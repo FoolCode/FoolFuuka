@@ -1,0 +1,81 @@
+/* Overwrite Twitter Bootstrap CSS */
+/* Input, Textarea, Select, Uneditable, Append */
+input,
+textarea,
+select,
+.uneditable-input {
+	margin: 0 2px 1px 0;
+	width: 500px;
+	max-width: 500px;
+}
+
+.uneditable-input { height: auto; }
+.input-append .add-on { margin-left: -3px; }
+
+/* Tables */
+table td { vertical-align: middle; }
+table th + th, table td + td {
+  border-left: 0px solid #ddd;
+}
+.fixed-table { table-layout: fixed; }
+
+/* End Twitter Bootstrap CSS Changes */
+
+
+
+/* Additional CSS */
+/* Search Bar */
+.smartsearch { float: right; border: 1px; }
+.smartsearch > form > input { width: 300px; }
+
+/* Div Tables */
+.table {
+  border: 1px solid #ddd;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding-left: 10px;
+}
+.table > hr.clear {
+  height: 0px;
+  border-color: rgba(0,0,0,0);
+}
+
+/* Div Lists */
+.list div { margin-right: 10px; }
+.list div + div { border-top: 1px solid #ddd; }
+.list .item div + div { border-top: 0px; }
+
+.list .item {
+  padding: 8px 8px 5px 8px;
+  margin-top: 5px;
+}
+.list .item .smalltext {
+  font-size: 10px;
+  margin-top: 2px;
+}
+.list .item .smalltext a {
+  color: #909090;
+  text-decoration: none;
+}
+.list .item .smalltext a:hover {
+  color: #0069d6;
+  text-decoration: none;
+}
+.list .chapters .item .info, .list .item .info {
+  float: right;
+}
+
+/* Change Log List */
+.changelog .item .title { font-weight: bold; }
+.changelog .item .description { padding-left: 5px; }
+
+/* Icons */
+.icon { vertical-align: middle; margin-right: 5px; }
+.icon-small { margin-bottom: 5px; }
+.sidebar { list-style: none; }
+
+/* Loader */
+.loading { display: none; width: 100%; text-align: center; margin: auto; }
+
+.vartext { padding: 5px; font-style: italic; font-size: 10px }

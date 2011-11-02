@@ -38,9 +38,6 @@ class Migration_Install extends CI_Migration
                                                 ('fs_ads_bottom_banner', '', 0),
                                                 ('fs_ads_bottom_banner_active', '', 0),
                                                 ('fs_ads_bottom_banner_reload', '', 0),
-                                                ('fs_ads_left_banner', '', 0),
-                                                ('fs_ads_left_banner_active', '', 0),
-                                                ('fs_ads_left_banner_reload', '', 0),
                                                 ('fs_ads_top_banner', '', 0),
                                                 ('fs_ads_top_banner_active', '', 0),
                                                 ('fs_ads_top_banner_reload', '', 0),
@@ -52,83 +49,6 @@ class Migration_Install extends CI_Migration
                                                 ('fs_gen_site_title', 'A fresh FoOlSlide', 0),
                                                 ('fs_priv_version', '" . FOOLSLIDE_VERSION . "', 0),
                                                 ('fs_srv_servers', '', 0);"
-			);
-		}
-
-		if (!$this->db->table_exists($this->db->dbprefix('comics')))
-		{
-			$this->db->query(
-					"CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('comics') . "` (
-                                          `id` int(11) NOT NULL AUTO_INCREMENT,
-                                          `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-                                          `stub` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-                                          `uniqid` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-                                          `hidden` int(11) NOT NULL,
-                                          `description` text COLLATE utf8_unicode_ci NOT NULL,
-                                          `thumbnail` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
-                                          `created` datetime NOT NULL,
-                                          `lastseen` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                                          `updated` datetime NOT NULL,
-                                          `creator` int(11) NOT NULL,
-                                          `editor` int(11) NOT NULL,
-                                          PRIMARY KEY (`id`)
-                                        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;"
-			);
-		}
-
-		if (!$this->db->table_exists($this->db->dbprefix('chapters')))
-		{
-			$this->db->query(
-					"CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('chapters') . "` (
-                                          `id` int(11) NOT NULL AUTO_INCREMENT,
-                                          `comic_id` int(11) NOT NULL,
-                                          `team_id` int(11) NOT NULL,
-                                          `joint_id` int(11) NOT NULL,
-                                          `chapter` int(11) NOT NULL,
-                                          `subchapter` int(11) NOT NULL,
-                                          `volume` int(11) NOT NULL,
-                                          `language` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
-                                          `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-                                          `stub` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-                                          `uniqid` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-                                          `hidden` int(11) NOT NULL,
-                                          `description` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
-                                          `thumbnail` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
-                                          `created` datetime NOT NULL,
-                                          `lastseen` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                                          `updated` datetime NOT NULL,
-                                          `creator` int(11) NOT NULL,
-                                          `editor` int(11) NOT NULL,
-                                          PRIMARY KEY (`id`)
-                                        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;"
-			);
-		}
-
-		if (!$this->db->table_exists($this->db->dbprefix('pages')))
-		{
-			$this->db->query(
-					"CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('pages') . "` (
-                                          `id` int(11) NOT NULL AUTO_INCREMENT,
-                                          `chapter_id` int(11) NOT NULL,
-                                          `filename` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-                                          `hidden` int(11) NOT NULL,
-                                          `description` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
-                                          `thumbnail` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
-                                          `created` datetime NOT NULL,
-                                          `lastseen` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                                          `updated` datetime NOT NULL,
-                                          `creator` int(11) NOT NULL,
-                                          `editor` int(11) NOT NULL,
-                                          `height` int(11) NOT NULL,
-                                          `width` int(11) NOT NULL,
-                                          `mime` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-                                          `grayscale` int(11) NOT NULL,
-                                          `thumbheight` int(11) NOT NULL,
-                                          `thumbwidth` int(11) NOT NULL,
-                                          `size` int(11) NOT NULL,
-                                          `thumbsize` int(11) NOT NULL,
-                                          PRIMARY KEY (`id`)
-                                        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;"
 			);
 		}
 
@@ -176,17 +96,6 @@ class Migration_Install extends CI_Migration
 			);
 		}
 
-		if (!$this->db->table_exists($this->db->dbprefix('licenses')))
-		{
-			$this->db->query(
-					"CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('licenses') . "` (
-                                          `id` int(11) NOT NULL AUTO_INCREMENT,
-                                          `comic_id` int(11) NOT NULL,
-                                          `nation` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-                                          PRIMARY KEY (`id`)
-                                        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;"
-			);
-		}
 
 		if (!$this->db->table_exists($this->db->dbprefix('memberships')))
 		{

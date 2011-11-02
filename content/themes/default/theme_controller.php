@@ -13,7 +13,7 @@ if (!defined('BASEPATH'))
  * For more information, refer to the support sites linked in your admin panel.
  */
 
-class Reader_Controller {
+class Theme_Controller {
 
 	function __construct() {
 		$this->CI = & get_instance();

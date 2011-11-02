@@ -19,12 +19,12 @@ class Chan extends Public_Controller
 	 */
 	public function index()
 	{
-		
+		echo 'here';
 	}
 	
 	public function board()
 	{
-		
+		echo 'here';
 	}
 	
 	public function thread($id)
@@ -44,9 +44,16 @@ class Chan extends Public_Controller
 	
 	public function _remap($method, $params = array())
 	{
-		if (method_exists($this->RC, $method))
+		$this->fu_board = $method;
+		$method = $params[0];
+		
+		/**
+		 * ADD CHECK IF BOARD EXISTS
+		 */
+		
+		if (method_exists($this->TC, $method))
 		{
-			return call_user_func_array(array($this->RC, $method), $params);
+			return call_user_func_array(array($this->TC, $method), $params);
 		}
 		
 		if (method_exists($this, $method))

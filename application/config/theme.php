@@ -7,9 +7,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 
 // load default config
-require(FCPATH . 'content/themes/default/reader_config.php');
+require(FCPATH . 'content/themes/default/theme_config.php');
 
 // overtwrite with theme specific configuration
-if (file_exists(FCPATH . 'content/themes/' . get_setting('fs_theme_dir') . '/reader_config.php'))
-	require(FCPATH . 'content/themes/' . get_setting('fs_theme_dir') . '/reader_config.php');
+if (file_exists(FCPATH . 'content/themes/' . get_setting('fs_theme_dir') . '/theme_config.php'))
+	require(FCPATH . 'content/themes/' . get_setting('fs_theme_dir') . '/theme_config.php');
 	

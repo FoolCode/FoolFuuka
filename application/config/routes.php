@@ -38,8 +38,8 @@
 |
 */
 
-$route['default_controller'] = "reader";
-$route['sitemap.xml'] = "reader/sitemap";
+$route['default_controller'] = "chan";
+$route['sitemap.xml'] = "feeds/sitemap";
 $route['rss.xml'] = "feeds/feeds";
 $route['atom.xml'] = "feeds/feeds/atom";
 $route['admin'] = "admin/series";

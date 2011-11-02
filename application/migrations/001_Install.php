@@ -48,7 +48,17 @@ class Migration_Install extends CI_Migration
                                                 ('fs_gen_footer_text', 'All the manga featured in this website are property of their publishers. The translations are fanmade and meant to be a preview of material unavailable for western countries.\nDo not try to profit from this material.<br/>If you liked any of the manga you obtained here, consider buying the Japanese versions, or the local translation, where available. Thanks for your support.', 0),
                                                 ('fs_gen_site_title', 'A fresh FoOlSlide', 0),
                                                 ('fs_priv_version', '" . FOOLSLIDE_VERSION . "', 0),
-                                                ('fs_srv_servers', '', 0);"
+                                                ('fs_srv_servers', '', 0),
+												('fs_geo_blocked', '', 0),
+												('fs_cron_autoupgrade', 0, 0),
+												('fs_priv_maintenance', '', 0),
+												('fs_reg_disabled', 0, 0),
+												('fs_reg_recaptcha_public', '', 0),
+												('fs_reg_recaptcha_secret', '', 0),
+												('fs_reg_email_disabled', 0, 0),
+												('fs_dl_archive_max', 350, 0),
+												('fs_dl_enabled', 0, 0),
+												('fs_cron_autoupgrade_version', 0, 0);"
 			);
 		}
 
@@ -200,6 +210,44 @@ class Migration_Install extends CI_Migration
                                         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;"
 			);
 		}
+
+
+
+
+
+
+
+
+
+
+
+		// remove also all the database entries
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('joints') . "` ADD INDEX ( `joint_id` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('joints') . "` ADD INDEX ( `team_id` )");
+
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('memberships') . "` ADD INDEX ( `team_id` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('memberships') . "` ADD INDEX ( `user_id` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('memberships') . "` ADD INDEX ( `is_leader` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('memberships') . "` ADD INDEX ( `accepted` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('memberships') . "` ADD INDEX ( `requested` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('memberships') . "` ADD INDEX ( `applied` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('memberships') . "` ADD INDEX ( `created` )");
+
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('memberships') . "` CHANGE `edited` `updated` DATETIME NOT NULL");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('memberships') . "` ADD INDEX ( `updated` )");
+
+
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('profiles') . "` ADD INDEX ( `user_id` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('profiles') . "` ADD INDEX ( `group_id` )");
+
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('teams') . "` ADD INDEX ( `name` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('teams') . "` ADD INDEX ( `stub` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('teams') . "` ADD INDEX ( `created` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('teams') . "` ADD INDEX ( `updated` )");
+
+
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('users') . "` ADD INDEX ( `username` )");
+		$this->db->query("ALTER TABLE `" . $this->db->dbprefix('users') . "` ADD INDEX ( `created` )");
 	}
 
 

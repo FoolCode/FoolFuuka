@@ -45,49 +45,6 @@ class Admin_Controller extends MY_Controller
 
 		$sidebar = array();
 
-		if (get_setting('fs_balancer_master_url'))
-		{
-			$sidebar["members"] = array(
-				"name" => _("Members"),
-				"level" => "member",
-				"default" => "members",
-				"icon" => 258,
-				"content" => array(
-					"members" => array("level" => "mod", "name" => _("Member List"), "icon" => 382),
-				)
-			);
-			$sidebar["preferences"] = array(
-				"name" => _("Preferences"),
-				"level" => "admin",
-				"default" => "general",
-				"icon" => 402,
-				"content" => array(
-					"registration" => array("level" => "admin", "name" => _("Registration"), "icon" => 360),
-				)
-			);
-			$sidebar["balancer"] = array("name" => _("Load balancer"),
-				"level" => "admin",
-				"default" => "balancers",
-				"icon" => 255,
-				"content" => array(
-					"client" => array("level" => "admin", "name" => _("Client"), "icon" => 120),
-				)
-			);
-
-			return $sidebar;
-		}
-
-		$sidebar["series"] = array(
-			"name" => _("Series"),
-			"level" => "mod",
-			"default" => "manage",
-			"icon" => 146,
-			"content" => array(
-				"manage" => array("level" => "mod", "name" => _("Manage"), "icon" => 184),
-				"add_new" => array("level" => "mod", "name" => _("Add New"), "icon" => 154),
-				"add_new_chapter" => array("level" => "mod", "name" => _("Add Chapter"), "icon" => 274)
-			)
-		);
 		$sidebar["members"] = array(
 			"name" => _("Members"),
 			"level" => "member",
@@ -107,19 +64,9 @@ class Admin_Controller extends MY_Controller
 			"icon" => 402,
 			"content" => array(
 				"general" => array("level" => "admin", "name" => _("General"), "icon" => 147),
-				"reader" => array("level" => "admin", "name" => _("Reader"), "icon" => 118),
 				"theme" => array("level" => "admin", "name" => _("Theme"), "icon" => 176),
 				"registration" => array("level" => "admin", "name" => _("Registration"), "icon" => 360),
 				"advertising" => array("level" => "admin", "name" => _("Advertising"), "icon" => 285),
-			)
-		);
-		$sidebar["balancer"] = array("name" => _("Load Balancer"),
-			"level" => "admin",
-			"default" => "balancers",
-			"icon" => 255,
-			"content" => array(
-				"balancers" => array("level" => "admin", "name" => _("Master"), "icon" => 121),
-				"client" => array("level" => "admin", "name" => _("Client"), "icon" => 120),
 			)
 		);
 		$sidebar["system"] = array("name" => _("System"),

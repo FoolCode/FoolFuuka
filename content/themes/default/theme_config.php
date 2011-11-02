@@ -7,10 +7,10 @@ if (!defined('BASEPATH'))
 // name, description of this theme...
 $config['theme_directory'] = 'default';
 $config['theme_name'] = 'Default';
-$config['theme_description'] = 'The default FoOlSlide theme';
+$config['theme_description'] = 'The default FoOlFuuka theme';
 $config['theme_tags'] = array('gray', 'sidebar');
 // for the default theme, this is the last FoOlSlide version there were changes to it
-$config['theme_version'] = '0.8.6';
+$config['theme_version'] = '0.1.0';
 
 // some personal data on the author
 $config['theme_author'] = 'Woxxy';

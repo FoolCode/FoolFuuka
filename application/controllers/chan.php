@@ -22,9 +22,20 @@ class Chan extends Public_Controller
 		echo 'here';
 	}
 	
-	public function board()
+	public function board($page = 1)
 	{
-		echo 'here';
+		
+		$this->fu_board;
+		$posts = new Post();
+		
+		$posts->limit(25)->include_related('relatedpost', NULL, TRUE, TRUE)->get();
+		
+		foreach($posts as $post)
+		{
+			echo '<pre>'.print_r($post->to_array(), true).'</pre>';
+		}
+		
+		
 	}
 	
 	public function thread($id)
@@ -32,7 +43,7 @@ class Chan extends Public_Controller
 		
 	}
 	
-	public function post($£id)
+	public function post($id)
 	{
 		
 	}

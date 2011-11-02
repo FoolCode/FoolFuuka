@@ -12,7 +12,7 @@ class MY_Controller extends CI_Controller
 		if (!file_exists(FCPATH . "config.php"))
 		{
 			if ($this->uri->segment(1) != "install")
-				show_error("If you are here, and have no clue why FoOlSlide is not working, start by reading the <a href='http://trac.foolrulez.com/foolslide/wiki/installation_guide'>installation manual</a>.");
+				show_error("If you are here, and have no clue why " . FOOLSLIDE_NAME . " is not working, start by reading the <a href='".FOOLSLIDE_MANUAL_INSTALL_URL."'>installation manual</a>.");
 		} else
 		{
 			$this->load->database();
@@ -22,7 +22,7 @@ class MY_Controller extends CI_Controller
 
 			// loads variables from database for get_setting()
 			load_settings();
-			
+
 			// create an array for the set_notice system
 			$this->notices = array();
 			$this->flash_notice_data = array();

@@ -24,15 +24,12 @@ class Chan extends Public_Controller
 	
 	public function board($page = 1)
 	{
-		
-		$this->fu_board;
 		$posts = new Post();
-		
 		$posts->where('post_id', 0)->limit(25)->get();
 		foreach($posts->all as $key => $post)
 		{
 			$posts->all[$key]->post = new Post();
-			$posts->all[$key]->post->where('post_id', $post->id)->limit(5)->get();
+			$posts->all[$key]->post->where('post_id', $post->id)->order_by('id', 'DESC')->limit(5)->get();
 		}
 		
 		$this->template->title(_('Team'));
@@ -40,14 +37,46 @@ class Chan extends Public_Controller
 		$this->template->build('board');
 	}
 	
-	public function thread($id)
+	public function thread($id = 0)
 	{
+		if(!is_numeric($id) || !$id > 0)
+		{
+			show_404();
+		}
 		
+		$thread = new Post();
+		$thread->where('id', $id)->limit(1)->get();
+		if($thread->result_count() == 0)
+		{
+			show_404();
+		}
+		
+		$thread->all[0]->post = new Post();
+		$thread->all[0]->post->where('post_id', $id)->order_by('id', 'DESC')->get();
+		$this->template->title(_('Team'));
+		$this->template->set('posts', $thread);
+		$this->template->build('board');
 	}
 	
-	public function post($id)
+	public function post($id = 0)
 	{
+		if(!is_numeric($id) || !$id > 0)
+		{
+			show_404();
+		}
 		
+		$post = new Post();
+		$post->where('id', $id)->get();
+		if($post->result_count() == 0)
+		{
+			show_404();
+		}
+		
+		$url = site_url($this->fu_board . '/thread/' . $post->post_id) . '#' . $post->id;
+		
+		$this->template->title(_('Redirecting...'));
+		$this->template->set('url', $url);
+		$this->template->build('redirect');
 	}
 	
 	public function ghost($page = 1)
@@ -59,7 +88,7 @@ class Chan extends Public_Controller
 	{
 		$this->fu_board = $method;
 		$method = $params[0];
-		
+		array_shift($params);
 		/**
 		 * ADD CHECK IF BOARD EXISTS
 		 */

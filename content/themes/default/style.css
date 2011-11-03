@@ -130,3 +130,8 @@ article.post .post_image {
 article.post > .text {
 	margin-left: 13px;
 }
+
+
+article.thread .greentext {
+	color: #789922;
+}

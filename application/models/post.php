@@ -7,7 +7,7 @@ class Post extends DataMapper
 {
 
 	var $table = 'boardaposts';
-	var $has_one = array();
+	var $has_one = array('post');
 	var $has_many = array();
 	var $validation = array(
 		'subnum' => array(
@@ -126,8 +126,7 @@ class Post extends DataMapper
 	{
 		$CI = & get_instance();
 		$find = array(
-			"(>>(\d+(?:,\d+)?))",
-			"((\r?\n|^)(&gt;.*?)(?=$|\r?\n))",
+			"'(\r?\n|^)(>.*?)(?=$|\r?\n)'i",
 			"'\[aa\](.*?)\[/aa\]'is",
 			"'\[spoiler](.*?)\[/spoiler]'is",
 			"'\[sup\](.*?)\[/sup\]'is",
@@ -144,8 +143,7 @@ class Post extends DataMapper
 		);
 
 		$replace = array(
-			'<a href="'.site_url($CI->fu_board . '/post/').'\\1">&gt;&gt;\\1</a>',
-			'<span class="greentext">&gt;\\1</span>',
+			'\\1<span class="greentext">\\2</span>\\3',
 			'<span class="aa">\\1</span>',
 			'<span class="spoiler">\\1</span>',
 			'<sup>\\1</sup>',
@@ -161,7 +159,31 @@ class Post extends DataMapper
 			'<span class="banned">\\1</span>',
 		);
 
-		return nl2br(preg_replace($find, $replace, $this->comment));
+
+
+		$regexing = $this->comment;
+		$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
+		return nl2br(preg_replace($find, $replace, $regexing));
+	}
+
+
+	function get_internal_link($matches)
+	{
+		$CI = & get_instance();
+		$id = substr($matches[0], 2);
+		if (!is_numeric($id) || !$id > 0)
+		{
+			return $matches[0];
+		}
+
+		$post = new Post();
+		$post->where('id', $id)->get();
+		if ($post->result_count() == 0)
+		{
+			return $matches[0];
+		}
+
+		return '<a href="' . site_url($CI->fu_board . '/thread/' . $post->post_id . '/') . '#' . $post->id . '">&gt;&gt;' . $id . '</a>';
 	}
 
 

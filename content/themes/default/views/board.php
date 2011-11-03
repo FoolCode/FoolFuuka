@@ -7,7 +7,7 @@ foreach ($posts->all as $post)
 {
 	echo '
 			<article class="thread">
-				<header>
+				<header id="'.$post->id.'">
 					<h2 class="post_title">' . $post->title . '</h2>
 					<span class="post_author">' . $post->name . '</span>
 					<span class="post_trip">' . $post->trip . '</span>
@@ -34,10 +34,10 @@ foreach ($posts->all as $post)
 		</div>';
 	echo '	
 			<aside class="posts">';
-	foreach ($post->post->all as $p)
+	foreach (array_reverse($post->post->all) as $p)
 	{
 		echo '
-			<article class="post">
+			<article class="post" id="'.$p->id.'">
 				<header>
 					<span class="post_author">' . $p->name . '</span>
 					<span class="post_trip">' . $p->trip . '</span>

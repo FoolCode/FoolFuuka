@@ -9,7 +9,6 @@ class Post extends DataMapper
 	var $table = 'boardaposts';
 	var $has_one = array();
 	var $has_many = array();
-	
 	var $validation = array(
 		'subnum' => array(
 			'rules' => array(),
@@ -108,18 +107,61 @@ class Post extends DataMapper
 	{
 		
 	}
-	
-	
+
+
 	function get_thumbnail()
 	{
 		$echo = '';
 		$number = $this->id;
-		while(strlen((string)$number) < 9)
+		while (strlen((string) $number) < 9)
 		{
-			$number = '0'.$number;
+			$number = '0' . $number;
 		}
-		
-		return site_url().'board/a/thumb/'.substr($number, 0, 4).'/'.substr($number, 4, 2).'/'.$this->preview;
+
+		return site_url() . 'board/a/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
+	}
+
+
+	function get_comment()
+	{
+		$CI = & get_instance();
+		$find = array(
+			"(>>(\d+(?:,\d+)?))",
+			"((\r?\n|^)(&gt;.*?)(?=$|\r?\n))",
+			"'\[aa\](.*?)\[/aa\]'is",
+			"'\[spoiler](.*?)\[/spoiler]'is",
+			"'\[sup\](.*?)\[/sup\]'is",
+			"'\[sub\](.*?)\[/sub\]'is",
+			"'\[b\](.*?)\[/b\]'is",
+			"'\[i\](.*?)\[/i\]'is",
+			"'\[u\](.*?)\[/u\]'is",
+			"'\[s\](.*?)\[/s\]'is",
+			"'\[o\](.*?)\[/o\]'is",
+			"'\[m\](.*?)\[/m\]'i",
+			"'\[code\](.*?)\[/code\]'i",
+			"'\[EXPERT\](.*?)\[/EXPERT\]'i",
+			"'\[banned\](.*?)\[/banned\]'i",
+		);
+
+		$replace = array(
+			'<a href="'.site_url($CI->fu_board . '/post/').'\\1">&gt;&gt;\\1</a>',
+			'<span class="greentext">&gt;\\1</span>',
+			'<span class="aa">\\1</span>',
+			'<span class="spoiler">\\1</span>',
+			'<sup>\\1</sup>',
+			'<sub>\\1</sub>',
+			'<strong>\\1</strong>',
+			'<em>\\1</em>',
+			'<span class="u">\\1</span>',
+			'<span class="s">\\1</span>',
+			'<span class="o">\\1</span>',
+			'<tt class="code">\\1</tt>',
+			'<code>\\1</code>',
+			'<b><span class="u"><span class="o">\\1</span></span></b>',
+			'<span class="banned">\\1</span>',
+		);
+
+		return nl2br(preg_replace($find, $replace, $this->comment));
 	}
 
 

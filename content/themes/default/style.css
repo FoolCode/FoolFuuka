@@ -5,6 +5,13 @@
 .clearfix { zoom: 1; }
 
 
+a, a:visited {
+	color: #34345c;
+}
+
+a:hover {
+	color: #dd0000;
+}
 
 
 
@@ -75,9 +82,9 @@ article.thread header {
 	margin-bottom: 5px;
 }
 
-article.thread .thread_image{
+article.thread > .thread_image {
 	float:left;
-	margin: 0px 10px 10px 0;
+	margin: 0 10px 10px 10px;
 }
 
 article.thread h2.post_title {
@@ -95,7 +102,6 @@ article.thread .post_author {
 }
 
 article.thread .post_trip {
-	font-weight: bold;
 	color: #117743;
 }
 
@@ -105,11 +111,22 @@ article.thread .post_number {
 
 article.thread > .text {
 	margin-bottom:20px;
+	margin-left:10px;
 }
 
 article.post {
 	background: #d6f0da;
 	float:left;
-	margin: 2px 0;
-	padding: 7px 20px 13px;
+	margin: 2px 0 2px 10px;
+	padding: 7px 20px 10px 13px;
+	border-bottom:1px solid #a1c7a3;
+}
+
+article.post .post_image {
+	float:left;
+	margin: 0 10px 10px 0;
+}
+
+article.post > .text {
+	margin-left: 13px;
 }

@@ -6,14 +6,10 @@ if (!defined('BASEPATH'))
 class Post extends DataMapper
 {
 
-	var $table = 'board_a_posts';
+	var $table = 'boardaposts';
 	var $has_one = array();
-	var $has_many = array(
-		'relatedpost' => array(
-			'class' => 'post',
-			'join_table' => 'board_a_posts'
-		)
-	);
+	var $has_many = array();
+	
 	var $validation = array(
 		'subnum' => array(
 			'rules' => array(),
@@ -111,6 +107,19 @@ class Post extends DataMapper
 	function post_model_init($from_cache = FALSE)
 	{
 		
+	}
+	
+	
+	function get_thumbnail()
+	{
+		$echo = '';
+		$number = $this->id;
+		while(strlen((string)$number) < 9)
+		{
+			$number = '0'.$number;
+		}
+		
+		return site_url().'board/a/thumb/'.substr($number, 0, 4).'/'.substr($number, 4, 2).'/'.$this->preview;
 	}
 
 

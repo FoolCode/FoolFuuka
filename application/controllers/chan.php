@@ -8,8 +8,8 @@ class Chan extends Public_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library('pagination');
 		$this->load->library('template');
+		$this->load->helper('number');
 		$this->template->set_layout('chan');
 	}
 
@@ -28,14 +28,16 @@ class Chan extends Public_Controller
 		$this->fu_board;
 		$posts = new Post();
 		
-		$posts->limit(25)->include_related('relatedpost', NULL, TRUE, TRUE)->get();
-		
-		foreach($posts as $post)
+		$posts->where('post_id', 0)->limit(25)->get();
+		foreach($posts->all as $key => $post)
 		{
-			echo '<pre>'.print_r($post->to_array(), true).'</pre>';
+			$posts->all[$key]->post = new Post();
+			$posts->all[$key]->post->where('post_id', $post->id)->limit(5)->get();
 		}
 		
-		
+		$this->template->title(_('Team'));
+		$this->template->set('posts', $posts);
+		$this->template->build('board');
 	}
 	
 	public function thread($id)

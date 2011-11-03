@@ -1,0 +1,115 @@
+
+/* Contain floats: h5bp.com/q */ 
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
+
+
+
+
+
+body {
+	background: #eefff2;
+}
+
+#header {
+	overflow:hidden;
+	border-bottom: 1px solid #555;
+	padding-bottom:12px;
+	margin:12px 0;
+}
+
+#logo {
+	margin-bottom:0;
+}
+
+#top_tools {
+	border-bottom: 1px solid #555;
+	margin: 12px 0;
+	padding-bottom:12px;
+}
+
+#top_tools form {
+	margin-bottom: 0;
+	margin-right:10px;
+	float:left;
+}
+
+#top_tools label {
+	width:auto;
+}
+
+#top_tools .input {
+	margin-left: 80px;
+}
+
+#top_tools input[type=submit] {
+	margin: 0 5px 0 -3px;
+}
+
+#top_tools input {
+	padding: 4px 4px;
+}
+
+input, textarea, select, .uneditable-input {
+	height:15px;
+}
+
+.input-prepend .add-on, .input-append .add-on {
+	height:15px;
+	line-height:15px
+}
+
+
+
+
+/* board */
+
+article.thread {
+	border-bottom: 1px solid #000;
+	padding: 15px 0;
+}
+
+article.thread header {
+	margin-bottom: 5px;
+}
+
+article.thread .thread_image{
+	float:left;
+	margin: 0px 10px 10px 0;
+}
+
+article.thread h2.post_title {
+	font-weight: bold;
+	color: #0f0c5d;
+	padding:0;
+	margin:0;
+	font-size:1em;
+	display:inline;
+	line-height:inherit;
+}
+article.thread .post_author {
+	font-weight: bold;
+	color: #117743;
+}
+
+article.thread .post_trip {
+	font-weight: bold;
+	color: #117743;
+}
+
+article.thread .post_number {
+	
+}
+
+article.thread > .text {
+	margin-bottom:20px;
+}
+
+article.post {
+	background: #d6f0da;
+	float:left;
+	margin: 2px 0;
+	padding: 7px 20px 13px;
+}

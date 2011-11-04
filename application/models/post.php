@@ -123,7 +123,7 @@ class Post extends DataMapper
 			$number = '0' . $number;
 		}
 
-		return site_url() . 'board/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
+		return site_url() . 'content/boards/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
 	}
 
 

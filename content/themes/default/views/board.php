@@ -19,7 +19,7 @@ foreach ($posts->all as $post)
 		echo '
 					<br/>
 					<span class="post_file">File: ' . byte_format($post->media_size, 0) . ', ' . $post->media_w . 'x' . $post->media_h . ', ' . $post->media . '</span>
-					<span class="post_file_controls">[<a href="' . site_url($this->fu_board . '/image/' . substr($post->media_hash, 0, -2)) . '">View Same</a>] [<a href="http://iqdb.org/?url=' . urlencode($post->get_thumbnail()) . '">iqdb</a>]</span>';
+					<span class="post_file_controls">[<a href="' . site_url($this->fu_board . '/image/' . urlencode(substr($post->media_hash, 0, -2))) . '">View Same</a>] [<a href="http://iqdb.org/?url=' . urlencode($post->get_thumbnail()) . '">iqdb</a>]</span>';
 	}
 	echo '
 				</header>';
@@ -65,7 +65,7 @@ foreach ($posts->all as $post)
 			echo '
 					<br/>
 					<span class="post_file">File: ' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media . '</span>
-					<span class="post_file_controls">[<a href="' . site_url($this->fu_board . '/image/' . substr($p->media_hash, 0, -2)) . '">View Same</a>] [<a href="http://iqdb.org/?url=' . urlencode($p->get_thumbnail()) . '">iqdb</a>]</span>';
+					<span class="post_file_controls">[<a href="' . site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) . '">View Same</a>] [<a href="http://iqdb.org/?url=' . urlencode($p->get_thumbnail()) . '">iqdb</a>]</span>';
 		}
 		echo '
 			</header>';

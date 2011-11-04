@@ -42,6 +42,21 @@ class Chan extends Public_Controller
 		$this->template->build('board');
 	}
 	
+	public function ghost($page = 1)
+	{
+		$posts = new Post();
+		$posts->where('parent', 0)->get_paged($page, 25);
+		foreach($posts->all as $key => $post)
+		{
+			$posts->all[$key]->post = new Post();
+			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
+		}
+		
+		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name);
+		$this->template->set('posts', $posts);
+		$this->template->build('board');
+	}
+	
 	public function thread($num = 0)
 	{
 		if(!is_numeric($num) || !$num > 0)
@@ -84,21 +99,6 @@ class Chan extends Public_Controller
 		$this->template->build('redirect');
 	}
 	
-	public function ghost($page = 1)
-	{
-		$posts = new Post();
-		$posts->where('parent', 0)->get_paged($page, 25);
-		foreach($posts->all as $key => $post)
-		{
-			$posts->all[$key]->post = new Post();
-			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
-		}
-		
-		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name);
-		$this->template->set('posts', $posts);
-		$this->template->build('board');
-	}
-	
 	public function image($hash = NULL, $limit = 25)
 	{
 		if($hash == NULL || !is_numeric($limit))
@@ -107,7 +107,7 @@ class Chan extends Public_Controller
 		}
 		
 		$posts = new Post();
-		$posts->where('media_hash', $hash . '==')->limit($limit)->order_by('num', 'DESC')->get();
+		$posts->where('media_hash', urldecode($hash) . '==')->limit($limit)->order_by('num', 'DESC')->get();
 		$this->template->title(_('Image'));
 		$this->template->set('posts', $posts);
 		$this->template->build('board');

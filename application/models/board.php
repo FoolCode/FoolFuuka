@@ -5,54 +5,51 @@ if (!defined('BASEPATH'))
 
 class Board extends DataMapper {
 
-	static $cached = array();
 	var $has_one = array();
 	var $has_many = array();
 	var $validation = array(
-		'board_shortname' => array(
+		'shortname' => array(
 			'rules' => array('required', 'max_length' => 256),
 			'label' => 'Board',
 			'type' => 'input'
 		),
-		'board_name' => array(
+		'name' => array(
 			'rules' => array('required', 'max_length' => 256),
 			'label' => 'Board Name',
 			'type' => 'input'
 		),
-		'board_url' => array(
+		'url' => array(
 			'rules' => array('required', 'max_length' => 256),
 			'label' => 'Board URL',
 			'type' => 'input'
 		),
 		'thread_refresh_rate' => array(
 			'rules' => array(),
-			'label' => 'Thread Refresh Rate',
+			'label' => 'Thread Refresh Rate #',
 			'type' => 'input'
 		),
 		'threads_posts' => array(
-			'rules' => array('is_int'),
-			'label' => 'Thread Threads',
+			'rules' => array('is_natural'),
+			'label' => 'Thread Threads #',
 			'type' => 'input'
 		),
 		'threads_media' => array(
-			'rules' => array('is_int'),
-			'label' => 'Media Threads',
+			'rules' => array('is_natural'),
+			'label' => 'Media Threads #',
 			'type' => 'input'
 		),
 		'threads_thumb' => array(
-			'rules' => array('is_int'),
-			'label' => 'Thumb Threads',
+			'rules' => array('is_natural'),
+			'label' => 'Thumb Threads #',
 			'type' => 'input'
 		),
 		'max_ancient_id' => array(
-			'rules' => array('is_int'),
+			'rules' => array('is_natural'),
 			'label' => 'Description',
-			'type' => 'input'
 		),
 		'max_indexed_id' => array(
-			'rules' => array('is_int'),
+			'rules' => array('is_natural'),
 			'label' => 'Description',
-			'type' => 'input'
 		)
 	);
 	
@@ -131,7 +128,7 @@ class Board extends DataMapper {
 			$found = FALSE;
 			
 			$board = new Board();
-			$board->where('board_shortname', $this->board_shortname)->get();
+			$board->where('shortname', $this->shortname)->get();
 			if ($board->result_count() == 0)
 			{
 				$found = TRUE;
@@ -140,18 +137,18 @@ class Board extends DataMapper {
 			while (!$found)
 			{
 				$i++;
-				$new_shortname = $this->board_shortname . '_' . $i;
+				$new_shortname = $this->shortname . '_' . $i;
 				$board = new Board();
-				$board->where('board_shortname', $new_shortname)->get();
+				$board->where('shortname', $new_shortname)->get();
 				if ($board->result_count() == 0)
 				{
-					$this->board_shortname = $new_shortname;
+					$this->shortname = $new_shortname;
 					$found = TRUE;
 				}
 			}
 		}
 		
-		if (isset($old_shortname) && $old_shortname != $this->board_shortname && is_dir("content/boards/" . $old_shortname))
+		if (isset($old_shortname) && $old_shortname != $this->shortname && is_dir("content/boards/" . $old_shortname))
 		{
 			$dir_old = "content/boards/" . $old_shortname;
 			$dir_new = "content/boards/" . $new_shortname;
@@ -207,8 +204,19 @@ class Board extends DataMapper {
 		// Place Holder
 	}
 	
+	public function check_shortname($shortname) {
+		$this->where('shortname', $shortname)->get();
+		return $this->result_count() > 0;
+	}
+	
 	public function directory()
 	{
-		return $this->board_shortname;
+		return $this->shortname;
 	}
+	
+	public function href()
+	{
+		return site_url($this->shortname);
+	}
+
 }

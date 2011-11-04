@@ -8,8 +8,11 @@ class Chan extends Public_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library('pagination');
 		$this->load->library('template');
+		$this->load->helper('number');
+		$boards = new Board();
+		$boards->order_by('shortname', 'ASC')->get();
+		$this->template->set('boards', $boards);
 		$this->template->set_layout('chan');
 	}
 
@@ -19,33 +22,66 @@ class Chan extends Public_Controller
 	 */
 	public function index()
 	{
-		echo 'here';
+		$this->template->title(get_setting('fs_gen_title'));
+		$this->template->set('disable_headers', TRUE);
+		$this->template->build('index');
 	}
 	
 	public function board($page = 1)
 	{
-		
-		$this->fu_board;
 		$posts = new Post();
-		
-		$posts->limit(25)->include_related('relatedpost', NULL, TRUE, TRUE)->get();
-		
-		foreach($posts as $post)
+		$posts->where('parent', 0)->limit(25)->get();
+		foreach($posts->all as $key => $post)
 		{
-			echo '<pre>'.print_r($post->to_array(), true).'</pre>';
+			$posts->all[$key]->post = new Post();
+			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
 		}
 		
-		
+		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name);
+		$this->template->set('posts', $posts);
+		$this->template->build('board');
 	}
 	
-	public function thread($id)
+	public function thread($num = 0)
 	{
+		if(!is_numeric($num) || !$num > 0)
+		{
+			show_404();
+		}
 		
+		$thread = new Post();
+		$thread->where('num', $num)->limit(1)->get();
+		if($thread->result_count() == 0)
+		{
+			show_404();
+		}
+		
+		$thread->all[0]->post = new Post();
+		$thread->all[0]->post->where('parent', $num)->order_by('num', 'DESC')->get();
+		$this->template->title(_('Team'));
+		$this->template->set('posts', $thread);
+		$this->template->build('board');
 	}
 	
-	public function post($id)
+	public function post($num = 0)
 	{
+		if(!is_numeric($num) || !$num > 0)
+		{
+			show_404();
+		}
 		
+		$post = new Post();
+		$post->where('num', $num)->get();
+		if($post->result_count() == 0)
+		{
+			show_404();
+		}
+		
+		$url = site_url($this->fu_board . '/thread/' . $post->parent) . '#' . $post->num;
+		
+		$this->template->title(_('Redirecting...'));
+		$this->template->set('url', $url);
+		$this->template->build('redirect');
 	}
 	
 	public function ghost($page = 1)
@@ -56,8 +92,17 @@ class Chan extends Public_Controller
 	public function _remap($method, $params = array())
 	{
 		$this->fu_board = $method;
-		$method = $params[0];
-		
+		if(isset($params[0]))
+		{
+			$board = new Board();
+			if(!$board->check_shortname($this->fu_board))
+			{
+				show_404();
+			}
+			$this->template->set('board', $board);
+			$method = $params[0];
+			array_shift($params);
+		}
 		/**
 		 * ADD CHECK IF BOARD EXISTS
 		 */

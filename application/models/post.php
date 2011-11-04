@@ -6,20 +6,19 @@ if (!defined('BASEPATH'))
 class Post extends DataMapper
 {
 
-	var $table = 'board_a_posts';
-	var $has_one = array();
-	var $has_many = array(
-		'relatedpost' => array(
-			'class' => 'post',
-			'join_table' => 'board_a_posts'
-		)
-	);
+	var $table = '';
+	var $has_one = array('post');
+	var $has_many = array();
 	var $validation = array(
+		'num' => array(
+			'rules' => array(),
+			'label' => 'Password'
+		),
 		'subnum' => array(
 			'rules' => array(),
 			'label' => 'Password'
 		),
-		'post_id' => array(
+		'parent' => array(
 			'rules' => array(),
 			'label' => 'Email',
 			'type' => 'input'
@@ -104,6 +103,7 @@ class Post extends DataMapper
 
 	function __construct($id = NULL)
 	{
+		$this->table = 'board' . get_selected_board()->shortname . 'posts';
 		parent::__construct($id);
 	}
 
@@ -111,6 +111,84 @@ class Post extends DataMapper
 	function post_model_init($from_cache = FALSE)
 	{
 		
+	}
+
+
+	function get_thumbnail()
+	{
+		$echo = '';
+		$number = $this->num;
+		while (strlen((string) $number) < 9)
+		{
+			$number = '0' . $number;
+		}
+
+		return site_url() . 'board/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
+	}
+
+
+	function get_comment()
+	{
+		$CI = & get_instance();
+		$find = array(
+			"'(\r?\n|^)(>.*?)(?=$|\r?\n)'i",
+			"'\[aa\](.*?)\[/aa\]'is",
+			"'\[spoiler](.*?)\[/spoiler]'is",
+			"'\[sup\](.*?)\[/sup\]'is",
+			"'\[sub\](.*?)\[/sub\]'is",
+			"'\[b\](.*?)\[/b\]'is",
+			"'\[i\](.*?)\[/i\]'is",
+			"'\[u\](.*?)\[/u\]'is",
+			"'\[s\](.*?)\[/s\]'is",
+			"'\[o\](.*?)\[/o\]'is",
+			"'\[m\](.*?)\[/m\]'i",
+			"'\[code\](.*?)\[/code\]'i",
+			"'\[EXPERT\](.*?)\[/EXPERT\]'i",
+			"'\[banned\](.*?)\[/banned\]'i",
+		);
+
+		$replace = array(
+			'\\1<span class="greentext">\\2</span>\\3',
+			'<span class="aa">\\1</span>',
+			'<span class="spoiler">\\1</span>',
+			'<sup>\\1</sup>',
+			'<sub>\\1</sub>',
+			'<strong>\\1</strong>',
+			'<em>\\1</em>',
+			'<span class="u">\\1</span>',
+			'<span class="s">\\1</span>',
+			'<span class="o">\\1</span>',
+			'<tt class="code">\\1</tt>',
+			'<code>\\1</code>',
+			'<b><span class="u"><span class="o">\\1</span></span></b>',
+			'<span class="banned">\\1</span>',
+		);
+
+
+
+		$regexing = $this->comment;
+		$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
+		return nl2br(preg_replace($find, $replace, $regexing));
+	}
+
+
+	function get_internal_link($matches)
+	{
+		$CI = & get_instance();
+		$num = substr($matches[0], 2);
+		if (!is_numeric($num) || !$num > 0)
+		{
+			return $matches[0];
+		}
+
+		$post = new Post();
+		$post->where('num', $num)->get();
+		if ($post->result_count() == 0)
+		{
+			return $matches[0];
+		}
+
+		return '<a href="' . site_url($CI->fu_board . '/thread/' . $post->parent . '/') . '#' . $post->num . '">&gt;&gt;' . $num . '</a>';
 	}
 
 

@@ -36,14 +36,30 @@ foreach ($posts->all as $post)
 			<aside class="posts">';
 	foreach (array_reverse($post->post->all) as $p)
 	{
-		echo '
+		if ($p->subnum > 0)
+		{
+			echo '
+			<article class="post" id="'.$p->num.'_'.$p->subnum.'">
+				<header>
+					<span class="post_author">' . $p->name . '</span>
+					<span class="post_trip">' . $p->trip . '</span>
+					<time datetime="' . date(DATE_W3C, $p->timestamp) . '">' . date('D M d H:i:s Y', $p->timestamp) . '</time>
+					<span class="post_number"><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum . '">No.</a><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum . '">' . $p->num . ',' . $p->subnum . '</a></span>
+				';
+		}
+		else
+		{
+			echo '
 			<article class="post" id="'.$p->num.'">
 				<header>
 					<span class="post_author">' . $p->name . '</span>
 					<span class="post_trip">' . $p->trip . '</span>
 					<time datetime="' . date(DATE_W3C, $p->timestamp) . '">' . date('D M d H:i:s Y', $p->timestamp) . '</time>
 					<span class="post_number"><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '">No.</a><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '">' . $p->num . '</a></span>
-						';
+				';
+		}
+		
+		
 		if ($p->media_filename)
 		{
 			echo '

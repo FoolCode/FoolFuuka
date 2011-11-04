@@ -27,10 +27,10 @@ class Chan extends Public_Controller
 		$this->template->build('index');
 	}
 	
-	public function board($page = 1)
+	public function page($page = 1)
 	{
 		$posts = new Post();
-		$posts->where('parent', 0)->limit(25)->get();
+		$posts->where('parent', 0)->get_paged($page, 25);
 		foreach($posts->all as $key => $post)
 		{
 			$posts->all[$key]->post = new Post();
@@ -87,7 +87,7 @@ class Chan extends Public_Controller
 	public function ghost($page = 1)
 	{
 		$posts = new Post();
-		$posts->where('parent', 0)->limit(25)->get();
+		$posts->where('parent', 0)->get_paged($page, 25);
 		foreach($posts->all as $key => $post)
 		{
 			$posts->all[$key]->post = new Post();
@@ -110,7 +110,7 @@ class Chan extends Public_Controller
 		$posts->where('media_hash', $hash . '==')->limit($limit)->order_by('num', 'DESC')->get();
 		$this->template->title(_('Image'));
 		$this->template->set('posts', $posts);
-		$this->template->build('image');
+		$this->template->build('board');
 	}
 	
 	public function _remap($method, $params = array())

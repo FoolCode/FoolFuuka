@@ -52,7 +52,7 @@ $route['account/leave_leadership/(:any)'] = "account/index/leave_leadership/$1";
 $route['admin/members/members'] = 'admin/members/membersa';
 
 $route['(?!(admin|account))(\w+)/(.*?)'] = "chan/$2/$3";
-$route['(\w+)'] = "chan/$1/board";
+$route['(\w+)'] = "chan/$1/page";
 
 $route['404_override'] = '';
 

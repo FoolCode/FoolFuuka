@@ -45,6 +45,17 @@ class Admin_Controller extends MY_Controller
 
 		$sidebar = array();
 
+		$sidebar["boards"] = array(
+			"name" => _("Boards"),
+			"level" => "admin",
+			"default" => "manage",
+			"icon" => 258,
+			"content" => array(
+				"manage" => array("level" => "admin", "name" => _("Manage"), "icon" => 382),
+				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 357)
+			)
+		);
+		
 		$sidebar["members"] = array(
 			"name" => _("Members"),
 			"level" => "member",

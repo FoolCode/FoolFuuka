@@ -117,7 +117,7 @@
 			</div> <!-- end of #main -->
 
 
-			<footer></footer>
+			<footer>FoOlFuuka</footer>
 		</div>
 
 		<!-- JavaScript at the bottom for fast page loading -->

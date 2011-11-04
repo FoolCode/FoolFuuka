@@ -49,6 +49,23 @@ if (!function_exists('load_settings'))
 }
 
 /**
+ * Return selected boards' shortname
+ * 
+ * @author Woxxy
+ */
+if (!function_exists('get_selected_board'))
+{
+
+	function get_selected_board()
+	{
+		$CI = & get_instance();
+		return $CI->fu_board;
+	}
+
+
+}
+
+/**
  * Caches in a variable and returns the home team's object
  * 
  * @author Woxxy

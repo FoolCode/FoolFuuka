@@ -5,8 +5,7 @@ if (!defined('BASEPATH'))
 
 class Post extends DataMapper
 {
-
-	var $table = 'boardaposts';
+	var $table = '';
 	var $has_one = array('post');
 	var $has_many = array();
 	var $validation = array(
@@ -98,7 +97,8 @@ class Post extends DataMapper
 	);
 
 	function __construct($id = NULL)
-	{
+	{	
+		$this->table = 'board'.get_selected_board().'posts';
 		parent::__construct($id);
 	}
 
@@ -118,7 +118,7 @@ class Post extends DataMapper
 			$number = '0' . $number;
 		}
 
-		return site_url() . 'board/a/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
+		return site_url() . 'board/'.get_selected_board().'/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
 	}
 
 

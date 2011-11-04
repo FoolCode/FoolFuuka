@@ -10,6 +10,9 @@ class Chan extends Public_Controller
 		parent::__construct();
 		$this->load->library('template');
 		$this->load->helper('number');
+		$boards = new Board();
+		$boards->order_by('shortname', 'ASC')->get();
+		$this->template->set('boards', $boards);
 		$this->template->set_layout('chan');
 	}
 
@@ -19,7 +22,9 @@ class Chan extends Public_Controller
 	 */
 	public function index()
 	{
-		echo 'here';
+		$this->template->title(get_setting('fs_gen_title'));
+		$this->template->set('disable_headers', TRUE);
+		$this->template->build('index');
 	}
 	
 	public function board($page = 1)
@@ -87,8 +92,17 @@ class Chan extends Public_Controller
 	public function _remap($method, $params = array())
 	{
 		$this->fu_board = $method;
-		$method = $params[0];
-		array_shift($params);
+		if(isset($params[0]))
+		{
+			$board = new Board();
+			if(!$board->check_shortname($this->fu_board))
+			{
+				show_404();
+			}
+			$this->template->set('board', $board);
+			$method = $params[0];
+			array_shift($params);
+		}
 		/**
 		 * ADD CHECK IF BOARD EXISTS
 		 */

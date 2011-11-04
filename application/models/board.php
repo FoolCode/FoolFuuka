@@ -204,8 +204,19 @@ class Board extends DataMapper {
 		// Place Holder
 	}
 	
+	public function check_shortname($shortname) {
+		$this->where('shortname', $shortname)->get();
+		return $this->result_count() > 0;
+	}
+	
 	public function directory()
 	{
 		return $this->shortname;
 	}
+	
+	public function href()
+	{
+		return site_url($this->shortname);
+	}
+
 }

@@ -15,9 +15,13 @@ a:hover {
 
 
 
+html {
+	min-height:100%;
+}
 
 body {
 	background: #eefff2;
+	min-height:100%;
 }
 
 #header {

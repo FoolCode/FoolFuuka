@@ -30,54 +30,54 @@ class Chan extends Public_Controller
 	public function board($page = 1)
 	{
 		$posts = new Post();
-		$posts->where('post_id', 0)->limit(25)->get();
+		$posts->where('parent', 0)->limit(25)->get();
 		foreach($posts->all as $key => $post)
 		{
 			$posts->all[$key]->post = new Post();
-			$posts->all[$key]->post->where('post_id', $post->id)->order_by('id', 'DESC')->limit(5)->get();
+			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
 		}
 		
-		$this->template->title(_('Team'));
+		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name);
 		$this->template->set('posts', $posts);
 		$this->template->build('board');
 	}
 	
-	public function thread($id = 0)
+	public function thread($num = 0)
 	{
-		if(!is_numeric($id) || !$id > 0)
+		if(!is_numeric($num) || !$num > 0)
 		{
 			show_404();
 		}
 		
 		$thread = new Post();
-		$thread->where('id', $id)->limit(1)->get();
+		$thread->where('num', $num)->limit(1)->get();
 		if($thread->result_count() == 0)
 		{
 			show_404();
 		}
 		
 		$thread->all[0]->post = new Post();
-		$thread->all[0]->post->where('post_id', $id)->order_by('id', 'DESC')->get();
+		$thread->all[0]->post->where('parent', $num)->order_by('num', 'DESC')->get();
 		$this->template->title(_('Team'));
 		$this->template->set('posts', $thread);
 		$this->template->build('board');
 	}
 	
-	public function post($id = 0)
+	public function post($num = 0)
 	{
-		if(!is_numeric($id) || !$id > 0)
+		if(!is_numeric($num) || !$num > 0)
 		{
 			show_404();
 		}
 		
 		$post = new Post();
-		$post->where('id', $id)->get();
+		$post->where('num', $num)->get();
 		if($post->result_count() == 0)
 		{
 			show_404();
 		}
 		
-		$url = site_url($this->fu_board . '/thread/' . $post->post_id) . '#' . $post->id;
+		$url = site_url($this->fu_board . '/thread/' . $post->parent) . '#' . $post->num;
 		
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);

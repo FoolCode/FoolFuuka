@@ -5,15 +5,20 @@ if (!defined('BASEPATH'))
 
 class Post extends DataMapper
 {
+
 	var $table = '';
 	var $has_one = array('post');
 	var $has_many = array();
 	var $validation = array(
+		'num' => array(
+			'rules' => array(),
+			'label' => 'Password'
+		),
 		'subnum' => array(
 			'rules' => array(),
 			'label' => 'Password'
 		),
-		'post_id' => array(
+		'parent' => array(
 			'rules' => array(),
 			'label' => 'Email',
 			'type' => 'input'
@@ -97,8 +102,8 @@ class Post extends DataMapper
 	);
 
 	function __construct($id = NULL)
-	{	
-		$this->table = 'board'.get_selected_board().'posts';
+	{
+		$this->table = 'board' . get_selected_board()->shortname . 'posts';
 		parent::__construct($id);
 	}
 
@@ -112,13 +117,13 @@ class Post extends DataMapper
 	function get_thumbnail()
 	{
 		$echo = '';
-		$number = $this->id;
+		$number = $this->num;
 		while (strlen((string) $number) < 9)
 		{
 			$number = '0' . $number;
 		}
 
-		return site_url() . 'board/'.get_selected_board().'/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
+		return site_url() . 'board/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
 	}
 
 
@@ -170,20 +175,20 @@ class Post extends DataMapper
 	function get_internal_link($matches)
 	{
 		$CI = & get_instance();
-		$id = substr($matches[0], 2);
-		if (!is_numeric($id) || !$id > 0)
+		$num = substr($matches[0], 2);
+		if (!is_numeric($num) || !$num > 0)
 		{
 			return $matches[0];
 		}
 
 		$post = new Post();
-		$post->where('id', $id)->get();
+		$post->where('num', $num)->get();
 		if ($post->result_count() == 0)
 		{
 			return $matches[0];
 		}
 
-		return '<a href="' . site_url($CI->fu_board . '/thread/' . $post->post_id . '/') . '#' . $post->id . '">&gt;&gt;' . $id . '</a>';
+		return '<a href="' . site_url($CI->fu_board . '/thread/' . $post->parent . '/') . '#' . $post->num . '">&gt;&gt;' . $num . '</a>';
 	}
 
 

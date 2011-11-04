@@ -59,7 +59,17 @@ if (!function_exists('get_selected_board'))
 	function get_selected_board()
 	{
 		$CI = & get_instance();
-		return $CI->fu_board;
+		if (isset($CI->fu_board_obj))
+			return $CI->fu_board_obj;
+		$board = new Board();
+		$board->where('shortname', $CI->fu_board)->get();
+		if($board->result_count() == 0)
+		{
+			// what the hell is going on? abort
+			show_404();
+		}
+		$CI->fu_board_obj = $board;
+		return $board;
 	}
 
 
@@ -148,7 +158,7 @@ function find_imagick()
 		{
 			return FALSE;
 		}
-		
+
 		exec($imagick_path . ' -version', $result);
 		if (preg_match('/ImageMagick/i', $result[0]))
 		{
@@ -280,9 +290,12 @@ function icons($num, $size = '32', $icons = 'sweeticons2')
 	return site_url() . 'assets/icons/' . $icons . '/' . $size . '/' . $num . '.png';
 }
 
-function is_natural($str) {
-	return (bool) preg_match( '/^[0-9]+$/', $str);
+
+function is_natural($str)
+{
+	return (bool) preg_match('/^[0-9]+$/', $str);
 }
+
 
 function relative_date($time)
 {

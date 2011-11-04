@@ -34,7 +34,7 @@ class Chan extends Public_Controller
 		foreach($posts->all as $key => $post)
 		{
 			$posts->all[$key]->post = new Post();
-			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
+			$posts->all[$key]->post->where(array('parent' => $post->num, 'subnum' => 0))->order_by('num', 'DESC')->limit(5)->get();
 		}
 		
 		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name);
@@ -86,7 +86,31 @@ class Chan extends Public_Controller
 	
 	public function ghost($page = 1)
 	{
+		$posts = new Post();
+		$posts->where('parent', 0)->limit(25)->get();
+		foreach($posts->all as $key => $post)
+		{
+			$posts->all[$key]->post = new Post();
+			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
+		}
 		
+		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name);
+		$this->template->set('posts', $posts);
+		$this->template->build('board');
+	}
+	
+	public function image($hash = NULL, $limit = 25)
+	{
+		if($hash == NULL || !is_numeric($limit))
+		{
+			show_404();
+		}
+		
+		$posts = new Post();
+		$posts->where('media_hash', $hash . '==')->limit($limit)->order_by('num', 'DESC')->get();
+		$this->template->title(_('Image'));
+		$this->template->set('posts', $posts);
+		$this->template->build('image');
 	}
 	
 	public function _remap($method, $params = array())

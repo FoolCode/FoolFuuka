@@ -45,6 +45,7 @@ foreach ($posts->all as $post)
 					<span class="post_trip">' . $p->trip . '</span>
 					<time datetime="' . date(DATE_W3C, $p->timestamp) . '">' . date('D M d H:i:s Y', $p->timestamp) . '</time>
 					<span class="post_number"><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum . '">No.</a><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum . '">' . $p->num . ',' . $p->subnum . '</a></span>
+					<span class="post_ghost">This is not an archived reply.</span>
 				';
 		}
 		else

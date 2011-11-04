@@ -107,7 +107,7 @@
 					?>
 
 					<?php
-					echo form_open($this->fu_board . '/page');
+					echo form_open($this->fu_board . '/ghost');
 					echo '<div class="input-prepend">';
 					echo '<span class="add-on">? #</span>';
 					echo form_input(array(

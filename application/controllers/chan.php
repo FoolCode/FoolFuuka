@@ -44,14 +44,28 @@ class Chan extends Public_Controller
 	
 	public function ghost($page = 1)
 	{
+		// obtain list of parent ids with posts, nasty hack
+		$values = array();
+		$ghosts = new Post();
+		$ghosts->where('subnum >', 0)->order_by('num', 'DESC')->group_by('parent')->get();
+		foreach($ghosts->all as $key => $ghost)
+		{
+			$values[] = $ghost->parent;
+		}
+		
+		if(empty($values))
+		{
+			$values[] = 0;
+		}
+		
+		// obtain list of threads with list of ids
 		$posts = new Post();
-		$posts->where('parent', 0)->get_paged($page, 25);
+		$posts->where_in('num', $values)->get_paged($page, 25);
 		foreach($posts->all as $key => $post)
 		{
 			$posts->all[$key]->post = new Post();
 			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
 		}
-		
 		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name);
 		$this->template->set('posts', $posts);
 		$this->template->build('board');
@@ -73,7 +87,7 @@ class Chan extends Public_Controller
 		
 		$thread->all[0]->post = new Post();
 		$thread->all[0]->post->where('parent', $num)->order_by('num', 'DESC')->get();
-		$this->template->title(_('Team'));
+		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name . ' - Thread #' . $num);
 		$this->template->set('posts', $thread);
 		$this->template->build('board');
 	}
@@ -108,7 +122,7 @@ class Chan extends Public_Controller
 		
 		$posts = new Post();
 		$posts->where('media_hash', urldecode($hash) . '==')->limit($limit)->order_by('num', 'DESC')->get();
-		$this->template->title(_('Image'));
+		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name . ' - Image: ' . urldecode($hash));
 		$this->template->set('posts', $posts);
 		$this->template->build('board');
 	}

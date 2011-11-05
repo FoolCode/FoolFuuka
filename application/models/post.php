@@ -103,7 +103,7 @@ class Post extends DataMapper
 
 	function __construct($id = NULL)
 	{
-		$this->table = 'board' . get_selected_board()->shortname . 'posts';
+		$this->table = 'board_' . get_selected_board()->shortname;
 		parent::__construct($id);
 	}
 

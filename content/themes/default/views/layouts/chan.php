@@ -128,6 +128,7 @@
 
 			<div role="main">
 				<?php echo $template['body']; ?>
+				<?php echo $template['partials']['reply']; ?>
 			</div> <!-- end of #main -->
 
 

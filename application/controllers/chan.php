@@ -13,6 +13,7 @@ class Chan extends Public_Controller
 		$boards = new Board();
 		$boards->order_by('shortname', 'ASC')->get();
 		$this->template->set('boards', $boards);
+		$this->template->set_partial('reply', 'reply');
 		$this->template->set_layout('chan');
 	}
 
@@ -44,6 +45,7 @@ class Chan extends Public_Controller
 	
 	public function ghost($page = 1)
 	{
+		/*
 		// obtain list of parent ids with posts, nasty hack
 		$values = array();
 		$ghosts = new Post();
@@ -66,6 +68,29 @@ class Chan extends Public_Controller
 			$posts->all[$key]->post = new Post();
 			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
 		}
+		 */
+		
+		$values = array();
+		$this->db->select('parent')->from('board_' . get_selected_board()->shortname . '_local')->order_by('num', 'DESC');
+		$ghosts = $this->db->get();
+		foreach($ghosts->result() as $key => $ghost)
+		{
+			$values[] = $ghost->parent;
+		}
+		
+		if(empty($values))
+		{
+			$values[] = '';
+		}
+		
+		$posts = new Post();
+		$posts->where_in('num', $values)->get_paged($page, 25);
+		foreach($posts->all as $key => $post)
+		{
+			$posts->all[$key]->post = new Post();
+			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
+		}
+		
 		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name);
 		$this->template->set('posts', $posts);
 		$this->template->build('board');
@@ -85,10 +110,19 @@ class Chan extends Public_Controller
 			show_404();
 		}
 		
+		$post_data = '';
+		if ($this->input->post())
+		{
+			// LETS HANDLE THE GHOST POSTS HERE
+			$post_data = $this->input->post();
+		}
+		
 		$thread->all[0]->post = new Post();
 		$thread->all[0]->post->where('parent', $num)->order_by('num', 'DESC')->get();
 		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name . ' - Thread #' . $num);
 		$this->template->set('posts', $thread);
+		
+		$this->template->set_partial('reply', 'reply', array('thread_id' => $num, 'post_data' => $post_data));
 		$this->template->build('board');
 	}
 	
@@ -113,9 +147,9 @@ class Chan extends Public_Controller
 		$this->template->build('redirect');
 	}
 	
-	public function image($hash = NULL, $limit = 25)
+	public function image($hash, $limit = 25)
 	{
-		if($hash == NULL || !is_numeric($limit))
+		if($hash == '' || !is_numeric($limit))
 		{
 			show_404();
 		}
@@ -124,6 +158,14 @@ class Chan extends Public_Controller
 		$posts->where('media_hash', urldecode($hash) . '==')->limit($limit)->order_by('num', 'DESC')->get();
 		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name . ' - Image: ' . urldecode($hash));
 		$this->template->set('posts', $posts);
+		$this->template->build('board');
+	}
+	
+	public function search($query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc')
+	{
+		$posts = new Post();
+		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name . ' - Search: ' . $query);
+		//$this->template->set('posts', $posts);
 		$this->template->build('board');
 	}
 	

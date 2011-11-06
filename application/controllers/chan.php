@@ -30,8 +30,45 @@ class Chan extends Public_Controller
 	
 	public function page($page = 1)
 	{
-		$posts = new Post();
-		$posts->where('parent', 0)->get_paged($page, 25);
+		$board = $this->db->protect_identifiers('board_' . $this->fu_board, TRUE);
+		
+		$query = $this->db->query('
+			SELECT ' . $board . '.* FROM
+			(
+				SELECT a.*
+				FROM ' . $board . ' AS a
+				WHERE a.parent = 0
+
+				UNION ALL
+
+				SELECT b.*
+				FROM ' . $board . ' AS b
+				WHERE b.parent > 0
+				GROUP BY b.parent
+
+				ORDER BY num DESC
+				LIMIT 0, 10
+			)
+			AS threads
+			JOIN ' . $board . '
+			ON threads.num = ' . $board . '.num
+				OR threads.num = ' . $board . '.parent
+			ORDER BY CASE ' . $board . '.parent 
+				WHEN 0 THEN ' . $board . '.num 
+				ELSE ' . $board . '.parent 
+				END
+				desc,num,subnum asc
+			;
+		');
+		echo $this->db->last_query();
+		foreach($query->result() as $row)
+		{
+			echo '<pre>';
+			print_r($row);
+			echo '</pre>';
+		}
+				
+		
 		foreach($posts->all as $key => $post)
 		{
 			$posts->all[$key]->post = new Post();

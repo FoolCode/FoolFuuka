@@ -7,7 +7,7 @@ foreach ($posts->all as $post)
 {
 	echo '
 			<article class="thread">
-				<header id="'.$post->num.'">
+				<header id="' . $post->num . '">
 					<h2 class="post_title">' . $post->title . '</h2>
 					<span class="post_author">' . $post->name . '</span>
 					<span class="post_trip">' . $post->trip . '</span>
@@ -31,6 +31,7 @@ foreach ($posts->all as $post)
 	echo '
 		<div class="text">
 		' . $post->get_comment() . '
+		'.(($post->get_omitted() > 0)?'<h6>' . $post->get_omitted() . ' posts omitted.</h6>':'').'
 		</div>';
 	echo '	
 			<aside class="posts">';
@@ -39,7 +40,7 @@ foreach ($posts->all as $post)
 		if ($p->subnum > 0)
 		{
 			echo '
-			<article class="post" id="'.$p->num.'_'.$p->subnum.'">
+			<article class="post" id="' . $p->num . '_' . $p->subnum . '">
 				<header>
 					<span class="post_author">' . $p->name . '</span>
 					<span class="post_trip">' . $p->trip . '</span>
@@ -51,7 +52,7 @@ foreach ($posts->all as $post)
 		else
 		{
 			echo '
-			<article class="post" id="'.$p->num.'">
+			<article class="post" id="' . $p->num . '">
 				<header>
 					<span class="post_author">' . $p->name . '</span>
 					<span class="post_trip">' . $p->trip . '</span>
@@ -59,8 +60,8 @@ foreach ($posts->all as $post)
 					<span class="post_number"><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '">No.</a><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '">' . $p->num . '</a></span>
 				';
 		}
-		
-		
+
+
 		if ($p->media_filename)
 		{
 			echo '

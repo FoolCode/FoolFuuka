@@ -125,6 +125,12 @@ class Post extends DataMapper
 
 		return site_url() . 'content/boards/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
 	}
+	
+	var $omitted = 0;
+	function get_omitted()
+	{	
+		return $this->omitted;
+	}
 
 
 	function get_comment()

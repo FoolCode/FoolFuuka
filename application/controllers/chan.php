@@ -30,49 +30,81 @@ class Chan extends Public_Controller
 	
 	public function page($page = 1)
 	{
-		$board = $this->db->protect_identifiers('board_' . $this->fu_board, TRUE);
+		$board = $this->db->protect_identifiers('board_' . get_selected_board()->shortname, TRUE);
 		
+		// get exactly 10 be it thread starters or parents with distinct parent
 		$query = $this->db->query('
-			SELECT ' . $board . '.* FROM
 			(
-				SELECT a.*
-				FROM ' . $board . ' AS a
-				WHERE a.parent = 0
-
-				UNION ALL
-
-				SELECT b.*
-				FROM ' . $board . ' AS b
-				WHERE b.parent > 0
-				GROUP BY b.parent
-
-				ORDER BY num DESC
-				LIMIT 0, 10
+				SELECT num, parent
+				FROM ' . $board . '
+				WHERE parent = 0
 			)
-			AS threads
-			JOIN ' . $board . '
-			ON threads.num = ' . $board . '.num
-				OR threads.num = ' . $board . '.parent
-			ORDER BY CASE ' . $board . '.parent 
-				WHEN 0 THEN ' . $board . '.num 
-				ELSE ' . $board . '.parent 
-				END
-				desc,num,subnum asc
+			UNION ALL
+			(
+				SELECT num, parent
+				FROM ' . $board . '
+				WHERE parent > 0
+				GROUP BY parent
+			)
+			ORDER BY num DESC
+			LIMIT 0, 10
 			;
 		');
-		echo $this->db->last_query();
+		
+		// get the IDs of the threads to fetch
+		$threads = array();
+		$posts = array(); // an associative array for later
+
 		foreach($query->result() as $row)
 		{
-			echo '<pre>';
-			print_r($row);
-			echo '</pre>';
+			if($row->parent != 0)
+			{
+				$threads[] = $row->parent;
+			}
+			else
+			{
+				$threads[] = $row->num;
+				$the_posts[$row->num] = array();
+			}
 		}
 				
+		$sql = array();
+		rsort($threads);
+		foreach($threads as $thread)
+		{
+			$sql[] = '
+				(
+					SELECT *
+					FROM ' . $board . '
+					WHERE num = ' . $thread . ' OR parent = ' . $thread . '
+					ORDER BY num DESC
+				)
+			';
+		}
+		
+		$sql = implode('UNION', $sql) . '
+			ORDER BY num DESC
+		';
+		
+
+		$posts = new Post();
+		$posts->query($sql);
+		
 		
 		foreach($posts->all as $key => $post)
 		{
-			$posts->all[$key]->post = new Post();
-			$posts->all[$key]->post->where(array('parent' => $post->num, 'subnum' => 0))->order_by('num', 'DESC')->limit(5)->get();
+			if($post->parent > 0)
+			{
+				foreach($posts->all as $k => $p)
+				{
+					if($p->num == $post->parent)
+					{
+						if(count($posts->all[$k]->post->all) < 5)
+							$posts->all[$k]->post->all[] = $post->get_copy();
+					}
+				}
+				unset($posts->all[$key]);
+			}
 		}
 		
 		$this->template->title('/'. get_selected_board()->shortname .'/ - '. get_selected_board()->name);

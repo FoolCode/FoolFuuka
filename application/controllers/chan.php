@@ -35,7 +35,7 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
-		
+
 		$board = $this->db->protect_identifiers('board_' . get_selected_board()->shortname, TRUE);
 
 		// get exactly 10 be it thread starters or parents with distinct parent
@@ -43,9 +43,9 @@ class Chan extends Public_Controller
 			SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent
 			FROM ' . $board . '
 			ORDER BY num DESC
-			LIMIT '. (($page*10)-10) . ',10
+			LIMIT ' . (($page * 10) - 10) . ',10
 		');
-		
+
 		// get the IDs of the threads to fetch
 		$threads = array();
 		$posts = array(); // an associative array for later
@@ -203,12 +203,66 @@ class Chan extends Public_Controller
 	}
 
 
-	public function search($query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc')
+	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
+	public function search()
 	{
+		$search = $this->uri->ruri_to_assoc(2, array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order'));
+
+
+		if (get_selected_board()->sphinx)
+		{
+			$this->load->library('SphinxClient');
+			$this->sphinxclient->SetServer(
+					// gotta turn the port into int
+					get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : 'localhost', get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_port') : 3312
+			);
+			
+			$this->sphinxclient->SetLimits(0, 25);
+
+			if ($search['username'])
+			{
+				$this->sphinxclient->setFilter('name', $search['username']);
+			}
+			
+			if ($search['tripcode'])
+			{
+				$this->sphinxclient->setFilter('trip', $search['tripcode']);
+			}
+			
+			if ($search['text'])
+			{
+			//	$this->sphinxclient->setFilter('comment', $search['text']);
+			}
+			
+			if ($search['deleted'] == "deleted")
+			{
+				$this->sphinxclient->setFilter('is_deleted', 1);
+			}
+			if ($search['deleted'] == "not-deleted")
+			{
+				$this->sphinxclient->setFilter('is_deleted', 0);
+			}
+			
+			if ($search['ghost'] == "only")
+			{
+				$this->sphinxclient->setFilter('is_internal', 1);
+			}
+			if ($search['ghost'] == "none")
+			{
+				$this->sphinxclient->setFilter('is_internal', 0);
+			}
+
+			$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED2);
+			$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
+			print_r($this->sphinxclient->query($search['text']), 'a_ancient a_main a_delta');
+		}
+/*
 		$posts = new Post();
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ' . $query);
 		//$this->template->set('posts', $posts);
 		$this->template->build('board');
+ * 
+ */
 	}
 
 

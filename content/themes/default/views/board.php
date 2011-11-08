@@ -81,7 +81,7 @@ foreach ($posts->all as $post)
 		' . $p->get_comment() . '
 		</div>
 		</article>
-		<div class="clearfix"></div>';
+		<div style="clear:right"></div>';
 	}
 	echo ' </aside>';
 	echo '<div class="clearfix"></div>';

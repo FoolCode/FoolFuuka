@@ -23,6 +23,11 @@ class Board extends DataMapper {
 			'label' => 'Board URL',
 			'type' => 'input'
 		),
+		'sphinx' => array(
+			'rules' => array(),
+			'label' => 'Use Sphinx search',
+			'type' => 'checkbox'
+		),
 		'thread_refresh_rate' => array(
 			'rules' => array(),
 			'label' => 'Thread Refresh Rate #',

@@ -120,7 +120,10 @@ article.thread > .text {
 
 article.post {
 	background: #d6f0da;
-	float:left;
+	display:-moz-inline-stack;
+	display:inline-block;
+	zoom:1;
+	*display:inline;
 	margin: 2px 0 2px 10px;
 	padding: 7px 20px 10px 13px;
 	border-bottom:1px solid #a1c7a3;

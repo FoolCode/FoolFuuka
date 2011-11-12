@@ -13,7 +13,7 @@ foreach ($posts->all as $post)
 					<span class="post_trip">' . $post->trip . '</span>
 					<time datetime="' . date(DATE_W3C, $post->timestamp) . '">' . date('D M d H:i:s Y', $post->timestamp) . '</time>
 					<span class="post_number"><a href="' . site_url($this->fu_board . '/thread/' . $post->num) . '">No.</a><a href="' . site_url($this->fu_board . '/thread/' . $post->num) . '#q' . $post->num . '">' . $post->num . '</a></span>
-					<span class="post_controls">[<a href="' . site_url($this->fu_board . '/thread/' . $post->num) . '">Reply</a>] [<a href="http://boards.4chan.org/' . $this->fu_board . '/res/' . $post->num . '">Original</a>]</span>';
+					<span class="post_controls">[<a href="' . site_url($this->fu_board . '/thread/' . $post->num) . '">Reply</a>] [<a href="http://boards.4chan.org/' . $this->fu_board . '/res/' . $post->num . '">Original</a>] [<a href="' . site_url($this->fu_board . '/report/' . $post->num) . '">Report</a>]</span>';
 	if ($post->media_filename)
 	{
 		echo '
@@ -31,7 +31,7 @@ foreach ($posts->all as $post)
 	echo '
 		<div class="text">
 		' . $post->get_comment() . '
-		'.(($post->get_omitted() > 0)?'<h6>' . $post->get_omitted() . ' posts omitted.</h6>':'').'
+		'.(($post->get_omitted() > 0)?'<h6>' . $post->get_omitted() . ' posts omitted. [ <a href="' . site_url($this->fu_board . '/thread/' . $post->num) . '">Expand</a> ]</h6>':'').'
 		</div>';
 	echo '	
 			<aside class="posts">';
@@ -46,6 +46,7 @@ foreach ($posts->all as $post)
 					<span class="post_trip">' . $p->trip . '</span>
 					<time datetime="' . date(DATE_W3C, $p->timestamp) . '">' . date('D M d H:i:s Y', $p->timestamp) . '</time>
 					<span class="post_number"><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum . '">No.</a><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum . '">' . $p->num . ',' . $p->subnum . '</a></span>
+					<span class="post_controls">[<a href="' . site_url($this->fu_board . '/report/' . $post->num) . '">Report</a>]</span>
 					<span class="post_ghost">This is not an archived reply.</span>
 				';
 		}
@@ -58,6 +59,7 @@ foreach ($posts->all as $post)
 					<span class="post_trip">' . $p->trip . '</span>
 					<time datetime="' . date(DATE_W3C, $p->timestamp) . '">' . date('D M d H:i:s Y', $p->timestamp) . '</time>
 					<span class="post_number"><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '">No.</a><a href="' . site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '">' . $p->num . '</a></span>
+					<span class="post_controls">[<a href="' . site_url($this->fu_board . '/report/' . $post->num) . '">Report</a>]</span>
 				';
 		}
 

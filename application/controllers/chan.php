@@ -12,6 +12,7 @@ class Chan extends Public_Controller
 		$this->load->helper('number');
 		$boards = new Board();
 		$boards->order_by('shortname', 'ASC')->get();
+		$this->template->set_partial('top_tools', 'top_tools');
 		$this->template->set('boards', $boards);
 		$this->template->set_partial('reply', 'reply');
 		$this->template->set_layout('chan');
@@ -180,8 +181,15 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$url = site_url($this->fu_board . '/thread/' . $post->parent) . '#' . $post->num;
-
+		if ($post->parent == 0)
+		{
+			$url = site_url($this->fu_board . '/thread/' . $post->num) . '#' . $post->num;
+		}
+		else
+		{
+			$url = site_url($this->fu_board . '/thread/' . $post->parent) . '#' . $post->num;
+		}
+		
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
 		$this->template->build('redirect');
@@ -203,15 +211,31 @@ class Chan extends Public_Controller
 	}
 
 
-	public function search($query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc')
-	{
+	public function search($params = array())
+	{		
+		$params = $this->uri->uri_to_assoc(3);
+		if (!empty($params))
+		{
+			// Begin MySQL Query Statements
+		}
+		
 		$posts = new Post();
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ' . $query);
-		//$this->template->set('posts', $posts);
+		$posts->where('media_hash', '==')->limit(25)->order_by('num', 'DESC')->get();
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ' .implode($params, ':'));
+		$this->template->set('posts', $posts);
 		$this->template->build('board');
 	}
 
+	
+	public function report($num = 0)
+	{
+		if (!is_numeric($num) || !$num > 0)
+		{
+			show_404();
+		}
+	}
 
+	
 	public function _remap($method, $params = array())
 	{
 		$this->fu_board = $method;

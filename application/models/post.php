@@ -86,9 +86,9 @@ class Post extends CI_Model
 				{
 					$result[$post->num]['posts'] = array();
 				}
-				if(isset($result[$post->parent]['omitted']))
+				if(!isset($result[$post->num]['omitted']))
 				{
-					$result[$post->parent]['omitted'] = -5;
+					$result[$post->num]['omitted'] = -5;
 				}
 			}
 		}

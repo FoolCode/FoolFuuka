@@ -242,6 +242,8 @@ class Chan extends Public_Controller
 	
 	public function remap_query()
 	{
+		$params = '';
+		
 		// Page Redirect
 		if ($this->input->get('task') == "page")
 		{
@@ -302,7 +304,7 @@ class Chan extends Public_Controller
 			}
 		}
 		
-		if ($this->input->get('task') != "")
+		if ($params != "")
 		{
 			$url = site_url($this->fu_board . '/' . $params);
 			$this->template->title(_('Redirecting...'));

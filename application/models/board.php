@@ -23,6 +23,21 @@ class Board extends DataMapper {
 			'label' => 'Board URL',
 			'type' => 'input'
 		),
+		'thumbs_url' => array(
+			'rules' => array('required', 'max_length' => 256),
+			'label' => 'Thumbs URL',
+			'type' => 'input'
+		),
+		'images_url' => array(
+			'rules' => array('required', 'max_length' => 256),
+			'label' => 'Images URL',
+			'type' => 'input'
+		),
+		'posting_url' => array(
+			'rules' => array('required', 'max_length' => 256),
+			'label' => 'Posting URL',
+			'type' => 'input'
+		),
 		'sphinx' => array(
 			'rules' => array(),
 			'label' => 'Use Sphinx search',
@@ -81,6 +96,8 @@ class Board extends DataMapper {
 		
 		if (!$this->add_board_dir())
 		{
+			// cleanup
+			$this->remove_board_db();
 			log_message('error', 'add_board: failed creating board directory');
 			return false;
 		}

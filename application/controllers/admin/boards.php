@@ -98,5 +98,32 @@ class Boards extends Admin_Controller
 		$this->load->view("admin/default.php", $this->viewdata);
 	}
 
+	function delete($type, $id = 0) {
+		if (!isAjax())
+		{
+			$this->output->set_output(_('You can\'t delete chapters from outside the admin panel through this link.'));
+			log_message("error", "Controller: series.php/remove: failed serie removal");
+			return false;
+		}
+		$id = intval($id);
+		
+		switch ($type)
+		{
+			case("board"):
+				$board = new Board();
+				$comic->where('id', $id)->get();
+				$title = $board->name;
+				if (!$board->remove())
+				{
+					flash_notice('error', sprintf(_('Failed to delete the board %s.'), $title));
+					log_message("error", "Controller: board.php/remove: failed board removal");
+					echo json_encode(array('href' => site_url("admin/series/manage")));
+					return false;
+				}
+				flash_notice('notice', sprintf(_('The series %s has been deleted.'), $title));
+				$this->output->set_output(json_encode(array('href' => site_url("admin/series/manage"))));
+				break;
+		}
+	}
 
 }

@@ -36,12 +36,14 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$board = $this->db->protect_identifiers('board_' . get_selected_board()->shortname, TRUE);
+		$page = intval($page);
+		
+		$board = $this->db->protect_identifiers('woxxy_tv').'.' . $this->db->protect_identifiers(get_selected_board()->shortname);
 
 		// get exactly 10 be it thread starters or parents with distinct parent
 		$query = $this->db->query('
 			SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent
-			FROM ' . $board . '
+			FROM '.$board.'
 			ORDER BY num DESC
 			LIMIT ' . (($page * 10) - 10) . ',10
 		');

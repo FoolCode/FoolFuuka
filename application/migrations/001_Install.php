@@ -228,7 +228,7 @@ class Migration_Install extends CI_Migration
 					  `max_ancient_id` int(11) NOT NULL,
 					  `max_indexed_id` int(11) NOT NULL,
 					  PRIMARY KEY  (`id`)
-					) ENGINE=MyISAM  DEFAULT CHARSET=utf8_bin;
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 				");
 		}
 

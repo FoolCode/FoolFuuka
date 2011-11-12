@@ -12,6 +12,7 @@ class Chan extends Public_Controller
 		$this->load->helper('number');
 		$boards = new Board();
 		$boards->order_by('shortname', 'ASC')->get();
+		$this->template->set_partial('top_tools', 'top_tools');
 		$this->template->set('boards', $boards);
 		$this->template->set_partial('reply', 'reply');
 		$this->template->set_layout('chan');
@@ -31,6 +32,8 @@ class Chan extends Public_Controller
 
 	public function page($page = 1)
 	{
+		$this->remap_query();
+		
 		if (!is_natural($page) || $page > 500)
 		{
 			show_404();
@@ -123,8 +126,15 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$url = site_url($this->fu_board . '/thread/' . $post->parent) . '#' . $post->num;
-
+		if ($post->parent == 0)
+		{
+			$url = site_url($this->fu_board . '/thread/' . $post->num) . '#' . $post->num;
+		}
+		else
+		{
+			$url = site_url($this->fu_board . '/thread/' . $post->parent) . '#' . $post->num;
+		}
+		
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
 		$this->template->build('redirect');
@@ -199,16 +209,96 @@ class Chan extends Public_Controller
 			$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
 			print_r($this->sphinxclient->query($search['text']), 'a_ancient a_main a_delta');
 		}
-/*
 		$posts = new Post();
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ' . $query);
-		//$this->template->set('posts', $posts);
+		$posts->where('media_hash', '==')->limit(25)->order_by('num', 'DESC')->get();
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ' . implode($params, ':'));
+		$this->template->set('posts', $posts);
 		$this->template->build('board');
- * 
- */
 	}
 
+	
+	public function report($num = 0)
+	{
+		if (!is_numeric($num) || !$num > 0)
+		{
+			show_404();
+		}
+	}
 
+	
+	public function remap_query()
+	{
+		$params = '';
+		
+		// Page Redirect
+		if ($this->input->get('task') == "page")
+		{
+			if ($this->input->get('page') != "")
+			{
+				$params = 'page/' . $this->input->get('page') . '/';
+			}
+			
+			if ($this->input->get('ghost') != "")
+			{
+				$params = 'ghost/' . $this->input->get('page') . '/';
+			}
+		}
+		
+		// Search Redirect
+		if ($this->input->get('task') == "search" || $this->input->get('task') == "search2")
+		{
+			$params = 'search/';
+			
+			// Build Redirect for Search
+			if ($this->input->get('search_text') != "")
+			{
+				$params .= 'text/' . $this->input->get('search_text') . '/';
+			}
+			
+			if ($this->input->get('search_username') != "")
+			{
+				$params .= 'username/' . $this->input->get('search_username') . '/';
+			}
+			
+			if ($this->input->get('search_tripcode') != "")
+			{
+				$params .= 'tripcode/' . $this->input->get('search_tripcode') . '/';
+			}
+			
+			if ($this->input->get('search_del') != "")
+			{
+				$del = str_replace('dontcare', '', $this->input->get('search_del'));
+				if ($del != "")
+				{
+					$params .= 'deleted/' . $del . '/';
+				}
+			}
+			
+			if ($this->input->get('search_int') != "")
+			{
+				$int = str_replace('dontcare', '', $this->input->get('search_int'));
+				if ($int != "")
+				{
+					$params .= 'internal/' . $int . '/';
+				}
+			}
+			
+			if ($this->input->get('search_ord') != "")
+			{
+				$ord = str_replace(array('old', 'new'), array('asc', 'desc'), $this->input->get('search_ord'));
+				$params .= 'order/' . $ord . '/';
+			}
+		}
+		
+		if ($params != "")
+		{
+			$url = site_url($this->fu_board . '/' . $params);
+			$this->template->title(_('Redirecting...'));
+			$this->template->set('url', $url);
+			die($this->template->build('redirect'));
+		}
+	}
+	
 	public function _remap($method, $params = array())
 	{
 		$this->fu_board = $method;

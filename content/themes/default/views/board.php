@@ -14,7 +14,7 @@ foreach ($posts as $key => $post) : ?>
 		<span class="post_trip"><?php echo $op->trip ?></span>
 		<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>"><?php date('D M d H:i:s Y', $op->timestamp) ?></time>
 		<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>"><?php echo $op->num ?></a></span>
-		<span class="post_controls">[<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>] [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]</span>
+		<span class="post_controls">[<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>] [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>] [<a href="<?php echo site_url($this->fu_board . '/report/' . $op->num) ?>">Report</a>]</span>
 
 		<?php if ($op->media_filename) : ?>
 		<br/>
@@ -48,6 +48,7 @@ foreach ($posts as $key => $post) : ?>
 				<span class="post_trip"><?php echo $p->trip ?></span>
 				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
 				<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum ?>"><?php echo $p->num . ',' . $p->subnum ?></a></span>
+				<span class="post_controls">[<a href="<?php echo site_url($this->fu_board . '/report/' . $p->num) ?>">Report</a>]</span>
 				<span class="post_ghost">This is not an archived reply.</span>
 		<?php else : ?>
 		<article class="post" id="<?php echo $p->num ?>">
@@ -56,6 +57,7 @@ foreach ($posts as $key => $post) : ?>
 				<span class="post_trip"><?php echo $p->trip ?></span>
 				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
 				<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num ?>"><?php echo $p->num ?></a></span>
+				<span class="post_controls">[<a href="<?php echo site_url($this->fu_board . '/report/' . $p->num) ?>">Report</a>]</span>
 				<?php endif; ?>
 				<?php if ($p->media_filename) : ?>
 				<br/>

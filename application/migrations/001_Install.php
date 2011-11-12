@@ -212,7 +212,25 @@ class Migration_Install extends CI_Migration
 		}
 
 
-
+		if (!$this->db->table_exists($this->db->dbprefix('boards')))
+		{
+			$this->db->query("
+					CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('boards') . "` (
+					  `id` int(11) NOT NULL auto_increment,
+					  `shortname` varchar(32) NOT NULL,
+					  `name` varchar(256) NOT NULL,
+					  `url` varchar(256) NOT NULL,
+					  `sphinx` int(11) NOT NULL,
+					  `threads_refresh_rate` int(11) NOT NULL,
+					  `threads_posts` int(11) NOT NULL,
+					  `threads_media` int(11) NOT NULL,
+					  `threads_thumb` int(11) NOT NULL,
+					  `max_ancient_id` int(11) NOT NULL,
+					  `max_indexed_id` int(11) NOT NULL,
+					  PRIMARY KEY  (`id`)
+					) ENGINE=MyISAM  DEFAULT CHARSET=utf8_bin;
+				");
+		}
 
 
 

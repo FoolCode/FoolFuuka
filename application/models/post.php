@@ -3,137 +3,119 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-class Post extends DataMapper
+class Post extends CI_Model
 {
 
 	var $table = '';
-	var $has_one = array('post');
-	var $has_many = array();
-	var $validation = array(
-		'num' => array(
-			'rules' => array(),
-			'label' => 'Password'
-		),
-		'subnum' => array(
-			'rules' => array(),
-			'label' => 'Password'
-		),
-		'parent' => array(
-			'rules' => array(),
-			'label' => 'Email',
-			'type' => 'input'
-		),
-		'timestamp' => array(
-			'rules' => array(),
-			'label' => 'Activated'
-		),
-		'preview' => array(
-			'rules' => array(),
-			'label' => 'Banned'
-		),
-		'preview_w' => array(
-			'rules' => array(),
-			'label' => 'Ban reason'
-		),
-		'preview_h' => array(
-			'rules' => array(),
-			'label' => 'New password key'
-		),
-		'media' => array(
-			'rules' => array(),
-			'label' => 'New password request'
-		),
-		'media_w' => array(
-			'rules' => array(),
-			'label' => 'New email'
-		),
-		'media_h	' => array(
-			'rules' => array(),
-			'label' => 'New email key'
-		),
-		'media_size' => array(
-			'rules' => array(),
-			'label' => 'Last IP'
-		),
-		'media_hash' => array(
-			'rules' => array(),
-			'label' => 'Last login'
-		),
-		'media_filename' => array(
-			'rules' => array(),
-			'label' => 'Modified'
-		),
-		'spoiler' => array(
-			'rules' => array(),
-			'label' => 'New password key'
-		),
-		'deleted' => array(
-			'rules' => array(),
-			'label' => 'New password request'
-		),
-		'capcode' => array(
-			'rules' => array(),
-			'label' => 'New email'
-		),
-		'email' => array(
-			'rules' => array(),
-			'label' => 'New email key'
-		),
-		'name' => array(
-			'rules' => array(),
-			'label' => 'Last IP'
-		),
-		'trip' => array(
-			'rules' => array(),
-			'label' => 'Last login'
-		),
-		'title' => array(
-			'rules' => array(),
-			'label' => 'Modified'
-		),
-		'comment' => array(
-			'rules' => array(),
-			'label' => 'Last login'
-		),
-		'delpass' => array(
-			'rules' => array(),
-			'label' => 'Modified'
-		)
-	);
 
 	function __construct($id = NULL)
 	{
-		$this->table = 'board_' . get_selected_board()->shortname;
-		parent::__construct($id);
+		$this->table = $this->db->protect_identifiers('woxxy_tv') . '.' . $this->db->protect_identifiers(get_selected_board()->shortname);
+		;
+		parent::__construct();
 	}
 
 
-	function post_model_init($from_cache = FALSE)
+	/**
+	 *
+	 * @param type $page
+	 * @param type $process
+	 * @return type 
+	 */
+	function get_latest($page = 1, $per_page = 20, $process = TRUE)
 	{
-		
+
+		// get exactly 20 be it thread starters or parents with distinct parent
+		$query = $this->db->query('
+			SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent
+			FROM ' . $this->table . '
+			ORDER BY num DESC
+			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
+		');
+
+		// get all the posts
+		$sql = array();
+		foreach ($query->result() as $row)
+		{
+			$sql[] = '
+				(
+					SELECT *
+					FROM ' . $this->table . '
+					WHERE num = ' . $row->unq_parent . ' OR parent = ' . $row->unq_parent . '
+					ORDER BY num DESC
+				)
+			';
+		}
+
+		$sql = implode('UNION', $sql) . '
+			ORDER BY num DESC
+		';
+
+		// quite disordered array
+		$query2 = $this->db->query($sql);
+
+		// associative array with keys
+		$result = array();
+		// order the array
+		foreach ($query2->result() as $post)
+		{
+			if ($process === TRUE)
+			{
+				$post->thumbnail_href = $this->get_thumbnail_href($post);
+				$post->comment_processed = $this->get_comment_processed($post);
+			}
+
+			if ($post->parent > 0)
+			{
+				// the first you create from a parent is the first thread
+				$result[$post->parent]['posts'][$post->num] = $post;
+				if(isset($result[$post->parent]['omitted']))
+				{
+					$result[$post->parent]['omitted']++;
+				}
+				else
+				{
+					$result[$post->parent]['omitted'] = -4;
+				}
+			}
+			else
+			{
+				// this should already exist
+				$result[$post->num]['op'] = $post;
+				if(!isset($result[$post->num]['posts']))
+				{
+					$result[$post->num]['posts'] = array();
+				}
+				if(isset($result[$post->parent]['omitted']))
+				{
+					$result[$post->parent]['omitted'] = -5;
+				}
+			}
+		}
+		return $result;
 	}
 
 
-	function get_thumbnail()
+	function get_thumbnail_href($row)
 	{
 		$echo = '';
-		$number = $this->num;
+		if($row->parent > 0)
+			$number = $row->parent;
+		else
+			$number = $row->num;
 		while (strlen((string) $number) < 9)
 		{
 			$number = '0' . $number;
 		}
-
-		return site_url() . 'content/boards/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $this->preview;
-	}
-	
-	var $omitted = 0;
-	function get_omitted()
-	{	
-		return $this->omitted;
+		
+		if(file_exists((get_setting('fs_fuuka_boards_url')?get_setting('fs_fuuka_boards_url'):FOOLFUUKA_BOARDS_DIRECTORY)).'/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview)
+			return (get_setting('fs_fuuka_boards_url')?get_setting('fs_fuuka_boards_url'):site_url() . FOOLFUUKA_BOARDS_DIRECTORY).'/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview;
+		return '';
+		
 	}
 
 
-	function get_comment()
+	function get_comment_processed($row)
 	{
 		$CI = & get_instance();
 		$find = array(
@@ -172,8 +154,8 @@ class Post extends DataMapper
 
 
 
-		$regexing = $this->comment;
-		$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
+		$regexing = $row->comment;
+		//$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
 		return nl2br(preg_replace($find, $replace, $regexing));
 	}
 

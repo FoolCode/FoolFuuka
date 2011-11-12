@@ -101,7 +101,7 @@ class Boards extends Admin_Controller
 	function delete($type, $id = 0) {
 		if (!isAjax())
 		{
-			$this->output->set_output(_('You can\'t delete chapters from outside the admin panel through this link.'));
+			$this->output->set_output(_('You can\'t delete from outside the admin panel through this link.'));
 			log_message("error", "Controller: series.php/remove: failed serie removal");
 			return false;
 		}

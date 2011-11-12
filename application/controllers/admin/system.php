@@ -75,7 +75,26 @@ class System extends Admin_Controller
 				'help' => sprintf(_('FoOlSlide uses %s via command line to maximize the processor power for processing images. If ImageMagick %s automatically, enter the location of the "convert" binary on your server in the field above.'), '<a href="#" rel="popover-below" title="ImageMagick" data-content="' . _('This is a library used to dynamically create, edit, compose or convert images.') . '">ImageMagick</a>', '<a href="#" rel="popover-below" title="' . _('ImageMagick Binary') . '" data-content="' . htmlspecialchars(_('This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" >' . _('can\'t be found') . '</a>')
 			)
 		);
-
+		
+		$form[] = array(
+			_('Boards directory'),
+			array(
+				'type' => 'input',
+				'name' => 'fs_fuuka_boards_directory',
+				'preferences' => 'fs_gen',
+				'help' => _('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
+			)
+		);
+		
+		$form[] = array(
+			_('Boards URL'),
+			array(
+				'type' => 'input',
+				'name' => 'fs_fuuka_boards_url',
+				'preferences' => 'fs_gen',
+				'help' => _('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
+			)
+		);
 
 		if ($post = $this->input->post())
 		{

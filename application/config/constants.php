@@ -50,5 +50,16 @@ define('FOOLSLIDE_NAME', 'FoOlFuuka');
 define('FOOLSLIDE_MANUAL_INSTALL_URL', 'http://ask.foolrulez.com');
 
 
+/*
+|--------------------------------------------------------------------------
+| FoOlFuuka specific constants
+|--------------------------------------------------------------------------
+|
+| Version and all
+|
+*/
+
+define('FOOLFUUKA_BOARDS_DIRECTORY', 'content/boards');
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

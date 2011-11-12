@@ -38,72 +38,13 @@ class Chan extends Public_Controller
 
 		$page = intval($page);
 		
-		$board = $this->db->protect_identifiers('woxxy_tv').'.' . $this->db->protect_identifiers(get_selected_board()->shortname);
-
-		// get exactly 10 be it thread starters or parents with distinct parent
-		$query = $this->db->query('
-			SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent
-			FROM '.$board.'
-			ORDER BY num DESC
-			LIMIT ' . (($page * 10) - 10) . ',10
-		');
-
-		// get the IDs of the threads to fetch
-		$threads = array();
-		$posts = array(); // an associative array for later
-
-		foreach ($query->result() as $row)
-		{
-			$threads[] = $row->unq_parent;
-		}
-
-		$sql = array();
-		rsort($threads);
-		foreach ($threads as $thread)
-		{
-			$sql[] = '
-				(
-					SELECT *
-					FROM ' . $board . '
-					WHERE num = ' . $thread . ' OR parent = ' . $thread . '
-					ORDER BY num DESC
-				)
-			';
-		}
-
-		$sql = implode('UNION', $sql) . '
-			ORDER BY num DESC
-		';
-
-
-		$posts = new Post();
-		$posts->query($sql);
-
-
-		foreach ($posts->all as $key => $post)
-		{
-			if ($post->parent > 0)
-			{
-				foreach ($posts->all as $k => $p)
-				{
-					if ($p->num == $post->parent)
-					{
-						if (count($posts->all[$k]->post->all) < 5)
-							$posts->all[$k]->post->all[] = $post->get_copy();
-
-						else
-						{
-							$posts->all[$k]->omitted++;
-						}
-					}
-				}
-				unset($posts->all[$key]);
-			}
-		}
+		$this->load->model('post');
+		$posts = $this->post->get_latest($page);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('posts', $posts);
 		$this->template->set('is_page', true);
+		$this->template->set('posts_per_thread', 5);
 		$this->template->build('board');
 	}
 

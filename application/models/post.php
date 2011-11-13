@@ -50,9 +50,11 @@ class Post extends CI_Model
 		');
 
 		// get all the posts
+		$threads = array();
 		$sql = array();
 		foreach ($query->result() as $row)
 		{
+			$threads[] = $row->unq_parent;
 			$sql[] = '
 				(
 					SELECT *
@@ -125,9 +127,121 @@ class Post extends CI_Model
 			}
 		}
 
+		// reorder threads, and the posts inside
+		$result2 = array();
+		foreach ($threads as $thread)
+		{
+			$result2[$thread] = $result[$thread];
+			if (isset($result2[$thread]['posts']))
+				$result2[$thread]['posts'] = $this->multiSort($result2[$thread]['posts'], 'num', 'subnum');
+		}
+
 		// this is a lot of data, clean it up
 		$query2->free_result();
-		return $result;
+		return $result2;
+	}
+
+
+	function get_latest_ghost($page = 1, $per_page = 20, $process = TRUE)
+	{
+		// get exactly 20 be it thread starters or parents with distinct parent
+		$query = $this->db->query('
+			SELECT DISTINCT(parent) as unq_parent, timestamp
+			FROM ' . $this->table_local . '
+			ORDER BY timestamp DESC
+			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
+		');
+
+		// get all the posts
+		$sql = array();
+		$threads = array();
+		foreach ($query->result() as $row)
+		{
+			$threads[] = $row->unq_parent;
+			$sql[] = '
+				(
+					SELECT *
+					FROM ' . $this->table . '
+					WHERE num = ' . $row->unq_parent . ' OR parent = ' . $row->unq_parent . '
+					ORDER BY num ASC
+				)
+			';
+		}
+
+		$sql = implode('UNION', $sql) . '
+			ORDER BY num ASC, subnum DESC
+		';
+
+		// clean up, even if it's supposedly just little data
+		$query->free_result();
+
+		// quite disordered array
+		$query2 = $this->db->query($sql);
+
+		// associative array with keys
+		$result = array();
+
+		// cool amount of posts: throw the nums in the cache
+		foreach ($query2->result() as $post)
+		{
+			if ($post->parent == 0)
+			{
+				$this->existing_posts[$post->num][] = $post->num;
+			}
+			else
+			{
+				if ($post->subnum == 0)
+					$this->existing_posts[$post->parent][] = $post->num;
+				else
+					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
+			}
+		}
+
+		// order the array
+		foreach ($query2->result() as $post)
+		{
+			if ($process === TRUE)
+			{
+				$post->thumbnail_href = $this->get_thumbnail_href($post);
+				$post->comment_processed = $this->get_comment_processed($post);
+			}
+
+			if ($post->parent > 0)
+			{
+				// the first you create from a parent is the first thread
+				$result[$post->parent]['posts'][] = $post;
+				if (isset($result[$post->parent]['omitted']))
+				{
+					$result[$post->parent]['omitted']++;
+				}
+				else
+				{
+					$result[$post->parent]['omitted'] = -4;
+				}
+			}
+			else
+			{
+				// this should already exist
+				$result[$post->num]['op'] = $post;
+				if (!isset($result[$post->num]['omitted']))
+				{
+					$result[$post->num]['omitted'] = -5;
+				}
+			}
+		}
+
+		// reorder threads, and the posts inside
+		$result2 = array();
+		foreach ($threads as $thread)
+		{
+			$result2[$thread] = $result[$thread];
+			if (isset($result2[$thread]['posts']))
+				$result2[$thread]['posts'] = $this->multiSort($result2[$thread]['posts'], 'num', 'subnum');
+		}
+
+		// this is a lot of data, clean it up
+		$query2->free_result();
+		return $result2;
 	}
 
 
@@ -180,7 +294,8 @@ class Post extends CI_Model
 
 
 		// easier to revert the array here for now
-		$result[$num]['posts'] = array_reverse($result[$num]['posts']);
+		if (isset($result[$num]['posts']))
+			$result[$num]['posts'] = $this->multiSort($result[$num]['posts'], 'num', 'subnum');
 		return $result;
 	}
 
@@ -272,8 +387,8 @@ class Post extends CI_Model
 			}
 
 			$sql = array();
-			
-			if(empty($search_result['matches']))
+
+			if (empty($search_result['matches']))
 			{
 				$result[0]['posts'] = array();
 				return $result;
@@ -292,7 +407,7 @@ class Post extends CI_Model
 			$sql = implode('UNION', $sql) . '
 				ORDER BY num ASC
 			';
-			
+
 			$query = $this->db->query($sql);
 
 			foreach ($query->result() as $post)
@@ -320,9 +435,49 @@ class Post extends CI_Model
 				// the first you create from a parent is the first thread
 				$result[0]['posts'][] = $post;
 			}
-			
-			return $result;
+			$result[0]['posts'] = array_reverse($result[0]['posts']);
+			return array_reverse($result);
 		}
+	}
+
+
+	function get_image($hash, $page, $per_page = 25, $process = TRUE)
+	{
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->table . '
+			WHERE media_hash = ?
+			ORDER BY num DESC
+			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
+			', array($hash));
+
+		foreach ($query->result() as $post)
+		{
+			if ($post->parent == 0)
+			{
+				$this->existing_posts[$post->num][] = $post->num;
+			}
+			else
+			{
+				if ($post->subnum == 0)
+					$this->existing_posts[$post->parent][] = $post->num;
+				else
+					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
+			}
+		}
+
+		foreach ($query->result() as $post)
+		{
+			if ($process === TRUE)
+			{
+				$post->thumbnail_href = $this->get_thumbnail_href($post);
+				$post->comment_processed = $this->get_comment_processed($post);
+			}
+			// the first you create from a parent is the first thread
+			$result[0]['posts'][] = $post;
+		}
+		$result[0]['posts'] = array_reverse($result[0]['posts']);
+		return $result;
 	}
 
 
@@ -411,6 +566,39 @@ class Post extends CI_Model
 
 		// return the thing untouched
 		return $matches[0];
+	}
+
+
+	// function from usort php page
+	function multiSort()
+	{
+		//get args of the function 
+		$args = func_get_args();
+		$c = count($args);
+		if ($c < 2)
+		{
+			return false;
+		}
+		//get the array to sort 
+		$array = array_splice($args, 0, 1);
+		$array = $array[0];
+		//sort with an anoymous function using args 
+		usort($array, function($a, $b) use($args)
+				{
+
+					$i = 0;
+					$c = count($args);
+					$cmp = 0;
+					while ($cmp == 0 && $i < $c)
+					{
+						$cmp = $a->$args[$i] > $b->$args[$i];
+						$i++;
+					}
+
+					return $cmp;
+				});
+
+		return $array;
 	}
 
 

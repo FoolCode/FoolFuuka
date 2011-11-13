@@ -212,7 +212,29 @@ class Migration_Install extends CI_Migration
 		}
 
 
-
+		if (!$this->db->table_exists($this->db->dbprefix('boards')))
+		{
+			$this->db->query("
+					CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('boards') . "` (
+					  `id` int(11) NOT NULL AUTO_INCREMENT,
+					  `shortname` varchar(32) CHARACTER SET latin1 NOT NULL,
+					  `name` varchar(256) CHARACTER SET latin1 NOT NULL,
+					  `url` varchar(256) CHARACTER SET latin1 NOT NULL,
+					  `thumbs_url` varchar(256) COLLATE utf8_bin NOT NULL,
+					  `images_url` varchar(256) COLLATE utf8_bin NOT NULL,
+					  `posting_url` varchar(256) COLLATE utf8_bin NOT NULL,
+					  `sphinx` int(11) NOT NULL,
+					  `threads_refresh_rate` int(11) NOT NULL,
+					  `threads_posts` int(11) NOT NULL,
+					  `threads_media` int(11) NOT NULL,
+					  `threads_thumb` int(11) NOT NULL,
+					  `max_ancient_id` int(11) NOT NULL,
+					  `max_indexed_id` int(11) NOT NULL,
+					  PRIMARY KEY (`id`),
+					  UNIQUE KEY `shortname` (`shortname`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+				");
+		}
 
 
 

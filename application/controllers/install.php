@@ -108,7 +108,7 @@ class Install extends Install_Controller
 				'name' => 'db_prefix',
 				'id' => 'db_prefix',
 				'maxlength' => '200',
-				'value' => 'fs_',
+				'value' => 'fu_',
 				'help' => _('Add a  database prefix to avoid collisions, in example if you have other ' . FOOLSLIDE_NAME)
 			)
 		);
@@ -278,8 +278,8 @@ class Install extends Install_Controller
 			mkdir('content/cache');
 		if (!is_dir('content/logs'))
 			mkdir('content/logs');
-		if (!is_dir('content/comics'))
-			mkdir('content/comics');
+		if (!is_dir('content/boards'))
+			mkdir('content/boards');
 
 		// if install can't make that config.php file, tell the user to do it manually
 		if ($manual_config)

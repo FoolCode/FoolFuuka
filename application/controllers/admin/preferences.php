@@ -94,7 +94,7 @@ class Preferences extends Admin_Controller
 
 		// build the array for the form
 		$form[] = array(
-			_('Slide Title'),
+			_('Title'),
 			array(
 				'type' => 'input',
 				'name' => 'fs_gen_site_title',
@@ -103,32 +103,6 @@ class Preferences extends Admin_Controller
 				'placeholder' => _('FoOlSlide'),
 				'preferences' => 'fs_gen',
 				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
-			)
-		);
-
-		$form[] = array(
-			_('Back URL'),
-			array(
-				'type' => 'input',
-				'name' => 'fs_gen_back_url',
-				'id' => 'back_url',
-				'maxlength' => '200',
-				'placeholder' => 'http://',
-				'preferences' => 'fs_gen',
-				'help' => _('A small URL linked to another page. This is located next to the title at the top of every page.')
-			)
-		);
-
-		$form[] = array(
-			_('Default Team'),
-			array(
-				'type' => 'input',
-				'name' => 'fs_gen_default_team',
-				'id' => 'default_team',
-				'maxlength' => '200',
-				'placeholder' => 'Anonymous',
-				'preferences' => 'fs_gen',
-				'help' => _('Sets the default team used for widgets and releases.')
 			)
 		);
 

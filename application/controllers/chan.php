@@ -38,73 +38,15 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
+
+		$page = intval($page);
 		
-		$board = $this->db->protect_identifiers('board_' . get_selected_board()->shortname, TRUE);
-
-		// get exactly 10 be it thread starters or parents with distinct parent
-		$query = $this->db->query('
-			SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent
-			FROM ' . $board . '
-			ORDER BY num DESC
-			LIMIT '. (($page*10)-10) . ',10
-		');
-		
-		// get the IDs of the threads to fetch
-		$threads = array();
-		$posts = array(); // an associative array for later
-
-		foreach ($query->result() as $row)
-		{
-			$threads[] = $row->unq_parent;
-		}
-
-		$sql = array();
-		rsort($threads);
-		foreach ($threads as $thread)
-		{
-			$sql[] = '
-				(
-					SELECT *
-					FROM ' . $board . '
-					WHERE num = ' . $thread . ' OR parent = ' . $thread . '
-					ORDER BY num DESC
-				)
-			';
-		}
-
-		$sql = implode('UNION', $sql) . '
-			ORDER BY num DESC
-		';
-
-
-		$posts = new Post();
-		$posts->query($sql);
-
-
-		foreach ($posts->all as $key => $post)
-		{
-			if ($post->parent > 0)
-			{
-				foreach ($posts->all as $k => $p)
-				{
-					if ($p->num == $post->parent)
-					{
-						if (count($posts->all[$k]->post->all) < 5)
-							$posts->all[$k]->post->all[] = $post->get_copy();
-
-						else
-						{
-							$posts->all[$k]->omitted++;
-						}
-					}
-				}
-				unset($posts->all[$key]);
-			}
-		}
+		$posts = $this->post->get_latest($page);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('posts', $posts);
 		$this->template->set('is_page', true);
+		$this->template->set('posts_per_thread', 5);
 		$this->template->build('board');
 	}
 
@@ -144,14 +86,16 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
+		
+		$num = intval($num);
 
-		$thread = new Post();
-		$thread->where('num', $num)->limit(1)->get();
-		if ($thread->result_count() == 0)
+		$thread = $this->post->get_thread($num);
+
+		if(count($thread) != 1)
 		{
 			show_404();
 		}
-
+		
 		$post_data = '';
 		if ($this->input->post())
 		{
@@ -159,8 +103,6 @@ class Chan extends Public_Controller
 			$post_data = $this->input->post();
 		}
 
-		$thread->all[0]->post = new Post();
-		$thread->all[0]->post->where('parent', $num)->order_by('num', 'DESC')->get();
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Thread #' . $num);
 		$this->template->set('posts', $thread);
 
@@ -175,13 +117,14 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
-
-		$post = new Post();
-		$post->where('num', $num)->get();
-		if ($post->result_count() == 0)
+		$num = intval($num);
+		
+		$thread = $this->post->get_post_thread($num);
+		if ($thread === FALSE)
 		{
 			show_404();
 		}
+<<<<<<< HEAD
 
 		if ($post->parent == 0)
 		{
@@ -191,6 +134,10 @@ class Chan extends Public_Controller
 		{
 			$url = site_url($this->fu_board . '/thread/' . $post->parent) . '#' . $post->num;
 		}
+=======
+		
+		$url = site_url($this->fu_board . '/thread/' . $thread) . '#' . $num;
+>>>>>>> foolfuuka/master
 		
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
@@ -213,6 +160,7 @@ class Chan extends Public_Controller
 	}
 
 
+<<<<<<< HEAD
 	public function search($params = array())
 	{	
 		$params = $this->uri->uri_to_assoc(3);
@@ -223,6 +171,61 @@ class Chan extends Public_Controller
 				// Build SQL Statement with Parameters
 		}
 		
+=======
+	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
+	public function search()
+	{
+		$search = $this->uri->ruri_to_assoc(2, array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order'));
+
+
+		if (get_selected_board()->sphinx)
+		{
+			$this->load->library('SphinxClient');
+			$this->sphinxclient->SetServer(
+					// gotta turn the port into int
+					get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : 'localhost', get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_port') : 3312
+			);
+			
+			$this->sphinxclient->SetLimits(0, 25);
+
+			if ($search['username'])
+			{
+				$this->sphinxclient->setFilter('name', $search['username']);
+			}
+			
+			if ($search['tripcode'])
+			{
+				$this->sphinxclient->setFilter('trip', $search['tripcode']);
+			}
+			
+			if ($search['text'])
+			{
+			//	$this->sphinxclient->setFilter('comment', $search['text']);
+			}
+			
+			if ($search['deleted'] == "deleted")
+			{
+				$this->sphinxclient->setFilter('is_deleted', 1);
+			}
+			if ($search['deleted'] == "not-deleted")
+			{
+				$this->sphinxclient->setFilter('is_deleted', 0);
+			}
+			
+			if ($search['ghost'] == "only")
+			{
+				$this->sphinxclient->setFilter('is_internal', 1);
+			}
+			if ($search['ghost'] == "none")
+			{
+				$this->sphinxclient->setFilter('is_internal', 0);
+			}
+
+			$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED2);
+			$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
+			print_r($this->sphinxclient->query($search['text']), 'a_ancient a_main a_delta');
+		}
+>>>>>>> foolfuuka/master
 		$posts = new Post();
 		$posts->where('media_hash', '==')->limit(25)->order_by('num', 'DESC')->get();
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ' . implode($params, ':'));
@@ -326,10 +329,10 @@ class Chan extends Public_Controller
 			$this->template->set('board', $board);
 			$method = $params[0];
 			array_shift($params);
+			$this->load->model('post');
 		}
-		/**
-		 * ADD CHECK IF BOARD EXISTS
-		 */
+		
+
 		if (method_exists($this->TC, $method))
 		{
 			return call_user_func_array(array($this->TC, $method), $params);

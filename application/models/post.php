@@ -8,6 +8,9 @@ class Post extends CI_Model
 
 	var $table = '';
 	var $table_local = '';
+	var $existing_posts = array();
+	var $existing_posts_not = array();
+	var $existing_posts_maybe = array();
 
 	function __construct($id = NULL)
 	{
@@ -72,6 +75,23 @@ class Post extends CI_Model
 
 		// associative array with keys
 		$result = array();
+		
+		// cool amount of posts: throw the nums in the cache
+		foreach ($query2->result() as $post)
+		{
+			if($post->parent == 0)
+			{
+				$this->existing_posts[$post->num][] = $post->num;
+			}
+			else
+			{
+				if($post->subnum == 0)
+					$this->existing_posts[$post->parent][] = $post->num;
+				else
+					$this->existing_posts[$post->parent][] = $post->num.','.$post->subnum;	
+			}			
+		}
+		
 		// order the array
 		foreach ($query2->result() as $post)
 		{
@@ -120,6 +140,22 @@ class Post extends CI_Model
 			', array($num, $num));
 
 		$result = array();
+		
+		foreach ($query->result() as $post)
+		{
+			if($post->parent == 0)
+			{
+				$this->existing_posts[$post->num][] = $post->num;
+			}
+			else
+			{
+				if($post->subnum == 0)
+					$this->existing_posts[$post->parent][] = $post->num;
+				else
+					$this->existing_posts[$post->parent][] = $post->num.','.$post->subnum;	
+			}			
+		}
+		
 		foreach ($query->result() as $post)
 		{
 			if ($process === TRUE)
@@ -142,6 +178,9 @@ class Post extends CI_Model
 		// this could be a lot of data, clean it up
 		$query->free_result();
 
+		
+		// easier to revert the array here for now
+		$result[$num]['posts'] = array_reverse($result[$num]['posts']);
 		return $result;
 	}
 
@@ -220,32 +259,39 @@ class Post extends CI_Model
 			'<span class="banned">\\1</span>',
 		);
 
-
-
 		$regexing = $row->comment;
-		//$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
+		$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $row->comment);
 		return nl2br(preg_replace($find, $replace, $regexing));
 	}
-
-
+	
 	function get_internal_link($matches)
 	{
-		$CI = & get_instance();
 		$num = substr($matches[0], 2);
 		if (!is_numeric($num) || !$num > 0)
 		{
 			return $matches[0];
 		}
-
-		$post = new Post();
-		$post->where('num', $num)->get();
-		if ($post->result_count() == 0)
+		
+		// check if it's the OP that is being linked to
+		if(array_key_exists($num, $this->existing_posts))
 		{
-			return $matches[0];
+			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '">&gt;&gt;' . $num . '</a>';
 		}
-
-		return '<a href="' . site_url($CI->fu_board . '/thread/' . $post->parent . '/') . '#' . $post->num . '">&gt;&gt;' . $num . '</a>';
+		
+		// check if it's one of the posts we've already met
+		foreach($this->existing_posts as $key => $thread)
+		{
+			if(in_array($num, $thread))
+			{
+				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . $num . '">&gt;&gt;' . $num . '</a>';				
+			}
+		}
+		
+		// nothing yet? make a generic link with post
+		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . $num . '/').'">&gt;&gt;' . $num . '</a>';				
+		
+		// return the thing untouched
+		return $matches[0];
 	}
-
 
 }

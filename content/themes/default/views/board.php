@@ -33,6 +33,7 @@ foreach ($posts as $key => $post) : ?>
 	<aside class="posts">
 		<?php 
 		$post_count = 0;
+		if(isset($post['posts']))
 		foreach (array_reverse($post['posts']) as $p) : 
 		
 			if(isset($posts_per_thread) && $posts_per_thread == $post_count)

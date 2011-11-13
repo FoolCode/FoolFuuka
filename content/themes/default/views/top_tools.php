@@ -40,42 +40,44 @@ echo form_close();
 
 <?php
 
-if (!$this->input->cookie('ghost_mode'))
+if ($this->input->cookie('ghost_mode') != 'true')
 {
-echo form_open($this->fu_board . '/page');
-echo '<div class="input-prepend">';
-echo '<span class="add-on">#</span>';
-echo form_input(array(
-	'name' => 'search',
-	'id' => 'search',
-	'class' => 'mini'
-));
-echo form_submit(array(
-	'value' => 'Go to page',
-	'class' => 'btn notice',
-));
-echo '</div>';
-echo form_close();
+	$toggle_mode = 'ghost';
+	echo form_open($this->fu_board . '/page');
+	echo '<div class="input-prepend">';
+	echo '<span class="add-on">#</span>';
+	echo form_input(array(
+		'name' => 'search',
+		'id' => 'search',
+		'class' => 'mini'
+	));
+	echo form_submit(array(
+		'value' => 'Go to page',
+		'class' => 'btn notice',
+	));
+	echo '</div>';
+	echo form_close();
 }
 else
 {
-echo form_open($this->fu_board . '/ghost');
-echo '<div class="input-prepend">';
-echo '<span class="add-on">? #</span>';
-echo form_input(array(
-	'name' => 'search',
-	'id' => 'search',
-	'class' => 'mini'
-));
-echo form_submit(array(
-	'value' => 'Ghost mode page',
-	'class' => 'btn notice',
-));
-echo '</div>';
-echo form_close();
+	$toggle_mode = 'page';
+	echo form_open($this->fu_board . '/ghost');
+	echo '<div class="input-prepend">';
+	echo '<span class="add-on">? #</span>';
+	echo form_input(array(
+		'name' => 'search',
+		'id' => 'search',
+		'class' => 'mini'
+	));
+	echo form_submit(array(
+		'value' => 'Ghost mode page',
+		'class' => 'btn notice',
+	));
+	echo '</div>';
+	echo form_close();
 }
 ?>
-<a href="<?php echo ($this->input->cookie('ghost_mode')) ? 'page' : 'ghost'; ?>">
-	<button class="btn<?php echo ($this->input->cookie('ghost_mode')) ? ' active' : ''; ?>">Ghost Mode</button>
+<a href="<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>">
+	<button class="btn<?php echo ($this->input->cookie('ghost_mode') == 'true') ? ' active' : ''; ?>">Ghost Mode</button>
 </a>
 <div class="clearfix"></div>

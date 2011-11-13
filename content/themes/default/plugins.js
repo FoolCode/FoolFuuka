@@ -12,9 +12,48 @@ jQuery(document).ready(function(){
 	});
 });
 
-function getSearch(searchForm)
+function toggleSearch(mode)
 {
+	var search;
 	
+	if (!(search = document.getElementById('search_' + mode))) return;
+	search.style.display = search.style.display ? "" : "none";
+}
+
+function getSearch(type, searchForm)
+{
+	var location = searchForm.action;
+	
+	if (searchForm.text.value != "")
+		location += 'text/' + searchForm.text.value + '/';
+	
+	if (type == 'advanced')
+	{
+		if (searchForm.username.value != "")
+			location += 'username/' + searchForm.username.value + '/';
+		
+		if (searchForm.tripcode.value != "")
+			location += 'tripcode/' + searchForm.tripcode.value + '/';
+		
+		if (getRadioValue(searchForm.deleted) != "")
+			location += 'deleted/' + getRadioValue(searchForm.deleted) + '/';
+	
+		if (getRadioValue(searchForm.ghost) != "")
+			location += 'ghost/' + getRadioValue(searchForm.ghost) + '/';
+	
+		location += 'order/' + getRadioValue(searchForm.order) + '/';
+	}
+
+	window.location = location;
+}
+
+function getRadioValue(group)
+{
+	for (index = 0; index < group.length; index++)
+	{
+		if (group[index].checked == true)
+			return group[index].value;
+	}
 }
 
 function getPost(postForm)

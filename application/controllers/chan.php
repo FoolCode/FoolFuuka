@@ -304,8 +304,9 @@ class Chan extends Public_Controller
 			$this->template->set('board', $board);
 			$method = $params[0];
 			array_shift($params);
+			$this->load->model('post');
 		}
-		$this->load->model('post');
+		
 
 		if (method_exists($this->TC, $method))
 		{

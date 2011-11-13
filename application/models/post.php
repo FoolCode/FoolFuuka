@@ -75,23 +75,23 @@ class Post extends CI_Model
 
 		// associative array with keys
 		$result = array();
-		
+
 		// cool amount of posts: throw the nums in the cache
 		foreach ($query2->result() as $post)
 		{
-			if($post->parent == 0)
+			if ($post->parent == 0)
 			{
 				$this->existing_posts[$post->num][] = $post->num;
 			}
 			else
 			{
-				if($post->subnum == 0)
+				if ($post->subnum == 0)
 					$this->existing_posts[$post->parent][] = $post->num;
 				else
-					$this->existing_posts[$post->parent][] = $post->num.','.$post->subnum;	
-			}			
+					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
+			}
 		}
-		
+
 		// order the array
 		foreach ($query2->result() as $post)
 		{
@@ -140,22 +140,22 @@ class Post extends CI_Model
 			', array($num, $num));
 
 		$result = array();
-		
+
 		foreach ($query->result() as $post)
 		{
-			if($post->parent == 0)
+			if ($post->parent == 0)
 			{
 				$this->existing_posts[$post->num][] = $post->num;
 			}
 			else
 			{
-				if($post->subnum == 0)
+				if ($post->subnum == 0)
 					$this->existing_posts[$post->parent][] = $post->num;
 				else
-					$this->existing_posts[$post->parent][] = $post->num.','.$post->subnum;	
-			}			
+					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
+			}
 		}
-		
+
 		foreach ($query->result() as $post)
 		{
 			if ($process === TRUE)
@@ -178,7 +178,7 @@ class Post extends CI_Model
 		// this could be a lot of data, clean it up
 		$query->free_result();
 
-		
+
 		// easier to revert the array here for now
 		$result[$num]['posts'] = array_reverse($result[$num]['posts']);
 		return $result;
@@ -201,6 +201,128 @@ class Post extends CI_Model
 		}
 
 		return FALSE;
+	}
+
+
+	function get_search($search, $process = TRUE)
+	{
+		if ($search['page'])
+		{
+			if (!is_numeric($search['page']) || $search['page'] > 200)
+			{
+				show_404();
+			}
+			$search['page'] = intval($search['page']);
+		}
+		else
+		{
+			$search['page'] = 1;
+		}
+
+		if (get_selected_board()->sphinx)
+		{
+			$this->load->library('SphinxClient');
+			$this->sphinxclient->SetServer(
+					// gotta turn the port into int
+					get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : '127.0.0.1', get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_port') : 9312
+			);
+
+			$this->sphinxclient->SetLimits(($search['page'] * 25) - 25, 25, 5000);
+
+			if ($search['username'])
+			{
+				$this->sphinxclient->setFilter('name', $search['username']);
+			}
+
+			if ($search['tripcode'])
+			{
+				$this->sphinxclient->setFilter('trip', $search['tripcode']);
+			}
+
+			if ($search['text'])
+			{
+				//	$this->sphinxclient->setFilter('comment', $search['text']);
+			}
+
+			if ($search['deleted'] == "deleted")
+			{
+				$this->sphinxclient->setFilter('is_deleted', 1);
+			}
+			if ($search['deleted'] == "not-deleted")
+			{
+				$this->sphinxclient->setFilter('is_deleted', 0);
+			}
+
+			if ($search['ghost'] == "only")
+			{
+				$this->sphinxclient->setFilter('is_internal', 1);
+			}
+			if ($search['ghost'] == "none")
+			{
+				$this->sphinxclient->setFilter('is_internal', 0);
+			}
+
+			$this->sphinxclient->setMatchMode(SPH_MATCH_ALL);
+			$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
+			$search_result = $this->sphinxclient->query($search['text'], 'a_ancient a_main a_delta');
+			if ($search_result === false)
+			{
+				// show some actual error...
+				show_404();
+			}
+
+			$sql = array();
+			
+			if(empty($search_result['matches']))
+			{
+				$result[0]['posts'] = array();
+				return $result;
+			}
+			foreach ($search_result['matches'] as $key => $matches)
+			{
+				$sql[] = '
+				(
+					SELECT *
+					FROM ' . $this->table . '
+					WHERE num = ' . $matches['attrs']['num'] . ' AND subnum = ' . $matches['attrs']['subnum'] . '
+				)
+			';
+			}
+
+			$sql = implode('UNION', $sql) . '
+				ORDER BY num ASC
+			';
+			
+			$query = $this->db->query($sql);
+
+			foreach ($query->result() as $post)
+			{
+				if ($post->parent == 0)
+				{
+					$this->existing_posts[$post->num][] = $post->num;
+				}
+				else
+				{
+					if ($post->subnum == 0)
+						$this->existing_posts[$post->parent][] = $post->num;
+					else
+						$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
+				}
+			}
+
+			foreach ($query->result() as $post)
+			{
+				if ($process === TRUE)
+				{
+					$post->thumbnail_href = $this->get_thumbnail_href($post);
+					$post->comment_processed = $this->get_comment_processed($post);
+				}
+				// the first you create from a parent is the first thread
+				$result[0]['posts'][] = $post;
+			}
+			
+			return $result;
+		}
 	}
 
 
@@ -263,31 +385,33 @@ class Post extends CI_Model
 		$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $row->comment);
 		return nl2br(trim(preg_replace($find, $replace, $regexing)));
 	}
-	
+
+
 	function get_internal_link($matches)
 	{
 		$num = $matches[2];
-		
+
 		// check if it's the OP that is being linked to
-		if(array_key_exists($num, $this->existing_posts))
+		if (array_key_exists($num, $this->existing_posts))
 		{
 			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '">&gt;&gt;' . $num . '</a>';
 		}
-		
+
 		// check if it's one of the posts we've already met
-		foreach($this->existing_posts as $key => $thread)
+		foreach ($this->existing_posts as $key => $thread)
 		{
-			if(in_array($num, $thread))
+			if (in_array($num, $thread))
 			{
-				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';				
+				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 			}
 		}
-		
+
 		// nothing yet? make a generic link with post
-		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . $num . '/').'">&gt;&gt;' . $num . '</a>';				
-		
+		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . $num . '/') . '">&gt;&gt;' . $num . '</a>';
+
 		// return the thing untouched
 		return $matches[0];
 	}
+
 
 }

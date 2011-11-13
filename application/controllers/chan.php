@@ -33,14 +33,14 @@ class Chan extends Public_Controller
 	public function page($page = 1)
 	{
 		$this->remap_query();
-		
+
 		if (!is_natural($page) || $page > 500)
 		{
 			show_404();
 		}
 
 		$page = intval($page);
-		
+
 		$posts = $this->post->get_latest($page);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
@@ -86,16 +86,16 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
-		
+
 		$num = intval($num);
 
 		$thread = $this->post->get_thread($num);
 
-		if(count($thread) != 1)
+		if (count($thread) != 1)
 		{
 			show_404();
 		}
-		
+
 		$post_data = '';
 		if ($this->input->post())
 		{
@@ -118,15 +118,15 @@ class Chan extends Public_Controller
 			show_404();
 		}
 		$num = intval($num);
-		
+
 		$thread = $this->post->get_post_thread($num);
 		if ($thread === FALSE)
 		{
 			show_404();
 		}
-		
+
 		$url = site_url($this->fu_board . '/thread/' . $thread) . '#' . $num;
-		
+
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
 		$this->template->build('redirect');
@@ -151,64 +151,30 @@ class Chan extends Public_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$search = $this->uri->ruri_to_assoc(2, array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order'));
-
-
-		if (get_selected_board()->sphinx)
+		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order', 'page');
+		if($this->input->post())
 		{
-			$this->load->library('SphinxClient');
-			$this->sphinxclient->SetServer(
-					// gotta turn the port into int
-					get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : 'localhost', get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_port') : 3312
-			);
-			
-			$this->sphinxclient->SetLimits(0, 25);
-
-			if ($search['username'])
+			$redirect_array = array(get_selected_board()->shortname, 'search');
+			foreach($modifiers as $modifier)
 			{
-				$this->sphinxclient->setFilter('name', $search['username']);
+				if($this->input->post($modifier))
+				{
+					$redirect_array[] = $modifier;
+					$redirect_array[] = rawurlencode($this->input->post($modifier));
+				}
 			}
 			
-			if ($search['tripcode'])
-			{
-				$this->sphinxclient->setFilter('trip', $search['tripcode']);
-			}
-			
-			if ($search['text'])
-			{
-			//	$this->sphinxclient->setFilter('comment', $search['text']);
-			}
-			
-			if ($search['deleted'] == "deleted")
-			{
-				$this->sphinxclient->setFilter('is_deleted', 1);
-			}
-			if ($search['deleted'] == "not-deleted")
-			{
-				$this->sphinxclient->setFilter('is_deleted', 0);
-			}
-			
-			if ($search['ghost'] == "only")
-			{
-				$this->sphinxclient->setFilter('is_internal', 1);
-			}
-			if ($search['ghost'] == "none")
-			{
-				$this->sphinxclient->setFilter('is_internal', 0);
-			}
-
-			$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED2);
-			$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
-			print_r($this->sphinxclient->query($search['text']), 'a_ancient a_main a_delta');
+			redirect(site_url($redirect_array));
 		}
-		$posts = new Post();
-		$posts->where('media_hash', '==')->limit(25)->order_by('num', 'DESC')->get();
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ' . implode($params, ':'));
+		$posts = $this->post->get_search($this->uri->ruri_to_assoc(2, $modifiers));
+
+		//echo '<pre>'; print_r($posts); echo '</pre>';
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('posts', $posts);
 		$this->template->build('board');
 	}
 
-	
+
 	public function report($num = 0)
 	{
 		if (!is_numeric($num) || !$num > 0)
@@ -217,11 +183,11 @@ class Chan extends Public_Controller
 		}
 	}
 
-	
+
 	public function remap_query()
 	{
 		$params = '';
-		
+
 		// Page Redirect
 		if ($this->input->get('task') == "page")
 		{
@@ -229,34 +195,34 @@ class Chan extends Public_Controller
 			{
 				$params = 'page/' . $this->input->get('page') . '/';
 			}
-			
+
 			if ($this->input->get('ghost') != "")
 			{
 				$params = 'ghost/' . $this->input->get('page') . '/';
 			}
 		}
-		
+
 		// Search Redirect
 		if ($this->input->get('task') == "search" || $this->input->get('task') == "search2")
 		{
 			$params = 'search/';
-			
+
 			// Build Redirect for Search
 			if ($this->input->get('search_text') != "")
 			{
 				$params .= 'text/' . $this->input->get('search_text') . '/';
 			}
-			
+
 			if ($this->input->get('search_username') != "")
 			{
 				$params .= 'username/' . $this->input->get('search_username') . '/';
 			}
-			
+
 			if ($this->input->get('search_tripcode') != "")
 			{
 				$params .= 'tripcode/' . $this->input->get('search_tripcode') . '/';
 			}
-			
+
 			if ($this->input->get('search_del') != "")
 			{
 				$del = str_replace('dontcare', '', $this->input->get('search_del'));
@@ -265,7 +231,7 @@ class Chan extends Public_Controller
 					$params .= 'deleted/' . $del . '/';
 				}
 			}
-			
+
 			if ($this->input->get('search_int') != "")
 			{
 				$int = str_replace('dontcare', '', $this->input->get('search_int'));
@@ -274,14 +240,14 @@ class Chan extends Public_Controller
 					$params .= 'internal/' . $int . '/';
 				}
 			}
-			
+
 			if ($this->input->get('search_ord') != "")
 			{
 				$ord = str_replace(array('old', 'new'), array('asc', 'desc'), $this->input->get('search_ord'));
 				$params .= 'order/' . $ord . '/';
 			}
 		}
-		
+
 		if ($params != "")
 		{
 			$url = site_url($this->fu_board . '/' . $params);
@@ -290,7 +256,8 @@ class Chan extends Public_Controller
 			die($this->template->build('redirect'));
 		}
 	}
-	
+
+
 	public function _remap($method, $params = array())
 	{
 		$this->fu_board = $method;
@@ -306,7 +273,7 @@ class Chan extends Public_Controller
 			array_shift($params);
 			$this->load->model('post');
 		}
-		
+
 
 		if (method_exists($this->TC, $method))
 		{

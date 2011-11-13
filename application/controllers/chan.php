@@ -124,20 +124,8 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
-<<<<<<< HEAD
-
-		if ($post->parent == 0)
-		{
-			$url = site_url($this->fu_board . '/thread/' . $post->num) . '#' . $post->num;
-		}
-		else
-		{
-			$url = site_url($this->fu_board . '/thread/' . $post->parent) . '#' . $post->num;
-		}
-=======
 		
 		$url = site_url($this->fu_board . '/thread/' . $thread) . '#' . $num;
->>>>>>> foolfuuka/master
 		
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
@@ -160,18 +148,6 @@ class Chan extends Public_Controller
 	}
 
 
-<<<<<<< HEAD
-	public function search($params = array())
-	{	
-		$params = $this->uri->uri_to_assoc(3);
-		// Build Initial SQL Statement
-			
-		if (!empty($params))
-		{
-				// Build SQL Statement with Parameters
-		}
-		
-=======
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
@@ -225,7 +201,6 @@ class Chan extends Public_Controller
 			$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
 			print_r($this->sphinxclient->query($search['text']), 'a_ancient a_main a_delta');
 		}
->>>>>>> foolfuuka/master
 		$posts = new Post();
 		$posts->where('media_hash', '==')->limit(25)->order_by('num', 'DESC')->get();
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ' . implode($params, ':'));

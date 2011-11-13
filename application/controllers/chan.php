@@ -117,22 +117,15 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
-
-		$post = new Post();
-		$post->where('num', $num)->get();
-		if ($post->result_count() == 0)
+		$num = intval($num);
+		
+		$thread = $this->post->get_post_thread($num);
+		if ($thread === FALSE)
 		{
 			show_404();
 		}
-
-		if ($post->parent == 0)
-		{
-			$url = site_url($this->fu_board . '/thread/' . $post->num) . '#' . $post->num;
-		}
-		else
-		{
-			$url = site_url($this->fu_board . '/thread/' . $post->parent) . '#' . $post->num;
-		}
+		
+		$url = site_url($this->fu_board . '/thread/' . $thread) . '#' . $num;
 		
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);

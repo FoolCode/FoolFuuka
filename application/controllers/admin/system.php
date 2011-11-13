@@ -95,6 +95,16 @@ class System extends Admin_Controller
 				'help' => _('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
 			)
 		);
+		
+		$form[] = array(
+			_('Boards database'),
+			array(
+				'type' => 'input',
+				'name' => 'fs_fuuka_boards_db',
+				'preferences' => 'fs_gen',
+				'help' => _('Overrides the default database, and is compatible with the Fuuka perl fetcher (beware: uses no database prefixes)')
+			)
+		);
 
 		if ($post = $this->input->post())
 		{

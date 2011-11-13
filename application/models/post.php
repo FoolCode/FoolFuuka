@@ -7,12 +7,25 @@ class Post extends CI_Model
 {
 
 	var $table = '';
+	var $table_local = '';
 
 	function __construct($id = NULL)
 	{
-		$this->table = $this->db->protect_identifiers('woxxy_tv') . '.' . $this->db->protect_identifiers(get_selected_board()->shortname);
-		;
 		parent::__construct();
+		$this->get_table();
+	}
+
+
+	function get_table()
+	{
+		if (get_setting('fs_fuuka_boards_db'))
+		{
+			$this->table = $this->db->protect_identifiers(get_setting('fs_fuuka_boards_db')) . '.' . $this->db->protect_identifiers(get_selected_board()->shortname);
+			$this->table_local = $this->db->protect_identifiers(get_setting('fs_fuuka_boards_db')) . '.' . $this->db->protect_identifiers(get_selected_board()->shortname . '_local');
+			return;
+		}
+		$this->table = $this->db->protect_identifiers('board_' . get_selected_board()->shortname, TRUE);
+		$this->table_local = $this->db->protect_identifiers('board_' . get_selected_board()->shortname . '_local', TRUE);
 	}
 
 
@@ -53,7 +66,7 @@ class Post extends CI_Model
 
 		// clean up, even if it's supposedly just little data
 		$query->free_result();
-		
+
 		// quite disordered array
 		$query2 = $this->db->query($sql);
 
@@ -72,7 +85,7 @@ class Post extends CI_Model
 			{
 				// the first you create from a parent is the first thread
 				$result[$post->parent]['posts'][$post->num] = $post;
-				if(isset($result[$post->parent]['omitted']))
+				if (isset($result[$post->parent]['omitted']))
 				{
 					$result[$post->parent]['omitted']++;
 				}
@@ -85,28 +98,27 @@ class Post extends CI_Model
 			{
 				// this should already exist
 				$result[$post->num]['op'] = $post;
-				if(!isset($result[$post->num]['omitted']))
+				if (!isset($result[$post->num]['omitted']))
 				{
 					$result[$post->num]['omitted'] = -5;
 				}
 			}
 		}
-		
+
 		// this is a lot of data, clean it up
 		$query2->free_result();
 		return $result;
 	}
 
-	
-	function get_thread($num, $process = TRUE) {
-		
+
+	function get_thread($num, $process = TRUE)
+	{
 		$query = $this->db->query('
-				SELECT * FROM '. $this->table .'
+				SELECT * FROM ' . $this->table . '
 				WHERE num = ? OR parent = ?
 				ORDER BY num, parent, subnum ASC;
-			', 
-			array($num, $num));
-		
+			', array($num, $num));
+
 		$result = array();
 		foreach ($query->result() as $post)
 		{
@@ -129,14 +141,34 @@ class Post extends CI_Model
 		}
 		// this could be a lot of data, clean it up
 		$query->free_result();
-		
+
 		return $result;
 	}
+
+
+	function get_post_thread($num)
+	{
+		$query = $this->db->query('
+				SELECT num, parent FROM ' . $this->table . '
+				WHERE num = ? OR parent = ?
+				LIMIT 0, 1;
+			', array($num, $num));
+
+		foreach ($query->result() as $post)
+		{
+			if ($post->parent > 0)
+				return $post->parent;
+			return $post->num;
+		}
+
+		return FALSE;
+	}
+
 
 	function get_thumbnail_href($row)
 	{
 		$echo = '';
-		if($row->parent > 0)
+		if ($row->parent > 0)
 			$number = $row->parent;
 		else
 			$number = $row->num;
@@ -144,11 +176,10 @@ class Post extends CI_Model
 		{
 			$number = '0' . $number;
 		}
-		
-		if(file_exists((get_setting('fs_fuuka_boards_url')?get_setting('fs_fuuka_boards_url'):FOOLFUUKA_BOARDS_DIRECTORY)).'/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview)
-			return (get_setting('fs_fuuka_boards_url')?get_setting('fs_fuuka_boards_url'):site_url() . FOOLFUUKA_BOARDS_DIRECTORY).'/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview;
+
+		if (file_exists((get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview)
+			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview;
 		return '';
-		
 	}
 
 

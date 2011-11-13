@@ -51,6 +51,9 @@ class Post extends CI_Model
 			ORDER BY num DESC
 		';
 
+		// clean up, even if it's supposedly just little data
+		$query->free_result();
+		
 		// quite disordered array
 		$query2 = $this->db->query($sql);
 
@@ -82,19 +85,53 @@ class Post extends CI_Model
 			{
 				// this should already exist
 				$result[$post->num]['op'] = $post;
-				if(!isset($result[$post->num]['posts']))
-				{
-					$result[$post->num]['posts'] = array();
-				}
 				if(!isset($result[$post->num]['omitted']))
 				{
 					$result[$post->num]['omitted'] = -5;
 				}
 			}
 		}
+		
+		// this is a lot of data, clean it up
+		$query2->free_result();
 		return $result;
 	}
 
+	
+	function get_thread($num, $process = TRUE) {
+		
+		$query = $this->db->query('
+				SELECT * FROM '. $this->table .'
+				WHERE num = ? OR parent = ?
+				ORDER BY num, parent, subnum ASC;
+			', 
+			array($num, $num));
+		
+		$result = array();
+		foreach ($query->result() as $post)
+		{
+			if ($process === TRUE)
+			{
+				$post->thumbnail_href = $this->get_thumbnail_href($post);
+				$post->comment_processed = $this->get_comment_processed($post);
+			}
+
+			if ($post->parent > 0)
+			{
+				// the first you create from a parent is the first thread
+				$result[$post->parent]['posts'][$post->num] = $post;
+			}
+			else
+			{
+				// this should already exist
+				$result[$post->num]['op'] = $post;
+			}
+		}
+		// this could be a lot of data, clean it up
+		$query->free_result();
+		
+		return $result;
+	}
 
 	function get_thumbnail_href($row)
 	{

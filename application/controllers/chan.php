@@ -41,7 +41,6 @@ class Chan extends Public_Controller
 
 		$page = intval($page);
 		
-		$this->load->model('post');
 		$posts = $this->post->get_latest($page);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
@@ -87,14 +86,16 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
+		
+		$num = intval($num);
 
-		$thread = new Post();
-		$thread->where('num', $num)->limit(1)->get();
-		if ($thread->result_count() == 0)
+		$thread = $this->post->get_thread($num);
+
+		if(count($thread) != 1)
 		{
 			show_404();
 		}
-
+		
 		$post_data = '';
 		if ($this->input->post())
 		{
@@ -102,8 +103,6 @@ class Chan extends Public_Controller
 			$post_data = $this->input->post();
 		}
 
-		$thread->all[0]->post = new Post();
-		$thread->all[0]->post->where('parent', $num)->order_by('num', 'DESC')->get();
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Thread #' . $num);
 		$this->template->set('posts', $thread);
 
@@ -313,9 +312,8 @@ class Chan extends Public_Controller
 			$method = $params[0];
 			array_shift($params);
 		}
-		/**
-		 * ADD CHECK IF BOARD EXISTS
-		 */
+		$this->load->model('post');
+
 		if (method_exists($this->TC, $method))
 		{
 			return call_user_func_array(array($this->TC, $method), $params);

@@ -27,7 +27,7 @@ foreach ($posts as $key => $post) : ?>
 	<?php endif; ?>
 	<div class="text">
 		<?php echo $op->comment_processed ?>
-		<?php echo (($post['omitted'] > 0)?'<h6>' . $post['omitted'] . ' posts omitted.</h6>':'') ?>
+		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0)?'<h6>' . $post['omitted'] . ' posts omitted.</h6>':'') ?>
 	</div>
 	<?php endif; ?>
 	<aside class="posts">
@@ -35,7 +35,7 @@ foreach ($posts as $key => $post) : ?>
 		$post_count = 0;
 		foreach (array_reverse($post['posts']) as $p) : 
 		
-			if($posts_per_thread == $post_count)
+			if(isset($posts_per_thread) && $posts_per_thread == $post_count)
 			{
 				break;
 			}

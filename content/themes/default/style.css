@@ -130,6 +130,10 @@ article.post {
 	border-left:1px solid #e6f0ea;
 }
 
+article.post.post_ghost {
+	background: #cce1cf;
+}
+
 article.post .post_image {
 	float:left;
 	margin: 0 10px 10px 0;

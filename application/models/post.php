@@ -104,7 +104,7 @@ class Post extends CI_Model
 			if ($post->parent > 0)
 			{
 				// the first you create from a parent is the first thread
-				$result[$post->parent]['posts'][$post->num] = $post;
+				$result[$post->parent]['posts'][] = $post;
 				if (isset($result[$post->parent]['omitted']))
 				{
 					$result[$post->parent]['omitted']++;
@@ -167,7 +167,7 @@ class Post extends CI_Model
 			if ($post->parent > 0)
 			{
 				// the first you create from a parent is the first thread
-				$result[$post->parent]['posts'][$post->num] = $post;
+				$result[$post->parent]['posts'][] = $post;
 			}
 			else
 			{
@@ -261,16 +261,12 @@ class Post extends CI_Model
 
 		$regexing = $row->comment;
 		$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $row->comment);
-		return nl2br(preg_replace($find, $replace, $regexing));
+		return nl2br(trim(preg_replace($find, $replace, $regexing)));
 	}
 	
 	function get_internal_link($matches)
 	{
-		$num = substr($matches[0], 2);
-		if (!is_numeric($num) || !$num > 0)
-		{
-			return $matches[0];
-		}
+		$num = $matches[2];
 		
 		// check if it's the OP that is being linked to
 		if(array_key_exists($num, $this->existing_posts))
@@ -283,7 +279,7 @@ class Post extends CI_Model
 		{
 			if(in_array($num, $thread))
 			{
-				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . $num . '">&gt;&gt;' . $num . '</a>';				
+				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';				
 			}
 		}
 		

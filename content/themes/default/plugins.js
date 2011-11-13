@@ -25,15 +25,15 @@ function getSearch(type, searchForm)
 	var location = searchForm.action;
 	
 	if (searchForm.text.value != "")
-		location += 'text/' + searchForm.text.value + '/';
+		location += 'text/' + encodeURIcomponent(searchForm.text.value) + '/';
 	
 	if (type == 'advanced')
 	{
 		if (searchForm.username.value != "")
-			location += 'username/' + searchForm.username.value + '/';
+			location += 'username/' + encodeURIcomponent(searchForm.username.value) + '/';
 		
 		if (searchForm.tripcode.value != "")
-			location += 'tripcode/' + searchForm.tripcode.value + '/';
+			location += 'tripcode/' + encodeURIcomponent(searchForm.tripcode.value) + '/';
 		
 		if (getRadioValue(searchForm.deleted) != "")
 			location += 'deleted/' + getRadioValue(searchForm.deleted) + '/';
@@ -52,7 +52,7 @@ function getRadioValue(group)
 	for (index = 0; index < group.length; index++)
 	{
 		if (group[index].checked == true)
-			return group[index].value;
+			return encodeURIcomponent(group[index].value);
 	}
 }
 
@@ -62,7 +62,7 @@ function getPost(postForm)
 		alert('Sorry, you must insert a valid post number.');
 		return false;
 	}
-	window.location = postForm.action + postForm.post.value + '/';
+	window.location = postForm.action + encodeURIcomponent(postForm.post.value) + '/';
 }
 
 function getPage(pageForm)
@@ -71,5 +71,5 @@ function getPage(pageForm)
 		alert('Sorry, you must insert a valid page number.');
 		return false;
 	}
-	window.location = pageForm.action + pageForm.page.value + '/';
+	window.location = pageForm.action + encodeURIcomponent(pageForm.page.value) + '/';
 }

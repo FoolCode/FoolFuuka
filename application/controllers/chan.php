@@ -32,6 +32,7 @@ class Chan extends Public_Controller
 
 	public function page($page = 1)
 	{
+		$this->input->set_cookie('ghost_mode', FALSE, 86400);
 		$this->remap_query();
 		
 		if (!is_natural($page) || $page > 500)
@@ -53,6 +54,8 @@ class Chan extends Public_Controller
 
 	public function ghost($page = 1)
 	{
+		$this->input->set_cookie('ghost_mode', TRUE, 86400);
+		
 		$values = array();
 		$this->db->select('parent')->from('board_' . get_selected_board()->shortname . '_local')->order_by('num', 'DESC');
 		$ghosts = $this->db->get();
@@ -201,9 +204,10 @@ class Chan extends Public_Controller
 			$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
 			print_r($this->sphinxclient->query($search['text']), 'a_ancient a_main a_delta');
 		}
+		
 		$posts = new Post();
 		$posts->where('media_hash', '==')->limit(25)->order_by('num', 'DESC')->get();
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ' . implode($params, ':'));
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Search: ');
 		$this->template->set('posts', $posts);
 		$this->template->build('board');
 	}
@@ -259,7 +263,7 @@ class Chan extends Public_Controller
 			
 			if ($this->input->get('search_del') != "")
 			{
-				$del = str_replace('dontcare', '', $this->input->get('search_del'));
+				$del = str_replace(array('dontcare', 'yes', 'no'), array('', 'deleted', 'not-deleted'), $this->input->get('search_del'));
 				if ($del != "")
 				{
 					$params .= 'deleted/' . $del . '/';
@@ -268,10 +272,10 @@ class Chan extends Public_Controller
 			
 			if ($this->input->get('search_int') != "")
 			{
-				$int = str_replace('dontcare', '', $this->input->get('search_int'));
+				$int = str_replace(array('dontcare', 'yes', 'no'), array('', 'only', 'none'), $this->input->get('search_int'));
 				if ($int != "")
 				{
-					$params .= 'internal/' . $int . '/';
+					$params .= 'ghost/' . $int . '/';
 				}
 			}
 			

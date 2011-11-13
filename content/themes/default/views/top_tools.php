@@ -39,6 +39,9 @@ echo form_close();
 ?>
 
 <?php
+
+if (!$this->input->cookie('ghost_mode'))
+{
 echo form_open($this->fu_board . '/page');
 echo '<div class="input-prepend">';
 echo '<span class="add-on">#</span>';
@@ -53,9 +56,9 @@ echo form_submit(array(
 ));
 echo '</div>';
 echo form_close();
-?>
-
-<?php
+}
+else
+{
 echo form_open($this->fu_board . '/ghost');
 echo '<div class="input-prepend">';
 echo '<span class="add-on">? #</span>';
@@ -70,5 +73,9 @@ echo form_submit(array(
 ));
 echo '</div>';
 echo form_close();
+}
 ?>
+<a href="<?php echo ($this->input->cookie('ghost_mode')) ? 'page' : 'ghost'; ?>">
+	<button class="btn<?php echo ($this->input->cookie('ghost_mode')) ? ' active' : ''; ?>">Ghost Mode</button>
+</a>
 <div class="clearfix"></div>

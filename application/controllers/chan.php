@@ -34,6 +34,10 @@ class Chan extends Public_Controller
 	{
 		$this->remap_query();
 		$this->input->set_cookie('ghost_mode', 'false', 86400);
+		if ($this->input->post())
+		{
+			redirect($this->fu_board . '/page/' . $this->input->post('page'), 'location', 303);
+		}
 		
 		if (!is_natural($page) || $page > 500)
 		{
@@ -56,6 +60,10 @@ class Chan extends Public_Controller
 	public function ghost($page = 1)
 	{
 		$this->input->set_cookie('ghost_mode', 'true', 86400);
+		if ($this->input->post())
+		{
+			redirect($this->fu_board . '/ghost/' . $this->input->post('page'), 'location', 303);
+		}
 		
 		$values = array();
 		$this->db->select('parent')->from('board_' . get_selected_board()->shortname . '_local')->order_by('num', 'DESC');
@@ -87,6 +95,7 @@ class Chan extends Public_Controller
 
 	public function thread($num = 0)
 	{
+		$num = str_replace('S', '', $num);
 		if (!is_numeric($num) || !$num > 0)
 		{
 			show_404();
@@ -118,6 +127,12 @@ class Chan extends Public_Controller
 
 	public function post($num = 0)
 	{
+		if ($this->input->post())
+		{
+			redirect($this->fu_board . '/post/' . $this->input->post('post'), 'location', 302);
+		}
+		
+		$num = str_replace('S', '', $num);
 		if (!is_numeric($num) || !$num > 0)
 		{
 			show_404();
@@ -290,7 +305,7 @@ class Chan extends Public_Controller
 		
 		if ($params != "")
 		{
-			redirect($this->fu_board . '/' . $params, 'location', 302);
+			redirect($this->fu_board . '/' . $params, 'location', 301);
 		}
 	}
 	

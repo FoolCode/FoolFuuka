@@ -11,3 +11,26 @@ jQuery(document).ready(function(){
 		});
 	});
 });
+
+function getSearch(searchForm)
+{
+	
+}
+
+function getPost(postForm)
+{
+	if (postForm.post.value == "") {
+		alert('Sorry, you must insert a valid post number.');
+		return false;
+	}
+	window.location = postForm.action + postForm.post.value + '/';
+}
+
+function getPage(pageForm)
+{
+	if (pageForm.page.value == "") {
+		alert('Sorry, you must insert a valid page number.');
+		return false;
+	}
+	window.location = pageForm.action + pageForm.page.value + '/';
+}

@@ -548,23 +548,39 @@ class Post extends CI_Model
 	}
 
 
-	function process_post($post, $clean = TRUE)
-	{
-		$post->thumbnail_href = $this->get_thumbnail_href($post);
-		$post->comment_processed = $this->get_comment_processed($post);
-		if ($clean === TRUE)
-		{
-			unset($post->delpass);
-		}
-	}
-
 
 	/*	 * ***
 	 * POSTING FUNCTIONS
 	 * *** */
-	function add_post($array)
+	function comment($data)
 	{
+		$errors = array();
+		if($data['name'] == FALSE || $data['name'] == '')
+		{
+			$name = 'Anonymous';
+		}
+		else
+		{
+			$name = process_name($data['name']);
+		}
 		
+		if($data['email'] == FALSE || $data['email'] == '')
+		{
+			$email = '';
+		}
+		else
+		{
+			$email = $data['email'];
+		}
+		
+		if($data['subject'] == FALSE || $data['subject'] == '')
+		{
+			$subject = '';
+		}
+		else
+		{
+			$subject = $data['subject'];
+		}
 	}
 
 
@@ -630,6 +646,25 @@ class Post extends CI_Model
 	/*	 * ***
 	 * MISC FUNCTIONS
 	 * *** */
+	
+	function process_post($post, $clean = TRUE)
+	{
+		$post->thumbnail_href = $this->get_thumbnail_href($post);
+		$post->comment_processed = $this->get_comment_processed($post);
+		
+		foreach(array('title', 'name', 'email', 'trip') as $element)
+		{
+			$element_processed = $element.'_processed';
+			$post->$element_processed = htmlentities($post->$element, ENT_COMPAT, 'UTF-8');
+		}
+		
+		if ($clean === TRUE)
+		{
+			unset($post->delpass);
+		}
+	}
+	
+	
 	function get_thumbnail_href($row)
 	{
 		if (!$row->preview)
@@ -654,7 +689,7 @@ class Post extends CI_Model
 	{
 		$CI = & get_instance();
 		$find = array(
-			"'(\r?\n|^)(>.*?)(?=$|\r?\n)'i",
+			"'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i",
 			"'\[aa\](.*?)\[/aa\]'is",
 			"'\[spoiler](.*?)\[/spoiler]'is",
 			"'\[sup\](.*?)\[/sup\]'is",
@@ -688,9 +723,13 @@ class Post extends CI_Model
 		);
 
 		$regexing = $row->comment;
-		$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $row->comment);
-		return nl2br(trim(preg_replace($find, $replace, $regexing)));
+		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
+		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
+		$regexing = nl2br(trim(preg_replace($find, $replace, $regexing)));
+		
+		return $regexing;
 	}
+	
 
 
 	function get_internal_link($matches)

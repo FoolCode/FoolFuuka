@@ -134,6 +134,10 @@ article.post {
 	border-left:1px solid #e6f0ea;
 }
 
+article.post.highlight {
+	background: #d6bad0;
+}
+
 article.post.post_ghost {
 	background: #cce1cf;
 }

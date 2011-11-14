@@ -2,6 +2,7 @@ jQuery(document).ready(function(){
 	jQuery("a[rel=twipsy]").twipsy({
 		live: true
 	});
+	
 	jQuery("[rel^='popover']").each(function() {
 		var direction = $(this).attr('rel').replace("popover-", "");
 		jQuery(this).popover({
@@ -10,6 +11,19 @@ jQuery(document).ready(function(){
 			html: true
 		});
 	});
+	
+	jQuery("a[rel=highlight]").click(function() {
+		var post = jQuery(this).attr("href").split(/#/);
+		if (post[1]) replyHighlight(post[1]);
+	})
+	
+	jQuery("a[rel=quote]").click(function() {
+		var post = jQuery(this).attr("id");
+		jQuery("#reply_comment").append(">>" + post + "\n");
+	})
+	
+	post = location.href.split(/#/);
+	if (post[1]) replyHighlight(post[1]);
 });
 
 function toggleSearch(mode)
@@ -72,4 +86,23 @@ function getPage(pageForm)
 		return false;
 	}
 	window.location = pageForm.action + encodeURIComponent(pageForm.page.value) + '/';
+}
+
+
+function replyHighlight(id)
+{
+	var articles = document.getElementsByTagName("article");
+	jQuery("article").each(function() {
+		var post = jQuery(this);
+		
+		if (post.hasClass("highlight"))
+		{
+			post.removeClass("highlight");
+		}
+		
+		if (post.attr("id") == id)
+		{
+			post.addClass("highlight");
+		}
+	})
 }

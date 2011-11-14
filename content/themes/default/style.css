@@ -114,7 +114,6 @@ article.thread .post_number {
 }
 
 article.thread > .text {
-	margin-bottom:20px;
 	padding:10px;
 	display:-moz-inline-stack;
 	display:inline-block;

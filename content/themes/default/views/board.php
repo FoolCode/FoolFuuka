@@ -19,7 +19,7 @@ foreach ($posts as $key => $post) : ?>
 		<?php if ($op->media_filename) : ?>
 		<br/>
 		<span class="post_file">File: <?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media ?></span>
-		<span class="post_file_controls">[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo urlencode($op->thumbnail_href) ?>">iqdb</a>]</span>
+		<span class="post_file_controls">[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>">google</a>]</span>
 		<?php endif; ?>
 	</header>
 	<?php if ($op->media_filename) : ?>
@@ -71,7 +71,7 @@ foreach ($posts as $key => $post) : ?>
 				<?php if ($p->media_filename) : ?>
 				<br/>
 				<span class="post_file">File: <?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media ?></span>
-				<span class="post_file_controls">[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo urlencode($p->thumbnail_href) ?>">iqdb</a>]</span>
+				<span class="post_file_controls">[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>">google</a>]</span>
 				<?php endif; ?>
 			</header>
 		<?php if ($p->media_filename) : ?>

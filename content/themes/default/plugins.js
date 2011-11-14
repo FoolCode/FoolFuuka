@@ -13,8 +13,8 @@ jQuery(document).ready(function(){
 	});
 	
 	jQuery("a[rel=highlight]").click(function() {
-		var post = jQuery(this).attr("href").split(/#/);
-		if (post[1]) replyHighlight(post[1]);
+		var post = jQuery(this).attr("id");
+		if (post) replyHighlight(post);
 	})
 	
 	jQuery("a[rel=quote]").click(function() {

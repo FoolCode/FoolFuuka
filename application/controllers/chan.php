@@ -106,8 +106,11 @@ class Chan extends Public_Controller
 		$post_data = '';
 		if ($this->input->post())
 		{
-			// LETS HANDLE THE GHOST POSTS HERE
-			$post_data = $this->input->post();
+			$this->form_validation->set_rules('bokunonome', 'Username', 'trim');
+			$this->form_validation->set_rules('elitterae', 'Email', '');
+			$this->form_validation->set_rules('talkingde', 'Subject', '');
+			$this->form_validation->set_rules('chennodiscursus', 'Comment', 'trim|min_lenght[3]');
+
 		}
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Thread #' . $num);

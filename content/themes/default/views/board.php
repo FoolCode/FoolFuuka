@@ -57,7 +57,7 @@ foreach ($posts as $key => $post) : ?>
 				<span class="post_trip"><?php echo $p->trip ?></span>
 				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
 				<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum ?>"><?php echo $p->num . ',' . $p->subnum ?></a></span>
-				<span class="post_controls">[<a href="<?php echo site_url($this->fu_board . '/report/' . $p->num) ?>">Report</a>]</span>
+				<span class="post_controls">[<a href="<?php echo site_url($this->fu_board . '/report/' . $p->num . '/' . $p->subnum) ?>">Report</a>]</span>
 				<span class="post_ghost"><img src="<?php echo icons(356, 16) ?>" title="This is a ghost post, not coming from 4chan"/></span>
 		<?php else : ?>
 		<article class="post" id="<?php echo $p->num ?>">

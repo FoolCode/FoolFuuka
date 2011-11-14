@@ -12,7 +12,7 @@ foreach ($posts as $key => $post) : ?>
 		<h2 class="post_title"><?php echo $op->title ?></h2>
 		<span class="post_author"><?php echo $op->name ?></span>
 		<span class="post_trip"><?php echo $op->trip ?></span>
-		<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>"><?php date('D M d H:i:s Y', $op->timestamp) ?></time>
+		<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
 		<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>"><?php echo $op->num ?></a></span>
 		<span class="post_controls">[<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>] [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>] [<a href="<?php echo site_url($this->fu_board . '/report/' . $op->num) ?>">Report</a>]</span>
 
@@ -29,18 +29,26 @@ foreach ($posts as $key => $post) : ?>
 		<?php echo $op->comment_processed ?>
 		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0)?'<h6>' . $post['omitted'] . ' posts omitted.</h6>':'') ?>
 	</div>
+	<div style="clear:right"></div>
 	<?php endif; ?>
+	<?php 
+		if(isset($post['posts'])) : ?>
 	<aside class="posts">
-		<?php 
-		$post_count = 0;
-		if(isset($post['posts']))
-		foreach (array_reverse($post['posts']) as $p) : 
 		
-			if(isset($posts_per_thread) && $posts_per_thread == $post_count)
-			{
-				break;
-			}
-			$post_count++;
+		<?php
+		if(isset($posts_per_thread))
+		{
+			$limit = count($post['posts']) - $posts_per_thread;
+			if($limit < 0)
+				$limit = 0;
+		}
+		else
+		{
+			$limit = 0;
+		}
+		
+		for($i = $limit; $i < count($post['posts']); $i++) :
+			$p = $post['posts'][$i];
 		?>
 		<?php if ($p->subnum > 0) : ?>
 		<article class="post post_ghost" id="<?php echo $p->num . '_' . $p->subnum ?>">
@@ -74,8 +82,9 @@ foreach ($posts as $key => $post) : ?>
 			</div>
 		</article>
 		<div style="clear:right"></div>
-	<?php endforeach; ?>
+	<?php endfor; ?>
 	</aside>
+	<?php endif; ?>
 	<div class="clearfix"></div>
 </article>
 <?php endforeach; ?>

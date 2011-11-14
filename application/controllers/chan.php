@@ -50,7 +50,7 @@ class Chan extends Public_Controller
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('posts', $posts);
-		$this->template->set('is_page', true);
+		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
 		$this->template->set_partial('top_tools', 'top_tools', array('page' => $page));
 		$this->template->build('board');
@@ -65,29 +65,19 @@ class Chan extends Public_Controller
 			redirect($this->fu_board . '/ghost/' . $this->input->post('page'), 'location', 303);
 		}
 		
-		$values = array();
-		$this->db->select('parent')->from('board_' . get_selected_board()->shortname . '_local')->order_by('num', 'DESC');
-		$ghosts = $this->db->get();
-		foreach ($ghosts->result() as $key => $ghost)
+		if (!is_natural($page) || $page > 500)
 		{
-			$values[] = $ghost->parent;
+			show_404();
 		}
 
-		if (empty($values))
-		{
-			$values[] = '';
-		}
+		$page = intval($page);
 
-		$posts = new Post();
-		$posts->where_in('num', $values)->get_paged($page, 25);
-		foreach ($posts->all as $key => $post)
-		{
-			$posts->all[$key]->post = new Post();
-			$posts->all[$key]->post->where('parent', $post->num)->order_by('num', 'DESC')->limit(5)->get();
-		}
+		$posts = $this->post->get_latest_ghost($page);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('posts', $posts);
+		$this->template->set('is_page', TRUE);
+		$this->template->set('posts_per_thread', 5);
 		$this->template->set_partial('top_tools', 'top_tools', array('page' => $page));
 		$this->template->build('board');
 	}
@@ -102,8 +92,6 @@ class Chan extends Public_Controller
 		}
 
 		$num = intval($num);
-
-		$thread = $this->post->get_thread($num);
 
 		if (count($thread) != 1)
 		{
@@ -153,15 +141,16 @@ class Chan extends Public_Controller
 	}
 
 
-	public function image($hash, $limit = 25)
+	public function image($hash, $page = 1)
 	{
-		if ($hash == '' || !is_numeric($limit))
+		if ($hash == '' || !is_numeric($page) || $page > 500)
 		{
 			show_404();
 		}
-
-		$posts = new Post();
-		$posts->where('media_hash', urldecode($hash) . '==')->limit($limit)->order_by('num', 'DESC')->get();
+		
+		$page = intval($page);
+		$posts = $this->post->get_image(urldecode($hash) . '==', $page);
+		
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Image: ' . urldecode($hash));
 		$this->template->set('posts', $posts);
 		$this->template->build('board');

@@ -178,8 +178,8 @@ else
 	
 }
 echo form_input(array(
-	'name' => 'page_view',
-	'id' => 'page_view',
+	'name' => 'page',
+	'id' => 'page',
 	'class' => 'mini',
 	'value' => $page
 ));

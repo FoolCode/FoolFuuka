@@ -186,13 +186,13 @@ echo form_input(array(
 echo form_submit(array(
 	'value' => 'Go',
 	'class' => 'btn notice',
+	'style' => 'border-radius:0; -webkit-border-radius:0; -moz-border-radius:0',
 	'onClick' => 'getPage(this.form); return false;'
 ));
+?>
+<input type="button" class="btn notice<?php echo ($this->input->cookie('ghost_mode') == 'true') ? ' active' : '' ?>" style="margin-left: -6px" value="Ghost Mode" onClick="location.href='<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>'">
+<?php
 echo '</div>';
 echo form_close();
 ?>
-
-<a href="<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>">
-	<button class="btn<?php echo ($this->input->cookie('ghost_mode') == 'true') ? ' active' : ''; ?>">Ghost Mode</button>
-</a>
 <div class="clearfix"></div>

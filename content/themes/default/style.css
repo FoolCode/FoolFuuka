@@ -114,7 +114,6 @@ article.thread .post_number {
 }
 
 article.thread > .text {
-	margin-bottom:20px;
 	padding:10px;
 	display:-moz-inline-stack;
 	display:inline-block;
@@ -132,6 +131,10 @@ article.post {
 	padding: 7px 20px 10px 18px;
 	border-bottom:1px solid #a1c7a3;
 	border-left:1px solid #e6f0ea;
+}
+
+article.post.highlight {
+	background: #d6bad0;
 }
 
 article.post.post_ghost {

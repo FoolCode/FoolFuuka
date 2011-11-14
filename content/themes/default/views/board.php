@@ -19,7 +19,7 @@ foreach ($posts as $key => $post) : ?>
 		<?php if ($op->media_filename) : ?>
 		<br/>
 		<span class="post_file">File: <?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media ?></span>
-		<span class="post_file_controls">[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo urlencode($op->thumbnail_href) ?>">iqdb</a>]</span>
+		<span class="post_file_controls">[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>">google</a>]</span>
 		<?php endif; ?>
 	</header>
 	<?php if ($op->media_filename) : ?>
@@ -56,7 +56,7 @@ foreach ($posts as $key => $post) : ?>
 				<span class="post_author"><?php echo $p->name ?></span>
 				<span class="post_trip"><?php echo $p->trip ?></span>
 				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
-				<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum ?>"><?php echo $p->num . ',' . $p->subnum ?></a></span>
+				<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>" rel="highlight" id="<?php echo $p->num . ',' . $p->subnum ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum ?>" rel="quote" id="<?php echo $p->num . ',' . $p->subnum ?>"><?php echo $p->num . ',' . $p->subnum ?></a></span>
 				<span class="post_controls">[<a href="<?php echo site_url($this->fu_board . '/report/' . $p->num . '/' . $p->subnum) ?>">Report</a>]</span>
 				<span class="post_ghost"><img src="<?php echo icons(356, 16) ?>" title="This is a ghost post, not coming from 4chan"/></span>
 		<?php else : ?>
@@ -65,13 +65,13 @@ foreach ($posts as $key => $post) : ?>
 				<span class="post_author"><?php echo $p->name ?></span>
 				<span class="post_trip"><?php echo $p->trip ?></span>
 				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
-				<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num ?>"><?php echo $p->num ?></a></span>
+				<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num ?>" rel="highlight" id="<?php echo $p->num ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num ?>" rel="quote" id="<?php echo $p->num ?>"><?php echo $p->num ?></a></span>
 				<span class="post_controls">[<a href="<?php echo site_url($this->fu_board . '/report/' . $p->num) ?>">Report</a>]</span>
 				<?php endif; ?>
 				<?php if ($p->media_filename) : ?>
 				<br/>
 				<span class="post_file">File: <?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media ?></span>
-				<span class="post_file_controls">[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo urlencode($p->thumbnail_href) ?>">iqdb</a>]</span>
+				<span class="post_file_controls">[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>">google</a>]</span>
 				<?php endif; ?>
 			</header>
 		<?php if ($p->media_filename) : ?>

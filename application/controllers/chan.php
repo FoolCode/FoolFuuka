@@ -65,6 +65,8 @@ class Chan extends Public_Controller
 			redirect($this->fu_board . '/ghost/' . $this->input->post('page'), 'location', 303);
 		}
 		
+		$values = array();
+		
 		if (!is_natural($page) || $page > 500)
 		{
 			show_404();

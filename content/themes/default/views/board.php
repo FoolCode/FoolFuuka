@@ -29,6 +29,7 @@ foreach ($posts as $key => $post) : ?>
 		<?php echo $op->comment_processed ?>
 		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0)?'<h6>' . $post['omitted'] . ' posts omitted.</h6>':'') ?>
 	</div>
+	<div style="clear:right"></div>
 	<?php endif; ?>
 	<?php 
 		if(isset($post['posts'])) : ?>

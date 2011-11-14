@@ -79,8 +79,6 @@ class Chan extends Public_Controller
 
 		$num = intval($num);
 
-		$thread = $this->post->get_thread($num);
-
 		if (count($thread) != 1)
 		{
 			show_404();

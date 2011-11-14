@@ -45,7 +45,7 @@ class Chan extends Public_Controller
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('posts', $posts);
-		$this->template->set('is_page', true);
+		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
 		$this->template->build('board');
 	}
@@ -64,7 +64,7 @@ class Chan extends Public_Controller
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('posts', $posts);
-		$this->template->set('is_page', true);
+		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
 		$this->template->build('board');
 	}

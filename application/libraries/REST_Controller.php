@@ -891,136 +891,26 @@ class REST_Controller extends MY_Controller
 	 * 
 	 * @author Woxxy
 	 */
-	function _check_id()
+	function _check_board()
 	{
-		if (!$this->get('id'))
+		if (!$this->get('board'))
 		{
-			$this->response(array('error' => _('ID not set')), 400);
-			return FALSE;
+			$this->response(array('error' => _('You didn\'t select a board')), 404);
 		}
-
-		if (!is_numeric($this->get('id')) || ($this->get('id') < 1))
+			
+		$board = new Board();
+		if(!$board->check_shortname($this->get('board')))
 		{
-			$this->response(array('error' => _('ID is not a valid number')), 400);
-			return FALSE;
-		}
-
-		return TRUE;
-	}
-
-
-	/*
-	 * Checks that the orderby method is correct or ignores it if wrong.
-	 * 
-	 * @author Woxxy
-	 * @param DataMapper $object database query
-	 * @param array $add add accepted values for search
-	 * @param array $remove removes default accepted values
-	 * @param array $default default accepted values
-	 */
-	function _orderby($object, $add = array(), $remove = array(), $default = array('id', 'name', 'created', 'updated'))
-	{
-		// return TRUE if there's no orderby set
-		if (!$this->get('orderby'))
-			return TRUE;
-
-		// the tag is set
-		$order = $this->get('orderby');
-
-		
-		// add and remove from default array
-		$default = array_merge($default, $add);
-		$default = array_diff($default, $remove);
-
-		// neutralize those caps
-		$order = strtolower($order);
-
-		// determine if ASC or DESC
-		$asc = substr($order, 0, 3);
-		if ($asc == "asc")
-		{
-			$asc = "ASC";
-			$order = substr($order, 4);
-		}
-		else if ($asc == "des")
-		{
-			$asc = "DESC";
-			$order = substr($order, 5);
+			$this->response(array('error' => _('The board you selected doesn\'t exist')), 404);
 		}
 		else
 		{
-			// DESC or ASC was not set, return the error
-			$this->response(array('error' => _('"orderby" tag wasn\'t correctly used.')), 400);
-			return FALSE;
+			$this->fu_board = $this->get('board');
 		}
 
-		// fix for compatibility FoOlSlide 0.8.4 (05/10/2011)
-		if($order == 'edited')
-			$order = 'updated';
-		
-		// check that the orderby method exists
-		if (in_array($order, $default))
-		{
-			$object->order_by($order, $asc);
-			return TRUE;
-		}
-
-		// there's no such method, return an error
-		$this->response(array('error' => _('"orderby" tag wasn\'t correctly used')), 400);
-		return FALSE;
+		$this->load->model('post');
 	}
 
-
-	/*
-	 * Retrieves the page tag and returns the correct limit for DataMapper
-	 * 
-	 * @author Woxxy
-	 * @param Datamapper $object
-	 * @param int $limit entries per page
-	 * @return $entry the entry from which the Datamapper limit function gets results
-	 */
-	function _page_to_offset($object, $default = 30, $max = 100)
-	{
-		// Give at least the first page if the page tag is not set or wrongly set
-		if (!$this->get('page'))
-		{
-			$page = 1;
-		}
-		else
-		{
-			// wrong page values
-			if (!is_numeric($this->get('page')) || $this->get('page') < 1)
-			{
-				$this->response(array('error' => _("The \"page\" tag was not a valid number.")), 400);
-				return FALSE;
-			}
-			// or use the page tag
-			$page = (int) $this->get('page');
-		}
-
-		// Give at least the first page if the page tag is not set or wrongly set
-		if (!$this->get('per_page') || !is_numeric($this->get('per_page')))
-		{
-			$per_page = $default;
-		}
-		else
-		{
-			// too large per_page number
-			if ($this->get('per_page') > $max)
-			{
-				$this->response(array('error' => _("You're trying to get a larger number of \"per_page\" results per request than allowed.")), 400);
-				return FALSE;
-			}
-			// or use the page tag
-			$per_page = (int) $this->get('per_page');
-		}
-
-		// the incredible algorithm to convert page to the right entry number
-		$entry = ($page * $per_page) - $per_page;
-
-		// trigger the limit
-		$object->limit($per_page, $entry);
-	}
 
 
 }

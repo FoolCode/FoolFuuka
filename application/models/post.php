@@ -38,7 +38,7 @@ class Post extends CI_Model
 	 * @param type $process
 	 * @return type 
 	 */
-	function get_latest($page = 1, $per_page = 20, $process = TRUE)
+	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE)
 	{
 
 		// get exactly 20 be it thread starters or parents with distinct parent
@@ -99,8 +99,7 @@ class Post extends CI_Model
 		{
 			if ($process === TRUE)
 			{
-				$post->thumbnail_href = $this->get_thumbnail_href($post);
-				$post->comment_processed = $this->get_comment_processed($post);
+				$this->process_post($post, $clean);
 			}
 
 			if ($post->parent > 0)
@@ -142,7 +141,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_latest_ghost($page = 1, $per_page = 20, $process = TRUE)
+	function get_latest_ghost($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE)
 	{
 		// get exactly 20 be it thread starters or parents with distinct parent
 		$query = $this->db->query('
@@ -202,8 +201,7 @@ class Post extends CI_Model
 		{
 			if ($process === TRUE)
 			{
-				$post->thumbnail_href = $this->get_thumbnail_href($post);
-				$post->comment_processed = $this->get_comment_processed($post);
+				$this->process_post($post, $clean);
 			}
 
 			if ($post->parent > 0)
@@ -245,7 +243,75 @@ class Post extends CI_Model
 	}
 
 
-	function get_thread($num, $process = TRUE)
+	function get_posts_ghost($page = 1, $per_page = 1000, $process = TRUE, $clean = TRUE)
+	{
+		// get exactly 20 be it thread starters or parents with distinct parent
+		$query = $this->db->query('
+			SELECT num, subnum, timestamp
+			FROM ' . $this->table_local . '
+			ORDER BY timestamp DESC
+			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
+		');
+
+		// get all the posts
+		$sql = array();
+		$threads = array();
+		foreach ($query->result() as $row)
+		{
+			$sql[] = '
+				(
+					SELECT *
+					FROM ' . $this->table . '
+					WHERE num = ' . $row->num . ' AND subnum = ' . $row->subnum . '
+				)
+			';
+		}
+
+		$sql = implode('UNION', $sql) . '
+			ORDER BY timestamp DESC
+		';
+
+		// clean up, even if it's supposedly just little data
+		$query->free_result();
+
+		// quite disordered array
+		$query2 = $this->db->query($sql);
+
+		// associative array with keys
+		$result = array();
+
+		// cool amount of posts: throw the nums in the cache
+		foreach ($query2->result() as $post)
+		{
+			if ($post->parent == 0)
+			{
+				$this->existing_posts[$post->num][] = $post->num;
+			}
+			else
+			{
+				if ($post->subnum == 0)
+					$this->existing_posts[$post->parent][] = $post->num;
+				else
+					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
+			}
+		}
+
+		// order the array
+		foreach ($query2->result() as $post)
+		{
+			if ($process === TRUE)
+			{
+				$this->process_post($post, $clean);
+			}
+			// the first you create from a parent is the first thread
+			$result['posts'][] = $post;
+		}
+		
+		return $result;
+	}
+
+
+	function get_thread($num, $process = TRUE, $clean = TRUE)
 	{
 		$query = $this->db->query('
 				SELECT * FROM ' . $this->table . '
@@ -254,6 +320,10 @@ class Post extends CI_Model
 			', array($num, $num));
 
 		$result = array();
+
+		// thread not found
+		if ($query->num_rows() == 0)
+			return FALSE;
 
 		foreach ($query->result() as $post)
 		{
@@ -274,8 +344,7 @@ class Post extends CI_Model
 		{
 			if ($process === TRUE)
 			{
-				$post->thumbnail_href = $this->get_thumbnail_href($post);
-				$post->comment_processed = $this->get_comment_processed($post);
+				$this->process_post($post, $clean);
 			}
 
 			if ($post->parent > 0)
@@ -319,7 +388,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_search($search, $process = TRUE)
+	function get_search($search, $process = TRUE, $clean = TRUE)
 	{
 		if ($search['page'])
 		{
@@ -429,8 +498,7 @@ class Post extends CI_Model
 			{
 				if ($process === TRUE)
 				{
-					$post->thumbnail_href = $this->get_thumbnail_href($post);
-					$post->comment_processed = $this->get_comment_processed($post);
+					$this->process_post($post, $clean);
 				}
 				// the first you create from a parent is the first thread
 				$result[0]['posts'][] = $post;
@@ -441,7 +509,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_image($hash, $page, $per_page = 25, $process = TRUE)
+	function get_image($hash, $page, $per_page = 25, $process = TRUE, $clean = TRUE)
 	{
 		$query = $this->db->query('
 			SELECT *
@@ -470,14 +538,24 @@ class Post extends CI_Model
 		{
 			if ($process === TRUE)
 			{
-				$post->thumbnail_href = $this->get_thumbnail_href($post);
-				$post->comment_processed = $this->get_comment_processed($post);
+				$this->process_post($post, $clean);
 			}
 			// the first you create from a parent is the first thread
 			$result[0]['posts'][] = $post;
 		}
 		$result[0]['posts'] = array_reverse($result[0]['posts']);
 		return $result;
+	}
+
+
+	function process_post($post, $clean = TRUE)
+	{
+		$post->thumbnail_href = $this->get_thumbnail_href($post);
+		$post->comment_processed = $this->get_comment_processed($post);
+		if ($clean === TRUE)
+		{
+			unset($post->delpass);
+		}
 	}
 
 

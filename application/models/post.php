@@ -561,6 +561,8 @@ class Post extends CI_Model
 
 	function get_thumbnail_href($row)
 	{
+		if(!$row->preview)
+			return '';
 		$echo = '';
 		if ($row->parent > 0)
 			$number = $row->parent;

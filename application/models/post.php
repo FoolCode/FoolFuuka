@@ -548,23 +548,32 @@ class Post extends CI_Model
 	}
 
 
-
 	/*	 * ***
 	 * POSTING FUNCTIONS
 	 * *** */
 	function comment($data)
-	{
+	{	show_404();
 		$errors = array();
-		if($data['name'] == FALSE || $data['name'] == '')
+		if ($data['name'] == FALSE || $data['name'] == '')
 		{
 			$name = 'Anonymous';
+			$trip = '';
 		}
 		else
 		{
-			$name = process_name($data['name']);
+			$name_arr = process_name($data['name']);
+			$name = $name_arr[0];
+			if(isset($name_arr[1]))
+			{
+				$trip = $name_arr[1];
+			}
+			else
+			{
+				$trip = '';
+			}
 		}
-		
-		if($data['email'] == FALSE || $data['email'] == '')
+
+		if ($data['email'] == FALSE || $data['email'] == '')
 		{
 			$email = '';
 		}
@@ -572,8 +581,8 @@ class Post extends CI_Model
 		{
 			$email = $data['email'];
 		}
-		
-		if($data['subject'] == FALSE || $data['subject'] == '')
+
+		if ($data['subject'] == FALSE || $data['subject'] == '')
 		{
 			$subject = '';
 		}
@@ -581,6 +590,66 @@ class Post extends CI_Model
 		{
 			$subject = $data['subject'];
 		}
+
+		if ($data['comment'] == FALSE || $data['comment'] == '')
+		{
+			$comment = '';
+		}
+		else
+		{
+			$comment = $data['comment'];
+		}
+
+		$this->db->or_where('ip', $this->input->ip_address());
+		if ($this->session->userdata('poster_id'))
+		{
+			$this->db->or_where('id', $this->session->userdata('poster_id'));
+		}
+		$query = $this->db->get('posters');
+
+		// if any data that could stop the query is returned, no need to add a row
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				if ($this->banned == 1)
+				{
+					// change to proper message
+					show_404();
+				}
+
+				if ($this->lastpost - time() < 20) // 20 seconds
+				{
+					// change to proper message
+					show_404();
+				}
+			}
+		}
+		else
+		{
+			$insert_poster = array(
+				'ip' => $this->input->ip_address(),
+				'user_agent' => $this->input->user_agent()
+			);
+			$this->db->insert('posters', $insert_poster);
+			$poster_id = $this->db->insert_id();
+			$this->session->set_userdata('poster_id', $poster_id);
+		}
+
+		// get the post after which we're replying to
+		// mostly copied from Fuuka original
+		$thread = $this->db->query('
+				INSERT INTO '.$this->table.'
+				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, poster)
+				VALUES
+				(
+					(select max(num) from (select * from '.$this->table.' where parent=? or num=?) as x),
+					(select max(subnum)+1 from (select * from '.$this->table.' where num=(select max(num) from '.$this->table.' where parent=? or num=?)) as x),
+					?,?,?,?,?,?,?,?,?)
+				)
+			',
+			array($num, $num, $num, now(), 'N', $email, $name, $trip, $title, $comment, $this->session->userdata('poster_id'))
+		);
 	}
 
 
@@ -591,7 +660,7 @@ class Post extends CI_Model
 		$matches = array();
 		if (preg_match("'^(.*?)(#)(.*)$'", $name, $matches))
 		{
-			$name = $matches[1];
+			$name = trim($matches[1]);
 			$matches2 = array();
 			preg_match("'^(.*?)(?:#+(.*))?$'", $matches[3], $matches2);
 
@@ -605,7 +674,7 @@ class Post extends CI_Model
 				$secure_trip = '!!' . $this->secure_tripcode($matches2[2]);
 			}
 		}
-		return array($name,$trip . $secure_trip);
+		return array($name, $trip . $secure_trip);
 	}
 
 
@@ -646,25 +715,29 @@ class Post extends CI_Model
 	/*	 * ***
 	 * MISC FUNCTIONS
 	 * *** */
-	
 	function process_post($post, $clean = TRUE)
 	{
+		$this->load->helper('text');
 		$post->thumbnail_href = $this->get_thumbnail_href($post);
 		$post->comment_processed = $this->get_comment_processed($post);
-		
-		foreach(array('title', 'name', 'email', 'trip') as $element)
+
+		// evil: &#8238; oykosneG fo suomynonA ,onriC&#8234;&#8234;&#8234;&#9320;
+		foreach (array('title', 'name', 'email', 'trip') as $element)
 		{
-			$element_processed = $element.'_processed';
-			$post->$element_processed = htmlentities($post->$element, ENT_COMPAT, 'UTF-8');
+			$element_processed = $element . '_processed';
+			$post->$element = preg_replace('/[\x{E2}\x{80}\x{AE}]/', '', $post->$element);
+			//$post->$element = ascii_to_entities($post->$element);
+			$post->$element = htmlentities($post->$element, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
+			$post->$element_processed = $post->$element;
 		}
-		
+
 		if ($clean === TRUE)
 		{
 			unset($post->delpass);
 		}
 	}
-	
-	
+
+
 	function get_thumbnail_href($row)
 	{
 		if (!$row->preview)
@@ -726,10 +799,9 @@ class Post extends CI_Model
 		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
 		$regexing = nl2br(trim(preg_replace($find, $replace, $regexing)));
-		
+
 		return $regexing;
 	}
-	
 
 
 	function get_internal_link($matches)

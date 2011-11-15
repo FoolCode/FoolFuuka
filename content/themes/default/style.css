@@ -80,6 +80,7 @@ input, textarea, select, .uneditable-input {
 article.thread {
 	border-bottom: 1px solid #000;
 	padding: 15px 0;
+	word-wrap: break-word
 }
 
 article.thread header {

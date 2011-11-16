@@ -180,11 +180,13 @@ class Chan extends Public_Controller
 			
 			redirect(site_url($redirect_array));
 		}
-		$posts = $this->post->get_search($this->uri->ruri_to_assoc(2, $modifiers));
+		$search = $this->uri->ruri_to_assoc(2, $modifiers);
+		$posts = $this->post->get_search($search);
 
 		//echo '<pre>'; print_r($posts); echo '</pre>';
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('posts', $posts);
+		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 		$this->template->build('board');
 	}
 

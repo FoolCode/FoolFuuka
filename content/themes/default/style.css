@@ -134,7 +134,7 @@ article.post {
 	border-left:1px solid #e6f0ea;
 }
 
-article.post.highlight {
+article.post.highlight, article.post.post_ghost.highlight {
 	background: #d6bad0;
 }
 

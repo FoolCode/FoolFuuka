@@ -155,6 +155,32 @@ article.post > .text {
 	*display:inline;
 }
 
+article.post.reply {
+	background: #99ccaa;
+	padding: 0 20px 0 0;
+}
+
+article.post.reply header {
+	padding: 7px 20px 0 18px;
+}
+
+article.post.reply input[type=text] {
+	width: 350px;
+	resize: auto;
+}
+
+article.post.reply textarea {
+	width: 350px;
+	min-height: 100px;
+}
+
+article.post.reply .actions {
+	width: 100%;
+	margin-bottom: -19px;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
 
 article.thread .greentext {
 	color: #789922;

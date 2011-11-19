@@ -86,5 +86,6 @@ foreach ($posts as $key => $post) : ?>
 	</aside>
 	<?php endif; ?>
 	<div class="clearfix"></div>
+	<?php echo $template['partials']['reply']; ?>
 </article>
 <?php endforeach; ?>

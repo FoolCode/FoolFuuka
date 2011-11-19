@@ -164,7 +164,7 @@ echo form_close();
 
 <!--- Page Input -->
 <?php
-if ($this->input->cookie('fu_ghost_mode') != 'true')
+if (!$this->input->cookie('fu_ghost_mode'))
 {
 	$toggle_mode = 'ghost';
 	echo form_open($this->fu_board . '/page');
@@ -192,7 +192,7 @@ echo form_submit(array(
 	'onClick' => 'getPage(this.form); return false;'
 ));
 ?>
-<input type="button" class="btn notice<?php echo ($this->input->cookie('fu_ghost_mode') == 'true') ? ' active' : '' ?>" style="margin-left: -6px" value="Ghost Mode" onClick="location.href='<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>'">
+<input type="button" class="btn notice<?php echo ($this->input->cookie('fu_ghost_mode')) ? ' active' : '' ?>" style="margin-left: -6px" value="Ghost Mode" onClick="location.href='<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>'">
 <?php
 echo '</div>';
 echo form_close();

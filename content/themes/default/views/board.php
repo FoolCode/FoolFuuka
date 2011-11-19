@@ -49,6 +49,9 @@ foreach ($posts as $key => $post) : ?>
 		
 		for($i = $limit; $i < count($post['posts']); $i++) :
 			$p = $post['posts'][$i];
+		
+		if ($p->parent == 0)
+			$p->parent = $p->num;
 		?>
 		<?php if ($p->subnum > 0) : ?>
 		<article class="post post_ghost" id="<?php echo $p->num . '_' . $p->subnum ?>">

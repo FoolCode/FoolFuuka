@@ -3,13 +3,9 @@ jQuery(document).ready(function(){
 		live: true
 	});
 	
-	jQuery("[rel^='popover']").each(function() {
-		var direction = $(this).attr('rel').replace("popover-", "");
-		jQuery(this).popover({
-			offset: 10, 
-			placement: direction, 
-			html: true
-		});
+	jQuery("[rel=popover]").popover({
+		offset: 10,
+		html: true
 	});
 	
 	jQuery("a[rel=highlight]").click(function() {
@@ -23,13 +19,18 @@ jQuery(document).ready(function(){
 	})
 	
 	post = location.href.split(/#/);
-	if (post[1]) replyHighlight(post[1]);
+	if (post[1]) {
+		if (post[1].match(/^q\d+$/)) {
+			post[1] = post[1].replace('q', '');
+			jQuery("#reply_comment").append(">>" + post[1] + "\n");
+		}
+		replyHighlight(post[1]);
+	}
 });
 
 function toggleSearch(mode)
 {
 	var search;
-	
 	if (!(search = document.getElementById('search_' + mode))) return;
 	search.style.display = search.style.display ? "" : "none";
 }
@@ -61,15 +62,6 @@ function getSearch(type, searchForm)
 	window.location = location;
 }
 
-function getRadioValue(group)
-{
-	for (index = 0; index < group.length; index++)
-	{
-		if (group[index].checked == true)
-			return encodeURIComponent(group[index].value);
-	}
-}
-
 function getPost(postForm)
 {
 	if (postForm.post.value == "") {
@@ -88,6 +80,14 @@ function getPage(pageForm)
 	window.location = pageForm.action + encodeURIComponent(pageForm.page.value) + '/';
 }
 
+function getRadioValue(group)
+{
+	for (index = 0; index < group.length; index++)
+	{
+		if (group[index].checked == true)
+			return encodeURIComponent(group[index].value);
+	}
+}
 
 function replyHighlight(id)
 {

@@ -4,9 +4,9 @@ if (!defined('BASEPATH'))
 ?>
 
 <?php if (isset($thread_id)) : ?>
-<article class="post reply" id="reply">
+<section class="post reply" id="reply">
 	<header>
-		<span class="post_author">Reply to Thread [<a href="#reply" rel="popover" data-original-title="Replying" data-content="Don't worry, your post will not be uploaded to the original board.">?</a>]</span>
+		<span>Reply to Thread [<a href="#reply" rel="popover" data-original-title="Replying" data-content="Don't worry, your post will not be uploaded to the original board.">?</a>]</span>
 	</header>
 	<div>
 		<?php echo form_open('', array('class' => 'form-stacked')) ?>
@@ -76,5 +76,5 @@ if (!defined('BASEPATH'))
 		</fieldset>
 		<?php echo form_close() ?>
 	</div>
-</article>
+</section>
 <?php endif; ?>

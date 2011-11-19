@@ -113,7 +113,8 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Thread #' . $num);
 		$this->template->set('posts', $thread);
 
-		$this->template->set_partial('reply', 'reply', array('thread_id' => $num, 'post_data' => $post_data));
+		$this->template->set('thread_id', $num);
+		//$this->template->set_partial('reply', 'reply', array('thread_id' => $num, 'post_data' => $post_data));
 		$this->template->build('board');
 	}
 

@@ -33,7 +33,7 @@ class Board extends DataMapper {
 	}
 	
 	
-	public function add($data = array())
+	public function add_report($data = array())
 	{
 		if (!$this->update_report_db($data))
 		{
@@ -45,7 +45,7 @@ class Board extends DataMapper {
 	}
 	
 	
-	public function remove()
+	public function del_report()
 	{
 		if (!$this->remove_report_db($data))
 		{
@@ -53,6 +53,29 @@ class Board extends DataMapper {
 			return false;
 		}
 		
+		return true;
+	}
+	
+	
+	public function process_report($data)
+	{
+		if (!isset($data["id"]) && $data["id"] == '')
+		{
+			log_message('error', 'process_report: failed to process report completely');
+			return false;
+		}
+		
+		// update_report_db with approval/rejection/etc.
+		// move thumbnail if needed. temporary structure.
+		
+		if ($data["action"] == 'spam' && $data["thumbnail"] = TRUE)
+		{
+			if (!$this->move_thumbnail($source, $destination))
+			{
+				log_message('error', 'process_report: failed to move thumbnail to spam folder');
+				return false;
+			}
+		}
 		return true;
 	}
 	

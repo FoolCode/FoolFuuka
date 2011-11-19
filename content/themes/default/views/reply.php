@@ -60,16 +60,19 @@ if (!defined('BASEPATH'))
 			<?php
 				echo form_hidden('id', $thread_id);
 				echo form_submit(array(
+					'name' => 'reply_action',
 					'value' => 'Submit',
 					'class' => 'btn primary'
 				));
 				echo '&nbsp;';
 				echo form_submit(array(
+					'name' => 'reply_action',
 					'value' => 'Delete',
 					'class' => 'btn secondary'
 				));
 			?>
 			</div>
+			<?php //print_r($post_data) ?>
 		</fieldset>
 		<?php echo form_close() ?>
 	</div>

@@ -55,6 +55,8 @@
 
 			<div role="main">
 				<?php echo $template['body']; ?>
+				
+				<?php echo $template['partials']['post_tools']; ?>
 			</div> <!-- end of #main -->
 
 

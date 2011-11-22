@@ -15,7 +15,8 @@ class Chan extends Public_Controller
 		$boards->order_by('shortname', 'ASC')->get();
 		$this->template->set_partial('top_tools', 'top_tools');
 		$this->template->set('boards', $boards);
-		$this->template->set_partial('reply', 'reply');
+		$this->template->set_partial('post_reply', 'post_reply');
+		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->set_layout('chan');
 	}
 
@@ -132,7 +133,8 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Thread #' . $num);
 		$this->template->set('posts', $thread);
 
-		$this->template->set_partial('reply', 'reply', array('thread_id' => $num, 'post_data' => $post_data));
+		$this->template->set('thread_id', $num);
+		//$this->template->set_partial('post_reply', 'post_reply', array('thread_id' => $num, 'post_data' => $post_data));
 		$this->template->build('board');
 	}
 
@@ -210,12 +212,30 @@ class Chan extends Public_Controller
 	}
 
 	
-	public function report($num = 0, $subnum = 0)
+	public function report($num = 0)
 	{
-		if ((!is_numeric($num) || !$num > 0) && (!is_numeric($subnum) || !$subnum > 0))
+		if (!is_numeric($num) || !$num > 0)
 		{
 			show_404();
 		}
+		
+		if (!$this->input->is_ajax_request()) {
+			show_404();
+		}
+		
+		$post = array(
+			'board' => get_selected_board()->id,
+			'post' => $this->input->post("post"),
+			'reason' => $this->input->post("reason")
+		);
+			
+		$report = new Report();
+		if (!$report->add($post))
+		{
+			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => '')));
+			return false;
+		}
+		$this->output->set_output(json_encode(array('status' => 'success')));
 	}
 
 

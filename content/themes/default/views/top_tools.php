@@ -8,7 +8,7 @@ if (!isset($page))
 <?php
 echo form_open($this->fu_board . '/search');
 echo '<div class="input-prepend">';
-echo '<span class="add-on" rel="popover-right" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</span>';
+echo '<span class="add-on" rel="popover" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</span>';
 echo form_input(array(
 	'name' => 'text',
 	'id' => 'text',
@@ -164,7 +164,7 @@ echo form_close();
 
 <!--- Page Input -->
 <?php
-if ($this->input->cookie('fu_ghost_mode') != 'true')
+if (!$this->input->cookie('fu_ghost_mode'))
 {
 	$toggle_mode = 'ghost';
 	echo form_open($this->fu_board . '/page');
@@ -192,7 +192,7 @@ echo form_submit(array(
 	'onClick' => 'getPage(this.form); return false;'
 ));
 ?>
-<input type="button" class="btn notice<?php echo ($this->input->cookie('fu_ghost_mode') == 'true') ? ' active' : '' ?>" style="margin-left: -6px" value="Ghost Mode" onClick="location.href='<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>'">
+<input type="button" class="btn notice<?php echo ($this->input->cookie('fu_ghost_mode')) ? ' active' : '' ?>" style="margin-left: -6px" value="Ghost Mode" onClick="location.href='<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>'">
 <?php
 echo '</div>';
 echo form_close();

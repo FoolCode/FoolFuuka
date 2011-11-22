@@ -34,7 +34,7 @@ class Chan extends Public_Controller
 	public function page($page = 1)
 	{
 		$this->remap_query();
-		$this->input->set_cookie('fu_ghost_mode', 'false', 86400);
+		$this->input->set_cookie('fu_ghost_mode', FALSE, 86400);
 		if ($this->input->post())
 		{
 			redirect($this->fu_board . '/page/' . $this->input->post('page'), 'location', 303);
@@ -60,7 +60,7 @@ class Chan extends Public_Controller
 
 	public function ghost($page = 1)
 	{
-		$this->input->set_cookie('fu_ghost_mode', 'true', 86400);
+		$this->input->set_cookie('fu_ghost_mode', TRUE, 86400);
 		if ($this->input->post())
 		{
 			redirect($this->fu_board . '/ghost/' . $this->input->post('page'), 'location', 303);

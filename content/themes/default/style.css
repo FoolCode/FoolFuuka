@@ -154,14 +154,17 @@ article.post {
 	border-left:1px solid #e6f0ea;
 }
 
-article.post.highlight, article.post.post_ghost.highlight {
-	background: #d6bad0;
-}
-
-article.post.post_ghost {
+article .post_ghost {
 	background: #cce1cf;
 }
 
+article .reported {
+	background: #e2e2e2;
+}
+
+article .highlight {
+	background: #d6bad0;
+}
 
 article.post .post_image {
 	float:left;
@@ -218,3 +221,5 @@ section.reply .actions {
 article.thread .greentext {
 	color: #789922;
 }
+
+.loading { display: none; width: 100%; text-align: center; margin: auto; }

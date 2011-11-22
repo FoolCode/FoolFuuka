@@ -3,20 +3,25 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-class Board extends DataMapper {
+class Report extends DataMapper {
 
 	var $has_one = array();
 	var $has_many = array();
 	var $validation = array(
-		'postid' => array(
+		'board' => array(
 			'rules' => array('required', 'is_int'),
-			'label' => 'Post ID',
+			'label' => 'Board',
+			'type' => 'input'
+		),
+		'post' => array(
+			'rules' => array('required', 'is_int'),
+			'label' => 'Post',
 			'type' => 'input'
 		),
 		'reason' => array(
-			'rules' => array('required', 'max_length' => 256),
+			'rules' => array(),
 			'label' => 'Reason',
-			'type' => 'input'
+			'type' => 'textarea'
 		)
 	);
 	
@@ -33,7 +38,7 @@ class Board extends DataMapper {
 	}
 	
 	
-	public function add_report($data = array())
+	public function add($data = array())
 	{
 		if (!$this->update_report_db($data))
 		{
@@ -45,7 +50,7 @@ class Board extends DataMapper {
 	}
 	
 	
-	public function del_report()
+	public function remove()
 	{
 		if (!$this->remove_report_db($data))
 		{
@@ -93,6 +98,7 @@ class Board extends DataMapper {
 			}
 		}
 		
+		// Loop over the array and assign values to the variables.
 		foreach ($data as $key => $value)
 		{
 			$this->$key = $value;

@@ -173,10 +173,7 @@ if ($CI->agent->is_browser('MSIE'))
 				</div>
 
 <?php echo $main_content_view; ?>
-			</div>
-		</div>
-
-		<footer style="position: relative; bottom: 0px; width: 100%">
+				<footer style="clear:both">
 			<p style="padding-left: 20px;">FoOlSlide Version <?php
 if (isset($this->tank_auth))
 {
@@ -186,6 +183,10 @@ if (isset($this->tank_auth))
 }
 ?></p>
 		</footer>
+			</div>
+			<div style="clear:both"></div>
+		</div>
+
 
 		<!-- Modal Container for Admin Panel -->
 		<div id="modal-container" class="modal hide fade">

@@ -650,6 +650,8 @@ class Post extends CI_Model
 			',
 			array($num, $num, $num, now(), 'N', $email, $name, $trip, $title, $comment, $this->session->userdata('poster_id'))
 		);
+		
+		
 	}
 
 

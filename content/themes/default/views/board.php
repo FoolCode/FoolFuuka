@@ -8,7 +8,7 @@ foreach ($posts as $key => $post) : ?>
 	<?php if(isset($post['op'])) :
 		$op = $post['op'];
 	?>
-	<header id="<?php echo $op->num ?>">
+	<header id="<?php echo $op->num ?>" class="<?php echo ((isset($op->report_status) && !is_null($op->report_status))?' reported':'') ?>">
 		<h2 class="post_title"><?php echo $op->title ?></h2>
 		<span class="post_author"><?php echo $op->name ?></span>
 		<span class="post_trip"><?php echo $op->trip ?></span>

@@ -8,6 +8,7 @@ class Post extends CI_Model
 
 	var $table = '';
 	var $table_local = '';
+	var $sql_report = '';
 	var $existing_posts = array();
 	var $existing_posts_not = array();
 	var $existing_posts_maybe = array();
@@ -16,6 +17,23 @@ class Post extends CI_Model
 	{
 		parent::__construct();
 		$this->get_table();
+
+		// make so it's shown where are the 
+		if ($this->tank_auth->is_allowed())
+		{
+			$this->sql_report = '
+					LEFT JOIN 
+					( 
+						SELECT post as report_post, reason as report_reason, status as report_status
+						FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+						WHERE `board` = ' . get_selected_board()->id . ' 
+					) as q
+					ON    
+					' . $this->table . '.`doc_id`
+					=
+					' . $this->db->protect_identifiers('q') . '.`report_post`
+				';
+		}
 	}
 
 
@@ -59,6 +77,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->table . '
+					' . $this->sql_report . '
 					WHERE num = ' . $row->unq_parent . ' OR parent = ' . $row->unq_parent . '
 					ORDER BY num DESC
 				)
@@ -81,6 +100,7 @@ class Post extends CI_Model
 		// cool amount of posts: throw the nums in the cache
 		foreach ($query2->result() as $post)
 		{
+			//echo '<pre>'; print_r($post); echo '</pre>';
 			if ($post->parent == 0)
 			{
 				$this->existing_posts[$post->num][] = $post->num;
@@ -161,6 +181,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->table . '
+					' . $this->sql_report . '
 					WHERE num = ' . $row->unq_parent . ' OR parent = ' . $row->unq_parent . '
 					ORDER BY num ASC
 				)
@@ -262,6 +283,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->table . '
+					' . $this->sql_report . '
 					WHERE num = ' . $row->num . ' AND subnum = ' . $row->subnum . '
 				)
 			';
@@ -315,6 +337,7 @@ class Post extends CI_Model
 	{
 		$query = $this->db->query('
 				SELECT * FROM ' . $this->table . '
+				' . $this->sql_report . '
 				WHERE num = ? OR parent = ?
 				ORDER BY num, parent, subnum ASC;
 			', array($num, $num));
@@ -373,6 +396,7 @@ class Post extends CI_Model
 	{
 		$query = $this->db->query('
 				SELECT num, parent FROM ' . $this->table . '
+				' . $this->sql_report . '
 				WHERE num = ? OR parent = ?
 				LIMIT 0, 1;
 			', array($num, $num));
@@ -468,6 +492,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->table . '
+					' . $this->sql_report . '
 					WHERE num = ' . $matches['attrs']['num'] . ' AND subnum = ' . $matches['attrs']['subnum'] . '
 				)
 			';
@@ -514,6 +539,7 @@ class Post extends CI_Model
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->table . '
+			' . $this->sql_report . '
 			WHERE media_hash = ?
 			ORDER BY num DESC
 			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
@@ -552,7 +578,8 @@ class Post extends CI_Model
 	 * POSTING FUNCTIONS
 	 * *** */
 	function comment($data)
-	{	show_404();
+	{
+		show_404();
 		$errors = array();
 		if ($data['name'] == FALSE || $data['name'] == '')
 		{
@@ -563,7 +590,7 @@ class Post extends CI_Model
 		{
 			$name_arr = process_name($data['name']);
 			$name = $name_arr[0];
-			if(isset($name_arr[1]))
+			if (isset($name_arr[1]))
 			{
 				$trip = $name_arr[1];
 			}
@@ -639,19 +666,16 @@ class Post extends CI_Model
 		// get the post after which we're replying to
 		// mostly copied from Fuuka original
 		$thread = $this->db->query('
-				INSERT INTO '.$this->table.'
+				INSERT INTO ' . $this->table . '
 				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, poster)
 				VALUES
 				(
-					(select max(num) from (select * from '.$this->table.' where parent=? or num=?) as x),
-					(select max(subnum)+1 from (select * from '.$this->table.' where num=(select max(num) from '.$this->table.' where parent=? or num=?)) as x),
+					(select max(num) from (select * from ' . $this->table . ' where parent=? or num=?) as x),
+					(select max(subnum)+1 from (select * from ' . $this->table . ' where num=(select max(num) from ' . $this->table . ' where parent=? or num=?)) as x),
 					?,?,?,?,?,?,?,?,?)
 				)
-			',
-			array($num, $num, $num, now(), 'N', $email, $name, $trip, $title, $comment, $this->session->userdata('poster_id'))
+			', array($num, $num, $num, now(), 'N', $email, $name, $trip, $title, $comment, $this->session->userdata('poster_id'))
 		);
-		
-		
 	}
 
 

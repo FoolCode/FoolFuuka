@@ -101,6 +101,7 @@ input, textarea, select, .uneditable-input {
 article.thread {
 	border-bottom: 1px solid #000;
 	padding: 15px 0;
+	word-wrap: break-word
 }
 
 article.thread header {
@@ -209,6 +210,44 @@ section.reply textarea {
 }
 
 section.reply .actions {
+	width: 100%;
+	margin-bottom: -19px;
+	border: 1px solid #dedede;
+	border-right: 0px;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+section.reply {
+	background: #99ccaa;
+	display:-moz-inline-stack;
+	display:inline-block;
+	zoom:1;
+	*display:inline;
+	margin: 2px 0 2px 10px;
+	padding: 0 20px 0 0;
+	border-bottom:1px solid #a1c7a3;
+	border-left:1px solid #e6f0ea;
+}
+
+section.reply header {
+	font-weight: bold;
+	color: #117743;
+	padding: 7px 20px 0 18px;
+}
+
+section.reply input[type=text] {
+	width: 350px;
+	resize: auto;
+}
+
+article.post.reply textarea {
+	width: 350px;
+	min-height: 100px;
+}
+
+article.post.reply .actions {
 	width: 100%;
 	margin-bottom: -19px;
 	border: 1px solid #dedede;

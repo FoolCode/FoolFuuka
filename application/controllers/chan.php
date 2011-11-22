@@ -97,6 +97,31 @@ class Chan extends Public_Controller
 
 		$num = intval($num);
 		
+		// commenting
+		$post_data = '';
+		if ($this->input->post())
+		{
+			$this->form_validation->set_rules('bokunonome', 'Username', 'trim|xss_clean|max_lenght[64]');
+			$this->form_validation->set_rules('elitterae', 'Email', 'trim|xss_clean|max_lenght[64]');
+			$this->form_validation->set_rules('talkingde', 'Subject', 'trim|xss_clean|max_lenght[64]');
+			$this->form_validation->set_rules('chennodiscursus', 'Comment', 'trim|min_lenght[3]|max_lenght[1000]|xss_clean');
+			
+			if ($this->form_validation->run() !== FALSE)
+			{
+					$data['name'] = $this->input->post('bokunonome');
+					$data['email'] = $this->input->post('elitterae');
+					$data['subject'] = $this->input->post('talkingde');
+					$data['comment'] = $this->input->post('chennodiscursus');
+					$data['num'] = $num;
+					
+					$this->post->comment($data);
+			}
+			else
+			{
+				set_notice('warning', validation_errors());
+			}
+		}
+		
 		$thread = $this->post->get_thread($num);
 
 		if (count($thread) != 1)
@@ -104,12 +129,6 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$post_data = '';
-		if ($this->input->post())
-		{
-			// LETS HANDLE THE GHOST POSTS HERE
-			$post_data = $this->input->post();
-		}
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Thread #' . $num);
 		$this->template->set('posts', $thread);

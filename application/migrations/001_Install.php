@@ -15,10 +15,10 @@ class Migration_Install extends CI_Migration
                                           `ip_address` varchar(16) COLLATE utf8_bin NOT NULL DEFAULT '0',
                                           `user_agent` varchar(120) COLLATE utf8_bin DEFAULT NULL,
                                           `last_activity` int(10) unsigned NOT NULL DEFAULT '0',
-                                          `user_data` text COLLATE utf8_bin NOT NULL,
+                                          `user_data` varchar(8000) COLLATE utf8_bin NOT NULL,
                                           PRIMARY KEY (`session_id`),
                                           KEY `last_activity_idx` (`last_activity`)
-                                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;"
+                                        ) ENGINE=MEMORY DEFAULT CHARSET=utf8 COLLATE=utf8_bin;"
 			);
 		}
 

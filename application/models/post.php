@@ -8,6 +8,7 @@ class Post extends CI_Model
 
 	var $table = '';
 	var $table_local = '';
+	var $sql_report = '';
 	var $existing_posts = array();
 	var $existing_posts_not = array();
 	var $existing_posts_maybe = array();
@@ -16,6 +17,23 @@ class Post extends CI_Model
 	{
 		parent::__construct();
 		$this->get_table();
+
+		// make so it's shown where are the 
+		if ($this->tank_auth->is_allowed())
+		{
+			$this->sql_report = '
+					LEFT JOIN 
+					( 
+						SELECT post as report_post, reason as report_reason, status as report_status
+						FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+						WHERE `board` = ' . get_selected_board()->id . ' 
+					) as q
+					ON    
+					' . $this->table . '.`doc_id`
+					=
+					' . $this->db->protect_identifiers('q') . '.`report_post`
+				';
+		}
 	}
 
 
@@ -59,6 +77,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->table . '
+					' . $this->sql_report . '
 					WHERE num = ' . $row->unq_parent . ' OR parent = ' . $row->unq_parent . '
 					ORDER BY num DESC
 				)
@@ -81,6 +100,7 @@ class Post extends CI_Model
 		// cool amount of posts: throw the nums in the cache
 		foreach ($query2->result() as $post)
 		{
+			//echo '<pre>'; print_r($post); echo '</pre>';
 			if ($post->parent == 0)
 			{
 				$this->existing_posts[$post->num][] = $post->num;
@@ -161,6 +181,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->table . '
+					' . $this->sql_report . '
 					WHERE num = ' . $row->unq_parent . ' OR parent = ' . $row->unq_parent . '
 					ORDER BY num ASC
 				)
@@ -262,6 +283,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->table . '
+					' . $this->sql_report . '
 					WHERE num = ' . $row->num . ' AND subnum = ' . $row->subnum . '
 				)
 			';
@@ -315,6 +337,7 @@ class Post extends CI_Model
 	{
 		$query = $this->db->query('
 				SELECT * FROM ' . $this->table . '
+				' . $this->sql_report . '
 				WHERE num = ? OR parent = ?
 				ORDER BY num, parent, subnum ASC;
 			', array($num, $num));
@@ -373,6 +396,7 @@ class Post extends CI_Model
 	{
 		$query = $this->db->query('
 				SELECT num, parent FROM ' . $this->table . '
+				' . $this->sql_report . '
 				WHERE num = ? OR parent = ?
 				LIMIT 0, 1;
 			', array($num, $num));
@@ -468,6 +492,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->table . '
+					' . $this->sql_report . '
 					WHERE num = ' . $matches['attrs']['num'] . ' AND subnum = ' . $matches['attrs']['subnum'] . '
 				)
 			';
@@ -514,6 +539,7 @@ class Post extends CI_Model
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->table . '
+			' . $this->sql_report . '
 			WHERE media_hash = ?
 			ORDER BY num DESC
 			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
@@ -548,23 +574,108 @@ class Post extends CI_Model
 	}
 
 
-	function process_post($post, $clean = TRUE)
-	{
-		$post->thumbnail_href = $this->get_thumbnail_href($post);
-		$post->comment_processed = $this->get_comment_processed($post);
-		if ($clean === TRUE)
-		{
-			unset($post->delpass);
-		}
-	}
-
-
 	/*	 * ***
 	 * POSTING FUNCTIONS
 	 * *** */
-	function add_post($array)
+	function comment($data)
 	{
-		
+		show_404();
+		$errors = array();
+		if ($data['name'] == FALSE || $data['name'] == '')
+		{
+			$name = 'Anonymous';
+			$trip = '';
+		}
+		else
+		{
+			$name_arr = process_name($data['name']);
+			$name = $name_arr[0];
+			if (isset($name_arr[1]))
+			{
+				$trip = $name_arr[1];
+			}
+			else
+			{
+				$trip = '';
+			}
+		}
+
+		if ($data['email'] == FALSE || $data['email'] == '')
+		{
+			$email = '';
+		}
+		else
+		{
+			$email = $data['email'];
+		}
+
+		if ($data['subject'] == FALSE || $data['subject'] == '')
+		{
+			$subject = '';
+		}
+		else
+		{
+			$subject = $data['subject'];
+		}
+
+		if ($data['comment'] == FALSE || $data['comment'] == '')
+		{
+			$comment = '';
+		}
+		else
+		{
+			$comment = $data['comment'];
+		}
+
+		$this->db->or_where('ip', $this->input->ip_address());
+		if ($this->session->userdata('poster_id'))
+		{
+			$this->db->or_where('id', $this->session->userdata('poster_id'));
+		}
+		$query = $this->db->get('posters');
+
+		// if any data that could stop the query is returned, no need to add a row
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				if ($this->banned == 1)
+				{
+					// change to proper message
+					show_404();
+				}
+
+				if ($this->lastpost - time() < 20) // 20 seconds
+				{
+					// change to proper message
+					show_404();
+				}
+			}
+		}
+		else
+		{
+			$insert_poster = array(
+				'ip' => $this->input->ip_address(),
+				'user_agent' => $this->input->user_agent()
+			);
+			$this->db->insert('posters', $insert_poster);
+			$poster_id = $this->db->insert_id();
+			$this->session->set_userdata('poster_id', $poster_id);
+		}
+
+		// get the post after which we're replying to
+		// mostly copied from Fuuka original
+		$thread = $this->db->query('
+				INSERT INTO ' . $this->table . '
+				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, poster)
+				VALUES
+				(
+					(select max(num) from (select * from ' . $this->table . ' where parent=? or num=?) as x),
+					(select max(subnum)+1 from (select * from ' . $this->table . ' where num=(select max(num) from ' . $this->table . ' where parent=? or num=?)) as x),
+					?,?,?,?,?,?,?,?,?)
+				)
+			', array($num, $num, $num, now(), 'N', $email, $name, $trip, $title, $comment, $this->session->userdata('poster_id'))
+		);
 	}
 
 
@@ -575,7 +686,7 @@ class Post extends CI_Model
 		$matches = array();
 		if (preg_match("'^(.*?)(#)(.*)$'", $name, $matches))
 		{
-			$name = $matches[1];
+			$name = trim($matches[1]);
 			$matches2 = array();
 			preg_match("'^(.*?)(?:#+(.*))?$'", $matches[3], $matches2);
 
@@ -589,7 +700,7 @@ class Post extends CI_Model
 				$secure_trip = '!!' . $this->secure_tripcode($matches2[2]);
 			}
 		}
-		return array($name,$trip . $secure_trip);
+		return array($name, $trip . $secure_trip);
 	}
 
 
@@ -630,6 +741,29 @@ class Post extends CI_Model
 	/*	 * ***
 	 * MISC FUNCTIONS
 	 * *** */
+	function process_post($post, $clean = TRUE)
+	{
+		$this->load->helper('text');
+		$post->thumbnail_href = $this->get_thumbnail_href($post);
+		$post->comment_processed = $this->get_comment_processed($post);
+
+		// evil: &#8238; oykosneG fo suomynonA ,onriC&#8234;&#8234;&#8234;&#9320;
+		foreach (array('title', 'name', 'email', 'trip') as $element)
+		{
+			$element_processed = $element . '_processed';
+			$post->$element = preg_replace('/[\x{E2}\x{80}\x{AE}]/', '', $post->$element);
+			//$post->$element = ascii_to_entities($post->$element);
+			$post->$element = htmlentities($post->$element, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
+			$post->$element_processed = $post->$element;
+		}
+
+		if ($clean === TRUE)
+		{
+			unset($post->delpass);
+		}
+	}
+
+
 	function get_thumbnail_href($row)
 	{
 		if (!$row->preview)
@@ -654,7 +788,7 @@ class Post extends CI_Model
 	{
 		$CI = & get_instance();
 		$find = array(
-			"'(\r?\n|^)(>.*?)(?=$|\r?\n)'i",
+			"'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i",
 			"'\[aa\](.*?)\[/aa\]'is",
 			"'\[spoiler](.*?)\[/spoiler]'is",
 			"'\[sup\](.*?)\[/sup\]'is",
@@ -688,8 +822,11 @@ class Post extends CI_Model
 		);
 
 		$regexing = $row->comment;
-		$regexing = preg_replace_callback("'(>>(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $row->comment);
-		return nl2br(trim(preg_replace($find, $replace, $regexing)));
+		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
+		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
+		$regexing = nl2br(trim(preg_replace($find, $replace, $regexing)));
+
+		return $regexing;
 	}
 
 

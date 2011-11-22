@@ -8,7 +8,7 @@ foreach ($posts as $key => $post) : ?>
 	<?php if(isset($post['op'])) :
 		$op = $post['op'];
 	?>
-	<header id="<?php echo $op->num ?>">
+	<header id="<?php echo $op->num ?>" class="<?php echo ((isset($op->report_status) && !is_null($op->report_status))?' reported':'') ?>">
 		<h2 class="post_title"><?php echo $op->title ?></h2>
 		<span class="post_author"><?php echo $op->name ?></span>
 		<span class="post_trip"><?php echo $op->trip ?></span>
@@ -54,7 +54,7 @@ foreach ($posts as $key => $post) : ?>
 			$p->parent = $p->num;
 		?>
 		<?php if ($p->subnum > 0) : ?>
-		<article class="post post_ghost" id="<?php echo $p->num . '_' . $p->subnum ?>">
+		<article class="post post_ghost<?php echo ((isset($p->report_status) && !is_null($p->report_status))?' reported':'') ?>" id="<?php echo $p->num . '_' . $p->subnum ?>">
 			<header>
 				<span class="post_author"><?php echo $p->name ?></span>
 				<span class="post_trip"><?php echo $p->trip ?></span>
@@ -65,7 +65,7 @@ foreach ($posts as $key => $post) : ?>
 				<?php endif; ?>
 				<span class="post_ghost"><img src="<?php echo icons(356, 16) ?>" title="This is a ghost post, not coming from 4chan"/></span>
 		<?php else : ?>
-		<article class="post" id="<?php echo $p->num ?>">
+		<article class="post<?php echo ((isset($p->report_status) && !is_null($p->report_status))?' reported':'') ?>" id="<?php echo $p->num ?>">
 			<header>
 				<span class="post_author"><?php echo $p->name ?></span>
 				<span class="post_trip"><?php echo $p->trip ?></span>

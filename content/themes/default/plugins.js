@@ -118,7 +118,6 @@ function getRadioValue(group)
 	}
 }
 
-
 function toggleHighlight(id, classn, single)
 {
 	var articles = document.getElementsByTagName("article");

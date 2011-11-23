@@ -746,6 +746,14 @@ class Post extends CI_Model
 	}
 
 
+	function delete($data)
+	{
+		// $data => { board, doc_id/post, password }
+		// Deleting
+		return false;
+	}
+	
+	
 	function process_name($name)
 	{
 		$trip = '';

@@ -242,12 +242,12 @@ section.reply input[type=text] {
 	resize: auto;
 }
 
-article.post.reply textarea {
+section.post.reply textarea {
 	width: 350px;
 	min-height: 100px;
 }
 
-article.post.reply .actions {
+section.post.reply .actions {
 	width: 100%;
 	margin-bottom: -19px;
 	border: 1px solid #dedede;

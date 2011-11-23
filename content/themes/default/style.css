@@ -110,7 +110,7 @@ article.thread header {
 	margin-bottom: 5px;
 }
 
-article.thread > .thread_image {
+article.thread > .thread_image_link {
 	float:left;
 	margin: 0 16px 10px 10px;
 }

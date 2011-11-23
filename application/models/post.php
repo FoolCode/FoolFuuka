@@ -718,7 +718,7 @@ class Post extends CI_Model
 				(
 					(select max(num) from (select * from ' . $this->table . ' where parent=? or num=?) as x),
 					(select max(subnum)+1 from (select * from ' . $this->table . ' where num=(select max(num) from ' . $this->table . ' where parent=? or num=?)) as x),
-					?, ?,?,?,?,?,?,?,?,?
+					?,?,?,?,?,?,?,?,?,?
 				);
 			', array(
 				$num, $num, 

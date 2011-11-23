@@ -613,6 +613,7 @@ class Post extends CI_Model
 		else
 		{
 			$email = $data['email'];
+			$this->input->set_cookie('foolfuuka_reply_email', $password, 60*60*24*30);
 		}
 
 		if ($data['subject'] == FALSE || $data['subject'] == '')
@@ -700,8 +701,8 @@ class Post extends CI_Model
 		$this->db->query('
 			replace into '.$this->table_local.' (num,parent,subnum,`timestamp`) 
 			select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from '.$this->table.'
-			where num = (select max(num) from '.$this->table.' where parent=$parent);
-		');
+			where num = (select max(num) from '.$this->table.' where parent=?);
+		', array($num));
 	}
 
 

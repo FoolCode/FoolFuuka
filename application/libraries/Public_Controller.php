@@ -27,6 +27,15 @@ class Public_Controller extends MY_Controller
 			$this->fu_reply_password = $this->input->cookie('foolfuuka_reply_password');
 		}
 		
+		if($this->input->cookie('foolfuuka_reply_email') != FALSE)
+		{
+			$this->fu_reply_email = $this->input->cookie('foolfuuka_reply_email');
+		}
+		else
+		{
+			$this->fu_reply_email = '';
+		}
+		
 		// We need to set some theme stuff, so let's load the template system
 		$this->load->library('template');
 

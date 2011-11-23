@@ -29,7 +29,8 @@ if (!defined('BASEPATH'))
 				<div class="input">
 					<?php echo form_input(array(
 						'name' => 'reply_elitterae',
-						'id' => 'reply_email'
+						'id' => 'reply_email',
+						'value' => ((isset($this->fu_reply_email))?$this->fu_reply_email:'')
 					)); ?>
 				</div>
 			</div>

@@ -86,7 +86,7 @@ foreach ($posts as $key => $post) : ?>
 		<article class="post<?php echo ((isset($p->report_status) && !is_null($p->report_status))?' reported':'') ?>" id="<?php echo $p->num ?>">
 			<header>
 				<h2 class="post_title"><?php echo $p->title_processed ?></h2>
-				<span class="post_author"><?php echo (($p->email_processed) ? '<a href="mailto:' . form_prep($op->email_processed) . '">' .$p->name_processed.'</a>' : $p->name_processed) ?></span>
+				<span class="post_author"><?php echo (($p->email_processed) ? '<a href="mailto:' . form_prep($p->email_processed) . '">' .$p->name_processed.'</a>' : $p->name_processed) ?></span>
 				<span class="post_trip"><?php echo $p->trip_processed ?></span>
 				<?php if($p->capcode == 'M') : ?>
 					<span class="post_level post_level_moderator">## Mod</span>

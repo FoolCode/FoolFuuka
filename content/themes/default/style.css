@@ -20,6 +20,7 @@ html {
 body {
 	background: #eefff2;
 	min-height:100%;
+	color:#333;
 }
 
 ::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
@@ -111,7 +112,7 @@ article.thread header {
 
 article.thread > .thread_image {
 	float:left;
-	margin: 0 10px 10px 10px;
+	margin: 0 16px 10px 10px;
 }
 
 article.thread h2.post_title {
@@ -193,10 +194,6 @@ article.post .post_image {
 article.post > .text {
 	margin-left: 13px;
 	padding: 7px 7px 0 0;
-	display:-moz-inline-stack;
-	display:inline-block;
-	zoom:1;
-	*display:inline;
 }
 
 section.reply {

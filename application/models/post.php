@@ -581,7 +581,11 @@ class Post extends CI_Model
 	 * *** */
 	function comment($data)
 	{
-		show_404();
+		if(check_stopforumspam_ip($this->input->ip_address()))
+		{
+			show_404();
+		}
+		
 		$errors = array();
 		if ($data['name'] == FALSE || $data['name'] == '')
 		{
@@ -636,6 +640,7 @@ class Post extends CI_Model
 		else
 		{
 			$password = $data['password'];
+			$this->input->set_cookie('foolfuuka_reply_password', $password, 60*60*24*30);
 		}
 
 		$this->db->or_where('ip', $this->input->ip_address());
@@ -676,17 +681,27 @@ class Post extends CI_Model
 
 		// get the post after which we're replying to
 		// mostly copied from Fuuka original
-		$thread = $this->db->query('
+		$this->db->query('
 				INSERT INTO ' . $this->table . '
 				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, pass, poster_id)
 				VALUES
 				(
 					(select max(num) from (select * from ' . $this->table . ' where parent=? or num=?) as x),
 					(select max(subnum)+1 from (select * from ' . $this->table . ' where num=(select max(num) from ' . $this->table . ' where parent=? or num=?)) as x),
-					?,?,?, CURRENT_TIMESTAMP,?,?,?,?,?,?)
+					?, CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?)
 				)
-			', array($num, $num, $num, now(), 'N', $email, $name, $trip, $title, $comment, $password, $this->session->userdata('poster_id'))
+			', array(
+				$num, $num, 
+				$num, $num,
+				$num, 'N', $email, $name, $trip, $title, $comment, $password, $this->session->userdata('poster_id'))
 		);
+		
+		// copypasta from fuuka...
+		$this->db->query('
+			replace into '.$this->table_local.' (num,parent,subnum,`timestamp`) 
+			select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from '.$this->table.'
+			where num = (select max(num) from '.$this->table.' where parent=$parent);
+		');
 	}
 
 

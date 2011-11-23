@@ -228,25 +228,6 @@ function get_gravatar($email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts 
 }
 
 
-/**
- * Returns a random string
- * 
- * @todo this is returning only numbers for some reason
- * @param int length of string to generate
- * @return string random string
- */
-function random_string($length = 20)
-{
-	$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
-	$string = '';
-	for ($p = 0; $p < $length; $p++)
-	{
-		$string .= $characters[mt_rand(0, strlen($characters - 1))];
-	}
-	return $string;
-}
-
-
 function icons($num, $size = '32', $icons = 'sweeticons2')
 {
 	return site_url() . 'assets/icons/' . $icons . '/' . $size . '/' . $num . '.png';

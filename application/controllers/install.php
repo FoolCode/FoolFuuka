@@ -238,7 +238,8 @@ class Install extends Install_Controller
 		$config = str_replace("\$db['default']['dbprefix'] = 'fs_'", "\$db['default']['dbprefix'] = '" . addslashes($post["db_prefix"]) . "'", $config);
 
 		// create a random string of 20 letters and numbers for the encryption key
-		$random_string = random_string(20);
+		$this->load->helper('string');
+		$random_string = random_string('alnum', 20);
 		$this->config->set_item('encryption_key', $random_string);
 		$config = str_replace("\$config['encryption_key'] = ''", "\$config['encryption_key'] = '" . addslashes($random_string) . "'", $config);
 

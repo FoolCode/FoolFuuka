@@ -54,9 +54,10 @@ if (!defined('BASEPATH'))
 			<div class="clearfix">
 				<label for="reply_password">Password</label>
 				<div class="input">
-					<?php echo form_input(array(
+					<?php echo form_password(array(
 						'name' => 'reply_nymphassword',
-						'id' => 'reply_password'
+						'id' => 'reply_password',
+						'value' => $this->fu_reply_password
 					)); ?>
 				</div>
 			</div>

@@ -12,6 +12,21 @@ class Public_Controller extends MY_Controller
 		// enable CSRF for public only
 		$this->config->config['csrf_protection'] = TRUE;
 		
+		
+		// get the password needed for the reply field
+		if($this->input->cookie('foolfuuka_reply_password') == FALSE || strlen($this->input->cookie('foolfuuka_reply_password')) < 3)
+		{
+			// create a new random password
+			$this->load->helper('string');
+			$rand_pass = random_string('alnum', 16);
+			$this->input->set_cookie('foolfuuka_reply_password', $rand_pass, 60*60*24*30);
+			$this->fu_reply_password = $rand_pass;
+		}
+		else
+		{
+			$this->fu_reply_password = $this->input->cookie('foolfuuka_reply_password');
+		}
+		
 		// We need to set some theme stuff, so let's load the template system
 		$this->load->library('template');
 

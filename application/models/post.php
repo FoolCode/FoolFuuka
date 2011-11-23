@@ -165,26 +165,26 @@ class Post extends CI_Model
 	function get_latest_ghost($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE)
 	{
 		// get exactly 20 be it thread starters or parents with distinct parent
-		/*$query = $this->db->query('
-			SELECT DISTINCT(parent) as unq_parent, timestamp
-			FROM ' . $this->table_local . '
-			ORDER BY timestamp DESC
-			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
-		');
-		
-		$query = $this->db->query('
-			SELECT DISTINCT(q.parent) AS unq_parent, '.$this->table.'.* FROM
-			'.$this->table.'
-			RIGHT JOIN 
-			'.$this->table.' AS q
-			ON '.$this->table.'.`parent` = q.num
-			WHERE '.$this->table.'.`subnum` != 0 AND '.$this->table.'.`email` != ?
-			ORDER BY '.$this->table.'.timestamp DESC
-			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . ';
-		', array('sage'));
-		*/
-		
-		
+		/* $query = $this->db->query('
+		  SELECT DISTINCT(parent) as unq_parent, timestamp
+		  FROM ' . $this->table_local . '
+		  ORDER BY timestamp DESC
+		  LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
+		  ');
+
+		  $query = $this->db->query('
+		  SELECT DISTINCT(q.parent) AS unq_parent, '.$this->table.'.* FROM
+		  '.$this->table.'
+		  RIGHT JOIN
+		  '.$this->table.' AS q
+		  ON '.$this->table.'.`parent` = q.num
+		  WHERE '.$this->table.'.`subnum` != 0 AND '.$this->table.'.`email` != ?
+		  ORDER BY '.$this->table.'.timestamp DESC
+		  LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . ';
+		  ', array('sage'));
+		 */
+
+
 		//echo '<pre>';print_r( $query->result());echo '</pre>';
 		//die();
 
@@ -196,7 +196,7 @@ class Post extends CI_Model
 			ORDER BY timestamp DESC
 			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 		');
-		
+
 		// get all the posts
 		$sql = array();
 		$threads = array();
@@ -605,11 +605,11 @@ class Post extends CI_Model
 	 * *** */
 	function comment($data)
 	{
-		if(check_stopforumspam_ip($this->input->ip_address()))
+		if (check_stopforumspam_ip($this->input->ip_address()))
 		{
-			return array('error'=>_('Your IP has been identified as a spam proxy. You can\'t post from there.'));
+			return array('error' => _('Your IP has been identified as a spam proxy. You can\'t post from there.'));
 		}
-		
+
 		$errors = array();
 		if ($data['name'] == FALSE || $data['name'] == '')
 		{
@@ -618,7 +618,7 @@ class Post extends CI_Model
 		}
 		else
 		{
-			$this->input->set_cookie('foolfuuka_reply_name', $data['name'], 60*60*24*30);
+			$this->input->set_cookie('foolfuuka_reply_name', $data['name'], 60 * 60 * 24 * 30);
 			$name_arr = $this->process_name($data['name']);
 			$name = $name_arr[0];
 			if (isset($name_arr[1]))
@@ -638,7 +638,7 @@ class Post extends CI_Model
 		else
 		{
 			$email = $data['email'];
-			$this->input->set_cookie('foolfuuka_reply_email', $email, 60*60*24*30);
+			$this->input->set_cookie('foolfuuka_reply_email', $email, 60 * 60 * 24 * 30);
 		}
 
 		if ($data['subject'] == FALSE || $data['subject'] == '')
@@ -658,7 +658,7 @@ class Post extends CI_Model
 		{
 			$comment = $data['comment'];
 		}
-		
+
 		if ($data['password'] == FALSE || $data['password'] == '')
 		{
 			$password = '';
@@ -666,7 +666,7 @@ class Post extends CI_Model
 		else
 		{
 			$password = $data['password'];
-			$this->input->set_cookie('foolfuuka_reply_password', $password, 60*60*24*30);
+			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
 		$num = $data['num'];
 		$postas = $data['postas'];
@@ -690,10 +690,10 @@ class Post extends CI_Model
 
 				if (time() - strtotime($row->lastpost) < 20 && !$this->tank_auth->is_allowed()) // 20 seconds
 				{
-					
+
 					return array('error' => 'You must wait at least 20 seconds before posting again.');
 				}
-				
+
 				$this->db->where('id', $row->id);
 				$this->db->update('posters', array('lastpost' => date('Y-m-d H:i:s')));
 			}
@@ -721,25 +721,25 @@ class Post extends CI_Model
 					?,?,?,?,?,?,?,?,?,?
 				);
 			', array(
-				$num, $num, 
-				$num, $num,
-				$num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
+			$num, $num,
+			$num, $num,
+			$num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
 		);
-		
+
 		// I need num and subnum for a proper redirect
 		$posted = $this->db->query('
 			SELECT * FROM ' . $this->table . '
 			WHERE doc_id = ?
 			LIMIT 0,1;
-		',array($this->db->insert_id()));
-		
+		', array($this->db->insert_id()));
+
 		// we don't even need this, but let's leave it for sake of backward compatibility with original fuuka
 		$this->db->query('
-			replace into '.$this->table_local.' (num,parent,subnum,`timestamp`) 
-			select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from '.$this->table.'
-			where num = (select max(num) from '.$this->table.' where parent=?);
+			replace into ' . $this->table_local . ' (num,parent,subnum,`timestamp`) 
+			select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from ' . $this->table . '
+			where num = (select max(num) from ' . $this->table . ' where parent=?);
 		', array($num));
-		
+
 		$posted = $posted->result();
 		$posted = $posted[0];
 		return array('success' => TRUE, 'posted' => $posted);
@@ -749,11 +749,99 @@ class Post extends CI_Model
 	function delete($data)
 	{
 		// $data => { board, doc_id/post, password }
-		// Deleting
-		return false;
+		$query = $this->db->query('
+			SELECT num, subnum, parent, doc_id, delpass
+			FROM ' . $this->table . '
+			WHERE doc_id = ?
+			LIMIT 0,1;
+		', $data['post']);
+
+		if ($query->num_rows() != 1)
+		{
+			return array('error' => _('There\'s no such a post to be deleted.'));
+		}
+
+		$row = $query->row();
+
+		if ((is_null($row->delpass) || $row->delpass !== $data['password']) && !$this->tank_auth->is_allowed())
+		{
+			return array('error' => _('The password you inserted did not match the post\'s deletion password.'));
+		}
+
+		// safe to say the user is allowed to remove it
+
+		if ($row->parent == 0) // deleting thread
+		{
+			// we risk getting into a racing condition
+			// get rid first of all of OP so posting is stopped
+			// first the file
+			if (!$this->delete_thumbnail($row))
+			{
+				return array('error' => _('Couldn\'t delete the thumbnail.'));
+			}
+
+			$this->db->query('
+				DELETE
+				FROM ' . $this->table . '
+				WHERE doc_id = ?
+			', array($row->doc_id));
+
+			if ($this->db->affected_rows() != 1)
+			{
+				return array('error' => _('Couldn\'t delete thread\'s opening post.'));
+			}
+
+			// nobody will post in here anymore, so we can take it easy
+			// get all child posts
+			$thread = $this->db->query('
+				SELECT *
+				FROM ' . $this->table . '
+				WHERE parent = ?
+			', array($row->num));
+
+			if ($thread->num_rows() > 0) // if there's comments at all
+			{
+				foreach ($thread->result() as $t)
+				{
+					if (!$this->delete_thumbnail($t))
+					{
+						return array('error' => _('Couldn\'t delete the thumbnail(s).'));
+					}
+				}
+
+				$this->db->query('
+					DELETE
+					FROM ' . $this->table . '
+					WHERE parent = ?
+				', array($row->num));
+			}
+			return array('success' => TRUE);
+		}
+		else
+		{
+			if (!$this->delete_thumbnail($row))
+			{
+				return array('error' => _('Couldn\'t delete the thumbnail.'));
+			}
+
+			$this->db->query('
+				DELETE
+				FROM ' . $this->table . '
+				WHERE doc_id = ?
+			', array($row->doc_id));
+			
+			if ($this->db->affected_rows() != 1)
+			{
+				return array('error' => _('Couldn\'t delete post.'));
+			}
+			
+			return TRUE;
+		}
+		
+		return FALSE;
 	}
-	
-	
+
+
 	function process_name($name)
 	{
 		$trip = '';
@@ -768,7 +856,7 @@ class Post extends CI_Model
 			if (count($matches2) > 1)
 			{
 				$trip = $this->tripcode($matches2[1]);
-				if($trip != '')
+				if ($trip != '')
 					$trip = '!' . $trip;
 			}
 
@@ -783,7 +871,7 @@ class Post extends CI_Model
 
 	function tripcode($plain)
 	{
-		if(trim($plain) == '')
+		if (trim($plain) == '')
 			return '';
 		$pw = mb_convert_encoding($plain, 'SJIS', 'UTF-8');
 		$pw = str_replace('&', '&amp;', $pw);
@@ -817,9 +905,13 @@ class Post extends CI_Model
 	}
 
 
-	/*	 * ***
-	 * MISC FUNCTIONS
-	 * *** */
+	/*
+	 |
+	 | MISC FUNCTIONS
+	 |
+	 */
+	
+	
 	function process_post($post, $clean = TRUE)
 	{
 		$this->load->helper('text');
@@ -847,7 +939,7 @@ class Post extends CI_Model
 	function get_thumbnail_href($row)
 	{
 		if (!$row->preview)
-			return '';
+			return FALSE;
 		$echo = '';
 		if ($row->parent > 0)
 			$number = $row->parent;
@@ -858,18 +950,56 @@ class Post extends CI_Model
 			$number = '0' . $number;
 		}
 
-		if (FALSE !== file_exists((get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview)
+		if (file_exists($this->get_thumbnail_dir($row)) !== FALSE)
 			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview;
 		$row->preview_h = 150;
 		$row->preview_w = 150;
-		return site_url().'content/themes/default/images/image_missing.jpg';
+		return site_url() . 'content/themes/default/images/image_missing.jpg';
 	}
-	
+
+
+	function get_thumbnail_dir($row)
+	{
+		if (!$row->preview)
+			return FALSE;
+		
+		if ($row->parent > 0)
+			$number = $row->parent;
+		else
+			$number = $row->num;
+
+		while (strlen((string) $number) < 9)
+		{
+			$number = '0' . $number;
+		}
+
+		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview;
+	}
+
+
+	function delete_thumbnail($row)
+	{
+		// don't try deleting what isn't there anyway
+		if (!$row->preview)
+			return TRUE;
+		
+		if (file_exists(get_thumbnail_dir($row)))
+		{
+			if (!@unlink(get_thumbnail_dir($row)))
+			{
+				log_message('error', 'post.php delete_thumbnail(): couldn\'t remove thumbnail: ' . get_thumbnail_dir($row));
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+
+
 	function get_remote_image_href($row)
 	{
 		if (!$row->media)
 			return '';
-		return get_selected_board()->images_url.$row->media_filename;
+		return get_selected_board()->images_url . $row->media_filename;
 	}
 
 

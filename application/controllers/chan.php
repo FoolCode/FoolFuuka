@@ -99,26 +99,28 @@ class Chan extends Public_Controller
 		
 		// commenting
 		$post_data = '';
-		if ($this->input->post())
+		if ($this->input->post('reply_action') == 'Submit')
 		{
-			$this->form_validation->set_rules('bokunonome', 'Username', 'trim|xss_clean|max_lenght[64]');
-			$this->form_validation->set_rules('elitterae', 'Email', 'trim|xss_clean|max_lenght[64]');
-			$this->form_validation->set_rules('talkingde', 'Subject', 'trim|xss_clean|max_lenght[64]');
-			$this->form_validation->set_rules('chennodiscursus', 'Comment', 'trim|min_lenght[3]|max_lenght[1000]|xss_clean');
+			$this->form_validation->set_rules('reply_bokunonome', 'Username', 'trim|xss_clean|max_lenght[64]');
+			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_lenght[64]');
+			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_lenght[64]');
+			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|min_lenght[3]|max_lenght[1000]|xss_clean');
+			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_lenght[3]|max_lenght[32]|xss_clean');
 			
 			if ($this->form_validation->run() !== FALSE)
 			{
-					$data['name'] = $this->input->post('bokunonome');
-					$data['email'] = $this->input->post('elitterae');
-					$data['subject'] = $this->input->post('talkingde');
-					$data['comment'] = $this->input->post('chennodiscursus');
+					$data['name'] = $this->input->post('reply_bokunonome');
+					$data['email'] = $this->input->post('reply_elitterae');
+					$data['subject'] = $this->input->post('reply_talkingde');
+					$data['comment'] = $this->input->post('reply_chennodiscursus');
+					$data['password'] = $this->input->post('reply_nymphassword');
 					$data['num'] = $num;
 					
 					$this->post->comment($data);
 			}
 			else
 			{
-				set_notice('warning', validation_errors());
+				$this->template->set('reply_errors', validation_errors());
 			}
 		}
 		

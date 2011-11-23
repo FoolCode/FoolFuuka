@@ -12,7 +12,7 @@ class MY_Controller extends CI_Controller
 		if (!file_exists(FCPATH . "config.php"))
 		{
 			if ($this->uri->segment(1) != "install")
-				show_error("If you are here, and have no clue why " . FOOLSLIDE_NAME . " is not working, start by reading the <a href='".FOOLSLIDE_MANUAL_INSTALL_URL."'>installation manual</a>.");
+				show_error("If you are here, and have no clue why " . FOOLSLIDE_NAME . " is not working, start by reading the <a href='" . FOOLSLIDE_MANUAL_INSTALL_URL . "'>installation manual</a>.");
 		} else
 		{
 			$this->load->database();
@@ -85,6 +85,63 @@ class MY_Controller extends CI_Controller
 					$this->config->config['tank_auth']['recaptcha_secret_key'] = $captcha_secret;
 				}
 			}
+			
+			$this->cron();
+		}
+	}
+
+
+	/*
+	 * Controller for cron triggered by any visit
+	 * Currently defaulted crons:
+	 * -updates every 13 hours the blocked IPs
+	 * 
+	 * @author Woxxy
+	 */
+	public function cron()
+	{
+		$last_check = get_setting('fs_cron_stopforumspam');
+
+		// every 13 hours
+		if (time() - $last_check > 46800)
+		{
+			$url = 'http://www.stopforumspam.com/downloads/listed_ip_90.zip';
+			if (function_exists('curl_init'))
+			{
+				$this->load->library('curl');
+				$zip = $this->curl->simple_get($url);
+			}
+			else
+			{
+				$zip = file_get_contents($url);
+			}
+			if (!$zip)
+			{
+				log_message('error', 'MY_Controller cron(): impossible to get the update from stopforumspam');
+				$this->db->update('preferences', array('value' => time()), array('name' => 'fs_cron_stopforumspam'));
+				return FALSE;
+			}
+
+			delete_files('content/cache/stopforumspam/', TRUE);
+			if (!is_dir('content/cache/stopforumspam'))
+				mkdir('content/cache/stopforumspam');
+			write_file('content/cache/stopforumspam/stopforumspam.zip', $zip);
+			$this->load->library('unzip');
+			$this->unzip->extract('content/cache/stopforumspam/stopforumspam.zip');
+			$ip_list = file_get_contents('content/cache/stopforumspam/listed_ip_90.txt');
+			
+			$this->db->empty_table('stopforumspam');
+			$ip_array = array();
+			foreach(preg_split("/((\r?\n)|(\r\n?))/", $ip_list) as $line){
+				$ip_array[] = '(INET_ATON('.$this->db->escape($line).'))';
+			}
+			$this->db->query('
+				INSERT IGNORE INTO ' . $this->db->protect_identifiers('stopforumspam', TRUE) . ' 
+				VALUES ' . implode(',',$ip_array).';');
+			
+			$this->db->update('preferences', array('value' => time()), array('name' => 'fs_cron_stopforumspam'));
+		
+			delete_files('content/cache/stopforumspam/', TRUE);
 		}
 	}
 

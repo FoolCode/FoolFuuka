@@ -61,10 +61,11 @@ class Post extends CI_Model
 
 		// get exactly 20 be it thread starters or parents with distinct parent
 		$query = $this->db->query('
-			SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent
+			SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent, email
 			FROM ' . $this->table . '
+			WHERE email != \'sage\'
 			ORDER BY num DESC
-			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
+			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 		');
 
 		// get all the posts
@@ -167,8 +168,9 @@ class Post extends CI_Model
 		$query = $this->db->query('
 			SELECT DISTINCT(parent) as unq_parent, timestamp
 			FROM ' . $this->table_local . '
+			WHERE email != \'sage\'
 			ORDER BY timestamp DESC
-			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
+			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 		');
 
 		// get all the posts
@@ -268,10 +270,10 @@ class Post extends CI_Model
 	{
 		// get exactly 20 be it thread starters or parents with distinct parent
 		$query = $this->db->query('
-			SELECT num, subnum, timestamp
+			SELECT num, subnum, timestamp, email
 			FROM ' . $this->table_local . '
 			ORDER BY timestamp DESC
-			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
+			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 		');
 
 		// get all the posts
@@ -626,6 +628,15 @@ class Post extends CI_Model
 		{
 			$comment = $data['comment'];
 		}
+		
+		if ($data['password'] == FALSE || $data['password'] == '')
+		{
+			$password = '';
+		}
+		else
+		{
+			$password = $data['password'];
+		}
 
 		$this->db->or_where('ip', $this->input->ip_address());
 		if ($this->session->userdata('poster_id'))
@@ -667,14 +678,14 @@ class Post extends CI_Model
 		// mostly copied from Fuuka original
 		$thread = $this->db->query('
 				INSERT INTO ' . $this->table . '
-				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, poster)
+				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, pass, poster_id)
 				VALUES
 				(
 					(select max(num) from (select * from ' . $this->table . ' where parent=? or num=?) as x),
 					(select max(subnum)+1 from (select * from ' . $this->table . ' where num=(select max(num) from ' . $this->table . ' where parent=? or num=?)) as x),
-					?,?,?,?,?,?,?,?,?)
+					?,?,?, CURRENT_TIMESTAMP,?,?,?,?,?,?)
 				)
-			', array($num, $num, $num, now(), 'N', $email, $name, $trip, $title, $comment, $this->session->userdata('poster_id'))
+			', array($num, $num, $num, now(), 'N', $email, $name, $trip, $title, $comment, $password, $this->session->userdata('poster_id'))
 		);
 	}
 

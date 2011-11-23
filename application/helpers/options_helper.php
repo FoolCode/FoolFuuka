@@ -123,6 +123,8 @@ if (!function_exists('parse_irc'))
 
 
 }
+
+
 /**
  * Locate ImageMagick and determine if it has been installed or not. 
  */
@@ -245,46 +247,6 @@ function random_string($length = 20)
 }
 
 
-/**
- * Future function for load balancing the source of the images
- * 
- * @author Woxxy
- * @param string $string the url of the image
- * @return string the base url for the image server
- */
-function balance_url($string = '')
-{
-	$balancers = unserialize(get_setting('fs_balancer_clients'));
-
-	if (is_array($balancers))
-	{
-		$urls = array();
-		foreach ($balancers as $balancer)
-		{
-			for ($i = 0; $i < $balancer["priority"]; $i++)
-			{
-				$urls[] = $balancer["url"];
-			}
-		}
-		while (count($urls) < 100)
-		{
-			$urls[] = site_url();
-		}
-		$urlkey = array_rand($urls);
-
-		return $urls[$urlkey];
-	}
-
-	return site_url($string);
-}
-
-
-function glyphish($num, $on = FALSE)
-{
-	return site_url() . 'assets/glyphish/' . ($on ? 'on' : 'off') . '/' . $num . '.png';
-}
-
-
 function icons($num, $size = '32', $icons = 'sweeticons2')
 {
 	return site_url() . 'assets/icons/' . $icons . '/' . $size . '/' . $num . '.png';
@@ -382,4 +344,24 @@ function HTMLpurify($dirty_html, $set = 'default')
 			break;
 	}
 	return HTMLPurifier($dirty_html, $config);
+}
+
+
+
+/**
+ * Compare with the local IP list if the IP is a possible spammer
+ * 
+ * @param string $ip
+ * @return bool  Returns true if the IP is in the stopforumspam repository
+ */
+function check_stopforumspam_ip($ip)
+{
+	$CI = & get_instance();
+	$query = $CI->db->query('
+		SELECT ip FROM ' . $CI->db->protect_identifiers('stopforumspam', TRUE) . ' 
+		WHERE ip = INET_NTOA('.$CI->db->escape($ip).')
+		LIMIT 0,1;
+	');
+	
+	return $query->num_rows() > 0;
 }

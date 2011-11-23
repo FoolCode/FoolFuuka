@@ -36,6 +36,15 @@ class Public_Controller extends MY_Controller
 			$this->fu_reply_email = '';
 		}
 		
+		if($this->input->cookie('foolfuuka_reply_name') != FALSE)
+		{
+			$this->fu_reply_name = $this->input->cookie('foolfuuka_reply_name');
+		}
+		else
+		{
+			$this->fu_reply_name = '';
+		}
+		
 		// We need to set some theme stuff, so let's load the template system
 		$this->load->library('template');
 

@@ -5,5 +5,5 @@ if (!defined('BASEPATH'))
 Redirecting ...
 
 <script type="text/javascript">
-	window.location = '<?php echo $url ?>';
+	window.location.href = '<?php echo $url ?>';
 </script>

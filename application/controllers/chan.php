@@ -40,7 +40,7 @@ class Chan extends Public_Controller
 		{
 			redirect($this->fu_board . '/page/' . $this->input->post('page'), 'location', 303);
 		}
-		
+
 		if (!is_natural($page) || $page > 500)
 		{
 			show_404();
@@ -66,9 +66,9 @@ class Chan extends Public_Controller
 		{
 			redirect($this->fu_board . '/ghost/' . $this->input->post('page'), 'location', 303);
 		}
-		
+
 		$values = array();
-		
+
 		if (!is_natural($page) || $page > 500)
 		{
 			show_404();
@@ -96,41 +96,13 @@ class Chan extends Public_Controller
 		}
 
 		$num = intval($num);
-		
-		// commenting
-		$post_data = '';
-		if ($this->input->post('reply_action') == 'Submit')
-		{
-			$this->form_validation->set_rules('reply_bokunonome', 'Username', 'trim|xss_clean|max_lenght[64]');
-			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_lenght[64]');
-			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_lenght[64]');
-			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|min_lenght[3]|max_lenght[1000]|xss_clean');
-			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_lenght[3]|max_lenght[32]|xss_clean');
-			
-			if ($this->form_validation->run() !== FALSE)
-			{
-					$data['name'] = $this->input->post('reply_bokunonome');
-					$data['email'] = $this->input->post('reply_elitterae');
-					$data['subject'] = $this->input->post('reply_talkingde');
-					$data['comment'] = $this->input->post('reply_chennodiscursus');
-					$data['password'] = $this->input->post('reply_nymphassword');
-					$data['num'] = $num;
-					
-					$this->post->comment($data);
-			}
-			else
-			{
-				$this->template->set('reply_errors', validation_errors());
-			}
-		}
-		
+
 		$thread = $this->post->get_thread($num);
 
 		if (count($thread) != 1)
 		{
 			show_404();
 		}
-
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Thread #' . $num);
 		$this->template->set('posts', $thread);
@@ -141,13 +113,108 @@ class Chan extends Public_Controller
 	}
 
 
+	public function sending()
+	{
+		// commenting
+		$post_data = '';
+		if ($this->input->post('reply_action') == 'Submit')
+		{
+			$this->load->library('form_validation');
+			$this->form_validation->set_rules('reply_numero', 'Thread no.', 'required|is_natural_no_zero|xss_clean');
+			$this->form_validation->set_rules('reply_bokunonome', 'Username', 'trim|xss_clean|max_lenght[64]');
+			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_lenght[64]');
+			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_lenght[64]');
+			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|required|min_lenght[3]|max_lenght[1000]|xss_clean');
+			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_lenght[3]|max_lenght[32]|xss_clean');
+
+			if ($this->tank_auth->is_allowed())
+			{
+				$this->form_validation->set_rules('reply_postas', 'Post as', 'required|callback__is_valid_allowed_tag|xss_clean');
+				$this->form_validation->set_message('_is_valid_allowed_tag', 'You didn\'t specify a correct type of user to post as');
+			}
+
+			if ($this->form_validation->run() !== FALSE)
+			{
+				$data['num'] = $this->input->post('reply_numero');
+				;
+				$data['name'] = $this->input->post('reply_bokunonome');
+				$data['email'] = $this->input->post('reply_elitterae');
+				$data['subject'] = $this->input->post('reply_talkingde');
+				$data['comment'] = $this->input->post('reply_chennodiscursus');
+				$data['password'] = $this->input->post('reply_nymphassword');
+				if($this->tank_auth->is_allowed())
+				{
+					$data['postas'] = $this->input->post('reply_postas');
+				}
+				else
+				{
+					$data['postas'] = 'N';
+				}
+
+				// check if the thread exists (this could be made lighter but whatever for now) @todo
+				$thread = $this->post->get_thread($data['num']);
+				if (count($thread) != 1)
+				{
+					show_404();
+				}
+
+				$result = $this->post->comment($data);
+				if (isset($result['error']))
+				{
+					$this->template->title(_('Error'));
+					$this->template->set('error', $result['error']);
+					$this->template->build('error');
+					return FALSE;
+				}
+				else if (isset($result['success']))
+				{
+					$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . '_' . $result['posted']->subnum;
+					$this->template->title(_('Redirecting...'));
+					$this->template->set('url', $url);
+					$this->template->build('redirect');
+					return TRUE;
+				}
+			}
+			else
+			{
+				$this->template->title(_('Error'));
+				$this->template->set('error', validation_errors());
+				$this->template->build('error');
+				return FALSE;
+			}
+		}
+	}
+
+
+	public function _is_valid_allowed_tag($tag)
+	{
+		switch ($tag)
+		{
+			case 'user':
+				return 'N';
+				break;
+			case 'mod':
+				return 'M';
+				break;
+			case 'admin':
+				if ($this->tank_auth->is_admin())
+				{
+					return 'A';
+					break;
+				}
+			default:
+				return FALSE;
+		}
+	}
+
+
 	public function post($num = 0)
 	{
 		if ($this->input->post())
 		{
 			redirect($this->fu_board . '/post/' . $this->input->post('post'), 'location', 302);
 		}
-		
+
 		$num = str_replace('S', '', $num);
 		if (!is_numeric($num) || !$num > 0)
 		{
@@ -175,10 +242,10 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
-		
+
 		$page = intval($page);
 		$posts = $this->post->get_image(urldecode($hash) . '==', $page);
-		
+
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Image: ' . urldecode($hash));
 		$this->template->set('posts', $posts);
 		$this->template->build('board');
@@ -189,18 +256,18 @@ class Chan extends Public_Controller
 	public function search()
 	{
 		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order', 'page');
-		if($this->input->post())
+		if ($this->input->post())
 		{
 			$redirect_array = array(get_selected_board()->shortname, 'search');
-			foreach($modifiers as $modifier)
+			foreach ($modifiers as $modifier)
 			{
-				if($this->input->post($modifier))
+				if ($this->input->post($modifier))
 				{
 					$redirect_array[] = $modifier;
 					$redirect_array[] = rawurlencode($this->input->post($modifier));
 				}
 			}
-			
+
 			redirect(site_url($redirect_array));
 		}
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
@@ -213,24 +280,25 @@ class Chan extends Public_Controller
 		$this->template->build('board');
 	}
 
-	
+
 	public function report($num = 0)
 	{
 		if (!is_numeric($num) || !$num > 0)
 		{
 			show_404();
 		}
-		
-		if (!$this->input->is_ajax_request()) {
+
+		if (!$this->input->is_ajax_request())
+		{
 			show_404();
 		}
-		
+
 		$post = array(
 			'board' => get_selected_board()->id,
 			'post' => $this->input->post("post"),
 			'reason' => $this->input->post("reason")
 		);
-			
+
 		$report = new Report();
 		if (!$report->add($post))
 		{

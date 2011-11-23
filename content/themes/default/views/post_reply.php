@@ -13,14 +13,16 @@ if (!defined('BASEPATH'))
 		<?php endif; ?>
 	</header>
 	<div>
-		<?php echo form_open('', array('class' => 'form-stacked')) ?>
+		<?php echo form_open(get_selected_board()->shortname.'/sending', array('class' => 'form-stacked')) ?>
+		<?php echo form_hidden('reply_numero', $thread_id) ?>
 		<fieldset>
 			<div class="clearfix">
 				<label for="reply_name">Name</label>
 				<div class="input">
 					<?php echo form_input(array(
 						'name' => 'reply_bokunonome',
-						'id' => 'reply_name'
+						'id' => 'reply_name',
+						'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:'')
 					)); ?>
 				</div>
 			</div>
@@ -62,6 +64,22 @@ if (!defined('BASEPATH'))
 					)); ?>
 				</div>
 			</div>
+			<?php 
+			// controls for administrators and moderators
+			if($this->tank_auth->is_allowed()) : ?>
+			<div class="clearfix">
+				<label for="reply_postas">Post as</label>
+				<div class="input">
+					<?php 
+					$postas = array('user' => 'User', 'mod' => 'Moderator');
+					if($this->tank_auth->is_admin())
+					{
+						$postas['admin'] = 'Administrator';
+					}
+					echo form_dropdown('reply_postas', $postas,'id="reply_postas"'); ?>
+				</div>
+			</div>
+			<?php endif; ?>
 			<div class="actions">
 			<?php
 				echo form_hidden('id', $thread_id);

@@ -165,14 +165,38 @@ class Post extends CI_Model
 	function get_latest_ghost($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE)
 	{
 		// get exactly 20 be it thread starters or parents with distinct parent
-		$query = $this->db->query('
+		/*$query = $this->db->query('
 			SELECT DISTINCT(parent) as unq_parent, timestamp
 			FROM ' . $this->table_local . '
-			WHERE email != \'sage\'
 			ORDER BY timestamp DESC
 			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 		');
+		
+		$query = $this->db->query('
+			SELECT DISTINCT(q.parent) AS unq_parent, '.$this->table.'.* FROM
+			'.$this->table.'
+			RIGHT JOIN 
+			'.$this->table.' AS q
+			ON '.$this->table.'.`parent` = q.num
+			WHERE '.$this->table.'.`subnum` != 0 AND '.$this->table.'.`email` != ?
+			ORDER BY '.$this->table.'.timestamp DESC
+			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . ';
+		', array('sage'));
+		*/
+		
+		
+		//echo '<pre>';print_r( $query->result());echo '</pre>';
+		//die();
 
+		$query = $this->db->query('
+			SELECT DISTINCT(parent) as unq_parent
+			FROM ' . $this->table . '
+			WHERE ' . $this->table . '.email != \'sage\'
+			AND subnum > 0
+			ORDER BY timestamp DESC
+			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
+		');
+		
 		// get all the posts
 		$sql = array();
 		$threads = array();
@@ -269,12 +293,16 @@ class Post extends CI_Model
 	function get_posts_ghost($page = 1, $per_page = 1000, $process = TRUE, $clean = TRUE)
 	{
 		// get exactly 20 be it thread starters or parents with distinct parent
-		$query = $this->db->query('
-			SELECT num, subnum, timestamp, email
+		/*$query = $this->db->query('
+			SELECT num, subnum, timestamp,
 			FROM ' . $this->table_local . '
 			ORDER BY timestamp DESC
 			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
-		');
+		');*/
+		
+		//$query = $this->db->query('
+		//	SELECT num
+		//');
 
 		// get all the posts
 		$sql = array();
@@ -583,7 +611,7 @@ class Post extends CI_Model
 	{
 		if(check_stopforumspam_ip($this->input->ip_address()))
 		{
-			show_404();
+			return array('error'=>_('Your IP has been identified as a spam proxy. You can\'t post from there.'));
 		}
 		
 		$errors = array();
@@ -594,7 +622,8 @@ class Post extends CI_Model
 		}
 		else
 		{
-			$name_arr = process_name($data['name']);
+			$this->input->set_cookie('foolfuuka_reply_name', $data['name'], 60*60*24*30);
+			$name_arr = $this->process_name($data['name']);
 			$name = $name_arr[0];
 			if (isset($name_arr[1]))
 			{
@@ -613,7 +642,7 @@ class Post extends CI_Model
 		else
 		{
 			$email = $data['email'];
-			$this->input->set_cookie('foolfuuka_reply_email', $password, 60*60*24*30);
+			$this->input->set_cookie('foolfuuka_reply_email', $email, 60*60*24*30);
 		}
 
 		if ($data['subject'] == FALSE || $data['subject'] == '')
@@ -643,6 +672,8 @@ class Post extends CI_Model
 			$password = $data['password'];
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60*60*24*30);
 		}
+		$num = $data['num'];
+		$postas = $data['postas'];
 
 		$this->db->or_where('ip', $this->input->ip_address());
 		if ($this->session->userdata('poster_id'))
@@ -656,17 +687,19 @@ class Post extends CI_Model
 		{
 			foreach ($query->result() as $row)
 			{
-				if ($this->banned == 1)
+				if ($row->banned == 1)
 				{
-					// change to proper message
-					show_404();
+					return array('error' => 'You are banned from posting.');
 				}
 
-				if ($this->lastpost - time() < 20) // 20 seconds
+				if (time() - strtotime($row->lastpost) < 20 && !$this->tank_auth->is_allowed()) // 20 seconds
 				{
-					// change to proper message
-					show_404();
+					
+					return array('error' => 'You must wait at least 20 seconds before posting again.');
 				}
+				
+				$this->db->where('id', $row->id);
+				$this->db->update('posters', array('lastpost' => date('Y-m-d H:i:s')));
 			}
 		}
 		else
@@ -681,28 +714,39 @@ class Post extends CI_Model
 		}
 
 		// get the post after which we're replying to
-		// mostly copied from Fuuka original
+		// partly copied from Fuuka original
 		$this->db->query('
 				INSERT INTO ' . $this->table . '
-				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, pass, poster_id)
+				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, poster_id)
 				VALUES
 				(
 					(select max(num) from (select * from ' . $this->table . ' where parent=? or num=?) as x),
 					(select max(subnum)+1 from (select * from ' . $this->table . ' where num=(select max(num) from ' . $this->table . ' where parent=? or num=?)) as x),
-					?, CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?)
-				)
+					?, ?,?,?,?,?,?,?,?,?
+				);
 			', array(
 				$num, $num, 
 				$num, $num,
-				$num, 'N', $email, $name, $trip, $title, $comment, $password, $this->session->userdata('poster_id'))
+				$num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
 		);
 		
-		// copypasta from fuuka...
+		// I need num and subnum for a proper redirect
+		$posted = $this->db->query('
+			SELECT * FROM ' . $this->table . '
+			WHERE doc_id = ?
+			LIMIT 0,1;
+		',array($this->db->insert_id()));
+		
+		// we don't even need this, but let's leave it for sake of backward compatibility with original fuuka
 		$this->db->query('
 			replace into '.$this->table_local.' (num,parent,subnum,`timestamp`) 
 			select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from '.$this->table.'
 			where num = (select max(num) from '.$this->table.' where parent=?);
 		', array($num));
+		
+		$posted = $posted->result();
+		$posted = $posted[0];
+		return array('success' => TRUE, 'posted' => $posted);
 	}
 
 

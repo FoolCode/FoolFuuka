@@ -340,9 +340,10 @@ function check_stopforumspam_ip($ip)
 	$CI = & get_instance();
 	$query = $CI->db->query('
 		SELECT ip FROM ' . $CI->db->protect_identifiers('stopforumspam', TRUE) . ' 
-		WHERE ip = INET_NTOA('.$CI->db->escape($ip).')
+		WHERE ip = INET_ATON('.$CI->db->escape($ip).')
 		LIMIT 0,1;
 	');
-	
+	if($query->num_rows() > 0)
+		print_r($query->result());
 	return $query->num_rows() > 0;
 }

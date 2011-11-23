@@ -1,4 +1,4 @@
-
+ 
 /* Contain floats: h5bp.com/q */ 
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
@@ -13,8 +13,6 @@ a:hover {
 	color: #dd0000;
 }
 
-
-
 html {
 	min-height:100%;
 }
@@ -23,6 +21,9 @@ body {
 	background: #eefff2;
 	min-height:100%;
 }
+
+::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
+::selection { background: #fe57a1; color: #fff; text-shadow: none; }
 
 #header {
 	overflow:hidden;
@@ -127,8 +128,29 @@ article.thread .post_author {
 	color: #117743;
 }
 
+article.thread .post_author a {
+	text-decoration:underline;
+}
+
+
 article.thread .post_trip {
 	color: #117743;
+}
+
+article.thread .post_level {
+	font-weight:bold;
+}
+
+article.thread .post_level.post_level_moderator {
+	color:#800080;
+}
+
+article.thread .post_level.post_level_global_moderator {
+	color:#800080;
+}
+
+article.thread .post_level.post_level_administrator {
+	color:#FF0000;
 }
 
 article.thread .post_number {
@@ -137,10 +159,6 @@ article.thread .post_number {
 
 article.thread > .text {
 	padding:10px;
-	display:-moz-inline-stack;
-	display:inline-block;
-	zoom:1;
-	*display:inline;
 }
 
 article.post {

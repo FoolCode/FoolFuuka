@@ -32,7 +32,7 @@ foreach ($posts as $key => $post) : ?>
 		<?php endif; ?>
 	</header>
 	<?php if ($op->media_filename) : ?>
-	<img src="<?php echo $op->thumbnail_href ?>" width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>" md5="<?php echo $op->media_hash ?>" class="thread_image" />
+	<a href="<?php echo $op->remote_image_href ?>" target="_blank" class="thread_image_link"><img src="<?php echo $op->thumbnail_href ?>" width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>" md5="<?php echo $op->media_hash ?>" class="thread_image" /></a>
 	<?php endif; ?>
 	<div class="text">
 		<?php echo $op->comment_processed ?>
@@ -110,7 +110,7 @@ foreach ($posts as $key => $post) : ?>
 				<?php endif; ?>
 			</header>
 		<?php if ($p->media_filename) : ?>
-		<img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" md5="<?php echo $p->media_hash ?>" class="post_image" />
+		<a href="<?php echo $p->remote_image_href ?>" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" md5="<?php echo $p->media_hash ?>" class="post_image" /></a>
 		<?php endif; ?>
 			<div class="text">
 				<?php echo $p->comment_processed ?>

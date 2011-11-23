@@ -816,6 +816,7 @@ class Post extends CI_Model
 	{
 		$this->load->helper('text');
 		$post->thumbnail_href = $this->get_thumbnail_href($post);
+		$post->remote_image_href = $this->get_remote_image_href($post);
 		$post->comment_processed = $this->get_comment_processed($post);
 
 		// evil: &#8238; oykosneG fo suomynonA ,onriC&#8234;&#8234;&#8234;&#9320;
@@ -852,6 +853,13 @@ class Post extends CI_Model
 		if (file_exists((get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview)
 			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview;
 		return '';
+	}
+	
+	function get_remote_image_href($row)
+	{
+		if (!$row->media)
+			return '';
+		return get_selected_board()->images_url.$row->media_filename;
 	}
 
 

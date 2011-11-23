@@ -292,17 +292,14 @@ class Post extends CI_Model
 
 	function get_posts_ghost($page = 1, $per_page = 1000, $process = TRUE, $clean = TRUE)
 	{
-		// get exactly 20 be it thread starters or parents with distinct parent
-		/*$query = $this->db->query('
-			SELECT num, subnum, timestamp,
-			FROM ' . $this->table_local . '
+		// get exactly 20 be it thread starters or parents with different parent
+		$query = $this->db->query('
+			SELECT num, subnum, timestamp
+			FROM ' . $this->table . '
+			WHERE subnum > 0
 			ORDER BY timestamp DESC
 			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
-		');*/
-		
-		//$query = $this->db->query('
-		//	SELECT num
-		//');
+		');
 
 		// get all the posts
 		$sql = array();
@@ -313,7 +310,6 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->table . '
-					' . $this->sql_report . '
 					WHERE num = ' . $row->num . ' AND subnum = ' . $row->subnum . '
 				)
 			';

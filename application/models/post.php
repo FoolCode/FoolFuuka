@@ -835,7 +835,7 @@ class Post extends CI_Model
 				return array('error' => _('Couldn\'t delete post.'));
 			}
 			
-			return TRUE;
+			return array('success' => TRUE);
 		}
 		
 		return FALSE;

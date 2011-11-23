@@ -763,7 +763,9 @@ class Post extends CI_Model
 
 			if (count($matches2) > 1)
 			{
-				$trip = '!' . $this->tripcode($matches2[1]);
+				$trip = $this->tripcode($matches2[1]);
+				if($trip != '')
+					$trip = '!' . $trip;
 			}
 
 			if (count($matches2) > 2)
@@ -777,6 +779,8 @@ class Post extends CI_Model
 
 	function tripcode($plain)
 	{
+		if(trim($plain) == '')
+			return '';
 		$pw = mb_convert_encoding($plain, 'SJIS', 'UTF-8');
 		$pw = str_replace('&', '&amp;', $pw);
 		$pw = str_replace('"', '&quot;', $pw);

@@ -21,11 +21,13 @@ jQuery(document).ready(function(){
 	});
 	
 	jQuery("a[rel=delete]").click(function() {
-		
+		var post = jQuery(this).attr("id");
+		var modalDelete = jQuery("#post_tools_delete");
+		modalDelete.find("#modal-loading").hide();
+		modalDelete.find("#delete_post").html(jQuery(this).attr("alt"));
+		modalDelete.find("#delete_postid").val(post);
 	});
 	
-	
-	// Bind on Submits
 	var modalReport = jQuery("#post_tools_report");
 	modalReport.find("#modal-submit").click(function() {
 		var loading = modalReport.find("#modal-loading");
@@ -36,7 +38,7 @@ jQuery(document).ready(function(){
 			loading.hide();
 			if (result.status == 'failed')
 			{
-				alert('Sorry, there has was a problem with the report. Please try again later.');
+				modalReport.find("#modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
 				return false;
 			}
 			toggleHighlight(modalReport.find("#report_post").val().replace(',', '_'), 'reported', false);
@@ -46,12 +48,29 @@ jQuery(document).ready(function(){
 	});
 	
 	var modalDelete = jQuery("#post_tools_delete");
+	modalDelete.find("#modal-submit").click(function() {
+		var loading = modalDelete.find("#modal-loading");
+		var post = modalDelete.find("#delete_postid").val();
+		var href = this.href + post + '/';
+		loading.show();
+		jQuery.post(href, { post: post, password: modalDelete.find("#delete_passwd").val() }, function(result) {
+			loading.hide();
+			if (result.status == 'failed')
+			{
+				modalDelete.find("#modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
+				return false;
+			}
+			modalDelete.modal('hide');
+		}, 'json');
+		return false;
+	});
 	
 	post = location.href.split(/#/);
 	if (post[1]) {
 		if (post[1].match(/^q\d+(_\d+)?$/)) {
 			post[1] = post[1].replace('q', '').replace('_', ',');
 			jQuery("#reply_comment").append(">>" + post[1] + "\n");
+			post[1] = post[1].replace(',', '_')
 		}
 		replyHighlight(post[1]);
 	}
@@ -120,7 +139,6 @@ function getRadioValue(group)
 
 function toggleHighlight(id, classn, single)
 {
-	var articles = document.getElementsByTagName("article");
 	jQuery("article").each(function() {
 		var post = jQuery(this);
 		

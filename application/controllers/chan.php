@@ -302,12 +302,39 @@ class Chan extends Public_Controller
 		$report = new Report();
 		if (!$report->add($post))
 		{
-			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => '')));
+			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => 'Sorry, failed to report post to the moderators. Please try again later.')));
 			return false;
 		}
 		$this->output->set_output(json_encode(array('status' => 'success')));
 	}
 
+	
+	public function delete($num = 0)
+	{
+		if (!is_numeric($num) || !$num > 0)
+		{
+			show_404();
+		}
+
+		if (!$this->input->is_ajax_request())
+		{
+			show_404();
+		}
+		
+		$post = array(
+			'board' => get_selected_board()->id,
+			'post' => $this->input->post("post"),
+			'password' => $this->input->post("password")
+		);
+		
+		if (!$this->post->delete($post))
+		{
+			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => 'Sorry, failed to delete specified post. Please try again later.')));
+			return false;
+		}
+		$this->output->set_output(json_encode(array('status' => 'success')));
+	}
+	
 
 	public function remap_query()
 	{

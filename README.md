@@ -4,11 +4,10 @@ FoOlFuuka
 FoOlFuuka is a modern PHP imageboard based on Ellislabs' CodeIgniter and our FoOlSlide framework.
 
 While keeping the traditional format of an imageboard, it introduces several enhancements like a more graphic
-administration panel, HTML5, automatic spam control, friendlier reporting tools and so on, that Fuuka didn't
-provide.
+administration panel, HTML5, automatic spam control, friendlier reporting tools and so on.
 
-[Fuuka](http://code.google.com/p/fuuka/) was originally a 4chan archiver that we've inherited. 
-FoOlFuuka keeps this tradition and keeps working mainly as a mirror for threads that die out on 4chan.
+[Fuuka](http://code.google.com/p/fuuka/) was originally a 4chan archiver, and with FoOlFuuka we're respecting the tradition.
+FoOlFuuka still allows ghostposting, as well as giving admin controls and possibility to enable image posting.
 
 
 ATTENTION

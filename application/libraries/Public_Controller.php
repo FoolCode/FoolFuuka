@@ -9,6 +9,9 @@ class Public_Controller extends MY_Controller
 	{
 		parent::__construct();
 
+		// enable CSRF for public only
+		$this->config->config['csrf_protection'] = TRUE;
+		
 		// We need to set some theme stuff, so let's load the template system
 		$this->load->library('template');
 

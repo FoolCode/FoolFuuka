@@ -668,6 +668,13 @@ class Post extends CI_Model
 			$password = $data['password'];
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
+		
+		// phpass password for extra security, using the same tank_auth setting since it's cool
+		$hasher = new PasswordHash(
+								$this->config->item('phpass_hash_strength', 'tank_auth'),
+								$this->config->item('phpass_hash_portable', 'tank_auth'));
+		$password = $hasher->HashPassword($password);
+		
 		$num = $data['num'];
 		$postas = $data['postas'];
 
@@ -763,8 +770,12 @@ class Post extends CI_Model
 		}
 
 		$row = $query->row();
+		
+		$hasher = new PasswordHash(
+								$this->config->item('phpass_hash_strength', 'tank_auth'),
+								$this->config->item('phpass_hash_portable', 'tank_auth'));
 
-		if ((is_null($row->delpass) || $row->delpass !== $data['password']) && !$this->tank_auth->is_allowed())
+		if ($hasher->CheckPassword($data['password'], $row->delpass) !== TRUE && !$this->tank_auth->is_allowed())// && !$this->tank_auth->is_allowed())
 		{
 			log_message('debug', 'post.php delete() inserted wrong password');
 			return array('error' => _('The password you inserted did not match the post\'s deletion password.'));

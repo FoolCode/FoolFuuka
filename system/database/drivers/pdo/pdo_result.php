@@ -5,26 +5,26 @@
  * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
- * @author		ExpressionEngine Dev Team
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
+ * @author		EllisLab Dev Team
  * @link		http://codeigniter.com
- * @since		Version 1.0
+ * @since		Version 2.1.0
  * @filesource
  */
 
 // ------------------------------------------------------------------------
 
 /**
- * MySQLi Result Class
+ * PDO Result Class
  *
  * This class extends the parent result class: CI_DB_result
  *
  * @category	Database
- * @author		ExpressionEngine Dev Team
+ * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/database/
  */
-class CI_DB_mysqli_result extends CI_DB_result {
+class CI_DB_pdo_result extends CI_DB_result {
 
 	/**
 	 * Number of rows in the result set
@@ -34,7 +34,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	 */
 	function num_rows()
 	{
-		return @mysqli_num_rows($this->result_id);
+		return $this->result_id->rowCount();
 	}
 
 	// --------------------------------------------------------------------
@@ -47,7 +47,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	 */
 	function num_fields()
 	{
-		return @mysqli_num_fields($this->result_id);
+		return $this->result_id->columnCount();
 	}
 
 	// --------------------------------------------------------------------
@@ -62,13 +62,11 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	 */
 	function list_fields()
 	{
-		$field_names = array();
-		while ($field = mysqli_fetch_field($this->result_id))
+		if ($this->db->db_debug)
 		{
-			$field_names[] = $field->name;
+			return $this->db->display_error('db_unsuported_feature');
 		}
-
-		return $field_names;
+		return FALSE;
 	}
 
 	// --------------------------------------------------------------------
@@ -83,27 +81,27 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	 */
 	function field_data()
 	{
-		$retval = array();
-		while ($field = mysqli_fetch_object($this->result_id))
-		{
-			preg_match('/([a-zA-Z]+)(\(\d+\))?/', $field->Type, $matches);
-
-			$type = (array_key_exists(1, $matches)) ? $matches[1] : NULL;
-			$length = (array_key_exists(2, $matches)) ? preg_replace('/[^\d]/', '', $matches[2]) : NULL;
-
-			$F				= new stdClass();
-			$F->name		= $field->Field;
-			$F->type		= $type;
-			$F->default		= $field->Default;
-			$F->max_length	= $length;
-			$F->primary_key = ( $field->Key == 'PRI' ? 1 : 0 );
-
-			$retval[] = $F;
-		}
-
-		return $retval;
-	}
+		$data = array();
 	
+		try
+		{
+			for($i = 0; $i < $this->num_fields(); $i++)
+			{
+				$data[] = $this->result_id->getColumnMeta($i);
+			}
+			
+			return $data;
+		}
+		catch (Exception $e)
+		{
+			if ($this->db->db_debug)
+			{
+				return $this->db->display_error('db_unsuported_feature');
+			}
+			return FALSE;
+		}
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -115,7 +113,6 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	{
 		if (is_object($this->result_id))
 		{
-			mysqli_free_result($this->result_id);
 			$this->result_id = FALSE;
 		}
 	}
@@ -134,7 +131,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	 */
 	function _data_seek($n = 0)
 	{
-		return mysqli_data_seek($this->result_id, $n);
+		return FALSE;
 	}
 
 	// --------------------------------------------------------------------
@@ -149,7 +146,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	 */
 	function _fetch_assoc()
 	{
-		return mysqli_fetch_assoc($this->result_id);
+		return $this->result_id->fetch(PDO::FETCH_ASSOC);
 	}
 
 	// --------------------------------------------------------------------
@@ -163,12 +160,12 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	 * @return	object
 	 */
 	function _fetch_object()
-	{
-		return mysqli_fetch_object($this->result_id);
+	{	
+		return $this->result_id->fetchObject();
 	}
 
 }
 
 
-/* End of file mysqli_result.php */
-/* Location: ./system/database/drivers/mysqli/mysqli_result.php */
+/* End of file pdo_result.php */
+/* Location: ./system/database/drivers/pdo/pdo_result.php */

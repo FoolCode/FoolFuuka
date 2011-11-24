@@ -9,10 +9,6 @@ class Public_Controller extends MY_Controller
 	{
 		parent::__construct();
 
-		// enable CSRF for public only
-		$this->config->config['csrf_protection'] = TRUE;
-		
-		
 		// get the password needed for the reply field
 		if($this->input->cookie('foolfuuka_reply_password') == FALSE || strlen($this->input->cookie('foolfuuka_reply_password')) < 3)
 		{

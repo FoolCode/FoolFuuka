@@ -303,7 +303,7 @@ class Chan extends Public_Controller
 		if (!$report->add($post))
 		{
 			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => 'Sorry, failed to report post to the moderators. Please try again later.')));
-			return false;
+			return FALSE;
 		}
 		$this->output->set_output(json_encode(array('status' => 'success')));
 	}
@@ -322,17 +322,21 @@ class Chan extends Public_Controller
 		}
 		
 		$post = array(
-			'board' => get_selected_board()->id,
 			'post' => $this->input->post("post"),
 			'password' => $this->input->post("password")
 		);
 		
-		if (!$this->post->delete($post))
+		
+		$result = $this->post->delete($post);
+		if(isset($result['error']))
 		{
-			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => 'Sorry, failed to delete specified post. Please try again later.')));
-			return false;
+			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
+			return FALSE;
 		}
-		$this->output->set_output(json_encode(array('status' => 'success')));
+		if(isset($result['success']) && $result['success'] === TRUE)
+		{
+			$this->output->set_output(json_encode(array('status' => 'success')));
+		}
 	}
 	
 

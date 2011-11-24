@@ -758,6 +758,7 @@ class Post extends CI_Model
 
 		if ($query->num_rows() != 1)
 		{
+			log_message('debug', 'post.php delete() post or thread not found');
 			return array('error' => _('There\'s no such a post to be deleted.'));
 		}
 
@@ -765,6 +766,7 @@ class Post extends CI_Model
 
 		if ((is_null($row->delpass) || $row->delpass !== $data['password']) && !$this->tank_auth->is_allowed())
 		{
+			log_message('debug', 'post.php delete() inserted wrong password');
 			return array('error' => _('The password you inserted did not match the post\'s deletion password.'));
 		}
 
@@ -777,6 +779,7 @@ class Post extends CI_Model
 			// first the file
 			if (!$this->delete_thumbnail($row))
 			{
+				log_message('error', 'post.php delete() couldn\'t delete thumbnail from thread OP');
 				return array('error' => _('Couldn\'t delete the thumbnail.'));
 			}
 
@@ -788,6 +791,7 @@ class Post extends CI_Model
 
 			if ($this->db->affected_rows() != 1)
 			{
+				log_message('error', 'post.php delete() couldn\'t delete thread OP');
 				return array('error' => _('Couldn\'t delete thread\'s opening post.'));
 			}
 
@@ -805,6 +809,7 @@ class Post extends CI_Model
 				{
 					if ($this->delete_thumbnail($t) !== TRUE)
 					{
+						log_message('error', 'post.php delete() couldn\'t delete thumbnail from thread comments');
 						return array('error' => _('Couldn\'t delete the thumbnail(s).'));
 					}
 				}
@@ -821,6 +826,7 @@ class Post extends CI_Model
 		{
 			if ($this->delete_thumbnail($row)  !== TRUE)
 			{
+				log_message('error', 'post.php delete() couldn\'t delete thumbnail from comment');
 				return array('error' => _('Couldn\'t delete the thumbnail.'));
 			}
 
@@ -832,6 +838,7 @@ class Post extends CI_Model
 			
 			if ($this->db->affected_rows() != 1)
 			{
+				log_message('error', 'post.php delete() couldn\'t delete comment');
 				return array('error' => _('Couldn\'t delete post.'));
 			}
 			

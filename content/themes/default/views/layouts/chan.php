@@ -71,6 +71,7 @@
 
 		<!-- scripts concatenated and minified via build script -->
 		<script defer type="text/javascript" src="<?php echo site_url() ?>assets/bootstrap/bootstrap.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
+		<script defer type="text/javascript" src="<?php echo site_url() ?>assets/js/jquery.localize.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<script defer src="<?php echo site_url() ?>content/themes/<?php echo get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 
 		<!-- end scripts -->

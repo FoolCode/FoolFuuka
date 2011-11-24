@@ -750,7 +750,7 @@ class Post extends CI_Model
 	{
 		// $data => { board, doc_id/post, password }
 		$query = $this->db->query('
-			SELECT num, subnum, parent, doc_id, delpass
+			SELECT *
 			FROM ' . $this->table . '
 			WHERE doc_id = ?
 			LIMIT 0,1;
@@ -803,7 +803,7 @@ class Post extends CI_Model
 			{
 				foreach ($thread->result() as $t)
 				{
-					if (!$this->delete_thumbnail($t))
+					if ($this->delete_thumbnail($t) !== TRUE)
 					{
 						return array('error' => _('Couldn\'t delete the thumbnail(s).'));
 					}
@@ -819,7 +819,7 @@ class Post extends CI_Model
 		}
 		else
 		{
-			if (!$this->delete_thumbnail($row))
+			if ($this->delete_thumbnail($row)  !== TRUE)
 			{
 				return array('error' => _('Couldn\'t delete the thumbnail.'));
 			}
@@ -983,9 +983,9 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return TRUE;
 		
-		if (file_exists(get_thumbnail_dir($row)))
+		if (file_exists($this->get_thumbnail_dir($row)))
 		{
-			if (!@unlink(get_thumbnail_dir($row)))
+			if (!@unlink($this->get_thumbnail_dir($row)))
 			{
 				log_message('error', 'post.php delete_thumbnail(): couldn\'t remove thumbnail: ' . get_thumbnail_dir($row));
 				return FALSE;

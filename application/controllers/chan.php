@@ -339,6 +339,26 @@ class Chan extends Public_Controller
 		}
 	}
 	
+	public function statistics($stat = NULL)
+	{
+		$this->load->model('statistics');
+		if(is_null($stat))
+		{
+			$stats_list = $this->statistics->get_available_stats();
+			// show the stats list
+			return TRUE;
+		}
+		
+		$stat_array = $this->statistics->check_available_stats($stat);
+
+		if(!is_array($stat_array))
+		{
+			show_404();
+		}
+		
+		$this->statistics->cron();
+	}
+	
 
 	public function remap_query()
 	{

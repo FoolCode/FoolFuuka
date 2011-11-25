@@ -202,6 +202,7 @@ class Statistics extends CI_Model
 				}
 				// we got the lock!
 				$process = 'process_'.$k;
+				$this->db->reconnect();
 				$result = $this->$process($board);
 				$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
 			}
@@ -259,7 +260,9 @@ class Statistics extends CI_Model
 				ORDER BY name,trip
 		', array(time() - 2592000));
 
-		return $query->result();
+		$array = $query->result();
+		$query->free_result();
+		return $array;
 	}
 
 	function process_daily_activity($board)
@@ -275,7 +278,9 @@ class Statistics extends CI_Model
 			ORDER BY floor(timestamp/300)%288;
 		', array(date('Y-m-d H:i:s', time()-86400)));
 		
-		return $query->result();
+		$array = $query->result();
+		$query->free_result(); 		
+		return $array;
 	}
 	
 	function process_daily_activity_archive($board)
@@ -290,7 +295,9 @@ class Statistics extends CI_Model
 			ORDER BY floor(timestamp/3600)%24;
 		', array(date('Y-m-d H:i:s', time()-86400)));
 
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 	
 	function process_daily_activity_hourly($board)
@@ -306,7 +313,9 @@ class Statistics extends CI_Model
 			ORDER BY floor(timestamp/3600)%24;
 		', array(date('Y-m-d H:i:s', time()-86400)));
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 	
 	function process_image_reposts($board)
@@ -335,7 +344,9 @@ class Statistics extends CI_Model
 			ORDER BY total DESC;
 		');
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 	
 	function process_karma($board)
@@ -351,7 +362,9 @@ class Statistics extends CI_Model
 			ORDER BY days;			
 		', array(date('Y-m-d H:i:s', time()-31536000)));
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 	
 	function process_new_tripfriends($board)
@@ -367,7 +380,9 @@ class Statistics extends CI_Model
 			ORDER BY firstseen DESC;
 		');
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 	
 	
@@ -385,7 +400,9 @@ class Statistics extends CI_Model
 			ORDER BY days
 		', array(date('Y-m-d H:i:s', time()-31536000)));
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 	
 	
@@ -401,7 +418,9 @@ class Statistics extends CI_Model
 			LIMIT 512
 		');
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 
 	
@@ -414,7 +433,9 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 		', array(date('Y-m-d H:i:s', time()-3600)));
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 	
 	
@@ -426,7 +447,9 @@ class Statistics extends CI_Model
 			WHERE timestamp > ? AND subnum != 0
 		', array(date('Y-m-d H:i:s', time()-3600)));
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 	
 	
@@ -440,7 +463,9 @@ class Statistics extends CI_Model
 			ORDER BY max(timestamp) DESC
 		', array(date('Y-m-d H:i:s', time()-1800)));
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}	
 	
 	function process_users_online_internal($board)
@@ -454,7 +479,9 @@ class Statistics extends CI_Model
 			ORDER BY max(timestamp) DESC
 		', array(date('Y-m-d H:i:s', time()-3600)));
 		
-		return $query->result();
+		$array = $query->result(); 		
+		$query->free_result(); 		
+		return $array;
 	}
 	
 }

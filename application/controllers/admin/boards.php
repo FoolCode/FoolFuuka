@@ -58,7 +58,7 @@ class Boards extends Admin_Controller
 			$board->update_board_db($this->input->post());
 			
 			flash_notice('notice', sprintf(_('Updated board information for %s.'), $board->name));
-			// Did we change the stub of the comic? We need to redirect to the new page then.
+			// Did we change the shortname of the board? We need to redirect to the new page then.
 			if (isset($old_shortname) && $old_shortname != $board->shortname)
 			{
 				redirect('/admin/boards/board/' . $board->shortname);
@@ -90,7 +90,7 @@ class Boards extends Admin_Controller
 		$table = ormer($board);
 		
 		$table = tabler($table, FALSE, TRUE);
-		$data["form_title"] = _('Add New') . ' ' . _('Series');
+		$data["form_title"] = _('Add New') . ' ' . _('Board');
 		$data['table'] = $table;
 
 		$this->viewdata["extra_title"][] = _("Board");
@@ -102,7 +102,7 @@ class Boards extends Admin_Controller
 		if (!isAjax())
 		{
 			$this->output->set_output(_('You can\'t delete from outside the admin panel through this link.'));
-			log_message("error", "Controller: series.php/remove: failed serie removal");
+			log_message("error", "Controller: board.php/remove: failed serie removal");
 			return false;
 		}
 		$id = intval($id);
@@ -111,17 +111,17 @@ class Boards extends Admin_Controller
 		{
 			case("board"):
 				$board = new Board();
-				$comic->where('id', $id)->get();
+				$board->where('id', $id)->get();
 				$title = $board->name;
 				if (!$board->remove())
 				{
 					flash_notice('error', sprintf(_('Failed to delete the board %s.'), $title));
 					log_message("error", "Controller: board.php/remove: failed board removal");
-					echo json_encode(array('href' => site_url("admin/series/manage")));
+					echo json_encode(array('href' => site_url("admin/boards/manage")));
 					return false;
 				}
-				flash_notice('notice', sprintf(_('The series %s has been deleted.'), $title));
-				$this->output->set_output(json_encode(array('href' => site_url("admin/series/manage"))));
+				flash_notice('notice', sprintf(_('The board %s has been deleted.'), $title));
+				$this->output->set_output(json_encode(array('href' => site_url("admin/boards/manage"))));
 				break;
 		}
 	}

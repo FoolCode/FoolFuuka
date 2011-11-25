@@ -1,6 +1,4 @@
 jQuery(document).ready(function(){
-	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
-	
 	// Bind on REL
 	jQuery("[rel=popover]").popover({ offset: 10, html: true });
 	
@@ -33,6 +31,8 @@ jQuery(document).ready(function(){
 	jQuery("a.closeModal").click(function() {
 		jQuery(this).closest(".modal").modal("hide");
 	});
+	
+	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
 	
 	var modalReport = jQuery("#post_tools_report");
 	modalReport.find("#modal-submit").click(function() {

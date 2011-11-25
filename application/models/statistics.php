@@ -175,19 +175,23 @@ class Statistics extends CI_Model
 		
 		foreach($boards->all as $board)
 		{
+			echo $board->shortname.PHP_EOL;
 			foreach($available as $k => $a)
 			{
+				echo $k.PHP_EOL;
 				$found = FALSE;
 				foreach($stats->result() as $r)
 				{
 					if($r->board_id == $board->id && $r->name == $k)
 					{
 						$found = TRUE;
-						if($r->timestamp > time() - $a['frequence'] || !$this->lock_stat($r->board_id, $k, $r->timestamp))
+						//$r->timestamp >= time() - strtotime($a['frequence']) || 
+						if(!$this->lock_stat($r->board_id, $k, $r->timestamp))
 						{
 							// another process took it up while we were O(n^3)ing!
 							continue;
 						}
+						break;
 					}
 				}
 				
@@ -196,11 +200,10 @@ class Statistics extends CI_Model
 					// extremely rare case, let's hope we don't get in a racing condition with this!
 					$this->save_stat($board->id, $k, date('Y-m-d H:i:s', time()+600), '');
 				}
-				
 				// we got the lock!
 				$process = 'process_'.$k;
 				$result = $this->$process($board);
-				$this->save_stat($board->id, 'availability', date('Y-m-d H:i:s'), $query->result());
+				$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
 			}
 		}
 	}
@@ -254,7 +257,7 @@ class Statistics extends CI_Model
 				GROUP BY name,trip 
 				HAVING count(*)>4
 				ORDER BY name,trip
-		', array(date('Y-m-d H:i:s', time()-2592000)));
+		', array(time() - 2592000));
 
 		return $query->result();
 	}
@@ -263,8 +266,8 @@ class Statistics extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT (floor(timestamp/300)%288)*300, count(*),
-				count(case media_hash when `` then NULL else 1 end),
-				count(case email when `sage` then 1 else NULL end) 
+				count(case media_hash when \'\' then NULL else 1 end),
+				count(case email when \'sage\' then 1 else NULL end) 
 			FROM '.$this->get_table($board).' 
 			USE index(timestamp_index) 
 			WHERE timestamp > ?
@@ -279,7 +282,7 @@ class Statistics extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT ((floor(timestamp/3600)%24)*3600)+1800,
-				count(*), count(CASE email WHEN `sage` THEN 1 ELSE NULL END) 
+				count(*), count(CASE email WHEN \'sage\' THEN 1 ELSE NULL END) 
 			FROM '.$this->get_table($board).' 
 			USE index(timestamp_index) 
 			WHERE timestamp> ? AND subnum != 0 
@@ -294,8 +297,8 @@ class Statistics extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT ((floor(timestamp/3600)%24)*3600)+1800, count(*),
-				count(CASE media_hash WHEN `` THEN NULL ELSE 1 END),
-				count(CASE email WHEN `sage` THEN 1 ELSE NULL END)
+				count(CASE media_hash WHEN \'\' THEN NULL ELSE 1 END),
+				count(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM '.$this->get_table($board).'  
 			USE index(timestamp_index) 
 			WHERE timestamp > ? 
@@ -319,7 +322,7 @@ class Statistics extends CI_Model
 				(
 					SELECT media_hash AS hash, count(media_hash) AS total
 					FROM '.$this->get_table($board).' 
-					WHERE media_hash != ``
+					WHERE media_hash != \'\'
 					GROUP BY media_hash
 					ORDER BY count(media_hash) desc 
 					LIMIT 32
@@ -339,8 +342,8 @@ class Statistics extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT floor(timestamp/86400)*86400 AS days, count(*),
-				count(case media_hash when `` then NULL else 1 end),
-				count(case email when `sage` then 1 else NULL end)
+				count(case media_hash when \'\' then NULL else 1 end),
+				count(case email when \'sage\' then 1 else NULL end)
 			FROM '.$this->get_table($board).'
 			FORCE index(timestamp_index) 
 			WHERE timestamp > ?
@@ -372,9 +375,9 @@ class Statistics extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT floor(timestamp/86400)*86400 as days,
-				count(CASE WHEN trip != `` THEN 1 ELSE NULL END),
-				count(CASE WHEN name!=`Anonymous` AND trip = `` THEN 1 ELSE NULL END),
-				count(case WHEN name=`Anonymous` AND trip = `` THEN 1 ELSE NULL END) 
+				count(CASE WHEN trip != \'\' THEN 1 ELSE NULL END),
+				count(CASE WHEN name!=\'Anonymous\' AND trip = \'\' THEN 1 ELSE NULL END),
+				count(case WHEN name=\'Anonymous\' AND trip = \'\' THEN 1 ELSE NULL END) 
 			FROM '.$this->get_table($board).' 
 			FORCE index(timestamp_index)
 			WHERE timestamp > ?

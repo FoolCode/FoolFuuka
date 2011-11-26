@@ -941,9 +941,7 @@ class Post extends CI_Model
 		foreach (array('title', 'name', 'email', 'trip') as $element)
 		{
 			$element_processed = $element . '_processed';
-			$post->$element = preg_replace('/[\x{E2}\x{80}\x{AE}]/', '', $post->$element);
-			//$post->$element = ascii_to_entities($post->$element);
-			$post->$element = htmlentities($post->$element, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
+			$post->$element = fuuka_htmlescape($post->$element);
 			$post->$element_processed = $post->$element;
 		}
 

@@ -348,18 +348,21 @@ class Chan extends Public_Controller
 			$stats_list = $this->statistics->get_available_stats();
 			$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': '._('statistics'));
 			$this->template->set('stats_list', $stats_list);
-			$this->template->build('statistics_list');
+			$this->template->build('statistics/statistics_list');
 			return TRUE;
 		}
 
-		$stat_array = $this->statistics->check_available_stats($stat);
+		$stat_array = $this->statistics->check_available_stats($stat, get_selected_board());
 
 		if (!is_array($stat_array))
 		{
 			show_404();
 		}
 
-		
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': '._('statistics'));
+		$this->template->set('info', $stat_array['info']);
+		$this->template->set('data', $stat_array['data']);
+		$this->template->build('statistics/'.$stat_array['info']['interface']);
 	}
 
 

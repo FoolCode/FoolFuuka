@@ -34,14 +34,14 @@ class Statistics extends CI_Model
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequence' => 60 * 60 * 6, // every 6 hours
-				'interface' => 'list'
+				'interface' => 'availability'
 			),
 			'daily_activity' => array(
 				'name' => _('Daily activity'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequence' => 60 * 60 * 6, // every 6 hours
-				'interface' => 'list'
+				'interface' => 'daily_activity'
 			),
 			'daily_activity_archive' => array(
 				'name' => _('Daily activity archive'),
@@ -144,12 +144,24 @@ class Statistics extends CI_Model
 	}
 
 
-	function check_available_stats($stat)
+	function check_available_stats($stat, $selected_board)
 	{
 		$available = $this->get_available_stats();
 		if (isset($available[$stat]) && $available[$stat]['enabled'] === TRUE)
 		{
-			return array('data' => $available[$stat]);
+			$query = $this->db->query('
+				SELECT *
+				FROM ' . $this->db->protect_identifiers('statistics', TRUE) . '
+				WHERE board_id = ? AND name = ?
+				LIMIT 0,1
+			', array($selected_board->id, $stat));
+			if ($query->num_rows() != 1)
+			{
+				return FALSE;
+			}
+
+			$result = $query->result();
+			return array('info' => $available[$stat], 'data' => $result[0]->data);
 		}
 		return FALSE;
 	}

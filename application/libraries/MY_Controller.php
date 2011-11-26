@@ -15,6 +15,8 @@ class MY_Controller extends CI_Controller
 				show_error("If you are here, and have no clue why " . FOOLSLIDE_NAME . " is not working, start by reading the <a href='" . FOOLSLIDE_MANUAL_INSTALL_URL . "'>installation manual</a>.");
 		} else
 		{
+			//$this->output->enable_profiler(TRUE);
+			
 			$this->load->database();
 			$this->load->library('session');
 			$this->load->library('datamapper');

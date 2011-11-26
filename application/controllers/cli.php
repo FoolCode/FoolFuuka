@@ -8,6 +8,7 @@ class Cli extends MY_Controller
 	function __construct()
 	{
 		parent::__construct();
+		echo 'here';
 		if(!$this->input->is_cli_request())
 		{
 			show_404();

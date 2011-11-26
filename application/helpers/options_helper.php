@@ -48,6 +48,17 @@ if (!function_exists('load_settings'))
 
 }
 
+if (!function_exists('fuuka_htmlescape'))
+{
+	function fuuka_htmlescape($input)
+	{
+		$input = preg_replace('/[\x80]+/S', '', $input);
+		$result = remove_invisible_characters($input);
+		return htmlentities($input, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
+	}
+}
+
+
 /**
  * Return selected boards' shortname
  * 

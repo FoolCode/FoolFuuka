@@ -39,21 +39,21 @@ class Statistics extends CI_Model
 			'daily_activity' => array(
 				'name' => _('Daily activity'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => TRUE,
+				'enabled' => FALSE,
 				'frequence' => 60 * 60 * 6, // every 6 hours
 				'interface' => 'daily_activity'
 			),
 			'daily_activity_archive' => array(
 				'name' => _('Daily activity archive'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => TRUE,
+				'enabled' => FALSE,
 				'frequence' => 60 * 60, // every hour
 				'interface' => 'list'
 			),
 			'daily_activity_hourly' => array(
 				'name' => _('Daily activity hourly'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => TRUE,
+				'enabled' => FALSE,
 				'frequence' => 60 * 60, // every 6 hours
 				'interface' => 'list'
 			),
@@ -62,12 +62,12 @@ class Statistics extends CI_Model
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequence' => 60 * 60 * 24 * 7, // every 7 days
-				'interface' => 'list'
+				'interface' => 'image_reposts'
 			),
 			'karma' => array(
 				'name' => _('Karma'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => TRUE,
+				'enabled' => FALSE,
 				'frequence' => 60 * 60 * 24 * 7, // every 7 days
 				'interface' => 'list'
 			),
@@ -76,12 +76,12 @@ class Statistics extends CI_Model
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequence' => 60 * 60 * 24 * 4, // every 4 days
-				'interface' => 'list'
+				'interface' => 'new_tripfriends'
 			),
 			'population' => array(
 				'name' => _('Population'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => TRUE,
+				'enabled' => FALSE,
 				'frequence' => 60 * 60 * 24, // every day
 				'interface' => 'list'
 			),
@@ -90,33 +90,33 @@ class Statistics extends CI_Model
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequence' => 60 * 60 * 24 * 4, // every 4 days
-				'interface' => 'list'
+				'interface' => 'post_count'
 			),
 			'post_rate' => array(
 				'name' => _('Post rate'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => TRUE,
+				'enabled' => FALSE,
 				'frequence' => 60 * 3, // every 3 minutes
 				'interface' => 'list'
 			),
 			'post_rate_archive' => array(
 				'name' => _('Post rate archive'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => TRUE,
+				'enabled' => FALSE,
 				'frequence' => 60 * 3, // every 3 minutes
 				'interface' => 'list'
 			),
 			'users_online' => array(
 				'name' => _('Users online'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => TRUE,
+				'enabled' => FALSE,
 				'frequence' => 60, // every minute
 				'interface' => 'list'
 			),
 			'users_online_internal' => array(
-				'name' => _('Users online internal'),
+				'name' => _('Users posting in archive'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => TRUE,
+				'enabled' => FALSE,
 				'frequence' => 60, // every minute
 				'interface' => 'list'
 			)

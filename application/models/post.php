@@ -468,7 +468,7 @@ class Post extends CI_Model
 			}
 
 			$this->sphinxclient->setMatchMode(SPH_MATCH_ALL);
-			if ($search['ghost'] == 'desc')
+			if ($search['order'] == 'asc')
 			{
 				$this->sphinxclient->setSortMode(SPH_SORT_ATTR_ASC, 'num');
 			}

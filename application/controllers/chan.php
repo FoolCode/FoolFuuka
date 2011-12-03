@@ -299,7 +299,7 @@ class Chan extends Public_Controller
 		$title = _('Searching for posts ') . implode(' ' . _('and') . ' ', $title);
 		$this->template->set('section_title', $title);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name) . ' - '.$title;
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - '.$title);
 		$this->template->set('posts', $posts);
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 		$this->template->build('board');

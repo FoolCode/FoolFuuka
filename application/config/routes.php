@@ -44,6 +44,7 @@ $route['rss.xml'] = "feeds/feeds";
 $route['atom.xml'] = "feeds/feeds/atom";
 $route['install'] = "install";
 $route['api'] = "api";
+$route['cli'] = "cli";
 $route['admin'] = "admin/preferences";
 $route['account'] = "account/index/profile";
 $route['account/profile'] = "account/index/profile";
@@ -53,7 +54,7 @@ $route['account/request/(:any)'] = "account/index/request/$1";
 $route['account/leave_leadership/(:any)'] = "account/index/leave_leadership/$1";
 $route['admin/members/members'] = 'admin/members/membersa';
 
-$route['(?!(admin|account|install|feeds|api))(\w+)/(.*?)'] = "chan/$2/$3";
+$route['(?!(admin|account|install|feeds|api|cli))(\w+)/(.*?)'] = "chan/$2/$3";
 $route['(\w+)'] = "chan/$1/page";
 
 $route['404_override'] = '';

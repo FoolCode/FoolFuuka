@@ -1,3 +1,4 @@
+
 jQuery(document).ready(function(){
 	// Bind on REL
 	jQuery("[rel=popover]").popover({ offset: 10, html: true });

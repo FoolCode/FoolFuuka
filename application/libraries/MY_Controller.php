@@ -15,6 +15,8 @@ class MY_Controller extends CI_Controller
 				show_error("If you are here, and have no clue why " . FOOLSLIDE_NAME . " is not working, start by reading the <a href='" . FOOLSLIDE_MANUAL_INSTALL_URL . "'>installation manual</a>.");
 		} else
 		{
+			//$this->output->enable_profiler(TRUE);
+			
 			$this->load->database();
 			$this->load->library('session');
 			$this->load->library('datamapper');
@@ -103,8 +105,16 @@ class MY_Controller extends CI_Controller
 		$last_check = get_setting('fs_cron_stopforumspam');
 
 		// every 13 hours
-		if (time() - $last_check > 46800)
+		if (time() - $last_check > 86400)
 		{
+			$this->db->query('
+				INSERT 
+				INTO '.$this->db->protect_identifiers('preferences',TRUE).'
+				(name, value) VALUES (?, ?)
+				ON DUPLICATE KEY UPDATE
+				value = VALUES(value)
+			', array('fs_cron_stopforumspam', time()));
+			
 			$url = 'http://www.stopforumspam.com/downloads/listed_ip_90.zip';
 			if (function_exists('curl_init'))
 			{
@@ -139,7 +149,6 @@ class MY_Controller extends CI_Controller
 				INSERT IGNORE INTO ' . $this->db->protect_identifiers('stopforumspam', TRUE) . ' 
 				VALUES ' . implode(',',$ip_array).';');
 			
-			$this->db->update('preferences', array('value' => time()), array('name' => 'fs_cron_stopforumspam'));
 		
 			delete_files('content/cache/stopforumspam/', TRUE);
 		}

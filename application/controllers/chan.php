@@ -142,7 +142,7 @@ class Chan extends Public_Controller
 				$data['subject'] = $this->input->post('reply_talkingde');
 				$data['comment'] = $this->input->post('reply_chennodiscursus');
 				$data['password'] = $this->input->post('reply_nymphassword');
-				if($this->tank_auth->is_allowed())
+				if ($this->tank_auth->is_allowed())
 				{
 					$data['postas'] = $this->input->post('reply_postas');
 				}
@@ -308,7 +308,7 @@ class Chan extends Public_Controller
 		$this->output->set_output(json_encode(array('status' => 'success')));
 	}
 
-	
+
 	public function delete($num = 0)
 	{
 		if (!is_numeric($num) || !$num > 0)
@@ -320,45 +320,51 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
-		
+
 		$post = array(
 			'post' => $this->input->post("post"),
 			'password' => $this->input->post("password")
 		);
-		
-		
+
+
 		$result = $this->post->delete($post);
-		if(isset($result['error']))
+		if (isset($result['error']))
 		{
 			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
 			return FALSE;
 		}
-		if(isset($result['success']) && $result['success'] === TRUE)
+		if (isset($result['success']) && $result['success'] === TRUE)
 		{
 			$this->output->set_output(json_encode(array('status' => 'success')));
 		}
 	}
-	
+
+
 	public function statistics($stat = NULL)
 	{
 		$this->load->model('statistics');
-		if(is_null($stat))
+		if (is_null($stat))
 		{
 			$stats_list = $this->statistics->get_available_stats();
-			// show the stats list
+			$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': '._('statistics'));
+			$this->template->set('stats_list', $stats_list);
+			$this->template->build('statistics/statistics_list');
 			return TRUE;
 		}
-		
-		$stat_array = $this->statistics->check_available_stats($stat);
 
-		if(!is_array($stat_array))
+		$stat_array = $this->statistics->check_available_stats($stat, get_selected_board());
+
+		if (!is_array($stat_array))
 		{
 			show_404();
 		}
-		
-		$this->statistics->cron();
+
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': '._('statistics'));
+		$this->template->set('info', $stat_array['info']);
+		$this->template->set('data', $stat_array['data']);
+		$this->template->build('statistics/'.$stat_array['info']['interface']);
 	}
-	
+
 
 	public function remap_query()
 	{

@@ -18,7 +18,7 @@ if (!defined('BASEPATH'))
 		<textarea id="report_comment" style="width: 500px; max-width: 500px; min-height: 100px; font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace !important"></textarea>
 	</div>
 	<div class="modal-footer">
-		<a href="#" id="modal-cancel" class="btn secondary">Cancel</a>
+		<a href="#" id="modal-cancel" class="btn secondary closeModal">Cancel</a>
 		<a href="<?php echo site_url($this->fu_board . '/report/') ?>" id="modal-submit" class="btn primary">Report</a>
 	</div>
 </div>
@@ -36,7 +36,7 @@ if (!defined('BASEPATH'))
 		<input type="hidden" id="delete_postid" readonly="readonly" />
 	</div>
 	<div class="modal-footer">
-		<a href="#" id="modal-cancel" class="btn secondary">Cancel</a>
+		<a href="#" id="modal-cancel" class="btn secondary closeModal">Cancel</a>
 		<a href="<?php echo site_url($this->fu_board . '/delete/') ?>" id="modal-submit" class="btn primary">Delete</a>
 	</div>
 </div>

@@ -29,6 +29,12 @@ jQuery(document).ready(function(){
 		modalDelete.find("#delete_postid").val(post);
 	});
 	
+	jQuery("a.closeModal").click(function() {
+		jQuery(this).closest(".modal").modal("hide");
+	});
+	
+	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
+	
 	var modalReport = jQuery("#post_tools_report");
 	modalReport.find("#modal-submit").click(function() {
 		var loading = modalReport.find("#modal-loading");

@@ -164,30 +164,6 @@ class Post extends CI_Model
 
 	function get_latest_ghost($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE)
 	{
-		// get exactly 20 be it thread starters or parents with distinct parent
-		/* $query = $this->db->query('
-		  SELECT DISTINCT(parent) as unq_parent, timestamp
-		  FROM ' . $this->table_local . '
-		  ORDER BY timestamp DESC
-		  LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
-		  ');
-
-		  $query = $this->db->query('
-		  SELECT DISTINCT(q.parent) AS unq_parent, '.$this->table.'.* FROM
-		  '.$this->table.'
-		  RIGHT JOIN
-		  '.$this->table.' AS q
-		  ON '.$this->table.'.`parent` = q.num
-		  WHERE '.$this->table.'.`subnum` != 0 AND '.$this->table.'.`email` != ?
-		  ORDER BY '.$this->table.'.timestamp DESC
-		  LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . ';
-		  ', array('sage'));
-		 */
-
-
-		//echo '<pre>';print_r( $query->result());echo '</pre>';
-		//die();
-
 		$query = $this->db->query('
 			SELECT DISTINCT(parent) as unq_parent
 			FROM ' . $this->table . '
@@ -465,35 +441,30 @@ class Post extends CI_Model
 
 			if ($search['username'])
 			{
-				$this->sphinxclient->setFilter('name', $search['username']);
+				$this->sphinxclient->setFilter('name', array($search['username']));
 			}
 
 			if ($search['tripcode'])
 			{
-				$this->sphinxclient->setFilter('trip', $search['tripcode']);
-			}
-
-			if ($search['text'])
-			{
-				//	$this->sphinxclient->setFilter('comment', $search['text']);
+				$this->sphinxclient->setFilter('trip', array($search['tripcode']));
 			}
 
 			if ($search['deleted'] == "deleted")
 			{
-				$this->sphinxclient->setFilter('is_deleted', 1);
+				$this->sphinxclient->setFilter('is_deleted', array(1));
 			}
 			if ($search['deleted'] == "not-deleted")
 			{
-				$this->sphinxclient->setFilter('is_deleted', 0);
+				$this->sphinxclient->setFilter('is_deleted', array(0));
 			}
 
 			if ($search['ghost'] == "only")
 			{
-				$this->sphinxclient->setFilter('is_internal', 1);
+				$this->sphinxclient->setFilter('is_internal', array(1));
 			}
 			if ($search['ghost'] == "none")
 			{
-				$this->sphinxclient->setFilter('is_internal', 0);
+				$this->sphinxclient->setFilter('is_internal', array(0));
 			}
 
 			$this->sphinxclient->setMatchMode(SPH_MATCH_ALL);
@@ -668,13 +639,13 @@ class Post extends CI_Model
 			$password = $data['password'];
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
-		
+
 		// phpass password for extra security, using the same tank_auth setting since it's cool
 		$hasher = new PasswordHash(
-								$this->config->item('phpass_hash_strength', 'tank_auth'),
-								$this->config->item('phpass_hash_portable', 'tank_auth'));
+						$this->config->item('phpass_hash_strength', 'tank_auth'),
+						$this->config->item('phpass_hash_portable', 'tank_auth'));
 		$password = $hasher->HashPassword($password);
-		
+
 		$num = $data['num'];
 		$postas = $data['postas'];
 
@@ -770,10 +741,10 @@ class Post extends CI_Model
 		}
 
 		$row = $query->row();
-		
+
 		$hasher = new PasswordHash(
-								$this->config->item('phpass_hash_strength', 'tank_auth'),
-								$this->config->item('phpass_hash_portable', 'tank_auth'));
+						$this->config->item('phpass_hash_strength', 'tank_auth'),
+						$this->config->item('phpass_hash_portable', 'tank_auth'));
 
 		if ($hasher->CheckPassword($data['password'], $row->delpass) !== TRUE && !$this->tank_auth->is_allowed())// && !$this->tank_auth->is_allowed())
 		{
@@ -835,7 +806,7 @@ class Post extends CI_Model
 		}
 		else
 		{
-			if ($this->delete_thumbnail($row)  !== TRUE)
+			if ($this->delete_thumbnail($row) !== TRUE)
 			{
 				log_message('error', 'post.php delete() couldn\'t delete thumbnail from comment');
 				return array('error' => _('Couldn\'t delete the thumbnail.'));
@@ -846,16 +817,16 @@ class Post extends CI_Model
 				FROM ' . $this->table . '
 				WHERE doc_id = ?
 			', array($row->doc_id));
-			
+
 			if ($this->db->affected_rows() != 1)
 			{
 				log_message('error', 'post.php delete() couldn\'t delete comment');
 				return array('error' => _('Couldn\'t delete post.'));
 			}
-			
+
 			return array('success' => TRUE);
 		}
-		
+
 		return FALSE;
 	}
 
@@ -924,12 +895,10 @@ class Post extends CI_Model
 
 
 	/*
-	 |
-	 | MISC FUNCTIONS
-	 |
+	  |
+	  | MISC FUNCTIONS
+	  |
 	 */
-	
-	
 	function process_post($post, $clean = TRUE)
 	{
 		$this->load->helper('text');
@@ -978,7 +947,7 @@ class Post extends CI_Model
 	{
 		if (!$row->preview)
 			return FALSE;
-		
+
 		if ($row->parent > 0)
 			$number = $row->parent;
 		else
@@ -998,7 +967,7 @@ class Post extends CI_Model
 		// don't try deleting what isn't there anyway
 		if (!$row->preview)
 			return TRUE;
-		
+
 		if (file_exists($this->get_thumbnail_dir($row)))
 		{
 			if (!@unlink($this->get_thumbnail_dir($row)))

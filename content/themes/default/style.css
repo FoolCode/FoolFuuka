@@ -37,6 +37,16 @@ body {
 	margin-bottom:0;
 }
 
+#header h1 {
+	line-height:140%;
+}
+
+#header h6 {
+	padding:0;
+	margin:0;
+	line-height:180%;
+}
+
 #top_tools {
 	border-bottom: 1px solid #555;
 	margin: 12px 0;

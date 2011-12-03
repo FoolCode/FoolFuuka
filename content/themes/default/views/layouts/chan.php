@@ -54,6 +54,9 @@
 			<?php endif; ?>
 
 			<div role="main">
+				<?php if(isset($section_title)): ?>
+				<h3 class="section_title"><?php echo $section_title ?></h3>
+				<?php endif; ?>
 				<?php echo $template['body']; ?>
 				
 				<?php echo $template['partials']['post_tools']; ?>

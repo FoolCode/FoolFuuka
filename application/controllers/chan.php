@@ -51,6 +51,8 @@ class Chan extends Public_Controller
 		$posts = $this->post->get_latest($page);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
+		if ($page > 1)
+			$this->template->set('section_title', _('Page ') . $page);
 		$this->template->set('posts', $posts);
 		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
@@ -79,6 +81,8 @@ class Chan extends Public_Controller
 		$posts = $this->post->get_latest_ghost($page);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
+		if ($page > 1)
+			$this->template->set('section_title', _('Ghosts page ') . $page);
 		$this->template->set('posts', $posts);
 		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
@@ -243,9 +247,11 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
+		$hash = urldecode($hash);
 		$page = intval($page);
-		$posts = $this->post->get_image(urldecode($hash) . '==', $page);
+		$posts = $this->post->get_image($hash . '==', $page);
 
+		$this->template->set('section_title', _('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Image: ' . urldecode($hash));
 		$this->template->set('posts', $posts);
 		$this->template->build('board');
@@ -273,8 +279,27 @@ class Chan extends Public_Controller
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
 		$posts = $this->post->get_search($search);
 
-		//echo '<pre>'; print_r($posts); echo '</pre>';
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
+		$title = array();
+		if ($search['text'])
+			$title[] = _('including') . ' "' . trim(fuuka_htmlescape($search['text'])) . '"';
+		if ($search['username'])
+			$title[] = _('with username'). ' "' . trim(fuuka_htmlescape($search['username'])) . '"';
+		if ($search['tripcode'])
+			$title[] = _('with tripcode'). ' "' . trim(fuuka_htmlescape($search['tripcode'])) . '"';
+		if ($search['deleted'] == 'deleted')
+			$title[] = _('that are deleted');
+		if ($search['deleted'] == 'not-deleted')
+			$title[] = _('that aren\'t deleted');
+		if ($search['ghost'] == 'only')
+			$title[] = _('that are by ghosts');
+		if ($search['ghost'] == 'none')
+			$title[] = _('that aren\' by ghosts');
+		
+			
+		$title = _('Searching for posts ') . implode(' ' . _('and') . ' ', $title);
+		$this->template->set('section_title', $title);
+
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name) . ' - '.$title;
 		$this->template->set('posts', $posts);
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 		$this->template->build('board');
@@ -346,7 +371,7 @@ class Chan extends Public_Controller
 		if (is_null($stat))
 		{
 			$stats_list = $this->statistics->get_available_stats();
-			$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': '._('statistics'));
+			$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': ' . _('statistics'));
 			$this->template->set('stats_list', $stats_list);
 			$this->template->build('statistics/statistics_list');
 			return TRUE;
@@ -359,10 +384,10 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': '._('statistics'));
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': ' . _('statistics'));
 		$this->template->set('info', $stat_array['info']);
 		$this->template->set('data', $stat_array['data']);
-		$this->template->build('statistics/'.$stat_array['info']['interface']);
+		$this->template->build('statistics/' . $stat_array['info']['interface']);
 	}
 
 

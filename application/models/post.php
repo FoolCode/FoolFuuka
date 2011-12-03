@@ -468,7 +468,15 @@ class Post extends CI_Model
 			}
 
 			$this->sphinxclient->setMatchMode(SPH_MATCH_ALL);
-			$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
+			if ($search['ghost'] == 'desc')
+			{
+				$this->sphinxclient->setSortMode(SPH_SORT_ATTR_ASC, 'num');
+			}
+			else
+			{
+				$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
+			}
+
 			$search_result = $this->sphinxclient->query($search['text'], 'a_ancient a_main a_delta');
 			if ($search_result === false)
 			{
@@ -863,11 +871,7 @@ class Post extends CI_Model
 		if (trim($plain) == '')
 			return '';
 		$pw = mb_convert_encoding($plain, 'SJIS', 'UTF-8');
-		$pw = str_replace('&', '&amp;', $pw);
-		$pw = str_replace('"', '&quot;', $pw);
-		$pw = str_replace("'", '&#39;', $pw);
-		$pw = str_replace('<', '&lt;', $pw);
-		$pw = str_replace('>', '&gt;', $pw);
+		$pw = str_replace(array('&', '"', "'", '<', '>'), array('&amp;', '&quot;', '&#39;', '&lt;', '&gt;'), $pw);
 
 		$salt = substr($pw . 'H.', 1, 2);
 		$salt = preg_replace('/[^.\/0-9:;<=>?@A-Z\[\\\]\^_`a-z]/', '.', $salt);

@@ -4,11 +4,11 @@ exit('No direct script access allowed');
 
 foreach ($posts as $key => $post) : ?>
 
-<article class="thread">
+<article <?php if(isset($post['op'])) : ?>id="<?php echo $post['op']->num ?>" class="thread doc_id_<?php echo $post['op']->doc_id ?>"<?php else: ?> class="thread" <?php endif;?>>
 	<?php if(isset($post['op'])) :
 		$op = $post['op'];
 	?>
-	<header id="<?php echo $op->num ?>" class="<?php echo ((isset($op->report_status) && !is_null($op->report_status))?' reported':'') ?>">
+	<header class="<?php echo ((isset($op->report_status) && !is_null($op->report_status))?' reported':'') ?>">
 		<div class="post_data">
 			<div class="input-prepend">
 				<span class="add-on">
@@ -37,7 +37,7 @@ foreach ($posts as $key => $post) : ?>
 		<br/>
 		<span class="post_file" style="padding-left: 2px"><?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media ?></span>
 		<div class="post_file_controls">
-			<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>" class="btn parent">View Same</a><a href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>" class="btn parent">iqdb</a><a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>" class="btn parent">Google</a>
+			<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>" class="btn parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>" class="btn parent">iqdb</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>" class="btn parent">Google</a>
 		</div>
 
 	</div>
@@ -71,7 +71,7 @@ foreach ($posts as $key => $post) : ?>
 			$p->parent = $p->num;
 		?>
 		
-		<article class="post <?php if ($p->subnum > 0) : ?>post_ghost<?php endif; ?><?php echo ((isset($p->report_status) && !is_null($p->report_status))?' reported':'') ?>" id="<?php echo $p->num . (($p->subnum > 0)?'_' . $p->subnum:'') ?>">
+		<article class="post doc_id_<?php echo $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php echo ((isset($p->report_status) && !is_null($p->report_status))?' reported':'') ?>" id="<?php echo $p->num . (($p->subnum > 0)?'_' . $p->subnum:'') ?>">
 			<header>
 				<div class="post_data">
 					<h2 class="post_title"><?php echo $p->title_processed ?></h2>
@@ -103,7 +103,7 @@ foreach ($posts as $key => $post) : ?>
 			<br/>
 			<span class="post_file"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></span>
 			<div class="post_file_controls">
-				<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btn parent">View Same</a><a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btn parent">iqdb</a><a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btn parent">Google</a>
+				<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btn parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btn parent">iqdb</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btn parent">Google</a>
 			</div>
 		</div>
 		<?php endif; ?>

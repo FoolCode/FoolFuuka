@@ -68,6 +68,7 @@ jQuery(document).ready(function(){
 				return false;
 			}
 			modalDelete.modal('hide');
+			jQuery('.doc_id_' + post).remove();
 		}, 'json');
 		return false;
 	});

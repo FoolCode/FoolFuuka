@@ -294,6 +294,8 @@ class Chan extends Public_Controller
 			$title[] = _('that are by ghosts');
 		if ($search['ghost'] == 'none')
 			$title[] = _('that aren\' by ghosts');
+		if ($search['order'] == 'asc')
+			$title[] = _('starting from the oldest ones');
 		
 			
 		$title = _('Searching for posts ') . implode(' ' . _('and') . ' ', $title);

@@ -77,6 +77,7 @@ body {
 
 input, textarea, select, .uneditable-input {
 	height:15px;
+	line-height:15px;
 }
 
 .input-prepend .add-on, .input-append .add-on {
@@ -84,32 +85,46 @@ input, textarea, select, .uneditable-input {
 	line-height:15px
 }
 
-.post_controls .btn.parent:first-child {
+.post_controls .btn.parent:first-child{
 	margin-left: 0px;
 }
 
-.post_controls .btn.parent:last-child {
+
+.post_file_controls .btn.parent:first-child {
+	border-radius: 0 0 0 3px;
+	-webkit-border-radius: 0 0 0 3px;
+	-moz-border-radius: 0 0 0 3px;
+	background-repeat:repeat-x; /* fix for Opera */
+}
+
+.post_controls .btn.parent:last-child{
 	border-radius: 0 3px 3px 0;
 	-webkit-border-radius: 0 3px 3px 0;
 	-moz-border-radius: 0 3px 3px 0;
 }
 
-.post_controls .btn.parent {
-	line-height: 14px;
-	font-size: 13px;
-	border-radius:0;
-	padding: 4px 10px 4px;
-	-webkit-border-radius:0;
-	-moz-border-radius:0;
-	margin-left: -5px;
+.post_file_controls .btn.parent:last-child {
+	border-radius: 0 0px 3px 0;
+	-webkit-border-radius: 0 0px 3px 0;
+	-moz-border-radius: 0 0px 3px 0;
 }
 
-article > header > .input-prepend .add-on {
+.post_controls .btn.parent, .post_file_controls .btn.parent {
+	line-height: 14px;
+	font-size: 13px;
+	padding: 4px 10px 4px 11px;
+	border-radius:0;
+	-webkit-border-radius:0;
+	-moz-border-radius:0;
+	margin-left: -1px;
+}
+
+article > header > * >.input-prepend .add-on {
 	height: 14px;
 	line-height: 14px;
 }
 
-article > header > .post_sub_controls {
+article > header > * > .post_sub_controls {
 	-webkit-transition: opacity 200ms ease-in-out;
 	-moz-transition: opacity 200ms ease-in-out;
 	-o-transition: opacity 200ms ease-in-out;
@@ -118,7 +133,7 @@ article > header > .post_sub_controls {
 	opacity: 0;
 }
 
-article:hover > header > .post_sub_controls {
+article:hover > header > * > .post_sub_controls {
 	opacity: 1;
 }
 
@@ -146,10 +161,45 @@ article:hover > header > .post_sub_controls {
 	margin-left: -5px;
 }
 
+
+.post_data .add-on {
+	border-bottom-left-radius: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-moz-border-radius-bottom-left: 0;
+	min-width:420px;
+}
+
+article.thread > .thread_image_box {
+	padding: 4px 4px 0;
+	background: #f5f5f5;
+	position:relative;
+	top:-6px;
+	z-index:5;
+	border: 1px solid #ccc;
+	border-bottom-left-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottom-left: 3px;
+	border-bottom-right-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-moz-border-radius-bottom-right: 3px;
+	border-top: 1px solid #eee;
+	text-align:center;
+	color: #bfbfbf;
+	text-shadow: 0px 1px 0px #fff;
+	max-width:251px;
+	font-size:0.9em;
+	line-height:150%;
+}
+
+article.thread > .thread_image_box > .post_file_controls {
+	position:relative;
+	bottom:-1px;
+	margin: 0 -5px 0 -4px;
+}
+
 /* board */
 
 article.thread {
-	border-bottom: 1px solid #000;
 	padding: 15px 0;
 	word-wrap: break-word
 }
@@ -158,9 +208,9 @@ article.thread header {
 	margin-bottom: 5px;
 }
 
-article.thread > .thread_image_link {
+article.thread > .thread_image_box {
 	float:left;
-	margin: 0 16px 10px 10px;
+	margin: 0 16px 10px 0px;
 }
 
 article.thread h2.post_title {

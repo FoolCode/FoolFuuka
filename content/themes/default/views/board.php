@@ -97,11 +97,9 @@ foreach ($posts as $key => $post) : ?>
 			</header>
 		<?php if ($p->media_filename) : ?>
 		<div class="thread_image_box">
-			<span class="post_file"><?php echo $p->media ?></span>
-			<br/>
+			<div class="post_file"><?php echo $p->media ?></div>
 			<a href="<?php echo $p->remote_image_href ?>" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" md5="<?php echo $p->media_hash ?>" class="post_image" /></a>
-			<br/>
-			<span class="post_file"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></span>
+			<div class="post_file"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></div>
 			<div class="post_file_controls">
 				<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btn parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btn parent">iqdb</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btn parent">Google</a>
 			</div>

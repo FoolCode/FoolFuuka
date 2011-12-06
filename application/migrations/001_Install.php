@@ -18,7 +18,7 @@ class Migration_Install extends CI_Migration
                                           `user_data` varchar(8000) COLLATE utf8_bin NOT NULL,
                                           PRIMARY KEY (`session_id`),
                                           KEY `last_activity_idx` (`last_activity`)
-                                        ) ENGINE=MEMORY DEFAULT CHARSET=utf8 COLLATE=utf8_bin;"
+                                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;"
 			);
 		}
 

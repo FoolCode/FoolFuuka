@@ -31,6 +31,9 @@
 		<div class="container-fluid">
 			<header id="header">
 			<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
+				<aside id="top_tools">
+					<?php echo $template['partials']['top_tools']; ?>
+				</aside>
 				[
 				<?php
 				$board_urls = array();
@@ -43,15 +46,9 @@
 				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
 				
 					<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
+				
 				<?php endif; ?>
-				<h6>This archiver does have Super Loli Powers.</h6>
 			</header>
-
-			<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
-				<aside id="top_tools">
-					<?php echo $template['partials']['top_tools']; ?>
-				</aside>
-			<?php endif; ?>
 
 			<div role="main">
 				<?php if(isset($section_title)): ?>

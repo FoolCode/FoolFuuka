@@ -38,7 +38,7 @@ body {
 	margin:0px 0;
 	color: #f5f5f5;
 	border-bottom: 2px solid #000;
-	background:url(images/green-fibers.png) #eee;
+	background:url(images/green-fibers.png) #888;
 }
 
 #header a {
@@ -73,6 +73,7 @@ body {
 
 #top_tools label {
 	width:auto;
+	color:#f5f5f5;
 }
 
 #top_tools .input {
@@ -97,6 +98,24 @@ input, textarea, select, .uneditable-input {
 	line-height:15px
 }
 
+
+#main {
+}
+
+#main .section_title {
+	padding:2px 10px 2px 35px;
+	border-bottom:3px solid #888;
+	background:#ddebdd;
+}
+
+
+
+#footer {
+	background:url(images/green-fibers.png) #888;	
+	padding:10px;
+	margin-top:0;
+	color:#f5f5f5;
+}
 
 /* board */
 
@@ -128,9 +147,7 @@ article.thread > header {
 
 article.thread > .thread_image_box {
 	float:left;
-	margin: 0 0 0 5px;
-	position:relative;
-	top:-6px;
+	margin: 0 0 0 10px;
 	z-index:5;
 	border-bottom-left-radius: 3px;
 	-webkit-border-bottom-left-radius: 3px;
@@ -158,9 +175,28 @@ article.thread > .thread_image_box > .post_file_controls .btn.parent {
 	font-size:12px;
 }
 
+article.thread > .thread_tools_bottom {
+	margin-left: 300px;
+	border-top: 1px solid #eee;
+	padding: 6px 0px;
+}
+
+article.thread > .thread_tools_bottom .omitted {
+	color: #aaa;
+	font-weight:bold;
+	font-size:14px;
+	margin-left:15px;
+	position:relative;
+	top:1px;
+}
+
+
 
 article.thread .post_controls .btn.parent:first-child{
-	margin-left: 0px;
+	border-radius: 3px 0 0 3px;
+	-webkit-border-radius: 3px 0 0 3px;
+	-moz-border-radius: 3px 0 0 3px;
+	margin-left: 10px;
 }
 
 
@@ -184,8 +220,8 @@ article.thread .post_file_controls .btn.parent:last-child {
 }
 
 article.thread .post_controls .btn.parent, article.thread .post_file_controls .btn.parent {
-	line-height: 14px;
-	font-size: 13px;
+	line-height: 12px;
+	font-size: 12px;
 	padding: 4px 10px 4px 11px;
 	border-radius:0;
 	-webkit-border-radius:0;
@@ -267,8 +303,9 @@ article.thread > .text {
 }
 
 article.post {
-	clear:both;
-	padding: 5px 0 10px 0;
+	overflow:hidden;
+	margin-left:300px;
+	padding: 0 0 10px 0;
 	border-top-right-radius: 3px;
 	-webkit-border-top-right-radius: 3px;
 	-moz-border-top-right-radius: 3px;
@@ -291,15 +328,18 @@ article.thread article.post .btn.parent{
 }
 
 article.thread article.post header{
-	margin-left: 300px;
 	padding-top:5px;
-	border-top:1px solid #ddd;
+	border-top:1px solid #aaa;
+}
 
+article.post > .text {
+	padding: 7px 10px 0px 15px;
+	word-wrap: break-word;
 }
 
 article.thread article.post header .btn.parent{
-	font-size:13px;
-	line-height:16px;
+	font-size:12px;
+	line-height:13px;
 	margin-bottom:-4px;
 	position:relative;
 	right:-7px;
@@ -353,11 +393,6 @@ article.post .highlight {
 	background: #d6bad0;
 }
 
-article.post > .text {
-	padding: 7px 10px 0px 5px;
-	word-wrap: break-word;
-	margin-left: 300px;
-}
 
 section.reply {
 	background: #99ccaa;
@@ -407,6 +442,7 @@ section.reply {
 	padding: 0 20px 0 0;
 	border-bottom:1px solid #a1c7a3;
 	border-left:1px solid #e6f0ea;
+	margin-left:300px;
 }
 
 section.reply header {

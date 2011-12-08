@@ -50,7 +50,7 @@
 				<?php endif; ?>
 			</header>
 
-			<div role="main">
+			<div role="main" id="main">
 				<?php if(isset($section_title)): ?>
 				<h3 class="section_title"><?php echo $section_title ?></h3>
 				<?php endif; ?>
@@ -60,7 +60,7 @@
 			</div> <!-- end of #main -->
 
 
-			<footer><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?></footer>
+			<footer id="footer"><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?></footer>
 		</div>
 
 		<!-- JavaScript at the bottom for fast page loading -->

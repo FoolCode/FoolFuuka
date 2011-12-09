@@ -439,14 +439,20 @@ class Post extends CI_Model
 
 			$this->sphinxclient->SetLimits(($search['page'] * 25) - 25, 25, 5000);
 
+			$query = '';
 			if ($search['username'])
 			{
-				$this->sphinxclient->setFilter('name', array($search['username']));
+				$query .= '@name '. $this->sphinxclient->EscapeString($search['username']). ' ';
 			}
 
 			if ($search['tripcode'])
 			{
-				$this->sphinxclient->setFilter('trip', array($search['tripcode']));
+				$query .= '@trip '. $this->sphinxclient->EscapeString($search['tripcode']). ' ';
+			}
+			
+			if ($search['text'])
+			{
+				$query .= '@comment '. $this->sphinxclient->HalfEscapeString($search['text']). ' ';
 			}
 
 			if ($search['deleted'] == "deleted")
@@ -467,7 +473,7 @@ class Post extends CI_Model
 				$this->sphinxclient->setFilter('is_internal', array(0));
 			}
 
-			$this->sphinxclient->setMatchMode(SPH_MATCH_ALL);
+			$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED);
 			if ($search['order'] == 'asc')
 			{
 				$this->sphinxclient->setSortMode(SPH_SORT_ATTR_ASC, 'num');
@@ -477,9 +483,9 @@ class Post extends CI_Model
 				$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
 			}
 
-			$search_result = $this->sphinxclient->query($search['text'], 'a_ancient a_main a_delta');
+			$search_result = $this->sphinxclient->query($query, 'a_ancient a_main a_delta');
 			if ($search_result === false)
-			{
+			{ echo 'here';
 				// show some actual error...
 				show_404();
 			}

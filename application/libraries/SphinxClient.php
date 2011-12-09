@@ -1495,6 +1495,20 @@ class SphinxClient
 
 		return str_replace ( $from, $to, $string );
 	}
+	
+	
+	/**
+	 * Escape function that wasn't in original
+	 * @param type $string
+	 * @return type 
+	 */
+	function HalfEscapeString ( $string )
+	{
+		$from = array ( '\\', '(',')','!','@','~','"','&', '/', '^', '$', '=' );
+		$to   = array ( '\\\\', '\(','\)','\!','\@','\~','\"', '\&', '\/', '\^', '\$', '\=' );
+
+		return str_replace ( $from, $to, $string );
+	}
 
 	/////////////////////////////////////////////////////////////////////////////
 	// attribute updates

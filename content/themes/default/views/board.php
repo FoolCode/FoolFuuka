@@ -102,8 +102,8 @@ foreach ($posts as $key => $post) :
 										<a href="<?php echo site_url($this->fu_board . '/report/' . $p->doc_id) ?>" class="btn parent" rel="report" id="<?php echo $p->doc_id ?>" alt="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_report" data-backdrop="true" data-keyboard="true">Report</a><a href="<?php echo site_url($this->fu_board . '/delete/' . $p->doc_id) ?>" class="btn parent" rel="delete" id="<?php echo $p->doc_id ?>" alt="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_delete" data-backdrop="true" data-keyboard="true">Delete</a>
 									</span>
 								<?php endif; ?>
+								<?php if ($p->subnum > 0) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/communicate-icon.png'; ?>" title="This is a ghost post, not coming from 4chan"/></span><?php endif ?>
 							</div>
-							<?php if ($p->subnum > 0) : ?><span class="post_type"><img src="<?php echo icons(356, 16) ?>" title="This is a ghost post, not coming from 4chan"/></span><?php endif ?>
 						</header>
 						<div class="text" <?php if ($p->media_filename) echo 'style="margin-left:310px;"'; ?>>
 							<?php echo $p->comment_processed ?>

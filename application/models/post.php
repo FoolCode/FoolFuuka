@@ -418,7 +418,7 @@ class Post extends CI_Model
 	{
 		if ($search['page'])
 		{
-			if (!is_numeric($search['page']) || $search['page'] > 200)
+			if (!is_numeric($search['page']) || $search['page'] > 30)
 			{
 				show_404();
 			}
@@ -442,17 +442,17 @@ class Post extends CI_Model
 			$query = '';
 			if ($search['username'])
 			{
-				$query .= '@name '. $this->sphinxclient->EscapeString($search['username']). ' ';
+				$query .= '@name ' . $this->sphinxclient->EscapeString($search['username']) . ' ';
 			}
 
 			if ($search['tripcode'])
 			{
-				$query .= '@trip '. $this->sphinxclient->EscapeString($search['tripcode']). ' ';
+				$query .= '@trip ' . $this->sphinxclient->EscapeString($search['tripcode']) . ' ';
 			}
-			
+
 			if ($search['text'])
 			{
-				$query .= '@comment '. $this->sphinxclient->HalfEscapeString($search['text']). ' ';
+				$query .= '@comment ' . $this->sphinxclient->HalfEscapeString($search['text']) . ' ';
 			}
 
 			if ($search['deleted'] == "deleted")
@@ -483,9 +483,10 @@ class Post extends CI_Model
 				$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
 			}
 
-			$search_result = $this->sphinxclient->query($query, 'a_ancient a_main a_delta');
+			$search_result = $this->sphinxclient->query($query, get_selected_board()->shortname . '_ancient ' . get_selected_board()->shortname . '_main ' . get_selected_board()->shortname . '_delta');
 			if ($search_result === false)
-			{ echo 'here';
+			{
+				echo $this->sphinxclient->getLastError();
 				// show some actual error...
 				show_404();
 			}
@@ -540,7 +541,7 @@ class Post extends CI_Model
 				$result[0]['posts'][] = $post;
 			}
 			$result[0]['posts'] = array_reverse($result[0]['posts']);
-			return array_reverse($result);
+			return array('posts' => array_reverse($result), 'total_found' => $search_result['total_found']);
 		}
 	}
 

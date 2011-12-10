@@ -109,6 +109,16 @@ input, textarea, select, .uneditable-input {
 }
 
 
+.pagination {
+	padding:2px 10px 2px 35px;
+	margin:0;
+	background:#ddebdd;
+}
+
+.pagination ul {
+	background:#fff;
+}
+
 
 #footer {
 	background:url(images/green-fibers.png) #888;	
@@ -196,7 +206,6 @@ article.thread .post_controls .btn.parent:first-child{
 	border-radius: 3px 0 0 3px;
 	-webkit-border-radius: 3px 0 0 3px;
 	-moz-border-radius: 3px 0 0 3px;
-	margin-left: 10px;
 }
 
 
@@ -381,8 +390,15 @@ article.thread article.post > .thread_image_box .post_image {
 	-webkit-box-shadow: 0px 0px 1px #ccc;	
 }
 
-article.post .post_ghost {
-	background: #cce1cf;
+article.post.post_ghost {
+	background: #aaa;
+	background: rgba(0,0,0,0.05);
+	margin-left:320px;
+	background: -moz-linear-gradient(right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+	background: -webkit-linear-gradient(right, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(right, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(right, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 100%); /* IE10+ */
+	background: linear-gradient(top, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 100%); /* W3C */
 }
 
 article.post .reported {
@@ -393,6 +409,15 @@ article.post .highlight {
 	background: #d6bad0;
 }
 
+article.post .post_type {
+	float:right;
+}
+
+article.post .post_controls {
+	float:right;
+	margin-right:6px;
+	margin-left:0px;
+}
 
 section.reply {
 	background: #99ccaa;

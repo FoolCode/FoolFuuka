@@ -53,6 +53,14 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		if ($page > 1)
 			$this->template->set('section_title', _('Page ') . $page);
+		
+		$pages_links = array();
+		for($i = 1; $i < 16; $i++)
+		{
+			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'page', $i));
+		}
+		$this->template->set('pages_links', $pages_links);
+		$this->template->set('pages_links_current', $page);
 		$this->template->set('posts', $posts);
 		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
@@ -83,6 +91,13 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		if ($page > 1)
 			$this->template->set('section_title', _('Ghosts page ') . $page);
+		$pages_links = array();
+		for($i = 1; $i < 16; $i++)
+		{
+			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'ghost', $i));
+		}
+		$this->template->set('pages_links', $pages_links);
+		$this->template->set('pages_links_current', $page);
 		$this->template->set('posts', $posts);
 		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
@@ -277,7 +292,7 @@ class Chan extends Public_Controller
 			redirect(site_url($redirect_array));
 		}
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
-		$posts = $this->post->get_search($search);
+		$result = $this->post->get_search($search);
 
 		$title = array();
 		if ($search['text'])
@@ -293,16 +308,40 @@ class Chan extends Public_Controller
 		if ($search['ghost'] == 'only')
 			$title[] = _('that are by ghosts');
 		if ($search['ghost'] == 'none')
-			$title[] = _('that aren\' by ghosts');
+			$title[] = _('that aren\'t by ghosts');
 		if ($search['order'] == 'asc')
 			$title[] = _('starting from the oldest ones');
-		
-			
+		if(!$search['page'] || !intval($search['page']))
+		{
+			$search['page'] = 1;
+		}
+
 		$title = _('Searching for posts ') . implode(' ' . _('and') . ' ', $title);
 		$this->template->set('section_title', $title);
 
+		$pages_links = array();
+		$pages = floor($result['total_found'] / 25) + 1;
+		if ($pages > 21) {
+			$pages = 21;
+		}		
+		
+		$uri_array = $this->uri->ruri_to_assoc(2);
+		foreach($uri_array as $key => $item)
+		{
+			if(!$item)
+				unset($uri_array[$key]);
+		}
+		
+		for($i = 1; $i < $pages; $i++)
+		{
+			$uri_array['page'] = $i;
+			$pages_links[$i] = site_url(array(get_selected_board()->shortname)).$this->uri->assoc_to_uri($uri_array);
+		}
+		$this->template->set('pages_links', $pages_links);
+		$this->template->set('pages_links_current', $search['page']);
+		
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - '.$title);
-		$this->template->set('posts', $posts);
+		$this->template->set('posts', $result['posts']);
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 		$this->template->build('board');
 	}

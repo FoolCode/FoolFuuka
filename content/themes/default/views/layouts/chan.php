@@ -54,31 +54,41 @@
 				<?php if(isset($section_title)): ?>
 				<h3 class="section_title"><?php echo $section_title ?></h3>
 				<?php endif; ?>
+				
 				<?php echo $template['body']; ?>
 				
 				<?php echo $template['partials']['post_tools']; ?>
+				<?php if(isset($pages_links)) : ?>
+					<div class="pagination">
+					  <ul>
+						<?php if($pages_links_current == 1) : ?>
+							<li class="prev disabled"><a href="#">&larr; Previous</a></li>
+						<?php else : ?>
+							<li class="prev"><a href="<?php echo $pages_links[$pages_links_current-1]; ?>">&larr; Previous</a></li>
+						<?php endif; ?>
+						<?php foreach($pages_links as $key => $item) : ?>
+							<li class="<?php if($key == $pages_links_current) echo 'active'; ?>"><a href="<?php echo $item ?>"><?php echo $key ?></a></li>
+						<?php endforeach; ?>
+						<?php if($pages_links_current < 15) : ?>
+							<li class="next"><a href="<?php echo $pages_links[$pages_links_current+1]; ?>">Next &rarr;</a></li>
+						<?php else : ?>
+							<li class="next disabled"><a href="#">Next &rarr;</a></li>						
+						<?php endif; ?>
+					  </ul>
+					</div>
+				<?php endif; ?>
 			</div> <!-- end of #main -->
 
 
 			<footer id="footer"><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?></footer>
 		</div>
 
-		<!-- JavaScript at the bottom for fast page loading -->
 
-		<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="<?php echo site_url() ?>/js/libs/jquery-1.6.4.min.js"><\/script>')</script>
-
-		<!-- scripts concatenated and minified via build script -->
 		<script defer type="text/javascript" src="<?php echo site_url() ?>assets/bootstrap/bootstrap.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<script defer type="text/javascript" src="<?php echo site_url() ?>assets/js/jquery.localize.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<script defer src="<?php echo site_url() ?>content/themes/<?php echo get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
-
-		<!-- end scripts -->
-
-
-		<!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID.
-			 mathiasbynens.be/notes/async-analytics-snippet -->
 		<script>
 			var _gaq=[['_setAccount','UX-XXXXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
 			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
@@ -92,8 +102,6 @@
 		  <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
 		  <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 		<![endif]-->
-
-
 
 		<?php echo get_setting('fs_theme_footer_code'); ?>
 	</body>

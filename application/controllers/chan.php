@@ -276,7 +276,7 @@ class Chan extends Public_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order', 'page');
+		$modifiers = array('text', 'name', 'tripcode', 'deleted', 'ghost', 'order', 'page');
 		if ($this->input->post())
 		{
 			$redirect_array = array(get_selected_board()->shortname, 'search');
@@ -297,8 +297,8 @@ class Chan extends Public_Controller
 		$title = array();
 		if ($search['text'])
 			$title[] = _('including') . ' "' . trim(fuuka_htmlescape($search['text'])) . '"';
-		if ($search['username'])
-			$title[] = _('with username'). ' "' . trim(fuuka_htmlescape($search['username'])) . '"';
+		if ($search['name'])
+			$title[] = _('with username'). ' "' . trim(fuuka_htmlescape($search['name'])) . '"';
 		if ($search['tripcode'])
 			$title[] = _('with tripcode'). ' "' . trim(fuuka_htmlescape($search['tripcode'])) . '"';
 		if ($search['deleted'] == 'deleted')
@@ -335,7 +335,7 @@ class Chan extends Public_Controller
 		for($i = 1; $i < $pages; $i++)
 		{
 			$uri_array['page'] = $i;
-			$pages_links[$i] = site_url(array(get_selected_board()->shortname)).$this->uri->assoc_to_uri($uri_array);
+			$pages_links[$i] = site_url().$this->uri->assoc_to_uri($uri_array);
 		}
 		$this->template->set('pages_links', $pages_links);
 		$this->template->set('pages_links_current', $search['page']);

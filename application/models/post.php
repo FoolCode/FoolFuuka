@@ -440,9 +440,9 @@ class Post extends CI_Model
 			$this->sphinxclient->SetLimits(($search['page'] * 25) - 25, 25, 5000);
 
 			$query = '';
-			if ($search['username'])
+			if ($search['name'])
 			{
-				$query .= '@name ' . $this->sphinxclient->EscapeString($search['username']) . ' ';
+				$query .= '@name ' . $this->sphinxclient->EscapeString($search['name']) . ' ';
 			}
 
 			if ($search['tripcode'])
@@ -1016,7 +1016,6 @@ class Post extends CI_Model
 			"'\[m\](.*?)\[/m\]'i",
 			"'\[code\](.*?)\[/code\]'i",
 			"'\[EXPERT\](.*?)\[/EXPERT\]'i",
-			"'\[banned\](.*?)\[/banned\]'i",
 		);
 
 		$replace = array(
@@ -1033,12 +1032,24 @@ class Post extends CI_Model
 			'<tt class="code">\\1</tt>',
 			'<code>\\1</code>',
 			'<b><span class="u"><span class="o">\\1</span></span></b>',
-			'<span class="banned">\\1</span>',
+		);
+		
+		$adminfind = array(
+			"'\[banned\](.*?)\[/banned\]'i",
+		);
+		
+		$adminreplace = array(
+			"'\[banned\](.*?)\[/banned\]'i",
 		);
 
+		
 		$regexing = $row->comment;
 		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
+		if($row->subnum == 0)
+		{
+			$regexing = preg_replace($adminfind, $adminreplace, $regexing);
+		}
 		$regexing = nl2br(trim(preg_replace($find, $replace, $regexing)));
 
 		return $regexing;

@@ -85,6 +85,6 @@ foreach ($posts as $key => $post) :
 	<?php if (isset($thread_id)) : ?>
 	thread_id = <?php echo $thread_id ?>;
 	thread_json = <?php echo json_encode($posts) ?>;
-	thread_latest_timestamp = <?php echo time(); ?>;
+	thread_latest_timestamp = thread_json[thread_id].posts[(thread_json[thread_id].posts.length - 1)].timestamp;
 	<?php endif; ?>
 </script>

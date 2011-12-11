@@ -66,7 +66,6 @@ class Chan extends REST_Controller
 		}
 		else
 		{
-			// no comics
 			$this->response(array('error' => _('Threads could not be found')), 404);
 		}
 	}
@@ -184,7 +183,7 @@ class Chan extends REST_Controller
 		else
 		{
 			// no comics
-			$this->response(array('error' => _('Thread could not be found')), 404);
+			$this->response(array('error' => _('Thread could not be found')), 200);
 		}
 	}
 

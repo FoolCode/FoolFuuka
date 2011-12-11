@@ -94,13 +94,15 @@ jQuery(document).ready(function(){
 	
 	if(jQuery('.js_hook_realtimethread').length == 1)
 	{
-		var text = '';
+		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btn success" href="#" onClick="return realtimethread()">Update now</a>');
 		realtimethread();
-		jQuery('.js_hook_realtimethread').prepend(text);
 	}
 });
 
+var timelapse = 10;
+var currentlapse = 0;
 var realtimethread = function(){
+	clearTimeout(currentlapse);
 	jQuery.ajax({
 		url: site_url + 'api/chan/thread/' ,
 		async: false,
@@ -109,20 +111,33 @@ var realtimethread = function(){
 		data: {
 			num : thread_id,
 			board: board_shortname,
-			timestamp: 0
+			timestamp: thread_latest_timestamp
 		},
 		success: function(data){
-			jQuery.each(data.posts, function(idx, value){
-				text += buildReply(value);
-			});
+			if(data.posts != undefined) {
+				jQuery.each(data[thread_id].posts, function(idx, value){
+					jQuery('article.thread aside').append(value.formatted);
+				});
+				thread_latest_timestamp = 	data.posts[data.posts.length-1].timestamp;
+				timelapse = 10;
+			}
+			else
+			{
+				if(timelapse < 30)
+				{
+					timelapse += 10;
+				}
+			}
+			currentlapse = setTimeout(realtimethread, timelapse*1000);
+			realtimethread_timer(timelapse);
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
-			alert(textStatus);
 		},
 		complete: function() {
-					
 		}
 	});
+	
+	return false;
 }
 
 var toggleSearch = function(mode)

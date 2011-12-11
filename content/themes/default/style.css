@@ -515,4 +515,17 @@ article.thread .greentext {
 	color: #789922;
 }
 
+.js_hook_realtimethread {
+	font-size:18px;
+	font-weight:bold;
+	margin:10px 10px 10px 300px;
+	border-top: 1px solid #aaa;
+	padding:5px;
+}
+.js_hook_realtimethread a.btn{
+	position:relative;
+	bottom:1px;
+}
+
+
 .loading { display: none; width: 100%; text-align: center; margin: auto; }

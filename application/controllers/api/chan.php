@@ -163,6 +163,18 @@ class Chan extends REST_Controller
 		
 		$num = intval($this->get('num'));
 		
+		// build an array if we have more specifications
+		if ($this->get('timestamp'))
+		{
+			if(!is_natural($this->get('timestamp')) && $this->get('timestamp') >= 0)
+			{
+				$this->response(array('error' => _('Your timestamp is malformed')), 404);
+			}
+			
+			$timestamp = intval($this->get('timestamp'));
+			$num = array('num' => $num, 'timestamp' => $timestamp);
+		}
+		
 		$thread = $this->post->get_thread($num);
 		
 		if ($thread !== FALSE)

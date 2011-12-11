@@ -34,6 +34,17 @@ class Post extends CI_Model
 					' . $this->db->protect_identifiers('q') . '.`report_post`
 				';
 		}
+		
+		// @todo make the existence of this block useless or something
+		// load the functions from the current theme, else load the default one
+		if (file_exists('content/themes/' . get_setting('fs_theme_dir') . '/theme_functions.php'))
+		{
+			require_once('content/themes/' . get_setting('fs_theme_dir') . '/theme_functions.php');
+		}
+		else
+		{
+			require_once('content/themes/' . $this->config->item('theme_extends') . '/theme_functions.php');
+		}
 	}
 
 
@@ -337,13 +348,27 @@ class Post extends CI_Model
 
 	function get_thread($num, $process = TRUE, $clean = TRUE)
 	{
-		$query = $this->db->query('
+		if (is_array($num))
+		{
+			if (isset($num['timestamp']))
+			{
+				$query = $this->db->query('
+					SELECT * FROM ' . $this->table . '
+					WHERE (parent = ? OR num = ?) AND timestamp > ?
+					ORDER BY num, parent, subnum ASC;
+				', array($num['num'], $num['num'], $num['timestamp']));
+			}
+			$num = $num['num'];
+		}
+		else
+		{
+			$query = $this->db->query('
 				SELECT * FROM ' . $this->table . '
 				' . $this->sql_report . '
 				WHERE num = ? OR parent = ?
 				ORDER BY num, parent, subnum ASC;
 			', array($num, $num));
-
+		}
 		$result = array();
 
 		// thread not found
@@ -917,7 +942,6 @@ class Post extends CI_Model
 		$post->remote_image_href = $this->get_remote_image_href($post);
 		$post->comment_processed = $this->get_comment_processed($post);
 
-		// evil: &#8238; oykosneG fo suomynonA ,onriC&#8234;&#8234;&#8234;&#9320;
 		foreach (array('title', 'name', 'email', 'trip') as $element)
 		{
 			$element_processed = $element . '_processed';
@@ -928,6 +952,14 @@ class Post extends CI_Model
 		if ($clean === TRUE)
 		{
 			unset($post->delpass);
+			if (!$this->tank_auth->is_allowed())
+			{
+				unset($post->poster_id);
+			}
+		}
+		if($post->parent > 0)
+		{
+			$post->formatted = build_board_comment($post);	
 		}
 	}
 
@@ -1033,20 +1065,20 @@ class Post extends CI_Model
 			'<code>\\1</code>',
 			'<b><span class="u"><span class="o">\\1</span></span></b>',
 		);
-		
+
 		$adminfind = array(
 			"'\[banned\](.*?)\[/banned\]'i",
 		);
-		
+
 		$adminreplace = array(
 			"'\[banned\](.*?)\[/banned\]'i",
 		);
 
-		
+
 		$regexing = $row->comment;
 		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
-		if($row->subnum == 0)
+		if ($row->subnum == 0)
 		{
 			$regexing = preg_replace($adminfind, $adminreplace, $regexing);
 		}

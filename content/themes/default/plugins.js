@@ -1,7 +1,10 @@
 
 jQuery(document).ready(function(){
 	// Bind on REL
-	jQuery("[rel=popover]").popover({ offset: 10, html: true });
+	jQuery("[rel=popover]").popover({
+		offset: 10, 
+		html: true
+	});
 	
 	jQuery("a[rel=highlight]").click(function() {
 		var post = jQuery(this).attr("id");
@@ -41,7 +44,10 @@ jQuery(document).ready(function(){
 		var post = modalReport.find("#report_postid").val();
 		var href = this.href + post + '/';
 		loading.show();
-		jQuery.post(href, { post: post, reason: modalReport.find("#report_comment").val() }, function(result) {
+		jQuery.post(href, {
+			post: post, 
+			reason: modalReport.find("#report_comment").val()
+		}, function(result) {
 			loading.hide();
 			if (result.status == 'failed')
 			{
@@ -60,7 +66,10 @@ jQuery(document).ready(function(){
 		var post = modalDelete.find("#delete_postid").val();
 		var href = this.href + post + '/';
 		loading.show();
-		jQuery.post(href, { post: post, password: modalDelete.find("#delete_passwd").val() }, function(result) {
+		jQuery.post(href, {
+			post: post, 
+			password: modalDelete.find("#delete_passwd").val()
+		}, function(result) {
 			loading.hide();
 			if (result.status == 'failed')
 			{
@@ -82,16 +91,48 @@ jQuery(document).ready(function(){
 		}
 		replyHighlight(post[1]);
 	}
+	
+	if(jQuery('.js_hook_realtimethread').length == 1)
+	{
+		var text = '';
+		realtimethread();
+		jQuery('.js_hook_realtimethread').prepend(text);
+	}
 });
 
-function toggleSearch(mode)
+var realtimethread = function(){
+	jQuery.ajax({
+		url: site_url + 'api/chan/thread/' ,
+		async: false,
+		dataType: 'json',
+		type: 'GET',
+		data: {
+			num : thread_id,
+			board: board_shortname,
+			timestamp: 0
+		},
+		success: function(data){
+			jQuery.each(data.posts, function(idx, value){
+				text += buildReply(value);
+			});
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			alert(textStatus);
+		},
+		complete: function() {
+					
+		}
+	});
+}
+
+var toggleSearch = function(mode)
 {
 	var search;
 	if (!(search = document.getElementById('search_' + mode))) return;
 	search.style.display = search.style.display ? "" : "none";
 }
 
-function getSearch(type, searchForm)
+var getSearch = function(type, searchForm)
 {
 	var location = searchForm.action;
 	
@@ -118,7 +159,7 @@ function getSearch(type, searchForm)
 	window.location = location;
 }
 
-function getPost(postForm)
+var getPost = function(postForm)
 {
 	if (postForm.post.value == "") {
 		alert('Sorry, you must insert a valid post number.');
@@ -127,7 +168,7 @@ function getPost(postForm)
 	window.location = postForm.action + encodeURIComponent(postForm.post.value) + '/';
 }
 
-function getPage(pageForm)
+var getPage = function(pageForm)
 {
 	if (pageForm.page.value == "") {
 		alert('Sorry, you must insert a valid page number.');
@@ -136,7 +177,7 @@ function getPage(pageForm)
 	window.location = pageForm.action + encodeURIComponent(pageForm.page.value) + '/';
 }
 
-function getRadioValue(group)
+var getRadioValue = function(group)
 {
 	for (index = 0; index < group.length; index++)
 	{

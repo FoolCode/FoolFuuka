@@ -213,8 +213,11 @@ class Chan extends Public_Controller
 				return 'N';
 				break;
 			case 'mod':
-				return 'M';
-				break;
+				if ($this->tank_auth->is_allowed())
+				{
+					return 'M';
+					break;
+				}
 			case 'admin':
 				if ($this->tank_auth->is_admin())
 				{
@@ -412,6 +415,7 @@ class Chan extends Public_Controller
 		if (is_null($stat))
 		{
 			$stats_list = $this->statistics->get_available_stats();
+			$this->template->set('section_title', _('Statistics'));
 			$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': ' . _('statistics'));
 			$this->template->set('stats_list', $stats_list);
 			$this->template->build('statistics/statistics_list');
@@ -425,6 +429,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
+		$this->template->set('section_title', _('Statistics:'). ' '.$stat_array['info']['name']);
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': ' . _('statistics'));
 		$this->template->set('info', $stat_array['info']);
 		$this->template->set('data', $stat_array['data']);

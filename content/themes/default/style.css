@@ -323,6 +323,19 @@ article.post {
 	-moz-border-top-left-radius: 3px;
 }
 
+article.post.has_image {
+	margin-left:0px;
+	clear:both;
+}
+
+article.post.has_image > header {
+	margin-left:300px;
+}
+
+article.post.has_image > .text {
+	margin-left:310px;
+}
+
 
 article.thread article.post .post_data {
 	padding:0 6px;

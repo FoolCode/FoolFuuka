@@ -36,12 +36,12 @@ class Boards extends Admin_Controller
 	}
 	
 	
-	function reports()
+	function reports($page = 1)
 	{
 		$this->viewdata["function_title"] = _('Reports');
 		$reports = new Report();
 		
-		$data["reports"] = $reports;
+		$data["reports"] = $reports->list_reports_all_boards($page);
 		
 		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/reports.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);

@@ -162,7 +162,7 @@ class Report extends DataMapper
 	{
 		$query = $this->db->query('
 			SELECT *
-			FROM ' . $this->db->protect_identifiers('reports' . $shortname, TRUE) . '
+			FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
 			ORDER BY created ASC
 			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 		');
@@ -178,13 +178,13 @@ class Report extends DataMapper
 		{
 			foreach ($boards->all as $board)
 			{
-				if ($board->id == $item['board'])
+				if ($board->id == $item->board)
 				{
 					$selects[] = '
 					(
 						SELECT * 
 						FROM ' . $this->get_table($board->shortname) . '
-						WHERE num = ' . $this->db->escape($item->post) . '
+						WHERE doc_id = ' . $this->db->escape($item->post) . '
 						LIMIT 0, 1
 					)';
 				}
@@ -194,7 +194,7 @@ class Report extends DataMapper
 		$sql = implode(' UNION ', $selects);
 		$query = $this->db->query($sql);
 
-		return $this->result();
+		return $query->result();
 	}
 
 

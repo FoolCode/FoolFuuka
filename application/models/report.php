@@ -184,6 +184,16 @@ class Report extends DataMapper
 					(
 						SELECT * 
 						FROM ' . $this->get_table($board->shortname) . '
+						LEFT JOIN 
+							( 
+								SELECT post as report_post, reason as report_reason, status as report_status
+								FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+								WHERE `board` = ' . $board->id . ' 
+							) as q
+							ON    
+							' . $this->get_table($board->shortname) . '.`doc_id`
+							=
+							' . $this->db->protect_identifiers('q') . '.`report_post`
 						WHERE num = ' . $this->db->escape($item->post) . '
 						LIMIT 0, 1
 					)';
@@ -194,7 +204,7 @@ class Report extends DataMapper
 		$sql = implode(' UNION ', $selects);
 		$query = $this->db->query($sql);
 
-		return $this->result();
+		return $query->result();
 	}
 
 

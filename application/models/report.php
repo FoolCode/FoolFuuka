@@ -184,6 +184,16 @@ class Report extends DataMapper
 					(
 						SELECT * 
 						FROM ' . $this->get_table($board->shortname) . '
+						LEFT JOIN 
+							( 
+								SELECT post as report_post, reason as report_reason, status as report_status
+								FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+								WHERE `id` = ' . $item->id . ' 
+							) as q
+							ON    
+							' . $this->get_table($board->shortname) . '.`doc_id`
+							=
+							' . $this->db->protect_identifiers('q') . '.`report_post`
 						WHERE doc_id = ' . $this->db->escape($item->post) . '
 						LIMIT 0, 1
 					)';

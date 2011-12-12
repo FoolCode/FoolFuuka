@@ -354,7 +354,7 @@ class Post extends CI_Model
 			{
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->table . '
-					WHERE (parent = ? OR num = ?) AND timestamp > ?
+					WHERE num = ? OR (parent = ? AND timestamp > ?)
 					ORDER BY num, parent, subnum ASC;
 				', array($num['num'], $num['num'], $num['timestamp']));
 			}
@@ -1095,7 +1095,7 @@ class Post extends CI_Model
 		// check if it's the OP that is being linked to
 		if (array_key_exists($num, $this->existing_posts))
 		{
-			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" rel="highlight" id="' . $num . '">&gt;&gt;' . $num . '</a>';
+			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" data-rel="highlight" data-id="' . $num . '">&gt;&gt;' . $num . '</a>';
 		}
 
 		// check if it's one of the posts we've already met
@@ -1103,7 +1103,7 @@ class Post extends CI_Model
 		{
 			if (in_array($num, $thread))
 			{
-				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" rel="highlight" id="' . $num . '">&gt;&gt;' . $num . '</a>';
+				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" data-rel="highlight" data-id="' . $num . '">&gt;&gt;' . $num . '</a>';
 			}
 		}
 

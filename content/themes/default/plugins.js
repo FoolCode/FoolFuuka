@@ -1,34 +1,34 @@
 
 jQuery(document).ready(function(){
 	// Bind on REL
-	jQuery("[rel=popover]").popover({
+	jQuery("[data-rel=popover]").popover({
 		offset: 10, 
 		html: true
 	});
 	
-	jQuery("a[rel=highlight]").click(function() {
-		var post = jQuery(this).attr("id");
+	jQuery("a[data-rel=highlight]").click(function() {
+		var post = jQuery(this).attr("data-id");
 		if (post) replyHighlight(post);
 	})
 	
-	jQuery("a[rel=quote]").click(function() {
-		var post = jQuery(this).attr("id");
+	jQuery("a[data-rel=quote]").click(function() {
+		var post = jQuery(this).attr("data-id");
 		jQuery("#reply_comment").append(">>" + post + "\n");
 	})
 	
-	jQuery("a[rel=report]").click(function() {
-		var post = jQuery(this).attr("id");
+	jQuery("a[data-rel=report]").click(function() {
+		var post = jQuery(this).attr("data-id");
 		var modalReport = jQuery("#post_tools_report");
 		modalReport.find("#modal-loading").hide();
-		modalReport.find("#report_post").val(jQuery(this).attr("alt"));
+		modalReport.find("#report_post").val(jQuery(this).attr("data-alt"));
 		modalReport.find("#report_postid").val(post);
 	});
 	
-	jQuery("a[rel=delete]").click(function() {
-		var post = jQuery(this).attr("id");
+	jQuery("a[data-rel=delete]").click(function() {
+		var post = jQuery(this).attr("data-id");
 		var modalDelete = jQuery("#post_tools_delete");
 		modalDelete.find("#modal-loading").hide();
-		modalDelete.find("#delete_post").html(jQuery(this).attr("alt"));
+		modalDelete.find("#delete_post").html(jQuery(this).attr("data-alt"));
 		modalDelete.find("#delete_postid").val(post);
 	});
 	
@@ -39,8 +39,8 @@ jQuery(document).ready(function(){
 	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
 	
 	var modalReport = jQuery("#post_tools_report");
-	modalReport.find("#modal-submit").click(function() {
-		var loading = modalReport.find("#modal-loading");
+	modalReport.find(".modal-submit").click(function() {
+		var loading = modalReport.find(".modal-loading");
 		var post = modalReport.find("#report_postid").val();
 		var href = this.href + post + '/';
 		loading.show();
@@ -51,7 +51,7 @@ jQuery(document).ready(function(){
 			loading.hide();
 			if (result.status == 'failed')
 			{
-				modalReport.find("#modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
+				modalReport.find(".modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
 				return false;
 			}
 			toggleHighlight(modalReport.find("#report_post").val().replace(',', '_'), 'reported', false);
@@ -61,8 +61,8 @@ jQuery(document).ready(function(){
 	});
 	
 	var modalDelete = jQuery("#post_tools_delete");
-	modalDelete.find("#modal-submit").click(function() {
-		var loading = modalDelete.find("#modal-loading");
+	modalDelete.find(".modal-submit").click(function() {
+		var loading = modalDelete.find(".modal-loading");
 		var post = modalDelete.find("#delete_postid").val();
 		var href = this.href + post + '/';
 		loading.show();
@@ -73,7 +73,7 @@ jQuery(document).ready(function(){
 			loading.hide();
 			if (result.status == 'failed')
 			{
-				modalDelete.find("#modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
+				modalDelete.find(".modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
 				return false;
 			}
 			modalDelete.modal('hide');
@@ -92,9 +92,9 @@ jQuery(document).ready(function(){
 		replyHighlight(post[1]);
 	}
 	
-	if(jQuery('.js_hook_realtimethread').length == 1)
+	if(thread_id != undefined)
 	{
-		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btn success" href="#" onClick="return realtimethread()">Update now</a>');
+		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btn success" href="#" onClick="realtimethread(); return false;">Update now</a>');
 		realtimethread();
 	}
 });
@@ -129,7 +129,6 @@ var realtimethread = function(){
 				}
 			}
 			currentlapse = setTimeout(realtimethread, timelapse*1000);
-			realtimethread_timer(timelapse);
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 		},

@@ -21,7 +21,7 @@ function build_board_comment($p) {
 						<?php if ($p->media_filename) : ?>
 							<div class="thread_image_box">
 								<div class="post_file"><?php echo $p->media ?></div>
-								<a href="<?php echo $p->remote_image_href ?>" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" md5="<?php echo $p->media_hash ?>" class="post_image" /></a>
+								<a href="<?php echo $p->remote_image_href ?>" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" data-md5="<?php echo $p->media_hash ?>" class="post_image" /></a>
 								<div class="post_file"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></div>
 								<div class="post_file_controls">
 									<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btn parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btn parent">iqdb</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btn parent">Google</a>
@@ -42,12 +42,10 @@ function build_board_comment($p) {
 									<span class="post_level post_level_administrator">## Admin</span>
 								<?php endif ?>
 								<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
-								<span class="post_number"><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" rel="highlight" id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" rel="quote" id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a></span>
-								<?php if (isset($thread_id)) : ?>
+								<span class="post_number"><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-rel="highlight">No.</a><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-rel="quote" data-id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a></span>
 									<span class="post_controls">
-										<a href="<?php echo site_url($CI->fu_board . '/report/' . $p->doc_id) ?>" class="btn parent" rel="report" id="<?php echo $p->doc_id ?>" alt="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_report" data-backdrop="true" data-keyboard="true">Report</a><a href="<?php echo site_url($CI->fu_board . '/delete/' . $p->doc_id) ?>" class="btn parent" rel="delete" id="<?php echo $p->doc_id ?>" alt="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_delete" data-backdrop="true" data-keyboard="true">Delete</a>
+										<a href="<?php echo site_url($CI->fu_board . '/report/' . $p->doc_id) ?>" class="btn parent" data-rel="report" data-id="<?php echo $p->doc_id ?>" data-alt="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_report" data-backdrop="true" data-keyboard="true">Report</a><a href="<?php echo site_url($CI->fu_board . '/delete/' . $p->doc_id) ?>" class="btn parent" data-rel="delete" data-id="<?php echo $p->doc_id ?>" data-alt="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_delete" data-backdrop="true" data-keyboard="true">Delete</a>
 									</span>
-								<?php endif; ?>
 								<?php if ($p->subnum > 0) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/communicate-icon.png'; ?>" title="This is a ghost post, not coming from 4chan"/></span><?php endif ?>
 							</div>
 						</header>

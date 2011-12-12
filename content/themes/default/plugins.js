@@ -1,14 +1,10 @@
 
-jQuery(document).ready(function(){
+jQuery(document).ready(function() {
 	jQuery("[data-function]").click(function() {
 		var el = jQuery(this);
 		var post = el.data("post");
 		var modal = jQuery("#post_tools_modal");
 		switch (el.data("function")) {
-			case 'popover':
-				el.popover({offset: 10, html: true});
-				break;
-				
 			case 'highlight':
 				if (post) replyHighlight(post);
 				break;
@@ -41,6 +37,7 @@ jQuery(document).ready(function(){
 			
 			case 'closeModal':
 				el.closest(".modal").modal('hide');
+				return false;
 				break;
 				
 			case 'submitModal':
@@ -67,22 +64,23 @@ jQuery(document).ready(function(){
 						return false;
 					}
 					modal.modal('hide');
-				}, 'json');
 				
-				if (action == 'report') {
-					toggleHighlight(modal.find(".modal-post").val().replace(',', '_'), 'reported', false);
-				}
-				else if (action == 'delete') {
-					jQuery('.doc_id_' + post).remove();
-				}
-				return false;
+					if (action == 'report') {
+						toggleHighlight(modal.find(".modal-post").val().replace(',', '_'), 'reported', false);
+					}
+					else if (action == 'delete') {
+						jQuery('.doc_id_' + post).remove();
+					}
+					return false;
+				}, 'json');
 				break;
 			
 			default:
 				break;
 		}
 	});
-       
+	
+	jQuery("[rel=popover]").popover({offset: 10, html: true});
 	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
 	
 	post = location.href.split(/#/);
@@ -95,7 +93,7 @@ jQuery(document).ready(function(){
 		replyHighlight(post[1]);
 	}
 	
-	if(thread_id != undefined)
+	if (thread_id != undefined)
 	{
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btn success" href="#" onClick="realtimethread(); return false;">Update now</a>');
 		realtimethread();

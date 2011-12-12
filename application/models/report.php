@@ -182,7 +182,7 @@ class Report extends DataMapper
 				{
 					$selects[] = '
 					(
-						SELECT CONCAT('.$this->db->escape($board->shortname).') AS shortname, * 
+						SELECT *, CONCAT('.$this->db->escape($board->shortname).') AS shortname 
 						FROM ' . $this->get_table($board->shortname) . '
 						LEFT JOIN 
 							( 

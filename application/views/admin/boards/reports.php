@@ -4,17 +4,16 @@
 
 	<div class="list comics">
 		<?php
-		print_r($reports);
-		
 		foreach ($reports as $report)
 		{
 			echo '<div class="item">
-				<div class="title"><a href="'.site_url("admin/boards/board/").'"></a></div>
-				<div class="reason">'.$report->report_reason.'</div>
+				<div class="title">Anonymous at '.$report->report_created.' on /'.$report->shortname.'/</div>
+				<div class="report_reason">'.$report->report_reason.'</div>
+				<div class="post">'.$report->comment.'</div>
 				<div class="smalltext quick_tools">'._('Quick Tools').': 
 					<a href="">'._('Delete').'</a> |
 					<a href="">'._('Spam').'</a> |
-					<a href="">'._('View').'</a>
+					<a href="'.site_url($report->shortname.'/post/'.$report->num).'">'._('View').'</a>
 				</div>';
 			echo '</div>';
 		}

@@ -186,7 +186,7 @@ class Report extends DataMapper
 						FROM ' . $this->get_table($board->shortname) . '
 						LEFT JOIN 
 							( 
-								SELECT post as report_post, reason as report_reason, status as report_status
+								SELECT post as report_post, reason as report_reason, status as report_status, created as report_created
 								FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
 								WHERE `id` = ' . $item->id . ' 
 							) as q

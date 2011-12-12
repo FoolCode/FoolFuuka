@@ -36,12 +36,17 @@ class Boards extends Admin_Controller
 	}
 	
 	
-	function reports($page = 1)
+	function reports($action = NULL, $num = 1)
 	{
 		$this->viewdata["function_title"] = _('Reports');
 		$reports = new Report();
 		
-		$data["reports"] = $reports->list_reports_all_boards($page);
+		if ($this->input->post())
+		{
+			// Handle Delete&Spam with $action
+		}
+		
+		$data["reports"] = $reports->list_reports_all_boards($num);
 		
 		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/reports.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);

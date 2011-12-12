@@ -1,86 +1,87 @@
 
-jQuery(document).ready(function(){
-	// Bind on REL
-	jQuery("[data-rel=popover]").popover({
-		offset: 10, 
-		html: true
+jQuery(document).ready(function() {
+	jQuery("[data-function]").click(function() {
+		var el = jQuery(this);
+		var post = el.data("post");
+		var modal = jQuery("#post_tools_modal");
+		switch (el.data("function")) {
+			case 'highlight':
+				if (post) replyHighlight(post);
+				break;
+				
+			case 'quote':
+				jQuery("#reply_comment").append(">>" + post + "\n");
+				break;
+				
+			case 'report':
+				modal.find(".title").html('Report - Post No.' + el.data("post-id"));
+				modal.find(".modal-loading").hide();
+				modal.find(".modal-information").html('\
+					<span class="modal-label">Post ID</span>\n\
+					<input type="text" class="modal-post" value="' + el.data("post-id") + '" readonly="readonly" />\n\
+					<input type="hidden" class="modal-post-id" value="' + post + '" />\n\
+					<span class="modal-field">Comment</span>\n\
+					<textarea class="modal-comment"></textarea>');
+				modal.find(".submitModal").data("action", 'report');
+				break;
+				
+			case 'delete':
+				modal.find(".title").html('Delete - Post No. ' + el.data("post-id"));
+				modal.find(".modal-loading").hide();
+				modal.find(".modal-information").html('\
+					<span class="modal-label">Password</span>\n\
+					<input type="password" class="modal-password" />\n\
+					<input type="hidden" class="modal-post-id" value="' + post + '" />');
+				modal.find(".submitModal").data("action", 'delete');
+				break;
+			
+			case 'closeModal':
+				el.closest(".modal").modal('hide');
+				return false;
+				break;
+				
+			case 'submitModal':
+				var loading = modal.find(".modal-loading");
+				var action = $(this).data("action");
+				var _post = modal.find(".modal-post-id").val();
+				var _href = action + '/' + _post + '/';
+				
+				if (action == 'report') {
+					var _data = { post: _post, reason: modal.find(".modal-comment").val() };
+				}
+				else if (action == 'delete') {
+					var _data = { post: _post, password: modal.find(".modal-password").val() };
+				}
+				else {
+					// Stop It! Unable to determine what action to use.
+					return false;
+				}
+				
+				jQuery.post(_href, _data, function(result) {
+					loading.hide();
+					if (result.status == 'failed') {
+						modal.find(".modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
+						return false;
+					}
+					modal.modal('hide');
+				
+					if (action == 'report') {
+						toggleHighlight(modal.find(".modal-post").val().replace(',', '_'), 'reported', false);
+					}
+					else if (action == 'delete') {
+						jQuery('.doc_id_' + post).remove();
+					}
+					return false;
+				}, 'json');
+				break;
+			
+			default:
+				break;
+		}
 	});
 	
-	jQuery("a[data-rel=highlight]").click(function() {
-		var post = jQuery(this).attr("data-id");
-		if (post) replyHighlight(post);
-	})
-	
-	jQuery("a[data-rel=quote]").click(function() {
-		var post = jQuery(this).attr("data-id");
-		jQuery("#reply_comment").append(">>" + post + "\n");
-	})
-	
-	jQuery("a[data-rel=report]").click(function() {
-		var post = jQuery(this).attr("data-id");
-		var modalReport = jQuery("#post_tools_report");
-		modalReport.find("#modal-loading").hide();
-		modalReport.find("#report_post").val(jQuery(this).attr("data-alt"));
-		modalReport.find("#report_postid").val(post);
-	});
-	
-	jQuery("a[data-rel=delete]").click(function() {
-		var post = jQuery(this).attr("data-id");
-		var modalDelete = jQuery("#post_tools_delete");
-		modalDelete.find("#modal-loading").hide();
-		modalDelete.find("#delete_post").html(jQuery(this).attr("data-alt"));
-		modalDelete.find("#delete_postid").val(post);
-	});
-	
-	jQuery("a.closeModal").click(function() {
-		jQuery(this).closest(".modal").modal("hide");
-	});
-	
+	jQuery("[rel=popover]").popover({offset: 10, html: true});
 	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
-	
-	var modalReport = jQuery("#post_tools_report");
-	modalReport.find(".modal-submit").click(function() {
-		var loading = modalReport.find(".modal-loading");
-		var post = modalReport.find("#report_postid").val();
-		var href = this.href + post + '/';
-		loading.show();
-		jQuery.post(href, {
-			post: post, 
-			reason: modalReport.find("#report_comment").val()
-		}, function(result) {
-			loading.hide();
-			if (result.status == 'failed')
-			{
-				modalReport.find(".modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
-				return false;
-			}
-			toggleHighlight(modalReport.find("#report_post").val().replace(',', '_'), 'reported', false);
-			modalReport.modal('hide');
-		}, 'json');
-		return false;
-	});
-	
-	var modalDelete = jQuery("#post_tools_delete");
-	modalDelete.find(".modal-submit").click(function() {
-		var loading = modalDelete.find(".modal-loading");
-		var post = modalDelete.find("#delete_postid").val();
-		var href = this.href + post + '/';
-		loading.show();
-		jQuery.post(href, {
-			post: post, 
-			password: modalDelete.find("#delete_passwd").val()
-		}, function(result) {
-			loading.hide();
-			if (result.status == 'failed')
-			{
-				modalDelete.find(".modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
-				return false;
-			}
-			modalDelete.modal('hide');
-			jQuery('.doc_id_' + post).remove();
-		}, 'json');
-		return false;
-	});
 	
 	post = location.href.split(/#/);
 	if (post[1]) {
@@ -92,7 +93,7 @@ jQuery(document).ready(function(){
 		replyHighlight(post[1]);
 	}
 	
-	if(thread_id != undefined)
+	if (thread_id != undefined)
 	{
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btn success" href="#" onClick="realtimethread(); return false;">Update now</a>');
 		realtimethread();

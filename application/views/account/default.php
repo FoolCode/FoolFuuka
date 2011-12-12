@@ -83,23 +83,23 @@ if ($CI->agent->is_browser('MSIE'))
 			<div id="nav">
 				<div class="element">
 					<a href="<?php echo site_url(); ?>">
-						<img class="icon off" src="<?php echo glyphish(158) ?>" />
-						<img class="icon on" src="<?php echo glyphish(158, TRUE) ?>" />
+						<img class="icon off" src="<?php echo icons(158) ?>" />
+						<img class="icon on" src="<?php echo icons(158, TRUE) ?>" />
 						<?php echo _("Reader") ?></a>
 				</div>
 				<?php if (isset($this->tank_auth) && $this->tank_auth->is_allowed())
 				{ ?><div class="element">
 						<a href="<?php echo site_url('admin'); ?>">
-							<img class="icon off" src="<?php echo glyphish(116) ?>" />
-							<img class="icon on" src="<?php echo glyphish(116, TRUE) ?>" />
+							<img class="icon off" src="<?php echo icons(116) ?>" />
+							<img class="icon on" src="<?php echo icons(116, TRUE) ?>" />
 							<?php echo _("Admin panel") ?></a>
 					</div>
 				<?php } ?>
 				<?php if (isset($this->tank_auth) && $this->tank_auth->is_logged_in())
 				{ ?><div class="element">
 						<a href="<?php echo site_url('/account/auth/logout'); ?>">
-							<img class="icon off" src="<?php echo glyphish(73) ?>" />
-							<img class="icon on" src="<?php echo glyphish(73, TRUE) ?>" />
+							<img class="icon off" src="<?php echo icons(73) ?>" />
+							<img class="icon on" src="<?php echo icons(73, TRUE) ?>" />
 							<?php echo _("Logout") ?> <?php echo $this->tank_auth->get_username(); ?></a>
 					</div>
 				<?php } ?>

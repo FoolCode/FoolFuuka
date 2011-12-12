@@ -34,6 +34,18 @@ class Boards extends Admin_Controller
 		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/manage.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
 	}
+	
+	
+	function reports()
+	{
+		$this->viewdata["function_title"] = _('Reports');
+		$reports = new Report();
+		
+		$data["reports"] = $reports;
+		
+		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/reports.php", $data, TRUE);
+		$this->load->view("admin/default.php", $this->viewdata);
+	}
 
 
 	function board($shortname = NULL)

@@ -63,6 +63,7 @@ body {
 #top_tools {
 	padding:30px 0 0;
 	float:right;
+	width: 780px;
 }
 
 #top_tools form {
@@ -312,7 +313,6 @@ article.thread > .text {
 }
 
 article.post {
-	overflow:hidden;
 	margin-left:300px;
 	padding: 0 0 10px 0;
 	border-top-right-radius: 3px;

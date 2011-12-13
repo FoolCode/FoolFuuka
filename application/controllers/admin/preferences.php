@@ -146,6 +146,17 @@ class Preferences extends Admin_Controller
 		);
 		
 		$form[] = array(
+			_('Google Analytics code'),
+			array(
+				'type' => 'input',
+				'name' => 'fs_theme_google_analytics',
+				'placeholder' => 'UX-XXXXXXX-X',
+				'preferences' => 'fs_gen',
+				'help' => _("Insert your Google Analytics code to get statistics.")
+			)
+		);
+		
+		$form[] = array(
 			_('Pre-Header Text'),
 			array(
 				'type' => 'textarea',

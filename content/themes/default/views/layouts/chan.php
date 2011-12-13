@@ -89,12 +89,14 @@
 		<script defer type="text/javascript" src="<?php echo site_url() ?>assets/bootstrap/bootstrap.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<script defer type="text/javascript" src="<?php echo site_url() ?>assets/js/jquery.localize.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<script defer src="<?php echo site_url() ?>content/themes/<?php echo get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
+		<?php if(get_setting('fs_theme_google_analytics')) : ?>
 		<script>
-			var _gaq=[['_setAccount','UX-XXXXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
+			var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
 			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 				s.parentNode.insertBefore(g,s)}(document,'script'));
 		</script>
+		<?php endif; ?>
 
 		<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
 			 chromium.org/developers/how-tos/chrome-frame-getting-started -->

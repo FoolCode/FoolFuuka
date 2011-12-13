@@ -61,44 +61,38 @@ body {
 }
 
 #top_tools {
-	padding:30px 0 0;
+	padding:3px 0 0;
 	float:right;
-	width: 780px;
+	width:500px;
 }
 
 #top_tools form {
-	margin-bottom: 0;
+	margin-bottom: 5px;
 	margin-right:10px;
-	float:left;
-}
-
-#top_tools label {
-	width:auto;
-	color:#f5f5f5;
-}
-
-#top_tools .input {
-	margin-left: 80px;
-}
-
-#top_tools input[type=submit] {
-	margin: 0 5px 0 -3px;
+	float:right;
 }
 
 #top_tools input {
+	height:20px;
+	padding: 2px 4px;
+}
+
+#top_tools label {
+	color: #f5f5f5;
+}
+
+#top_tools input[type=submit], #top_tools input[type=button] {
+	line-height:13px;
+	font-size:13px;
+	height:26px;
+}
+
+#top_tools .add-on {
 	padding: 4px 4px;
+	line-height:16px;
+	font-size:13px;
+	height:16px;
 }
-
-input, textarea, select, .uneditable-input {
-	height:15px;
-	line-height:15px;
-}
-
-.input-prepend .add-on, .input-append .add-on {
-	height:15px;
-	line-height:15px
-}
-
 
 #main {
 }

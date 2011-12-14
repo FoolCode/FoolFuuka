@@ -71,9 +71,9 @@ foreach ($posts as $key => $post) :
 					<?php echo build_board_comment($p); ?>
 				<?php endfor; ?>
 				<?php if (isset($thread_id)) : ?>
-					<div class="js_hook_realtimethread"></div>
 				<?php endif; ?>
 			</aside>
+			<div class="js_hook_realtimethread"></div>
 		<?php endif; ?>
 		<?php echo $template['partials']['post_reply']; ?>
 	</article>

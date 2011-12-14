@@ -17,7 +17,7 @@ function build_board_comment($p) {
 	$CI = & get_instance();
 	ob_start();
 	?>
-	<article class="post doc_id_<?php echo $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php echo ((isset($p->report_status) && !is_null($p->report_status)) ? ' reported' : '') ?><?php echo ($p->media_filename?' has_image':'') ?>" id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
+	<article class="post doc_id_<?php echo $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php echo ((isset($p->report_status) && !is_null($p->report_status)) ? ' reported' : '') ?><?php echo ($p->media_filename?' has_image':'') ?><?php if ($p->media_filename) : ?> clearfix<?php endif; ?>" id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
 						<?php if ($p->media_filename) : ?>
 							<div class="thread_image_box">
 								<div class="post_file"><?php echo $p->media ?></div>

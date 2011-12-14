@@ -307,7 +307,8 @@ article.thread > .text {
 }
 
 article.post {
-	margin-left:300px;
+	margin:0 0px 0 300px;
+	margin-right:0px;
 	padding: 0 0 10px 0;
 	border-top-right-radius: 3px;
 	-webkit-border-top-right-radius: 3px;

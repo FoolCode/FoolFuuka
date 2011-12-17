@@ -44,6 +44,7 @@ foreach ($posts as $key => $post) :
 			</div>
 			<div class="thread_tools_bottom">
 					<span class="post_controls"><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>" class="btn parent">View</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#reply' ?>" class="btn parent">Reply</a><a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>" class="btn parent">Original</a><a href="<?php echo site_url($this->fu_board . '/report/' . $op->doc_id) ?>" class="btn parent" data-function="report" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><a href="<?php echo site_url($this->fu_board . '/delete/' . $op->doc_id) ?>" class="btn parent" data-function="delete" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a></span>
+					<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/file-delete-icon.png'; ?>" title="This post was deleted from 4chan manually"/></span><?php endif ?>
 					<?php echo ((isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' posts omitted.</span>' : '') ?>
 			</div>
 		<?php endif; ?>
@@ -70,10 +71,10 @@ foreach ($posts as $key => $post) :
 					?>		
 					<?php echo build_board_comment($p); ?>
 				<?php endfor; ?>
-				<?php if (isset($thread_id)) : ?>
-				<?php endif; ?>
 			</aside>
+			<?php if (isset($thread_id)) : ?>
 			<div class="js_hook_realtimethread"></div>
+			<?php endif; ?>
 		<?php endif; ?>
 		<?php echo $template['partials']['post_reply']; ?>
 	</article>

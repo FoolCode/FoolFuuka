@@ -46,7 +46,8 @@ function build_board_comment($p) {
 									<span class="post_controls">
 										<a href="<?php echo site_url($CI->fu_board . '/report/' . $p->doc_id) ?>" class="btn parent" data-function="report" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><a href="<?php echo site_url($CI->fu_board . '/delete/' . $p->doc_id) ?>" class="btn parent" data-function="delete" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a>
 									</span>
-								<?php if ($p->subnum > 0) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/communicate-icon.png'; ?>" title="This is a ghost post, not coming from 4chan"/></span><?php endif ?>
+									<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/file-delete-icon.png'; ?>" title="This post was deleted from 4chan manually"/></span><?php endif ?>
+									<?php if ($p->subnum > 0) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/communicate-icon.png'; ?>" title="This is a ghost post, not coming from 4chan"/></span><?php endif ?>
 							</div>
 						</header>
 						<div class="text">

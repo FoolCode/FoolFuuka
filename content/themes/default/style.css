@@ -276,6 +276,11 @@ article.thread .post_author a {
 	text-decoration:underline;
 }
 
+article.thread > .thread_tools_bottom .post_type {
+	position:relative;
+	top:5px;
+	left:3px;
+}
 
 article.thread .post_trip {
 	color: #117743;
@@ -422,6 +427,7 @@ article.post .highlight {
 
 article.post .post_type {
 	float:right;
+	margin-left:4px;
 }
 
 article.post .post_controls {

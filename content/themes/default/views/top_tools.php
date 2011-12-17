@@ -2,9 +2,9 @@
 if (!isset($page))
 	$page = 1;
 ?>
-
+<div class="clearfix" style="border-bottom:1px dashed #aaa; margin-bottom: 5px; padding-left:10px;">
 <!--- Post Input -->
-<div style="">
+<div>
 <?php
 echo form_open($this->fu_board . '/post');
 echo '<div class="input-prepend">';
@@ -58,20 +58,20 @@ echo form_submit(array(
 ));
 ?>
 	
-<input type="button" class="btn notice<?php echo ($this->input->cookie('fu_ghost_mode')) ? ' active' : '' ?>" style="margin-left:-5px;" value="Ghost Mode" onClick="location.href='<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>'">
+<input type="button" class="btn notice" style="margin-left:-5px;" value="Ghost Mode" onClick="location.href='<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>'">
 <?php
 echo '</div>';
 echo form_close();
 ?>
 </div>	
-
+</div>
 
 <!--- Search Input -->
 <div id="search_simple">
 <?php
 echo form_open($this->fu_board . '/search');
 echo '<div class="input-prepend">';
-echo '<span class="add-on" rel="popover" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</span>';
+echo '<span class="add-on" rel="popover" data-placement="below" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</span>';
 echo form_input(array(
 	'name' => 'text',
 	'id' => 'text',

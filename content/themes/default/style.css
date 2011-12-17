@@ -20,6 +20,7 @@ html {
 body {
 	min-height:100%;
 	color:#333;
+	color:#364041;
 	background:url(images/subtle_freckles.png) #eee;
 	padding:0;
 	margin:0;
@@ -63,7 +64,7 @@ body {
 #top_tools {
 	padding:3px 0 0;
 	float:right;
-	width:500px;
+	width:410px;
 }
 
 #top_tools form {
@@ -72,7 +73,7 @@ body {
 	float:right;
 }
 
-#top_tools input {
+#top_tools input[type=text], #top_tools input[type=button], #top_tools input[type=submit] {
 	height:20px;
 	padding: 2px 4px;
 }
@@ -129,7 +130,7 @@ article.thread {
 	word-wrap: break-word;
 	position:relative;
 	overflow:hidden;
-	border-bottom:3px solid #888;
+	border-bottom:3px solid #364041;
 }
 
 article.thread .thread_divider{
@@ -187,7 +188,7 @@ article.thread > .thread_tools_bottom {
 }
 
 article.thread > .thread_tools_bottom .omitted {
-	color: #aaa;
+	color: #364041;
 	font-weight:bold;
 	font-size:14px;
 	margin-left:15px;
@@ -328,7 +329,7 @@ article.post.has_image > header {
 }
 
 article.post.has_image > .text {
-	margin-left:310px;
+	margin-left:300px;
 }
 
 

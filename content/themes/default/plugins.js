@@ -120,7 +120,7 @@ var realtimethread = function(){
 				jQuery.each(data[thread_id].posts, function(idx, value){
 					jQuery('article.thread aside').append(value.formatted);
 				});
-				thread_latest_timestamp = 	data[thread_id].posts[data[thread_id].posts.length-1].timestamp;
+				thread_latest_timestamp = data[thread_id].posts[data[thread_id].posts.length-1].timestamp;
 				timelapse = 10;
 			}
 			else

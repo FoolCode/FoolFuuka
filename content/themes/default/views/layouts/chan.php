@@ -46,7 +46,7 @@
 				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
 				
 					<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
-				
+					<h6>This is an archive board. Here's a <a href="<?php echo $board->url ?>">link</a> to the original.</h6>
 				<?php endif; ?>
 			</header>
 

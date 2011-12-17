@@ -194,6 +194,17 @@ class Report extends DataMapper
 							' . $this->get_table($board->shortname) . '.`doc_id`
 							=
 							' . $this->db->protect_identifiers('q') . '.`report_post`
+						LEFT JOIN
+							(
+								SELECT id AS poster_id_join,
+									ip AS poster_ip, user_agent AS poster_user_agent, 
+									banned AS poster_banned, banned_reason AS poster_banned_reason, 
+									banned_start AS poster_banned_start, banned_end AS poster_banned_end
+								FROM'.$this->db->protect_identifiers('posters', TRUE).'
+							) as p
+							ON ' . $this->get_table($board->shortname) . '.`poster_id`
+							=
+							' . $this->db->protect_identifiers('p') . '.`poster_id_join`
 						WHERE doc_id = ' . $this->db->escape($item->post) . '
 						LIMIT 0, 1
 					)';

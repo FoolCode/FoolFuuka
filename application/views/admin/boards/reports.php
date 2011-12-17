@@ -13,7 +13,8 @@
 				<div class="smalltext quick_tools">'._('Quick Tools').': 
 					<a href="">'._('Delete').'</a> |
 					<a href="">'._('Spam').'</a> |
-					<a href="'.site_url($report->shortname.'/post/'.$report->num).'">'._('View').'</a>
+					<a href="'.site_url($report->shortname.'/post/'.$report->num).'">'._('View').'</a> |
+					<a href="">'._('Ban').'</a> '.$report->poster_ip.'
 				</div>';
 			echo '</div>';
 		}

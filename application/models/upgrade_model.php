@@ -20,10 +20,10 @@ class Upgrade_model extends CI_Model {
 	function check_latest($force = FALSE) {
 		if (function_exists('curl_init')) {
 			$this->load->library('curl');
-			$result = $this->curl->simple_post($this->pod . '/api/software/foolslide', array('url' => site_url(), 'version' => get_setting('fs_priv_version')));
+			$result = $this->curl->simple_post($this->pod . '/api/software/foolfuuka', array('url' => site_url(), 'version' => get_setting('fs_priv_version')));
 		}
 		else
-			$result = file_get_contents($this->pod . '/api/software/foolslide');
+			$result = file_get_contents($this->pod . '/api/software/foolfuuka');
 		if (!$result) {
 			set_notice('error', _('FoOlPod server could not be contacted: impossible to check for new versions.'));
 			return FALSE;

@@ -3,9 +3,9 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<article>
+<article style="padding:50px;">
 	<h1><?php echo _('Welcome on the 4chan Archiver "FoOlFuuka"'); ?></h1>
-	<p><?php echo _('We are hosting these boards:'); ?></p>
+	<p><?php echo _('We are hosting the archives of the following boards:'); ?></p>
 	<h2>[
 		<?php
 		$board_urls = array();

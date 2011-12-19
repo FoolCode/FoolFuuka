@@ -34,7 +34,7 @@ class Post extends CI_Model
 					' . $this->db->protect_identifiers('q') . '.`report_post`
 				';
 		}
-		
+
 		// @todo make the existence of this block useless or something
 		// load the functions from the current theme, else load the default one
 		if (file_exists('content/themes/' . get_setting('fs_theme_dir') . '/theme_functions.php'))
@@ -957,9 +957,9 @@ class Post extends CI_Model
 				unset($post->poster_id);
 			}
 		}
-		if($post->parent > 0)
+		if ($post->parent > 0)
 		{
-			$post->formatted = build_board_comment($post);	
+			$post->formatted = build_board_comment($post);
 		}
 	}
 
@@ -1040,8 +1040,6 @@ class Post extends CI_Model
 			"'\[spoiler](.*?)\[/spoiler]'is",
 			"'\[sup\](.*?)\[/sup\]'is",
 			"'\[sub\](.*?)\[/sub\]'is",
-			"'\[b\](.*?)\[/b\]'is",
-			"'\[i\](.*?)\[/i\]'is",
 			"'\[u\](.*?)\[/u\]'is",
 			"'\[s\](.*?)\[/s\]'is",
 			"'\[o\](.*?)\[/o\]'is",
@@ -1056,8 +1054,6 @@ class Post extends CI_Model
 			'<span class="spoiler">\\1</span>',
 			'<sup>\\1</sup>',
 			'<sub>\\1</sub>',
-			'<strong>\\1</strong>',
-			'<em>\\1</em>',
 			'<span class="u">\\1</span>',
 			'<span class="s">\\1</span>',
 			'<span class="o">\\1</span>',
@@ -1077,12 +1073,20 @@ class Post extends CI_Model
 
 		$regexing = $row->comment;
 		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
+
+		// http://stackoverflow.com/questions/206059/php-validation-regex-for-url
+		$regexing = preg_replace("
+				#((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie", "'<a href=\"$1\" target=\"_blank\">$1</a>$4'", $regexing);
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
 		if ($row->subnum == 0)
 		{
 			$regexing = preg_replace($adminfind, $adminreplace, $regexing);
 		}
-		$regexing = nl2br(trim(preg_replace($find, $replace, $regexing)));
+
+		$regexing = preg_replace($find, $replace, $regexing);
+
+
+		$regexing = nl2br(trim($regexing));
 
 		return $regexing;
 	}

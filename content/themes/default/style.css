@@ -170,6 +170,12 @@ article.thread > .thread_image_box {
 	line-height:150%;
 }
 
+article.thread > .thread_image_box .thread_image {
+	box-shadow: 0px 0px 1px #ccc;
+	-moz-box-shadow: 0px 0px 1px #ccc;
+	-webkit-box-shadow: 0px 0px 1px #ccc;	
+}
+
 
 article.thread > .thread_image_box > .post_file_controls {
 	position:relative;

@@ -571,3 +571,12 @@ article.thread .greentext {
 
 
 .loading { display: none; width: 100%; text-align: center; margin: auto; }
+
+.spoiler {
+	color:#000;
+	background:#000;
+}
+
+.spoiler:hover {
+	color:#fff;
+}

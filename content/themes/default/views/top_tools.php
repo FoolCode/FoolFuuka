@@ -71,7 +71,7 @@ echo form_close();
 <?php
 echo form_open($this->fu_board . '/search');
 echo '<div class="input-prepend">';
-echo '<span class="add-on" rel="popover" data-placement="below" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</span>';
+echo '<a class="add-on" data-rel="popover-below" data-placement="below" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</a>';
 echo form_input(array(
 	'name' => 'text',
 	'id' => 'text',
@@ -100,10 +100,10 @@ echo form_close();
 <?php
 echo form_open($this->fu_board . '/search');
 echo '<div class="input-prepend">';
-echo '<span class="add-on" rel="popover-below" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</span>';
+echo '<a class="add-on" data-rel="popover-below" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</a>';
 echo form_input(array(
 	'name' => 'text',
-	'id' => 'text',
+	'id' => 'text2',
 	'style' => 'width:239px',
 	'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : ''
 ));

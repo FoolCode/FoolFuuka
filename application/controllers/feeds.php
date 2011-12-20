@@ -12,6 +12,7 @@ class Feeds extends Public_Controller
 	
 	function sitemap()
 	{
+		show_404();
 		$sitemap = array(
 			array(
 				// homepage
@@ -64,6 +65,7 @@ class Feeds extends Public_Controller
 
 	function feeds($format = NULL)
 	{
+		show_404();
 		//if (is_null($format))
 		//	redirect('reader/feeds/rss');
 		$this->load->helper('xml');

@@ -85,7 +85,8 @@ jQuery(document).ready(function() {
 		}
 	});
 	
-	jQuery("[rel=popover]").popover({offset: 10, html: true});
+	jQuery("[data-rel=popover-below]").popover({offset: 10, html: true});
+	jQuery("[data-rel=popover]").popover({offset: 10, html: true});
 	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
 	
 	post = location.href.split(/#/);

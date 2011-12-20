@@ -6,7 +6,7 @@ if (!defined('BASEPATH'))
 <?php if (isset($thread_id)) : ?>
 <section class="post reply" id="reply">
 	<header>
-		<span>Reply to Thread [<a href="#reply" rel="popover" data-original-title="Replying" data-content="Don't worry, your post will not be uploaded to the original board.">?</a>]</span>
+		<span>Reply to Thread [<a href="#reply" data-rel="popover" data-original-title="Replying" data-content="Don't worry, your post will not be uploaded to the original board.">?</a>]</span>
 		<br/>
 		<?php if(isset($reply_errors)) : ?>
 			<span style="color:red"><?php echo $reply_errors ?></span>

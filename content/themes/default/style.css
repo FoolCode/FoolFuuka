@@ -96,6 +96,10 @@ body {
 	height:16px;
 }
 
+#top_tools a.add-on {
+	color:#ccc;
+}
+
 #main {
 }
 

@@ -1036,30 +1036,14 @@ class Post extends CI_Model
 		$CI = & get_instance();
 		$find = array(
 			"'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i",
-			"'\[aa\](.*?)\[/aa\]'is",
 			"'\[spoiler](.*?)\[/spoiler]'is",
-			"'\[sup\](.*?)\[/sup\]'is",
-			"'\[sub\](.*?)\[/sub\]'is",
-			"'\[u\](.*?)\[/u\]'is",
-			"'\[s\](.*?)\[/s\]'is",
-			"'\[o\](.*?)\[/o\]'is",
-			"'\[m\](.*?)\[/m\]'i",
 			"'\[code\](.*?)\[/code\]'i",
-			"'\[EXPERT\](.*?)\[/EXPERT\]'i",
 		);
 
 		$replace = array(
 			'\\1<span class="greentext">\\2</span>\\3',
-			'<span class="aa">\\1</span>',
 			'<span class="spoiler">\\1</span>',
-			'<sup>\\1</sup>',
-			'<sub>\\1</sub>',
-			'<span class="u">\\1</span>',
-			'<span class="s">\\1</span>',
-			'<span class="o">\\1</span>',
-			'<tt class="code">\\1</tt>',
 			'<code>\\1</code>',
-			'<b><span class="u"><span class="o">\\1</span></span></b>',
 		);
 
 		$adminfind = array(

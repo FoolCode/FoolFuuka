@@ -118,7 +118,7 @@ class Chan extends Public_Controller
 
 		$thread = $this->post->get_thread($num);
 
-		if (count($thread) != 1)
+		if (!is_array($thread))
 		{
 			show_404();
 		}

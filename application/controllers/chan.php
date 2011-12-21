@@ -279,7 +279,7 @@ class Chan extends Public_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'name', 'tripcode', 'deleted', 'ghost', 'order', 'page');
+		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order', 'page');
 		if ($this->input->post())
 		{
 			$redirect_array = array(get_selected_board()->shortname, 'search');
@@ -300,8 +300,8 @@ class Chan extends Public_Controller
 		$title = array();
 		if ($search['text'])
 			$title[] = _('including') . ' "' . trim(fuuka_htmlescape($search['text'])) . '"';
-		if ($search['name'])
-			$title[] = _('with username'). ' "' . trim(fuuka_htmlescape($search['name'])) . '"';
+		if ($search['username'])
+			$title[] = _('with username'). ' "' . trim(fuuka_htmlescape($search['username'])) . '"';
 		if ($search['tripcode'])
 			$title[] = _('with tripcode'). ' "' . trim(fuuka_htmlescape($search['tripcode'])) . '"';
 		if ($search['deleted'] == 'deleted')

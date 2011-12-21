@@ -465,19 +465,19 @@ class Post extends CI_Model
 			$this->sphinxclient->SetLimits(($search['page'] * 25) - 25, 25, 5000);
 
 			$query = '';
-			if ($search['name'])
+			if ($search['username'])
 			{
-				$query .= '@name ' . $this->sphinxclient->EscapeString($search['name']) . ' ';
+				$query .= '@name ' . $this->sphinxclient->EscapeString(urldecode($search['username'])) . ' ';
 			}
 
 			if ($search['tripcode'])
 			{
-				$query .= '@trip ' . $this->sphinxclient->EscapeString($search['tripcode']) . ' ';
+				$query .= '@trip ' . $this->sphinxclient->EscapeString(urldecode($search['tripcode'])) . ' ';
 			}
 
 			if ($search['text'])
 			{
-				$query .= '@comment ' . $this->sphinxclient->HalfEscapeString($search['text']) . ' ';
+				$query .= '@comment ' . $this->sphinxclient->HalfEscapeString(urldecode($search['text'])) . ' ';
 			}
 
 			if ($search['deleted'] == "deleted")
@@ -521,7 +521,7 @@ class Post extends CI_Model
 			if (empty($search_result['matches']))
 			{
 				$result[0]['posts'] = array();
-				return $result;
+				array('posts' => $result, 'total_found' => 0);
 			}
 			foreach ($search_result['matches'] as $key => $matches)
 			{
@@ -606,7 +606,7 @@ class Post extends CI_Model
 			// the first you create from a parent is the first thread
 			$result[0]['posts'][] = $post;
 		}
-		$result[0]['posts'] = array_reverse($result[0]['posts']);
+		$result[0]['posts'] = $result[0]['posts'];
 		return $result;
 	}
 

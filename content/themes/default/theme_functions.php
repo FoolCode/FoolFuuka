@@ -24,14 +24,14 @@ function build_board_comment($p) {
 								<a href="<?php echo $p->remote_image_href ?>" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" data-md5="<?php echo $p->media_hash ?>" class="post_image" /></a>
 								<div class="post_file"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></div>
 								<div class="post_file_controls">
-									<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btn parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btn parent">iqdb</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btn parent">Google</a>
+									<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btnr parent">Google</a>
 								</div>
 							</div>
 						<?php endif; ?>
 						<header>
 							<div class="post_data">
 								<h2 class="post_title"><?php echo $p->title_processed ?></h2>
-								<span class="post_author"><?php echo (($p->email_processed) ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span> <span class="post_trip"><?php echo $p->trip_processed ?></span>
+								<span class="post_author"><?php echo (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span> <span class="post_trip"><?php echo $p->trip_processed ?></span>
 								<?php if ($p->capcode == 'M') : ?>
 									<span class="post_level post_level_moderator">## Mod</span>
 								<?php endif ?>
@@ -44,7 +44,7 @@ function build_board_comment($p) {
 								<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
 								<span class="post_number"><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="highlight">No.</a><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="quote" data-post="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a></span>
 									<span class="post_controls">
-										<a href="<?php echo site_url($CI->fu_board . '/report/' . $p->doc_id) ?>" class="btn parent" data-function="report" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><a href="<?php echo site_url($CI->fu_board . '/delete/' . $p->doc_id) ?>" class="btn parent" data-function="delete" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a>
+										<a href="<?php echo site_url($CI->fu_board . '/report/' . $p->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><a href="<?php echo site_url($CI->fu_board . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a>
 									</span>
 									<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/file-delete-icon.png'; ?>" title="This post was deleted from 4chan manually"/></span><?php endif ?>
 									<?php if ($p->subnum > 0) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/communicate-icon.png'; ?>" title="This is a ghost post, not coming from 4chan"/></span><?php endif ?>
@@ -53,7 +53,7 @@ function build_board_comment($p) {
 						<div class="text">
 							<?php echo $p->comment_processed ?>
 						</div>
-					</article>
+					</article><br/>
 <?php
  $string = ob_get_contents();
  ob_end_clean();

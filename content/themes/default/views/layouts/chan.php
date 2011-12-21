@@ -43,10 +43,9 @@
 				}
 				echo implode(' / ', $board_urls)
 				?>
-				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
+				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ] [ Original archiver: <a href="http://oldarchive.foolz.us">http://oldarchive.foolz.us</a> ]
 				
 					<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
-					<h6>This is an archive board. Here's a <a href="<?php echo $board->url ?>">link</a> to the original.</h6>
 				<?php endif; ?>
 			</header>
 
@@ -54,6 +53,7 @@
 				<?php if(isset($section_title)): ?>
 				<h3 class="section_title"><?php echo $section_title ?></h3>
 				<?php endif; ?>
+				
 				
 				<?php echo $template['body']; ?>
 				
@@ -69,7 +69,7 @@
 						<?php foreach($pages_links as $key => $item) : ?>
 							<li class="<?php if($key == $pages_links_current) echo 'active'; ?>"><a href="<?php echo $item ?>"><?php echo $key ?></a></li>
 						<?php endforeach; ?>
-						<?php if($pages_links_current < 15) : ?>
+						<?php if($pages_links_current> 1 && $pages_links_current < 15) : ?>
 							<li class="next"><a href="<?php echo $pages_links[$pages_links_current+1]; ?>">Next &rarr;</a></li>
 						<?php else : ?>
 							<li class="next disabled"><a href="#">Next &rarr;</a></li>						

@@ -146,6 +146,15 @@ class Post extends CI_Model
 				{
 					$result[$post->parent]['omitted'] = -4;
 				}
+				
+				if (isset($result[$post->parent]['images_omitted']) && $post->preview)
+				{
+					$result[$post->parent]['images_omitted']++;
+				}
+				else if ($post->preview)
+				{
+					$result[$post->parent]['images_omitted'] = -4;
+				}
 			}
 			else
 			{
@@ -249,6 +258,15 @@ class Post extends CI_Model
 				else
 				{
 					$result[$post->parent]['omitted'] = -4;
+				}
+				
+				if (isset($result[$post->parent]['images_omitted']) && $post->preview)
+				{
+					$result[$post->parent]['images_omitted']++;
+				}
+				else if ($post->preview)
+				{
+					$result[$post->parent]['images_omitted'] = -4;
 				}
 			}
 			else
@@ -718,6 +736,18 @@ class Post extends CI_Model
 		}
 		else
 		{
+			if(strlen($comment) > 4096)
+			{
+				return array('error' => 'Your post was too long.');
+			}
+			
+			$lines = explode("\n", $comment);
+			
+			if(count($lines) > 40)
+			{
+				return array('error' => 'Your post had too many lines.');
+			}	
+				
 			$insert_poster = array(
 				'ip' => $this->input->ip_address(),
 				'user_agent' => $this->input->user_agent()

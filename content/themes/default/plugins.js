@@ -74,7 +74,7 @@ jQuery(document).ready(function() {
 						toggleHighlight(modal.find(".modal-post").val().replace(',', '_'), 'reported', false);
 					}
 					else if (action == 'delete') {
-						jQuery('.doc_id_' + post).remove();
+						jQuery('.doc_id_' + post).hide();
 					}
 					return false;
 				}, 'json');
@@ -101,7 +101,7 @@ jQuery(document).ready(function() {
 	
 	if (thread_id != undefined)
 	{
-		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btn success" href="#" onClick="realtimethread(); return false;">Update now</a>');
+		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
 		realtimethread();
 	}
 });

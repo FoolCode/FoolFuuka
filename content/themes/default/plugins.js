@@ -49,7 +49,7 @@ jQuery(document).ready(function() {
 				var loading = modal.find(".modal-loading");
 				var action = $(this).data("action");
 				var _post = modal.find(".modal-post-id").val();
-				var _href = action + '/' + _post + '/';
+				var _href = $(this).data(action) + '/' + _post + '/';
 				
 				if (action == 'report') {
 					var _data = { post: _post, reason: modal.find(".modal-comment").val() };

@@ -130,7 +130,7 @@ body {
 }
 
 .btnr {
-	padding:1px 3px;
+	padding:1px 3px 2px;
 	background:#6A836F;
 	text-shadow:none;
 	margin: 0 2px;
@@ -162,7 +162,7 @@ article.thread > header {
 
 article.thread > .thread_image_box {
 	float:left;
-	margin: 0 20px 0 15px;
+	margin: 0 20px 10px 15px;
 	z-index:5;
 	border-bottom-left-radius: 3px;
 	-webkit-border-bottom-left-radius: 3px;
@@ -259,7 +259,7 @@ article.thread .post_number {
 }
 
 article.thread > .text {
-	padding:10px;
+	padding:10px 10px 10px 30px;
 	word-wrap: break-word;
 }
 
@@ -286,6 +286,7 @@ article.thread article.post .post_data {
 
 article.thread article.post header{
 	padding-top:5px;
+	overflow:hidden;
 }
 
 article.post > .text {
@@ -298,7 +299,7 @@ article.thread article.post > .thread_image_box {
 	text-align:center;
 	color: #888;
 	text-shadow: 0px 1px 0px #fff;
-	max-width:170px;
+	max-width:140px;
 	margin:0 10px 0 4px;
 	font-size:0.8em;
 	line-height:130%;
@@ -321,7 +322,7 @@ article.thread article.post > .thread_image_box .post_image {
 	box-shadow: 0px 0px 1px #ccc;
 	-moz-box-shadow: 0px 0px 1px #ccc;
 	-webkit-box-shadow: 0px 0px 1px #ccc;	
-	max-width:170px;
+	max-width:130px;
 	height:auto;
 }
 

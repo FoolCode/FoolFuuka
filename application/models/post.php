@@ -538,8 +538,7 @@ class Post extends CI_Model
 
 			if (empty($search_result['matches']))
 			{
-				$result[0]['posts'] = array();
-				array('posts' => $result, 'total_found' => 0);
+				return array('posts' => array(), 'total_found' => 0);
 			}
 			foreach ($search_result['matches'] as $key => $matches)
 			{

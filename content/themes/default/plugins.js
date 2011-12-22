@@ -8,11 +8,11 @@ jQuery(document).ready(function() {
 			case 'highlight':
 				if (post) replyHighlight(post);
 				break;
-				
+
 			case 'quote':
 				jQuery("#reply_comment").append(">>" + post + "\n");
 				break;
-				
+
 			case 'report':
 				modal.find(".title").html('Report - Post No.' + el.data("post-id"));
 				modal.find(".modal-loading").hide();
@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
 					<textarea class="modal-comment"></textarea>');
 				modal.find(".submitModal").data("action", 'report');
 				break;
-				
+
 			case 'delete':
 				var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
 				modal.find(".title").html('Delete - Post No. ' + el.data("post-id"));
@@ -39,18 +39,18 @@ jQuery(document).ready(function() {
 					modal.find(".modal-password").val(foolfuuka_reply_password);
 				}
 				break;
-			
+
 			case 'closeModal':
 				el.closest(".modal").modal('hide');
 				return false;
 				break;
-				
+
 			case 'submitModal':
 				var loading = modal.find(".modal-loading");
 				var action = $(this).data("action");
 				var _post = modal.find(".modal-post-id").val();
 				var _href = $(this).data(action) + '/' + _post + '/';
-				
+
 				if (action == 'report') {
 					var _data = { post: _post, reason: modal.find(".modal-comment").val() };
 				}
@@ -61,7 +61,7 @@ jQuery(document).ready(function() {
 					// Stop It! Unable to determine what action to use.
 					return false;
 				}
-				
+
 				jQuery.post(_href, _data, function(result) {
 					loading.hide();
 					if (result.status == 'failed') {
@@ -69,26 +69,26 @@ jQuery(document).ready(function() {
 						return false;
 					}
 					modal.modal('hide');
-				
+
 					if (action == 'report') {
 						toggleHighlight(modal.find(".modal-post").val().replace(',', '_'), 'reported', false);
 					}
 					else if (action == 'delete') {
 						jQuery('.doc_id_' + post).hide();
 					}
-					return false;
 				}, 'json');
+				return false;
 				break;
-			
+
 			default:
 				break;
 		}
 	});
-	
+
 	jQuery("[data-rel=popover-below]").popover({offset: 10, html: true});
 	jQuery("[data-rel=popover]").popover({offset: 10, html: true});
 	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
-	
+
 	post = location.href.split(/#/);
 	if (post[1]) {
 		if (post[1].match(/^q\d+(_\d+)?$/)) {
@@ -98,7 +98,7 @@ jQuery(document).ready(function() {
 		}
 		replyHighlight(post[1]);
 	}
-	
+
 	if (thread_id != undefined)
 	{
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
@@ -143,7 +143,7 @@ var realtimethread = function(){
 		complete: function() {
 		}
 	});
-	
+
 	return false;
 }
 
@@ -157,24 +157,24 @@ var toggleSearch = function(mode)
 var getSearch = function(type, searchForm)
 {
 	var location = searchForm.action;
-	
+
 	if (searchForm.text.value != "")
 		location += 'text/' + encodeURIComponent(searchForm.text.value) + '/';
-	
+
 	if (type == 'advanced')
 	{
 		if (searchForm.username.value != "")
 			location += 'username/' + encodeURIComponent(searchForm.username.value) + '/';
-		
+
 		if (searchForm.tripcode.value != "")
 			location += 'tripcode/' + encodeURIComponent(searchForm.tripcode.value) + '/';
-		
+
 		if (getRadioValue(searchForm.deleted) != "")
 			location += 'deleted/' + getRadioValue(searchForm.deleted) + '/';
-	
+
 		if (getRadioValue(searchForm.ghost) != "")
 			location += 'ghost/' + getRadioValue(searchForm.ghost) + '/';
-	
+
 		location += 'order/' + getRadioValue(searchForm.order) + '/';
 	}
 
@@ -212,12 +212,12 @@ function toggleHighlight(id, classn, single)
 {
 	jQuery("article").each(function() {
 		var post = jQuery(this);
-		
+
 		if (post.hasClass(classn) && single)
 		{
 			post.removeClass(classn);
 		}
-		
+
 		if (post.attr("id") == id)
 		{
 			post.addClass(classn);

@@ -18,17 +18,17 @@ class Post extends CI_Model
 		parent::__construct();
 		$this->get_table();
 
-		// make so it's shown where are the 
+		// make so it's shown where are the
 		if ($this->tank_auth->is_allowed())
 		{
 			$this->sql_report = '
-					LEFT JOIN 
-					( 
+					LEFT JOIN
+					(
 						SELECT post as report_post, reason as report_reason, status as report_status
 						FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
-						WHERE `board` = ' . get_selected_board()->id . ' 
+						WHERE `board` = ' . get_selected_board()->id . '
 					) as q
-					ON    
+					ON
 					' . $this->table . '.`doc_id`
 					=
 					' . $this->db->protect_identifiers('q') . '.`report_post`
@@ -65,7 +65,7 @@ class Post extends CI_Model
 	 *
 	 * @param type $page
 	 * @param type $process
-	 * @return type 
+	 * @return type
 	 */
 	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE)
 	{
@@ -146,7 +146,7 @@ class Post extends CI_Model
 				{
 					$result[$post->parent]['omitted'] = -4;
 				}
-				
+
 				if (isset($result[$post->parent]['images_omitted']) && $post->preview)
 				{
 					$result[$post->parent]['images_omitted']++;
@@ -259,7 +259,7 @@ class Post extends CI_Model
 				{
 					$result[$post->parent]['omitted'] = -4;
 				}
-				
+
 				if (isset($result[$post->parent]['images_omitted']) && $post->preview)
 				{
 					$result[$post->parent]['images_omitted']++;
@@ -739,14 +739,14 @@ class Post extends CI_Model
 			{
 				return array('error' => 'Your post was too long.');
 			}
-			
+
 			$lines = explode("\n", $comment);
-			
+
 			if(count($lines) > 40)
 			{
 				return array('error' => 'Your post had too many lines.');
-			}	
-				
+			}
+
 			$insert_poster = array(
 				'ip' => $this->input->ip_address(),
 				'user_agent' => $this->input->user_agent()
@@ -782,7 +782,7 @@ class Post extends CI_Model
 
 		// we don't even need this, but let's leave it for sake of backward compatibility with original fuuka
 		$this->db->query('
-			replace into ' . $this->table_local . ' (num,parent,subnum,`timestamp`) 
+			replace into ' . $this->table_local . ' (num,parent,subnum,`timestamp`)
 			select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from ' . $this->table . '
 			where num = (select max(num) from ' . $this->table . ' where parent=?);
 		', array($num));
@@ -954,7 +954,7 @@ class Post extends CI_Model
 				Coix9e6+3c05Pk6Bi1GWsMWcJUf7rL9tpsxROtq0AAQBPQ0rTlstFEziwm3vRaTZvPRboQfREta0
 				9VA+tRiWfN3XP+1bbMS9exKacGLMxR/bmO5A57AgQF+bPjhif5M/OOJ6J/76q0JDHA==';
 
-		//$sectrip='!!'.substr(sha1_base64($sectrip.decode_base64($self->{secret})), 0, 11);	
+		//$sectrip='!!'.substr(sha1_base64($sectrip.decode_base64($self->{secret})), 0, 11);
 		return substr(base64_encode(sha1($plain . (base64_decode($secure)), TRUE)), 0, 11);
 	}
 
@@ -1056,7 +1056,16 @@ class Post extends CI_Model
 	{
 		if (!$row->media)
 			return '';
-		return get_selected_board()->images_url . $row->media_filename;
+
+		// ignore webkit and opera and allow rel="noreferrer" do its work
+		if (preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
+		{
+			return get_selected_board()->images_url . $row->media_filename;
+		}
+		else
+		{
+			return site_url(get_selected_board()->shortname . '/redirect/' . $row->media_filename);
+		}
 	}
 
 
@@ -1112,7 +1121,7 @@ class Post extends CI_Model
 		// check if it's the OP that is being linked to
 		if (array_key_exists($num, $this->existing_posts))
 		{
-			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" data-rel="highlight" data-id="' . $num . '">&gt;&gt;' . $num . '</a>';
+			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" data-function="highlight" data-backlink="true" data-id="' . $num . '">&gt;&gt;' . $num . '</a>';
 		}
 
 		// check if it's one of the posts we've already met
@@ -1120,7 +1129,7 @@ class Post extends CI_Model
 		{
 			if (in_array($num, $thread))
 			{
-				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" data-rel="highlight" data-id="' . $num . '">&gt;&gt;' . $num . '</a>';
+				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" data-function="highlight" data-backlink="true" data-id="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 			}
 		}
 
@@ -1135,17 +1144,17 @@ class Post extends CI_Model
 	// function from usort php page
 	function multiSort()
 	{
-		//get args of the function 
+		//get args of the function
 		$args = func_get_args();
 		$c = count($args);
 		if ($c < 2)
 		{
 			return false;
 		}
-		//get the array to sort 
+		//get the array to sort
 		$array = array_splice($args, 0, 1);
 		$array = $array[0];
-		//sort with an anoymous function using args 
+		//sort with an anoymous function using args
 		usort($array, function($a, $b) use($args)
 				{
 

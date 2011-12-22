@@ -103,6 +103,7 @@ jQuery(document).ready(function() {
 	{
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
 		realtimethread();
+		backlinkify();
 	}
 });
 
@@ -141,10 +142,55 @@ var realtimethread = function(){
 		error: function(jqXHR, textStatus, errorThrown) {
 		},
 		complete: function() {
+			backlinkify();
 		}
 	});
 
 	return false;
+}
+
+var backlinkify = function()
+{
+	var backlinks = new Object;
+	jQuery("article").each(function() {
+		var that = jQuery(this);
+		var post_id = that.attr('id');
+
+		backlinks[post_id] = []
+		if (post_id != thread_id)
+		{
+			jQuery.each(that.find("[data-backlink=true]"), function(idx, post) {
+				backlinks[post.innerText.replace('>>', '')].push('<a href="' + post.baseURI + '#' + post_id + '" data-function="backlink" data-id="' + post_id + '">&gt;&gt;' + post_id)
+			});
+		}
+	});
+
+	jQuery(".post_backlink").each(function() {
+		var that = jQuery(this);
+		that.html(backlinks[that.data('id')].join(" "))
+	});
+
+	jQuery("[data-function=backlink]").hover(
+		function() {
+			console.debug('hover')
+			var backlink = jQuery("#backlink");
+			var that = jQuery(this);
+
+			var pos = that.offset(); var width = that.width();
+
+			backlink.css({left: (pos.left + width + 10) + 'px', top: (pos.top) + 'px'});
+			jQuery.each(thread_json[thread_id].posts, function(idx, quote) {
+				if ((that.data('id') == quote.num + '_' + quote.subnum) || (that.data('id') == quote.num) || (that.data('id') == quote.parent))
+				{
+					backlink.css('display', 'block');
+					backlink.html(quote.formatted).find(".post_controls").remove();
+				}
+			})
+		},
+		function () {
+			jQuery("#backlink").css('display', 'none').html();
+		}
+	);
 }
 
 var toggleSearch = function(mode)

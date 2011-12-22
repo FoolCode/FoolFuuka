@@ -150,7 +150,7 @@ body {
 article.thread {
 	padding: 15px 0;
 	word-wrap: break-word;
-	position:relative;
+	//position:relative;
 	border-bottom:3px solid #364041;
 	overflow:hidden;
 }
@@ -209,6 +209,17 @@ article.thread > .thread_tools_bottom .omitted {
 	top:1px;
 }
 
+article.thread .post_type {
+	margin-left:4px;
+}
+article.thread .post_type img {
+	vertical-align:bottom
+}
+
+article.thread .post_is_op {
+	font-weight: bold;
+	color:#000;
+}
 
 article.thread h2.post_title {
 	font-weight: bold;
@@ -228,11 +239,6 @@ article.thread .post_author a {
 	text-decoration:underline;
 }
 
-article.thread > .thread_tools_bottom .post_type {
-	position:relative;
-	top:5px;
-	left:3px;
-}
 
 article.thread .post_trip {
 	color: #117743;
@@ -258,15 +264,21 @@ article.thread .post_number {
 
 }
 
+article.thread .backlink_list {
+	font-size:11px;
+	color:#888;
+	display:none;
+}
+
 article.thread > .text {
 	padding:10px 10px 10px 30px;
 	word-wrap: break-word;
 }
 
-article.post {
+.post {
 	margin:2px 20px;
 	margin-right:0px;
-	padding: 0 0 10px 5px;
+	padding: 0 0 10px 10px;
 	display:-moz-inline-stack;
 	display:inline-block;
 	zoom:1;
@@ -275,26 +287,26 @@ article.post {
 	border-bottom:1px solid #aaa;
 }
 
-article.post.has_image {
+.post.has_image {
 	clear:both;
 }
 
 
-article.thread article.post .post_data {
-	padding:0 6px;
+.post .post_data {
+	padding:0 6px 0 0;
 }
 
-article.thread article.post header{
+.post header{
 	padding-top:5px;
 	overflow:hidden;
 }
 
-article.post > .text {
+.post > .text {
 	padding: 7px 10px 0px 15px;
 	word-wrap: break-word;
 }
 
-article.thread article.post > .thread_image_box {
+.post > .thread_image_box {
 	float:left;
 	text-align:center;
 	color: #888;
@@ -305,20 +317,20 @@ article.thread article.post > .thread_image_box {
 	line-height:130%;
 	padding-top:5px;
 }
-article.thread article.post > .thread_image_box .post_file {
+.post > .thread_image_box .post_file {
 	text-align:center;
 	word-wrap: break-word;
 	display:block;
 	padding:2px;
 }
 
-article.thread article.post > .thread_image_box > .post_file_controls {
+.post > .thread_image_box > .post_file_controls {
 	margin: 0 -2px 0 -2px;
 	position:relative;
 	top:2px;
 }
 
-article.thread article.post > .thread_image_box .post_image {
+.post > .thread_image_box .post_image {
 	box-shadow: 0px 0px 1px #ccc;
 	-moz-box-shadow: 0px 0px 1px #ccc;
 	-webkit-box-shadow: 0px 0px 1px #ccc;	
@@ -326,7 +338,7 @@ article.thread article.post > .thread_image_box .post_image {
 	height:auto;
 }
 
-article.post.post_ghost {
+.post.post_ghost {
 	background: #aaa;
 	background: rgba(0,0,0,0.05);
 	margin-left:40px;
@@ -337,21 +349,25 @@ article.post.post_ghost {
 	background: linear-gradient(top, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 100%); /* W3C */
 }
 
-article.post.reported {
+.post.reported {
 	background: #e2e2e2;
 }
 
-article.post.highlight {
+.post.highlight {
 	background: #d6bad0;
 }
 
-article.post .post_type {
-	float:right;
-	margin-left:4px;
+#backlink {
+	box-shadow: 0px 0px 3px #333;
+	-moz-box-shadow: 0px 0px 3px #333;
+	-webkit-box-shadow: 0px 0px 3px #333;
+	overflow:hidden;
 }
 
-article.post .post_controls {
+#backlink .post {
+	margin:0;
 }
+
 
 section.reply {
 	background: #99ccaa;
@@ -432,6 +448,10 @@ section.post.reply .actions {
 
 article.thread .greentext {
 	color: #789922;
+}
+
+article.thread .backlink.op {
+	border-bottom: 1px dotted #000;
 }
 
 .modal-label {

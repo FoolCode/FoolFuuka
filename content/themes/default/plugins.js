@@ -52,10 +52,16 @@ jQuery(document).ready(function() {
 				var _href = $(this).data(action) + '/' + _post + '/';
 
 				if (action == 'report') {
-					var _data = { post: _post, reason: modal.find(".modal-comment").val() };
+					var _data = {
+						post: _post, 
+						reason: modal.find(".modal-comment").val()
+					};
 				}
 				else if (action == 'delete') {
-					var _data = { post: _post, password: modal.find(".modal-password").val() };
+					var _data = {
+						post: _post, 
+						password: modal.find(".modal-password").val()
+					};
 				}
 				else {
 					// Stop It! Unable to determine what action to use.
@@ -85,9 +91,15 @@ jQuery(document).ready(function() {
 		}
 	});
 
-	jQuery("[data-rel=popover-below]").popover({offset: 10, html: true});
-	jQuery("[data-rel=popover]").popover({offset: 10, html: true});
-	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
+	jQuery("[data-rel=popover-below]").popover({
+		offset: 10, 
+		html: true
+	});
+	jQuery("[data-rel=popover]").popover({
+		offset: 10, 
+		html: true
+	});
+	timify();
 
 	post = location.href.split(/#/);
 	if (post[1]) {
@@ -102,8 +114,8 @@ jQuery(document).ready(function() {
 	if (thread_id != undefined)
 	{
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
-		realtimethread();
 		backlinkify();
+		realtimethread();
 	}
 });
 
@@ -129,6 +141,7 @@ var realtimethread = function(){
 				});
 				thread_latest_timestamp = data[thread_id].posts[data[thread_id].posts.length-1].timestamp;
 				timelapse = 10;
+				realtime_callback();
 			}
 			else
 			{
@@ -142,11 +155,19 @@ var realtimethread = function(){
 		error: function(jqXHR, textStatus, errorThrown) {
 		},
 		complete: function() {
-			backlinkify();
 		}
 	});
 
 	return false;
+}
+
+var realtime_callback = function(){
+	backlinkify();
+	timify();
+}
+
+var timify = function() {
+	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
 }
 
 var backlinkify = function()
@@ -167,30 +188,47 @@ var backlinkify = function()
 
 	jQuery(".post_backlink").each(function() {
 		var that = jQuery(this);
-		that.html(backlinks[that.data('id')].join(" "))
+		if(backlinks[that.data('id')].length > 0)
+		{
+			that.html(backlinks[that.data('id')].join(" "));
+			that.parent().show();
+		}
 	});
 
 	jQuery("[data-function=backlink]").hover(
 		function() {
-			console.debug('hover')
 			var backlink = jQuery("#backlink");
 			var that = jQuery(this);
 
-			var pos = that.offset(); var width = that.width();
+			var pos = that.offset();
+			var height = that.height();
 
-			backlink.css({left: (pos.left + width + 10) + 'px', top: (pos.top) + 'px'});
-			jQuery.each(thread_json[thread_id].posts, function(idx, quote) {
-				if ((that.data('id') == quote.num + '_' + quote.subnum) || (that.data('id') == quote.num) || (that.data('id') == quote.parent))
-				{
-					backlink.css('display', 'block');
-					backlink.html(quote.formatted).find(".post_controls").remove();
-				}
-			})
+			backlink.css({
+				left: (pos.left + 5) + 'px', 
+				top: (pos.top + height + 3) + 'px'
+			});
+			
+			if(thread_id == that.data('id'))
+			{
+				quote = thread_json[thread_id].op;
+				backlink.css('display', 'block');
+				backlink.html(quote.formatted).find(".post_controls").remove();
+			}
+			else
+			{
+				jQuery.each(thread_json[thread_id].posts, function(idx, quote) {
+					if ((that.data('id') == quote.num + '_' + quote.subnum) || (that.data('id') == quote.num && quote.subnum == 0 ) || (that.data('id') == quote.parent))
+					{
+						backlink.css('display', 'block');
+						backlink.html(quote.formatted).find(".post_controls").remove();
+					}
+				})
+			}
 		},
 		function () {
 			jQuery("#backlink").css('display', 'none').html();
 		}
-	);
+		);
 }
 
 var toggleSearch = function(mode)

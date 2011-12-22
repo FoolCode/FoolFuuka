@@ -137,7 +137,11 @@ var realtimethread = function(){
 		success: function(data){
 			if(data[thread_id].posts instanceof Array) {
 				jQuery.each(data[thread_id].posts, function(idx, value){
-					jQuery('article.thread aside').append(value.formatted);
+					if(typeof thread_json[value.num] != undefined)
+					{
+						thread_json[thread_id].posts.push(value);
+						jQuery('article.thread aside').append(value.formatted);
+					}
 				});
 				thread_latest_timestamp = data[thread_id].posts[data[thread_id].posts.length-1].timestamp;
 				timelapse = 10;
@@ -182,10 +186,12 @@ var backlinkify = function()
 		{
 			jQuery.each(that.find("[data-backlink=true]"), function(idx, post) {
 				backlinks[post.innerText.replace('>>', '')].push('<a href="' + post.baseURI + '#' + post_id + '" data-function="backlink" data-id="' + post_id + '">&gt;&gt;' + post_id)
+				backlinks[post.innerText.replace('>>', '')] = eliminateDuplicates(backlinks[post.innerText.replace('>>', '')]);
 			});
 		}
 	});
-
+	
+	
 	jQuery(".post_backlink").each(function() {
 		var that = jQuery(this);
 		if(backlinks[that.data('id')].length > 0)
@@ -195,6 +201,17 @@ var backlinkify = function()
 		}
 	});
 
+	// how could we make it working well on cellphones?
+	if( navigator.userAgent.match(/Android/i) ||
+		navigator.userAgent.match(/webOS/i) ||
+		navigator.userAgent.match(/iPhone/i) ||
+		navigator.userAgent.match(/iPad/i) ||
+		navigator.userAgent.match(/iPod/i) ||
+		navigator.userAgent.match(/BlackBerry/)
+		){
+		return false;
+	}
+	
 	jQuery("[data-function=backlink]").hover(
 		function() {
 			var backlink = jQuery("#backlink");
@@ -353,4 +370,20 @@ function getCookie( check_name ) {
 	{
 		return null;
 	}
+}
+
+
+function eliminateDuplicates(arr) {
+  var i,
+      len=arr.length,
+      out=[],
+      obj={};
+
+  for (i=0;i<len;i++) {
+    obj[arr[i]]=0;
+  }
+  for (i in obj) {
+    out.push(i);
+  }
+  return out;
 }

@@ -489,6 +489,7 @@ article.thread .backlink.op {
 	margin:10px 10px 10px 20px;
 	border-top: 1px solid #aaa;
 	padding:5px;
+	clear:both;
 }
 .js_hook_realtimethread a.btn{
 	position:relative;

@@ -140,7 +140,7 @@ class MY_Controller extends CI_Controller
 			$this->unzip->extract('content/cache/stopforumspam/stopforumspam.zip');
 			$ip_list = file_get_contents('content/cache/stopforumspam/listed_ip_90.txt');
 			
-			$this->db->empty_table('stopforumspam');
+			$this->db->truncate('stopforumspam');
 			$ip_array = array();
 			foreach(preg_split("/((\r?\n)|(\r\n?))/", $ip_list) as $line){
 				$ip_array[] = '(INET_ATON('.$this->db->escape($line).'))';

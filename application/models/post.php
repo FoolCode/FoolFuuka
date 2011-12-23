@@ -1102,9 +1102,8 @@ class Post extends CI_Model
 		$regexing = $row->comment;
 		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
 
-		// http://stackoverflow.com/questions/206059/php-validation-regex-for-url
-		$regexing = preg_replace("
-				#((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie", "'<a href=\"$1\" target=\"_blank\">$1</a>$4'", $regexing);
+		$regexing = auto_link($regexing, 'url', TRUE);
+
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
 		if ($row->subnum == 0)
 		{
@@ -1127,7 +1126,7 @@ class Post extends CI_Model
 		// check if it's the OP that is being linked to
 		if (array_key_exists($num, $this->existing_posts))
 		{
-			return '<a class="backlink op" href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" data-function="highlight" data-backlink="true" data-id="' . $num . '">&gt;&gt;' . $num . '</a>';
+			return '<a class="backlink op" href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" data-function="highlight" data-function2="backlink" data-backlink="true" data-id="' . $num . '">&gt;&gt;' . $num . '</a>';
 		}
 
 		// check if it's one of the posts we've already met
@@ -1135,7 +1134,7 @@ class Post extends CI_Model
 		{
 			if (in_array($num, $thread))
 			{
-				return '<a class="backlink" href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" data-function="highlight" data-backlink="true" data-id="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+				return '<a class="backlink" href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" data-function="highlight" data-function2="backlink" data-backlink="true" data-id="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 			}
 		}
 

@@ -1,6 +1,6 @@
 
 jQuery(document).ready(function() {
-	jQuery("[data-function]").click(function() {
+	jQuery("[data-function]").add("[data-function2]").click(function() {
 		var el = jQuery(this);
 		var post = el.data("post");
 		var modal = jQuery("#post_tools_modal");
@@ -213,7 +213,7 @@ var backlinkify = function()
 		return false;
 	}
 	
-	jQuery("[data-function=backlink]").hover(
+	jQuery("[data-function=backlink]").add("[data-function2=backlink]").hover(
 		function() {
 			var backlink = jQuery("#backlink");
 			var that = jQuery(this);

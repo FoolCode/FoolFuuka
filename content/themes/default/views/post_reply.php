@@ -64,13 +64,13 @@ if (!defined('BASEPATH'))
 					)); ?>
 				</div>
 			</div>
-			<?php 
+			<?php
 			// controls for administrators and moderators
 			if($this->tank_auth->is_allowed()) : ?>
 			<div class="clearfix">
 				<label for="reply_postas">Post as</label>
 				<div class="input">
-					<?php 
+					<?php
 					$postas = array('user' => 'User', 'mod' => 'Moderator');
 					if($this->tank_auth->is_admin())
 					{
@@ -87,12 +87,6 @@ if (!defined('BASEPATH'))
 					'name' => 'reply_action',
 					'value' => 'Submit',
 					'class' => 'btn primary'
-				));
-				echo '&nbsp;';
-				echo form_submit(array(
-					'name' => 'reply_action',
-					'value' => 'Delete',
-					'class' => 'btn secondary'
 				));
 			?>
 			</div>

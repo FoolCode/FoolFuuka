@@ -1017,7 +1017,7 @@ class Post extends CI_Model
 		{
 			return '';
 		}
-		
+
 	}
 
 
@@ -1127,7 +1127,7 @@ class Post extends CI_Model
 		// check if it's the OP that is being linked to
 		if (array_key_exists($num, $this->existing_posts))
 		{
-			return '<a class="backlink op" href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" data-function="highlight" data-backlink="true" data-id="' . $num . '">&gt;&gt;' . $num . '</a>';
+			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" class="backlink op" data-function="highlight" data-backlink="true" data-post="' . $num . '">&gt;&gt;' . $num . '</a>';
 		}
 
 		// check if it's one of the posts we've already met
@@ -1135,7 +1135,7 @@ class Post extends CI_Model
 		{
 			if (in_array($num, $thread))
 			{
-				return '<a class="backlink" href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" data-function="highlight" data-backlink="true" data-id="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 			}
 		}
 

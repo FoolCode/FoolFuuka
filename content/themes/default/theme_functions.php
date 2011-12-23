@@ -51,7 +51,7 @@ function build_board_comment($p, $modifiers = array()) {
 								<?php if ($p->subnum > 0) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/communicate-icon.png'; ?>" title="This is a ghost post, not coming from 4chan"/></span><?php endif ?>
 							</div>
 						</header>
-							<div class="backlink_list"><?php echo _('Quoted by:') ?> <span class="post_backlink" data-id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>"></span></div>
+							<div class="backlink_list"><?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>"></span></div>
 						<div class="text">
 							<?php echo $p->comment_processed ?>
 						</div>

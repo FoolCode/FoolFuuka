@@ -272,6 +272,7 @@ class Chan extends Public_Controller
 		$this->template->set('section_title', _('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Image: ' . urldecode($hash));
 		$this->template->set('posts', $posts);
+		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');
 	}
 
@@ -352,6 +353,7 @@ class Chan extends Public_Controller
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - '.$title);
 		$this->template->set('posts', $result['posts']);
+		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 		$this->template->build('board');
 	}

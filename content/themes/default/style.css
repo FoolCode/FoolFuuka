@@ -129,20 +129,21 @@ body {
 	color:#f5f5f5;
 }
 
-.btnr {
+.btnr, .btnr:visited {
 	padding:1px 3px 2px;
-	background:#6A836F;
+	background:#C8E4CE;
 	text-shadow:none;
 	margin: 0 2px;
-	color:#f5f5f5;
+	color:#333;
 	font-size:11px;
 	line-height:11px;
 	position:relative;
 	top:-1px;
 }
 
-.btnr:visited, .btnr:hover {
-	color:#f5f5f5;	
+.btnr:hover {
+	background:	#6a836f;
+	color:#f5f5f5;
 }
 
 /* board */

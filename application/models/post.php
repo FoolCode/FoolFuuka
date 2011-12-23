@@ -628,9 +628,9 @@ class Post extends CI_Model
 	}
 
 
-	/*	 * ***
+	/**
 	 * POSTING FUNCTIONS
-	 * *** */
+	 **/
 	function comment($data)
 	{
 		if (check_stopforumspam_ip($this->input->ip_address()))

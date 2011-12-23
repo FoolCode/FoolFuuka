@@ -1,5 +1,4 @@
 jQuery(document).ready(function() {
-	bindFunctions();
 	jQuery("[data-rel=popover-below]").popover({
 		offset: 10,
 		html: true
@@ -8,7 +7,6 @@ jQuery(document).ready(function() {
 		offset: 10,
 		html: true
 	});
-	timify();
 
 	post = location.href.split(/#/);
 	if (post[1]) {
@@ -26,6 +24,8 @@ jQuery(document).ready(function() {
 		backlinkify();
 		realtimethread();
 	}
+	bindFunctions();
+	timify();
 });
 
 var timelapse = 10;
@@ -75,8 +75,8 @@ var realtimethread = function(){
 }
 
 var realtime_callback = function(){
-	bindFunctions();
 	backlinkify();
+	bindFunctions();
 	timify();
 }
 

@@ -204,6 +204,7 @@ article.thread > .thread_tools_bottom .omitted {
 article.thread .post_type {
 	margin-left:4px;
 }
+
 article.thread .post_type img {
 	vertical-align:bottom
 }
@@ -286,6 +287,20 @@ article.thread > .text {
 
 .post .post_data {
 	padding:0 6px 0 0;
+}
+
+.post .post_file .post_file_filename {
+	text-overflow: ellipsis;
+	max-width:180px;
+	overflow:hidden;
+	white-space: nowrap;
+	display:inline-block;
+	position:relative;
+	top:1px;
+}
+
+.post .post_file .post_file_filename:hover {
+	max-width:none;
 }
 
 .post header{

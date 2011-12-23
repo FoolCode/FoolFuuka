@@ -151,11 +151,9 @@ body {
 article.thread {
 	padding: 15px 0;
 	word-wrap: break-word;
-	//position:relative;
 	border-bottom:3px solid #364041;
 	overflow:hidden;
 }
-
 
 article.thread > header {
 	overflow:hidden;
@@ -165,12 +163,6 @@ article.thread > .thread_image_box {
 	float:left;
 	margin: 0 20px 10px 15px;
 	z-index:5;
-	border-bottom-left-radius: 3px;
-	-webkit-border-bottom-left-radius: 3px;
-	-moz-border-radius-bottom-left: 3px;
-	border-bottom-right-radius: 3px;
-	-webkit-border-bottom-right-radius: 3px;
-	-moz-border-radius-bottom-right: 3px;
 	text-align:center;
 	color: #bfbfbf;
 	text-shadow: 0px 1px 0px #fff;
@@ -180,9 +172,6 @@ article.thread > .thread_image_box {
 }
 
 article.thread > .thread_image_box .thread_image {
-	box-shadow: 0px 0px 1px #ccc;
-	-moz-box-shadow: 0px 0px 1px #ccc;
-	-webkit-box-shadow: 0px 0px 1px #ccc;	
 }
 
 
@@ -300,6 +289,7 @@ article.thread > .text {
 .post header{
 	padding-top:5px;
 	overflow:hidden;
+	display:-moz-inline-stack;
 }
 
 .post > .text {
@@ -332,9 +322,6 @@ article.thread > .text {
 }
 
 .post > .thread_image_box .post_image {
-	box-shadow: 0px 0px 1px #ccc;
-	-moz-box-shadow: 0px 0px 1px #ccc;
-	-webkit-box-shadow: 0px 0px 1px #ccc;	
 	max-width:130px;
 	height:auto;
 }

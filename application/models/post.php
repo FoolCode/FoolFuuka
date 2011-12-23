@@ -967,7 +967,8 @@ class Post extends CI_Model
 	function process_post($post, $clean = TRUE)
 	{
 		$this->load->helper('text');
-		$post->thumbnail_href = $this->get_thumbnail_href($post);
+		$post->thumbnail_href = $this->get_image_href($post, TRUE);
+		$post->image_href = $this->get_image_href($post);
 		$post->remote_image_href = $this->get_remote_image_href($post);
 		$post->comment_processed = $this->get_comment_processed($post);
 
@@ -990,7 +991,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_thumbnail_href($row)
+	function get_image_href($row, $thumbnail = FALSE)
 	{
 		if (!$row->preview)
 			return FALSE;
@@ -1004,15 +1005,23 @@ class Post extends CI_Model
 			$number = '0' . $number;
 		}
 
-		if (file_exists($this->get_thumbnail_dir($row)) !== FALSE)
-			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview;
-		$row->preview_h = 150;
-		$row->preview_w = 150;
-		return site_url() . 'content/themes/default/images/image_missing.jpg';
+		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
+			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/'.(($thumbnail)?'thumb':'img').'/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail)?$row->preview:$row->media_filename);
+		if($thumbnail)
+		{
+			$row->preview_h = 150;
+			$row->preview_w = 150;
+			return site_url() . 'content/themes/default/images/image_missing.jpg';
+		}
+		else
+		{
+			return '';
+		}
+		
 	}
 
 
-	function get_thumbnail_dir($row)
+	function get_image_dir($row, $thumbnail)
 	{
 		if (!$row->preview)
 			return FALSE;
@@ -1027,7 +1036,7 @@ class Post extends CI_Model
 			$number = '0' . $number;
 		}
 
-		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . get_selected_board()->shortname . '/thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->preview;
+		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . get_selected_board()->shortname . '/'.(($thumbnail === TRUE)?'thumb':'img').'/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail === TRUE)?$row->preview:$row->media_filename);
 	}
 
 

@@ -14,7 +14,7 @@ foreach ($posts as $key => $post) :
 			?>
 			<?php if ($op->media_filename) : ?>
 				<div class="thread_image_box">
-					<a href="<?php echo $op->remote_image_href ?>" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $op->thumbnail_href ?>" width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>" data-md5="<?php echo $op->media_hash ?>" class="thread_image" /></a>
+					<a href="<?php echo ($op->image_href)?$op->image_href:$op->remote_image_href ?>" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $op->thumbnail_href ?>" width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>" data-md5="<?php echo $op->media_hash ?>" class="thread_image" /></a>
 					<div class="post_file" style="padding-left: 2px"><?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media ?></div>
 					<div class="post_file_controls">
 						<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>" class="btnr parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>" class="btnr parent">Google</a>

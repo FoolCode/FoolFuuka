@@ -21,7 +21,7 @@ function build_board_comment($p, $modifiers = array()) {
 						<?php if ($p->media_filename) : ?>
 							<div class="thread_image_box">
 								<div class="post_file"><?php echo $p->media ?></div>
-								<a href="<?php echo $p->remote_image_href ?>" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" data-md5="<?php echo $p->media_hash ?>" class="post_image" /></a>
+								<a href="<?php echo ($p->image_href)?$p->image_href:$p->remote_image_href ?>" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" data-md5="<?php echo $p->media_hash ?>" class="post_image" /></a>
 								<div class="post_file"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></div>
 								<div class="post_file_controls">
 									<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btnr parent">Google</a>

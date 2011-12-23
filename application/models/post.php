@@ -1102,9 +1102,8 @@ class Post extends CI_Model
 		$regexing = $row->comment;
 		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
 
-		// http://stackoverflow.com/questions/206059/php-validation-regex-for-url
-		$regexing = preg_replace("
-				#((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie", "'<a href=\"$1\" target=\"_blank\">$1</a>$4'", $regexing);
+		$regexing = auto_link($regexing, 'url', TRUE);
+
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
 		if ($row->subnum == 0)
 		{

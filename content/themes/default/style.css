@@ -167,8 +167,10 @@ article.thread > .thread_image_box {
 	color: #bfbfbf;
 	text-shadow: 0px 1px 0px #fff;
 	max-width:250px;
-	font-size:0.9em;
+	font-size:0.8em;
 	line-height:150%;
+	vertical-align:bottom;
+
 }
 
 article.thread > .thread_image_box .thread_image {
@@ -274,7 +276,7 @@ article.thread > .text {
 	zoom:1;
 	*display:inline;
 	background: #d6f0da;
-	border-bottom:1px solid #aaa;
+	border-bottom:1px solid #ccc;
 }
 
 .post.has_image {
@@ -301,18 +303,26 @@ article.thread > .text {
 	float:left;
 	text-align:center;
 	color: #888;
-	text-shadow: 0px 1px 0px #fff;
 	max-width:140px;
 	margin:0 10px 0 4px;
 	font-size:0.8em;
 	line-height:130%;
 	padding-top:5px;
+	vertical-align:bottom;
 }
-.post > .thread_image_box .post_file {
-	text-align:center;
+.post .post_file {
 	word-wrap: break-word;
 	display:block;
-	padding:2px;
+	overflow:hidden;
+	display:-moz-inline-stack;
+	font-size:11px;
+	color:#888;
+	line-height:12px;
+	margin-top:5px;
+}
+
+.post .post_file .btnr {
+	font-size:10px;
 }
 
 .post > .thread_image_box > .post_file_controls {
@@ -342,7 +352,15 @@ article.thread > .text {
 }
 
 .post.highlight {
-	background: #d6bad0;
+	background: #eedbea;
+}
+
+.post.highlight .btnr, .post.highlight .btnr:visited {
+	background: #e4c9e7;
+}
+
+.post.highlight .btnr:hover {
+	background: #b182b5;
 }
 
 #backlink {

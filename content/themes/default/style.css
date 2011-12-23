@@ -314,7 +314,6 @@ article.thread > .text {
 	word-wrap: break-word;
 	display:block;
 	overflow:hidden;
-	display:-moz-inline-stack;
 	font-size:11px;
 	color:#888;
 	line-height:12px;

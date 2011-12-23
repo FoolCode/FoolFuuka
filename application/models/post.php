@@ -9,6 +9,7 @@ class Post extends CI_Model
 	var $table = '';
 	var $table_local = '';
 	var $sql_report = '';
+	var $sql_report_after_join = '';
 	var $existing_posts = array();
 	var $existing_posts_not = array();
 	var $existing_posts_maybe = array();
@@ -30,6 +31,19 @@ class Post extends CI_Model
 					) as q
 					ON
 					' . $this->table . '.`doc_id`
+					=
+					' . $this->db->protect_identifiers('q') . '.`report_post`
+				';
+			
+			$this->sql_report_after_join = '
+					LEFT JOIN
+					(
+						SELECT post as report_post, reason as report_reason, status as report_status
+						FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+						WHERE `board` = ' . get_selected_board()->id . '
+					) as q
+					ON
+					g.`doc_id`
 					=
 					' . $this->db->protect_identifiers('q') . '.`report_post`
 				';
@@ -67,21 +81,50 @@ class Post extends CI_Model
 	 * @param type $process
 	 * @return type
 	 */
-	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE)
+	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE, $ghost = FALSE)
 	{
 
 		// get exactly 20 be it thread starters or parents with distinct parent
-		$query = $this->db->query('
-			SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent, email
-			FROM ' . $this->table . '
-			WHERE email != \'sage\'
-			ORDER BY num DESC
-			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
-		');
+		if(!$ghost)
+		{
+			$query = $this->db->query('
+				SELECT *
+				FROM
+				(
+					SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent, email
+					FROM ' . $this->table . '
+					WHERE email != \'sage\'
+					ORDER BY num DESC
+					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
+				) AS t
+				LEFT JOIN ' . $this->table . ' AS g
+					ON g.num = t.unq_parent
+				'.$this->sql_report_after_join.'
+			');
+		}
+		else
+		{
+			$query = $this->db->query('
+				SELECT *
+				FROM
+				(
+					SELECT DISTINCT(parent) as unq_parent
+					FROM ' . $this->table . '
+					WHERE ' . $this->table . '.email != \'sage\'
+					AND subnum > 0
+					ORDER BY timestamp DESC
+					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
+				) AS t
+				LEFT JOIN ' . $this->table . ' AS g
+					ON g.num = t.unq_parent
+				'.$this->sql_report_after_join.'
+			');
+		}
 
 		// get all the posts
 		$threads = array();
 		$sql = array();
+		$sqlcount = array();
 		foreach ($query->result() as $row)
 		{
 			$threads[] = $row->unq_parent;
@@ -90,8 +133,17 @@ class Post extends CI_Model
 					SELECT *
 					FROM ' . $this->table . '
 					' . $this->sql_report . '
-					WHERE num = ' . $row->unq_parent . ' OR parent = ' . $row->unq_parent . '
-					ORDER BY num DESC
+					WHERE parent = ' . $row->unq_parent . '
+					ORDER BY num DESC, subnum DESC
+					LIMIT 0, 5
+				)
+			';
+
+			$sqlcount[] = '
+				(
+					SELECT count(*) AS count_all, count(distinct preview) AS count_images, num, parent
+					FROM ' . $this->table . '
+					WHERE parent = ' . $row->unq_parent . '
 				)
 			';
 		}
@@ -100,17 +152,19 @@ class Post extends CI_Model
 			ORDER BY num DESC
 		';
 
-		// clean up, even if it's supposedly just little data
-		$query->free_result();
+		$sqlcount = implode('UNION', $sqlcount);
 
 		// quite disordered array
 		$query2 = $this->db->query($sql);
+		$querycount = $this->db->query($sqlcount);
 
 		// associative array with keys
 		$result = array();
 
+		$posts = array_merge($query->result(), $query2->result());
+
 		// cool amount of posts: throw the nums in the cache
-		foreach ($query2->result() as $post)
+		foreach ($posts as $post)
 		{
 			//echo '<pre>'; print_r($post); echo '</pre>';
 			if ($post->parent == 0)
@@ -127,43 +181,38 @@ class Post extends CI_Model
 		}
 
 		// order the array
-		foreach ($query2->result() as $post)
+		foreach ($posts as $post)
 		{
 			if ($process === TRUE)
 			{
 				$this->process_post($post, $clean);
+			}
+			$post_num = ($post->parent > 0) ? $post->parent : $post->num;
+			if (!isset($result[$post_num]['omitted']))
+			{
+				foreach ($querycount->result() as $counter)
+				{
+					if ($counter->parent == $post->num)
+					{
+						$result[$post_num]['omitted'] = $counter->count_all - 5;
+						$result[$post_num]['images_omitted'] = $counter->count_images - 1;
+					}
+				}
 			}
 
 			if ($post->parent > 0)
 			{
 				// the first you create from a parent is the first thread
 				$result[$post->parent]['posts'][] = $post;
-				if (isset($result[$post->parent]['omitted']))
+				if ($post->preview)
 				{
-					$result[$post->parent]['omitted']++;
-				}
-				else
-				{
-					$result[$post->parent]['omitted'] = -4;
-				}
-
-				if (isset($result[$post->parent]['images_omitted']) && $post->preview)
-				{
-					$result[$post->parent]['images_omitted']++;
-				}
-				else if ($post->preview)
-				{
-					$result[$post->parent]['images_omitted'] = -4;
+					$result[$post->parent]['images_omitted']--;
 				}
 			}
 			else
 			{
 				// this should already exist
 				$result[$post->num]['op'] = $post;
-				if (!isset($result[$post->num]['omitted']))
-				{
-					$result[$post->num]['omitted'] = -5;
-				}
 			}
 		}
 
@@ -175,120 +224,9 @@ class Post extends CI_Model
 			if (isset($result2[$thread]['posts']))
 				$result2[$thread]['posts'] = $this->multiSort($result2[$thread]['posts'], 'num', 'subnum');
 		}
-
-		// this is a lot of data, clean it up
-		$query2->free_result();
-		return $result2;
-	}
-
-
-	function get_latest_ghost($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE)
-	{
-		$query = $this->db->query('
-			SELECT DISTINCT(parent) as unq_parent
-			FROM ' . $this->table . '
-			WHERE ' . $this->table . '.email != \'sage\'
-			AND subnum > 0
-			ORDER BY timestamp DESC
-			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
-		');
-
-		// get all the posts
-		$sql = array();
-		$threads = array();
-		foreach ($query->result() as $row)
-		{
-			$threads[] = $row->unq_parent;
-			$sql[] = '
-				(
-					SELECT *
-					FROM ' . $this->table . '
-					' . $this->sql_report . '
-					WHERE num = ' . $row->unq_parent . ' OR parent = ' . $row->unq_parent . '
-					ORDER BY num ASC
-				)
-			';
-		}
-
-		$sql = implode('UNION', $sql) . '
-			ORDER BY num ASC, subnum DESC
-		';
 
 		// clean up, even if it's supposedly just little data
 		$query->free_result();
-
-		// quite disordered array
-		$query2 = $this->db->query($sql);
-
-		// associative array with keys
-		$result = array();
-
-		// cool amount of posts: throw the nums in the cache
-		foreach ($query2->result() as $post)
-		{
-			if ($post->parent == 0)
-			{
-				$this->existing_posts[$post->num][] = $post->num;
-			}
-			else
-			{
-				if ($post->subnum == 0)
-					$this->existing_posts[$post->parent][] = $post->num;
-				else
-					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
-			}
-		}
-
-		// order the array
-		foreach ($query2->result() as $post)
-		{
-			if ($process === TRUE)
-			{
-				$this->process_post($post, $clean);
-			}
-
-			if ($post->parent > 0)
-			{
-				// the first you create from a parent is the first thread
-				$result[$post->parent]['posts'][] = $post;
-				if (isset($result[$post->parent]['omitted']))
-				{
-					$result[$post->parent]['omitted']++;
-				}
-				else
-				{
-					$result[$post->parent]['omitted'] = -4;
-				}
-
-				if (isset($result[$post->parent]['images_omitted']) && $post->preview)
-				{
-					$result[$post->parent]['images_omitted']++;
-				}
-				else if ($post->preview)
-				{
-					$result[$post->parent]['images_omitted'] = -4;
-				}
-			}
-			else
-			{
-				// this should already exist
-				$result[$post->num]['op'] = $post;
-				if (!isset($result[$post->num]['omitted']))
-				{
-					$result[$post->num]['omitted'] = -5;
-				}
-			}
-		}
-
-		// reorder threads, and the posts inside
-		$result2 = array();
-		foreach ($threads as $thread)
-		{
-			$result2[$thread] = $result[$thread];
-			if (isset($result2[$thread]['posts']))
-				$result2[$thread]['posts'] = $this->multiSort($result2[$thread]['posts'], 'num', 'subnum');
-		}
-
 		// this is a lot of data, clean it up
 		$query2->free_result();
 		return $result2;
@@ -630,7 +568,7 @@ class Post extends CI_Model
 
 	/**
 	 * POSTING FUNCTIONS
-	 **/
+	 * */
 	function comment($data)
 	{
 		if (check_stopforumspam_ip($this->input->ip_address()))
@@ -735,14 +673,14 @@ class Post extends CI_Model
 		}
 		else
 		{
-			if(strlen($comment) > 4096)
+			if (strlen($comment) > 4096)
 			{
 				return array('error' => 'Your post was too long.');
 			}
 
 			$lines = explode("\n", $comment);
 
-			if(count($lines) > 40)
+			if (count($lines) > 40)
 			{
 				return array('error' => 'Your post had too many lines.');
 			}
@@ -1006,8 +944,8 @@ class Post extends CI_Model
 		}
 
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
-			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/'.(($thumbnail)?'thumb':'img').'/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail)?$row->preview:$row->media_filename);
-		if($thumbnail)
+			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview : $row->media_filename);
+		if ($thumbnail)
 		{
 			$row->preview_h = 150;
 			$row->preview_w = 150;
@@ -1017,7 +955,6 @@ class Post extends CI_Model
 		{
 			return '';
 		}
-
 	}
 
 
@@ -1036,7 +973,7 @@ class Post extends CI_Model
 			$number = '0' . $number;
 		}
 
-		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . get_selected_board()->shortname . '/'.(($thumbnail === TRUE)?'thumb':'img').'/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail === TRUE)?$row->preview:$row->media_filename);
+		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . get_selected_board()->shortname . '/' . (($thumbnail === TRUE) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail === TRUE) ? $row->preview : $row->media_filename);
 	}
 
 

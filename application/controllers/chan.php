@@ -86,7 +86,7 @@ class Chan extends Public_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest_ghost($page);
+		$posts = $this->post->get_latest($page, 20, TRUE, TRUE, TRUE);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		if ($page > 1)

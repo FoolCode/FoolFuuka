@@ -13,6 +13,7 @@ class Post extends CI_Model
 	var $existing_posts = array();
 	var $existing_posts_not = array();
 	var $existing_posts_maybe = array();
+	var $realtime = FALSE;
 
 	function __construct($id = NULL)
 	{
@@ -302,7 +303,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_thread($num, $process = TRUE, $clean = TRUE)
+	function get_thread($num, $process = TRUE, $clean = TRUE, $realtime = FALSE)
 	{
 		if (is_array($num))
 		{
@@ -330,6 +331,12 @@ class Post extends CI_Model
 		// thread not found
 		if ($query->num_rows() == 0)
 			return FALSE;
+
+		// thread is for realtime
+		if ($realtime === TRUE)
+		{
+			$this->realtime = TRUE;
+		}
 
 		foreach ($query->result() as $post)
 		{
@@ -1080,6 +1087,11 @@ class Post extends CI_Model
 			{
 				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 			}
+		}
+
+		if ($this->realtime === TRUE)
+		{
+			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 		}
 
 		// nothing yet? make a generic link with post

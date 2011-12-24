@@ -6,9 +6,9 @@ class Chan extends REST_Controller
 {
 	/**
 	 * Returns the latest threads
-	 * 
+	 *
 	 * Available filters: page, per_page (default:30, max:100), orderby
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function threads_get()
@@ -20,7 +20,7 @@ class Chan extends REST_Controller
 			if (!is_natural($this->get('page')))
 			{
 				$this->response(array('error' => _('Faulty page value')), 404);
-			} 
+			}
 			else if ($this->get('page') > 100)
 			{
 				$this->response(array('error' => _('Can\'t go over page 500')), 404);
@@ -41,7 +41,7 @@ class Chan extends REST_Controller
 			if (!is_natural($this->get('per_page')))
 			{
 				$this->response(array('error' => _('Faulty per_page value')), 404);
-			} 
+			}
 			else if ($this->get('per_page') > 50)
 			{
 				$this->response(array('error' => _('Can\'t return more than 50 threads')), 404);
@@ -56,7 +56,7 @@ class Chan extends REST_Controller
 			$per_page = 25;
 		}
 
-		
+
 
 		$posts = $this->post->get_latest($page, $per_page);
 
@@ -69,13 +69,13 @@ class Chan extends REST_Controller
 			$this->response(array('error' => _('Threads could not be found')), 404);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Returns chapters from selected page
-	 * 
+	 *
 	 * Available filters: page, per_page (default:30, max:100), orderby
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function ghost_threads_get()
@@ -87,7 +87,7 @@ class Chan extends REST_Controller
 			if (!is_natural($this->get('page')))
 			{
 				$this->response(array('error' => _('Faulty page value')), 404);
-			} 
+			}
 			else if ($this->get('page') > 100)
 			{
 				$this->response(array('error' => _('Can\'t go over page 500')), 404);
@@ -108,7 +108,7 @@ class Chan extends REST_Controller
 			if (!is_natural($this->get('per_page')))
 			{
 				$this->response(array('error' => _('Faulty per_page value')), 404);
-			} 
+			}
 			else if ($this->get('per_page') > 50)
 			{
 				$this->response(array('error' => _('Can\'t return more than 50 threads')), 404);
@@ -141,9 +141,9 @@ class Chan extends REST_Controller
 
 	/**
 	 * Returns a thread
-	 * 
+	 *
 	 * Available filters: num (required)
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function thread_get()
@@ -154,14 +154,14 @@ class Chan extends REST_Controller
 		{
 			$this->response(array('error' => _('You have to select a thread number')), 404);
 		}
-		
+
 		if (!is_natural($this->get('num')))
 		{
 			$this->response(array('error' => _('Faulty thread number')), 404);
 		}
-		
+
 		$num = intval($this->get('num'));
-		
+
 		// build an array if we have more specifications
 		if ($this->get('timestamp'))
 		{
@@ -169,13 +169,13 @@ class Chan extends REST_Controller
 			{
 				$this->response(array('error' => _('Your timestamp is malformed')), 404);
 			}
-			
+
 			$timestamp = intval($this->get('timestamp'));
 			$num = array('num' => $num, 'timestamp' => $timestamp);
 		}
-		
-		$thread = $this->post->get_thread($num);
-		
+
+		$thread = $this->post->get_thread($num, TRUE, TRUE, TRUE);
+
 		if ($thread !== FALSE)
 		{
 			$this->response($thread, 200); // 200 being the HTTP response code
@@ -190,13 +190,13 @@ class Chan extends REST_Controller
 	function ghost_posts_get()
 	{
 		$this->_check_board();
-		
+
 		if ($this->get('page'))
 		{
 			if (!is_natural($this->get('page')))
 			{
 				$this->response(array('error' => _('Faulty page value')), 404);
-			} 
+			}
 			else if ($this->get('page') > 100)
 			{
 				$this->response(array('error' => _('Can\'t go over page 500')), 404);
@@ -217,7 +217,7 @@ class Chan extends REST_Controller
 			if (!is_natural($this->get('per_page')))
 			{
 				$this->response(array('error' => _('Faulty per_page value')), 404);
-			} 
+			}
 			else if ($this->get('per_page') > 3000)
 			{
 				$this->response(array('error' => _('Can\'t return more than 3000 ghost posts')), 404);
@@ -231,7 +231,7 @@ class Chan extends REST_Controller
 		{
 			$per_page = 1000;
 		}
-		
+
 		$posts = $this->post->get_posts_ghost($page, $per_page);
 
 		if (count($posts['posts']) > 0)

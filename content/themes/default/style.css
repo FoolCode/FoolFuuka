@@ -409,6 +409,7 @@ article.thread article.post:nth-of-type(-n+4) {
 
 #backlink .post {
 	margin:0;
+	max-width:none;
 }
 
 

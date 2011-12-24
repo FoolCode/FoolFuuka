@@ -332,8 +332,8 @@ class Chan extends Public_Controller
 
 		$pages_links = array();
 		$pages = floor($result['total_found'] / 25) + 1;
-		if ($pages > 21) {
-			$pages = 21;
+		if ($pages > 20) {
+			$pages = 20;
 		}
 
 		$uri_array = $this->uri->ruri_to_assoc(2);
@@ -343,7 +343,7 @@ class Chan extends Public_Controller
 				unset($uri_array[$key]);
 		}
 
-		for($i = 1; $i < $pages; $i++)
+		for($i = 1; $i <= $pages; $i++)
 		{
 			$uri_array['page'] = $i;
 			$pages_links[$i] = site_url().$this->uri->assoc_to_uri($uri_array);

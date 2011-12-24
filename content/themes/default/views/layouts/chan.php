@@ -69,7 +69,7 @@
 						<?php foreach($pages_links as $key => $item) : ?>
 							<li class="<?php if($key == $pages_links_current) echo 'active'; ?>"><a href="<?php echo $item ?>"><?php echo $key ?></a></li>
 						<?php endforeach; ?>
-						<?php if($pages_links_current >= 1 && $pages_links_current < 15) : ?>
+						<?php if((count($pages_links) > 1) && ($pages_links_current >= 1 && $pages_links_current < 15)) : ?>
 							<li class="next"><a href="<?php echo $pages_links[$pages_links_current+1]; ?>">Next &rarr;</a></li>
 						<?php else : ?>
 							<li class="next disabled"><a href="#">Next &rarr;</a></li>

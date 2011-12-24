@@ -217,6 +217,7 @@ class Chan extends Public_Controller
 			}
 			else
 			{
+				$this->form_validation->set_error_delimiters('', '');
 				if ($this->input->is_ajax_request())
 				{
 					$this->output

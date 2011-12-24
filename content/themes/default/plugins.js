@@ -60,7 +60,7 @@ var realtimethread = function(){
 			{
 				if(timelapse < 30)
 				{
-					timelapse += 10;
+					timelapse += 5;
 				}
 			}
 			currentlapse = setTimeout(realtimethread, timelapse*1000);
@@ -76,7 +76,7 @@ var realtimethread = function(){
 
 var realtime_callback = function(){
 	backlinkify();
-	bindFunctions();
+	bindFunctions(true);
 	timify();
 }
 
@@ -163,10 +163,10 @@ var backlinkify = function()
 		function () {
 			jQuery("#backlink").css('display', 'none').html('');
 		}
-	);
+		);
 }
 
-var bindFunctions = function()
+var bindFunctions = function(dont_touch)
 {
 	jQuery("[data-function]").click(function() {
 		var el = jQuery(this);
@@ -182,6 +182,10 @@ var bindFunctions = function()
 				break;
 
 			case 'comment':
+				if(dont_touch === true)
+					return false;
+				var reply_alert = jQuery('#reply_ajax_notices');
+				reply_alert.hide().removeClass('error').removeClass('success');
 				jQuery.ajax({
 					url: site_url + board_shortname + '/sending' ,
 					async: false,
@@ -191,25 +195,31 @@ var bindFunctions = function()
 					data: {
 						reply_numero: post,
 						reply_bokunonome: jQuery("#reply_name").val(),
-						reply_elittera: jQuery("#reply_email").val(),
+						reply_elitterae: jQuery("#reply_email").val(),
 						reply_talkingde: jQuery("#reply_subject").val(),
 						reply_chennodiscursus: jQuery("#reply_comment").val(),
 						reply_nymphassword: jQuery("#reply_password").val(),
 						reply_action: 'Submit'
 					},
 					success: function(data){
-						var reply_alert = jQuery("#reply_alert");
+						
 						if (data.error != "")
 						{
 							reply_alert.html(data.error);
+							reply_alert.addClass('error');
+							reply_alert.show();
 							return false;
 						}
 						reply_alert.html(data.success);
-						setTimeout(function() { reply_alert.html('') }, 5000);
+						reply_alert.addClass('success');
+						reply_alert.show();
 						jQuery("#reply_comment").val('')
 						realtimethread();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
+						reply_alert.html('Connection error.');
+						reply_alert.addClass('error');
+						reply_alert.show();
 					},
 					complete: function() {
 					}
@@ -422,16 +432,16 @@ function getCookie( check_name ) {
 
 
 function eliminateDuplicates(arr) {
-  var i,
-      len=arr.length,
-      out=[],
-      obj={};
+	var i,
+	len=arr.length,
+	out=[],
+	obj={};
 
-  for (i=0;i<len;i++) {
-    obj[arr[i]]=0;
-  }
-  for (i in obj) {
-    out.push(i);
-  }
-  return out;
+	for (i=0;i<len;i++) {
+		obj[arr[i]]=0;
+	}
+	for (i in obj) {
+		out.push(i);
+	}
+	return out;
 }

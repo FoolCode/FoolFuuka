@@ -486,6 +486,23 @@ section.post.reply .actions {
 	border-radius: 0;
 }
 
+section.post.reply #reply_ajax_notices {
+	padding:8px;
+	margin-top:10px;
+	margin-left:20px;
+	display:none;
+}
+
+section.post.reply #reply_ajax_notices.error {
+	background: #FFC5C5;
+	border: 1px solid red;
+}
+
+section.post.reply #reply_ajax_notices.success {
+	background:#DFFAD9;
+	border: 1px solid #61B84D;
+}
+
 article.thread .greentext {
 	color: #789922;
 }

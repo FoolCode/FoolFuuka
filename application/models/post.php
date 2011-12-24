@@ -34,7 +34,7 @@ class Post extends CI_Model
 					=
 					' . $this->db->protect_identifiers('q') . '.`report_post`
 				';
-			
+
 			$this->sql_report_after_join = '
 					LEFT JOIN
 					(
@@ -944,7 +944,14 @@ class Post extends CI_Model
 		}
 
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
+		{
+			if ($row->preview_h == 0 && $row->preview_w == 0)
+			{
+				$row->preview_h = 126;
+				$row->preview_w = 126;
+			}
 			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview : $row->media_filename);
+		}
 		if ($thumbnail)
 		{
 			$row->preview_h = 150;

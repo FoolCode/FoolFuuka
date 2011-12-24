@@ -154,7 +154,8 @@ var backlinkify = function()
 					if ((that.data('post') == quote.num + '_' + quote.subnum) || (that.data('post') == quote.num && quote.subnum == 0 ) || (that.data('post') == quote.parent))
 					{
 						backlink.css('display', 'block');
-						backlink.html(quote.formatted).find("article").removeAttr("id").find(".post_controls").add(".post_file_controls").remove();
+						backlink.html(quote.formatted).find("article").removeAttr("id").find(".post_controls").remove();
+						backlink.find(".post_file_controls").remove();
 					}
 				})
 			}

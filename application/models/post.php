@@ -1083,7 +1083,7 @@ class Post extends CI_Model
 		}
 
 		// nothing yet? make a generic link with post
-		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . $num . '/') . '">&gt;&gt;' . $num . '</a>';
+		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . $num . '/') . '" class="backlink" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 
 		// return the thing untouched
 		return $matches[0];

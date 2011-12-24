@@ -1,5 +1,5 @@
- 
-/* Contain floats: h5bp.com/q */ 
+
+/* Contain floats: h5bp.com/q */
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
@@ -174,8 +174,16 @@ article.thread > .thread_image_box {
 }
 
 article.thread > .thread_image_box .thread_image {
+
 }
 
+article.thread > .thread_image_box .thread_image.is_spoiler_image {
+	opacity: 0.05;
+}
+
+article.thread > .thread_image_box .thread_image.is_spoiler_image:hover {
+	opacity: 1.0;
+}
 
 article.thread > .thread_image_box > .post_file_controls {
 	position:relative;
@@ -348,6 +356,14 @@ article.thread > .text {
 .post > .thread_image_box .post_image {
 	max-width:130px;
 	height:auto;
+}
+
+.post > .thread_image_box .post_image.is_spoiler_image {
+	opacity: 0.2;
+}
+
+.post > .thread_image_box .post_image.is_spoiler_image:hover {
+	opacity: 1.0;
 }
 
 .post.post_ghost {

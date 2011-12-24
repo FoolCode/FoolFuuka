@@ -91,11 +91,17 @@ var backlinkify = function()
 		var that = jQuery(this);
 		var post_id = that.attr('id');
 
-		backlinks[post_id] = []
+		backlinks[post_id] = [];
 		if (post_id != thread_id)
 		{
 			jQuery.each(that.find("[data-backlink=true]"), function(idx, post) {
 				p_id = jQuery(post).text().replace('>>', '')
+
+				if (typeof backlinks[p_id] == "undefined")
+				{
+					backlinks[p_id] = [];
+				}
+
 				backlinks[p_id].push('<a href="' + post.baseURI + '#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id + '</a>');
 				backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
 			});
@@ -154,7 +160,7 @@ var backlinkify = function()
 			}
 		},
 		function () {
-			jQuery("#backlink").css('display', 'none').html();
+			jQuery("#backlink").css('display', 'none').html('');
 		}
 	);
 }

@@ -13,6 +13,7 @@ class Post extends CI_Model
 	var $existing_posts = array();
 	var $existing_posts_not = array();
 	var $existing_posts_maybe = array();
+	var $realtime = FALSE;
 
 	function __construct($id = NULL)
 	{
@@ -302,7 +303,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_thread($num, $process = TRUE, $clean = TRUE)
+	function get_thread($num, $process = TRUE, $clean = TRUE, $realtime = FALSE)
 	{
 		if (is_array($num))
 		{
@@ -330,6 +331,12 @@ class Post extends CI_Model
 		// thread not found
 		if ($query->num_rows() == 0)
 			return FALSE;
+
+		// thread is for realtime
+		if ($realtime === TRUE)
+		{
+			$this->realtime = TRUE;
+		}
 
 		foreach ($query->result() as $post)
 		{
@@ -975,7 +982,14 @@ class Post extends CI_Model
 		}
 
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
+		{
+			if ($row->preview_h == 0 && $row->preview_w == 0)
+			{
+				$row->preview_h = 126;
+				$row->preview_w = 126;
+			}
 			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview : $row->media_filename);
+		}
 		if ($thumbnail)
 		{
 			$row->preview_h = 150;
@@ -1106,8 +1120,13 @@ class Post extends CI_Model
 			}
 		}
 
+		if ($this->realtime === TRUE)
+		{
+			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+		}
+
 		// nothing yet? make a generic link with post
-		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . $num . '/') . '">&gt;&gt;' . $num . '</a>';
+		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . $num . '/') . '" class="backlink" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 
 		// return the thing untouched
 		return $matches[0];

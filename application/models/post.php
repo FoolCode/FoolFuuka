@@ -34,7 +34,7 @@ class Post extends CI_Model
 					=
 					' . $this->db->protect_identifiers('q') . '.`report_post`
 				';
-			
+
 			$this->sql_report_after_join = '
 					LEFT JOIN
 					(
@@ -85,7 +85,7 @@ class Post extends CI_Model
 	{
 
 		// get exactly 20 be it thread starters or parents with distinct parent
-		if(!$ghost)
+		if (!$ghost)
 		{
 			$query = $this->db->query('
 				SELECT *
@@ -99,7 +99,7 @@ class Post extends CI_Model
 				) AS t
 				LEFT JOIN ' . $this->table . ' AS g
 					ON g.num = t.unq_parent
-				'.$this->sql_report_after_join.'
+				' . $this->sql_report_after_join . '
 			');
 		}
 		else
@@ -117,7 +117,7 @@ class Post extends CI_Model
 				) AS t
 				LEFT JOIN ' . $this->table . ' AS g
 					ON g.num = t.unq_parent
-				'.$this->sql_report_after_join.'
+				' . $this->sql_report_after_join . '
 			');
 		}
 
@@ -412,90 +412,121 @@ class Post extends CI_Model
 
 		if (get_selected_board()->sphinx)
 		{
-			$this->load->library('SphinxClient');
-			$this->sphinxclient->SetServer(
-					// gotta turn the port into int
-					get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : '127.0.0.1', get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_port') : 9312
-			);
 
-			$this->sphinxclient->SetLimits(($search['page'] * 25) - 25, 25, 5000);
+			if ($search['username'] || $search['tripcode'] || $search['text'] || $search['deleted'] || $search['ghost'])
+			{
+				$this->load->library('SphinxClient');
+				$this->sphinxclient->SetServer(
+						// gotta turn the port into int
+						get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : '127.0.0.1', get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_port') : 9312
+				);
 
-			$query = '';
-			if ($search['username'])
-			{
-				$query .= '@name ' . $this->sphinxclient->EscapeString(urldecode($search['username'])) . ' ';
-			}
+				$this->sphinxclient->SetLimits(($search['page'] * 25) - 25, 25, 5000);
 
-			if ($search['tripcode'])
-			{
-				$query .= '@trip ' . $this->sphinxclient->EscapeString(urldecode($search['tripcode'])) . ' ';
-			}
+				$query = '';
+				if ($search['username'])
+				{
+					$query .= '@name ' . $this->sphinxclient->EscapeString(urldecode($search['username'])) . ' ';
+				}
 
-			if ($search['text'])
-			{
-				$query .= '@comment ' . $this->sphinxclient->HalfEscapeString(urldecode($search['text'])) . ' ';
-			}
+				if ($search['tripcode'])
+				{
+					$query .= '@trip ' . $this->sphinxclient->EscapeString(urldecode($search['tripcode'])) . ' ';
+				}
 
-			if ($search['deleted'] == "deleted")
-			{
-				$this->sphinxclient->setFilter('is_deleted', array(1));
-			}
-			if ($search['deleted'] == "not-deleted")
-			{
-				$this->sphinxclient->setFilter('is_deleted', array(0));
-			}
+				if ($search['text'])
+				{
+					$query .= '@comment ' . $this->sphinxclient->HalfEscapeString(urldecode($search['text'])) . ' ';
+				}
 
-			if ($search['ghost'] == "only")
-			{
-				$this->sphinxclient->setFilter('is_internal', array(1));
-			}
-			if ($search['ghost'] == "none")
-			{
-				$this->sphinxclient->setFilter('is_internal', array(0));
-			}
+				if ($search['deleted'] == "deleted")
+				{
+					$this->sphinxclient->setFilter('is_deleted', array(1));
+				}
+				if ($search['deleted'] == "not-deleted")
+				{
+					$this->sphinxclient->setFilter('is_deleted', array(0));
+				}
 
-			$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED);
-			if ($search['order'] == 'asc')
-			{
-				$this->sphinxclient->setSortMode(SPH_SORT_ATTR_ASC, 'num');
-			}
-			else
-			{
-				$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
-			}
+				if ($search['ghost'] == "only")
+				{
+					$this->sphinxclient->setFilter('is_internal', array(1));
+				}
+				if ($search['ghost'] == "none")
+				{
+					$this->sphinxclient->setFilter('is_internal', array(0));
+				}
 
-			$search_result = $this->sphinxclient->query($query, get_selected_board()->shortname . '_ancient ' . get_selected_board()->shortname . '_main ' . get_selected_board()->shortname . '_delta');
-			if ($search_result === false)
-			{
-				echo $this->sphinxclient->getLastError();
-				// show some actual error...
-				show_404();
-			}
+				$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED);
+				if ($search['order'] == 'asc')
+				{
+					$this->sphinxclient->setSortMode(SPH_SORT_ATTR_ASC, 'num');
+				}
+				else
+				{
+					$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
+				}
 
-			$sql = array();
+				$search_result = $this->sphinxclient->query($query, get_selected_board()->shortname . '_ancient ' . get_selected_board()->shortname . '_main ' . get_selected_board()->shortname . '_delta');
+				if ($search_result === false)
+				{
+					echo $this->sphinxclient->getLastError();
+					// show some actual error...
+					show_404();
+				}
 
-			if (empty($search_result['matches']))
-			{
-				return array('posts' => array(), 'total_found' => 0);
-			}
-			foreach ($search_result['matches'] as $key => $matches)
-			{
-				$sql[] = '
-				(
-					SELECT *
-					FROM ' . $this->table . '
-					' . $this->sql_report . '
-					WHERE num = ' . $matches['attrs']['num'] . ' AND subnum = ' . $matches['attrs']['subnum'] . '
-				)
-			';
-			}
+				$sql = array();
 
-			$sql = implode('UNION', $sql) . '
+				if (empty($search_result['matches']))
+				{
+					return array('posts' => array(), 'total_found' => 0);
+				}
+				foreach ($search_result['matches'] as $key => $matches)
+				{
+					$sql[] = '
+						(
+							SELECT *
+							FROM ' . $this->table . '
+							' . $this->sql_report . '
+							WHERE num = ' . $matches['attrs']['num'] . ' AND subnum = ' . $matches['attrs']['subnum'] . '
+						)
+					';
+				}
+
+				$sql = implode('UNION', $sql) . '
 				ORDER BY num ASC
 			';
 
-			$query = $this->db->query($sql);
-
+				$query = $this->db->query($sql);
+			}
+			else // it's damn slow to run empty searches, unless we use MySQL directly
+			{
+				if ($search['order'] == 'asc')
+				{
+					$order = 'ORDER BY num ASC';
+				}
+				else
+				{
+					$order = 'ORDER BY num DESC';
+				}
+				
+				$query = $this->db->query('
+					SELECT *
+					FROM ' . $this->table . '
+					'.$order.'
+					LIMIT '.(($search['page'] * 25) - 25).', 25
+				');
+				
+				$query2 = $this->db->query('
+					SELECT count(*) AS total_found
+					FROM ' . $this->table . '
+					LIMIT 0, 5000	
+				');
+				
+				$found = $query2->result();
+				$search_result = array('total_found' => $found[0]->total_found);
+			}
+			
 			foreach ($query->result() as $post)
 			{
 				if ($post->parent == 0)

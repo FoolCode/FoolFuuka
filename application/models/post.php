@@ -312,7 +312,7 @@ class Post extends CI_Model
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->table . '
 					WHERE num = ? OR (parent = ? AND timestamp > ?)
-					ORDER BY num, parent, subnum ASC;
+					ORDER BY num, subnum ASC;
 				', array($num['num'], $num['num'], $num['timestamp']));
 			}
 			$num = $num['num'];

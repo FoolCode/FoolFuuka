@@ -174,12 +174,26 @@ class Chan extends Public_Controller
 				$thread = $this->post->get_thread($data['num']);
 				if (count($thread) != 1)
 				{
+					if ($this->input->is_ajax_request())
+					{
+						$this->output
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => 'This thread does not exist.', 'success' => '')));
+						return FALSE;
+					}
 					show_404();
 				}
 
 				$result = $this->post->comment($data);
 				if (isset($result['error']))
 				{
+					if ($this->input->is_ajax_request())
+					{
+						$this->output
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => $result['error'], 'success' => '')));
+						return FALSE;
+					}
 					$this->template->title(_('Error'));
 					$this->template->set('error', $result['error']);
 					$this->template->build('error');
@@ -187,6 +201,13 @@ class Chan extends Public_Controller
 				}
 				else if (isset($result['success']))
 				{
+					if ($this->input->is_ajax_request())
+					{
+						$this->output
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => '', 'success' => 'Your comment has been posted.')));
+						return FALSE;
+					}
 					$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . '_' . $result['posted']->subnum;
 					$this->template->title(_('Redirecting...'));
 					$this->template->set('url', $url);
@@ -196,6 +217,13 @@ class Chan extends Public_Controller
 			}
 			else
 			{
+				if ($this->input->is_ajax_request())
+				{
+					$this->output
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => validation_errors(), 'success' => '')));
+					return FALSE;
+				}
 				$this->template->title(_('Error'));
 				$this->template->set('error', validation_errors());
 				$this->template->build('error');
@@ -238,7 +266,7 @@ class Chan extends Public_Controller
 		}
 
 		$num = str_replace('S', '', $num);
-		
+
 		if(strpos($num, '_') > 0)
 		{
 			$nums = explode('_', $num);
@@ -256,7 +284,7 @@ class Chan extends Public_Controller
 		{
 			$subnum = 0;
 		}
-		
+
 		if (!is_natural($num) || !$num > 0)
 		{
 			show_404();
@@ -271,17 +299,17 @@ class Chan extends Public_Controller
 
 		if($thread->subnum > 0)
 		{
-			$url = site_url($this->fu_board . '/thread/' . $thread->parent) . '#' . $thread->num . '_' . $thread->subnum;			
+			$url = site_url($this->fu_board . '/thread/' . $thread->parent) . '#' . $thread->num . '_' . $thread->subnum;
 		}
 		else if ($thread->parent > 0)
 		{
-			$url = site_url($this->fu_board . '/thread/' . $thread->parent) . '#' . $thread->num;			
+			$url = site_url($this->fu_board . '/thread/' . $thread->parent) . '#' . $thread->num;
 		}
 		else
 		{
-			$url = site_url($this->fu_board . '/thread/' . $thread->num);			
+			$url = site_url($this->fu_board . '/thread/' . $thread->num);
 		}
-		
+
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
 		$this->template->build('redirect');

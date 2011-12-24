@@ -14,7 +14,6 @@ if (!defined('BASEPATH'))
 	</header>
 	<div>
 		<?php echo form_open(get_selected_board()->shortname.'/sending', array('class' => 'form-stacked')) ?>
-		<?php echo form_hidden('reply_numero', $thread_id) ?>
 		<fieldset>
 			<div class="clearfix">
 				<label for="reply_name">Name</label>
@@ -82,13 +81,17 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 			<div class="actions">
 			<?php
-				echo form_hidden('id', $thread_id);
+				echo form_hidden('reply_numero', $thread_id);
 				echo form_submit(array(
 					'name' => 'reply_action',
 					'value' => 'Submit',
-					'class' => 'btn primary'
+					'class' => 'btn primary',
+					'data-function' => 'comment',
+					'data-post' => $thread_id
 				));
 			?>
+				<br/><br/>
+				<span id="reply_alert"></span>
 			</div>
 			<?php //print_r($post_data) ?>
 		</fieldset>

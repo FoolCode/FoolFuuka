@@ -180,16 +180,40 @@ var bindFunctions = function()
 				jQuery("#reply_comment").append(">>" + post + "\n");
 				break;
 
-			case 'report':
-				modal.find(".title").html('Report - Post No.' + el.data("post-id"));
-				modal.find(".modal-loading").hide();
-				modal.find(".modal-information").html('\
-					<span class="modal-label">Post ID</span>\n\
-					<input type="text" class="modal-post" value="' + el.data("post-id") + '" readonly="readonly" />\n\
-					<input type="hidden" class="modal-post-id" value="' + post + '" />\n\
-					<span class="modal-field">Comment</span>\n\
-					<textarea class="modal-comment"></textarea>');
-				modal.find(".submitModal").data("action", 'report');
+			case 'comment':
+				jQuery.ajax({
+					url: site_url + board_shortname + '/sending' ,
+					async: false,
+					dataType: 'json',
+					type: 'POST',
+					cache: false,
+					data: {
+						reply_numero: post,
+						reply_bokunonome: jQuery("#reply_name").val(),
+						reply_elittera: jQuery("#reply_email").val(),
+						reply_talkingde: jQuery("#reply_subject").val(),
+						reply_chennodiscursus: jQuery("#reply_comment").val(),
+						reply_nymphassword: jQuery("#reply_password").val(),
+						reply_action: 'Submit'
+					},
+					success: function(data){
+						var reply_alert = jQuery("#reply_alert");
+						if (data.error != "")
+						{
+							reply_alert.html(data.error);
+							return false;
+						}
+						reply_alert.html(data.success);
+						setTimeout(function() { reply_alert.html('') }, 5000);
+						jQuery("#reply_comment").val('')
+						realtimethread();
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+					},
+					complete: function() {
+					}
+				});
+				return false;
 				break;
 
 			case 'delete':
@@ -205,6 +229,18 @@ var bindFunctions = function()
 				{
 					modal.find(".modal-password").val(foolfuuka_reply_password);
 				}
+				break;
+
+			case 'report':
+				modal.find(".title").html('Report - Post No.' + el.data("post-id"));
+				modal.find(".modal-loading").hide();
+				modal.find(".modal-information").html('\
+					<span class="modal-label">Post ID</span>\n\
+					<input type="text" class="modal-post" value="' + el.data("post-id") + '" readonly="readonly" />\n\
+					<input type="hidden" class="modal-post-id" value="' + post + '" />\n\
+					<span class="modal-field">Comment</span>\n\
+					<textarea class="modal-comment"></textarea>');
+				modal.find(".submitModal").data("action", 'report');
 				break;
 
 			case 'closeModal':

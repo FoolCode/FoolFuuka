@@ -279,16 +279,22 @@ article.thread > .text {
 	margin:2px 20px;
 	margin-right:0px;
 	padding: 0 0 10px 10px;
+	background: #d6f0da;
+	border-bottom:1px solid #ccc;
+	float:left;
+	clear:both;
+}
+
+article.thread article.post:nth-of-type(-n+4) {
+	clear:none;
+	float:none;
 	display:-moz-inline-stack;
 	display:inline-block;
 	zoom:1;
 	*display:inline;
-	background: #d6f0da;
-	border-bottom:1px solid #ccc;
 }
 
 .post.has_image {
-	clear:both;
 }
 
 
@@ -407,10 +413,6 @@ article.thread > .text {
 
 section.reply {
 	background: #99ccaa;
-	display:-moz-inline-stack;
-	display:inline-block;
-	zoom:1;
-	*display:inline;
 	margin: 2px 0 2px 10px;
 	padding: 0 20px 0 0;
 	border-bottom:1px solid #a1c7a3;

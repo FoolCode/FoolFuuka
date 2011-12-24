@@ -238,20 +238,50 @@ class Chan extends Public_Controller
 		}
 
 		$num = str_replace('S', '', $num);
-		if (!is_numeric($num) || !$num > 0)
+		
+		if(strpos($num, '_') > 0)
+		{
+			$nums = explode('_', $num);
+			if(count($nums) != 2)
+				show_404();
+			$subnum = $nums[1];
+			$num = $nums[0];
+			if (!is_natural($subnum) || !$subnum > 0)
+			{
+				show_404();
+			}
+			$subnum = intval($subnum);
+		}
+		else
+		{
+			$subnum = 0;
+		}
+		
+		if (!is_natural($num) || !$num > 0)
 		{
 			show_404();
 		}
 		$num = intval($num);
 
-		$thread = $this->post->get_post_thread($num);
+		$thread = $this->post->get_post_thread($num, $subnum);
 		if ($thread === FALSE)
 		{
 			show_404();
 		}
 
-		$url = site_url($this->fu_board . '/thread/' . $thread) . '#' . $num;
-
+		if($thread->subnum > 0)
+		{
+			$url = site_url($this->fu_board . '/thread/' . $thread->parent) . '#' . $thread->num . '_' . $thread->subnum;			
+		}
+		else if ($thread->parent > 0)
+		{
+			$url = site_url($this->fu_board . '/thread/' . $thread->parent) . '#' . $thread->num;			
+		}
+		else
+		{
+			$url = site_url($this->fu_board . '/thread/' . $thread->num);			
+		}
+		
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
 		$this->template->build('redirect');

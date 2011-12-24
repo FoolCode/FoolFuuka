@@ -19,7 +19,6 @@ html {
 
 body {
 	min-height:100%;
-	color:#333;
 	color:#364041;
 	background:#EEF8F0;
 	padding:0;
@@ -398,6 +397,7 @@ article.thread > .text {
 	-moz-box-shadow: 0px 0px 3px #333;
 	-webkit-box-shadow: 0px 0px 3px #333;
 	overflow:hidden;
+	background:#EEF8F0;
 }
 
 #backlink .post {

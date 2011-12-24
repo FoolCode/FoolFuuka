@@ -382,20 +382,18 @@ class Post extends CI_Model
 	}
 
 
-	function get_post_thread($num)
+	function get_post_thread($num, $subnum = 0)
 	{
 		$query = $this->db->query('
-				SELECT num, parent FROM ' . $this->table . '
+				SELECT num, parent, subnum FROM ' . $this->table . '
 				' . $this->sql_report . '
-				WHERE num = ? OR parent = ?
+				WHERE parent = ? OR (num = ? AND subnum = ?)
 				LIMIT 0, 1;
-			', array($num, $num));
+			', array($num, $num, $subnum));
 
 		foreach ($query->result() as $post)
 		{
-			if ($post->parent > 0)
-				return $post->parent;
-			return $post->num;
+			return $post;
 		}
 
 		return FALSE;
@@ -1126,7 +1124,7 @@ class Post extends CI_Model
 		}
 
 		// nothing yet? make a generic link with post
-		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . $num . '/') . '" class="backlink" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . str_replace(',', '_', $num) . '/') . '" class="backlink" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 
 		// return the thing untouched
 		return $matches[0];

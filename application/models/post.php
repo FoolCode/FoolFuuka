@@ -162,7 +162,7 @@ class Post extends CI_Model
 		// associative array with keys
 		$result = array();
 
-		$posts = array_merge($query->result(), $query2->result());
+		$posts = array_merge($query->result(), array_reverse($query2->result()));
 
 		// cool amount of posts: throw the nums in the cache
 		foreach ($posts as $post)
@@ -222,15 +222,15 @@ class Post extends CI_Model
 		foreach ($threads as $thread)
 		{
 			$result2[$thread] = $result[$thread];
-			if (isset($result2[$thread]['posts']))
-				$result2[$thread]['posts'] = $this->multiSort($result2[$thread]['posts'], 'num', 'subnum');
+			//if (isset($result2[$thread]['posts']))
+			//	$result2[$thread]['posts'] = $this->multiSort($result2[$thread]['posts'], 'num', 'subnum');
 		}
 
 		// clean up, even if it's supposedly just little data
 		$query->free_result();
 		// this is a lot of data, clean it up
 		$query2->free_result();
-		return $result2;
+		return ($result2);
 	}
 
 
@@ -323,7 +323,7 @@ class Post extends CI_Model
 				SELECT * FROM ' . $this->table . '
 				' . $this->sql_report . '
 				WHERE num = ? OR parent = ?
-				ORDER BY num, parent, subnum ASC;
+				ORDER BY num ASC;
 			', array($num, $num));
 		}
 		$result = array();
@@ -376,8 +376,8 @@ class Post extends CI_Model
 
 
 		// easier to revert the array here for now
-		if (isset($result[$num]['posts']))
-			$result[$num]['posts'] = $this->multiSort($result[$num]['posts'], 'num', 'subnum');
+		//if (isset($result[$num]['posts']))
+		//	$result[$num]['posts'] = $this->multiSort($result[$num]['posts'], 'num', 'subnum');
 		return $result;
 	}
 
@@ -697,10 +697,10 @@ class Post extends CI_Model
 					return array('error' => 'You are banned from posting.');
 				}
 
-				if (time() - strtotime($row->lastpost) < 20 && !$this->tank_auth->is_allowed()) // 20 seconds
+				if (time() - strtotime($row->lastpost) < 10 && !$this->tank_auth->is_allowed()) // 20 seconds
 				{
 
-					return array('error' => 'You must wait at least 20 seconds before posting again.');
+					return array('error' => 'You must wait at least 10 seconds before posting again.');
 				}
 
 				$this->db->where('id', $row->id);

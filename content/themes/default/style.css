@@ -292,6 +292,7 @@ article.thread article.post:nth-of-type(-n+4) {
 	display:inline-block;
 	zoom:1;
 	*display:inline;
+	max-width:72%;
 }
 
 .post.has_image {
@@ -408,6 +409,7 @@ article.thread article.post:nth-of-type(-n+4) {
 
 #backlink .post {
 	margin:0;
+	max-width:none;
 }
 
 

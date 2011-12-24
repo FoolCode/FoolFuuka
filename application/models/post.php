@@ -99,7 +99,7 @@ class Post extends CI_Model
 					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 				) AS t
 				LEFT JOIN ' . $this->table . ' AS g
-					ON g.num = t.unq_parent
+					ON g.num = t.unq_parent AND g.subnum = 0
 				' . $this->sql_report_after_join . '
 			');
 		}
@@ -117,11 +117,11 @@ class Post extends CI_Model
 					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 				) AS t
 				LEFT JOIN ' . $this->table . ' AS g
-					ON g.num = t.unq_parent
+					ON g.num = t.unq_parent AND g.subnum = 0
 				' . $this->sql_report_after_join . '
 			');
 		}
-
+		
 		// get all the posts
 		$threads = array();
 		$sql = array();

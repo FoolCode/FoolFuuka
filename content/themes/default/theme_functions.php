@@ -46,16 +46,16 @@ function build_board_comment($p, $modifiers = array()) {
 								<?php if ($p->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/spoiler-icon.png'; ?>" title="This post contains a spoiler image."/></span><?php endif ?>
 								<?php if ($p->subnum > 0) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/communicate-icon.png'; ?>" title="This is a ghost post, not coming from 4chan."/></span><?php endif ?>
 							</div>
-							<?php if ($p->media_filename) : ?>
-							<div class="post_file">
-								<span class="post_file_filename"><?php echo $p->media ?></span>,
-								<?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?>
-								<span class="post_file_controls">
-									<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btnr parent">Google</a>
-								</span>
-							</div>
-							<?php endif; ?>
 						</header>
+						<?php if ($p->media_filename) : ?>
+						<div class="post_file">
+							<span class="post_file_filename"><?php echo $p->media ?></span>,
+							<span class="post_file_metadata"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></span>
+							<span class="post_file_controls">
+								<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btnr parent">Google</a>
+							</span>
+						</div>
+						<?php endif; ?>
 
 						<div class="backlink_list"><?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>"></span></div>
 						<div class="text">

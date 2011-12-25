@@ -19,13 +19,6 @@ function build_board_comment($p, $modifiers = array()) {
 	?>
 	<article class="post doc_id_<?php echo $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php echo ((isset($p->report_status) && !is_null($p->report_status)) ? ' reported' : '') ?><?php echo ($p->media_filename?' has_image':'') ?><?php if ($p->media_filename) : ?> clearfix<?php endif; ?>" id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
 						<?php if ($p->media_filename) : ?>
-							<div class="post_file">
-								<span class="post_file_controls">
-									<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btnr parent">Google</a>
-								</span>
-								<span class="post_file_filename"><?php echo $p->media ?></span>,
-								<?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?>
-							</div>
 							<div class="thread_image_box">
 								<a href="<?php echo ($p->image_href)?$p->image_href:$p->remote_image_href ?>" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" data-md5="<?php echo $p->media_hash ?>" class="post_image<?php echo ($p->spoiler)?' is_spoiler_image':'' ?>" /></a>
 							</div>
@@ -54,6 +47,15 @@ function build_board_comment($p, $modifiers = array()) {
 								<?php if ($p->subnum > 0) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/communicate-icon.png'; ?>" title="This is a ghost post, not coming from 4chan."/></span><?php endif ?>
 							</div>
 						</header>
+						<?php if ($p->media_filename) : ?>
+						<div class="post_file">
+							<span class="post_file_filename"><?php echo $p->media ?></span>,
+							<span class="post_file_metadata"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></span>
+							<span class="post_file_controls">
+								<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btnr parent">Google</a>
+							</span>
+						</div>
+						<?php endif; ?>
 
 						<div class="backlink_list"><?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>"></span></div>
 						<div class="text">

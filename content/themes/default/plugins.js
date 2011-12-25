@@ -145,20 +145,20 @@ var backlinkify = function()
 			if(thread_id == that.data('post'))
 			{
 				quote = thread_json[thread_id].op;
-				backlink.css('display', 'block');
-				backlink.html(quote.formatted).find(".post_controls").add(".post_file_controls").remove();
+				backlink.css('display', 'block').html(quote.formatted);
 			}
 			else
 			{
 				jQuery.each(thread_json[thread_id].posts, function(idx, quote) {
 					if ((that.data('post') == quote.num + '_' + quote.subnum) || (that.data('post') == quote.num && quote.subnum == 0 ) || (that.data('post') == quote.parent))
 					{
-						backlink.css('display', 'block');
-						backlink.html(quote.formatted).find("article").removeAttr("id").find(".post_controls").remove();
-						backlink.find(".post_file_controls").remove();
+						backlink.css('display', 'block').html(quote.formatted);
 					}
-				})
+				});
 			}
+
+			backlink.find("article").removeAttr("id").find(".post_controls").remove();
+			backlink.find(".post_file_controls").remove();
 		},
 		function () {
 			jQuery("#backlink").css('display', 'none').html('');
@@ -294,6 +294,21 @@ var bindFunctions = function()
 				break;
 		}
 	});
+
+	/*
+	jQuery("[data-expand=true]").click(function() {
+		var that = jQuery(this).children();
+
+		// Update Dimensions
+		that.attr("width", that.data('width'))
+		that.attr("height", that.data('height'))
+
+		// Update Image
+		that.attr("src", this.href);
+
+		return false;
+	});
+	*/
 }
 
 var toggleSearch = function(mode)

@@ -165,7 +165,7 @@ var backlinkify = function()
 					backlinks[p_id] = [];
 				}
 
-				backlinks[p_id].push('<a href="' + post.baseURI + '#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id + '</a>');
+				backlinks[p_id].push('<a href="' + site_url + board_shortname + '/thread/' + thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id + '</a>');
 				backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
 			});
 		}
@@ -222,8 +222,8 @@ var backlinkify = function()
 				});
 			}
 
-			//backlink.find("article").removeAttr("id").find(".post_controls").remove();
-			//backlink.find(".post_file_controls").remove();
+			backlink.find("article").removeAttr("id").find(".post_controls").remove();
+			backlink.find(".post_file_controls").remove();
 		},
 		function () {
 			jQuery("#backlink").css('display', 'none').html('');

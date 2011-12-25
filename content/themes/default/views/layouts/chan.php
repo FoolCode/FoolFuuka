@@ -52,6 +52,8 @@
 			<div role="main" id="main">
 				<?php if(isset($section_title)): ?>
 				<h3 class="section_title"><?php echo $section_title ?></h3>
+				<?php else : ?>
+				<div class="section_title"><?php echo $section_title ?></div>
 				<?php endif; ?>
 
 

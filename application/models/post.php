@@ -74,6 +74,64 @@ class Post extends CI_Model
 		$this->table = $this->db->protect_identifiers('board_' . get_selected_board()->shortname, TRUE);
 		$this->table_local = $this->db->protect_identifiers('board_' . get_selected_board()->shortname . '_local', TRUE);
 	}
+	
+	
+	function thread_o_matic()
+	{
+		$query = $this->db->query('
+			SELECT DISTINCT *
+			FROM ' . $this->table . '
+			WHERE parent = 0
+			ORDER BY num DESC
+			LIMIT 0, 200
+		');
+		
+		$sql = array();
+		$result = $query->result();
+		foreach ($result as $row)
+		{
+			$sql[] = '
+				(
+					SELECT count(*) AS count_all, count(distinct preview) AS count_images, parent
+					FROM ' . $this->table . '
+					WHERE parent = ' . $row->num . '
+				)
+			';
+		}
+		
+		$sql = implode('UNION', $sql) . '
+			ORDER BY parent DESC
+		';
+		
+		$query2 = $this->db->query($sql);
+		$result2 = $query2->result();
+		foreach($result as $key => $row)
+		{
+			$result[$key]->count_all = 0;
+			$result[$key]->count_images = 0;
+			// it should basically always be the first found anyway unless not found
+			foreach($result2 as $k => $r)
+			{
+				if($r->parent == $row->num)
+				{
+					$result[$key]->count_all = $result2[$k]->count_all;
+					$result[$key]->count_images = $result2[$k]->count_images;
+				}
+			}
+		}
+		
+		foreach($result as $key => $post)
+		{
+			if ($process === TRUE)
+			{
+				$this->process_post($post, $clean);
+			}
+			// the first you create from a parent is the first thread
+			$result[$key] = $post;
+		}
+		
+		return $result;
+	}
 
 
 	/**

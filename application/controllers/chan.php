@@ -30,6 +30,17 @@ class Chan extends Public_Controller
 		$this->template->set('disable_headers', TRUE);
 		$this->template->build('index');
 	}
+	
+	public function thread_o_matic()
+	{
+		$threads = $this->post->thread_o_matic();
+		
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
+		$this->template->set('section_title', 'thread-O-matic');
+		$this->template->set('threads', $threads);
+		$this->template->set_partial('top_tools', 'top_tools');
+		$this->template->build('thread_o_matic');
+	}
 
 
 	public function page($page = 1)
@@ -44,7 +55,7 @@ class Chan extends Public_Controller
 		if (!is_natural($page) || $page > 500)
 		{
 			show_404();
-		}
+		}	
 
 		$page = intval($page);
 

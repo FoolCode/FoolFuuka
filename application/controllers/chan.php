@@ -385,7 +385,7 @@ class Chan extends Public_Controller
 			$search['page'] = 1;
 		}
 
-		$title = _('Searching for posts ') . implode(' ' . _('and') . ' ', $title);
+		$title = _('Searching for posts ') . urldecode(implode(' ' . _('and') . ' ', $title));
 		$this->template->set('section_title', $title);
 
 		$pages_links = array();

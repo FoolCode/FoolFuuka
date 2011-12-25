@@ -1,171 +1,3 @@
-jQuery(document).ready(function() {
-	jQuery("[data-rel=popover-below]").popover({
-		offset: 10,
-		html: true
-	});
-	jQuery("[data-rel=popover]").popover({
-		offset: 10,
-		html: true
-	});
-
-	post = location.href.split(/#/);
-	if (post[1]) {
-		if (post[1].match(/^q\d+(_\d+)?$/)) {
-			post[1] = post[1].replace('q', '').replace('_', ',');
-			jQuery("#reply_comment").append(">>" + post[1] + "\n");
-			post[1] = post[1].replace(',', '_')
-		}
-		replyHighlight(post[1]);
-	}
-
-	if (typeof thread_id != "undefined")
-	{
-		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
-		backlinkify();
-		realtimethread();
-	}
-	bindFunctions();
-	timify();
-});
-
-var timelapse = 10;
-var currentlapse = 0;
-var realtimethread = function(){
-	clearTimeout(currentlapse);
-	jQuery.ajax({
-		url: site_url + 'api/chan/thread/' ,
-		async: false,
-		dataType: 'json',
-		type: 'GET',
-		cache: false,
-		data: {
-			num : thread_id,
-			board: board_shortname,
-			timestamp: thread_latest_timestamp
-		},
-		success: function(data){
-			if(data[thread_id].posts instanceof Array) {
-				jQuery.each(data[thread_id].posts, function(idx, value){
-					if(typeof thread_json[value.num] != undefined)
-					{
-						thread_json[thread_id].posts.push(value);
-						jQuery('article.thread aside').append(value.formatted);
-					}
-				});
-				thread_latest_timestamp = data[thread_id].posts[data[thread_id].posts.length-1].timestamp;
-				timelapse = 10;
-				realtime_callback();
-			}
-			else
-			{
-				if(timelapse < 30)
-				{
-					timelapse += 10;
-				}
-			}
-			currentlapse = setTimeout(realtimethread, timelapse*1000);
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-		},
-		complete: function() {
-		}
-	});
-
-	return false;
-}
-
-var realtime_callback = function(){
-	backlinkify();
-	bindFunctions();
-	timify();
-}
-
-var timify = function() {
-	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
-}
-
-var backlinkify = function()
-{
-	var backlinks = new Object;
-	jQuery("article").each(function() {
-		var that = jQuery(this);
-		var post_id = that.attr('id');
-
-		backlinks[post_id] = [];
-		if (post_id != thread_id)
-		{
-			jQuery.each(that.find("[data-backlink=true]"), function(idx, post) {
-				p_id = jQuery(post).text().replace('>>', '')
-
-				if (typeof backlinks[p_id] == "undefined")
-				{
-					backlinks[p_id] = [];
-				}
-
-				backlinks[p_id].push('<a href="' + post.baseURI + '#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id + '</a>');
-				backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
-			});
-		}
-	});
-
-
-	jQuery(".post_backlink").each(function() {
-		var that = jQuery(this);
-		if(backlinks[that.data('post')].length > 0)
-		{
-			that.html(backlinks[that.data('post')].join(" "));
-			that.parent().show();
-		}
-	});
-
-	// how could we make it working well on cellphones?
-	if( navigator.userAgent.match(/Android/i) ||
-		navigator.userAgent.match(/webOS/i) ||
-		navigator.userAgent.match(/iPhone/i) ||
-		navigator.userAgent.match(/iPad/i) ||
-		navigator.userAgent.match(/iPod/i) ||
-		navigator.userAgent.match(/BlackBerry/)
-		){
-		return false;
-	}
-
-	jQuery("[data-backlink=true]").hover(
-		function() {
-			var backlink = jQuery("#backlink");
-			var that = jQuery(this);
-
-			var pos = that.offset();
-			var height = that.height();
-
-			backlink.css({
-				left: (pos.left + 5) + 'px',
-				top: (pos.top + height + 3) + 'px'
-			});
-
-			if(thread_id == that.data('post'))
-			{
-				quote = thread_json[thread_id].op;
-				backlink.css('display', 'block').html(quote.formatted);
-			}
-			else
-			{
-				jQuery.each(thread_json[thread_id].posts, function(idx, quote) {
-					if ((that.data('post') == quote.num + '_' + quote.subnum) || (that.data('post') == quote.num && quote.subnum == 0 ) || (that.data('post') == quote.parent))
-					{
-						backlink.css('display', 'block').html(quote.formatted);
-					}
-				});
-			}
-
-			backlink.find("article").removeAttr("id").find(".post_controls").remove();
-			backlink.find(".post_file_controls").remove();
-		},
-		function () {
-			jQuery("#backlink").css('display', 'none').html('');
-		}
-	);
-}
-
 var bindFunctions = function()
 {
 	jQuery("[data-function]").click(function() {
@@ -311,6 +143,146 @@ var bindFunctions = function()
 	*/
 }
 
+var timify = function() {
+	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
+}
+
+var backlinkify = function()
+{
+	var backlinks = new Object;
+	jQuery("article").each(function() {
+		var that = jQuery(this);
+		var post_id = that.attr('id');
+
+		backlinks[post_id] = [];
+		if (post_id != thread_id)
+		{
+			jQuery.each(that.find("[data-backlink=true]"), function(idx, post) {
+				p_id = jQuery(post).text().replace('>>', '')
+
+				if (typeof backlinks[p_id] == "undefined")
+				{
+					backlinks[p_id] = [];
+				}
+
+				backlinks[p_id].push('<a href="' + post.baseURI + '#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id + '</a>');
+				backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
+			});
+		}
+	});
+
+
+	jQuery(".post_backlink").each(function() {
+		var that = jQuery(this);
+		if(backlinks[that.data('post')].length > 0)
+		{
+			that.html(backlinks[that.data('post')].join(" "));
+			that.parent().show();
+		}
+	});
+
+	// how could we make it working well on cellphones?
+	if( navigator.userAgent.match(/Android/i) ||
+		navigator.userAgent.match(/webOS/i) ||
+		navigator.userAgent.match(/iPhone/i) ||
+		navigator.userAgent.match(/iPad/i) ||
+		navigator.userAgent.match(/iPod/i) ||
+		navigator.userAgent.match(/BlackBerry/)
+		){
+		return false;
+	}
+
+	jQuery("[data-backlink=true]").hover(
+		function() {
+			var backlink = jQuery("#backlink");
+			var that = jQuery(this);
+
+			var pos = that.offset();
+			var height = that.height();
+
+			backlink.css({
+				left: (pos.left + 5) + 'px',
+				top: (pos.top + height + 3) + 'px'
+			});
+
+			if(thread_id == that.data('post'))
+			{
+				quote = thread_json[thread_id].op;
+				backlink.css('display', 'block');
+				backlink.html(quote.formatted);
+			}
+			else
+			{
+				jQuery.each(thread_json[thread_id].posts, function(idx, quote) {
+					if ((that.data('post') == quote.num + '_' + quote.subnum) || (that.data('post') == quote.num && quote.subnum == 0 ) || (that.data('post') == quote.parent))
+					{
+						backlink.css('display', 'block');
+						backlink.html(quote.formatted);
+					}
+				});
+			}
+
+			//backlink.find("article").removeAttr("id").find(".post_controls").remove();
+			//backlink.find(".post_file_controls").remove();
+		},
+		function () {
+			jQuery("#backlink").css('display', 'none').html('');
+		}
+	);
+}
+
+var timelapse = 10;
+var currentlapse = 0;
+var realtimethread = function(){
+	clearTimeout(currentlapse);
+	jQuery.ajax({
+		url: site_url + 'api/chan/thread/' ,
+		async: false,
+		dataType: 'json',
+		type: 'GET',
+		cache: false,
+		data: {
+			num : thread_id,
+			board: board_shortname,
+			timestamp: thread_latest_timestamp
+		},
+		success: function(data){
+			if(data[thread_id].posts instanceof Array) {
+				jQuery.each(data[thread_id].posts, function(idx, value){
+					if(typeof thread_json[value.num] != undefined)
+					{
+						thread_json[thread_id].posts.push(value);
+						jQuery('article.thread aside').append(value.formatted);
+					}
+				});
+				thread_latest_timestamp = data[thread_id].posts[data[thread_id].posts.length-1].timestamp;
+				timelapse = 10;
+				realtime_callback();
+			}
+			else
+			{
+				if(timelapse < 30)
+				{
+					timelapse += 10;
+				}
+			}
+			currentlapse = setTimeout(realtimethread, timelapse*1000);
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+		},
+		complete: function() {
+		}
+	});
+
+	return false;
+}
+
+var realtime_callback = function(){
+	backlinkify();
+	bindFunctions();
+	timify();
+}
+
 var toggleSearch = function(mode)
 {
 	var search;
@@ -450,3 +422,33 @@ function eliminateDuplicates(arr) {
   }
   return out;
 }
+
+jQuery(document).ready(function() {
+	jQuery("[data-rel=popover-below]").popover({
+		offset: 10,
+		html: true
+	});
+	jQuery("[data-rel=popover]").popover({
+		offset: 10,
+		html: true
+	});
+
+	post = location.href.split(/#/);
+	if (post[1]) {
+		if (post[1].match(/^q\d+(_\d+)?$/)) {
+			post[1] = post[1].replace('q', '').replace('_', ',');
+			jQuery("#reply_comment").append(">>" + post[1] + "\n");
+			post[1] = post[1].replace(',', '_')
+		}
+		replyHighlight(post[1]);
+	}
+
+	if (typeof thread_id != "undefined")
+	{
+		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
+		backlinkify();
+		realtimethread();
+	}
+	bindFunctions();
+	timify();
+});

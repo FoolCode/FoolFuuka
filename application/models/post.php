@@ -120,17 +120,14 @@ class Post extends CI_Model
 			}
 		}
 		
+		$result_num_as_key = array();
 		foreach($result as $key => $post)
 		{
-			if ($process === TRUE)
-			{
-				$this->process_post($post, $clean);
-			}
-			// the first you create from a parent is the first thread
-			$result[$key] = $post;
+			$this->process_post($post, TRUE);
+			$result_num_as_key[$post->num] = $post; 
 		}
 		
-		return $result;
+		return $result_num_as_key;
 	}
 
 

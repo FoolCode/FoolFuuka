@@ -46,6 +46,12 @@
 				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ] [ Original archiver: <a href="http://oldarchive.foolz.us">http://oldarchive.foolz.us</a> ]
 
 					<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
+					<?php else : ?>
+					<div class="section_title">
+						Oh, Merry Christmas people. Here's a <a style="text-decoration:underline" href="http://foolrulez.org/blog/2011/12/foolfuuka/" target="_blank">brief post</a> about what's new and development status of the new archiver. 
+						We were being asked for features we already implemented silently, so you might want to read.
+						We're of course seeking for suggestions, so drop us some line so we know what should we focus on.
+					</div>
 				<?php endif; ?>
 			</header>
 
@@ -91,7 +97,7 @@
 		<script defer src="<?php echo site_url() ?>content/themes/<?php echo get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<?php if(get_setting('fs_theme_google_analytics')) : ?>
 		<script>
-			var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us']['_trackPageview'],['_trackPageLoadTime']];
+			var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us'],['_trackPageview'],['_trackPageLoadTime']];
 			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 				s.parentNode.insertBefore(g,s)}(document,'script'));

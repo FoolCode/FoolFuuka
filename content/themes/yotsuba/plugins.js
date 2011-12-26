@@ -1,7 +1,7 @@
 function quote(text) {
     if (document.selection) {
         document.post.com.focus();
-        sel = document.selection.createRange();
+        var sel = document.selection.createRange();
         sel.text = ">>" + text + "\n";
     } else if (document.post.com.selectionStart || document.post.com.selectionStart == "0") {
         var startPos = document.post.com.selectionStart;
@@ -30,61 +30,100 @@ function repquote(rep) {
 }
 
 function reppop(url) {
-    day = new Date();
-    id = day.getTime();
+    var day = new Date();
+    var id = day.getTime();
     window.open(url, id, 'toolbar=0,scrollbars=0,location=0,status=1,menubar=0,resizable=1,width=660,height=192');
     return false;
 }
 
+function https_rewrite1(t,attr) {
+    var a = document.getElementsByTagName(t);
+    for (e in a) {
+        try {
+            var s = a[e].getAttribute(attr);
+            a[e].setAttribute(attr, s.replace("http:","https:").replace(/[0-9]+\.thumbs/, "thumbs"));
+        }
+        catch(ee)
+        {}
+    }
+}
+
+function page_postload() {
+    if (window.location.protocol=="https:") {
+        https_rewrite1("form","action");
+        https_rewrite1("a","href");
+        https_rewrite1("img","src");
+        https_rewrite1("link","href");
+    }
+}
+
+function https_rewrite() {
+    page_postload();
+}
+
+function recaptcha_load() {
+    var d = document.getElementById("recaptcha_div");
+    if (!d) return;
+
+    Recaptcha.create("6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc", "recaptcha_div",{theme: "clean"});
+}
+
 function init() {
-    arr = location.href.split(/#/);
+    var arr = location.href.split(/#/);
     if (arr[1]) {
         if (arr[1].match(/(q)?([0-9]+)/)) {
-            rep = arr[1];
-            re = arr[1].replace(/q/, "");
+            var rep = arr[1];
+            var re = arr[1].replace(/q/, "");
             replyhl(re);
             repquote(rep);
         }
     }
-    var cookie = readCookie(style_group);
-    var title = cookie ? cookie : getPreferredStyleSheet();
-    setActiveStyleSheet(title);
+    if (typeof style_group != "undefined" && style_group) {
+        var cookie = readCookie(style_group);
+        var title = cookie ? cookie : getPreferredStyleSheet();
+        setActiveStyleSheet(title);
+    }
 
     if (typeof jsMath != "undefined" && typeof jsMath.Easy.onload != "undefined" && !jsMath.Easy.loaded) jsMath.Easy.onload();
+
+    /* if (typeof Recaptcha != "undefined") recaptcha_load(); */
 }
 
 function uninit() {
     var title = getActiveStyleSheet();
+    if (!title) return;
     createCookie(style_group, title, 365, ".4chan.org");
 }
 
 function setActiveStyleSheet(title) {
-    var i, a, main;
-    for (i = 0;
-    (a = document.getElementsByTagName("link")[i]); i++) {
-        if (a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title")) {
-            a.disabled = true;
-            if (a.getAttribute("title") == title) a.disabled = false;
-        }
+    var a;
+    var link;
+    var href = '';
+    for (var i = 0; (a = document.getElementsByTagName("link")[i]); i++) {
+          if (a.getAttribute("title") == "switch")
+               link = a;
+          if (a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title")) {
+                if (a.getAttribute("title") == title) {
+                    href = a.href;
+                    }
+               }
     }
+    link.setAttribute("href", href);
 }
 
 function getActiveStyleSheet() {
     var i, a;
-    for (i = 0;
-    (a = document.getElementsByTagName("link")[i]); i++) {
-        if (a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title") && !a.disabled) return a.getAttribute("title");
+    var link;
+    for (i = 0; (a = document.getElementsByTagName("link")[i]); i++) {
+        if (a.getAttribute("title") == "switch")
+               link = a;
+        else if (a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title") && a.href==link.href) return a.getAttribute("title");
     }
     return null;
 }
 
 function getPreferredStyleSheet() {
-    var i, a;
-    for (i = 0;
-    (a = document.getElementsByTagName("link")[i]); i++) {
-        if (a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("rel").indexOf("alt") == -1 && a.getAttribute("title")) return a.getAttribute("title");
-    }
-    return null;
+    return (style_group == "ws_style") ? "Yotsuba B" : "Yotsuba";
 }
 
 function createCookie(name, value, days, domain) {

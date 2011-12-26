@@ -1,12 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
 		<title><?php echo $template['title']; ?></title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="imagetoolbar" content="false" />
-		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0" />
 		<?php
 		if ($this->config->item('theme_extends') != '' &&
 				$this->config->item('theme_extends') != get_setting('fs_theme_dir') &&
@@ -17,11 +16,7 @@
 		}
 		if (file_exists('content/themes/' . get_setting('fs_theme_dir') . '/style.css'))
 			echo link_tag('content/themes/' . get_setting('fs_theme_dir') . '/style.css?v=' . FOOLSLIDE_VERSION);
-		?> 
-		<link rel="sitemap" type="application/xml" title="Sitemap" href="<?php echo site_url() ?>sitemap.xml" />
-		<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo site_url() ?>rss.xml" />
-		<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url() ?>atom.xml" />
-		<link rel='index' title='<?php echo get_setting('fs_gen_site_title') ?>' href='<?php echo site_url() ?>' />
+		?>
 		<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
@@ -41,17 +36,61 @@
 				]
 			<?php endif; ?>
 			</span>
-			
+
 			<span id="navtopr">
-				[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / reports / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
+				[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / statistics / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
 			</span>
 		</div>
-		<br>
+
 		<div class="logo">
 			<font size="5">
 				<b><span><?php echo $template['title']; ?></span></b>
 			</font>
 		</div>
+
+		<hr>
+
+		<div id="archive_tools">
+			<?php echo $template['partials']['top_tools'] ?>
+		</div>
+
+		<hr>
+
 		<?php echo $template['body']; ?>
+
+		<?php if (isset($pages_links)) : ?>
+			<table class="pages" align="left" border="1">
+				<tbody>
+					<tr>
+						<?php if ($pages_links_current == 1) : ?>
+							<td>Previous</td>
+						<?php else : ?>
+							<td><input type="submit" value="Previous" onclick="location.href='<?php echo $pages_links[$pages_links_current-1]; ?>';return false;"></td>
+						<?php endif; ?>
+							<td>
+							<?php foreach ($pages_links as $key => $item) : ?>
+								[<a href="<?php echo $item ?>"><?php if ($key == $pages_links_current) echo '<b>'; ?><?php echo $key ?><?php if ($key == $pages_links_current) echo '</b>'; ?></a>]
+							<?php endforeach; ?>
+							</td>
+						<?php if ((count($pages_links) > 1) && ($pages_links_current >= 1 && $pages_links_current < 15)) : ?>
+							<td><input type="submit" value="Next" onclick="location.href='<?php echo $pages_links[$pages_links_current+1]; ?>';return false;"></td>
+						<?php else : ?>
+							<td>Next</td>
+						<?php endif; ?>
+					</tr>
+				</tbody>
+			</table>
+		<?php endif; ?>
+
+		<?php if(get_setting('fs_theme_google_analytics')) : ?>
+		<script>
+			var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us']['_trackPageview'],['_trackPageLoadTime']];
+			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+				s.parentNode.insertBefore(g,s)}(document,'script'));
+		</script>
+		<?php endif; ?>
+
+		<?php echo get_setting('fs_theme_footer_code'); ?>
 	</body>
 </html>

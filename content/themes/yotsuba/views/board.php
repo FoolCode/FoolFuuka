@@ -1,76 +1,80 @@
 <?php
 if (!defined('BASEPATH'))
-exit('No direct script access allowed');
+	exit('No direct script access allowed');
 
+if (!isset($modifiers))
+		$modifiers = array();
+?>
+
+<form name="threads">
+
+<?php
 foreach ($posts as $key => $post) : ?>
 	<?php if(isset($post['op'])) :
 		$op = $post['op'];
 	?>
 		<?php if ($op->media_filename) : ?>
+		<br>
 		<span class="filesize">
-			File : <?php echo $op->media_filename . '-(' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ')' ?>
+			File : <a href="<?php echo ($op->image_href) ? $op->image_href : $op->remote_image_href ?>" rel="noreferrer" target="_blank"><?php echo $op->media_filename ?></a><?php echo '-(' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ')' ?>
 		</span>
 		<br>
-		<a href="" target="_blank">
+		<a href="<?php echo ($op->image_href) ? $op->image_href : $op->remote_image_href ?>" rel="noreferrer" target="_blank">
 			<img src="<?php echo $op->thumbnail_href ?>" border="0" align="left" width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>" hspace="20" alt="<?php echo byte_format($op->media_size, 0) ?>" md5="<?php echo $op->media_hash ?>"/>
 		</a>
 		<?php endif; ?>
-		
+
 		<a name="0"></a>
+
 		<span class="filetitle"></span>
 		<span class="postername"><?php echo $op->name ?></span>
 		<span class="postertrip"><?php echo $op->trip ?></span>
-		<span class="posttime"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></span>
+		<span class="posttime"><?php echo date('M/d/y(D)H:i', $op->timestamp) ?></span>
 		<span id="nothread<?php echo $op->num ?>">
-			<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num . '#' . $op->num) ?>" class="quotejs">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" class="quotejs"><?php echo $op->num ?></a>
-			[<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]
+			<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" class="quotejs"><?php echo $op->num ?></a> [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>" class="quotejs">Reply</a>]
 		</span>
-		<blockquote><?php echo $op->comment_processed ?></blockquote>
-		<span class="omittedposts"><?php echo ((isset($post['omitted']) && $post['omitted'] > 0)?$post['omitted'] . ' posts omitted. Click Reply to view.':'') ?></span>
+		<blockquote>
+			<?php echo $op->comment_processed ?>
+		</blockquote>
+		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' posts '.((isset($post['images_omitted']) && $post['images_omitted'] > 0)?'and '.$post['images_omitted'].' images':'').' omitted. Click Reply to view.</span>' : '') ?>
 	<?php endif; ?>
 
-	<?php 
-	$post_count = 0;
-	if(isset($post['posts']))
-	foreach (array_reverse($post['posts']) as $p) : 
-
-		if(isset($posts_per_thread) && $posts_per_thread == $post_count)
+	<?php
+	if (isset($post['posts']))
+	{
+		if (isset($posts_per_thread))
 		{
-			break;
+			$limit = count($post['posts']) - $posts_per_thread;
+			if ($limit < 0)
+				$limit = 0;
 		}
-		$post_count++;
+		else
+		{
+			$limit = 0;
+		}
+
+		for ($i = $limit; $i < count($post['posts']); $i++)
+		{
+			$p = $post['posts'][$i];
+
+			if ($p->parent == 0)
+				$p->parent = $p->num;
+
+			echo build_board_comment($p, $modifiers);
+		}
+	}
 	?>
-	<table>
-		<tbody>
-			<tr>
-				<td nowrap class="doubledash">&gt;&gt;</td>
-				<td id="<?php echo $p->num ?>" class="reply">
-					<span class="replytitle"></span>
-					<span class="commentpostername"><?php echo $p->name ?></span>
-					<?php echo date('D M d H:i:s Y', $p->timestamp) ?>
-					<?php if ($p->subnum > 0) : ?>
-					<span id="norep<?php echo $p->num ?>">
-						<a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent . '#' . $p->num . '_' . $p->subnum) ?>" class="quotejs">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum ?>" class="quotejs"><?php echo $op->num ?></a>
-					</span>
-					<?php else : ?>
-					<span id="norep<?php echo $p->num ?>">
-						<a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent . '#' . $p->num) ?>" class="quotejs">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num ?>" class="quotejs"><?php echo $op->num ?></a>
-					</span>
-					<?php endif; ?>
-					<?php if ($p->media_filename) : ?>
-						<br>
-						File : <?php echo $p->media_filename . '-(' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ')' ?>
-						<br>
-						<a href="" target="_blank">
-							<img src="<?php echo $p->thumbnail_href ?>" border="0" align="left" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" hspace="20" alt="<?php echo byte_format($p->media_size, 0) ?>" md5="<?php echo $p->media_hash ?>"/>
-						</a>
-					<?php endif; ?>
-					<blockquote><?php echo $p->comment_processed ?></blockquote>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<?php endforeach; ?>
 	<br clear="left">
 	<hr>
 <?php endforeach; ?>
+</form>
+
+<script type="text/javascript">
+	site_url = '<?php echo site_url() ?>';
+	board_shortname = '<?php echo get_selected_board()->shortname ?>';
+	<?php if (isset($thread_id)) : ?>
+	thread_id = <?php echo $thread_id ?>;
+	thread_json = <?php echo json_encode($posts) ?>;
+	thread_latest_timestamp = thread_json[thread_id].posts[(thread_json[thread_id].posts.length - 1)].timestamp;
+	<?php endif; ?>
+</script>

@@ -486,6 +486,23 @@ section.post.reply .actions {
 	border-radius: 0;
 }
 
+section.post.reply #reply_ajax_notices {
+	padding:8px;
+	margin-top:10px;
+	margin-left:20px;
+	display:none;
+}
+
+section.post.reply #reply_ajax_notices.error {
+	background: #FFC5C5;
+	border: 1px solid red;
+}
+
+section.post.reply #reply_ajax_notices.success {
+	background:#DFFAD9;
+	border: 1px solid #61B84D;
+}
+
 article.thread .greentext {
 	color: #789922;
 }
@@ -493,6 +510,53 @@ article.thread .greentext {
 article.thread .backlink.op {
 	border-bottom: 1px dotted #000;
 }
+
+
+#thread_o_matic {
+	
+}
+
+#thread_o_matic > article.thread {
+	border:none;
+	width:24%;
+	margin:5px 0.5%;
+	float:left;
+	font-size:11px;
+	line-height:13px;
+}
+
+#thread_o_matic > article.thread > header {
+	text-align:center;
+}
+
+#thread_o_matic > article.thread > header .post_controls{
+	display:block;
+	margin-top:3px;
+}
+
+#thread_o_matic > article.thread > .thread_image_box{
+	float:none;
+	line-height:inherit;
+	max-width:none;
+	margin-top: 6px;
+}
+
+#thread_o_matic > article.thread > .thread_image_box > .post_file_controls{
+	display:block;
+	margin-top:3px;
+}
+	
+#thread_o_matic > article.thread > .thread_image_box .thread_image{
+	max-width:100%;
+	height:auto;
+	box-shadow: 0px 0px 2px #888;
+}
+
+#thread_o_matic > article.thread .thread_tools_bottom {
+	text-align:center;
+	margin:0;
+}
+
 
 .modal-label {
 	float: left;

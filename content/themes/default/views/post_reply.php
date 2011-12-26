@@ -12,6 +12,7 @@ if (!defined('BASEPATH'))
 			<span style="color:red"><?php echo $reply_errors ?></span>
 		<?php endif; ?>
 	</header>
+	<div id="reply_ajax_notices"></div>
 	<div>
 		<?php echo form_open(get_selected_board()->shortname.'/sending', array('class' => 'form-stacked')) ?>
 		<fieldset>
@@ -91,7 +92,6 @@ if (!defined('BASEPATH'))
 				));
 			?>
 				<br/><br/>
-				<span id="reply_alert"></span>
 			</div>
 			<?php //print_r($post_data) ?>
 		</fieldset>

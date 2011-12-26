@@ -76,6 +76,61 @@ class Post extends CI_Model
 	}
 
 
+	function thread_o_matic()
+	{
+		$query = $this->db->query('
+			SELECT DISTINCT *
+			FROM ' . $this->table . '
+			WHERE parent = 0
+			ORDER BY num DESC
+			LIMIT 0, 200
+		');
+
+		$sql = array();
+		$result = $query->result();
+		foreach ($result as $row)
+		{
+			$sql[] = '
+				(
+					SELECT count(*) AS count_all, count(distinct preview) AS count_images, parent
+					FROM ' . $this->table . '
+					WHERE parent = ' . $row->num . '
+				)
+			';
+		}
+
+		$sql = implode('UNION', $sql) . '
+			ORDER BY parent DESC
+		';
+
+		$query2 = $this->db->query($sql);
+		$result2 = $query2->result();
+		foreach ($result as $key => $row)
+		{
+			$result[$key]->count_all = 0;
+			$result[$key]->count_images = 0;
+			// it should basically always be the first found anyway unless not found
+			foreach ($result2 as $k => $r)
+			{
+				if ($r->parent == $row->num)
+				{
+					$result[$key]->count_all = $result2[$k]->count_all;
+					$result[$key]->count_images = $result2[$k]->count_images;
+				}
+			}
+		}
+
+		$result_num_as_key = array();
+		foreach ($result as $key => $post)
+		{
+			$this->process_post($post, TRUE);
+			$result_num_as_key[$post->num] = $post;
+		}
+
+		return $result_num_as_key;
+	}
+
+
 	/**
 	 *
 	 * @param type $page
@@ -99,7 +154,7 @@ class Post extends CI_Model
 					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 				) AS t
 				LEFT JOIN ' . $this->table . ' AS g
-					ON g.num = t.unq_parent
+					ON g.num = t.unq_parent AND g.subnum = 0
 				' . $this->sql_report_after_join . '
 			');
 		}
@@ -117,7 +172,7 @@ class Post extends CI_Model
 					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 				) AS t
 				LEFT JOIN ' . $this->table . ' AS g
-					ON g.num = t.unq_parent
+					ON g.num = t.unq_parent AND g.subnum = 0
 				' . $this->sql_report_after_join . '
 			');
 		}
@@ -518,8 +573,8 @@ class Post extends CI_Model
 				$query = $this->db->query('
 					SELECT *
 					FROM ' . $this->table . '
-					'.$order.'
-					LIMIT '.(($search['page'] * 25) - 25).', 25
+					' . $order . '
+					LIMIT ' . (($search['page'] * 25) - 25) . ', 25
 				');
 
 				$query2 = $this->db->query('
@@ -802,7 +857,7 @@ class Post extends CI_Model
 			// we risk getting into a racing condition
 			// get rid first of all of OP so posting is stopped
 			// first the file
-			if (!$this->delete_thumbnail($row))
+			if (!$this->delete_image($row))
 			{
 				log_message('error', 'post.php delete() couldn\'t delete thumbnail from thread OP');
 				return array('error' => _('Couldn\'t delete the thumbnail.'));
@@ -832,9 +887,9 @@ class Post extends CI_Model
 			{
 				foreach ($thread->result() as $t)
 				{
-					if ($this->delete_thumbnail($t) !== TRUE)
+					if ($this->delete_image($t) !== TRUE)
 					{
-						log_message('error', 'post.php delete() couldn\'t delete thumbnail from thread comments');
+						log_message('error', 'post.php delete() couldn\'t delete image and thumbnail from thread comments');
 						return array('error' => _('Couldn\'t delete the thumbnail(s).'));
 					}
 				}
@@ -849,7 +904,7 @@ class Post extends CI_Model
 		}
 		else
 		{
-			if ($this->delete_thumbnail($row) !== TRUE)
+			if ($this->delete_image($row) !== TRUE)
 			{
 				log_message('error', 'post.php delete() couldn\'t delete thumbnail from comment');
 				return array('error' => _('Couldn\'t delete the thumbnail.'));
@@ -1001,7 +1056,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_image_dir($row, $thumbnail)
+	function get_image_dir($row, $thumbnail = FALSE)
 	{
 		if (!$row->preview)
 			return FALSE;
@@ -1020,20 +1075,31 @@ class Post extends CI_Model
 	}
 
 
-	function delete_thumbnail($row)
+	function delete_image($row, $image = TRUE, $thumbnail = TRUE)
 	{
 		// don't try deleting what isn't there anyway
 		if (!$row->preview)
 			return TRUE;
 
-		if (file_exists($this->get_thumbnail_dir($row)))
-		{
-			if (!@unlink($this->get_thumbnail_dir($row)))
+		if ($image)
+			if (file_exists($this->get_image_dir($row)))
 			{
-				log_message('error', 'post.php delete_thumbnail(): couldn\'t remove thumbnail: ' . get_thumbnail_dir($row));
-				return FALSE;
+				if (!@unlink($this->get_image_dir($row)))
+				{
+					log_message('error', 'post.php delete_image(): couldn\'t remove image: ' . $this->get_image_dir($row));
+					return FALSE;
+				}
 			}
-		}
+			
+		if ($thumbnail)
+			if (file_exists($this->get_image_dir($row, TRUE)))
+			{
+				if (!@unlink($this->get_image_dir($row, TRUE)))
+				{
+					log_message('error', 'post.php delete_thumbnail(): couldn\'t remove thumbnail: ' . $this->get_image_dir($row, TRUE));
+					return FALSE;
+				}
+			}
 		return TRUE;
 	}
 

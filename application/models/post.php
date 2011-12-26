@@ -311,9 +311,9 @@ class Post extends CI_Model
 			{
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->table . '
-					WHERE num = ? OR (parent = ? AND timestamp > ?)
+					WHERE doc_id = ? OR (parent = ? AND timestamp > ?)
 					ORDER BY num, subnum ASC;
-				', array($num['num'], $num['num'], $num['timestamp']));
+				', array($num['doc_id'], $num['num'], $num['timestamp']));
 			}
 			$num = $num['num'];
 		}
@@ -514,24 +514,24 @@ class Post extends CI_Model
 				{
 					$order = 'ORDER BY num DESC';
 				}
-				
+
 				$query = $this->db->query('
 					SELECT *
 					FROM ' . $this->table . '
 					'.$order.'
 					LIMIT '.(($search['page'] * 25) - 25).', 25
 				');
-				
+
 				$query2 = $this->db->query('
 					SELECT count(*) AS total_found
 					FROM ' . $this->table . '
-					LIMIT 0, 5000	
+					LIMIT 0, 5000
 				');
-				
+
 				$found = $query2->result();
 				$search_result = array('total_found' => $found[0]->total_found);
 			}
-			
+
 			foreach ($query->result() as $post)
 			{
 				if ($post->parent == 0)

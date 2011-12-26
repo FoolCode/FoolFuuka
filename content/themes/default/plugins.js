@@ -242,6 +242,7 @@ var realtimethread = function(){
 		type: 'GET',
 		cache: false,
 		data: {
+			doc_id : thread_doc_id,
 			num : thread_id,
 			board: board_shortname,
 			timestamp: thread_latest_timestamp

@@ -170,8 +170,9 @@ class Chan extends REST_Controller
 				$this->response(array('error' => _('Your timestamp is malformed')), 404);
 			}
 
+			$doc_id = intval($this->get('doc_id'));
 			$timestamp = intval($this->get('timestamp'));
-			$num = array('num' => $num, 'timestamp' => $timestamp);
+			$num = array('doc_id' => $doc_id, 'num' => $num, 'timestamp' => $timestamp);
 		}
 
 		$thread = $this->post->get_thread($num, TRUE, TRUE, TRUE);

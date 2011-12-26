@@ -89,8 +89,17 @@ foreach ($posts as $key => $post) :
 	site_url = '<?php echo site_url() ?>';
 	board_shortname = '<?php echo get_selected_board()->shortname ?>';
 	<?php if (isset($thread_id)) : ?>
+	thread_doc_id = <?php echo $post['op']->doc_id ?>;
 	thread_id = <?php echo $thread_id ?>;
 	thread_json = <?php echo json_encode($posts) ?>;
-	thread_latest_timestamp = thread_json[thread_id].posts[(thread_json[thread_id].posts.length - 1)].timestamp;
+
+	if (typeof thread_json[thread_id].posts != "undefined")
+	{
+		thread_latest_timestamp = thread_json[thread_id].posts[(thread_json[thread_id].posts.length - 1)].timestamp;
+	}
+	else
+	{
+		thread_latest_timestamp = 0;
+	}
 	<?php endif; ?>
 </script>

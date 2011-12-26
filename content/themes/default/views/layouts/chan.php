@@ -46,18 +46,18 @@
 				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ] [ Original archiver: <a href="http://oldarchive.foolz.us">http://oldarchive.foolz.us</a> ]
 
 					<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
-					<?php else : ?>
-					<div class="section_title">
-						Oh, Merry Christmas people. Here's a <a style="text-decoration:underline" href="http://foolrulez.org/blog/2011/12/foolfuuka/" target="_blank">brief post</a> about what's new and development status of the new archiver. 
-						We were being asked for features we already implemented silently, so you might want to read.
-						We're of course seeking for suggestions, so drop us some line so we know what should we focus on.
-					</div>
 				<?php endif; ?>
 			</header>
 
 			<div role="main" id="main">
 				<?php if(isset($section_title)): ?>
 				<h3 class="section_title"><?php echo $section_title ?></h3>
+				<?php else : ?>
+					<div class="section_title">
+						Here's a <a style="text-decoration:underline" href="http://foolrulez.org/blog/2011/12/foolfuuka/" target="_blank">brief post</a> about what's new and development status of the new archiver. 
+						We were being asked for features we already implemented silently, so you might want to read.
+						We're of course seeking for suggestions, so drop us some line so we know what should we focus on.
+					</div>
 				<?php endif; ?>
 
 

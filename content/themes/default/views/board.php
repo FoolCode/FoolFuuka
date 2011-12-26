@@ -78,6 +78,11 @@ foreach ($posts as $key => $post) :
 			<?php if (isset($thread_id)) : ?>
 			<div class="js_hook_realtimethread"></div>
 			<?php endif; ?>
+		<?php else : ?>
+			<?php if (isset($thread_id)) : ?>
+			<aside class="posts"></aside>
+			<div class="js_hook_realtimethread"></div>
+			<?php endif; ?>
 		<?php endif; ?>
 		<?php echo $template['partials']['post_reply']; ?>
 	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
@@ -99,6 +104,7 @@ foreach ($posts as $key => $post) :
 	}
 	else
 	{
+		thread_json[thread_id].posts = [];
 		thread_latest_timestamp = 0;
 	}
 	<?php endif; ?>

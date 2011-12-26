@@ -45,13 +45,14 @@ $modifiers = array();
 		</div>
 		<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
 	</article>
-	<?php 
+	<?php
 	if($count%4 == 0) echo '<div class="clearfix"></div>';
 	endforeach; ?>
-	
+
 	<script type="text/javascript">
 	site_url = '<?php echo site_url() ?>';
 	board_shortname = '<?php echo get_selected_board()->shortname ?>';
+	thread_doc_id = 1;
 	thread_id = 1;
 	thread_json = <?php echo json_encode($threads) ?>;
 	//thread_latest_timestamp = thread_json[thread_id].posts[(thread_json[thread_id].posts.length - 1)].timestamp;

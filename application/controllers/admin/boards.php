@@ -34,20 +34,28 @@ class Boards extends Admin_Controller
 		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/manage.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
 	}
-	
-	
+
+
 	function reports($action = NULL, $num = 1)
 	{
 		$this->viewdata["function_title"] = _('Reports');
 		$reports = new Report();
-		
-		if ($this->input->post())
+
+		if ($action == 'delete')
 		{
-			// Handle Delete&Spam with $action
+			return FALSE;
 		}
-		
+		if ($action == 'spam')
+		{
+			return FALSE;
+
+		}
+		if ($action == 'ban')
+		{
+			return FALSE;
+		}
+
 		$data["reports"] = $reports->list_reports_all_boards($num);
-		
 		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/reports.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
 	}
@@ -73,7 +81,7 @@ class Boards extends Admin_Controller
 			// Prepare for stub change in case we have to redirect instead of just printing the view
 			$old_shortname = $board->shortname;
 			$board->update_board_db($this->input->post());
-			
+
 			flash_notice('notice', sprintf(_('Updated board information for %s.'), $board->name));
 			// Did we change the shortname of the board? We need to redirect to the new page then.
 			if (isset($old_shortname) && $old_shortname != $board->shortname)
@@ -105,7 +113,7 @@ class Boards extends Admin_Controller
 		}
 
 		$table = ormer($board);
-		
+
 		$table = tabler($table, FALSE, TRUE);
 		$data["form_title"] = _('Add New') . ' ' . _('Board');
 		$data['table'] = $table;
@@ -123,7 +131,7 @@ class Boards extends Admin_Controller
 			return false;
 		}
 		$id = intval($id);
-		
+
 		switch ($type)
 		{
 			case("board"):

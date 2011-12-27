@@ -378,7 +378,7 @@ class Post extends CI_Model
 				SELECT * FROM ' . $this->table . '
 				' . $this->sql_report . '
 				WHERE num = ? OR parent = ?
-				ORDER BY num ASC;
+				ORDER BY num, subnum ASC;
 			', array($num, $num));
 		}
 		$result = array();
@@ -1090,7 +1090,7 @@ class Post extends CI_Model
 					return FALSE;
 				}
 			}
-			
+
 		if ($thumbnail)
 			if (file_exists($this->get_image_dir($row, TRUE)))
 			{

@@ -34,7 +34,7 @@ class Report extends DataMapper
 
 	function post_model_init($from_cache = FALSE)
 	{
-		
+
 	}
 
 
@@ -182,23 +182,23 @@ class Report extends DataMapper
 				{
 					$selects[] = '
 					(
-						SELECT *, CONCAT('.$this->db->escape($board->shortname).') AS shortname 
+						SELECT *, CONCAT('.$this->db->escape($board->shortname).') AS shortname
 						FROM ' . $this->get_table($board->shortname) . '
-						LEFT JOIN 
-							( 
-								SELECT post as report_post, reason as report_reason, status as report_status, created as report_created
+						LEFT JOIN
+							(
+								SELECT id as report_id, post as report_post, reason as report_reason, status as report_status, created as report_created
 								FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
-								WHERE `id` = ' . $item->id . ' 
+								WHERE `id` = ' . $item->id . '
 							) as q
-							ON    
+							ON
 							' . $this->get_table($board->shortname) . '.`doc_id`
 							=
 							' . $this->db->protect_identifiers('q') . '.`report_post`
 						LEFT JOIN
 							(
 								SELECT id AS poster_id_join,
-									ip AS poster_ip, user_agent AS poster_user_agent, 
-									banned AS poster_banned, banned_reason AS poster_banned_reason, 
+									ip AS poster_ip, user_agent AS poster_user_agent,
+									banned AS poster_banned, banned_reason AS poster_banned_reason,
 									banned_start AS poster_banned_start, banned_end AS poster_banned_end
 								FROM'.$this->db->protect_identifiers('posters', TRUE).'
 							) as p
@@ -219,4 +219,57 @@ class Report extends DataMapper
 	}
 
 
+	function get_image_href($data, $thumbnail = FALSE)
+	{
+		if (!$data->preview)
+			return FALSE;
+
+		if ($data->parent > 0)
+			$number = $data->parent;
+		else
+			$number = $data->num;
+		while (strlen((string) $number) < 9)
+		{
+			$number = '0' . $number;
+		}
+
+		if (file_exists($this->get_image_dir($data, $thumbnail)) !== FALSE)
+		{
+			if ($data->preview_h == 0 && $data->preview_w == 0)
+			{
+				$data->preview_h = 126;
+				$data->preview_w = 126;
+			}
+			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $data->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $data->preview : $data->media_filename);
+		}
+		if ($thumbnail)
+		{
+			$data->preview_h = 150;
+			$data->preview_w = 150;
+			return site_url() . 'content/themes/default/images/image_missing.jpg';
+		}
+		else
+		{
+			return '';
+		}
+	}
+
+
+	function get_image_dir($data, $thumbnail = FALSE)
+	{
+		if (!$data->preview)
+			return FALSE;
+
+		if ($data->parent > 0)
+			$number = $data->parent;
+		else
+			$number = $data->num;
+
+		while (strlen((string) $number) < 9)
+		{
+			$number = '0' . $number;
+		}
+
+		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . $data->shortname . '/' . (($thumbnail === TRUE) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail === TRUE) ? $data->preview : $data->media_filename);
+	}
 }

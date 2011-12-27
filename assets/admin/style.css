@@ -79,3 +79,85 @@ table th + th, table td + td {
 .loading { display: none; width: 100%; text-align: center; margin: auto; }
 
 .vartext { padding: 5px; font-style: italic; font-size: 10px }
+
+
+
+
+.report {
+	margin:2px 20px;
+	margin-right:0px;
+	padding: 0 0 10px 10px;
+	background: #d6f0da;
+	border-bottom:1px solid #ccc;
+	clear:both;
+}
+
+.report_author {
+	font-weight: bold;
+	color: #117743;
+}
+
+.report .report_data {
+	padding:0 6px 0 0;
+}
+
+.report .report_file .report_file_filename {
+	text-overflow: ellipsis;
+	max-width:180px;
+	overflow:hidden;
+	white-space: nowrap;
+	display:inline-block;
+	position:relative;
+	top:2px;
+}
+
+.report .report_file .report_file_filename:hover {
+	max-width:none;
+}
+
+.report header{
+	padding-top:5px;
+	overflow:hidden;
+	display:-moz-inline-stack;
+}
+
+.report > .text {
+	padding: 7px 10px 0px 15px;
+	word-wrap: break-word;
+}
+
+.report > .thread_image_box {
+	float:left;
+	text-align:center;
+	color: #888;
+	max-width:140px;
+	margin:0 10px 0 4px;
+	font-size:0.8em;
+	line-height:130%;
+	padding-top:5px;
+	vertical-align:bottom;
+}
+.report .report_file {
+	word-wrap: break-word;
+	display:block;
+	overflow:hidden;
+	font-size:11px;
+	color:#888;
+	line-height:12px;
+	margin-top:5px;
+}
+
+.report .report_file .btnr {
+	font-size:10px;
+}
+
+.report > .thread_image_box > .report_file_controls {
+	margin: 0 -2px 0 -2px;
+	position:relative;
+	top:2px;
+}
+
+.report > .thread_image_box .report_image {
+	max-width:130px;
+	height:auto;
+}

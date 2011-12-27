@@ -134,7 +134,7 @@ var bindFunctions = function()
 		}
 	});
 
-	/*
+/*
 	jQuery("[data-expand=true]").click(function() {
 		var that = jQuery(this).children();
 
@@ -256,7 +256,7 @@ var backlinkify = function()
 		function () {
 			jQuery("#backlink").css('display', 'none').html('');
 		}
-	);
+		);
 }
 
 var timelapse = 10;
@@ -395,6 +395,22 @@ function replyHighlight(id)
 	toggleHighlight(id, 'highlight', true);
 }
 
+var changeTheme = function(theme)
+{
+	alert();
+	setCookie('foolfuuka_theme', theme, 30);
+	window.location.reload();
+}
+
+
+function setCookie(c_name,value,exdays)
+{
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate() + exdays);
+	var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+	document.cookie=c_name + "=" + c_value;
+}
+
 
 function getCookie( check_name ) {
 	// first we'll split this cookie up into name/value pairs
@@ -438,18 +454,18 @@ function getCookie( check_name ) {
 
 
 function eliminateDuplicates(arr) {
-  var i,
-      len=arr.length,
-      out=[],
-      obj={};
+	var i,
+	len=arr.length,
+	out=[],
+	obj={};
 
-  for (i=0;i<len;i++) {
-    obj[arr[i]]=0;
-  }
-  for (i in obj) {
-    out.push(i);
-  }
-  return out;
+	for (i=0;i<len;i++) {
+		obj[arr[i]]=0;
+	}
+	for (i in obj) {
+		out.push(i);
+	}
+	return out;
 }
 
 jQuery(document).ready(function() {

@@ -47,12 +47,18 @@ class Public_Controller extends MY_Controller
 		$this->config->load('theme');
 
 		// Set theme by using the theme variable
-		$this->template->set_theme((get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default'));
+		$this->fu_theme = (get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default');
+		if($this->input->cookie('foolfuuka_theme') && in_array($this->input->cookie('foolfuuka_theme'), array('default', 'fuuka')))
+		{
+			$this->fu_theme = $this->input->cookie('foolfuuka_theme');
+		}
+		
+		$this->template->set_theme($this->fu_theme);
 
 		// load the controller from the current theme, else load the default one
-		if (file_exists('content/themes/' . get_setting('fs_theme_dir') . '/theme_controller.php'))
+		if (file_exists('content/themes/' . $this->fu_theme . '/theme_controller.php'))
 		{
-			require_once('content/themes/' . get_setting('fs_theme_dir') . '/theme_controller.php');
+			require_once('content/themes/' . $this->fu_theme . '/theme_controller.php');
 		}
 		else
 		{
@@ -61,9 +67,9 @@ class Public_Controller extends MY_Controller
 		$this->TC = new Theme_Controller();
 
 		// load the functions from the current theme, else load the default one
-		if (file_exists('content/themes/' . get_setting('fs_theme_dir') . '/theme_functions.php'))
+		if (file_exists('content/themes/' . $this->fu_theme . '/theme_functions.php'))
 		{
-			require_once('content/themes/' . get_setting('fs_theme_dir') . '/theme_functions.php');
+			require_once('content/themes/' . $this->fu_theme . '/theme_functions.php');
 		}
 		else
 		{

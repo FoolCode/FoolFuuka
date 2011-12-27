@@ -170,7 +170,7 @@ var backlinkify = function()
 		if (post_id != thread_id)
 		{
 			jQuery.each(that.find("[data-backlink=true]"), function(idx, post) {
-				p_id = jQuery(post).text().replace('>>', '')
+				p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
 
 				if (typeof backlinks[p_id] == "undefined")
 				{

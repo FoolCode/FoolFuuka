@@ -528,6 +528,10 @@ article.thread .backlink.op {
 	line-height:13px;
 }
 
+#thread_o_matic > article.thread:nth-of-type(n+5) {
+	border-top: 2px solid #6A836F;
+}
+
 #thread_o_matic > article.thread > header {
 	text-align:center;
 }

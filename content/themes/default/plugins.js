@@ -397,7 +397,6 @@ function replyHighlight(id)
 
 var changeTheme = function(theme)
 {
-	alert();
 	setCookie('foolfuuka_theme', theme, 30);
 	window.location.reload();
 }

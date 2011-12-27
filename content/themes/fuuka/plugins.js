@@ -62,69 +62,60 @@ window.onload = function() {
   if (document.forms.postform && document.forms.postform.delpass) document.forms.postform.delpass.value = get_cookie("delpass");
 }
 
-function createCookie(name, value, days) {
-  if (days) {
-    var date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    var expires = "; expires=" + date.toGMTString();
-  } else
-  var expires = "";
-  document.cookie = name + "=" + value + expires + "; path=/";
+
+
+function setCookie(c_name,value,exdays)
+{
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate() + exdays);
+	var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+	document.cookie=c_name + "=" + c_value;
 }
 
-function readCookie(name) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(';');
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
+
+function getCookie( check_name ) {
+	// first we'll split this cookie up into name/value pairs
+	// note: document.cookie only returns name=value, not the other components
+	var a_all_cookies = document.cookie.split( ';' );
+	var a_temp_cookie = '';
+	var cookie_name = '';
+	var cookie_value = '';
+	var b_cookie_found = false; // set boolean t/f default f
+
+	for ( i = 0; i < a_all_cookies.length; i++ )
+	{
+		// now we'll split apart each name=value pair
+		a_temp_cookie = a_all_cookies[i].split( '=' );
+
+
+		// and trim left/right whitespace while we're at it
+		cookie_name = a_temp_cookie[0].replace(/^\s+|\s+$/g, '');
+
+		// if the extracted name matches passed check_name
+		if ( cookie_name == check_name )
+		{
+			b_cookie_found = true;
+			// we need to handle case where cookie has no value but exists (no = sign, that is):
+			if ( a_temp_cookie.length > 1 )
+			{
+				cookie_value = unescape( a_temp_cookie[1].replace(/^\s+|\s+$/g, '') );
+			}
+			// note that in cases where cookie is initialized but no value, null is returned
+			return cookie_value;
+			break;
+		}
+		a_temp_cookie = null;
+		cookie_name = '';
+	}
+	if ( !b_cookie_found )
+	{
+		return null;
+	}
 }
 
-function eraseCookie(name) {
-  createCookie(name, "", -1);
-}
 
-var displayedImages = new Array();
-
-var showImages = function() {
-  jQuery('.subreply blockquote').each(function(index, el) {
-    var counter = 0;
-    jQuery('a:not(:has(img))', $(el)).each(function(i, e) {
-      var href = $(e).attr('href');
-      var results = href.match(/http:\/\/\S+(\.png|\.jpg|\.gif)/g);
-      if (results instanceof Array) {
-        var stop = false;
-        jQuery.each(displayedImages, function(idx, val) {
-          if (results[0].indexOf(val) > -1 || results[0].indexOf('http://', 5) > -1) {
-            displayedImages.push(results[0]);
-            stop = true;
-            jQuery(el).parent('.subreply').parent().hide();
-            return false;
-          }
-        });
-        if (stop) {
-          return false;
-        }
-        displayedImages.push(results[0]);
-        var isImgur = null;
-        isImgur = href.match(/http:\/\/i\.imgur\S+(\.png|\.jpg|\.gif)/g);
-        if (isImgur instanceof Array) {
-          var idxof = isImgur[0].lastIndexOf('.');
-          edited = results[0].substr(0, idxof) + 'm';
-          edited += results[0].substr(idxof);
-          $(e).replaceWith("<a target=\"_blank\" href=\"" + results[0] + "\"><img src=\"" + edited + "\" style=\"max-width:200px;max-height:200px\" /></a>");
-        }
-        $(e).replaceWith("<a target=\"_blank\" href=\"" + results[0] + "\"><img src=\"" + results[0] + "\" style=\"max-width:200px;max-height:200px\" /></a>");
-        $(e).find('img').load(function() {
-
-        });
-        return false;
-        counter++;
-      }
-      if (counter == 1) return false;
-    });
-  });
+var changeTheme = function(theme)
+{
+	setCookie('foolfuuka_theme', theme, 30);
+	window.location.reload();
 }

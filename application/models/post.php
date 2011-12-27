@@ -52,9 +52,9 @@ class Post extends CI_Model
 
 		// @todo make the existence of this block useless or something
 		// load the functions from the current theme, else load the default one
-		if (file_exists('content/themes/' . get_setting('fs_theme_dir') . '/theme_functions.php'))
+		if (file_exists('content/themes/' . $this->fu_theme . '/theme_functions.php'))
 		{
-			require_once('content/themes/' . get_setting('fs_theme_dir') . '/theme_functions.php');
+			require_once('content/themes/' . $this->fu_theme . '/theme_functions.php');
 		}
 		else
 		{

@@ -316,18 +316,18 @@ article.thread article.post:nth-of-type(-n+4) {
 	color:#888;
 	line-height:12px;
 	margin-top:5px;
-}
-
-
-.post .post_file .post_file_filename.unshown {
-	display:none;
+	margin-right:5px;
 }
 
 .post .post_file .post_file_filename.shown {
 	display:inline;
 
 }
-	
+
+.post .post_file .post_file_filename.unshown {
+	display:none;
+}
+
 .post .post_file:hover .post_file_filename.shown {
 	display:none;
 }

@@ -23,11 +23,17 @@ function build_board_comment($p, $modifiers = array()) {
 								<span class="post_file_controls">
 									<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btnr parent">Google</a>
 								</span>
-								
-								<span class="post_file_filename unshown"><?php echo $p->media ?></span>
-								
-								<span class="post_file_filename shown"><?php echo character_limiter($p->media, 8) ?></span>,
-								
+								<span class="post_file_filename unshown"><?php echo $p->media ?></span><span class="post_file_filename shown"><?php 
+								if(mb_strlen($p->media) > 38)
+								{
+									$ext_pos = strrpos($p->media, '.');
+									echo substr($p->media, 0, 32).' (...)'.substr($p->media, $ext_pos);
+								}
+								else
+								{
+									echo $p->media;
+								}
+								?></span>,
 								<span class="post_file_metadata"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></span>
 							</div>
 							<div class="thread_image_box">

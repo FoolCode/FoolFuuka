@@ -12,33 +12,36 @@ if (!defined('BASEPATH'))
 				<div class="theader">
 					Reply to Thread <a class="tooltip-red" href="#">[?] <span>Don't expect anything heroic. Your post will not be uploaded to the original board.</span></a>
 				</div>
+				<?php if(isset($reply_errors)) : ?>
+			<span style="color:red"><?php echo $reply_errors ?></span>
+		<?php endif; ?>
 				<table>
 					<tbody>
 						<tr>
 							<td class="postblock">Name</td>
-							<td><?php echo form_input(array('name' => 'reply_bokunonome', 'id' => 'reply_name', 'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:''))); ?></td>
+							<td><?php echo form_input(array('name' => 'NAMAE', 'size' => 63, 'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:''))); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock">E-mail</td>
-							<td><?php echo form_input(array('name' => 'reply_elitterae', 'id' => 'reply_email', 'value' => ((isset($this->fu_reply_email))?$this->fu_reply_email:''))); ?></td>
+							<td><?php echo form_input(array('name' => 'MERU', 'size' => 63, 'value' => ((isset($this->fu_reply_email))?$this->fu_reply_email:''))); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock">Subject</td>
-							<td><?php echo form_input(array('name' => 'reply_talkingde', 'id' => 'reply_subject')); ?></td>
+							<td><?php echo form_input(array('name' => 'subject', 'size' => 63)); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock">Comment</td>
-							<td><?php echo form_textarea(array('name' => 'reply_chennodiscursus', 'id' => 'reply_comment')); ?></td>
+							<td><?php echo form_textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock">Password</td>
-							<td><?php echo form_password(array('name' => 'reply_nymphassword', 'id' => 'reply_password', 'value' => $this->fu_reply_password)); ?></td>
+							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock">Action</td>
 							<td>
 								<?php
-									echo form_hidden('reply_numero', $thread_id);
+									echo form_hidden('parent', $thread_id);
 									echo form_submit(array(
 										'name' => 'reply_action',
 										'value' => 'Submit'

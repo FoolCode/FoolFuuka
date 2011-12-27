@@ -53,7 +53,7 @@ $modifiers = array();
 	site_url = '<?php echo site_url() ?>';
 	board_shortname = '<?php echo get_selected_board()->shortname ?>';
 	thread_doc_id = 1;
-	thread_id = 1;
+	//thread_id = 1;
 	thread_json = <?php echo json_encode($threads) ?>;
 	//thread_latest_timestamp = thread_json[thread_id].posts[(thread_json[thread_id].posts.length - 1)].timestamp;
 </script>

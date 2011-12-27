@@ -208,7 +208,7 @@ var backlinkify = function()
 			var height = that.height();
 			var width = that.width();
 
-			
+
 			if(that.attr('data-backlink') != 'true')
 			{
 				thread_id = that.attr('data-backlink');
@@ -232,7 +232,7 @@ var backlinkify = function()
 					}
 				});
 			}
-			
+
 			if(jQuery(window).width() < pos.left + backlink.width())
 			{
 				backlink.css({
@@ -487,7 +487,7 @@ jQuery(document).ready(function() {
 		replyHighlight(post[1]);
 	}
 
-	if (typeof thread_id != "undefined" || thread_id > 0)
+	if (typeof thread_id != "undefined")
 	{
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
 		backlinkify();

@@ -30,11 +30,11 @@ class Chan extends Public_Controller
 		$this->template->set('disable_headers', TRUE);
 		$this->template->build('index');
 	}
-	
+
 	public function thread_o_matic()
 	{
 		$threads = $this->post->thread_o_matic();
-		
+
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('section_title', 'thread-O-matic 2.39b (name subject to change)');
 		$this->template->set('threads', $threads);
@@ -55,7 +55,7 @@ class Chan extends Public_Controller
 		if (!is_natural($page) || $page > 500)
 		{
 			show_404();
-		}	
+		}
 
 		$page = intval($page);
 
@@ -166,7 +166,7 @@ class Chan extends Public_Controller
 			if ($this->form_validation->run() !== FALSE)
 			{
 				$data['num'] = $this->input->post('reply_numero');
-				;
+
 				$data['name'] = $this->input->post('reply_bokunonome');
 				$data['email'] = $this->input->post('reply_elitterae');
 				$data['subject'] = $this->input->post('reply_talkingde');

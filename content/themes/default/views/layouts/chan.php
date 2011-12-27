@@ -11,14 +11,14 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap/style.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
 		<?php
 		if ($this->config->item('theme_extends') != '' &&
-				$this->config->item('theme_extends') != get_setting('fs_theme_dir') &&
+				$this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme : 'default') &&
 				$this->config->item('theme_extends_css') === TRUE &&
 				file_exists('content/themes/' . $this->config->item('theme_extends') . '/style.css'))
 		{
 			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOLSLIDE_VERSION);
 		}
-		if (file_exists('content/themes/' . get_setting('fs_theme_dir') . '/style.css'))
-			echo link_tag('content/themes/' . get_setting('fs_theme_dir') . '/style.css?v=' . FOOLSLIDE_VERSION);
+		if (file_exists('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css'))
+			echo link_tag('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css?v=' . FOOLSLIDE_VERSION);
 		?>
 	<!--	<link rel="sitemap" type="application/xml" title="Sitemap" href="<?php echo site_url() ?>sitemap.xml" />
 		<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo site_url() ?>rss.xml" />
@@ -89,7 +89,7 @@
 		<script>window.jQuery || document.write('<script src="<?php echo site_url() ?>/js/libs/jquery-1.6.4.min.js"><\/script>')</script>
 		<script defer type="text/javascript" src="<?php echo site_url() ?>assets/bootstrap/bootstrap.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<script defer type="text/javascript" src="<?php echo site_url() ?>assets/js/jquery.localize.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
-		<script defer src="<?php echo site_url() ?>content/themes/<?php echo get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
+		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<?php if(get_setting('fs_theme_google_analytics')) : ?>
 		<script>
 			var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us'],['_trackPageview'],['_trackPageLoadTime']];

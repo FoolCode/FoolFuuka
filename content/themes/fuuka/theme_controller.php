@@ -56,13 +56,13 @@ class Theme_Controller {
 			$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_lenght[3]|max_lenght[1000]|xss_clean');
 			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_lenght[3]|max_lenght[32]|xss_clean');
 
-			/*
+
 			if ($this->CI->tank_auth->is_allowed())
 			{
 				$this->CI->form_validation->set_rules('reply_postas', 'Post as', 'required|callback__is_valid_allowed_tag|xss_clean');
 				$this->CI->form_validation->set_message('_is_valid_allowed_tag', 'You didn\'t specify a correct type of user to post as');
 			}
-			 */
+
 
 			if ($this->CI->form_validation->run() !== FALSE)
 			{
@@ -74,7 +74,7 @@ class Theme_Controller {
 				$data['comment'] = $this->CI->input->post('KOMENTO');
 				$data['password'] = $this->CI->input->post('delpass');
 				$data['postas'] = 'N';
-				/*
+
 				if ($this->CI->tank_auth->is_allowed())
 				{
 					$data['postas'] = $this->CI->input->post('reply_postas');
@@ -83,7 +83,7 @@ class Theme_Controller {
 				{
 					$data['postas'] = 'N';
 				}
-				*/
+
 
 				// check if the thread exists (this could be made lighter but whatever for now) @todo
 				$thread = $this->CI->post->get_thread($data['num']);
@@ -100,6 +100,9 @@ class Theme_Controller {
 				}
 				else if (isset($result['success']))
 				{
+					$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $data['num']));
+					$this->CI->template->set_layout('redirect');
+					$this->CI->template->build('board');
 					return TRUE;
 				}
 			}
@@ -121,8 +124,11 @@ class Theme_Controller {
 				);
 
 				$result = $this->CI->post->delete($post);
-				print_r($result);
 			}
+
+			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('parent')));
+			$this->CI->template->set_layout('redirect');
+			$this->CI->template->build('board');
 		}
 	}
 

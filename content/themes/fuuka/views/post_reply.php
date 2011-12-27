@@ -37,6 +37,18 @@ if (!defined('BASEPATH'))
 							<td class="postblock">Password</td>
 							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)); ?></td>
 						</tr>
+						<?php if($this->tank_auth->is_allowed()) : ?>
+						<tr>
+							<td class="postblock">Post As</td>
+							<td>
+								<?php
+								$postas = array('user' => 'User', 'mod' => 'Moderator');
+								if($this->tank_auth->is_admin()) { $postas['admin'] = 'Administrator'; }
+								echo form_dropdown('reply_postas', $postas,'id="reply_postas"');
+								?>
+							</td>
+						</tr>
+						<?php endif; ?>
 						<tr>
 							<td class="postblock">Action</td>
 							<td>

@@ -54,12 +54,6 @@ function toggle(id) {
 window.onload = function() {
   arr = location.href.split(/#/);
   if (arr[1]) replyhighlight(arr[1]);
-
-  if (document.forms.postform && document.forms.postform.NAMAE) document.forms.postform.NAMAE.value = get_cookie("name");
-
-  if (document.forms.postform && document.forms.postform.MERU) document.forms.postform.MERU.value = get_cookie("email");
-
-  if (document.forms.postform && document.forms.postform.delpass) document.forms.postform.delpass.value = get_cookie("delpass");
 }
 
 

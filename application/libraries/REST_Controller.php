@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class REST_Controller extends MY_Controller
+class REST_Controller extends Public_Controller
 {
 
 	protected $rest_format = NULL; // Set this in a controller to use a default format

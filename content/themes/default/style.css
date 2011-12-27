@@ -303,18 +303,37 @@ article.thread article.post:nth-of-type(-n+4) {
 	padding:0 6px 0 0;
 }
 
-.post .post_file .post_file_filename {
-	text-overflow: ellipsis;
-	max-width:180px;
-	overflow:hidden;
-	white-space: nowrap;
-	display:inline-block;
-	position:relative;
-	top:2px;
+
+.post .post_file .btnr {
+	font-size:10px;
 }
 
-.post .post_file .post_file_filename:hover {
-	max-width:none;
+.post .post_file {
+	word-wrap: break-word;
+	display:block;
+	overflow:hidden;
+	font-size:11px;
+	color:#888;
+	line-height:12px;
+	margin-top:5px;
+}
+
+
+.post .post_file .post_file_filename.unshown {
+	display:none;
+}
+
+.post .post_file .post_file_filename.shown {
+	display:inline;
+
+}
+	
+.post .post_file:hover .post_file_filename.shown {
+	display:none;
+}
+
+.post .post_file:hover .post_file_filename.unshown {
+	display:inline;
 }
 
 .post header{
@@ -338,19 +357,6 @@ article.thread article.post:nth-of-type(-n+4) {
 	line-height:130%;
 	padding-top:5px;
 	vertical-align:bottom;
-}
-.post .post_file {
-	word-wrap: break-word;
-	display:block;
-	overflow:hidden;
-	font-size:11px;
-	color:#888;
-	line-height:12px;
-	margin-top:5px;
-}
-
-.post .post_file .btnr {
-	font-size:10px;
 }
 
 .post > .thread_image_box > .post_file_controls {

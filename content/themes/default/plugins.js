@@ -1,6 +1,6 @@
 var bindFunctions = function()
 {
-	jQuery("[data-function]").click(function() {
+	jQuery("body").delegate("[data-function]", "click", function(event) {
 		var el = jQuery(this);
 		var post = el.data("post");
 		var modal = jQuery("#post_tools_modal");
@@ -10,10 +10,12 @@ var bindFunctions = function()
 				break;
 
 			case 'quote':
-				jQuery("#reply_comment").append(">>" + post + "\n");
+				jQuery("#reply_comment").val(jQuery("#reply_comment").val() + ">>" + post + "\n");
 				break;
 
 			case 'comment':
+				var reply_alert = jQuery('#reply_ajax_notices');
+				reply_alert.removeClass('error').removeClass('success');
 				jQuery.ajax({
 					url: site_url + board_shortname + '/sending' ,
 					async: false,
@@ -30,23 +32,28 @@ var bindFunctions = function()
 						reply_action: 'Submit'
 					},
 					success: function(data){
-						var reply_alert = jQuery("#reply_alert");
 						if (data.error != "")
 						{
 							reply_alert.html(data.error);
+							reply_alert.addClass('error');
+							reply_alert.show();
 							return false;
 						}
 						reply_alert.html(data.success);
-						setTimeout(function() { reply_alert.html('') }, 5000);
-						jQuery("#reply_comment").val('')
+						reply_alert.addClass('success');
+						reply_alert.show();
+						jQuery("#reply_comment").val("");
 						realtimethread();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
+						reply_alert.html('Connection error.');
+						reply_alert.addClass('error');
+						reply_alert.show();
 					},
 					complete: function() {
 					}
 				});
-				return false;
+				event.preventDefault();
 				break;
 
 			case 'delete':
@@ -285,7 +292,7 @@ var realtimethread = function(){
 			{
 				if(timelapse < 30)
 				{
-					timelapse += 10;
+					timelapse += 5;
 				}
 			}
 			currentlapse = setTimeout(realtimethread, timelapse*1000);
@@ -301,7 +308,7 @@ var realtimethread = function(){
 
 var realtime_callback = function(){
 	backlinkify();
-	bindFunctions();
+	//bindFunctions();
 	timify();
 }
 

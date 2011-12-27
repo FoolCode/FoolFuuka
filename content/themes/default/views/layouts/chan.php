@@ -53,11 +53,6 @@
 				<?php if(isset($section_title)): ?>
 				<h3 class="section_title"><?php echo $section_title ?></h3>
 				<?php else : ?>
-					<div class="section_title">
-						Here's a <a style="text-decoration:underline" href="http://foolrulez.org/blog/2011/12/foolfuuka/" target="_blank">brief post</a> about what's new and development status of the new archiver. 
-						We were being asked for features we already implemented silently, so you might want to read.
-						We're of course seeking for suggestions, so drop us some line so we know what should we focus on.
-					</div>
 				<?php endif; ?>
 
 

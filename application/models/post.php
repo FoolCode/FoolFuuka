@@ -755,7 +755,7 @@ class Post extends CI_Model
 				if (time() - strtotime($row->lastpost) < 10 && !$this->tank_auth->is_allowed()) // 20 seconds
 				{
 
-					return array('error' => 'You must wait at least 10 seconds before posting again.');
+					//return array('error' => 'You must wait at least 10 seconds before posting again.');
 				}
 
 				$this->db->where('id', $row->id);

@@ -20,9 +20,9 @@ html {
 body {
 	min-height:100%;
 	color:#364041;
-	background:#EEF8F0;
 	padding:0;
 	margin:0;
+	background:#6A836F;
 }
 
 ::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
@@ -30,6 +30,7 @@ body {
 
 .container-fluid {
 	padding: 0;
+	background:#EEF8F0;
 }
 
 #header {
@@ -101,6 +102,7 @@ body {
 }
 
 #main {
+	min-height:400px;
 }
 
 #main .section_title {
@@ -129,8 +131,10 @@ body {
 }
 
 .btnr, .btnr:visited {
-	padding:1px 3px 2px;
-	background:#C8E4CE;
+	padding:0px 3px 1px;
+	background:transparent;
+	border:1px solid #ccc;
+	border: 1px solid rgba(0,0,0,0.1);
 	text-shadow:none;
 	margin: 0 2px;
 	color:#333;
@@ -141,8 +145,11 @@ body {
 }
 
 .btnr:hover {
-	background:	#6a836f;
-	color:#f5f5f5;
+	border:1px solid #888;
+	border: 1px solid rgba(0,0,0,0.4);
+	color:#000;
+	text-decoration: none;
+	cursor:pointer;
 }
 
 /* board */
@@ -314,9 +321,10 @@ article.thread article.post:nth-of-type(-n+4) {
 	overflow:hidden;
 	font-size:11px;
 	color:#888;
-	line-height:12px;
-	margin-top:5px;
+	line-height:18px;
+	margin-top:3px;
 	margin-right:5px;
+	margin-bottom:-4px;
 }
 
 .post .post_file .post_file_filename.shown {
@@ -360,9 +368,6 @@ article.thread article.post:nth-of-type(-n+4) {
 }
 
 .post > .thread_image_box > .post_file_controls {
-	margin: 0 -2px 0 -2px;
-	position:relative;
-	top:2px;
 }
 
 .post > .thread_image_box .post_image {
@@ -395,14 +400,6 @@ article.thread article.post:nth-of-type(-n+4) {
 
 .post.highlight {
 	background: #eedbea;
-}
-
-.post.highlight .btnr, .post.highlight .btnr:visited {
-	background: #e4c9e7;
-}
-
-.post.highlight .btnr:hover {
-	background: #b182b5;
 }
 
 #backlink {
@@ -538,6 +535,7 @@ article.thread .backlink.op {
 #thread_o_matic > article.thread > header .post_controls{
 	display:block;
 	margin-top:3px;
+	margin-bottom:2px;
 }
 
 #thread_o_matic > article.thread > .thread_image_box{

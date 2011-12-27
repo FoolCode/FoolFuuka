@@ -17,4 +17,5 @@ if (!defined('BASEPATH'))
 		?>
 		]
 	</h2>
+	<img src="<?php echo site_url() . 'content/themes/default/images/dat_cat.png' ?>" style="max-width:60%;position:absolute; top:-20px; right:30px;"/>
 </article>

@@ -76,7 +76,7 @@ class Post extends CI_Model
 	}
 
 
-	function thread_o_matic()
+	function gallery()
 	{
 		$query = $this->db->query('
 			SELECT DISTINCT *

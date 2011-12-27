@@ -31,15 +31,15 @@ class Chan extends Public_Controller
 		$this->template->build('index');
 	}
 
-	public function thread_o_matic()
+	public function gallery()
 	{
-		$threads = $this->post->thread_o_matic();
+		$threads = $this->post->gallery();
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
-		$this->template->set('section_title', 'thread-O-matic 2.39b (name subject to change)');
+		$this->template->set('section_title', 'Gallery ß - Showing: threads');
 		$this->template->set('threads', $threads);
 		$this->template->set_partial('top_tools', 'top_tools');
-		$this->template->build('thread_o_matic');
+		$this->template->build('gallery');
 	}
 
 

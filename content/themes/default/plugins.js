@@ -56,6 +56,11 @@ var bindFunctions = function()
 				event.preventDefault();
 				break;
 
+			case 'realtimethread':
+				realtimethread();
+				event.preventDefault();
+				break
+
 			case 'delete':
 				var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
 				modal.find(".title").html('Delete - Post No. ' + el.data("post-id"));
@@ -492,6 +497,16 @@ jQuery(document).ready(function() {
 		backlinkify();
 		realtimethread();
 	}
+	
+	if (typeof page_function != "undefined")
+	{
+		if(page_function == "gallery")
+		{
+			window.thread_id = 0;
+			backlinkify();
+		}
+	}
+	
 	bindFunctions();
 	timify();
 });

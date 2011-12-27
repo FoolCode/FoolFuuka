@@ -147,7 +147,7 @@ var bindFunctions = function()
 
 		return false;
 	});
-	*/
+*/
 }
 
 var timify = function() {
@@ -172,7 +172,7 @@ var backlinkify = function()
 					backlinks[p_id] = [];
 				}
 
-				backlinks[p_id].push('<a href="' + site_url + board_shortname + '/thread/' + thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id + '</a>');
+				backlinks[p_id].push('<a href="' + site_url + board_shortname + '/thread/' + thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
 				backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
 			});
 		}
@@ -308,7 +308,6 @@ var realtimethread = function(){
 
 var realtime_callback = function(){
 	backlinkify();
-	//bindFunctions();
 	timify();
 }
 

@@ -516,7 +516,7 @@ article.thread .backlink.op {
 
 
 #thread_o_matic {
-	
+
 }
 
 #thread_o_matic > article.thread {
@@ -553,7 +553,7 @@ article.thread .backlink.op {
 	display:block;
 	margin-top:3px;
 }
-	
+
 #thread_o_matic > article.thread > .thread_image_box .thread_image{
 	max-width:100%;
 	height:auto;
@@ -618,4 +618,9 @@ article.thread .backlink.op {
 
 .spoiler:hover {
 	color:#fff;
+}
+
+.banned {
+	color:#ff0000;
+	font-weight:bold;
 }

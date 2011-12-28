@@ -1141,7 +1141,7 @@ class Post extends CI_Model
 		);
 
 		$adminreplace = array(
-			"'\[banned\](.*?)\[/banned\]'i",
+			'<span class="banned">\\1</span>',
 		);
 
 

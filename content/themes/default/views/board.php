@@ -98,14 +98,28 @@ foreach ($posts as $key => $post) :
 	thread_id = <?php echo $thread_id ?>;
 	thread_json = <?php echo json_encode($posts) ?>;
 
+	var getLatestID = function(data)
+	{
+		var max = data[data.length-1].doc_id;
+		for ( index = 0; index < data.length; index++ )
+		{
+			if ( data[index].doc_id > max )
+			{
+				max = data[index].doc_id;
+			}
+		}
+
+		return max;
+	}
+
 	if (typeof thread_json[thread_id].posts != "undefined")
 	{
-		thread_latest_timestamp = thread_json[thread_id].posts[(thread_json[thread_id].posts.length - 1)].timestamp;
+		thread_latest_doc_id = getLatestID(thread_json[thread_id].posts);
 	}
 	else
 	{
 		thread_json[thread_id].posts = [];
-		thread_latest_timestamp = 0;
+		thread_latest_doc_id = 0;
 	}
 	<?php endif; ?>
 </script>

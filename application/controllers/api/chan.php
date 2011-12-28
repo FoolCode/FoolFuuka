@@ -173,6 +173,7 @@ class Chan extends REST_Controller
 			$doc_id = intval($this->get('doc_id'));
 			$latest_doc_id = intval($this->get('latest_doc_id'));
 			$num = array('doc_id' => $doc_id, 'num' => $num, 'latest_doc_id' => $latest_doc_id);
+			$from_realtime = TRUE;
 		}
 
 		$thread = $this->post->get_thread($num, TRUE, TRUE, TRUE);
@@ -183,6 +184,12 @@ class Chan extends REST_Controller
 		}
 		else
 		{
+			if($from_realtime)
+			{
+				$response = array();
+				$response[$num['num']] = array('posts' => array());
+				$this->response($response, 200);
+			}
 			// no comics
 			$this->response(array('error' => _('Thread could not be found')), 200);
 		}

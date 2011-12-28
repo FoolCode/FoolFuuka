@@ -29,6 +29,7 @@ var bindFunctions = function()
 						reply_talkingde: jQuery("#reply_subject").val(),
 						reply_chennodiscursus: jQuery("#reply_comment").val(),
 						reply_nymphassword: jQuery("#reply_password").val(),
+						reply_postas: jQuery("#reply_postas").val(),
 						reply_action: 'Submit'
 					},
 					success: function(data){
@@ -267,12 +268,6 @@ var backlinkify = function()
 var timelapse = 10;
 var currentlapse = 0;
 var realtimethread = function(){
-	latest_doc_id = 0;
-	if(typeof thread_json[thread_id].posts != undefined)
-		jQuery.each(thread_json[thread_id].post, function(idx, val){
-			if(val.doc_id > latest_doc_id)
-				latest_doc_id = val.doc_id;
-		});
 	clearTimeout(currentlapse);
 	jQuery.ajax({
 		url: site_url + 'api/chan/thread/' ,
@@ -284,17 +279,18 @@ var realtimethread = function(){
 			doc_id : thread_doc_id,
 			num : thread_id,
 			board: board_shortname,
-			latest_doc_id: latest_doc_id
+			latest_doc_id: thread_latest_doc_id
 		},
 		success: function(data){
-			if(data[thread_id].posts instanceof Array) {
+			if(data[thread_id].posts instanceof Array && data[thread_id].posts.length > 0) {
 				jQuery.each(data[thread_id].posts, function(idx, value){
-					if(typeof thread_json[value.num] != undefined)
+					if(typeof thread_json[thread_id] != undefined)
 					{
 						thread_json[thread_id].posts.push(value);
 						jQuery('article.thread aside').append(value.formatted);
 					}
 				});
+				thread_latest_doc_id = getLatestID(data[thread_id].posts);
 				timelapse = 10;
 				realtime_callback();
 			}
@@ -519,7 +515,7 @@ jQuery(document).ready(function() {
 		backlinkify();
 		realtimethread();
 	}
-	
+
 	if (typeof page_function != "undefined")
 	{
 		if(page_function == "gallery")
@@ -528,7 +524,7 @@ jQuery(document).ready(function() {
 			backlinkify();
 		}
 	}
-	
+
 	bindFunctions();
 	timify();
 });

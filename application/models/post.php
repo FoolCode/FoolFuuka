@@ -366,9 +366,9 @@ class Post extends CI_Model
 			{
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->table . '
-					WHERE doc_id = ? OR (parent = ? AND doc_id > ?)
+					WHERE parent = ? AND doc_id > ?
 					ORDER BY num, subnum ASC;
-				', array($num['doc_id'], $num['num'], $num['latest_doc_id']));
+				', array($num['num'], $num['latest_doc_id']));
 			}
 			$num = $num['num'];
 		}

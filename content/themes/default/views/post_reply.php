@@ -76,7 +76,7 @@ if (!defined('BASEPATH'))
 					{
 						$postas['admin'] = 'Administrator';
 					}
-					echo form_dropdown('reply_postas', $postas,'id="reply_postas"'); ?>
+					echo form_dropdown('reply_postas', $postas, 'User', 'id="reply_postas"'); ?>
 				</div>
 			</div>
 			<?php endif; ?>

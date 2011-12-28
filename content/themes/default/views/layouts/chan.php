@@ -39,7 +39,7 @@
 				$board_urls = array();
 				foreach ($boards as $key => $item)
 				{
-					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery">+</a>';
+					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
 				}
 				echo implode(' / ', $board_urls)
 				?>

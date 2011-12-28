@@ -11,7 +11,7 @@ if (!defined('BASEPATH'))
 		$board_urls = array();
 		foreach ($boards as $key => $board)
 		{
-			$board_urls[] = '<a href="' . $board->href() . '">'.$board->shortname.'</a>';
+			$board_urls[] = '<a href="' . $board->href() . '">'.$board->shortname.'</a> <a href="' . $board->href() . 'gallery/">+</a>';
 		}
 		echo implode(' / ', $board_urls)
 		?>

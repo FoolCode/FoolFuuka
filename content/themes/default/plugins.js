@@ -267,6 +267,12 @@ var backlinkify = function()
 var timelapse = 10;
 var currentlapse = 0;
 var realtimethread = function(){
+	latest_doc_id = 0;
+	if(typeof thread_json[thread_id].posts != undefined)
+		jQuery.each(thread_json[thread_id].post, function(idx, val){
+			if(val.doc_id > latest_doc_id)
+				latest_doc_id = val.doc_id;
+		});
 	clearTimeout(currentlapse);
 	jQuery.ajax({
 		url: site_url + 'api/chan/thread/' ,
@@ -278,7 +284,7 @@ var realtimethread = function(){
 			doc_id : thread_doc_id,
 			num : thread_id,
 			board: board_shortname,
-			timestamp: thread_latest_timestamp
+			latest_doc_id: latest_doc_id
 		},
 		success: function(data){
 			if(data[thread_id].posts instanceof Array) {
@@ -289,7 +295,6 @@ var realtimethread = function(){
 						jQuery('article.thread aside').append(value.formatted);
 					}
 				});
-				thread_latest_timestamp = data[thread_id].posts[data[thread_id].posts.length-1].timestamp;
 				timelapse = 10;
 				realtime_callback();
 			}

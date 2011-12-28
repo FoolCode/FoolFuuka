@@ -28,7 +28,13 @@ class Report extends DataMapper
 
 	function __construct($id = NULL)
 	{
-		parent::__construct($id);
+		parent::__construct(NULL);
+
+		// We've overwrote some functions, and we need to use the get() from THIS model
+		if (!empty($id) && is_numeric($id))
+		{
+			$this->where('id', $id)->get();
+		}
 	}
 
 
@@ -38,27 +44,110 @@ class Report extends DataMapper
 	}
 
 
+	public function get($limit = NULL, $offset = NULL)
+	{
+		$CI = & get_instance();
+
+		return parent::get($limit, $offset);
+	}
+
+
+	public function get_post()
+	{
+		$CI = & get_instance();
+
+		$boards = new Board();
+		$boards->get();
+
+		foreach ($boards->all as $board)
+		{
+			if ($board->id == $this->board)
+			{
+				$sql = 'SELECT *, CONCAT('.$this->db->escape($board->shortname).') AS shortname
+					FROM ' . $this->get_table($board->shortname) . '
+					LEFT JOIN
+						(
+							SELECT id as report_id, post as report_post, reason as report_reason, status as report_status, created as report_created
+							FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+							WHERE `id` = ' . $this->id . '
+						) as q
+						ON
+						' . $this->get_table($board->shortname) . '.`doc_id`
+						=
+						' . $this->db->protect_identifiers('q') . '.`report_post`
+					LEFT JOIN
+						(
+							SELECT id AS poster_id_join,
+								ip AS poster_ip, user_agent AS poster_user_agent,
+								banned AS poster_banned, banned_reason AS poster_banned_reason,
+								banned_start AS poster_banned_start, banned_end AS poster_banned_end
+							FROM'.$this->db->protect_identifiers('posters', TRUE).'
+						) as p
+						ON ' . $this->get_table($board->shortname) . '.`poster_id`
+						=
+						' . $this->db->protect_identifiers('p') . '.`poster_id_join`
+					WHERE doc_id = ' . $this->db->escape($this->post) . '
+					LIMIT 0, 1';
+			}
+		}
+
+		$query = $this->db->query($sql);
+
+		return $query->result();
+	}
+
+
 	public function add($data = array())
 	{
 		if (!$this->update_report_db($data))
 		{
 			log_message('error', 'add_report: failed writing to database');
-			return false;
+			return FALSE;
 		}
 
-		return true;
+		return TRUE;
+	}
+
+
+	public function ban()
+	{
+		$post = $this->get_post();
+
+		if ($post[0]->poster_id == 0)
+		{
+			set_notice('error', _('There is no poster information associated with this post.'));
+			log_message('error', 'report_ban: no poster information assocated with report');
+			return FALSE;
+		}
+
+		/*
+		if (!$this->ban_ip($post[0]->poster_ip))
+		{
+			log_message('error', 'report_ban: failed to ban poster ip');
+			return FALSE;
+		}*/
+
+		if (!$this->remove_report_db())
+		{
+			log_message('error', 'report_ban: failed to remove report');
+			return FALSE;
+		}
+
+		return $post[0];
 	}
 
 
 	public function remove()
 	{
-		if (!$this->remove_report_db($data))
+		$post = $this->get_post();
+
+		if (!$this->remove_report_db())
 		{
 			log_message('error', 'remove_report: failed to remove database entry');
-			return false;
+			return FALSE;
 		}
 
-		return true;
+		return TRUE;
 	}
 
 
@@ -67,7 +156,7 @@ class Report extends DataMapper
 		if (!isset($data["id"]) && $data["id"] == '')
 		{
 			log_message('error', 'process_report: failed to process report completely');
-			return false;
+			return FALSE;
 		}
 
 		// update_report_db with approval/rejection/etc.
@@ -78,10 +167,10 @@ class Report extends DataMapper
 			if (!$this->move_thumbnail($source, $destination))
 			{
 				log_message('error', 'process_report: failed to move thumbnail to spam folder');
-				return false;
+				return FALSE;
 			}
 		}
-		return true;
+		return TRUE;
 	}
 
 
@@ -94,7 +183,7 @@ class Report extends DataMapper
 			{
 				set_notice('error', 'The report you wish to modify doesn\'t exist.');
 				log_message('error', 'update_report_db: failed to find requested id');
-				return false;
+				return FALSE;
 			}
 		}
 
@@ -116,10 +205,10 @@ class Report extends DataMapper
 				set_notice('error', 'Failed to save this entry to the database for unknown reasons.');
 				log_message('error', 'update_report_db: failed to save entry');
 			}
-			return false;
+			return FALSE;
 		}
 
-		return true;
+		return TRUE;
 	}
 
 
@@ -129,10 +218,10 @@ class Report extends DataMapper
 		{
 			set_notice('error', 'This report couldn\'t be removed from the database for unknown reasons.');
 			log_message('error', 'remove_report_db: failed to removed requested id');
-			return false;
+			return FALSE;
 		}
 
-		return true;
+		return TRUE;
 	}
 
 
@@ -142,9 +231,9 @@ class Report extends DataMapper
 		{
 			set_notice('error', 'This thumbnail could not be moved. Please check your file permissions.');
 			log_message('error', 'move_thumbnail: failed to move thumbnail');
-			return false;
+			return FALSE;
 		}
-		return true;
+		return TRUE;
 	}
 
 

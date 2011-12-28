@@ -36,28 +36,9 @@ class Boards extends Admin_Controller
 	}
 
 
-	function reports($action = NULL, $num = 1)
+	function reports()
 	{
-		$this->viewdata["function_title"] = _('Reports');
-		$reports = new Report();
-
-		if ($action == 'delete')
-		{
-			return FALSE;
-		}
-		if ($action == 'spam')
-		{
-			return FALSE;
-
-		}
-		if ($action == 'ban')
-		{
-			return FALSE;
-		}
-
-		$data["reports"] = $reports->list_reports_all_boards($num);
-		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/reports.php", $data, TRUE);
-		$this->load->view("admin/default.php", $this->viewdata);
+		redirect('admin/reports/');
 	}
 
 

@@ -22,7 +22,7 @@ class System extends Admin_Controller
 
 	/*
 	 * A page telling if there's an ugrade available
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function index()
@@ -75,7 +75,7 @@ class System extends Admin_Controller
 				'help' => sprintf(_('FoOlSlide uses %s via command line to maximize the processor power for processing images. If ImageMagick %s automatically, enter the location of the "convert" binary on your server in the field above.'), '<a href="#" rel="popover-below" title="ImageMagick" data-content="' . _('This is a library used to dynamically create, edit, compose or convert images.') . '">ImageMagick</a>', '<a href="#" rel="popover-below" title="' . _('ImageMagick Binary') . '" data-content="' . htmlspecialchars(_('This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" >' . _('can\'t be found') . '</a>')
 			)
 		);
-		
+
 		$form[] = array(
 			_('Boards directory'),
 			array(
@@ -85,7 +85,7 @@ class System extends Admin_Controller
 				'help' => _('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
 			)
 		);
-		
+
 		$form[] = array(
 			_('Boards URL'),
 			array(
@@ -95,7 +95,7 @@ class System extends Admin_Controller
 				'help' => _('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
 			)
 		);
-		
+
 		$form[] = array(
 			_('Boards database'),
 			array(
@@ -131,7 +131,7 @@ class System extends Admin_Controller
 	 * _submit is a private function that submits to the "preferences" table.
 	 * entries that don't exist are created. the preferences table could get very large
 	 * but it's not really an issue as long as the variables are kept all different.
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function _submit($post, $form)
@@ -191,16 +191,6 @@ class System extends Admin_Controller
 		$data["form_title"] = _("Tools");
 
 		$data["imagick_optimize"] = FALSE;
-		if (find_imagick())
-		{
-			$page = new Page();
-			$page->where('description', '')->limit(1)->get();
-			if ($page->result_count() == 1)
-			{
-				$data["imagick_optimize"] = TRUE;
-			}
-		}
-
 		$data["database_backup"] = strtolower($this->db->dbdriver) == "mysql";
 		$data["database_optimize"] = strtolower($this->db->dbdriver) == "mysql" || strtolower($this->db->dbdriver) == "mysqli";
 
@@ -552,7 +542,7 @@ class System extends Admin_Controller
 
 	/*
 	 * This just triggers the upgrade function in the upgrade model
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function do_upgrade()

@@ -362,13 +362,13 @@ class Post extends CI_Model
 	{
 		if (is_array($num))
 		{
-			if (isset($num['timestamp']))
+			if (isset($num['latest_doc_id']))
 			{
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->table . '
-					WHERE doc_id = ? OR (parent = ? AND timestamp > ?)
+					WHERE doc_id = ? OR (parent = ? AND doc_id > ?)
 					ORDER BY num, subnum ASC;
-				', array($num['doc_id'], $num['num'], $num['timestamp']));
+				', array($num['doc_id'], $num['num'], $num['latest_doc_id']));
 			}
 			$num = $num['num'];
 		}

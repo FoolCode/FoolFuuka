@@ -163,16 +163,16 @@ class Chan extends REST_Controller
 		$num = intval($this->get('num'));
 
 		// build an array if we have more specifications
-		if ($this->get('timestamp'))
+		if ($this->get('latest_doc_id'))
 		{
-			if(!is_natural($this->get('timestamp')) && $this->get('timestamp') >= 0)
+			if(!is_natural($this->get('latest_doc_id')) && $this->get('latest_doc_id') >= 0)
 			{
-				$this->response(array('error' => _('Your timestamp is malformed')), 404);
+				$this->response(array('error' => _('Your latest_doc_id is malformed')), 404);
 			}
 
 			$doc_id = intval($this->get('doc_id'));
-			$timestamp = intval($this->get('timestamp'));
-			$num = array('doc_id' => $doc_id, 'num' => $num, 'timestamp' => $timestamp);
+			$latest_doc_id = intval($this->get('latest_doc_id'));
+			$num = array('doc_id' => $doc_id, 'num' => $num, 'latest_doc_id' => $latest_doc_id);
 		}
 
 		$thread = $this->post->get_thread($num, TRUE, TRUE, TRUE);

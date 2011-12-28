@@ -29,6 +29,7 @@ var bindFunctions = function()
 						reply_talkingde: jQuery("#reply_subject").val(),
 						reply_chennodiscursus: jQuery("#reply_comment").val(),
 						reply_nymphassword: jQuery("#reply_password").val(),
+						reply_postas: jQuery("#reply_postas").val(),
 						reply_action: 'Submit'
 					},
 					success: function(data){
@@ -278,7 +279,7 @@ var realtimethread = function(){
 			doc_id : thread_doc_id,
 			num : thread_id,
 			board: board_shortname,
-			timestamp: thread_latest_timestamp
+			latest_doc_id: thread_latest_doc_id,
 		},
 		success: function(data){
 			if(data[thread_id].posts instanceof Array) {
@@ -289,7 +290,7 @@ var realtimethread = function(){
 						jQuery('article.thread aside').append(value.formatted);
 					}
 				});
-				thread_latest_timestamp = data[thread_id].posts[data[thread_id].posts.length-1].timestamp;
+				thread_latest_doc_id = getLatestID(data[thread_id].posts);
 				timelapse = 10;
 				realtime_callback();
 			}
@@ -497,7 +498,7 @@ jQuery(document).ready(function() {
 		backlinkify();
 		realtimethread();
 	}
-	
+
 	if (typeof page_function != "undefined")
 	{
 		if(page_function == "gallery")
@@ -506,7 +507,7 @@ jQuery(document).ready(function() {
 			backlinkify();
 		}
 	}
-	
+
 	bindFunctions();
 	timify();
 });

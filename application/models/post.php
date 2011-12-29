@@ -137,19 +137,39 @@ class Post extends CI_Model
 	 * @param type $process
 	 * @return type
 	 */
-	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE, $ghost = FALSE)
+	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE, $ghost = FALSE, $thread_order = FALSe)
 	{
 
 		// get exactly 20 be it thread starters or parents with distinct parent
-		if (!$ghost)
-		{
+		if ($ghost)
+		{	
+			// only with ghost replies
 			$query = $this->db->query('
 				SELECT *
 				FROM
 				(
-					SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent, email
+					SELECT DISTINCT(parent) as unq_parent
 					FROM ' . $this->table . '
-					WHERE email != \'sage\'
+					WHERE ' . $this->table . '.email != \'sage\'
+					AND subnum > 0
+					ORDER BY timestamp DESC
+					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
+				) AS t
+				LEFT JOIN ' . $this->table . ' AS g
+					ON g.num = t.unq_parent AND g.subnum = 0
+				' . $this->sql_report_after_join . '
+			');
+		}
+		else if($thread_order)
+		{
+			// by thread creation
+			$query = $this->db->query('
+				SELECT *
+				FROM
+				(
+					SELECT DISTINCT(num) as unq_parent
+					FROM ' . $this->table . '
+					WHERE parent = 0 AND subnum = 0
 					ORDER BY num DESC
 					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 				) AS t
@@ -160,15 +180,15 @@ class Post extends CI_Model
 		}
 		else
 		{
+			// normal
 			$query = $this->db->query('
 				SELECT *
 				FROM
 				(
-					SELECT DISTINCT(parent) as unq_parent
+					SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent, email
 					FROM ' . $this->table . '
-					WHERE ' . $this->table . '.email != \'sage\'
-					AND subnum > 0
-					ORDER BY timestamp DESC
+					WHERE email != \'sage\'
+					ORDER BY num DESC
 					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 				) AS t
 				LEFT JOIN ' . $this->table . ' AS g
@@ -366,9 +386,9 @@ class Post extends CI_Model
 			{
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->table . '
-					WHERE doc_id = ? OR (parent = ? AND doc_id > ?)
+					WHERE parent = ? AND doc_id > ?
 					ORDER BY num, subnum ASC;
-				', array($num['doc_id'], $num['num'], $num['latest_doc_id']));
+				', array($num['num'], $num['latest_doc_id']));
 			}
 			$num = $num['num'];
 		}

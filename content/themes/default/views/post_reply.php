@@ -14,7 +14,7 @@ if (!defined('BASEPATH'))
 	</header>
 	<div id="reply_ajax_notices"></div>
 	<div>
-		<?php echo form_open(get_selected_board()->shortname.'/sending', array('class' => 'form-stacked')) ?>
+		<?php echo form_open(get_selected_board()->shortname.'/sending', array('class' => 'form-stacked', 'id' => 'reply_form')) ?>
 		<fieldset>
 			<div class="clearfix">
 				<label for="reply_name">Name</label>

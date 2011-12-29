@@ -1,6 +1,6 @@
 var bindFunctions = function()
 {
-	jQuery("body").delegate("[data-function]", "click", function(event) {
+	jQuery("#main").on("click", "[data-function]", function(event) {
 		var el = jQuery(this);
 		var post = el.data("post");
 		var modal = jQuery("#post_tools_modal");
@@ -154,45 +154,8 @@ var bindFunctions = function()
 		return false;
 	});
 */
-}
-
-var timify = function() {
-	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
-}
-
-var backlinkify = function()
-{
-	var backlinks = new Object;
-	jQuery("article").each(function() {
-		var that = jQuery(this);
-		var post_id = that.attr('id');
-
-		backlinks[post_id] = [];
-		if (post_id != thread_id)
-		{
-			jQuery.each(that.find("[data-backlink=true]"), function(idx, post) {
-				p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
-
-				if (typeof backlinks[p_id] == "undefined")
-				{
-					backlinks[p_id] = [];
-				}
-
-				backlinks[p_id].push('<a href="' + site_url + board_shortname + '/thread/' + thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
-				backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
-			});
-		}
-	});
 
 
-	jQuery(".post_backlink").each(function() {
-		var that = jQuery(this);
-		if(backlinks[that.data('post')].length > 0)
-		{
-			that.html(backlinks[that.data('post')].join(" "));
-			that.parent().show();
-		}
-	});
 
 	// how could we make it working well on cellphones?
 	if( navigator.userAgent.match(/Android/i) ||
@@ -205,8 +168,9 @@ var backlinkify = function()
 		return false;
 	}
 
-	jQuery("[data-backlink]").hover(
-		function() {
+	jQuery("#main").on("mouseover mouseout", "[data-backlink]", function(event) {
+		if(event.type == "mouseover")
+		{
 			var backlink = jQuery("#backlink");
 			var that = jQuery(this);
 
@@ -258,11 +222,58 @@ var backlinkify = function()
 
 			backlink.find("article").removeAttr("id").find(".post_controls").remove();
 			backlink.find(".post_file_controls").remove();
-		},
-		function () {
+		}
+		else
+		{
 			jQuery("#backlink").css('display', 'none').html('');
 		}
-		);
+	});
+}
+
+var backlinkify_init = function() {
+	if(typeof thread_json[thread_id].posts != "undefined")
+	{
+		jQuery.each(thread_json[thread_id].posts, function(idx, value){
+			backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
+		});
+	}
+}
+
+var backlinkify = function(elem, post_id, subnum)
+{
+	var backlinks = {};
+	if(subnum > 0)
+		post_id += "_" + subnum;
+
+	elem.find("[data-backlink=true]").each(function(idx, post) {
+		p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
+		
+		if (typeof backlinks[p_id] == "undefined")
+		{
+			backlinks[p_id] = [];
+		}
+
+		backlinks[p_id].push('<a href="' + site_url + board_shortname + '/thread/' + thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+		backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
+	});
+
+	jQuery.each(backlinks, function(key, val){
+		var post = jQuery("#" + key);
+		if(post.length == 0)
+			return false;
+
+		var post_backlink = post.find(".post_backlink:eq(0)");
+		var already_backlinked = post_backlink.text().replace('>>', '').split(' ');
+		jQuery.each(already_backlinked, function(i,v){
+			if(typeof val[v] != "undefined")
+			{
+				delete val[v];
+			}
+		});
+		
+		post_backlink.html(post_backlink.html() + ((post_backlink.html().length > 0)?" ":"") + val.join(" "));
+		post_backlink.parent().show();
+	});
 }
 
 var timelapse = 10;
@@ -270,7 +281,7 @@ var currentlapse = 0;
 var realtimethread = function(){
 	clearTimeout(currentlapse);
 	jQuery.ajax({
-		url: site_url + 'api/chan/thread/' ,
+		url: site_url + 'api/chan/thread/',
 		async: false,
 		dataType: 'json',
 		type: 'GET',
@@ -282,17 +293,26 @@ var realtimethread = function(){
 			latest_doc_id: thread_latest_doc_id
 		},
 		success: function(data){
+			var w_height = jQuery(document).height();
 			if(data[thread_id].posts instanceof Array && data[thread_id].posts.length > 0) {
 				jQuery.each(data[thread_id].posts, function(idx, value){
 					if(typeof thread_json[thread_id] != undefined)
 					{
 						thread_json[thread_id].posts.push(value);
-						jQuery('article.thread aside').append(value.formatted);
+						post = jQuery(value.formatted)
+						post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+						backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
+						jQuery('article.thread aside').append(post);
 					}
 				});
+				
+				if(jQuery('#reply_form :focus').length > 0)
+				{
+					window.scrollBy(0, jQuery(document).height() - w_height);
+				}
+				
 				thread_latest_doc_id = getLatestID(data[thread_id].posts);
 				timelapse = 10;
-				realtime_callback();
 			}
 			else
 			{
@@ -310,11 +330,6 @@ var realtimethread = function(){
 	});
 
 	return false;
-}
-
-var realtime_callback = function(){
-	backlinkify();
-	timify();
 }
 
 var toggleSearch = function(mode)
@@ -512,7 +527,7 @@ jQuery(document).ready(function() {
 	if (typeof thread_id != "undefined")
 	{
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
-		backlinkify();
+		backlinkify_init();
 		realtimethread();
 	}
 
@@ -521,10 +536,10 @@ jQuery(document).ready(function() {
 		if(page_function == "gallery")
 		{
 			window.thread_id = 0;
-			backlinkify();
+			backlinkify_init();
 		}
 	}
 
 	bindFunctions();
-	timify();
+	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
 });

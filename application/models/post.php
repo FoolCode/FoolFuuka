@@ -197,6 +197,12 @@ class Post extends CI_Model
 			');
 		}
 
+		
+		if($query->num_rows() == 0)
+		{
+			return array('posts' => array(), 'op' => array());
+		}
+		
 		// get all the posts
 		$threads = array();
 		$sql = array();

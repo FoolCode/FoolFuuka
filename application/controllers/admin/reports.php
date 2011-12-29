@@ -48,7 +48,8 @@ class Reports extends Admin_Controller
 		{
 			case('ban'):
 				$report = new Report();
-				if (!$data = $report->process_report($id, array('process' => 'ban', 'banned_reason' => '', 'banned_start' => '', 'banned_end' => '')))
+				$params = array('process' => 'ban', 'banned_reason' => '', 'banned_start' => '', 'banned_end' => '');
+				if (!$data = $report->process_report($id, $params))
 				{
 					flash_notice('error', _('Failed to ban the IP.'));
 					log_message('error', 'Controller: reports.php/ban: failed to ban ip');
@@ -61,7 +62,8 @@ class Reports extends Admin_Controller
 
 			case('delete'):
 				$report = new Report();
-				if (!$report->process_report($id, array('process' => 'delete', 'remove' => $remove)))
+				$params = array('process' => 'delete', 'remove' => $remove);
+				if (!$report->process_report($id, $params))
 				{
 					flash_notice('error', _('Failed to delete the reported post/image.'));
 					log_message('error', 'Controller: reports.php/delete: failed to delete reported post/image');

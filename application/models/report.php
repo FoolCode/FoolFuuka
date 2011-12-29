@@ -163,9 +163,9 @@ class Report extends DataMapper
 
 	public function process_report($id = 0, $action = array())
 	{
-		if ($action['process'] == NULL || $action['process'] == "")
+		if (empty($action) || !isset($action['process']))
 		{
-			/* LOG FAILURE, INVALID ACTION */
+			log_message('error', 'process_report: invalid operation');
 			return FALSE;
 		}
 
@@ -178,8 +178,8 @@ class Report extends DataMapper
 
 		if ($query->num_rows() == 0)
 		{
-			/* LOG FAILURE, IT DOES NOT EXIST */
-			/* BUT DELETE THE REPORT */
+			log_message('error', 'process_report: failed to process report, it does not exist');
+			$this->db->delete('reports', array('id' => $report->id));
 			return FALSE;
 		}
 
@@ -188,8 +188,8 @@ class Report extends DataMapper
 
 		if ($postdata === FALSE)
 		{
-			/* LOG FAILURE, IT DOES NOT EXIST */
-			/* BUT DELETE THE REPORT */
+			log_message('error', 'process_report: failed to process post, it does not exist');
+			$this->db->delete('reports', array('id' => $report->id));
 			return FALSE;
 
 		}
@@ -197,56 +197,31 @@ class Report extends DataMapper
 		switch ($action['process'])
 		{
 			case('ban'):
-				/* IMPLEMENT BAN */
-
 				if ($postdata->poster_ip == "")
 				{
-					/* FAILED TO BE, NO IP PRESENT REMOVE FROM DATABASE EITHER WAY!! */
 					$this->db->delete('reports', array('id' => $report->id));
 					return FALSE;
 				}
-				$this->db->update('posters', array('banned' => 1, 'banned_reason' => $action['banned_reason'], 'banned_start' => $action['banned_start'], 'banned_end' => $action['banned_end']));
+				$this->db->update('posters', array('banned' => 1, 'banned_reason' => $action['banned_reason'], 'banned_start' => $action['banned_start'], 'banned_end' => $action['banned_end']), array('id' => $postdata->poster_id));
 				$this->db->delete('reports', array('id' => $report->id));
 				return $postdata;
 				break;
 
 			case('delete'):
-				// $action['remove'] = post/image
-				// $post = new Post();
-				// $post->delete(array('board' => $postdata->shortname, 'post' => $postdata->id, 'password' => $postdata->delpass));
-				/* MODIFY DELETE FUNCTION */
+				$post = new Post();
+				$data = array('board' => $postdata->shortname, 'post' => $postdata->id, 'password' => $postdata->delpass, 'remove' => $action['remove']);
+				if (!$post->delete($data))
+				{
+					log_message('error', 'process_report: failed to delete post');
+					return FALSE;
+				}
 				$this->db->delete('reports', array('id' => $report->id));
+				return TRUE;
 				break;
 		}
 
-		return TRUE;
+		return FALSE;
 	}
-
-
-	/*
-	 * Remove this deprecated and useless function!
-	public function process_report($data)
-	{
-		if (!isset($data["id"]) && $data["id"] == '')
-		{
-			log_message('error', 'process_report: failed to process report completely');
-			return FALSE;
-		}
-
-		// update_report_db with approval/rejection/etc.
-		// move thumbnail if needed. temporary structure.
-
-		if ($data["action"] == 'spam' && $data["thumbnail"] = TRUE)
-		{
-			if (!$this->move_thumbnail($source, $destination))
-			{
-				log_message('error', 'process_report: failed to move thumbnail to spam folder');
-				return FALSE;
-			}
-		}
-		return TRUE;
-	}
-	*/
 
 
 	public function update_report_db($data = array())

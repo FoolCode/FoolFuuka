@@ -142,7 +142,7 @@ class Post extends CI_Model
 
 		// get exactly 20 be it thread starters or parents with distinct parent
 		if ($ghost)
-		{	
+		{
 			// only with ghost replies
 			$query = $this->db->query('
 				SELECT *
@@ -844,7 +844,7 @@ class Post extends CI_Model
 
 	function delete($data)
 	{
-		// $data => { board, doc_id/post, password }
+		// $data => { board, post (doc_id), password, remove (post/image) }
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->table . '

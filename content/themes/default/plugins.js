@@ -1,6 +1,6 @@
 var bindFunctions = function()
 {
-	jQuery("#main").on("click", "[data-function]", function(event) {
+	jQuery("body").on("click", "[data-function]", function(event) {
 		var el = jQuery(this);
 		var post = el.data("post");
 		var modal = jQuery("#post_tools_modal");
@@ -231,12 +231,14 @@ var bindFunctions = function()
 }
 
 var backlinkify_init = function() {
-	if(typeof thread_json[thread_id].posts != "undefined")
-	{
-		jQuery.each(thread_json[thread_id].posts, function(idx, value){
-			backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-		});
-	}
+	jQuery.each(thread_json, function(k,v){
+		if(typeof thread_json[k].posts != "undefined")
+		{
+			jQuery.each(thread_json[k].posts, function(idx, value){
+				backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
+			});
+		}
+	});
 }
 
 var backlinkify = function(elem, post_id, subnum)
@@ -529,15 +531,6 @@ jQuery(document).ready(function() {
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
 		backlinkify_init();
 		realtimethread();
-	}
-
-	if (typeof page_function != "undefined")
-	{
-		if(page_function == "gallery")
-		{
-			window.thread_id = 0;
-			backlinkify_init();
-		}
 	}
 
 	bindFunctions();

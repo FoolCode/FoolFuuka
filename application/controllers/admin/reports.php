@@ -8,7 +8,9 @@ class Reports extends Admin_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->tank_auth->is_admin() or redirect('admin');
+
+		if (!($this->tank_auth->is_allowed()))
+			redirect('admin');
 
 		// title on top
 		$this->viewdata['controller_title'] = '<a href="'.site_url("admin/reports").'">' . _("Reports") . '</a>';;
@@ -33,7 +35,7 @@ class Reports extends Admin_Controller
 	}
 
 
-	function action($method = NULL, $id = 0)
+	function action($method = NULL, $id = 0, $remove = NULL)
 	{
 		if (!$this->input->is_ajax_request())
 		{
@@ -45,11 +47,10 @@ class Reports extends Admin_Controller
 		switch ($method)
 		{
 			case('ban'):
-				$report = new Report($id);
-				if (!$report->ban())
+				$report = new Report();
+				if (!$data = $report->process_report($id, array('process' => 'ban', 'banned_reason' => '', 'banned_start' => '', 'banned_end' => '')))
 				{
-					$data = $report->get_post();
-					flash_notice('error', sprintf(_('Failed to ban the following IP: %s.'), $data[0]->poster_ip));
+					flash_notice('error', _('Failed to ban the IP.'));
 					log_message('error', 'Controller: reports.php/ban: failed to ban ip');
 					$this->output->set_output(json_encode(array('href' => site_url('admin/reports/manage'))));
 					return FALSE;
@@ -59,15 +60,15 @@ class Reports extends Admin_Controller
 				break;
 
 			case('delete'):
-				$report = new Report($id);
-				if (!$report->remove())
+				$report = new Report();
+				if (!$report->process_report($id, array('process' => 'delete', 'remove' => $remove)))
 				{
-					flash_notice('error', _('Failed to delete the reported post.'));
-					log_message('error', 'Controller: reports.php/delete: failed to delete reported post');
+					flash_notice('error', _('Failed to delete the reported post/image.'));
+					log_message('error', 'Controller: reports.php/delete: failed to delete reported post/image');
 					$this->output->set_output(json_encode(array('href' => site_url('admin/reports/manage'))));
 					return FALSE;
 				}
-				flash_notice('notice', _('The reported post has been removed from the database.'));
+				flash_notice('notice', _('The reported post/image has been removed from the database.'));
 				$this->output->set_output(json_encode(array('href' => site_url('admin/reports/manage'))));
 				break;
 

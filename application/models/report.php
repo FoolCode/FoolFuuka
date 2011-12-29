@@ -88,12 +88,64 @@ class Report extends DataMapper
 						' . $this->db->protect_identifiers('p') . '.`poster_id_join`
 					WHERE doc_id = ' . $this->db->escape($this->post) . '
 					LIMIT 0, 1';
+
+				$query = $this->db->query($sql);
+
+				return $query->result();
 			}
 		}
 
-		$query = $this->db->query($sql);
+		return FALSE;
+	}
 
-		return $query->result();
+
+	public function get_postdata($report)
+	{
+		$boards = new Board();
+		$boards->get();
+
+		foreach ($boards->all as $board)
+		{
+			if ($board->id == $report->board)
+			{
+
+				$sql = 'SELECT *, CONCAT(' . $this->db->escape($board->shortname) . ') AS shortname
+					FROM ' . $this->get_table($board->shortname) . '
+					LEFT JOIN
+						(
+							SELECT id as report_id, post as report_doc_id, reason as report_reason, status as report_status, created as report_created
+							FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+							WHERE `id` = ' . $report->id . '
+						) as q
+						ON
+						' . $this->get_table($board->shortname) . '.`doc_id`
+						=
+						' . $this->db->protect_identifiers('q') . '.`report_doc_id`
+					LEFT JOIN
+						(
+							SELECT id AS poster_id_join,
+								ip AS poster_ip, user_agent AS poster_user_agent,
+								banned AS poster_banned, banned_reason AS poster_banned_reason,
+								banned_start AS poster_banned_start, banned_end AS poster_banned_end
+							FROM' . $this->db->protect_identifiers('posters', TRUE) . '
+						) as p
+						ON
+						' . $this->get_table($board->shortname) . '.`poster_id`
+						=
+						' . $this->db->protect_identifiers('p') . '.`poster_id_join`
+					WHERE doc_id = ' . $this->db->escape($report->post) . '
+					LIMIT 0, 1';
+
+				$query = $this->db->query($sql);
+
+				if ($query->num_rows() == 0)
+					return FALSE;
+
+				return $query->row();
+			}
+		}
+
+		return FALSE;
 	}
 
 
@@ -109,48 +161,70 @@ class Report extends DataMapper
 	}
 
 
-	public function ban()
+	public function process_report($id = 0, $action = array())
 	{
-		$post = $this->get_post();
-
-		if ($post[0]->poster_id == 0)
+		if ($action['process'] == NULL || $action['process'] == "")
 		{
-			set_notice('error', _('There is no poster information associated with this post.'));
-			log_message('error', 'report_ban: no poster information assocated with report');
+			/* LOG FAILURE, INVALID ACTION */
 			return FALSE;
 		}
 
-		/*
-		if (!$this->ban_ip($post[0]->poster_ip))
-		{
-			log_message('error', 'report_ban: failed to ban poster ip');
-			return FALSE;
-		}*/
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+			WHERE `id` = ' . $id . '
+			LIMIT 0, 1
+		');
 
-		if (!$this->remove_report_db())
+		if ($query->num_rows() == 0)
 		{
-			log_message('error', 'report_ban: failed to remove report');
+			/* LOG FAILURE, IT DOES NOT EXIST */
+			/* BUT DELETE THE REPORT */
 			return FALSE;
 		}
 
-		return $post[0];
-	}
+		$report = $query->row();
+		$postdata = $this->get_postdata($report);
 
-
-	public function remove()
-	{
-		$post = $this->get_post();
-
-		if (!$this->remove_report_db())
+		if ($postdata === FALSE)
 		{
-			log_message('error', 'remove_report: failed to remove database entry');
+			/* LOG FAILURE, IT DOES NOT EXIST */
+			/* BUT DELETE THE REPORT */
 			return FALSE;
+
+		}
+
+		switch ($action['process'])
+		{
+			case('ban'):
+				/* IMPLEMENT BAN */
+
+				if ($postdata->poster_ip == "")
+				{
+					/* FAILED TO BE, NO IP PRESENT REMOVE FROM DATABASE EITHER WAY!! */
+					$this->db->delete('reports', array('id' => $report->id));
+					return FALSE;
+				}
+				$this->db->update('posters', array('banned' => 1, 'banned_reason' => $action['banned_reason'], 'banned_start' => $action['banned_start'], 'banned_end' => $action['banned_end']));
+				$this->db->delete('reports', array('id' => $report->id));
+				return $postdata;
+				break;
+
+			case('delete'):
+				// $action['remove'] = post/image
+				// $post = new Post();
+				// $post->delete(array('board' => $postdata->shortname, 'post' => $postdata->id, 'password' => $postdata->delpass));
+				/* MODIFY DELETE FUNCTION */
+				$this->db->delete('reports', array('id' => $report->id));
+				break;
 		}
 
 		return TRUE;
 	}
 
 
+	/*
+	 * Remove this deprecated and useless function!
 	public function process_report($data)
 	{
 		if (!isset($data["id"]) && $data["id"] == '')
@@ -172,6 +246,7 @@ class Report extends DataMapper
 		}
 		return TRUE;
 	}
+	*/
 
 
 	public function update_report_db($data = array())

@@ -584,10 +584,12 @@ class Post extends CI_Model
 			';
 
 				$query = $this->db->query($sql);
+				
+				$do_reverse = TRUE;
 			}
 			else // it's damn slow to run empty searches, unless we use MySQL directly
 			{
-				if ($search['order'] == 'asc')
+				if ($search['order'] === 'asc')
 				{
 					$order = 'ORDER BY num ASC';
 				}
@@ -611,6 +613,7 @@ class Post extends CI_Model
 
 				$found = $query2->result();
 				$search_result = array('total_found' => $found[0]->total_found);
+				$do_reverse = FALSE;
 			}
 
 			foreach ($query->result() as $post)
@@ -637,8 +640,10 @@ class Post extends CI_Model
 				// the first you create from a parent is the first thread
 				$result[0]['posts'][] = $post;
 			}
-			$result[0]['posts'] = array_reverse($result[0]['posts']);
-			return array('posts' => array_reverse($result), 'total_found' => $search_result['total_found']);
+			
+			if($do_reverse)
+				$result[0]['posts'] = array_reverse($result[0]['posts']);
+			return array('posts' => $result, 'total_found' => $search_result['total_found']);
 		}
 	}
 

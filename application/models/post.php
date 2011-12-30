@@ -640,7 +640,6 @@ class Post extends CI_Model
 				// the first you create from a parent is the first thread
 				$result[0]['posts'][] = $post;
 			}
-			
 			if(is_array($result[0]['posts']) && $do_reverse)
 				$result[0]['posts'] = array_reverse($result[0]['posts']);
 			return array('posts' => $result, 'total_found' => $search_result['total_found']);

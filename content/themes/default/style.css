@@ -522,7 +522,6 @@ article.thread .backlink.op {
 	border-bottom: 1px dotted #000;
 }
 
-
 #thread_o_matic {
 
 }
@@ -626,6 +625,18 @@ article.thread .backlink.op {
 
 .spoiler:hover {
 	color:#fff;
+}
+
+.overline {
+	text-decoration:overline;
+}
+
+.strikethrough {
+	text-decoration:line-through;
+}
+
+.underline {
+	text-decoration:underline;
 }
 
 .banned {

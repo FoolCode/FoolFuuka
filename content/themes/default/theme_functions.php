@@ -26,8 +26,8 @@ function build_board_comment($p, $modifiers = array()) {
 								<span class="post_file_filename unshown"><?php echo $p->media ?></span><span class="post_file_filename shown"><?php 
 								if(mb_strlen($p->media) > 38)
 								{
-									$ext_pos = strrpos($p->media, '.');
-									echo substr($p->media, 0, 32).' (...)'.substr($p->media, $ext_pos);
+									$ext_pos = mb_strrpos($p->media, '.');
+									echo mb_substr($p->media, 0, 32).' (...)'.mb_substr($p->media, $ext_pos);
 								}
 								else
 								{

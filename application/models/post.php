@@ -1030,13 +1030,14 @@ class Post extends CI_Model
 		$post->thumbnail_href = $this->get_image_href($post, TRUE);
 		$post->image_href = $this->get_image_href($post);
 		$post->remote_image_href = $this->get_remote_image_href($post);
-		$post->comment_processed = $this->get_comment_processed($post);
+		$post->comment_processed = utf8_encode($this->get_comment_processed($post));
+		$post->comment = utf8_encode($post->comment);
 
-		foreach (array('title', 'name', 'email', 'trip') as $element)
+		foreach (array('title', 'name', 'email', 'trip', 'media', 'preview', 'media_filename', 'media_hash') as $element)
 		{
 			$element_processed = $element . '_processed';
-			$post->$element = fuuka_htmlescape($post->$element);
-			$post->$element_processed = $post->$element;
+			$post->$element_processed = utf8_encode(fuuka_htmlescape($post->$element));
+			$post->$element = utf8_encode($post->$element);
 		}
 
 		if ($clean === TRUE)

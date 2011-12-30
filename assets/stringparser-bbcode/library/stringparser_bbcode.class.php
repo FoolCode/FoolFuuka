@@ -564,7 +564,7 @@ class StringParser_BBCode extends StringParser {
 					return true;
 				}
 				if ($needle == '[') {
-					$node =& new StringParser_BBCode_Node_Element ($this->_cpos);
+					$node = new StringParser_BBCode_Node_Element ($this->_cpos);
 					$res = $this->_pushNode ($node);
 					if (!$res) {
 						return false;
@@ -1207,7 +1207,7 @@ class StringParser_BBCode extends StringParser {
 			for ($i = 0; $i < count ($sub_nodes); $i++) {
 				if (!$last_node_was_paragraph ||  ($prevtype == $sub_nodes[$i]->_type && ($i != 0 || $prevtype != STRINGPARSER_BBCODE_NODE_ELEMENT))) {
 					unset ($paragraph);
-					$paragraph =& new StringParser_BBCode_Node_Paragraph ();
+					$paragraph = new StringParser_BBCode_Node_Paragraph ();
 				}
 				$prevtype = $sub_nodes[$i]->_type;
 				if ($sub_nodes[$i]->_type != STRINGPARSER_BBCODE_NODE_ELEMENT || $sub_nodes[$i]->getFlag ('paragraph_type', 'integer', BBCODE_PARAGRAPH_ALLOW_BREAKUP) != BBCODE_PARAGRAPH_BLOCK_ELEMENT) {
@@ -1218,7 +1218,7 @@ class StringParser_BBCode extends StringParser {
 					$dest_nodes[] =& $sub_nodes[$i];
 					$last_onde_was_paragraph = false;
 					unset ($paragraph);
-					$paragraph =& new StringParser_BBCode_Node_Paragraph ();
+					$paragraph = new StringParser_BBCode_Node_Paragraph ();
 				}
 			}
 		}
@@ -1261,7 +1261,7 @@ class StringParser_BBCode extends StringParser {
 		if ($node->_type == STRINGPARSER_NODE_TEXT) {
 			$cpos = 0;
 			while (($npos = strpos ($node->content, $detect_string, $cpos)) !== false) {
-				$subnode =& new StringParser_Node_Text (substr ($node->content, $cpos, $npos - $cpos), $node->occurredAt + $cpos);
+				$subnode = new StringParser_Node_Text (substr ($node->content, $cpos, $npos - $cpos), $node->occurredAt + $cpos);
 				// copy flags
 				foreach ($node->_flags as $flag => $value) {
 					if ($flag == 'newlinemode.begin') {
@@ -1278,7 +1278,7 @@ class StringParser_BBCode extends StringParser {
 				unset ($subnode);
 				$cpos = $npos + strlen ($detect_string);
 			}
-			$subnode =& new StringParser_Node_Text (substr ($node->content, $cpos), $node->occurredAt + $cpos);
+			$subnode = new StringParser_Node_Text (substr ($node->content, $cpos), $node->occurredAt + $cpos);
 			if ($cpos == 0) {
 				$value = $node->getFlag ('newlinemode.begin', 'integer', null);
 				if ($value !== null) {
@@ -1532,7 +1532,7 @@ class StringParser_BBCode_Node_Element extends StringParser_Node {
 	 * @return object
 	 */
 	function &duplicate () {
-		$newnode =& new StringParser_BBCode_Node_Element ($this->occurredAt);
+		$newnode = new StringParser_BBCode_Node_Element ($this->occurredAt);
 		$newnode->_name = $this->_name;
 		$newnode->_flags = $this->_flags;
 		$newnode->_attributes = $this->_attributes;

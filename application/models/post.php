@@ -640,8 +640,7 @@ class Post extends CI_Model
 				// the first you create from a parent is the first thread
 				$result[0]['posts'][] = $post;
 			}
-
-			if($do_reverse)
+			if(is_array($result[0]['posts']) && $do_reverse)
 				$result[0]['posts'] = array_reverse($result[0]['posts']);
 			return array('posts' => $result, 'total_found' => $search_result['total_found']);
 		}
@@ -1030,13 +1029,14 @@ class Post extends CI_Model
 		$post->thumbnail_href = $this->get_image_href($post, TRUE);
 		$post->image_href = $this->get_image_href($post);
 		$post->remote_image_href = $this->get_remote_image_href($post);
-		$post->comment_processed = $this->get_comment_processed($post);
+		$post->comment_processed = (iconv('UTF-8', 'UTF-8//IGNORE', $this->get_comment_processed($post)));
+		$post->comment = (iconv('UTF-8', 'UTF-8//IGNORE', $post->comment));
 
-		foreach (array('title', 'name', 'email', 'trip') as $element)
+		foreach (array('title', 'name', 'email', 'trip', 'media', 'preview', 'media_filename', 'media_hash') as $element)
 		{
 			$element_processed = $element . '_processed';
-			$post->$element = fuuka_htmlescape($post->$element);
-			$post->$element_processed = $post->$element;
+			$post->$element_processed = (iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element)));
+			$post->$element = (iconv('UTF-8', 'UTF-8//IGNORE', $post->$element));
 		}
 
 		if ($clean === TRUE)

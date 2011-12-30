@@ -510,6 +510,14 @@ article.thread .greentext {
 	color: #789922;
 }
 
+article.thread .spoiler .greentext {
+	color: black;
+}
+
+article.thread .spoiler:hover .greentext {
+	color: #789922;
+}
+
 article.thread .backlink.op {
 	border-bottom: 1px dotted #000;
 }

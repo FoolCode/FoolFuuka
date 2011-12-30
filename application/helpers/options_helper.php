@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
 
 /**
  * Function to get single options from the preferences database
- * 
+ *
  * @param string $option the code of the option
  * @author Woxxy
  * @return string the option
@@ -27,7 +27,7 @@ if (!function_exists('get_setting'))
 
 /**
  * Loads variables from database for get_setting()
- * 
+ *
  * @author Woxxy
  */
 if (!function_exists('load_settings'))
@@ -61,7 +61,7 @@ if (!function_exists('fuuka_htmlescape'))
 
 /**
  * Return selected boards' shortname
- * 
+ *
  * @author Woxxy
  */
 if (!function_exists('get_selected_board'))
@@ -88,7 +88,7 @@ if (!function_exists('get_selected_board'))
 
 /**
  * Caches in a variable and returns the home team's object
- * 
+ *
  * @author Woxxy
  * @return object home team
  */
@@ -137,7 +137,7 @@ if (!function_exists('parse_irc'))
 
 
 /**
- * Locate ImageMagick and determine if it has been installed or not. 
+ * Locate ImageMagick and determine if it has been installed or not.
  */
 function find_imagick()
 {
@@ -185,7 +185,7 @@ function find_imagick()
 
 /**
  * Checks that the call is made from Ajax
- * 
+ *
  * @author Woxxy
  * @return bool true if ajax request
  */
@@ -297,7 +297,7 @@ function relative_date($time)
 
 
 /**
- * 
+ *
  */
 function HTMLpurify($dirty_html, $set = 'default')
 {
@@ -339,10 +339,25 @@ function HTMLpurify($dirty_html, $set = 'default')
 }
 
 
+/**
+ * Parse BBCode
+ */
+function parse_bbcode($string)
+{
+	require_once(FCPATH . "assets/stringparser-bbcode/library/stringparser_bbcode.class.php");
+
+	$bbcode = new StringParser_BBCode();
+
+	$bbcode->addCode('spoiler', 'simple_replace', NULL, array('start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array());
+	$bbcode->addCode('code', 'simple_replace', NULL, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'inline', array('block', 'inline'), array());
+
+	return $bbcode->parse($string);
+}
+
 
 /**
  * Compare with the local IP list if the IP is a possible spammer
- * 
+ *
  * @param string $ip
  * @return bool  Returns true if the IP is in the stopforumspam repository
  */
@@ -350,7 +365,7 @@ function check_stopforumspam_ip($ip)
 {
 	$CI = & get_instance();
 	$query = $CI->db->query('
-		SELECT ip FROM ' . $CI->db->protect_identifiers('stopforumspam', TRUE) . ' 
+		SELECT ip FROM ' . $CI->db->protect_identifiers('stopforumspam', TRUE) . '
 		WHERE ip = INET_ATON('.$CI->db->escape($ip).')
 		LIMIT 0,1;
 	');

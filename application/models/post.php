@@ -197,12 +197,12 @@ class Post extends CI_Model
 			');
 		}
 
-		
+
 		if($query->num_rows() == 0)
 		{
 			return array('posts' => array(), 'op' => array());
 		}
-		
+
 		// get all the posts
 		$threads = array();
 		$sql = array();
@@ -584,7 +584,7 @@ class Post extends CI_Model
 			';
 
 				$query = $this->db->query($sql);
-				
+
 				$do_reverse = TRUE;
 			}
 			else // it's damn slow to run empty searches, unless we use MySQL directly
@@ -640,7 +640,7 @@ class Post extends CI_Model
 				// the first you create from a parent is the first thread
 				$result[0]['posts'][] = $post;
 			}
-			
+
 			if($do_reverse)
 				$result[0]['posts'] = array_reverse($result[0]['posts']);
 			return array('posts' => $result, 'total_found' => $search_result['total_found']);
@@ -1155,24 +1155,22 @@ class Post extends CI_Model
 	function get_comment_processed($row)
 	{
 		$CI = & get_instance();
+
+		// Replace Specific Code
 		$find = array(
-			"'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i",
-			"'\[spoiler](.*?)\[/spoiler]'is",
-			"'\[code\](.*?)\[/code\]'i",
+			"'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i"
 		);
 
 		$replace = array(
-			'\\1<span class="greentext">\\2</span>\\3',
-			'<span class="spoiler">\\1</span>',
-			'<code>\\1</code>',
+			'\\1<span class="greentext">\\2</span>\\3'
 		);
 
 		$adminfind = array(
-			"'\[banned\](.*?)\[/banned\]'i",
+			"'\[banned\](.*?)\[/banned\]'i"
 		);
 
 		$adminreplace = array(
-			'<span class="banned">\\1</span>',
+			'<span class="banned">\\1</span>'
 		);
 
 
@@ -1188,7 +1186,7 @@ class Post extends CI_Model
 		}
 
 		$regexing = preg_replace($find, $replace, $regexing);
-
+		$regexing = parse_bbcode($regexing);
 
 		$regexing = nl2br(trim($regexing));
 

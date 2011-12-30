@@ -1,0 +1,100 @@
+-- Changes until version 0.3.3
+
+2008-03-27 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		fixed regression in handling of case insensitive codes
+
+-- Changes until version 0.3.2b
+
+2007-12-27 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		removed forgotten debug output
+
+-- Changes until version 0.3.2
+
+2007-12-10 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		fixed bug in handling of case insensitive codes,
+		fixed nasty bug that made [list][*][*][/list] misbehave
+	* Documentation: Changed example to prevent XSS attacks.
+	* Changed license to MIT license
+
+-- Changes until version 0.3.1
+
+2006-04-23 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		fixed nasty bug in _findNamedNode(),
+		fixed really nasty bug that newly occured in 0.3.0
+		(usecontent? and callback_replace? were swapped)
+
+-- Changes until version 0.3.0
+
+2006-04-23 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser.class.php:
+		corrected several phpdoc comments, made removeChild method
+		public, fixed nasty bug in removeChild, fixed notice that
+		occurs in new PHP versions
+	* stringparser_bbcode.class.php:
+		corrected several phpdoc comments, added support for mixed
+		attribute types ([code=foo attr=bar]), added support for
+		code revalidation on close tag occurrence, added support
+		for usecontent? the other way round (callback_replace?)
+
+-- Changes until version 0.2.5
+
+2005-08-14 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser.class.php: Added type () function for
+		StringParser_Node, small bugfix in StringParser_Node_Text
+		constructor, improved phpdoc comments a bit
+	* stringparser_bbcode.class.php: Added global case sensitive option,
+		improved inline documentation, added setFlag function to
+		StringParser_Node, fixed (PHP4 specific)  bug in validate
+
+-- Changes until version 0.2.4-beta2:
+
+2005-05-21 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		fixed some bugs
+
+-- Changes until version 0.2.4-beta1:
+
+2005-05-21 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		minor bugfix in paragraph handling, support of multiple
+		'usecontent?'-parameters, project version now specified in source
+		code
+	* stringparser.class.php: project version now specified in source code
+	* doc/de/kapitel2.html, doc/en/chapter2.html: updated documentation
+		to describe the use of multiple 'usecontent?'-parameters
+
+-- Changes until version 0.2.3:
+
+2005-03-14 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		fixed two bug, one could cause a fatal error
+
+2005-02-03 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		major bugfix regarding paragraph handling
+
+2004-12-25 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		minor bug fix, added case insensibility feature
+
+2004-11-13 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser.class.php, stringparser_bbcode.class.php:
+		minor bug fixes, added license information
+		to head
+
+2004-11-10 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		modified settype() calls to work with php < 4.2
+
+2004-11-08 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser_bbcode.class.php:
+		changed require to require_once
+
+2004-11-03 Christian Seiler <webmaster@christian-seiler.de>
+	* stringparser.class.php, stringparser_bbcode.class.php:
+		removed every call-time pass-by-reference to ensure
+		the class works with PHP 5

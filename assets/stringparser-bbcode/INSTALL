@@ -1,0 +1,10 @@
+Quick installation guide
+
+Copy stringparser.class.php and stringparser_bbcode.class.php from the src
+directory into an arbitrary directory. Then, it is possible to use the class
+by including it into your PHP source:
+
+require_once 'path/to/stringparser_bbcode.class.php';
+
+For further information refer to the documentation provided with this
+archive (inside the doc/ directory).

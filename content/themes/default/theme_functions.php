@@ -17,7 +17,7 @@ function build_board_comment($p, $modifiers = array()) {
 	$CI = & get_instance();
 	ob_start();
 	?>
-	<article class="post doc_id_<?php echo $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php echo ((isset($p->report_status) && !is_null($p->report_status)) ? ' reported' : '') ?><?php echo ($p->media_filename?' has_image':'') ?><?php if ($p->media_filename) : ?> clearfix<?php endif; ?>" id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
+	<article class="post doc_id_<?php echo $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if($p->parent == $p->num) : ?> post_is_op<?php endif; ?><?php echo ((isset($p->report_status) && !is_null($p->report_status)) ? ' reported' : '') ?><?php echo ($p->media_filename?' has_image':'') ?><?php if ($p->media_filename) : ?> clearfix<?php endif; ?>" id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
 						<?php if ($p->media_filename) : ?>
 							<div class="post_file">
 								<span class="post_file_controls">
@@ -37,12 +37,12 @@ function build_board_comment($p, $modifiers = array()) {
 								<span class="post_file_metadata"><?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?></span>
 							</div>
 							<div class="thread_image_box">
-								<a href="<?php echo ($p->image_href)?$p->image_href:$p->remote_image_href ?>" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" data-md5="<?php echo $p->media_hash ?>" class="post_image<?php echo ($p->spoiler)?' is_spoiler_image':'' ?>" /></a>
+								<a href="<?php echo ($p->image_href)?$p->image_href:$p->remote_image_href ?>" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $p->thumbnail_href ?>" <?php if ($p->preview_w > 0 && $p->preview_h > 0) : ?>width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" <?php endif; ?> data-md5="<?php echo $p->media_hash ?>" class="post_image<?php echo ($p->spoiler)?' is_spoiler_image':'' ?>" /></a>
 							</div>
 						<?php endif; ?>
 						<header>
 							<div class="post_data">
-								<?php if($p->parent == 0) : ?><span class="post_is_op">Opening post</span><?php endif; ?>
+								<?php if($p->parent == 0) : ?><span class="post_type_is_op">Opening post</span><?php endif; ?>
 								<h2 class="post_title"><?php echo $p->title_processed ?></h2>
 								<span class="post_author"><?php echo (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span> <span class="post_trip"><?php echo $p->trip_processed ?></span>
 								<?php if ($p->capcode == 'M') : ?>

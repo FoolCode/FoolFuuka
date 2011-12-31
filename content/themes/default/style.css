@@ -171,7 +171,6 @@ article.thread > .thread_image_box {
 	text-align:center;
 	color: #bfbfbf;
 	text-shadow: 0px 1px 0px #fff;
-	max-width:250px;
 	font-size:0.8em;
 	line-height:150%;
 	vertical-align:bottom;
@@ -179,7 +178,10 @@ article.thread > .thread_image_box {
 }
 
 article.thread > .thread_image_box .thread_image {
-
+	max-width:251px;
+	max-height:251px;
+	width:auto;
+	height:auto;
 }
 
 article.thread > .thread_image_box .thread_image.is_spoiler_image {
@@ -222,7 +224,7 @@ article.thread .post_type img {
 	vertical-align:bottom
 }
 
-article.thread .post_is_op {
+article.thread .post_type_is_op {
 	font-weight: bold;
 	color:#000;
 }
@@ -358,7 +360,6 @@ article.thread article.post:nth-of-type(-n+4) {
 	float:left;
 	text-align:center;
 	color: #888;
-	max-width:140px;
 	margin:0 10px 0 4px;
 	font-size:0.8em;
 	line-height:130%;
@@ -370,8 +371,15 @@ article.thread article.post:nth-of-type(-n+4) {
 }
 
 .post > .thread_image_box .post_image {
-	max-width:130px;
+	max-width:126px;
+	max-height:126px;
 	height:auto;
+	width:auto;
+}
+
+.post.post_is_op > .thread_image_box .post_image {
+	max-width:251px;
+	max-height:251px;
 }
 
 .post > .thread_image_box .post_image.is_spoiler_image {

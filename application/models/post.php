@@ -757,6 +757,18 @@ class Post extends CI_Model
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
 
+		if (strlen($comment) > 4096)
+		{
+			return array('error' => 'Your post was too long.');
+		}
+
+		$lines = explode("\n", $comment);
+
+		if (count($lines) > 20)
+		{
+			return array('error' => 'Your post had too many lines.');
+		}
+
 		// phpass password for extra security, using the same tank_auth setting since it's cool
 		$hasher = new PasswordHash(
 						$this->config->item('phpass_hash_strength', 'tank_auth'),
@@ -802,18 +814,6 @@ class Post extends CI_Model
 		}
 		else
 		{
-			if (strlen($comment) > 4096)
-			{
-				return array('error' => 'Your post was too long.');
-			}
-
-			$lines = explode("\n", $comment);
-
-			if (count($lines) > 40)
-			{
-				return array('error' => 'Your post had too many lines.');
-			}
-
 			$insert_poster = array(
 				'ip' => $this->input->ip_address(),
 				'user_agent' => $this->input->user_agent(),

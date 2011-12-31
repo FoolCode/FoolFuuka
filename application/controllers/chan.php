@@ -146,7 +146,7 @@ class Chan extends Public_Controller
 	{
 		// commenting
 		$post_data = '';
-		if ($this->input->post('reply_action') == 'Submit')
+		if ($this->input->post('reply_gattai') == 'Submit')
 		{
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('reply_numero', 'Thread no.', 'required|is_natural_no_zero|xss_clean');

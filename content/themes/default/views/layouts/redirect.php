@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Redirecting...</title>
+		<title><?php echo $template['title']; ?></title>
 		<meta http-equiv="Refresh" content="0; url=<?php echo $url ?>" />
 	</head>
 	<body>

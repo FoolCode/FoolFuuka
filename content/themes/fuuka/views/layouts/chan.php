@@ -9,7 +9,6 @@
 		if (file_exists('content/themes/' . $this->fu_theme . '/style.css'))
 			echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOLSLIDE_VERSION);
 		?>
-
 		<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<?php echo get_setting('fs_theme_header_code'); ?>
 
@@ -74,5 +73,15 @@
 			<?php endif; ?>
 		</div>
 
+		<?php if(get_setting('fs_theme_google_analytics')) : ?>
+		<script>
+			var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us']['_trackPageview'],['_trackPageLoadTime']];
+			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+				s.parentNode.insertBefore(g,s)}(document,'script'));
+		</script>
+		<?php endif; ?>
+
+		<?php echo get_setting('fs_theme_footer_code'); ?>
 	</body>
 </html>

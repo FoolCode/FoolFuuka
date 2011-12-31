@@ -222,6 +222,7 @@ class Chan extends Public_Controller
 					$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . '_' . $result['posted']->subnum;
 					$this->template->title(_('Redirecting...'));
 					$this->template->set('url', $url);
+					$this->template->set_layout('redirect');
 					$this->template->build('redirect');
 					return TRUE;
 				}
@@ -324,6 +325,7 @@ class Chan extends Public_Controller
 
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
+		$this->template->set_layout('redirect');
 		$this->template->build('redirect');
 	}
 
@@ -350,7 +352,7 @@ class Chan extends Public_Controller
 	public function redirect($image = NULL) {
 		$this->template->set('url', get_selected_board()->images_url . $image);
 		$this->template->set_layout('redirect');
-		$this->template->build('board');
+		$this->template->build('redirect');
 	}
 
 
@@ -425,6 +427,19 @@ class Chan extends Public_Controller
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
+		$this->template->build('board');
+	}
+
+
+	public function theme($theme = 'default')
+	{
+		$this->input->set_cookie('foolfuuka_theme', $theme, 86400);
+		if ($this->input->server('HTTP_REFERER')) :
+			$this->template->set('url', $this->input->server('HTTP_REFERER'));
+		else :
+			$this->template->set('url', site_url(get_selected_board()->shortname));
+		endif;
+		$this->template->set_layout('redirect');
 		$this->template->build('board');
 	}
 

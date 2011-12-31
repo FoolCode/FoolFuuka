@@ -56,6 +56,7 @@
 
 		<?php echo $template['body']; ?>
 
+		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
 		<table align="right">
 			<tbody>
 				<?php if (isset($thread_id)) : ?>
@@ -75,7 +76,7 @@
 				</tr>
 			</tbody>
 		</table>
-
+		<?php endif; ?>
 
 		<?php if (isset($pages_links)) : ?>
 			<table class="pages" align="left" border="1">

@@ -155,7 +155,7 @@ class Chan extends Public_Controller
 			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|required|min_length[3]|max_length[1000]|xss_clean');
-			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_lenght[3]|max_length[32]|xss_clean');
+			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 			if ($this->tank_auth->is_allowed())
 			{

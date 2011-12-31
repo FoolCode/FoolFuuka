@@ -80,7 +80,10 @@
 			<?php endif; ?>
 		<?php endif; ?>
 
+		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
 		Theme [ <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'yotsuba')) ?>" onclick="changeTheme('yotsuba'); return false;">Yotsuba</a> ]
+		<?php endif; ?>
+
 		<?php if(get_setting('fs_theme_google_analytics')) : ?>
 		<script>
 			var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us']['_trackPageview'],['_trackPageLoadTime']];

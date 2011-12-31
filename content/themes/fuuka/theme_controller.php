@@ -130,8 +130,8 @@ class Theme_Controller {
 			$this->CI->form_validation->set_rules('NAMAE', 'Username', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('MERU', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('subject', 'Subject', 'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_lenght[3]|max_length[1000]|xss_clean');
-			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_lenght[3]|max_length[32]|xss_clean');
+			$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_length[3]|max_length[1000]|xss_clean');
+			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 
 			if ($this->CI->tank_auth->is_allowed())

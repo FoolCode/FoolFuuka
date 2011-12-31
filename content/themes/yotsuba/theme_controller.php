@@ -131,8 +131,8 @@ class Theme_Controller {
 			$this->CI->form_validation->set_rules('name', 'Username', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('email', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('sub', 'Subject', 'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('com', 'Comment', 'trim|required|min_lenght[3]|max_length[1000]|xss_clean');
-			$this->CI->form_validation->set_rules('pwd', 'Password', 'required|min_lenght[3]|max_length[32]|xss_clean');
+			$this->CI->form_validation->set_rules('com', 'Comment', 'trim|required|min_length[3]|max_length[1000]|xss_clean');
+			$this->CI->form_validation->set_rules('pwd', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 
 			if ($this->CI->tank_auth->is_allowed())

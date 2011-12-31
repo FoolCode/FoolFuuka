@@ -37,46 +37,26 @@
 				[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / statistics / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
 			</span>
 		</div>
-
+		<br/>
 		<div class="logo">
 			<font size="5">
-				<b><span><?php echo $template['title']; ?></span></b>
+				<b><span>/<?php echo $board->shortname ?>/ - <?php echo htmlspecialchars($board->name) ?></span></b>
+			</font>
+			<br>
+			<font size="1">
+				<?php if(isset($section_title)): ?><?php echo $section_title ?><?php endif; ?>
 			</font>
 		</div>
 
 		<hr>
 
-		<div id="archive_tools">
-			<?php echo $template['partials']['top_tools'] ?>
-		</div>
+		<?php echo $template['partials']['top_tools'] ?>
 
 		<hr>
 
 		<?php endif; ?>
 
 		<?php echo $template['body']; ?>
-
-		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
-		<table align="right">
-			<tbody>
-				<?php if (isset($thread_id)) : ?>
-				<tr>
-					<td nowrap="" align="center" class="deletebuttons">
-					Delete Post Password <input class="inputtext" type="password" name="pwd" size="8" maxlength="8" value="">
-					<input type="hidden" value="<?php echo $thread_id ?>"/>
-					<input type="submit" name="com_delete" value="Delete"/>
-					<input type="submit" name="com_report" value="Report"/>
-					</td>
-				</tr>
-				<?php endif; ?>
-				<tr>
-					<td align="right">
-						Theme [ <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'yotsuba')) ?>" onclick="changeTheme('yotsuba'); return false;">Yotsuba</a> ]
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<?php endif; ?>
 
 		<?php if (isset($pages_links)) : ?>
 			<table class="pages" align="left" border="1">

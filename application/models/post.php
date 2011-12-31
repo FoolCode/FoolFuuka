@@ -557,7 +557,6 @@ class Post extends CI_Model
 				$search_result = $this->sphinxclient->query($query, get_selected_board()->shortname . '_ancient ' . get_selected_board()->shortname . '_main ' . get_selected_board()->shortname . '_delta');
 				if ($search_result === false)
 				{
-					echo $this->sphinxclient->getLastError();
 					// show some actual error...
 					show_404();
 				}
@@ -602,6 +601,7 @@ class Post extends CI_Model
 				$query = $this->db->query('
 					SELECT *
 					FROM ' . $this->table . '
+					' . $this->sql_report . '
 					' . $order . '
 					LIMIT ' . (($search['page'] * 25) - 25) . ', 25
 				');
@@ -1038,14 +1038,14 @@ class Post extends CI_Model
 		$post->thumbnail_href = $this->get_image_href($post, TRUE);
 		$post->image_href = $this->get_image_href($post);
 		$post->remote_image_href = $this->get_remote_image_href($post);
-		$post->comment_processed = (iconv('UTF-8', 'UTF-8//IGNORE', $this->get_comment_processed($post)));
-		$post->comment = (iconv('UTF-8', 'UTF-8//IGNORE', $post->comment));
+		$post->comment_processed = iconv('UTF-8', 'UTF-8//IGNORE', $this->get_comment_processed($post));
+		$post->comment = iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
 
 		foreach (array('title', 'name', 'email', 'trip', 'media', 'preview', 'media_filename', 'media_hash') as $element)
 		{
 			$element_processed = $element . '_processed';
-			$post->$element_processed = (iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element)));
-			$post->$element = (iconv('UTF-8', 'UTF-8//IGNORE', $post->$element));
+			$post->$element_processed = iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));
+			$post->$element = iconv('UTF-8', 'UTF-8//IGNORE', $post->$element);
 		}
 
 		if ($clean === TRUE)
@@ -1076,11 +1076,6 @@ class Post extends CI_Model
 
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
 		{
-			if ($row->preview_h == 0 && $row->preview_w == 0)
-			{
-				$row->preview_h = 126;
-				$row->preview_w = 126;
-			}
 			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview : $row->media_filename);
 		}
 		if ($thumbnail)

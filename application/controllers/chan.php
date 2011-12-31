@@ -27,7 +27,7 @@ class Chan extends Public_Controller
 	public function index()
 	{
 		$this->template->set('disable_headers', TRUE);
-		$this->template->title('FoOlFuuka » 4chan Archiver');
+		$this->template->title('FoOlFuuka &raquo; 4chan Archiver');
 		$this->template->build('index');
 	}
 
@@ -61,7 +61,7 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest($page);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' » Page '.$page:''));
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' &raquo; Page '.$page:''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Page ') . $page);
 
@@ -99,7 +99,7 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest($page, 20, TRUE, TRUE, TRUE);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Ghost' . (($page > 1)?' &raquo; Page '.$page:''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Ghosts page ') . $page);
 		$pages_links = array();
@@ -134,7 +134,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Thread #' . $num);
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Thread #' . $num);
 		$this->template->set('posts', $thread);
 
 		$this->template->set('thread_id', $num);
@@ -146,6 +146,12 @@ class Chan extends Public_Controller
 	{
 		// commenting
 		$post_data = '';
+		
+		if($this->input->post('name') || $this->input->post('reply') || $this->input->post('email'))
+		{
+			show_404();
+		}
+		
 		if ($this->input->post('reply_gattai') == 'Submit')
 		{
 			$this->load->library('form_validation');
@@ -153,7 +159,7 @@ class Chan extends Public_Controller
 			$this->form_validation->set_rules('reply_bokunonome', 'Username', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_length[64]');
-			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|required|min_length[3]|max_length[1000]|xss_clean');
+			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|required|min_length[3]|max_length[4096]|xss_clean');
 			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 			if ($this->tank_auth->is_allowed())

@@ -20,6 +20,12 @@ if (!defined('BASEPATH'))
 				<label for="reply_bokunonome">Name</label>
 				<div class="input">
 					<?php echo form_input(array(
+						'name' => 'name',
+						'id' => 'reply_name_yep',
+						'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:''),
+						'style' => 'display:none'
+					)); ?>
+					<?php echo form_input(array(
 						'name' => 'reply_bokunonome',
 						'id' => 'reply_bokunonome',
 						'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:'')
@@ -29,6 +35,12 @@ if (!defined('BASEPATH'))
 			<div class="clearfix">
 				<label for="reply_elitterae">E-mail</label>
 				<div class="input">
+					<?php echo form_input(array(
+						'name' => 'email',
+						'id' => 'reply_email_yep',
+						'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:''),
+						'style' => 'display:none'
+					)); ?>
 					<?php echo form_input(array(
 						'name' => 'reply_elitterae',
 						'id' => 'reply_elitterae',
@@ -48,6 +60,11 @@ if (!defined('BASEPATH'))
 			<div class="clearfix">
 				<label for="reply_chennodiscursus">Comment</label>
 				<div class="input">
+					<?php echo form_textarea(array(
+						'name' => 'reply',
+						'id' => 'reply_comment_yep',
+						'style' => 'display:none'
+					)); ?>
 					<?php echo form_textarea(array(
 						'name' => 'reply_chennodiscursus',
 						'id' => 'reply_chennodiscursus'

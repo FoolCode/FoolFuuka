@@ -336,3 +336,20 @@ div.logo img {
     float: left;
     width: 25px;
 }
+a.tooltip span, a.tooltip-red span{
+    font-family:Georgia, serif;
+    display:none;
+    padding:6px;
+    margin:2em 0 0 0.5em;
+    width:25%;
+}
+a.tooltip:hover span, a.tooltip-red:hover span{
+    display:inline;
+    position:absolute;
+    border:1px solid black;
+    background:lightyellow;
+    color:black;
+    font-weight:normal;
+    text-align:left;
+    text-decoration:none;
+}

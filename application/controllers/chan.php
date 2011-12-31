@@ -27,7 +27,7 @@ class Chan extends Public_Controller
 	public function index()
 	{
 		$this->template->set('disable_headers', TRUE);
-		$this->template->title('FoOlFuuka » 4chan Archiver');
+		$this->template->title('FoOlFuuka &raquo; 4chan Archiver');
 		$this->template->build('index');
 	}
 
@@ -61,7 +61,7 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest($page);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' » Page '.$page:''));
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' &raquo; Page '.$page:''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Page ') . $page);
 
@@ -99,7 +99,7 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest($page, 20, TRUE, TRUE, TRUE);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Ghost' . (($page > 1)?' &raquo; Page '.$page:''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Ghosts page ') . $page);
 		$pages_links = array();
@@ -134,7 +134,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Thread #' . $num);
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Thread #' . $num);
 		$this->template->set('posts', $thread);
 
 		$this->template->set('thread_id', $num);

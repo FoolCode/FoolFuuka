@@ -25,7 +25,7 @@ foreach ($posts as $key => $post) : ?>
 
 		<label>
 			<?php if (isset($thread_id)) : ?><input type="checkbox" name="delete[]" value="<?php echo $op->doc_id ?>"/><?php endif; ?>
-			<span class="postername"><?php echo $op->name ?></span> <?php echo date('D M d H:i:s Y', $op->timestamp) ?>
+			<span class="postername"><?php echo $op->name ?></span> <?php echo date('D M d H:i:s Y', $op->timestamp + 18000) ?>
 		</label>
 
 		<?php if(!isset($thread_id)) : ?>

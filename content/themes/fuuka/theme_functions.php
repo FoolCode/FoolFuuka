@@ -27,7 +27,7 @@ function build_board_comment($p, $modifiers = array(), $thread_id = NULL) {
 						<input type="checkbox" name="delete[]" value="<?php echo $p->doc_id ?>"/>
 						<?php endif; ?>
 						<span class="postername"><?php echo $p->name ?></span>
-						<?php echo date('D M d H:i:s Y', $p->timestamp) ?>
+						<?php echo date('D M d H:i:s Y', $p->timestamp + 18000) ?>
 					</label>
 					<?php if($thread_id == NULL) : ?>
 					<a class="js" href="<?php echo site_url(array($CI->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>

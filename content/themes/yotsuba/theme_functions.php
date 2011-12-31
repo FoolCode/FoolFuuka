@@ -25,7 +25,7 @@ function build_board_comment($p, $modifiers = array(), $thread_id = NULL) {
 				<td id="<?php echo $p->num ?>" class="reply">
 					<span class="replytitle"></span>
 					<span class="commentpostername"><?php echo $p->name ?></span>
-					<?php echo date('M/d/y(D)H:i', $p->timestamp) ?>
+					<?php echo date('m/d/y(D)H:i', $p->timestamp + 18000) ?>
 
 					<?php if ($p->subnum > 0) : ?>
 					<span id="norep<?php echo $p->num . '_' . $p->subnum ?>">

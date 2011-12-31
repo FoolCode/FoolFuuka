@@ -31,7 +31,7 @@ foreach ($posts as $key => $post) : ?>
 		<span class="filetitle"></span>
 		<span class="postername"><?php echo $op->name ?></span>
 		<span class="postertrip"><?php echo $op->trip ?></span>
-		<span class="posttime"><?php echo date('M/d/y(D)H:i', $op->timestamp) ?></span>
+		<span class="posttime"><?php echo date('m/d/y(D)H:i', $op->timestamp + 18000) ?></span>
 		<span id="nothread<?php echo $op->num ?>">
 			<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" class="quotejs"><?php echo $op->num ?></a> &nbsp; [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]
 		</span>

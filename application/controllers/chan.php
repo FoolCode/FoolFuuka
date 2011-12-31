@@ -147,15 +147,21 @@ class Chan extends Public_Controller
 	{
 		// commenting
 		$post_data = '';
+		
+		if($this->input->post('name') || $this->input->post('reply') || $this->input->post('email'))
+		{
+			show_404();
+		}
+		
 		if ($this->input->post('reply_action') == 'Submit')
 		{
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('reply_numero', 'Thread no.', 'required|is_natural_no_zero|xss_clean');
-			$this->form_validation->set_rules('reply_bokunonome', 'Username', 'trim|xss_clean|max_lenght[64]');
-			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_lenght[64]');
-			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_lenght[64]');
-			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|required|min_lenght[3]|max_lenght[1000]|xss_clean');
-			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_lenght[3]|max_lenght[32]|xss_clean');
+			$this->form_validation->set_rules('reply_bokunonome', 'Username', 'trim|xss_clean|max_length[64]');
+			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_length[64]');
+			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_length[64]');
+			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|required|min_length[3]|max_length[500]|xss_clean');
+			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 			if ($this->tank_auth->is_allowed())
 			{

@@ -766,12 +766,15 @@ class Post extends CI_Model
 		$num = $data['num'];
 		$postas = $data['postas'];
 
-		$this->db->or_where('ip', $this->input->ip_address());
 		if ($this->session->userdata('poster_id'))
 		{
-			$this->db->or_where('id', $this->session->userdata('poster_id'));
+			$query = $this->db->get_where('posters', array('id' => $this->session->userdata('poster_id')));
 		}
-		$query = $this->db->get('posters');
+		else
+		{
+			$query = $this->db->get_where('posters', array('ip' => $this->input->ip_address()));
+		}
+
 
 		// if any data that could stop the query is returned, no need to add a row
 		if ($query->num_rows() > 0)
@@ -783,14 +786,17 @@ class Post extends CI_Model
 					return array('error' => 'You are banned from posting.');
 				}
 
-				if (time() - strtotime($row->lastpost) < 10 && !$this->tank_auth->is_allowed()) // 20 seconds
+				if (time() - strtotime($row->lastpost) < 10 && !$this->tank_auth->is_allowed()) // 10 seconds
 				{
-
-					//return array('error' => 'You must wait at least 10 seconds before posting again.');
+					return array('error' => 'You must wait at least 10 seconds before posting again.');
 				}
 
-				$this->db->where('id', $row->id);
-				$this->db->update('posters', array('lastpost' => date('Y-m-d H:i:s')));
+				if (time() - strtotime($row->lastpost) < 30 && $row->lastcomment == $comment)
+				{
+					return array('error' => 'Your post contained the same text as your previous post.');
+				}
+
+				$this->db->update('posters', array('id' => $row->id,  'lastcomment' => $comment, 'lastpost' => date('Y-m-d H:i:s')));
 			}
 		}
 		else

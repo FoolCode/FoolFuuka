@@ -23,7 +23,7 @@ function build_board_comment($p, $modifiers = array()) {
 								<span class="post_file_controls">
 									<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent">View Same</a><a target="_blank" href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" class="btnr parent">Google</a>
 								</span>
-								<span class="post_file_filename unshown"><?php echo $p->media ?></span><span class="post_file_filename shown"><?php 
+								<span class="post_file_filename unshown"><?php echo $p->media ?></span><span class="post_file_filename shown"><?php
 								if(mb_strlen($p->media) > 38)
 								{
 									$ext_pos = mb_strrpos($p->media, '.');
@@ -55,7 +55,7 @@ function build_board_comment($p, $modifiers = array()) {
 									<span class="post_level post_level_administrator">## Admin</span>
 								<?php endif ?>
 								<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
-								<span class="post_number"><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="highlight" data-post="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>">No.</a><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="quote" data-post="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a></span>
+								<span class="post_number"><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="highlight" data-post="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="quote" data-post="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a></span>
 								<span class="post_controls">
 									<?php if(isset($modifiers['post_show_view_button'])) : ?><a class="btnr" href="<?php echo site_url(array($CI->fu_board, 'thread', $p->parent)) . '#' . $p->num . (($p->subnum)?'_'.$p->subnum:'') ?>">View</a><?php endif; ?><a href="<?php echo site_url($CI->fu_board . '/report/' . $p->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><?php if($p->subnum > 0 || $CI->tank_auth->is_allowed()) : ?><a href="<?php echo site_url($CI->fu_board . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a><?php endif; ?>
 								</span>

@@ -22,7 +22,7 @@ class Public_Controller extends MY_Controller
 		{
 			$this->fu_reply_password = $this->input->cookie('foolfuuka_reply_password');
 		}
-		
+
 		if($this->input->cookie('foolfuuka_reply_email') != FALSE)
 		{
 			$this->fu_reply_email = $this->input->cookie('foolfuuka_reply_email');
@@ -31,7 +31,7 @@ class Public_Controller extends MY_Controller
 		{
 			$this->fu_reply_email = '';
 		}
-		
+
 		if($this->input->cookie('foolfuuka_reply_name') != FALSE)
 		{
 			$this->fu_reply_name = $this->input->cookie('foolfuuka_reply_name');
@@ -40,7 +40,7 @@ class Public_Controller extends MY_Controller
 		{
 			$this->fu_reply_name = '';
 		}
-		
+
 		// We need to set some theme stuff, so let's load the template system
 		$this->load->library('template');
 
@@ -48,11 +48,11 @@ class Public_Controller extends MY_Controller
 
 		// Set theme by using the theme variable
 		$this->fu_theme = (get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default');
-		if($this->input->cookie('foolfuuka_theme') && in_array($this->input->cookie('foolfuuka_theme'), array('default', 'fuuka')))
+		if($this->input->cookie('foolfuuka_theme') && in_array($this->input->cookie('foolfuuka_theme'), array('default', 'fuuka', 'yotsuba')))
 		{
 			$this->fu_theme = $this->input->cookie('foolfuuka_theme');
 		}
-		
+
 		$this->template->set_theme($this->fu_theme);
 
 		// load the controller from the current theme, else load the default one

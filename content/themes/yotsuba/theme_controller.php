@@ -5,11 +5,11 @@ if (!defined('BASEPATH'))
 
 /**
  * READER CONTROLLER
- * 
+ *
  * This file allows you to override the standard FoOlSlide controller to make
  * your own URLs for your theme, and to make sure your theme keeps working
  * even if the FoOlSlide default theme gets modified.
- * 
+ *
  * For more information, refer to the support sites linked in your admin panel.
  */
 
@@ -18,16 +18,113 @@ class Theme_Controller {
 	function __construct() {
 		$this->CI = & get_instance();
 	}
-	
-	
-	/**
-	 * 
-	 * Example function that overrides the index page
-	 * 
-	 */
-	//public function index($page = 1) {
-	//	if($this->CI->tank_auth->is_logged_in()) 
-	//		echo 'here';
-	//}
+
+
+	public function page($page = 1)
+	{
+		$this->CI->remap_query();
+		$this->CI->input->set_cookie('fu_ghost_mode', FALSE, 86400);
+		if ($this->CI->input->post())
+		{
+			redirect($this->CI->fu_board . '/page/' . $this->CI->input->post('page'), 'location', 303);
+		}
+
+		if (!is_natural($page) || $page > 500)
+		{
+			show_404();
+		}
+
+		$page = intval($page);
+
+		$this->CI->post->features = FALSE;
+		$this->CI->post->yotsuba = TRUE;
+		$posts = $this->CI->post->get_latest($page);
+
+		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' » Page '.$page:''));
+		if ($page > 1)
+			$this->CI->template->set('section_title', _('Page ') . $page);
+
+		$pages_links = array();
+		for($i = 1; $i < 16; $i++)
+		{
+			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'page', $i));
+		}
+		$this->CI->template->set('pages_links', $pages_links);
+		$this->CI->template->set('pages_links_current', $page);
+		$this->CI->template->set('posts',  $posts);
+		$this->CI->template->set('is_page', TRUE);
+		$this->CI->template->set('posts_per_thread', 5);
+		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
+		$this->CI->template->build('board');
+	}
+
+
+	public function ghost($page = 1)
+	{
+		$this->CI->input->set_cookie('fu_ghost_mode', TRUE, 86400);
+		if ($this->CI->input->post())
+		{
+			redirect($this->CI->fu_board . '/ghost/' . $this->CI->input->post('page'), 'location', 303);
+		}
+
+		$values = array();
+
+		if (!is_natural($page) || $page > 500)
+		{
+			show_404();
+		}
+
+		$page = intval($page);
+
+		$posts = $this->CI->post->get_latest($page, 20, TRUE, TRUE, TRUE);
+
+		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
+		if ($page > 1)
+			$this->CI->template->set('section_title', _('Ghosts page ') . $page);
+		$pages_links = array();
+		for($i = 1; $i < 16; $i++)
+		{
+			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'ghost', $i));
+		}
+		$this->CI->template->set('pages_links', $pages_links);
+		$this->CI->template->set('pages_links_current', $page);
+		$this->CI->template->set('posts', $posts);
+		$this->CI->template->set('is_page', TRUE);
+		$this->CI->template->set('posts_per_thread', 5);
+		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
+		$this->CI->template->build('board');
+	}
+
+
+	public function thread($num = 0)
+	{
+		$num = str_replace('S', '', $num);
+		if (!is_numeric($num) || !$num > 0)
+		{
+			show_404();
+		}
+
+		$num = intval($num);
+
+		$thread = $this->CI->post->get_thread($num);
+
+		if (!is_array($thread))
+		{
+			show_404();
+		}
+
+		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Thread #' . $num);
+		$this->CI->template->set('posts', $thread);
+
+		$this->CI->template->set('thread_id', $num);
+		//$this->CI->template->set_partial('post_reply', 'post_reply', array('thread_id' => $num, 'post_data' => $post_data));
+		$this->CI->template->build('board');
+	}
+
+
+	public function thread_o_matic()
+	{
+		show_404();
+	}
 
 }

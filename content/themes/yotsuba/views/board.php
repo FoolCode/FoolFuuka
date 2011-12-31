@@ -6,6 +6,8 @@ if (!isset($modifiers))
 		$modifiers = array();
 ?>
 
+<?php echo $template['partials']['post_reply']; ?>
+
 <form name="threads">
 
 <?php
@@ -31,7 +33,7 @@ foreach ($posts as $key => $post) : ?>
 		<span class="postertrip"><?php echo $op->trip ?></span>
 		<span class="posttime"><?php echo date('M/d/y(D)H:i', $op->timestamp) ?></span>
 		<span id="nothread<?php echo $op->num ?>">
-			<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" class="quotejs"><?php echo $op->num ?></a> [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>" class="quotejs">Reply</a>]
+			<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" class="quotejs"><?php echo $op->num ?></a> &nbsp; [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]
 		</span>
 		<blockquote>
 			<?php echo $op->comment_processed ?>
@@ -60,7 +62,14 @@ foreach ($posts as $key => $post) : ?>
 			if ($p->parent == 0)
 				$p->parent = $p->num;
 
-			echo build_board_comment($p, $modifiers);
+			if (isset($thread_id))
+			{
+				echo build_board_comment($p, $modifiers, $thread_id);
+			}
+			else
+			{
+				echo build_board_comment($p, $modifiers);
+			}
 		}
 	}
 	?>
@@ -68,13 +77,3 @@ foreach ($posts as $key => $post) : ?>
 	<hr>
 <?php endforeach; ?>
 </form>
-
-<script type="text/javascript">
-	site_url = '<?php echo site_url() ?>';
-	board_shortname = '<?php echo get_selected_board()->shortname ?>';
-	<?php if (isset($thread_id)) : ?>
-	thread_id = <?php echo $thread_id ?>;
-	thread_json = <?php echo json_encode($posts) ?>;
-	thread_latest_timestamp = thread_json[thread_id].posts[(thread_json[thread_id].posts.length - 1)].timestamp;
-	<?php endif; ?>
-</script>

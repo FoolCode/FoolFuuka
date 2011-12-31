@@ -35,7 +35,7 @@ foreach ($posts as $key => $post) : ?>
 		<?php endif; ?>
 
 		<blockquote><p><?php echo $op->comment_processed ?></p></blockquote>
-		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omittedposts">' . $post['omitted'] . ' posts omitted.</span>' : '') ?>
+		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omittedposts">' . $post['omitted'] . ' posts omitted. Click Reply to view.</span>' : '') ?>
 	</div>
 	<?php endif; ?>
 

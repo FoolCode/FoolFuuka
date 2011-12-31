@@ -1,0 +1,73 @@
+<?php
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
+?>
+
+<?php if (isset($thread_id)) : ?>
+<table width="100%">
+	<tbody>
+		<tr>
+			<th bgcolor="#e04000"><font color="#FFFFFF">Posting Mode: Reply</font></th>
+		</tr>
+	</tbody>
+</table>
+<span style="left: 5px; position: absolute;">[<a href="../../" accesskey="a">Return</a>]</span>
+<div style="postition:relative"></div>
+<div align="center" class="postarea">
+	<?php form_open_multipart(get_selected_board()->shortname.'/sending') ?>
+		<?php echo form_hidden('resto', $thread_id) ?>
+		<table cellpadding="1" cellspacing="1">
+			<tbody>
+				<tr>
+					<td></td>
+					<td class="postblock" align="left">
+						<b>Name</b>
+					</td>
+					<td>
+						<?php echo form_input(array('class' => 'inputtext', 'name' => 'name', 'size' => 28)) ?>
+						<span id="tdname"></span>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="postblock" align="left">
+						<b>E-mail</b>
+					</td>
+					<td>
+						<?php echo form_input(array('class' => 'inputtext', 'name' => 'email', 'size' => 28)) ?>
+						<span id="tdemail"></span>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="postblock" align="left">
+						<b>Subject</b>
+					</td>
+					<td>
+						<?php echo form_input(array('class' => 'inputtext', 'name' => 'sub', 'size' => 28)) ?>
+					</td>
+				</tr>
+				<tr>
+					<td vlaign="bottom"></td>
+					<td class="postblock" align="left">
+						<b>Comment</b>
+					</td>
+					<td>
+						<?php echo form_textarea(array('class' => 'inputtext', 'name' => 'com', 'cols' => 48, 'rows' => 4, 'wrap' => 'soft')) ?>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="postblock" align="left">
+						<b>Password</b>
+					</td>
+					<td>
+						<?php echo form_password(array('name' => 'pwd', 'size' => 24, 'value' => $this->fu_reply_password)) ?>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	<?php form_close() ?>
+</div>
+<hr>
+<?php endif; ?>

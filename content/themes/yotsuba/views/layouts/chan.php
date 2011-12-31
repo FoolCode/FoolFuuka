@@ -7,15 +7,8 @@
 		<meta http-equiv="imagetoolbar" content="false" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0" />
 		<?php
-		if ($this->config->item('theme_extends') != '' &&
-				$this->config->item('theme_extends') != get_setting('fs_theme_dir') &&
-				$this->config->item('theme_extends_css') === TRUE &&
-				file_exists('content/themes/' . $this->config->item('theme_extends') . '/style.css'))
-		{
-			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOLSLIDE_VERSION);
-		}
-		if (file_exists('content/themes/' . get_setting('fs_theme_dir') . '/style.css'))
-			echo link_tag('content/themes/' . get_setting('fs_theme_dir') . '/style.css?v=' . FOOLSLIDE_VERSION);
+		if (file_exists('content/themes/' . $this->fu_theme . '/style.css'))
+			echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOLSLIDE_VERSION);
 		?>
 		<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
 		<?php echo get_setting('fs_theme_header_code'); ?>

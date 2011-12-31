@@ -34,7 +34,7 @@ if (!defined('BASEPATH'))
 							<td><?php echo form_textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)); ?></td>
 						</tr>
 						<tr>
-							<td class="postblock">Password</td>
+							<td class="postblock">Password <a class="tooltip" href="#">[?] <span>Password used for file deletion.</span></a></td>
 							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)); ?></td>
 						</tr>
 						<?php if($this->tank_auth->is_allowed()) : ?>

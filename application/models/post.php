@@ -13,7 +13,9 @@ class Post extends CI_Model
 	var $existing_posts = array();
 	var $existing_posts_not = array();
 	var $existing_posts_maybe = array();
+	var $features = TRUE;
 	var $realtime = FALSE;
+	var $yotsuba = FALSE;
 
 	function __construct($id = NULL)
 	{
@@ -137,7 +139,7 @@ class Post extends CI_Model
 	 * @param type $process
 	 * @return type
 	 */
-	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE, $ghost = FALSE, $thread_order = FALSe)
+	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE, $ghost = FALSE, $thread_order = FALSE)
 	{
 
 		// get exactly 20 be it thread starters or parents with distinct parent
@@ -1201,6 +1203,10 @@ class Post extends CI_Model
 		// check if it's the OP that is being linked to
 		if (array_key_exists($num, $this->existing_posts))
 		{
+			if ($this->features == FALSE)
+			{
+				return (($this->yotsuba) ? '<font class="unkfunc">' : '') . '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#p' . $num . '"' . (($this->yotsuba) ? ' class="quotelink"' : '') . '>&gt;&gt;' . $num . '</a>' . (($this->yotsuba) ? '</font>' : '');
+			}
 			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" class="backlink op" data-function="highlight" data-backlink="true" data-post="' . $num . '">&gt;&gt;' . $num . '</a>';
 		}
 
@@ -1209,16 +1215,28 @@ class Post extends CI_Model
 		{
 			if (in_array($num, $thread))
 			{
+				if ($this->features == FALSE)
+				{
+					return (($this->yotsuba) ? '<font class="unkfunc">' : '') . '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#p' . str_replace(',', '_', $num) . '"' . (($this->yotsuba) ? ' class="quotelink"' : '') . '>&gt;&gt;' . $num . '</a>' . (($this->yotsuba) ? '</font>' : '');
+				}
 				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 			}
 		}
 
 		if ($this->realtime === TRUE)
 		{
+			if ($this->features == FALSE)
+			{
+				return (($this->yotsuba) ? '<font class="unkfunc">' : '') . '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#p' . str_replace(',', '_', $num) . '"' . (($this->yotsuba) ? ' class="quotelink"' : '') . '>&gt;&gt;' . $num . '</a>' . (($this->yotsuba) ? '</font>' : '');
+			}
 			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 		}
 
 		// nothing yet? make a generic link with post
+		if ($this->features == FALSE)
+		{
+			return (($this->yotsuba) ? '<font class="unkfunc">' : '') . '<a href="' . site_url(get_selected_board()->shortname . '/post/' . str_replace(',', '_', $num) . '/') . '"' . (($this->yotsuba) ? ' class="quotelink"' : '') . '>&gt;&gt;' . $num . '</a>' . (($this->yotsuba) ? '</font>' : '');
+		}
 		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . str_replace(',', '_', $num) . '/') . '" class="backlink" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
 
 		// return the thing untouched

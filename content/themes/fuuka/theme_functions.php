@@ -30,10 +30,11 @@ function build_board_comment($p, $modifiers = array(), $thread_id = NULL) {
 						<?php echo date('D M d H:i:s Y', $p->timestamp) ?>
 					</label>
 					<?php if($thread_id == NULL) : ?>
-					<a class="js" href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
+					<a class="js" href="<?php echo site_url(array($CI->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 					<?php else : ?>
-					<a class="js" href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
+					<a class="js" href="<?php echo site_url(array($CI->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 					<?php endif; ?>
+					<?php if(isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?php echo site_url(array($CI->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum)?'_'.$p->subnum:'') ?>">View</a>]<?php endif; ?>
 
 					<?php if ($p->deleted == 1) : ?><img class="inline" src="<?php echo site_url().'content/themes/'.(($CI->fu_theme) ? $CI->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="This post was deleted from 4chan manually."/><?php endif ?>
 					<?php if ($p->spoiler == 1) : ?><img class="inline" src="<?php echo site_url().'content/themes/'.(($CI->fu_theme) ? $CI->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="This post contains a spoiler image."/><?php endif ?>
@@ -42,7 +43,7 @@ function build_board_comment($p, $modifiers = array(), $thread_id = NULL) {
 					<br/>
 					<?php if ($p->media_filename) : ?>
 					<span>
-						File: <?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media_filename; ?>
+						File: <?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media; ?>
 						<?php echo '<!-- ' . substr($p->media_hash, 0, -2) . '-->' ?>
 					</span>
 					[<a href="<?php echo site_url($CI->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>">SauceNAO</a>]

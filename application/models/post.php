@@ -791,12 +791,13 @@ class Post extends CI_Model
 					return array('error' => 'You must wait at least 10 seconds before posting again.');
 				}
 
-				if (time() - strtotime($row->lastpost) < 30 && $row->lastcomment == $comment)
+				if (time() - strtotime($row->lastpost) < 20 && $row->lastcomment == $comment)
 				{
 					return array('error' => 'Your post contained the same text as your previous post.');
 				}
 
-				$this->db->update('posters', array('id' => $row->id,  'lastcomment' => $comment, 'lastpost' => date('Y-m-d H:i:s')));
+				$this->db->where('id', $row->id);
+				$this->db->update('posters', array('lastcomment' => $comment, 'lastpost' => date('Y-m-d H:i:s')));
 			}
 		}
 		else

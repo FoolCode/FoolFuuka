@@ -127,11 +127,11 @@ class Theme_Controller {
 		if ($this->CI->input->post('reply_action') == 'Submit') {
 			$this->CI->load->library('form_validation');
 			$this->CI->form_validation->set_rules('parent', 'Thread no.', 'required|is_natural_no_zero|xss_clean');
-			$this->CI->form_validation->set_rules('NAMAE', 'Username', 'trim|xss_clean|max_lenght[64]');
-			$this->CI->form_validation->set_rules('MERU', 'Email', 'trim|xss_clean|max_lenght[64]');
-			$this->CI->form_validation->set_rules('subject', 'Subject', 'trim|xss_clean|max_lenght[64]');
-			$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_lenght[3]|max_lenght[1000]|xss_clean');
-			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_lenght[3]|max_lenght[32]|xss_clean');
+			$this->CI->form_validation->set_rules('NAMAE', 'Username', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('MERU', 'Email', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('subject', 'Subject', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_lenght[3]|max_length[1000]|xss_clean');
+			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_lenght[3]|max_length[32]|xss_clean');
 
 
 			if ($this->CI->tank_auth->is_allowed())

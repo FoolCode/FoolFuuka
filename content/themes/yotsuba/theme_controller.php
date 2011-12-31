@@ -128,11 +128,11 @@ class Theme_Controller {
 		if ($this->CI->input->post('com_submit') == 'Submit') {
 			$this->CI->load->library('form_validation');
 			$this->CI->form_validation->set_rules('resto', 'Thread no.', 'required|is_natural_no_zero|xss_clean');
-			$this->CI->form_validation->set_rules('name', 'Username', 'trim|xss_clean|max_lenght[64]');
-			$this->CI->form_validation->set_rules('email', 'Email', 'trim|xss_clean|max_lenght[64]');
-			$this->CI->form_validation->set_rules('sub', 'Subject', 'trim|xss_clean|max_lenght[64]');
-			$this->CI->form_validation->set_rules('com', 'Comment', 'trim|required|min_lenght[3]|max_lenght[1000]|xss_clean');
-			$this->CI->form_validation->set_rules('pwd', 'Password', 'required|min_lenght[3]|max_lenght[32]|xss_clean');
+			$this->CI->form_validation->set_rules('name', 'Username', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('email', 'Email', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('sub', 'Subject', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('com', 'Comment', 'trim|required|min_lenght[3]|max_length[1000]|xss_clean');
+			$this->CI->form_validation->set_rules('pwd', 'Password', 'required|min_lenght[3]|max_length[32]|xss_clean');
 
 
 			if ($this->CI->tank_auth->is_allowed())

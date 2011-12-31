@@ -325,6 +325,7 @@ class Chan extends Public_Controller
 
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
+		$this->template->set('fast_redirect', TRUE);
 		$this->template->set_layout('redirect');
 		$this->template->build('redirect');
 	}
@@ -433,7 +434,7 @@ class Chan extends Public_Controller
 
 	public function theme($theme = 'default')
 	{
-		$this->input->set_cookie('foolfuuka_theme', $theme, 86400);
+		$this->input->set_cookie('foolfuuka_theme', $theme, 31536000);
 		if ($this->input->server('HTTP_REFERER')) :
 			$this->template->set('url', $this->input->server('HTTP_REFERER'));
 		else :

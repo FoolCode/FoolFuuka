@@ -56,6 +56,27 @@
 
 		<?php echo $template['body']; ?>
 
+		<table align="right">
+			<tbody>
+				<?php if (isset($thread_id)) : ?>
+				<tr>
+					<td nowrap="" align="center" class="deletebuttons">
+					Delete Post Password <input class="inputtext" type="password" name="pwd" size="8" maxlength="8" value="">
+					<input type="hidden" value="<?php echo $thread_id ?>"/>
+					<input type="submit" name="com_delete" value="Delete"/>
+					<input type="submit" name="com_report" value="Report"/>
+					</td>
+				</tr>
+				<?php endif; ?>
+				<tr>
+					<td align="right">
+						Theme [ <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'yotsuba')) ?>" onclick="changeTheme('yotsuba'); return false;">Yotsuba</a> ]
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
 		<?php if (isset($pages_links)) : ?>
 			<table class="pages" align="left" border="1">
 				<tbody>

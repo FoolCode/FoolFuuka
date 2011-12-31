@@ -62,6 +62,10 @@ if (!defined('BASEPATH'))
 										'name' => 'reply_delete',
 										'value' => 'Delete Selected Posts'
 									));
+									echo form_submit(array(
+										'name' => 'reply_report',
+										'value' => 'Report Selected Posts'
+									));
 								?>
 							</td>
 						</tr>

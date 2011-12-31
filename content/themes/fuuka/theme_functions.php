@@ -21,11 +21,9 @@ function build_board_comment($p, $modifiers = array(), $thread_id = NULL) {
 		<tbody>
 			<tr>
 				<td class="doubledash">&gt;&gt;</td>
-				<td class="reply" id="p<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
+				<td class="<?php echo ($p->subnum > 0) ? 'subreply' : 'reply' ?>" id="p<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
 					<label>
-						<?php if ($thread_id != NULL) : ?>
 						<input type="checkbox" name="delete[]" value="<?php echo $p->doc_id ?>"/>
-						<?php endif; ?>
 						<span class="postername"><?php echo $p->name ?></span>
 						<?php echo date('D M d H:i:s Y', $p->timestamp + 18000) ?>
 					</label>
@@ -34,11 +32,12 @@ function build_board_comment($p, $modifiers = array(), $thread_id = NULL) {
 					<?php else : ?>
 					<a class="js" href="<?php echo site_url(array($CI->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 					<?php endif; ?>
-					<?php if(isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?php echo site_url(array($CI->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum)?'_'.$p->subnum:'') ?>">View</a>]<?php endif; ?>
 
 					<?php if ($p->deleted == 1) : ?><img class="inline" src="<?php echo site_url().'content/themes/'.(($CI->fu_theme) ? $CI->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="This post was deleted from 4chan manually."/><?php endif ?>
 					<?php if ($p->spoiler == 1) : ?><img class="inline" src="<?php echo site_url().'content/themes/'.(($CI->fu_theme) ? $CI->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="This post contains a spoiler image."/><?php endif ?>
 					<?php if ($p->subnum > 0) : ?><img class="inline" src="<?php echo site_url().'content/themes/'.(($CI->fu_theme) ? $CI->fu_theme : 'default').'/images/icons/communicate-icon.png'; ?>" alt="[INTERNAL]" title="This is a ghost post, not coming from 4chan."/><?php endif ?>
+
+					<?php if(isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?php echo site_url(array($CI->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum)?'_'.$p->subnum:'') ?>">View</a>]<?php endif; ?>
 
 					<br/>
 					<?php if ($p->media_filename) : ?>

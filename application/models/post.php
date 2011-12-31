@@ -15,7 +15,6 @@ class Post extends CI_Model
 	var $existing_posts_maybe = array();
 	var $features = TRUE;
 	var $realtime = FALSE;
-	var $yotsuba = FALSE;
 
 	function __construct($id = NULL)
 	{
@@ -1200,44 +1199,49 @@ class Post extends CI_Model
 	{
 		$num = $matches[2];
 
-		// check if it's the OP that is being linked to
-		if (array_key_exists($num, $this->existing_posts))
+		$_prefix = '';
+		$_urltag = '#';
+		$_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '"';
+		$_suffix = '';
+		if ($this->features == FALSE)
 		{
-			if ($this->features == FALSE)
+			if ($this->fu_theme == 'fuuka')
 			{
-				return (($this->yotsuba) ? '<font class="unkfunc">' : '') . '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#p' . $num . '"' . (($this->yotsuba) ? ' class="quotelink"' : '') . '>&gt;&gt;' . $num . '</a>' . (($this->yotsuba) ? '</font>' : '');
+				$_prefix = '<span class="unkfunc">';
+				$_urltag = '#p';
+				$_option = ' onclick="replyhighlight(\'p' . str_replace(',', '_', $num) . '\')"';
+				$_suffix = '</span>';
 			}
-			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" class="backlink op" data-function="highlight" data-backlink="true" data-post="' . $num . '">&gt;&gt;' . $num . '</a>';
+
+			if ($this->fu_theme == 'yotsuba')
+			{
+				$_prefix = '<font class="unkfunc">';
+				$_urltag = '#';
+				$_option = ' class="quotelink" onclick="replyhl(\'' . str_replace(',', '_', $num) . '\');"';
+				$_suffix = '</font>';
+			}
 		}
 
-		// check if it's one of the posts we've already met
+		if (array_key_exists($num, $this->existing_posts))
+		{
+			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname,'thread',$num)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+		}
+
 		foreach ($this->existing_posts as $key => $thread)
 		{
 			if (in_array($num, $thread))
 			{
-				if ($this->features == FALSE)
-				{
-					return (($this->yotsuba) ? '<font class="unkfunc">' : '') . '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#p' . str_replace(',', '_', $num) . '"' . (($this->yotsuba) ? ' class="quotelink"' : '') . '>&gt;&gt;' . $num . '</a>' . (($this->yotsuba) ? '</font>' : '');
-				}
-				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+				return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname,'thread',$key)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 			}
 		}
 
 		if ($this->realtime === TRUE)
 		{
-			if ($this->features == FALSE)
-			{
-				return (($this->yotsuba) ? '<font class="unkfunc">' : '') . '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#p' . str_replace(',', '_', $num) . '"' . (($this->yotsuba) ? ' class="quotelink"' : '') . '>&gt;&gt;' . $num . '</a>' . (($this->yotsuba) ? '</font>' : '');
-			}
-			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname,'thread',$key)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 		}
 
 		// nothing yet? make a generic link with post
-		if ($this->features == FALSE)
-		{
-			return (($this->yotsuba) ? '<font class="unkfunc">' : '') . '<a href="' . site_url(get_selected_board()->shortname . '/post/' . str_replace(',', '_', $num) . '/') . '"' . (($this->yotsuba) ? ' class="quotelink"' : '') . '>&gt;&gt;' . $num . '</a>' . (($this->yotsuba) ? '</font>' : '');
-		}
-		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . str_replace(',', '_', $num) . '/') . '" class="backlink" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+		return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'post', str_replace(',', '_', $num))) . '">&gt;&gt;'.$num.'</a>' . $_suffix;
 
 		// return the thing untouched
 		return $matches[0];

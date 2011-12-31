@@ -207,6 +207,25 @@ class Theme_Controller {
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('board');
 		}
+
+		if ($this->CI->input->post('reply_report') == 'Report Selected Posts')
+		{
+			foreach ($this->CI->input->post('delete') as $key => $value)
+			{
+				$post = array(
+					'board' => get_selected_board()->id,
+					'post' => $value,
+					'reason' => $this->CI->input->post("KOMENTO")
+				);
+
+				$report = new Report();
+				$report->add($post);
+			}
+
+			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('parent')));
+			$this->CI->template->set_layout('redirect');
+			$this->CI->template->build('board');
+		}
 	}
 
 

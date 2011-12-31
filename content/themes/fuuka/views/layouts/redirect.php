@@ -13,9 +13,14 @@
 			a:visited { color: #34345C }
 			a:hover { color: #DD0000 }
 		</style>
+		<?php if (isset($fast_redirect)) : ?>
+		<meta http-equiv="Refresh" content="0; url=<?php echo $url ?>" />
+		<?php else : ?>
 		<meta http-equiv="Refresh" content="2; url=<?php echo $url ?>" />
+		<?php endif; ?>
 	</head>
 	<body>
+		<?php if (!isset($fast_redirect)) : ?>
 		<h1><?php echo $title ?></h1>
 		<div class="outer">
 			<div class="inner">
@@ -23,5 +28,6 @@
 			</div>
 		</div>
 		<p><a href="<?php echo $url ?>" rel="noreferrer"><?php echo $url ?></a><br/>All characters <acronym title="DO NOT STEAL MY ART">&#169;</acronym> Darkpa's party</p>
+		<?php endif; ?>
 	</body>
 </html>

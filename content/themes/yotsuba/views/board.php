@@ -28,6 +28,7 @@ foreach ($posts as $key => $post) : ?>
 
 		<a name="0"></a>
 
+		<input type="checkbox" name="delete[]" value="<?php echo $op->doc_id ?>"/>
 		<span class="filetitle"></span>
 		<span class="postername"><?php echo $op->name ?></span>
 		<span class="postertrip"><?php echo $op->trip ?></span>

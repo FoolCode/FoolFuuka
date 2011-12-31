@@ -22,7 +22,8 @@ function build_board_comment($p, $modifiers = array(), $thread_id = NULL) {
 		<tbody>
 			<tr>
 				<td nowrap class="doubledash">&gt;&gt;</td>
-				<td id="<?php echo $p->num ?>" class="reply">
+				<td id="<?php echo ($p->subnum > 0) ? $p->num . '_' . $p->subnum : $p->num ?>" class="reply">
+					<input type="checkbox" name="delete[]" value="<?php echo $p->doc_id ?>"/>
 					<span class="replytitle"></span>
 					<span class="commentpostername"><?php echo $p->name ?></span>
 					<?php echo date('m/d/y(D)H:i', $p->timestamp + 18000) ?>

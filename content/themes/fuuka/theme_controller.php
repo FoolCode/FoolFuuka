@@ -179,7 +179,7 @@ class Theme_Controller {
 				{
 					$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $data['num']));
 					$this->CI->template->set_layout('redirect');
-					$this->CI->template->build('board');
+					$this->CI->template->build('redirect');
 					return TRUE;
 				}
 			}
@@ -205,7 +205,7 @@ class Theme_Controller {
 
 			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('parent')));
 			$this->CI->template->set_layout('redirect');
-			$this->CI->template->build('board');
+			$this->CI->template->build('redirect');
 		}
 
 		if ($this->CI->input->post('reply_report') == 'Report Selected Posts')
@@ -224,7 +224,7 @@ class Theme_Controller {
 
 			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('parent')));
 			$this->CI->template->set_layout('redirect');
-			$this->CI->template->build('board');
+			$this->CI->template->build('redirect');
 		}
 	}
 

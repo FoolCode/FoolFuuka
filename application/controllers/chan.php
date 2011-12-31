@@ -138,7 +138,6 @@ class Chan extends Public_Controller
 		$this->template->set('posts', $thread);
 
 		$this->template->set('thread_id', $num);
-		//$this->template->set_partial('post_reply', 'post_reply', array('thread_id' => $num, 'post_data' => $post_data));
 		$this->template->build('board');
 	}
 
@@ -441,7 +440,7 @@ class Chan extends Public_Controller
 			$this->template->set('url', site_url(get_selected_board()->shortname));
 		endif;
 		$this->template->set_layout('redirect');
-		$this->template->build('board');
+		$this->template->build('redirect');
 	}
 
 

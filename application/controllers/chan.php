@@ -138,7 +138,6 @@ class Chan extends Public_Controller
 		$this->template->set('posts', $thread);
 
 		$this->template->set('thread_id', $num);
-		//$this->template->set_partial('post_reply', 'post_reply', array('thread_id' => $num, 'post_data' => $post_data));
 		$this->template->build('board');
 	}
 
@@ -153,14 +152,14 @@ class Chan extends Public_Controller
 			show_404();
 		}
 		
-		if ($this->input->post('reply_action') == 'Submit')
+		if ($this->input->post('reply_gattai') == 'Submit')
 		{
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('reply_numero', 'Thread no.', 'required|is_natural_no_zero|xss_clean');
 			$this->form_validation->set_rules('reply_bokunonome', 'Username', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_length[64]');
-			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|required|min_length[3]|max_length[500]|xss_clean');
+			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|required|min_length[3]|max_length[4096]|xss_clean');
 			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 			if ($this->tank_auth->is_allowed())
@@ -228,6 +227,7 @@ class Chan extends Public_Controller
 					$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . '_' . $result['posted']->subnum;
 					$this->template->title(_('Redirecting...'));
 					$this->template->set('url', $url);
+					$this->template->set_layout('redirect');
 					$this->template->build('redirect');
 					return TRUE;
 				}
@@ -330,6 +330,8 @@ class Chan extends Public_Controller
 
 		$this->template->title(_('Redirecting...'));
 		$this->template->set('url', $url);
+		$this->template->set('fast_redirect', TRUE);
+		$this->template->set_layout('redirect');
 		$this->template->build('redirect');
 	}
 
@@ -356,7 +358,7 @@ class Chan extends Public_Controller
 	public function redirect($image = NULL) {
 		$this->template->set('url', get_selected_board()->images_url . $image);
 		$this->template->set_layout('redirect');
-		$this->template->build('board');
+		$this->template->build('redirect');
 	}
 
 
@@ -432,6 +434,19 @@ class Chan extends Public_Controller
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 		$this->template->build('board');
+	}
+
+
+	public function theme($theme = 'default')
+	{
+		$this->input->set_cookie('foolfuuka_theme', $theme, 31536000);
+		if ($this->input->server('HTTP_REFERER')) :
+			$this->template->set('url', $this->input->server('HTTP_REFERER'));
+		else :
+			$this->template->set('url', site_url(get_selected_board()->shortname));
+		endif;
+		$this->template->set_layout('redirect');
+		$this->template->build('redirect');
 	}
 
 

@@ -7,20 +7,16 @@
 		<meta http-equiv="imagetoolbar" content="false" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0" />
 		<?php
-		if ($this->config->item('theme_extends') != '' &&
-				$this->config->item('theme_extends') != get_setting('fs_theme_dir') &&
-				$this->config->item('theme_extends_css') === TRUE &&
-				file_exists('content/themes/' . $this->config->item('theme_extends') . '/style.css'))
-		{
-			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOLSLIDE_VERSION);
-		}
-		if (file_exists('content/themes/' . get_setting('fs_theme_dir') . '/style.css'))
-			echo link_tag('content/themes/' . get_setting('fs_theme_dir') . '/style.css?v=' . FOOLSLIDE_VERSION);
+		if (file_exists('content/themes/' . $this->fu_theme . '/style.css'))
+			echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOLSLIDE_VERSION);
 		?>
+		<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body bgcolor="#FFFFEE" text="#800000" link="#0000EE" vlink="#0000EE">
+		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
+
 		<div id="header">
 			<span id="navtop">
 			<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
@@ -56,7 +52,31 @@
 
 		<hr>
 
+		<?php endif; ?>
+
 		<?php echo $template['body']; ?>
+
+		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
+		<table align="right">
+			<tbody>
+				<?php if (isset($thread_id)) : ?>
+				<tr>
+					<td nowrap="" align="center" class="deletebuttons">
+					Delete Post Password <input class="inputtext" type="password" name="pwd" size="8" maxlength="8" value="">
+					<input type="hidden" value="<?php echo $thread_id ?>"/>
+					<input type="submit" name="com_delete" value="Delete"/>
+					<input type="submit" name="com_report" value="Report"/>
+					</td>
+				</tr>
+				<?php endif; ?>
+				<tr>
+					<td align="right">
+						Theme [ <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'yotsuba')) ?>" onclick="changeTheme('yotsuba'); return false;">Yotsuba</a> ]
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<?php endif; ?>
 
 		<?php if (isset($pages_links)) : ?>
 			<table class="pages" align="left" border="1">

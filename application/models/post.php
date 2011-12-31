@@ -13,6 +13,7 @@ class Post extends CI_Model
 	var $existing_posts = array();
 	var $existing_posts_not = array();
 	var $existing_posts_maybe = array();
+	var $features = TRUE;
 	var $realtime = FALSE;
 
 	function __construct($id = NULL)
@@ -137,7 +138,7 @@ class Post extends CI_Model
 	 * @param type $process
 	 * @return type
 	 */
-	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE, $ghost = FALSE, $thread_order = FALSe)
+	function get_latest($page = 1, $per_page = 20, $process = TRUE, $clean = TRUE, $ghost = FALSE, $thread_order = FALSE)
 	{
 
 		// get exactly 20 be it thread starters or parents with distinct parent
@@ -756,6 +757,18 @@ class Post extends CI_Model
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
 
+		if (strlen($comment) > 4096)
+		{
+			return array('error' => 'Your post was too long.');
+		}
+
+		$lines = explode("\n", $comment);
+
+		if (count($lines) > 20)
+		{
+			return array('error' => 'Your post had too many lines.');
+		}
+
 		// phpass password for extra security, using the same tank_auth setting since it's cool
 		$hasher = new PasswordHash(
 						$this->config->item('phpass_hash_strength', 'tank_auth'),
@@ -765,12 +778,15 @@ class Post extends CI_Model
 		$num = $data['num'];
 		$postas = $data['postas'];
 
-		$this->db->or_where('ip', $this->input->ip_address());
 		if ($this->session->userdata('poster_id'))
 		{
-			$this->db->or_where('id', $this->session->userdata('poster_id'));
+			$query = $this->db->get_where('posters', array('id' => $this->session->userdata('poster_id')));
 		}
-		$query = $this->db->get('posters');
+		else
+		{
+			$query = $this->db->get_where('posters', array('ip' => $this->input->ip_address()));
+		}
+
 
 		// if any data that could stop the query is returned, no need to add a row
 		if ($query->num_rows() > 0)
@@ -782,33 +798,26 @@ class Post extends CI_Model
 					return array('error' => 'You are banned from posting.');
 				}
 
-				if (time() - strtotime($row->lastpost) < 10 && !$this->tank_auth->is_allowed()) // 20 seconds
+				if (time() - strtotime($row->lastpost) < 10 && !$this->tank_auth->is_allowed()) // 10 seconds
 				{
+					return array('error' => 'You must wait at least 10 seconds before posting again.');
+				}
 
-					//return array('error' => 'You must wait at least 10 seconds before posting again.');
+				if (time() - strtotime($row->lastpost) < 20 && $row->lastcomment == $comment)
+				{
+					return array('error' => 'Your post contained the same text as your previous post.');
 				}
 
 				$this->db->where('id', $row->id);
-				$this->db->update('posters', array('lastpost' => date('Y-m-d H:i:s')));
+				$this->db->update('posters', array('lastcomment' => $comment, 'lastpost' => date('Y-m-d H:i:s')));
 			}
 		}
 		else
 		{
-			if (strlen($comment) > 4096)
-			{
-				return array('error' => 'Your post was too long.');
-			}
-
-			$lines = explode("\n", $comment);
-
-			if (count($lines) > 40)
-			{
-				return array('error' => 'Your post had too many lines.');
-			}
-
 			$insert_poster = array(
 				'ip' => $this->input->ip_address(),
-				'user_agent' => $this->input->user_agent()
+				'user_agent' => $this->input->user_agent(),
+				'lastcomment' => $comment
 			);
 			$this->db->insert('posters', $insert_poster);
 			$poster_id = $this->db->insert_id();
@@ -1198,28 +1207,49 @@ class Post extends CI_Model
 	{
 		$num = $matches[2];
 
-		// check if it's the OP that is being linked to
-		if (array_key_exists($num, $this->existing_posts))
+		$_prefix = '';
+		$_urltag = '#';
+		$_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '"';
+		$_suffix = '';
+		if ($this->features == FALSE)
 		{
-			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $num . '/') . '#' . $num . '" class="backlink op" data-function="highlight" data-backlink="true" data-post="' . $num . '">&gt;&gt;' . $num . '</a>';
+			if ($this->fu_theme == 'fuuka')
+			{
+				$_prefix = '<span class="unkfunc">';
+				$_urltag = '#p';
+				$_option = ' onclick="replyhighlight(\'p' . str_replace(',', '_', $num) . '\')"';
+				$_suffix = '</span>';
+			}
+
+			if ($this->fu_theme == 'yotsuba')
+			{
+				$_prefix = '<font class="unkfunc">';
+				$_urltag = '#';
+				$_option = ' class="quotelink" onclick="replyhl(\'' . str_replace(',', '_', $num) . '\');"';
+				$_suffix = '</font>';
+			}
 		}
 
-		// check if it's one of the posts we've already met
+		if (array_key_exists($num, $this->existing_posts))
+		{
+			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname,'thread',$num)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+		}
+
 		foreach ($this->existing_posts as $key => $thread)
 		{
 			if (in_array($num, $thread))
 			{
-				return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+				return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname,'thread',$key)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 			}
 		}
 
 		if ($this->realtime === TRUE)
 		{
-			return '<a href="' . site_url(get_selected_board()->shortname . '/thread/' . $key . '/') . '#' . str_replace(',', '_', $num) . '" class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname,'thread',$key)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 		}
 
 		// nothing yet? make a generic link with post
-		return '<a href="' . site_url(get_selected_board()->shortname . '/post/' . str_replace(',', '_', $num) . '/') . '" class="backlink" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '">&gt;&gt;' . $num . '</a>';
+		return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'post', str_replace(',', '_', $num))) . '">&gt;&gt;'.$num.'</a>' . $_suffix;
 
 		// return the thing untouched
 		return $matches[0];

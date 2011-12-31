@@ -20,6 +20,81 @@ class Theme_Controller {
 	}
 
 
+	public function page($page = 1)
+	{
+		$this->CI->remap_query();
+		$this->CI->input->set_cookie('fu_ghost_mode', FALSE, 86400);
+		if ($this->CI->input->post())
+		{
+			redirect($this->CI->fu_board . '/page/' . $this->CI->input->post('page'), 'location', 303);
+		}
+
+		if (!is_natural($page) || $page > 500)
+		{
+			show_404();
+		}
+
+		$page = intval($page);
+
+		$this->CI->post->features = FALSE;
+		$posts = $this->CI->post->get_latest($page, 20, TRUE, TRUE, FALSE, TRUE, FALSE);
+
+		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' » Page '.$page:''));
+		if ($page > 1)
+			$this->CI->template->set('section_title', _('Page ') . $page);
+
+		$pages_links = array();
+		for($i = 1; $i < 16; $i++)
+		{
+			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'page', $i));
+		}
+		$this->CI->template->set('pages_links', $pages_links);
+		$this->CI->template->set('pages_links_current', $page);
+		$this->CI->template->set('posts',  $posts);
+		$this->CI->template->set('is_page', TRUE);
+		$this->CI->template->set('posts_per_thread', 5);
+		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
+		$this->CI->template->build('board');
+	}
+
+	public function ghost($page = 1)
+	{
+		$this->CI->input->set_cookie('fu_ghost_mode', TRUE, 86400);
+		if ($this->CI->input->post())
+		{
+			redirect($this->CI->fu_board . '/ghost/' . $this->CI->input->post('page'), 'location', 303);
+		}
+
+		$values = array();
+
+		if (!is_natural($page) || $page > 500)
+		{
+			show_404();
+		}
+
+		$page = intval($page);
+
+		$this->CI->post->features = FALSE;
+		$posts = $this->CI->post->get_latest($page, 20, TRUE, TRUE, TRUE, TRUE, FALSE);
+
+		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
+		if ($page > 1)
+			$this->CI->template->set('section_title', _('Ghosts page ') . $page);
+		$pages_links = array();
+		for($i = 1; $i < 16; $i++)
+		{
+			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'ghost', $i));
+		}
+		$this->CI->template->set('pages_links', $pages_links);
+		$this->CI->template->set('pages_links_current', $page);
+		$this->CI->template->set('posts', $posts);
+		$this->CI->template->set('is_page', TRUE);
+		$this->CI->template->set('posts_per_thread', 5);
+		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
+		$this->CI->template->build('board');
+	}
+
+
 	public function thread($num)
 	{
 		$num = str_replace('S', '', $num);
@@ -30,6 +105,7 @@ class Theme_Controller {
 
 		$num = intval($num);
 
+		$this->CI->post->features = FALSE;
 		$thread = $this->CI->post->get_thread($num);
 
 		if (!is_array($thread))
@@ -45,16 +121,17 @@ class Theme_Controller {
 		$this->CI->template->build('board');
 	}
 
+
 	public function sending()
 	{
 		if ($this->CI->input->post('reply_action') == 'Submit') {
 			$this->CI->load->library('form_validation');
 			$this->CI->form_validation->set_rules('parent', 'Thread no.', 'required|is_natural_no_zero|xss_clean');
-			$this->CI->form_validation->set_rules('NAMAE', 'Username', 'trim|xss_clean|max_lenght[64]');
-			$this->CI->form_validation->set_rules('MERU', 'Email', 'trim|xss_clean|max_lenght[64]');
-			$this->CI->form_validation->set_rules('subject', 'Subject', 'trim|xss_clean|max_lenght[64]');
-			$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_lenght[3]|max_lenght[1000]|xss_clean');
-			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_lenght[3]|max_lenght[32]|xss_clean');
+			$this->CI->form_validation->set_rules('NAMAE', 'Username', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('MERU', 'Email', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('subject', 'Subject', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_length[3]|max_length[1000]|xss_clean');
+			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 
 			if ($this->CI->tank_auth->is_allowed())
@@ -102,7 +179,7 @@ class Theme_Controller {
 				{
 					$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $data['num']));
 					$this->CI->template->set_layout('redirect');
-					$this->CI->template->build('board');
+					$this->CI->template->build('redirect');
 					return TRUE;
 				}
 			}
@@ -128,9 +205,29 @@ class Theme_Controller {
 
 			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('parent')));
 			$this->CI->template->set_layout('redirect');
-			$this->CI->template->build('board');
+			$this->CI->template->build('redirect');
+		}
+
+		if ($this->CI->input->post('reply_report') == 'Report Selected Posts')
+		{
+			foreach ($this->CI->input->post('delete') as $key => $value)
+			{
+				$post = array(
+					'board' => get_selected_board()->id,
+					'post' => $value,
+					'reason' => $this->CI->input->post("KOMENTO")
+				);
+
+				$report = new Report();
+				$report->add($post);
+			}
+
+			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('parent')));
+			$this->CI->template->set_layout('redirect');
+			$this->CI->template->build('redirect');
 		}
 	}
+
 
 	public function thread_o_matic()
 	{

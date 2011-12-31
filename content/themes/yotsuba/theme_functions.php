@@ -13,29 +13,28 @@
  */
 
 
-function build_board_comment($p, $modifiers = array()) {
+function build_board_comment($p, $modifiers = array(), $thread_id = NULL) {
 	$CI = & get_instance();
 	ob_start();
 ?>
-	<a name="<?php echo $p->num ?>"></a>
+	<a name="<?php echo ($p->subnum > 0) ? $p->num . '_' . $p->subnum : $p->num ?>"></a>
 	<table>
 		<tbody>
 			<tr>
 				<td nowrap class="doubledash">&gt;&gt;</td>
-				<td id="<?php echo $p->num ?>" class="reply">
+				<td id="<?php echo ($p->subnum > 0) ? $p->num . '_' . $p->subnum : $p->num ?>" class="reply">
+					<input type="checkbox" name="delete[]" value="<?php echo $p->doc_id ?>"/>
 					<span class="replytitle"></span>
 					<span class="commentpostername"><?php echo $p->name ?></span>
-					<?php echo date('M/d/y(D)H:i', $p->timestamp) ?>
+					<?php echo date('m/d/y(D)H:i', $p->timestamp + 18000) ?>
 
 					<?php if ($p->subnum > 0) : ?>
 					<span id="norep<?php echo $p->num . '_' . $p->subnum ?>">
-						<a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>" class="quotejs">No.</a>
-						<a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum ?>" class="quotejs"><?php echo $p->num ?></a>
+						<a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>" class="quotejs">No.</a><a href="<?php echo ($thread_id == NULL) ? site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum : 'javascript:quote(\'' . $p->num . ',' . $p->subnum . '\')'?>" class="quotejs"><?php echo $p->num . ',' . $p->subnum ?></a>
 					</span>
 					<?php else : ?>
 					<span id="norep<?php echo $p->num ?>">
-						<a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num ?>" class="quotejs">No.</a>
-						<a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#q' . $p->num ?>" class="quotejs"><?php echo $p->num ?></a>
+						<a href="<?php echo site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num ?>" class="quotejs">No.</a><a href="<?php echo ($thread_id == NULL) ? site_url($CI->fu_board . '/thread/' . $p->parent) . '#' . $p->num : 'javascript:quote(\'' . $p->num . '\')' ?>" class="quotejs"><?php echo $p->num ?></a>
 					</span>
 					<?php endif; ?>
 

@@ -55,15 +55,15 @@ if (!isset($page))
 					<td>
 						<label>
 							<?php echo form_radio(array('name' => 'deleted', 'value' => '', 'checked' => (empty($search["deleted"])) ? TRUE : FALSE)); ?>
-							<span>Display All Posts</span>
+							<span>Show All Posts</span>
 						</label><br />
 						<label>
 							<?php echo form_radio(array('name' => 'deleted', 'value' => 'deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'deleted') ? TRUE : FALSE)); ?>
-							<span>Only Deleted Posts</span>
+							<span>Show Only Deleted Posts</span>
 						</label><br />
 						<label>
 							<?php echo form_radio(array('name' => 'deleted', 'value' => 'not-deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'not-deleted') ? TRUE : FALSE)); ?>
-							<span>Only Non-Deleted Posts</span>
+							<span>Only Show Non-Deleted Posts</span>
 						</label>
 					</td>
 				</tr>
@@ -72,15 +72,15 @@ if (!isset($page))
 					<td>
 						<label>
 							<?php echo form_radio(array('name' => 'ghost', 'value' => '', 'checked' => (empty($search["ghost"])) ? TRUE : FALSE)); ?>
-							<span>Display All Posts</span>
+							<span>Show All Posts</span>
 						</label><br />
 						<label>
 							<?php echo form_radio(array('name' => 'ghost', 'value' => 'only', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'only') ? TRUE : FALSE)); ?>
-							<span>Only Ghost Posts</span>
+							<span>Show Only Internal Posts</span>
 						</label><br />
 						<label>
 							<?php echo form_radio(array('name' => 'ghost', 'value' => 'none', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'none') ? TRUE : FALSE)); ?>
-							<span>Old Archived Posts</span>
+							<span>Show Old Archived Posts</span>
 						</label>
 					</td>
 				</tr>
@@ -106,7 +106,7 @@ if (!isset($page))
 							'onclick' => 'getSearch(\'advanced\', this.form); return false;'
 						));
 						echo form_submit(array(
-							'value' => 'Advanced',
+							'value' => 'Simple',
 							'onclick' => 'javascript:toggle(\'advanced-search\');toggle(\'simple-search\');return false;'
 						));
 						?>

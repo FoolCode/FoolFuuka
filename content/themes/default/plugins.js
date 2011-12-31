@@ -10,7 +10,7 @@ var bindFunctions = function()
 				break;
 
 			case 'quote':
-				jQuery("#reply_comment").val(jQuery("#reply_comment").val() + ">>" + post + "\n");
+				jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
 				break;
 
 			case 'comment':
@@ -24,13 +24,13 @@ var bindFunctions = function()
 					cache: false,
 					data: {
 						reply_numero: post,
-						reply_bokunonome: jQuery("#reply_name").val(),
-						reply_elittera: jQuery("#reply_email").val(),
-						reply_talkingde: jQuery("#reply_subject").val(),
-						reply_chennodiscursus: jQuery("#reply_comment").val(),
-						reply_nymphassword: jQuery("#reply_password").val(),
+						reply_bokunonome: jQuery("#reply_bokunonome").val(),
+						reply_elittera: jQuery("#reply_elittera").val(),
+						reply_talkingde: jQuery("#reply_talkingde").val(),
+						reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
+						reply_nymphassword: jQuery("#reply_nymphassword").val(),
 						reply_postas: jQuery("#reply_postas").val(),
-						reply_action: 'Submit'
+						reply_gattai: 'Submit'
 					},
 					success: function(data){
 						if (data.error != "")
@@ -43,7 +43,7 @@ var bindFunctions = function()
 						reply_alert.html(data.success);
 						reply_alert.addClass('success');
 						reply_alert.show();
-						jQuery("#reply_comment").val("");
+						jQuery("#reply_chennodiscursus").val("");
 						realtimethread();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
@@ -249,7 +249,7 @@ var backlinkify = function(elem, post_id, subnum)
 
 	elem.find("[data-backlink=true]").each(function(idx, post) {
 		p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
-		
+
 		if (typeof backlinks[p_id] == "undefined")
 		{
 			backlinks[p_id] = [];
@@ -272,7 +272,7 @@ var backlinkify = function(elem, post_id, subnum)
 				delete val[v];
 			}
 		});
-		
+
 		post_backlink.html(post_backlink.html() + ((post_backlink.html().length > 0)?" ":"") + val.join(" "));
 		post_backlink.parent().show();
 	});
@@ -307,12 +307,12 @@ var realtimethread = function(){
 						jQuery('article.thread aside').append(post);
 					}
 				});
-				
+
 				if(jQuery('#reply_form :focus').length > 0)
 				{
 					window.scrollBy(0, jQuery(document).height() - w_height);
 				}
-				
+
 				thread_latest_doc_id = getLatestID(data[thread_id].posts);
 				timelapse = 10;
 			}
@@ -520,7 +520,7 @@ jQuery(document).ready(function() {
 	if (post[1]) {
 		if (post[1].match(/^q\d+(_\d+)?$/)) {
 			post[1] = post[1].replace('q', '').replace('_', ',');
-			jQuery("#reply_comment").append(">>" + post[1] + "\n");
+			jQuery("#reply_chennodiscursus").append(">>" + post[1] + "\n");
 			post[1] = post[1].replace(',', '_')
 		}
 		replyHighlight(post[1]);

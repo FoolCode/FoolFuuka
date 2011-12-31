@@ -17,49 +17,49 @@ if (!defined('BASEPATH'))
 		<?php echo form_open(get_selected_board()->shortname.'/sending', array('class' => 'form-stacked', 'id' => 'reply_form')) ?>
 		<fieldset>
 			<div class="clearfix">
-				<label for="reply_name">Name</label>
+				<label for="reply_bokunonome">Name</label>
 				<div class="input">
 					<?php echo form_input(array(
 						'name' => 'reply_bokunonome',
-						'id' => 'reply_name',
+						'id' => 'reply_bokunonome',
 						'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:'')
 					)); ?>
 				</div>
 			</div>
 			<div class="clearfix">
-				<label for="reply_email">E-mail</label>
+				<label for="reply_elitterae">E-mail</label>
 				<div class="input">
 					<?php echo form_input(array(
 						'name' => 'reply_elitterae',
-						'id' => 'reply_email',
+						'id' => 'reply_elitterae',
 						'value' => ((isset($this->fu_reply_email))?$this->fu_reply_email:'')
 					)); ?>
 				</div>
 			</div>
 			<div class="clearfix">
-				<label for="reply_subject">Subject</label>
+				<label for="reply_talkingde">Subject</label>
 				<div class="input">
 					<?php echo form_input(array(
 						'name' => 'reply_talkingde',
-						'id' => 'reply_subject'
+						'id' => 'reply_talkingde'
 					)); ?>
 				</div>
 			</div>
 			<div class="clearfix">
-				<label for="reply_comment">Comment</label>
+				<label for="reply_chennodiscursus">Comment</label>
 				<div class="input">
 					<?php echo form_textarea(array(
 						'name' => 'reply_chennodiscursus',
-						'id' => 'reply_comment'
+						'id' => 'reply_chennodiscursus'
 					)); ?>
 				</div>
 			</div>
 			<div class="clearfix">
-				<label for="reply_password">Password</label>
+				<label for="reply_nymphassword">Password</label>
 				<div class="input">
 					<?php echo form_password(array(
 						'name' => 'reply_nymphassword',
-						'id' => 'reply_password',
+						'id' => 'reply_nymphassword',
 						'value' => $this->fu_reply_password
 					)); ?>
 				</div>
@@ -84,7 +84,7 @@ if (!defined('BASEPATH'))
 			<?php
 				echo form_hidden('reply_numero', $thread_id);
 				echo form_submit(array(
-					'name' => 'reply_action',
+					'name' => 'reply_gattai',
 					'value' => 'Submit',
 					'class' => 'btn primary',
 					'data-function' => 'comment',

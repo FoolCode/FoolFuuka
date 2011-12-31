@@ -816,7 +816,8 @@ class Post extends CI_Model
 
 			$insert_poster = array(
 				'ip' => $this->input->ip_address(),
-				'user_agent' => $this->input->user_agent()
+				'user_agent' => $this->input->user_agent(),
+				'lastcomment' => $comment
 			);
 			$this->db->insert('posters', $insert_poster);
 			$poster_id = $this->db->insert_id();

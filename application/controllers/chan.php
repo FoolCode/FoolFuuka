@@ -147,7 +147,7 @@ class Chan extends Public_Controller
 		// commenting
 		$post_data = '';
 		
-		if($this->input->post('name') || $this->input->post('reply') || $this->input->post('email'))
+		if(mb_strlen($this->input->post('name')) > 0 || mb_strlen($this->input->post('reply')) > 0 || mb_strlen($this->input->post('email')) > 0)
 		{
 			show_404();
 		}

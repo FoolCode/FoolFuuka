@@ -25,7 +25,7 @@ var bindFunctions = function()
 					data: {
 						reply_numero: post,
 						reply_bokunonome: jQuery("#reply_bokunonome").val(),
-						reply_elittera: jQuery("#reply_elittera").val(),
+						reply_elitterae: jQuery("#reply_elitterae").val(),
 						reply_talkingde: jQuery("#reply_talkingde").val(),
 						reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
 						reply_nymphassword: jQuery("#reply_nymphassword").val(),

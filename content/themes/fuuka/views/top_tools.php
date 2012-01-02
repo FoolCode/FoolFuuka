@@ -124,8 +124,7 @@ if (!isset($page))
 		echo 'Post No.';
 		echo form_input(array(
 			'name' => 'post',
-			'id' => 'post',
-			'class' => 'mini'
+			'id' => 'post'
 		));
 		echo form_submit(array(
 			'value' => 'View',

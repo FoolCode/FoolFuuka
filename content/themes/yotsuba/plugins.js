@@ -148,6 +148,14 @@ function readCookie(name) {
     return null;
 }
 
+function toggle(id) {
+  var elem;
+
+  if (!(elem = document.getElementById(id))) return;
+
+  elem.style.display = elem.style.display ? "" : "none";
+}
+
 function setCookie(name, value, expires, path, domain, secure) {
 
 	var today = new Date();

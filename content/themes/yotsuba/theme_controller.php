@@ -204,7 +204,11 @@ class Theme_Controller {
 				$result = $this->CI->post->delete($post);
 			}
 
-			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('resto')));
+			if ($this->CI->input->post('resto')) :
+				$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('resto')));
+			else :
+				$this->CI->template->set('url', site_url(get_selected_board()->shortname));
+			endif;
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');
 		}
@@ -216,14 +220,18 @@ class Theme_Controller {
 				$post = array(
 					'board' => get_selected_board()->id,
 					'post' => $value,
-					'reason' => $this->CI->input->post("KOMENTO")
+					'reason' => ''
 				);
 
 				$report = new Report();
 				$report->add($post);
 			}
 
-			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('resto')));
+			if ($this->CI->input->post('resto')) :
+				$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('resto')));
+			else :
+				$this->CI->template->set('url', site_url(get_selected_board()->shortname));
+			endif;
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');
 		}

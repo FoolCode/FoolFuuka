@@ -11,10 +11,13 @@ class Post extends CI_Model
 	var $sql_report = '';
 	var $sql_report_after_join = '';
 	var $existing_posts = array();
-	var $existing_posts_not = array();
-	var $existing_posts_maybe = array();
+	var $backlinks = array();
 	var $features = TRUE;
 	var $realtime = FALSE;
+	
+	// I'd love to get rid of these but there seems to be no other way to pass
+	// more parameters to callbacks
+	var $current_row = null;
 
 	function __construct($id = NULL)
 	{
@@ -270,6 +273,7 @@ class Post extends CI_Model
 			{
 				$this->process_post($post, $clean);
 			}
+			
 			$post_num = ($post->parent > 0) ? $post->parent : $post->num;
 			if (!isset($result[$post_num]['omitted']))
 			{
@@ -298,14 +302,12 @@ class Post extends CI_Model
 				$result[$post->num]['op'] = $post;
 			}
 		}
-
+		
 		// reorder threads, and the posts inside
 		$result2 = array();
 		foreach ($threads as $thread)
 		{
 			$result2[$thread] = $result[$thread];
-			//if (isset($result2[$thread]['posts']))
-			//	$result2[$thread]['posts'] = $this->multiSort($result2[$thread]['posts'], 'num', 'subnum');
 		}
 
 		// clean up, even if it's supposedly just little data
@@ -444,22 +446,31 @@ class Post extends CI_Model
 
 			if ($post->parent > 0)
 			{
-				// the first you create from a parent is the first thread
-				$result[$post->parent]['posts'][] = $post;
+				//echo $post->num . (($post->subnum == 0)?'':'_'.$post->subnum).'<br/>';
+				$result[$post->parent]['posts'][$post->num . (($post->subnum == 0)?'':'_'.$post->subnum)] = $post;
 			}
 			else
 			{
-				// this should already exist
 				$result[$post->num]['op'] = $post;
 			}
 		}
 		// this could be a lot of data, clean it up
 		$query->free_result();
 
+		// stick the backlinks
+		foreach($this->backlinks as $key => $item)
+		{
+			if(isset($result[$num]['op']) && $result[$num]['op']->num == $key)
+			{
+				$result[$num]['op']->backlinks = array_unique($item);
+			}
+			else if(isset($result[$num]['posts'][$key]))
+			{
+				$result[$num]['posts'][$key]->backlinks = array_unique($item);
+			}
+		}
 
-		// easier to revert the array here for now
-		//if (isset($result[$num]['posts']))
-		//	$result[$num]['posts'] = $this->multiSort($result[$num]['posts'], 'num', 'subnum');
+		//print_r($result);
 		return $result;
 	}
 
@@ -1035,6 +1046,7 @@ class Post extends CI_Model
 	 */
 	function process_post($post, $clean = TRUE)
 	{
+		$this->current_row = $post;
 		$this->load->helper('text');
 		$post->thumbnail_href = $this->get_image_href($post, TRUE);
 		$post->image_href = $this->get_image_href($post);
@@ -1225,6 +1237,11 @@ class Post extends CI_Model
 				$_suffix = '</font>';
 			}
 		}
+
+		$this->backlinks[str_replace(',', '_', $num)][] = $_prefix 
+				. '<a href="' . site_url(array(get_selected_board()->shortname,'thread',($this->current_row->parent == 0)?$this->current_row->num:$this->current_row->parent)) 
+				. $_urltag . $this->current_row->num . (($this->current_row->subnum == 0)?'':'_'.$this->current_row->subnum)
+				. '"' . $_option . '>&gt;&gt;' . $this->current_row->num . (($this->current_row->subnum == 0)?'':','.$this->current_row->subnum) . '</a>' . $_suffix;
 
 		if (array_key_exists($num, $this->existing_posts))
 		{

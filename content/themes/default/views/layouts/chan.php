@@ -53,7 +53,6 @@
 				<?php if(isset($section_title)): ?>
 				<h3 class="section_title"><?php echo $section_title ?></h3>
 				<?php else : ?>
-				<p class="section_title">We're fixing some performance issues regarding real time threads. It might go up and down.</p>
 				<?php endif; ?>
 
 

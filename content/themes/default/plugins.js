@@ -281,37 +281,46 @@ var timelapse = 10;
 var currentlapse = 0;
 var realtimethread = function(){
 	clearTimeout(currentlapse);
+	var latest_doc_id = 0;
+	jQuery.each(thread_json[thread_id].posts, function(idx, val){
+		if(latest_doc_id < val.doc_id)
+			latest_doc_id = val.doc_id;
+	});
+
 	jQuery.ajax({
 		url: site_url + 'api/chan/thread/',
 		dataType: 'json',
 		type: 'GET',
 		cache: false,
 		data: {
-			doc_id : thread_doc_id,
 			num : thread_id,
 			board: board_shortname,
-			latest_doc_id: thread_latest_doc_id
+			latest_doc_id: latest_doc_id
 		},
 		success: function(data){
 			var w_height = jQuery(document).height();
-			if(data[thread_id].posts instanceof Array && data[thread_id].posts.length > 0) {
+			var found_posts = false;
+			if(typeof data[thread_id].posts != "undefined") {
 				jQuery.each(data[thread_id].posts, function(idx, value){
+					found_posts = true;
 					if(typeof thread_json[thread_id] != undefined)
 					{
-						thread_json[thread_id].posts.push(value);
+						thread_json[thread_id].posts[idx] = value;
 						post = jQuery(value.formatted)
 						post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
 						backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
 						jQuery('article.thread aside').append(post);
 					}
 				});
-
+			}
+			
+			if(found_posts)
+			{
 				if(jQuery('#reply_form :focus').length > 0)
 				{
 					window.scrollBy(0, jQuery(document).height() - w_height);
 				}
 
-				thread_latest_doc_id = getLatestID(data[thread_id].posts);
 				timelapse = 10;
 			}
 			else
@@ -527,8 +536,7 @@ jQuery(document).ready(function() {
 	if (typeof thread_id != "undefined")
 	{
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
-		backlinkify_init();
-		realtimethread();
+		setTimeout(realtimethread, 10000);
 	}
 
 	bindFunctions();

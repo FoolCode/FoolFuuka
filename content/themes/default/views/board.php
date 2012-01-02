@@ -42,7 +42,7 @@ foreach ($posts as $key => $post) :
 							<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" title="This post was deleted from 4chan manually."/></span><?php endif ?>
 							<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" title="This post contains a spoiler image."/></span><?php endif ?>
 				</div>
-				<div class="backlink_list"><?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"></span></div>
+				<div class="backlink_list"<?php echo (isset($op->backlinks)?' style="display:block"':'') ?>><?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks))?implode(' ', $op->backlinks):'' ?></span></div>
 			</header>
 			<div class="text">
 				<?php echo $op->comment_processed ?>
@@ -55,25 +55,13 @@ foreach ($posts as $key => $post) :
 			<aside class="posts">
 
 				<?php
-				if (isset($posts_per_thread))
-				{
-					$limit = count($post['posts']) - $posts_per_thread;
-					if ($limit < 0)
-						$limit = 0;
-				}
-				else
-				{
-					$limit = 0;
-				}
-
-				for ($i = $limit; $i < count($post['posts']); $i++) :
-					$p = $post['posts'][$i];
+				foreach($post['posts'] as $p) :
 
 					if ($p->parent == 0)
 						$p->parent = $p->num;
 					?>
 					<?php echo build_board_comment($p, $modifiers); ?>
-				<?php endfor; ?>
+				<?php endforeach; ?>
 			</aside>
 			<?php if (isset($thread_id)) : ?>
 			<div class="js_hook_realtimethread"></div>
@@ -94,32 +82,7 @@ foreach ($posts as $key => $post) :
 	site_url = '<?php echo site_url() ?>';
 	board_shortname = '<?php echo get_selected_board()->shortname ?>';
 	<?php if (isset($thread_id)) : ?>
-	thread_doc_id = <?php echo $post['op']->doc_id ?>;
 	thread_id = <?php echo $thread_id ?>;
 	thread_json = <?php echo json_encode($posts) ?>;
-
-	var getLatestID = function(data)
-	{
-		var max = data[data.length-1].doc_id;
-		for ( index = 0; index < data.length; index++ )
-		{
-			if ( data[index].doc_id > max )
-			{
-				max = data[index].doc_id;
-			}
-		}
-
-		return max;
-	}
-
-	if (typeof thread_json[thread_id].posts != "undefined")
-	{
-		thread_latest_doc_id = getLatestID(thread_json[thread_id].posts);
-	}
-	else
-	{
-		thread_json[thread_id].posts = [];
-		thread_latest_doc_id = 0;
-	}
 	<?php endif; ?>
 </script>

@@ -170,9 +170,8 @@ class Chan extends REST_Controller
 				$this->response(array('error' => _('Your latest_doc_id is malformed')), 404);
 			}
 
-			$doc_id = intval($this->get('doc_id'));
 			$latest_doc_id = intval($this->get('latest_doc_id'));
-			$num = array('doc_id' => $doc_id, 'num' => $num, 'latest_doc_id' => $latest_doc_id);
+			$num = array('num' => $num, 'latest_doc_id' => $latest_doc_id);
 			$from_realtime = TRUE;
 		}
 

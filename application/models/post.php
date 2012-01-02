@@ -469,9 +469,9 @@ class Post extends CI_Model
 		$query = $this->db->query('
 				SELECT num, parent, subnum FROM ' . $this->table . '
 				' . $this->sql_report . '
-				WHERE parent = ? OR (num = ? AND subnum = ?)
+				WHERE num = ? AND subnum = ?
 				LIMIT 0, 1;
-			', array($num, $num, $subnum));
+			', array($num, $subnum));
 
 		foreach ($query->result() as $post)
 		{
@@ -757,7 +757,7 @@ class Post extends CI_Model
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
 
-		if (strlen($comment) > 4096)
+		if (mb_strlen($comment) > 4096)
 		{
 			return array('error' => 'Your post was too long.');
 		}
@@ -824,6 +824,7 @@ class Post extends CI_Model
 			$this->session->set_userdata('poster_id', $poster_id);
 		}
 
+		
 		// get the post after which we're replying to
 		// partly copied from Fuuka original
 		$this->db->query('
@@ -840,7 +841,7 @@ class Post extends CI_Model
 			$num, $num,
 			$num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
 		);
-
+		
 		// I need num and subnum for a proper redirect
 		$posted = $this->db->query('
 			SELECT * FROM ' . $this->table . '

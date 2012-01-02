@@ -18,14 +18,13 @@ var bindFunctions = function()
 				reply_alert.removeClass('error').removeClass('success');
 				jQuery.ajax({
 					url: site_url + board_shortname + '/sending' ,
-					async: false,
 					dataType: 'json',
 					type: 'POST',
 					cache: false,
 					data: {
 						reply_numero: post,
 						reply_bokunonome: jQuery("#reply_bokunonome").val(),
-						reply_elittera: jQuery("#reply_elittera").val(),
+						reply_elitterae: jQuery("#reply_elitterae").val(),
 						reply_talkingde: jQuery("#reply_talkingde").val(),
 						reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
 						reply_nymphassword: jQuery("#reply_nymphassword").val(),
@@ -284,7 +283,6 @@ var realtimethread = function(){
 	clearTimeout(currentlapse);
 	jQuery.ajax({
 		url: site_url + 'api/chan/thread/',
-		async: false,
 		dataType: 'json',
 		type: 'GET',
 		cache: false,

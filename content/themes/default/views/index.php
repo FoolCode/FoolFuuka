@@ -2,6 +2,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
+<img src="<?php echo site_url() . 'content/themes/default/images/dat_cat.png' ?>" style="max-width:50%;position:absolute; top:-20px; right:30px;"/>
 
 <article style="padding:50px;">
 	<h1><?php echo _('Welcome on the 4chan Archiver "FoOlFuuka"'); ?></h1>
@@ -17,5 +18,4 @@ if (!defined('BASEPATH'))
 		?>
 		]
 	</h2>
-	<img src="<?php echo site_url() . 'content/themes/default/images/dat_cat.png' ?>" style="max-width:60%;position:absolute; top:-20px; right:30px;"/>
 </article>

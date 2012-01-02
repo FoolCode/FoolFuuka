@@ -87,6 +87,28 @@ if (!function_exists('get_selected_board'))
 }
 
 /**
+ * Set selected boards' shortname
+ */
+if (!function_exists('set_selected_board'))
+{
+	function set_selected_board($name)
+	{
+		$CI = & get_instance();
+		if (isset($CI->fu_board_obj))
+			return $CI->fu_board_obj;
+		$board = new Board();
+		$board->where('shortname', $name)->get();
+		if($board->result_count() == 0)
+		{
+			// what the hell is going on? abort
+			show_404();
+		}
+		$CI->fu_board_obj = $board;
+		return $board;
+	}
+}
+
+/**
  * Caches in a variable and returns the home team's object
  *
  * @author Woxxy

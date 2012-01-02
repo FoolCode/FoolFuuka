@@ -208,8 +208,9 @@ class Report extends DataMapper
 				break;
 
 			case('delete'):
-				$post = new Post();
-				$data = array('board' => $postdata->shortname, 'post' => $postdata->id, 'password' => $postdata->delpass, 'remove' => $action['remove']);
+				set_selected_board($postdata->shortname);
+				$post = new Post(FALSE);
+				$data = array('post' => $postdata->doc_id, 'password' => $postdata->delpass, 'remove' => $action['remove']);
 				if (!$post->delete($data))
 				{
 					log_message('error', 'process_report: failed to delete post');

@@ -51,15 +51,18 @@ class Post extends CI_Model
 				';
 		}
 
-		// @todo make the existence of this block useless or something
-		// load the functions from the current theme, else load the default one
-		if (file_exists('content/themes/' . $this->fu_theme . '/theme_functions.php'))
+		if ($id != FALSE)
 		{
-			require_once('content/themes/' . $this->fu_theme . '/theme_functions.php');
-		}
-		else
-		{
-			require_once('content/themes/' . $this->config->item('theme_extends') . '/theme_functions.php');
+			// @todo make the existence of this block useless or something
+			// load the functions from the current theme, else load the default one
+			if (file_exists('content/themes/' . $this->fu_theme . '/theme_functions.php'))
+			{
+				require_once('content/themes/' . $this->fu_theme . '/theme_functions.php');
+			}
+			else
+			{
+				require_once('content/themes/' . $this->config->item('theme_extends') . '/theme_functions.php');
+			}
 		}
 	}
 
@@ -824,7 +827,7 @@ class Post extends CI_Model
 			$this->session->set_userdata('poster_id', $poster_id);
 		}
 
-		
+
 		// get the post after which we're replying to
 		// partly copied from Fuuka original
 		$this->db->query('
@@ -841,7 +844,7 @@ class Post extends CI_Model
 			$num, $num,
 			$num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
 		);
-		
+
 		// I need num and subnum for a proper redirect
 		$posted = $this->db->query('
 			SELECT * FROM ' . $this->table . '
@@ -890,8 +893,18 @@ class Post extends CI_Model
 			return array('error' => _('The password you inserted did not match the post\'s deletion password.'));
 		}
 
-		// safe to say the user is allowed to remove it
+		if (isset($data['remove']) && $data['remove'] == 'image')
+		{
+			if (!$this->delete_image($row))
+			{
+				log_message('error', 'post.php delete() couldn\'t delete thumbnail from post');
+				return array('error' => _('Couldn\'t delete the thumbnail image.'));
+			}
 
+			return array('success' => TRUE);
+		}
+
+		// safe to say the user is allowed to remove it
 		if ($row->parent == 0) // deleting thread
 		{
 			// we risk getting into a racing condition

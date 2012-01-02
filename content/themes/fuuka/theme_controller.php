@@ -39,7 +39,7 @@ class Theme_Controller {
 		$this->CI->post->features = FALSE;
 		$posts = $this->CI->post->get_latest($page, 20, TRUE, TRUE, FALSE, TRUE, FALSE);
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' » Page '.$page:''));
+		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Page ') . $page);
 
@@ -77,7 +77,7 @@ class Theme_Controller {
 		$this->CI->post->features = FALSE;
 		$posts = $this->CI->post->get_latest($page, 20, TRUE, TRUE, TRUE, TRUE, FALSE);
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
+		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Ghosts page ') . $page);
 		$pages_links = array();
@@ -113,7 +113,7 @@ class Theme_Controller {
 			show_404();
 		}
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Thread #' . $num);
+		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->CI->template->set('posts', $thread);
 
 		$this->CI->template->set('thread_id', $num);

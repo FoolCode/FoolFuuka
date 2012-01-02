@@ -53,9 +53,8 @@ foreach ($posts as $key => $post) : ?>
 			$limit = 0;
 		}
 
-		for ($i = $limit; $i < count($post['posts']); $i++)
+		foreach ($post['posts'] as $p)
 		{
-			$p = $post['posts'][$i];
 
 			if ($p->parent == 0)
 				$p->parent = $p->num;

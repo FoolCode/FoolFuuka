@@ -469,9 +469,9 @@ class Post extends CI_Model
 		$query = $this->db->query('
 				SELECT num, parent, subnum FROM ' . $this->table . '
 				' . $this->sql_report . '
-				WHERE parent = ? OR (num = ? AND subnum = ?)
+				WHERE num = ? AND subnum = ?
 				LIMIT 0, 1;
-			', array($num, $num, $subnum));
+			', array($num, $subnum));
 
 		foreach ($query->result() as $post)
 		{

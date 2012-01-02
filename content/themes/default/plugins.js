@@ -18,7 +18,6 @@ var bindFunctions = function()
 				reply_alert.removeClass('error').removeClass('success');
 				jQuery.ajax({
 					url: site_url + board_shortname + '/sending' ,
-					async: false,
 					dataType: 'json',
 					type: 'POST',
 					cache: false,
@@ -284,7 +283,6 @@ var realtimethread = function(){
 	clearTimeout(currentlapse);
 	jQuery.ajax({
 		url: site_url + 'api/chan/thread/',
-		async: false,
 		dataType: 'json',
 		type: 'GET',
 		cache: false,

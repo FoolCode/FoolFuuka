@@ -1286,15 +1286,27 @@ class Post extends CI_Model
 	function get_crossboard_link($matches)
 	{
 		$link = $matches[2];
-		$board = $matches[3];
+		$shortname = $matches[3];
 		$num = $matches[4];
+
+		$board = new Board();
+		$board->where('shortname', $shortname)->get();
+		if ($board->result_count() == 0)
+		{
+			if ($num)
+			{
+				return '<a href="http://boards.4chan.org/' . $shortname . '/res/' . $num . '">&gt;&gt;&gt;' . $link . '</a>';
+			}
+
+			return '<a href="http://boards.4chan.org/' . $shortname . '/">&gt;&gt;&gt;' . $link . '</a>';
+		}
 
 		if ($num)
 		{
-			return '<a href="' . site_url(array($board, 'post', $num)) . '">' . $link . '</a>';
+			return '<a href="' . site_url(array($board->shortname, 'post', $num)) . '">&gt;&gt;&gt;' . $link . '</a>';
 		}
 
-		return '<a href="' . site_url($board) . '">' . $link . '</a>';
+		return '<a href="' . site_url($board->shortname) . '">&gt;&gt;&gt;' . $link . '</a>';
 
 		return $matches[0];
 	}

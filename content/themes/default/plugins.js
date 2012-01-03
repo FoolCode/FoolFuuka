@@ -202,7 +202,7 @@ var bindFunctions = function()
 				});
 			}
 
-			if(jQuery(window).width() < pos.left + backlink.width())
+			if(jQuery(window).width()/2 < pos.left + width/2)
 			{
 				backlink.css({
 					right: (jQuery(window).width() - pos.left -	 width) + 'px',

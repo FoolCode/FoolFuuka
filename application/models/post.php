@@ -1231,6 +1231,7 @@ class Post extends CI_Model
 		$_prefix = '';
 		$_urltag = '#';
 		$_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '"';
+		$_backlink_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . $this->current_row->num . (($this->current_row->subnum == 0)?'':'_'.$this->current_row->subnum) . '"';
 		$_suffix = '';
 		if ($this->features == FALSE)
 		{
@@ -1254,7 +1255,7 @@ class Post extends CI_Model
 		$this->backlinks[str_replace(',', '_', $num)][] = $_prefix 
 				. '<a href="' . site_url(array(get_selected_board()->shortname,'thread',($this->current_row->parent == 0)?$this->current_row->num:$this->current_row->parent)) 
 				. $_urltag . $this->current_row->num . (($this->current_row->subnum == 0)?'':'_'.$this->current_row->subnum)
-				. '"' . $_option . '>&gt;&gt;' . $this->current_row->num . (($this->current_row->subnum == 0)?'':','.$this->current_row->subnum) . '</a>' . $_suffix;
+				. '"' . $_backlink_option . '>&gt;&gt;' . $this->current_row->num . (($this->current_row->subnum == 0)?'':','.$this->current_row->subnum) . '</a>' . $_suffix;
 
 		if (array_key_exists($num, $this->existing_posts))
 		{

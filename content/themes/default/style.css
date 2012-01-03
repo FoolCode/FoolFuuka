@@ -174,7 +174,7 @@ article.thread > .thread_image_box {
 	font-size:0.8em;
 	line-height:150%;
 	vertical-align:bottom;
-
+	max-width:260px;
 }
 
 article.thread > .thread_image_box .thread_image {

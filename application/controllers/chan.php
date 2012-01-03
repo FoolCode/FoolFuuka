@@ -353,6 +353,17 @@ class Chan extends Public_Controller
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');
 	}
+	
+	public function full_image($image)
+	{
+		
+		if(!in_array(substr($image, -3), array('jpg', 'png','gif')) || !is_natural(substr($image, 0, 13)))
+		{
+			show_404();
+		}
+		
+		$image_data = $this->post->get_full_image($image);
+	}
 
 
 	public function redirect($image = NULL) {

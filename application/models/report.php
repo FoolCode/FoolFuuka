@@ -52,100 +52,47 @@ class Report extends DataMapper
 	}
 
 
-	public function get_post()
-	{
-		$CI = & get_instance();
-
-		$boards = new Board();
-		$boards->get();
-
-		foreach ($boards->all as $board)
-		{
-			if ($board->id == $this->board)
-			{
-				$sql = 'SELECT *, CONCAT('.$this->db->escape($board->shortname).') AS shortname
-					FROM ' . $this->get_table($board->shortname) . '
-					LEFT JOIN
-						(
-							SELECT id as report_id, post as report_post, reason as report_reason, status as report_status, created as report_created
-							FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
-							WHERE `id` = ' . $this->id . '
-						) as q
-						ON
-						' . $this->get_table($board->shortname) . '.`doc_id`
-						=
-						' . $this->db->protect_identifiers('q') . '.`report_post`
-					LEFT JOIN
-						(
-							SELECT id AS poster_id_join,
-								ip AS poster_ip, user_agent AS poster_user_agent,
-								banned AS poster_banned, banned_reason AS poster_banned_reason,
-								banned_start AS poster_banned_start, banned_end AS poster_banned_end
-							FROM'.$this->db->protect_identifiers('posters', TRUE).'
-						) as p
-						ON ' . $this->get_table($board->shortname) . '.`poster_id`
-						=
-						' . $this->db->protect_identifiers('p') . '.`poster_id_join`
-					WHERE doc_id = ' . $this->db->escape($this->post) . '
-					LIMIT 0, 1';
-
-				$query = $this->db->query($sql);
-
-				return $query->result();
-			}
-		}
-
-		return FALSE;
-	}
-
-
-	public function get_postdata($report)
+	public function get_reported_post($report)
 	{
 		$boards = new Board();
-		$boards->get();
+		$boards->where('id', $report->board)->get();
 
-		foreach ($boards->all as $board)
-		{
-			if ($board->id == $report->board)
-			{
+		if ($board->result_count() == 0)
+			return FALSE;
 
-				$sql = 'SELECT *, CONCAT(' . $this->db->escape($board->shortname) . ') AS shortname
-					FROM ' . $this->get_table($board->shortname) . '
-					LEFT JOIN
-						(
-							SELECT id as report_id, post as report_doc_id, reason as report_reason, status as report_status, created as report_created
-							FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
-							WHERE `id` = ' . $report->id . '
-						) as q
-						ON
-						' . $this->get_table($board->shortname) . '.`doc_id`
-						=
-						' . $this->db->protect_identifiers('q') . '.`report_doc_id`
-					LEFT JOIN
-						(
-							SELECT id AS poster_id_join,
-								ip AS poster_ip, user_agent AS poster_user_agent,
-								banned AS poster_banned, banned_reason AS poster_banned_reason,
-								banned_start AS poster_banned_start, banned_end AS poster_banned_end
-							FROM' . $this->db->protect_identifiers('posters', TRUE) . '
-						) as p
-						ON
-						' . $this->get_table($board->shortname) . '.`poster_id`
-						=
-						' . $this->db->protect_identifiers('p') . '.`poster_id_join`
-					WHERE doc_id = ' . $this->db->escape($report->post) . '
-					LIMIT 0, 1';
+		$sql = 'SELECT *, CONCAT('.$this->db->escape($board->shortname).') AS shortname
+			FROM ' . $this->get_table($board->shortname) . '
+			LEFT JOIN
+				(
+					SELECT id as report_id, post as report_doc_id, reason as report_reason, status as report_status, created as report_created
+					FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+					WHERE `id` = ' . $report->id . '
+				) as q
+				ON
+				' . $this->get_table($board->shortname) . '.`doc_id`
+				=
+				' . $this->db->protect_identifiers('q') . '.`report_doc_id`
+			LEFT JOIN
+				(
+					SELECT id AS poster_id_join,
+						ip AS poster_ip, user_agent AS poster_user_agent,
+						banned AS poster_banned, banned_reason AS poster_banned_reason,
+						banned_start AS poster_banned_start, banned_end AS poster_banned_end
+					FROM'.$this->db->protect_identifiers('posters', TRUE).'
+				) as p
+				ON
+				' . $this->get_table($board->shortname) . '.`poster_id`
+				=
+				' . $this->db->protect_identifiers('p') . '.`poster_id_join`
+			WHERE doc_id = ' . $this->db->escape($report->post) . '
+			LIMIT 0, 1';
 
-				$query = $this->db->query($sql);
+		$query = $this->db->query($sql);
 
-				if ($query->num_rows() == 0)
-					return FALSE;
+		if ($query->num_rows() == 0)
+			return FALSE;
 
-				return $query->row();
-			}
-		}
-
-		return FALSE;
+		return $query->result();
 	}
 
 
@@ -184,7 +131,7 @@ class Report extends DataMapper
 		}
 
 		$report = $query->row();
-		$postdata = $this->get_postdata($report);
+		$postdata = $this->get_reported_post($report);
 
 		if ($postdata === FALSE)
 		{
@@ -303,7 +250,7 @@ class Report extends DataMapper
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
-			ORDER BY created ASC
+			ORDER BY created DESC
 			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 		');
 

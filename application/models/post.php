@@ -14,7 +14,7 @@ class Post extends CI_Model
 	var $backlinks = array();
 	var $features = TRUE;
 	var $realtime = FALSE;
-	
+
 	// I'd love to get rid of these but there seems to be no other way to pass
 	// more parameters to callbacks
 	var $current_row = null;
@@ -276,7 +276,7 @@ class Post extends CI_Model
 			{
 				$this->process_post($post, $clean);
 			}
-			
+
 			$post_num = ($post->parent > 0) ? $post->parent : $post->num;
 			if (!isset($result[$post_num]['omitted']))
 			{
@@ -305,7 +305,7 @@ class Post extends CI_Model
 				$result[$post->num]['op'] = $post;
 			}
 		}
-		
+
 		// reorder threads, and the posts inside
 		$result2 = array();
 		foreach ($threads as $thread)
@@ -1210,6 +1210,7 @@ class Post extends CI_Model
 		$regexing = auto_link($regexing, 'url', TRUE);
 
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
+		$regexing = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/(\d+(?:,\d+)?)?(\/?)))'i", array(get_class($this), 'get_crossboard_link'), $regexing);
 		if ($row->subnum == 0)
 		{
 			$regexing = preg_replace($adminfind, $adminreplace, $regexing);
@@ -1251,8 +1252,8 @@ class Post extends CI_Model
 			}
 		}
 
-		$this->backlinks[str_replace(',', '_', $num)][] = $_prefix 
-				. '<a href="' . site_url(array(get_selected_board()->shortname,'thread',($this->current_row->parent == 0)?$this->current_row->num:$this->current_row->parent)) 
+		$this->backlinks[str_replace(',', '_', $num)][] = $_prefix
+				. '<a href="' . site_url(array(get_selected_board()->shortname,'thread',($this->current_row->parent == 0)?$this->current_row->num:$this->current_row->parent))
 				. $_urltag . $this->current_row->num . (($this->current_row->subnum == 0)?'':'_'.$this->current_row->subnum)
 				. '"' . $_option . '>&gt;&gt;' . $this->current_row->num . (($this->current_row->subnum == 0)?'':','.$this->current_row->subnum) . '</a>' . $_suffix;
 
@@ -1278,6 +1279,23 @@ class Post extends CI_Model
 		return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'post', str_replace(',', '_', $num))) . '">&gt;&gt;'.$num.'</a>' . $_suffix;
 
 		// return the thing untouched
+		return $matches[0];
+	}
+
+
+	function get_crossboard_link($matches)
+	{
+		$link = $matches[2];
+		$board = $matches[3];
+		$num = $matches[4];
+
+		if ($num)
+		{
+			return '<a href="' . site_url(array($board, 'post', $num)) . '">' . $link . '</a>';
+		}
+
+		return '<a href="' . site_url($board) . '">' . $link . '</a>';
+
 		return $matches[0];
 	}
 

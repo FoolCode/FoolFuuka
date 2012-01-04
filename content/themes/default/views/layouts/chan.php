@@ -7,7 +7,6 @@
 		<title><?php echo $template['title']; ?></title>
 		<meta http-equiv="imagetoolbar" content="false" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0">
-		<script src="<?php echo site_url() ?>/assets/js/modernizr-2.0.6.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap/style.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
 		<?php
 		if ($this->config->item('theme_extends') != '' &&
@@ -20,6 +19,9 @@
 		if (file_exists('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css'))
 			echo link_tag('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css?v=' . FOOLSLIDE_VERSION);
 		?>
+		<!--[if lt IE 9]>
+			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 	<!--	<link rel="sitemap" type="application/xml" title="Sitemap" href="<?php echo site_url() ?>sitemap.xml" />
 		<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo site_url() ?>rss.xml" />
 		<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url() ?>atom.xml" /> -->

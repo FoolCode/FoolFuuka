@@ -543,7 +543,7 @@ class Chan extends Public_Controller
 		}
 	}
 
-
+	/*
 	public function spam($num = 0)
 	{
 		if (!$this->tank_auth->is_allowed())
@@ -572,7 +572,7 @@ class Chan extends Public_Controller
 			$this->output->set_output(json_encode(array('status' => 'success')));
 		}
 	}
-
+	*/
 
 	public function statistics($stat = NULL)
 	{

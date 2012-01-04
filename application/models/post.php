@@ -1023,7 +1023,7 @@ class Post extends CI_Model
 		return FALSE;
 	}
 
-
+	/*
 	function spam($doc_id)
 	{
 		$query = $this->db->query('
@@ -1035,7 +1035,7 @@ class Post extends CI_Model
 
 		if ($query->num_rows() != 1)
 		{
-			log_message('debug', 'post.php spam() post or thread no found');
+			log_message('debug', 'post.php spam() post or thread not found');
 			return array('error' => _('There\'s no such record to mark as spam.'));
 		}
 
@@ -1055,7 +1055,7 @@ class Post extends CI_Model
 
 		return array('success' => TRUE);
 	}
-
+	*/
 
 	function process_name($name)
 	{

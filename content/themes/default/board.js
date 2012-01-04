@@ -87,7 +87,7 @@ var bindFunctions = function()
 					<textarea class="modal-comment"></textarea>');
 				modal.find(".submitModal").data("action", 'report');
 				break;
-				
+			/*	
 			case 'spam':
 				jQuery.ajax({
 					url: site_url + board_shortname + '/spam/' + post + '/',
@@ -106,7 +106,7 @@ var bindFunctions = function()
 				});
 				event.preventDefault();
 				break;
-
+			*/
 			case 'closeModal':
 				el.closest(".modal").modal('hide');
 				return false;

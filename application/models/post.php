@@ -1024,6 +1024,39 @@ class Post extends CI_Model
 	}
 
 
+	function spam($doc_id)
+	{
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->table . '
+			WHERE doc_id = ?
+			LIMIT 0,1;
+		', $doc_id);
+
+		if ($query->num_rows() != 1)
+		{
+			log_message('debug', 'post.php spam() post or thread no found');
+			return array('error' => _('There\'s no such record to mark as spam.'));
+		}
+
+		$row = $query->row();
+
+		$this->db->query('
+			UPDATE ' . $this->table . '
+			SET spam = 1
+			WHERE doc_id = ?
+		', $row->doc_id);
+
+		if ($this->db->affected_rows() != 1)
+		{
+			log_message('debug', 'post.php spam() unable to update record.');
+			return array('error' => _('Unable to mark post/thread as spam.'));
+		}
+
+		return array('success' => TRUE);
+	}
+
+
 	function process_name($name)
 	{
 		$trip = '';

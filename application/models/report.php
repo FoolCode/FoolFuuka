@@ -54,8 +54,8 @@ class Report extends DataMapper
 
 	public function get_reported_post($report)
 	{
-		$boards = new Board();
-		$boards->where('id', $report->board)->get();
+		$board = new Board();
+		$board->where('id', $report->board)->get();
 
 		if ($board->result_count() == 0)
 			return FALSE;
@@ -92,7 +92,7 @@ class Report extends DataMapper
 		if ($query->num_rows() == 0)
 			return FALSE;
 
-		return $query->result();
+		return $query->row();
 	}
 
 
@@ -120,7 +120,7 @@ class Report extends DataMapper
 			SELECT *
 			FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
 			WHERE `id` = ' . $id . '
-			LIMIT 0, 1
+			LIMIT 0,1
 		');
 
 		if ($query->num_rows() == 0)
@@ -158,9 +158,23 @@ class Report extends DataMapper
 				set_selected_board($postdata->shortname);
 				$post = new Post(FALSE);
 				$data = array('post' => $postdata->doc_id, 'password' => $postdata->delpass, 'remove' => $action['remove']);
-				if (!$post->delete($data))
+				$result = $post->delete($data);
+				if (isset($result['error']))
 				{
 					log_message('error', 'process_report: failed to delete post');
+					return FALSE;
+				}
+				$this->db->delete('reports', array('id' => $report->id));
+				return TRUE;
+				break;
+
+			case('spam'):
+				set_selected_board($postdata->shortname);
+				$post = new Post(FALSE);
+				$result = $post->spam($postdata->doc_id);
+				if (isset($result['error']))
+				{
+					log_message('error', 'process_report: failed to mark post as spam');
 					return FALSE;
 				}
 				$this->db->delete('reports', array('id' => $report->id));

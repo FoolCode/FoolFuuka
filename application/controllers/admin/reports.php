@@ -74,16 +74,30 @@ class Reports extends Admin_Controller
 				$this->output->set_output(json_encode(array('href' => site_url('admin/reports/manage'))));
 				break;
 
-			case('spam'):
+			case('remove'):
 				$report = new Report($id);
 				if (!$report->remove_report_db())
 				{
-					flash_notice('error', _('Failed to remove the spam report from the database.'));
-					log_message('error', 'Controller: reports.php/spam: remove the spam report');
+					flash_notice('error', _('Failed to remove the report from the database.'));
+					log_message('error', 'Controller: reports.php/remove: failed to remove the report');
 					$this->output->set_output(json_encode(array('href' => site_url('admin/reports/manage'))));
 					return FALSE;
 				}
-				flash_notice('notice', _('The report has been marked as spam and removed.'));
+				flash_notice('notice', _('The report has been removed.'));
+				$this->output->set_output(json_encode(array('href' => site_url('admin/reports/manage'))));
+				break;
+
+			case('spam'):
+				$report = new Report();
+				$params = array('process' => 'spam');
+				if (!$report->process_report($id, $params))
+				{
+					flash_notice('error', _('Failed to mark the reported post as spam.'));
+					log_message('error', 'Controller: reports.php/spam: failed to mark the post as spam');
+					$this->output->set_output(json_encode(array('href' => site_url('admin/reports/manage'))));
+					return FALSE;
+				}
+				flash_notice('notice', _('The reported post has been marked as spam.'));
 				$this->output->set_output(json_encode(array('href' => site_url('admin/reports/manage'))));
 				break;
 		}

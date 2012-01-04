@@ -14,7 +14,7 @@ if (!defined('BASEPATH'))
 <span style="left: 5px; position: absolute;">[<a href="../../" accesskey="a">Return</a>]</span>
 <div style="postition:relative"></div>
 <div align="center" class="postarea">
-	<?php echo form_open_multipart(get_selected_board()->shortname.'/sending') ?>
+	<?php echo form_open_multipart(get_selected_board()->shortname.'/sending', array('name' => 'post')) ?>
 		<?php echo form_hidden('resto', $thread_id) ?>
 		<table cellpadding="1" cellspacing="1">
 			<tbody>

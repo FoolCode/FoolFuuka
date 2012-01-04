@@ -642,3 +642,7 @@ article.thread .backlink.op {
 	color:#ff0000;
 	font-weight:bold;
 }
+
+.is_spam {
+	display: none;
+}

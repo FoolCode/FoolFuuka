@@ -199,6 +199,7 @@ var bindFunctions = function()
 
 			if(that.attr('data-backlink') != 'true')
 			{
+				// gallery
 				thread_id = that.attr('data-backlink');
 				quote = thread_json[thread_id];
 				backlink.css('display', 'block');
@@ -206,19 +207,19 @@ var bindFunctions = function()
 			}
 			else if(thread_id == that.data('post'))
 			{
-				quote = thread_json[thread_id].op;
+				// OP
+				quote = thread_op_json;
 				backlink.css('display', 'block');
 				backlink.html(quote.formatted);
 			}
 			else
 			{
-				jQuery.each(thread_json[thread_id].posts, function(idx, quote) {
-					if ((that.data('post') == quote.num + '_' + quote.subnum) || (that.data('post') == quote.num && quote.subnum == 0 ) || (that.data('post') == quote.parent))
-					{
-						backlink.css('display', 'block');
-						backlink.html(quote.formatted);
-					}
-				});
+				// normal posts
+				var toClone = jQuery('#' + that.data('post'));
+				if (toClone.length == 0)
+					return false;
+				backlink.css('display', 'block');
+				backlink.html(toClone.clone());
 			}
 
 			if(jQuery(window).width()/2 < pos.left + width/2)
@@ -244,17 +245,6 @@ var bindFunctions = function()
 		else
 		{
 			jQuery("#backlink").css('display', 'none').html('');
-		}
-	});
-}
-
-var backlinkify_init = function() {
-	jQuery.each(thread_json, function(k,v){
-		if(typeof thread_json[k].posts != "undefined")
-		{
-			jQuery.each(thread_json[k].posts, function(idx, value){
-				backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-			});
 		}
 	});
 }
@@ -300,12 +290,6 @@ var timelapse = 10;
 var currentlapse = 0;
 var realtimethread = function(){
 	clearTimeout(currentlapse);
-	var latest_doc_id = 0;
-	jQuery.each(thread_json[thread_id].posts, function(idx, val){
-		if(latest_doc_id < val.doc_id)
-			latest_doc_id = val.doc_id;
-	});
-
 	jQuery.ajax({
 		url: site_url + 'api/chan/thread/',
 		dataType: 'json',
@@ -322,14 +306,11 @@ var realtimethread = function(){
 			if(typeof data[thread_id].posts != "undefined") {
 				jQuery.each(data[thread_id].posts, function(idx, value){
 					found_posts = true;
-					if(typeof thread_json[thread_id] != undefined)
-					{
-						thread_json[thread_id].posts[idx] = value;
-						post = jQuery(value.formatted)
-						post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
-						backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-						jQuery('article.thread aside').append(post);
-					}
+					post = jQuery(value.formatted)
+					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+					backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
+					jQuery('article.thread aside').append(post);
+					latest_doc_id = value.doc_id;
 				});
 			}
 			

@@ -91,6 +91,15 @@ foreach ($posts as $key => $post) :
 	board_shortname = '<?php echo get_selected_board()->shortname ?>';
 	<?php if (isset($thread_id)) : ?>
 	thread_id = <?php echo $thread_id ?>;
-	thread_json = <?php echo json_encode($posts) ?>;
+	thread_op_json = <?php echo json_encode($posts[$thread_id]['op']) ?>;
+	latest_doc_id = <?php 
+		$latest_doc_id = $posts[$thread_id]['op']->doc_id;
+		foreach($posts[$thread_id]['posts'] as $post)
+		{
+			if($latest_doc_id < $post->doc_id)
+				$latest_doc_id = $post->doc_id;
+		}
+		echo $latest_doc_id;
+	?>
 	<?php endif; ?>
 </script>

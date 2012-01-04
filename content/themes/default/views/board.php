@@ -55,8 +55,16 @@ foreach ($posts as $key => $post) :
 			<aside class="posts">
 
 				<?php
+				$post_counter = 0;
 				foreach($post['posts'] as $p) :
-
+					if($p->preview)
+					{
+						$post_counter++;
+					}
+					if($post_counter == 150)
+					{
+						$modifiers['lazyload'] = TRUE;
+					}
 					if ($p->parent == 0)
 						$p->parent = $p->num;
 					?>
@@ -76,7 +84,6 @@ foreach ($posts as $key => $post) :
 	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
 	</article>
 <?php endforeach; ?>
-
 
 <script type="text/javascript">
 	site_url = '<?php echo site_url() ?>';

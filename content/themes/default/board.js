@@ -535,8 +535,8 @@ function eliminateDuplicates(arr) {
 jQuery(document).ready(function() {
 	
 	jQuery('img.lazyload').lazyload({
-		effect: 'fadeIn',
-		threshold: 1000
+		threshold: 1000,
+		event: 'scrollstop'
 	});
 	
 	jQuery("[data-rel=popover-below]").popover({

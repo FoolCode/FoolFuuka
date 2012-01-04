@@ -88,6 +88,25 @@ var bindFunctions = function()
 				modal.find(".submitModal").data("action", 'report');
 				break;
 
+			case 'spam':
+				jQuery.ajax({
+					url: site_url + board_shortname + '/spam/' + post + '/',
+					dataType: 'json',
+					type: 'POST',
+					data: {
+						post: post
+					},
+					success: function(data) {
+						jQuery("#" + el.data("post-id")).addClass('is_spam');
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+					},
+					complete: function() {
+					}
+				});
+				event.preventDefault();
+				break;
+
 			case 'closeModal':
 				el.closest(".modal").modal('hide');
 				return false;
@@ -313,7 +332,7 @@ var realtimethread = function(){
 					}
 				});
 			}
-			
+
 			if(found_posts)
 			{
 				if(jQuery('#reply_form :focus').length > 0)

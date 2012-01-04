@@ -146,12 +146,12 @@ class Chan extends Public_Controller
 	{
 		// commenting
 		$post_data = '';
-		
+
 		if(mb_strlen($this->input->post('name')) > 0 || mb_strlen($this->input->post('reply')) > 0 || mb_strlen($this->input->post('email')) > 0)
 		{
 			show_404();
 		}
-		
+
 		if ($this->input->post('reply_gattai') == 'Submit')
 		{
 			$this->load->library('form_validation');
@@ -353,16 +353,16 @@ class Chan extends Public_Controller
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');
 	}
-	
+
 	public function full_image($image)
-	{		
+	{
 		if(!in_array(substr($image, -3), array('jpg', 'png','gif')) || !is_natural(substr($image, 0, 13)))
 		{
 			show_404();
 		}
-		
+
 		$image_data = $this->post->get_full_image($image);
-		
+
 		if(isset($image_data['image_href']))
 		{
 			redirect($image_data['image_href']);
@@ -376,7 +376,7 @@ class Chan extends Public_Controller
 				$this->template->set('error', _('There\'s no record of such image in our database.'));
 				$this->template->build('error');
 			}
-			
+
 			if($image_data['error_type'] == 'not_on_server')
 			{
 				$this->output->set_status_header('404');
@@ -389,7 +389,7 @@ class Chan extends Public_Controller
 	}
 
 
-	public function redirect($image = NULL) 
+	public function redirect($image = NULL)
 	{
 		$this->template->set('url', get_selected_board()->images_url . $image);
 		$this->template->set_layout('redirect');
@@ -532,6 +532,36 @@ class Chan extends Public_Controller
 
 
 		$result = $this->post->delete($post);
+		if (isset($result['error']))
+		{
+			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
+			return FALSE;
+		}
+		if (isset($result['success']) && $result['success'] === TRUE)
+		{
+			$this->output->set_output(json_encode(array('status' => 'success')));
+		}
+	}
+
+
+	public function spam($num = 0)
+	{
+		if (!$this->tank_auth->is_allowed())
+		{
+			show_404();
+		}
+
+		if (!is_numeric($num) || !$num > 0)
+		{
+			show_404();
+		}
+
+		if (!$this->input->is_ajax_request())
+		{
+			show_404();
+		}
+
+		$result = $this->post->spam($this->input->post("post"));
 		if (isset($result['error']))
 		{
 			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));

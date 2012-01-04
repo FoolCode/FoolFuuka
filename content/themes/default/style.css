@@ -14,11 +14,14 @@ a:hover {
 }
 
 html {
-	min-height:100%;
+	height:100%;
+	background:#6A836F;
+	margin:0;
+	padding:0;
 }
 
 body {
-	min-height:100%;
+	height:100%;
 	color:#364041;
 	padding:0;
 	margin:0;
@@ -28,8 +31,25 @@ body {
 ::selection { background: #fe57a1; color: #fff; text-shadow: none; }
 
 .container-fluid {
+	position:static;
 	padding: 0;
 	background:#EEF8F0;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -40px;
+}
+
+#footer {
+	background:#6A836F;
+	color:#f5f5f5;
+}
+
+#footer, #push {
+	height: 28px;
+	margin:0;
+	padding:12px 15px 0;
+	border: none;
 }
 
 #header {
@@ -61,6 +81,7 @@ body {
 	margin:2px 0 0;
 	line-height:100%;
 }
+
 
 #top_tools {
 	padding:3px 0 0;
@@ -101,7 +122,6 @@ body {
 }
 
 #main {
-	min-height:400px;
 }
 
 #main .section_title {
@@ -122,12 +142,6 @@ body {
 }
 
 
-#footer {
-	background:#6A836F;
-	padding:10px;
-	margin-top:0;
-	color:#f5f5f5;
-}
 
 .btnr, .btnr:visited {
 	padding:0px 3px 1px;
@@ -178,10 +192,7 @@ article.thread > .thread_image_box {
 }
 
 article.thread > .thread_image_box .thread_image {
-	max-width:251px;
-	max-height:251px;
-	width:auto;
-	height:auto;
+
 }
 
 article.thread > .thread_image_box .thread_image.is_spoiler_image {
@@ -371,15 +382,11 @@ article.thread article.post:nth-of-type(-n+4) {
 }
 
 .post > .thread_image_box .post_image {
-	max-width:126px;
-	max-height:126px;
-	height:auto;
-	width:auto;
+
 }
 
 .post.post_is_op > .thread_image_box .post_image {
-	max-width:251px;
-	max-height:251px;
+
 }
 
 .post > .thread_image_box .post_image.is_spoiler_image {

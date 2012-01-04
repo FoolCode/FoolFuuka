@@ -338,7 +338,7 @@ class Chan extends Public_Controller
 
 	public function image($hash, $page = 1)
 	{
-		if ($hash == '' || !is_numeric($page) || $page > 500)
+		if ($hash == '' || !is_natural($page) || $page > 500)
 		{
 			show_404();
 		}
@@ -355,18 +355,42 @@ class Chan extends Public_Controller
 	}
 	
 	public function full_image($image)
-	{
-		
+	{		
 		if(!in_array(substr($image, -3), array('jpg', 'png','gif')) || !is_natural(substr($image, 0, 13)))
 		{
 			show_404();
 		}
 		
 		$image_data = $this->post->get_full_image($image);
+		
+		if(isset($image_data['image_href']))
+		{
+			redirect($image_data['image_href']);
+		}
+		if(isset($image_data['error_type']))
+		{
+			if($image_data['error_type'] == 'no_record')
+			{
+				$this->output->set_status_header('404');
+				$this->template->title(_('Error'));
+				$this->template->set('error', _('There\'s no record of such image in our database.'));
+				$this->template->build('error');
+			}
+			
+			if($image_data['error_type'] == 'not_on_server')
+			{
+				$this->output->set_status_header('404');
+				$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Image pruned' );
+				$this->template->set('posts', array('posts' => array($image_data['result'])));
+				$this->template->set('modifiers', array('post_show_single_post' => TRUE));
+				$this->template->build('board');
+			}
+		}
 	}
 
 
-	public function redirect($image = NULL) {
+	public function redirect($image = NULL) 
+	{
 		$this->template->set('url', get_selected_board()->images_url . $image);
 		$this->template->set_layout('redirect');
 		$this->template->build('redirect');
@@ -440,7 +464,7 @@ class Chan extends Public_Controller
 		$this->template->set('pages_links', $pages_links);
 		$this->template->set('pages_links_current', $search['page']);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - '.$title);
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; '.$title);
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
@@ -527,7 +551,7 @@ class Chan extends Public_Controller
 		{
 			$stats_list = $this->statistics->get_available_stats();
 			$this->template->set('section_title', _('Statistics'));
-			$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': ' . _('statistics'));
+			$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . '&raquo; ' . _('statistics'));
 			$this->template->set('stats_list', $stats_list);
 			$this->template->build('statistics/statistics_list');
 			return TRUE;
@@ -541,7 +565,7 @@ class Chan extends Public_Controller
 		}
 
 		$this->template->set('section_title', _('Statistics:'). ' '.$stat_array['info']['name']);
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ': ' . _('statistics'));
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . '&raquo; ' . _('statistics'));
 		$this->template->set('info', $stat_array['info']);
 		$this->template->set('data', $stat_array['data']);
 		$this->template->build('statistics/' . $stat_array['info']['interface']);

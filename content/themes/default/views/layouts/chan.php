@@ -80,9 +80,9 @@
 				<?php endif; ?>
 			</div> <!-- end of #main -->
 
-
-			<footer id="footer"><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?></footer>
+			<div id="push"></div>
 		</div>
+		<footer id="footer"><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?></footer>
 
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

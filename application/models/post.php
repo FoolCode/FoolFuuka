@@ -700,11 +700,42 @@ class Post extends CI_Model
 		$result[0]['posts'] = $result[0]['posts'];
 		return $result;
 	}
+	
+	
+	function get_full_image($image)
+	{
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->table . '
+			WHERE media_filename = ?
+			ORDER BY num DESC
+			LIMIT 0, 1
+		', array($image));
+		
+		if($query->num_rows() == 0)
+		{
+			return array('error_type' => 'no_record', 'error_code' => 404);
+		}
+
+		$result = $query->result();
+		$result = $result[0];
+		
+		$image_href = $this->get_image_href($result);
+		
+		if($image_href == '')
+		{
+			$this->process_post($result, TRUE);
+			return array('error_type' => 'not_on_server', 'error_code' => 404, 'result' => $result);
+		}
+		
+		return array('image_href' => $image_href);
+		
+	}
 
 
 	/**
 	 * POSTING FUNCTIONS
-	 * */
+	 */
 	function comment($data)
 	{
 		if (check_stopforumspam_ip($this->input->ip_address()))

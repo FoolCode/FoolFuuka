@@ -241,6 +241,11 @@ var bindFunctions = function()
 
 			backlink.find("article").removeAttr("id").find(".post_controls").remove();
 			backlink.find(".post_file_controls").remove();
+			var swap_image = backlink.find('[data-original]');
+			if(swap_image.length > 0)
+			{
+				swap_image.attr('src', swap_image.attr('data-original'));
+			}
 		}
 		else
 		{

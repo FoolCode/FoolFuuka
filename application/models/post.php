@@ -1166,6 +1166,17 @@ class Post extends CI_Model
 
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
 		{
+			if(strlen(get_setting('fs_balancer_clients')) > 10)
+			{
+				$matches = array();
+				preg_match('/([\d]+)/', $row->preview, $matches);
+				if(isset($matches[1]))
+				{
+					$balancer_servers = unserialize(get_setting('fs_balancer_clients'));
+					$server_num = (intval($matches[1]))%(count($balancer_servers));
+					return $balancer_servers[$server_num]['url'] . '/' . get_selected_board()->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview : $row->media_filename);
+				}
+			}
 			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview : $row->media_filename);
 		}
 		if ($thumbnail)

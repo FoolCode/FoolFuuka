@@ -94,10 +94,9 @@ if ($CI->agent->is_browser('MSIE'))
 								})
 							});
 <?php } ?>
-						// Auto-Focus on First Input
-						jQuery(":input:first").focus(); // Focus on first input generated
+
+						jQuery(":input:first").focus();
 				
-						// Bootstrap jQuery
 						jQuery("a[rel=twipsy]").twipsy({ live: true });
 						jQuery("a[rel^='popover']").each(function() {
 							var direction = $(this).attr('rel').replace("popover-", "");

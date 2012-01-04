@@ -92,6 +92,16 @@ class Admin_Controller extends MY_Controller
 				"upgrade" => array("level" => "admin", "name" => _("Upgrade") . ((get_setting('fs_cron_autoupgrade_version') && version_compare(FOOLSLIDE_VERSION, get_setting('fs_cron_autoupgrade_version')) < 0) ? ' <span class="label success">' . _('New') . '</span>' : ''), "icon" => 353),
 			)
 		);
+		
+		$sidebar["balancer"] = array("name" => _("Load Balancer"),
+			"level" => "admin",
+			"default" => "balancers",
+			"icon" => 255,
+			"content" => array(
+				"balancers" => array("level" => "admin", "name" => _("Master"), "icon" => 121),
+				"client" => array("level" => "admin", "name" => _("Client"), "icon" => 120),
+			)
+		);
 
 		$sidebar["meta"] = array("name" => "Meta", // no gettext because meta must be meta
 			"level" => "member",

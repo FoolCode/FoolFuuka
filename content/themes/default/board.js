@@ -1,6 +1,6 @@
 var bindFunctions = function()
 {
-	jQuery("body").on("click", "[data-function]", function(event) {
+	jQuery("body").on("click", "a.[data-function], button.[data-function], input.[data-function]", function(event) {
 		var el = jQuery(this);
 		var post = el.data("post");
 		var modal = jQuery("#post_tools_modal");
@@ -186,7 +186,7 @@ var bindFunctions = function()
 		return false;
 	}
 
-	jQuery("#main").on("mouseover mouseout", "[data-backlink]", function(event) {
+	jQuery("#main").on("mouseover mouseout", "article a.[data-backlink]", function(event) {
 		if(event.type == "mouseover")
 		{
 			var backlink = jQuery("#backlink");
@@ -255,7 +255,7 @@ var backlinkify = function(elem, post_id, subnum)
 	if(subnum > 0)
 		post_id += "_" + subnum;
 
-	elem.find("[data-backlink=true]").each(function(idx, post) {
+	elem.find("a.[data-backlink=true]").each(function(idx, post) {
 		p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
 
 		if (typeof backlinks[p_id] == "undefined")
@@ -517,14 +517,14 @@ jQuery(document).ready(function() {
 	
 	jQuery('img.lazyload').lazyload({
 		threshold: 1000,
-		event: 'scrollstop'
+		event: 'scroll'
 	});
 	
-	jQuery("[data-rel=popover-below]").popover({
+	jQuery("a.[data-rel=popover-below]").popover({
 		offset: 10,
 		html: true
 	});
-	jQuery("[data-rel=popover]").popover({
+	jQuery("a.[data-rel=popover]").popover({
 		offset: 10,
 		html: true
 	});

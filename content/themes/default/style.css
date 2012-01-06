@@ -25,6 +25,7 @@ body {
 	color:#364041;
 	padding:0;
 	margin:0;
+	font-family: "Arial", sans-serif;
 }
 
 ::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }

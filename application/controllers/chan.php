@@ -543,6 +543,36 @@ class Chan extends Public_Controller
 		}
 	}
 
+	/*
+	public function spam($num = 0)
+	{
+		if (!$this->tank_auth->is_allowed())
+		{
+			show_404();
+		}
+
+		if (!is_numeric($num) || !$num > 0)
+		{
+			show_404();
+		}
+
+		if (!$this->input->is_ajax_request())
+		{
+			show_404();
+		}
+
+		$result = $this->post->spam($this->input->post("post"));
+		if (isset($result['error']))
+		{
+			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
+			return FALSE;
+		}
+		if (isset($result['success']) && $result['success'] === TRUE)
+		{
+			$this->output->set_output(json_encode(array('status' => 'success')));
+		}
+	}
+	*/
 
 	public function spam($num = 0)
 	{

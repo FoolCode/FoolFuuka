@@ -10,6 +10,14 @@
 |
 */
 
+$hook['display_override'] = array(
+		 'class'    => '',
+		 'function' => 'compress_html',
+		 'filename' => 'options_helper.php',
+		 'filepath' => 'helpers',
+		 'params'   => array('beer', 'wine', 'snacks')
+	);
+
 
 /* End of file hooks.php */
 /* Location: ./application/config/hooks.php */

@@ -191,10 +191,6 @@ article.thread > .thread_image_box {
 	max-width:260px;
 }
 
-article.thread > .thread_image_box .thread_image {
-
-}
-
 article.thread > .thread_image_box .thread_image.is_spoiler_image {
 	opacity: 0.05;
 }
@@ -279,10 +275,6 @@ article.thread .post_level.post_level_administrator {
 	color:#FF0000;
 }
 
-article.thread .post_number {
-
-}
-
 article.thread .backlink_list {
 	font-size:11px;
 	color:#888;
@@ -341,7 +333,6 @@ article.thread article.post:nth-of-type(-n+4) {
 
 .post .post_file .post_file_filename.shown {
 	display:inline;
-
 }
 
 .post .post_file .post_file_filename.unshown {
@@ -376,17 +367,6 @@ article.thread article.post:nth-of-type(-n+4) {
 	line-height:130%;
 	padding-top:5px;
 	vertical-align:bottom;
-}
-
-.post > .thread_image_box > .post_file_controls {
-}
-
-.post > .thread_image_box .post_image {
-
-}
-
-.post.post_is_op > .thread_image_box .post_image {
-
 }
 
 .post > .thread_image_box .post_image.is_spoiler_image {
@@ -630,7 +610,12 @@ article.thread .backlink.op {
 }
 
 
-.loading { display: none; width: 100%; text-align: center; margin: auto; }
+.loading { 
+	display: none; 
+	width: 100%; 
+	text-align: center; 
+	margin: auto; 
+}
 
 .spoiler {
 	color:#000;

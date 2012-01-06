@@ -37,17 +37,13 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest($page, 20, TRUE, TRUE, FALSE, TRUE, FALSE);
+		$posts = $this->CI->post->get_latest($page, 24, TRUE, TRUE, FALSE, TRUE, FALSE);
 
 		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Page ') . $page);
 
-		$pages_links = array();
-		for($i = 1; $i < 16; $i++)
-		{
-			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'page', $i));
-		}
+		$pages_links = site_url(array(get_selected_board()->shortname, 'page'));
 		$this->CI->template->set('pages_links', $pages_links);
 		$this->CI->template->set('pages_links_current', $page);
 		$this->CI->template->set('posts',  $posts);
@@ -75,16 +71,12 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest($page, 20, TRUE, TRUE, TRUE, TRUE, FALSE);
+		$posts = $this->CI->post->get_latest($page, 24, TRUE, TRUE, TRUE, TRUE, FALSE);
 
 		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Ghosts page ') . $page);
-		$pages_links = array();
-		for($i = 1; $i < 16; $i++)
-		{
-			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'ghost', $i));
-		}
+		$pages_links = site_url(array(get_selected_board()->shortname, 'ghost'));
 		$this->CI->template->set('pages_links', $pages_links);
 		$this->CI->template->set('pages_links_current', $page);
 		$this->CI->template->set('posts', $posts);
@@ -226,6 +218,70 @@ class Theme_Controller {
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');
 		}
+	}
+
+
+	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
+	public function search()
+	{
+		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order', 'page');
+		if ($this->CI->input->post())
+		{
+			$redirect_array = array(get_selected_board()->shortname, 'search');
+			foreach ($modifiers as $modifier)
+			{
+				if ($this->CI->input->post($modifier))
+				{
+					$redirect_array[] = $modifier;
+					$redirect_array[] = rawurlencode($this->CI->input->post($modifier));
+				}
+			}
+
+			redirect(site_url($redirect_array));
+		}
+		$search = $this->CI->uri->ruri_to_assoc(2, $modifiers);
+		$result = $this->CI->post->get_search($search);
+
+		$title = array();
+		if ($search['text'])
+			$title[] = _('including') . ' "' . trim(fuuka_htmlescape($search['text'])) . '"';
+		if ($search['username'])
+			$title[] = _('with username'). ' "' . trim(fuuka_htmlescape($search['username'])) . '"';
+		if ($search['tripcode'])
+			$title[] = _('with tripcode'). ' "' . trim(fuuka_htmlescape($search['tripcode'])) . '"';
+		if ($search['deleted'] == 'deleted')
+			$title[] = _('that are deleted');
+		if ($search['deleted'] == 'not-deleted')
+			$title[] = _('that aren\'t deleted');
+		if ($search['ghost'] == 'only')
+			$title[] = _('that are by ghosts');
+		if ($search['ghost'] == 'none')
+			$title[] = _('that aren\'t by ghosts');
+		if ($search['order'] == 'asc')
+			$title[] = _('starting from the oldest ones');
+		if(!$search['page'] || !intval($search['page']))
+		{
+			$search['page'] = 1;
+		}
+
+		$title = _('Searching for posts ') . urldecode(implode(' ' . _('and') . ' ', $title));
+		$this->CI->template->set('section_title', $title);
+
+		$uri_array = $this->CI->uri->ruri_to_assoc(2);
+		foreach($uri_array as $key => $item)
+		{
+			if(!$item)
+				unset($uri_array[$key]);
+		}
+		$pages_links = site_url(array($this->CI->uri->assoc_to_uri($uri_array), 'page'));
+		$this->CI->template->set('pages_links', $pages_links);
+		$this->CI->template->set('pages_links_current', $search['page']);
+
+		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; '.$title);
+		$this->CI->template->set('posts', $result['posts']);
+		$this->CI->template->set('modifiers', array('post_show_view_button' => TRUE));
+		$this->CI->template->set_partial('top_tools', 'top_tools', array('search' => $search));
+		$this->CI->template->build('board');
 	}
 
 

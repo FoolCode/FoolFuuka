@@ -38,51 +38,50 @@
 
 	<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
 
-		<div>
+		<div style="min-height:30px;">
 			<h1>/<?php echo $board->shortname ?>/ - <?php echo htmlspecialchars($board->name) ?></h1>
-		</div>
 
-		<?php if(isset($section_title)): ?><h2><?php echo $section_title ?></h2><?php endif; ?>
-		<hr />
+			<?php if(isset($section_title)): ?><h2><?php echo $section_title ?></h2><?php endif; ?>
+			<hr />
 
-		<?php echo $template['partials']['top_tools']; ?>
+			<?php echo $template['partials']['top_tools']; ?>
 
-		<hr />
+			<hr />
 
 	<?php endif; ?>
 
 		<?php echo $template['body']; ?>
 
 		<?php if (isset($pages_links)) : ?>
-			<?php if ($pages_links_current <= 15) : ?>
-			<table class="pages" align="left" border="1">
+			<table style="float:left">
 				<tbody>
 					<tr>
-						<?php if ($pages_links_current == 1) : ?>
-							<td>Previous</td>
-						<?php else : ?>
-							<td><input type="submit" value="Previous" onclick="location.href='<?php echo $pages_links[$pages_links_current-1]; ?>';return false;"/></td>
+						<td colspan="6" class="theader">Navigation</td>
+					</tr>
+					<tr>
+						<td class="postblock">View posts</td>
+						<?php if ($pages_links_current > 5) : ?>
+						<td>[<a href="<?php echo $pages_links . ($pages_links_current - 4) ?>/">-96</a>]</td>
 						<?php endif; ?>
-							<td>
-							<?php foreach ($pages_links as $key => $item) : ?>
-								[<a href="<?php echo $item ?>"><?php if ($key == $pages_links_current) echo '<b>'; ?><?php echo $key ?><?php if ($key == $pages_links_current) echo '</b>'; ?></a>]
-							<?php endforeach; ?>
-							</td>
-						<?php if ((count($pages_links) > 1) && ($pages_links_current >= 1 && $pages_links_current < 15)) : ?>
-							<td><input type="submit" value="Next" onclick="location.href='<?php echo $pages_links[$pages_links_current+1]; ?>';return false;"/></td>
-						<?php else : ?>
-							<td>Next</td>
+						<?php if ($pages_links_current > 2) : ?>
+						<td>[<a href="<?php echo $pages_links . ($pages_links_current - 2) ?>/">-48</a>]</td>
 						<?php endif; ?>
+						<?php if ($pages_links_current > 1) : ?>
+						<td>[<a href="<?php echo $pages_links . ($pages_links_current - 1) ?>/">-24</a>]</td>
+						<?php endif; ?>
+						<td>[<a href="<?php echo $pages_links . ($pages_links_current + 1) ?>/">+24</a>]</td>
+						<td>[<a href="<?php echo $pages_links . ($pages_links_current + 2) ?>/">+48</a>]</td>
+						<td>[<a href="<?php echo $pages_links . ($pages_links_current + 4) ?>/">+96</a>]</td>
 					</tr>
 				</tbody>
 			</table>
-			<?php else : ?>
-			<?php endif; ?>
 		<?php endif; ?>
 
 		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
-		<div style="float:right">
-			Theme [ <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'yotsuba')) ?>" onclick="changeTheme('yotsuba'); return false;">Yotsuba</a> ]
+			<div style="float:right">
+				Theme [ <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'yotsuba')) ?>" onclick="changeTheme('yotsuba'); return false;">Yotsuba</a> ]
+			</div>
+
 		</div>
 		<?php endif; ?>
 

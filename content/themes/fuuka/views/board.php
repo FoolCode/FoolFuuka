@@ -26,8 +26,9 @@ foreach ($posts as $key => $post) : ?>
 		<label>
 			<input type="checkbox" name="delete[]" value="<?php echo $op->doc_id ?>"/>
 			<span class="filetitle"><?php echo $op->title_processed ?></span>
-			<span class="postername"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span> <?php echo date('D M d H:i:s Y', $op->timestamp + 18000) ?>
+			<span class="postername"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
 			<span class="postertrip"><?php echo $op->trip_processed ?></span>
+			<?php echo date('D M d H:i:s Y', $op->timestamp + 18000) ?>
 		</label>
 
 		<?php if(!isset($thread_id)) : ?>

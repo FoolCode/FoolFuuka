@@ -45,6 +45,10 @@ body {
 	color:#f5f5f5;
 }
 
+#footer a, a.visited {
+	color:inherit;
+}
+
 #footer, #push {
 	height: 28px;
 	margin:0;

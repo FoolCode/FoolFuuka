@@ -56,7 +56,7 @@
 			<table style="float:left">
 				<tbody>
 					<tr>
-						<td colspan="6" class="theader">Navigation</td>
+						<td colspan="7" class="theader">Navigation</td>
 					</tr>
 					<tr>
 						<td class="postblock">View posts</td>

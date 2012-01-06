@@ -285,7 +285,7 @@ class Theme_Controller {
 	}
 
 
-	public function thread_o_matic()
+	public function gallery()
 	{
 		show_404();
 	}

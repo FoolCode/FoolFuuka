@@ -551,5 +551,5 @@ jQuery(document).ready(function() {
 	}
 
 	bindFunctions();
-	jQuery("time").localize('ddd mmm dd HH:MM:ss yyyy');
+	jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy');
 });

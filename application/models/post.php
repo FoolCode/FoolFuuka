@@ -615,7 +615,6 @@ class Post extends CI_Model
 				$query = $this->db->query('
 					SELECT *
 					FROM ' . $this->table . '
-					' . $this->sql_report . '
 					' . $order . '
 					LIMIT ' . (($search['page'] * 25) - 25) . ', 25
 				');

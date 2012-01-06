@@ -6,7 +6,7 @@ if (!isset($page))
 	<!--- Search Input -->
 	<?php echo form_open($this->fu_board . '/search'); ?>
 	<div id="simple-search" class="postspan" style="float:left">
-		Text Search [<a class="tooltip" href="#">?<span>Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing the word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt></span></a>]
+		Text search [<a class="tooltip" href="#">?<span>Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing the word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt></span></a>]
 
 		<?php
 		echo form_input(array(
@@ -16,7 +16,7 @@ if (!isset($page))
 			'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : ''
 		));
 		?>
-		
+
 		<?php
 		echo form_submit(array(
 			'value' => 'Go'
@@ -33,7 +33,7 @@ if (!isset($page))
 		<table style="float:left">
 			<tbody>
 				<tr>
-					<td colspan="2" class="theader">Advanced Search</td>
+					<td colspan="2" class="theader">Advanced search</td>
 				</tr>
 				<tr>
 					<td class="postblock">Text to find</td>
@@ -105,14 +105,10 @@ if (!isset($page))
 					<td>
 						<?php
 						echo form_submit(array(
-							'value' => 'Search',
-							'onclick' => 'getSearch(\'advanced\', this.form); return false;'
-						));
-						echo form_submit(array(
-							'value' => 'Simple',
-							'onclick' => 'javascript:toggle(\'advanced-search\');toggle(\'simple-search\');return false;'
+							'value' => 'Search'
 						));
 						?>
+						<a href="#" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ Simple ]</a>
 					</td>
 				</tr>
 			</tbody>
@@ -124,7 +120,7 @@ if (!isset($page))
 	<?php echo form_open($this->fu_board . '/post'); ?>
 	<div class="postspan" style="float:left">
 		View Post
-		
+
 		<?php
 		echo form_input(array(
 			'name' => 'post',
@@ -132,7 +128,7 @@ if (!isset($page))
 			'size' => '9'
 		));
 		?>
-		
+
 		<?php
 		echo form_submit(array(
 			'value' => 'View',
@@ -146,7 +142,7 @@ if (!isset($page))
 	<?php echo form_open($this->fu_board . '/page'); ?>
 	<div class="postspan" style="float:left">
 		View page
-		
+
 		<?php
 		echo form_input(array(
 			'name' => 'page',
@@ -155,17 +151,16 @@ if (!isset($page))
 			'value' => $page
 		));
 		?>
-	
+
 		<?php
 		echo form_submit(array(
 			'value' => 'View',
 			'onclick' => 'location.href=\'' . site_url($this->fu_board . '/page/') . '\' + this.form.page.value + \'/\'; return false;'
 		));
 		?>
-		
+
 		<a class="tooltip" href="#">[?]<span>In ghost mode, only threads with non-archived posts will be shown.</span></a>
-		
-		
+
 		<input type="button" value="View in Ghost mode" onclick="location.href='<?php echo site_url($this->fu_board . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
 	</div>
 	<?php echo form_close(); ?>

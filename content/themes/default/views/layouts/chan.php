@@ -50,6 +50,9 @@
 		<?php //		<br/>[ Select theme (will later be moved to footer): <a href="#" onClick="changeTheme('default')">Default</a> / <a href="#" onClick="changeTheme('fuuka')">Fuuka</a> ]
 		?>			<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
 				<?php endif; ?>
+				<aside id="top_options">
+					<?php echo $template['partials']['top_options']; ?>
+				</aside>
 			</header>
 
 			<div role="main" id="main">

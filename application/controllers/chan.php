@@ -14,6 +14,7 @@ class Chan extends Public_Controller
 		$boards = new Board();
 		$boards->order_by('shortname', 'ASC')->get();
 		$this->template->set_partial('top_tools', 'top_tools');
+		$this->template->set_partial('top_options', 'top_options');
 		$this->template->set('boards', $boards);
 		$this->template->set_partial('post_reply', 'post_reply');
 		$this->template->set_partial('post_tools', 'post_tools');

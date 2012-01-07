@@ -14,7 +14,6 @@ class Post extends CI_Model
 	var $backlinks = array();
 	var $features = TRUE;
 	var $realtime = FALSE;
-
 	// I'd love to get rid of these but there seems to be no other way to pass
 	// more parameters to callbacks
 	var $current_row = null;
@@ -130,7 +129,7 @@ class Post extends CI_Model
 		$result_num_as_key = array();
 		foreach ($result as $key => $post)
 		{
-			$this->process_post($post, TRUE);
+			$this->process_post($post, TRUE, TRUE);
 			$result_num_as_key[$post->num] = $post;
 		}
 
@@ -167,7 +166,7 @@ class Post extends CI_Model
 				' . $this->sql_report_after_join . '
 			');
 		}
-		else if($thread_order)
+		else if ($thread_order)
 		{
 			// by thread creation
 			$query = $this->db->query('
@@ -205,7 +204,7 @@ class Post extends CI_Model
 		}
 
 
-		if($query->num_rows() == 0)
+		if ($query->num_rows() == 0)
 		{
 			return array('posts' => array(), 'op' => array());
 		}
@@ -444,13 +443,13 @@ class Post extends CI_Model
 		{
 			if ($process === TRUE)
 			{
-				$this->process_post($post, $clean);
+				$this->process_post($post, $clean, $realtime);
 			}
 
 			if ($post->parent > 0)
 			{
 				//echo $post->num . (($post->subnum == 0)?'':'_'.$post->subnum).'<br/>';
-				$result[$post->parent]['posts'][$post->num . (($post->subnum == 0)?'':'_'.$post->subnum)] = $post;
+				$result[$post->parent]['posts'][$post->num . (($post->subnum == 0) ? '' : '_' . $post->subnum)] = $post;
 			}
 			else
 			{
@@ -461,13 +460,13 @@ class Post extends CI_Model
 		$query->free_result();
 
 		// stick the backlinks
-		foreach($this->backlinks as $key => $item)
+		foreach ($this->backlinks as $key => $item)
 		{
-			if(isset($result[$num]['op']) && $result[$num]['op']->num == $key)
+			if (isset($result[$num]['op']) && $result[$num]['op']->num == $key)
 			{
 				$result[$num]['op']->backlinks = array_unique($item);
 			}
-			else if(isset($result[$num]['posts'][$key]))
+			else if (isset($result[$num]['posts'][$key]))
 			{
 				$result[$num]['posts'][$key]->backlinks = array_unique($item);
 			}
@@ -654,7 +653,7 @@ class Post extends CI_Model
 				// the first you create from a parent is the first thread
 				$result[0]['posts'][] = $post;
 			}
-			if(is_array($result[0]['posts']) && $do_reverse)
+			if (is_array($result[0]['posts']) && $do_reverse)
 				$result[0]['posts'] = array_reverse($result[0]['posts']);
 			return array('posts' => $result, 'total_found' => $search_result['total_found']);
 		}
@@ -699,8 +698,8 @@ class Post extends CI_Model
 		$result[0]['posts'] = $result[0]['posts'];
 		return $result;
 	}
-	
-	
+
+
 	function get_full_image($image)
 	{
 		$query = $this->db->query('
@@ -710,25 +709,24 @@ class Post extends CI_Model
 			ORDER BY num DESC
 			LIMIT 0, 1
 		', array($image));
-		
-		if($query->num_rows() == 0)
+
+		if ($query->num_rows() == 0)
 		{
 			return array('error_type' => 'no_record', 'error_code' => 404);
 		}
 
 		$result = $query->result();
 		$result = $result[0];
-		
+
 		$image_href = $this->get_image_href($result);
-		
-		if($image_href == '')
+
+		if ($image_href == '')
 		{
 			$this->process_post($result, TRUE);
 			return array('error_type' => 'not_on_server', 'error_code' => 404, 'result' => $result);
 		}
-		
+
 		return array('image_href' => $image_href);
-		
 	}
 
 
@@ -1022,40 +1020,40 @@ class Post extends CI_Model
 		return FALSE;
 	}
 
+
 	/*
-	function spam($doc_id)
-	{
-		$query = $this->db->query('
-			SELECT *
-			FROM ' . $this->table . '
-			WHERE doc_id = ?
-			LIMIT 0,1;
-		', $doc_id);
+	  function spam($doc_id)
+	  {
+	  $query = $this->db->query('
+	  SELECT *
+	  FROM ' . $this->table . '
+	  WHERE doc_id = ?
+	  LIMIT 0,1;
+	  ', $doc_id);
 
-		if ($query->num_rows() != 1)
-		{
-			log_message('debug', 'post.php spam() post or thread not found');
-			return array('error' => _('There\'s no such record to mark as spam.'));
-		}
+	  if ($query->num_rows() != 1)
+	  {
+	  log_message('debug', 'post.php spam() post or thread not found');
+	  return array('error' => _('There\'s no such record to mark as spam.'));
+	  }
 
-		$row = $query->row();
+	  $row = $query->row();
 
-		$this->db->query('
-			UPDATE ' . $this->table . '
-			SET spam = 1
-			WHERE doc_id = ?
-		', $row->doc_id);
+	  $this->db->query('
+	  UPDATE ' . $this->table . '
+	  SET spam = 1
+	  WHERE doc_id = ?
+	  ', $row->doc_id);
 
-		if ($this->db->affected_rows() != 1)
-		{
-			log_message('debug', 'post.php spam() unable to update record.');
-			return array('error' => _('Unable to mark post/thread as spam.'));
-		}
+	  if ($this->db->affected_rows() != 1)
+	  {
+	  log_message('debug', 'post.php spam() unable to update record.');
+	  return array('error' => _('Unable to mark post/thread as spam.'));
+	  }
 
-		return array('success' => TRUE);
-	}
-	*/
-
+	  return array('success' => TRUE);
+	  }
+	 */
 	function process_name($name)
 	{
 		$trip = '';
@@ -1120,7 +1118,7 @@ class Post extends CI_Model
 	  | MISC FUNCTIONS
 	  |
 	 */
-	function process_post($post, $clean = TRUE)
+	function process_post($post, $clean = TRUE, $build = FALSE)
 	{
 		$this->current_row = $post;
 		$this->load->helper('text');
@@ -1145,7 +1143,24 @@ class Post extends CI_Model
 				unset($post->poster_id);
 			}
 		}
-		$post->formatted = build_board_comment($post);
+		
+		if($build)
+			$post->formatted = $this->build_board_comment($post);
+	}
+
+
+	function build_board_comment($p)
+	{
+		ob_start();
+		
+		if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
+			include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
+		else
+			include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
+
+		$string = ob_get_contents();
+		ob_end_clean();
+		return $string;
 	}
 
 
@@ -1165,14 +1180,14 @@ class Post extends CI_Model
 
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
 		{
-			if(strlen(get_setting('fs_balancer_clients')) > 10)
+			if (strlen(get_setting('fs_balancer_clients')) > 10)
 			{
 				$matches = array();
 				preg_match('/([\d]+)/', $row->preview, $matches);
-				if(isset($matches[1]))
+				if (isset($matches[1]))
 				{
 					$balancer_servers = unserialize(get_setting('fs_balancer_clients'));
-					$server_num = (intval($matches[1]))%(count($balancer_servers));
+					$server_num = (intval($matches[1])) % (count($balancer_servers));
 					return $balancer_servers[$server_num]['url'] . '/' . get_selected_board()->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview : $row->media_filename);
 				}
 			}
@@ -1306,7 +1321,7 @@ class Post extends CI_Model
 		$_prefix = '';
 		$_urltag = '#';
 		$_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '"';
-		$_backlink_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . $this->current_row->num . (($this->current_row->subnum == 0)?'':'_'.$this->current_row->subnum) . '"';
+		$_backlink_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . $this->current_row->num . (($this->current_row->subnum == 0) ? '' : '_' . $this->current_row->subnum) . '"';
 		$_suffix = '';
 		if ($this->features == FALSE)
 		{
@@ -1328,30 +1343,30 @@ class Post extends CI_Model
 		}
 
 		$this->backlinks[str_replace(',', '_', $num)][] = $_prefix
-				. '<a href="' . site_url(array(get_selected_board()->shortname,'thread',($this->current_row->parent == 0)?$this->current_row->num:$this->current_row->parent))
-				. $_urltag . $this->current_row->num . (($this->current_row->subnum == 0)?'':'_'.$this->current_row->subnum)
-				. '"' . $_backlink_option . '>&gt;&gt;' . $this->current_row->num . (($this->current_row->subnum == 0)?'':','.$this->current_row->subnum) . '</a>' . $_suffix;
+				. '<a href="' . site_url(array(get_selected_board()->shortname, 'thread', ($this->current_row->parent == 0) ? $this->current_row->num : $this->current_row->parent))
+				. $_urltag . $this->current_row->num . (($this->current_row->subnum == 0) ? '' : '_' . $this->current_row->subnum)
+				. '"' . $_backlink_option . '>&gt;&gt;' . $this->current_row->num . (($this->current_row->subnum == 0) ? '' : ',' . $this->current_row->subnum) . '</a>' . $_suffix;
 
 		if (array_key_exists($num, $this->existing_posts))
 		{
-			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname,'thread',$num)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'thread', $num)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 		}
 
 		foreach ($this->existing_posts as $key => $thread)
 		{
 			if (in_array($num, $thread))
 			{
-				return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname,'thread',$key)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+				return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'thread', $key)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 			}
 		}
 
 		if ($this->realtime === TRUE)
 		{
-			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname,'thread',$key)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'thread', $key)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 		}
 
 		// nothing yet? make a generic link with post
-		return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'post', str_replace(',', '_', $num))) . '">&gt;&gt;'.$num.'</a>' . $_suffix;
+		return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'post', str_replace(',', '_', $num))) . '">&gt;&gt;' . $num . '</a>' . $_suffix;
 
 		// return the thing untouched
 		return $matches[0];

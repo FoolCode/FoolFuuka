@@ -62,14 +62,13 @@ foreach ($posts as $key => $post) : ?>
 			if ($p->parent == 0)
 				$p->parent = $p->num;
 
-			if (isset($thread_id))
-			{
-				echo build_board_comment($p, $modifiers, $thread_id);
-			}
+			if(!isset($thread_id))
+				$thread_id = NULL;
+			
+			if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
+				include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
 			else
-			{
-				echo build_board_comment($p, $modifiers);
-			}
+				include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
 		}
 	}
 	?>

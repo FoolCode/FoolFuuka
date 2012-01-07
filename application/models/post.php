@@ -499,7 +499,7 @@ class Post extends CI_Model
 	{
 		if ($search['page'])
 		{
-			if (!is_numeric($search['page']) || $search['page'] > 30)
+			if (!is_numeric($search['page']))
 			{
 				show_404();
 			}

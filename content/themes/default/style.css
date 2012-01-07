@@ -135,19 +135,6 @@ body {
 	background:#eefff2;
 }
 
-
-.pagination {
-	padding:2px 10px 2px 35px;
-	margin:0;
-	background:#ddebdd;
-}
-
-.pagination ul {
-	background:#fff;
-}
-
-
-
 .btnr, .btnr:visited {
 	padding:0px 3px 1px;
 	background:transparent;
@@ -615,11 +602,11 @@ article.thread .backlink.op {
 }
 
 
-.loading { 
-	display: none; 
-	width: 100%; 
-	text-align: center; 
-	margin: auto; 
+.loading {
+	display: none;
+	width: 100%;
+	text-align: center;
+	margin: auto;
 }
 
 .spoiler {
@@ -650,4 +637,46 @@ article.thread .backlink.op {
 
 .is_spam {
 	display: none;
+}
+
+.paginate {
+	padding:2px 10px 2px 35px;
+	height:36px;
+	background:#ddebdd;
+}
+.paginate ul {
+	background:#fff;
+	float:left;
+	margin:0;
+	border:1px solid #ddd;
+	border:1px solid rgba(0, 0, 0, 0.15);
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	border-radius:3px;
+	-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.paginate li {
+	display:inline;
+}
+.paginate a, .paginate span {
+	float:left;
+	padding:0 14px;
+	line-height:34px;
+	border-right:1px solid;
+	border-right-color:#ddd;
+	border-right-color:rgba(0, 0, 0, 0.15);
+	*border-right-color:#ddd;
+	text-decoration:none;
+}
+.paginate a:hover, .paginate .active a {
+	background-color:#c7eefe;
+}
+.paginate .disabled a, .paginate .disabled a:hover {
+	background-color:transparent;
+	color:#bfbfbf;
+}
+.paginate .next a {
+	border:0;
 }

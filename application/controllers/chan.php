@@ -65,14 +65,12 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' &raquo; Page '.$page:''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Page ') . $page);
-
-		$pages_links = array();
-		for($i = 1; $i < 16; $i++)
-		{
-			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'page', $i));
-		}
-		$this->template->set('pages_links', $pages_links);
-		$this->template->set('pages_links_current', $page);
+		$pagination = array(
+			'base_url' => site_url(array(get_selected_board()->shortname, 'page')),
+			'current_page' => $page,
+			'total' => 0
+		);
+		$this->template->set('pagination', $pagination);
 		$this->template->set('posts',  $posts);
 		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
@@ -103,13 +101,12 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Ghost' . (($page > 1)?' &raquo; Page '.$page:''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Ghosts page ') . $page);
-		$pages_links = array();
-		for($i = 1; $i < 16; $i++)
-		{
-			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'ghost', $i));
-		}
-		$this->template->set('pages_links', $pages_links);
-		$this->template->set('pages_links_current', $page);
+		$pagination = array(
+			'base_url' => site_url(array(get_selected_board()->shortname, 'ghost')),
+			'current_page' => $page,
+			'total' => 0
+		);
+		$this->template->set('pagination', $pagination);
 		$this->template->set('posts', $posts);
 		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
@@ -444,12 +441,6 @@ class Chan extends Public_Controller
 		$title = _('Searching for posts ') . urldecode(implode(' ' . _('and') . ' ', $title));
 		$this->template->set('section_title', $title);
 
-		$pages_links = array();
-		$pages = floor($result['total_found'] / 25) + 1;
-		if ($pages > 20) {
-			$pages = 20;
-		}
-
 		$uri_array = $this->uri->ruri_to_assoc(2);
 		foreach($uri_array as $key => $item)
 		{
@@ -457,13 +448,16 @@ class Chan extends Public_Controller
 				unset($uri_array[$key]);
 		}
 
-		for($i = 1; $i <= $pages; $i++)
-		{
-			$uri_array['page'] = $i;
-			$pages_links[$i] = site_url().$this->uri->assoc_to_uri($uri_array);
-		}
-		$this->template->set('pages_links', $pages_links);
-		$this->template->set('pages_links_current', $search['page']);
+		if (isset($uri_array['page']))
+			unset($uri_array['page']);
+
+		$total_pages = ceil($result['total_found'] / 25);
+		$pagination = array(
+			'base_url' => site_url(array($this->uri->assoc_to_uri($uri_array), 'page')),
+			'current_page' => $search['page'],
+			'total' => (($total_pages > 200) ? 200 : $total_pages)
+		);
+		$this->template->set('pagination', $pagination);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; '.$title);
 		$this->template->set('posts', $result['posts']);

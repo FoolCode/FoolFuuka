@@ -96,10 +96,13 @@ foreach ($posts as $key => $post) :
 	thread_op_json = <?php echo json_encode($posts[$thread_id]['op']) ?>;
 	latest_doc_id = <?php 
 		$latest_doc_id = $posts[$thread_id]['op']->doc_id;
-		foreach($posts[$thread_id]['posts'] as $post)
+		if(isset($posts[$thread_id]['posts']))
 		{
-			if($latest_doc_id < $post->doc_id)
-				$latest_doc_id = $post->doc_id;
+			foreach($posts[$thread_id]['posts'] as $post)
+			{
+				if($latest_doc_id < $post->doc_id)
+					$latest_doc_id = $post->doc_id;
+			}
 		}
 		echo $latest_doc_id;
 	?>

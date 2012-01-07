@@ -19,7 +19,6 @@
 
 		<div id="header">
 			<span id="navtop">
-			<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
 				[
 				<?php
 				$boards_urls = array();
@@ -30,7 +29,6 @@
 				echo implode(' / ', $boards_urls);
 				?>
 				]
-			<?php endif; ?>
 			</span>
 
 			<span id="navtopr">
@@ -43,12 +41,10 @@
 				<b><span>/<?php echo $board->shortname ?>/ - <?php echo htmlspecialchars($board->name) ?></span></b>
 			</font>
 			<br>
-			<font size="1">
-				<?php if(isset($section_title)): ?><?php echo $section_title ?><?php endif; ?>
-			</font>
+			<font size="1"><?php if(isset($section_title)): ?><?php echo $section_title ?><?php endif; ?></font>
 		</div>
 
-		<hr>
+		<hr width="90%" size="1">
 
 		<?php echo $template['partials']['top_tools'] ?>
 

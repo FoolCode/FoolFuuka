@@ -22,7 +22,7 @@ function build_board_comment($p, $modifiers = array(), $thread_id = NULL) {
 		<tbody>
 			<tr>
 				<td nowrap class="doubledash">&gt;&gt;</td>
-				<td id="<?php echo ($p->subnum > 0) ? $p->num . '_' . $p->subnum : $p->num ?>" class="reply">
+				<td id="<?php echo ($p->subnum > 0) ? $p->num . '_' . $p->subnum : $p->num ?>" class="<?php echo ($p->subnum > 0) ? 'subreply' : 'reply' ?>">
 					<input type="checkbox" name="delete[]" value="<?php echo $p->doc_id ?>"/>
 					<span class="replytitle"><?php echo $p->title_processed ?></span>
 					<span class="commentpostername"><?php echo (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>

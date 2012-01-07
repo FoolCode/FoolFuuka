@@ -84,4 +84,6 @@ if (!defined('BASEPATH'))
 	<?php echo form_close() ?>
 </div>
 <hr>
+<?php else: ?>
+<div style="postition:relative"></div>
 <?php endif; ?>

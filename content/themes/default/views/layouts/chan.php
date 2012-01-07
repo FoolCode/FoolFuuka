@@ -19,7 +19,7 @@
 		if (file_exists('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css'))
 			echo link_tag('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css?v=' . FOOLSLIDE_VERSION);
 		?>
-		
+
 		<!--[if lt IE 9]>
 			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -62,24 +62,52 @@
 				<?php echo $template['body']; ?>
 
 				<?php echo $template['partials']['post_tools']; ?>
-				<?php if(isset($pages_links)) : ?>
-					<div class="pagination">
-					  <ul>
-						<?php if($pages_links_current == 1) : ?>
-							<li class="prev disabled"><a href="#">&larr; Previous</a></li>
-						<?php else : ?>
-							<li class="prev"><a href="<?php echo $pages_links[$pages_links_current-1]; ?>">&larr; Previous</a></li>
-						<?php endif; ?>
-						<?php foreach($pages_links as $key => $item) : ?>
-							<li class="<?php if($key == $pages_links_current) echo 'active'; ?>"><a href="<?php echo $item ?>"><?php echo $key ?></a></li>
-						<?php endforeach; ?>
-						<?php if((count($pages_links) > 1) && ($pages_links_current >= 1 && $pages_links_current < 15)) : ?>
-							<li class="next"><a href="<?php echo $pages_links[$pages_links_current+1]; ?>">Next &rarr;</a></li>
-						<?php else : ?>
-							<li class="next disabled"><a href="#">Next &rarr;</a></li>
-						<?php endif; ?>
-					  </ul>
-					</div>
+
+				<?php if (isset($pagination)) : ?>
+				<div class="paginate">
+					<ul>
+					<?php if ($pagination['current_page'] == 1) : ?>
+						<li class="prev disabled"><a href="#">&larr; Previous</a></li>
+					<?php else : ?>
+						<li class="prev"><a href="<?php echo $pagination['base_url'] . ($pagination['current_page'] - 1); ?>/">&larr; Previous</a></li>
+					<?php endif; ?>
+
+					<?php
+					if ($pagination['total'] <= 15) :
+						for ($index = 1; $index <= $pagination['total']; $index++)
+						{
+							echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+						}
+					else :
+						if ($pagination['current_page'] < 15) :
+							for ($index = 1; $index <= 15; $index++)
+							{
+								echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+							}
+							echo '<li class="disabled"><span>...</span></li>';
+						else :
+							for ($index = 1; $index < 10; $index++)
+							{
+								echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+							}
+							echo '<li class="disabled"><span>...</span></li>';
+							for ($index = ((($pagination['current_page'] + 2) > $pagination['total']) ? ($pagination['current_page'] - 4) : ($pagination['current_page'] - 2)); $index <= ((($pagination['current_page'] + 2) > $pagination['total']) ? $pagination['total'] : ($pagination['current_page'] + 2)); $index++)
+							{
+								echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+							}
+							if (($pagination['current_page'] + 2) < $pagination['total'])
+								echo '<li class="disabled"><span>...</span></li>';
+						endif;
+					endif;
+					?>
+
+					<?php if ($pagination['total'] == $pagination['current_page']) : ?>
+						<li class="next disabled"><a href="#">Next &rarr;</a></li>
+					<?php else : ?>
+						<li class="next"><a href="<?php echo $pagination['base_url'] . ($pagination['current_page'] + 1); ?>/">Next &rarr;</a></li>
+					<?php endif; ?>
+					</ul>
+				</div>
 				<?php endif; ?>
 			</div> <!-- end of #main -->
 

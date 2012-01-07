@@ -500,7 +500,7 @@ class Post extends CI_Model
 	{
 		if ($search['page'])
 		{
-			if (!is_numeric($search['page']) || $search['page'] > 30)
+			if (!is_numeric($search['page']))
 			{
 				show_404();
 			}
@@ -699,8 +699,8 @@ class Post extends CI_Model
 		$result[0]['posts'] = $result[0]['posts'];
 		return $result;
 	}
-	
-	
+
+
 	function get_full_image($image)
 	{
 		$query = $this->db->query('
@@ -710,7 +710,7 @@ class Post extends CI_Model
 			ORDER BY num DESC
 			LIMIT 0, 1
 		', array($image));
-		
+
 		if($query->num_rows() == 0)
 		{
 			return array('error_type' => 'no_record', 'error_code' => 404);
@@ -718,17 +718,17 @@ class Post extends CI_Model
 
 		$result = $query->result();
 		$result = $result[0];
-		
+
 		$image_href = $this->get_image_href($result);
-		
+
 		if($image_href == '')
 		{
 			$this->process_post($result, TRUE);
 			return array('error_type' => 'not_on_server', 'error_code' => 404, 'result' => $result);
 		}
-		
+
 		return array('image_href' => $image_href);
-		
+
 	}
 
 

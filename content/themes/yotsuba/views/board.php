@@ -8,6 +8,13 @@ if (!isset($modifiers))
 
 <?php echo $template['partials']['post_reply'] ?>
 
+<iframe src="" style="height: 0px; width: 0px; visibility: hidden; border-top-style: none; border-right-style: none; border-bottom-style: none; border-left-style: none; border-width: initial; border-color: initial; border-image: initial;">
+	<html>
+		<head></head>
+		<body></body>
+	</html>
+</iframe>
+
 <?php echo form_open(get_selected_board()->shortname .'/sending', array('name' => 'delform')) ?>
 <?php
 foreach ($posts as $key => $post) : ?>
@@ -41,7 +48,7 @@ foreach ($posts as $key => $post) : ?>
 		<?php endif ?>
 		<span class="posttime"><?php echo date('m/d/y(D)H:i', $op->timestamp + 18000) ?></span>
 		<span id="nothread<?php echo $op->num ?>">
-			<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" class="quotejs"><?php echo $op->num ?></a> &nbsp; [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]
+			<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo (!isset($thread_id)) ? site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num : 'javascript:quote(\'' . $op->num . '\')'?>" class="quotejs"><?php echo $op->num ?></a> &nbsp; [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]
 		</span>
 		<blockquote>
 			<?php echo $op->comment_processed ?>
@@ -68,7 +75,7 @@ foreach ($posts as $key => $post) : ?>
 			}
 
 		endforeach;
-		
+
 	}
 	?>
 	<br clear="left">

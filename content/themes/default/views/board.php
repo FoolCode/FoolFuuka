@@ -24,9 +24,9 @@ foreach ($posts as $key => $post) :
 
 			<header class="<?php echo ((isset($op->report_status) && !is_null($op->report_status)) ? ' reported' : '') ?>">
 				<div class="post_data">
-							<h2 class="post_title"><?php echo $op->title_processed ?></h2>
+							<?php if ($op->title_processed) : ?><h2 class="post_title"><?php echo $op->title_processed ?></h2><?php endif; ?>
 							<span class="post_author"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
-							<span class="post_trip"><?php echo $op->trip_processed ?></span>
+							<?php if ($op->trip_processed) : ?><span class="post_trip"><?php echo $op->trip_processed ?></span><?php endif; ?>
 							<?php if ($op->capcode == 'M') : ?>
 								<span class="post_level post_level_moderator">## Mod</span>
 							<?php endif ?>
@@ -37,7 +37,7 @@ foreach ($posts as $key => $post) :
 								<span class="post_level post_level_administrator">## Admin</span>
 							<?php endif ?>
 							<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
-							<span class="post_number"><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" data-function="highlight" data-post="<?php echo $op->num ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" data-function="quote" data-post="<?php echo $op->num ?>"><?php echo $op->num ?></a></span>
+							<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" data-function="highlight" data-post="<?php echo $op->num ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" data-function="quote" data-post="<?php echo $op->num ?>"><?php echo $op->num ?></a>
 							<span class="post_controls"><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>" class="btnr parent">View</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#reply' ?>" class="btnr parent">Reply</a><a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>" class="btnr parent">Original</a><a href="<?php echo site_url($this->fu_board . '/report/' . $op->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><?php if($this->tank_auth->is_allowed()) : ?><a href="<?php echo site_url($this->fu_board . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a><?php if(false) : ?><a href="<?php echo site_url($this->fu_board . '/spam/' . $op->doc_id) ?>" class="btnr parent" data-function="spam" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>">Spam</a><?php endif; ?><?php endif; ?></span>
 							<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan manually."/></span><?php endif ?>
 							<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
@@ -68,7 +68,12 @@ foreach ($posts as $key => $post) :
 					if ($p->parent == 0)
 						$p->parent = $p->num;
 					?>
-					<?php echo build_board_comment($p, $modifiers); ?>
+					<?php 
+						if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
+							include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
+						else
+							include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
+					?>
 				<?php endforeach; ?>
 				
 			</aside>
@@ -82,9 +87,9 @@ foreach ($posts as $key => $post) :
 			<?php endif; ?>
 		<?php endif; ?>
 		<?php echo $template['partials']['post_reply']; ?>
-	<?php if (isset($thread_id)) : ?>
-	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
-	<?php endif; ?>
+		<?php if (isset($thread_id)) : ?>
+			<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
+		<?php endif; ?>
 	</article>
 <?php endforeach; ?>
 

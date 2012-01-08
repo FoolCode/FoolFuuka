@@ -311,33 +311,6 @@ class Preferences extends Admin_Controller
 		if ($post = $this->input->post())
 		{
 			$this->_submit($post, $form);
-
-			// this code is necessary to keep the ad well centered inside iframes
-			$ad_before = '<!DOCTYPE html>
-						<html>
-						  <head>
-							<title>FoOlSlide ads</title>
-							<style>body{margin:0; padding:0; overflow:hidden;}</style>
-							<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-						  </head>
-						  <body>';
-			$ad_after = '</body>
-						</html>';
-
-			// available ads
-			$ads = array('fs_ads_top_banner' => 'ads_top.html', 'fs_ads_bottom_banner' => 'ads_bottom.html');
-
-			// write an HTML file, so calling it will use less processor power than calling the database via Codeigniter
-			// this recreates the files every time one saves
-			foreach ($ads as $ad => $adfile)
-			{
-				if (!write_file('./content/ads/' . $adfile, $ad_before . $this->input->post($ad) . $ad_after))
-				{
-					log_message('error', 'preferences.php/advertising: couldn\'t update HTML files');
-					flash_notice('error', _('Couldn\'t save the advertising code in the HTML'));
-				}
-			}
-			
 			redirect('admin/preferences/advertising');
 		}
 

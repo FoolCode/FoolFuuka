@@ -50,27 +50,7 @@ class MY_Controller extends CI_Controller
 				bindtextdomain("default", FCPATH . "assets/locale");
 				textdomain("default");
 			}
-
-			// set the nationality where possible, and leave ignored ips without a nation
-			$ignored_ips = array();
-			if (get_setting('fs_balancer_ips'))
-				$ignored_ips = @unserialize(get_setting('fs_balancer_ips'));
-			$ignored_ips[] = '127.0.0.1';
-			$remote_addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
-			if ($this->session->userdata('nation') !== FALSE || !in_array($remote_addr, $ignored_ips))
-			{
-				// If the user doesn't have a nation set, let's grab it
-				require_once("assets/geolite/GeoIP.php");
-				$gi = geoip_open("assets/geolite/GeoIP.dat", GEOIP_STANDARD);
-				$nation = geoip_country_code_by_addr($gi, $remote_addr);
-				geoip_close($gi);
-				$this->session->set_userdata('nation', $nation);
-			}
-			else if ($this->session->userdata('nation'))
-			{
-				$this->session->set_userdata('nation', '');
-			}
-
+			
 			// a good time to change some of the defauly settings dynamically
 			$this->config->config['tank_auth']['allow_registration'] = !get_setting('fs_reg_disabled');
 

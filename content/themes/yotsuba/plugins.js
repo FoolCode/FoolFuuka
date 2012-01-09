@@ -22,7 +22,7 @@ function replyhl(id) {
 
 function repquote(rep) {
     if (rep.match(/q([0-9]+)/)) {
-        rep = rep.replace(/q/, "");
+        rep = rep.replace(/q/, "").replace('_', ',');
         if (document.post.com.value == "") {
             quote(rep);
         }

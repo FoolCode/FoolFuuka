@@ -1143,7 +1143,7 @@ class Post extends CI_Model
 				unset($post->poster_id);
 			}
 		}
-		
+
 		if($build)
 			$post->formatted = $this->build_board_comment($post);
 	}
@@ -1152,7 +1152,7 @@ class Post extends CI_Model
 	function build_board_comment($p)
 	{
 		ob_start();
-		
+
 		if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
 			include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
 		else
@@ -1275,7 +1275,6 @@ class Post extends CI_Model
 	{
 		$CI = & get_instance();
 
-		// Replace Specific Code
 		$find = array(
 			"'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i"
 		);
@@ -1283,6 +1282,32 @@ class Post extends CI_Model
 		$replace = array(
 			'\\1<span class="greentext">\\2</span>\\3'
 		);
+
+		if ($this->features == FALSE)
+		{
+			if ($this->fu_theme == 'fuuka')
+			{
+				$find = array(
+					"'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i"
+				);
+
+				$replace = array(
+					'\\1<span class="greentext">\\2</span>\\3'
+				);
+			}
+
+			if ($this->fu_theme == 'yotsuba')
+			{
+				$find = array(
+					"'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i"
+				);
+
+				$replace = array(
+					'\\1<font class="unkfunc">\\2</font>\\3'
+				);
+			}
+		}
+
 
 		$adminfind = array(
 			"'\[banned\](.*?)\[/banned\]'i"
@@ -1379,24 +1404,40 @@ class Post extends CI_Model
 		$shortname = $matches[3];
 		$num = $matches[4];
 
+		$_prefix = ''; $_suffix = '';
+		if ($this->features == FALSE)
+		{
+			if ($this->fu_theme == 'fuuka')
+			{
+				$_prefix = '<span class="unkfunc">';
+				$_suffix = '</span>';
+			}
+
+			if ($this->fu_theme == 'yotsuba')
+			{
+				$_prefix = '<font class="unkfunc">';
+				$_suffix = '</font>';
+			}
+		}
+
 		$board = new Board();
 		$board->where('shortname', $shortname)->get();
 		if ($board->result_count() == 0)
 		{
 			if ($num)
 			{
-				return '<a href="http://boards.4chan.org/' . $shortname . '/res/' . $num . '">&gt;&gt;&gt;' . $link . '</a>';
+				return $_prefix . '<a href="http://boards.4chan.org/' . $shortname . '/res/' . $num . '">&gt;&gt;&gt;' . $link . '</a>' . $_suffix;
 			}
 
-			return '<a href="http://boards.4chan.org/' . $shortname . '/">&gt;&gt;&gt;' . $link . '</a>';
+			return $_prefix . '<a href="http://boards.4chan.org/' . $shortname . '/">&gt;&gt;&gt;' . $link . '</a>' . $_suffix;
 		}
 
 		if ($num)
 		{
-			return '<a href="' . site_url(array($board->shortname, 'post', $num)) . '">&gt;&gt;&gt;' . $link . '</a>';
+			return $_prefix . '<a href="' . site_url(array($board->shortname, 'post', $num)) . '">&gt;&gt;&gt;' . $link . '</a>' . $_suffix;
 		}
 
-		return '<a href="' . site_url($board->shortname) . '">&gt;&gt;&gt;' . $link . '</a>';
+		return $_prefix . '<a href="' . site_url($board->shortname) . '">&gt;&gt;&gt;' . $link . '</a>' . $_suffix;
 
 		return $matches[0];
 	}

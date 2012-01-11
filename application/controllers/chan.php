@@ -527,19 +527,6 @@ class Chan extends Public_Controller
 	}
 
 
-	public function theme($theme = 'default')
-	{
-		$this->input->set_cookie('foolfuuka_theme', $theme, 31536000);
-		if ($this->input->server('HTTP_REFERER') && strpos($this->agent->referrer(), site_url()) === 0) :
-			$this->template->set('url', $this->input->server('HTTP_REFERER'));
-		else :
-			$this->template->set('url', site_url(get_selected_board()->shortname));
-		endif;
-		$this->template->set_layout('redirect');
-		$this->template->build('redirect');
-	}
-
-
 	public function report($num = 0)
 	{
 		if (!is_numeric($num) || !$num > 0)

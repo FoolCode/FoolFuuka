@@ -8,13 +8,13 @@ echo '<?xml version="1.0" encoding="utf-8"?>' . "\n";
 
 	<title><?php echo $feed_name; ?></title>
 	<link href="<?php echo $feed_url; ?>"/>
-	<updated><?php echo date(DATE_W3C, strtotime($posts["chapters"][0]["created"])) ?></updated>
+	<updated><?php //echo date(DATE_W3C, strtotime($posts["chapters"][0]["created"])) ?></updated>
 	<author>
 		<name><?php echo get_home_team()->name ?></name>
 	</author>
 	<id><?php echo site_url() ?></id>
 	
-	<?php foreach ($posts["chapters"] as $entry): ?>
+	<?php foreach ($posts["threads"] as $entry): ?>
 		<entry>
 			<title><?php echo xml_convert($entry["title"]); ?></title>
 			<link href="<?php echo $entry["href"] ?>"/>

@@ -31,6 +31,66 @@ class Chan extends Public_Controller
 		$this->template->title('FoOlFuuka &raquo; 4chan Archiver');
 		$this->template->build('index');
 	}
+	
+	function feeds($mode = 'rss_gallery_50')
+	{
+		//if (is_null($format))
+		//	redirect('reader/feeds/rss');
+		$this->load->helper('xml');
+		
+		if(substr($mode, 0, 4) == 'atom')
+		{
+			$format = 'atom';
+			$mode = substr($mode, 5);
+		}
+		else
+		{
+			$format = 'rss';
+			$mode = substr($mode, 4);
+		}
+		
+		switch ($mode)
+		{
+			case 'gallery_50':
+				// returns last 200 threads with the thread number as key
+				$threads = array_slice($this->post->gallery(),0, 50);
+
+				if (count($threads) > 0)
+				{
+					// let's create a pretty array of chapters [comic][chapter][teams]
+					$result['threads'] = array();
+					$key = 0;
+					foreach ($threads as $num => $thread)
+					{
+						$result['threads'][$key]['title'] = $thread->title_processed;
+						$result['threads'][$key]['thumb'] = $thread->thumbnail_href;
+						$result['threads'][$key]['href'] = site_url(array(get_selected_board()->shortname, 'thread', $thread->num));
+						$result['threads'][$key]['created'] = $thread->timestamp;
+						$key++;
+					}
+				}
+				break;
+				
+				
+			default:
+				show_404();
+		}
+
+		$data['encoding'] = 'utf-8';
+		$data['feed_name'] = get_setting('fs_gen_site_title');
+		$data['feed_url'] = site_url('feeds/rss');
+		$data['page_description'] = get_setting('fs_gen_site_title') . ' RSS feed';
+		$data['page_language'] = get_setting('fs_gen_lang') ? get_setting('fs_gen_lang') : 'en_EN';
+		$data['posts'] = $result;
+		if ($format == "atom")
+		{
+			header("Content-Type: application/atom+xml");
+			$this->load->view('atom', $data);
+			return TRUE;
+		}
+		header("Content-Type: application/rss+xml");
+		$this->load->view('rss', $data);
+	}
 
 	public function gallery()
 	{

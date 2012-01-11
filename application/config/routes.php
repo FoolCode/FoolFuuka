@@ -54,6 +54,7 @@ $route['account/request/(:any)'] = "account/index/request/$1";
 $route['account/leave_leadership/(:any)'] = "account/index/leave_leadership/$1";
 $route['admin/members/members'] = 'admin/members/membersa';
 
+$route['(?!(admin|account|install|feeds|api|cli))(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";
 $route['(?!(admin|account|install|feeds|api|cli))(\w+)/(.*?)'] = "chan/$2/$3";
 $route['(\w+)'] = "chan/$1/page";
 

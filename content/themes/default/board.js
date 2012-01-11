@@ -520,10 +520,14 @@ function eliminateDuplicates(arr) {
 
 jQuery(document).ready(function() {
 	
-	jQuery('img.lazyload').lazyload({
-		threshold: 1000,
-		event: 'scroll'
-	});
+	var lazyloaded = jQuery('img.lazyload');
+	if(lazyloaded.length > 149)
+	{
+		lazyloaded.lazyload({
+			threshold: 1000,
+			event: 'scroll'
+		});
+	}
 	
 	jQuery("a.[data-rel=popover-below]").popover({
 		offset: 10,

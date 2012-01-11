@@ -671,6 +671,11 @@ class Post extends CI_Model
 			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
 			', array($hash));
 
+		if($query->num_rows() == 0)
+		{
+			return array();
+		}
+		
 		foreach ($query->result() as $post)
 		{
 			if ($post->parent == 0)
@@ -695,7 +700,6 @@ class Post extends CI_Model
 			// the first you create from a parent is the first thread
 			$result[0]['posts'][] = $post;
 		}
-		$result[0]['posts'] = $result[0]['posts'];
 		return $result;
 	}
 

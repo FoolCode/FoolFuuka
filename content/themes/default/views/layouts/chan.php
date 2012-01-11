@@ -23,9 +23,10 @@
 		<!--[if lt IE 9]>
 			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-	<!--	<link rel="sitemap" type="application/xml" title="Sitemap" href="<?php echo site_url() ?>sitemap.xml" />
-		<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo site_url() ?>rss.xml" />
-		<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url() ?>atom.xml" /> -->
+		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
+		<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo site_url(get_selected_board()->shortname) ?>rss_gallery_50.xml" />
+		<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url(get_selected_board()->shortname) ?>atom_gallery_50.xml" /> 
+		<?php endif; ?>
 		<link rel='index' title='<?php echo get_setting('fs_gen_site_title') ?>' href='<?php echo site_url() ?>' />
 		<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
 		<?php echo get_setting('fs_theme_header_code'); ?>

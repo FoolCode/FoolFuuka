@@ -536,6 +536,11 @@ class Post extends CI_Model
 
 				if ($search['text'])
 				{
+					if(mb_strlen($search['text']) < 2)
+					{
+						return array('error' => _('The text you were searching for was too short. It must be at least two characters long.'));
+					}
+					
 					$query .= '@comment ' . $this->sphinxclient->HalfEscapeString(urldecode($search['text'])) . ' ';
 				}
 
@@ -570,8 +575,27 @@ class Post extends CI_Model
 				$search_result = $this->sphinxclient->query($query, get_selected_board()->shortname . '_ancient ' . get_selected_board()->shortname . '_main ' . get_selected_board()->shortname . '_delta');
 				if ($search_result === false)
 				{
-					// show some actual error...
-					show_404();
+					if($this->sphinxclient->IsConnectError())
+					{
+						return array('error' => _('The search engine seems to be offline. If it\'s offline for more than a few minutes, you might want to report the issue. Most likely it was turned off and not turned back on.'));
+					}
+					
+					return array('error' => _('The search engine couldn\'t figure out the query. It\'s possible that you\'ve used characters that aren\'t accepted. If you think this is a bug, report it if possible.'));
+					
+					// we could use the rest for debugging purposes,
+					// but for now we better just give a generic errors because
+					// "human readable" here doesn't mean "public-friendly"
+					if($this->sphinxclient->GetLastError())
+					{
+						return array('error' => $this->sphinxclient->GetLastError());
+					}
+					
+					if($this->sphinxclient->GetLastWarning())
+					{
+						return array('error' => $this->sphinxclient->GetLastWarning());
+					}
+					
+					return array('error' => _('Something went wrong with the search engine and we don\'t know what!'));
 				}
 
 				$sql = array();

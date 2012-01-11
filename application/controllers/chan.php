@@ -31,14 +31,15 @@ class Chan extends Public_Controller
 		$this->template->title('FoOlFuuka &raquo; 4chan Archiver');
 		$this->template->build('index');
 	}
-	
+
+
 	function feeds($mode = 'rss_gallery_50')
 	{
 		//if (is_null($format))
 		//	redirect('reader/feeds/rss');
 		$this->load->helper('xml');
-		
-		if(substr($mode, 0, 4) == 'atom')
+
+		if (substr($mode, 0, 4) == 'atom')
 		{
 			$format = 'atom';
 			$mode = substr($mode, 5);
@@ -48,12 +49,12 @@ class Chan extends Public_Controller
 			$format = 'rss';
 			$mode = substr($mode, 4);
 		}
-		
+
 		switch ($mode)
 		{
 			case 'gallery_50':
 				// returns last 200 threads with the thread number as key
-				$threads = array_slice($this->post->gallery(),0, 50);
+				$threads = array_slice($this->post->gallery(), 0, 50);
 
 				if (count($threads) > 0)
 				{
@@ -70,8 +71,8 @@ class Chan extends Public_Controller
 					}
 				}
 				break;
-				
-				
+
+
 			default:
 				show_404();
 		}
@@ -91,6 +92,7 @@ class Chan extends Public_Controller
 		header("Content-Type: application/rss+xml");
 		$this->load->view('rss', $data);
 	}
+
 
 	public function gallery()
 	{
@@ -122,7 +124,7 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest($page);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' &raquo; Page '.$page:''));
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Page ') . $page);
 		$pagination = array(
@@ -131,7 +133,7 @@ class Chan extends Public_Controller
 			'total' => 0
 		);
 		$this->template->set('pagination', $pagination);
-		$this->template->set('posts',  $posts);
+		$this->template->set('posts', $posts);
 		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
 		$this->template->set_partial('top_tools', 'top_tools', array('page' => $page));
@@ -158,7 +160,7 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest($page, 20, TRUE, TRUE, TRUE);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Ghost' . (($page > 1)?' &raquo; Page '.$page:''));
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Ghost' . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Ghosts page ') . $page);
 		$pagination = array(
@@ -205,7 +207,7 @@ class Chan extends Public_Controller
 		// commenting
 		$post_data = '';
 
-		if(mb_strlen($this->input->post('name')) > 0 || mb_strlen($this->input->post('reply')) > 0 || mb_strlen($this->input->post('email')) > 0)
+		if (mb_strlen($this->input->post('name')) > 0 || mb_strlen($this->input->post('reply')) > 0 || mb_strlen($this->input->post('email')) > 0)
 		{
 			show_404();
 		}
@@ -251,8 +253,8 @@ class Chan extends Public_Controller
 					if ($this->input->is_ajax_request())
 					{
 						$this->output
-							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => 'This thread does not exist.', 'success' => '')));
+								->set_content_type('application/json')
+								->set_output(json_encode(array('error' => 'This thread does not exist.', 'success' => '')));
 						return FALSE;
 					}
 					show_404();
@@ -264,8 +266,8 @@ class Chan extends Public_Controller
 					if ($this->input->is_ajax_request())
 					{
 						$this->output
-							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => $result['error'], 'success' => '')));
+								->set_content_type('application/json')
+								->set_output(json_encode(array('error' => $result['error'], 'success' => '')));
 						return FALSE;
 					}
 					$this->template->title(_('Error'));
@@ -278,8 +280,8 @@ class Chan extends Public_Controller
 					if ($this->input->is_ajax_request())
 					{
 						$this->output
-							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => '', 'success' => 'Your comment has been posted.')));
+								->set_content_type('application/json')
+								->set_output(json_encode(array('error' => '', 'success' => 'Your comment has been posted.')));
 						return FALSE;
 					}
 					$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . '_' . $result['posted']->subnum;
@@ -343,10 +345,10 @@ class Chan extends Public_Controller
 
 		$num = str_replace('S', '', $num);
 
-		if(strpos($num, '_') > 0)
+		if (strpos($num, '_') > 0)
 		{
 			$nums = explode('_', $num);
-			if(count($nums) != 2)
+			if (count($nums) != 2)
 				show_404();
 			$subnum = $nums[1];
 			$num = $nums[0];
@@ -373,7 +375,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		if($thread->subnum > 0)
+		if ($thread->subnum > 0)
 		{
 			$url = site_url($this->fu_board . '/thread/' . $thread->parent) . '#' . $thread->num . '_' . $thread->subnum;
 		}
@@ -412,22 +414,23 @@ class Chan extends Public_Controller
 		$this->template->build('board');
 	}
 
+
 	public function full_image($image)
 	{
-		if(!in_array(substr($image, -3), array('jpg', 'png','gif')) || !is_natural(substr($image, 0, 13)))
+		if (!in_array(substr($image, -3), array('jpg', 'png', 'gif')) || !is_natural(substr($image, 0, 13)))
 		{
 			show_404();
 		}
 
 		$image_data = $this->post->get_full_image($image);
 
-		if(isset($image_data['image_href']))
+		if (isset($image_data['image_href']))
 		{
 			redirect($image_data['image_href']);
 		}
-		if(isset($image_data['error_type']))
+		if (isset($image_data['error_type']))
 		{
-			if($image_data['error_type'] == 'no_record')
+			if ($image_data['error_type'] == 'no_record')
 			{
 				$this->output->set_status_header('404');
 				$this->template->title(_('Error'));
@@ -435,10 +438,10 @@ class Chan extends Public_Controller
 				$this->template->build('error');
 			}
 
-			if($image_data['error_type'] == 'not_on_server')
+			if ($image_data['error_type'] == 'not_on_server')
 			{
 				$this->output->set_status_header('404');
-				$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Image pruned' );
+				$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Image pruned');
 				$this->template->set('posts', array('posts' => array($image_data['result'])));
 				$this->template->set('modifiers', array('post_show_single_post' => TRUE));
 				$this->template->build('board');
@@ -476,13 +479,21 @@ class Chan extends Public_Controller
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
 		$result = $this->post->get_search($search);
 
+		if (isset($result['error']))
+		{
+			$this->template->title(_('Error'));
+			$this->template->set('error', $result['error']);
+			$this->template->build('error');
+			return FALSE;
+		}
+
 		$title = array();
 		if ($search['text'])
 			$title[] = _('including') . ' "' . trim(fuuka_htmlescape($search['text'])) . '"';
 		if ($search['username'])
-			$title[] = _('with username'). ' "' . trim(fuuka_htmlescape($search['username'])) . '"';
+			$title[] = _('with username') . ' "' . trim(fuuka_htmlescape($search['username'])) . '"';
 		if ($search['tripcode'])
-			$title[] = _('with tripcode'). ' "' . trim(fuuka_htmlescape($search['tripcode'])) . '"';
+			$title[] = _('with tripcode') . ' "' . trim(fuuka_htmlescape($search['tripcode'])) . '"';
 		if ($search['deleted'] == 'deleted')
 			$title[] = _('that are deleted');
 		if ($search['deleted'] == 'not-deleted')
@@ -493,7 +504,7 @@ class Chan extends Public_Controller
 			$title[] = _('that aren\'t by ghosts');
 		if ($search['order'] == 'asc')
 			$title[] = _('starting from the oldest ones');
-		if(!$search['page'] || !intval($search['page']))
+		if (!$search['page'] || !intval($search['page']))
 		{
 			$search['page'] = 1;
 		}
@@ -502,9 +513,9 @@ class Chan extends Public_Controller
 		$this->template->set('section_title', $title);
 
 		$uri_array = $this->uri->ruri_to_assoc(2);
-		foreach($uri_array as $key => $item)
+		foreach ($uri_array as $key => $item)
 		{
-			if(!$item)
+			if (!$item)
 				unset($uri_array[$key]);
 		}
 
@@ -519,7 +530,7 @@ class Chan extends Public_Controller
 		);
 		$this->template->set('pagination', $pagination);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; '.$title);
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; ' . $title);
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
@@ -585,37 +596,37 @@ class Chan extends Public_Controller
 		}
 	}
 
+
 	/*
-	public function spam($num = 0)
-	{
-		if (!$this->tank_auth->is_allowed())
-		{
-			show_404();
-		}
+	  public function spam($num = 0)
+	  {
+	  if (!$this->tank_auth->is_allowed())
+	  {
+	  show_404();
+	  }
 
-		if (!is_numeric($num) || !$num > 0)
-		{
-			show_404();
-		}
+	  if (!is_numeric($num) || !$num > 0)
+	  {
+	  show_404();
+	  }
 
-		if (!$this->input->is_ajax_request())
-		{
-			show_404();
-		}
+	  if (!$this->input->is_ajax_request())
+	  {
+	  show_404();
+	  }
 
-		$result = $this->post->spam($this->input->post("post"));
-		if (isset($result['error']))
-		{
-			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
-			return FALSE;
-		}
-		if (isset($result['success']) && $result['success'] === TRUE)
-		{
-			$this->output->set_output(json_encode(array('status' => 'success')));
-		}
-	}
-	*/
-
+	  $result = $this->post->spam($this->input->post("post"));
+	  if (isset($result['error']))
+	  {
+	  $this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
+	  return FALSE;
+	  }
+	  if (isset($result['success']) && $result['success'] === TRUE)
+	  {
+	  $this->output->set_output(json_encode(array('status' => 'success')));
+	  }
+	  }
+	 */
 	public function spam($num = 0)
 	{
 		if (!$this->tank_auth->is_allowed())
@@ -666,7 +677,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$this->template->set('section_title', _('Statistics:'). ' '.$stat_array['info']['name']);
+		$this->template->set('section_title', _('Statistics:') . ' ' . $stat_array['info']['name']);
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . '&raquo; ' . _('statistics'));
 		$this->template->set('info', $stat_array['info']);
 		$this->template->set('data', $stat_array['data']);

@@ -1058,6 +1058,8 @@ class Post extends CI_Model
 	  return array('success' => TRUE);
 	  }
 	 */
+	
+	
 	function process_name($name)
 	{
 		$trip = '';

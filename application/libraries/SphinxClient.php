@@ -1507,7 +1507,9 @@ class SphinxClient
 		$from = array ( '\\', '(',')','!','@','~','&', '/', '^', '$', '=' );
 		$to   = array ( '\\\\', '\(','\)','\!','\@','\~', '\&', '\/', '\^', '\$', '\=' );
 
-		return str_replace ( $from, $to, $string );
+		$string = str_replace ( $from, $to, $string );
+		$string = preg_replace("'\"([^\s]+)-([^\s]*)\"'", "\\1\-\\2", $string);
+		return preg_replace("'([^\s]+)-([^\s]*)'", "\"\\1\-\\2\"", $string);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

@@ -180,6 +180,10 @@ form {
     background: #D6BAD0;
     color: #000;
 }
+.subreply {
+    background: #C2C9F2;
+    color: #000;
+}
 .doubledash {
     vertical-align: top;
     clear: both;

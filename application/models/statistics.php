@@ -30,6 +30,7 @@ class Statistics extends CI_Model
 	{
 		$this->stats = array(
 			'availability' => array(
+				'location' =>'availability',
 				'name' => _('Availability'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
@@ -37,27 +38,80 @@ class Statistics extends CI_Model
 				'interface' => 'availability'
 			),
 			'daily_activity' => array(
+				'location' =>'daily_activity',
 				'name' => _('Daily activity'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => FALSE,
+				'enabled' => TRUE,
 				'frequence' => 60 * 60 * 6, // every 6 hours
-				'interface' => 'daily_activity'
+				'interface' => 'graph',
+				'gnuplot' => array(
+					'title' => "'5-Minute Intervals'",
+					'style' => 'data fsteps',
+					'timefmt' => '"%s"',
+					'yrange' => '[ 0 : ]',
+					'xdata' => 'time',
+					'xrange' => '[ "{{X_START}}" : "{{X_END}}" ]',
+					'format' => 'x "%H:%M"',
+					'grid' => TRUE,
+					'key' => 'left',
+					'plot' => array(
+						"'{{INFILE}}' using 1:2 t 'Posts' lt rgb '#008000' with filledcurve x1",
+						"'{{INFILE}}' using 1:3 t 'Images' lt rgb '#0000ff' with filledcurve x1",
+						"'{{INFILE}}' using 1:4 t 'Sages' lt rgb '#ff0000' with filledcurve x1"
+					)
+				)
 			),
 			'daily_activity_archive' => array(
+				'location' =>'daily_activity_archive',
 				'name' => _('Daily activity archive'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => FALSE,
+				'enabled' => TRUE,
 				'frequence' => 60 * 60, // every hour
-				'interface' => 'list'
+				'interface' => 'graph',
+				'gnuplot' => array(
+					'title' => "'1-Hour Intervals'",
+					'timefmt' => '"%s"',
+					'yrange' => '[ 0 : ]',
+					'xdata' => 'time',
+					'xrange' => '[ "0" : "86400" ]',
+					'format' => 'x "%H:%M"',
+					'grid' => TRUE,
+					'key' => 'left',
+					'boxwidth' => 3600,
+					'style' => 'fill solid border -1',
+					'plot' => array(
+						"'{{INFILE}}' using 1:2 t 'Posts' lt rgb '#008000' with boxes",
+						"'{{INFILE}}' using 1:3 t 'Sages' lt rgb '#ff0000' with boxes"
+					)
+				)
 			),
 			'daily_activity_hourly' => array(
+				'location' =>'daily_activity_hourly',
 				'name' => _('Daily activity hourly'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => FALSE,
+				'enabled' => TRUE,
 				'frequence' => 60 * 60, // every 6 hours
-				'interface' => 'list'
+				'interface' => 'graph',
+				'gnuplot' => array(
+					'title' => "'1-Hour Intervals'",
+					'timefmt' => '"%s"',
+					'yrange' => '[ 0 : ]',
+					'xdata' => 'time',
+					'xrange' => '[ "0" : "86400" ]',
+					'format' => 'x "%H:%M"',
+					'grid' => TRUE,
+					'key' => 'left',
+					'boxwidth' => 3600,
+					'style' => 'fill solid border -1',
+					'plot' => array(
+						"'{{INFILE}}' using 1:2 t 'Posts' lt rgb '#008000' with boxes",
+						"'{{INFILE}}' using 1:3 t 'Images' lt rgb '#0000ff' with boxes",
+						"'{{INFILE}}' using 1:4 t 'Sages' lt rgb '#ff0000' with boxes"
+					)
+				)
 			),
 			'image_reposts' => array(
+				'location' =>'image_reposts',
 				'name' => _('Image reposts'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
@@ -65,13 +119,31 @@ class Statistics extends CI_Model
 				'interface' => 'image_reposts'
 			),
 			'karma' => array(
+				'location' =>'karma',
 				'name' => _('Karma'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => FALSE,
+				'enabled' => TRUE,
 				'frequence' => 60 * 60 * 24 * 7, // every 7 days
-				'interface' => 'list'
+				'interface' => 'graph',
+				'gnuplot' => array(
+					'title' => "'1-Day Intervals'",
+					'style' => 'data fsteps',
+					'timefmt' => '"%s"',
+					'yrange' => '[ 0 : ]',
+					'xdata' => 'time',
+					'xrange' => '[ "{{X_START}}" : "{{X_END}}" ]',
+					'format' => 'x "%m/%y"',
+					'grid' => TRUE,
+					'key' => 'left',
+					'plot' => array(
+						"'{{INFILE}}' using 1:2 t 'Posts' lt rgb '#008000' with filledcurve x1",
+						"'{{INFILE}}' using 1:3 t 'Images' lt rgb '#0000ff' with filledcurve x1",
+						"'{{INFILE}}' using 1:4 t 'Sages' lt rgb '#ff0000' with filledcurve x1"
+					)
+				)
 			),
 			'new_tripfriends' => array(
+				'location' =>'new_tripfriends',
 				'name' => _('New tripfags'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
@@ -79,13 +151,31 @@ class Statistics extends CI_Model
 				'interface' => 'new_tripfriends'
 			),
 			'population' => array(
+				'location' =>'population',
 				'name' => _('Population'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => FALSE,
+				'enabled' => TRUE,
 				'frequence' => 60 * 60 * 24, // every day
-				'interface' => 'list'
+				'interface' => 'graph',
+				'gnuplot' => array(
+					'title' => "'Posters'",
+					'style' => 'data fsteps',
+					'timefmt' => '"%s"',
+					'yrange' => '[ 0 : ]',
+					'xdata' => 'time',
+					'xrange' => '[ "{{X_START}}" : "{{X_END}}" ]',
+					'format' => 'x "%m/%y"',
+					'grid' => TRUE,
+					'key' => 'left',
+					'plot' => array(
+						"'{{INFILE}}' using 1:4 t 'Anonymous' lt rgb '#008000' with filledcurve x1",
+						"'{{INFILE}}' using 1:2 t 'Tripfriends' lt rgb '#0000ff' with filledcurve x1",
+						"'{{INFILE}}' using 1:3 t 'Namefags' lt rgb '#ff0000' with filledcurve x1"
+					)
+				)
 			),
 			'post_count' => array(
+				'location' =>'post_count',
 				'name' => _('Post count'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
@@ -93,30 +183,34 @@ class Statistics extends CI_Model
 				'interface' => 'post_count'
 			),
 			'post_rate' => array(
+				'location' =>'post_rate',
 				'name' => _('Post rate'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => FALSE,
+				'enabled' => TRUE,
 				'frequence' => 60 * 3, // every 3 minutes
 				'interface' => 'list'
 			),
 			'post_rate_archive' => array(
+				'location' =>'post_rate_archive',
 				'name' => _('Post rate archive'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => FALSE,
+				'enabled' => TRUE,
 				'frequence' => 60 * 3, // every 3 minutes
 				'interface' => 'list'
 			),
 			'users_online' => array(
+				'location' =>'users_online',
 				'name' => _('Users online'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => FALSE,
+				'enabled' => TRUE,
 				'frequence' => 60, // every minute
 				'interface' => 'list'
 			),
 			'users_online_internal' => array(
+				'location' =>'users_online_internal',
 				'name' => _('Users posting in archive'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
-				'enabled' => FALSE,
+				'enabled' => TRUE,
 				'frequence' => 60, // every minute
 				'interface' => 'list'
 			)
@@ -198,7 +292,7 @@ class Statistics extends CI_Model
 					if ($r->board_id == $board->id && $r->name == $k)
 					{
 						$found = TRUE;
-						//$r->timestamp >= time() - strtotime($a['frequence']) || 
+						//$r->timestamp >= time() - strtotime($a['frequence']) ||
 						if (!$this->lock_stat($r->board_id, $k, $r->timestamp))
 						{
 							// another process took it up while we were O(n^3)ing!
@@ -217,6 +311,12 @@ class Statistics extends CI_Model
 				$process = 'process_' . $k;
 				$this->db->reconnect();
 				$result = $this->$process($board);
+
+				if (isset($this->stats[$k]['gnuplot']))
+				{
+					$this->graph_gnuplot($board->shortname, $k, json_decode(json_encode($result), TRUE));
+				}
+
 				$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
 			}
 		}
@@ -225,8 +325,8 @@ class Statistics extends CI_Model
 
 	/**
 	 * To avoid really dangerous racing conditions, turn up the timer before starting the update
-	 * 
-	 * @param type $name 
+	 *
+	 * @param type $name
 	 */
 	function lock_stat($board_id, $name, $temp_timestamp)
 	{
@@ -246,7 +346,7 @@ class Statistics extends CI_Model
 	function save_stat($board_id, $name, $timestamp, $data = '')
 	{
 		$this->db->query('
-			INSERT 
+			INSERT
 			INTO ' . $this->db->protect_identifiers('statistics', TRUE) . '
 			(board_id, name, timestamp, data)
 			VALUES
@@ -261,10 +361,10 @@ class Statistics extends CI_Model
 	{
 		$query = $this->db->query('
 				SELECT name,trip,count(num) AS posts,avg(timestamp%86400) AS avg1,std(timestamp%86400) AS std1,
-					(avg((timestamp+43200)%86400)+43200)%86400 avg2,std((timestamp+43200)%86400) AS std2 
-				FROM ' . $this->get_table($board) . ' 
-				WHERE timestamp > ? 
-				GROUP BY name,trip 
+					(avg((timestamp+43200)%86400)+43200)%86400 avg2,std((timestamp+43200)%86400) AS std2
+				FROM ' . $this->get_table($board) . '
+				WHERE timestamp > ?
+				GROUP BY name,trip
 				HAVING count(*)>4
 				ORDER BY name,trip
 		', array(time() - 2592000));
@@ -278,11 +378,11 @@ class Statistics extends CI_Model
 	function process_daily_activity($board)
 	{
 		$query = $this->db->query('
-			SELECT (floor(timestamp/300)%288)*300, count(*),
+			SELECT (floor(timestamp/300)%288)*300 AS time, count(*),
 				count(case media_hash when \'\' then NULL else 1 end),
-				count(case email when \'sage\' then 1 else NULL end) 
-			FROM ' . $this->get_table($board) . ' 
-			USE index(timestamp_index) 
+				count(case email when \'sage\' then 1 else NULL end)
+			FROM ' . $this->get_table($board) . '
+			USE index(timestamp_index)
 			WHERE timestamp > ?
 			GROUP BY floor(timestamp/300)%288
 			ORDER BY floor(timestamp/300)%288;
@@ -297,12 +397,12 @@ class Statistics extends CI_Model
 	function process_daily_activity_archive($board)
 	{
 		$query = $this->db->query('
-			SELECT ((floor(timestamp/3600)%24)*3600)+1800,
-				count(*), count(CASE email WHEN \'sage\' THEN 1 ELSE NULL END) 
-			FROM ' . $this->get_table($board) . ' 
-			USE index(timestamp_index) 
-			WHERE timestamp> ? AND subnum != 0 
-			GROUP BY floor(timestamp/3600)%24 
+			SELECT ((floor(timestamp/3600)%24)*3600)+1800 AS time,
+				count(*), count(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
+			FROM ' . $this->get_table($board) . '
+			USE index(timestamp_index)
+			WHERE timestamp> ? AND subnum != 0
+			GROUP BY floor(timestamp/3600)%24
 			ORDER BY floor(timestamp/3600)%24;
 		', array(date('Y-m-d H:i:s', time() - 86400)));
 
@@ -315,13 +415,13 @@ class Statistics extends CI_Model
 	function process_daily_activity_hourly($board)
 	{
 		$query = $this->db->query('
-			SELECT ((floor(timestamp/3600)%24)*3600)+1800, count(*),
+			SELECT ((floor(timestamp/3600)%24)*3600)+1800 AS time, count(*),
 				count(CASE media_hash WHEN \'\' THEN NULL ELSE 1 END),
 				count(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
-			FROM ' . $this->get_table($board) . '  
-			USE index(timestamp_index) 
-			WHERE timestamp > ? 
-			GROUP BY floor(timestamp/3600)%24 
+			FROM ' . $this->get_table($board) . '
+			USE index(timestamp_index)
+			WHERE timestamp > ?
+			GROUP BY floor(timestamp/3600)%24
 			ORDER BY floor(timestamp/3600)%24;
 		', array(date('Y-m-d H:i:s', time() - 86400)));
 
@@ -334,25 +434,25 @@ class Statistics extends CI_Model
 	function process_image_reposts($board)
 	{
 		$query = $this->db->query('
-			SELECT preview, num, subnum, parent, media_hash, total 
-			FROM ' . $this->get_table($board) . ' 
-			JOIN 
+			SELECT preview, num, subnum, parent, media_hash, total
+			FROM ' . $this->get_table($board) . '
+			JOIN
 			(
-				SELECT hash, total, max(preview_w) AS w 
-				FROM ' . $this->get_table($board) . ' 
-				JOIN 
+				SELECT hash, total, max(preview_w) AS w
+				FROM ' . $this->get_table($board) . '
+				JOIN
 				(
 					SELECT media_hash AS hash, count(media_hash) AS total
-					FROM ' . $this->get_table($board) . ' 
+					FROM ' . $this->get_table($board) . '
 					WHERE media_hash != \'\'
 					GROUP BY media_hash
-					ORDER BY count(media_hash) desc 
+					ORDER BY count(media_hash) desc
 					LIMIT 32
-				) as x 
-				ON media_hash = hash 
+				) as x
+				ON media_hash = hash
 				GROUP BY media_hash
-			) as x 
-			ON media_hash = hash AND preview_w = w 
+			) as x
+			ON media_hash = hash AND preview_w = w
 			GROUP BY media_hash
 			ORDER BY total DESC;
 		');
@@ -366,14 +466,14 @@ class Statistics extends CI_Model
 	function process_karma($board)
 	{
 		$query = $this->db->query('
-			SELECT floor(timestamp/86400)*86400 AS days, count(*),
+			SELECT floor(timestamp/86400)*86400 AS time, count(*),
 				count(case media_hash when \'\' then NULL else 1 end),
 				count(case email when \'sage\' then 1 else NULL end)
 			FROM ' . $this->get_table($board) . '
-			FORCE index(timestamp_index) 
+			FORCE index(timestamp_index)
 			WHERE timestamp > ?
-			GROUP BY days 
-			ORDER BY days;			
+			GROUP BY time
+			ORDER BY time;
 		', array(date('Y-m-d H:i:s', time() - 31536000)));
 
 		$array = $query->result();
@@ -385,13 +485,13 @@ class Statistics extends CI_Model
 	function process_new_tripfriends($board)
 	{
 		$query = $this->db->query('
-			SELECT * from 
+			SELECT * from
 			(
-				SELECT name, trip, min(timestamp) AS firstseen, 
-					count(num) AS postcount 
+				SELECT name, trip, min(timestamp) AS firstseen,
+					count(num) AS postcount
 				FROM ' . $this->get_table($board) . ' group by trip
-			) as l 
-			WHERE l.postcount > 30 
+			) as l
+			WHERE l.postcount > 30
 			ORDER BY firstseen DESC;
 		');
 
@@ -404,15 +504,15 @@ class Statistics extends CI_Model
 	function process_population($board)
 	{
 		$query = $this->db->query('
-			SELECT floor(timestamp/86400)*86400 as days,
+			SELECT floor(timestamp/86400)*86400 as time,
 				count(CASE WHEN trip != \'\' THEN 1 ELSE NULL END),
 				count(CASE WHEN name!=\'Anonymous\' AND trip = \'\' THEN 1 ELSE NULL END),
-				count(case WHEN name=\'Anonymous\' AND trip = \'\' THEN 1 ELSE NULL END) 
-			FROM ' . $this->get_table($board) . ' 
+				count(case WHEN name=\'Anonymous\' AND trip = \'\' THEN 1 ELSE NULL END)
+			FROM ' . $this->get_table($board) . '
 			FORCE index(timestamp_index)
 			WHERE timestamp > ?
-			GROUP BY days 
-			ORDER BY days
+			GROUP BY time
+			ORDER BY time
 		', array(date('Y-m-d H:i:s', time() - 31536000)));
 
 		$array = $query->result();
@@ -440,7 +540,7 @@ class Statistics extends CI_Model
 	function process_post_rate($board)
 	{
 		$query = $this->db->query('
-			SELECT count(*), count(*)/60 
+			SELECT count(*), count(*)/60
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ?
 		', array(date('Y-m-d H:i:s', time() - 3600)));
@@ -454,8 +554,8 @@ class Statistics extends CI_Model
 	function process_post_rate_archive($board)
 	{
 		$query = $this->db->query('
-			SELECT count(*), count(*)/60 
-			FROM ' . $this->get_table($board) . ' 
+			SELECT count(*), count(*)/60
+			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ? AND subnum != 0
 		', array(date('Y-m-d H:i:s', time() - 3600)));
 
@@ -470,8 +570,8 @@ class Statistics extends CI_Model
 		$query = $this->db->query('
 			SELECT name, trip, max(timestamp), num, subnum
 			FROM ' . $this->get_table($board) . '
-			WHERE timestamp > ? 
-			GROUP BY name, trip 
+			WHERE timestamp > ?
+			GROUP BY name, trip
 			ORDER BY max(timestamp) DESC
 		', array(date('Y-m-d H:i:s', time() - 1800)));
 
@@ -498,4 +598,76 @@ class Statistics extends CI_Model
 	}
 
 
+	function graph_gnuplot($board, $stat, $data)
+	{
+		// File Locations
+		$INFILE = FCPATH . 'content/cache/reports-' . $board . '-' . $stat . '.dat';
+		$OUTFILE = FCPATH . 'content/reports/' . $board . '/' . $stat . '.png';
+		$GNUFILE = FCPATH . 'content/cache/reports-' . $board . '-' . $stat . '.gnu';
+
+		// Graph Data
+		$X_START = $data[0]['time'];
+		$X_END = $data[count($data) - 1]['time'];
+
+		$graph_data = array();
+		foreach ($data as $line) {
+			$graph_data[] = implode("\t", $line);
+		}
+		$graph_data = implode("\n", $graph_data);
+		write_file($INFILE, $graph_data);
+
+		// Template Variables
+		$template_vars = array(
+			'{{INFILE}}',
+			'{{OUTFILE}}',
+			'{{X_START}}',
+			'{{X_END}}'
+		);
+
+		$template_vals = array(
+			$INFILE,
+			$OUTFILE,
+			$X_START,
+			$X_END
+		);
+
+		$template = str_replace($template_vars, $template_vals, $this->generate_gnuplot_template($stat));
+		write_file($GNUFILE, $template);
+
+		// Run GNUPlot
+		$result = @exec('/usr/bin/gnuplot ' . $GNUFILE);
+		return $result;
+	}
+
+	function generate_gnuplot_template($stat)
+	{
+		$options = $this->stats[$stat]['gnuplot'];
+
+		$template = array();
+
+		$template[] = "set terminal png transparent size 800,600";
+		$template[] = "set output '{{OUTFILE}}'";
+		$template[] = "show terminal";
+		foreach ($options as $key => $value)
+		{
+			if ($value === TRUE)
+			{
+				$template[] = "set {$key}";
+			}
+			else
+			{
+				if (is_array($value))
+				{
+					$value = implode(", ", $value);
+					$template[] = "{$key} {$value}";
+				}
+				else
+				{
+					$template[] = "set {$key} {$value}";
+				}
+			}
+		}
+
+		return implode("\n", $template);
+	}
 }

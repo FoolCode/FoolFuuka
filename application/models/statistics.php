@@ -600,6 +600,21 @@ class Statistics extends CI_Model
 
 	function graph_gnuplot($board, $stat, $data)
 	{
+		if(!file_exists(FCPATH . 'content/cache/'))
+		{
+			mkdir(FCPATH . 'content/cache/');
+		}
+		
+		if(!file_exists(FCPATH . 'content/reports/'))
+		{
+			mkdir(FCPATH . 'content/reports/');
+		}
+		
+		if(!file_exists(FCPATH . 'content/reports/' . $board . '/'))
+		{
+			mkdir(FCPATH . 'content/reports/' . $board . '/');
+		}
+		
 		// File Locations
 		$INFILE = FCPATH . 'content/cache/reports-' . $board . '-' . $stat . '.dat';
 		$OUTFILE = FCPATH . 'content/reports/' . $board . '/' . $stat . '.png';

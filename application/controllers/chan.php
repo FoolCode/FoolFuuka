@@ -479,6 +479,8 @@ class Chan extends Public_Controller
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
 		$result = $this->post->get_search($search);
 
+		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
+
 		if (isset($result['error']))
 		{
 			$this->template->title(_('Error'));
@@ -533,7 +535,6 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; ' . $title);
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
-		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 		$this->template->build('board');
 	}
 

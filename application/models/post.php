@@ -477,6 +477,80 @@ class Post extends CI_Model
 	}
 
 
+	function get_last50($num, $process = TRUE, $clean = TRUE)
+	{
+
+		$query = $this->db->query('
+			SELECT * FROM
+				(
+					SELECT * FROM ' . $this->table . '
+					' . $this->sql_report . '
+					WHERE num = ? OR parent = ?
+					ORDER BY num DESC, subnum DESC
+					LIMIT 50
+				)
+			AS q
+			ORDER BY num, subnum ASC;
+		', array($num, $num));
+		$result = array();
+
+		// thread not found
+		if ($query->num_rows() == 0)
+			return FALSE;
+
+		foreach ($query->result() as $post)
+		{
+			if ($post->parent == 0)
+			{
+				$this->existing_posts[$post->num][] = $post->num;
+			}
+			else
+			{
+				if ($post->subnum == 0)
+					$this->existing_posts[$post->parent][] = $post->num;
+				else
+					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
+			}
+		}
+
+		foreach ($query->result() as $post)
+		{
+			if ($process === TRUE)
+			{
+				$this->process_post($post, $clean);
+			}
+
+			if ($post->parent > 0)
+			{
+				//echo $post->num . (($post->subnum == 0)?'':'_'.$post->subnum).'<br/>';
+				$result[$post->parent]['posts'][$post->num . (($post->subnum == 0) ? '' : '_' . $post->subnum)] = $post;
+			}
+			else
+			{
+				$result[$post->num]['op'] = $post;
+			}
+		}
+		// this could be a lot of data, clean it up
+		$query->free_result();
+
+		// stick the backlinks
+		foreach ($this->backlinks as $key => $item)
+		{
+			if (isset($result[$num]['op']) && $result[$num]['op']->num == $key)
+			{
+				$result[$num]['op']->backlinks = array_unique($item);
+			}
+			else if (isset($result[$num]['posts'][$key]))
+			{
+				$result[$num]['posts'][$key]->backlinks = array_unique($item);
+			}
+		}
+
+		//print_r($result);
+		return $result;
+	}
+
+
 	function get_post_thread($num, $subnum = 0)
 	{
 		$query = $this->db->query('
@@ -540,7 +614,7 @@ class Post extends CI_Model
 					{
 						return array('error' => _('The text you were searching for was too short. It must be at least two characters long.'));
 					}
-					
+
 					$query .= '@comment ' . $this->sphinxclient->HalfEscapeString(urldecode($search['text'])) . ' ';
 				}
 
@@ -579,9 +653,9 @@ class Post extends CI_Model
 					{
 						return array('error' => _('The search engine seems to be offline. If it\'s offline for more than a few minutes, you might want to report the issue. Most likely it was turned off and not turned back on.'));
 					}
-					
+
 					return array('error' => _('The search engine couldn\'t figure out the query. It\'s possible that you\'ve used characters that aren\'t accepted. If you think this is a bug, report it if possible.'));
-					
+
 					// we could use the rest for debugging purposes,
 					// but for now we better just give a generic errors because
 					// "human readable" here doesn't mean "public-friendly"
@@ -589,12 +663,12 @@ class Post extends CI_Model
 					{
 						return array('error' => $this->sphinxclient->GetLastError());
 					}
-					
+
 					if($this->sphinxclient->GetLastWarning())
 					{
 						return array('error' => $this->sphinxclient->GetLastWarning());
 					}
-					
+
 					return array('error' => _('Something went wrong with the search engine and we don\'t know what!'));
 				}
 
@@ -699,7 +773,7 @@ class Post extends CI_Model
 		{
 			return array();
 		}
-		
+
 		foreach ($query->result() as $post)
 		{
 			if ($post->parent == 0)
@@ -1082,8 +1156,8 @@ class Post extends CI_Model
 	  return array('success' => TRUE);
 	  }
 	 */
-	
-	
+
+
 	function process_name($name)
 	{
 		$trip = '';

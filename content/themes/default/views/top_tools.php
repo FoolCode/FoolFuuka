@@ -29,7 +29,6 @@ if (!isset($page))
 	<!--- Page Input -->
 	<div>
 		<?php
-		$toggle_mode = 'ghost';
 		echo form_open($this->fu_board . '/page');
 		echo '<div class="input-prepend">';
 		echo '<span class="add-on">Page #</span>';
@@ -48,12 +47,12 @@ if (!isset($page))
 		));
 		?>
 
-		<input type="button" class="btn notice" style="margin-left:-5px;" value="Ghost Mode" onClick="location.href='<?php echo site_url($this->fu_board . '/' . $toggle_mode . '/' . $page) ?>'">
+		<input type="button" class="btn notice" style="margin-left:-5px;" value="Ghost Mode" onclick="location.href='<?php echo site_url($this->fu_board . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
 		<?php
 		echo '</div>';
 		echo form_close();
 		?>
-	</div>	
+	</div>
 </div>
 
 <!--- Search Input -->

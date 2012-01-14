@@ -202,6 +202,37 @@ class Chan extends Public_Controller
 	}
 
 
+	public function last50($num = 0)
+	{
+		$num = str_replace('S', '', $num);
+		if (!is_numeric($num) || !$num > 0)
+		{
+			show_404();
+		}
+
+		$num = intval($num);
+
+		$thread = $this->post->get_last50($num);
+
+		if (!is_array($thread))
+		{
+			show_404();
+		}
+
+		if (isset($thread[$num]['op']))
+		{
+			$this->post($num);
+		}
+
+		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Thread #' . $num);
+		$this->template->set('posts', $thread);
+
+		$this->template->set('thread_id', $num);
+		$this->template->set('last50', TRUE);
+		$this->template->build('board');
+	}
+
+
 	public function sending()
 	{
 		// commenting

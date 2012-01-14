@@ -32,9 +32,9 @@ foreach ($posts as $key => $post) : ?>
 		</label>
 
 		<?php if(!isset($thread_id)) : ?>
-		<a class="js" href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.<?php echo $op->num ?></a> [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>] [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]
+		<a class="js" href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.<?php echo $op->num ?></a> [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?> [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]
 		<?php else : ?>
-		<a class="js" href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $op->num ?>\n')"><?php echo $op->num ?></a> [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>] [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]
+		<a class="js" href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $op->num ?>\n')"><?php echo $op->num ?></a> [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?> [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]
 		<?php endif; ?>
 
 		<blockquote><p><?php echo $op->comment_processed ?></p></blockquote>
@@ -64,7 +64,7 @@ foreach ($posts as $key => $post) : ?>
 
 			if(!isset($thread_id))
 				$thread_id = NULL;
-			
+
 			if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
 				include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
 			else

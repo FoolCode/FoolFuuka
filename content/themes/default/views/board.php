@@ -38,7 +38,7 @@ foreach ($posts as $key => $post) :
 							<?php endif ?>
 							<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
 							<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" data-function="highlight" data-post="<?php echo $op->num ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" data-function="quote" data-post="<?php echo $op->num ?>"><?php echo $op->num ?></a>
-							<span class="post_controls"><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>" class="btnr parent">View</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#reply' ?>" class="btnr parent">Reply</a><a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>" class="btnr parent">Original</a><a href="<?php echo site_url($this->fu_board . '/report/' . $op->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><?php if($this->tank_auth->is_allowed()) : ?><a href="<?php echo site_url($this->fu_board . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a><?php if(false) : ?><a href="<?php echo site_url($this->fu_board . '/spam/' . $op->doc_id) ?>" class="btnr parent" data-function="spam" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>">Spam</a><?php endif; ?><?php endif; ?></span>
+							<span class="post_controls"><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>" class="btnr parent">View</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#reply' ?>" class="btnr parent">Reply</a><?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '" class="btnr parent">Last 50</a>' : '' ?><a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>" class="btnr parent">Original</a><a href="<?php echo site_url($this->fu_board . '/report/' . $op->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><?php if($this->tank_auth->is_allowed()) : ?><a href="<?php echo site_url($this->fu_board . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a><?php if(false) : ?><a href="<?php echo site_url($this->fu_board . '/spam/' . $op->doc_id) ?>" class="btnr parent" data-function="spam" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>">Spam</a><?php endif; ?><?php endif; ?></span>
 							<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan manually."/></span><?php endif ?>
 							<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
 				</div>
@@ -68,14 +68,14 @@ foreach ($posts as $key => $post) :
 					if ($p->parent == 0)
 						$p->parent = $p->num;
 					?>
-					<?php 
+					<?php
 						if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
 							include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
 						else
 							include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
 					?>
 				<?php endforeach; ?>
-				
+
 			</aside>
 			<?php if (isset($thread_id)) : ?>
 			<div class="js_hook_realtimethread"></div>
@@ -98,8 +98,22 @@ foreach ($posts as $key => $post) :
 	board_shortname = '<?php echo get_selected_board()->shortname ?>';
 	<?php if (isset($thread_id)) : ?>
 	thread_id = <?php echo $thread_id ?>;
+	<?php if (isset($last50)) : ?>
+	latest_doc_id = <?php
+		$latest_doc_id = 0;
+		if(isset($posts[$thread_id]['posts']))
+		{
+			foreach($posts[$thread_id]['posts'] as $post)
+			{
+				if($latest_doc_id < $post->doc_id)
+					$latest_doc_id = $post->doc_id;
+			}
+		}
+		echo $latest_doc_id;
+	?>
+	<?php else : ?>
 	thread_op_json = <?php echo json_encode($posts[$thread_id]['op']) ?>;
-	latest_doc_id = <?php 
+	latest_doc_id = <?php
 		$latest_doc_id = $posts[$thread_id]['op']->doc_id;
 		if(isset($posts[$thread_id]['posts']))
 		{
@@ -111,5 +125,6 @@ foreach ($posts as $key => $post) :
 		}
 		echo $latest_doc_id;
 	?>
+	<?php endif; ?>
 	<?php endif; ?>
 </script>

@@ -36,7 +36,7 @@ class Admin_Controller extends MY_Controller
 	/*
 	 * Non-dynamic sidebar array.
 	 * Permissions are set inside
-	 * 
+	 *
 	 * @author Woxxy
 	 * @return sidebar array
 	 */
@@ -52,11 +52,21 @@ class Admin_Controller extends MY_Controller
 			"icon" => 258,
 			"content" => array(
 				"manage" => array("level" => "admin", "name" => _("Manage"), "icon" => 382),
-				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 357),
-				"reports" => array("level" => "mod", "name" => _("Reports"), "icon" => 357)
+				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 357)
 			)
 		);
-		
+
+		$sidebar["posts"] = array(
+			"name" => _("Posts"),
+			"level" => "mod",
+			"default" => "reports",
+			"icon" => 258,
+			"content" => array(
+				"reports" => array("level" => "mod", "name" => _("Reports"), "icon" => 357),
+				"spam" => array("level" => "mod", "name" => _("Spam"), "icon" => 357)
+			)
+		);
+
 		$sidebar["members"] = array(
 			"name" => _("Members"),
 			"level" => "member",
@@ -92,7 +102,7 @@ class Admin_Controller extends MY_Controller
 				"upgrade" => array("level" => "admin", "name" => _("Upgrade") . ((get_setting('fs_cron_autoupgrade_version') && version_compare(FOOLSLIDE_VERSION, get_setting('fs_cron_autoupgrade_version')) < 0) ? ' <span class="label success">' . _('New') . '</span>' : ''), "icon" => 353),
 			)
 		);
-		
+
 		$sidebar["balancer"] = array("name" => _("Load Balancer"),
 			"level" => "admin",
 			"default" => "balancers",
@@ -119,7 +129,7 @@ class Admin_Controller extends MY_Controller
 
 	/*
 	 * Returns the sidebar code
-	 * 
+	 *
 	 * @todo comment this
 	 */
 	public function sidebar()
@@ -166,7 +176,7 @@ class Admin_Controller extends MY_Controller
 	 * Currently defaulted crons:
 	 * -check for updates
 	 * -remove one week old logs
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	public function cron()

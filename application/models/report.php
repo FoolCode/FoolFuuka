@@ -259,6 +259,63 @@ class Report extends DataMapper
 	}
 
 
+	public function list_all_reports($page = 1, $per_page = 15)
+	{
+		$reports = $this->get_paged($page, $per_page);
+
+		if($reports->paged->total_rows == 0)
+			return array();
+
+		$boards = new Board();
+		$boards->get();
+
+		$selects = array();
+		foreach ($reports->all as $report)
+		{
+			foreach ($boards->all as $board)
+			{
+				if ($board->id == $report->board)
+				{
+					$selects[] = '
+					(
+						SELECT *, CONCAT('.$this->db->escape($board->shortname).') AS shortname
+						FROM ' . $this->get_table($board->shortname) . '
+						LEFT JOIN
+							(
+								SELECT id as report_id, post as report_post, reason as report_reason, status as report_status, created as report_created
+								FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+								WHERE `id` = ' . $report->id . '
+							) as q
+							ON
+							' . $this->get_table($board->shortname) . '.`doc_id`
+							=
+							' . $this->db->protect_identifiers('q') . '.`report_post`
+						LEFT JOIN
+							(
+								SELECT id AS poster_id_join,
+									ip AS poster_ip, user_agent AS poster_user_agent,
+									banned AS poster_banned, banned_reason AS poster_banned_reason,
+									banned_start AS poster_banned_start, banned_end AS poster_banned_end
+								FROM'.$this->db->protect_identifiers('posters', TRUE).'
+							) as p
+							ON ' . $this->get_table($board->shortname) . '.`poster_id`
+							=
+							' . $this->db->protect_identifiers('p') . '.`poster_id_join`
+						WHERE doc_id = ' . $this->db->escape($report->post) . '
+						LIMIT 0, 1
+					)';
+				}
+			}
+		}
+
+		$sql = implode(' UNION ', $selects);
+		$query = $this->db->query($sql);
+
+		$reports->all = $query->result();
+		return $reports;
+	}
+
+
 	public function list_reports_all_boards($page = 1, $per_page = 100)
 	{
 		$query = $this->db->query('

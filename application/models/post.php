@@ -489,7 +489,7 @@ class Post extends CI_Model
 					ORDER BY num DESC, subnum DESC
 					LIMIT 50
 				)
-			AS q
+			AS x
 			ORDER BY num, subnum ASC;
 		', array($num, $num));
 		$result = array();

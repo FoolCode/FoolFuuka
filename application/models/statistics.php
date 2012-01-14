@@ -188,7 +188,7 @@ class Statistics extends CI_Model
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequence' => 60 * 3, // every 3 minutes
-				'interface' => 'list'
+				'interface' => 'post_rate'
 			),
 			'post_rate_archive' => array(
 				'location' =>'post_rate_archive',
@@ -196,7 +196,7 @@ class Statistics extends CI_Model
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequence' => 60 * 3, // every 3 minutes
-				'interface' => 'list'
+				'interface' => 'post_rate'
 			),
 			'users_online' => array(
 				'location' =>'users_online',
@@ -312,7 +312,7 @@ class Statistics extends CI_Model
 				$this->db->reconnect();
 				$result = $this->$process($board);
 
-				if (isset($this->stats[$k]['gnuplot']))
+				if (isset($this->stats[$k]['gnuplot']) && !is_array($result))
 				{
 					$this->graph_gnuplot($board->shortname, $k, json_decode(json_encode($result), TRUE));
 				}
@@ -386,7 +386,7 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 			GROUP BY floor(timestamp/300)%288
 			ORDER BY floor(timestamp/300)%288;
-		', array(date('Y-m-d H:i:s', time() - 86400)));
+		', array(time() - 86400));
 
 		$array = $query->result();
 		$query->free_result();
@@ -404,7 +404,7 @@ class Statistics extends CI_Model
 			WHERE timestamp> ? AND subnum != 0
 			GROUP BY floor(timestamp/3600)%24
 			ORDER BY floor(timestamp/3600)%24;
-		', array(date('Y-m-d H:i:s', time() - 86400)));
+		', array(time() - 86400));
 
 		$array = $query->result();
 		$query->free_result();
@@ -423,7 +423,7 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 			GROUP BY floor(timestamp/3600)%24
 			ORDER BY floor(timestamp/3600)%24;
-		', array(date('Y-m-d H:i:s', time() - 86400)));
+		', array(time() - 86400));
 
 		$array = $query->result();
 		$query->free_result();
@@ -474,7 +474,7 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 			GROUP BY time
 			ORDER BY time;
-		', array(date('Y-m-d H:i:s', time() - 31536000)));
+		', array(time() - 31536000));
 
 		$array = $query->result();
 		$query->free_result();
@@ -513,7 +513,7 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 			GROUP BY time
 			ORDER BY time
-		', array(date('Y-m-d H:i:s', time() - 31536000)));
+		', array(time() - 31536000));
 
 		$array = $query->result();
 		$query->free_result();
@@ -543,7 +543,7 @@ class Statistics extends CI_Model
 			SELECT count(*), count(*)/60
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ?
-		', array(date('Y-m-d H:i:s', time() - 3600)));
+		', array(time() - 3600));
 
 		$array = $query->result();
 		$query->free_result();
@@ -557,7 +557,7 @@ class Statistics extends CI_Model
 			SELECT count(*), count(*)/60
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ? AND subnum != 0
-		', array(date('Y-m-d H:i:s', time() - 3600)));
+		', array(time() - 3600));
 
 		$array = $query->result();
 		$query->free_result();
@@ -573,7 +573,7 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 			GROUP BY name, trip
 			ORDER BY max(timestamp) DESC
-		', array(date('Y-m-d H:i:s', time() - 1800)));
+		', array(time() - 1800));
 
 		$array = $query->result();
 		$query->free_result();
@@ -590,7 +590,7 @@ class Statistics extends CI_Model
 			WHERE id != 0 AND timestamp > ?
 			GROUP BY id
 			ORDER BY max(timestamp) DESC
-		', array(date('Y-m-d H:i:s', time() - 3600)));
+		', array(time() - 3600));
 
 		$array = $query->result();
 		$query->free_result();

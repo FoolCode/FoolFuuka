@@ -315,7 +315,8 @@ var realtimethread = function(){
 					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
 					backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
 					jQuery('article.thread aside').append(post);
-					latest_doc_id = value.doc_id;
+					if(latest_doc_id < value.doc_id)
+						latest_doc_id = value.doc_id;
 				});
 			}
 			

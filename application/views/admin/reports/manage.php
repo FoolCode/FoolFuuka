@@ -4,7 +4,7 @@
 
 	<div class="list comics">
 		<?php $rep = new Report(); ?>
-		<?php foreach ($reports as $report) :	?>
+		<?php foreach ($reports->all as $report) :	?>
 		<div class="item">
 			<div class="report_data">
 				<span class="report_author">Anonymous</span> in /<?php echo $report->shortname ?>/
@@ -37,4 +37,32 @@
 		</div>
 		<?php endforeach; ?>
 	</div>
+
+	<?php if ($reports->paged->total_pages > 1) : ?>
+	<div class="pagination" style="margin-bottom: -5px">
+		<ul>
+		<?php
+			if ($reports->paged->has_previous)
+				echo '<li class="prev"><a href="' . site_url('admin/posts/reports/'.$reports->paged->previous_page) . '">&larr; ' . _('Prev') . '</a></li>';
+			else
+				echo '<li class="prev disabled"><a href="#">&larr; ' . _('Prev') . '</a></li>';
+
+			$page = 1;
+			while ($page <= $reports->paged->total_pages)
+			{
+				if ($reports->paged->current_page == $page)
+					echo '<li class="active"><a href="#">' . $page . '</a></li>';
+				else
+					echo '<li><a href="' . site_url('admin/posts/reports/'.$page) .'">' . $page . '</a></li>';
+				$page++;
+			}
+
+			if ($reports->paged->has_next)
+				echo '<li class="next"><a href="' . site_url('admin/posts/reports/'.$reports->paged->next_page) . '">' . _('Next') . ' &rarr;</a></li>';
+			else
+				echo '<li class="next disabled"><a href="#">' . _('Next') . ' &rarr;</a></li>';
+		?>
+		</ul>
+	</div>
+	<?php endif; ?>
 </div>

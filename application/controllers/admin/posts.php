@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-class Reports extends Admin_Controller
+class Posts extends Admin_Controller
 {
 	function __construct()
 	{
@@ -13,25 +13,31 @@ class Reports extends Admin_Controller
 			redirect('admin');
 
 		// title on top
-		$this->viewdata['controller_title'] = '<a href="'.site_url("admin/reports").'">' . _("Reports") . '</a>';;
+		$this->viewdata['controller_title'] = '<a href="'.site_url("admin/posts").'">' . _("Posts") . '</a>';;
 	}
 
 
 	function index()
 	{
-		return $this->manage();
+		return $this->reports();
 	}
 
 
-	function manage($page = 1)
+	function reports($page = 1)
 	{
-		$this->viewdata["function_title"] = _('Manage');
+		$this->viewdata["function_title"] = _('Reports');
 		$reports = new Report();
 
-		$data["reports"] = $reports->list_reports_all_boards($page);
+		$data["reports"] = $reports->list_all_reports($page);
 
 		$this->viewdata["main_content_view"] = $this->load->view("admin/reports/manage.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
+	}
+
+
+	function spam($page = 1)
+	{
+
 	}
 
 

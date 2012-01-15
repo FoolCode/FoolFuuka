@@ -204,7 +204,7 @@ class Statistics extends CI_Model
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequence' => 60, // every minute
-				'interface' => 'list'
+				'interface' => 'users_online'
 			),
 			'users_online_internal' => array(
 				'location' =>'users_online_internal',
@@ -212,7 +212,7 @@ class Statistics extends CI_Model
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequence' => 60, // every minute
-				'interface' => 'list'
+				'interface' => 'users_online'
 			)
 		);
 	}
@@ -255,7 +255,7 @@ class Statistics extends CI_Model
 			}
 
 			$result = $query->result();
-			return array('info' => $available[$stat], 'data' => $result[0]->data);
+			return array('info' => $available[$stat], 'data' => $result[0]->data, 'timestamp' => $result[0]->timestamp);
 		}
 		return FALSE;
 	}

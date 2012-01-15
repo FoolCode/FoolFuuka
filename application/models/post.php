@@ -482,13 +482,13 @@ class Post extends CI_Model
 
 		$query = $this->db->query('
 			SELECT * FROM
-				(
-					SELECT * FROM ' . $this->table . '
-					' . $this->sql_report . '
-					WHERE num = ? OR parent = ?
-					ORDER BY num DESC, subnum DESC
-					LIMIT 50
-				)
+			(
+				SELECT * FROM ' . $this->table . '
+				' . $this->sql_report . '
+				WHERE num = ? OR parent = ?
+				ORDER BY num DESC, subnum DESC
+				LIMIT 50
+			)
 			AS x
 			ORDER BY num, subnum ASC;
 		', array($num, $num));

@@ -59,13 +59,18 @@ window.log = function(){
         /* Fire one scroll event per scroll. Not one scroll event per image. */
         var elements = this;
 		var lastscroll = 0;
+		var triggered_scroll = 0;
+		var stopped_scroll = 0;
         if (0 == settings.event.indexOf("scroll")) {
             $(settings.container).bind(settings.event, function(event) {
-                var counter = 0;
-				if((+new Date()) - lastscroll < 100)
+            triggered_scroll++;
+            	var current_date = +new Date();
+            	if(current_date - lastscroll < 500)
 				{
 					return false;
 				}
+				lastscroll = current_date;
+                var counter = 0;
                 elements.each(function() {
                     if (settings.skip_invisible && !$(this).is(":visible")) return;
                     if ($.abovethetop(this, settings) ||

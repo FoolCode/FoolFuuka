@@ -440,7 +440,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 		
-		$hash = mb_substr($imploded_uri, 0, 22);
+		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
 		if(mb_strlen($imploded_uri) > 23)
 		{
 			$page = substr($imploded_uri, 23);

@@ -45,7 +45,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 |
 */
 
-define('FOOLSLIDE_VERSION', '0.3.0');
+define('FOOLSLIDE_VERSION', '0.4.0');
 define('FOOLSLIDE_NAME', 'FoOlFuuka');
 define('FOOLSLIDE_MANUAL_INSTALL_URL', 'http://ask.foolrulez.com');
 

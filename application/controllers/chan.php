@@ -427,14 +427,35 @@ class Chan extends Public_Controller
 	}
 
 
-	public function image($hash, $page = 1)
+	public function image()
 	{
+		$uri = $this->uri->segment_array();
+		
+		array_shift($uri);
+		array_shift($uri);
+
+		$imploded_uri = urldecode(implode('/', $uri));
+		if(mb_strlen($imploded_uri) < 22)
+		{
+			show_404();
+		}
+		
+		$hash = mb_substr($imploded_uri, 0, 22);
+		if(mb_strlen($imploded_uri) > 23)
+		{
+			$page = substr($imploded_uri, 23);
+		}
+		else
+		{
+			$page = 1;
+		}
+		
+		
 		if ($hash == '' || !is_natural($page) || $page > 500)
 		{
 			show_404();
 		}
 
-		$hash = urldecode($hash);
 		$page = intval($page);
 		$posts = $this->post->get_image($hash . '==', $page);
 

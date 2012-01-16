@@ -922,7 +922,7 @@ class Post extends CI_Model
 		$num = $data['num'];
 		$postas = $data['postas'];
 
-		if ($this->session->userdata('poster_id'))
+		if ($this->session->userdata('poster_id') && $this->session->userdata('poster_id') != 0)
 		{
 			$query = $this->db->get_where('posters', array('id' => $this->session->userdata('poster_id')));
 		}
@@ -937,12 +937,14 @@ class Post extends CI_Model
 		{
 			foreach ($query->result() as $row)
 			{
-				if ($row->banned == 1)
+				if ($row->banned == 1 && !$this->tank_auth->is_allowed())
 				{
 					return array('error' => 'You are banned from posting.');
 				}
+				
+				log_message('error', time() - strtotime($row->lastpost) );
 
-				if (time() - strtotime($row->lastpost) < 10 && !$this->tank_auth->is_allowed()) // 10 seconds
+				if (time() - strtotime($row->lastpost) < 10 && time() - strtotime($row->lastpost) > 0 && !$this->tank_auth->is_allowed()) // 10 seconds
 				{
 					return array('error' => 'You must wait at least 10 seconds before posting again.');
 				}
@@ -954,6 +956,7 @@ class Post extends CI_Model
 
 				$this->db->where('id', $row->id);
 				$this->db->update('posters', array('lastcomment' => $comment, 'lastpost' => date('Y-m-d H:i:s')));
+				$this->session->set_userdata('poster_id', $row->id);
 			}
 		}
 		else
@@ -967,7 +970,7 @@ class Post extends CI_Model
 			$poster_id = $this->db->insert_id();
 			$this->session->set_userdata('poster_id', $poster_id);
 		}
-
+		
 
 		// get the post after which we're replying to
 		// partly copied from Fuuka original

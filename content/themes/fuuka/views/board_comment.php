@@ -16,7 +16,7 @@ if (!defined('BASEPATH'))
 					<span class="postertrip"><?php echo $p->trip_processed ?></span>
 					<?php echo date('D M d H:i:s Y', $p->timestamp + 18000) ?>
 				</label>
-				<?php if ($thread_id == NULL) : ?>
+				<?php if (isset($thread_id) && $thread_id == NULL) : ?>
 					<a class="js" href="<?php echo site_url(array($this->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php else : ?>
 					<a class="js" href="<?php echo site_url(array($this->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>

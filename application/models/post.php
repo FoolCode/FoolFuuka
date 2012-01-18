@@ -194,7 +194,7 @@ class Post extends CI_Model
 				(
 					SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent, email
 					FROM ' . $this->table . '
-					WHERE email != \'sage\' OR (email = \'sage\' AND parent = 0)
+					WHERE email != \'sage\' OR (email	= \'sage\' AND parent = 0)
 					ORDER BY num DESC
 					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 				) AS t

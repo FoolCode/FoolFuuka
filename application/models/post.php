@@ -1272,7 +1272,20 @@ class Post extends CI_Model
 	{
 		if (!$row->preview)
 			return FALSE;
-		$echo = '';
+
+		if ($row->deleted)
+		{
+			if ($thumbnail)
+			{
+
+				return site_url() . 'content/themes/default/images/image_missing.jpg';
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+
 		if ($row->parent > 0)
 			$number = $row->parent;
 		else
@@ -1423,8 +1436,8 @@ class Post extends CI_Model
 
 
 		$regexing = $row->comment;
-		
-		
+
+
 		// get rid of moot's formatting
 		if($row->capcode == 'A' && mb_strpos($regexing, '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
 		{

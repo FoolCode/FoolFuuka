@@ -108,6 +108,30 @@ if (!function_exists('set_selected_board'))
 	}
 }
 
+
+if (!function_exists('generate_file_path'))
+{
+	function generate_file_path($path)
+	{
+		$path = explode("/", $path);
+		$depth = 0; $recursive = array();
+
+		while ($depth < count($path))
+		{
+			$recursive[] = $path[$depth];
+
+			if ($path[$depth] != "")
+			{
+				if (!file_exists(implode("/", $recursive)))
+				{
+					mkdir(implode("/", $recursive));
+				}
+			}
+			$depth++;
+		}
+	}
+}
+
 /**
  * Caches in a variable and returns the home team's object
  *
@@ -298,6 +322,19 @@ function parse_bbcode($string)
 
 
 /**
+ * Parse Posted Data
+ */
+function check_commentdata($data = array(), $hash = FALSE)
+{
+	require_once(FCPATH . "assets/anti-spam/nospam.php");
+
+	$nospam = new NoSpam();
+	$nospam->compile_spam_database();
+
+	return $nospam->is_spam($data, $hash);
+}
+
+/**
  * Compare with the local IP list if the IP is a possible spammer
  *
  * @param string $ip
@@ -335,5 +372,5 @@ function compress_html()
 	$buffer = preg_replace($search, $replace, $buffer);
 
 	$CI->output->set_output($buffer);
-	$CI->output->_display(); 
+	$CI->output->_display();
 }

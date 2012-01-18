@@ -25,7 +25,7 @@
 		<![endif]-->
 		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
 		<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo site_url(get_selected_board()->shortname) ?>rss_gallery_50.xml" />
-		<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url(get_selected_board()->shortname) ?>atom_gallery_50.xml" /> 
+		<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url(get_selected_board()->shortname) ?>atom_gallery_50.xml" />
 		<?php endif; ?>
 		<link rel='index' title='<?php echo get_setting('fs_gen_site_title') ?>' href='<?php echo site_url() ?>' />
 		<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
@@ -48,8 +48,7 @@
 				echo implode(' / ', $board_urls)
 				?>
 				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ] [ Original archiver: <a href="http://oldarchive.foolz.us">http://oldarchive.foolz.us</a> ]
-		<?php //		<br/>[ Select theme (will later be moved to footer): <a href="#" onClick="changeTheme('default')">Default</a> / <a href="#" onClick="changeTheme('fuuka')">Fuuka</a> ]
-		?>			<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
+				<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
 				<?php endif; ?>
 				<aside id="top_options">
 					<?php echo $template['partials']['top_options']; ?>
@@ -62,6 +61,7 @@
 				<?php else : ?>
 				<?php endif; ?>
 
+				<?php echo $template['partials']['post_thread']; ?>
 
 				<?php echo $template['body']; ?>
 

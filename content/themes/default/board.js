@@ -13,6 +13,7 @@ var bindFunctions = function()
 				jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
 				break;
 
+			/*
 			case 'comment':
 				var reply_alert = jQuery('#reply_ajax_notices');
 				reply_alert.removeClass('error').removeClass('success');
@@ -55,7 +56,8 @@ var bindFunctions = function()
 				});
 				event.preventDefault();
 				break;
-
+			*/
+		       
 			case 'realtimethread':
 				realtimethread();
 				event.preventDefault();
@@ -87,7 +89,7 @@ var bindFunctions = function()
 					<textarea class="modal-comment"></textarea>');
 				modal.find(".submitModal").data("action", 'report');
 				break;
-			/*	
+			/*
 			case 'spam':
 				jQuery.ajax({
 					url: site_url + board_shortname + '/spam/' + post + '/',
@@ -319,7 +321,7 @@ var realtimethread = function(){
 						latest_doc_id = value.doc_id;
 				});
 			}
-			
+
 			if(found_posts)
 			{
 				if(jQuery('#reply_form :focus').length > 0)
@@ -520,7 +522,7 @@ function eliminateDuplicates(arr) {
 }
 
 jQuery(document).ready(function() {
-	
+
 	var lazyloaded = jQuery('img.lazyload');
 	if(lazyloaded.length > 149)
 	{
@@ -529,7 +531,7 @@ jQuery(document).ready(function() {
 			event: 'scroll'
 		});
 	}
-	
+
 	jQuery("a.[data-rel=popover-below]").popover({
 		offset: 10,
 		html: true

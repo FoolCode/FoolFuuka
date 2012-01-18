@@ -33,6 +33,12 @@ if (!defined('BASEPATH'))
 							<td class="postblock">Comment</td>
 							<td><?php echo form_textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)); ?></td>
 						</tr>
+						<?php if(get_selected_board()->archive) : ?>
+						<tr>
+							<td class="postblock">File</td>
+							<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')); ?></td>
+						</tr>
+						<?php endif; ?>
 						<tr>
 							<td class="postblock">Password <a class="tooltip" href="#">[?] <span>Password used for file deletion.</span></a></td>
 							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)); ?></td>
@@ -54,6 +60,7 @@ if (!defined('BASEPATH'))
 							<td>
 								<?php
 									echo form_hidden('parent', $thread_id);
+									echo form_hidden('MAX_FILE_SIZE', 3072);
 									echo form_submit(array(
 										'name' => 'reply_action',
 										'value' => 'Submit'

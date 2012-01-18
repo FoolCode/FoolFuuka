@@ -19,24 +19,29 @@ class Board extends DataMapper {
 			'type' => 'input'
 		),
 		'url' => array(
-			'rules' => array('required', 'max_length' => 256),
+			'rules' => array('max_length' => 256),
 			'label' => 'Board URL',
 			'type' => 'input'
 		),
 		'thumbs_url' => array(
-			'rules' => array('required', 'max_length' => 256),
+			'rules' => array('max_length' => 256),
 			'label' => 'Thumbs URL',
 			'type' => 'input'
 		),
 		'images_url' => array(
-			'rules' => array('required', 'max_length' => 256),
+			'rules' => array('max_length' => 256),
 			'label' => 'Images URL',
 			'type' => 'input'
 		),
 		'posting_url' => array(
-			'rules' => array('required', 'max_length' => 256),
+			'rules' => array('max_length' => 256),
 			'label' => 'Posting URL',
 			'type' => 'input'
+		),
+		'archive' => array(
+			'rules' => array(),
+			'label' => '4chan Board',
+			'type' => 'checkbox'
 		),
 		'sphinx' => array(
 			'rules' => array(),
@@ -72,20 +77,20 @@ class Board extends DataMapper {
 			'label' => 'Description',
 		)
 	);
-	
-	
+
+
 	function __construct($id = NULL)
-	{		
+	{
 		parent::__construct($id);
 	}
 
-	
+
 	function post_model_init($from_cache = FALSE)
 	{
-		
+
 	}
-	
-	
+
+
 	public function add($data = array())
 	{
 		if (!$this->update_board_db($data))
@@ -93,7 +98,7 @@ class Board extends DataMapper {
 			log_message('error', 'add_board: failed writing to database');
 			return false;
 		}
-		
+
 		if (!$this->add_board_dir())
 		{
 			// cleanup
@@ -101,11 +106,11 @@ class Board extends DataMapper {
 			log_message('error', 'add_board: failed creating board directory');
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	
+
+
 	public function remove()
 	{
 		/*
@@ -115,17 +120,17 @@ class Board extends DataMapper {
 			return false;
 		}
 		*/
-		
+
 		if (!$this->remove_board_db())
 		{
 			log_message('error', 'remove_board: failed to remove database entry');
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	
+
+
 	public function update_board_db($data = array())
 	{
 		if (isset($data["id"]) && $data["id"] != '')
@@ -138,24 +143,24 @@ class Board extends DataMapper {
 				return false;
 			}
 		}
-		
+
 		foreach ($data as $key => $value)
 		{
 			$this->$key = $value;
 		}
-		
+
 		if ((!isset($this->id) || $this->id == ''))
 		{
 			$i = 1;
 			$found = FALSE;
-			
+
 			$board = new Board();
 			$board->where('shortname', $this->shortname)->get();
 			if ($board->result_count() == 0)
 			{
 				$found = TRUE;
 			}
-			
+
 			while (!$found)
 			{
 				$i++;
@@ -169,14 +174,14 @@ class Board extends DataMapper {
 				}
 			}
 		}
-		
+
 		if (isset($old_shortname) && $old_shortname != $this->shortname && is_dir("content/boards/" . $old_shortname))
 		{
 			$dir_old = "content/boards/" . $old_shortname;
 			$dir_new = "content/boards/" . $new_shortname;
 			rename($dir_old, $dir_new);
 		}
-		
+
 		if (!$this->save())
 		{
 			if (!$this->valid)
@@ -191,11 +196,11 @@ class Board extends DataMapper {
 			}
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	
+
+
 	public function remove_board_db()
 	{
 		if (!$this->delete())
@@ -204,11 +209,11 @@ class Board extends DataMapper {
 			log_message('error', 'remove_board_db: failed to remove requested id');
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	
+
+
 	public function add_board_dir()
 	{
 		if (!mkdir("content/boards/" . $this->directory()))
@@ -219,23 +224,23 @@ class Board extends DataMapper {
 		}
 		return true;
 	}
-	
-	
+
+
 	public function remove_board_dir()
 	{
 		// Place Holder
 	}
-	
+
 	public function check_shortname($shortname) {
 		$this->where('shortname', $shortname)->get();
 		return $this->result_count() > 0;
 	}
-	
+
 	public function directory()
 	{
 		return $this->shortname;
 	}
-	
+
 	public function href()
 	{
 		return site_url($this->shortname);

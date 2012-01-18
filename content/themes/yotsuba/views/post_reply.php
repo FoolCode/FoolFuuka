@@ -56,6 +56,18 @@ if (!defined('BASEPATH'))
 						<?php echo form_textarea(array('class' => 'inputtext', 'name' => 'com', 'cols' => 48, 'rows' => 4, 'wrap' => 'soft')) ?>
 					</td>
 				</tr>
+				<?php if(get_selected_board()->archive) : ?>
+				<tr>
+					<td vlaign="bottom"></td>
+					<td class="postblock" align="left">
+						<b>File</b>
+					</td>
+					<td>
+						<?php echo form_upload(array('name' => 'upfile')) ?>
+						<?php echo form_hidden('MAX_FILE_SIZE', 3072) ?>
+					</td>
+				</tr>
+				<?php endif; ?>
 				<?php if($this->tank_auth->is_allowed()) : ?>
 				<tr>
 					<td></td>

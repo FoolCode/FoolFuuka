@@ -12,8 +12,17 @@ if (!defined('BASEPATH'))
 				<label>
 					<input type="checkbox" name="delete[]" value="<?php echo $p->doc_id ?>"/>
 					<span class="filetitle"><?php echo $p->title_processed ?></span>
-					<span class="postername"><?php echo (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
-					<span class="postertrip"><?php echo $p->trip_processed ?></span>
+					<span class="postername<?php echo ($p->capcode == 'M' || $p->capcode == 'G') ? ' mod' : '' ?><?php echo ($p->capcode == 'A') ? ' admin' : '' ?>"><?php echo (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
+					<span class="postertrip<?php echo ($p->capcode == 'M' || $p->capcode == 'G') ? ' mod' : '' ?><?php echo ($p->capcode == 'A') ? ' admin' : '' ?>"><?php echo $p->trip_processed ?></span>
+					<?php if ($p->capcode == 'M') : ?>
+						<span class="postername mod">## Mod</span>
+					<?php endif ?>
+					<?php if ($p->capcode == 'G') : ?>
+						<span class="postername mod">## Global Mod</span>
+					<?php endif ?>
+					<?php if ($p->capcode == 'A') : ?>
+						<span class="postername admin">## Admin</span>
+					<?php endif ?>
 					<?php echo date('D M d H:i:s Y', $p->timestamp + 18000) ?>
 				</label>
 				<?php if (isset($thread_id) && $thread_id == NULL) : ?>

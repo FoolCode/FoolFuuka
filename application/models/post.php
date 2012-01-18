@@ -726,35 +726,126 @@ class Post extends CI_Model
 				$search_result = array('total_found' => $found[0]->total_found);
 				$do_reverse = FALSE;
 			}
-
-			foreach ($query->result() as $post)
-			{
-				if ($post->parent == 0)
-				{
-					$this->existing_posts[$post->num][] = $post->num;
-				}
-				else
-				{
-					if ($post->subnum == 0)
-						$this->existing_posts[$post->parent][] = $post->num;
-					else
-						$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
-				}
-			}
-
-			foreach ($query->result() as $post)
-			{
-				if ($process === TRUE)
-				{
-					$this->process_post($post, $clean);
-				}
-				// the first you create from a parent is the first thread
-				$result[0]['posts'][] = $post;
-			}
-			if (is_array($result[0]['posts']) && $do_reverse)
-				$result[0]['posts'] = array_reverse($result[0]['posts']);
-			return array('posts' => $result, 'total_found' => $search_result['total_found']);
 		}
+		else
+		{
+			$field = array();
+			$value = array();
+			$index = array();
+
+			if ($search['username'])
+			{
+				$field[] = 'name = ?';
+				$value[] = $search['username'];
+				$index[] = 'name_index';
+			}
+
+			if ($search['tripcode'])
+			{
+				$field[] = 'trip = ?';
+				$value[] = urldecode($search['tripcode']);
+				$index[] = 'trip_index';
+			}
+
+			if ($search['text'])
+			{
+				if(mb_strlen($search['text']) < 2)
+				{
+					return array('error' => _('The text you were searching for was too short. It must be at least two characters long.'));
+				}
+
+				//$field[] = 'match(comment) against (?)';
+				$field[] = 'comment LIKE ?';
+				$value[] = '%' . urldecode($search['text']) . '%';
+			}
+
+			if ($search['deleted'] == "deleted")
+			{
+				$field[] = 'deleted = ?';
+				$value[] = 1;
+			}
+			if ($search['deleted'] == "not-deleted")
+			{
+				$field[] = 'deleted = ?';
+				$value[] = 0;
+			}
+
+			if ($search['ghost'] == "only")
+			{
+				$field[] = 'subnum = ?';
+				$value[] = 1;
+			}
+			if ($search['ghost'] == "none")
+			{
+				$field[] = 'subnum = ?';
+				$value[] = 0;
+			}
+
+			if ($search['order'] === 'asc')
+			{
+				$order = 'ORDER BY num ASC';
+			}
+			else
+			{
+				$order = 'ORDER BY num DESC';
+			}
+
+			$query = $this->db->query('
+				SELECT *
+				FROM ' . $this->table . '
+				' . ((!empty($index)) ? ' use index(' . implode(', ', $index) . ')' : '') . ((!empty($field)) ? ' WHERE ' . implode(' AND ', $field) : '') . '
+				' . $order . '
+				LIMIT ' . (($search['page'] * 25) - 25) . ', 25
+			', $value);
+
+			$query2 = $this->db->query('
+				SELECT count(*) AS total_found
+				FROM ' . $this->table . '
+				' . ((!empty($index)) ? ' use index(' . implode(', ', $index) . ')' : '') . ((!empty($field)) ? ' WHERE ' . implode(' AND ', $field) : '') . '
+				LIMIT 0, 5000
+			', $value);
+
+			if ($query->num_rows() == 0)
+			{
+				return array('posts' => array(), 'total_found' => 0);
+			}
+
+			$found = $query2->result();
+			$search_result = array('total_found' => $found[0]->total_found);
+			$do_reverse = FALSE;
+		}
+
+
+
+		foreach ($query->result() as $post)
+		{
+			if ($post->parent == 0)
+			{
+				$this->existing_posts[$post->num][] = $post->num;
+			}
+			else
+			{
+				if ($post->subnum == 0)
+					$this->existing_posts[$post->parent][] = $post->num;
+				else
+					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
+			}
+		}
+
+		foreach ($query->result() as $post)
+		{
+			if ($process === TRUE)
+			{
+				$this->process_post($post, $clean);
+			}
+			// the first you create from a parent is the first thread
+			$result[0]['posts'][] = $post;
+		}
+
+		if (is_array($result[0]['posts']) && $do_reverse)
+			$result[0]['posts'] = array_reverse($result[0]['posts']);
+
+		return array('posts' => $result, 'total_found' => $search_result['total_found']);
 	}
 
 
@@ -832,10 +923,73 @@ class Post extends CI_Model
 	}
 
 
+	function check_thread($num)
+	{
+		if (is_array($num))
+		{
+			if (!isset($num['parent']))
+			{
+				return array('invalid_thread' => TRUE);
+			}
+
+			$num = $num['parent'];
+		}
+
+		if ($num == 0)
+		{
+			return array('invalid_thread' => TRUE);
+		}
+
+		$query = $this->db->query('
+			SELECT * FROM ' . $this->table . '
+			' . $this->sql_report . '
+			WHERE num = ? OR parent = ?
+			ORDER BY num, subnum ASC;
+		', array($num, $num));
+
+		if ($query->num_rows() == 0)
+		{
+			return array('invalid_thread' => TRUE);
+		}
+
+		$count = array('posts' => 0, 'images' => 0);
+		foreach ($query->result() as $post)
+		{
+			if ($post->media_filename)
+			{
+				$count['images']++;
+			}
+			$count['posts']++;
+		}
+
+		$query->free_result();
+
+		if ($count['posts'] > 400)
+		{
+			if ($count['images'] > 200)
+			{
+				return array('thread_dead' => TRUE, 'disable_image_upload' => TRUE);
+			}
+			else
+			{
+				return array('thread_dead' => TRUE);
+
+			}
+		}
+		else if ($count['images'] > 200)
+		{
+			return array('disable_image_upload' => TRUE);
+
+		}
+
+		return array('valid_thread' => TRUE);
+	}
+
+
 	/**
 	 * POSTING FUNCTIONS
 	 */
-	function comment($data)
+	function comment($data, $allow_media = TRUE)
 	{
 		if (check_stopforumspam_ip($this->input->ip_address()))
 		{
@@ -901,6 +1055,58 @@ class Post extends CI_Model
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
 
+		if ($data['media'] == FALSE || $data['media'] == '')
+		{
+			if (is_array($data['num']))
+			{
+				$parent = $data['num']['parent'];
+			}
+			else
+			{
+				$parent = $data['num'];
+			}
+
+			if ($parent == 0)
+			{
+				return array('error' => 'An image is required for creating threads.');
+			}
+
+			if (strlen($data['media_error']) == 64)
+			{
+				return array('error' => 'The filetype you are attempting to upload is not allowed.');
+			}
+
+			if (strlen($data['media_error']) == 79)
+			{
+				return array('error' => 'The image you are attempting to upload is larger than the permitted size.');
+			}
+		}
+		else
+		{
+			if ($allow_media == FALSE)
+			{
+				return array('error' => 'Sorry, this thread has reached its maximum amount of image replies.');
+			}
+
+			$media = $data['media'];
+			if ($media["image_width"] == 0 || $media["image_height"] == 0)
+			{
+				return array('error' => 'Your image upload is not a valid image file.');
+			}
+
+			$media_hash = base64_encode(pack("H*", md5(file_get_contents($media["full_path"]))));
+			if (check_commentdata(array($media_hash)))
+			{
+				return array('error' => 'Your image upload has been flagged as inappropriate.');
+			}
+
+		}
+
+		if (check_commentdata($data))
+		{
+			return array('error' => 'Your post contains contents that is marked as spam.');
+		}
+
 		if (mb_strlen($comment) > 4096)
 		{
 			return array('error' => 'Your post was too long.');
@@ -942,16 +1148,9 @@ class Post extends CI_Model
 					return array('error' => 'You are banned from posting.');
 				}
 				
-				log_message('error', time() - strtotime($row->lastpost) );
-
 				if (time() - strtotime($row->lastpost) < 10 && time() - strtotime($row->lastpost) > 0 && !$this->tank_auth->is_allowed()) // 10 seconds
 				{
 					return array('error' => 'You must wait at least 10 seconds before posting again.');
-				}
-
-				if (time() - strtotime($row->lastpost) < 20 && $row->lastcomment == $comment)
-				{
-					return array('error' => 'Your post contained the same text as your previous post.');
 				}
 
 				$this->db->where('id', $row->id);
@@ -970,24 +1169,39 @@ class Post extends CI_Model
 			$poster_id = $this->db->insert_id();
 			$this->session->set_userdata('poster_id', $poster_id);
 		}
-		
 
-		// get the post after which we're replying to
-		// partly copied from Fuuka original
-		$this->db->query('
+		if (is_array($num))
+		{
+			$this->db->query('
 				INSERT INTO ' . $this->table . '
 				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, poster_id)
 				VALUES
 				(
-					(select max(num) from (select * from ' . $this->table . ' where parent=? or num=?) as x),
-					(select max(subnum)+1 from (select * from ' . $this->table . ' where num=(select max(num) from ' . $this->table . ' where parent=? or num=?)) as x),
-					?,?,?,?,?,?,?,?,?,?
+					(select coalesce(max(num),0)+1 from (select * from ' . $this->table . ') as x),
+					?,?,?,?,?,?,?,?,?,?,?
 				);
-			', array(
-			$num, $num,
-			$num, $num,
-			$num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
-		);
+				', array(0, $num['parent'], time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
+			);
+		}
+		else
+		{
+			// get the post after which we're replying to
+			// partly copied from Fuuka original
+			$this->db->query('
+					INSERT INTO ' . $this->table . '
+					(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, poster_id)
+					VALUES
+					(
+						(select max(num) from (select * from ' . $this->table . ' where parent=? or num=?) as x),
+						(select max(subnum)+1 from (select * from ' . $this->table . ' where num=(select max(num) from ' . $this->table . ' where parent=? or num=?)) as x),
+						?,?,?,?,?,?,?,?,?,?
+					);
+				', array(
+				$num, $num,
+				$num, $num,
+				$num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
+			);
+		}
 
 		// I need num and subnum for a proper redirect
 		$posted = $this->db->query('
@@ -996,15 +1210,32 @@ class Post extends CI_Model
 			LIMIT 0,1;
 		', array($this->db->insert_id()));
 
-		// we don't even need this, but let's leave it for sake of backward compatibility with original fuuka
-		$this->db->query('
-			replace into ' . $this->table_local . ' (num,parent,subnum,`timestamp`)
-			select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from ' . $this->table . '
-			where num = (select max(num) from ' . $this->table . ' where parent=?);
-		', array($num));
+		if (!is_array($num))
+		{
+			// we don't even need this, but let's leave it for sake of backward compatibility with original fuuka
+			$this->db->query('
+				replace into ' . $this->table_local . ' (num,parent,subnum,`timestamp`)
+				select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from ' . $this->table . '
+				where num = (select max(num) from ' . $this->table . ' where parent=?);
+			', array($num));
+		}
 
 		$posted = $posted->result();
 		$posted = $posted[0];
+
+		if ($data['media'] != FALSE || $data['media'] != '')
+		{
+			if ($image = $this->process_media($posted, $media, $media_hash))
+			{
+				$this->db->query('
+					UPDATE ' . $this->table . '
+					SET preview=?, preview_w=?, preview_h=?, media=?, media_w=?, media_h=?, media_size=?, media_hash=?, media_filename=?
+					WHERE doc_id=?
+					', $image
+				);
+			}
+		}
+
 		return array('success' => TRUE, 'posted' => $posted);
 	}
 
@@ -1054,10 +1285,17 @@ class Post extends CI_Model
 			// we risk getting into a racing condition
 			// get rid first of all of OP so posting is stopped
 			// first the file
-			if (!$this->delete_image($row))
+			if (get_selected_board()->archive && $this->total_same_media($row->media_hash) > 1)
 			{
-				log_message('error', 'post.php delete() couldn\'t delete thumbnail from thread OP');
-				return array('error' => _('Couldn\'t delete the thumbnail.'));
+				// do nothing, this is required to not affect archived boards
+			}
+			else
+			{
+				if (!$this->delete_image($row))
+				{
+					log_message('error', 'post.php delete() couldn\'t delete thumbnail from thread OP');
+					return array('error' => _('Couldn\'t delete the thumbnail.'));
+				}
 			}
 
 			$this->db->query('
@@ -1101,10 +1339,17 @@ class Post extends CI_Model
 		}
 		else
 		{
-			if ($this->delete_image($row) !== TRUE)
+			if (get_selected_board()->archive && $this->total_same_media($row->media_hash) > 1)
 			{
-				log_message('error', 'post.php delete() couldn\'t delete thumbnail from comment');
-				return array('error' => _('Couldn\'t delete the thumbnail.'));
+				// do nothing, this is required to not affect archived boards
+			}
+			else
+			{
+				if ($this->delete_image($row) !== TRUE)
+				{
+					log_message('error', 'post.php delete() couldn\'t delete thumbnail from comment');
+					return array('error' => _('Couldn\'t delete the thumbnail.'));
+				}
 			}
 
 			$this->db->query('
@@ -1256,6 +1501,116 @@ class Post extends CI_Model
 	}
 
 
+	function total_same_media($media_hash)
+	{
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->table . '
+			WHERE media_hash = ?
+		', array($media_hash));
+
+		return $query->num_rows();
+	}
+
+
+	function process_media($post, $media, $media_hash)
+	{
+		if (get_selected_board()->archive)
+		{
+			$query = $this->db->query('
+				SELECT *
+				FROM ' . $this->table . '
+				WHERE media_hash = ?
+				LIMIT 0,1;
+			', array($media_hash));
+
+			if ($query->num_rows() != 0)
+			{
+				$file = $query->row();
+
+				return array($file->preview, $file->preview_w, $file->preview_h, $media["file_name"], $file->media_w, $file->media_h, $file->media_size, $file->media_hash, $file->media_filename, $post->doc_id);
+			}
+			else
+			{
+				$number = $post->timestamp;
+			}
+		}
+		else
+		{
+			if ($post->parent > 0)
+			{
+				$number = $post->parent;
+			}
+			else
+			{
+				$number = $post->num;
+			}
+
+			while (strlen((string) $number) < 9)
+			{
+				$number = '0' . $number;
+			}
+		}
+
+		// generate random filename based on timestamp
+		$media_unixtime = time() . rand(1000, 9999);
+		$media_filename = $media_unixtime . $media["file_ext"];
+		$thumb_filename = $media_unixtime . "s" . $media["file_ext"];
+
+		// image and thumb paths
+		$path = array(
+			'image_dir' => (get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY) . "/" . get_selected_board()->shortname . "/img/" . substr($number, 0, 4) . "/" . substr($number, 4, 2) . "/",
+			'thumb_dir' => (get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY) . "/" . get_selected_board()->shortname . "/thumb/" . substr($number, 0, 4) . "/" . substr($number, 4, 2) . "/"
+		);
+
+		// generate paths if necessary
+		generate_file_path($path['image_dir']);
+		generate_file_path($path['thumb_dir']);
+
+		// move media file
+		if (!copy($media["full_path"], $path["image_dir"] . $media_filename))
+		{
+			log_message('error', 'process_media: failed to create/copy media file');
+			return FALSE;
+		}
+
+		if (!unlink($media["full_path"]))
+		{
+			log_message('error', 'process_media: failed to remove media file from cache');
+		}
+
+		if ($media["image_width"] > 250 || $media["image_height"])
+		{
+			// generate thumbnail
+			$CI = & get_instance();
+			$CI->load->library('image_lib');
+			$img_config['image_library'] = (find_imagick()) ? 'ImageMagick' : 'GD2'; // Use GD2 as fallback
+			$img_config['library_path'] = (find_imagick()) ? (get_setting('fs_serv_imagick_path') ? get_setting('fs_serv_imagick_path') : '/usr/bin') : ''; // If GD2, use none
+			$img_config['source_image'] = $path["image_dir"] . $media_filename;
+			$img_config["new_image"] = $path["thumb_dir"] . $thumb_filename;
+			$img_config['width'] = ($media["image_width"] > 250) ? 250 : $media["image_width"];
+			$img_config['height'] = ($media["image_height"] > 250) ? 250 : $media["image_height"];
+			$img_config['maintain_ratio'] = TRUE;
+			$img_config['master_dim'] = 'auto';
+			$CI->image_lib->initialize($img_config);
+			if (!$CI->image_lib->resize())
+			{
+				log_message('error', 'process_media: failed to create thumbnail');
+				return FALSE;
+			}
+			$CI->image_lib->clear();
+			$thumb_dimensions = @getimagesize($path["thumb_dir"] . $thumb_filename);
+		}
+		else
+		{
+			$thumb_filename = $media_filename;
+			$thumb_dimensions = array($media["image_width"], $media["image_height"]);
+		}
+
+		return array($thumb_filename, $thumb_dimensions[0], $thumb_dimensions[1], $media["file_name"], $media["image_width"], $media["image_height"], ($media["file_size"] * 1024), $media_hash, $media_filename, $post->doc_id);
+	}
+
+
 	function build_board_comment($p)
 	{
 		ob_start();
@@ -1275,14 +1630,27 @@ class Post extends CI_Model
 	{
 		if (!$row->preview)
 			return FALSE;
-		$echo = '';
-		if ($row->parent > 0)
-			$number = $row->parent;
-		else
-			$number = $row->num;
-		while (strlen((string) $number) < 9)
+
+		if ($row->media_w <= 250 && $row->media_h <= 250)
 		{
-			$number = '0' . $number;
+			$thumbnail = FALSE;
+		}
+
+		if (get_selected_board()->archive)
+		{
+			$number = $row->media_filename;
+		}
+		else
+		{
+			if ($row->parent > 0)
+				$number = $row->parent;
+			else
+				$number = $row->num;
+
+			while (strlen((string) $number) < 9)
+			{
+				$number = '0' . $number;
+			}
 		}
 
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
@@ -1318,14 +1686,21 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		if ($row->parent > 0)
-			$number = $row->parent;
-		else
-			$number = $row->num;
-
-		while (strlen((string) $number) < 9)
+		if (get_selected_board()->archive)
 		{
-			$number = '0' . $number;
+			$number = $row->media_filename;
+		}
+		else
+		{
+			if ($row->parent > 0)
+				$number = $row->parent;
+			else
+				$number = $row->num;
+
+			while (strlen((string) $number) < 9)
+			{
+				$number = '0' . $number;
+			}
 		}
 
 		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . get_selected_board()->shortname . '/' . (($thumbnail === TRUE) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail === TRUE) ? $row->preview : $row->media_filename);

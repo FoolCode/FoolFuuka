@@ -5,7 +5,7 @@ if (!isset($modifiers))
 	$modifiers = array();
 
 if (isset($thread_id))
-	echo form_open_multipart(get_selected_board()->shortname .'/thread/' . $thread_id, array('id' => 'postform'));
+	echo form_open_multipart(get_selected_board()->shortname .'/sending', array('id' => 'postform'));
 ?>
 
 <div class="content">
@@ -26,13 +26,22 @@ foreach ($posts as $key => $post) : ?>
 		<label>
 			<input type="checkbox" name="delete[]" value="<?php echo $op->doc_id ?>"/>
 			<span class="filetitle"><?php echo $op->title_processed ?></span>
-			<span class="postername"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
-			<span class="postertrip"><?php echo $op->trip_processed ?></span>
+			<span class="postername<?php echo ($op->capcode == 'M' || $op->capcode == 'G') ? ' mod' : '' ?><?php echo ($op->capcode == 'A') ? ' admin' : '' ?>"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
+			<span class="postertrip<?php echo ($op->capcode == 'M' || $op->capcode == 'G') ? ' mod' : '' ?><?php echo ($op->capcode == 'A') ? ' admin' : '' ?>"><?php echo $op->trip_processed ?></span>
+			<?php if ($op->capcode == 'M') : ?>
+				<span class="postername mod">## Mod</span>
+			<?php endif ?>
+			<?php if ($op->capcode == 'G') : ?>
+				<span class="postername mod">## Global Mod</span>
+			<?php endif ?>
+			<?php if ($op->capcode == 'A') : ?>
+				<span class="postername admin">## Admin</span>
+			<?php endif ?>
 			<?php echo date('D M d H:i:s Y', $op->timestamp + 18000) ?>
 		</label>
 
 		<?php if(!isset($thread_id)) : ?>
-		<a class="js" href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.<?php echo $op->num ?></a> [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?> [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]
+		<a class="js" href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.<?php echo $op->num ?></a> [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?><?php if (get_selected_board()->archive == 0) : ?> [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]<?php endif; ?>
 		<?php else : ?>
 		<a class="js" href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $op->num ?>\n')"><?php echo $op->num ?></a> [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?> [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]
 		<?php endif; ?>
@@ -79,6 +88,4 @@ foreach ($posts as $key => $post) : ?>
 </div>
 <?php
 if (isset($thread_id))
-{
 	echo form_close();
-}

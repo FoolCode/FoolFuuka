@@ -262,10 +262,6 @@ class Report extends DataMapper
 	public function list_all_reports($page = 1, $per_page = 15)
 	{
 		$reports = $this->get_paged($page, $per_page);
-
-		if($reports->paged->total_rows == 0)
-			return array();
-
 		$boards = new Board();
 		$boards->get();
 
@@ -311,7 +307,10 @@ class Report extends DataMapper
 		$sql = implode(' UNION ', $selects);
 		$query = $this->db->query($sql);
 
-		$reports->all = $query->result();
+		if ($query->num_rows() != 0)
+		{
+			$reports->all = $query->result();
+		}
 		return $reports;
 	}
 

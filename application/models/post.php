@@ -482,14 +482,14 @@ class Post extends CI_Model
 
 		$query = $this->db->query('
 			SELECT * FROM
-				(
-					SELECT * FROM ' . $this->table . '
-					' . $this->sql_report . '
-					WHERE num = ? OR parent = ?
-					ORDER BY num DESC, subnum DESC
-					LIMIT 50
-				)
-			AS q
+			(
+				SELECT * FROM ' . $this->table . '
+				' . $this->sql_report . '
+				WHERE num = ? OR parent = ?
+				ORDER BY num DESC, subnum DESC
+				LIMIT 50
+			)
+			AS x
 			ORDER BY num, subnum ASC;
 		', array($num, $num));
 		$result = array();
@@ -1423,6 +1423,20 @@ class Post extends CI_Model
 
 
 		$regexing = $row->comment;
+		
+		
+		// get rid of moot's formatting
+		if($row->capcode == 'A' && mb_strpos($regexing, '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
+		{
+
+			$regexing = str_replace('<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', '', $regexing);
+
+			if(mb_substr($regexing, -6, 6) == '</div>')
+			{
+				$regexing = mb_substr($regexing, 0, mb_strlen($regexing) - 6);
+			}
+		}
+
 		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
 
 		$regexing = auto_link($regexing, 'url', TRUE);

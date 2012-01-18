@@ -427,14 +427,35 @@ class Chan extends Public_Controller
 	}
 
 
-	public function image($hash, $page = 1)
+	public function image()
 	{
+		$uri = $this->uri->segment_array();
+		
+		array_shift($uri);
+		array_shift($uri);
+
+		$imploded_uri = urldecode(implode('/', $uri));
+		if(mb_strlen($imploded_uri) < 22)
+		{
+			show_404();
+		}
+		
+		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
+		if(mb_strlen($imploded_uri) > 23)
+		{
+			$page = substr($imploded_uri, 23);
+		}
+		else
+		{
+			$page = 1;
+		}
+		
+		
 		if ($hash == '' || !is_natural($page) || $page > 500)
 		{
 			show_404();
 		}
 
-		$hash = urldecode($hash);
 		$page = intval($page);
 		$posts = $this->post->get_image($hash . '==', $page);
 
@@ -510,6 +531,8 @@ class Chan extends Public_Controller
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
 		$result = $this->post->get_search($search);
 
+		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
+
 		if (isset($result['error']))
 		{
 			$this->template->title(_('Error'));
@@ -564,7 +587,6 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; ' . $title);
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
-		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 		$this->template->build('board');
 	}
 
@@ -697,22 +719,25 @@ class Chan extends Public_Controller
 			$this->template->set('section_title', _('Statistics'));
 			$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . '&raquo; ' . _('statistics'));
 			$this->template->set('stats_list', $stats_list);
-			$this->template->build('statistics/statistics_list');
+			$this->template->set_partial('statistics_interface', 'statistics/statistics_list');
+			$this->template->build('statistics/statistics_show');
 			return TRUE;
 		}
 
 		$stat_array = $this->statistics->check_available_stats($stat, get_selected_board());
-
 		if (!is_array($stat_array))
 		{
 			show_404();
 		}
 
-		$this->template->set('section_title', _('Statistics:') . ' ' . $stat_array['info']['name']);
+		$time_left = $stat_array['info']['frequence'] + strtotime($stat_array['timestamp']);
+		$this->load->helper('date');
+		$this->template->set('section_title', _('Statistics:') . ' ' . $stat_array['info']['name'] . '. Next update: ' . timespan(time(),$time_left));
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . '&raquo; ' . _('statistics'));
 		$this->template->set('info', $stat_array['info']);
 		$this->template->set('data', $stat_array['data']);
-		$this->template->build('statistics/' . $stat_array['info']['interface']);
+		$this->template->set_partial('statistics_interface', 'statistics/' . $stat_array['info']['interface']);
+		$this->template->build('statistics/statistics_show');
 	}
 
 

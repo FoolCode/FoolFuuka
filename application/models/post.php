@@ -156,7 +156,8 @@ class Post extends CI_Model
 				(
 					SELECT DISTINCT(parent) as unq_parent
 					FROM ' . $this->table . '
-					WHERE ' . $this->table . '.email != \'sage\'
+					WHERE 
+					' . $this->table . '.email != \'sage\'
 					AND subnum > 0
 					ORDER BY timestamp DESC
 					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
@@ -193,7 +194,7 @@ class Post extends CI_Model
 				(
 					SELECT DISTINCT( IF(parent = 0, num, parent)) as unq_parent, email
 					FROM ' . $this->table . '
-					WHERE email != \'sage\'
+					WHERE email != \'sage\' OR (email = \'sage\' AND parent = 0)
 					ORDER BY num DESC
 					LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 				) AS t

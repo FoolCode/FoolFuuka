@@ -122,7 +122,14 @@ class Theme_Controller {
 			$this->CI->form_validation->set_rules('NAMAE', 'Username', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('MERU', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('subject', 'Subject', 'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_length[3]|max_length[4096]|xss_clean');
+			if ($this->CI->input->post('parent') == 0)
+			{
+				$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|xss_clean');
+			}
+			else
+			{
+				$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_length[3]|max_length[4096]|xss_clean');				
+			}
 			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 			if ($this->CI->tank_auth->is_allowed())
@@ -201,7 +208,8 @@ class Theme_Controller {
 
 				if (isset($result['error']))
 				{
-					$this->CI->template->set('reply_errors', $result['error']);
+					$this->CI->template->set('error', $result['error']);
+					$this->CI->template->build('error');
 					return FALSE;
 				}
 				else if (isset($result['success']))

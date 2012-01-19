@@ -56,7 +56,7 @@ if (!defined('BASEPATH'))
 						<?php echo form_textarea(array('class' => 'inputtext', 'name' => 'com', 'cols' => 48, 'rows' => 4, 'wrap' => 'soft')) ?>
 					</td>
 				</tr>
-				<?php if(get_selected_board()->archive) : ?>
+				<?php if(!get_selected_board()->archive) : ?>
 				<tr>
 					<td vlaign="bottom"></td>
 					<td class="postblock" align="left">

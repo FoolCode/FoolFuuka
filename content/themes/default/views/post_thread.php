@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 ?>
 
 
-<?php if (get_selected_board()->archive && isset($is_page)) : ?>
+<?php if (!get_selected_board()->archive && isset($is_page)) : ?>
 	<div id="thread_form">
 		<?php echo form_open_multipart(get_selected_board()->shortname.'/sending') ?>
 		<fieldset>

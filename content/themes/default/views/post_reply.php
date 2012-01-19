@@ -69,7 +69,7 @@ if (!defined('BASEPATH'))
 					)); ?>
 				</div>
 			</div>
-			<?php if(get_selected_board()->archive) : ?>
+			<?php if(!get_selected_board()->archive) : ?>
 			<div class="clearfix">
 				<label for="reply_file">File</label>
 				<div class="input">

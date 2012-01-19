@@ -1286,7 +1286,7 @@ class Post extends CI_Model
 			// we risk getting into a racing condition
 			// get rid first of all of OP so posting is stopped
 			// first the file
-			if (get_selected_board()->archive && $this->total_same_media($row->media_hash) > 1)
+			if (!get_selected_board()->archive && $this->total_same_media($row->media_hash) > 1)
 			{
 				// do nothing, this is required to not affect archived boards
 			}
@@ -1340,7 +1340,7 @@ class Post extends CI_Model
 		}
 		else
 		{
-			if (get_selected_board()->archive && $this->total_same_media($row->media_hash) > 1)
+			if (!get_selected_board()->archive && $this->total_same_media($row->media_hash) > 1)
 			{
 				// do nothing, this is required to not affect archived boards
 			}
@@ -1516,7 +1516,7 @@ class Post extends CI_Model
 
 	function process_media($post, $media, $media_hash)
 	{
-		if (get_selected_board()->archive)
+		if (!get_selected_board()->archive)
 		{
 			$query = $this->db->query('
 				SELECT *
@@ -1637,7 +1637,7 @@ class Post extends CI_Model
 			$thumbnail = FALSE;
 		}
 
-		if (get_selected_board()->archive)
+		if (!get_selected_board()->archive)
 		{
 			$number = $row->media_filename;
 		}
@@ -1687,7 +1687,7 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		if (get_selected_board()->archive)
+		if (!get_selected_board()->archive)
 		{
 			$number = $row->media_filename;
 		}

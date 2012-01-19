@@ -1632,7 +1632,6 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-
 		if (!get_selected_board()->archive && $row->media_w <= 250 && $row->media_h <= 250)
 		{
 			$thumbnail = FALSE;
@@ -1642,7 +1641,7 @@ class Post extends CI_Model
 		{
 			$number = $row->media_filename;
 		}
-
+		
 		if ($row->deleted)
 		{
 			if ($thumbnail)

@@ -47,7 +47,7 @@
 				}
 				echo implode(' / ', $board_urls)
 				?>
-				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ] [ Original archiver: <a href="http://oldarchive.foolz.us">http://oldarchive.foolz.us</a> ]
+				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
 				<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
 				<?php endif; ?>
 				<aside id="top_options">
@@ -136,7 +136,7 @@
 
 			<div id="push"></div>
 		</div>
-		<footer id="footer"><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?>
+		<footer id="footer"><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?>, Fuuka Fetcher - Version r93
 			<div style="float:right">
 				Theme [ <a href="<?php echo site_url(array('functions', 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array('functions', 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> ]
 			</div>

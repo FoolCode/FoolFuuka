@@ -5,10 +5,11 @@ if (!defined('BASEPATH'))
 
 
 <?php if (!get_selected_board()->archive && isset($is_page)) : ?>
-	<div id="thread_form">
+	<section id="thread_form">
+		<h5>Create a new thread</h5>
 		<?php echo form_open_multipart(get_selected_board()->shortname.'/sending') ?>
 		<fieldset>
-			<div style="float:left;" class="clearfix">
+			<div style="float:left;">
 				<div class="clearfix">
 					<label for="reply_bokunonome">Name</label>
 					<div class="input">
@@ -48,8 +49,6 @@ if (!defined('BASEPATH'))
 						)); ?>
 					</div>
 				</div>
-			</div>
-			<div style="float:left">
 				<div class="clearfix">
 					<label for="reply_file">File</label>
 					<div class="input">
@@ -84,6 +83,7 @@ if (!defined('BASEPATH'))
 						echo form_dropdown('reply_postas', $postas, 'User', 'id="reply_postas"'); ?>
 					</div>
 				</div>
+				<?php endif; ?>
 			</div>
 			<div class="clearfix" style="float:left">
 				<label for="reply_chennodiscursus">Comment</label>
@@ -97,23 +97,22 @@ if (!defined('BASEPATH'))
 						'name' => 'reply_chennodiscursus',
 						'id' => 'reply_chennodiscursus',
 						'rows' => 3,
-						'style' => 'height:110px; width:300px'
+						'style' => 'height:200px; width:320px'
 					)); ?>
 				</div>
 			</div>
-			<?php endif; ?>
-			<div class="actions" style="clear:both;">
+			<div class="actions" style="clear:both;text-align:right">
 			<?php
 				echo form_hidden('reply_numero', 0);
 				echo form_hidden('MAX_FILE_SIZE', 3072);
 				echo form_submit(array(
 					'name' => 'reply_gattai',
-					'value' => 'Submit new thread',
-					'class' => 'btn primary'
+					'value' => 'Submit',
+					'class' => 'btn primary',
 				));
 			?>
 			</div>
 		</fieldset>
 		<?php echo form_close() ?>
-	</div>
+	</section>
 <?php endif; ?>

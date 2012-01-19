@@ -512,20 +512,57 @@ article.thread .backlink.op {
 #thread_form {
 	background:#d6f0da;
 	border:2px solid #364041;
-	width:980px;
-	margin:15px auto 25px;
+	width:730px;
+	margin:15px auto;
+}
+
+#thread_form h5 {
+	margin:0;
+	padding:8px;
+	line-height:normal;
 }
 
 #thread_form .actions, #thread_form form, #thread_form fieldset {
 	margin:0;
+	padding:0;
+}
+
+#thread_form .actions {
+	padding:10px;
 }
 
 #thread_form label {
-	width:65px;
+	width:60px;
+	margin-left:10px;
+	background:#f5f5f5;
+	border: 1px solid #ccc;
+	color:#bfbfbf;
+	text-shadow: 0px 1px 0px rgb(255, 255, 255);
+	line-height:26px;
+	height:26px;
+	padding:0px 3px;
+	margin-right:-2px;
+	border-top-left-radius:3px;
+	border-bottom-left-radius:3px;
+}
+
+#thread_form input[type=text], #thread_form input[type=password],
+#thread_form input[type=file], #thread_form select {
+	border-top-left-radius:0;
+	border-bottom-left-radius:0;
+}
+
+#thread_form input[type=file],  #thread_form select {
+	width:220px;
+	height:28px;
+}
+
+#thread_form textarea {
+	border-top-left-radius:0;	
 }
 
 #thread_form .input {
-	margin-left:68px
+	margin-left:77px
 }
 
 #thread_o_matic {

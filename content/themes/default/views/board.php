@@ -24,23 +24,23 @@ foreach ($posts as $key => $post) :
 
 			<header class="<?php echo ((isset($op->report_status) && !is_null($op->report_status)) ? ' reported' : '') ?>">
 				<div class="post_data">
-							<?php if ($op->title_processed) : ?><h2 class="post_title"><?php echo $op->title_processed ?></h2><?php endif; ?>
-							<span class="post_author"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
-							<?php if ($op->trip_processed) : ?><span class="post_trip"><?php echo $op->trip_processed ?></span><?php endif; ?>
-							<?php if ($op->capcode == 'M') : ?>
-								<span class="post_level post_level_moderator">## Mod</span>
-							<?php endif ?>
-							<?php if ($op->capcode == 'G') : ?>
-								<span class="post_level post_level_global_moderator">## Global Mod</span>
-							<?php endif ?>
-							<?php if ($op->capcode == 'A') : ?>
-								<span class="post_level post_level_administrator">## Admin</span>
-							<?php endif ?>
-							<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
-							<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" data-function="highlight" data-post="<?php echo $op->num ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" data-function="quote" data-post="<?php echo $op->num ?>"><?php echo $op->num ?></a>
-							<span class="post_controls"><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>" class="btnr parent">View</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#reply' ?>" class="btnr parent">Reply</a><?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '" class="btnr parent">Last 50</a>' : '' ?><?php if (get_selected_board()->archive == 1) : ?><a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>" class="btnr parent">Original</a><?php endif; ?><a href="<?php echo site_url($this->fu_board . '/report/' . $op->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><?php if($this->tank_auth->is_allowed()) : ?><a href="<?php echo site_url($this->fu_board . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a><?php if(false) : ?><a href="<?php echo site_url($this->fu_board . '/spam/' . $op->doc_id) ?>" class="btnr parent" data-function="spam" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>">Spam</a><?php endif; ?><?php endif; ?></span>
-							<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan manually."/></span><?php endif ?>
-							<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
+					<?php if ($op->title_processed) : ?><h2 class="post_title"><?php echo $op->title_processed ?></h2><?php endif; ?>
+					<span class="post_author"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
+					<?php if ($op->trip_processed) : ?><span class="post_trip"><?php echo $op->trip_processed ?></span><?php endif; ?>
+					<?php if ($op->capcode == 'M') : ?>
+						<span class="post_level post_level_moderator">## Mod</span>
+					<?php endif ?>
+					<?php if ($op->capcode == 'G') : ?>
+						<span class="post_level post_level_global_moderator">## Global Mod</span>
+					<?php endif ?>
+					<?php if ($op->capcode == 'A') : ?>
+						<span class="post_level post_level_administrator">## Admin</span>
+					<?php endif ?>
+					<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
+					<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" data-function="highlight" data-post="<?php echo $op->num ?>">No.</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num ?>" data-function="quote" data-post="<?php echo $op->num ?>"><?php echo $op->num ?></a>
+					<span class="post_controls"><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>" class="btnr parent">View</a><a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#reply' ?>" class="btnr parent">Reply</a><?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '" class="btnr parent">Last 50</a>' : '' ?><a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>" class="btnr parent">Original</a><a href="<?php echo site_url($this->fu_board . '/report/' . $op->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Report</a><?php if($this->tank_auth->is_allowed()) : ?><a href="<?php echo site_url($this->fu_board . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true">Delete</a><?php if(false) : ?><a href="<?php echo site_url($this->fu_board . '/spam/' . $op->doc_id) ?>" class="btnr parent" data-function="spam" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>">Spam</a><?php endif; ?><?php endif; ?></span>
+					<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan manually."/></span><?php endif ?>
+					<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
 				</div>
 				<div class="backlink_list"<?php echo (isset($op->backlinks)?' style="display:block"':'') ?>><?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks))?implode(' ', $op->backlinks):'' ?></span></div>
 			</header>

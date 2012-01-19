@@ -1632,7 +1632,8 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		if ($row->media_w <= 250 && $row->media_h <= 250)
+
+		if (!get_selected_board()->archive && $row->media_w <= 250 && $row->media_h <= 250)
 		{
 			$thumbnail = FALSE;
 		}
@@ -1641,6 +1642,22 @@ class Post extends CI_Model
 		{
 			$number = $row->media_filename;
 		}
+
+		if ($row->deleted)
+		{
+			if ($thumbnail)
+			{
+
+				return site_url() . 'content/themes/default/images/image_missing.jpg';
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+
+		if ($row->parent > 0)
+			$number = $row->parent;
 		else
 		{
 			if ($row->parent > 0)
@@ -1802,8 +1819,8 @@ class Post extends CI_Model
 
 
 		$regexing = $row->comment;
-		
-		
+
+
 		// get rid of moot's formatting
 		if($row->capcode == 'A' && mb_strpos($regexing, '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
 		{

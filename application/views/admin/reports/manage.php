@@ -27,12 +27,12 @@
 				<div class="text"><?php echo nl2br($report->comment) ?></div>
 			</article>
 			<div class="smalltext quick_tools">Quick Tools:
-				<a href="<?php echo site_url('/admin/reports/action/remove/'.$report->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/reports/action/remove/'.$report->report_id) ?>', 'Do you really wish to delete this report?'); return false;">Delete Report</a> |
-				<a href="<?php echo site_url('/admin/reports/action/delete/'.$report->report_id.'/post/') ?>" onclick="confirmPlug('<?php echo site_url('/admin/reports/action/delete/'.$report->report_id.'/post/') ?>', 'Do you really wish to delete this reported post?'); return false;">Delete Post</a> |
-				<a href="<?php echo site_url('/admin/reports/action/delete/'.$report->report_id.'/image/') ?>" onclick="confirmPlug('<?php echo site_url('/admin/reports/action/delete/'.$report->report_id.'/image/') ?>', 'Do you really wish to delete this reported post\'s image?'); return false;">Delete Image</a> |
-				<a href="<?php echo site_url('/admin/reports/action/spam/'.$report->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/reports/action/spam/'.$report->report_id) ?>', 'Do you really wish to mark this report as spam?'); return false;">Spam</a> |
+				<a href="<?php echo site_url('/admin/posts/action/remove/'.$report->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/remove/'.$report->report_id) ?>', 'Do you really wish to delete this report?'); return false;">Delete Report</a> |
+				<a href="<?php echo site_url('/admin/posts/action/delete/'.$report->report_id.'/post/') ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/delete/'.$report->report_id.'/post/') ?>', 'Do you really wish to delete this reported post?'); return false;">Delete Post</a> |
+				<a href="<?php echo site_url('/admin/posts/action/delete/'.$report->report_id.'/image/') ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/delete/'.$report->report_id.'/image/') ?>', 'Do you really wish to delete this reported post\'s image?'); return false;">Delete Image</a> |
+				<a href="<?php echo site_url('/admin/posts/action/spam/'.$report->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/spam/'.$report->report_id) ?>', 'Do you really wish to mark this report as spam?'); return false;">Spam</a> |
 				<a href="<?php echo site_url($report->shortname.'/post/'.(($report->subnum > 0) ? $report->num . '_' . $report->subnum : $report->num)) ?>">View</a> |
-				<a href="<?php echo site_url('/admin/reports/action/ban/'.$report->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/reports/action/ban/'.$report->report_id) ?>', 'Do you really wish to ban this IP?'); return false;">Ban</a> <?php echo $report->poster_ip ?>
+				<a href="<?php echo site_url('/admin/posts/action/ban/'.$report->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/ban/'.$report->report_id) ?>', 'Do you really wish to ban this IP?'); return false;">Ban</a> <?php echo $report->poster_ip ?>
 			</div>
 		</div>
 		<?php endforeach; ?>

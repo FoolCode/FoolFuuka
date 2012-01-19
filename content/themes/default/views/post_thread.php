@@ -108,7 +108,7 @@ if (!defined('BASEPATH'))
 				echo form_hidden('MAX_FILE_SIZE', 3072);
 				echo form_submit(array(
 					'name' => 'reply_gattai',
-					'value' => 'Submit',
+					'value' => 'Submit new thread',
 					'class' => 'btn primary'
 				));
 			?>

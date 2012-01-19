@@ -159,7 +159,7 @@ class Theme_Controller {
 
 				// Check if thread exists
 				$check = $this->CI->post->check_thread($data['num']);
-				if (get_selected_board()->archive)
+				if (!get_selected_board()->archive)
 				{
 					// Normal Posting
 					if (isset($check['invalid_thread']) && $this->CI->input->post('parent') == 0)

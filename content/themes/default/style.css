@@ -511,11 +511,9 @@ article.thread .backlink.op {
 
 #thread_form {
 	background:#d6f0da;
-	border-bottom:2px solid #364041;
-	border-left:2px solid #364041;
-	border-right:2px solid #364041;
+	border:2px solid #364041;
 	width:980px;
-	margin:0 auto
+	margin:15px auto 25px;
 }
 
 #thread_form .actions, #thread_form form, #thread_form fieldset {

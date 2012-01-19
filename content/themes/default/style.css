@@ -511,15 +511,13 @@ article.thread .backlink.op {
 
 #thread_form {
 	background:#d6f0da;
-	border:2px solid #364041;
-	width:730px;
-	margin:15px auto;
+	border-bottom:2px solid #364041;
+	margin:0 0 15px 0;
+	padding:10px 10px 4px;
 }
 
-#thread_form h5 {
-	margin:0;
-	padding:8px;
-	line-height:normal;
+#thread_form form .clearfix {
+	margin-bottom:6px;
 }
 
 #thread_form .actions, #thread_form form, #thread_form fieldset {
@@ -563,6 +561,23 @@ article.thread .backlink.op {
 
 #thread_form .input {
 	margin-left:77px
+}
+
+#thread_form .rules {
+	font-size:11px;
+	float:left;
+	max-width:300px;
+	line-height:10px;
+	padding: 0 10px;
+}
+
+#thread_form .rules p {
+	margin-bottom:0;
+}
+
+
+#thread_form .rules li{
+	line-height:14px;
 }
 
 #thread_o_matic {

@@ -38,30 +38,49 @@
 				<aside id="top_tools">
 					<?php echo $template['partials']['top_tools']; ?>
 				</aside>
-				Archives: [
 				<?php
 				$board_urls = array();
+				$parenthesis_open = FALSE;
 				foreach ($boards as $key => $item)
 				{
+					if(!$parenthesis_open)
+					{
+						echo 'Archives: [ ';
+						$parenthesis_open = TRUE;
+					}
 					if($item->archive == 0)
 						continue;
 					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+					
 				}
-				echo implode(' / ', $board_urls)
+				echo implode(' / ', $board_urls);
+				if($parenthesis_open)
+				{
+					echo ' ]';
+					$parenthesis_open = FALSE;
+				}
 				?>
-				]
-				Boards: [
 				<?php
 				$board_urls = array();
 				foreach ($boards as $key => $item)
 				{
+					if(!$parenthesis_open)
+					{
+						echo 'Boards: [ ';
+						$parenthesis_open = TRUE;
+					}
+					
 					if($item->archive == 1)
 						continue;
 					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
 				}
-				echo implode(' / ', $board_urls)
+				echo implode(' / ', $board_urls);
+				if($parenthesis_open)
+				{
+					echo ' ]';
+					$parenthesis_open = FALSE;
+				}
 				?>
-				]
 
 				[ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
 				<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>

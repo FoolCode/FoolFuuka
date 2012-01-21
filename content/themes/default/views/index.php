@@ -6,16 +6,48 @@ if (!defined('BASEPATH'))
 
 <article style="padding:50px;">
 	<h1><?php echo _('Welcome on the 4chan Archiver "FoOlFuuka"'); ?></h1>
-	<p><?php echo _('We are hosting the archives of the following boards:'); ?></p>
-	<h2>[
-		<?php
-		$board_urls = array();
-		foreach ($boards as $key => $board)
-		{
-			$board_urls[] = '<a href="' . $board->href() . '">'.$board->shortname.'</a> <a href="' . $board->href() . 'gallery/">+</a>';
-		}
-		echo implode(' / ', $board_urls)
-		?>
-		]
+	<h2><?php
+				$board_urls = array();
+				$parenthesis_open = FALSE;
+				foreach ($boards as $key => $item)
+				{
+					if(!$parenthesis_open)
+					{
+						echo 'Archives: [ ';
+						$parenthesis_open = TRUE;
+					}
+					if($item->archive == 0)
+						continue;
+					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+					
+				}
+				echo implode(' / ', $board_urls);
+				if($parenthesis_open)
+				{
+					echo ' ]';
+					$parenthesis_open = FALSE;
+				}
+				?><br/>
+				<?php
+				$board_urls = array();
+				foreach ($boards as $key => $item)
+				{
+					if(!$parenthesis_open)
+					{
+						echo 'Boards: [ ';
+						$parenthesis_open = TRUE;
+					}
+					
+					if($item->archive == 1)
+						continue;
+					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+				}
+				echo implode(' / ', $board_urls);
+				if($parenthesis_open)
+				{
+					echo ' ]';
+					$parenthesis_open = FALSE;
+				}
+				?>
 	</h2>
 </article>

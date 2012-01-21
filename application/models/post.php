@@ -156,7 +156,7 @@ class Post extends CI_Model
 				(
 					SELECT DISTINCT(parent) as unq_parent
 					FROM ' . $this->table . '
-					WHERE 
+					WHERE
 					' . $this->table . '.email != \'sage\'
 					AND subnum > 0
 					ORDER BY timestamp DESC
@@ -1148,7 +1148,7 @@ class Post extends CI_Model
 				{
 					return array('error' => 'You are banned from posting.');
 				}
-				
+
 				if (time() - strtotime($row->lastpost) < 10 && time() - strtotime($row->lastpost) > 0 && !$this->tank_auth->is_allowed()) // 10 seconds
 				{
 					return array('error' => 'You must wait at least 10 seconds before posting again.');
@@ -1631,19 +1631,6 @@ class Post extends CI_Model
 	{
 		if (!$row->preview)
 			return FALSE;
-
-		if ($row->deleted)
-		{
-			if ($thumbnail)
-			{
-
-				return site_url() . 'content/themes/default/images/image_missing.jpg';
-			}
-			else
-			{
-				return FALSE;
-			}
-		}
 
 		if ($row->parent > 0)
 			$number = $row->parent;

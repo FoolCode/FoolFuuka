@@ -282,10 +282,10 @@ class Statistics extends CI_Model
 
 		foreach ($boards->all as $board)
 		{
-			echo $board->shortname . PHP_EOL;
+			echo $board->shortname . ' (' . $board->id . ')' . PHP_EOL;
 			foreach ($available as $k => $a)
 			{
-				echo $k . PHP_EOL;
+				echo $k . ' (' . $board->id . ')' . PHP_EOL;
 				$found = FALSE;
 				foreach ($stats->result() as $r)
 				{
@@ -350,9 +350,9 @@ class Statistics extends CI_Model
 			INTO ' . $this->db->protect_identifiers('statistics', TRUE) . '
 			(board_id, name, timestamp, data)
 			VALUES
-			(?, ?, ?, ?)
+				(?, ?, ?, ?)
 			ON DUPLICATE KEY UPDATE
-			timestamp = VALUES(timestamp), data = VALUES(data);
+				timestamp = VALUES(timestamp), data = VALUES(data);
 		', array($board_id, $name, $timestamp, json_encode($data)));
 	}
 
@@ -434,31 +434,38 @@ class Statistics extends CI_Model
 	function process_image_reposts($board)
 	{
 		$query = $this->db->query('
-			SELECT preview, num, subnum, parent, media_hash, total
+			SELECT media_hash AS hash, count(media_hash) AS total
 			FROM ' . $this->get_table($board) . '
-			JOIN
-			(
-				SELECT hash, total, max(preview_w) AS w
-				FROM ' . $this->get_table($board) . '
-				JOIN
-				(
-					SELECT media_hash AS hash, count(media_hash) AS total
-					FROM ' . $this->get_table($board) . '
-					WHERE media_hash != \'\'
-					GROUP BY media_hash
-					ORDER BY count(media_hash) desc
-					LIMIT 32
-				) as x
-				ON media_hash = hash
-				GROUP BY media_hash
-			) as x
-			ON media_hash = hash AND preview_w = w
+			WHERE media_hash != \'\'
 			GROUP BY media_hash
-			ORDER BY total DESC;
+			ORDER BY count(media_hash) desc
+			LIMIT 32
 		');
 
-		$array = $query->result();
+		$sql = array();
+		foreach ($query->result() as $row)
+		{
+			$sql[] = '
+				(
+					SELECT preview, num, subnum, parent, media_hash, count(media_hash) as total
+					FROM
+					(
+						SELECT preview, preview_w, num, subnum, parent, media_hash
+						FROM ' . $this->get_table($board) . '
+						USE index(media_hash)
+						WHERE media_hash = ' . $this->db->escape($row->hash) . '
+						ORDER BY preview_w DESC
+					) as x
+				)
+			';
+		}
 		$query->free_result();
+
+		$sql = implode('UNION', $sql) . ' ORDER BY total DESC';
+
+		$query2 = $this->db->query($sql);
+		$array = $query2->result();
+		$query2->free_result();
 		return $array;
 	}
 
@@ -604,17 +611,17 @@ class Statistics extends CI_Model
 		{
 			mkdir(FCPATH . 'content/cache/');
 		}
-		
+
 		if(!file_exists(FCPATH . 'content/reports/'))
 		{
 			mkdir(FCPATH . 'content/reports/');
 		}
-		
+
 		if(!file_exists(FCPATH . 'content/reports/' . $board . '/'))
 		{
 			mkdir(FCPATH . 'content/reports/' . $board . '/');
 		}
-		
+
 		// File Locations
 		$INFILE = FCPATH . 'content/cache/reports-' . $board . '-' . $stat . '.dat';
 		$OUTFILE = FCPATH . 'content/reports/' . $board . '/' . $stat . '.png';

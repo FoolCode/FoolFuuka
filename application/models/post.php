@@ -1805,12 +1805,22 @@ class Post extends CI_Model
 		// get rid of moot's formatting
 		if ($row->capcode == 'A' && mb_strpos($regexing, '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
 		{
-
 			$regexing = str_replace('<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', '', $regexing);
 
 			if (mb_substr($regexing, -6, 6) == '</div>')
 			{
 				$regexing = mb_substr($regexing, 0, mb_strlen($regexing) - 6);
+			}
+		}
+		
+		// get rid of another of moot's cancerous formatting
+		if ($row->capcode == 'A' && mb_strpos($regexing, '<span style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
+		{
+			$regexing = str_replace('<span style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', '', $regexing);
+
+			if (mb_substr($regexing, -10, 10) == '[/spoiler]')
+			{
+				$regexing = mb_substr($regexing, 0, mb_strlen($regexing) - 10);
 			}
 		}
 

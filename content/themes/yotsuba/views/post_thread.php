@@ -3,7 +3,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<?php if (!get_selected_board()->archive && isset($is_page)) : ?>
+<?php if (isset($is_page) && !get_selected_board()->archive) : ?>
 <div style="postition:relative"></div>
 <div align="center" class="postarea">
 	<?php echo form_open_multipart(get_selected_board()->shortname.'/sending', array('name' => 'post')) ?>

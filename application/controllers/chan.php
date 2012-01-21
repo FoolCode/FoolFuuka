@@ -479,7 +479,7 @@ class Chan extends Public_Controller
 	public function image()
 	{
 		$uri = $this->uri->segment_array();
-		
+
 		array_shift($uri);
 		array_shift($uri);
 
@@ -488,7 +488,7 @@ class Chan extends Public_Controller
 		{
 			show_404();
 		}
-		
+
 		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
 		if(mb_strlen($imploded_uri) > 23)
 		{
@@ -498,8 +498,8 @@ class Chan extends Public_Controller
 		{
 			$page = 1;
 		}
-		
-		
+
+
 		if ($hash == '' || !is_natural($page) || $page > 500)
 		{
 			show_404();

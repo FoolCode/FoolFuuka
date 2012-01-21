@@ -127,7 +127,7 @@ class Theme_Controller {
 	{
 		if ($this->CI->input->post('com_submit') == 'Submit') {
 			$this->CI->load->library('form_validation');
-			$this->CI->form_validation->set_rules('resto', 'Thread no.', 'required|is_natural_no_zero|xss_clean');
+			$this->CI->form_validation->set_rules('resto', 'Thread no.', 'required|is_natural|xss_clean');
 			$this->CI->form_validation->set_rules('name', 'Username', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('email', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('sub', 'Subject', 'trim|xss_clean|max_length[64]');
@@ -162,15 +162,55 @@ class Theme_Controller {
 					$data['postas'] = 'N';
 				}
 
-
-				// check if the thread exists (this could be made lighter but whatever for now) @todo
-				$thread = $this->CI->post->get_thread($data['num']);
-				if (count($thread) != 1)
+				// Check if thread exists
+				$check = $this->CI->post->check_thread($data['num']);
+				if (!get_selected_board()->archive)
 				{
-					show_404();
+					// Normal Posting
+					if (isset($check['invalid_thread']) && $this->CI->input->post('resto') == 0)
+					{
+						$data['num'] = array('parent' => 0);
+					}
+					else if (isset($check['thread_dead']))
+					{
+						$data['num'] = $this->CI->input->post('resto');
+					}
+					else
+					{
+						$data['num'] = array('parent' => $this->CI->input->post('resto'));
+					}
+				}
+				else
+				{
+					if (isset($check['invalid_thread']))
+					{
+						show_404();
+					}
 				}
 
-				$result = $this->CI->post->comment($data);
+				$media_config['upload_path'] = 'content/cache/';
+				$media_config['allowed_types'] = 'jpg|png|gif';
+				$media_config['max_size'] = 3072;
+				$this->CI->load->library('upload', $media_config);
+				if ($this->CI->upload->do_upload('upfile'))
+				{
+					$data['media'] = $this->CI->upload->data();
+				}
+				else
+				{
+					$data['media'] = '';
+					$data['media_error'] = $this->CI->upload->display_errors();
+				}
+
+				if (isset($check['disable_image_upload']))
+				{
+					$result = $this->CI->post->comment($data, FALSE);
+				}
+				else
+				{
+					$result = $this->CI->post->comment($data);
+				}
+
 				if (isset($result['error']))
 				{
 					$this->CI->template->set('reply_errors', $result['error']);
@@ -178,7 +218,16 @@ class Theme_Controller {
 				}
 				else if (isset($result['success']))
 				{
-					$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $data['num']));
+					if ($result['posted']->parent == 0)
+					{
+						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->num)) . '#p' . $result['posted']->num;
+					}
+					else
+					{
+						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#p' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
+					}
+
+					$this->CI->template->set('url', $url);
 					$this->CI->template->set_layout('redirect');
 					$this->CI->template->build('redirect');
 					return TRUE;
@@ -187,7 +236,8 @@ class Theme_Controller {
 			else
 			{
 				$this->CI->form_validation->set_error_delimiters('', '');
-				$this->CI->template->set('reply_errors', validation_errors());
+				$this->CI->template->set('error', validation_errors());
+				$this->CI->template->build('error');
 				return FALSE;
 			}
 		}

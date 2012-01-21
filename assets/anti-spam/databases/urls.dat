@@ -41,7 +41,6 @@ yuripuri.h.fc2.com
 stoptazmo.com
 netbux.org
 geocities.jp/empire_of_tashiro/
-&gt;&gt;
 hrevolution.webcindario.com
 yayoipv.h.fc2.com
 f-mon.tv
@@ -96,7 +95,6 @@ oo.lv
 ns01.us
 guestbook.cgiworld.net
 phentermine
-/\bcialis\b/i
 funpic.de
 casino-focus.com
 tigersushi.com
@@ -276,7 +274,6 @@ beatarod.info
 resourcez.com
 ecspace.us
 photoangels
-/a[^a-z0-9]*n[^a-z0-9]*o[^a-z0-9]*n[^a-z0-9]*t[^a-z0-9]*a[^a-z0-9]*l[^a-z0-9]*k[^a-z0-9]*/i
 bitefight.no
 dreamwiz.com
 lolita-list.com
@@ -301,10 +298,6 @@ femininFilaria
 tackled96422
 sammel5
 game-life.ru
-nswplanet.com
-/\.php\?[a-zA-Z0-9_-]+\/[0-9]{5}\.html/
-/<\/a>.*\[\/url\]/is
-/\[\/url\].*<\/a>/is
 notlong.com
 avwav.com
 bitefight.com.pt
@@ -343,7 +336,7 @@ freeforums.org
 indexoffiles.com
 fromru.su
 indya.com
-tripod.com/?
+tripod.com
 kidololis.co
 magnify.net
 beam.to
@@ -452,7 +445,6 @@ puma-ferrari.org
 mbtsandals24.com
 hotsmbt.net
 mbtbest.com
-/jailbreakme[^ ]+.com/
 littleurl.net
 brand-copy-shop.com
 yuppy111.com
@@ -482,3 +474,4 @@ yesnanjingmassage.com
 erythromycin.com
 plavix.com
 prednisolone.com
+flickr.com/people/73932114@N04/

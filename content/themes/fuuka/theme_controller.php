@@ -109,22 +109,28 @@ class Theme_Controller {
 		$this->CI->template->set('posts', $thread);
 
 		$this->CI->template->set('thread_id', $num);
-		$sending = $this->sending();
 		$this->CI->template->build('board');
 	}
 
 
 	public function sending()
 	{
-		if ($this->CI->input->post('reply_action') == 'Submit') {
+		if ($this->CI->input->post('reply_action') == 'Submit')
+		{
 			$this->CI->load->library('form_validation');
-			$this->CI->form_validation->set_rules('parent', 'Thread no.', 'required|is_natural_no_zero|xss_clean');
+			$this->CI->form_validation->set_rules('parent', 'Thread no.', 'required|is_natural|xss_clean');
 			$this->CI->form_validation->set_rules('NAMAE', 'Username', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('MERU', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->CI->form_validation->set_rules('subject', 'Subject', 'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_length[3]|max_length[4096]|xss_clean');
+			if ($this->CI->input->post('parent') == 0)
+			{
+				$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|xss_clean');
+			}
+			else
+			{
+				$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_length[3]|max_length[4096]|xss_clean');				
+			}
 			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
-
 
 			if ($this->CI->tank_auth->is_allowed())
 			{
@@ -132,11 +138,9 @@ class Theme_Controller {
 				$this->CI->form_validation->set_message('_is_valid_allowed_tag', 'You didn\'t specify a correct type of user to post as');
 			}
 
-
 			if ($this->CI->form_validation->run() !== FALSE)
 			{
 				$data['num'] = $this->CI->input->post('parent');
-
 				$data['name'] = $this->CI->input->post('NAMAE');
 				$data['email'] = $this->CI->input->post('MERU');
 				$data['subject'] = $this->CI->input->post('subject');
@@ -153,23 +157,73 @@ class Theme_Controller {
 					$data['postas'] = 'N';
 				}
 
-
-				// check if the thread exists (this could be made lighter but whatever for now) @todo
-				$thread = $this->CI->post->get_thread($data['num']);
-				if (count($thread) != 1)
+				// Check if thread exists
+				$check = $this->CI->post->check_thread($data['num']);
+				if (!get_selected_board()->archive)
 				{
-					show_404();
+					// Normal Posting
+					if (isset($check['invalid_thread']) && $this->CI->input->post('parent') == 0)
+					{
+						$data['num'] = array('parent' => 0);
+					}
+					else if (isset($check['thread_dead']))
+					{
+						$data['num'] = $this->CI->input->post('parent');
+					}
+					else
+					{
+						$data['num'] = array('parent' => $this->CI->input->post('parent'));
+					}
+				}
+				else
+				{
+					if (isset($check['invalid_thread']))
+					{
+						show_404();
+					}
 				}
 
-				$result = $this->CI->post->comment($data);
+				$media_config['upload_path'] = 'content/cache/';
+				$media_config['allowed_types'] = 'jpg|png|gif';
+				$media_config['max_size'] = 3072;
+				$this->CI->load->library('upload', $media_config);
+				if ($this->CI->upload->do_upload('file_image'))
+				{
+					$data['media'] = $this->CI->upload->data();
+				}
+				else
+				{
+					$data['media'] = '';
+					$data['media_error'] = $this->CI->upload->display_errors();
+				}
+
+				if (isset($check['disable_image_upload']))
+				{
+					$result = $this->CI->post->comment($data, FALSE);
+				}
+				else
+				{
+					$result = $this->CI->post->comment($data);
+				}
+
 				if (isset($result['error']))
 				{
-					$this->CI->template->set('reply_errors', $result['error']);
+					$this->CI->template->set('error', $result['error']);
+					$this->CI->template->build('error');
 					return FALSE;
 				}
 				else if (isset($result['success']))
 				{
-					$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $data['num']));
+					if ($result['posted']->parent == 0)
+					{
+						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->num)) . '#p' . $result['posted']->num;
+					}
+					else
+					{
+						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#p' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
+					}
+
+					$this->CI->template->set('url', $url);
 					$this->CI->template->set_layout('redirect');
 					$this->CI->template->build('redirect');
 					return TRUE;
@@ -178,7 +232,8 @@ class Theme_Controller {
 			else
 			{
 				$this->CI->form_validation->set_error_delimiters('', '');
-				$this->CI->template->set('reply_errors', validation_errors());
+				$this->CI->template->set('error', validation_errors());
+				$this->CI->template->build('error');
 				return FALSE;
 			}
 		}

@@ -16,6 +16,7 @@ class Chan extends Public_Controller
 		$this->template->set_partial('top_tools', 'top_tools');
 		$this->template->set_partial('top_options', 'top_options');
 		$this->template->set('boards', $boards);
+		$this->template->set_partial('post_thread', 'post_thread');
 		$this->template->set_partial('post_reply', 'post_reply');
 		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->set_layout('chan');
@@ -246,7 +247,7 @@ class Chan extends Public_Controller
 		if ($this->input->post('reply_gattai') == 'Submit')
 		{
 			$this->load->library('form_validation');
-			$this->form_validation->set_rules('reply_numero', 'Thread no.', 'required|is_natural_no_zero|xss_clean');
+			$this->form_validation->set_rules('reply_numero', 'Thread no.', 'required|is_natural|xss_clean');
 			$this->form_validation->set_rules('reply_bokunonome', 'Username', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_length[64]');
@@ -262,12 +263,12 @@ class Chan extends Public_Controller
 			if ($this->form_validation->run() !== FALSE)
 			{
 				$data['num'] = $this->input->post('reply_numero');
-
 				$data['name'] = $this->input->post('reply_bokunonome');
 				$data['email'] = $this->input->post('reply_elitterae');
 				$data['subject'] = $this->input->post('reply_talkingde');
 				$data['comment'] = $this->input->post('reply_chennodiscursus');
 				$data['password'] = $this->input->post('reply_nymphassword');
+
 				if ($this->tank_auth->is_allowed())
 				{
 					$data['postas'] = $this->input->post('reply_postas');
@@ -277,21 +278,60 @@ class Chan extends Public_Controller
 					$data['postas'] = 'N';
 				}
 
-				// check if the thread exists (this could be made lighter but whatever for now) @todo
-				$thread = $this->post->get_thread($data['num']);
-				if (count($thread) != 1)
+				// Check if thread exists
+				$check = $this->post->check_thread($data['num']);
+				if (!get_selected_board()->archive)
 				{
-					if ($this->input->is_ajax_request())
+					// Normal Posting
+					if (isset($check['invalid_thread']) && $this->input->post('reply_numero') == 0)
 					{
-						$this->output
-								->set_content_type('application/json')
-								->set_output(json_encode(array('error' => 'This thread does not exist.', 'success' => '')));
-						return FALSE;
+						$data['num'] = array('parent' => 0);
 					}
-					show_404();
+					else if (isset($check['thread_dead']))
+					{
+						$data['num'] = $this->input->post('reply_numero');
+					}
+					else
+					{
+						$data['num'] = array('parent' => $this->input->post('reply_numero'));
+					}
+				}
+				else
+				{
+					if (isset($check['invalid_thread']))
+					{
+						if ($this->input->is_ajax_request())
+						{
+							$this->output
+									->set_content_type('application/json')
+									->set_output(json_encode(array('error' => 'This thread does not exist.', 'success' => '')));
+						}
+					}
 				}
 
-				$result = $this->post->comment($data);
+				$media_config['upload_path'] = 'content/cache/';
+				$media_config['allowed_types'] = 'jpg|png|gif';
+				$media_config['max_size'] = 3072;
+				$this->load->library('upload', $media_config);
+				if ($this->upload->do_upload('file_image'))
+				{
+					$data['media'] = $this->upload->data();
+				}
+				else
+				{
+					$data['media'] = '';
+					$data['media_error'] = $this->upload->display_errors();
+				}
+
+				if (isset($check['disable_image_upload']))
+				{
+					$result = $this->post->comment($data, FALSE);
+				}
+				else
+				{
+					$result = $this->post->comment($data);
+				}
+
 				if (isset($result['error']))
 				{
 					if ($this->input->is_ajax_request())
@@ -315,7 +355,16 @@ class Chan extends Public_Controller
 								->set_output(json_encode(array('error' => '', 'success' => 'Your comment has been posted.')));
 						return FALSE;
 					}
-					$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . '_' . $result['posted']->subnum;
+
+					if ($result['posted']->parent == 0)
+					{
+						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->num)) . '#' . $result['posted']->num;
+					}
+					else
+					{
+						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
+					}
+
 					$this->template->title(_('Redirecting...'));
 					$this->template->set('url', $url);
 					$this->template->set_layout('redirect');
@@ -650,36 +699,6 @@ class Chan extends Public_Controller
 	}
 
 
-	/*
-	  public function spam($num = 0)
-	  {
-	  if (!$this->tank_auth->is_allowed())
-	  {
-	  show_404();
-	  }
-
-	  if (!is_numeric($num) || !$num > 0)
-	  {
-	  show_404();
-	  }
-
-	  if (!$this->input->is_ajax_request())
-	  {
-	  show_404();
-	  }
-
-	  $result = $this->post->spam($this->input->post("post"));
-	  if (isset($result['error']))
-	  {
-	  $this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
-	  return FALSE;
-	  }
-	  if (isset($result['success']) && $result['success'] === TRUE)
-	  {
-	  $this->output->set_output(json_encode(array('status' => 'success')));
-	  }
-	  }
-	 */
 	public function spam($num = 0)
 	{
 		if (!$this->tank_auth->is_allowed())

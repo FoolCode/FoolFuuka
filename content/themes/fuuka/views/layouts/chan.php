@@ -49,6 +49,8 @@
 
 			<hr />
 
+			<?php echo $template['partials']['post_thread']; ?>
+			
 	<?php endif; ?>
 
 		<?php echo $template['body']; ?>

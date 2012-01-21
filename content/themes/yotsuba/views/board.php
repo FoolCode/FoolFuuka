@@ -6,6 +6,7 @@ if (!isset($modifiers))
 		$modifiers = array();
 ?>
 
+<?php echo $template['partials']['post_thread'] ?>
 <?php echo $template['partials']['post_reply'] ?>
 
 <iframe src="" style="height: 0px; width: 0px; visibility: hidden; border-top-style: none; border-right-style: none; border-bottom-style: none; border-left-style: none; border-width: initial; border-color: initial; border-image: initial;">
@@ -67,12 +68,12 @@ foreach ($posts as $key => $post) : ?>
 
 			if(!isset($thread_id))
 				$thread_id = NULL;
-			
+
 			if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
 				include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
 			else
 				include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
-		
+
 
 		endforeach;
 

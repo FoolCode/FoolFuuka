@@ -3,18 +3,18 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<?php if (isset($thread_id)) : ?>
-<table>
+<?php if (!get_selected_board()->archive && isset($is_page)) : ?>
+<?php echo form_open_multipart(get_selected_board()->shortname .'/sending', array('id' => 'postform')); ?>
+<table style="margin-left: auto; margin-right: auto">
 	<tbody>
 		<tr>
-			<td class="doubledash">&gt;&gt;</td>
 			<td class="subreply">
 				<div class="theader">
-					Reply to Thread <a class="tooltip-red" href="#">[?] <span>Don't expect anything heroic. Your post will not be uploaded to the original board.</span></a>
+					Create New Thread
 				</div>
 				<?php if(isset($reply_errors)) : ?>
-			<span style="color:red"><?php echo $reply_errors ?></span>
-		<?php endif; ?>
+				<span style="color:red"><?php echo $reply_errors ?></span>
+				<?php endif; ?>
 				<table>
 					<tbody>
 						<tr>
@@ -33,12 +33,10 @@ if (!defined('BASEPATH'))
 							<td class="postblock">Comment</td>
 							<td><?php echo form_textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)); ?></td>
 						</tr>
-						<?php if(!get_selected_board()->archive) : ?>
 						<tr>
 							<td class="postblock">File</td>
 							<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')); ?></td>
 						</tr>
-						<?php endif; ?>
 						<tr>
 							<td class="postblock">Password <a class="tooltip" href="#">[?] <span>Password used for file deletion.</span></a></td>
 							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)); ?></td>
@@ -59,19 +57,11 @@ if (!defined('BASEPATH'))
 							<td class="postblock">Action</td>
 							<td>
 								<?php
-									echo form_hidden('parent', $thread_id);
+									echo form_hidden('parent', 0);
 									echo form_hidden('MAX_FILE_SIZE', 3072);
 									echo form_submit(array(
 										'name' => 'reply_action',
 										'value' => 'Submit'
-									));
-									echo form_submit(array(
-										'name' => 'reply_delete',
-										'value' => 'Delete Selected Posts'
-									));
-									echo form_submit(array(
-										'name' => 'reply_report',
-										'value' => 'Report Selected Posts'
 									));
 								?>
 							</td>
@@ -82,4 +72,7 @@ if (!defined('BASEPATH'))
 		</tr>
 	</tbody>
 </table>
+<?php echo form_close() ?>
+
+<hr/>
 <?php endif; ?>

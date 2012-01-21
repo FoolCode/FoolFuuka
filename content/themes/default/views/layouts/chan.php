@@ -25,7 +25,7 @@
 		<![endif]-->
 		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
 		<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo site_url(get_selected_board()->shortname) ?>rss_gallery_50.xml" />
-		<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url(get_selected_board()->shortname) ?>atom_gallery_50.xml" /> 
+		<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url(get_selected_board()->shortname) ?>atom_gallery_50.xml" />
 		<?php endif; ?>
 		<link rel='index' title='<?php echo get_setting('fs_gen_site_title') ?>' href='<?php echo site_url() ?>' />
 		<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
@@ -38,18 +38,33 @@
 				<aside id="top_tools">
 					<?php echo $template['partials']['top_tools']; ?>
 				</aside>
-				[
+				Archives: [
 				<?php
 				$board_urls = array();
 				foreach ($boards as $key => $item)
 				{
+					if($item->archive == 0)
+						continue;
 					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
 				}
 				echo implode(' / ', $board_urls)
 				?>
-				] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ] [ Original archiver: <a href="http://oldarchive.foolz.us">http://oldarchive.foolz.us</a> ]
-		<?php //		<br/>[ Select theme (will later be moved to footer): <a href="#" onClick="changeTheme('default')">Default</a> / <a href="#" onClick="changeTheme('fuuka')">Fuuka</a> ]
-		?>			<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
+				]
+				Boards: [
+				<?php
+				$board_urls = array();
+				foreach ($boards as $key => $item)
+				{
+					if($item->archive == 1)
+						continue;
+					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+				}
+				echo implode(' / ', $board_urls)
+				?>
+				]
+				
+				[ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
+				<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
 				<?php endif; ?>
 				<aside id="top_options">
 					<?php echo $template['partials']['top_options']; ?>
@@ -62,6 +77,7 @@
 				<?php else : ?>
 				<?php endif; ?>
 
+				<?php echo $template['partials']['post_thread']; ?>
 
 				<?php echo $template['body']; ?>
 
@@ -136,7 +152,7 @@
 
 			<div id="push"></div>
 		</div>
-		<footer id="footer"><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?>
+		<footer id="footer"><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?>, <a href="http://code.google.com/p/fuuka/" target="_blank">Fuuka Fetcher</a> - Version r94
 			<div style="float:right">
 				Theme [ <a href="<?php echo site_url(array('functions', 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array('functions', 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> ]
 			</div>

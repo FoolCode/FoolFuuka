@@ -14,7 +14,7 @@ if (!defined('BASEPATH'))
 	</header>
 	<div id="reply_ajax_notices"></div>
 	<div>
-		<?php echo form_open(get_selected_board()->shortname.'/sending', array('class' => 'form-stacked', 'id' => 'reply_form')) ?>
+		<?php echo form_open_multipart(get_selected_board()->shortname.'/sending', array('class' => 'form-stacked', 'id' => 'reply_form')) ?>
 		<fieldset>
 			<div class="clearfix">
 				<label for="reply_bokunonome">Name</label>
@@ -22,7 +22,6 @@ if (!defined('BASEPATH'))
 					<?php echo form_input(array(
 						'name' => 'name',
 						'id' => 'reply_name_yep',
-						'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:''),
 						'style' => 'display:none'
 					)); ?>
 					<?php echo form_input(array(
@@ -38,7 +37,6 @@ if (!defined('BASEPATH'))
 					<?php echo form_input(array(
 						'name' => 'email',
 						'id' => 'reply_email_yep',
-						'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:''),
 						'style' => 'display:none'
 					)); ?>
 					<?php echo form_input(array(
@@ -71,6 +69,17 @@ if (!defined('BASEPATH'))
 					)); ?>
 				</div>
 			</div>
+			<?php if(!get_selected_board()->archive) : ?>
+			<div class="clearfix">
+				<label for="reply_file">File</label>
+				<div class="input">
+					<?php echo form_upload(array(
+						'name' => 'file_image',
+						'id' => 'file_image'
+					)); ?>
+				</div>
+			</div>
+			<?php endif; ?>
 			<div class="clearfix">
 				<label for="reply_nymphassword">Password</label>
 				<div class="input">
@@ -100,6 +109,7 @@ if (!defined('BASEPATH'))
 			<div class="actions">
 			<?php
 				echo form_hidden('reply_numero', $thread_id);
+				echo form_hidden('MAX_FILE_SIZE', 3072);
 				echo form_submit(array(
 					'name' => 'reply_gattai',
 					'value' => 'Submit',

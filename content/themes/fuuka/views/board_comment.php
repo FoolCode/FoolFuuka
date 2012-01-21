@@ -12,11 +12,20 @@ if (!defined('BASEPATH'))
 				<label>
 					<input type="checkbox" name="delete[]" value="<?php echo $p->doc_id ?>"/>
 					<span class="filetitle"><?php echo $p->title_processed ?></span>
-					<span class="postername"><?php echo (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
-					<span class="postertrip"><?php echo $p->trip_processed ?></span>
+					<span class="postername<?php echo ($p->capcode == 'M' || $p->capcode == 'G') ? ' mod' : '' ?><?php echo ($p->capcode == 'A') ? ' admin' : '' ?>"><?php echo (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
+					<span class="postertrip<?php echo ($p->capcode == 'M' || $p->capcode == 'G') ? ' mod' : '' ?><?php echo ($p->capcode == 'A') ? ' admin' : '' ?>"><?php echo $p->trip_processed ?></span>
+					<?php if ($p->capcode == 'M') : ?>
+						<span class="postername mod">## Mod</span>
+					<?php endif ?>
+					<?php if ($p->capcode == 'G') : ?>
+						<span class="postername mod">## Global Mod</span>
+					<?php endif ?>
+					<?php if ($p->capcode == 'A') : ?>
+						<span class="postername admin">## Admin</span>
+					<?php endif ?>
 					<?php echo date('D M d H:i:s Y', $p->timestamp + 18000) ?>
 				</label>
-				<?php if ($thread_id == NULL) : ?>
+				<?php if (isset($thread_id) && $thread_id == NULL) : ?>
 					<a class="js" href="<?php echo site_url(array($this->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php else : ?>
 					<a class="js" href="<?php echo site_url(array($this->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>

@@ -3,19 +3,11 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<?php if (isset($thread_id)) : ?>
-<table width="100%">
-	<tbody>
-		<tr>
-			<th bgcolor="#e04000"><font color="#FFFFFF">Posting Mode: Reply</font></th>
-		</tr>
-	</tbody>
-</table>
-<span style="left: 5px; position: absolute;">[<a href="../../" accesskey="a">Return</a>]</span>
+<?php if (!get_selected_board()->archive && isset($is_page)) : ?>
 <div style="postition:relative"></div>
 <div align="center" class="postarea">
 	<?php echo form_open_multipart(get_selected_board()->shortname.'/sending', array('name' => 'post')) ?>
-		<?php echo form_hidden('resto', $thread_id) ?>
+		<?php echo form_hidden('resto', 0) ?>
 		<table cellpadding="1" cellspacing="1">
 			<tbody>
 				<tr>
@@ -56,7 +48,6 @@ if (!defined('BASEPATH'))
 						<?php echo form_textarea(array('class' => 'inputtext', 'name' => 'com', 'cols' => 48, 'rows' => 4, 'wrap' => 'soft')) ?>
 					</td>
 				</tr>
-				<?php if(!get_selected_board()->archive) : ?>
 				<tr>
 					<td vlaign="bottom"></td>
 					<td class="postblock" align="left">
@@ -67,7 +58,6 @@ if (!defined('BASEPATH'))
 						<?php echo form_hidden('MAX_FILE_SIZE', 3072) ?>
 					</td>
 				</tr>
-				<?php endif; ?>
 				<?php if($this->tank_auth->is_allowed()) : ?>
 				<tr>
 					<td></td>

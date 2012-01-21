@@ -1848,7 +1848,7 @@ class Post extends CI_Model
 			if ($this->fu_theme == 'fuuka')
 			{
 				$_prefix = '<span class="unkfunc">';
-				$_urltag = '#p';
+				$_urltag = '#';
 				$_option = ' onclick="replyhighlight(\'p' . str_replace(',', '_', $num) . '\')"';
 				$_suffix = '</span>';
 			}

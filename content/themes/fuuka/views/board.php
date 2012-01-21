@@ -23,7 +23,7 @@ foreach ($posts as $key => $post) : ?>
 		<a href="<?php echo ($op->image_href)?$op->image_href:$op->remote_image_href ?>" rel="noreferrer"><img class="thumb" src="<?php echo $op->thumbnail_href ?>" alt="<?php echo $op->num ?>" width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>"/></a>
 		<?php endif; ?>
 
-		<label>
+		<label id="<?php echo $op->num ?>">
 			<input type="checkbox" name="delete[]" value="<?php echo $op->doc_id ?>"/>
 			<span class="filetitle"><?php echo $op->title_processed ?></span>
 			<span class="postername<?php echo ($op->capcode == 'M' || $op->capcode == 'G') ? ' mod' : '' ?><?php echo ($op->capcode == 'A') ? ' admin' : '' ?>"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>

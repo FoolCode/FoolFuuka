@@ -286,7 +286,6 @@ article.thread > .text {
 	border-bottom:1px solid #ccc;
 	float:left;
 	clear:both;
-	float:none;
 }
 
 article.thread article.post:nth-of-type(-n+4) {

@@ -442,9 +442,13 @@ class Post extends CI_Model
 
 		foreach ($query->result() as $post)
 		{
-			if ($process === TRUE)
+			if ($process === TRUE && $post->parent != 0)
 			{
 				$this->process_post($post, $clean, $realtime);
+			}
+			else if ($process === TRUE && $post->parent == 0)
+			{
+				$this->process_post($post, TRUE, TRUE);
 			}
 
 			if ($post->parent > 0)
@@ -1836,6 +1840,7 @@ class Post extends CI_Model
 		$_prefix = '';
 		$_urltag = '#';
 		$_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '"';
+		$_option_op = ' class="backlink op" data-function="highlight" data-backlink="true" data-post="' . str_replace(',', '_', $num) . '"';
 		$_backlink_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . $this->current_row->num . (($this->current_row->subnum == 0) ? '' : '_' . $this->current_row->subnum) . '"';
 		$_suffix = '';
 		if ($this->features == FALSE)
@@ -1864,7 +1869,7 @@ class Post extends CI_Model
 
 		if (array_key_exists($num, $this->existing_posts))
 		{
-			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'thread', $num)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'thread', $num)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option_op . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 		}
 
 		foreach ($this->existing_posts as $key => $thread)

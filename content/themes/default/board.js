@@ -243,6 +243,10 @@ var bindFunctions = function()
 
 			backlink.find("article").removeAttr("id").find(".post_controls").remove();
 			backlink.find(".post_file_controls").remove();
+			if(typeof page_function != undefined && page_function == "gallery")
+			{
+				backlink.find(".thread_image_box").remove();
+			}
 			var swap_image = backlink.find('[data-original]');
 			if(swap_image.length > 0)
 			{

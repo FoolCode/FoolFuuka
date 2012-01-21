@@ -17,6 +17,7 @@ class Post extends CI_Model
 	// I'd love to get rid of these but there seems to be no other way to pass
 	// more parameters to callbacks
 	var $current_row = null;
+	var $backlinks_hash_only_url = FALSE;
 
 	function __construct($id = NULL)
 	{
@@ -392,6 +393,9 @@ class Post extends CI_Model
 
 	function get_thread($num, $process = TRUE, $clean = TRUE, $realtime = FALSE)
 	{
+		// settings
+		$this->backlinks_hash_only_url = TRUE;
+		
 		if (is_array($num))
 		{
 			if (isset($num['latest_doc_id']))
@@ -484,6 +488,8 @@ class Post extends CI_Model
 
 	function get_last50($num, $process = TRUE, $clean = TRUE)
 	{
+		// settings
+		$this->backlinks_hash_only_url = TRUE;
 
 		$query = $this->db->query('
 			SELECT * FROM
@@ -615,7 +621,7 @@ class Post extends CI_Model
 
 				if ($search['text'])
 				{
-					if(mb_strlen($search['text']) < 2)
+					if (mb_strlen($search['text']) < 2)
 					{
 						return array('error' => _('The text you were searching for was too short. It must be at least two characters long.'));
 					}
@@ -654,7 +660,7 @@ class Post extends CI_Model
 				$search_result = $this->sphinxclient->query($query, get_selected_board()->shortname . '_ancient ' . get_selected_board()->shortname . '_main ' . get_selected_board()->shortname . '_delta');
 				if ($search_result === false)
 				{
-					if($this->sphinxclient->IsConnectError())
+					if ($this->sphinxclient->IsConnectError())
 					{
 						return array('error' => _('The search engine seems to be offline. If it\'s offline for more than a few minutes, you might want to report the issue. Most likely it was turned off and not turned back on.'));
 					}
@@ -664,12 +670,12 @@ class Post extends CI_Model
 					// we could use the rest for debugging purposes,
 					// but for now we better just give a generic errors because
 					// "human readable" here doesn't mean "public-friendly"
-					if($this->sphinxclient->GetLastError())
+					if ($this->sphinxclient->GetLastError())
 					{
 						return array('error' => $this->sphinxclient->GetLastError());
 					}
 
-					if($this->sphinxclient->GetLastWarning())
+					if ($this->sphinxclient->GetLastWarning())
 					{
 						return array('error' => $this->sphinxclient->GetLastWarning());
 					}
@@ -754,7 +760,7 @@ class Post extends CI_Model
 
 			if ($search['text'])
 			{
-				if(mb_strlen($search['text']) < 2)
+				if (mb_strlen($search['text']) < 2)
 				{
 					return array('error' => _('The text you were searching for was too short. It must be at least two characters long.'));
 				}
@@ -865,7 +871,7 @@ class Post extends CI_Model
 			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
 			', array($hash));
 
-		if($query->num_rows() == 0)
+		if ($query->num_rows() == 0)
 		{
 			return array();
 		}
@@ -978,13 +984,11 @@ class Post extends CI_Model
 			else
 			{
 				return array('thread_dead' => TRUE);
-
 			}
 		}
 		else if ($count['images'] > 200)
 		{
 			return array('disable_image_upload' => TRUE);
-
 		}
 
 		return array('valid_thread' => TRUE);
@@ -1104,7 +1108,6 @@ class Post extends CI_Model
 			{
 				return array('error' => 'Your image upload has been flagged as inappropriate.');
 			}
-
 		}
 
 		if (check_commentdata($data))
@@ -1409,8 +1412,6 @@ class Post extends CI_Model
 	  return array('success' => TRUE);
 	  }
 	 */
-
-
 	function process_name($name)
 	{
 		$trip = '';
@@ -1501,7 +1502,7 @@ class Post extends CI_Model
 			}
 		}
 
-		if($build)
+		if ($build)
 			$post->formatted = $this->build_board_comment($post);
 	}
 
@@ -1620,7 +1621,7 @@ class Post extends CI_Model
 	{
 		ob_start();
 
-		if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
+		if (file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
 			include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
 		else
 			include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
@@ -1802,12 +1803,12 @@ class Post extends CI_Model
 
 
 		// get rid of moot's formatting
-		if($row->capcode == 'A' && mb_strpos($regexing, '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
+		if ($row->capcode == 'A' && mb_strpos($regexing, '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
 		{
 
 			$regexing = str_replace('<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', '', $regexing);
 
-			if(mb_substr($regexing, -6, 6) == '</div>')
+			if (mb_substr($regexing, -6, 6) == '</div>')
 			{
 				$regexing = mb_substr($regexing, 0, mb_strlen($regexing) - 6);
 			}
@@ -1869,6 +1870,10 @@ class Post extends CI_Model
 
 		if (array_key_exists($num, $this->existing_posts))
 		{
+			if ($this->backlinks_hash_only_url)
+			{
+				return $_prefix . '<a href="' . $_urltag . str_replace(',', '_', $num) . '"' . $_option_op . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+			}
 			return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'thread', $num)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option_op . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 		}
 
@@ -1876,6 +1881,10 @@ class Post extends CI_Model
 		{
 			if (in_array($num, $thread))
 			{
+				if ($this->backlinks_hash_only_url)
+				{
+					return $_prefix . '<a href="' . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+				}
 				return $_prefix . '<a href="' . site_url(array(get_selected_board()->shortname, 'thread', $key)) . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 			}
 		}
@@ -1899,7 +1908,8 @@ class Post extends CI_Model
 		$shortname = $matches[3];
 		$num = $matches[4];
 
-		$_prefix = ''; $_suffix = '';
+		$_prefix = '';
+		$_suffix = '';
 		if ($this->features == FALSE)
 		{
 			if ($this->fu_theme == 'fuuka')

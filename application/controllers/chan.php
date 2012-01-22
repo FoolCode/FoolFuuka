@@ -97,7 +97,7 @@ class Chan extends Public_Controller
 
 	public function gallery()
 	{
-		if (!get_selected_board()->thumbnails)
+		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
 		{
 			show_404();
 		}

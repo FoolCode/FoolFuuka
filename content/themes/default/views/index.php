@@ -40,8 +40,8 @@ if (!defined('BASEPATH'))
 
 					if($item->archive == 1)
 						continue;
-					
-					if ($item->thumbnails)
+
+					if ($item->thumbnails || $this->tank_auth->is_allowed())
 					{
 						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
 					}

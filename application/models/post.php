@@ -1652,7 +1652,7 @@ class Post extends CI_Model
 			}
 		}
 
-		if (!get_selected_board()->thumbnails)
+		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
 		{
 			if ($thumbnail)
 			{

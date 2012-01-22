@@ -12,7 +12,7 @@ foreach ($posts as $key => $post) :
 		if (isset($post['op'])) :
 			$op = $post['op'];
 			?>
-			<?php if ($op->media_filename) : ?>
+			<?php if ($op->media_filename && get_selected_board()->thumbnails) : ?>
 				<div class="thread_image_box">
 					<a href="<?php echo ($op->image_href)?$op->image_href:$op->remote_image_href ?>" rel="noreferrer" target="_blank" class="thread_image_link"<?php echo ($op->image_href)?' data-expand="true"':'' ?>><img src="<?php echo $op->thumbnail_href ?>" <?php if ($op->preview_w > 0 && $op->preview_h > 0) : ?> width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>"<?php endif; ?> data-width="<?php echo $op->media_w ?>" data-height="<?php echo $op->media_h ?>" data-md5="<?php echo $op->media_hash ?>" class="thread_image<?php echo ($op->spoiler)?' is_spoiler_image':'' ?>" /></a>
 					<div class="post_file" style="padding-left: 2px"><?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media ?></div>

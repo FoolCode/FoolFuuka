@@ -97,6 +97,11 @@ class Chan extends Public_Controller
 
 	public function gallery()
 	{
+		if (!get_selected_board()->thumbnails)
+		{
+			show_404();
+		}
+
 		$threads = $this->post->gallery();
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);

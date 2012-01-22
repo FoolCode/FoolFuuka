@@ -38,7 +38,7 @@ if (!defined('BASEPATH'))
 				<?php if (isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?php echo site_url(array($this->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum) ? '_' . $p->subnum : '') ?>">View</a>]<?php endif; ?>
 
 				<br/>
-				<?php if ($p->media_filename) : ?>
+				<?php if ($p->media_filename && get_selected_board()->thumbnails) : ?>
 					<span>
 						File: <?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media; ?>
 						<?php echo '<!-- ' . substr($p->media_hash, 0, -2) . '-->' ?>

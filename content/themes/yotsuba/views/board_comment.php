@@ -31,7 +31,7 @@
 					</span>
 				<?php endif; ?>
 
-				<?php if ($p->media_filename) : ?>
+				<?php if ($p->media_filename && get_selected_board()->thumbnails) : ?>
 					<br>
 					<span class="filesize">
 						File <a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" target="_blank"><?php echo $p->media_filename ?></a><?php echo '-(' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ')' ?>

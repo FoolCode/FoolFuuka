@@ -395,7 +395,7 @@ class Post extends CI_Model
 	{
 		// settings
 		$this->backlinks_hash_only_url = TRUE;
-		
+
 		if (is_array($num))
 		{
 			if (isset($num['latest_doc_id']))
@@ -1652,6 +1652,16 @@ class Post extends CI_Model
 			}
 		}
 
+		if (!get_selected_board()->thumbnails)
+		{
+			if ($thumbnail)
+			{
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
 		{
 			if (strlen(get_setting('fs_balancer_clients')) > 10)
@@ -1812,7 +1822,7 @@ class Post extends CI_Model
 				$regexing = mb_substr($regexing, 0, mb_strlen($regexing) - 6);
 			}
 		}
-		
+
 		// get rid of another of moot's cancerous formatting
 		if ($row->capcode == 'A' && mb_strpos($regexing, '<span style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
 		{

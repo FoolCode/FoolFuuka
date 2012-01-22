@@ -21,7 +21,7 @@ if (!defined('BASEPATH'))
 					}
 					
 					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
-					
+
 				}
 				echo implode(' / ', $board_urls);
 				if($parenthesis_open)
@@ -43,8 +43,17 @@ if (!defined('BASEPATH'))
 						echo 'Boards: [ ';
 						$parenthesis_open = TRUE;
 					}
+					if($item->archive == 1)
+						continue;
 					
-					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+					if ($item->thumbnails)
+					{
+						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+					}
+					else
+					{
+						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a>';
+					}
 				}
 				echo implode(' / ', $board_urls);
 				if($parenthesis_open)

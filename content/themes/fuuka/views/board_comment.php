@@ -43,7 +43,7 @@ if (!defined('BASEPATH'))
 						File: <?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media; ?>
 						<?php echo '<!-- ' . substr($p->media_hash, 0, -2) . '-->' ?>
 					</span>
-					[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>">SauceNAO</a>]
+					<?php if (get_selected_board()->thumbnails) : ?>[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>">SauceNAO</a>]<?php endif; ?>
 					<br>
 					<a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" rel="noreferrer">
 						<img class="thumb" src="<?php echo $p->thumbnail_href ?>" alt="<?php echo $p->num ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" />

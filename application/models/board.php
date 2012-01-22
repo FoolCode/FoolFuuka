@@ -43,6 +43,11 @@ class Board extends DataMapper {
 			'label' => '4chan Board',
 			'type' => 'checkbox'
 		),
+		'thumbnails' => array(
+			'rules' => array(),
+			'label' => 'Display Thumbnails',
+			'type' => 'checkbox'
+		),
 		'sphinx' => array(
 			'rules' => array(),
 			'label' => 'Use Sphinx search',

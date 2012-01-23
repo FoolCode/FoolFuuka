@@ -63,6 +63,7 @@
 					{
 						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a>';
 					}
+					
 				}
 				echo implode(' / ', $board_urls);
 				if($parenthesis_open)

@@ -1694,6 +1694,16 @@ class Post extends CI_Model
 			return '';
 		}
 
+		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
+		{
+			if ($thumbnail)
+			{
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
 		{
 			if (strlen(get_setting('fs_balancer_clients')) > 10)

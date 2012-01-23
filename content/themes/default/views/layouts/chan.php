@@ -52,8 +52,17 @@
 						$parenthesis_open = TRUE;
 					}
 					
-					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
-
+					if($item->archive == 0)
+						continue;
+					
+					if ($item->thumbnails)
+					{
+						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+					}
+					else
+					{
+						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a>';
+					}
 				}
 				echo implode(' / ', $board_urls);
 				if($parenthesis_open)

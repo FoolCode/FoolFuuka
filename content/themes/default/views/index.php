@@ -20,6 +20,8 @@ if (!defined('BASEPATH'))
 						$parenthesis_open = TRUE;
 					}
 					
+					if($item->archive == 0)
+						continue;
 					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
 
 				}
@@ -43,6 +45,7 @@ if (!defined('BASEPATH'))
 						echo 'Boards: [ ';
 						$parenthesis_open = TRUE;
 					}
+		
 					if($item->archive == 1)
 						continue;
 					

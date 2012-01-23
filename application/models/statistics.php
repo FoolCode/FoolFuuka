@@ -261,7 +261,7 @@ class Statistics extends CI_Model
 	}
 
 
-	function cron()
+	function cron($id = NULL)
 	{
 		$boards = new Board();
 		$boards->get();
@@ -282,6 +282,9 @@ class Statistics extends CI_Model
 
 		foreach ($boards->all as $board)
 		{
+			if(!is_null($id) && $id != $board->id)
+				continue;
+			
 			echo $board->shortname . ' (' . $board->id . ')' . PHP_EOL;
 			foreach ($available as $k => $a)
 			{
@@ -311,78 +314,13 @@ class Statistics extends CI_Model
 				$process = 'process_' . $k;
 				$this->db->reconnect();
 				$result = $this->$process($board);
-
-				if (isset($this->stats[$k]['gnuplot']) && !is_array($result))
+				
+				if (isset($this->stats[$k]['gnuplot']) && is_array($result))
 				{
-					$this->graph_gnuplot($board->shortname, $k, json_decode(json_encode($result), TRUE));
+					$this->graph_gnuplot($board->shortname, $k, $result);
 				}
 
 				$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
-			}
-		}
-	}
-
-
-	function run($id)
-	{
-		$boards = new Board();
-		$boards->get();
-
-		$available = $this->get_available_stats();
-
-		$stats = $this->db->query('
-			SELECT board_id, name, timestamp
-			FROM ' . $this->db->protect_identifiers('statistics', TRUE) . '
-			ORDER BY timestamp DESC
-		');
-
-		$avail = array();
-		foreach ($available as $k => $a)
-		{
-			$avail[] = $k;
-		}
-
-		foreach ($boards->all as $board)
-		{
-			if ($board->id == $id)
-			{
-				echo $board->shortname . ' (' . $board->id . ')' . PHP_EOL;
-				foreach ($available as $k => $a)
-				{
-					echo $k . ' (' . $board->id . ')' . PHP_EOL;
-					$found = FALSE;
-					foreach ($stats->result() as $r)
-					{
-						if ($r->board_id == $board->id && $r->name == $k)
-						{
-							$found = TRUE;
-							//$r->timestamp >= time() - strtotime($a['frequence']) ||
-							if (!$this->lock_stat($r->board_id, $k, $r->timestamp))
-							{
-								// another process took it up while we were O(n^3)ing!
-								continue;
-							}
-							break;
-						}
-					}
-
-					if ($found === FALSE)
-					{
-						// extremely rare case, let's hope we don't get in a racing condition with this!
-						$this->save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
-					}
-					// we got the lock!
-					$process = 'process_' . $k;
-					$this->db->reconnect();
-					$result = $this->$process($board);
-
-					if (isset($this->stats[$k]['gnuplot']) && !is_array($result))
-					{
-						$this->graph_gnuplot($board->shortname, $k, json_decode(json_encode($result), TRUE));
-					}
-
-					$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
-				}
 			}
 		}
 	}
@@ -434,7 +372,7 @@ class Statistics extends CI_Model
 				ORDER BY name,trip
 		', array(time() - 2592000));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -453,7 +391,7 @@ class Statistics extends CI_Model
 			ORDER BY floor(timestamp/300)%288;
 		', array(time() - 86400));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -471,7 +409,7 @@ class Statistics extends CI_Model
 			ORDER BY floor(timestamp/3600)%24;
 		', array(time() - 86400));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -490,7 +428,7 @@ class Statistics extends CI_Model
 			ORDER BY floor(timestamp/3600)%24;
 		', array(time() - 86400));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -548,7 +486,7 @@ class Statistics extends CI_Model
 			ORDER BY time;
 		', array(time() - 31536000));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -567,7 +505,7 @@ class Statistics extends CI_Model
 			ORDER BY firstseen DESC;
 		');
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -587,7 +525,7 @@ class Statistics extends CI_Model
 			ORDER BY time
 		', array(time() - 31536000));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -603,7 +541,7 @@ class Statistics extends CI_Model
 			LIMIT 512
 		');
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -617,7 +555,7 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 		', array(time() - 3600));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -631,7 +569,7 @@ class Statistics extends CI_Model
 			WHERE timestamp > ? AND subnum != 0
 		', array(time() - 3600));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -647,7 +585,7 @@ class Statistics extends CI_Model
 			ORDER BY max(timestamp) DESC
 		', array(time() - 1800));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -664,7 +602,7 @@ class Statistics extends CI_Model
 			ORDER BY max(timestamp) DESC
 		', array(time() - 3600));
 
-		$array = $query->result();
+		$array = $query->result_array();
 		$query->free_result();
 		return $array;
 	}
@@ -717,7 +655,7 @@ class Statistics extends CI_Model
 			$X_START,
 			$X_END
 		);
-
+	echo 'here';
 		$template = str_replace($template_vars, $template_vals, $this->generate_gnuplot_template($stat));
 		write_file($GNUFILE, $template);
 

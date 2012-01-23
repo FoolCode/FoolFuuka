@@ -32,9 +32,8 @@ class Cli extends MY_Controller
 	function statistics($board = NULL)
 	{
 		$this->load->model('statistics');
-		$done = FALSE;
 
-		$this->statistics->run($board);
+		$this->statistics->cron($board);
 	}
 
 

@@ -8,25 +8,34 @@ class Cli extends MY_Controller
 	function __construct()
 	{
 		parent::__construct();
-		
-		if(!$this->input->is_cli_request())
+
+		if (!$this->input->is_cli_request())
 		{
-			show_404();
+			return FALSE;
 		}
-		
-		$this->cron();
 	}
-	
-	
-	function cron()
+
+
+	function stats_cron()
 	{
 		$this->load->model('statistics');
 		$done = FALSE;
-		
-		while(!$done)
+
+		while (!$done)
 		{
 			$this->statistics->cron();
 			sleep(30);
 		}
 	}
+
+
+	function statistics($board = NULL)
+	{
+		$this->load->model('statistics');
+		$done = FALSE;
+
+		$this->statistics->run($board);
+	}
+
+
 }

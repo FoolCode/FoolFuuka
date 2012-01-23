@@ -50,7 +50,15 @@
 					}
 					if($item->archive == 0)
 						continue;
-					$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+
+					if ($item->thumbnails || $this->tank_auth->is_allowed())
+					{
+						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+					}
+					else
+					{
+						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a>';
+					}
 
 				}
 				echo implode(' / ', $board_urls);

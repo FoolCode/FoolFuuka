@@ -22,9 +22,9 @@ foreach ($posts as $key => $post) : ?>
 	<?php if(isset($post['op'])) :
 		$op = $post['op'];
 	?>
-		<?php if ($op->media_filename) : ?>
+		<?php if ($op->media) : ?>
 		<span class="filesize">
-			File : <a href="<?php echo ($op->image_href) ? $op->image_href : $op->remote_image_href ?>" target="_blank"><?php echo $op->media_filename ?></a><?php echo '-(' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ')' ?>
+			File : <a href="<?php echo ($op->image_href) ? $op->image_href : $op->remote_image_href ?>" target="_blank"><?php echo ($op->media_filename) ? $op->media_filename : $op->media ?></a><?php echo '-(' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ')' ?>
 		</span>
 		<br>
 		<a href="<?php echo ($op->image_href) ? $op->image_href : $op->remote_image_href ?>" target="_blank">

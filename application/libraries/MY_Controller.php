@@ -13,10 +13,11 @@ class MY_Controller extends CI_Controller
 		{
 			if ($this->uri->segment(1) != "install")
 				show_error("If you are here, and have no clue why " . FOOLSLIDE_NAME . " is not working, start by reading the <a href='" . FOOLSLIDE_MANUAL_INSTALL_URL . "'>installation manual</a>.");
-		} else
+		}
+		else
 		{
 			//$this->output->enable_profiler(TRUE);
-			
+
 			$this->load->database();
 			$this->load->library('session');
 			$this->load->library('datamapper');
@@ -50,7 +51,7 @@ class MY_Controller extends CI_Controller
 				bindtextdomain("default", FCPATH . "assets/locale");
 				textdomain("default");
 			}
-			
+
 			// a good time to change some of the defauly settings dynamically
 			$this->config->config['tank_auth']['allow_registration'] = !get_setting('fs_reg_disabled');
 
@@ -67,7 +68,7 @@ class MY_Controller extends CI_Controller
 					$this->config->config['tank_auth']['recaptcha_secret_key'] = $captcha_secret;
 				}
 			}
-			
+
 			$this->cron();
 		}
 	}
@@ -77,7 +78,7 @@ class MY_Controller extends CI_Controller
 	 * Controller for cron triggered by any visit
 	 * Currently defaulted crons:
 	 * -updates every 13 hours the blocked IPs
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	public function cron()
@@ -88,13 +89,13 @@ class MY_Controller extends CI_Controller
 		if (time() - $last_check > 86400)
 		{
 			$this->db->query('
-				INSERT 
+				INSERT
 				INTO '.$this->db->protect_identifiers('preferences',TRUE).'
 				(name, value) VALUES (?, ?)
 				ON DUPLICATE KEY UPDATE
 				value = VALUES(value)
 			', array('fs_cron_stopforumspam', time()));
-			
+
 			$url = 'http://www.stopforumspam.com/downloads/listed_ip_90.zip';
 			if (function_exists('curl_init'))
 			{
@@ -119,17 +120,17 @@ class MY_Controller extends CI_Controller
 			$this->load->library('unzip');
 			$this->unzip->extract('content/cache/stopforumspam/stopforumspam.zip');
 			$ip_list = file_get_contents('content/cache/stopforumspam/listed_ip_90.txt');
-			
+
 			$this->db->truncate('stopforumspam');
 			$ip_array = array();
 			foreach(preg_split("/((\r?\n)|(\r\n?))/", $ip_list) as $line){
 				$ip_array[] = '(INET_ATON('.$this->db->escape($line).'))';
 			}
 			$this->db->query('
-				INSERT IGNORE INTO ' . $this->db->protect_identifiers('stopforumspam', TRUE) . ' 
+				INSERT IGNORE INTO ' . $this->db->protect_identifiers('stopforumspam', TRUE) . '
 				VALUES ' . implode(',',$ip_array).';');
-			
-		
+
+
 			delete_files('content/cache/stopforumspam/', TRUE);
 		}
 	}

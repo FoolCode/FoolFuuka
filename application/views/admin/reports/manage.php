@@ -4,7 +4,7 @@
 
 	<div class="list comics">
 		<?php $rep = new Report(); ?>
-		<?php foreach ($reports->all as $report) :	?>
+		<?php foreach ($reports->all as $report) : ?>
 		<div class="item">
 			<div class="report_data">
 				<span class="report_author">Anonymous</span> in /<?php echo $report->shortname ?>/
@@ -22,7 +22,7 @@
 					</div>
 				</header>
 				<?php if ($report->media_filename) : ?>
-				<a href="" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $rep->get_image_href($report, TRUE) ?>" width="<?php echo $report->preview_w ?>" height="<?php echo $report->preview_h ?>" class="thread_image"/></a>
+				<a href="<?php echo site_url($report->shortname.'/post/'.(($report->subnum > 0) ? $report->num . '_' . $report->subnum : $report->num)) ?>" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $rep->get_image_href($report, TRUE) ?>" width="<?php echo $report->preview_w ?>" height="<?php echo $report->preview_h ?>" class="thread_image"/></a>
 				<?php endif; ?>
 				<div class="text"><?php echo nl2br($report->comment) ?></div>
 			</article>
@@ -47,15 +47,36 @@
 			else
 				echo '<li class="prev disabled"><a href="#">&larr; ' . _('Prev') . '</a></li>';
 
-			$page = 1;
-			while ($page <= $reports->paged->total_pages)
-			{
-				if ($reports->paged->current_page == $page)
-					echo '<li class="active"><a href="#">' . $page . '</a></li>';
-				else
-					echo '<li><a href="' . site_url('admin/posts/reports/'.$page) .'">' . $page . '</a></li>';
-				$page++;
-			}
+			if ($reports->paged->total_pages <= 15) :
+				for ($index = 1; $index <= $reports->paged->total_pages; $index++)
+				{
+					echo '<li' . (($reports->paged->current_page == $index) ? ' class="active"' : '') . '><a href="' . site_url('admin/posts/reports/' . $index) . '">' . $index . '</a></li>';
+				}
+			else :
+				if ($reports->paged->current_page < 15) :
+					for ($index = 1; $index <= 15; $index++)
+					{
+						echo '<li' . (($reports->paged->current_page == $index) ? ' class="active"' : '') . '><a href="' . site_url('admin/posts/reports/' . $index) . '">' . $index . '</a></li>';
+					}
+
+					echo '<li class="disabled"><span>...</span></li>';
+				else :
+					for ($index = 1; $index < 10; $index++)
+					{
+						echo '<li' . (($reports->paged->current_page == $index) ? ' class="active"' : '') . '><a href="' . site_url('admin/posts/reports/' . $index) . '">' . $index . '</a></li>';
+					}
+
+					echo '<li class="disabled"><span>...</span></li>';
+
+					for ($index = ((($reports->paged->current_page + 2) > $reports->paged->total_pages) ? ($reports->paged->current_page - 4) : ($reports->paged->current_page - 2)); $index <= ((($reports->paged->current_page + 2) > $reports->paged->total_pages) ? $reports->paged->total_pages : ($reports->paged->current_page + 2)); $index++)
+					{
+						echo '<li' . (($reports->paged->current_page == $index) ? ' class="active"' : '') . '><a href="' . site_url('admin/posts/reports/' . $index) . '">' . $index . '</a></li>';
+					}
+
+					if (($reports->paged->current_page + 2) < $reports->paged->total_pages)
+						echo '<li class="disabled"><span>...</span></li>';
+				endif;
+			endif;
 
 			if ($reports->paged->has_next)
 				echo '<li class="next"><a href="' . site_url('admin/posts/reports/'.$reports->paged->next_page) . '">' . _('Next') . ' &rarr;</a></li>';

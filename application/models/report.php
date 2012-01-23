@@ -164,7 +164,7 @@ class Report extends DataMapper
 					log_message('error', 'process_report: failed to delete post');
 					return FALSE;
 				}
-				$this->db->delete('reports', array('id' => $report->id));
+				//$this->db->delete('reports', array('id' => $report->id));
 				return TRUE;
 				break;
 
@@ -177,7 +177,7 @@ class Report extends DataMapper
 					log_message('error', 'process_report: failed to mark post as spam');
 					return FALSE;
 				}
-				$this->db->delete('reports', array('id' => $report->id));
+				//$this->db->delete('reports', array('id' => $report->id));
 				return TRUE;
 				break;
 		}
@@ -264,6 +264,11 @@ class Report extends DataMapper
 		$reports = $this->get_paged($page, $per_page);
 		$boards = new Board();
 		$boards->get();
+
+		if ($reports->paged->total_rows == 0)
+		{
+			return $reports;
+		}
 
 		$selects = array();
 		foreach ($reports->all as $report)

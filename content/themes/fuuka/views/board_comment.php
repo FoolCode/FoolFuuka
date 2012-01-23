@@ -38,12 +38,12 @@ if (!defined('BASEPATH'))
 				<?php if (isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?php echo site_url(array($this->fu_board, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum) ? '_' . $p->subnum : '') ?>">View</a>]<?php endif; ?>
 
 				<br/>
-				<?php if ($p->media_filename) : ?>
+				<?php if ($p->media) : ?>
 					<span>
 						File: <?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media; ?>
 						<?php echo '<!-- ' . substr($p->media_hash, 0, -2) . '-->' ?>
 					</span>
-					<?php if (get_selected_board()->thumbnails) : ?>[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>">SauceNAO</a>]<?php endif; ?>
+					<?php if (get_selected_board()->thumbnails || $this->tank_auth->is_allowed()) : ?>[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>">SauceNAO</a>]<?php endif; ?>
 					<br>
 					<a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" rel="noreferrer">
 						<img class="thumb" src="<?php echo $p->thumbnail_href ?>" alt="<?php echo $p->num ?>" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" />

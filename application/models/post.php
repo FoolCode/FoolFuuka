@@ -1284,6 +1284,8 @@ class Post extends CI_Model
 				return array('error' => _('Couldn\'t delete the thumbnail image.'));
 			}
 
+			// If reports exist, remove
+			$this->db->delete('reports', array('board' => get_selected_board()->id, 'post' => $row->doc_id));
 			return array('success' => TRUE);
 		}
 
@@ -1318,6 +1320,9 @@ class Post extends CI_Model
 				return array('error' => _('Couldn\'t delete thread\'s opening post.'));
 			}
 
+			// If reports exist, remove
+			$this->db->delete('reports', array('board' => get_selected_board()->id, 'post' => $row->doc_id));
+
 			// nobody will post in here anymore, so we can take it easy
 			// get all child posts
 			$thread = $this->db->query('
@@ -1335,6 +1340,9 @@ class Post extends CI_Model
 						log_message('error', 'post.php delete() couldn\'t delete image and thumbnail from thread comments');
 						return array('error' => _('Couldn\'t delete the thumbnail(s).'));
 					}
+
+					// If reports exist, remove
+					$this->db->delete('reports', array('board' => get_selected_board()->id, 'post' => $t->doc_id));
 				}
 
 				$this->db->query('
@@ -1372,6 +1380,8 @@ class Post extends CI_Model
 				return array('error' => _('Couldn\'t delete post.'));
 			}
 
+			// If reports exist, remove
+			$this->db->delete('reports', array('board' => get_selected_board()->id, 'post' => $row->doc_id));
 			return array('success' => TRUE);
 		}
 
@@ -1637,8 +1647,10 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		if ($row->parent > 0)
-			$number = $row->parent;
+		if (!get_selected_board()->archive)
+		{
+			$number = $row->media_filename;
+		}
 		else
 		{
 			if ($row->parent > 0)
@@ -1663,6 +1675,16 @@ class Post extends CI_Model
 		}
 
 		if (!get_selected_board()->thumbnails)
+		{
+			if ($thumbnail)
+			{
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
+		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
 		{
 			if ($thumbnail)
 			{

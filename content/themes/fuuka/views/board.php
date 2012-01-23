@@ -16,9 +16,9 @@ foreach ($posts as $key => $post) : ?>
 		$op = $post['op'];
 	?>
 	<div id="p<?php echo $op->num ?>">
-		<?php if ($op->media_filename) : ?>
+		<?php if ($op->media) : ?>
 		<span>File: <?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media; ?> <?php echo '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
-		<?php if (get_selected_board()->thumbnails) : ?>[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $op->thumbnail_href ?>">SauceNAO</a>]<?php endif; ?>
+		<?php if (get_selected_board()->thumbnails || $this->tank_auth->is_allowed()) : ?>[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $op->thumbnail_href ?>">SauceNAO</a>]<?php endif; ?>
 		<br />
 		<a href="<?php echo ($op->image_href)?$op->image_href:$op->remote_image_href ?>" rel="noreferrer"><img class="thumb" src="<?php echo $op->thumbnail_href ?>" alt="<?php echo $op->num ?>" width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>"/></a>
 		<?php endif; ?>

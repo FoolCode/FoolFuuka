@@ -1704,6 +1704,29 @@ class Post extends CI_Model
 			return '';
 		}
 
+		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
+		{
+			if ($thumbnail)
+			{
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
+		if (get_selected_board()->delay_thumbnails)
+		{
+			if ($row->timestamp + 86400 > time())
+			{
+				if ($thumbnail)
+				{
+					return site_url() . 'content/themes/default/images/null-image.png';
+				}
+
+				return '';
+			}
+		}
+
 		if (file_exists($this->get_image_dir($row, $thumbnail)) !== FALSE)
 		{
 			if (strlen(get_setting('fs_balancer_clients')) > 10)
@@ -1792,14 +1815,22 @@ class Post extends CI_Model
 		if (!$row->media)
 			return '';
 
-		// ignore webkit and opera and allow rel="noreferrer" do its work
-		if (preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
+		if (get_selected_board()->archive)
 		{
-			return get_selected_board()->images_url . $row->media_filename;
+			// ignore webkit and opera and allow rel="noreferrer" do its work
+			if (preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
+			{
+				return get_selected_board()->images_url . $row->media_filename;
+			}
+			else
+			{
+				return site_url(get_selected_board()->shortname . '/redirect/' . $row->media_filename);
+			}
 		}
 		else
 		{
-			return site_url(get_selected_board()->shortname . '/redirect/' . $row->media_filename);
+			$number = $row->media_filename;
+			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' . get_selected_board()->shortname . '/' . 'img' . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . $row->media_filename;
 		}
 	}
 

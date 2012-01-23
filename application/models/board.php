@@ -48,9 +48,19 @@ class Board extends DataMapper {
 			'label' => 'Display Thumbnails',
 			'type' => 'checkbox'
 		),
+		'delay_thumbnails' => array(
+			'rules' => array(),
+			'label' => 'Hide Thumbnails for 1 Day',
+			'type' => 'checkbox'
+		),
 		'sphinx' => array(
 			'rules' => array(),
 			'label' => 'Use Sphinx search',
+			'type' => 'checkbox'
+		),
+		'hidden' => array(
+			'rules' => array(),
+			'label' => 'Hide Board',
 			'type' => 'checkbox'
 		),
 		'thread_refresh_rate' => array(

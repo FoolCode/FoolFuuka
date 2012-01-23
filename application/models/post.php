@@ -1647,8 +1647,10 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		if ($row->parent > 0)
-			$number = $row->parent;
+		if (!get_selected_board()->archive)
+		{
+			$number = $row->media_filename;
+		}
 		else
 		{
 			if ($row->parent > 0)

@@ -265,6 +265,11 @@ class Report extends DataMapper
 		$boards = new Board();
 		$boards->get();
 
+		if ($reports->paged->total_rows == 0)
+		{
+			return $reports;
+		}
+
 		$selects = array();
 		foreach ($reports->all as $report)
 		{

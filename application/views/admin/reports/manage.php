@@ -4,7 +4,7 @@
 
 	<div class="list comics">
 		<?php $rep = new Report(); ?>
-		<?php foreach ($reports->all as $report) :	?>
+		<?php foreach ($reports->all as $report) : ?>
 		<div class="item">
 			<div class="report_data">
 				<span class="report_author">Anonymous</span> in /<?php echo $report->shortname ?>/

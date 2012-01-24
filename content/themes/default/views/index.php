@@ -11,11 +11,15 @@ if (!defined('BASEPATH'))
 				$parenthesis_open = FALSE;
 				foreach ($boards as $key => $item)
 				{
+					if($item->archive == 0)
+						continue;
+						
 					if(!$parenthesis_open)
 					{
 						echo 'Archives: [ ';
 						$parenthesis_open = TRUE;
 					}
+					
 					if($item->archive == 0)
 						continue;
 
@@ -38,8 +42,12 @@ if (!defined('BASEPATH'))
 				?><br/>
 				<?php
 				$board_urls = array();
+				$parenthesis_open = FALSE;
 				foreach ($boards as $key => $item)
 				{
+					if($item->archive == 1)
+						continue;
+						
 					if(!$parenthesis_open)
 					{
 						echo 'Boards: [ ';

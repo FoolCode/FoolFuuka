@@ -1657,10 +1657,73 @@ class Post extends CI_Model
 				$number = $row->parent;
 			else
 				$number = $row->num;
+		}
 
-			while (strlen((string) $number) < 9)
+		while (strlen((string) $number) < 9)
+		{
+			$number = '0' . $number;
+		}
+
+		if (!get_selected_board()->thumbnails)
+		{
+			if ($thumbnail)
 			{
-				$number = '0' . $number;
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
+		if (!get_selected_board()->thumbnails)
+		{
+			if ($thumbnail)
+			{
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
+		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
+		{
+			if ($thumbnail)
+			{
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
+		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
+		{
+			if ($thumbnail)
+			{
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
+		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
+		{
+			if ($thumbnail)
+			{
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
+		if (get_selected_board()->delay_thumbnails)
+		{
+			if ($row->timestamp + 86400 > time())
+			{
+				if ($thumbnail)
+				{
+					return site_url() . 'content/themes/default/images/null-image.png';
+				}
+
+				return '';
 			}
 		}
 

@@ -511,11 +511,19 @@ class Chan extends Public_Controller
 		}
 
 		$page = intval($page);
-		$posts = $this->post->get_image($hash . '==', $page);
+		$result = $this->post->get_image($hash . '==', $page);
+
+		$total_pages = ceil($result['total_found'] / 25);
+		$pagination = array(
+			'base_url' => site_url(array(get_selected_board()->shortname, 'image', $hash)),
+			'current_page' => $page,
+			'total' => (($total_pages > 200) ? 200 : $total_pages)
+		);
+		$this->template->set('pagination', $pagination);
 
 		$this->template->set('section_title', _('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Image: ' . urldecode($hash));
-		$this->template->set('posts', $posts);
+		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');
 	}

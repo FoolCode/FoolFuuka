@@ -869,7 +869,14 @@ class Post extends CI_Model
 			WHERE media_hash = ?
 			ORDER BY num DESC
 			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
-			', array($hash));
+		', array($hash));
+
+		$query2 = $this->db->query('
+			SELECT count(*) AS total_found
+			FROM ' . $this->table . '
+			WHERE media_hash = ?
+			LIMIT 0, 5000
+		', array($hash));
 
 		if ($query->num_rows() == 0)
 		{
@@ -900,7 +907,11 @@ class Post extends CI_Model
 			// the first you create from a parent is the first thread
 			$result[0]['posts'][] = $post;
 		}
-		return $result;
+
+		$found = $query2->result();
+		$search_result = array('total_found' => $found[0]->total_found);
+
+		return array('posts' => $result, 'total_found' => $search_result['total_found']);
 	}
 
 

@@ -191,12 +191,12 @@ class Post extends CI_Model
 					SELECT *
 					FROM
 					(
-						SELECT IF(b.parent = 0, b.num, b.parent) as unq_parent, MAX(b.doc_id), b.num
+						SELECT parent as unq_parent, MAX(b.doc_id), b.num
 						FROM (
-							SELECT num, parent, email, subnum, doc_id
+							SELECT num, parent, subnum, doc_id, email
 							FROM ' . $this->get_table($board) . '
-							WHERE email <> \'sage\' OR (email = \'sage\' AND parent = 0)
-							AND subnum <> 0
+							WHERE subnum > 0
+							AND (email <> \'sage\' OR (email = \'sage\' AND parent = 0))
 							ORDER BY doc_id DESC
 							LIMIT 0, 100000
 						) AS b

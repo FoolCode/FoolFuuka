@@ -14,7 +14,7 @@ var bindFunctions = function()
 				break;
 
 			case 'comment':
-				if(false && jQuery("#file_image").val().length > 0)
+				if(jQuery("#file_image").val())
 					return true;
 				var reply_alert = jQuery('#reply_ajax_notices');
 				reply_alert.removeClass('error').removeClass('success');

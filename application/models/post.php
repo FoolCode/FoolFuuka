@@ -1884,7 +1884,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_remote_image_href($row)
+	function get_remote_image_href($board, $row)
 	{
 		if (!$row->media)
 			return '';

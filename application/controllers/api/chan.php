@@ -165,17 +165,17 @@ class Chan extends REST_Controller
 		// build an array if we have more specifications
 		if ($this->get('latest_doc_id'))
 		{
-			if(!is_natural($this->get('latest_doc_id')) && $this->get('latest_doc_id') < 0)
+			if (!is_natural($this->get('latest_doc_id')) && $this->get('latest_doc_id') < 0)
 			{
 				$this->response(array('error' => _('Your latest_doc_id is malformed')), 404);
 			}
 
 			$latest_doc_id = intval($this->get('latest_doc_id'));
-			$num = array('num' => $num, 'latest_doc_id' => $latest_doc_id);
-			$from_realtime = TRUE;
 		}
 
-		$thread = $this->post->get_thread(get_selected_board(), $num, array('realtime' => TRUE));
+		$thread = $this->post->get_thread(
+				get_selected_board(), $num, array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
+		);
 
 		if ($thread !== FALSE)
 		{
@@ -183,7 +183,7 @@ class Chan extends REST_Controller
 		}
 		else
 		{
-			if($from_realtime)
+			if ($from_realtime)
 			{
 				$response = array();
 				$response[$num['num']] = array('posts' => array());
@@ -193,6 +193,7 @@ class Chan extends REST_Controller
 			$this->response(array('error' => _('Thread could not be found')), 200);
 		}
 	}
+
 
 	function ghost_posts_get()
 	{
@@ -251,5 +252,6 @@ class Chan extends REST_Controller
 			$this->response(array('error' => _('Ghost posts could not be found')), 404);
 		}
 	}
+
 
 }

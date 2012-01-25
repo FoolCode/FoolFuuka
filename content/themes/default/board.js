@@ -13,8 +13,9 @@ var bindFunctions = function()
 				jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
 				break;
 
-			/*
 			case 'comment':
+				if(jQuery("#file_image").val())
+					return true;
 				var reply_alert = jQuery('#reply_ajax_notices');
 				reply_alert.removeClass('error').removeClass('success');
 				jQuery.ajax({
@@ -56,7 +57,6 @@ var bindFunctions = function()
 				});
 				event.preventDefault();
 				break;
-			*/
 		       
 			case 'realtimethread':
 				realtimethread();

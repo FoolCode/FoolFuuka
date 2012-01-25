@@ -37,7 +37,7 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest($page);
+		$posts = $this->CI->post->get_latest(get_selected_board(), $page);
 
 		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' » Page '.$page:''));
 		if ($page > 1)
@@ -76,7 +76,7 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest($page, 20, TRUE, TRUE, TRUE);
+		$posts = $this->CI->post->get_latest(get_selected_board(), $page, array('per_page' => 20, 'type' => 'ghost'));
 
 		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
 		if ($page > 1)
@@ -107,7 +107,7 @@ class Theme_Controller {
 		$num = intval($num);
 
 		$this->CI->post->features = FALSE;
-		$thread = $this->CI->post->get_thread($num);
+		$thread = $this->CI->post->get_thread(get_selected_board(), $num);
 
 		if (!is_array($thread))
 		{
@@ -163,7 +163,7 @@ class Theme_Controller {
 				}
 
 				// Check if thread exists
-				$check = $this->CI->post->check_thread($data['num']);
+				$check = $this->CI->post->check_thread(get_selected_board(), $data['num']);
 				if (!get_selected_board()->archive)
 				{
 					// Normal Posting
@@ -204,11 +204,11 @@ class Theme_Controller {
 
 				if (isset($check['disable_image_upload']))
 				{
-					$result = $this->CI->post->comment($data, FALSE);
+					$result = $this->CI->post->comment(get_selected_board(), $data, FALSE);
 				}
 				else
 				{
-					$result = $this->CI->post->comment($data);
+					$result = $this->CI->post->comment(get_selected_board(), $data);
 				}
 
 				if (isset($result['error']))
@@ -251,7 +251,7 @@ class Theme_Controller {
 					'password' => $this->CI->input->post('pwd')
 				);
 
-				$result = $this->CI->post->delete($post);
+				$result = $this->CI->post->delete(get_selected_board(), $post);
 			}
 
 			if ($this->CI->input->post('resto')) :

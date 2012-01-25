@@ -49,7 +49,7 @@ foreach ($posts as $key => $post) : ?>
 		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="This post was deleted before its lifetime has expired."/><?php endif ?>
 		<?php if ($op->spoiler == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="The image in this post is marked as spoiler."/><?php endif ?>
 
-		[<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?><?php if (get_selected_board()->archive == 1) : ?> [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]<?php endif; ?>
+		[<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?><?php if (get_selected_board()->archive) : ?> [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]<?php endif; ?>
 
 		<blockquote><p><?php echo $op->comment_processed ?></p></blockquote>
 		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omittedposts">' . $post['omitted'] . ' posts omitted. Click Reply to view.</span>' : '') ?>

@@ -37,7 +37,7 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest($page, 24, TRUE, TRUE, FALSE, TRUE, FALSE);
+		$posts = $this->CI->post->get_latest(get_selected_board(), $page, array('per_page' => 24, 'type' => 'by_thread'));
 
 		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		if ($page > 1)
@@ -71,7 +71,7 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest($page, 24, TRUE, TRUE, TRUE, TRUE, FALSE);
+		$posts = $this->CI->post->get_latest(get_selected_board(), $page, array('per_page' => 24, 'type' => 'ghost'));
 
 		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		if ($page > 1)
@@ -98,7 +98,7 @@ class Theme_Controller {
 		$num = intval($num);
 
 		$this->CI->post->features = FALSE;
-		$thread = $this->CI->post->get_thread($num);
+		$thread = $this->CI->post->get_thread(get_selected_board(), $num);
 
 		if (!is_array($thread))
 		{
@@ -158,7 +158,7 @@ class Theme_Controller {
 				}
 
 				// Check if thread exists
-				$check = $this->CI->post->check_thread($data['num']);
+				$check = $this->CI->post->check_thread(get_selected_board(), $data['num']);
 				if (!get_selected_board()->archive)
 				{
 					// Normal Posting
@@ -199,11 +199,11 @@ class Theme_Controller {
 
 				if (isset($check['disable_image_upload']))
 				{
-					$result = $this->CI->post->comment($data, FALSE);
+					$result = $this->CI->post->comment(get_selected_board(), $data, FALSE);
 				}
 				else
 				{
-					$result = $this->CI->post->comment($data);
+					$result = $this->CI->post->comment(get_selected_board(), $data);
 				}
 
 				if (isset($result['error']))
@@ -247,7 +247,7 @@ class Theme_Controller {
 					'password' => $this->CI->input->post('delpass')
 				);
 
-				$result = $this->CI->post->delete($post);
+				$result = $this->CI->post->delete(get_selected_board(), $post);
 			}
 
 			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('parent')));
@@ -295,7 +295,7 @@ class Theme_Controller {
 			redirect(site_url($redirect_array));
 		}
 		$search = $this->CI->uri->ruri_to_assoc(2, $modifiers);
-		$result = $this->CI->post->get_search($search);
+		$result = $this->CI->post->get_search(get_selected_board(), $search);
 
 		$title = array();
 		if ($search['text'])

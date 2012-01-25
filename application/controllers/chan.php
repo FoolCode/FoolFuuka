@@ -102,7 +102,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$threads = $this->post->gallery();
+		$threads = $this->post->get_gallery(get_selected_board());
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
 		$this->template->set('section_title', 'Gallery ß - Showing: threads');
@@ -128,7 +128,7 @@ class Chan extends Public_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest($page);
+		$posts = $this->post->get_latest(get_selected_board(), $page);
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
@@ -164,7 +164,7 @@ class Chan extends Public_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest($page, 20, TRUE, TRUE, TRUE);
+		$posts = $this->post->get_latest(get_selected_board(), $page, array('type' => 'ghost'));
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Ghost' . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
@@ -193,7 +193,7 @@ class Chan extends Public_Controller
 
 		$num = intval($num);
 
-		$thread = $this->post->get_thread($num);
+		$thread = $this->post->get_thread(get_selected_board(), $num);
 
 		if (!is_array($thread))
 		{
@@ -218,20 +218,23 @@ class Chan extends Public_Controller
 
 		$num = intval($num);
 
-		$thread = $this->post->get_last50($num);
+		$thread = $this->post->get_thread(
+				get_selected_board(), $num, array('type' => 'last_x', 'type_extra' => array('last_limit' => 50))
+		);
 
 		if (!is_array($thread))
 		{
 			show_404();
 		}
 
-		if (isset($thread[$num]['op']))
+		if (count($thread[$num]['posts']) < 50)
 		{
 			$this->post($num);
 		}
 
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Thread #' . $num);
 		$this->template->set('posts', $thread);
+		$this->template->set('section_title', sprintf(_('Showing the last 50 posts for thread No.%s'), $num));
 
 		$this->template->set('thread_id', $num);
 		$this->template->set('last50', TRUE);
@@ -284,7 +287,7 @@ class Chan extends Public_Controller
 				}
 
 				// Check if thread exists
-				$check = $this->post->check_thread($data['num']);
+				$check = $this->post->check_thread(get_selected_board(), $data['num']);
 				if (!get_selected_board()->archive)
 				{
 					// Normal Posting
@@ -330,11 +333,11 @@ class Chan extends Public_Controller
 
 				if (isset($check['disable_image_upload']))
 				{
-					$result = $this->post->comment($data, FALSE);
+					$result = $this->post->comment(get_selected_board(), $data, FALSE);
 				}
 				else
 				{
-					$result = $this->post->comment($data);
+					$result = $this->post->comment(get_selected_board(), $data);
 				}
 
 				if (isset($result['error']))
@@ -454,7 +457,7 @@ class Chan extends Public_Controller
 		}
 		$num = intval($num);
 
-		$thread = $this->post->get_post_thread($num, $subnum);
+		$thread = $this->post->get_post_thread(get_selected_board(), $num, $subnum);
 		if ($thread === FALSE)
 		{
 			show_404();
@@ -489,13 +492,13 @@ class Chan extends Public_Controller
 		array_shift($uri);
 
 		$imploded_uri = urldecode(implode('/', $uri));
-		if(mb_strlen($imploded_uri) < 22)
+		if (mb_strlen($imploded_uri) < 22)
 		{
 			show_404();
 		}
 
 		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
-		if(mb_strlen($imploded_uri) > 23)
+		if (mb_strlen($imploded_uri) > 23)
 		{
 			$page = substr($imploded_uri, 23);
 		}
@@ -511,7 +514,7 @@ class Chan extends Public_Controller
 		}
 
 		$page = intval($page);
-		$posts = $this->post->get_image($hash . '==', $page);
+		$posts = $this->post->get_image(get_selected_board(), $hash . '==', $page);
 
 		$this->template->set('section_title', _('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Image: ' . urldecode($hash));
@@ -528,7 +531,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$image_data = $this->post->get_full_image($image);
+		$image_data = $this->post->get_full_image(get_selected_board(), $image);
 
 		if (isset($image_data['image_href']))
 		{
@@ -583,7 +586,7 @@ class Chan extends Public_Controller
 			redirect(site_url($redirect_array));
 		}
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
-		$result = $this->post->get_search($search);
+		$result = $this->post->get_search(get_selected_board(), $search);
 
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 
@@ -691,7 +694,7 @@ class Chan extends Public_Controller
 		);
 
 
-		$result = $this->post->delete($post);
+		$result = $this->post->delete(get_selected_board(), $post);
 		if (isset($result['error']))
 		{
 			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
@@ -756,7 +759,7 @@ class Chan extends Public_Controller
 
 		$time_left = $stat_array['info']['frequence'] + strtotime($stat_array['timestamp']);
 		$this->load->helper('date');
-		$this->template->set('section_title', _('Statistics:') . ' ' . $stat_array['info']['name'] . '. Next update: ' . timespan(time(),$time_left));
+		$this->template->set('section_title', _('Statistics:') . ' ' . $stat_array['info']['name'] . '. Next update: ' . timespan(time(), $time_left));
 		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . '&raquo; ' . _('statistics'));
 		$this->template->set('info', $stat_array['info']);
 		$this->template->set('data', $stat_array['data']);

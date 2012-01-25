@@ -162,6 +162,8 @@ class Chan extends REST_Controller
 
 		$num = intval($this->get('num'));
 
+		$from_realtime = FALSE;
+		
 		// build an array if we have more specifications
 		if ($this->get('latest_doc_id'))
 		{
@@ -171,6 +173,7 @@ class Chan extends REST_Controller
 			}
 
 			$latest_doc_id = intval($this->get('latest_doc_id'));
+			$from_realtime = TRUE;
 		}
 
 		$thread = $this->post->get_thread(

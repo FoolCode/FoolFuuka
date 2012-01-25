@@ -1660,7 +1660,7 @@ class Post extends CI_Model
 
 		if (!get_selected_board()->archive)
 		{
-			$number = $row->media_filename;
+			$number = (($thumbnail) ? $row->preview : $row->media_filename);
 		}
 		else
 		{
@@ -1683,59 +1683,6 @@ class Post extends CI_Model
 			}
 
 			return '';
-		}
-
-		if (!get_selected_board()->thumbnails)
-		{
-			if ($thumbnail)
-			{
-				return site_url() . 'content/themes/default/images/null-image.png';
-			}
-
-			return '';
-		}
-
-		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
-		{
-			if ($thumbnail)
-			{
-				return site_url() . 'content/themes/default/images/null-image.png';
-			}
-
-			return '';
-		}
-
-		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
-		{
-			if ($thumbnail)
-			{
-				return site_url() . 'content/themes/default/images/null-image.png';
-			}
-
-			return '';
-		}
-
-		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
-		{
-			if ($thumbnail)
-			{
-				return site_url() . 'content/themes/default/images/null-image.png';
-			}
-
-			return '';
-		}
-
-		if (get_selected_board()->delay_thumbnails)
-		{
-			if ($row->timestamp + 86400 > time())
-			{
-				if ($thumbnail)
-				{
-					return site_url() . 'content/themes/default/images/null-image.png';
-				}
-
-				return '';
-			}
 		}
 
 		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
@@ -1796,7 +1743,7 @@ class Post extends CI_Model
 
 		if (!get_selected_board()->archive)
 		{
-			$number = $row->media_filename;
+			$number = (($thumbnail) ? $row->preview : $row->media_filename);
 		}
 		else
 		{

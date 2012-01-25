@@ -284,7 +284,7 @@ class Statistics extends CI_Model
 		{
 			if(!is_null($id) && $id != $board->id)
 				continue;
-			
+
 			echo $board->shortname . ' (' . $board->id . ')' . PHP_EOL;
 			foreach ($available as $k => $a)
 			{
@@ -314,78 +314,13 @@ class Statistics extends CI_Model
 				$process = 'process_' . $k;
 				$this->db->reconnect();
 				$result = $this->$process($board);
-				
+
 				if (isset($this->stats[$k]['gnuplot']) && is_array($result))
 				{
 					$this->graph_gnuplot($board->shortname, $k, $result);
 				}
 
 				$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
-			}
-		}
-	}
-
-
-	function run($id)
-	{
-		$boards = new Board();
-		$boards->get();
-
-		$available = $this->get_available_stats();
-
-		$stats = $this->db->query('
-			SELECT board_id, name, timestamp
-			FROM ' . $this->db->protect_identifiers('statistics', TRUE) . '
-			ORDER BY timestamp DESC
-		');
-
-		$avail = array();
-		foreach ($available as $k => $a)
-		{
-			$avail[] = $k;
-		}
-
-		foreach ($boards->all as $board)
-		{
-			if ($board->id == $id)
-			{
-				echo $board->shortname . ' (' . $board->id . ')' . PHP_EOL;
-				foreach ($available as $k => $a)
-				{
-					echo $k . ' (' . $board->id . ')' . PHP_EOL;
-					$found = FALSE;
-					foreach ($stats->result() as $r)
-					{
-						if ($r->board_id == $board->id && $r->name == $k)
-						{
-							$found = TRUE;
-							//$r->timestamp >= time() - strtotime($a['frequence']) ||
-							if (!$this->lock_stat($r->board_id, $k, $r->timestamp))
-							{
-								// another process took it up while we were O(n^3)ing!
-								continue;
-							}
-							break;
-						}
-					}
-
-					if ($found === FALSE)
-					{
-						// extremely rare case, let's hope we don't get in a racing condition with this!
-						$this->save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
-					}
-					// we got the lock!
-					$process = 'process_' . $k;
-					$this->db->reconnect();
-					$result = $this->$process($board);
-
-					if (isset($this->stats[$k]['gnuplot']) && !is_array($result))
-					{
-						$this->graph_gnuplot($board->shortname, $k, json_decode(json_encode($result), TRUE));
-					}
-
-					$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
-				}
 			}
 		}
 	}

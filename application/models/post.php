@@ -1635,11 +1635,6 @@ class Post extends CI_Model
 	{
 		if (!$board->archive)
 		{
-			if (!unlink($media["full_path"]))
-			{
-				log_message('error', 'process_media: failed to remove media file from cache');
-			}
-
 			$query = $this->db->query('
 				SELECT *
 				FROM ' . $this->get_table($board) . '
@@ -1649,6 +1644,11 @@ class Post extends CI_Model
 
 			if ($query->num_rows() != 0)
 			{
+				if (!unlink($media["full_path"]))
+				{
+					log_message('error', 'process_media: failed to remove media file from cache');
+				}
+
 				$file = $query->row();
 
 				return array($file->preview, $file->preview_w, $file->preview_h, $media["file_name"], $file->media_w, $file->media_h, $file->media_size, $file->media_hash, $file->media_filename, $post->doc_id);
@@ -1771,7 +1771,7 @@ class Post extends CI_Model
 				$number = $row->parent;
 			else
 				$number = $row->num;
-			
+
 			while (strlen((string) $number) < 9)
 			{
 				$number = '0' . $number;

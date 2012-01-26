@@ -1014,7 +1014,7 @@ class Post extends CI_Model
 		$result = $query->result();
 		$result = $result[0];
 
-		$image_href = $this->get_image_href($result);
+		$image_href = $this->get_image_href($board, $result);
 
 		if ($image_href == '')
 		{
@@ -1892,14 +1892,15 @@ class Post extends CI_Model
 		if ($board->archive)
 		{
 			// ignore webkit and opera and allow rel="noreferrer" do its work
-			if (preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
+			if (isset($_SERVER['HTTP_USER_AGENT']))
 			{
-				return $board->images_url . $row->media_filename;
+				if (preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
+				{
+					return $board->images_url . $row->media_filename;
+				}
 			}
-			else
-			{
-				return site_url($board->shortname . '/redirect/' . $row->media_filename);
-			}
+
+			return site_url($board->shortname . '/redirect/' . $row->media_filename);
 		}
 		else
 		{

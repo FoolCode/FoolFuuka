@@ -28,6 +28,7 @@ class Report extends DataMapper
 
 	function __construct($id = NULL)
 	{
+		$this->load->model('post');
 		parent::__construct(NULL);
 
 		// We've overwrote some functions, and we need to use the get() from THIS model
@@ -270,7 +271,8 @@ class Report extends DataMapper
 			return $reports;
 		}
 
-		$selects = array();
+		$query = array();
+		/*
 		foreach ($reports->all as $report)
 		{
 			foreach ($boards->all as $board)
@@ -312,12 +314,20 @@ class Report extends DataMapper
 		$sql = implode(' UNION ', $selects);
 		$query = $this->db->query($sql);
 
-		if ($query->num_rows() != 0)
+		if ($query->num_rows() == 0)
 		{
 
 			$reports->all = $query->result();
 		}
-		return $reports;
+		*/
+
+		foreach ($reports->all as $report)
+		{
+			$query[] = array('board_id' => $report->board_id, 'doc_id' => $report->post);
+		}
+
+		$results = $this->post->get_multi_posts($query);
+		return $results;
 	}
 
 

@@ -63,7 +63,7 @@ class Post extends CI_Model
 	{
 		if(!$this->tank_auth->is_allowed())
 			return '';
-		
+
 		return '
 					LEFT JOIN
 					(
@@ -90,7 +90,7 @@ class Post extends CI_Model
 	{
 		if(!$this->tank_auth->is_allowed())
 			return '';
-		
+
 		return '
 					LEFT JOIN
 					(
@@ -660,11 +660,11 @@ class Post extends CI_Model
 		$query = array();
 		foreach ($posts as $post)
 		{
-			// post [report_id, board_id, doc_id]
-			$board = $this->radix->get_board($post->board_id);
+			// post [board_id, doc_id]
+			$board = $this->radix->get_by_id($post->board_id);
 			$query[] = '
 				(
-					SELECT *
+					SELECT *, CONCAT(' . $this->db->escape($post->board_id) . ') as board_id
 					FROM ' . $this->get_table($board) . '
 					' . $this->get_sql_report_after_join($board) . '
 					LEFT JOIN
@@ -690,14 +690,14 @@ class Post extends CI_Model
 			return array();
 		}
 
-		$reports = array();
-		foreach ($query->result()->all as $report)
+		$results = array();
+		foreach ($query->result()->all as $post)
 		{
-			$board = $this->radix->get_board($report->report_board_id);
-			$reports[] = array($board, $report);
+			$board = $this->radix->get_by_id($post->board_id);
+			$results[] = array($board, $post);
 		}
 
-		return $reports;
+		return $results;
 	}
 
 

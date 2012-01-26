@@ -1677,8 +1677,8 @@ class Post extends CI_Model
 
 		// generate random filename based on timestamp
 		$media_unixtime = time() . rand(1000, 9999);
-		$media_filename = $media_unixtime . $media["file_ext"];
-		$thumb_filename = $media_unixtime . "s" . $media["file_ext"];
+		$media_filename = $media_unixtime . strtolower($media["file_ext"]);
+		$thumb_filename = $media_unixtime . "s" . strtolower($media["file_ext"]);
 
 		// image and thumb paths
 		$path = array(

@@ -314,6 +314,7 @@ class Report extends DataMapper
 
 		if ($query->num_rows() != 0)
 		{
+
 			$reports->all = $query->result();
 		}
 		return $reports;

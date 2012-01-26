@@ -660,19 +660,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->get_table($board) . '
-					LEFT JOIN
-						(
-							SELECT
-								id as report_id,
-								board_id as report_board_id
-								post as report_doc_id,
-								reason as report_comment,
-								status as report_status,
-								created as report_created
-							FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
-							WHERE `id` = ' . $post->report_id . '
-						) as r
-						ON ' . $this->get_table($board) . '.`doc_id` = ' . $this->db->protect_identifiers('r') . '.`report_doc_id`
+					' . $this->get_sql_report_after_join($board) . '
 					LEFT JOIN
 						(
 							SELECT

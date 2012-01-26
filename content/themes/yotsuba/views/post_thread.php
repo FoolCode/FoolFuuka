@@ -56,6 +56,7 @@ if (!defined('BASEPATH'))
 					<td>
 						<?php echo form_upload(array('name' => 'upfile')) ?>
 						<?php echo form_hidden('MAX_FILE_SIZE', 3072) ?>
+						<?php echo form_checkbox(array('class' => 'inputtext', 'name' => 'spoiler', 'id' => 'spoiler', 'value' => 1)); ?>
 					</td>
 				</tr>
 				<?php if($this->tank_auth->is_allowed()) : ?>

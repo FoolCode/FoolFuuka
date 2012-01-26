@@ -163,7 +163,7 @@ class Chan extends REST_Controller
 		$num = intval($this->get('num'));
 
 		$from_realtime = FALSE;
-		
+
 		// build an array if we have more specifications
 		if ($this->get('latest_doc_id'))
 		{
@@ -174,10 +174,54 @@ class Chan extends REST_Controller
 
 			$latest_doc_id = intval($this->get('latest_doc_id'));
 			$from_realtime = TRUE;
+
+			$thread = $this->post->get_thread(
+					get_selected_board(), $num, array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
+			);
+		}
+		else
+		{
+			$thread = $this->post->get_thread(
+					get_selected_board(), $num, array()
+			);
 		}
 
+		if ($thread !== FALSE)
+		{
+			$this->response($thread, 200); // 200 being the HTTP response code
+		}
+		else
+		{
+			if ($from_realtime)
+			{
+				$response = array();
+				$response[$num['num']] = array('posts' => array());
+				$this->response($response, 200);
+			}
+			// no comics
+			$this->response(array('error' => _('Thread could not be found')), 200);
+		}
+	}
+
+
+	function thread_ghosts_posts_get()
+	{
+		$this->_check_board();
+
+		if (!$this->get('num'))
+		{
+			$this->response(array('error' => _('You have to select a thread number')), 404);
+		}
+
+		if (!is_natural($this->get('num')))
+		{
+			$this->response(array('error' => _('Faulty thread number')), 404);
+		}
+
+		$num = intval($this->get('num'));
+
 		$thread = $this->post->get_thread(
-				get_selected_board(), $num, array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
+				get_selected_board(), $num, array('type' => 'ghosts')
 		);
 
 		if ($thread !== FALSE)

@@ -36,7 +36,7 @@ if (!defined('BASEPATH'))
 						<?php if(!get_selected_board()->archive) : ?>
 						<tr>
 							<td class="postblock">File</td>
-							<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')); ?></td>
+							<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')); ?> <?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)); ?></td>
 						</tr>
 						<?php endif; ?>
 						<tr>

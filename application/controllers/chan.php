@@ -324,6 +324,7 @@ class Chan extends Public_Controller
 				if ($this->upload->do_upload('file_image'))
 				{
 					$data['media'] = $this->upload->data();
+					$data['spoiler'] = $this->input->post('reply_spoiler');
 				}
 				else
 				{

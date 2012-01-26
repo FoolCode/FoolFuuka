@@ -527,10 +527,19 @@ class Post extends CI_Model
 
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->get_table($board) . '
-					' . $this->get_sql_report($board) . '
 					WHERE num = ? OR parent = ?
 					ORDER BY num, subnum ASC;
 				', array($num, $num));
+
+				break;
+
+			case 'ghosts':
+
+				$query = $this->db->query('
+					SELECT * FROM ' . $this->get_table($board) . '
+					WHERE parent = ? AND subnum != 0
+					ORDER BY num, subnum ASC;
+				', array($num));
 
 				break;
 
@@ -1211,6 +1220,15 @@ class Post extends CI_Model
 			}
 		}
 
+		if ($data['spoiler'] == FALSE || $data['spoiler'] == '')
+		{
+			$spoiler = 0;
+		}
+		else
+		{
+			$spoiler = $data['spoiler'];
+		}
+
 		if (check_commentdata($data))
 		{
 			return array('error' => 'Your post contains contents that is marked as spam.');
@@ -1283,13 +1301,13 @@ class Post extends CI_Model
 		{
 			$this->db->query('
 				INSERT INTO ' . $this->get_table($board) . '
-				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, poster_id)
+				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, spoiler, poster_id)
 				VALUES
 				(
 					(select coalesce(max(num),0)+1 from (select * from ' . $this->get_table($board) . ') as x),
-					?,?,?,?,?,?,?,?,?,?,?
+					?,?,?,?,?,?,?,?,?,?,?,?
 				);
-				', array(0, $num['parent'], time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
+				', array(0, $num['parent'], time(), $postas, $email, $name, $trip, $subject, $comment, $password, $spoiler, $this->session->userdata('poster_id'))
 			);
 		}
 		else
@@ -1771,7 +1789,7 @@ class Post extends CI_Model
 			return '';
 		}
 
-		if ($board->delay_thumbnails)
+		if ($board->delay_thumbnails && !$this->tank_auth->is_allowed())
 		{
 			if ($row->timestamp + 86400 > time())
 			{

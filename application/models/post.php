@@ -649,6 +649,64 @@ class Post extends CI_Model
 	}
 
 
+	function get_multi_posts($posts = array())
+	{
+		$query = array();
+		foreach ($posts as $post)
+		{
+			// post [report_id, board_id, doc_id]
+			$board = $this->radix->get_board($post->board_id);
+			$query[] = '
+				(
+					SELECT *
+					FROM ' . $this->get_table($board) . '
+					LEFT JOIN
+						(
+							SELECT
+								id as report_id,
+								board_id as report_board_id
+								post as report_doc_id,
+								reason as report_comment,
+								status as report_status,
+								created as report_created
+							FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+							WHERE `id` = ' . $post->report_id . '
+						) as r
+						ON ' . $this->get_table($board) . '.`doc_id` = ' . $this->db->protect_identifiers('r') . '.`report_doc_id`
+					LEFT JOIN
+						(
+							SELECT
+								id as poster_id_join,
+								ip as poster_ip,
+								banned as poster_banned
+							FROM ' . $this->db->protect_identifiers('posters', TRUE) . '
+						) as p
+						ON ' . $this->get_table($board) . '.`poster_id` = ' . $this->db->protect_identifiers('p') . '.`poster_id_join`
+					WHERE doc_id = ' . $this->db->escape($post->doc_id) . '
+					LIMIT 0, 1
+				)
+			';
+		}
+
+		$query = implode(' UNION ', $query);
+		$query = $this->db->query($query);
+
+		if ($query->num_rows() == 0)
+		{
+			return array();
+		}
+
+		$reports = array();
+		foreach ($query->result()->all as $report)
+		{
+			$board = $this->radix->get_board($report->report_board_id);
+			$reports[] = array($board, $report);
+		}
+
+		return $reports;
+	}
+
+
 	function get_search($board, $search, $options = array())
 	{
 		// defaults

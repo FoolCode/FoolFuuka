@@ -22,7 +22,9 @@
 					</div>
 				</header>
 				<?php if ($report->media_filename) : ?>
-				<a href="<?php echo site_url($report->shortname.'/post/'.(($report->subnum > 0) ? $report->num . '_' . $report->subnum : $report->num)) ?>" rel="noreferrer" target="_blank" class="thread_image_link"><img src="<?php echo $rep->get_image_href($report, TRUE) ?>" width="<?php echo $report->preview_w ?>" height="<?php echo $report->preview_h ?>" class="thread_image"/></a>
+				<a href="<?php echo site_url($report->shortname.'/post/'.(($report->subnum > 0) ? $report->num . '_' . $report->subnum : $report->num)) ?>" rel="noreferrer" target="_blank" class="thread_image_link">
+					<img src="<?php echo $CI->post->get_image_href($report, $report, TRUE) ?>" width="<?php echo $report->preview_w ?>" height="<?php echo $report->preview_h ?>" class="thread_image"/>
+				</a>
 				<?php endif; ?>
 				<div class="text"><?php echo nl2br($report->comment) ?></div>
 			</article>

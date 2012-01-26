@@ -1020,7 +1020,7 @@ class Post extends CI_Model
 		$result = $query->result();
 		$result = $result[0];
 
-		$image_href = $this->get_image_href($result);
+		$image_href = $this->get_image_href($board, $result);
 
 		if ($image_href == '')
 		{
@@ -1683,8 +1683,8 @@ class Post extends CI_Model
 
 		// generate random filename based on timestamp
 		$media_unixtime = time() . rand(1000, 9999);
-		$media_filename = $media_unixtime . $media["file_ext"];
-		$thumb_filename = $media_unixtime . "s" . $media["file_ext"];
+		$media_filename = $media_unixtime . strtolower($media["file_ext"]);
+		$thumb_filename = $media_unixtime . "s" . strtolower($media["file_ext"]);
 
 		// image and thumb paths
 		$path = array(
@@ -1767,23 +1767,6 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		if (!$board->archive)
-		{
-			$number = (($thumbnail) ? $row->preview : $row->media_filename);
-		}
-		else
-		{
-			if ($row->parent > 0)
-				$number = $row->parent;
-			else
-				$number = $row->num;
-
-			while (strlen((string) $number) < 9)
-			{
-				$number = '0' . $number;
-			}
-		}
-
 		if (!$board->thumbnails && !$this->tank_auth->is_allowed())
 		{
 			if ($thumbnail)
@@ -1804,6 +1787,28 @@ class Post extends CI_Model
 				}
 
 				return '';
+			}
+		}
+
+		if (!$board->archive)
+		{
+			if (strpos($row->preview, 's.') === FALSE)
+			{
+				$thumbnail = FALSE;
+			}
+
+			$number = (($thumbnail) ? $row->preview : $row->media_filename);
+		}
+		else
+		{
+			if ($row->parent > 0)
+				$number = $row->parent;
+			else
+				$number = $row->num;
+
+			while (strlen((string) $number) < 9)
+			{
+				$number = '0' . $number;
 			}
 		}
 
@@ -1842,6 +1847,11 @@ class Post extends CI_Model
 
 		if (!$board->archive)
 		{
+			if (strpos($row->preview, 's.') === FALSE)
+			{
+				$thumbnail = FALSE;
+			}
+
 			$number = (($thumbnail) ? $row->preview : $row->media_filename);
 		}
 		else
@@ -1898,14 +1908,15 @@ class Post extends CI_Model
 		if ($board->archive)
 		{
 			// ignore webkit and opera and allow rel="noreferrer" do its work
-			if (preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
+			if (isset($_SERVER['HTTP_USER_AGENT']))
 			{
-				return $board->images_url . $row->media_filename;
+				if (preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
+				{
+					return $board->images_url . $row->media_filename;
+				}
 			}
-			else
-			{
-				return site_url($board->shortname . '/redirect/' . $row->media_filename);
-			}
+
+			return site_url($board->shortname . '/redirect/' . $row->media_filename);
 		}
 		else
 		{

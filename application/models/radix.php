@@ -6,8 +6,12 @@ if (!defined('BASEPATH'))
 class Radix extends CI_Model
 {
 
-	var $preloaded_radixes;
-	var $preloaded_radixes_array;
+	var $preloaded_radixes = null;
+	var $preloaded_radixes_array = null;
+	var $loaded_radixes_archive = null;
+	var $loaded_radixes_archive_array = null;
+	var $loaded_radixes_board = null;
+	var $loaded_radixes_board_array = null;
 
 	function __construct($id = NULL)
 	{
@@ -52,7 +56,7 @@ class Radix extends CI_Model
 	 */
 	function get_all()
 	{
-		return $preloaded_radixes;
+		return $this->preloaded_radixes;
 	}
 
 
@@ -63,18 +67,22 @@ class Radix extends CI_Model
 	 */
 	function get_all_array()
 	{
-		return $preloaded_radixes_array;
+		return $this->preloaded_radixes_array;
 	}
 
 
 	/**
 	 * Returns the single radix
 	 */
-	function get_by_id($radix_id)
+	function get_by_id($radix_id, $array = FALSE)
 	{
-		$object = get_all();
-		if(isset($object[$radix_id]))
-			return $object[$radix_id];
+		if($array)
+			$items = $this->get_all_array();
+		else
+			$items = $this->get_all();
+		
+		if(isset($items[$radix_id]))
+			return $items[$radix_id];
 		
 		return FALSE;
 	}
@@ -84,12 +92,37 @@ class Radix extends CI_Model
 	 */
 	function get_by_id_array($radix_id)
 	{
-		$array = get_all_array();
-		if(isset($array[$radix_id]))
-			return $array[$radix_id];
-		
-		return FALSE;
+		return $this->get_by_id($radix_id, TRUE);
 	}
 	
+	/**
+	 * Returns only the archive radixes
+	 *
+	 * @param string $type 'archive_true, 'archive_false'
+	 * @param type $array
+	 * @return type 
+	 */
+	function get_by_type($type, $array = FALSE)
+	{
+		if(!is_null($this->$loaded_radixes_archive))
+			return $loaded_radixes_archive;
+		
+		// just make a copy and get rid of the non-archive ones
+		
+		if($array)
+			$items = $this->get_all_array();
+		else
+			$items = $this->get_all();
+		
+		foreach($all as $key => $item)
+		{
+			if($item->archive == 0)
+				unset($all[$key]);
+		}
+	}
 	
+	function get_archives()
+	{
+		$this->get_by_type('archive_true');
+	}
 }

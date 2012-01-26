@@ -1786,7 +1786,7 @@ class Post extends CI_Model
 
 		if (!$board->archive)
 		{
-			if ($row->preview_w == $row->media_w && $row->preview_h == $row->preview_h)
+			if (strpos($row->preview, 's.') === FALSE)
 			{
 				$thumbnail = FALSE;
 			}
@@ -1841,7 +1841,7 @@ class Post extends CI_Model
 
 		if (!$board->archive)
 		{
-			if ($row->preview_w == $row->media_w && $row->preview_h == $row->preview_h)
+			if (strpos($row->preview, 's.') === FALSE)
 			{
 				$thumbnail = FALSE;
 			}

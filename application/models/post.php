@@ -1761,23 +1761,6 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		if (!$board->archive)
-		{
-			$number = (($thumbnail) ? $row->preview : $row->media_filename);
-		}
-		else
-		{
-			if ($row->parent > 0)
-				$number = $row->parent;
-			else
-				$number = $row->num;
-
-			while (strlen((string) $number) < 9)
-			{
-				$number = '0' . $number;
-			}
-		}
-
 		if (!$board->thumbnails && !$this->tank_auth->is_allowed())
 		{
 			if ($thumbnail)
@@ -1798,6 +1781,28 @@ class Post extends CI_Model
 				}
 
 				return '';
+			}
+		}
+
+		if (!$board->archive)
+		{
+			if ($row->preview_w == $row->media_w && $row->preview_h == $row->preview_h)
+			{
+				$thumbnail = FALSE;
+			}
+
+			$number = (($thumbnail) ? $row->preview : $row->media_filename);
+		}
+		else
+		{
+			if ($row->parent > 0)
+				$number = $row->parent;
+			else
+				$number = $row->num;
+
+			while (strlen((string) $number) < 9)
+			{
+				$number = '0' . $number;
 			}
 		}
 
@@ -1836,6 +1841,11 @@ class Post extends CI_Model
 
 		if (!$board->archive)
 		{
+			if ($row->preview_w == $row->media_w && $row->preview_h == $row->preview_h)
+			{
+				$thumbnail = FALSE;
+			}
+
 			$number = (($thumbnail) ? $row->preview : $row->media_filename);
 		}
 		else

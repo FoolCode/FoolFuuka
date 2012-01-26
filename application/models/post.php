@@ -61,6 +61,9 @@ class Post extends CI_Model
 	 */
 	function get_sql_report($board)
 	{
+		if(!$this->tank_auth->is_allowed())
+			return '';
+		
 		return '
 					LEFT JOIN
 					(
@@ -85,6 +88,9 @@ class Post extends CI_Model
 	 */
 	function get_sql_report_after_join($board)
 	{
+		if(!$this->tank_auth->is_allowed())
+			return '';
+		
 		return '
 					LEFT JOIN
 					(

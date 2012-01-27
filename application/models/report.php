@@ -289,6 +289,7 @@ class Report extends DataMapper
 					log_message('error', 'process_report: failed to ban image md5');
 					return array('error' => TRUE, 'message' => 'Failed to ban the MD5.');
 				}
+				$this->db->delete('reports', array('id' => $report->id));
 				return array('success' => TRUE, 'message' => 'The reported image has been banned from our system.');
 
 				break;

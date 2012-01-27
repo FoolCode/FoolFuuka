@@ -680,7 +680,7 @@ class Post extends CI_Model
 		$query = array();
 		foreach ($posts as $post)
 		{
-			// post [board_id, doc_id]
+			// post [board_id, doc_id = array(1,2,3..)]
 			$board = $this->radix->get_by_id($post['board_id']);
 			$query[] = '
 				(
@@ -688,8 +688,7 @@ class Post extends CI_Model
 					FROM ' . $this->get_table($board) . ' as g
 					' . $this->get_sql_report_after_join($board) . '
 					' . $this->get_sql_poster_after_join() . '
-					WHERE g.`doc_id` = ' . $this->db->escape($post['doc_id']) . '
-					LIMIT 0, 1
+					WHERE g.`doc_id` = ' . implode(' OR g.`doc_id` = ', $post['doc_id']) . '
 				)
 			';
 		}

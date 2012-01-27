@@ -530,6 +530,54 @@ class Chan extends Public_Controller
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');
 	}
+	
+	
+	public function similar_image()
+	{
+		$uri = $this->uri->segment_array();
+
+		array_shift($uri);
+		array_shift($uri);
+
+		$imploded_uri = urldecode(implode('/', $uri));
+		if (mb_strlen($imploded_uri) < 22)
+		{
+			show_404();
+		}
+
+		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
+		if (mb_strlen($imploded_uri) > 23)
+		{
+			$page = substr($imploded_uri, 23);
+		}
+		else
+		{
+			$page = 1;
+		}
+
+
+		if ($hash == '' || !is_natural($page) || $page > 500)
+		{
+			show_404();
+		}
+
+		$page = intval($page);
+		$result = $this->post->get_similar_image(get_selected_radix(), $hash . '==', $page);
+
+		//$total_pages = ceil($result['total_found'] / 25);
+		/*$pagination = array(
+			'base_url' => site_url(array(get_selected_radix()->shortname, 'image', $hash)),
+			'current_page' => $page,
+			'total' => (($total_pages > 200) ? 200 : $total_pages)
+		);
+		$this->template->set('pagination', $pagination);
+*/
+		$this->template->set('section_title', _('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Image: ' . urldecode($hash));
+		$this->template->set('posts', $result['posts']);
+		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
+		$this->template->build('board');
+	}
 
 
 	public function full_image($image)

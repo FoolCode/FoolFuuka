@@ -3,7 +3,7 @@
 	<?php echo buttoner(); ?>
 
 	<div class="list comics">
-		<?php $rep = new Report(); $post = new Post();?>
+		<?php $post = new Post();?>
 		<?php foreach ($reports as $report) : ?>
 		<div class="item">
 			<div class="report_data">

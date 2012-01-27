@@ -1720,24 +1720,26 @@ class Post extends CI_Model
 				SELECT *
 				FROM ' . $this->get_table($board) . '
 				WHERE media_hash = ?
+				ORDER BY doc_id DESC
 				LIMIT 0,1;
 			', array($media_hash));
 
 			if ($query->num_rows() != 0)
 			{
-				if (!unlink($media["full_path"]))
-				{
-					log_message('error', 'process_media: failed to remove media file from cache');
-				}
-
 				$file = $query->row();
 
-				return array($file->preview, $file->preview_w, $file->preview_h, $media["file_name"], $file->media_w, $file->media_h, $file->media_size, $file->media_hash, $file->media_filename, $post->doc_id);
+				if (file_exists($this->get_image_dir($board, $file, FALSE)) !== FALSE)
+				{
+					if (!unlink($media["full_path"]))
+					{
+						log_message('error', 'process_media: failed to remove media file from cache');
+					}
+
+					return array($file->preview, $file->preview_w, $file->preview_h, $media["file_name"], $file->media_w, $file->media_h, $file->media_size, $file->media_hash, $file->media_filename, $post->doc_id);
+				}
 			}
-			else
-			{
-				$number = $post->timestamp;
-			}
+
+			$number = $post->timestamp;
 		}
 		else
 		{

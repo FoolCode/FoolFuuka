@@ -27,9 +27,9 @@
 		<div>
 			[ <?php
 			$board_urls = array();
-			foreach ($boards as $key => $item)
+			foreach ($this->radix->get_all() as $key => $item)
 			{
-				$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a>';
+				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
 			echo implode(' / ', $board_urls)
 			?> ] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
@@ -50,7 +50,7 @@
 			<hr />
 
 			<?php echo $template['partials']['post_thread']; ?>
-			
+
 	<?php endif; ?>
 
 		<?php echo $template['body']; ?>

@@ -131,7 +131,11 @@ class Report extends DataMapper
 		}
 
 		$report = $query->row();
-		$postdata = $this->get_reported_post($report);
+		
+		$CI = & get_instance();
+		$CI->load->model('post');
+		$postdata = $CI->post->get_multi_posts(array(array('board_id' => $report->board, 'doc_id' => array($report->post))));
+		$postdata = $postdata[0];
 
 		if ($postdata === FALSE)
 		{
@@ -144,40 +148,34 @@ class Report extends DataMapper
 		switch ($action['process'])
 		{
 			case('ban'):
-				if ($postdata->poster_ip == "")
+				if ($postdata['post']->poster_ip == "")
 				{
 					$this->db->delete('reports', array('id' => $report->id));
 					return FALSE;
 				}
-				$this->db->update('posters', array('banned' => 1, 'banned_reason' => $action['banned_reason'], 'banned_start' => $action['banned_start'], 'banned_end' => $action['banned_end']), array('id' => $postdata->poster_id));
+				$this->db->update('posters', array('banned' => 1, 'banned_reason' => $action['banned_reason'], 'banned_start' => $action['banned_start'], 'banned_end' => $action['banned_end']), array('id' => $postdata['post']->poster_id));
 				$this->db->delete('reports', array('id' => $report->id));
 				return $postdata;
 				break;
 
 			case('delete'):
-				set_selected_board($postdata->shortname);
-				$post = new Post(FALSE);
-				$data = array('post' => $postdata->doc_id, 'password' => $postdata->delpass, 'remove' => $action['remove']);
-				$result = $post->delete($data);
+				$data = array('post' => $postdata['post']->doc_id, 'password' => $postdata['post']->delpass, 'remove' => $action['remove']);
+				$result = $CI->post->delete($postdata['board'], $data);
 				if (isset($result['error']))
 				{
 					log_message('error', 'process_report: failed to delete post');
 					return FALSE;
 				}
-				//$this->db->delete('reports', array('id' => $report->id));
 				return TRUE;
 				break;
 
 			case('spam'):
-				set_selected_board($postdata->shortname);
-				$post = new Post(FALSE);
-				$result = $post->spam($postdata->doc_id);
+				$result = $CI->post->spam($postdata['board'], $postdata['post']->doc_id);
 				if (isset($result['error']))
 				{
 					log_message('error', 'process_report: failed to mark post as spam');
 					return FALSE;
 				}
-				//$this->db->delete('reports', array('id' => $report->id));
 				return TRUE;
 				break;
 		}

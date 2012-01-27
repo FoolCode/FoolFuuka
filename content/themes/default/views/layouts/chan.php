@@ -112,7 +112,9 @@
 
 				<?php echo $template['body']; ?>
 
-				<?php echo $template['partials']['post_tools']; ?>
+				<?php 
+				if(get_selected_radix())
+					echo $template['partials']['post_tools']; ?>
 
 				<?php if (isset($pagination)) : ?>
 				<div class="paginate">

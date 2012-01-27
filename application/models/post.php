@@ -104,6 +104,51 @@ class Post extends CI_Model
 					' . $this->db->protect_identifiers('q') . '.`report_post`
 				';
 	}
+	
+	
+	/**
+	 * Load the last posts created, with said delay and minimum doc_id
+	 * Function mainly used by the Live system
+	 *
+	 * @param type $board
+	 * @param type $limit
+	 * @param type $delay
+	 * @param type $min_doc_id
+	 * @return type 
+	 */
+	function get_with_delay($board, $limit = 500, $delay = 0, $latest_doc_id = 0, $inferior_doc_id = NULL)
+	{
+
+		if(is_null($inferior_doc_id))
+		{
+			$query = $this->db->query('
+				SELECT *
+				FROM ' . $this->get_table($board) . '
+				WHERE doc_id > ?
+				AND timestamp < ?
+				ORDER BY doc_id DESC
+				LIMIT 0, '.intval($limit).'
+			', array($latest_doc_id, time() - $delay));
+		}
+		else
+		{
+			$query = $this->db->query('
+				SELECT *
+				FROM ' . $this->get_table($board) . '
+				WHERE doc_id < ?
+				AND timestamp < ?
+				ORDER BY doc_id DESC
+				LIMIT 0, '.intval($limit).'
+			', array($inferior_doc_id, time() - $delay));
+		}
+		
+		if($query->num_rows() == 0)
+		{
+			return FALSE;
+		}
+		
+		return $query->result();
+	}
 
 
 	function get_sql_poster_after_join()
@@ -1067,6 +1112,107 @@ class Post extends CI_Model
 		return array('posts' => $result, 'total_found' => $search_result['total_found']);
 	}
 
+	
+	function get_similar_image($board, $hash, $page, $options = array())
+	{
+		// defaults
+		$per_page = 25;
+		$process = TRUE;
+		$clean = TRUE;
+		
+		// overwrite defaults
+		foreach ($options as $key => $option)
+		{
+			$$key = $option;
+		}
+
+
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->db->protect_identifiers('libpuz_signatures', TRUE) . '
+			WHERE md5 = ?
+			LIMIT 0, 1
+		', array($hash));
+		
+		if($query->num_rows() == 0)
+			return FALSE;
+		
+		$sig = $query->result();
+		
+		$signature = puzzle_uncompress_cvec($sig[0]->signature);
+		
+		$words = array();
+		for ($i = 0; $i < 100; $i++){
+			$words[] = $this->db->escape(mb_substr($signature,$i,10));
+		}
+
+		//$words = mb_substr($signature, 0, 10);
+		
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->db->protect_identifiers('libpuz_words', TRUE) . ' AS w
+			LEFT JOIN ' . $this->db->protect_identifiers('libpuz_signatures', TRUE) . ' AS s
+				ON w.signature_id = s.id
+			WHERE w.word = ' . implode(' OR  w.word = ', $words) . '
+			LIMIT 0, 20000
+		');
+		
+		if($query->num_rows() == 0)
+			return FALSE;
+
+		$md5s = array();
+		foreach($query->result() as $item)
+		{
+			$distance = puzzle_vector_normalized_distance(puzzle_uncompress_cvec($item->signature), $signature);
+			if($distance > 0.95)
+			{
+				$md5s[] = $this->db->escape($item->md5);
+			}
+		}
+		
+		if(count($md5s) == 0)
+			return FALSE;
+
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->get_table($board) . '
+			' . $this->get_sql_report($board) . '
+			WHERE media_hash = ' . implode(' OR  media_hash = ', $md5s) . '
+			LIMIT 0, 200
+		');
+
+		if($query->num_rows() == 0)
+			return FALSE;
+		
+		foreach ($query->result() as $post)
+		{
+			if ($post->parent == 0)
+			{
+				$this->existing_posts[$post->num][] = $post->num;
+			}
+			else
+			{
+				if ($post->subnum == 0)
+					$this->existing_posts[$post->parent][] = $post->num;
+				else
+					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
+			}
+		}
+
+		foreach ($query->result() as $post)
+		{
+			if ($process === TRUE)
+			{
+				$this->process_post($board, $post, $clean);
+			}
+			// the first you create from a parent is the first thread
+			$result[0]['posts'][] = $post;
+		}
+
+
+		return array('posts' => $result);
+	}
+	
 
 	function get_full_image($board, $image)
 	{

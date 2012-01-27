@@ -324,6 +324,22 @@ class Statistics extends CI_Model
 			}
 		}
 	}
+	
+	
+	function get_stat($board_id, $name)
+	{
+		$stat = $this->db->query('
+			SELECT *
+			FROM ' . $this->db->protect_identifiers('statistics', TRUE) . '
+			WHERE board_id = ? and name = ?
+		', array($board_id, $name));
+		
+		if($stat->num_rows() == 0)
+			return FALSE;
+		
+		$result = $stat->result();
+		return $result[0];
+	}
 
 
 	/**

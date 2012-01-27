@@ -3,10 +3,10 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<?php if (isset($is_page) && !get_selected_board()->archive) : ?>
+<?php if (isset($is_page) && !get_selected_radix()->archive) : ?>
 <div style="postition:relative"></div>
 <div align="center" class="postarea">
-	<?php echo form_open_multipart(get_selected_board()->shortname.'/sending', array('name' => 'post')) ?>
+	<?php echo form_open_multipart(get_selected_radix()->shortname.'/sending', array('name' => 'post')) ?>
 		<?php echo form_hidden('resto', 0) ?>
 		<table cellpadding="1" cellspacing="1">
 			<tbody>

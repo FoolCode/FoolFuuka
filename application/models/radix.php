@@ -14,6 +14,7 @@ class Radix extends CI_Model
 	var $loaded_radixes_board = null;
 	var $loaded_radixes_board_array = null;
 	var $selected_radix = null; // readily available if set
+	var $selected_radix_array = null;
 
 	function __construct($id = NULL)
 	{
@@ -31,6 +32,13 @@ class Radix extends CI_Model
 			SELECT *
 			FROM ' . $this->db->protect_identifiers('boards', TRUE) . '
 		');
+
+		if ($query->num_rows() == 0)
+		{
+			$this->preloaded_radixes = array();
+			$this->preloaded_radixes_array = array();
+			return FALSE;
+		}
 
 		$object = $query->result();
 		$array = $query->result_array();
@@ -51,9 +59,49 @@ class Radix extends CI_Model
 	}
 
 
-	function set_selected_radix_by_shortname($radix)
+	/**
+	 * Set a radix for execution (example: chan.php)
+	 * Always returns object, array can be returned by get_selected_radix_array()
+	 * 
+	 * @param type $shortname
+	 * @return type 
+	 */
+	function set_selected_by_shortname($shortname)
 	{
-		
+		if (FALSE != ($val = $this->get_by_shortname($shortname)))
+		{
+			$this->selected_radix = $val;
+			// clean up the array version
+			$this->selected_radix_array = null;
+			return $val;
+		}
+
+		$this->selected_radix = FALSE;
+		$this->selected_radix_array = FALSE;
+
+		return FALSE;
+	}
+
+
+	function get_selected()
+	{
+		if (is_null($this->selected_radix))
+		{
+			log_message('error', 'radix.php get_selected_radix(): no radix selected');
+			return FALSE;
+		}
+
+		return $this->selected_radix;
+	}
+
+
+	function get_selected_array()
+	{
+
+		if ($this->get_selected() === FALSE)
+			return FALSE;
+
+		return $this->selected_radix_array = $this->get_by_id_array($this->get_selected()->id);
 	}
 
 
@@ -118,9 +166,9 @@ class Radix extends CI_Model
 	{
 		$items = $this->get_all();
 
-		foreach($items as $item)
+		foreach ($items as $item)
 		{
-			if($switch == ($item->$type === $value))
+			if ($switch == ($item->$type === $value))
 			{
 				return $item;
 			}
@@ -128,6 +176,7 @@ class Radix extends CI_Model
 
 		return FALSE;
 	}
+
 
 	/**
 	 * Returns the single radix by type selected as array
@@ -142,9 +191,9 @@ class Radix extends CI_Model
 	{
 		$items = $this->get_all();
 
-		foreach($items as $item)
+		foreach ($items as $item)
 		{
-			if($switch === ($item[$type] === $value))
+			if ($switch === ($item[$type] === $value))
 			{
 				return $item;
 			}
@@ -153,6 +202,7 @@ class Radix extends CI_Model
 		return FALSE;
 	}
 
+
 	/**
 	 * Returns the single radix by shortname
 	 */
@@ -160,11 +210,12 @@ class Radix extends CI_Model
 	{
 		return $this->get_by_type($shortname, 'shortname');
 	}
-	
+
+
 	/**
 	 * Returns the single radix as array by shortname
 	 */
-	function get_by_shortname($shortname)
+	function get_by_shortname_array($shortname)
 	{
 		return $this->get_by_type_array($shortname, 'shortname');
 	}
@@ -178,7 +229,7 @@ class Radix extends CI_Model
 	 * @param type $array
 	 * @return type 
 	 */
-	function get_by_type($type, $switch, $array = FALSE)
+	function filter_by_type($type, $switch, $array = FALSE)
 	{
 		if ($array)
 			$items = $this->get_all_array();
@@ -207,7 +258,7 @@ class Radix extends CI_Model
 		if (!is_null($this->loaded_radixes_archive))
 			return $this->loaded_radixes_archive;
 
-		return $this->loaded_radixes_archive = $this->get_by_type('archive', TRUE);
+		return $this->loaded_radixes_archive = $this->filter_by_type('archive', TRUE);
 	}
 
 
@@ -219,7 +270,7 @@ class Radix extends CI_Model
 		if (!is_null($this->loaded_radixes_board))
 			return $this->loaded_radixes_board;
 
-		return $this->loaded_radixes_boards = $this->get_by_type('archive', FALSE);
+		return $this->loaded_radixes_boards = $this->filter_by_type('archive', FALSE);
 	}
 
 
@@ -231,7 +282,7 @@ class Radix extends CI_Model
 		if (!is_null($this->loaded_radixes_archive_array))
 			return $this->loaded_radixes_archive_array;
 
-		return $this->loaded_radixes_archive_array = $this->get_by_type('archive', TRUE, TRUE);
+		return $this->loaded_radixes_archive_array = $this->filter_by_type('archive', TRUE, TRUE);
 	}
 
 
@@ -243,7 +294,7 @@ class Radix extends CI_Model
 		if (!is_null($this->loaded_radixes_board_array))
 			return $this->loaded_radixes_board_array;
 
-		return $this->loaded_radixes_board_array = $this->get_by_type('archive', FALSE, TRUE);
+		return $this->loaded_radixes_board_array = $this->filter_by_type('archive', FALSE, TRUE);
 	}
 
 

@@ -16,7 +16,7 @@ if (!isset($modifiers))
 	</html>
 </iframe>
 
-<?php echo form_open(get_selected_board()->shortname .'/sending', array('name' => 'delform')) ?>
+<?php echo form_open(get_selected_radix()->shortname .'/sending', array('name' => 'delform')) ?>
 <?php
 foreach ($posts as $key => $post) : ?>
 	<?php if(isset($post['op'])) :
@@ -49,7 +49,7 @@ foreach ($posts as $key => $post) : ?>
 		<?php endif ?>
 		<span class="posttime"><?php echo date('m/d/y(D)H:i', $op->timestamp + 18000) ?></span>
 		<span id="nothread<?php echo $op->num ?>">
-			<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo (!isset($thread_id)) ? site_url($this->fu_board . '/thread/' . $op->num) . '#q' . $op->num : 'javascript:quote(\'' . $op->num . '\')'?>" class="quotejs"><?php echo $op->num ?></a> &nbsp; [<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]
+			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo (!isset($thread_id)) ? site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num : 'javascript:quote(\'' . $op->num . '\')'?>" class="quotejs"><?php echo $op->num ?></a> &nbsp; [<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>">Reply</a>]
 		</span>
 		<blockquote>
 			<?php echo $op->comment_processed ?>
@@ -94,7 +94,7 @@ foreach ($posts as $key => $post) : ?>
 		</tr>
 		<tr>
 			<td align="right">
-				Theme [ <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'yotsuba')) ?>" onclick="changeTheme('yotsuba'); return false;">Yotsuba</a> ]
+				Theme [ <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'theme', 'yotsuba')) ?>" onclick="changeTheme('yotsuba'); return false;">Yotsuba</a> ]
 			</td>
 		</tr>
 	</tbody>

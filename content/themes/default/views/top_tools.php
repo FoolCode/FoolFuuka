@@ -6,7 +6,7 @@ if (!isset($page))
 	<!--- Post Input -->
 	<div>
 		<?php
-		echo form_open($this->fu_board . '/post');
+		echo form_open(get_selected_radix()->shortname . '/post');
 		echo '<div class="input-prepend">';
 		echo '<span class="add-on">Post No.</span>';
 		echo form_input(array(
@@ -29,7 +29,7 @@ if (!isset($page))
 	<!--- Page Input -->
 	<div>
 		<?php
-		echo form_open($this->fu_board . '/page');
+		echo form_open(get_selected_radix()->shortname . '/page');
 		echo '<div class="input-prepend">';
 		echo '<span class="add-on">Page #</span>';
 
@@ -47,7 +47,7 @@ if (!isset($page))
 		));
 		?>
 
-		<input type="button" class="btn notice" style="margin-left:-5px;" value="Ghost Mode" onclick="location.href='<?php echo site_url($this->fu_board . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
+		<input type="button" class="btn notice" style="margin-left:-5px;" value="Ghost Mode" onclick="location.href='<?php echo site_url(get_selected_radix()->shortname . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
 		<?php
 		echo '</div>';
 		echo form_close();
@@ -58,7 +58,7 @@ if (!isset($page))
 <!--- Search Input -->
 <div id="search_simple">
 	<?php
-	echo form_open($this->fu_board . '/search');
+	echo form_open(get_selected_radix()->shortname . '/search');
 	echo '<div class="input-prepend">';
 	echo '<a class="add-on" data-rel="popover-below" data-placement="below" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</a>';
 	echo form_input(array(
@@ -87,7 +87,7 @@ if (!isset($page))
 <!--- Advanced Search Input -->
 <div id="search_advanced" style="display: none">
 	<?php
-	echo form_open($this->fu_board . '/search');
+	echo form_open(get_selected_radix()->shortname . '/search');
 	echo '<div class="input-prepend">';
 	echo '<a class="add-on" data-rel="popover-below" data-original-title="How to search" data-content="' . htmlentities('Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing that word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt>') . '">?</a>';
 	echo form_input(array(

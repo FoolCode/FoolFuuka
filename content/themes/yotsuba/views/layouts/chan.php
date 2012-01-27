@@ -32,7 +32,7 @@
 			</span>
 
 			<span id="navtopr">
-				[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / statistics / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
+				[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / statistics / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
 			</span>
 		</div>
 		<br/>

@@ -66,7 +66,7 @@ class Chan extends Public_Controller
 					{
 						$result['threads'][$key]['title'] = $thread->title_processed;
 						$result['threads'][$key]['thumb'] = $thread->thumbnail_href;
-						$result['threads'][$key]['href'] = site_url(array(get_selected_board()->shortname, 'thread', $thread->num));
+						$result['threads'][$key]['href'] = site_url(array(get_selected_radix()->shortname, 'thread', $thread->num));
 						$result['threads'][$key]['created'] = $thread->timestamp;
 						$key++;
 					}
@@ -97,14 +97,14 @@ class Chan extends Public_Controller
 
 	public function gallery()
 	{
-		if (!get_selected_board()->thumbnails && !$this->tank_auth->is_allowed())
+		if (!get_selected_radix()->thumbnails && !$this->tank_auth->is_allowed())
 		{
 			show_404();
 		}
 
-		$threads = $this->post->get_gallery(get_selected_board());
+		$threads = $this->post->get_gallery(get_selected_radix());
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
 		$this->template->set('section_title', 'Gallery ß - Showing: threads');
 		$this->template->set('threads', $threads);
 		$this->template->set_partial('top_tools', 'top_tools');
@@ -128,13 +128,13 @@ class Chan extends Public_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest(get_selected_board(), $page);
+		$posts = $this->post->get_latest(get_selected_radix(), $page);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1) ? ' &raquo; Page ' . $page : ''));
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Page ') . $page);
 		$pagination = array(
-			'base_url' => site_url(array(get_selected_board()->shortname, 'page')),
+			'base_url' => site_url(array(get_selected_radix()->shortname, 'page')),
 			'current_page' => $page,
 			'total' => 0
 		);
@@ -164,13 +164,13 @@ class Chan extends Public_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest(get_selected_board(), $page, array('type' => 'ghost'));
+		$posts = $this->post->get_latest(get_selected_radix(), $page, array('type' => 'ghost'));
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Ghost' . (($page > 1) ? ' &raquo; Page ' . $page : ''));
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Ghost' . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Ghosts page ') . $page);
 		$pagination = array(
-			'base_url' => site_url(array(get_selected_board()->shortname, 'ghost')),
+			'base_url' => site_url(array(get_selected_radix()->shortname, 'ghost')),
 			'current_page' => $page,
 			'total' => 0
 		);
@@ -193,14 +193,14 @@ class Chan extends Public_Controller
 
 		$num = intval($num);
 
-		$thread = $this->post->get_thread(get_selected_board(), $num);
+		$thread = $this->post->get_thread(get_selected_radix(), $num);
 
 		if (!is_array($thread))
 		{
 			show_404();
 		}
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Thread #' . $num);
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Thread #' . $num);
 		$this->template->set('posts', $thread);
 
 		$this->template->set('thread_id', $num);
@@ -219,7 +219,7 @@ class Chan extends Public_Controller
 		$num = intval($num);
 
 		$thread = $this->post->get_thread(
-				get_selected_board(), $num, array('type' => 'last_x', 'type_extra' => array('last_limit' => 50))
+				get_selected_radix(), $num, array('type' => 'last_x', 'type_extra' => array('last_limit' => 50))
 		);
 
 		if (!is_array($thread))
@@ -232,7 +232,7 @@ class Chan extends Public_Controller
 			$this->post($num);
 		}
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Thread #' . $num);
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Thread #' . $num);
 		$this->template->set('posts', $thread);
 		$this->template->set('section_title', sprintf(_('Showing the last 50 posts for thread No.%s'), $num));
 
@@ -287,8 +287,8 @@ class Chan extends Public_Controller
 				}
 
 				// Check if thread exists
-				$check = $this->post->check_thread(get_selected_board(), $data['num']);
-				if (!get_selected_board()->archive)
+				$check = $this->post->check_thread(get_selected_radix(), $data['num']);
+				if (!get_selected_radix()->archive)
 				{
 					// Normal Posting
 					if (isset($check['invalid_thread']) && $this->input->post('reply_numero') == 0)
@@ -333,11 +333,11 @@ class Chan extends Public_Controller
 
 				if (isset($check['disable_image_upload']))
 				{
-					$result = $this->post->comment(get_selected_board(), $data, FALSE);
+					$result = $this->post->comment(get_selected_radix(), $data, FALSE);
 				}
 				else
 				{
-					$result = $this->post->comment(get_selected_board(), $data);
+					$result = $this->post->comment(get_selected_radix(), $data);
 				}
 
 				if (isset($result['error']))
@@ -366,11 +366,11 @@ class Chan extends Public_Controller
 
 					if ($result['posted']->parent == 0)
 					{
-						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->num)) . '#' . $result['posted']->num;
+						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->num)) . '#' . $result['posted']->num;
 					}
 					else
 					{
-						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
+						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 					}
 
 					$this->template->title(_('Redirecting...'));
@@ -457,7 +457,7 @@ class Chan extends Public_Controller
 		}
 		$num = intval($num);
 
-		$thread = $this->post->get_post_thread(get_selected_board(), $num, $subnum);
+		$thread = $this->post->get_post_thread(get_selected_radix(), $num, $subnum);
 		if ($thread === FALSE)
 		{
 			show_404();
@@ -514,18 +514,18 @@ class Chan extends Public_Controller
 		}
 
 		$page = intval($page);
-		$result = $this->post->get_image(get_selected_board(), $hash . '==', $page);
+		$result = $this->post->get_image(get_selected_radix(), $hash . '==', $page);
 
 		$total_pages = ceil($result['total_found'] / 25);
 		$pagination = array(
-			'base_url' => site_url(array(get_selected_board()->shortname, 'image', $hash)),
+			'base_url' => site_url(array(get_selected_radix()->shortname, 'image', $hash)),
 			'current_page' => $page,
 			'total' => (($total_pages > 200) ? 200 : $total_pages)
 		);
 		$this->template->set('pagination', $pagination);
 
 		$this->template->set('section_title', _('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' - Image: ' . urldecode($hash));
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Image: ' . urldecode($hash));
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');
@@ -539,7 +539,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
-		$image_data = $this->post->get_full_image(get_selected_board(), $image);
+		$image_data = $this->post->get_full_image(get_selected_radix(), $image);
 
 		if (isset($image_data['image_href']))
 		{
@@ -558,7 +558,7 @@ class Chan extends Public_Controller
 			if ($image_data['error_type'] == 'not_on_server')
 			{
 				$this->output->set_status_header('404');
-				$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; Image pruned');
+				$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Image pruned');
 				$this->template->set('posts', array('posts' => array($image_data['result'])));
 				$this->template->set('modifiers', array('post_show_single_post' => TRUE));
 				$this->template->build('board');
@@ -569,7 +569,7 @@ class Chan extends Public_Controller
 
 	public function redirect($image = NULL)
 	{
-		$this->template->set('url', get_selected_board()->images_url . $image);
+		$this->template->set('url', get_selected_radix()->images_url . $image);
 		$this->template->set_layout('redirect');
 		$this->template->build('redirect');
 	}
@@ -581,7 +581,7 @@ class Chan extends Public_Controller
 		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order', 'page');
 		if ($this->input->post())
 		{
-			$redirect_array = array(get_selected_board()->shortname, 'search');
+			$redirect_array = array(get_selected_radix()->shortname, 'search');
 			foreach ($modifiers as $modifier)
 			{
 				if ($this->input->post($modifier))
@@ -594,7 +594,7 @@ class Chan extends Public_Controller
 			redirect(site_url($redirect_array));
 		}
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
-		$result = $this->post->get_search(get_selected_board(), $search);
+		$result = $this->post->get_search(get_selected_radix(), $search);
 
 		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
 
@@ -649,7 +649,7 @@ class Chan extends Public_Controller
 		);
 		$this->template->set('pagination', $pagination);
 
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; ' . $title);
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; ' . $title);
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');
@@ -669,7 +669,7 @@ class Chan extends Public_Controller
 		}
 
 		$post = array(
-			'board' => get_selected_board()->id,
+			'board' => get_selected_radix()->id,
 			'post' => $this->input->post("post"),
 			'reason' => $this->input->post("reason")
 		);
@@ -702,7 +702,7 @@ class Chan extends Public_Controller
 		);
 
 
-		$result = $this->post->delete(get_selected_board(), $post);
+		$result = $this->post->delete(get_selected_radix(), $post);
 		if (isset($result['error']))
 		{
 			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
@@ -752,14 +752,14 @@ class Chan extends Public_Controller
 		{
 			$stats_list = $this->statistics->get_available_stats();
 			$this->template->set('section_title', _('Statistics'));
-			$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . '&raquo; ' . _('statistics'));
+			$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . '&raquo; ' . _('statistics'));
 			$this->template->set('stats_list', $stats_list);
 			$this->template->set_partial('statistics_interface', 'statistics/statistics_list');
 			$this->template->build('statistics/statistics_show');
 			return TRUE;
 		}
 
-		$stat_array = $this->statistics->check_available_stats($stat, get_selected_board());
+		$stat_array = $this->statistics->check_available_stats($stat, get_selected_radix());
 		if (!is_array($stat_array))
 		{
 			show_404();
@@ -768,7 +768,7 @@ class Chan extends Public_Controller
 		$time_left = $stat_array['info']['frequence'] + strtotime($stat_array['timestamp']);
 		$this->load->helper('date');
 		$this->template->set('section_title', _('Statistics:') . ' ' . $stat_array['info']['name'] . '. Next update: ' . timespan(time(), $time_left));
-		$this->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . '&raquo; ' . _('statistics'));
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . '&raquo; ' . _('statistics'));
 		$this->template->set('info', $stat_array['info']);
 		$this->template->set('data', $stat_array['data']);
 		$this->template->set_partial('statistics_interface', 'statistics/' . $stat_array['info']['interface']);
@@ -849,11 +849,9 @@ class Chan extends Public_Controller
 
 	public function _remap($method, $params = array())
 	{
-		$this->fu_board = $method;
 		if (isset($params[0]))
 		{
-			$board = new Board();
-			if (!$board->check_shortname($this->fu_board))
+			if (!($board = $this->radix->set_selected_by_shortname($method)))
 			{
 				show_404();
 			}

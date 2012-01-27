@@ -4,9 +4,9 @@ if (!defined('BASEPATH'))
 ?>
 
 
-<?php if (isset($is_page) && !get_selected_board()->archive) : ?>
+<?php if (isset($is_page) && !get_selected_radix()->archive) : ?>
 	<section id="thread_form">
-		<?php echo form_open_multipart(get_selected_board()->shortname.'/sending') ?>
+		<?php echo form_open_multipart(get_selected_radix()->shortname.'/sending') ?>
 		<fieldset>
 			<div style="float:left;">
 				<div class="clearfix">

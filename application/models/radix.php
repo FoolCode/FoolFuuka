@@ -117,7 +117,7 @@ class Radix extends CI_Model
 		foreach($all as $key => $item)
 		{
 			if($item->archive == 0)
-				unset $all[$key];
+				unset($all[$key]);
 		}
 	}
 	

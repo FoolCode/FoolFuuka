@@ -50,7 +50,7 @@ if ( ! function_exists('site_url'))
 
 /**
  * Base URL
- * 
+ *
  * Create a local URL based on your basepath.
  * Segments can be passed in as a string or an array, same as site_url
  * or a URL to a file can be passed in, e.g. to an image file.
@@ -398,7 +398,7 @@ if ( ! function_exists('auto_link'))
 										$matches['1'][$i].'<a href="http'.
 										$matches['4'][$i].'://'.
 										$matches['5'][$i].
-										$matches['6'][$i].'"'.$pop.'>http'.
+										preg_replace('/[[\/\!]*?[^\[\]]*?]/si', '', $matches['6'][$i]).'"'.$pop.'>http'.
 										$matches['4'][$i].'://'.
 										$matches['5'][$i].
 										$matches['6'][$i].'</a>'.

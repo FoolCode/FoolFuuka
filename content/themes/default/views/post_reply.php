@@ -79,6 +79,16 @@ if (!defined('BASEPATH'))
 					)); ?>
 				</div>
 			</div>
+			<div class="clearfix">
+				<label for="reply_file"></label>
+				<div class="input">
+					<?php echo form_checkbox(array(
+						'name' => 'reply_spoiler',
+						'id' => 'reply_spoiler',
+						'value' => 1
+					)); ?>
+				</div>
+			</div>
 			<?php endif; ?>
 			<div class="clearfix">
 				<label for="reply_nymphassword">Password</label>

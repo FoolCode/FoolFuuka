@@ -276,6 +276,7 @@ class Chan extends Public_Controller
 				$data['subject'] = $this->input->post('reply_talkingde');
 				$data['comment'] = $this->input->post('reply_chennodiscursus');
 				$data['password'] = $this->input->post('reply_nymphassword');
+				$data['spoiler'] = $this->input->post('reply_spoiler');
 
 				if ($this->tank_auth->is_allowed())
 				{
@@ -320,6 +321,9 @@ class Chan extends Public_Controller
 				$media_config['upload_path'] = 'content/cache/';
 				$media_config['allowed_types'] = 'jpg|png|gif';
 				$media_config['max_size'] = 3072;
+				$media_config['max_width'] = 3000;
+				$media_config['max_height'] = 3000;
+				$media_config['overwrite'] = TRUE;
 				$this->load->library('upload', $media_config);
 				if ($this->upload->do_upload('file_image'))
 				{

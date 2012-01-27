@@ -63,11 +63,11 @@ class Post extends CI_Model
 	{
 		if(!$this->tank_auth->is_allowed())
 			return '';
-		
+
 		return '
 					LEFT JOIN
 					(
-						SELECT post as report_post, reason as report_reason, status as report_status
+						SELECT id as report_id, post as report_post, reason as report_reason, status as report_status
 						FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
 						WHERE `board` = ' . $board->id . '
 					) as q
@@ -90,11 +90,11 @@ class Post extends CI_Model
 	{
 		if(!$this->tank_auth->is_allowed())
 			return '';
-		
+
 		return '
 					LEFT JOIN
 					(
-						SELECT post as report_post, reason as report_reason, status as report_status
+						SELECT id as report_id, post as report_post, reason as report_reason, status as report_status, created as report_created
 						FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
 						WHERE `board` = ' . $board->id . '
 					) as q
@@ -148,6 +148,26 @@ class Post extends CI_Model
 		}
 		
 		return $query->result();
+	}
+
+
+	function get_sql_poster_after_join()
+	{
+		if(!$this->tank_auth->is_allowed())
+			return '';
+
+		return '
+					LEFT JOIN
+					(
+						SELECT id as poster_id_join, ip as poster_ip, banned as poster_banned
+						FROM ' . $this->db->protect_identifiers('posters', TRUE) . '
+					) as p
+					ON
+					g.`poster_id`
+					=
+					' . $this->db->protect_identifiers('p') . '.`poster_id_join`
+				';
+
 	}
 
 
@@ -578,10 +598,19 @@ class Post extends CI_Model
 
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->get_table($board) . '
-					' . $this->get_sql_report($board) . '
 					WHERE num = ? OR parent = ?
 					ORDER BY num, subnum ASC;
 				', array($num, $num));
+
+				break;
+
+			case 'ghosts':
+
+				$query = $this->db->query('
+					SELECT * FROM ' . $this->get_table($board) . '
+					WHERE parent = ? AND subnum != 0
+					ORDER BY num, subnum ASC;
+				', array($num));
 
 				break;
 
@@ -688,6 +717,43 @@ class Post extends CI_Model
 		}
 
 		return FALSE;
+	}
+
+
+	function get_multi_posts($posts = array())
+	{
+		$query = array();
+		foreach ($posts as $post)
+		{
+			// post [board_id, doc_id = array(1,2,3..)]
+			$board = $this->radix->get_by_id($post['board_id']);
+			$query[] = '
+				(
+					SELECT *, CONCAT(' . $this->db->escape($post['board_id']) . ') as board_id
+					FROM ' . $this->get_table($board) . ' as g
+					' . $this->get_sql_report_after_join($board) . '
+					' . $this->get_sql_poster_after_join() . '
+					WHERE g.`doc_id` = ' . implode(' OR g.`doc_id` = ', $post['doc_id']) . '
+				)
+			';
+		}
+
+		$query = implode(' UNION ', $query);
+		$query = $this->db->query($query);
+
+		if ($query->num_rows() == 0)
+		{
+			return array();
+		}
+
+		$results = array();
+		foreach ($query->result() as $post)
+		{
+			$board = $this->radix->get_by_id($post->board_id);
+			$results[] = array('board' => $board, 'post' => $post);
+		}
+
+		return $results;
 	}
 
 
@@ -1317,6 +1383,17 @@ class Post extends CI_Model
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
 
+
+
+		if ($data['spoiler'] == FALSE || $data['spoiler'] == '')
+		{
+			$spoiler = 0;
+		}
+		else
+		{
+			$spoiler = $data['spoiler'];
+		}
+
 		if ($data['media'] == FALSE || $data['media'] == '')
 		{
 			if (is_array($data['num']))
@@ -1326,6 +1403,11 @@ class Post extends CI_Model
 			else
 			{
 				$parent = $data['num'];
+			}
+
+			if ($spoiler == 1)
+			{
+				$spoiler = 0;
 			}
 
 			if ($parent == 0)
@@ -1435,13 +1517,13 @@ class Post extends CI_Model
 		{
 			$this->db->query('
 				INSERT INTO ' . $this->get_table($board) . '
-				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, poster_id)
+				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, spoiler, poster_id)
 				VALUES
 				(
 					(select coalesce(max(num),0)+1 from (select * from ' . $this->get_table($board) . ') as x),
-					?,?,?,?,?,?,?,?,?,?,?
+					?,?,?,?,?,?,?,?,?,?,?,?
 				);
-				', array(0, $num['parent'], time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
+				', array(0, $num['parent'], time(), $postas, $email, $name, $trip, $subject, $comment, $password, $spoiler, $this->session->userdata('poster_id'))
 			);
 		}
 		else
@@ -1504,7 +1586,7 @@ class Post extends CI_Model
 
 	function delete($board, $data)
 	{
-		// $data => { board, post (doc_id), password, remove (post/image) }
+		// $data => { board, [post (doc_id), password, type (post/image)] }
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->get_table($board) . '
@@ -1530,7 +1612,7 @@ class Post extends CI_Model
 			return array('error' => _('The password you inserted did not match the post\'s deletion password.'));
 		}
 
-		if (isset($data['remove']) && $data['remove'] == 'image')
+		if (isset($data['type']) && $data['type'] == 'image')
 		{
 			if (!$this->delete_image($board, $row))
 			{
@@ -1643,39 +1725,39 @@ class Post extends CI_Model
 	}
 
 
-	/*
-	  function spam($board, $doc_id)
-	  {
-	  $query = $this->db->query('
-	  SELECT *
-	  FROM ' . $this->get_table($board) . '
-	  WHERE doc_id = ?
-	  LIMIT 0,1;
-	  ', $doc_id);
+	function spam($board, $doc_id)
+	{
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->get_table($board) . '
+			WHERE doc_id = ?
+			LIMIT 0,1;
+		', array($doc_id));
 
-	  if ($query->num_rows() != 1)
-	  {
-	  log_message('debug', 'post.php spam() post or thread not found');
-	  return array('error' => _('There\'s no such record to mark as spam.'));
-	  }
+		if ($query->num_rows() == 0)
+		{
+			log_message('error', 'spam: the specified post or thread was not found');
+			return array('error' => TRUE);
+		}
 
-	  $row = $query->row();
+		$row = $query->row();
 
-	  $this->db->query('
-	  UPDATE ' . $this->get_table($board) . '
-	  SET spam = 1
-	  WHERE doc_id = ?
-	  ', $row->doc_id);
+		$this->db->query('
+			UPDATE ' . $this->get_table($board) . '
+			SET = ?
+			WHERE doc_id = ?
+		', array(1, $row->doc_id));
 
-	  if ($this->db->affected_rows() != 1)
-	  {
-	  log_message('debug', 'post.php spam() unable to update record.');
-	  return array('error' => _('Unable to mark post/thread as spam.'));
-	  }
+		if ($this->db->affected_rows() != 1)
+		{
+			log_message('error', 'spam: unable to update record');
+			return array('error' => TRUE);
+		}
 
-	  return array('success' => TRUE);
-	  }
-	 */
+		return array('success' => TRUE);
+	}
+
+
 	function process_name($name)
 	{
 		$trip = '';
@@ -1791,24 +1873,26 @@ class Post extends CI_Model
 				SELECT *
 				FROM ' . $this->get_table($board) . '
 				WHERE media_hash = ?
+				ORDER BY doc_id DESC
 				LIMIT 0,1;
 			', array($media_hash));
 
 			if ($query->num_rows() != 0)
 			{
-				if (!unlink($media["full_path"]))
-				{
-					log_message('error', 'process_media: failed to remove media file from cache');
-				}
-
 				$file = $query->row();
 
-				return array($file->preview, $file->preview_w, $file->preview_h, $media["file_name"], $file->media_w, $file->media_h, $file->media_size, $file->media_hash, $file->media_filename, $post->doc_id);
+				if (file_exists($this->get_image_dir($board, $file, FALSE)) !== FALSE)
+				{
+					if (!unlink($media["full_path"]))
+					{
+						log_message('error', 'process_media: failed to remove media file from cache');
+					}
+
+					return array($file->preview, $file->preview_w, $file->preview_h, $media["file_name"], $file->media_w, $file->media_h, $file->media_size, $file->media_hash, $file->media_filename, $post->doc_id);
+				}
 			}
-			else
-			{
-				$number = $post->timestamp;
-			}
+
+			$number = $post->timestamp;
 		}
 		else
 		{

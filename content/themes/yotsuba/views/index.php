@@ -9,9 +9,9 @@ if (!defined('BASEPATH'))
 	<h2>[
 		<?php
 		$board_urls = array();
-		foreach ($boards as $key => $board)
+		foreach ($this->radix->get_all() as $key => $board)
 		{
-			$board_urls[] = '<a href="' . $board->href() . '">'.$board->shortname.'</a>';
+			$board_urls[] = '<a href="' . $board->href . '">'.$board->shortname.'</a>';
 		}
 		echo implode(' / ', $board_urls)
 		?>

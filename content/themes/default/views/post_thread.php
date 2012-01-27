@@ -110,17 +110,25 @@ if (!defined('BASEPATH'))
 					<li>You are responsible for your posts and images.</li>
 					<li>Max image size: 3 MegaBytes</li>
 				</ul>
-				<div>
-			<?php
-				echo form_hidden('reply_numero', 0);
-				echo form_hidden('MAX_FILE_SIZE', 3072);
-				echo form_submit(array(
-					'name' => 'reply_gattai',
-					'value' => 'Submit',
-					'class' => 'btn',
-				));
-			?>
-			</div>
+
+
+					<div>
+					<?php echo form_checkbox(array(
+						'name' => 'reply_spoiler',
+						'id' => 'reply_spoiler',
+						'value' => 1
+					));
+					?>
+					<?php
+						echo form_hidden('reply_numero', 0);
+						echo form_hidden('MAX_FILE_SIZE', 3072);
+						echo form_submit(array(
+							'name' => 'reply_gattai',
+							'value' => 'Submit',
+							'class' => 'btn',
+						));
+					?>
+					</div>
 			</div>
 
 		</fieldset>

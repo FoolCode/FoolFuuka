@@ -41,7 +41,7 @@ class Posts extends Admin_Controller
 	}
 
 
-	function action($method = NULL, $id = 0, $remove = NULL)
+	function action($type = 'remove', $report_id = 0, $remove = NULL)
 	{
 		if (!$this->input->is_ajax_request())
 		{
@@ -59,38 +59,60 @@ class Posts extends Admin_Controller
 			$redirect = site_url('admin/posts/reports');
 		}
 
-		switch ($method)
+
+		switch ($type)
 		{
 			case('ban'):
+
 				$report = new Report();
-				$params = array('process' => 'ban', 'banned_reason' => '', 'banned_start' => '', 'banned_end' => '');
-				if (!$data = $report->process_report($id, $params))
+				$result = $report->process_report(
+					$report_id,
+					array(
+						'action' => 'ban',
+						'value' => array(
+							'banned_reason' => $this->input->post('banned_reason'),
+							'banned_start' => $this->input->post('banned_start'),
+							'banned_end' => $this->input->post('banned_end')
+						)
+					)
+				);
+				if (isset($result['error']))
 				{
-					flash_notice('error', _('Failed to ban the IP.'));
-					log_message('error', 'Controller: reports.php/ban: failed to ban ip');
+					flash_notice('error', $result['message']);
 					$this->output->set_output(json_encode(array('href' => $redirect)));
 					return FALSE;
 				}
-				flash_notice('notice', sprintf(_('The IP %s has been banned from posting.'), $data->poster_ip));
+				flash_notice('notice', $result['message']);
 				$this->output->set_output(json_encode(array('href' => $redirect)));
+
 				break;
 
 			case('delete'):
+
 				$report = new Report();
-				$params = array('process' => 'delete', 'remove' => $remove);
-				if (!$report->process_report($id, $params))
+				$result = $report->process_report(
+					$report_id,
+					array(
+						'action' => 'delete',
+						'value' => array(
+							'delete' => $remove
+						)
+					)
+				);
+				if (isset($result['error']))
 				{
-					flash_notice('error', _('Failed to delete the reported post/image.'));
-					log_message('error', 'Controller: reports.php/delete: failed to delete reported post/image');
+					flash_notice('error', $result['message']);
 					$this->output->set_output(json_encode(array('href' => $redirect)));
 					return FALSE;
 				}
-				flash_notice('notice', _('The reported post/image has been removed from the database.'));
+				flash_notice('notice', $result['message']);
 				$this->output->set_output(json_encode(array('href' => $redirect)));
+
 				break;
 
 			case('remove'):
-				$report = new Report($id);
+
+				$report = new Report($report_id);
 				if (!$report->remove_report_db())
 				{
 					flash_notice('error', _('Failed to remove the report from the database.'));
@@ -98,24 +120,32 @@ class Posts extends Admin_Controller
 					$this->output->set_output(json_encode(array('href' => $redirect)));
 					return FALSE;
 				}
-				flash_notice('notice', _('The report has been removed.'));
+				flash_notice('notice', _('The report has been removed from the database.'));
 				$this->output->set_output(json_encode(array('href' => $redirect)));
+
 				break;
 
 			case('spam'):
+
 				$report = new Report();
-				$params = array('process' => 'spam');
-				if (!$report->process_report($id, $params))
+				$result = $report->process_report(
+					$report_id,
+					array(
+						'action' => 'spam'
+					)
+				);
+				if (isset($result['error']))
 				{
-					flash_notice('error', _('Failed to mark the reported post as spam.'));
-					log_message('error', 'Controller: reports.php/spam: failed to mark the post as spam');
+					flash_notice('error', $result['message']);
 					$this->output->set_output(json_encode(array('href' => $redirect)));
 					return FALSE;
 				}
-				flash_notice('notice', _('The reported post has been marked as spam.'));
+				flash_notice('notice', $result['message']);
 				$this->output->set_output(json_encode(array('href' => $redirect)));
+
 				break;
 		}
 	}
+
 
 }

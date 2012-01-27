@@ -128,7 +128,7 @@ class Theme_Controller {
 			}
 			else
 			{
-				$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_length[3]|max_length[4096]|xss_clean');				
+				$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|required|min_length[3]|max_length[4096]|xss_clean');
 			}
 			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
@@ -146,6 +146,7 @@ class Theme_Controller {
 				$data['subject'] = $this->CI->input->post('subject');
 				$data['comment'] = $this->CI->input->post('KOMENTO');
 				$data['password'] = $this->CI->input->post('delpass');
+				$data['spoiler'] = $this->CI->input->post('reply_spoiler');
 				$data['postas'] = 'N';
 
 				if ($this->CI->tank_auth->is_allowed())
@@ -186,6 +187,9 @@ class Theme_Controller {
 				$media_config['upload_path'] = 'content/cache/';
 				$media_config['allowed_types'] = 'jpg|png|gif';
 				$media_config['max_size'] = 3072;
+				$media_config['max_width'] = 3000;
+				$media_config['max_height'] = 3000;
+				$media_config['overwrite'] = TRUE;
 				$this->CI->load->library('upload', $media_config);
 				if ($this->CI->upload->do_upload('file_image'))
 				{

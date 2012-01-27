@@ -22,9 +22,9 @@
 				[
 				<?php
 				$boards_urls = array();
-				foreach ($boards as $key => $item)
+				foreach ($this->radix->get_all() as $key => $item)
 				{
-					$boards_urls[] = '<a href="' . $item->href() . '" title="' . $item->name . '">' . $item->shortname . '</a>';
+					$boards_urls[] = '<a href="' . $item->href . '" title="' . $item->name . '">' . $item->shortname . '</a>';
 				}
 				echo implode(' / ', $boards_urls);
 				?>

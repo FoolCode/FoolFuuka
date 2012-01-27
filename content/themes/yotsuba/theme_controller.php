@@ -151,6 +151,7 @@ class Theme_Controller {
 				$data['subject'] = $this->CI->input->post('sub');
 				$data['comment'] = $this->CI->input->post('com');
 				$data['password'] = $this->CI->input->post('pwd');
+				$data['spoiler'] = $this->CI->input->post('spoiler');
 				$data['postas'] = 'N';
 
 				if ($this->CI->tank_auth->is_allowed())
@@ -191,6 +192,9 @@ class Theme_Controller {
 				$media_config['upload_path'] = 'content/cache/';
 				$media_config['allowed_types'] = 'jpg|png|gif';
 				$media_config['max_size'] = 3072;
+				$media_config['max_width'] = 3000;
+				$media_config['max_height'] = 3000;
+				$media_config['overwrite'] = TRUE;
 				$this->CI->load->library('upload', $media_config);
 				if ($this->CI->upload->do_upload('upfile'))
 				{

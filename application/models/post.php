@@ -1919,6 +1919,13 @@ class Post extends CI_Model
 		}
 		else
 		{
+			if (!$board->archive && strpos($row->preview, 's.') === FALSE)
+			{
+				$row->preview_h = 150;
+				$row->preview_w = 150;
+				return site_url() . 'content/themes/default/images/image_missing.jpg';
+			}
+
 			return '';
 		}
 	}
@@ -1981,6 +1988,44 @@ class Post extends CI_Model
 				}
 			}
 		return TRUE;
+	}
+
+
+	function ban_image_hash($md5)
+	{
+		// sql insert
+		$this->db->insert('banned_md5', array('md5' => $md5));
+
+		// generate mass delete
+		$query = array();
+		foreach($this->radix->get_all() as $board)
+		{
+			$query[] = '
+				(
+					SELECT *, CONCAT(' . $this->db->escape($board->id) . ') as board_id
+					FROM ' . $this->get_table($board) . '
+					WHERE media_hash = ' . $this->db->escape($md5) . '
+				)
+			';
+		}
+
+		$query = implode(' UNION ', $query);
+		$query = $this->db->query($query);
+
+		if ($query->num_rows() == 0)
+		{
+			log_message('error', 'ban_image_hash: there are no posts that contain this hash');
+			return array('error' => TRUE);
+		}
+
+		foreach ($query->result() as $image)
+		{
+			$this->delete_image(
+				$this->radix->get_by_id($image->board_id), $image
+			);
+		}
+
+		return array('');
 	}
 
 

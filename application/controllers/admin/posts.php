@@ -110,6 +110,26 @@ class Posts extends Admin_Controller
 
 				break;
 
+			case('md5'):
+
+				$report = new Report();
+				$result = $report->process_report(
+					$report_id,
+					array(
+						'action' => 'md5'
+					)
+				);
+				if (isset($result['error']))
+				{
+					flash_notice('error', $result['message']);
+					$this->output->set_output(json_encode(array('href' => $redirect)));
+					return FALSE;
+				}
+				flash_notice('notice', $result['message']);
+				$this->output->set_output(json_encode(array('href' => $redirect)));
+
+				break;
+
 			case('remove'):
 
 				$report = new Report($report_id);

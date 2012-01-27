@@ -131,7 +131,7 @@ class Report extends DataMapper
 		}
 
 		$report = $query->row();
-		
+
 		$CI = & get_instance();
 		$CI->load->model('post');
 		$postdata = $CI->post->get_multi_posts(array(array('board_id' => $report->board, 'doc_id' => array($report->post))));

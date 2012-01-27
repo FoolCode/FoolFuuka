@@ -187,6 +187,9 @@ class Theme_Controller {
 				$media_config['upload_path'] = 'content/cache/';
 				$media_config['allowed_types'] = 'jpg|png|gif';
 				$media_config['max_size'] = 3072;
+				$media_config['max_width'] = 3000;
+				$media_config['max_height'] = 3000;
+				$media_config['overwrite'] = TRUE;
 				$this->CI->load->library('upload', $media_config);
 				if ($this->CI->upload->do_upload('file_image'))
 				{

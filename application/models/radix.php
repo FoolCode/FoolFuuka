@@ -241,11 +241,15 @@ class Radix extends CI_Model
 		foreach ($items as $key => $item)
 		{
 			if ($array)
-				if ($item[$type] == !$switch)
+			{
+				if ($item[$type] != $switch)
 					unset($items[$key]);
-				else
-				if ($item->$type == !$switch)
+			}
+			else
+			{
+				if ($item->$type != $switch)
 					unset($items[$key]);
+			}
 		}
 
 		return $items;
@@ -272,7 +276,7 @@ class Radix extends CI_Model
 		if (!is_null($this->loaded_radixes_board))
 			return $this->loaded_radixes_board;
 
-		return $this->loaded_radixes_boards = $this->filter_by_type('archive', FALSE);
+		return $this->loaded_radixes_board = $this->filter_by_type('archive', FALSE);
 	}
 
 

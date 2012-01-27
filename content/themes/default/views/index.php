@@ -9,27 +9,22 @@ if (!defined('BASEPATH'))
 	<h2><?php
 				$board_urls = array();
 				$parenthesis_open = FALSE;
-				foreach ($boards as $key => $item)
+				foreach ($this->radix->get_archives() as $key => $item)
 				{
-					if($item->archive == 0)
-						continue;
 						
 					if(!$parenthesis_open)
 					{
 						echo 'Archives: [ ';
 						$parenthesis_open = TRUE;
 					}
-					
-					if($item->archive == 0)
-						continue;
 
 					if ($item->thumbnails || $this->tank_auth->is_allowed())
 					{
-						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+						$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a> <a href="' . $item->href . 'gallery/">+</a>';
 					}
 					else
 					{
-						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a>';
+						$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 					}
 
 				}
@@ -43,27 +38,21 @@ if (!defined('BASEPATH'))
 				<?php
 				$board_urls = array();
 				$parenthesis_open = FALSE;
-				foreach ($boards as $key => $item)
-				{
-					if($item->archive == 1)
-						continue;
-						
+				foreach ($this->radix->get_boards() as $key => $item)
+				{		
 					if(!$parenthesis_open)
 					{
 						echo 'Boards: [ ';
 						$parenthesis_open = TRUE;
 					}
 
-					if($item->archive == 1)
-						continue;
-
 					if ($item->thumbnails || $this->tank_auth->is_allowed())
 					{
-						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a> <a href="' . $item->href() . 'gallery/">+</a>';
+						$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a> <a href="' . $item->href . 'gallery/">+</a>';
 					}
 					else
 					{
-						$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a>';
+						$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 					}
 				}
 				echo implode(' / ', $board_urls);

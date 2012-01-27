@@ -7,7 +7,7 @@ if (!isset($page))
 	<?php echo form_open('#') . form_close(); ?>
 
 	<!--- Search Input -->
-	<?php echo form_open($this->fu_board . '/search'); ?>
+	<?php echo form_open(get_selected_radix()->shortname . '/search'); ?>
 	<div id="simple-search" class="postspan" style="float:left">
 		Text search [<a class="tooltip" href="#">?<span>Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing the word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt></span></a>]
 
@@ -31,7 +31,7 @@ if (!isset($page))
 	<?php echo form_close(); ?>
 
 	<!--- Advanced Search Input -->
-	<?php echo form_open($this->fu_board . '/search'); ?>
+	<?php echo form_open(get_selected_radix()->shortname . '/search'); ?>
 	<div id="advanced-search" class="postspan" style="float:left;display:none">
 		<table style="float:left">
 			<tbody>
@@ -120,7 +120,7 @@ if (!isset($page))
 	<?php echo form_close(); ?>
 
 	<!--- Post Input -->
-	<?php echo form_open($this->fu_board . '/post'); ?>
+	<?php echo form_open(get_selected_radix()->shortname . '/post'); ?>
 	<div class="postspan" style="float:left">
 		View Post
 
@@ -135,14 +135,14 @@ if (!isset($page))
 		<?php
 		echo form_submit(array(
 			'value' => 'View',
-			'onclick' => 'location.href=\'' . site_url($this->fu_board . '/post/') . '\' + this.form.post.value + \'/\'; return false;'
+			'onclick' => 'location.href=\'' . site_url(get_selected_radix()->shortname . '/post/') . '\' + this.form.post.value + \'/\'; return false;'
 		));
 		?>
 	</div>
 	<?php echo form_close(); ?>
 
 	<!--- Page Input -->
-	<?php echo form_open($this->fu_board . '/page'); ?>
+	<?php echo form_open(get_selected_radix()->shortname . '/page'); ?>
 	<div class="postspan" style="float:left">
 		View Page
 
@@ -158,13 +158,13 @@ if (!isset($page))
 		<?php
 		echo form_submit(array(
 			'value' => 'View',
-			'onclick' => 'location.href=\'' . site_url($this->fu_board . '/page/') . '\' + this.form.page.value + \'/\'; return false;'
+			'onclick' => 'location.href=\'' . site_url(get_selected_radix()->shortname . '/page/') . '\' + this.form.page.value + \'/\'; return false;'
 		));
 		?>
 
 		<a class="tooltip" href="#">[?]<span>In ghost mode, only threads with non-archived posts will be shown.</span></a>
 
-		<input type="button" value="View in Ghost Mode" onclick="location.href='<?php echo site_url($this->fu_board . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
+		<input type="button" value="View in Ghost Mode" onclick="location.href='<?php echo site_url(get_selected_radix()->shortname . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
 	</div>
 	<?php echo form_close(); ?>
 </div>

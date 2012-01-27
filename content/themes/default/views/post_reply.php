@@ -14,7 +14,7 @@ if (!defined('BASEPATH'))
 	</header>
 	<div id="reply_ajax_notices"></div>
 	<div>
-		<?php echo form_open_multipart(get_selected_board()->shortname.'/sending', array('class' => 'form-stacked', 'id' => 'reply_form')) ?>
+		<?php echo form_open_multipart(get_selected_radix()->shortname.'/sending', array('class' => 'form-stacked', 'id' => 'reply_form')) ?>
 		<fieldset>
 			<div class="clearfix">
 				<label for="reply_bokunonome">Name</label>
@@ -69,7 +69,7 @@ if (!defined('BASEPATH'))
 					)); ?>
 				</div>
 			</div>
-			<?php if(!get_selected_board()->archive) : ?>
+			<?php if(!get_selected_radix()->archive) : ?>
 			<div class="clearfix">
 				<label for="reply_file">File</label>
 				<div class="input">

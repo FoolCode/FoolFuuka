@@ -32,7 +32,7 @@
 				$board_urls[] = '<a href="' . $item->href() . '">' . $item->shortname . '</a>';
 			}
 			echo implode(' / ', $board_urls)
-			?> ] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url($this->fu_board) ?>">top</a> / <a href="<?php echo site_url(array($this->fu_board, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
+			?> ] [ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
 		</div>
 
 	<?php endif; ?>
@@ -82,7 +82,7 @@
 
 		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
 			<div style="float:right">
-				Theme [ <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_board()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> ]
+				Theme [ <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> ]
 			</div>
 
 		</div>

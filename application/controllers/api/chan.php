@@ -58,7 +58,7 @@ class Chan extends REST_Controller
 
 
 
-		$posts = $this->post->get_latest(get_selected_board(), $page, array('per_page' => $per_page));
+		$posts = $this->post->get_latest(get_selected_radix(), $page, array('per_page' => $per_page));
 
 		if (count($posts) > 0)
 		{
@@ -125,7 +125,7 @@ class Chan extends REST_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest_ghost(get_selected_board(), $page, array('per_page' => $per_page));
+		$posts = $this->post->get_latest_ghost(get_selected_radix(), $page, array('per_page' => $per_page));
 
 		if (count($posts) > 0)
 		{
@@ -176,13 +176,13 @@ class Chan extends REST_Controller
 			$from_realtime = TRUE;
 
 			$thread = $this->post->get_thread(
-					get_selected_board(), $num, array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
+					get_selected_radix(), $num, array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
 			);
 		}
 		else
 		{
 			$thread = $this->post->get_thread(
-					get_selected_board(), $num, array()
+					get_selected_radix(), $num, array()
 			);
 		}
 
@@ -221,7 +221,7 @@ class Chan extends REST_Controller
 		$num = intval($this->get('num'));
 
 		$thread = $this->post->get_thread(
-				get_selected_board(), $num, array('type' => 'ghosts')
+				get_selected_radix(), $num, array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
 		);
 
 		if ($thread !== FALSE)
@@ -287,7 +287,7 @@ class Chan extends REST_Controller
 			$per_page = 1000;
 		}
 
-		$posts = $this->post->get_posts_ghost(get_selected_board(), $page, array('per_page' => $per_page));
+		$posts = $this->post->get_posts_ghost(get_selected_radix(), $page, array('per_page' => $per_page));
 
 		if (count($posts['posts']) > 0)
 		{

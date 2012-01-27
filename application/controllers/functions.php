@@ -20,7 +20,7 @@ class Functions extends Public_Controller
 		if ($this->input->server('HTTP_REFERER') && strpos($this->agent->referrer(), site_url()) === 0) :
 			$this->template->set('url', $this->input->server('HTTP_REFERER'));
 		else :
-			$this->template->set('url', site_url(get_selected_board()->shortname));
+			$this->template->set('url', site_url(get_selected_radix()->shortname));
 		endif;
 		$this->template->set_layout('redirect');
 		$this->template->build('redirect');

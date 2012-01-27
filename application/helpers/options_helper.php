@@ -56,56 +56,26 @@ if (!function_exists('fuuka_htmlescape'))
 		$result = remove_invisible_characters($input);
 		return htmlentities($input, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
 	}
+
+
 }
 
 
 /**
- * Return selected boards' shortname
+ * Return selected radix' shortname
  *
  * @author Woxxy
  */
-if (!function_exists('get_selected_board'))
+if (!function_exists('get_selected_radix'))
 {
 
-	function get_selected_board()
+	function get_selected_radix()
 	{
 		$CI = & get_instance();
-		if (isset($CI->fu_board_obj))
-			return $CI->fu_board_obj;
-		$board = new Board();
-		$board->where('shortname', $CI->fu_board)->get();
-		if($board->result_count() == 0)
-		{
-			// what the hell is going on? abort
-			show_404();
-		}
-		$CI->fu_board_obj = $board;
-		return $board;
+		return $CI->radix->get_selected();
 	}
 
 
-}
-
-/**
- * Set selected boards' shortname
- */
-if (!function_exists('set_selected_board'))
-{
-	function set_selected_board($name)
-	{
-		$CI = & get_instance();
-		if (isset($CI->fu_board_obj))
-			return $CI->fu_board_obj;
-		$board = new Board();
-		$board->where('shortname', $name)->get();
-		if($board->result_count() == 0)
-		{
-			// what the hell is going on? abort
-			show_404();
-		}
-		$CI->fu_board_obj = $board;
-		return $board;
-	}
 }
 
 
@@ -114,7 +84,8 @@ if (!function_exists('generate_file_path'))
 	function generate_file_path($path)
 	{
 		$path = explode("/", $path);
-		$depth = 0; $recursive = array();
+		$depth = 0;
+		$recursive = array();
 
 		while ($depth < count($path))
 		{
@@ -130,6 +101,8 @@ if (!function_exists('generate_file_path'))
 			$depth++;
 		}
 	}
+
+
 }
 
 /**
@@ -180,8 +153,6 @@ if (!function_exists('parse_irc'))
 
 
 }
-
-
 /**
  * Locate ImageMagick and determine if it has been installed or not.
  */
@@ -318,16 +289,16 @@ function parse_bbcode($string)
 	$bbcode->addCode('u', 'simple_replace', NULL, array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array());
 	$bbcode->addCode('banned:lit', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());
 
-	if($CI->fu_theme == 'fuuka' || $CI->fu_theme == 'yotsuba')
+	if ($CI->fu_theme == 'fuuka' || $CI->fu_theme == 'yotsuba')
 	{
 		$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'), 'inline', array('block', 'inline'), array());
 	}
 	else
 	{
-		$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());		
+		$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());
 	}
-	
-	
+
+
 	return $bbcode->parse($string);
 }
 
@@ -345,6 +316,7 @@ function check_commentdata($data = array(), $hash = FALSE)
 	return $nospam->is_spam($data, $hash);
 }
 
+
 /**
  * Compare with the local IP list if the IP is a possible spammer
  *
@@ -356,10 +328,10 @@ function check_stopforumspam_ip($ip)
 	$CI = & get_instance();
 	$query = $CI->db->query('
 		SELECT ip FROM ' . $CI->db->protect_identifiers('stopforumspam', TRUE) . '
-		WHERE ip = INET_ATON('.$CI->db->escape($ip).')
+		WHERE ip = INET_ATON(' . $CI->db->escape($ip) . ')
 		LIMIT 0,1;
 	');
-	if($query->num_rows() > 0)
+	if ($query->num_rows() > 0)
 		print_r($query->result());
 	return $query->num_rows() > 0;
 }
@@ -367,19 +339,19 @@ function check_stopforumspam_ip($ip)
 
 function compress_html()
 {
-	$CI =& get_instance();
+	$CI = & get_instance();
 	$buffer = $CI->output->get_output();
 
 	$search = array(
-		'/\>[^\S ]+/s',    //strip whitespaces after tags, except space
-		'/[^\S ]+\</s',    //strip whitespaces before tags, except space
-		'/(\s)+/s'    // shorten multiple whitespace sequences
-		);
+		'/\>[^\S ]+/s', //strip whitespaces after tags, except space
+		'/[^\S ]+\</s', //strip whitespaces before tags, except space
+		'/(\s)+/s'	// shorten multiple whitespace sequences
+	);
 	$replace = array(
 		'> ',
 		' <',
 		'\\1'
-		);
+	);
 	$buffer = preg_replace($search, $replace, $buffer);
 
 	$CI->output->set_output($buffer);

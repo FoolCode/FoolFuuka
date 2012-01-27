@@ -23,11 +23,11 @@
 
 				<?php if ($p->subnum > 0) : ?>
 					<span id="norep<?php echo $p->num . '_' . $p->subnum ?>">
-						<a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>" class="quotejs">No.</a><a href="<?php echo ($thread_id == NULL) ? site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum : 'javascript:quote(\'' . $p->num . ',' . $p->subnum . '\')' ?>" class="quotejs"><?php echo $p->num . ',' . $p->subnum ?></a>
+						<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>" class="quotejs">No.</a><a href="<?php echo ($thread_id == NULL) ? site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum : 'javascript:quote(\'' . $p->num . ',' . $p->subnum . '\')' ?>" class="quotejs"><?php echo $p->num . ',' . $p->subnum ?></a>
 					</span>
 				<?php else : ?>
 					<span id="norep<?php echo $p->num ?>">
-						<a href="<?php echo site_url($this->fu_board . '/thread/' . $p->parent) . '#' . $p->num ?>" class="quotejs">No.</a><a href="<?php echo ($thread_id == NULL) ? site_url($this->fu_board . '/thread/' . $p->parent) . '#q' . $p->num : 'javascript:quote(\'' . $p->num . '\')' ?>" class="quotejs"><?php echo $p->num ?></a>
+						<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#' . $p->num ?>" class="quotejs">No.</a><a href="<?php echo ($thread_id == NULL) ? site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#q' . $p->num : 'javascript:quote(\'' . $p->num . '\')' ?>" class="quotejs"><?php echo $p->num ?></a>
 					</span>
 				<?php endif; ?>
 

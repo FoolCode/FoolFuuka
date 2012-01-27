@@ -10,8 +10,8 @@ foreach ($data_array as $key => $item) :
 
 <div class="image_reposts_image">
 	<div class="image_reposts_number"><strong>#<?php echo $key+1 ?></strong> - Reposts: <?php echo $item->total ?></div>
-<a href="<?php echo site_url(array(get_selected_board()->shortname, 'image', urlencode(substr($item->media_hash, 0, -2)))) ?>">
-	<img src="<?php echo $this->post->get_image_href(get_selected_board(), $item, TRUE) ?>" />
+<a href="<?php echo site_url(array(get_selected_radix()->shortname, 'image', urlencode(substr($item->media_hash, 0, -2)))) ?>">
+	<img src="<?php echo $this->post->get_image_href(get_selected_radix(), $item, TRUE) ?>" />
 </a>
 </div>
 <?php

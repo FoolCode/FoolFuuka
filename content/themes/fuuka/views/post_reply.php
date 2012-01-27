@@ -33,7 +33,7 @@ if (!defined('BASEPATH'))
 							<td class="postblock">Comment</td>
 							<td><?php echo form_textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)); ?></td>
 						</tr>
-						<?php if(!get_selected_board()->archive) : ?>
+						<?php if(!get_selected_radix()->archive) : ?>
 						<tr>
 							<td class="postblock">File</td>
 							<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')); ?> <?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)); ?></td>

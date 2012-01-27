@@ -899,13 +899,9 @@ class REST_Controller extends Public_Controller
 		}
 			
 		$board = new Board();
-		if(!$board->check_shortname($this->get('board')))
+		if(!$this->radix->set_selected_by_shortname($this->get('board')))
 		{
 			$this->response(array('error' => _('The board you selected doesn\'t exist')), 404);
-		}
-		else
-		{
-			$this->fu_board = $this->get('board');
 		}
 
 		$this->load->model('post');

@@ -37,13 +37,13 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest(get_selected_board(), $page, array('per_page' => 24, 'type' => 'by_thread'));
+		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 24, 'type' => 'by_thread'));
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
+		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Page ') . $page);
 
-		$pages_links = site_url(array(get_selected_board()->shortname, 'page'));
+		$pages_links = site_url(array(get_selected_radix()->shortname, 'page'));
 		$this->CI->template->set('pages_links', $pages_links);
 		$this->CI->template->set('pages_links_current', $page);
 		$this->CI->template->set('posts',  $posts);
@@ -71,12 +71,12 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest(get_selected_board(), $page, array('per_page' => 24, 'type' => 'ghost'));
+		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 24, 'type' => 'ghost'));
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
+		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Ghosts page ') . $page);
-		$pages_links = site_url(array(get_selected_board()->shortname, 'ghost'));
+		$pages_links = site_url(array(get_selected_radix()->shortname, 'ghost'));
 		$this->CI->template->set('pages_links', $pages_links);
 		$this->CI->template->set('pages_links_current', $page);
 		$this->CI->template->set('posts', $posts);
@@ -98,14 +98,14 @@ class Theme_Controller {
 		$num = intval($num);
 
 		$this->CI->post->features = FALSE;
-		$thread = $this->CI->post->get_thread(get_selected_board(), $num);
+		$thread = $this->CI->post->get_thread(get_selected_radix(), $num);
 
 		if (!is_array($thread))
 		{
 			show_404();
 		}
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name);
+		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
 		$this->CI->template->set('posts', $thread);
 
 		$this->CI->template->set('thread_id', $num);
@@ -158,8 +158,8 @@ class Theme_Controller {
 				}
 
 				// Check if thread exists
-				$check = $this->CI->post->check_thread(get_selected_board(), $data['num']);
-				if (!get_selected_board()->archive)
+				$check = $this->CI->post->check_thread(get_selected_radix(), $data['num']);
+				if (!get_selected_radix()->archive)
 				{
 					// Normal Posting
 					if (isset($check['invalid_thread']) && $this->CI->input->post('parent') == 0)
@@ -199,11 +199,11 @@ class Theme_Controller {
 
 				if (isset($check['disable_image_upload']))
 				{
-					$result = $this->CI->post->comment(get_selected_board(), $data, FALSE);
+					$result = $this->CI->post->comment(get_selected_radix(), $data, FALSE);
 				}
 				else
 				{
-					$result = $this->CI->post->comment(get_selected_board(), $data);
+					$result = $this->CI->post->comment(get_selected_radix(), $data);
 				}
 
 				if (isset($result['error']))
@@ -216,11 +216,11 @@ class Theme_Controller {
 				{
 					if ($result['posted']->parent == 0)
 					{
-						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->num)) . '#p' . $result['posted']->num;
+						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->num)) . '#p' . $result['posted']->num;
 					}
 					else
 					{
-						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#p' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
+						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->parent)) . '#p' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 					}
 
 					$this->CI->template->set('url', $url);
@@ -247,10 +247,10 @@ class Theme_Controller {
 					'password' => $this->CI->input->post('delpass')
 				);
 
-				$result = $this->CI->post->delete(get_selected_board(), $post);
+				$result = $this->CI->post->delete(get_selected_radix(), $post);
 			}
 
-			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('parent')));
+			$this->CI->template->set('url', site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('parent')));
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');
 		}
@@ -260,7 +260,7 @@ class Theme_Controller {
 			foreach ($this->CI->input->post('delete') as $key => $value)
 			{
 				$post = array(
-					'board' => get_selected_board()->id,
+					'board' => get_selected_radix()->id,
 					'post' => $value,
 					'reason' => $this->CI->input->post("KOMENTO")
 				);
@@ -269,7 +269,7 @@ class Theme_Controller {
 				$report->add($post);
 			}
 
-			$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('parent')));
+			$this->CI->template->set('url', site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('parent')));
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');
 		}
@@ -282,7 +282,7 @@ class Theme_Controller {
 		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order', 'page');
 		if ($this->CI->input->post())
 		{
-			$redirect_array = array(get_selected_board()->shortname, 'search');
+			$redirect_array = array(get_selected_radix()->shortname, 'search');
 			foreach ($modifiers as $modifier)
 			{
 				if ($this->CI->input->post($modifier))
@@ -295,7 +295,7 @@ class Theme_Controller {
 			redirect(site_url($redirect_array));
 		}
 		$search = $this->CI->uri->ruri_to_assoc(2, $modifiers);
-		$result = $this->CI->post->get_search(get_selected_board(), $search);
+		$result = $this->CI->post->get_search(get_selected_radix(), $search);
 
 		$title = array();
 		if ($search['text'])
@@ -332,7 +332,7 @@ class Theme_Controller {
 		$this->CI->template->set('pages_links', $pages_links);
 		$this->CI->template->set('pages_links_current', $search['page']);
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' &raquo; '.$title);
+		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; '.$title);
 		$this->CI->template->set('posts', $result['posts']);
 		$this->CI->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->CI->template->set_partial('top_tools', 'top_tools', array('search' => $search));

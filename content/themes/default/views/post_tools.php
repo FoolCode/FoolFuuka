@@ -15,6 +15,6 @@ if (!defined('BASEPATH'))
 	</div>
 	<div class="modal-footer">
 		<a href="#" class="btn secondary closeModal" data-function="closeModal">Cancel</a>
-		<a href="#" class="btn primary submitModal" data-function="submitModal" data-report="<?php echo site_url($this->fu_board . '/report/') ?>" data-delete="<?php echo site_url($this->fu_board . '/delete/') ?>">Submit</a>
+		<a href="#" class="btn primary submitModal" data-function="submitModal" data-report="<?php echo site_url(get_selected_radix()->shortname . '/report/') ?>" data-delete="<?php echo site_url(get_selected_radix()->shortname . '/delete/') ?>">Submit</a>
 	</div>
 </div>

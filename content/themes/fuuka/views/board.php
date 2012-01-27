@@ -5,7 +5,7 @@ if (!isset($modifiers))
 	$modifiers = array();
 
 if (isset($thread_id))
-	echo form_open_multipart(get_selected_board()->shortname .'/sending', array('id' => 'postform'));
+	echo form_open_multipart(get_selected_radix()->shortname .'/sending', array('id' => 'postform'));
 ?>
 
 <div class="content">
@@ -18,7 +18,7 @@ foreach ($posts as $key => $post) : ?>
 	<div id="p<?php echo $op->num ?>">
 		<?php if ($op->media) : ?>
 		<span>File: <?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media; ?> <?php echo '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
-		<?php if (get_selected_board()->thumbnails || $this->tank_auth->is_allowed()) : ?>[<a href="<?php echo site_url($this->fu_board . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $op->thumbnail_href ?>">SauceNAO</a>]<?php endif; ?>
+		<?php if (get_selected_radix()->thumbnails || $this->tank_auth->is_allowed()) : ?>[<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . urlencode(substr($op->media_hash, 0, -2))) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $op->thumbnail_href ?>">SauceNAO</a>]<?php endif; ?>
 		<br />
 		<a href="<?php echo ($op->image_href)?$op->image_href:$op->remote_image_href ?>" rel="noreferrer"><img class="thumb" src="<?php echo $op->thumbnail_href ?>" alt="<?php echo $op->num ?>" width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>"/></a>
 		<?php endif; ?>
@@ -41,15 +41,15 @@ foreach ($posts as $key => $post) : ?>
 		</label>
 
 		<?php if(!isset($thread_id)) : ?>
-		<a class="js" href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.<?php echo $op->num ?></a>
+		<a class="js" href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>">No.<?php echo $op->num ?></a>
 		<?php else : ?>
-		<a class="js" href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $op->num ?>\n')"><?php echo $op->num ?></a>
+		<a class="js" href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $op->num ?>\n')"><?php echo $op->num ?></a>
 		<?php endif; ?>
 
 		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="This post was deleted before its lifetime has expired."/><?php endif ?>
 		<?php if ($op->spoiler == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="The image in this post is marked as spoiler."/><?php endif ?>
 
-		[<a href="<?php echo site_url($this->fu_board . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($this->fu_board . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?><?php if (get_selected_board()->archive) : ?> [<a href="http://boards.4chan.org/<?php echo $this->fu_board . '/res/' . $op->num ?>">Original</a>]<?php endif; ?>
+		[<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url(get_selected_radix()->shortname . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?><?php if (get_selected_radix()->archive) : ?> [<a href="http://boards.4chan.org/<?php echo get_selected_radix()->shortname . '/res/' . $op->num ?>">Original</a>]<?php endif; ?>
 
 		<blockquote><p><?php echo $op->comment_processed ?></p></blockquote>
 		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omittedposts">' . $post['omitted'] . ' posts omitted. Click Reply to view.</span>' : '') ?>

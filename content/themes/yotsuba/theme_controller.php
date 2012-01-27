@@ -37,16 +37,16 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest(get_selected_board(), $page);
+		$posts = $this->CI->post->get_latest(get_selected_radix(), $page);
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . (($page > 1)?' » Page '.$page:''));
+		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1)?' » Page '.$page:''));
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Page ') . $page);
 
 		$pages_links = array();
 		for($i = 1; $i < 16; $i++)
 		{
-			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'page', $i));
+			$pages_links[$i] = site_url(array(get_selected_radix()->shortname, 'page', $i));
 		}
 		$this->CI->template->set('pages_links', $pages_links);
 		$this->CI->template->set('pages_links_current', $page);
@@ -76,15 +76,15 @@ class Theme_Controller {
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest(get_selected_board(), $page, array('per_page' => 20, 'type' => 'ghost'));
+		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 20, 'type' => 'ghost'));
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
+		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Ghosts page ') . $page);
 		$pages_links = array();
 		for($i = 1; $i < 16; $i++)
 		{
-			$pages_links[$i] = site_url(array(get_selected_board()->shortname, 'ghost', $i));
+			$pages_links[$i] = site_url(array(get_selected_radix()->shortname, 'ghost', $i));
 		}
 		$this->CI->template->set('pages_links', $pages_links);
 		$this->CI->template->set('pages_links_current', $page);
@@ -107,14 +107,14 @@ class Theme_Controller {
 		$num = intval($num);
 
 		$this->CI->post->features = FALSE;
-		$thread = $this->CI->post->get_thread(get_selected_board(), $num);
+		$thread = $this->CI->post->get_thread(get_selected_radix(), $num);
 
 		if (!is_array($thread))
 		{
 			show_404();
 		}
 
-		$this->CI->template->title('/' . get_selected_board()->shortname . '/ - ' . get_selected_board()->name . ' » Thread #' . $num);
+		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' » Thread #' . $num);
 		$this->CI->template->set('posts', $thread);
 
 		$this->CI->template->set('thread_id', $num);
@@ -163,8 +163,8 @@ class Theme_Controller {
 				}
 
 				// Check if thread exists
-				$check = $this->CI->post->check_thread(get_selected_board(), $data['num']);
-				if (!get_selected_board()->archive)
+				$check = $this->CI->post->check_thread(get_selected_radix(), $data['num']);
+				if (!get_selected_radix()->archive)
 				{
 					// Normal Posting
 					if (isset($check['invalid_thread']) && $this->CI->input->post('resto') == 0)
@@ -204,11 +204,11 @@ class Theme_Controller {
 
 				if (isset($check['disable_image_upload']))
 				{
-					$result = $this->CI->post->comment(get_selected_board(), $data, FALSE);
+					$result = $this->CI->post->comment(get_selected_radix(), $data, FALSE);
 				}
 				else
 				{
-					$result = $this->CI->post->comment(get_selected_board(), $data);
+					$result = $this->CI->post->comment(get_selected_radix(), $data);
 				}
 
 				if (isset($result['error']))
@@ -220,11 +220,11 @@ class Theme_Controller {
 				{
 					if ($result['posted']->parent == 0)
 					{
-						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->num)) . '#p' . $result['posted']->num;
+						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->num)) . '#p' . $result['posted']->num;
 					}
 					else
 					{
-						$url = site_url(array(get_selected_board()->shortname, 'thread', $result['posted']->parent)) . '#p' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
+						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->parent)) . '#p' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 					}
 
 					$this->CI->template->set('url', $url);
@@ -251,13 +251,13 @@ class Theme_Controller {
 					'password' => $this->CI->input->post('pwd')
 				);
 
-				$result = $this->CI->post->delete(get_selected_board(), $post);
+				$result = $this->CI->post->delete(get_selected_radix(), $post);
 			}
 
 			if ($this->CI->input->post('resto')) :
-				$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('resto')));
+				$this->CI->template->set('url', site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('resto')));
 			else :
-				$this->CI->template->set('url', site_url(get_selected_board()->shortname));
+				$this->CI->template->set('url', site_url(get_selected_radix()->shortname));
 			endif;
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');
@@ -268,7 +268,7 @@ class Theme_Controller {
 			foreach ($this->CI->input->post('delete') as $key => $value)
 			{
 				$post = array(
-					'board' => get_selected_board()->id,
+					'board' => get_selected_radix()->id,
 					'post' => $value,
 					'reason' => ''
 				);
@@ -278,9 +278,9 @@ class Theme_Controller {
 			}
 
 			if ($this->CI->input->post('resto')) :
-				$this->CI->template->set('url', site_url(get_selected_board()->shortname . '/thread/' . $this->CI->input->post('resto')));
+				$this->CI->template->set('url', site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('resto')));
 			else :
-				$this->CI->template->set('url', site_url(get_selected_board()->shortname));
+				$this->CI->template->set('url', site_url(get_selected_radix()->shortname));
 			endif;
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');

@@ -1440,7 +1440,7 @@ class Post extends CI_Model
 
 	function delete($board, $data)
 	{
-		// $data => { board, post (doc_id), password, remove (post/image) }
+		// $data => { board, [post (doc_id), password, type (post/image)] }
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->get_table($board) . '
@@ -1466,7 +1466,7 @@ class Post extends CI_Model
 			return array('error' => _('The password you inserted did not match the post\'s deletion password.'));
 		}
 
-		if (isset($data['remove']) && $data['remove'] == 'image')
+		if (isset($data['type']) && $data['type'] == 'image')
 		{
 			if (!$this->delete_image($board, $row))
 			{

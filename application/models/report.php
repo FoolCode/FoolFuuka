@@ -52,50 +52,6 @@ class Report extends DataMapper
 	}
 
 
-	public function get_reported_post($report)
-	{
-		$board = new Board();
-		$board->where('id', $report->board)->get();
-
-		if ($board->result_count() == 0)
-			return FALSE;
-
-		$sql = 'SELECT *, CONCAT('.$this->db->escape($board->shortname).') AS shortname
-			FROM ' . $this->get_table($board->shortname) . '
-			LEFT JOIN
-				(
-					SELECT id as report_id, post as report_doc_id, reason as report_reason, status as report_status, created as report_created
-					FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
-					WHERE `id` = ' . $report->id . '
-				) as q
-				ON
-				' . $this->get_table($board->shortname) . '.`doc_id`
-				=
-				' . $this->db->protect_identifiers('q') . '.`report_doc_id`
-			LEFT JOIN
-				(
-					SELECT id AS poster_id_join,
-						ip AS poster_ip, user_agent AS poster_user_agent,
-						banned AS poster_banned, banned_reason AS poster_banned_reason,
-						banned_start AS poster_banned_start, banned_end AS poster_banned_end
-					FROM'.$this->db->protect_identifiers('posters', TRUE).'
-				) as p
-				ON
-				' . $this->get_table($board->shortname) . '.`poster_id`
-				=
-				' . $this->db->protect_identifiers('p') . '.`poster_id_join`
-			WHERE doc_id = ' . $this->db->escape($report->post) . '
-			LIMIT 0, 1';
-
-		$query = $this->db->query($sql);
-
-		if ($query->num_rows() == 0)
-			return FALSE;
-
-		return $query->row();
-	}
-
-
 	public function add($data = array())
 	{
 		if (!$this->update_report_db($data))
@@ -105,82 +61,6 @@ class Report extends DataMapper
 		}
 
 		return TRUE;
-	}
-
-
-	public function process_report($id = 0, $action = array())
-	{
-		if (empty($action) || !isset($action['process']))
-		{
-			log_message('error', 'process_report: invalid operation');
-			return FALSE;
-		}
-
-		$query = $this->db->query('
-			SELECT *
-			FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
-			WHERE `id` = ' . $id . '
-			LIMIT 0,1
-		');
-
-		if ($query->num_rows() == 0)
-		{
-			log_message('error', 'process_report: failed to process report, it does not exist');
-			$this->db->delete('reports', array('id' => $report->id));
-			return FALSE;
-		}
-
-		$report = $query->row();
-
-		$CI = & get_instance();
-		$CI->load->model('post');
-		$postdata = $CI->post->get_multi_posts(array(array('board_id' => $report->board, 'doc_id' => array($report->post))));
-		$postdata = $postdata[0];
-
-		if ($postdata === FALSE)
-		{
-			log_message('error', 'process_report: failed to process post, it does not exist');
-			$this->db->delete('reports', array('id' => $report->id));
-			return FALSE;
-
-		}
-
-		switch ($action['process'])
-		{
-			case('ban'):
-				if ($postdata['post']->poster_ip == "")
-				{
-					$this->db->delete('reports', array('id' => $report->id));
-					return FALSE;
-				}
-				$this->db->update('posters', array('banned' => 1, 'banned_reason' => $action['banned_reason'], 'banned_start' => $action['banned_start'], 'banned_end' => $action['banned_end']), array('id' => $postdata['post']->poster_id));
-				$this->db->delete('reports', array('id' => $report->id));
-				return $postdata;
-				break;
-
-			case('delete'):
-				$data = array('post' => $postdata['post']->doc_id, 'password' => $postdata['post']->delpass, 'remove' => $action['remove']);
-				$result = $CI->post->delete($postdata['board'], $data);
-				if (isset($result['error']))
-				{
-					log_message('error', 'process_report: failed to delete post');
-					return FALSE;
-				}
-				return TRUE;
-				break;
-
-			case('spam'):
-				$result = $CI->post->spam($postdata['board'], $postdata['post']->doc_id);
-				if (isset($result['error']))
-				{
-					log_message('error', 'process_report: failed to mark post as spam');
-					return FALSE;
-				}
-				return TRUE;
-				break;
-		}
-
-		return FALSE;
 	}
 
 
@@ -259,6 +139,9 @@ class Report extends DataMapper
 
 	public function list_all_reports($page = 1, $per_page = 15)
 	{
+		$CI = & get_instance();
+		$CI->load->model('post');
+
 		$reports = $this->get_paged($page, $per_page);
 		$boards = new Board();
 		$boards->get();
@@ -268,6 +151,7 @@ class Report extends DataMapper
 			return $reports;
 		}
 
+		// generate $board => [doc_id, doc_id]
 		$multi_posts = array();
 		foreach ($reports->all as $report)
 		{
@@ -280,20 +164,140 @@ class Report extends DataMapper
 			}
 		}
 
-		$query = array();
-		foreach ($multi_posts as $key => $doc_ids)
+		// generate [board_id, array(doc_id, doc_id)]
+		$posts = array();
+		foreach ($multi_posts as $key => $doc_id)
 		{
-			$query[]  = array('board_id' => $key, 'doc_id' => $doc_ids);
+			$posts[]  = array('board_id' => $key, 'doc_id' => $doc_id);
 		}
 
-		$CI = & get_instance();
-		$CI->load->model('post');
-		$results = $CI->post->get_multi_posts($query);
+		$results = $CI->post->get_multi_posts($posts);
 		if (!empty($results))
 		{
 			$reports->all = $results;
 		}
 		return $reports;
+	}
+
+
+	public function process_report($id = 0, $options = array())
+	{
+		// report, [action, value]
+		if (empty($options) || !isset($options['action']))
+		{
+			log_message('error', 'process_report: invalid call');
+			return FALSE;
+		}
+
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
+			WHERE id = ?
+			LIMIT 0,1
+		', array($id));
+
+		if ($query->num_rows() == 0)
+		{
+			log_message('error', 'process_report: failed to process, report does not exist');
+			return FALSE;
+		}
+
+		// set result
+		$report = $query->row();
+
+		$CI = & get_instance();
+		$CI->load->model('post');
+
+		// get single post
+		$post = $CI->post->get_multi_posts(
+			array(
+				array(
+					'board_id' => $report->board,
+					'doc_id' => array(
+						$report->post
+					)
+				)
+			)
+		);
+
+		if (empty($post))
+		{
+			log_message('error', 'process_report: failed to process, post does not exist');
+			$this->db->delete('reports', array('id' => $report->id));
+			return FALSE;
+		}
+
+		switch ($options['action'])
+		{
+			case('ban'):
+
+				if ($post['post']->poster_ip == "")
+				{
+					$this->db->delete('reports', array('id' => $report->id));
+					log_message('error', 'process_report: failed to ban ip address specified');
+					return array('error' => TRUE, 'message' => sprintf('Failed to ban the IP %s.', $post['post']->poster_ip));
+				}
+
+				$this->db->update(
+					'posters',
+					array(
+						'banned' => 1,
+						'banned_reason' => $options['value']['banned_reason'],
+						'banned_start' => $options['value']['banned_start'],
+						'banned_end' => $options['value']['banned_end']
+					),
+					array(
+						'id' => $post['post']->poster_id
+					)
+				);
+				$this->db->delete('reports', array('id' => $report->id));
+				return array('success' => TRUE, 'message' => sprintf('The IP %s has been banned from posting.', $post['post']->poster_ip));
+
+				break;
+
+			case('delete'):
+
+				if (!isset($options['value']['delete']))
+				{
+					log_message('error', 'process_report: invalid delete type');
+					return array('error' => TRUE, 'message' => 'Invalid Operation.');
+				}
+
+				$result = $CI->post->delete(
+					$post['board'],
+					array(
+						'post' => $post['post']->doc_id,
+						'password' => $post['post']->delpass,
+						'type' => $options['value']['delete']
+					)
+				);
+				if (isset($result['error']))
+				{
+					log_message('error', 'process_report: failed to delete the reported post or image');
+					return array('error' => TRUE, 'message' => 'Failed to remove the reported post or image from the database.');
+				}
+				return array('success' => TRUE, 'message' => 'The reported post or image has been removed from the database.');
+
+				break;
+
+			case('spam'):
+
+				$result = $CI->post->spam($post['board'], $post['post']->doc_id);
+				if (isset($result['error']))
+				{
+					log_message('error', 'process_report: failed to mark the reported post or image as spam');
+					return array('error' => TRUE, 'message' => 'Failed to flag the reported post or image as spam.');
+				}
+				return array('success' => TRUE, 'message' => 'The reported post or image has been flagged as spam in the database.');
+
+				break;
+
+			default:
+
+				return array('error' => TRUE, 'message' => 'Invalid Operation.');
+		}
+
+		return array('error' => TRUE, 'message' => 'Invalid Operation.');
 	}
 
 

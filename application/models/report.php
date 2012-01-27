@@ -219,6 +219,7 @@ class Report extends DataMapper
 				)
 			)
 		);
+		$post = $post[0];
 
 		if (empty($post))
 		{

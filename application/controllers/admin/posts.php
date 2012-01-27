@@ -59,12 +59,12 @@ class Posts extends Admin_Controller
 			$redirect = site_url('admin/posts/reports');
 		}
 
-		$report = new Report();
 
 		switch ($type)
 		{
 			case('ban'):
 
+				$report = new Report();
 				$result = $report->process_report(
 					$report_id,
 					array(
@@ -89,6 +89,7 @@ class Posts extends Admin_Controller
 
 			case('delete'):
 
+				$report = new Report();
 				$result = $report->process_report(
 					$report_id,
 					array(
@@ -111,6 +112,7 @@ class Posts extends Admin_Controller
 
 			case('remove'):
 
+				$report = new Report($report_id);
 				if (!$report->remove_report_db())
 				{
 					flash_notice('error', _('Failed to remove the report from the database.'));
@@ -118,13 +120,14 @@ class Posts extends Admin_Controller
 					$this->output->set_output(json_encode(array('href' => $redirect)));
 					return FALSE;
 				}
-				flash_notice('notice', _('The report has been removed.'));
+				flash_notice('notice', _('The report has been removed from the database.'));
 				$this->output->set_output(json_encode(array('href' => $redirect)));
 
 				break;
 
 			case('spam'):
 
+				$report = new Report();
 				$result = $report->process_report(
 					$report_id,
 					array(

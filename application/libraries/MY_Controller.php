@@ -26,6 +26,9 @@ class MY_Controller extends CI_Controller
 			// loads variables from database for get_setting()
 			load_settings();
 
+			// load the radixes (boards)
+			$this->load->model('radix');
+			
 			// create an array for the set_notice system
 			$this->notices = array();
 			$this->flash_notice_data = array();

@@ -6,8 +6,12 @@ if (!defined('BASEPATH'))
 class Radix extends CI_Model
 {
 
-	var $preloaded_radixes;
-	var $preloaded_radixes_array;
+	var $preloaded_radixes = null;
+	var $preloaded_radixes_array = null;
+	var $loaded_radixes_archive = null;
+	var $loaded_radixes_archive_array = null;
+	var $loaded_radixes_board = null;
+	var $loaded_radixes_board_array = null;
 
 	function __construct($id = NULL)
 	{
@@ -91,5 +95,15 @@ class Radix extends CI_Model
 		return FALSE;
 	}
 	
-	
+	/**
+	 * Returns only the archive radixes
+	 */
+	function get_archives()
+	{
+		if(!is_null($this->$loaded_radixes_archive))
+			return $loaded_radixes_archive;
+		
+		// just make a copy and get rid of the non-archive ones
+		$all = get_all();
+	}
 }

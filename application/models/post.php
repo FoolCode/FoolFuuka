@@ -1579,39 +1579,39 @@ class Post extends CI_Model
 	}
 
 
-	/*
-	  function spam($board, $doc_id)
-	  {
-	  $query = $this->db->query('
-	  SELECT *
-	  FROM ' . $this->get_table($board) . '
-	  WHERE doc_id = ?
-	  LIMIT 0,1;
-	  ', $doc_id);
+	function spam($board, $doc_id)
+	{
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->get_table($board) . '
+			WHERE doc_id = ?
+			LIMIT 0,1;
+		', array($doc_id));
 
-	  if ($query->num_rows() != 1)
-	  {
-	  log_message('debug', 'post.php spam() post or thread not found');
-	  return array('error' => _('There\'s no such record to mark as spam.'));
-	  }
+		if ($query->num_rows() == 0)
+		{
+			log_message('error', 'spam: the specified post or thread was not found');
+			return array('error' => TRUE);
+		}
 
-	  $row = $query->row();
+		$row = $query->row();
 
-	  $this->db->query('
-	  UPDATE ' . $this->get_table($board) . '
-	  SET spam = 1
-	  WHERE doc_id = ?
-	  ', $row->doc_id);
+		$this->db->query('
+			UPDATE ' . $this->get_table($board) . '
+			SET = ?
+			WHERE doc_id = ?
+		', array(1, $row->doc_id));
 
-	  if ($this->db->affected_rows() != 1)
-	  {
-	  log_message('debug', 'post.php spam() unable to update record.');
-	  return array('error' => _('Unable to mark post/thread as spam.'));
-	  }
+		if ($this->db->affected_rows() != 1)
+		{
+			log_message('error', 'spam: unable to update record');
+			return array('error' => TRUE);
+		}
 
-	  return array('success' => TRUE);
-	  }
-	 */
+		return array('success' => TRUE);
+	}
+
+
 	function process_name($name)
 	{
 		$trip = '';

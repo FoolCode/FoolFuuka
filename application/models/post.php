@@ -1237,6 +1237,17 @@ class Post extends CI_Model
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
 
+
+
+		if ($data['spoiler'] == FALSE || $data['spoiler'] == '')
+		{
+			$spoiler = 0;
+		}
+		else
+		{
+			$spoiler = $data['spoiler'];
+		}
+
 		if ($data['media'] == FALSE || $data['media'] == '')
 		{
 			if (is_array($data['num']))
@@ -1246,6 +1257,11 @@ class Post extends CI_Model
 			else
 			{
 				$parent = $data['num'];
+			}
+
+			if ($spoiler == 1)
+			{
+				$spoiler = 0;
 			}
 
 			if ($parent == 0)
@@ -1281,15 +1297,6 @@ class Post extends CI_Model
 			{
 				return array('error' => 'Your image upload has been flagged as inappropriate.');
 			}
-		}
-
-		if ($data['spoiler'] == FALSE || $data['spoiler'] == '')
-		{
-			$spoiler = 0;
-		}
-		else
-		{
-			$spoiler = $data['spoiler'];
 		}
 
 		if (check_commentdata($data))

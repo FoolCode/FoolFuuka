@@ -276,6 +276,7 @@ class Chan extends Public_Controller
 				$data['subject'] = $this->input->post('reply_talkingde');
 				$data['comment'] = $this->input->post('reply_chennodiscursus');
 				$data['password'] = $this->input->post('reply_nymphassword');
+				$data['spoiler'] = $this->input->post('reply_spoiler');
 
 				if ($this->tank_auth->is_allowed())
 				{
@@ -324,7 +325,6 @@ class Chan extends Public_Controller
 				if ($this->upload->do_upload('file_image'))
 				{
 					$data['media'] = $this->upload->data();
-					$data['spoiler'] = $this->input->post('reply_spoiler');
 				}
 				else
 				{

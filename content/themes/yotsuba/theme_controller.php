@@ -151,6 +151,7 @@ class Theme_Controller {
 				$data['subject'] = $this->CI->input->post('sub');
 				$data['comment'] = $this->CI->input->post('com');
 				$data['password'] = $this->CI->input->post('pwd');
+				$data['spoiler'] = $this->CI->input->post('spoiler');
 				$data['postas'] = 'N';
 
 				if ($this->CI->tank_auth->is_allowed())

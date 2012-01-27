@@ -118,7 +118,7 @@ class Chan extends Public_Controller
 		$this->input->set_cookie('fu_ghost_mode', FALSE, 86400);
 		if ($this->input->post())
 		{
-			redirect($this->fu_board . '/page/' . $this->input->post('page'), 'location', 303);
+			redirect(get_selected_radix()->shortname . '/page/' . $this->input->post('page'), 'location', 303);
 		}
 
 		if (!is_natural($page) || $page > 500)
@@ -152,7 +152,7 @@ class Chan extends Public_Controller
 		$this->input->set_cookie('fu_ghost_mode', TRUE, 86400);
 		if ($this->input->post())
 		{
-			redirect($this->fu_board . '/ghost/' . $this->input->post('page'), 'location', 303);
+			redirect(get_selected_radix()->shortname . '/ghost/' . $this->input->post('page'), 'location', 303);
 		}
 
 		$values = array();
@@ -429,7 +429,7 @@ class Chan extends Public_Controller
 	{
 		if ($this->input->post())
 		{
-			redirect($this->fu_board . '/post/' . $this->input->post('post'), 'location', 302);
+			redirect(get_selected_radix()->shortname . '/post/' . $this->input->post('post'), 'location', 302);
 		}
 
 		$num = str_replace('S', '', $num);
@@ -466,15 +466,15 @@ class Chan extends Public_Controller
 
 		if ($thread->subnum > 0)
 		{
-			$url = site_url($this->fu_board . '/thread/' . $thread->parent) . '#' . $thread->num . '_' . $thread->subnum;
+			$url = site_url(get_selected_radix()->shortname . '/thread/' . $thread->parent) . '#' . $thread->num . '_' . $thread->subnum;
 		}
 		else if ($thread->parent > 0)
 		{
-			$url = site_url($this->fu_board . '/thread/' . $thread->parent) . '#' . $thread->num;
+			$url = site_url(get_selected_radix()->shortname . '/thread/' . $thread->parent) . '#' . $thread->num;
 		}
 		else
 		{
-			$url = site_url($this->fu_board . '/thread/' . $thread->num);
+			$url = site_url(get_selected_radix()->shortname . '/thread/' . $thread->num);
 		}
 
 		$this->template->title(_('Redirecting...'));
@@ -843,7 +843,7 @@ class Chan extends Public_Controller
 
 		if ($params != "")
 		{
-			redirect($this->fu_board . '/' . $params, 'location', 301);
+			redirect(get_selected_radix()->shortname . '/' . $params, 'location', 301);
 		}
 	}
 

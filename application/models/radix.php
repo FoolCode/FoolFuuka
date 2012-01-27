@@ -47,11 +47,13 @@ class Radix extends CI_Model
 		foreach ($object as $item)
 		{
 			$result_object[$item->id] = $item;
+			$result_object[$item->id]->href = site_url(array($item->shortname));
 		}
 
 		foreach ($array as $item)
 		{
 			$result_array[$item['id']] = $item;
+			$result_array[$item['id']]['href'] = site_url(array($item['shortname']));
 		}
 
 		$this->preloaded_radixes = $result_object;
@@ -236,17 +238,17 @@ class Radix extends CI_Model
 		else
 			$items = $this->get_all();
 
-		foreach ($all as $key => $item)
+		foreach ($items as $key => $item)
 		{
 			if ($array)
 				if ($item[$type] == !$switch)
-					unset($all[$key]);
+					unset($items[$key]);
 				else
 				if ($item->$type == !$switch)
-					unset($all[$key]);
+					unset($items[$key]);
 		}
 
-		return $all;
+		return $items;
 	}
 
 

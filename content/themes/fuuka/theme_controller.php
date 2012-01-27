@@ -26,7 +26,7 @@ class Theme_Controller {
 		$this->CI->input->set_cookie('fu_ghost_mode', FALSE, 86400);
 		if ($this->CI->input->post())
 		{
-			redirect($this->CI->fu_board . '/page/' . $this->CI->input->post('page'), 'location', 303);
+			redirect(get_selected_radix()->shortname . '/page/' . $this->CI->input->post('page'), 'location', 303);
 		}
 
 		if (!is_natural($page) || $page > 500)
@@ -58,7 +58,7 @@ class Theme_Controller {
 		$this->CI->input->set_cookie('fu_ghost_mode', TRUE, 86400);
 		if ($this->CI->input->post())
 		{
-			redirect($this->CI->fu_board . '/ghost/' . $this->CI->input->post('page'), 'location', 303);
+			redirect(get_selected_radix()->shortname . '/ghost/' . $this->CI->input->post('page'), 'location', 303);
 		}
 
 		$values = array();

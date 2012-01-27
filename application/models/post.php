@@ -106,6 +106,26 @@ class Post extends CI_Model
 	}
 
 
+	function get_sql_poster_after_join()
+	{
+		if(!$this->tank_auth->is_allowed())
+			return '';
+
+		return '
+					LEFT JOIN
+					(
+						SELECT id as poster_id_join, ip as poster_ip, banned as poster_banned
+						FROM ' . $this->db->protect_identifiers('posters', TRUE) . '
+					) as p
+					ON
+					g.`poster_id`
+					=
+					' . $this->db->protect_identifiers('p') . '.`poster_id_join`
+				';
+
+	}
+
+
 	/**
 	 * Returns the last 200 threads that were made, deleted or not, together
 	 * with the number of images and posts inside of them
@@ -667,15 +687,7 @@ class Post extends CI_Model
 					SELECT *, CONCAT(' . $this->db->escape($post['board_id']) . ') as board_id
 					FROM ' . $this->get_table($board) . ' as g
 					' . $this->get_sql_report_after_join($board) . '
-					LEFT JOIN
-						(
-							SELECT
-								id as poster_id_join,
-								ip as poster_ip,
-								banned as poster_banned
-							FROM ' . $this->db->protect_identifiers('posters', TRUE) . '
-						) as p
-						ON ' . $this->db->protect_identifiers('g') . '.`poster_id` = ' . $this->db->protect_identifiers('p') . '.`poster_id_join`
+					' . $this->get_sql_poster_after_join() . '
 					WHERE g.`doc_id` = ' . $this->db->escape($post['doc_id']) . '
 					LIMIT 0, 1
 				)

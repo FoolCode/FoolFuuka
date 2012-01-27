@@ -67,7 +67,7 @@ class Post extends CI_Model
 		return '
 					LEFT JOIN
 					(
-						SELECT post as report_post, reason as report_reason, status as report_status
+						SELECT id as report_id, post as report_post, reason as report_reason, status as report_status
 						FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
 						WHERE `board` = ' . $board->id . '
 					) as q
@@ -94,7 +94,7 @@ class Post extends CI_Model
 		return '
 					LEFT JOIN
 					(
-						SELECT post as report_post, reason as report_reason, status as report_status
+						SELECT id as report_id, post as report_post, reason as report_reason, status as report_status, created as report_created
 						FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
 						WHERE `board` = ' . $board->id . '
 					) as q
@@ -661,11 +661,11 @@ class Post extends CI_Model
 		foreach ($posts as $post)
 		{
 			// post [board_id, doc_id]
-			$board = $this->radix->get_by_id($post->board_id);
+			$board = $this->radix->get_by_id($post['board_id']);
 			$query[] = '
 				(
-					SELECT *, CONCAT(' . $this->db->escape($post->board_id) . ') as board_id
-					FROM ' . $this->get_table($board) . '
+					SELECT *, CONCAT(' . $this->db->escape($post['board_id']) . ') as board_id
+					FROM ' . $this->get_table($board) . ' as g
 					' . $this->get_sql_report_after_join($board) . '
 					LEFT JOIN
 						(
@@ -675,8 +675,8 @@ class Post extends CI_Model
 								banned as poster_banned
 							FROM ' . $this->db->protect_identifiers('posters', TRUE) . '
 						) as p
-						ON ' . $this->get_table($board) . '.`poster_id` = ' . $this->db->protect_identifiers('p') . '.`poster_id_join`
-					WHERE doc_id = ' . $this->db->escape($post->doc_id) . '
+						ON ' . $this->db->protect_identifiers('g') . '.`poster_id` = ' . $this->db->protect_identifiers('p') . '.`poster_id_join`
+					WHERE g.`doc_id` = ' . $this->db->escape($post['doc_id']) . '
 					LIMIT 0, 1
 				)
 			';
@@ -691,10 +691,10 @@ class Post extends CI_Model
 		}
 
 		$results = array();
-		foreach ($query->result()->all as $post)
+		foreach ($query->result() as $post)
 		{
 			$board = $this->radix->get_by_id($post->board_id);
-			$results[] = array($board, $post);
+			$results[] = array('board' => $board, 'post' => $post);
 		}
 
 		return $results;

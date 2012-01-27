@@ -28,7 +28,6 @@ class Report extends DataMapper
 
 	function __construct($id = NULL)
 	{
-		$this->load->model('post');
 		parent::__construct(NULL);
 
 		// We've overwrote some functions, and we need to use the get() from THIS model
@@ -271,7 +270,6 @@ class Report extends DataMapper
 			return $reports;
 		}
 
-		$query = array();
 		/*
 		foreach ($reports->all as $report)
 		{
@@ -321,13 +319,19 @@ class Report extends DataMapper
 		}
 		*/
 
+		$query = array();
 		foreach ($reports->all as $report)
 		{
-			$query[] = array('board_id' => $report->board_id, 'doc_id' => $report->post);
+			$query[] = array('board_id' => $report->board, 'doc_id' => $report->post);
 		}
 
-		$results = $this->post->get_multi_posts($query);
-		return $results;
+		$post = new Post();
+		$results = $post->get_multi_posts($query);
+		if (!empty($results))
+		{
+			$reports->all = $results;
+		}
+		return $reports;
 	}
 
 

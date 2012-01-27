@@ -1147,7 +1147,7 @@ class Post extends CI_Model
 		}
 
 		//$words = mb_substr($signature, 0, 10);
-		
+		$query->free_result();
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->db->protect_identifiers('libpuz_words', TRUE) . ' AS w
@@ -1164,7 +1164,7 @@ class Post extends CI_Model
 		foreach($query->result() as $item)
 		{
 			$distance = puzzle_vector_normalized_distance(puzzle_uncompress_cvec($item->signature), $signature);
-			if($distance > 0.95)
+			if($distance < 0.5)
 			{
 				$md5s[] = $this->db->escape($item->md5);
 			}
@@ -1172,7 +1172,7 @@ class Post extends CI_Model
 		
 		if(count($md5s) == 0)
 			return FALSE;
-
+		$query->free_result();
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->get_table($board) . '

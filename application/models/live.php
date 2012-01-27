@@ -10,15 +10,23 @@ class Live extends CI_Model
 		'timers' => array(
 			0 => array(
 				'limit' => 500,
-				'functions' => array()
+				'functions' => array(),
+				'backwards' => FALSE // master switch for backwards
 			// it's unsafe to do image processing zero seconds later!
 			),
 			10 => array(
 				'limit' => 10000,
-				'functions' => array('libpuzzle_store')
+				'functions' => array(
+					array( 
+						'function' => 'libpuzzle_store',
+						'backwards' => TRUE
+					),
+				),
+				'backwards' => TRUE
 			)
 		)
 	);
+	
 	var $delays = null;
 
 	function __construct($id = NULL)
@@ -82,10 +90,15 @@ class Live extends CI_Model
 				$latest_doc_id = $this->delays[$board->id][$key]['latest_doc_id'];
 			else
 				$latest_doc_id = 0;
+			
+			if (isset($this->delays[$board->id][$key]['inferior_doc_id']))
+				$inferior_doc_id = $this->delays[$board->id][$key]['inferior_doc_id'];
+			else
+				$inferior_doc_id = 0;
 
 			$posts = $this->post->get_with_delay($board, $process['limit'], $key, $latest_doc_id);
 
-			if ($posts == FALSE)
+			if ($posts == FALSE && $process['backwards'])
 			{
 				// if we're done with going upwards, let's go backwards
 				$posts = $this->post->get_with_delay($board, $process['limit'], $key, 0, $inferior_doc_id);
@@ -98,17 +111,22 @@ class Live extends CI_Model
 						
 			foreach ($process['functions'] as $func)
 			{
-				$this->$func($board, $posts);
+				$fun = $func['function'];
+				$this->$fun($board, $posts);
 			}
 			
 			foreach($posts as $post)
 			{
 				if($latest_doc_id < $post->doc_id)
 					$latest_doc_id = $post->doc_id;
+				
+				if($inferior_doc_id > $post->doc_id)
+					$inferior_doc_id = $post->doc_id;
 			}
 			
 			$this->delays[$board->id][$key]['latest_doc_id'] = $latest_doc_id;
-			//$this->statistics->save_stat($board->id, '_live_delays', time(), $this->delays[$board->id]);
+			$this->delays[$board->id][$key]['inferior_doc_id'] = $inferior_doc_id;
+			$this->statistics->save_stat($board->id, '_live_delays', time(), $this->delays[$board->id]);
 		}
 		
 		
@@ -155,8 +173,12 @@ class Live extends CI_Model
 					$words[] = array('word' => mb_substr($signature,$i,10), 'pos' => $i, 'signature_id' => $insert_id);
 				}
 				
-				$query = $this->db->insert_batch('libpuz_words', $words);
-			}
+				$query->free_result();
+				
+				$this->db->insert_batch('libpuz_words', $words);
+				
+				
+				}
 		}
 	}
 	

@@ -1478,10 +1478,17 @@ class Post extends CI_Model
 			// we risk getting into a racing condition
 			// get rid first of all of OP so posting is stopped
 			// first the file
-			if (!$this->delete_image($board, $row))
+			if (!$board->archive && $this->total_same_media($board, $row->media_hash) > 1)
 			{
-				log_message('error', 'post.php delete() couldn\'t delete thumbnail from thread OP');
-				return array('error' => _('Couldn\'t delete the thumbnail.'));
+				// do nothing, this is required to not affect archived boards
+			}
+			else
+			{
+				if (!$this->delete_image($board, $row))
+				{
+					log_message('error', 'post.php delete() couldn\'t delete thumbnail from thread OP');
+					return array('error' => _('Couldn\'t delete the thumbnail.'));
+				}
 			}
 
 			$this->db->query('
@@ -1531,10 +1538,17 @@ class Post extends CI_Model
 		}
 		else
 		{
-			if ($this->delete_image($board, $row) !== TRUE)
+			if (!$board->archive && $this->total_same_media($board, $row->media_hash) > 1)
 			{
-				log_message('error', 'post.php delete() couldn\'t delete thumbnail from comment');
-				return array('error' => _('Couldn\'t delete the thumbnail.'));
+				// do nothing, this is required to not affect archived boards
+			}
+			else
+			{
+				if ($this->delete_image($board, $row) !== TRUE)
+				{
+					log_message('error', 'post.php delete() couldn\'t delete thumbnail from comment');
+					return array('error' => _('Couldn\'t delete the thumbnail.'));
+				}
 			}
 
 			$this->db->query('
@@ -1683,6 +1697,18 @@ class Post extends CI_Model
 
 		if ($build)
 			$post->formatted = $this->build_board_comment($board, $post);
+	}
+
+
+	function total_same_media($board, $media_hash)
+	{
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->get_table($board) . '
+			WHERE media_hash = ?
+		', array($media_hash));
+
+		return $query->num_rows();
 	}
 
 

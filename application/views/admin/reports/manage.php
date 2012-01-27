@@ -34,7 +34,8 @@
 				<a href="<?php echo site_url('/admin/posts/action/delete/'.$report['post']->report_id.'/image/') ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/delete/'.$report['post']->report_id.'/image/') ?>', 'Do you really wish to delete this reported post\'s image?'); return false;">Delete Image</a> |
 				<a href="<?php echo site_url('/admin/posts/action/spam/'.$report['post']->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/spam/'.$report['post']->report_id) ?>', 'Do you really wish to mark this report as spam?'); return false;">Spam</a> |
 				<a href="<?php echo site_url($report['board']->shortname.'/post/'.(($report['post']->subnum > 0) ? $report['post']->num . '_' . $report['post']->subnum : $report['post']->num)) ?>">View</a> |
-				<a href="<?php echo site_url('/admin/posts/action/ban/'.$report['post']->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/ban/'.$report['post']->report_id) ?>', 'Do you really wish to ban this IP?'); return false;">Ban</a> <?php echo $report['post']->poster_ip ?>
+				<a href="<?php echo site_url('/admin/posts/action/ban/'.$report['post']->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/ban/'.$report['post']->report_id) ?>', 'Do you really wish to ban this IP?'); return false;">Ban</a> <?php echo $report['post']->poster_ip ?> |
+				<a href="<?php echo site_url('/admin/posts/action/md5/'.$report['post']->report_id) ?>" onclick="confirmPlug('<?php echo site_url('/admin/posts/action/md5/'.$report['post']->report_id) ?>', 'Do you really wish to ban and delete this reported post\'s image?'); return false;">Ban and Delete Image</a>
 			</div>
 		</div>
 		<?php endforeach; ?>

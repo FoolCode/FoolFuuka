@@ -281,6 +281,19 @@ class Report extends DataMapper
 
 				break;
 
+			case('md5'):
+
+				$result = $CI->post->ban_image_hash($post['post']->media_hash);
+				if (isset($result['error']))
+				{
+					log_message('error', 'process_report: failed to ban image md5');
+					return array('error' => TRUE, 'message' => 'Failed to ban the MD5.');
+				}
+				$this->db->delete('reports', array('id' => $report->id));
+				return array('success' => TRUE, 'message' => 'The reported image has been banned from our system.');
+
+				break;
+
 			case('spam'):
 
 				$result = $CI->post->spam($post['board'], $post['post']->doc_id);

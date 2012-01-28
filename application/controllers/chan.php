@@ -130,13 +130,16 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest(get_selected_radix(), $page);
 
+		$pages = $posts['pages'];
+		$posts = $posts['result'];
+		
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Page ') . $page);
 		$pagination = array(
 			'base_url' => site_url(array(get_selected_radix()->shortname, 'page')),
 			'current_page' => $page,
-			'total' => 0
+			'total' => $pages
 		);
 		$this->template->set('pagination', $pagination);
 		$this->template->set('posts', $posts);
@@ -166,14 +169,18 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest(get_selected_radix(), $page, array('type' => 'ghost'));
 
+		$pages = $posts['pages'];
+		$posts = $posts['result'];
+		
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Ghost' . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Ghosts page ') . $page);
 		$pagination = array(
 			'base_url' => site_url(array(get_selected_radix()->shortname, 'ghost')),
 			'current_page' => $page,
-			'total' => 0
+			'total' => $pages
 		);
+
 		$this->template->set('pagination', $pagination);
 		$this->template->set('posts', $posts);
 		$this->template->set('is_page', TRUE);
@@ -577,7 +584,7 @@ class Chan extends Public_Controller
 		$this->template->set('pagination', $pagination);
 */
 		$this->template->set('section_title', _('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Image: ' . urldecode($hash));
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Images similar to: ' . urldecode($hash));
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');

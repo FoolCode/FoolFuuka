@@ -28,6 +28,7 @@ class Cli extends MY_Controller
 		}
 	}
 
+
 	function statistics($board = NULL)
 	{
 		$this->load->model('statistics');
@@ -35,11 +36,18 @@ class Cli extends MY_Controller
 		$this->statistics->cron($board);
 	}
 
+
 	function live()
 	{
 		$this->load->model('live');
 
-		$this->live->cron();
+		$done = FALSE;
+
+		while (!$done)
+		{
+			$this->live->cron();
+			sleep(5);
+		}
 	}
 
 

@@ -338,6 +338,7 @@ class Statistics extends CI_Model
 			return FALSE;
 		
 		$result = $stat->result();
+		$stat->free_result();
 		return $result[0];
 	}
 

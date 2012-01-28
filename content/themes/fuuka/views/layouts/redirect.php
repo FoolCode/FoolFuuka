@@ -28,6 +28,10 @@
 			</div>
 		</div>
 		<p><a href="<?php echo $url ?>" rel="noreferrer"><?php echo $url ?></a><br/>All characters <acronym title="DO NOT STEAL MY ART">&#169;</acronym> Darkpa's party</p>
+		<?php else: ?>
+		<script type="text/javascript">
+			window.location.href = '<?php echo $url ?>';
+		</script>
 		<?php endif; ?>
 	</body>
 </html>

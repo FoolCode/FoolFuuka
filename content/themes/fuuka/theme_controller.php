@@ -39,6 +39,9 @@ class Theme_Controller {
 		$this->CI->post->features = FALSE;
 		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 24, 'type' => 'by_thread'));
 
+		$pages = $posts['pages'];
+		$posts = $posts['result'];
+		
 		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Page ') . $page);
@@ -73,6 +76,9 @@ class Theme_Controller {
 		$this->CI->post->features = FALSE;
 		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 24, 'type' => 'ghost'));
 
+		$pages = $posts['pages'];
+		$posts = $posts['result'];
+		
 		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Ghosts page ') . $page);

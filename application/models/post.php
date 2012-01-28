@@ -279,6 +279,14 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				');
+				
+				// this might not actually be working, we need to test it somewhere
+				$query_pages = $this->db->query('
+					SELECT DISTINCT(parent), count(*) as pages
+					FROM ' . $this->get_table($board) . '
+					WHERE subnum <> 0
+					LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+				');
 				break;
 
 			case 'by_thread':
@@ -296,6 +304,13 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				');
+				
+				$query_pages = $this->db->query('
+					SELECT FLOOR(count(*)/' . intval($per_page) . ')+1 as pages
+					FROM ' . $this->get_table($board) . '
+					WHERE parent = 0 AND subnum = 0
+					LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+				');
 				break;
 
 			case 'by_post':
@@ -308,6 +323,7 @@ class Post extends CI_Model
 							SELECT num, parent, email
 							FROM ' . $this->get_table($board) . '
 							WHERE email <> \'sage\' OR (email = \'sage\' AND parent = 0)
+							AND subnum = 0
 							ORDER BY num DESC
 							LIMIT 0, 100000
 						) AS b
@@ -319,16 +335,36 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				');
+				
+				$query_pages = $this->db->query('
+					SELECT FLOOR(count(*)/' . intval($per_page) . ')+1 as pages
+					FROM ' . $this->get_table($board) . '
+					WHERE parent = 0 AND subnum = 0
+					LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+				');
 				break;
 			default:
 				log_message('error', 'post.php get_latest(): wrong or no list type selected');
 				return FALSE;
 		}
 
+		if(isset($query_pages))
+		{
+			$pages = $query_pages->result();
+			$query_pages->free_result();
+			$pages = $pages[0]->pages;
+			if($pages == 0)
+				$pages = NULL;
+		}
+		else
+		{
+			$pages = NULL;
+		}
+		
 
 		if ($query->num_rows() == 0)
 		{
-			return array('posts' => array(), 'op' => array());
+			return array('result' => array('posts' => array(), 'op' => array()), 'pages' => $pages);
 		}
 
 		// echo '<pre>'.print_r($query->result(), TRUE).'</pre>';die();
@@ -439,7 +475,8 @@ class Post extends CI_Model
 		$query->free_result();
 		// this is a lot of data, clean it up
 		$query2->free_result();
-		return ($result2);
+		
+		return array('result' => $result2, 'pages' => $pages);
 	}
 
 

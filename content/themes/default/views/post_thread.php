@@ -53,7 +53,8 @@ if (!defined('BASEPATH'))
 					<div class="input">
 						<?php echo form_upload(array(
 							'name' => 'file_image',
-							'id' => 'file_image'
+							'id' => 'file_image',
+							'required' => 'required'
 						)); ?>
 					</div>
 				</div>
@@ -63,7 +64,8 @@ if (!defined('BASEPATH'))
 						<?php echo form_password(array(
 							'name' => 'reply_nymphassword',
 							'id' => 'reply_nymphassword',
-							'value' => $this->fu_reply_password
+							'value' => $this->fu_reply_password,
+							'required' => 'required'
 						)); ?>
 					</div>
 				</div>
@@ -113,12 +115,14 @@ if (!defined('BASEPATH'))
 
 
 					<div>
+					<label for="reply_spoiler add-on">Spoiler
 					<?php echo form_checkbox(array(
 						'name' => 'reply_spoiler',
 						'id' => 'reply_spoiler',
 						'value' => 1
 					));
 					?>
+					</label>
 					<?php
 						echo form_hidden('reply_numero', 0);
 						echo form_hidden('MAX_FILE_SIZE', 3072);

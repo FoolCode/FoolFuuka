@@ -279,13 +279,17 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				');
-				
+
 				// this might not actually be working, we need to test it somewhere
 				$query_pages = $this->db->query('
-					SELECT DISTINCT(parent), count(*) as pages
-					FROM ' . $this->get_table($board) . '
-					WHERE subnum <> 0
-					LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					SELECT FLOOR(count(e.num)/' . intval($per_page) . ')+1 as pages
+					FROM
+					(
+						SELECT DISTINCT(parent), subnum, num
+						FROM ' . $this->get_table($board) . '
+						WHERE subnum <> 0
+						LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					) AS e
 				');
 				break;
 
@@ -304,12 +308,16 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				');
-				
+
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(*)/' . intval($per_page) . ')+1 as pages
-					FROM ' . $this->get_table($board) . '
-					WHERE parent = 0 AND subnum = 0
-					LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					SELECT FLOOR(count(e.num)/' . intval($per_page) . ')+1 as pages, parent
+					FROM
+					(
+						SELECT num, parent
+						FROM ' . $this->get_table($board) . '
+						WHERE parent = 0 AND subnum = 0
+						LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					) as e
 				');
 				break;
 
@@ -335,12 +343,16 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				');
-				
+
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(*)/' . intval($per_page) . ')+1 as pages
-					FROM ' . $this->get_table($board) . '
-					WHERE parent = 0 AND subnum = 0
-					LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					SELECT FLOOR(count(e.num)/' . intval($per_page) . ')+1 as pages, parent
+					FROM
+					(
+						SELECT num, parent
+						FROM ' . $this->get_table($board) . '
+						WHERE parent = 0 AND subnum = 0
+						LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					) as e
 				');
 				break;
 			default:
@@ -353,14 +365,14 @@ class Post extends CI_Model
 			$pages = $query_pages->result();
 			$query_pages->free_result();
 			$pages = $pages[0]->pages;
-			if($pages == 0)
+			if($pages <= 1)
 				$pages = NULL;
 		}
 		else
 		{
 			$pages = NULL;
 		}
-		
+
 
 		if ($query->num_rows() == 0)
 		{
@@ -475,7 +487,7 @@ class Post extends CI_Model
 		$query->free_result();
 		// this is a lot of data, clean it up
 		$query2->free_result();
-		
+
 		return array('result' => $result2, 'pages' => $pages);
 	}
 
@@ -1865,7 +1877,6 @@ class Post extends CI_Model
 		$this->load->helper('text');
 		$post->thumbnail_href = $this->get_image_href($board, $post, TRUE);
 		$post->image_href = $this->get_image_href($board, $post);
-		$post->image_href = (($post->image_href) ? $post->image_href : $post->thumbnail_href);
 		$post->remote_image_href = $this->get_remote_image_href($board, $post);
 		$post->comment_processed = iconv('UTF-8', 'UTF-8//IGNORE', $this->get_comment_processed($board, $post));
 		$post->comment = iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
@@ -2060,12 +2071,12 @@ class Post extends CI_Model
 
 		if (!$board->archive)
 		{
-			if (strpos($row->preview, 's.') === FALSE)
+			$number = (($thumbnail) ? $row->preview : $row->media_filename);
+
+			if (strpos($number, 's.') === FALSE)
 			{
 				$thumbnail = FALSE;
 			}
-
-			$number = (($thumbnail) ? $row->preview : $row->media_filename);
 		}
 		else
 		{
@@ -2122,12 +2133,12 @@ class Post extends CI_Model
 
 		if (!$board->archive)
 		{
-			if (strpos($row->preview, 's.') === FALSE)
+			$number = (($thumbnail) ? $row->preview : $row->media_filename);
+
+			if (strpos($number, 's.') === FALSE)
 			{
 				$thumbnail = FALSE;
 			}
-
-			$number = (($thumbnail) ? $row->preview : $row->media_filename);
 		}
 		else
 		{

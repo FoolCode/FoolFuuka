@@ -38,7 +38,7 @@
 					</span>
 					<br>
 					<a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" target="_blank">
-						<img src="<?php echo $p->thumbnail_href ?>" border="0" align="left" width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" hspace="20" alt="<?php echo byte_format($p->media_size, 0) ?>" md5="<?php echo $p->media_hash ?>"/>
+						<img src="<?php echo $p->thumbnail_href ?>" border="0" align="left" <?php if ($p->preview_w > 0 && $p->preview_h > 0) : ?>width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" <?php endif; ?> hspace="20" alt="<?php echo byte_format($p->media_size, 0) ?>" md5="<?php echo $p->media_hash ?>"/>
 					</a>
 				<?php endif; ?>
 

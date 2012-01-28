@@ -28,7 +28,7 @@ foreach ($posts as $key => $post) : ?>
 		</span>
 		<br>
 		<a href="<?php echo ($op->image_href) ? $op->image_href : $op->remote_image_href ?>" target="_blank">
-			<img src="<?php echo $op->thumbnail_href ?>" border="0" align="left" width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>" hspace="20" alt="<?php echo byte_format($op->media_size, 0) ?>" md5="<?php echo $op->media_hash ?>"/>
+			<img src="<?php echo $op->thumbnail_href ?>" border="0" align="left" <?php if ($op->preview_w > 0 && $op->preview_h > 0) : ?> width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>"<?php endif; ?> hspace="20" alt="<?php echo byte_format($op->media_size, 0) ?>" md5="<?php echo $op->media_hash ?>"/>
 		</a>
 		<?php endif; ?>
 

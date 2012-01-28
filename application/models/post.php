@@ -104,8 +104,8 @@ class Post extends CI_Model
 					' . $this->db->protect_identifiers('q') . '.`report_post`
 				';
 	}
-	
-	
+
+
 	/**
 	 * Load the last posts created, with said delay and minimum doc_id
 	 * Function mainly used by the Live system
@@ -114,7 +114,7 @@ class Post extends CI_Model
 	 * @param type $limit
 	 * @param type $delay
 	 * @param type $min_doc_id
-	 * @return type 
+	 * @return type
 	 */
 	function get_with_delay($board, $limit = 500, $delay = 0, $latest_doc_id = 0, $inferior_doc_id = NULL)
 	{
@@ -141,12 +141,12 @@ class Post extends CI_Model
 				LIMIT 0, '.intval($limit).'
 			', array($inferior_doc_id, time() - $delay));
 		}
-		
+
 		if($query->num_rows() == 0)
 		{
 			return FALSE;
 		}
-		
+
 		return $query->result();
 	}
 
@@ -1149,14 +1149,14 @@ class Post extends CI_Model
 		return array('posts' => $result, 'total_found' => $search_result['total_found']);
 	}
 
-	
+
 	function get_similar_image($board, $hash, $page, $options = array())
 	{
 		// defaults
 		$per_page = 25;
 		$process = TRUE;
 		$clean = TRUE;
-		
+
 		// overwrite defaults
 		foreach ($options as $key => $option)
 		{
@@ -1170,14 +1170,14 @@ class Post extends CI_Model
 			WHERE md5 = ?
 			LIMIT 0, 1
 		', array($hash));
-		
+
 		if($query->num_rows() == 0)
 			return FALSE;
-		
+
 		$sig = $query->result();
-		
+
 		$signature = puzzle_uncompress_cvec($sig[0]->signature);
-		
+
 		$words = array();
 		for ($i = 0; $i < 100; $i++){
 			$words[] = $this->db->escape(mb_substr($signature,$i,10));
@@ -1193,7 +1193,7 @@ class Post extends CI_Model
 			WHERE w.word = ' . implode(' OR  w.word = ', $words) . '
 			LIMIT 0, 20000
 		');
-		
+
 		if($query->num_rows() == 0)
 			return FALSE;
 
@@ -1206,7 +1206,7 @@ class Post extends CI_Model
 				$md5s[] = $this->db->escape($item->md5);
 			}
 		}
-		
+
 		if(count($md5s) == 0)
 			return FALSE;
 		$query->free_result();
@@ -1220,7 +1220,7 @@ class Post extends CI_Model
 
 		if($query->num_rows() == 0)
 			return FALSE;
-		
+
 		foreach ($query->result() as $post)
 		{
 			if ($post->parent == 0)
@@ -1249,7 +1249,7 @@ class Post extends CI_Model
 
 		return array('posts' => $result);
 	}
-	
+
 
 	function get_full_image($board, $image)
 	{
@@ -1865,6 +1865,7 @@ class Post extends CI_Model
 		$this->load->helper('text');
 		$post->thumbnail_href = $this->get_image_href($board, $post, TRUE);
 		$post->image_href = $this->get_image_href($board, $post);
+		$post->image_href = (($post->image_href) ? $post->image_href : $post->thumbnail_href);
 		$post->remote_image_href = $this->get_remote_image_href($board, $post);
 		$post->comment_processed = iconv('UTF-8', 'UTF-8//IGNORE', $this->get_comment_processed($board, $post));
 		$post->comment = iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);

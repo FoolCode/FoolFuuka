@@ -35,7 +35,11 @@ if (!defined('BASEPATH'))
 						</tr>
 						<tr>
 							<td class="postblock">File</td>
-							<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')); ?> <?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)); ?></td>
+							<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')); ?></td>
+						</tr>
+						<tr>
+							<td class="postblock">Spoiler</td>
+							<td><?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock">Password <a class="tooltip" href="#">[?] <span>Password used for file deletion.</span></a></td>

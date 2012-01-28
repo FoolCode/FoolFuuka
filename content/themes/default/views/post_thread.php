@@ -53,7 +53,8 @@ if (!defined('BASEPATH'))
 					<div class="input">
 						<?php echo form_upload(array(
 							'name' => 'file_image',
-							'id' => 'file_image'
+							'id' => 'file_image',
+							'required' => 'required'
 						)); ?>
 					</div>
 				</div>
@@ -63,7 +64,8 @@ if (!defined('BASEPATH'))
 						<?php echo form_password(array(
 							'name' => 'reply_nymphassword',
 							'id' => 'reply_nymphassword',
-							'value' => $this->fu_reply_password
+							'value' => $this->fu_reply_password,
+							'required' => 'required'
 						)); ?>
 					</div>
 				</div>

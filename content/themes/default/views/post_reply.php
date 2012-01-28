@@ -65,7 +65,8 @@ if (!defined('BASEPATH'))
 					)); ?>
 					<?php echo form_textarea(array(
 						'name' => 'reply_chennodiscursus',
-						'id' => 'reply_chennodiscursus'
+						'id' => 'reply_chennodiscursus',
+						'required' => 'required'
 					)); ?>
 				</div>
 			</div>
@@ -80,7 +81,7 @@ if (!defined('BASEPATH'))
 				</div>
 			</div>
 			<div class="clearfix">
-				<label for="reply_file"></label>
+				<label for="reply_file">Spoiler</label>
 				<div class="input">
 					<?php echo form_checkbox(array(
 						'name' => 'reply_spoiler',
@@ -96,7 +97,8 @@ if (!defined('BASEPATH'))
 					<?php echo form_password(array(
 						'name' => 'reply_nymphassword',
 						'id' => 'reply_nymphassword',
-						'value' => $this->fu_reply_password
+						'value' => $this->fu_reply_password,
+						'required' => 'required'
 					)); ?>
 				</div>
 			</div>

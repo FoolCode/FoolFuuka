@@ -314,7 +314,7 @@ var realtimethread = function(){
 		success: function(data){
 			var w_height = jQuery(document).height();
 			var found_posts = false;
-			if(typeof data[thread_id] != "undefined" && typeof data[thread_id].posts != "undefined") {
+			if(typeof data[thread_id] !== "undefined" && typeof data[thread_id].posts !== "undefined") {
 				jQuery.each(data[thread_id].posts, function(idx, value){
 					found_posts = true;
 					post = jQuery(value.formatted)

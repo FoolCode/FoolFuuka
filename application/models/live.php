@@ -15,7 +15,7 @@ class Live extends CI_Model
 			// it's unsafe to do image processing zero seconds later!
 			),
 			10 => array(
-				'limit' => 10000,
+				'limit' => 5000,
 				'functions' => array(
 					array( 
 						'function' => 'libpuzzle_store',

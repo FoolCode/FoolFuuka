@@ -282,10 +282,14 @@ class Post extends CI_Model
 				
 				// this might not actually be working, we need to test it somewhere
 				$query_pages = $this->db->query('
-					SELECT DISTINCT(parent), count(*) as pages
-					FROM ' . $this->get_table($board) . '
-					WHERE subnum <> 0
-					LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					SELECT FLOOR(count(e.num)/' . intval($per_page) . ')+1 as pages
+					FROM 
+					(
+						SELECT DISTINCT(parent), subnum, num
+						FROM ' . $this->get_table($board) . '
+						WHERE subnum <> 0
+						LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					) AS e
 				');
 				break;
 
@@ -361,7 +365,7 @@ class Post extends CI_Model
 			$pages = $query_pages->result();
 			$query_pages->free_result();
 			$pages = $pages[0]->pages;
-			if($pages == 0)
+			if($pages <= 1)
 				$pages = NULL;
 		}
 		else

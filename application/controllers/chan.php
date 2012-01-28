@@ -577,7 +577,7 @@ class Chan extends Public_Controller
 		$this->template->set('pagination', $pagination);
 */
 		$this->template->set('section_title', _('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Image: ' . urldecode($hash));
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Images similar to: ' . urldecode($hash));
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');

@@ -243,7 +243,7 @@ var bindFunctions = function()
 
 			backlink.find("article").removeAttr("id").find(".post_controls").remove();
 			backlink.find(".post_file_controls").remove();
-			if(typeof page_function != undefined && page_function == "gallery")
+			if(typeof page_function !== 'undefined' && page_function == "gallery")
 			{
 				backlink.find(".thread_image_box").remove();
 			}
@@ -269,7 +269,7 @@ var backlinkify = function(elem, post_id, subnum)
 	elem.find("a.[data-backlink=true]").each(function(idx, post) {
 		p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
 
-		if (typeof backlinks[p_id] == "undefined")
+		if (typeof backlinks[p_id] === "undefined")
 		{
 			backlinks[p_id] = [];
 		}
@@ -286,7 +286,7 @@ var backlinkify = function(elem, post_id, subnum)
 		var post_backlink = post.find(".post_backlink:eq(0)");
 		var already_backlinked = post_backlink.text().replace('>>', '').split(' ');
 		jQuery.each(already_backlinked, function(i,v){
-			if(typeof val[v] != "undefined")
+			if(typeof val[v] !== "undefined")
 			{
 				delete val[v];
 			}
@@ -314,7 +314,7 @@ var realtimethread = function(){
 		success: function(data){
 			var w_height = jQuery(document).height();
 			var found_posts = false;
-			if(typeof data[thread_id].posts != "undefined") {
+			if(typeof data[thread_id] != "undefined" && typeof data[thread_id].posts != "undefined") {
 				jQuery.each(data[thread_id].posts, function(idx, value){
 					found_posts = true;
 					post = jQuery(value.formatted)
@@ -555,7 +555,7 @@ jQuery(document).ready(function() {
 		replyHighlight(post[1]);
 	}
 
-	if (typeof thread_id != "undefined")
+	if (typeof thread_id !== "undefined")
 	{
 		jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
 		setTimeout(realtimethread, 10000);

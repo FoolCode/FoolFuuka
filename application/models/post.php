@@ -306,10 +306,14 @@ class Post extends CI_Model
 				');
 				
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(num)/' . intval($per_page) . ')+1 as pages
-					FROM ' . $this->get_table($board) . '
-					WHERE parent = 0 AND subnum = 0
-					LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					SELECT FLOOR(count(e.num)/' . intval($per_page) . ')+1 as pages, parent
+					FROM
+					(
+						SELECT num, parent
+						FROM ' . $this->get_table($board) . '
+						WHERE parent = 0 AND subnum = 0
+						LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					) as e
 				');
 				break;
 
@@ -337,10 +341,14 @@ class Post extends CI_Model
 				');
 				
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(num)/' . intval($per_page) . ')+1 as pages
-					FROM ' . $this->get_table($board) . '
-					WHERE parent = 0 AND subnum = 0
-					LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					SELECT FLOOR(count(e.num)/' . intval($per_page) . ')+1 as pages, parent
+					FROM
+					(
+						SELECT num, parent
+						FROM ' . $this->get_table($board) . '
+						WHERE parent = 0 AND subnum = 0
+						LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
+					) as e
 				');
 				break;
 			default:

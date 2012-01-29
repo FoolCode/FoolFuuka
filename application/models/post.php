@@ -938,7 +938,7 @@ class Post extends CI_Model
 				}
 
 				$sql = implode('UNION', $sql) . '
-				ORDER BY num ASC
+				ORDER BY timestamp ASC
 			';
 
 				$query = $this->db->query($sql);
@@ -949,11 +949,11 @@ class Post extends CI_Model
 			{
 				if ($search['order'] === 'asc')
 				{
-					$order = 'ORDER BY num ASC';
+					$order = 'ORDER BY timestamp ASC';
 				}
 				else
 				{
-					$order = 'ORDER BY num DESC';
+					$order = 'ORDER BY timestamp DESC';
 				}
 
 				$query = $this->db->query('
@@ -1030,11 +1030,11 @@ class Post extends CI_Model
 
 			if ($search['order'] === 'asc')
 			{
-				$order = 'ORDER BY num ASC';
+				$order = 'ORDER BY timestamp ASC';
 			}
 			else
 			{
-				$order = 'ORDER BY num DESC';
+				$order = 'ORDER BY timestamp DESC';
 			}
 
 			$query = $this->db->query('

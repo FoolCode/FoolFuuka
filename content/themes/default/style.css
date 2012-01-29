@@ -559,6 +559,11 @@ article.thread .backlink.op {
 	-moz-border-radius-bottomleft:0;
 }
 
+#thread_form input[type=submit] {
+	position:relative;
+	bottom:1px;
+}
+
 #thread_form input[type=file],  #thread_form select {
 	border:1px solid #cccccc;
 	width:218px;

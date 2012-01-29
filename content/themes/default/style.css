@@ -543,6 +543,12 @@ article.thread .backlink.op {
 	border-bottom-left-radius:3px;
 }
 
+::-webkit-file-upload-button {
+	margin-left:2px;
+	position:relative;
+	bottom:1px;
+}
+
 #thread_form input[type=text], #thread_form input[type=password],
 #thread_form input[type=file], #thread_form select {
 	border-top-left-radius:0;
@@ -550,8 +556,22 @@ article.thread .backlink.op {
 }
 
 #thread_form input[type=file],  #thread_form select {
-	width:220px;
-	height:28px;
+	border:1px solid #cccccc;
+	width:218px;
+	height:26px;
+	-webkit-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Opera hack */
+@media not screen and (1)
+{
+    #thread_form input[type=file],  #thread_form select
+    {
+        height: 28px;
+		width: 220px;
+    }
 }
 
 #thread_form textarea {

@@ -115,14 +115,14 @@ if (!defined('BASEPATH'))
 
 
 					<div>
-					<label for="reply_spoiler add-on">Spoiler
+					<label for="reply_spoiler">Spoiler</label>
 					<?php echo form_checkbox(array(
 						'name' => 'reply_spoiler',
 						'id' => 'reply_spoiler',
 						'value' => 1
 					));
 					?>
-					</label>
+
 					<?php
 						echo form_hidden('reply_numero', 0);
 						echo form_hidden('MAX_FILE_SIZE', 3072);

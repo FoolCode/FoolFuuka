@@ -588,6 +588,16 @@ article.thread .backlink.op {
 	-webkit-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);
 	-moz-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);
 	box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	
+	border-radius:3px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	border-top-left-radius:0;
+	border-bottom-left-radius:0;
+	-webkitborder-top-left-radius:0;
+	-webkit-border-bottom-left-radius:0;
+	-moz-border-radius-topleft:0;
+	-moz-border-radius-bottomleft:0;
 }
 
 #thread_form textarea {

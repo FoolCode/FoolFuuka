@@ -46,9 +46,13 @@ class Theme_Controller {
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Page ') . $page);
 
-		$pages_links = site_url(array(get_selected_radix()->shortname, 'page'));
-		$this->CI->template->set('pages_links', $pages_links);
-		$this->CI->template->set('pages_links_current', $page);
+		$pagination = array(
+			'base_url' => site_url(array(get_selected_radix()->shortname, 'page')),
+			'current_page' => $page,
+			'total' => $pages
+		);
+		
+		$this->CI->template->set('pagination', $pagination);
 		$this->CI->template->set('posts',  $posts);
 		$this->CI->template->set('is_page', TRUE);
 		$this->CI->template->set('posts_per_thread', 5);
@@ -82,9 +86,14 @@ class Theme_Controller {
 		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Ghosts page ') . $page);
-		$pages_links = site_url(array(get_selected_radix()->shortname, 'ghost'));
-		$this->CI->template->set('pages_links', $pages_links);
-		$this->CI->template->set('pages_links_current', $page);
+		
+		$pagination = array(
+			'base_url' => site_url(array(get_selected_radix()->shortname, 'page')),
+			'current_page' => $page,
+			'total' => $pages
+		);
+		
+		$this->CI->template->set('pagination', $pagination);
 		$this->CI->template->set('posts', $posts);
 		$this->CI->template->set('is_page', TRUE);
 		$this->CI->template->set('posts_per_thread', 5);

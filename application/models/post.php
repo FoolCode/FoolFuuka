@@ -1401,7 +1401,11 @@ class Post extends CI_Model
 		else
 		{
 			$email = $data['email'];
-			$this->input->set_cookie('foolfuuka_reply_email', $email, 60 * 60 * 24 * 30);
+			
+			if($email != 'sage')
+			{
+				$this->input->set_cookie('foolfuuka_reply_email', $email, 60 * 60 * 24 * 30);
+			}
 		}
 
 		if ($data['subject'] == FALSE || $data['subject'] == '')

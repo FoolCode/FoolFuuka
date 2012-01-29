@@ -132,7 +132,7 @@ class Chan extends Public_Controller
 
 		$pages = $posts['pages'];
 		$posts = $posts['result'];
-		
+
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Page ') . $page);
@@ -171,7 +171,7 @@ class Chan extends Public_Controller
 
 		$pages = $posts['pages'];
 		$posts = $posts['result'];
-		
+
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Ghost' . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
 			$this->template->set('section_title', _('Ghosts page ') . $page);
@@ -487,11 +487,7 @@ class Chan extends Public_Controller
 			$url = site_url(get_selected_radix()->shortname . '/thread/' . $thread->num);
 		}
 
-		$this->template->title(_('Redirecting...'));
-		$this->template->set('url', $url);
-		$this->template->set('fast_redirect', TRUE);
-		$this->template->set_layout('redirect');
-		$this->template->build('redirect');
+		redirect($url, 'location', 301);
 	}
 
 
@@ -541,8 +537,8 @@ class Chan extends Public_Controller
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->template->build('board');
 	}
-	
-	
+
+
 	public function similar_image()
 	{
 		$uri = $this->uri->segment_array();

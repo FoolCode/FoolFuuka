@@ -2324,8 +2324,6 @@ class Post extends CI_Model
 
 		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
 
-		$regexing = auto_link($regexing, 'url', TRUE);
-
 		// for preg_replace_callback
 		$this->current_board_for_prc = $board;
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
@@ -2335,6 +2333,8 @@ class Post extends CI_Model
 			$regexing = preg_replace($adminfind, $adminreplace, $regexing);
 		}
 
+		$regexing = auto_link($regexing, 'url', TRUE);
+		
 		$regexing = preg_replace($find, $replace, $regexing);
 		$regexing = parse_bbcode($regexing);
 

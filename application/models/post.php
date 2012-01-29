@@ -886,11 +886,11 @@ class Post extends CI_Model
 				$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED);
 				if ($search['order'] == 'asc')
 				{
-					$this->sphinxclient->setSortMode(SPH_SORT_ATTR_ASC, 'num');
+					$this->sphinxclient->setSortMode(SPH_SORT_ATTR_ASC, 'timestamp');
 				}
 				else
 				{
-					$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'num');
+					$this->sphinxclient->setSortMode(SPH_SORT_ATTR_DESC, 'timestamp');
 				}
 
 				$search_result = $this->sphinxclient->query($query, $board->shortname . '_ancient ' . $board->shortname . '_main ' . $board->shortname . '_delta');

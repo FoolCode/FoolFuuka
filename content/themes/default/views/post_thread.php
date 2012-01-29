@@ -116,12 +116,12 @@ if (!defined('BASEPATH'))
 
 					<div>
 					<label for="reply_spoiler">Spoiler</label>
-					<span style="line-height:14px; padding:3px 6px 3px; background:#fff; display:inline-block; border:1px solid #ccc;">
+					<span class="checkbox-wrap">
 						<?php echo form_checkbox(array(
 							'name' => 'reply_spoiler',
 							'id' => 'reply_spoiler',
 							'value' => 1,
-							'style' => 'height:14px; width:14px;'
+							'style' => 'height:13px; width:13px;'
 						));
 						?>
 					</span>

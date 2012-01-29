@@ -1127,7 +1127,7 @@ class Post extends CI_Model
 
 		if ($query->num_rows() == 0)
 		{
-			return array();
+			return array('posts' => array(), 'total_found' => 0);
 		}
 
 		foreach ($query->result() as $post)
@@ -1401,7 +1401,7 @@ class Post extends CI_Model
 		else
 		{
 			$email = $data['email'];
-			
+
 			if($email != 'sage')
 			{
 				$this->input->set_cookie('foolfuuka_reply_email', $email, 60 * 60 * 24 * 30);
@@ -2338,7 +2338,7 @@ class Post extends CI_Model
 		}
 
 		$regexing = auto_link($regexing, 'url', TRUE);
-		
+
 		$regexing = preg_replace($find, $replace, $regexing);
 		$regexing = parse_bbcode($regexing);
 

@@ -96,9 +96,6 @@
 					[ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
 					<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
 				<?php endif; ?>
-				<aside id="top_options">
-					<?php echo $template['partials']['top_options']; ?>
-				</aside>
 			</header>
 
 			<div role="main" id="main">
@@ -107,12 +104,15 @@
 				<?php else : ?>
 				<?php endif; ?>
 
-				<?php echo $template['partials']['post_thread']; ?>
+				<?php
+				if (isset($is_page))
+					echo $template['partials']['post_thread'];
+				?>
 
 				<?php echo $template['body']; ?>
 
 				<?php
-				if (get_selected_radix())
+				if ((!isset($disable_headers) || $disable_headers !== TRUE) && get_selected_radix())
 					echo $template['partials']['post_tools'];
 				?>
 

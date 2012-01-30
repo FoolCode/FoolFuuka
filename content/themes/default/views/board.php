@@ -86,8 +86,9 @@ foreach ($posts as $key => $post) :
 			<div class="js_hook_realtimethread"></div>
 			<?php endif; ?>
 		<?php endif; ?>
-		<?php echo $template['partials']['post_reply']; ?>
+
 		<?php if (isset($thread_id)) : ?>
+			<?php echo $template['partials']['post_reply']; ?>
 			<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
 		<?php endif; ?>
 	</article>

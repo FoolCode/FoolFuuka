@@ -13,12 +13,7 @@ class Chan extends Public_Controller
 		$this->load->helper('number');
 		$boards = new Board();
 		$boards->order_by('shortname', 'ASC')->get();
-		$this->template->set_partial('top_tools', 'top_tools');
-		$this->template->set_partial('top_options', 'top_options');
 		$this->template->set('boards', $boards);
-		$this->template->set_partial('post_thread', 'post_thread');
-		$this->template->set_partial('post_reply', 'post_reply');
-		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->set_layout('chan');
 	}
 
@@ -108,6 +103,7 @@ class Chan extends Public_Controller
 		$this->template->set('section_title', 'Gallery ß - Showing: threads');
 		$this->template->set('threads', $threads);
 		$this->template->set_partial('top_tools', 'top_tools');
+		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->build('gallery');
 	}
 
@@ -146,6 +142,8 @@ class Chan extends Public_Controller
 		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
 		$this->template->set_partial('top_tools', 'top_tools', array('page' => $page));
+		$this->template->set_partial('post_thread', 'post_thread');
+		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->build('board');
 	}
 
@@ -186,6 +184,8 @@ class Chan extends Public_Controller
 		$this->template->set('is_page', TRUE);
 		$this->template->set('posts_per_thread', 5);
 		$this->template->set_partial('top_tools', 'top_tools', array('page' => $page));
+		$this->template->set_partial('post_thread', 'post_thread');
+		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->build('board');
 	}
 
@@ -209,8 +209,10 @@ class Chan extends Public_Controller
 
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Thread #' . $num);
 		$this->template->set('posts', $thread);
-
 		$this->template->set('thread_id', $num);
+		$this->template->set_partial('top_tools', 'top_tools');
+		$this->template->set_partial('post_reply', 'post_reply');
+		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->build('board');
 	}
 
@@ -242,9 +244,11 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Thread #' . $num);
 		$this->template->set('posts', $thread);
 		$this->template->set('section_title', sprintf(_('Showing the last 50 posts for thread No.%s'), $num));
-
 		$this->template->set('thread_id', $num);
 		$this->template->set('last50', TRUE);
+		$this->template->set_partial('top_tools', 'top_tools');
+		$this->template->set_partial('post_reply', 'post_reply');
+		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->build('board');
 	}
 
@@ -535,6 +539,8 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Image: ' . urldecode($hash));
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
+		$this->template->set_partial('top_tools', 'top_tools');
+		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->build('board');
 	}
 
@@ -651,8 +657,6 @@ class Chan extends Public_Controller
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
 		$result = $this->post->get_search(get_selected_radix(), $search);
 
-		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
-
 		if (isset($result['error']))
 		{
 			$this->template->title(_('Error'));
@@ -707,6 +711,8 @@ class Chan extends Public_Controller
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; ' . $title);
 		$this->template->set('posts', $result['posts']);
 		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
+		$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
+		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->build('board');
 	}
 

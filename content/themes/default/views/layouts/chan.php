@@ -112,7 +112,7 @@
 				<?php echo $template['body']; ?>
 
 				<?php
-				if ((!isset($disable_headers) || $disable_headers !== TRUE) && get_selected_radix())
+				if ((!isset($disable_headers) || $disable_headers !== TRUE) && !isset($is_statistics) && get_selected_radix())
 					echo $template['partials']['post_tools'];
 				?>
 

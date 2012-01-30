@@ -116,7 +116,7 @@
 					echo $template['partials']['post_tools'];
 				?>
 
-				<?php if (isset($pagination) && !is_null($pagination['total'])) : ?>
+				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 					<div class="paginate">
 						<ul>
 							<?php if ($pagination['current_page'] == 1) : ?>
@@ -125,27 +125,8 @@
 								<li class="prev"><a href="<?php echo $pagination['base_url'] . ($pagination['current_page'] - 1); ?>/">&larr; Previous</a></li>
 							<?php endif; ?>
 
-							<?php	
-								if ($pagination['total'] == 0) :
-									if ($pagination['current_page'] < 15) :
-										for ($index = 1; $index <= 15; $index++)
-										{
-											echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
-										}
-										echo '<li class="disabled"><span>...</span></li>';
-									else :
-										for ($index = 1; $index < 10; $index++)
-										{
-											echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
-										}
-										echo '<li class="disabled"><span>...</span></li>';
-										for ($index = ($pagination['current_page'] - 2); $index <= ($pagination['current_page'] + 2); $index++)
-										{
-											echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
-										}
-										echo '<li class="disabled"><span>...</span></li>';
-									endif;
-								elseif ($pagination['total'] <= 15) :
+							<?php
+								if ($pagination['total'] <= 15) :
 									for ($index = 1; $index <= $pagination['total']; $index++)
 									{
 										echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';

@@ -55,7 +55,7 @@
 
 			<?php echo $template['body']; ?>
 
-			<?php if (isset($pagination) && !is_null($pagination['total'])) : ?>
+			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<table style="float:left">
 					<tbody>
 						<tr>
@@ -64,27 +64,14 @@
 						<tr>
 							<td class="postblock">View posts</td>
 							<td>
-								<?php
-								if ($pagination['total'] == 0) :
-									if ($pagination['current_page'] < 15) :
-										for ($index = 1; $index <= 15; $index++)
-										{
-											echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
-										}
-										echo '[<span>...</span>] ';
-									else :
-										for ($index = 1; $index < 10; $index++)
-										{
-											echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
-										}
-										echo '[<span>...</span>] ';
-										for ($index = ($pagination['current_page'] - 2); $index <= ($pagination['current_page'] + 2); $index++)
-										{
-											echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
-										}
-										echo '[<span>...</span>] ';
-									endif;
-								elseif ($pagination['total'] <= 15) :
+							<?php
+								if ($pagination['current_page'] == 1) :
+									echo '[Prev] ';
+								else :
+									echo '[<a href="' . $pagination['base_url'] . ($pagination['current_page'] - 1) . '/">Prev</a>] ';
+								endif;
+
+								if ($pagination['total'] <= 15) :
 									for ($index = 1; $index <= $pagination['total']; $index++)
 									{
 										echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
@@ -110,12 +97,18 @@
 											echo '[<span>...</span>] ';
 									endif;
 								endif;
-								?>
+
+								if ($pagination['total'] == $pagination['current_page']) :
+									echo '[Next] ';
+								else :
+									echo '[<a href="' . $pagination['base_url'] . ($pagination['current_page'] + 1) . '/">Next</a>] ';
+								endif;
+							?>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-			<?php endif; ?>			
+			<?php endif; ?>
 
 
 			<?php if (isset($pages_links)) : ?>

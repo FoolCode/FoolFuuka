@@ -2326,7 +2326,7 @@ class Post extends CI_Model
 			}
 		}
 
-		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8');
+		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8', FALSE);
 
 		// for preg_replace_callback
 		$this->current_board_for_prc = $board;

@@ -613,6 +613,8 @@ class Chan extends Public_Controller
 				$this->output->set_status_header('404');
 				$this->template->title(_('Error'));
 				$this->template->set('error', _('There\'s no record of such image in our database.'));
+				$this->template->set_partial('top_tools', 'top_tools');
+				$this->template->set_partial('post_tools', 'post_tools');
 				$this->template->build('error');
 			}
 
@@ -620,8 +622,9 @@ class Chan extends Public_Controller
 			{
 				$this->output->set_status_header('404');
 				$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Image pruned');
-				$this->template->set('posts', array('posts' => array($image_data['result'])));
-				$this->template->set('modifiers', array('post_show_single_post' => TRUE));
+				$this->template->set('posts', array('posts' => array('posts' => array($image_data['result']))));
+				$this->template->set('modifiers', array('post_show_single_post' => TRUE, 'post_show_view_button' => TRUE));
+				$this->template->set('section_title', _('Error 404: The image has been pruned from the server. '));
 				$this->template->set_partial('top_tools', 'top_tools');
 				$this->template->set_partial('post_tools', 'post_tools');
 				$this->template->build('board');

@@ -41,7 +41,7 @@ class Theme_Controller {
 
 		$pages = $posts['pages'];
 		$posts = $posts['result'];
-		
+
 		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1)?' » Page '.$page:''));
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Page ') . $page);
@@ -57,6 +57,8 @@ class Theme_Controller {
 		$this->CI->template->set('is_page', TRUE);
 		$this->CI->template->set('posts_per_thread', 5);
 		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
+		$this->CI->template->set_partial('post_thread', 'post_thread');
+		$this->CI->template->set_partial('post_tools', 'post_tools');
 		$this->CI->template->build('board');
 	}
 
@@ -83,7 +85,7 @@ class Theme_Controller {
 
 		$pages = $posts['pages'];
 		$posts = $posts['result'];
-		
+
 		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
 		if ($page > 1)
 			$this->CI->template->set('section_title', _('Ghosts page ') . $page);
@@ -98,6 +100,8 @@ class Theme_Controller {
 		$this->CI->template->set('is_page', TRUE);
 		$this->CI->template->set('posts_per_thread', 5);
 		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
+		$this->CI->template->set_partial('post_thread', 'post_thread');
+		$this->CI->template->set_partial('post_tools', 'post_tools');
 		$this->CI->template->build('board');
 	}
 
@@ -124,7 +128,9 @@ class Theme_Controller {
 		$this->CI->template->set('posts', $thread);
 
 		$this->CI->template->set('thread_id', $num);
-		//$this->CI->template->set_partial('post_reply', 'post_reply', array('thread_id' => $num, 'post_data' => $post_data));
+		$this->CI->template->set_partial('top_tools', 'top_tools');
+		$this->CI->template->set_partial('post_reply', 'post_reply');
+		$this->CI->template->set_partial('post_tools', 'post_tools');
 		$this->CI->template->build('board');
 	}
 
@@ -298,7 +304,7 @@ class Theme_Controller {
 	}
 
 
-	public function thread_o_matic()
+	public function gallery()
 	{
 		show_404();
 	}

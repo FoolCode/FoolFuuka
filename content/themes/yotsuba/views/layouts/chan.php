@@ -17,38 +17,43 @@
 	<body bgcolor="#FFFFEE" text="#800000" link="#0000EE" vlink="#0000EE">
 		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
 
-		<div id="header">
-			<span id="navtop">
-				[
-				<?php
-				$boards_urls = array();
-				foreach ($this->radix->get_all() as $key => $item)
-				{
-					$boards_urls[] = '<a href="' . $item->href . '" title="' . $item->name . '">' . $item->shortname . '</a>';
-				}
-				echo implode(' / ', $boards_urls);
-				?>
-				]
-			</span>
+			<div id="header">
+				<span id="navtop">
+					[
+					<?php
+					$boards_urls = array();
+					foreach ($this->radix->get_all() as $key => $item)
+					{
+						$boards_urls[] = '<a href="' . $item->href . '" title="' . $item->name . '">' . $item->shortname . '</a>';
+					}
+					echo implode(' / ', $boards_urls);
+					?>
+					]
+				</span>
 
-			<span id="navtopr">
-				[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / statistics / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
-			</span>
-		</div>
-		<br/>
-		<div class="logo">
-			<font size="5">
-				<b><span>/<?php echo $board->shortname ?>/ - <?php echo htmlspecialchars($board->name) ?></span></b>
-			</font>
-			<br>
-			<font size="1"><?php if(isset($section_title)): ?><?php echo $section_title ?><?php endif; ?></font>
-		</div>
+				<span id="navtopr">
+					[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / statistics / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
+				</span>
+			</div>
+			<br/>
+			<div class="logo">
+				<font size="5">
+					<b><span>/<?php echo $board->shortname ?>/ - <?php echo htmlspecialchars($board->name) ?></span></b>
+				</font>
+				<br>
+				<font size="1"><?php if(isset($section_title)): ?><?php echo $section_title ?><?php endif; ?></font>
+			</div>
 
-		<hr width="90%" size="1">
+			<hr width="90%" size="1">
 
-		<?php echo $template['partials']['top_tools'] ?>
+			<?php echo $template['partials']['top_tools'] ?>
 
-		<hr>
+			<hr>
+
+			<?php
+			if (isset($is_page))
+				echo $template['partials']['post_thread'];
+			?>
 
 		<?php endif; ?>
 

@@ -6,8 +6,10 @@ if (!isset($modifiers))
 		$modifiers = array();
 ?>
 
-<?php echo $template['partials']['post_thread'] ?>
-<?php echo $template['partials']['post_reply'] ?>
+<?php
+if (isset($thread_id))
+	echo $template['partials']['post_reply'];
+?>
 
 <iframe src="" style="height: 0px; width: 0px; visibility: hidden; border-top-style: none; border-right-style: none; border-bottom-style: none; border-left-style: none; border-width: initial; border-color: initial; border-image: initial;">
 	<html>

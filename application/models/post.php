@@ -1103,6 +1103,9 @@ class Post extends CI_Model
 		$process = TRUE;
 		$clean = TRUE;
 
+		// urlsafe hash
+		$hash = base64_encode(urlsafe_b64decode($hash));
+
 		// overwrite defaults
 		foreach ($options as $key => $option)
 		{

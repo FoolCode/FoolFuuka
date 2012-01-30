@@ -61,6 +61,26 @@ if (!function_exists('fuuka_htmlescape'))
 }
 
 
+if (!function_exists('urlsafe_b64encode'))
+{
+	function urlsafe_b64encode($string)
+	{
+		$result = base64_encode($string);
+		return str_replace(array('+', '/'), array('-', '_'), $result);
+	}
+}
+
+
+if (!function_exists('urlsafe_b64decode'))
+{
+	function urlsafe_b64decode($string)
+	{
+		$result = str_replace(array('-', '_'), array('+', '/'), $string);
+		return base64_decode($result);
+	}
+}
+
+
 /**
  * Return selected radix' shortname
  *

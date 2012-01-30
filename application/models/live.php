@@ -94,7 +94,7 @@ class Live extends CI_Model
 			if (isset($this->delays[$board->id][$key]['inferior_doc_id']))
 				$inferior_doc_id = $this->delays[$board->id][$key]['inferior_doc_id'];
 			else
-				$inferior_doc_id = 0;
+				$inferior_doc_id = PHP_INT_MAX;
 
 			$posts = $this->post->get_with_delay($board, $process['limit'], $key, $latest_doc_id);
 

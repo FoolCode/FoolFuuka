@@ -146,8 +146,10 @@ class Post extends CI_Model
 		{
 			return FALSE;
 		}
-
-		return $query->result();
+		
+		$result = $query->result();
+		$query->free_result();
+		return $result;
 	}
 
 

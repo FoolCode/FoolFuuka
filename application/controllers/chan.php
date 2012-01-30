@@ -816,6 +816,7 @@ class Chan extends Public_Controller
 			$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . '&raquo; ' . _('statistics'));
 			$this->template->set('stats_list', $stats_list);
 			$this->template->set_partial('statistics_interface', 'statistics/statistics_list');
+			$this->template->set_partial('top_tools', 'top_tools');
 			$this->template->build('statistics/statistics_show');
 			return TRUE;
 		}
@@ -833,6 +834,7 @@ class Chan extends Public_Controller
 		$this->template->set('info', $stat_array['info']);
 		$this->template->set('data', $stat_array['data']);
 		$this->template->set_partial('statistics_interface', 'statistics/' . $stat_array['info']['interface']);
+		$this->template->set_partial('top_tools', 'top_tools');
 		$this->template->build('statistics/statistics_show');
 	}
 

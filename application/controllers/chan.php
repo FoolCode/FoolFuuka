@@ -622,6 +622,8 @@ class Chan extends Public_Controller
 				$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Image pruned');
 				$this->template->set('posts', array('posts' => array($image_data['result'])));
 				$this->template->set('modifiers', array('post_show_single_post' => TRUE));
+				$this->template->set_partial('top_tools', 'top_tools');
+				$this->template->set_partial('post_tools', 'post_tools');
 				$this->template->build('board');
 			}
 		}

@@ -164,10 +164,10 @@ a.tooltip-red:hover{
 code,.code { white-space: pre }
 a img { vertical-align: top; }
 
-.o { text-decoration: overline; }
-.u { text-decoration: underline; }
+.overline { text-decoration: overline; }
+.underline { text-decoration: underline; }
 .aa { font-family:Mona,'MS PGothic' !important; }
-.s { text-decoration: line-through; }
+.strikethrough { text-decoration: line-through; }
 .banned { font-weight: bold; color: red; }
 .admin{ color: #c00000 !important; }
 .mod{ color: #800080 !important; }

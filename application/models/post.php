@@ -2114,10 +2114,15 @@ class Post extends CI_Model
 			else
 				$number = $row->num;
 
-			while (strlen((string) $number) < 9)
-			{
-				$number = '0' . $number;
-			}
+			preg_match('/(\d+?)(\d{2})\d{0,3}$/', $number, $matches);
+
+			if(!isset($matches[1]))
+				$matches[1] = '';
+
+			if(!isset($matches[2]))
+				$matches[2] = '';
+
+			$number = str_pad($matches[1], 4, "0", STR_PAD_LEFT) . str_pad($matches[2], 2, "0", STR_PAD_LEFT);
 		}
 
 		if (file_exists($this->get_image_dir($board, $row, $thumbnail)) !== FALSE)
@@ -2176,10 +2181,15 @@ class Post extends CI_Model
 			else
 				$number = $row->num;
 
-			while (strlen((string) $number) < 9)
-			{
-				$number = '0' . $number;
-			}
+			preg_match('/(\d+?)(\d{2})\d{0,3}$/', $number, $matches);
+
+			if(!isset($matches[1]))
+				$matches[1] = '';
+
+			if(!isset($matches[2]))
+				$matches[2] = '';
+
+			$number = str_pad($matches[1], 4, "0", STR_PAD_LEFT) . str_pad($matches[2], 2, "0", STR_PAD_LEFT);
 		}
 
 		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . $board->shortname . '/' . (($thumbnail === TRUE) ? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail === TRUE) ? $row->preview : $row->media_filename);
@@ -2346,7 +2356,7 @@ class Post extends CI_Model
 		$this->current_board_for_prc = $board;
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
 		$regexing = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/(\d+(?:,\d+)?)?(\/?)))'i", array(get_class($this), 'get_crossboard_link'), $regexing);
-		
+
 		$regexing = auto_link($regexing, 'url', TRUE);
 
 		$regexing = preg_replace($find, $replace, $regexing);
@@ -2361,9 +2371,9 @@ class Post extends CI_Model
 			$adminreplace = array(
 				'<span class="banned">\\1</span>'
 			);
-			
+
 			$regexing = preg_replace($adminfind, $adminreplace, $regexing);
-			
+
 			$litfind = array(
 				"'\[banned:lit\]'i",
 				"'\[/banned:lit\]'i",
@@ -2377,7 +2387,7 @@ class Post extends CI_Model
 				'[moot]',
 				'[/moot]'
 			);
-			
+
 			$regexing = preg_replace($litfind, $litreplace, $regexing);
 		}
 

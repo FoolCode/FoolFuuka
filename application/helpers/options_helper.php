@@ -291,7 +291,7 @@ function is_natural($str)
 /**
  * Parse BBCode
  */
-function parse_bbcode($string)
+function parse_bbcode($string, $archive = FALSE)
 {
 	$CI = & get_instance();
 	require_once(FCPATH . "assets/stringparser-bbcode/library/stringparser_bbcode.class.php");
@@ -307,17 +307,20 @@ function parse_bbcode($string)
 	$bbcode->addCode('o', 'simple_replace', NULL, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array());
 	$bbcode->addCode('s', 'simple_replace', NULL, array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array());
 	$bbcode->addCode('u', 'simple_replace', NULL, array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array());
-	$bbcode->addCode('banned:lit', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());
-
-	if ($CI->fu_theme == 'fuuka' || $CI->fu_theme == 'yotsuba')
+	
+	if($archive)
 	{
-		$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'), 'inline', array('block', 'inline'), array());
-	}
-	else
-	{
-		$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());
-	}
+		$bbcode->addCode('banned:lit', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());
 
+		if ($CI->fu_theme == 'fuuka' || $CI->fu_theme == 'yotsuba')
+		{
+			$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'), 'inline', array('block', 'inline'), array());
+		}
+		else
+		{
+			$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());
+		}
+	}
 
 	return $bbcode->parse($string);
 }

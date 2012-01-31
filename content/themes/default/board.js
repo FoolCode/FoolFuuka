@@ -57,7 +57,7 @@ var bindFunctions = function()
 				});
 				event.preventDefault();
 				break;
-		       
+
 			case 'realtimethread':
 				realtimethread();
 				event.preventDefault();
@@ -374,6 +374,9 @@ var getSearch = function(type, searchForm)
 
 		if (searchForm.tripcode.value != "")
 			location += 'tripcode/' + encodeURIComponent(searchForm.tripcode.value) + '/';
+
+		if (getRadioValue(searchForm.capcode) != "")
+			location += 'capcode/' + getRadioValue(searchForm.capcode) + '/';
 
 		if (getRadioValue(searchForm.deleted) != "")
 			location += 'deleted/' + getRadioValue(searchForm.deleted) + '/';

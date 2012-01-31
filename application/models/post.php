@@ -146,7 +146,7 @@ class Post extends CI_Model
 		{
 			return FALSE;
 		}
-		
+
 		$result = $query->result();
 		$query->free_result();
 		return $result;
@@ -885,6 +885,15 @@ class Post extends CI_Model
 					$this->sphinxclient->setFilter('is_internal', array(0));
 				}
 
+				if ($search['capcode'] == "admin")
+				{
+					$this->sphinxclient->setFilter('int_capcode', array(97));
+				}
+				if ($search['capcode'] == "mod")
+				{
+					$this->sphinxclient->setFilter('int_capcode', array(109));
+				}
+
 				$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED);
 				if ($search['order'] == 'asc')
 				{
@@ -1028,6 +1037,17 @@ class Post extends CI_Model
 			{
 				$field[] = 'subnum = ?';
 				$value[] = 0;
+			}
+
+			if ($search['capcode'] == "admin")
+			{
+				$field[] = 'capcode = ?';
+				$value[] = 'A';
+			}
+			if ($search['capcode'] == "mod")
+			{
+				$field[] = 'capcode = ?';
+				$value[] = 'M';
 			}
 
 			if ($search['order'] === 'asc')

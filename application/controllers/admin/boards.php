@@ -80,6 +80,15 @@ class Boards extends Admin_Controller
 	}
 
 
+	function sphinx()
+	{
+		$this->viewdata["function_title"] = '<a href="' . site_url('/admin/boards/sphinx/') . '">' . _('Sphinx') . '</a>';
+
+		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/sphinx.php", $data, TRUE);
+		$this->load->view("admin/default.php", $this->viewdata);
+	}
+
+
 	function add_new()
 	{
 		$this->viewdata["function_title"] = '<a href="#">' . _("Add New") . '</a>';

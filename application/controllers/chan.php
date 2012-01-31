@@ -644,7 +644,7 @@ class Chan extends Public_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order', 'page');
+		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'capcode', 'order', 'page');
 		if ($this->input->post())
 		{
 			$redirect_array = array(get_selected_radix()->shortname, 'search');
@@ -685,6 +685,10 @@ class Chan extends Public_Controller
 			$title[] = _('that are by ghosts');
 		if ($search['ghost'] == 'none')
 			$title[] = _('that aren\'t by ghosts');
+		if ($search['capcode'] == 'admin')
+			$title[] = _('made by admins');
+		if ($search['capcode'] == 'mod')
+			$title[] = _('made by mods');
 		if ($search['order'] == 'asc')
 			$title[] = _('starting from the oldest ones');
 		if (!$search['page'] || !intval($search['page']))

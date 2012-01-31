@@ -125,6 +125,31 @@ if (!isset($page))
 			</div>
 		</div>
 		<div class="clearfix">
+			<label>Capcode</label>
+			<div class="input">
+				<ul class="inputs-list">
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"])) ? TRUE : FALSE)); ?>
+							<span>Display All Posts</span>
+						</label>
+					</li>
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod') ? TRUE : FALSE)); ?>
+							<span>Only Mod Posts</span>
+						</label>
+					</li>
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin') ? TRUE : FALSE)); ?>
+							<span>Only Admin Posts</span>
+						</label>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="clearfix">
 			<label>Deleted Posts</label>
 			<div class="input">
 				<ul class="inputs-list">

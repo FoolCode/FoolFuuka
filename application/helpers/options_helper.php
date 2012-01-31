@@ -310,8 +310,6 @@ function parse_bbcode($string, $archive = FALSE)
 	
 	if($archive)
 	{
-		$bbcode->addCode('banned:lit', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());
-
 		if ($CI->fu_theme == 'fuuka' || $CI->fu_theme == 'yotsuba')
 		{
 			$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'), 'inline', array('block', 'inline'), array());

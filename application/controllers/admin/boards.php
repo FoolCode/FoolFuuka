@@ -84,8 +84,92 @@ class Boards extends Admin_Controller
 	{
 		$this->viewdata["function_title"] = '<a href="' . site_url('/admin/boards/sphinx/') . '">' . _('Sphinx') . '</a>';
 
+		$form = array();
+
+		$form[] = array(
+			_('Path'),
+			array(
+				'type' => 'input',
+				'name' => 'fu_sphinx_path',
+				'id' => 'sphinx_path',
+				'maxlength' => '200',
+				'placeholder' => _('/usr/local/sphinx/data/'),
+				'preferences' => 'fs_gen',
+				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
+			)
+		);
+
+		if ($post = $this->input->post())
+		{
+			$this->_submit($post, $form);
+			redirect('admin/preferences/theme');
+		}
+
+		// create the form
+		$table = tabler($form, FALSE);
+		$data['form_title'] = _('Theme');
+		$data['table'] = $table;
+
 		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/sphinx.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
+	}
+
+
+	function generate_sphinx_config()
+	{
+
+	}
+
+
+	function generate_sphinx_definition_source($board)
+	{
+		return "
+			# /" . $board . "/
+			source " . $board . "_main : main
+			{
+				sql_query = SELECT doc_id, num, subnum, name, trip, (ascii(capcode)) as int_capcode, (subnnum != 0) as is_internal, deleted as is_deleted, timestamp, title, comment FROM " . $board . " WHERE doc_id >= \$start AND doc_id <= \$end
+				sql_query_info = SELECT * FROM " . $board . " WHERE doc_id = \$id
+				sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
+				sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_index_id_" . $board . ", \$maxid)
+			}
+
+			source " . $board . "_ancient : " . $board . "_main
+			{
+				sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $board ."
+				sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_ancient_id_" . $board .", \$maxid)
+			}
+
+			source " . $board . "_delta : " . $board . "_main
+			{
+				sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_'" . $board . "'), (SELECT MAX(doc_id) FROM " . $board .")
+				sql_query_post_index =
+			}
+		";
+	}
+
+
+	function generate_sphinx_definition_index($board, $path)
+	{
+		return "
+			# /" . $board . "/
+			index " . $board . "_main : main
+			{
+				source = " . $board . "_main
+				path = " . $path . "/" . $board . "_main
+			}
+
+			index " . $board . "_ancient : " . $board . "_main
+			{
+				source = " . $board . "_ancient
+				path = " . $path . "/" . $board . "_ancient
+			}
+
+			index " . $board . "_delta : " . $board . "_main
+			{
+				source = " . $board . "_delta
+				path = " . $path . "/" . $board . "_delta
+			}
+		";
 	}
 
 

@@ -52,6 +52,7 @@ class Admin_Controller extends MY_Controller
 			"icon" => 258,
 			"content" => array(
 				"manage" => array("level" => "admin", "name" => _("Manage"), "icon" => 382),
+				"sphinx" => array("level" => "admin", "name" => _("Sphinx"), "icon" => 382),
 				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 357)
 			)
 		);

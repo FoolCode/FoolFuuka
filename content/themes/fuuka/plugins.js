@@ -53,7 +53,12 @@ function toggle(id) {
 
 window.onload = function() {
   arr = location.href.split(/#/);
-  if (arr[1]) replyhighlight(arr[1]);
+  if (arr[1]) {
+    if (arr[1].charAt(0) != 'p')
+      replyhighlight('p' + arr[1]);
+    else
+      replyhighlight(arr[1]);
+  }
 }
 
 

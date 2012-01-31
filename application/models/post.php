@@ -2297,14 +2297,7 @@ class Post extends CI_Model
 		}
 
 
-		$adminfind = array(
-			"'\[banned\](.*?)\[/banned\]'i"
-		);
-
-		$adminreplace = array(
-			'<span class="banned">\\1</span>'
-		);
-
+		
 
 		$regexing = $row->comment;
 
@@ -2337,15 +2330,25 @@ class Post extends CI_Model
 		$this->current_board_for_prc = $board;
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
 		$regexing = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/(\d+(?:,\d+)?)?(\/?)))'i", array(get_class($this), 'get_crossboard_link'), $regexing);
-		if ($row->subnum == 0)
+		
+		
+		if ($board->archive && $row->subnum == 0)
 		{
+			$adminfind = array(
+				"'\[banned\](.*?)\[/banned\]'i"
+			);
+
+			$adminreplace = array(
+				'<span class="banned">\\1</span>'
+			);
+			
 			$regexing = preg_replace($adminfind, $adminreplace, $regexing);
 		}
 
 		$regexing = auto_link($regexing, 'url', TRUE);
 
 		$regexing = preg_replace($find, $replace, $regexing);
-		$regexing = parse_bbcode($regexing);
+		$regexing = parse_bbcode($regexing, $board->archive);
 
 		$regexing = nl2br(trim($regexing));
 

@@ -117,7 +117,138 @@ class Boards extends Admin_Controller
 
 	function generate_sphinx_config()
 	{
+		$config = '
+			########################################################
+			## Sphinx Configuration for FoOlFuuka
+			########################################################
+		';
 
+		$config .= '
+			########################################################
+			## data source definition
+			########################################################
+
+			source main
+			{
+				# data source type. mandatory, no default value
+				# known types are mysql, pgsql, mssql, xmlpipe, xmlpipe2, odbc
+				type = mysql
+
+				# SQL source information
+				sql_host =
+				sql_user =
+				sql_pass =
+				sql_db =
+				sql_port =
+
+				sql_query_pre = SET NAMES utf8
+				sql_range_step = 10000
+				sql_query =
+
+				sql_attr_uint = num
+				sql_attr_uint = subnum
+				sql_attr_uint = int_capcode
+				sql_attr_bool = has_image
+				sql_attr_bool = is_internal
+				sql_attr_bool = is_deleted
+				sql_attr_timestamp = timestamp
+
+				sql_query_info =
+				sql_query_post_index =
+			}
+		';
+
+		foreach ($this->radix->get_all() as $key => $board)
+		{
+			if ($board->sphinx)
+			{
+				$config .= $this->generate_sphinx_definition_source($board->shortname);
+			}
+		}
+
+		$config .= '
+			########################################################
+			## index definition
+			########################################################
+
+			index main
+			{
+				source = main
+				path = ?
+				docinfo = extern
+				mlock = 0
+				morphology = none
+				min_word_len = ?
+				charset_type = utf-8
+
+				charset_table =
+
+				min_prefix_len = 3
+				prefix_fields = comment, title
+				enable_star = 1
+				html_strip = 0
+			}
+		';
+
+		foreach ($this->radix->get_all() as $key => $board)
+		{
+			if ($board->sphinx)
+			{
+				$config .= $this->generate_sphinx_definition_source($board->shortname, '');
+			}
+		}
+
+		$config .= '
+			########################################################
+			## indexer settings
+			########################################################
+
+			indexer
+			{
+				mem_limit = ?
+				max_xmlpipe2_field = 4M
+				write_buffer = 5M
+				max_file_field_buffer = 32M
+			}
+		';
+
+		$config .= '
+			########################################################
+			## searchd settings
+			########################################################
+
+			searchd
+			{
+				listen = ?
+				listen = ?
+				log = ?
+				query_log =
+				read_timeout = 5
+				client_timeout = 300
+				max_children = 10
+				pid_file = ?
+				max_matches = 5000
+				seamless_rotate = 1
+				preopen_indexes = 1
+				unlink_old = 1
+				mva_updates_pool = 1M
+				max_packet_size = 8M
+				max_filters = 256
+				max_filter_values = 4096
+				max_batch_queries = 32
+				workers = threads
+				binlog_path = ?
+				collation_server = utf8_general_ci
+				collation_libc_locale = en_US.UTF-8
+				compat_sphinxsql_magics = 0
+			}
+		';
+
+		$config .= '
+			# --eof--
+		';
+
+		return $config;
 	}
 
 

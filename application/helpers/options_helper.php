@@ -307,7 +307,7 @@ function parse_bbcode($string, $archive = FALSE)
 	$bbcode->addCode('o', 'simple_replace', NULL, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array());
 	$bbcode->addCode('s', 'simple_replace', NULL, array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array());
 	$bbcode->addCode('u', 'simple_replace', NULL, array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array());
-	
+
 	if($archive)
 	{
 		if ($CI->fu_theme == 'fuuka' || $CI->fu_theme == 'yotsuba')

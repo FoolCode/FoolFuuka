@@ -2362,7 +2362,7 @@ class Post extends CI_Model
 		$regexing = auto_link($regexing, 'url', TRUE);
 
 		$regexing = preg_replace($find, $replace, $regexing);
-		$regexing = parse_bbcode($regexing, $board->archive);
+		$regexing = parse_bbcode($regexing, (($board->archive && $row->subnum == 0) ? TRUE : FALSE));
 
 		if ($board->archive && $row->subnum == 0)
 		{

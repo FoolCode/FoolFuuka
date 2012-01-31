@@ -305,7 +305,7 @@ class Theme_Controller {
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'order', 'page');
+		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'capcode', 'order', 'page');
 		if ($this->CI->input->post())
 		{
 			$redirect_array = array(get_selected_radix()->shortname, 'search');

@@ -15,6 +15,52 @@ class Boards extends Admin_Controller
 	}
 
 
+	function _submit($post, $form)
+	{
+		// Support Checkbox Listing
+		$former = array();
+		foreach ($form as $key => $item)
+		{
+			if (isset($item[1]['value']) && is_array($item[1]['value'])) {
+				foreach ($item[1]['value'] as $key => $item2) {
+					$former[] = array('1', $item2);
+				}
+			}
+			else
+				$former[] = $form[$key];
+		}
+
+		foreach ($former as $key => $item)
+		{
+			if (isset($post[$item[1]['name']]))
+				$value = $post[$item[1]['name']];
+			else
+				$value = NULL;
+
+			$this->db->from('preferences');
+			$this->db->where(array('name' => $item[1]['name']));
+			if ($this->db->count_all_results() == 1)
+			{
+				$this->db->update('preferences', array('value' => $value), array('name' => $item[1]['name']));
+			}
+			else
+			{
+				$this->db->insert('preferences', array('name' => $item[1]['name'], 'value' => $value));
+			}
+		}
+
+		$CI = & get_instance();
+		$array = $CI->db->get('preferences')->result_array();
+		$result = array();
+		foreach ($array as $item)
+		{
+			$result[$item['name']] = $item['value'];
+		}
+		$CI->fs_options = $result;
+		flash_notice('notice', _('Updated settings.'));
+	}
+
+
 	function index()
 	{
 		return $this->manage();
@@ -87,13 +133,64 @@ class Boards extends Admin_Controller
 		$form = array();
 
 		$form[] = array(
-			_('Path'),
+			_('Listen (Sphinx)'),
+			array(
+				'type' => 'input',
+				'name' => 'fu_sphinx_listen',
+				'id' => 'sphinx_listen',
+				'maxlength' => '200',
+				'placeholder' => _('127.0.0.1:9312'),
+				'preferences' => 'fs_gen',
+			)
+		);
+
+		$form[] = array(
+			_('Listen (MySQL)'),
+			array(
+				'type' => 'input',
+				'name' => 'fu_sphinx_listen_mysql',
+				'id' => 'sphinx_listen_mysql',
+				'maxlength' => '200',
+				'placeholder' => _('127.0.0.1:9306'),
+				'preferences' => 'fs_gen',
+				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
+			)
+		);
+
+		$form[] = array(
+			_('Working Directory'),
 			array(
 				'type' => 'input',
 				'name' => 'fu_sphinx_path',
 				'id' => 'sphinx_path',
 				'maxlength' => '200',
-				'placeholder' => _('/usr/local/sphinx/data/'),
+				'placeholder' => _('/usr/local/sphinx/var'),
+				'preferences' => 'fs_gen',
+				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
+			)
+		);
+
+		$form[] = array(
+			_('Minimum Word Length'),
+			array(
+				'type' => 'input',
+				'name' => 'fu_sphinx_min_word_len',
+				'id' => 'sphinx_min_word_len',
+				'maxlength' => '200',
+				'placeholder' => _('3'),
+				'preferences' => 'fs_gen',
+				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
+			)
+		);
+
+		$form[] = array(
+			_('Memory Limit'),
+			array(
+				'type' => 'input',
+				'name' => 'fu_sphinx_mem_limit',
+				'id' => 'sphinx_mem_limit',
+				'maxlength' => '200',
+				'placeholder' => _('2047M'),
 				'preferences' => 'fs_gen',
 				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
 			)
@@ -102,13 +199,15 @@ class Boards extends Admin_Controller
 		if ($post = $this->input->post())
 		{
 			$this->_submit($post, $form);
-			redirect('admin/preferences/theme');
+			redirect('admin/boards/sphinx');
 		}
 
 		// create the form
 		$table = tabler($form, FALSE);
 		$data['form_title'] = _('Theme');
 		$data['table'] = $table;
+
+		$data['config'] = str_replace("\t\t\t", '', $this->generate_sphinx_config());
 
 		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/sphinx.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
@@ -174,11 +273,11 @@ class Boards extends Admin_Controller
 			index main
 			{
 				source = main
-				path = ?
+				path = ' . get_setting('fu_sphinx_path') . '/data/main
 				docinfo = extern
 				mlock = 0
 				morphology = none
-				min_word_len = ?
+				min_word_len = ' . ((get_setting('fu_sphinx_mem_limit')) ? get_setting('fu_sphinx_mem_limit') : '2047M') . '
 				charset_type = utf-8
 
 				charset_table =
@@ -194,7 +293,7 @@ class Boards extends Admin_Controller
 		{
 			if ($board->sphinx)
 			{
-				$config .= $this->generate_sphinx_definition_source($board->shortname, '');
+				$config .= $this->generate_sphinx_definition_index($board->shortname, ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data');
 			}
 		}
 
@@ -205,7 +304,7 @@ class Boards extends Admin_Controller
 
 			indexer
 			{
-				mem_limit = ?
+				mem_limit = ' . ((get_setting('fu_sphinx_mem_limit')) ? get_setting('fu_sphinx_mem_limit') : '2047M') . '
 				max_xmlpipe2_field = 4M
 				write_buffer = 5M
 				max_file_field_buffer = 32M
@@ -219,14 +318,14 @@ class Boards extends Admin_Controller
 
 			searchd
 			{
-				listen = ?
-				listen = ?
-				log = ?
-				query_log =
+				listen = ' . ((get_setting('fu_sphinx_listen')) ? get_setting('fu_sphinx_listen') . ':sphinx' : '127.0.0.1:9312:sphinx') . '
+				listen = ' . ((get_setting('fu_sphinx_listen_mysql')) ? get_setting('fu_sphinx_listen_mysql') . ':mysql41' : '127.0.0.1:9312:mysql41') . '
+				log = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/searchd.log
+				query_log = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/query.log
 				read_timeout = 5
 				client_timeout = 300
 				max_children = 10
-				pid_file = ?
+				pid_file = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/searchd.pid
 				max_matches = 5000
 				seamless_rotate = 1
 				preopen_indexes = 1
@@ -237,7 +336,7 @@ class Boards extends Admin_Controller
 				max_filter_values = 4096
 				max_batch_queries = 32
 				workers = threads
-				binlog_path = ?
+				binlog_path = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data
 				collation_server = utf8_general_ci
 				collation_libc_locale = en_US.UTF-8
 				compat_sphinxsql_magics = 0

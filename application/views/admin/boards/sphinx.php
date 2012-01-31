@@ -7,4 +7,7 @@
 		echo $table;
 		echo form_close();
 	?>
+
+	<hr class="clear"/>
+	<?php echo nl2br($config) ?>
 </div>

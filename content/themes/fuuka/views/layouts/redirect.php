@@ -1,4 +1,4 @@
-<?php $title = fuuka_title() ?>
+<?php $title = fuuka_title($message) ?>
 <!DOCTYPE html>
 <html>
 	<head>

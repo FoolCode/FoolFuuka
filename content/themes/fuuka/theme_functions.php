@@ -13,10 +13,21 @@
  */
 
 // Fuuka's Code
-function fuuka_title()
+function fuuka_title($message)
 {
-	$titles = array('That was VIP quality!', 'That was /b/ Quality! Please die in a fire~', 'Can\'t let you do that, Star Fox!');
-	return $titles[array_rand($titles, 1)];
+	switch ($message)
+	{
+		case 1:
+			return 'Can\'t let you do that, Star Fox!';
+			break;
+
+		case 2:
+			return 'That was /b/ Quality! Please die in a fire~';
+			break;
+
+		default:
+			return 'That was VIP quality!';
+	}
 }
 
 function fuuka_message()

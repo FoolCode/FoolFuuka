@@ -249,6 +249,7 @@ class Theme_Controller {
 					}
 
 					$this->CI->template->set('url', $url);
+					$this->CI->template->set('message', 0);
 					$this->CI->template->set_layout('redirect');
 					$this->CI->template->build('redirect');
 					return TRUE;

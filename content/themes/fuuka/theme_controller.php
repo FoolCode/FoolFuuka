@@ -58,7 +58,6 @@ class Theme_Controller
 		$this->CI->template->set('posts_per_thread', 5);
 		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
 		$this->CI->template->set_partial('post_thread', 'post_thread');
-		$this->CI->template->set_partial('post_tools', 'post_tools');
 		$this->CI->template->build('board');
 	}
 
@@ -102,7 +101,6 @@ class Theme_Controller
 		$this->CI->template->set('posts_per_thread', 5);
 		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
 		$this->CI->template->set_partial('post_thread', 'post_thread');
-		$this->CI->template->set_partial('post_tools', 'post_tools');
 		$this->CI->template->build('board');
 	}
 
@@ -125,12 +123,16 @@ class Theme_Controller
 			show_404();
 		}
 
+		if (!isset($thread[$num]['op']))
+		{
+			$this->CI->post($num);
+		}
+
 		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
 		$this->CI->template->set('posts', $thread);
 		$this->CI->template->set('thread_id', $num);
 		$this->CI->template->set_partial('top_tools', 'top_tools');
 		$this->CI->template->set_partial('post_reply', 'post_reply');
-		$this->CI->template->set_partial('post_tools', 'post_tools');
 		$this->CI->template->build('board');
 	}
 
@@ -469,7 +471,6 @@ class Theme_Controller
 		$this->CI->template->set('posts', $result['posts']);
 		$this->CI->template->set('modifiers', array('post_show_view_button' => TRUE));
 		$this->CI->template->set_partial('top_tools', 'top_tools', array('search' => $search));
-		$this->CI->template->set_partial('post_tools', 'post_tools');
 		$this->CI->template->build('board');
 	}
 

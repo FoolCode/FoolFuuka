@@ -207,6 +207,11 @@ class Chan extends Public_Controller
 			show_404();
 		}
 
+		if (!isset($thread[$num]['op']))
+		{
+			$this->post($num);
+		}
+
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Thread #' . $num);
 		$this->template->set('posts', $thread);
 		$this->template->set('thread_id', $num);

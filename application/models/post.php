@@ -2113,7 +2113,7 @@ class Post extends CI_Model
 
 		if ($board->delay_thumbnails && !$this->tank_auth->is_allowed())
 		{
-			if ($row->timestamp + 86400 > time())
+			if (isset($row->timestamp) && ($row->timestamp + 86400 > time()))
 			{
 				if ($thumbnail)
 				{

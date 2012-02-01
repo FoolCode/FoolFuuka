@@ -1322,21 +1322,15 @@ class Post extends CI_Model
 
 	function check_thread($board, $num)
 	{
-		if (is_array($num))
-		{
-			if (!isset($num['parent']))
-			{
-				return array('invalid_thread' => TRUE);
-			}
-
-			$num = $num['parent'];
-		}
-
 		if ($num == 0)
 		{
+			// 0 should be not thrown in an archive, 
+			// but it's a thread OP in normal boards...
+			// either way, it shouldn't reach here if it's 0
 			return array('invalid_thread' => TRUE);
 		}
 
+		// grab the entire thread
 		$query = $this->db->query('
 			SELECT * FROM ' . $this->get_table($board) . '
 			' . $this->get_sql_report($board) . '
@@ -1344,14 +1338,23 @@ class Post extends CI_Model
 			ORDER BY num, subnum ASC;
 		', array($num, $num));
 
+		// nothing related found
 		if ($query->num_rows() == 0)
 		{
 			return array('invalid_thread' => TRUE);
 		}
 
 		$count = array('posts' => 0, 'images' => 0);
+		$thread_op_present = FALSE;
 		foreach ($query->result() as $post)
 		{
+			// we need to find if there's the OP in the list
+			// let's be strict, we want the $num to be the OP
+			if($post->parent == 0 && $post->subnum == 0 && $post->num === $num)
+			{
+				$thread_op_present = TRUE;
+			}
+			
 			if ($post->media_filename)
 			{
 				$count['images']++;
@@ -1361,6 +1364,12 @@ class Post extends CI_Model
 
 		$query->free_result();
 
+		if(!$thread_op_present)
+		{
+			// we didn't point to the thread OP, this is not a thread
+			return array('invalid_thread' => TRUE);
+		}
+		
 		if ($count['posts'] > 400)
 		{
 			if ($count['images'] > 200)
@@ -1463,6 +1472,14 @@ class Post extends CI_Model
 			$this->input->set_cookie('foolfuuka_reply_password', $password, 60 * 60 * 24 * 30);
 		}
 
+		if(isset($data['ghost']) && $data['ghost'] === TRUE)
+		{
+			$ghost = TRUE;
+		}
+		else
+		{
+			$ghost = FALSE;
+		}
 
 
 		if ($data['spoiler'] == FALSE || $data['spoiler'] == '')
@@ -1495,14 +1512,17 @@ class Post extends CI_Model
 				return array('error' => 'An image is required for creating threads.');
 			}
 
-			if (strlen($data['media_error']) == 64)
+			if(isset($data['media_error']))
 			{
-				return array('error' => 'The filetype you are attempting to upload is not allowed.');
-			}
+				if (strlen($data['media_error']) == 64)
+				{
+					return array('error' => 'The filetype you are attempting to upload is not allowed.');
+				}
 
-			if (strlen($data['media_error']) == 79)
-			{
-				return array('error' => 'The image you are attempting to upload is larger than the permitted size.');
+				if (strlen($data['media_error']) == 79)
+				{
+					return array('error' => 'The image you are attempting to upload is larger than the permitted size.');
+				}
 			}
 		}
 		else
@@ -1593,8 +1613,10 @@ class Post extends CI_Model
 			$this->session->set_userdata('poster_id', $poster_id);
 		}
 
-		if (is_array($num))
+		if (!$ghost)
 		{
+			// NORMAL REPLY
+			
 			$this->db->query('
 				INSERT INTO ' . $this->get_table($board) . '
 				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, spoiler, poster_id)
@@ -1603,11 +1625,13 @@ class Post extends CI_Model
 					(select coalesce(max(num),0)+1 from (select * from ' . $this->get_table($board) . ') as x),
 					?,?,?,?,?,?,?,?,?,?,?,?
 				);
-				', array(0, $num['parent'], time(), $postas, $email, $name, $trip, $subject, $comment, $password, $spoiler, $this->session->userdata('poster_id'))
+				', array(0, $num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $spoiler, $this->session->userdata('poster_id'))
 			);
 		}
 		else
 		{
+			// GHOST REPLY
+			
 			// get the post after which we're replying to
 			// partly copied from Fuuka original
 			$this->db->query('

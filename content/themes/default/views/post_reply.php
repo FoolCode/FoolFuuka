@@ -66,7 +66,6 @@ if (!defined('BASEPATH'))
 					<?php echo form_textarea(array(
 						'name' => 'reply_chennodiscursus',
 						'id' => 'reply_chennodiscursus',
-						'required' => 'required'
 					)); ?>
 				</div>
 			</div>

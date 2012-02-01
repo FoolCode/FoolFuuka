@@ -255,9 +255,7 @@ class Chan extends Public_Controller
 
 	public function sending()
 	{
-		// commenting
-		$post_data = '';
-
+		// honey pot to get rid of bots with 99.8% more skill
 		if (mb_strlen($this->input->post('name')) > 0 || mb_strlen($this->input->post('reply')) > 0 || mb_strlen($this->input->post('email')) > 0)
 		{
 			show_404();
@@ -270,7 +268,7 @@ class Chan extends Public_Controller
 			$this->form_validation->set_rules('reply_bokunonome', 'Username', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_elitterae', 'Email', 'trim|xss_clean|max_length[64]');
 			$this->form_validation->set_rules('reply_talkingde', 'Subject', 'trim|xss_clean|max_length[64]');
-			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|required|min_length[3]|max_length[4096]|xss_clean');
+			$this->form_validation->set_rules('reply_chennodiscursus', 'Comment', 'trim|min_length[3]|max_length[4096]|xss_clean');
 			$this->form_validation->set_rules('reply_nymphassword', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 			if ($this->tank_auth->is_allowed())
@@ -279,7 +277,24 @@ class Chan extends Public_Controller
 				$this->form_validation->set_message('_is_valid_allowed_tag', 'You didn\'t specify a correct type of user to post as');
 			}
 
-			if ($this->form_validation->run() !== FALSE)
+
+			// get rid of the validation errors here for readability
+			if ($this->form_validation->run() == FALSE)
+			{
+				$this->form_validation->set_error_delimiters('', '');
+				if ($this->input->is_ajax_request())
+				{
+					$this->output
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => validation_errors(), 'success' => '')));
+					return FALSE;
+				}
+				$this->template->title(_('Error'));
+				$this->template->set('error', validation_errors());
+				$this->template->build('error');
+				return FALSE;
+			}
+			else
 			{
 				$data['num'] = $this->input->post('reply_numero');
 				$data['name'] = $this->input->post('reply_bokunonome');
@@ -298,62 +313,187 @@ class Chan extends Public_Controller
 					$data['postas'] = 'N';
 				}
 
-				// Check if thread exists
-				$check = $this->post->check_thread(get_selected_radix(), $data['num']);
+
+				/*
+				  |
+				  |	FIRST OF ALL, CHECK WHAT KIND OF POST IS PASSING THROUGH
+				  |
+				  |	CHECK IF IT GOES IN THE RIGHT PLACE
+				  |
+				 */
+				
+				$data['ghost'] = FALSE;
+
+				// Check if thread exists and other things
 				if (!get_selected_radix()->archive)
 				{
-					// Normal Posting
-					if (isset($check['invalid_thread']) && $this->input->post('reply_numero') == 0)
+
+					if ($data['num'] == 0) // making a new thread
 					{
-						$data['num'] = array('parent' => 0);
-					}
-					else if (isset($check['thread_dead']))
-					{
-						$data['num'] = $this->input->post('reply_numero');
+						// let's make it exactly 0
+						$data['num'] = 0;
+						// no issues here
+						$check = array();
 					}
 					else
 					{
-						$data['num'] = array('parent' => $this->input->post('reply_numero'));
+						// replying to a thread
+						// check that we do have the thread
+						$check = $this->post->check_thread(get_selected_radix(), $data['num']);
+
+						if (isset($check['invalid_thread']))
+						{
+							// probably the set OP num wasn't actually an OP
+							if ($this->input->is_ajax_request())
+							{
+								$this->output
+										->set_content_type('application/json')
+										->set_output(json_encode(array('error' => _('This thread does not exist.'), 'success' => '')));
+								return FALSE;
+							}
+
+							$this->template->title(_('Error'));
+							$this->template->set('error', _('This thread does not exist.'));
+							$this->template->build('error');
+							return FALSE;
+						}
+
+						// thread_dead means the rest of the posts are going to be ghost
+						// ghosts won't bump the thread
+						if (isset($check['thread_dead']))
+						{
+							$data['ghost'] = TRUE;
+						}
 					}
 				}
 				else
 				{
+					// in the archive all posts are ghost
+					$data['ghost'] = TRUE;
+
+					$check = $this->post->check_thread(get_selected_radix(), $data['num']);
+
 					if (isset($check['invalid_thread']))
 					{
+						// probably the wrong OP, or it tried creating a new thread with num = 0
 						if ($this->input->is_ajax_request())
 						{
 							$this->output
 									->set_content_type('application/json')
-									->set_output(json_encode(array('error' => 'This thread does not exist.', 'success' => '')));
+									->set_output(json_encode(array('error' => _('This thread does not exist.'), 'success' => '')));
+							return FALSE;
 						}
+
+						$this->template->title(_('Error'));
+						$this->template->set('error', _('This thread does not exist.'));
+						$this->template->build('error');
+						return FALSE;
+					}
+
+					// it should be pretty safe to post a ghost, right?
+				}
+
+
+				/*
+				  |
+				  |	SECOND, CHECK IMAGE-RELATED SWITCHES
+				  |
+				 */
+
+				// OP must always post an image
+				if ($data['num'] == 0 
+						&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] == 4))
+				{
+					if ($this->input->is_ajax_request())
+					{
+						$this->output
+								->set_content_type('application/json')
+								->set_output(json_encode(array('error' => _('You must always upload an image when making new threads.'), 'success' => '')));
+						return FALSE;
+					}
+
+					$this->template->title(_('Error'));
+					$this->template->set('error', _('You must always upload an image when making new threads.'));
+					$this->template->build('error');
+					return FALSE;
+				}
+
+				// poster must always write a comment if he didn't upload an image
+				if (mb_strlen($data['comment']) < 3 
+						&& (!isset($_FILES['file_image']) || $_FILES['file_image']['error'] == 4))
+				{
+					// if there's no image, there must be a comment
+					if ($this->input->is_ajax_request())
+					{
+						$this->output
+								->set_content_type('application/json')
+								->set_output(json_encode(array('error' => _('You must always write a comment when not uploading an image.'), 'success' => '')));
+						return FALSE;
+					}
+
+					$this->template->title(_('Error'));
+					$this->template->set('error', _('You must always write a comment when not uploading an image.'));
+					$this->template->build('error');
+					return FALSE;
+				}
+
+				// don't post images if it's ghost or the image limit has been hit
+				if ((isset($check['disable_image_upload']) || $data['ghost']) 
+						&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4))
+				{
+					if ($this->input->is_ajax_request())
+					{
+						$this->output
+								->set_content_type('application/json')
+								->set_output(json_encode(array('error' => _('Image posting is disabled in this thread.'), 'success' => '')));
+						return FALSE;
+					}
+
+					$this->template->title(_('Error'));
+					$this->template->set('error', _('Image posting is disabled in this thread.'));
+					$this->template->build('error');
+					return FALSE;
+				}
+				
+				$data['media'] = '';
+
+				if (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4)
+				{
+					$media_config['upload_path'] = 'content/cache/';
+					$media_config['allowed_types'] = 'jpg|png|gif';
+					$media_config['max_size'] = 3072;
+					$media_config['max_width'] = 3000;
+					$media_config['max_height'] = 3000;
+					$media_config['overwrite'] = TRUE;
+					$this->load->library('upload', $media_config);
+					if ($this->upload->do_upload('file_image'))
+					{
+						$data['media'] = $this->upload->data();
+					}
+					else
+					{
+						$data['media'] = '';
+						$data['media_error'] = $this->upload->display_errors();
 					}
 				}
 
-				$media_config['upload_path'] = 'content/cache/';
-				$media_config['allowed_types'] = 'jpg|png|gif';
-				$media_config['max_size'] = 3072;
-				$media_config['max_width'] = 3000;
-				$media_config['max_height'] = 3000;
-				$media_config['overwrite'] = TRUE;
-				$this->load->library('upload', $media_config);
-				if ($this->upload->do_upload('file_image'))
-				{
-					$data['media'] = $this->upload->data();
-				}
-				else
-				{
-					$data['media'] = '';
-					$data['media_error'] = $this->upload->display_errors();
-				}
+				/*
+				  |
+				  |	SEND
+				  |
+				 */
 
-				if (isset($check['disable_image_upload']))
-				{
-					$result = $this->post->comment(get_selected_radix(), $data, FALSE);
-				}
-				else
-				{
-					$result = $this->post->comment(get_selected_radix(), $data);
-				}
+				// hopefully at this point it's all pretty much clean
+				// the comment function does a lot more processing though
+				$result = $this->post->comment(get_selected_radix(), $data);
+
+
+				/*
+				  |
+				  |	OUTPUT ERRORS OR SUCCESS
+				  |
+				 */
+
 
 				if (isset($result['error']))
 				{
@@ -394,21 +534,6 @@ class Chan extends Public_Controller
 					$this->template->build('redirect');
 					return TRUE;
 				}
-			}
-			else
-			{
-				$this->form_validation->set_error_delimiters('', '');
-				if ($this->input->is_ajax_request())
-				{
-					$this->output
-							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => validation_errors(), 'success' => '')));
-					return FALSE;
-				}
-				$this->template->title(_('Error'));
-				$this->template->set('error', validation_errors());
-				$this->template->build('error');
-				return FALSE;
 			}
 		}
 	}
@@ -578,13 +703,13 @@ class Chan extends Public_Controller
 		$result = $this->post->get_similar_image(get_selected_radix(), $hash . '==', $page);
 
 		//$total_pages = ceil($result['total_found'] / 25);
-		/*$pagination = array(
-			'base_url' => site_url(array(get_selected_radix()->shortname, 'image', $hash)),
-			'current_page' => $page,
-			'total' => (($total_pages > 200) ? 200 : $total_pages)
-		);
-		$this->template->set('pagination', $pagination);
-*/
+		/* $pagination = array(
+		  'base_url' => site_url(array(get_selected_radix()->shortname, 'image', $hash)),
+		  'current_page' => $page,
+		  'total' => (($total_pages > 200) ? 200 : $total_pages)
+		  );
+		  $this->template->set('pagination', $pagination);
+		 */
 		$this->template->set('section_title', _('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Images similar to: ' . urldecode($hash));
 		$this->template->set('posts', $result['posts']);

@@ -137,6 +137,9 @@ class Theme_Controller {
 
 	public function sending()
 	{
+		
+		show_404();
+		
 		if ($this->CI->input->post('com_submit') == 'Submit') {
 			$this->CI->load->library('form_validation');
 			$this->CI->form_validation->set_rules('resto', 'Thread no.', 'required|is_natural|xss_clean');

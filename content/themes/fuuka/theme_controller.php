@@ -234,6 +234,7 @@ class Theme_Controller {
 				if (isset($result['error']))
 				{
 					$this->CI->template->set('error', $result['error']);
+					$this->CI->template->set_partial('top_tools', 'top_tools');
 					$this->CI->template->build('error');
 					return FALSE;
 				}
@@ -259,6 +260,7 @@ class Theme_Controller {
 			{
 				$this->CI->form_validation->set_error_delimiters('', '');
 				$this->CI->template->set('error', validation_errors());
+				$this->CI->template->set_partial('top_tools', 'top_tools');
 				$this->CI->template->build('error');
 				return FALSE;
 			}
@@ -277,6 +279,7 @@ class Theme_Controller {
 			}
 
 			$this->CI->template->set('url', site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('parent')));
+			$this->CI->template->set('message', 0);
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');
 		}
@@ -296,6 +299,7 @@ class Theme_Controller {
 			}
 
 			$this->CI->template->set('url', site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('parent')));
+			$this->CI->template->set('message', 0);
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');
 		}

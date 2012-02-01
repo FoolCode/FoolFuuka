@@ -324,8 +324,8 @@ class Statistics extends CI_Model
 			}
 		}
 	}
-	
-	
+
+
 	function get_stat($board_id, $name)
 	{
 		$stat = $this->db->query('
@@ -333,10 +333,10 @@ class Statistics extends CI_Model
 			FROM ' . $this->db->protect_identifiers('statistics', TRUE) . '
 			WHERE board_id = ? and name = ?
 		', array($board_id, $name));
-		
+
 		if($stat->num_rows() == 0)
 			return FALSE;
-		
+
 		$result = $stat->result();
 		$stat->free_result();
 		return $result[0];
@@ -467,10 +467,10 @@ class Statistics extends CI_Model
 		{
 			$sql[] = '
 				(
-					SELECT preview, num, subnum, parent, media_hash, count(media_hash) as total
+					SELECT preview, media_filename, num, subnum, parent, media_hash, count(media_hash) as total
 					FROM
 					(
-						SELECT preview, preview_w, num, subnum, parent, media_hash
+						SELECT preview, media_filename, preview_w, num, subnum, parent, media_hash
 						FROM ' . $this->get_table($board) . '
 						USE index(media_hash)
 						WHERE media_hash = ' . $this->db->escape($row->hash) . '

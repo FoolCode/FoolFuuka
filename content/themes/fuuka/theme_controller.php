@@ -230,6 +230,7 @@ class Theme_Controller
 
 							$this->CI->template->title(_('Error'));
 							$this->CI->template->set('error', _('This thread does not exist.'));
+							$this->CI->template->set_partial('top_tools', 'top_tools');
 							$this->CI->template->build('error');
 							return FALSE;
 						}
@@ -254,6 +255,7 @@ class Theme_Controller
 						// probably the wrong OP, or it tried creating a new thread with num = 0
 						$this->CI->template->title(_('Error'));
 						$this->CI->template->set('error', _('This thread does not exist.'));
+						$this->CI->template->set_partial('top_tools', 'top_tools');
 						$this->CI->template->build('error');
 						return FALSE;
 					}
@@ -269,31 +271,34 @@ class Theme_Controller
 				 */
 
 				// OP must always post an image
-				if ($data['num'] == 0 
+				if ($data['num'] == 0
 						&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] == 4))
 				{
 					$this->CI->template->title(_('Error'));
 					$this->CI->template->set('error', _('You must always upload an image when making new threads.'));
+					$this->CI->template->set_partial('top_tools', 'top_tools');
 					$this->CI->template->build('error');
 					return FALSE;
 				}
 
 				// poster must always write a comment if he didn't upload an image
-				if (mb_strlen($data['comment']) < 3 
+				if (mb_strlen($data['comment']) < 3
 						&& (!isset($_FILES['file_image']) || $_FILES['file_image']['error'] == 4))
 				{
 					$this->CI->template->title(_('Error'));
 					$this->CI->template->set('error', _('You must always write a comment when not uploading an image.'));
+					$this->CI->template->set_partial('top_tools', 'top_tools');
 					$this->CI->template->build('error');
 					return FALSE;
 				}
 
 				// don't post images if it's ghost or the image limit has been hit
-				if ((isset($check['disable_image_upload']) || $data['ghost']) 
+				if ((isset($check['disable_image_upload']) || $data['ghost'])
 						&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4))
 				{
 					$this->CI->template->title(_('Error'));
 					$this->CI->template->set('error', _('Image posting is disabled in this thread.'));
+					$this->CI->template->set_partial('top_tools', 'top_tools');
 					$this->CI->template->build('error');
 					return FALSE;
 				}
@@ -315,7 +320,6 @@ class Theme_Controller
 					}
 					else
 					{
-						$data['media'] = '';
 						$data['media_error'] = $this->CI->upload->display_errors();
 					}
 				}

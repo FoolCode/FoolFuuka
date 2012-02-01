@@ -291,6 +291,7 @@ class Chan extends Public_Controller
 				}
 				$this->template->title(_('Error'));
 				$this->template->set('error', validation_errors());
+				$this->template->set_partial('top_tools', 'top_tools');
 				$this->template->build('error');
 				return FALSE;
 			}
@@ -321,7 +322,7 @@ class Chan extends Public_Controller
 				  |	CHECK IF IT GOES IN THE RIGHT PLACE
 				  |
 				 */
-				
+
 				$data['ghost'] = FALSE;
 
 				// Check if thread exists and other things
@@ -354,6 +355,7 @@ class Chan extends Public_Controller
 
 							$this->template->title(_('Error'));
 							$this->template->set('error', _('This thread does not exist.'));
+							$this->template->set_partial('top_tools', 'top_tools');
 							$this->template->build('error');
 							return FALSE;
 						}
@@ -386,6 +388,7 @@ class Chan extends Public_Controller
 
 						$this->template->title(_('Error'));
 						$this->template->set('error', _('This thread does not exist.'));
+						$this->template->set_partial('top_tools', 'top_tools');
 						$this->template->build('error');
 						return FALSE;
 					}
@@ -401,7 +404,7 @@ class Chan extends Public_Controller
 				 */
 
 				// OP must always post an image
-				if ($data['num'] == 0 
+				if ($data['num'] == 0
 						&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] == 4))
 				{
 					if ($this->input->is_ajax_request())
@@ -414,12 +417,13 @@ class Chan extends Public_Controller
 
 					$this->template->title(_('Error'));
 					$this->template->set('error', _('You must always upload an image when making new threads.'));
+					$this->template->set_partial('top_tools', 'top_tools');
 					$this->template->build('error');
 					return FALSE;
 				}
 
 				// poster must always write a comment if he didn't upload an image
-				if (mb_strlen($data['comment']) < 3 
+				if (mb_strlen($data['comment']) < 3
 						&& (!isset($_FILES['file_image']) || $_FILES['file_image']['error'] == 4))
 				{
 					// if there's no image, there must be a comment
@@ -433,12 +437,13 @@ class Chan extends Public_Controller
 
 					$this->template->title(_('Error'));
 					$this->template->set('error', _('You must always write a comment when not uploading an image.'));
+					$this->template->set_partial('top_tools', 'top_tools');
 					$this->template->build('error');
 					return FALSE;
 				}
 
 				// don't post images if it's ghost or the image limit has been hit
-				if ((isset($check['disable_image_upload']) || $data['ghost']) 
+				if ((isset($check['disable_image_upload']) || $data['ghost'])
 						&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4))
 				{
 					if ($this->input->is_ajax_request())
@@ -451,10 +456,11 @@ class Chan extends Public_Controller
 
 					$this->template->title(_('Error'));
 					$this->template->set('error', _('Image posting is disabled in this thread.'));
+					$this->template->set_partial('top_tools', 'top_tools');
 					$this->template->build('error');
 					return FALSE;
 				}
-				
+
 				$data['media'] = '';
 
 				if (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4)
@@ -472,7 +478,6 @@ class Chan extends Public_Controller
 					}
 					else
 					{
-						$data['media'] = '';
 						$data['media_error'] = $this->upload->display_errors();
 					}
 				}
@@ -506,6 +511,7 @@ class Chan extends Public_Controller
 					}
 					$this->template->title(_('Error'));
 					$this->template->set('error', $result['error']);
+					$this->template->set_partial('top_tools', 'top_tools');
 					$this->template->build('error');
 					return FALSE;
 				}
@@ -528,10 +534,7 @@ class Chan extends Public_Controller
 						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 					}
 
-					$this->template->title(_('Redirecting...'));
-					$this->template->set('url', $url);
-					$this->template->set_layout('redirect');
-					$this->template->build('redirect');
+					redirect($url, 'location', 303);
 					return TRUE;
 				}
 			}

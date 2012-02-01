@@ -1324,7 +1324,7 @@ class Post extends CI_Model
 	{
 		if ($num == 0)
 		{
-			// 0 should be not thrown in an archive, 
+			// 0 should be not thrown in an archive,
 			// but it's a thread OP in normal boards...
 			// either way, it shouldn't reach here if it's 0
 			return array('invalid_thread' => TRUE);
@@ -1354,7 +1354,7 @@ class Post extends CI_Model
 			{
 				$thread_op_present = TRUE;
 			}
-			
+
 			if ($post->media_filename)
 			{
 				$count['images']++;
@@ -1369,7 +1369,7 @@ class Post extends CI_Model
 			// we didn't point to the thread OP, this is not a thread
 			return array('invalid_thread' => TRUE);
 		}
-		
+
 		if ($count['posts'] > 400)
 		{
 			if ($count['images'] > 200)
@@ -1616,7 +1616,7 @@ class Post extends CI_Model
 		if (!$ghost)
 		{
 			// NORMAL REPLY
-			
+
 			$this->db->query('
 				INSERT INTO ' . $this->get_table($board) . '
 				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, spoiler, poster_id)
@@ -1631,7 +1631,7 @@ class Post extends CI_Model
 		else
 		{
 			// GHOST REPLY
-			
+
 			// get the post after which we're replying to
 			// partly copied from Fuuka original
 			$this->db->query('
@@ -1657,9 +1657,9 @@ class Post extends CI_Model
 			LIMIT 0,1;
 		', array($this->db->insert_id()));
 
-		if (!is_array($num))
+		// we don't even need this, but let's leave it for sake of backward compatibility with original fuuka
+		if ($board->archive)
 		{
-			// we don't even need this, but let's leave it for sake of backward compatibility with original fuuka
 			$this->db->query('
 				replace into ' . $this->get_table_local($board) . ' (num,parent,subnum,`timestamp`)
 				select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from ' . $this->get_table($board) . '

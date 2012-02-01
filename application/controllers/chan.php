@@ -356,6 +356,7 @@ class Chan extends Public_Controller
 							$this->template->title(_('Error'));
 							$this->template->set('error', _('This thread does not exist.'));
 							$this->template->set_partial('top_tools', 'top_tools');
+							$this->template->set_partial('post_tools', 'post_tools');
 							$this->template->build('error');
 							return FALSE;
 						}
@@ -389,6 +390,7 @@ class Chan extends Public_Controller
 						$this->template->title(_('Error'));
 						$this->template->set('error', _('This thread does not exist.'));
 						$this->template->set_partial('top_tools', 'top_tools');
+						$this->template->set_partial('post_tools', 'post_tools');
 						$this->template->build('error');
 						return FALSE;
 					}
@@ -418,6 +420,7 @@ class Chan extends Public_Controller
 					$this->template->title(_('Error'));
 					$this->template->set('error', _('You must always upload an image when making new threads.'));
 					$this->template->set_partial('top_tools', 'top_tools');
+					$this->template->set_partial('post_tools', 'post_tools');
 					$this->template->build('error');
 					return FALSE;
 				}
@@ -438,6 +441,7 @@ class Chan extends Public_Controller
 					$this->template->title(_('Error'));
 					$this->template->set('error', _('You must always write a comment when not uploading an image.'));
 					$this->template->set_partial('top_tools', 'top_tools');
+					$this->template->set_partial('post_tools', 'post_tools');
 					$this->template->build('error');
 					return FALSE;
 				}
@@ -457,6 +461,7 @@ class Chan extends Public_Controller
 					$this->template->title(_('Error'));
 					$this->template->set('error', _('Image posting is disabled in this thread.'));
 					$this->template->set_partial('top_tools', 'top_tools');
+					$this->template->set_partial('post_tools', 'post_tools');
 					$this->template->build('error');
 					return FALSE;
 				}
@@ -512,6 +517,7 @@ class Chan extends Public_Controller
 					$this->template->title(_('Error'));
 					$this->template->set('error', $result['error']);
 					$this->template->set_partial('top_tools', 'top_tools');
+					$this->template->set_partial('post_tools', 'post_tools');
 					$this->template->build('error');
 					return FALSE;
 				}

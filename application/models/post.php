@@ -1406,6 +1406,13 @@ class Post extends CI_Model
 
 		if (check_stopforumspam_ip($this->input->ip_address()))
 		{
+			if ($data['media'] != FALSE || $data['media'] != '')
+			{
+				if (!unlink($data["media"]["full_path"]))
+				{
+					log_message('error', 'process_media: failed to remove media file from cache');
+				}
+			}
 			return array('error' => _('Your IP has been identified as a spam proxy. You can\'t post from there.'));
 		}
 
@@ -1481,7 +1488,6 @@ class Post extends CI_Model
 			$ghost = FALSE;
 		}
 
-
 		if ($data['spoiler'] == FALSE || $data['spoiler'] == '')
 		{
 			$spoiler = 0;
@@ -1493,21 +1499,12 @@ class Post extends CI_Model
 
 		if ($data['media'] == FALSE || $data['media'] == '')
 		{
-			if (is_array($data['num']))
-			{
-				$parent = $data['num']['parent'];
-			}
-			else
-			{
-				$parent = $data['num'];
-			}
-
 			if ($spoiler == 1)
 			{
 				$spoiler = 0;
 			}
 
-			if ($parent == 0)
+			if ($data['num'] == 0)
 			{
 				return array('error' => 'An image is required for creating threads.');
 			}
@@ -1527,20 +1524,36 @@ class Post extends CI_Model
 		}
 		else
 		{
+			$media = $data['media'];
+
 			if ($allow_media == FALSE)
 			{
+				if (!unlink($media["full_path"]))
+				{
+					log_message('error', 'process_media: failed to remove media file from cache');
+				}
 				return array('error' => 'Sorry, this thread has reached its maximum amount of image replies.');
 			}
 
-			$media = $data['media'];
 			if ($media["image_width"] == 0 || $media["image_height"] == 0)
 			{
+				if (!unlink($media["full_path"]))
+				{
+					log_message('error', 'process_media: failed to remove media file from cache');
+				}
 				return array('error' => 'Your image upload is not a valid image file.');
 			}
 
 			$media_hash = base64_encode(pack("H*", md5(file_get_contents($media["full_path"]))));
-			if (check_commentdata(array($media_hash)))
+
+			$check = $this->db->get_where('banned_md5', array('md5' => $media_hash));
+
+			if ($check->num_rows() > 0)
 			{
+				if (!unlink($media["full_path"]))
+				{
+					log_message('error', 'process_media: failed to remove media file from cache');
+				}
 				return array('error' => 'Your image upload has been flagged as inappropriate.');
 			}
 		}
@@ -2100,6 +2113,26 @@ class Post extends CI_Model
 	{
 		if (!$row->preview)
 			return FALSE;
+
+		/**
+		 * Checking for Banned MD5 Hashes
+		 */
+		$query = $this->db->get_where('banned_md5', array('md5' => $row->media_hash));
+
+		if ($query->num_rows() > 0)
+		{
+			if ($thumbnail)
+			{
+				$row->preview_h = 150;
+				$row->preview_w = 150;
+				return site_url() . 'content/themes/default/images/banned-image.png';
+			}
+
+			return '';
+		}
+		/**
+		 * End Check
+		 */
 
 		if (!$board->thumbnails && !$this->tank_auth->is_allowed())
 		{

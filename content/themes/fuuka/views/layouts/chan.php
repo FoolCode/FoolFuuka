@@ -77,13 +77,19 @@
 								if ($pagination['total'] <= 15) :
 									for ($index = 1; $index <= $pagination['total']; $index++)
 									{
-										echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
+										if ($pagination['current_page'] == $index)
+											echo '[<b>' . $index  . '</b>]';
+										else
+											echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
 									}
 								else :
 									if ($pagination['current_page'] < 15) :
 										for ($index = 1; $index <= 15; $index++)
 										{
-											echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
+											if ($pagination['current_page'] == $index)
+												echo '[<b>' . $index  . '</b>]';
+											else
+												echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
 										}
 										echo '[<span>...</span>] ';
 									else :
@@ -94,7 +100,10 @@
 										echo '[<span>...</span>] ';
 										for ($index = ((($pagination['current_page'] + 2) > $pagination['total']) ? ($pagination['current_page'] - 4) : ($pagination['current_page'] - 2)); $index <= ((($pagination['current_page'] + 2) > $pagination['total']) ? $pagination['total'] : ($pagination['current_page'] + 2)); $index++)
 										{
-											echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
+											if ($pagination['current_page'] == $index)
+												echo '[<b>' . $index  . '</b>]';
+											else
+												echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
 										}
 										if (($pagination['current_page'] + 2) < $pagination['total'])
 											echo '[<span>...</span>] ';
@@ -108,32 +117,6 @@
 								endif;
 							?>
 							</td>
-						</tr>
-					</tbody>
-				</table>
-			<?php endif; ?>
-
-
-			<?php if (isset($pages_links)) : ?>
-				<table style="float:left">
-					<tbody>
-						<tr>
-							<td colspan="7" class="theader">Navigation</td>
-						</tr>
-						<tr>
-							<td class="postblock">View posts</td>
-							<?php if ($pages_links_current > 5) : ?>
-								<td>[<a href="<?php echo $pages_links . ($pages_links_current - 4) ?>/">-96</a>]</td>
-							<?php endif; ?>
-							<?php if ($pages_links_current > 2) : ?>
-								<td>[<a href="<?php echo $pages_links . ($pages_links_current - 2) ?>/">-48</a>]</td>
-							<?php endif; ?>
-							<?php if ($pages_links_current > 1) : ?>
-								<td>[<a href="<?php echo $pages_links . ($pages_links_current - 1) ?>/">-24</a>]</td>
-							<?php endif; ?>
-							<td>[<a href="<?php echo $pages_links . ($pages_links_current + 1) ?>/">+24</a>]</td>
-							<td>[<a href="<?php echo $pages_links . ($pages_links_current + 2) ?>/">+48</a>]</td>
-							<td>[<a href="<?php echo $pages_links . ($pages_links_current + 4) ?>/">+96</a>]</td>
 						</tr>
 					</tbody>
 				</table>

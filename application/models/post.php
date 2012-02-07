@@ -885,14 +885,14 @@ class Post extends CI_Model
 					$this->sphinxclient->setFilter('is_internal', array(0));
 				}
 
-				if ($search['capcode'] == "admin")
+				/*if ($search['capcode'] == "admin")
 				{
 					$this->sphinxclient->setFilter('int_capcode', array(97));
 				}
 				if ($search['capcode'] == "mod")
 				{
 					$this->sphinxclient->setFilter('int_capcode', array(109));
-				}
+				}*/
 
 				$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED);
 				if ($search['order'] == 'asc')
@@ -1933,14 +1933,14 @@ class Post extends CI_Model
 		$post->thumbnail_href = $this->get_image_href($board, $post, TRUE);
 		$post->image_href = $this->get_image_href($board, $post);
 		$post->remote_image_href = $this->get_remote_image_href($board, $post);
-		$post->comment_processed = iconv('UTF-8', 'UTF-8//IGNORE', $this->get_comment_processed($board, $post));
-		$post->comment = iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
+		$post->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->get_comment_processed($board, $post));
+		$post->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
 
 		foreach (array('title', 'name', 'email', 'trip', 'media', 'preview', 'media_filename', 'media_hash') as $element)
 		{
 			$element_processed = $element . '_processed';
-			$post->$element_processed = iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));
-			$post->$element = iconv('UTF-8', 'UTF-8//IGNORE', $post->$element);
+			$post->$element_processed = @iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));
+			$post->$element = @iconv('UTF-8', 'UTF-8//IGNORE', $post->$element);
 		}
 
 		if ($clean === TRUE)
@@ -2353,7 +2353,6 @@ class Post extends CI_Model
 		}
 		$regexing = $row->comment;
 
-
 		// get rid of moot's formatting
 		if ($row->capcode == 'A' && mb_strpos($regexing, '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
 		{
@@ -2376,7 +2375,7 @@ class Post extends CI_Model
 			}
 		}
 
-		$regexing = htmlentities($regexing, ENT_COMPAT, 'UTF-8', FALSE);
+		$regexing = htmlentities($regexing, ENT_COMPAT | ENT_IGNORE, 'UTF-8', FALSE);
 
 		// for preg_replace_callback
 		$this->current_board_for_prc = $board;

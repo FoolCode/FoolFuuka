@@ -463,6 +463,18 @@ class Theme_Controller
 			if (!$item)
 				unset($uri_array[$key]);
 		}
+
+		if (isset($uri_array['page']))
+			unset($uri_array['page']);
+
+		$total_pages = ceil($result['total_found'] / 25);
+		$pagination = array(
+			'base_url' => site_url(array($this->CI->uri->assoc_to_uri($uri_array), 'page')),
+			'current_page' => $search['page'],
+			'total' => (($total_pages > 200) ? 200 : $total_pages)
+		);
+		$this->CI->template->set('pagination', $pagination);
+
 		$pages_links = site_url(array($this->CI->uri->assoc_to_uri($uri_array), 'page'));
 		$this->CI->template->set('pages_links', $pages_links);
 		$this->CI->template->set('pages_links_current', $search['page']);

@@ -836,7 +836,7 @@ class Post extends CI_Model
 		if ($board->sphinx)
 		{
 
-			if ($search['username'] || $search['tripcode'] || $search['text'] || $search['deleted'] || $search['ghost'])
+			if ($search['username'] || $search['tripcode'] || $search['capcode'] || $search['text'] || $search['deleted'] || $search['ghost'])
 			{
 				$this->load->library('SphinxClient');
 				$this->sphinxclient->SetServer(
@@ -855,6 +855,15 @@ class Post extends CI_Model
 				if ($search['tripcode'])
 				{
 					$query .= '@trip ' . $this->sphinxclient->EscapeString(urldecode($search['tripcode'])) . ' ';
+				}
+
+				if ($search['capcode'] == "admin")
+				{
+					$this->sphinxclient->setFilter('int_capcode', array(65));
+				}
+				if ($search['capcode'] == "mod")
+				{
+					$this->sphinxclient->setFilter('int_capcode', array(77));
 				}
 
 				if ($search['text'])
@@ -884,15 +893,6 @@ class Post extends CI_Model
 				{
 					$this->sphinxclient->setFilter('is_internal', array(0));
 				}
-
-				/*if ($search['capcode'] == "admin")
-				{
-					$this->sphinxclient->setFilter('int_capcode', array(97));
-				}
-				if ($search['capcode'] == "mod")
-				{
-					$this->sphinxclient->setFilter('int_capcode', array(109));
-				}*/
 
 				$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED);
 				if ($search['order'] == 'asc')
@@ -1011,6 +1011,17 @@ class Post extends CI_Model
 				$index[] = 'trip_index';
 			}
 
+			if ($search['capcode'] == "admin")
+			{
+				$field[] = 'capcode = ?';
+				$value[] = 'A';
+			}
+			if ($search['capcode'] == "mod")
+			{
+				$field[] = 'capcode = ?';
+				$value[] = 'M';
+			}
+
 			if ($search['text'])
 			{
 				if (mb_strlen($search['text']) < 2)
@@ -1043,17 +1054,6 @@ class Post extends CI_Model
 			{
 				$field[] = 'subnum = ?';
 				$value[] = 0;
-			}
-
-			if ($search['capcode'] == "admin")
-			{
-				$field[] = 'capcode = ?';
-				$value[] = 'A';
-			}
-			if ($search['capcode'] == "mod")
-			{
-				$field[] = 'capcode = ?';
-				$value[] = 'M';
 			}
 
 			if ($search['order'] === 'asc')

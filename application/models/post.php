@@ -264,17 +264,17 @@ class Post extends CI_Model
 					SELECT *
 					FROM
 					(
-						SELECT parent as unq_parent, MAX(b.doc_id), b.num
+						SELECT parent as unq_parent, MAX(b.timestamp), b.num
 						FROM (
-							SELECT num, parent, subnum, doc_id, email
+							SELECT num, parent, subnum, timestamp, email
 							FROM ' . $this->get_table($board) . '
 							WHERE subnum > 0
-							AND (email <> \'sage\' OR (email = \'sage\' AND parent = 0))
-							ORDER BY doc_id DESC
+							AND (email <> \'sage\' OR email IS NULL OR (email = \'sage\' AND parent = 0))
+							ORDER BY timestamp DESC
 							LIMIT 0, 100000
 						) AS b
 						GROUP BY unq_parent
-						ORDER BY MAX(b.doc_id) DESC
+						ORDER BY MAX(b.timestamp) DESC
 						LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
 					) AS t
 					LEFT JOIN ' . $this->get_table($board) . ' AS g

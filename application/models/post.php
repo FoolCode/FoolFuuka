@@ -836,7 +836,7 @@ class Post extends CI_Model
 		if ($board->sphinx)
 		{
 
-			if ($search['username'] || $search['tripcode'] || $search['capcode'] || $search['text'] || $search['deleted'] || $search['ghost'])
+			if ($search['username'] || $search['tripcode'] || $search['text'] || $search['deleted'] || $search['ghost'] || $search['filter'])
 			{
 				$this->load->library('SphinxClient');
 				$this->sphinxclient->SetServer(
@@ -855,15 +855,6 @@ class Post extends CI_Model
 				if ($search['tripcode'])
 				{
 					$query .= '@trip ' . $this->sphinxclient->EscapeString(urldecode($search['tripcode'])) . ' ';
-				}
-
-				if ($search['capcode'] == "admin")
-				{
-					$this->sphinxclient->setFilter('int_capcode', array(65));
-				}
-				if ($search['capcode'] == "mod")
-				{
-					$this->sphinxclient->setFilter('int_capcode', array(77));
 				}
 
 				if ($search['text'])
@@ -892,6 +883,55 @@ class Post extends CI_Model
 				if ($search['ghost'] == "none")
 				{
 					$this->sphinxclient->setFilter('is_internal', array(0));
+				}
+
+				if ($search['filter'] != "")
+				{
+					$filters = explode('-', $search['filter']);
+					unset($search['filter']);
+
+					foreach ($filters as $key => $value)
+					{
+						$search['filter'][$value] = TRUE;
+					}
+
+					// Capcode Check
+					if (!empty($search['filter']['user']))
+					{
+						$this->sphinxclient->setFilter('int_capcode', array(65, 77));
+					}
+					if (!empty($search['filter']['mod']))
+					{
+						if (!empty($search['filter']['user']))
+						{
+							$this->sphinxclient->setFilter('int_capcode', array(77), TRUE);
+						}
+						else
+						{
+							$this->sphinxclient->setFilter('int_capcode', array(78, 65));
+						}
+					}
+					if (!empty($search['filter']['admin']))
+					{
+						if (!empty($search['filter']['user']) || !empty($search['filter']['mod']))
+						{
+							$this->sphinxclient->setFilter('int_capcode', array(65), TRUE);
+						}
+						else
+						{
+							$this->sphinxclient->setFilter('int_capcode', array(78, 77));
+						}
+					}
+
+					if (!empty($search['filter']['text']))
+					{
+						$this->sphinxclient->setFilter('has_image', array(1));
+					}
+
+					if (!empty($search['filter']['image']))
+					{
+						$this->sphinxclient->setFilter('has_image', array(0));
+					}
 				}
 
 				$this->sphinxclient->setMatchMode(SPH_MATCH_EXTENDED);

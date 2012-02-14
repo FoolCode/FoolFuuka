@@ -193,47 +193,37 @@ if (!isset($page))
 				</ul>
 			</div>
 		</div>
-		<?php
-			if (!empty($search["filter"])) :
-				$filters = explode('-', $search["filter"]);
-				unset($search["filter"]);
-				foreach ($filters as $key => $value)
-				{
-					$search["filter"][$value] = TRUE;
-				}
-			endif;
-		?>
 		<div class="clearfix">
 			<label>Filter</label>
 			<div class="input">
 				<ul class="inputs-list">
 					<li>
 						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'admin', 'checked' => (!empty($search["filter"]["admin"]) && $search["filter"]["admin"] == TRUE) ? TRUE : FALSE)); ?>
+							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'admin', 'checked' => (!empty($search["filter"]["admin"]) && $search["filter"]["admin"] === TRUE) ? TRUE : FALSE)); ?>
 							<span>Admin Posts</span>
 						</label>
 					</li>
 					<li>
 						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'mod', 'checked' => (!empty($search["filter"]["mod"]) && $search["filter"]["mod"] == TRUE) ? TRUE : FALSE)); ?>
+							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'mod', 'checked' => (!empty($search["filter"]["mod"]) && $search["filter"]["mod"] === TRUE) ? TRUE : FALSE)); ?>
 							<span>Mod Posts</span>
 						</label>
 					</li>
 					<li>
 						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'user', 'checked' => (!empty($search["filter"]["user"]) && $search["filter"]["user"] == TRUE) ? TRUE : FALSE)); ?>
+							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'user', 'checked' => (!empty($search["filter"]["user"]) && $search["filter"]["user"] === TRUE) ? TRUE : FALSE)); ?>
 							<span>User Posts</span>
 						</label>
 					</li>
 					<li>
 						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]["admin"]) && $search["filter"]["admin"] == TRUE) ? TRUE : FALSE)); ?>
+							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]["text"]) && $search["filter"]["text"] === TRUE) ? TRUE : FALSE)); ?>
 							<span>Text-Only Posts</span>
 						</label>
 					</li>
 					<li>
 						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]["image"]) && $search["filter"]["image"] == TRUE) ? TRUE : FALSE)); ?>
+							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]["image"]) && $search["filter"]["image"] === TRUE) ? TRUE : FALSE)); ?>
 							<span>Only Image Posts</span>
 						</label>
 					</li>

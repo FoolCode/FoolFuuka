@@ -413,6 +413,9 @@ var getPage = function(pageForm)
 
 var getRadioValue = function(group)
 {
+	if (typeof group == "undefined")
+		return '';
+
 	for (index = 0; index < group.length; index++)
 	{
 		if (group[index].checked == true)
@@ -422,6 +425,9 @@ var getRadioValue = function(group)
 
 var getCheckValue = function(group)
 {
+	if (typeof group == "undefined")
+		return '';
+
 	var values = new Array();
 	for (index = 0; index < group.length; index++)
 	{

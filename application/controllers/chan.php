@@ -783,7 +783,7 @@ class Chan extends Public_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'capcode', 'order', 'page');
+		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'capcode', 'filter', 'order', 'page');
 		if ($this->input->post())
 		{
 			$redirect_array = array(get_selected_radix()->shortname, 'search');
@@ -805,6 +805,8 @@ class Chan extends Public_Controller
 		{
 			$this->template->title(_('Error'));
 			$this->template->set('error', $result['error']);
+			$this->template->set_partial('top_tools', 'top_tools', array('search' => $search));
+			$this->template->set_partial('post_tools', 'post_tools');
 			$this->template->build('error');
 			return FALSE;
 		}
@@ -830,6 +832,18 @@ class Chan extends Public_Controller
 			$title[] = _('made by mods');
 		if ($search['order'] == 'asc')
 			$title[] = _('starting from the oldest ones');
+
+		if ($search["filter"]) :
+			$filters = explode('-', $search["filter"]);
+			unset($search["filter"]);
+			foreach ($filters as $key => $value)
+			{
+				$search["filter"][$value] = TRUE;
+			}
+
+			$title[] = _('with the following filters applied: ') . implode(', ', $filters);
+		endif;
+
 		if (!$search['page'] || !intval($search['page']))
 		{
 			$search['page'] = 1;
@@ -844,6 +858,9 @@ class Chan extends Public_Controller
 			if (!$item)
 				unset($uri_array[$key]);
 		}
+
+		if (isset($uri_array['filter']))
+			$uri_array['filter'] = implode('-', $filters);
 
 		if (isset($uri_array['page']))
 			unset($uri_array['page']);

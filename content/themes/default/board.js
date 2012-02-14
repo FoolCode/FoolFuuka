@@ -384,6 +384,9 @@ var getSearch = function(type, searchForm)
 		if (getRadioValue(searchForm.ghost) != "")
 			location += 'ghost/' + getRadioValue(searchForm.ghost) + '/';
 
+		if (getCheckValue(searchForm.filter) != "")
+			location += 'filter/' + getCheckValue(searchForm.filter) + '/';
+
 		location += 'order/' + getRadioValue(searchForm.order) + '/';
 	}
 
@@ -415,6 +418,18 @@ var getRadioValue = function(group)
 		if (group[index].checked == true)
 			return encodeURIComponent(group[index].value);
 	}
+}
+
+var getCheckValue = function(group)
+{
+	var values = new Array();
+	for (index = 0; index < group.length; index++)
+	{
+		if (group[index].checked == true)
+			values.push(group[index].value);
+	}
+
+	return encodeURIComponent(values.join("-"));
 }
 
 function toggleHighlight(id, classn, single)

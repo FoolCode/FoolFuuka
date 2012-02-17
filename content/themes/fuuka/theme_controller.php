@@ -20,13 +20,12 @@ class Theme_Controller
 	}
 
 
-	public function page($page = 1)
+	public function page($page = 1, $by_thread = FALSE)
 	{
 		$this->CI->remap_query();
-		$this->CI->input->set_cookie('fu_ghost_mode', FALSE, 86400);
 		if ($this->CI->input->post())
 		{
-			redirect(get_selected_radix()->shortname . '/page/' . $this->CI->input->post('page'), 'location', 303);
+			redirect(get_selected_radix()->shortname . '/' . ($by_thread ? 'by_thread' : 'page') . '/' . $this->CI->input->post('page'), 'location', 303);
 		}
 
 		if (!is_natural($page) || $page > 500)
@@ -37,17 +36,17 @@ class Theme_Controller
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 24, 'type' => 'by_thread'));
+		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 24, 'type' => ($by_thread ? 'by_thread' : 'by_post')));
 
 		$pages = $posts['pages'];
 		$posts = $posts['result'];
 
-		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
+		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1) ? ' &raque; Page ' . $page : ''));
 		if ($page > 1)
-			$this->CI->template->set('section_title', _('Page ') . $page);
+			$this->CI->template->set('section_title', ($by_thread ? _('Latest by Thread - Page ') : _('Page ')) . $page);
 
 		$pagination = array(
-			'base_url' => site_url(array(get_selected_radix()->shortname, 'page')),
+			'base_url' => site_url(array(get_selected_radix()->shortname, ($by_thread ? 'by_thread' : 'page'))),
 			'current_page' => $page,
 			'total' => $pages
 		);
@@ -62,9 +61,14 @@ class Theme_Controller
 	}
 
 
+	public function by_thread($page = 1)
+	{
+		$this->page($page, TRUE);
+	}
+
+
 	public function ghost($page = 1)
 	{
-		$this->CI->input->set_cookie('fu_ghost_mode', TRUE, 86400);
 		if ($this->CI->input->post())
 		{
 			redirect(get_selected_radix()->shortname . '/ghost/' . $this->CI->input->post('page'), 'location', 303);

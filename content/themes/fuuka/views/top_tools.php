@@ -54,23 +54,6 @@ if (!isset($page))
 					</td>
 				</tr>
 				<tr>
-					<td class="postblock">Capcode</td>
-					<td>
-						<label>
-							<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"])) ? TRUE : FALSE)); ?>
-							<span>Show all posts</span>
-						</label><br />
-						<label>
-							<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod') ? TRUE : FALSE)); ?>
-							<span>Show only mod posts</span>
-						</label><br />
-						<label>
-							<?php echo form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin') ? TRUE : FALSE)); ?>
-							<span>Show only admin posts</span>
-						</label>
-					</td>
-				</tr>
-				<tr>
 					<td class="postblock">Deleted posts</td>
 					<td>
 						<label>

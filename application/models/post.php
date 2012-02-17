@@ -1051,17 +1051,6 @@ class Post extends CI_Model
 				$index[] = 'trip_index';
 			}
 
-			if ($search['capcode'] == "admin")
-			{
-				$field[] = 'capcode = ?';
-				$value[] = 'A';
-			}
-			if ($search['capcode'] == "mod")
-			{
-				$field[] = 'capcode = ?';
-				$value[] = 'M';
-			}
-
 			if ($search['text'])
 			{
 				if (mb_strlen($search['text']) < 2)

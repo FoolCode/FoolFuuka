@@ -844,10 +844,6 @@ class Chan extends Public_Controller
 			$title[] = _('that are by ghosts');
 		if ($search['ghost'] == 'none')
 			$title[] = _('that aren\'t by ghosts');
-		if ($search['capcode'] == 'admin')
-			$title[] = _('made by admins');
-		if ($search['capcode'] == 'mod')
-			$title[] = _('made by mods');
 		if ($search['order'] == 'asc')
 			$title[] = _('starting from the oldest ones');
 

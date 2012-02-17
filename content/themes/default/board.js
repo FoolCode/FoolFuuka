@@ -89,26 +89,7 @@ var bindFunctions = function()
 					<textarea class="modal-comment"></textarea>');
 				modal.find(".submitModal").data("action", 'report');
 				break;
-			/*
-			case 'spam':
-				jQuery.ajax({
-					url: site_url + board_shortname + '/spam/' + post + '/',
-					dataType: 'json',
-					type: 'POST',
-					data: {
-						post: post
-					},
-					success: function(data) {
-						jQuery("#" + el.data("post-id")).addClass('is_spam');
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-					},
-					complete: function() {
-					}
-				});
-				event.preventDefault();
-				break;
-			*/
+
 			case 'closeModal':
 				el.closest(".modal").modal('hide');
 				return false;
@@ -159,23 +140,6 @@ var bindFunctions = function()
 				break;
 		}
 	});
-
-/*
-	jQuery("[data-expand=true]").click(function() {
-		var that = jQuery(this).children();
-
-		// Update Dimensions
-		that.attr("width", that.data('width'))
-		that.attr("height", that.data('height'))
-
-		// Update Image
-		that.attr("src", this.href);
-
-		return false;
-	});
-*/
-
-
 
 	// how could we make it working well on cellphones?
 	if( navigator.userAgent.match(/Android/i) ||
@@ -399,7 +363,8 @@ var getPost = function(postForm)
 		alert('Sorry, you must insert a valid post number.');
 		return false;
 	}
-	window.location = postForm.action + encodeURIComponent(postForm.post.value) + '/';
+	var post = postForm.post.value.match(/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/);
+	window.location = postForm.action + encodeURIComponent(((typeof post[1] != 'undefined') ? post[1] : '') + ((typeof post[2] != 'undefined') ? '_' + post[2] : '')) + '/';
 }
 
 var getPage = function(pageForm)

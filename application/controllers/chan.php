@@ -582,7 +582,8 @@ class Chan extends Public_Controller
 	{
 		if ($this->input->post())
 		{
-			redirect(get_selected_radix()->shortname . '/post/' . $this->input->post('post'), 'location', 302);
+			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $this->input->post('post'), $matches);
+			redirect(get_selected_radix()->shortname . '/post/' . (isset($matches[1]) ? $matches[1] : '') . (isset($matches[2]) ? '_' . $matches[2] : ''), 'location', 302);
 		}
 
 		$num = str_replace('S', '', $num);

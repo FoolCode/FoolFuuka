@@ -149,7 +149,7 @@ if (!isset($page))
 		<?php
 		echo form_submit(array(
 			'value' => 'View',
-			'onclick' => 'location.href=\'' . site_url(get_selected_radix()->shortname . '/post/') . '\' + this.form.post.value + \'/\'; return false;'
+			'onclick' => 'getPost(this.form); return false;'
 		));
 		?>
 	</div>

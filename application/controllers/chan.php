@@ -489,6 +489,23 @@ class Chan extends Public_Controller
 					else
 					{
 						$data['media_error'] = $this->upload->display_errors();
+
+						if(isset($data['media_error']))
+						{
+							if ($this->input->is_ajax_request())
+							{
+								$this->output
+										->set_content_type('application/json')
+										->set_output(json_encode(array('error' => $data['media_error'], 'success' => '')));
+								return FALSE;
+							}
+							$this->template->title(_('Error'));
+							$this->template->set('error', $data['media_error']);
+							$this->template->set_partial('top_tools', 'top_tools');
+							$this->template->set_partial('post_tools', 'post_tools');
+							$this->template->build('error');
+							return FALSE;
+						}
 					}
 				}
 
@@ -784,7 +801,7 @@ class Chan extends Public_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'capcode', 'filter', 'order', 'page');
+		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'filter', 'order', 'page');
 		if ($this->input->post())
 		{
 			$redirect_array = array(get_selected_radix()->shortname, 'search');

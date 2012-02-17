@@ -323,6 +323,22 @@ class Theme_Controller
 					else
 					{
 						$data['media_error'] = $this->CI->upload->display_errors();
+
+						if(isset($data['media_error']))
+						{
+							if ($this->CI->input->is_ajax_request())
+							{
+								$this->CI->output
+										->set_content_type('application/json')
+										->set_output(json_encode(array('error' => $data['media_error'], 'success' => '')));
+								return FALSE;
+							}
+							$this->CI->template->title(_('Error'));
+							$this->CI->template->set('error', $data['media_error']);
+							$this->CI->template->set_partial('top_tools', 'top_tools');
+							$this->CI->template->build('error');
+							return FALSE;
+						}
 					}
 				}
 
@@ -346,6 +362,7 @@ class Theme_Controller
 
 				if (isset($result['error']))
 				{
+					$this->CI->template->title(_('Error'));
 					$this->CI->template->set('error', $result['error']);
 					$this->CI->template->set_partial('top_tools', 'top_tools');
 					$this->CI->template->build('error');
@@ -414,7 +431,7 @@ class Theme_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'capcode', 'filter', 'order', 'page');
+		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'filter', 'order', 'page');
 		if ($this->CI->input->post())
 		{
 			$redirect_array = array(get_selected_radix()->shortname, 'search');
@@ -449,6 +466,18 @@ class Theme_Controller
 			$title[] = _('that aren\'t by ghosts');
 		if ($search['order'] == 'asc')
 			$title[] = _('starting from the oldest ones');
+
+		if ($search["filter"]) :
+			$filters = explode('-', $search["filter"]);
+			unset($search["filter"]);
+			foreach ($filters as $key => $value)
+			{
+				$search["filter"][$value] = TRUE;
+			}
+
+			$title[] = _('with the following filters applied: ') . implode(', ', $filters);
+		endif;
+
 		if (!$search['page'] || !intval($search['page']))
 		{
 			$search['page'] = 1;

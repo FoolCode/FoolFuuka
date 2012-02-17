@@ -2455,7 +2455,7 @@ class Post extends CI_Model
 		$regexing = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i", array(get_class($this), 'get_internal_link'), $regexing);
 		$regexing = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/(\d+(?:,\d+)?)?(\/?)))'i", array(get_class($this), 'get_crossboard_link'), $regexing);
 
-		$regexing = auto_link($regexing, 'url', TRUE);
+		$regexing = auto_linkify($regexing, 'url', TRUE);
 
 		$regexing = preg_replace($find, $replace, $regexing);
 		$regexing = parse_bbcode($regexing, (($board->archive && $row->subnum == 0) ? TRUE : FALSE));

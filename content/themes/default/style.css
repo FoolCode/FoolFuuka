@@ -70,15 +70,13 @@ body {
 	color:#eee;
 }
 
-#logo {
-	margin-bottom:0;
-}
-
 #header h1 {
 	line-height:100%;
 	color: #f5f5f5;
 	font-size:35px;
 	margin-top:11px;
+        font-size:30px; 
+        margin:4px 0 3px;
 }
 
 #header h6 {

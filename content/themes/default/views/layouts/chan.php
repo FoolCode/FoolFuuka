@@ -49,14 +49,7 @@
 							$parenthesis_open = TRUE;
 						}
 
-						if ($item->thumbnails || $this->tank_auth->is_allowed())
-						{
-							$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a> <a href="' . $item->href . 'gallery/">+</a>';
-						}
-						else
-						{
-							$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
-						}
+						$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 					}
 					echo implode(' / ', $board_urls);
 					if ($parenthesis_open)
@@ -76,14 +69,7 @@
 							$parenthesis_open = TRUE;
 						}
 
-						if ($item->thumbnails || $this->tank_auth->is_allowed())
-						{
-							$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a> <a href="' . $item->href . 'gallery/">+</a>';
-						}
-						else
-						{
-							$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
-						}
+						$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 					}
 					echo implode(' / ', $board_urls);
 					if ($parenthesis_open)
@@ -93,8 +79,11 @@
 					}
 					?>
 
-					[ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
+					[ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> / <a href="http://status.foolrulez.org/">network status</a> ]
 					<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
+					<?php if($board->thumbnails) 
+						echo '[ <a href="' . $board->href . 'by_thread' . '">latest by thread</a> / <a href="' . $board->href . 'gallery' . '">gallery</a> ]';
+					?>
 				<?php endif; ?>
 			</header>
 

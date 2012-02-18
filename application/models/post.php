@@ -836,7 +836,7 @@ class Post extends CI_Model
 			 */
 			if ($search['subject'])
 			{
-				$match['@subject'] = $this->sphinxql->EscapeString(urldecode($search['subject']));
+				$match['@title'] = $this->sphinxql->EscapeString(urldecode($search['subject']));
 			}
 			if ($search['username'])
 			{

@@ -316,7 +316,7 @@ class Post extends CI_Model
 						FROM (
 							SELECT num, parent, email
 							FROM ' . $this->get_table($board) . '
-							WHERE email <> \'sage\' OR (email = \'sage\' AND parent = 0)
+							WHERE email <> \'sage\' OR email IS NULL OR (email = \'sage\' AND parent = 0)
 							AND subnum = 0
 							ORDER BY num DESC
 							LIMIT 0, 100000

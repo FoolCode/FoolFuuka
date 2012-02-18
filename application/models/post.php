@@ -838,6 +838,7 @@ class Post extends CI_Model
 
 			if ($search['username'] || $search['tripcode'] || $search['text'] || $search['deleted'] || $search['ghost'] || $search['filter'])
 			{
+				/*
 				$this->load->library('SphinxClient');
 				$this->sphinxclient->SetServer(
 						// gotta turn the port into int
@@ -968,7 +969,64 @@ class Post extends CI_Model
 					}
 
 					return array('error' => _('Something went wrong with the search engine and we don\'t know what!'));
+				}*/
+
+				$this->load->library('SphinxQL');
+				$this->sphinxql->SetServer(
+					get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : '127.0.0.1', get_setting('fs_sphinx_port') ? 9306 : 9306
+				);
+
+				/*
+				 *  FULLTEXT MATCH
+				 */
+				$matches = array();
+				if ($search['username'])
+				{
+					$matches[] = "'@name " . $this->sphinxql->EscapeString(urldecode($search['username'])) . "'";
 				}
+				if ($search['tripcode'])
+				{
+					$matches[] = "'@trip " . $this->sphinxql->EscapeString(urldecode($search['tripcode'])) . "'";
+				}
+				if ($search['text'])
+				{
+					if (mb_strlen($search['text']) < 2)
+					{
+						return array('error' => _('The text you were searching for was too short. It must be at least two characters long.'));
+					}
+
+					$matches[] = "'@comment " . $this->sphinxql->HalfEscapeString(urldecode($search['text'])) . "'";
+				}
+
+				/* WHERE CONDITIONS */
+				$conditions = array();
+				if ($search['deleted'] == "deleted")
+				{
+					$conditions[] = "is_delete = 1";
+				}
+				if ($search['deleted'] == "not-deleted")
+				{
+					$conditions[] = "is_delete = 0";
+				}
+				if ($search['ghost'] == "only")
+				{
+					$conditions[] = "is_internal = 1";
+				}
+				if ($search['ghost'] == "none")
+				{
+					$conditions[] = "is_internal = 0";
+				}
+
+				$search_result = $this->sphinxql->Query('
+					SELECT *
+					FROM ' . $board->shortname . '_ancient, ' . $board->shortname . '_main, ' . $board->shortname . '_delta
+					WHERE
+					' . ((!empty($matches)) ? 'MATCH(' . implode(', ', $matches) . ')' : '') . '
+					' . ((!empty($conditions)) ? implode(' AND ', $matches) : '') . '
+					ORDER BY timestamp ' . (($search['order'] == 'asc') ? 'ASC' : 'DESC') . '
+					LIMIT ' . (($search['page'] * 25) - 25) . ', 25
+					OPTION max_matches = 5000
+				');
 
 				$sql = array();
 
@@ -983,7 +1041,7 @@ class Post extends CI_Model
 							SELECT *
 							FROM ' . $this->get_table($board) . '
 							' . $this->get_sql_report($board) . '
-							WHERE num = ' . $matches['attrs']['num'] . ' AND subnum = ' . $matches['attrs']['subnum'] . '
+							WHERE num = ' . $matches['num'] . ' AND subnum = ' . $matches['subnum'] . '
 						)
 					';
 				}
@@ -1028,7 +1086,7 @@ class Post extends CI_Model
 				');
 
 				$found = $query2->result();
-				$search_result = array('total_found' => $found[0]->total_found);
+				$search_result = array('total_found' => count($search_result['matches']));
 			}
 		}
 		else

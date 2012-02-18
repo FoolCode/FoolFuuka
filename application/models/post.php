@@ -38,22 +38,6 @@ class Post extends CI_Model
 
 
 	/**
-	 * Returns the name of the correct table_local, protected in oblique quotes
-	 *
-	 * @param type $board
-	 * @return type
-	 */
-	function get_table_local($board)
-	{
-		if (get_setting('fs_fuuka_boards_db'))
-		{
-			return $this->table_local = $this->db->protect_identifiers(get_setting('fs_fuuka_boards_db')) . '.' . $this->db->protect_identifiers($board->shortname . '_local');
-		}
-		return $this->table_local = $this->db->protect_identifiers('board_' . $board->shortname . '_local', TRUE);
-	}
-
-
-	/**
 	 * Returns the SQL string to get the report data with the post
 	 *
 	 * @param type $board
@@ -1698,16 +1682,6 @@ class Post extends CI_Model
 			WHERE doc_id = ?
 			LIMIT 0,1;
 		', array($this->db->insert_id()));
-
-		// we don't even need this, but let's leave it for sake of backward compatibility with original fuuka
-		if ($board->archive)
-		{
-			$this->db->query('
-				replace into ' . $this->get_table_local($board) . ' (num,parent,subnum,`timestamp`)
-				select num,case when parent = 0 then num else parent end as parent,max(subnum),max(`timestamp`) from ' . $this->get_table($board) . '
-				where num = (select max(num) from ' . $this->get_table($board) . ' where parent=?);
-			', array($num));
-		}
 
 		$posted = $posted->result();
 		$posted = $posted[0];

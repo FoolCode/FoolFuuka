@@ -108,10 +108,9 @@ class Chan extends Public_Controller
 	}
 
 
-	public function page($page = 1)
+	public function page($page = 1, $by_thread = FALSE)
 	{
 		$this->remap_query();
-		$this->input->set_cookie('fu_ghost_mode', FALSE, 86400);
 		if ($this->input->post())
 		{
 			redirect(get_selected_radix()->shortname . '/page/' . $this->input->post('page'), 'location', 303);
@@ -124,16 +123,16 @@ class Chan extends Public_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest(get_selected_radix(), $page);
+		$posts = $this->post->get_latest(get_selected_radix(), $page, array('type' => ($by_thread ? 'by_thread' : 'by_post')));
 
 		$pages = $posts['pages'];
 		$posts = $posts['result'];
 
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
-			$this->template->set('section_title', _('Page ') . $page);
+			$this->template->set('section_title', ($by_thread ? _('Latest by thread - Page ') : _('Page ')) . $page);
 		$pagination = array(
-			'base_url' => site_url(array(get_selected_radix()->shortname, 'page')),
+			'base_url' => site_url(array(get_selected_radix()->shortname, ($by_thread ? 'by_thread' : 'page'))),
 			'current_page' => $page,
 			'total' => $pages
 		);
@@ -145,6 +144,11 @@ class Chan extends Public_Controller
 		$this->template->set_partial('post_thread', 'post_thread');
 		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->build('board');
+	}
+
+	public function by_thread($page = 1)
+	{
+		$this->page($page, TRUE);
 	}
 
 

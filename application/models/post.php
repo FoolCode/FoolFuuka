@@ -844,7 +844,7 @@ class Post extends CI_Model
 
 			$this->load->library('SphinxQL');
 			$this->sphinxql->SetServer(
-				get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : '127.0.0.1', get_setting('fs_sphinx_port') ? 9306 : 9306
+				get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : '127.0.0.1', get_setting('fs_sphinx_port') ? get_setting('fs_sphinx_port') : 9306
 			);
 
 			/*

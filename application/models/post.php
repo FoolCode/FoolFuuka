@@ -833,7 +833,7 @@ class Post extends CI_Model
 			$search['page'] = 1;
 		}
 
-		if ($board->sphinx && ($search['username'] || $search['tripcode'] || $search['text']))
+		if ($board->sphinx && ($search['subject'] || $search['username'] || $search['tripcode'] || $search['text']))
 		{
 			$match = array();
 			$where = array();
@@ -850,6 +850,10 @@ class Post extends CI_Model
 			/*
 			 * FULLTEXT MATCH
 			 */
+			if ($search['subject'])
+			{
+				$match['@subject'] = $this->sphinxql->EscapeString(urldecode($search['subject']));
+			}
 			if ($search['username'])
 			{
 				$match['@name'] = $this->sphinxql->EscapeString(urldecode($search['username']));
@@ -997,6 +1001,11 @@ class Post extends CI_Model
 		{
 			$field = array(); $value = array(); $index = array();
 
+			if ($search['subject'])
+			{
+				array_push($field, 'title LIKE ?');
+				array_push($value, $search['subject']);
+			}
 			if ($search['username'])
 			{
 				array_push($field, 'name = ?');
@@ -1073,13 +1082,13 @@ class Post extends CI_Model
 
 				if (!empty($search['filter']['text']))
 				{
-					array_push($field, 'media = ?', 'media IS ?');
-					array_push($value, '', NULL);
+					array_push($field, 'media IS NOT ?');
+					array_push($value, NULL);
 				}
 				if (!empty($search['filter']['image']))
 				{
-					array_push($field, 'media != ?', 'media IS NOT ?');
-					array_push($value, '', NULL);
+					array_push($field, 'media IS ?');
+					array_push($value, NULL);
 				}
 			}
 			if ($search['order'] === 'asc')

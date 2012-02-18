@@ -113,6 +113,12 @@ if (!isset($page))
 	<br/>
 	<div style="max-width: 360px">
 		<div class="clearfix">
+			<label for="username">Subject</label>
+			<div class="input">
+				<?php echo form_input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"])) ? rawurldecode($search["subject"]) : '')); ?>
+			</div>
+		</div>
+		<div class="clearfix">
 			<label for="username">Username</label>
 			<div class="input">
 				<?php echo form_input(array('name' => 'username', 'id' => 'username', 'value' => (isset($search["username"])) ? rawurldecode($search["username"]) : '')); ?>

@@ -333,6 +333,9 @@ var getSearch = function(type, searchForm)
 
 	if (type == 'advanced')
 	{
+		if (searchForm.subject.value != "")
+			location += 'subject/' + encodeURIComponent(searchForm.subject.value) + '/';
+
 		if (searchForm.username.value != "")
 			location += 'username/' + encodeURIComponent(searchForm.username.value) + '/';
 

@@ -111,7 +111,6 @@ class Chan extends Public_Controller
 	public function page($page = 1, $by_thread = FALSE)
 	{
 		$this->remap_query();
-		$this->input->set_cookie('fu_ghost_mode', FALSE, 86400);
 		if ($this->input->post())
 		{
 			redirect(get_selected_radix()->shortname . '/page/' . $this->input->post('page'), 'location', 303);
@@ -124,16 +123,16 @@ class Chan extends Public_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest(get_selected_radix(), $page, array('type' => ($by_thread?'by_thread':'by_post')));
+		$posts = $this->post->get_latest(get_selected_radix(), $page, array('type' => ($by_thread ? 'by_thread' : 'by_post')));
 
 		$pages = $posts['pages'];
 		$posts = $posts['result'];
 
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1) ? ' &raquo; Page ' . $page : ''));
 		if ($page > 1)
-			$this->template->set('section_title', ($by_thread?_('Latest by thread - Page '):_('Page ')) . $page);
+			$this->template->set('section_title', ($by_thread ? _('Latest by thread - Page ') : _('Page ')) . $page);
 		$pagination = array(
-			'base_url' => site_url(array(get_selected_radix()->shortname, ($by_thread?'by_thread':'page'))),
+			'base_url' => site_url(array(get_selected_radix()->shortname, ($by_thread ? 'by_thread' : 'page'))),
 			'current_page' => $page,
 			'total' => $pages
 		);
@@ -146,7 +145,7 @@ class Chan extends Public_Controller
 		$this->template->set_partial('post_tools', 'post_tools');
 		$this->template->build('board');
 	}
-	
+
 	public function by_thread($page = 1)
 	{
 		$this->page($page, TRUE);
@@ -302,6 +301,7 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->template->set('error', validation_errors());
 				$this->template->set_partial('top_tools', 'top_tools');
+				$this->template->set_partial('post_tools', 'post_tools');
 				$this->template->build('error');
 				return FALSE;
 			}
@@ -494,6 +494,23 @@ class Chan extends Public_Controller
 					else
 					{
 						$data['media_error'] = $this->upload->display_errors();
+
+						if(isset($data['media_error']))
+						{
+							if ($this->input->is_ajax_request())
+							{
+								$this->output
+										->set_content_type('application/json')
+										->set_output(json_encode(array('error' => $data['media_error'], 'success' => '')));
+								return FALSE;
+							}
+							$this->template->title(_('Error'));
+							$this->template->set('error', $data['media_error']);
+							$this->template->set_partial('top_tools', 'top_tools');
+							$this->template->set_partial('post_tools', 'post_tools');
+							$this->template->build('error');
+							return FALSE;
+						}
 					}
 				}
 
@@ -587,7 +604,8 @@ class Chan extends Public_Controller
 	{
 		if ($this->input->post())
 		{
-			redirect(get_selected_radix()->shortname . '/post/' . $this->input->post('post'), 'location', 302);
+			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $this->input->post('post'), $matches);
+			redirect(get_selected_radix()->shortname . '/post/' . (isset($matches[1]) ? $matches[1] : '') . (isset($matches[2]) ? '_' . $matches[2] : ''), 'location', 302);
 		}
 
 		$num = str_replace('S', '', $num);
@@ -788,7 +806,7 @@ class Chan extends Public_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'capcode', 'filter', 'order', 'page');
+		$modifiers = array('text', 'subject', 'username', 'tripcode', 'deleted', 'ghost', 'filter', 'order', 'page');
 		if ($this->input->post())
 		{
 			$redirect_array = array(get_selected_radix()->shortname, 'search');
@@ -819,6 +837,8 @@ class Chan extends Public_Controller
 		$title = array();
 		if ($search['text'])
 			$title[] = _('including') . ' "' . trim(fuuka_htmlescape($search['text'])) . '"';
+		if ($search['subject'])
+			$title[] = _('with subject') . ' "' . trim(fuuka_htmlescape($search['subject'])) . '"';
 		if ($search['username'])
 			$title[] = _('with username') . ' "' . trim(fuuka_htmlescape($search['username'])) . '"';
 		if ($search['tripcode'])
@@ -831,10 +851,6 @@ class Chan extends Public_Controller
 			$title[] = _('that are by ghosts');
 		if ($search['ghost'] == 'none')
 			$title[] = _('that aren\'t by ghosts');
-		if ($search['capcode'] == 'admin')
-			$title[] = _('made by admins');
-		if ($search['capcode'] == 'mod')
-			$title[] = _('made by mods');
 		if ($search['order'] == 'asc')
 			$title[] = _('starting from the oldest ones');
 

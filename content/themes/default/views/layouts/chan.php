@@ -79,11 +79,9 @@
 					}
 					?>
 
-					[ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> / <a href="http://status.foolrulez.org/">network status</a> ]
-					<h1 id="logo">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
-					<?php if($board->thumbnails) 
-						echo '[ <a href="' . $board->href . 'by_thread' . '">latest by thread</a> / <a href="' . $board->href . 'gallery' . '">gallery</a> ]';
-					?>
+					[ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
+					<h1 id="logo" style="font-size:30px; line-height:30px; margin:4px 0 0;">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
+					[ <a href="<?php echo $board->href ?>by_thread">latest by thread</a> <?php if ($item->thumbnails || $this->tank_auth->is_allowed()) : ?>/ <a href="<?php echo $board->href ?>gallery">gallery</a><?php endif; ?> ]
 				<?php endif; ?>
 			</header>
 

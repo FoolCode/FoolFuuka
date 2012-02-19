@@ -127,6 +127,15 @@ function getCookie( check_name ) {
 	}
 }
 
+var getPost = function(postForm)
+{
+	if (postForm.post.value == "") {
+		alert('Sorry, you must insert a valid post number.');
+		return false;
+	}
+	var post = postForm.post.value.match(/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/);
+	window.location = postForm.action + encodeURIComponent(((typeof post[1] != 'undefined') ? post[1] : '') + ((typeof post[2] != 'undefined') ? '_' + post[2] : '')) + '/';
+}
 
 var changeTheme = function(theme)
 {

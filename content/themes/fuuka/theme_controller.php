@@ -20,13 +20,12 @@ class Theme_Controller
 	}
 
 
-	public function page($page = 1)
+	public function page($page = 1, $by_thread = FALSE)
 	{
 		$this->CI->remap_query();
-		$this->CI->input->set_cookie('fu_ghost_mode', FALSE, 86400);
 		if ($this->CI->input->post())
 		{
-			redirect(get_selected_radix()->shortname . '/page/' . $this->CI->input->post('page'), 'location', 303);
+			redirect(get_selected_radix()->shortname . '/' . ($by_thread ? 'by_thread' : 'page') . '/' . $this->CI->input->post('page'), 'location', 303);
 		}
 
 		if (!is_natural($page) || $page > 500)
@@ -37,17 +36,17 @@ class Theme_Controller
 		$page = intval($page);
 
 		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 24, 'type' => 'by_thread'));
+		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 24, 'type' => ($by_thread ? 'by_thread' : 'by_post')));
 
 		$pages = $posts['pages'];
 		$posts = $posts['result'];
 
-		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
+		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1) ? ' &raque; Page ' . $page : ''));
 		if ($page > 1)
-			$this->CI->template->set('section_title', _('Page ') . $page);
+			$this->CI->template->set('section_title', ($by_thread ? _('Latest by Thread - Page ') : _('Page ')) . $page);
 
 		$pagination = array(
-			'base_url' => site_url(array(get_selected_radix()->shortname, 'page')),
+			'base_url' => site_url(array(get_selected_radix()->shortname, ($by_thread ? 'by_thread' : 'page'))),
 			'current_page' => $page,
 			'total' => $pages
 		);
@@ -62,9 +61,14 @@ class Theme_Controller
 	}
 
 
+	public function by_thread($page = 1)
+	{
+		$this->page($page, TRUE);
+	}
+
+
 	public function ghost($page = 1)
 	{
-		$this->CI->input->set_cookie('fu_ghost_mode', TRUE, 86400);
 		if ($this->CI->input->post())
 		{
 			redirect(get_selected_radix()->shortname . '/ghost/' . $this->CI->input->post('page'), 'location', 303);
@@ -323,6 +327,22 @@ class Theme_Controller
 					else
 					{
 						$data['media_error'] = $this->CI->upload->display_errors();
+
+						if(isset($data['media_error']))
+						{
+							if ($this->CI->input->is_ajax_request())
+							{
+								$this->CI->output
+										->set_content_type('application/json')
+										->set_output(json_encode(array('error' => $data['media_error'], 'success' => '')));
+								return FALSE;
+							}
+							$this->CI->template->title(_('Error'));
+							$this->CI->template->set('error', $data['media_error']);
+							$this->CI->template->set_partial('top_tools', 'top_tools');
+							$this->CI->template->build('error');
+							return FALSE;
+						}
 					}
 				}
 
@@ -346,6 +366,7 @@ class Theme_Controller
 
 				if (isset($result['error']))
 				{
+					$this->CI->template->title(_('Error'));
 					$this->CI->template->set('error', $result['error']);
 					$this->CI->template->set_partial('top_tools', 'top_tools');
 					$this->CI->template->build('error');
@@ -414,7 +435,7 @@ class Theme_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'capcode', 'filter', 'order', 'page');
+		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'filter', 'order', 'page');
 		if ($this->CI->input->post())
 		{
 			$redirect_array = array(get_selected_radix()->shortname, 'search');
@@ -449,6 +470,18 @@ class Theme_Controller
 			$title[] = _('that aren\'t by ghosts');
 		if ($search['order'] == 'asc')
 			$title[] = _('starting from the oldest ones');
+
+		if ($search["filter"]) :
+			$filters = explode('-', $search["filter"]);
+			unset($search["filter"]);
+			foreach ($filters as $key => $value)
+			{
+				$search["filter"][$value] = TRUE;
+			}
+
+			$title[] = _('with the following filters applied: ') . implode(', ', $filters);
+		endif;
+
 		if (!$search['page'] || !intval($search['page']))
 		{
 			$search['page'] = 1;

@@ -398,7 +398,7 @@ if ( ! function_exists('auto_link'))
 										$matches['1'][$i].'<a href="http'.
 										$matches['4'][$i].'://'.
 										$matches['5'][$i].
-										preg_replace('/[[\/\!]*?[^\[\]]*?]/si', '', $matches['6'][$i]).'"'.$pop.'>http'.
+										$matches['6'][$i].'"'.$pop.'>http'.
 										$matches['4'][$i].'://'.
 										$matches['5'][$i].
 										$matches['6'][$i].'</a>'.

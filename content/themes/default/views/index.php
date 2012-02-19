@@ -2,8 +2,6 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
-<img src="<?php echo site_url() . 'content/themes/default/images/dat_cat.png' ?>" style="max-width:50%;position:absolute; top:-20px; right:30px;"/>
-
 <article style="padding:50px;">
 	<h1><?php echo _('Welcome on the 4chan Archiver "FoOlFuuka"'); ?></h1>
 	<h2><?php
@@ -11,7 +9,7 @@ if (!defined('BASEPATH'))
 				$parenthesis_open = FALSE;
 				foreach ($this->radix->get_archives() as $key => $item)
 				{
-						
+
 					if(!$parenthesis_open)
 					{
 						echo 'Archives: [ ';
@@ -39,7 +37,7 @@ if (!defined('BASEPATH'))
 				$board_urls = array();
 				$parenthesis_open = FALSE;
 				foreach ($this->radix->get_boards() as $key => $item)
-				{		
+				{
 					if(!$parenthesis_open)
 					{
 						echo 'Boards: [ ';

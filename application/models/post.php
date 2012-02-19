@@ -1088,6 +1088,7 @@ class Post extends CI_Model
 				SELECT *
 				FROM ' . $this->get_table($board) .
 				((!empty($field)) ? ' WHERE ' . implode(' AND ', $field) : '') . '
+				' . $order . '
 				LIMIT ' . (($search['page'] * 25) - 25) . ', 25
 			', $value);
 
@@ -1098,7 +1099,9 @@ class Post extends CI_Model
 
 			$count = $this->db->query('
 				SELECT count(*) AS total_found
-				FROM ' . $this->get_table($board) . '
+				FROM ' . $this->get_table($board) .
+				((!empty($field)) ? ' WHERE ' . implode(' AND ', $field) : '') . '
+				LIMIT 0, 5000
 			', $value);
 
 			$found = $count->result();

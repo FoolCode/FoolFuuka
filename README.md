@@ -32,9 +32,10 @@ Features
 
 Requirements
 ------------
-The requirements of FoOlFuuka are relatively high. Most of t
 
-* PHP 5.2, __PHP 5.3.10+ suggested__ (security reasons)
+The requirements of FoOlFuuka are relatively high if you want the most out of it. This really means improved security rather than more features, which means you really should have the suggested versions.
+
+* PHP 5.2, __PHP 5.3.10+ suggested__
 * MySQL 5, __MySQL 5.5 suggested__
 
 FoOlFuuka is really light, and will run on any server meeting the requirements. Your first worry will be rather bandwidth and hard disk space.

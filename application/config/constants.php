@@ -49,6 +49,9 @@ define('FOOLSLIDE_VERSION', '0.5.7');
 define('FOOLSLIDE_NAME', 'FoOlFuuka');
 define('FOOLSLIDE_MANUAL_INSTALL_URL', 'http://ask.foolrulez.com');
 
+define('FOOLSLIDE_REQUIREMENT_PHP', '5.3.0');
+
+
 
 /*
 |--------------------------------------------------------------------------

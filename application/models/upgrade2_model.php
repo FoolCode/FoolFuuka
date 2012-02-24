@@ -73,40 +73,52 @@ class Upgrade2_model extends CI_Model {
 		// Put FoOlSlide in maintenance
 		$this->db->update('preferences', array('value' => 'fs_priv_maintenance'), array('name' => _("We're currently upgrading FoOlSlide. This process usually takes few seconds or a couple minutes, check back soon!")));
 		
-		if (!file_exists('content/cache/upgrade')) {
+		$this->load->helper('directory');
+		$filenames = directory_map('content/cache/upgrade/', 1);
+		$folder = "";
+		foreach($filenames as $filename)
+		{
+		    if($filename != 'upgrade.zip')
+		    {
+			$folder = $filename;
+			break;
+		    }
+		}
+		log_message('error', $folder);
+		if (!file_exists('content/cache/upgrade/' . $folder)) {
 			return FALSE;
 		}
-		if (!file_exists('content/cache/upgrade/index.php')) {
+		if (!file_exists('content/cache/upgrade/' . $folder . '/index.php')) {
 			return FALSE;
 		}
-		if (!file_exists('content/cache/upgrade/application')) {
+		if (!file_exists('content/cache/upgrade/' . $folder . '/application')) {
 			return FALSE;
 		}
-		if (!file_exists('content/cache/upgrade/system')) {
+		if (!file_exists('content/cache/upgrade/' . $folder . '/system')) {
 			return FALSE;
 		}
-		if (!file_exists('content/cache/upgrade/assets')) {
+		if (!file_exists('content/cache/upgrade/' . $folder . '/assets')) {
 			return FALSE;
 		}
-		if (!file_exists('content/cache/upgrade/content/themes/default')) {
+		if (!file_exists('content/cache/upgrade/' . $folder . '/content/themes/default')) {
 			return FALSE;
 		}
-		if (!file_exists('content/cache/upgrade/content/themes/fuuka')) {
+		if (!file_exists('content/cache/upgrade/' . $folder . '/content/themes/fuuka')) {
 			return FALSE;
 		}
 
 		unlink('index.php');
-		rename('content/cache/upgrade/index.php', 'index.php');
+		rename('content/cache/upgrade/' . $folder . '/index.php', 'index.php');
 		delete_files('application/', TRUE);
-		rename('content/cache/upgrade/application', 'application');
+		rename('content/cache/upgrade/' . $folder . '/application', 'application');
 		delete_files('system/', TRUE);
-		rename('content/cache/upgrade/system', 'system');
+		rename('content/cache/upgrade/' . $folder . '/system', 'system');
 		delete_files('assets/', TRUE);
-		rename('content/cache/upgrade/assets', 'assets');
+		rename('content/cache/upgrade/' . $folder . '/assets', 'assets');
 		delete_files('content/themes/default/', TRUE);
-		rename('content/cache/upgrade/content/themes/default', 'content/themes/default');
+		rename('content/cache/upgrade/' . $folder . '/content/themes/default', 'content/themes/default');
 		delete_files('content/themes/fuuka/', TRUE);
-		rename('content/cache/upgrade/content/themes/fuuka', 'content/themes/fuuka');
+		rename('content/cache/upgrade/' . $folder . '/content/themes/fuuka', 'content/themes/fuuka');
 		
 		// delete the mobile folder for a while... 05/09/2011
 		//if (file_exists('content/themes/mobile')) {

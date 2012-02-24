@@ -560,7 +560,7 @@ class System extends Admin_Controller
 			$this->upgrade_model->clean();
 			// show some kind of error
 			log_message('error', 'system.php do_upgrade(): failed upgrade');
-			flash_message('error', _('Upgrade failed: check file permissions.'));
+			flash_notice('error', _('Upgrade failed: check file permissions.'));
 		}
 
 		// return an url

@@ -200,7 +200,7 @@ class Admin_Controller extends MY_Controller
 				// if a version is outputted, save the new version number in database
 				if ($versions[0])
 				{
-					$this->db->update('preferences', array('value' => $versions[0]->version . '.' . $versions[0]->subversion . '.' . $versions[0]->subsubversion), array('name' => 'fs_cron_autoupgrade_version'));
+					$this->db->update('preferences', array('value' => $versions[0]->name), array('name' => 'fs_cron_autoupgrade_version'));
 				}
 
 				// remove one week old logs

@@ -533,6 +533,10 @@ class System extends Admin_Controller
 
 		// look for the latest version available
 		$data["new_versions"] = $this->upgrade_model->check_latest();
+		
+		// we're going to use markdown here
+		$this->load->library('Markdown_Parser');
+		$data["changelog"] = $this->upgrade_model->get_changelog();
 
 		// print out
 		$this->viewdata["main_content_view"] = $this->load->view("admin/system/upgrade", $data, TRUE);

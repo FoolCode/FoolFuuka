@@ -54,6 +54,12 @@ class Upgrade_model extends CI_Model
 
 	return FALSE;
     }
+    
+    
+    function get_changelog()
+    {
+	return file_get_contents('https://raw.github.com/woxxy/FoOlFuuka/master/CHANGELOG.md');
+    }
 
     /**
      * Compares two versions and returns TRUE if second parameter is bigger than first, else FALSE

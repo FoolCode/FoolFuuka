@@ -60,11 +60,6 @@ if ($new_versions)
 {
 	echo '<div class="table" style="padding-bottom: 10px; margin-right:10px;">';
 	echo '<h3>' . _('Changelog') . '</h3><div class="changelog">';
-	foreach ($new_versions as $version)
-	{
-		echo '<br/><div class="item">
-			<h4 class="title">' . _('Version') . ' ' . $version->name . '</h4>
-			<div class="description">' . nl2br("IMPLEMENT CHANGELOGS!") . '</div></div>';
-	}
+	echo Markdown($changelog);
 	echo '</div></div>';
 }

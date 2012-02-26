@@ -51,6 +51,7 @@ define('FOOLSLIDE_MANUAL_INSTALL_URL', 'http://ask.foolrulez.com');
 
 define('FOOLSLIDE_REQUIREMENT_PHP', '5.3.0');
 
+define('FOOLSLIDE_PLUGIN_DIR', 'content/plugins/');
 
 
 /*

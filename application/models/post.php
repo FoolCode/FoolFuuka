@@ -386,8 +386,9 @@ class Post extends CI_Model
 				$result[$post->parent]['posts'][] = $post;
 				if ($post->preview)
 				{
+					// -1 because OP is always displayed
 					if(!isset($result[$post->parent]['images_omitted']))
-						$result[$num]['images_omitted'] = 0;
+						$result[$post->parent]['images_omitted'] = -1;
 					$result[$post->parent]['images_omitted']--;
 				}
 			}
@@ -396,7 +397,11 @@ class Post extends CI_Model
 				// this should already exist
 				$result[$post->num]['op'] = $post;
 				if($post->nreplies > 5)
-					$result[$post->num]['omitted'] = $post->nreplies - 5;
+					$result[$post->num]['omitted'] = $post->nreplies - 6;
+				
+				// -1 because OP is always displayed
+				if(!isset($result[$post->num]['images_omitted']))
+						$result[$post->num]['images_omitted'] = -1;
 				$result[$post->num]['images_omitted'] += $post->nimages;
 			}
 		}
@@ -406,7 +411,7 @@ class Post extends CI_Model
 		// this is a lot of data, clean it up
 		$query2->free_result();
 
-		return array('result' => $result2, 'pages' => $pages);
+		return array('result' => $result, 'pages' => $pages);
 	}
 
 
@@ -1454,19 +1459,19 @@ class Post extends CI_Model
 
 			if ($data['num'] == 0)
 			{
-				return array('error' => 'An image is required for creating threads.');
+				return array('error' => _('An image is required for creating threads.'));
 			}
 
 			if(isset($data['media_error']))
 			{
 				if (strlen($data['media_error']) == 64)
 				{
-					return array('error' => 'The filetype you are attempting to upload is not allowed.');
+					return array('error' => _('The filetype you are attempting to upload is not allowed.'));
 				}
 
 				if (strlen($data['media_error']) == 79)
 				{
-					return array('error' => 'The image you are attempting to upload is larger than the permitted size.');
+					return array('error' => _('The image you are attempting to upload is larger than the permitted size.'));
 				}
 			}
 		}
@@ -1480,7 +1485,7 @@ class Post extends CI_Model
 				{
 					log_message('error', 'process_media: failed to remove media file from cache');
 				}
-				return array('error' => 'Sorry, this thread has reached its maximum amount of image replies.');
+				return array('error' => _('Sorry, this thread has reached its maximum amount of image replies.'));
 			}
 
 			if ($media["image_width"] == 0 || $media["image_height"] == 0)
@@ -1489,7 +1494,7 @@ class Post extends CI_Model
 				{
 					log_message('error', 'process_media: failed to remove media file from cache');
 				}
-				return array('error' => 'Your image upload is not a valid image file.');
+				return array('error' => _('Your image upload is not a valid image file.'));
 			}
 
 			$media_hash = base64_encode(pack("H*", md5(file_get_contents($media["full_path"]))));
@@ -1502,25 +1507,25 @@ class Post extends CI_Model
 				{
 					log_message('error', 'process_media: failed to remove media file from cache');
 				}
-				return array('error' => 'Your image upload has been flagged as inappropriate.');
+				return array('error' => _('Your image upload has been flagged as inappropriate.'));
 			}
 		}
 
 		if (check_commentdata($data))
 		{
-			return array('error' => 'Your post contains contents that is marked as spam.');
+			return array('error' => _('Your post contains contents that is marked as spam.'));
 		}
 
 		if (mb_strlen($comment) > 4096)
 		{
-			return array('error' => 'Your post was too long.');
+			return array('error' => _('Your post was too long.'));
 		}
 
 		$lines = explode("\n", $comment);
 
 		if (count($lines) > 20)
 		{
-			return array('error' => 'Your post had too many lines.');
+			return array('error' => _('Your post had too many lines.'));
 		}
 
 		// phpass password for extra security, using the same tank_auth setting since it's cool
@@ -1532,18 +1537,22 @@ class Post extends CI_Model
 		$num = $data['num'];
 		$postas = $data['postas'];
 
-		
-		$query = $this->db->get_where('posters', array('ip' => inet_ptod($this->input->ip_address())));
 
+		// check if there's a ban on this user
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->db->protect_identifiers('posters', TRUE) . '
+			WHERE ip = ?
+			LIMIT 0,1
+		', array(inet_ptod($this->input->ip_address())));
 
-		// if any data that could stop the query is returned, no need to add a row
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)
 			{
-				if ($row->banned == 1 && !$this->tank_auth->is_allowed())
+				if($row->banned && !$this->tank_auth->is_allowed())
 				{
-					return array('error' => 'You are banned from posting.');
+					return array('error' => _('You are banned from posting'));
 				}
 			}
 		}
@@ -1551,16 +1560,24 @@ class Post extends CI_Model
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->get_table($board) . '
-			WHERE ip = ?
+			WHERE id = ?
 			ORDER BY timestamp DESC
 			LIMIT 0,1
-		');
+		', array(inet_ptod($this->input->ip_address())));
 		
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)
 			{
+				if($comment != "" && $row->comment == $comment && !$this->tank_auth->is_allowed())
+				{
+					return array('error' => _('You\'re posting again the same comment as the last time!'));
+				}
 				
+				if (time() - strtotime($row->lastpost) < 10 && time() - strtotime($row->lastpost) > 0 && !$this->tank_auth->is_allowed()) // 10 seconds
+				{
+					return array('error' => 'You must wait at least 10 seconds before posting again.');
+				}
 			}
 		}
 
@@ -1668,7 +1685,7 @@ class Post extends CI_Model
 
 			// If reports exist, remove
 			$this->db->delete('reports', array('board' => $board->id, 'post' => $row->doc_id));
-			$this->recalculate_thread($board, $row->num);
+			$this->recalculate_thread($board, ($row->parent?$row->parent:$row->num));
 			return array('success' => TRUE);
 		}
 
@@ -1735,7 +1752,7 @@ class Post extends CI_Model
 				', array($row->num));
 			}
 			
-			$this->recalculate_thread($board, $row->num);
+			$this->recalculate_thread($board, ($row->parent?$row->parent:$row->num));
 			return array('success' => TRUE);
 		}
 		else
@@ -1767,7 +1784,7 @@ class Post extends CI_Model
 
 			// If reports exist, remove
 			$this->db->delete('reports', array('board' => $board->id, 'post' => $row->doc_id));
-			$this->recalculate_thread($board, $row->num);
+			$this->recalculate_thread($board, ($row->parent?$row->parent:$row->num));
 			return array('success' => TRUE);
 		}
 
@@ -1777,30 +1794,76 @@ class Post extends CI_Model
 	
 	function recalculate_thread($board, $num)
 	{
-		$this->db->query('
-			SELECT op.doc_id_p, op.p AS parent, op.timestamp AS time_op, 
-			COALESCE(GREATEST(op.timestamp,tb2.timestamp),op.timestamp) AS time_last, 
-			COALESCE(GREATEST(op.timestamp,tb3.timestamp),op.timestamp) AS time_bump,
-			tb4.timestamp AS time_ghost,
-			tb5.timestamp AS time_ghost_bump,
-			tb6.nreplies AS nreplies,
-			tb7.nimages AS nimages
-			FROM 
-			(SELECT doc_id AS doc_id_p, num AS p, timestamp FROM jp WHERE parent = 0 AND num = ?) AS op 
-			LEFT JOIN
-			(SELECT parent AS p, MAX(timestamp) AS timestamp FROM jp WHERE parent <> 0 GROUP BY parent) AS tb2 ON op.p = tb2.p
-			LEFT JOIN
-			(SELECT parent AS p, MAX(timestamp) AS timestamp FROM jp WHERE parent <> 0 AND email <> \'sage\' OR email IS NULL GROUP BY parent) AS tb3 ON op.p = tb3.p
-			LEFT JOIN
-			(SELECT parent AS p, MAX(timestamp) AS timestamp FROM jp WHERE parent <> 0 AND subnum <> 0 GROUP BY parent) AS tb4 ON op.p = tb4.p
-			LEFT JOIN
-			(SELECT parent AS p, MAX(timestamp) AS timestamp FROM jp WHERE parent <> 0 AND subnum <> 0 AND (email <> \'sage\' OR email IS NULL) GROUP BY parent) AS tb5 ON op.p = tb5.p
-			LEFT JOIN
-			(SELECT parent AS p, COUNT(*) AS nreplies FROM jp WHERE parent <> 0 group by parent) AS tb6 ON op.p = tb6.p
-			LEFT JOIN
-			(SELECT parent AS p, COUNT(media_hash) AS nimages FROM jp WHERE parent <> 0 group by parent) AS tb7 ON op.p = tb7.p
-
-		', array($num));
+		$query = $this->db->query('
+			SELECT parent, doc_id, timestamp, email, media_hash
+			FROM ' . $this->get_table($board) . '
+			WHERE parent = ? OR num = ?
+		', array(intval($num), intval($num)));
+		
+		$doc_id_p = 0;
+		$parent = 0;
+		$time_op = 0;
+		$time_last = 0;
+		$time_bump = 0;
+		$time_ghost = NULL;
+		$time_ghost_bump = NULL;
+		$nreplies = 0;
+		$nimages = 0;
+		
+		foreach($query->result() as $row)
+		{
+			if($row->parent == 0)
+			{
+				$doc_id_p = $row->doc_id;
+				$parent = $row->num;
+				$time_op = $row->timestamp;
+			}
+			
+			if($row->timestamp > $time_last)
+			{
+				$time_last = $row->timestamp;
+			}
+			
+			if($row->email != 'sage' && $row->timestamp > $time_bump)
+			{
+				$time_bump = $row->timestamp;
+			}
+			
+			if($row->subnum > 0 && (is_null($time_ghost) || $row->timestamp > $time_ghost))
+			{
+				$time_ghost = $row->timestamp;
+			}
+			
+			if($row->subnum > 0 && $row->email != 'sage' && (is_null($time_ghost_bump) || $row->timestamp > $time_ghost_bump))
+			{
+				$time_ghost_bump = $row->timestamp;
+			}
+			
+			$nreplies++;
+			
+			if($row->media_hash)
+			{
+				$nimages++;
+			}
+			
+			$query->free_result();
+			
+			$this->db->query('
+				INSERT
+				INTO ' . $this->get_table_threads($board) . '
+				(doc_id_p, parent, time_op, time_last, time_bump, time_ghost, time_ghost_bump, nreplies, nimages)
+				VALUES (?,?,?,?,?,?,?,?,?)
+				ON DUPLICATE KEY UPDATE 
+					parent = VALUES(parent),
+					time_op = VALUES(time_op),
+					time_last = VALUES(time_last),
+					time_bump = VALUES(time_bump),
+					time_ghost = VALUES(time_ghost),
+					time_ghost_bump = VALUES(time_ghost_bump),
+					nreplies = VALUES(nreplies),
+					nimages = VALUES(nimages)
+			', array($doc_id_p, $parent, $time_op, $time_last, $time_bump, $time_ghost, $time_ghost_bump, $nreplies, $nimages));
+		}
 	}
 
 

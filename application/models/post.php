@@ -22,7 +22,7 @@ class Post extends CI_Model
 
 
 	/**
-	 * Returns the name of the correct table, protected in oblique quotes
+	 * Returns the name of the correct posts table, protected in oblique quotes
 	 *
 	 * @param type $board
 	 * @return type
@@ -34,6 +34,21 @@ class Post extends CI_Model
 			return $this->table = $this->db->protect_identifiers(get_setting('fs_fuuka_boards_db')) . '.' . $this->db->protect_identifiers($board->shortname);
 		}
 		return $this->table = $this->db->protect_identifiers('board_' . $board->shortname, TRUE);
+	}
+	
+	/**
+	 * Returns the name of the correct threads table, protected in oblique quotes
+	 *
+	 * @param type $board
+	 * @return type
+	 */
+	function get_table_threads($board)
+	{
+		if (get_setting('fs_fuuka_boards_db'))
+		{
+			return $this->table = $this->db->protect_identifiers(get_setting('fs_fuuka_boards_db')) . '.' . $this->db->protect_identifiers($board->shortname.'_threads');
+		}
+		return $this->table = $this->db->protect_identifiers('board_' . $board->shortname.'_threads', TRUE);
 	}
 
 
@@ -166,46 +181,27 @@ class Post extends CI_Model
 	 */
 	function get_gallery($board)
 	{
+		
 		$query = $this->db->query('
-			SELECT DISTINCT *
-			FROM ' . $this->get_table($board) . '
-			WHERE parent = 0
-			ORDER BY num DESC
-			LIMIT 0, 200
-		');
+			SELECT *
+			FROM
+			(
+				SELECT *, parent as unq_parent
+				FROM ' . $this->get_table_threads($board) . '
+				ORDER BY time_op DESC
+				LIMIT 0, 200
+			) AS t
+			LEFT JOIN ' . $this->get_table($board) . ' AS g
+				ON g.num = t.unq_parent AND g.subnum = 0
+		', array(intval(($page * $per_page) - $per_page), intval($per_page)));
 
-		$sql = array();
 		$result = $query->result();
-		foreach ($result as $row)
-		{
-			$sql[] = '
-				(
-					SELECT count(*) AS count_all, count(distinct preview) AS count_images, parent
-					FROM ' . $this->get_table($board) . '
-					WHERE parent = ' . intval($row->num) . '
-				)
-			';
-		}
-
-		$sql = implode('UNION', $sql) . '
-			ORDER BY parent DESC
-		';
-
-		$query2 = $this->db->query($sql);
-		$result2 = $query2->result();
+		
 		foreach ($result as $key => $row)
 		{
-			$result[$key]->count_all = 0;
-			$result[$key]->count_images = 0;
-			// it should basically always be the first found anyway unless not found
-			foreach ($result2 as $k => $r)
-			{
-				if ($r->parent == $row->num)
-				{
-					$result[$key]->count_all = $result2[$k]->count_all;
-					$result[$key]->count_images = $result2[$k]->count_images;
-				}
-			}
+			$result[$key]->count_all = $row->nreplies;
+			$result[$key]->count_images = $row->nimages;
+			
 		}
 
 		$result_num_as_key = array();
@@ -248,34 +244,21 @@ class Post extends CI_Model
 					SELECT *
 					FROM
 					(
-						SELECT parent as unq_parent, MAX(b.timestamp), b.num
-						FROM (
-							SELECT num, parent, subnum, timestamp, email
-							FROM ' . $this->get_table($board) . '
-							WHERE subnum > 0
-							AND (email <> \'sage\' OR email IS NULL OR (email = \'sage\' AND parent = 0))
-							ORDER BY timestamp DESC
-							LIMIT 0, 100000
-						) AS b
-						GROUP BY unq_parent
-						ORDER BY MAX(b.timestamp) DESC
-						LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
-					) AS t
+						SELECT *, parent as unq_parent
+						FROM ' . $this->get_table_threads($board) . '
+						ORDER BY time_ghost_bump DESC
+						LIMIT ?, ?
+					) AS t	
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
-				');
+				', array(intval(($page * $per_page) - $per_page), intval($per_page)));
 
 				// this might not actually be working, we need to test it somewhere
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(e.num)/' . intval($per_page) . ')+1 as pages
-					FROM
-					(
-						SELECT DISTINCT(parent), subnum, num
-						FROM ' . $this->get_table($board) . '
-						WHERE subnum <> 0
-						LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
-					) AS e
+					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1 as pages
+					FROM ' . $this->get_table_threads($board) . '
+					WHERE time_ghost_bump IS NOT NULL
 				');
 				break;
 
@@ -284,26 +267,19 @@ class Post extends CI_Model
 					SELECT *
 					FROM
 					(
-						SELECT DISTINCT(num) as unq_parent
-						FROM ' . $this->get_table($board) . '
-						WHERE parent = 0 AND subnum = 0
-						ORDER BY num DESC
-						LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
+						SELECT *, parent as unq_parent
+						FROM ' . $this->get_table_threads($board) . '
+						ORDER BY time_op DESC
+						LIMIT ?, ?
 					) AS t
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
-				');
+				', array(intval(($page * $per_page) - $per_page), intval($per_page)));
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(e.num)/' . intval($per_page) . ')+1 as pages, parent
-					FROM
-					(
-						SELECT num, parent
-						FROM ' . $this->get_table($board) . '
-						WHERE parent = 0 AND subnum = 0
-						LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
-					) as e
+					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1 as pages
+					FROM ' . $this->get_table_threads($board) . '
 				');
 				break;
 
@@ -312,33 +288,19 @@ class Post extends CI_Model
 					SELECT *
 					FROM
 					(
-						SELECT IF(b.parent = 0, b.num, b.parent) as unq_parent, MAX(b.num), b.num
-						FROM (
-							SELECT num, parent, email
-							FROM ' . $this->get_table($board) . '
-							WHERE email <> \'sage\' OR email IS NULL OR (email = \'sage\' AND parent = 0)
-							AND subnum = 0
-							ORDER BY num DESC
-							LIMIT 0, 100000
-						) AS b
-						GROUP BY unq_parent
-						ORDER BY MAX(b.num) DESC
-						LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
+						SELECT *, parent as unq_parent
+						FROM ' . $this->get_table_threads($board) . '
+						ORDER BY time_bump DESC
+						LIMIT ?, ?
 					) AS t
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
-				');
+				', array(intval(($page * $per_page) - $per_page), intval($per_page)));
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(e.num)/' . intval($per_page) . ')+1 as pages, parent
-					FROM
-					(
-						SELECT num, parent
-						FROM ' . $this->get_table($board) . '
-						WHERE parent = 0 AND subnum = 0
-						LIMIT 0, ' . ( ((intval($page) > 13)?(intval($page)+5):15) * intval($per_page)) .'
-					) as e
+					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1 as pages
+					FROM ' . $this->get_table_threads($board) . '
 				');
 				break;
 			default:
@@ -359,18 +321,14 @@ class Post extends CI_Model
 			$pages = NULL;
 		}
 
-
 		if ($query->num_rows() == 0)
 		{
 			return array('result' => array('posts' => array(), 'op' => array()), 'pages' => $pages);
 		}
 
-		// echo '<pre>'.print_r($query->result(), TRUE).'</pre>';die();
-
 		// get all the posts
 		$threads = array();
 		$sql = array();
-		$sqlcount = array();
 		foreach ($query->result() as $row)
 		{
 			$threads[] = $row->unq_parent;
@@ -384,25 +342,14 @@ class Post extends CI_Model
 					LIMIT 0, 5
 				)
 			';
-
-			$sqlcount[] = '
-				(
-					SELECT count(*) AS count_all, count(distinct preview) AS count_images, num, parent
-					FROM ' . $this->get_table($board) . '
-					WHERE parent = ' . $row->unq_parent . '
-				)
-			';
 		}
 
 		$sql = implode('UNION', $sql) . '
 			ORDER BY num DESC
 		';
 
-		$sqlcount = implode('UNION', $sqlcount);
-
 		// quite disordered array
 		$query2 = $this->db->query($sql);
-		$querycount = $this->db->query($sqlcount);
 
 		// associative array with keys
 		$result = array();
@@ -424,7 +371,7 @@ class Post extends CI_Model
 					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
 			}
 		}
-
+		
 		// order the array
 		foreach ($posts as $post)
 		{
@@ -433,25 +380,14 @@ class Post extends CI_Model
 				$this->process_post($board, $post, $clean);
 			}
 
-			$post_num = ($post->parent > 0) ? $post->parent : $post->num;
-			if (!isset($result[$post_num]['omitted']))
-			{
-				foreach ($querycount->result() as $counter)
-				{
-					if ($counter->parent == $post->num)
-					{
-						$result[$post_num]['omitted'] = $counter->count_all - 5;
-						$result[$post_num]['images_omitted'] = $counter->count_images - 1;
-					}
-				}
-			}
-
 			if ($post->parent > 0)
 			{
 				// the first you create from a parent is the first thread
 				$result[$post->parent]['posts'][] = $post;
 				if ($post->preview)
 				{
+					if(!isset($result[$post->parent]['images_omitted']))
+						$result[$num]['images_omitted'] = 0;
 					$result[$post->parent]['images_omitted']--;
 				}
 			}
@@ -459,14 +395,10 @@ class Post extends CI_Model
 			{
 				// this should already exist
 				$result[$post->num]['op'] = $post;
+				if($post->nreplies > 5)
+					$result[$post->num]['omitted'] = $post->nreplies - 5;
+				$result[$post->num]['images_omitted'] += $post->nimages;
 			}
-		}
-
-		// reorder threads, and the posts inside
-		$result2 = array();
-		foreach ($threads as $thread)
-		{
-			$result2[$thread] = $result[$thread];
 		}
 
 		// clean up, even if it's supposedly just little data
@@ -1600,14 +1532,8 @@ class Post extends CI_Model
 		$num = $data['num'];
 		$postas = $data['postas'];
 
-		if ($this->session->userdata('poster_id') && $this->session->userdata('poster_id') != 0)
-		{
-			$query = $this->db->get_where('posters', array('id' => $this->session->userdata('poster_id')));
-		}
-		else
-		{
-			$query = $this->db->get_where('posters', array('ip' => $this->input->ip_address()));
-		}
+		
+		$query = $this->db->get_where('posters', array('ip' => inet_ptod($this->input->ip_address())));
 
 
 		// if any data that could stop the query is returned, no need to add a row
@@ -1619,27 +1545,23 @@ class Post extends CI_Model
 				{
 					return array('error' => 'You are banned from posting.');
 				}
-
-				if (time() - strtotime($row->lastpost) < 10 && time() - strtotime($row->lastpost) > 0 && !$this->tank_auth->is_allowed()) // 10 seconds
-				{
-					return array('error' => 'You must wait at least 10 seconds before posting again.');
-				}
-
-				$this->db->where('id', $row->id);
-				$this->db->update('posters', array('lastcomment' => $comment, 'lastpost' => date('Y-m-d H:i:s')));
-				$this->session->set_userdata('poster_id', $row->id);
 			}
 		}
-		else
+		
+		$query = $this->db->query('
+			SELECT *
+			FROM ' . $this->get_table($board) . '
+			WHERE ip = ?
+			ORDER BY timestamp DESC
+			LIMIT 0,1
+		');
+		
+		if ($query->num_rows() > 0)
 		{
-			$insert_poster = array(
-				'ip' => $this->input->ip_address(),
-				'user_agent' => $this->input->user_agent(),
-				'lastcomment' => $comment
-			);
-			$this->db->insert('posters', $insert_poster);
-			$poster_id = $this->db->insert_id();
-			$this->session->set_userdata('poster_id', $poster_id);
+			foreach ($query->result() as $row)
+			{
+				
+			}
 		}
 
 		if (!$ghost)
@@ -1648,13 +1570,13 @@ class Post extends CI_Model
 
 			$this->db->query('
 				INSERT INTO ' . $this->get_table($board) . '
-				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, spoiler, poster_id)
+				(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, spoiler)
 				VALUES
 				(
 					(select coalesce(max(num),0)+1 from (select * from ' . $this->get_table($board) . ') as x),
-					?,?,?,?,?,?,?,?,?,?,?,?
+					?,?,?,?,?,?,?,?,?,?,?
 				);
-				', array(0, $num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $spoiler, $this->session->userdata('poster_id'))
+				', array(0, $num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $spoiler)
 			);
 		}
 		else
@@ -1665,17 +1587,17 @@ class Post extends CI_Model
 			// partly copied from Fuuka original
 			$this->db->query('
 					INSERT INTO ' . $this->get_table($board) . '
-					(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass, poster_id)
+					(num, subnum, parent, timestamp, capcode, email, name, trip, title, comment, delpass)
 					VALUES
 					(
 						(select max(num) from (select * from ' . $this->get_table($board) . ' where parent=? or num=?) as x),
 						(select max(subnum)+1 from (select * from ' . $this->get_table($board) . ' where num=(select max(num) from ' . $this->get_table($board) . ' where parent=? or num=?)) as x),
-						?,?,?,?,?,?,?,?,?,?
+						?,?,?,?,?,?,?,?,?
 					);
 				', array(
 				$num, $num,
 				$num, $num,
-				$num, time(), $postas, $email, $name, $trip, $subject, $comment, $password, $this->session->userdata('poster_id'))
+				$num, time(), $postas, $email, $name, $trip, $subject, $comment, $password)
 			);
 		}
 
@@ -1703,6 +1625,7 @@ class Post extends CI_Model
 			}
 		}
 
+		$this->recalculate_thread($board, $num);
 		return array('success' => TRUE, 'posted' => $posted);
 	}
 
@@ -1745,6 +1668,7 @@ class Post extends CI_Model
 
 			// If reports exist, remove
 			$this->db->delete('reports', array('board' => $board->id, 'post' => $row->doc_id));
+			$this->recalculate_thread($board, $row->num);
 			return array('success' => TRUE);
 		}
 
@@ -1810,6 +1734,8 @@ class Post extends CI_Model
 					WHERE parent = ?
 				', array($row->num));
 			}
+			
+			$this->recalculate_thread($board, $row->num);
 			return array('success' => TRUE);
 		}
 		else
@@ -1841,10 +1767,40 @@ class Post extends CI_Model
 
 			// If reports exist, remove
 			$this->db->delete('reports', array('board' => $board->id, 'post' => $row->doc_id));
+			$this->recalculate_thread($board, $row->num);
 			return array('success' => TRUE);
 		}
 
 		return FALSE;
+	}
+	
+	
+	function recalculate_thread($board, $num)
+	{
+		$this->db->query('
+			SELECT op.doc_id_p, op.p AS parent, op.timestamp AS time_op, 
+			COALESCE(GREATEST(op.timestamp,tb2.timestamp),op.timestamp) AS time_last, 
+			COALESCE(GREATEST(op.timestamp,tb3.timestamp),op.timestamp) AS time_bump,
+			tb4.timestamp AS time_ghost,
+			tb5.timestamp AS time_ghost_bump,
+			tb6.nreplies AS nreplies,
+			tb7.nimages AS nimages
+			FROM 
+			(SELECT doc_id AS doc_id_p, num AS p, timestamp FROM jp WHERE parent = 0 AND num = ?) AS op 
+			LEFT JOIN
+			(SELECT parent AS p, MAX(timestamp) AS timestamp FROM jp WHERE parent <> 0 GROUP BY parent) AS tb2 ON op.p = tb2.p
+			LEFT JOIN
+			(SELECT parent AS p, MAX(timestamp) AS timestamp FROM jp WHERE parent <> 0 AND email <> \'sage\' OR email IS NULL GROUP BY parent) AS tb3 ON op.p = tb3.p
+			LEFT JOIN
+			(SELECT parent AS p, MAX(timestamp) AS timestamp FROM jp WHERE parent <> 0 AND subnum <> 0 GROUP BY parent) AS tb4 ON op.p = tb4.p
+			LEFT JOIN
+			(SELECT parent AS p, MAX(timestamp) AS timestamp FROM jp WHERE parent <> 0 AND subnum <> 0 AND (email <> \'sage\' OR email IS NULL) GROUP BY parent) AS tb5 ON op.p = tb5.p
+			LEFT JOIN
+			(SELECT parent AS p, COUNT(*) AS nreplies FROM jp WHERE parent <> 0 group by parent) AS tb6 ON op.p = tb6.p
+			LEFT JOIN
+			(SELECT parent AS p, COUNT(media_hash) AS nimages FROM jp WHERE parent <> 0 group by parent) AS tb7 ON op.p = tb7.p
+
+		', array($num));
 	}
 
 

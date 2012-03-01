@@ -193,15 +193,28 @@ class Post extends CI_Model
 			) AS t
 			LEFT JOIN ' . $this->get_table($board) . ' AS g
 				ON g.num = t.unq_parent AND g.subnum = 0
-		', array(intval(($page * $per_page) - $per_page), intval($per_page)));
+			LEFT JOIN
+			(
+				SELECT parent AS p, COUNT(*) AS nreplies, COUNT(media_hash) AS nimages 
+				FROM ' . $this->get_table($board) . ' 
+				WHERE parent <> 0 
+				GROUP BY parent
+			) AS rpl ON t.unq_parent = rpl.p
+		');
 
 		$result = $query->result();
 		
 		foreach ($result as $key => $row)
 		{
-			$result[$key]->count_all = $row->nreplies;
-			$result[$key]->count_images = $row->nimages;
+			if($row->nreplies)
+				$result[$key]->count_all = $row->nreplies;
+			else 
+				$result[$key]->count_all = 0;
 			
+			if($row->nimages)
+				$result[$key]->count_images = $row->nimages;
+			else 
+				$result[$key]->count_images = 0;			
 		}
 
 		$result_num_as_key = array();
@@ -251,6 +264,13 @@ class Post extends CI_Model
 					) AS t	
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
+					LEFT JOIN
+					(
+						SELECT parent AS p, COUNT(*) AS nreplies, COUNT(media_hash) AS nimages 
+						FROM ' . $this->get_table($board) . ' 
+						WHERE parent <> 0 
+						GROUP BY parent
+					) AS rpl ON t.unq_parent = rpl.p
 					' . $this->get_sql_report_after_join($board) . '
 				', array(intval(($page * $per_page) - $per_page), intval($per_page)));
 
@@ -272,6 +292,13 @@ class Post extends CI_Model
 						ORDER BY time_op DESC
 						LIMIT ?, ?
 					) AS t
+					LEFT JOIN
+					(
+						SELECT parent AS p, COUNT(*) AS nreplies, COUNT(media_hash) AS nimages 
+						FROM ' . $this->get_table($board) . ' 
+						WHERE parent <> 0 
+						GROUP BY parent
+					) AS rpl ON t.unq_parent = rpl.p
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
@@ -293,6 +320,13 @@ class Post extends CI_Model
 						ORDER BY time_bump DESC
 						LIMIT ?, ?
 					) AS t
+					LEFT JOIN
+					(
+						SELECT parent AS p, COUNT(*) AS nreplies, COUNT(media_hash) AS nimages 
+						FROM ' . $this->get_table($board) . ' 
+						WHERE parent <> 0 
+						GROUP BY parent
+					) AS rpl ON t.unq_parent = rpl.p
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
@@ -388,7 +422,7 @@ class Post extends CI_Model
 				{
 					// -1 because OP is always displayed
 					if(!isset($result[$post->parent]['images_omitted']))
-						$result[$post->parent]['images_omitted'] = -1;
+						$result[$post->parent]['images_omitted'] = 0;
 					$result[$post->parent]['images_omitted']--;
 				}
 			}
@@ -396,12 +430,12 @@ class Post extends CI_Model
 			{
 				// this should already exist
 				$result[$post->num]['op'] = $post;
-				if($post->nreplies > 5)
-					$result[$post->num]['omitted'] = $post->nreplies - 6;
+				if($post->nreplies > 4)
+					$result[$post->num]['omitted'] = $post->nreplies - 5;
 				
 				// -1 because OP is always displayed
 				if(!isset($result[$post->num]['images_omitted']))
-						$result[$post->num]['images_omitted'] = -1;
+						$result[$post->num]['images_omitted'] = 0;
 				$result[$post->num]['images_omitted'] += $post->nimages;
 			}
 		}

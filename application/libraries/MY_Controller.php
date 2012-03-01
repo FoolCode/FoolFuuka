@@ -17,7 +17,6 @@ class MY_Controller extends CI_Controller
 		else
 		{
 			//$this->output->enable_profiler(TRUE);
-
 			$this->load->database();
 			$this->load->library('session');
 			$this->load->library('tank_auth');

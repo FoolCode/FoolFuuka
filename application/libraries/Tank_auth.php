@@ -188,13 +188,31 @@ class Tank_auth
 			$user_id = $this->ci->session->userdata('user_id');
 		}
 
-		// we're checking if another user is an admin
-		$user = new Profile();
-		$user->where('user_id', $user_id)->limit(1)->get();
-		if ($user->group_id == 1)
+		if(isset($this->cached['is_admin']))
 		{
-			return TRUE;
+			if($this->cached['is_admin'] === TRUE)
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
 		}
+		
+		// we're checking if another user is an admin
+		$query = $this->ci->db->where('user_id', $user_id)->limit(1)->get('profiles');
+		if ($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			if ($row->group_id == 1)
+			{
+				$this->cached['is_admin'] = TRUE;
+				return TRUE;
+			}
+		}
+		
+		$this->cached['is_admin'] = FALSE;
 		return FALSE;
 	}
 
@@ -218,13 +236,31 @@ class Tank_auth
 			$user_id = $this->ci->session->userdata('user_id');
 		}
 
-		// we're checking if another user is an admin
-		$user = new Profile();
-		$user->where('user_id', $user_id)->limit(1)->get();
-		if ($user->group_id == 3)
+		if(isset($this->cached['is_mod']))
 		{
-			return TRUE;
+			if($this->cached['is_mod'] === TRUE)
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
 		}
+		
+		// we're checking if another user is an admin
+		$query = $this->ci->db->where('user_id', $user_id)->limit(1)->get('profiles');
+		if ($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			if ($row->group_id == 3)
+			{
+				$this->cached['is_mod'] = TRUE;
+				return TRUE;
+			}
+		}
+		
+		$this->cached['is_mod'] = FALSE;
 		return FALSE;
 	}
 
@@ -254,22 +290,20 @@ class Tank_auth
 
 		if (!isset($this->cached["group"][$group_name]))
 		{
-			$group = new Group();
-			$group->where('name', $group_name)->get();
-			if ($group->result_count() != 1)
+			$query = $this->ci->db->where('name', $group_name)->get('groups');
+			if ($query->num_rows() != 1)
 			{
 				log_message('error', 'tank_auth:is_group: using non-existent group name');
 				return FALSE;
 			}
 
-			$this->cached["group"][$group_name] = $group;
+			$this->cached["group"][$group_name] = $query->row();
 		}
 
 		if (!isset($this->cached["profile"]))
 		{
-			$profile = new Profile();
-			$profile->where('user_id', $this->get_user_id())->limit(1)->get();
-			$this->cached["profile"] = $profile;
+			$query = $this->ci->db->where('user_id', $this->get_user_id())->limit(1)->get('profiles');
+			$this->cached["profile"] = $query->row();
 		}
 
 		if ($this->cached["group"][$group_name]->id == $this->cached["profile"]->group_id)

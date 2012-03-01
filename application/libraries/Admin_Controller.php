@@ -16,6 +16,8 @@ class Admin_Controller extends MY_Controller
 		}
 		$this->tank_auth->is_allowed() or show_404();
 
+		$this->load->library('datamapper');
+		
 		$this->viewdata["sidebar"] = $this->sidebar();
 
 		// Check if the database is upgraded to the the latest available

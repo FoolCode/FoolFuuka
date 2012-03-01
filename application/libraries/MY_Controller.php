@@ -20,7 +20,6 @@ class MY_Controller extends CI_Controller
 
 			$this->load->database();
 			$this->load->library('session');
-			$this->load->library('datamapper');
 			$this->load->library('tank_auth');
 
 			// loads variables from database for get_setting()

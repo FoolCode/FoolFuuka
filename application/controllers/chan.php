@@ -11,9 +11,7 @@ class Chan extends Public_Controller
 		$this->load->library('template');
 		$this->load->helper('cookie');
 		$this->load->helper('number');
-		$boards = new Board();
-		$boards->order_by('shortname', 'ASC')->get();
-		$this->template->set('boards', $boards);
+		$this->template->set('boards', $this->radix->get_all());
 		$this->template->set_layout('chan');
 	}
 

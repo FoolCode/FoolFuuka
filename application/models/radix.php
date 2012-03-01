@@ -31,6 +31,7 @@ class Radix extends CI_Model
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->db->protect_identifiers('boards', TRUE) . '
+			ORDER BY shortname ASC
 		');
 
 		if ($query->num_rows() == 0)

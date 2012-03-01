@@ -2605,9 +2605,8 @@ class Post extends CI_Model
 			}
 		}
 
-		$board = new Board();
-		$board->where('shortname', $shortname)->get();
-		if ($board->result_count() == 0)
+		$board = $this->radix->get_by_shortname($shortname);
+		if (!$board)
 		{
 			if ($num)
 			{

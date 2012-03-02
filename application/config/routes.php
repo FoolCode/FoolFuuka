@@ -53,12 +53,13 @@ $route['account/leave_team/(:any)'] = "account/index/leave_team/$1";
 $route['account/request/(:any)'] = "account/index/request/$1";
 $route['account/leave_leadership/(:any)'] = "account/index/leave_leadership/$1";
 $route['admin/members/members'] = 'admin/members/membersa';
+$route['admin/plugins/(.*?)'] = "admin/plugins_admin/$1";
 
 $route['(?!(admin|account|install|feeds|api|cli))(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";
 $route['(?!(admin|account|install|feeds|api|cli))(\w+)/(.*?)'] = "chan/$2/$3";
 $route['(\w+)'] = "chan/$1/page";
 
-$route['404_override'] = '';
+$route['404_override'] = 'plugin';
 
 
 /* End of file routes.php */

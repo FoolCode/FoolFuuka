@@ -1102,7 +1102,7 @@ class Chan extends Public_Controller
 		{
 			if (!($board = $this->radix->set_selected_by_shortname($method)))
 			{
-				show_404();
+				parent::_remap($method, $params);
 			}
 			$this->template->set('board', $board);
 			$method = $params[0];

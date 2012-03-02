@@ -22,19 +22,19 @@ if (!defined('BASEPATH'))
 					<td><?php echo $plugin->info->description ?></td>
 					<td>
 						<?php
-						form_open('admin/plugins/action', '',
-							array('action' => $plugin->enabled ? 'enable' : 'disable')
+						echo form_open('admin/plugins/action/' . $plugin->info->slug, '',
+							array('action' => $plugin->enabled ? 'disable' : 'enable')
 						);
 						echo '<input type="submit" class="btn" value="' .($plugin->enabled ? _('Disable') : _('Enable')). '" />';
-						form_close();
+						echo form_close();
 						?>
 					</td>
 					<td><?php
-						form_open('admin/plugins/action', '',
+						echo form_open('admin/plugins/action', '',
 							array('action' => 'remove')
 						);
 						echo '<input type="submit" class="btn" value="' . _('Remove') . '" />';
-						form_close();
+						echo form_close();
 						?>
 					</td></td>
 				</tr>

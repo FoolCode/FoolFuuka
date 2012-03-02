@@ -7,6 +7,8 @@ if (!defined('BASEPATH'))
  * Here you should complete the required fields
  */
 
+// class name case sensitive
+$info['slug'] = 'FS_Articles';
 // name under which to display your plugin
 $info['name'] = 'Articles';
 // short description about what the plugin does

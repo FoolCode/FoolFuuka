@@ -89,7 +89,7 @@ class Plugins extends CI_Model
 	{
 		$slugs = $this->lookup_plugins();
 
-		$query = $query->db->query('
+		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->db->dbprefix('plugins') . '
 		');
@@ -98,7 +98,7 @@ class Plugins extends CI_Model
 
 	function get_enabled()
 	{
-		$query = $query->db->query('
+		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->db->dbprefix('plugins') . '
 			WHERE enabled = 1
@@ -110,14 +110,14 @@ class Plugins extends CI_Model
 
 	function get_by_slug($slug)
 	{
-		$query = $query->db->query('
+		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->db->dbprefix('plugins') . '
 			WHERE slug = ?
 		',
 			array($slug));
 
-		$plugin = $query->result();
+		$plugin = $query->row();
 		$plugin->info = $this->get_info_by_slug($slug);
 
 		return $plugin;
@@ -146,7 +146,7 @@ class Plugins extends CI_Model
 
 	function enable($slug)
 	{
-		$query->db->query('
+		$this->db->query('
 			INSERT INTO ' . $this->db->dbprefix('plugins') . '
 			(slug, enabled)
 			VALUES (?, 1)
@@ -162,7 +162,7 @@ class Plugins extends CI_Model
 
 	function disable($slug)
 	{
-		$query = $query->db->query('
+		$query = $this->db->query('
 			UPDATE ' . $this->db->dbprefix('plugins') . '
 			SET enabled = 0
 			WHERE slug = ?
@@ -203,7 +203,7 @@ class Plugins extends CI_Model
 
 			$class->install();
 
-			$query = $query->db->query('
+			$query = $this->db->query('
 				UPDATE ' . $this->db->dbprefix('plugins') . '
 				SET revision = 0
 				WHERE slug = ?

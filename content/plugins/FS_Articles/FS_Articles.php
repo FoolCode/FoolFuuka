@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class FS_Articles extends FS_Plugins
+class FS_Articles extends Plugins
 {
 	/*
 	 * This is a plugin that is in actual production, but that is also
@@ -118,7 +118,7 @@ class FS_Articles extends FS_Plugins
 	function remove()
 	{
 		$this->db->query('
-		DROP TABLE `fu_plugin_fs-articles`
+			DROP TABLE `fu_plugin_fs-articles`
 	    ');
 	}
 

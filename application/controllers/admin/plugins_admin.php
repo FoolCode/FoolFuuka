@@ -55,7 +55,7 @@ class Plugins_Admin extends Admin_Controller
 				}
 				break;
 
-			case 'enable':
+			case 'disable':
 				$plugin = $this->plugins->disable($slug);
 				if ($plugin === FALSE)
 				{

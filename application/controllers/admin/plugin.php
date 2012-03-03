@@ -13,9 +13,6 @@ class Plugin extends Admin_Controller
 	function __construct()
 	{
 		parent::__construct();
-		echo 'admin panel';
-
-		
 	}
 
 }

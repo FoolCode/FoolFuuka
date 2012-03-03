@@ -5,6 +5,9 @@ if (!defined('BASEPATH'))
 
 class Admin_Controller extends MY_Controller
 {
+
+	var $viewdata = array();
+	
 	public function __construct()
 	{
 		parent::__construct();

@@ -12,7 +12,8 @@ class FS_Articles extends Plugins
 	 * you will have to edit to match
 	 */
 
-
+	//var $viewdata; // make your life easier for admin pages
+	
 	function __construct()
 	{
 		// KEEP THIS EMPTY, use the initialize_plugin method instead
@@ -27,17 +28,29 @@ class FS_Articles extends Plugins
 	 */
 	function initialize_plugin()
 	{
+		$this->plugins->register_controller_function($this, array('admin', 'articles'),
+			'manage');
 		$this->plugins->register_controller_function($this, array('admin', 'articles', 'manage'),
 			'manage');
 		
 		$this->plugins->register_controller_function($this, array('chan', '(:any)', 'articles'),
+			'article');
+		$this->plugins->register_controller_function($this, array('chan', '(:any)', 'articles', '(:any)'),
 			'article');
 	}
 
 
 	function manage()
 	{
-		echo 'here yep';
+		// for some functions you will need the ACTUAL controller variable
+		$CI = & get_instance();
+		
+		$CI->viewdata['controller_title'] = '<a href="'.site_url("admin/articles/manage").'">' . _("Articles") . '</a>';
+		$CI->viewdata['function_title'] = _('Manage');
+		
+		$data['content'] = "HELLO WORLD!";
+		$CI->viewdata["main_content_view"] = $this->load->view("admin/plugin.php", $data, TRUE);
+		$this->load->view("admin/default.php", $CI->viewdata);
 	}
 	
 	

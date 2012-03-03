@@ -32,6 +32,8 @@ class FS_Articles extends Plugins
 			array('admin', 'articles'), 'manage');
 		$this->plugins->register_controller_function($this,
 			array('admin', 'articles', 'manage'), 'manage');
+		
+		//$this->plugins->register_admin_sidebar_link('');
 
 		$this->plugins->register_controller_function($this,
 			array('chan', '(:any)', 'articles'), 'article');

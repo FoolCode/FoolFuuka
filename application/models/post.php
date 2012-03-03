@@ -216,29 +216,40 @@ class Post extends CI_Model
 			) AS t
 			LEFT JOIN ' . $this->get_table($board) . ' AS g
 				ON g.num = t.unq_parent AND g.subnum = 0
-			LEFT JOIN
-			(
-				SELECT parent AS p, COUNT(*) AS nreplies,
-					COUNT(media_hash) AS nimages 
-				FROM ' . $this->get_table($board) . ' 
-				WHERE parent <> 0 
-				GROUP BY parent
-			) AS rpl ON t.unq_parent = rpl.p
 		');
 
+		$sql = array();
 		$result = $query->result();
+		foreach ($result as $row)
+		{
+			$sql[] = '
+				(
+					SELECT count(*) AS count_all, count(distinct preview) AS count_images, parent
+					FROM ' . $this->get_table($board) . '
+					WHERE parent = ' . intval($row->num) . '
+				)
+			';
+		}
 
+		$sql = implode('UNION', $sql) . '
+			ORDER BY parent DESC
+		';
+
+		$query2 = $this->db->query($sql);
+		$result2 = $query2->result();
 		foreach ($result as $key => $row)
 		{
-			if ($row->nreplies)
-				$result[$key]->count_all = $row->nreplies;
-			else
-				$result[$key]->count_all = 0;
-
-			if ($row->nimages)
-				$result[$key]->count_images = $row->nimages;
-			else
-				$result[$key]->count_images = 0;
+			$result[$key]->count_all = 0;
+			$result[$key]->count_images = 0;
+			// it should basically always be the first found anyway unless not found
+			foreach ($result2 as $k => $r)
+			{
+				if ($r->parent == $row->num)
+				{
+					$result[$key]->count_all = $result2[$k]->count_all;
+					$result[$key]->count_images = $result2[$k]->count_images;
+				}
+			}
 		}
 
 		$result_num_as_key = array();
@@ -288,14 +299,6 @@ class Post extends CI_Model
 					) AS t	
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
-					LEFT JOIN
-					(
-						SELECT parent AS p, COUNT(*) AS nreplies, 
-							COUNT(media_hash) AS nimages 
-						FROM ' . $this->get_table($board) . ' 
-						WHERE parent <> 0 
-						GROUP BY parent
-					) AS rpl ON t.unq_parent = rpl.p
 					' . $this->get_sql_report_after_join($board) . '
 				',
 					array(intval(($page * $per_page) - $per_page),
@@ -323,14 +326,6 @@ class Post extends CI_Model
 						ORDER BY time_op DESC
 						LIMIT ?, ?
 					) AS t
-					LEFT JOIN
-					(
-						SELECT parent AS p, COUNT(*) AS nreplies, 
-							COUNT(media_hash) AS nimages 
-						FROM ' . $this->get_table($board) . ' 
-						WHERE parent <> 0 
-						GROUP BY parent
-					) AS rpl ON t.unq_parent = rpl.p
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
@@ -357,14 +352,6 @@ class Post extends CI_Model
 						ORDER BY time_bump DESC
 						LIMIT ?, ?
 					) AS t
-					LEFT JOIN
-					(
-						SELECT parent AS p, COUNT(*) AS nreplies, 
-							COUNT(media_hash) AS nimages 
-						FROM ' . $this->get_table($board) . ' 
-						WHERE parent <> 0 
-						GROUP BY parent
-					) AS rpl ON t.unq_parent = rpl.p
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
@@ -412,6 +399,7 @@ class Post extends CI_Model
 		// get all the posts
 		$threads = array();
 		$sql = array();
+		$sqlcount = array();
 		foreach ($query->result() as $row)
 		{
 			$threads[] = $row->unq_parent;
@@ -425,14 +413,25 @@ class Post extends CI_Model
 					LIMIT 0, 5
 				)
 			';
+
+			$sqlcount[] = '
+				(
+					SELECT count(*) AS count_all, count(distinct preview) AS count_images, num, parent
+					FROM ' . $this->get_table($board) . '
+					WHERE parent = ' . $row->unq_parent . '
+				)
+			';
 		}
 
 		$sql = implode('UNION', $sql) . '
 			ORDER BY num DESC
 		';
 
+		$sqlcount = implode('UNION', $sqlcount);
+
 		// quite disordered array
 		$query2 = $this->db->query($sql);
+		$querycount = $this->db->query($sqlcount);
 
 		// associative array with keys
 		$result = array();
@@ -463,15 +462,25 @@ class Post extends CI_Model
 				$this->process_post($board, $post, $clean);
 			}
 
+			$post_num = ($post->parent > 0) ? $post->parent : $post->num;
+			if (!isset($result[$post_num]['omitted']))
+			{
+				foreach ($querycount->result() as $counter)
+				{
+					if ($counter->parent == $post->num)
+					{
+						$result[$post_num]['omitted'] = $counter->count_all - 5;
+						$result[$post_num]['images_omitted'] = $counter->count_images - 1;
+					}
+				}
+			}
+
 			if ($post->parent > 0)
 			{
 				// the first you create from a parent is the first thread
 				$result[$post->parent]['posts'][] = $post;
 				if ($post->preview)
 				{
-					// -1 because OP is always displayed
-					if (!isset($result[$post->parent]['images_omitted']))
-						$result[$post->parent]['images_omitted'] = 0;
 					$result[$post->parent]['images_omitted']--;
 				}
 			}
@@ -479,13 +488,6 @@ class Post extends CI_Model
 			{
 				// this should already exist
 				$result[$post->num]['op'] = $post;
-				if ($post->nreplies > 4)
-					$result[$post->num]['omitted'] = $post->nreplies - 5;
-
-				// -1 because OP is always displayed
-				if (!isset($result[$post->num]['images_omitted']))
-					$result[$post->num]['images_omitted'] = 0;
-				$result[$post->num]['images_omitted'] += $post->nimages;
 			}
 		}
 

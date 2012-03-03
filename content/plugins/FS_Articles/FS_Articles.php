@@ -12,7 +12,6 @@ class FS_Articles extends Plugins
 	 */
 
 
-
 	function __construct()
 	{
 		// KEEP THIS EMPTY, use the initialize_plugin method instead
@@ -32,7 +31,13 @@ class FS_Articles extends Plugins
 			array('admin', 'articles'), 'manage');
 		$this->plugins->register_controller_function($this,
 			array('admin', 'articles', 'manage'), 'manage');
-		
+		$this->plugins->register_controller_function($this,
+			array('admin', 'articles', 'edit'), 'manage');
+		$this->plugins->register_controller_function($this,
+			array('admin', 'articles', 'edit', '(:any)'), 'manage');
+		$this->plugins->register_controller_function($this,
+			array('admin', 'articles', 'remove', '(:any)'), 'manage');
+
 		//$this->plugins->register_admin_sidebar_link('');
 
 		$this->plugins->register_controller_function($this,
@@ -41,17 +46,66 @@ class FS_Articles extends Plugins
 			array('chan', '(:any)', 'articles', '(:any)'), 'article');
 	}
 
-	
 
 	function manage()
 	{
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/articles/manage") . '">' . _("Articles") . '</a>';
 		$this->viewdata['function_title'] = _('Manage');
 
-		$data['content'] = "HELLO WORLD!";
+		$articles = $this->get_all();
+		
+		ob_start();
+		?>
+
+		<div class="table">
+			<a href="<?php echo site_url('admin/articles/edit') ?>" class="btn" style="float:right; margin:5px"><?php echo _('New article') ?></a>
+			<h3><?php echo _('Manage articles'); ?></h3>
+
+			<table class="table-bordered table-striped table-condensed">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Slug</th>
+						<th>Edit</th>
+						<th>Remove</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php 
+					foreach($articles as $article) : ?>
+					<tr>
+						<td>
+							<?php echo htmlentities($this->name) ?>
+						</td>
+						<td>
+							<?php echo $this->slug ?>
+						</td>
+						<td>
+										<a href="<?php echo site_url('admin/articles/edit/'.$article->slug) ?>" class="btn"><?php echo _('Edit') ?></a>
+						</td>
+						<td>
+							<a href="<?php echo site_url('admin/articles/remove/'.$article->slug) ?>" class="btn"><?php echo _('Edit') ?></a>
+						</td>
+					</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+
+		<?php
+		$data['content'] = ob_get_clean();
 		$this->viewdata["main_content_view"] = $this->load->view("admin/plugin.php",
 			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
+	}
+
+
+	function edit_article()
+	{
+		if($this->input->post())
+		{
+			
+		}
 	}
 
 
@@ -66,7 +120,7 @@ class FS_Articles extends Plugins
 		ob_start();
 		?>
 
-		<h1>Welcome to the articles section!</h1>
+				<h1>Welcome to the articles section!</h1>
 
 		<?php
 		$this->template->set('content', ob_get_clean());
@@ -81,10 +135,13 @@ class FS_Articles extends Plugins
 	function get_all()
 	{
 		$query = $this->db->query('
-	    SELECT *
-	    FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-	');
+			SELECT *
+			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
+		');
 
+		if($query->num_rows() == 0)
+			return array();
+		
 		return $query->result();
 	}
 
@@ -92,11 +149,14 @@ class FS_Articles extends Plugins
 	function get_by_slug($slug)
 	{
 		$query = $this->db->query('
-	    SELECT *
-	    FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-	    WHERE slug = ?
-	',
+			SELECT *
+			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
+			WHERE slug = ?
+		',
 			array($slug));
+		
+		if($query->num_rows() == 0)
+			return array();
 
 		return $query->result();
 	}
@@ -105,11 +165,14 @@ class FS_Articles extends Plugins
 	function get_by_id($id)
 	{
 		$query = $this->db->query('
-	    SELECT *
-	    FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-	    WHERE slug = ?
-	',
+			SELECT *
+			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
+			WHERE slug = ?
+		',
 			array($id));
+		
+		if($query->num_rows() == 0)
+			return array();
 
 		return $query->result();
 	}

@@ -266,13 +266,18 @@ class Plugins extends CI_Model
 		// codeigniter $this->uri->rsegment_uri sends weird indexes in the array with 1+ start
 		// this reindexes the array
 		$uri_array = array_values($uri_array);
-		
+		/*echo '<pre>';
+		print_r($uri_array);
+		print_r($this->_controller_uris);
+		echo '</pre>';*/
 		foreach($this->_controller_uris as $item)
-		{	
+		{
 			// it must be contained by the entire URI
 			foreach($item['uri_array'] as $key => $chunk)
 			{
-				if($chunk != $uri_array[$key] && $chunk != '(:any)')
+				if(($chunk != $uri_array[$key] && $chunk != '(:any)') ||
+					(count($item['uri_array']) > count($uri_array))
+					)
 				{
 					break;
 				}

@@ -1162,7 +1162,6 @@ class Chan extends Public_Controller
 		$this->load->helper('number');
 		$this->template->set_layout('chan');
 
-		//echo $this->uri->ruri_string();
 		// see if some plugin completely overrides a function
 		if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
 		{

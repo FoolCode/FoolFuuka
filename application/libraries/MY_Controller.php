@@ -97,24 +97,15 @@ class MY_Controller extends CI_Controller
 			// don't let people go directly to the plugin system
 			show_404();
 		}
-		echo $method;
 
-			$radix = $this->radix->set_selected_by_shortname($method);
-		
-		if($radix)
+		if ($this->plugins->is_controller_function($this->uri->segment_array()))
 		{
-			// it's a radix (board)
-			array_unshift($params, 'chan', $method);
-		}
-		/*
-		if ($this->plugins->is_controller_function($this->uri->uri_string()))
-		{
-			$plugin_controller = $this->plugins->get_controller_function($this->uri->uri_string());
+			$plugin_controller = $this->plugins->get_controller_function($this->uri->segment_array());
 
 			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']),
 					array());
 		}
-		*/
+		
 		if (method_exists($this, $method))
 		{
 			return call_user_func_array(array($this, $method), $params);

@@ -45,15 +45,29 @@ $route['atom.xml'] = "feeds/feeds/atom";
 $route['install'] = "install";
 $route['api'] = "api";
 $route['cli'] = "cli";
-$route['admin'] = "admin/preferences";
 $route['account'] = "account/index/profile";
 $route['account/profile'] = "account/index/profile";
 $route['account/teams'] = "account/index/teams";
 $route['account/leave_team/(:any)'] = "account/index/leave_team/$1";
 $route['account/request/(:any)'] = "account/index/request/$1";
 $route['account/leave_leadership/(:any)'] = "account/index/leave_leadership/$1";
+$route['admin'] = "admin/preferences";
 $route['admin/members/members'] = 'admin/members/membersa';
 $route['admin/plugins/(.*?)'] = "admin/plugins_admin/$1";
+
+$route_admin_controllers = glob(APPPATH . 'controllers/admin/*.php');
+
+foreach($route_admin_controllers as $key => $item)
+{
+	$item = str_replace(APPPATH . 'controllers/admin/', '', $item);
+	$route_admin_controllers[$key] = substr($item, 0, strlen($item) - 4);
+}
+$route_admin_controllers[] = 'plugins';
+
+
+// routes to allow plugin.php to catch the files, could be automated...
+$route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)'] = "admin/plugin/$2/";
+$route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)/(.*?)'] = "admin/plugin/$2/$3";
 
 $route['(?!(admin|account|install|feeds|api|cli))(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";
 $route['(?!(admin|account|install|feeds|api|cli))(\w+)/(.*?)'] = "chan/$2/$3";

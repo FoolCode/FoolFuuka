@@ -12,10 +12,5 @@ class Plugin extends MY_Controller
 	{
 		parent::__construct();
 	}
-	
-	function test()
-	{
-		echo $this->tank_auth->is_allowed()?'yes':'no';
-	}
 
 }

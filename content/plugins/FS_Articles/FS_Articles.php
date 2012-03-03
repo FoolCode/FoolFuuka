@@ -27,7 +27,7 @@ class FS_Articles extends Plugins
 	 */
 	function initialize_plugin()
 	{
-		$this->plugins->register_controller_function($this, array('articles'),
+		$this->plugins->register_controller_function($this, array('admin', 'articles', 'manage'),
 			'manage');
 		
 		$this->plugins->register_controller_function($this, array('chan', '(:any)', 'articles'),
@@ -47,7 +47,17 @@ class FS_Articles extends Plugins
 		$this->template->set('section_title', 'Articles');
 		$this->template->set_partial('top_tools', 'top_tools');
 		$this->template->set_partial('post_tools', 'post_tools');
-		$this->template->build('gallery');
+		
+		// unless you're making a huge view you can live with output buffers
+		ob_start();
+		?>
+
+		<h1>Welcome to the articles section!</h1>
+		
+		<?php
+		$this->template->set('content', ob_get_clean());
+		
+		$this->template->build('plugin');
 	}
 
 

@@ -7,11 +7,26 @@ class Plugins extends CI_Model
 {
 
 	var $_controller_uris = array();
-
+	//var $viewdata = array();
 
 	function __construct()
 	{
 		parent::__construct();
+	}
+	
+	/**
+	 * We're dealing with making plugins that play well with controllers
+	 * and we need Arrays to work properly. Without this $this->var[] = $data
+	 * wouldn't work if $this->var is set in the controller
+	 * Example: $this->viewdata['controller_title'] = $title; would fail  
+	 *
+	 * 
+	 * @param string $key
+	 */
+	function &__get($key)
+	{
+		$CI =& get_instance();
+		return $CI->$key;
 	}
 
 
@@ -135,8 +150,8 @@ class Plugins extends CI_Model
 			{
 				require_once 'content/plugins/' . $slug . '/' . $slug . '.php';
 				$this->$slug = new $slug();
-				
-				if(method_exists($this->$slug, 'initialize_plugin'))
+
+				if (method_exists($this->$slug, 'initialize_plugin'))
 				{
 					$this->$slug->initialize_plugin();
 				}
@@ -232,7 +247,8 @@ class Plugins extends CI_Model
 				}
 				else
 				{
-					log_message('error', 'Couldn\'t find upgrade method in plugin: ' . $update_method);
+					log_message('error',
+						'Couldn\'t find upgrade method in plugin: ' . $update_method);
 					return array('error', 'upgrade_method_not_found');
 					$done = TRUE;
 					break;
@@ -250,7 +266,7 @@ class Plugins extends CI_Model
 				$done = TRUE;
 			}
 		}
-		
+
 		return TRUE;
 	}
 
@@ -266,34 +282,34 @@ class Plugins extends CI_Model
 		// codeigniter $this->uri->rsegment_uri sends weird indexes in the array with 1+ start
 		// this reindexes the array
 		$uri_array = array_values($uri_array);
-		/*echo '<pre>';
-		print_r($uri_array);
-		print_r($this->_controller_uris);
-		echo '</pre>';*/
-		foreach($this->_controller_uris as $item)
+		/* echo '<pre>';
+		  print_r($uri_array);
+		  print_r($this->_controller_uris);
+		  echo '</pre>'; */
+		foreach ($this->_controller_uris as $item)
 		{
 			// it must be contained by the entire URI
-			foreach($item['uri_array'] as $key => $chunk)
+			foreach ($item['uri_array'] as $key => $chunk)
 			{
-				if(($chunk != $uri_array[$key] && $chunk != '(:any)') ||
+				if (($chunk != $uri_array[$key] && $chunk != '(:any)') ||
 					(count($item['uri_array']) > count($uri_array))
-					)
+				)
 				{
 					break;
 				}
-				
+
 				// we've gone over the select URI, the plugin activates
-				if($key == count($uri_array) - 1)
+				if ($key == count($uri_array) - 1)
 				{
 					return $item;
 				}
 			}
 		}
-		
+
 		return FALSE;
 	}
 
-	
+
 	/**
 	 * Send an array, if shorter than the URI it will trigger the class method requested
 	 * 

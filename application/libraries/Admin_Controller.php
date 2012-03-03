@@ -6,7 +6,6 @@ if (!defined('BASEPATH'))
 class Admin_Controller extends MY_Controller
 {
 
-	var $viewdata = array();
 	
 	public function __construct()
 	{
@@ -36,8 +35,8 @@ class Admin_Controller extends MY_Controller
 			$this->cron();
 		}
 	}
-
-
+	
+	
 	/*
 	 * Non-dynamic sidebar array.
 	 * Permissions are set inside

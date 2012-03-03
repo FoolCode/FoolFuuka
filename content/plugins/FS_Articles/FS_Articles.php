@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
@@ -12,8 +11,8 @@ class FS_Articles extends Plugins
 	 * you will have to edit to match
 	 */
 
-	//var $viewdata; // make your life easier for admin pages
-	
+
+
 	function __construct()
 	{
 		// KEEP THIS EMPTY, use the initialize_plugin method instead
@@ -21,55 +20,55 @@ class FS_Articles extends Plugins
 		parent::__construct();
 	}
 
-
-	/**
+	/*
 	 * We leave the install, update, remove, enable, disable functions on 
 	 * bottom of this file
 	 */
+
+
 	function initialize_plugin()
 	{
-		$this->plugins->register_controller_function($this, array('admin', 'articles'),
-			'manage');
-		$this->plugins->register_controller_function($this, array('admin', 'articles', 'manage'),
-			'manage');
-		
-		$this->plugins->register_controller_function($this, array('chan', '(:any)', 'articles'),
-			'article');
-		$this->plugins->register_controller_function($this, array('chan', '(:any)', 'articles', '(:any)'),
-			'article');
+		$this->plugins->register_controller_function($this,
+			array('admin', 'articles'), 'manage');
+		$this->plugins->register_controller_function($this,
+			array('admin', 'articles', 'manage'), 'manage');
+
+		$this->plugins->register_controller_function($this,
+			array('chan', '(:any)', 'articles'), 'article');
+		$this->plugins->register_controller_function($this,
+			array('chan', '(:any)', 'articles', '(:any)'), 'article');
 	}
 
+	
 
 	function manage()
 	{
-		// for some functions you will need the ACTUAL controller variable
-		$CI = & get_instance();
-		
-		$CI->viewdata['controller_title'] = '<a href="'.site_url("admin/articles/manage").'">' . _("Articles") . '</a>';
-		$CI->viewdata['function_title'] = _('Manage');
-		
+		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/articles/manage") . '">' . _("Articles") . '</a>';
+		$this->viewdata['function_title'] = _('Manage');
+
 		$data['content'] = "HELLO WORLD!";
-		$CI->viewdata["main_content_view"] = $this->load->view("admin/plugin.php", $data, TRUE);
-		$this->load->view("admin/default.php", $CI->viewdata);
+		$this->viewdata["main_content_view"] = $this->load->view("admin/plugin.php",
+			$data, TRUE);
+		$this->load->view("admin/default.php", $this->viewdata);
 	}
-	
-	
+
+
 	function article()
 	{
 		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
 		$this->template->set('section_title', 'Articles');
 		$this->template->set_partial('top_tools', 'top_tools');
 		$this->template->set_partial('post_tools', 'post_tools');
-		
+
 		// unless you're making a huge view you can live with output buffers
 		ob_start();
 		?>
 
 		<h1>Welcome to the articles section!</h1>
-		
+
 		<?php
 		$this->template->set('content', ob_get_clean());
-		
+
 		$this->template->build('plugin');
 	}
 

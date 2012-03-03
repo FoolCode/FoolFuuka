@@ -15,13 +15,40 @@ class FS_Articles extends Plugins
 
 	function __construct()
 	{
+		// KEEP THIS EMPTY, use the initialize_plugin method instead
+
 		parent::__construct();
 	}
+
 
 	/**
 	 * We leave the install, update, remove, enable, disable functions on 
 	 * bottom of this file
 	 */
+	function initialize_plugin()
+	{
+		$this->plugins->register_controller_function($this, array('articles'),
+			'manage');
+		
+		$this->plugins->register_controller_function($this, array('chan', '(:any)', 'articles'),
+			'article');
+	}
+
+
+	function manage()
+	{
+		echo 'here yep';
+	}
+	
+	
+	function article()
+	{
+		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
+		$this->template->set('section_title', 'Articles');
+		$this->template->set_partial('top_tools', 'top_tools');
+		$this->template->set_partial('post_tools', 'post_tools');
+		$this->template->build('gallery');
+	}
 
 
 	/**
@@ -101,15 +128,16 @@ class FS_Articles extends Plugins
 	    ");
 	}
 
-
 	/**
 	 * If any upgrade is necessary, use this format. Update checks are
 	 * performed every time the version of the plugin is changed.
 	 */
-	function upgrade_001()
-	{
-		
-	}
+	/*
+	  function upgrade_001()
+	  {
+
+	  }
+	 */
 
 
 	/**

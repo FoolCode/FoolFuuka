@@ -23,7 +23,10 @@ class MY_Controller extends CI_Controller
 			$this->load->database();
 			$this->load->library('session');
 			$this->load->library('tank_auth');
+
+			// plugin system as early we can without losing on security
 			$this->load->model('plugins');
+			$this->plugins->load_plugins();
 
 			// loads variables from database for get_setting()
 			load_settings();
@@ -94,18 +97,31 @@ class MY_Controller extends CI_Controller
 			// don't let people go directly to the plugin system
 			show_404();
 		}
-			
-		if($this->plugins->is_controller_function($method, $params))
-		{
-			
-		}
+		echo $method;
+
+			$radix = $this->radix->set_selected_by_shortname($method);
 		
+		if($radix)
+		{
+			// it's a radix (board)
+			array_unshift($params, 'chan', $method);
+		}
+		/*
+		if ($this->plugins->is_controller_function($this->uri->uri_string()))
+		{
+			$plugin_controller = $this->plugins->get_controller_function($this->uri->uri_string());
+
+			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']),
+					array());
+		}
+		*/
 		if (method_exists($this, $method))
 		{
 			return call_user_func_array(array($this, $method), $params);
 		}
 		show_404();
 	}
+
 
 	/**
 	 * Controller for cron triggered by any visit

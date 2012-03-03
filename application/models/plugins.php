@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Plugins extends CI_Model
 {
 
-	var $_controller_functions;
+	var $_controller_uris = array();
 
 
 	function __construct()
@@ -135,6 +135,11 @@ class Plugins extends CI_Model
 			{
 				require_once 'content/plugins/' . $slug . '/' . $slug . '.php';
 				$this->$slug = new $slug();
+				
+				if(method_exists($this->$slug, 'initialize_plugin'))
+				{
+					$this->$slug->initialize_plugin();
+				}
 			}
 			else
 			{
@@ -154,7 +159,7 @@ class Plugins extends CI_Model
 		',
 			array($slug));
 
-		$this->update($slug);
+		$this->upgrade($slug);
 
 		return $this->get_by_slug($slug);
 	}
@@ -181,7 +186,7 @@ class Plugins extends CI_Model
 	}
 
 
-	function update($slug)
+	function upgrade($slug)
 	{
 		$plugin = $this->get_by_slug($slug);
 
@@ -250,21 +255,49 @@ class Plugins extends CI_Model
 	}
 
 
-	function get_controller_functions()
+	function get_controller_function($uri)
 	{
-		return $this->_controller_functions;
+		return $this->is_controller_function($uri);
 	}
 
 
-	function is_controller_function($controller_name, $function_name = array())
+	function is_controller_function($uri_array)
 	{
+		// codeigniter $this->uri->rsegment_uri sends weird indexes in the array with 1+ start
+		// this reindexes the array
+		$uri_array = array_values($uri_array);
+		
+		foreach($this->_controller_uris as $item)
+		{	
+			// it must be contained by the entire URI
+			foreach($item['uri_array'] as $key => $chunk)
+			{
+				if($chunk != $uri_array[$key] && $chunk != '(:any)')
+				{
+					break;
+				}
+				
+				// we've gone over the select URI, the plugin activates
+				if($key == count($uri_array) - 1)
+				{
+					return $item;
+				}
+			}
+		}
+		
 		return FALSE;
 	}
 
-
-	function add_controller_function($controller_name, $function_name)
+	
+	/**
+	 * Send an array, if shorter than the URI it will trigger the class method requested
+	 * 
+	 * @param type $controller_name
+	 * @param type $method 
+	 */
+	function register_controller_function(&$class, $uri_array, $method)
 	{
-		$this->_controller_functions[$controller_name][] = $function_name;
+		$this->_controller_uris[] = array('uri_array' => $uri_array, 'plugin' => $class, 'method' => $method);
 	}
 
 }

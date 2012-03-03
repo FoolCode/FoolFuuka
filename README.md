@@ -1,50 +1,56 @@
 FoOlFuuka
 =========
 
-FoOlFuuka is a modern PHP imageboard based on Ellislabs' CodeIgniter and our FoOlSlide framework.
-
-While keeping the traditional format of an imageboard, it introduces several enhancements like a more graphic
-administration panel, HTML5, automatic spam control, friendlier reporting tools and so on.
-
-[Fuuka](http://code.google.com/p/fuuka/) was originally a 4chan archiver, and with FoOlFuuka we're respecting the tradition.
-FoOlFuuka still allows ghostposting, as well as giving admin controls and possibility to enable image posting.
+__Notice: FoOlFuuka is not yet ready to be installed__
 
 
-ATTENTION
-=========
-We are still developing this application. It won't work without our customizations, so don't try installing it yet.
+About
+-----
 
-Installation
+FoOlFuuka is an imageboard written in PHP and based on the CodeIgniter framework.
+
+Unlike most imageboards, it is built like a CMS and looks modern.
+
+FoOlFuuka also works as frontend for the original [Fuuka](http://code.google.com/p/fuuka/) that automatically archives the 4chan boards. All the features from Fuuka's interface have been reimplemented and the original interface has been cloned as a separate theme.
+
+Features
+--------
+
+* Support for both archives and regular imageboards
+* Modern "Default" theme and classic "Fuuka" theme
+* Real time threads, quick reply, on-hover backlinks
+* Sorting by latest posts, latest threads, gallery
+* Search with several filters (Sphinx-search compatible)
+* Find similar images internally, search with external services
+* Report buttons, report management system in admin panel
+* Transparent thumbnails and GIF mostly correctly handled
+* Statistics for posting rates, postcounts etc.
+* Admin panel to manage boards, check server status, manage staff etc.
+* APIs for connecting to external services
+* Cron
+* More nice things that you won't like because you don't like nice things
+
+Requirements
 ------------
-1.  Copy everything in the archive in a public server folder
-2.  Create a MySQL database
-3.  Go to http://yourdomain.com/fuukafolder/install
-4.  Insert database info and admin account info
-5.  Create a new board and follow the instructions
 
-Adapting from Fuuka
--------------------
-FoOlFuuka is able to cohexist with the original Fuuka. All you have to do is pointing FoOlFuuka to the original Fuuka through the admin panel preferences.
+The requirements of FoOlFuuka are relatively high if you want the most out of it. This really means improved security rather than more features, which means you really should have the suggested versions.
 
-We've made a table change. The _local tables are not needed anymore, but we keep filling them for backward compatibility.
+* PHP 5.2, __PHP 5.3.10+ suggested__
+* MySQL 5, __MySQL 5.5 suggested__
 
-You need the doc_id columns at the beginning of the board table from Fuuka r70.
+FoOlFuuka is really light, and will run on any server meeting the requirements. Your first worry will be rather bandwidth and hard disk space.
 
-You will also need a poster_id column at the beginning of the table. It's a simple INT(10) column, NULL not allowed.
+Unlike other imageboards, FoOlFuuka keeps the threads stored forever, which means load will rise (extremely slowly) over time. This is mostly due to the MySQL fulltext search not having good performance.
 
-Fetcher
--------
-At this time we are still coding the Java fetcher for FoOlFuuka. The perl fetcher for Fuuka still works, but you need to make a change on line 416 of /Board/Mysql.pm and replace with
+Optional
+--------
 
-	sprintf "(0, NULL, %u,$location,%u,%u,%s,%d,%d,%s,%d,%d,%d,%s,%s,%d,%d,%s,%s,%s,%s,%s,%s,%s)",
+* Sphinx-search: blazing fast search, but needs lots of extra resources (RAM and HD space). Suggested for imageboards with several millions of posts.
 
-We added a zero for the poster_id not to throw a MySQL error.
+Using with Fuuka Fetcher
+------------------------
 
+FoOlFuuka can be used for the archival of 4chan imageboards.
 
-Troubleshooting
----------------
+Just compile the needed fields in the admin panel to connect to the separate database tables and folders.
 
-* If you are on an Nginx server, follow this [link](http://trac.foolrulez.com/foolslide/wiki/nginx_install)
-* If you are on an Apache server and you can't reach "/install", follow this [link](http://trac.foolrulez.com/foolslide/wiki/apache_htaccess)
-* No, there's no physical "/install" folder to upload. It will still work in your browser.
-* In case, come looking for help on the [trac](http://trac.foolrulez.com/foolslide), where you can use the ticket system to expose your problem

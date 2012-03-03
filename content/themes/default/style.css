@@ -164,6 +164,24 @@ article.thread {
 	overflow:hidden;
 }
 
+article.thread time {
+    font-family:monospace;
+    font-size:12px;
+}
+
+article.thread .time_wrap .hidden_time {
+    display:none;
+}
+
+article.thread .time_wrap:hover .hidden_time {
+    display:inline;
+}
+
+article.thread .time_wrap:hover .show_time {
+    display:none;
+}
+
+
 article.thread > header {
 	overflow:hidden;
 }

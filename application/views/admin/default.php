@@ -54,8 +54,11 @@ if (!defined('BASEPATH'))
 						?>
 					</div>
 
+
 					<?php echo $main_content_view; ?>
-					<footer style="clear:both">
+
+
+					<footer class="footer">
 						<p style="padding-left: 20px;">FoOlSlide Version <?php
 					if (isset($this->tank_auth))
 					{

@@ -435,7 +435,7 @@ class Theme_Controller
 	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
 	public function search()
 	{
-		$modifiers = array('text', 'username', 'tripcode', 'deleted', 'ghost', 'filter', 'order', 'page');
+		$modifiers = array('text', 'subject', 'username', 'tripcode', 'deleted', 'ghost', 'filter', 'order', 'page');
 		if ($this->CI->input->post())
 		{
 			$redirect_array = array(get_selected_radix()->shortname, 'search');
@@ -452,6 +452,16 @@ class Theme_Controller
 		}
 		$search = $this->CI->uri->ruri_to_assoc(2, $modifiers);
 		$result = $this->CI->post->get_search(get_selected_radix(), $search);
+
+		if (isset($result['error']))
+		{
+			$this->CI->template->title(_('Error'));
+			$this->CI->template->set('error', $result['error']);
+			$this->CI->template->set_partial('top_tools', 'top_tools', array('search' => $search));
+			$this->CI->template->set_partial('post_tools', 'post_tools');
+			$this->CI->template->build('error');
+			return FALSE;
+		}
 
 		$title = array();
 		if ($search['text'])

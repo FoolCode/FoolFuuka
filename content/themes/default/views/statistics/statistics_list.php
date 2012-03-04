@@ -2,6 +2,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
+
 <nav style="margin-top:20px;">
 	<ul>
 		<?php foreach ($stats_list as $key => $stat) : ?>

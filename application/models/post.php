@@ -819,20 +819,23 @@ class Post extends CI_Model
 
 		if ($board->sphinx && ($search['subject'] || $search['username'] || $search['tripcode'] || $search['text']))
 		{
+			/**
+			 * Establish connection to SphinxQL via MySQL Library.
+			 */
+			$this->load->library('SphinxQL');
+			$this->sphinxql->SetServer(
+				get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : '127.0.0.1',
+				get_setting('fs_sphinx_port') ? get_setting('fs_sphinx_port') : 9306
+			);
+
+			/**
+			 * Set default empty variables to store query information for SphinxQL.
+			 */
 			$match = array();
 			$where = array();
 
 			/*
-			 * SPHINXQL CONNECTION
-			 */
-
-			$this->load->library('SphinxQL');
-			$this->sphinxql->SetServer(
-				get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : '127.0.0.1', get_setting('fs_sphinx_port') ? get_setting('fs_sphinx_port') : 9306
-			);
-
-			/*
-			 * FULLTEXT MATCH
+			 * Generate FULLTEXT query with $match array.
 			 */
 			if ($search['subject'])
 			{
@@ -861,7 +864,7 @@ class Post extends CI_Model
 			}
 
 			/*
-			 * WHERE CONDITIONS
+			 * Generate FILTER conditions for SphinxQL query with $where array.
 			 */
 			if ($search['deleted'] == "deleted")
 			{
@@ -881,6 +884,9 @@ class Post extends CI_Model
 			}
 			if ($search['filter'] != "")
 			{
+				/**
+				 * Expand the filter parameter and apply further filters provided.
+				 */
 				$filters = explode('-', $search['filter']);
 				unset($search['filter']);
 
@@ -889,6 +895,9 @@ class Post extends CI_Model
 					$search['filter'][$value] = TRUE;
 				}
 
+				/**
+				 * Handle the filtering of capcode with semi-complex array manipulation.
+				 */
 				if (!empty($search['filter']['user']) || !empty($search['filter']['mod']) || !empty($search['filter']['admin']))
 				{
 					$where['cap'] = array();
@@ -931,8 +940,8 @@ class Post extends CI_Model
 				}
 			}
 
-			/*
-			 * QUERY SPHINXQL
+			/**
+			 * Query SphinxQL with our search parameters generated above.
 			 */
 			$search_result = $this->sphinxql->Query('
 				SELECT *
@@ -941,7 +950,7 @@ class Post extends CI_Model
 					' . ((!empty($CONDITIONS)) ? 'AND ' . implode(' AND ', $CONDITIONS) : '') . '
 				ORDER BY timestamp ' . (($search['order'] == 'asc') ? 'ASC' : 'DESC') . '
 				LIMIT ' . (($search['page'] * 25) - 25) . ', 25
-				OPTION max_matches = 5000, reverse_scan = ' . (($search['order'] == 'asc') ? 0 : 1 ) . '
+				OPTION max_matches = 5000
 			');
 
 			if (empty($search_result['matches']))
@@ -950,7 +959,7 @@ class Post extends CI_Model
 			}
 
 			/*
-			 * QUERY MYSQL
+			 * Query MySQL for full records.
 			 */
 			$sql = array();
 			foreach ($search_result['matches'] as $key => $matches)
@@ -981,25 +990,30 @@ class Post extends CI_Model
 			$query = $this->db->query($sql);
 			$total = $search_result['total_found'];
 		}
-		else // MySQL for both empty searchs AND non-sphinx indexed boards
+		else /* Use MySQL for both empty searches and non-sphinx indexed boards. */
 		{
-			$field = array(); $value = array(); $index = array();
+			/**
+			 * Set default empty variables to store query information for MySQL.
+			 */
+			$field = array();
+			$value = array();
+			$index = array();
 
 			if ($search['subject'])
 			{
 				array_push($field, 'title LIKE ?');
-				array_push($value, $search['subject']);
+				array_push($value, urldecode($search['subject']));
 			}
 			if ($search['username'])
 			{
 				array_push($field, 'name = ?');
-				array_push($value, $search['username']);
+				array_push($value, urldecode($search['username']));
 				array_push($index, 'name_index');
 			}
 			if ($search['tripcode'])
 			{
 				array_push($field, 'trip = ?');
-				array_push($value, $search['tripcode']);
+				array_push($value, urldecode($search['tripcode']));
 				array_push($index, 'trip_index');
 
 			}
@@ -1011,9 +1025,8 @@ class Post extends CI_Model
 				}
 
 				array_push($field, 'comment LIKE ?');
-				array_push($value, $search['text']);
+				array_push($value, urldecode($search['text']));
 			}
-
 
 			if ($search['deleted'] == "deleted")
 			{
@@ -1108,8 +1121,8 @@ class Post extends CI_Model
 			$total = $found[0]->total_found;
 		}
 
-		/*
-		 * PROCESS AND FORMAT
+		/**
+		 * Process all results and format the posts for display.
 		 */
 		foreach ($query->result() as $post)
 		{

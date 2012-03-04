@@ -1,189 +1,73 @@
-<!DOCTYPE html>
+<?php
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
+?><!DOCTYPE html>
 <html>
 	<head>
 		<title><?php echo get_setting('fs_gen_site_title'); ?> <?php echo _('Control Panel') ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap/style.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/admin/style.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
-		<style type="text/css">
-			body {
-				padding-top: 60px;
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/admin/admin.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
 		<script type="text/javascript" src="<?php echo site_url() ?>assets/js/jquery.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
-		<script type="text/javascript" src="<?php echo site_url() ?>assets/bootstrap/bootstrap.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
-		<script type="text/javascript">
-			function slideDown(item) { jQuery(item).slideDown(); }
-			function slideUp(item) { jQuery(item).slideUp(); }
-			function slideToggle(item) { jQuery(item).slideToggle(); }
-			
-			function confirmPlug(href, text, item, func)
-			{
-				if (text != "") {
-					var modalContainer = jQuery("#modal-container");
-					modalContainer.modal({show: true, closeOnEscape: true, backdrop: 'static', keyboard: true});
-					modalContainer.find("#modal-text-desc").html(text);
-					modalContainer.find("#modal-btn-no").click(function() {
-						modalContainer.modal('hide');
-						return false;
-					});
-					modalContainer.find("#modal-btn-yes").attr('href', href).click(function(e) {
-						if(func instanceof Function)
-						{
-							e.preventDefault();
-							modalContainer.modal('hide');
-							func();
-							return false;
-						}
-						
-						modalContainer.find("#modal-loading").show();
-						jQuery.post(href, function(result) {
-							modalContainer.find("#modal-loading").hide();
-							if (location.href == result.href) window.location.reload(true);
-							location.href = result.href;
-						}, 'json');
-						return false;
-					}).focus();
-				}
-				else {
-					jQuery.post(href, function(result) {
-						if (location.href == result.href) window.location.reload(true);
-						location.href = result.href;
-					}, 'json');
-				}
-			}
-			
-			function addField(e)
-			{
-				if (jQuery(e).val().length > 0)
-				{
-					jQuery(e).clone().val('').insertAfter(e);
-					jQuery(e).after('<br/>');
-					jQuery(e).attr('onKeyUp', '');
-					jQuery(e).attr('onChange', '');
-				}
-			}
-			
-			jQuery(document).ready(function() {
-<?php
-$CI = & get_instance();
-if ($CI->agent->is_browser('MSIE'))
-{
-	?>
-							jQuery('[placeholder]').focus(function() {
-								var input = jQuery(this);
-								if (input.val() == input.attr('placeholder'))
-								{
-									input.val('');
-									input.removeClass('placeholder');
-								}
-							}).blur(function() {
-								var input = jQuery(this);
-								if (input.val() == '' || input.val() == input.attr('placeholder'))
-								{
-									input.addClass('placeholder');
-									input.val(input.attr('placeholder'));
-								}
-							}).blur().parents('forms').submit(function() {
-								jQuery(this).find('[placeholder]').each(function() {
-									var input = jQuery(this);
-									if (input.val() == input.attr('placeholder')) {
-										input.val('');
-									}
-								})
-							});
-<?php } ?>
-
-						jQuery(":input:first").focus();
-				
-						jQuery("a[rel=twipsy]").twipsy({ live: true });
-						jQuery("a[rel^='popover']").each(function() {
-							var direction = $(this).attr('rel').replace("popover-", "");
-							$(this).popover({ offset: 10, placement: direction, html: true });
-						});
-					});
-		</script>
+		<script type="text/javascript" src="<?php echo site_url() ?>assets/bootstrap2/js/bootstrap.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
+		<script type="text/javascript" src="<?php echo site_url() ?>assets/admin/admin.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
 		<script type="text/javascript">jQuery().alert();</script>
 	</head>
 
 	<body>
-		<div class="topbar" data-dropdown="dropdown">
-			<div class="topbar-inner">
-				<div class="container-fluid">
-					<a class="brand" href="<?php echo site_url('admin') ?>"><?php echo get_setting('fs_gen_site_title'); ?> - <?php echo _('Control Panel'); ?></a>
-					<ul class="nav secondary-nav">
-						<li><a href="<?php echo site_url(); ?>">
-								<?php echo _("Boards") ?></a></li>
-						<?php if ((isset($this->tank_auth) && $this->tank_auth->is_allowed()) || (isset($this->tank_auth) && $this->tank_auth->is_logged_in()))
-						{ ?>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle"><?php echo $this->tank_auth->get_username(); ?></a>
-								<ul class="dropdown-menu">
-									<?php if (isset($this->tank_auth) && $this->tank_auth->is_allowed())
-									{ ?><li><a href="<?php echo site_url('account'); ?>">
-												<?php echo _("Your Profile") ?></a></li>
-									<?php } ?>
-									<?php if (isset($this->tank_auth) && $this->tank_auth->is_logged_in())
-									{ ?><li><a href="<?php echo site_url('/account/auth/logout'); ?>">
-												<?php echo _("Logout") ?></a></li>
-									<?php } ?>
-								</ul>
-							</li>
-						<?php } ?>
-					</ul>
-				</div>
-			</div>
-		</div>
+
+		<?php echo $topbar; ?>
 
 		<div class="container-fluid">
-			<div class="sidebar">
-				<div class="well">
+			<div class="row-fluid">
+				<div class="span2">
 					<?php echo $sidebar ?>
 				</div>
-			</div>
 
-			<div class="content">
-				<ul class="breadcrumb">
-					<?php
-					echo '<li>' . $controller_title . '</li>';
-					if (isset($function_title))
-						echo ' <span class="divider">/</span> <li>' . $function_title . '</li>';
-					if (isset($extra_title) && !empty($extra_title))
-					{
-						$breadcrumbs = count($extra_title);
-						$count = 1;
-						foreach ($extra_title as $item)
+
+				<div class="span10">
+					<ul class="breadcrumb">
+						<?php
+						echo '<li>' . $controller_title . '</li>';
+						if (isset($function_title))
+							echo ' <span class="divider">/</span> <li>' . $function_title . '</li>';
+						if (isset($extra_title) && !empty($extra_title))
 						{
-							echo ' <span class="divider">/</span> ';
-							if ($count == $breadcrumbs)
-								echo '<li class="active">' . $item . '</li>';
-							else
-								echo '<li>' . $item . '</li>';
+							$breadcrumbs = count($extra_title);
+							$count = 1;
+							foreach ($extra_title as $item)
+							{
+								echo ' <span class="divider">/</span> ';
+								if ($count == $breadcrumbs)
+									echo '<li class="active">' . $item . '</li>';
+								else
+									echo '<li>' . $item . '</li>';
+							}
 						}
-					}
-					?>
-				</ul>
+						?>
+					</ul>
 
-				<div class="alerts">
-					<?php
+					<div class="alerts">
+						<?php
 						echo get_notices();
-					?>
-				</div>
+						?>
+					</div>
 
-<?php echo $main_content_view; ?>
-				<footer style="clear:both">
-			<p style="padding-left: 20px;">FoOlSlide Version <?php
-if (isset($this->tank_auth))
-{
-	echo FOOLSLIDE_VERSION;
-	if ($this->tank_auth->is_admin() && (FOOLSLIDE_VERSION != get_setting('fs_cron_autoupgrade_version') && (get_setting('fs_cron_autoupgrade_version'))))
-		echo ' – <a href="' . site_url('admin/system/upgrade/') . '">' . _('New upgrade available:') . ' ' . get_setting('fs_cron_autoupgrade_version') . '</a>';
-}
-?></p>
-		</footer>
+					<?php echo $main_content_view; ?>
+					<footer style="clear:both">
+						<p style="padding-left: 20px;">FoOlSlide Version <?php
+					if (isset($this->tank_auth))
+					{
+						echo FOOLSLIDE_VERSION;
+						if ($this->tank_auth->is_admin() && (FOOLSLIDE_VERSION != get_setting('fs_cron_autoupgrade_version') && (get_setting('fs_cron_autoupgrade_version'))))
+							echo ' – <a href="' . site_url('admin/system/upgrade/') . '">' . _('New upgrade available:') . ' ' . get_setting('fs_cron_autoupgrade_version') . '</a>';
+					}
+					?></p>
+					</footer>
+				</div>
+				<div style="clear:both"></div>
 			</div>
-			<div style="clear:both"></div>
 		</div>
 
 

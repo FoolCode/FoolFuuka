@@ -5,6 +5,8 @@ if (!defined('BASEPATH'))
 
 class Admin_Controller extends MY_Controller
 {
+
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -16,6 +18,8 @@ class Admin_Controller extends MY_Controller
 		}
 		$this->tank_auth->is_allowed() or show_404();
 
+		$this->load->library('datamapper');
+		
 		$this->viewdata["sidebar"] = $this->sidebar();
 
 		// Check if the database is upgraded to the the latest available
@@ -31,8 +35,8 @@ class Admin_Controller extends MY_Controller
 			$this->cron();
 		}
 	}
-
-
+	
+	
 	/*
 	 * Non-dynamic sidebar array.
 	 * Permissions are set inside
@@ -101,6 +105,15 @@ class Admin_Controller extends MY_Controller
 				"preferences" => array("level" => "admin", "name" => _("Preferences") . ' <span class="label notice">' . _('New') . '</span>', "icon" => 149),
 				"tools" => array("level" => "admin", "name" => _("Tools") . ' <span class="label notice">' . _('New') . '</span>', "icon" => 351),
 				"upgrade" => array("level" => "admin", "name" => _("Upgrade") . ((get_setting('fs_cron_autoupgrade_version') && version_compare(FOOLSLIDE_VERSION, get_setting('fs_cron_autoupgrade_version')) < 0) ? ' <span class="label success">' . _('New') . '</span>' : ''), "icon" => 353),
+			)
+		);
+		
+		$sidebar["plugins"] = array("name" => _("Plugins"),
+			"level" => "admin",
+			"default" => "manage",
+			"icon" => 255,
+			"content" => array(
+				"manage" => array("level" => "admin", "name" => _("Manage"), "icon" => 121),
 			)
 		);
 
@@ -200,7 +213,7 @@ class Admin_Controller extends MY_Controller
 				// if a version is outputted, save the new version number in database
 				if ($versions[0])
 				{
-					$this->db->update('preferences', array('value' => $versions[0]->version . '.' . $versions[0]->subversion . '.' . $versions[0]->subsubversion), array('name' => 'fs_cron_autoupgrade_version'));
+					$this->db->update('preferences', array('value' => $versions[0]->name), array('name' => 'fs_cron_autoupgrade_version'));
 				}
 
 				// remove one week old logs

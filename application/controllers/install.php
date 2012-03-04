@@ -308,7 +308,7 @@ class Install extends Install_Controller
 	{
 		$prob = FALSE;
 
-		if (version_compare(phpversion(), '5.2.0') < 0)
+		if (version_compare(phpversion(), FOOLSLIDE_REQUIREMENT_PHP) < 0)
 		{
 			set_notice('error', _('You need at least PHP version 5.2.0 to run ' . FOOLSLIDE_NAME . '. This means you have a many years old version. It is suggested to upgrade to a more recent version of PHP to avoid security issues with your server in general.'));
 			$prob = TRUE;

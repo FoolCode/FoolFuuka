@@ -165,8 +165,6 @@ article.thread {
 }
 
 article.thread time {
-    font-family:monospace;
-    font-size:12px;
 }
 
 article.thread .time_wrap .hidden_time {

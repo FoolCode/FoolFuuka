@@ -3,8 +3,11 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
+
 class MY_Controller extends CI_Controller
 {
+
+
 	function __construct()
 	{
 		parent::__construct();
@@ -17,18 +20,20 @@ class MY_Controller extends CI_Controller
 		else
 		{
 			//$this->output->enable_profiler(TRUE);
-
 			$this->load->database();
 			$this->load->library('session');
-			$this->load->library('datamapper');
 			$this->load->library('tank_auth');
+
+			// plugin system as early we can without losing on security
+			$this->load->model('plugins');
+			$this->plugins->load_plugins();
 
 			// loads variables from database for get_setting()
 			load_settings();
 
 			// load the radixes (boards)
 			$this->load->model('radix');
-			
+
 			// create an array for the set_notice system
 			$this->notices = array();
 			$this->flash_notice_data = array();
@@ -58,7 +63,8 @@ class MY_Controller extends CI_Controller
 			// a good time to change some of the defauly settings dynamically
 			$this->config->config['tank_auth']['allow_registration'] = !get_setting('fs_reg_disabled');
 
-			$this->config->config['tank_auth']['email_activation'] = ((get_setting('fs_reg_email_disabled')) ? FALSE : TRUE);
+			$this->config->config['tank_auth']['email_activation'] = ((get_setting('fs_reg_email_disabled'))
+						? FALSE : TRUE);
 
 			$captcha_public = get_setting('fs_reg_recaptcha_public');
 			if ($captcha_public != "")
@@ -77,7 +83,38 @@ class MY_Controller extends CI_Controller
 	}
 
 
-	/*
+	/**
+	 * Alternative remap function that works with the plugin system
+	 * 
+	 * @param string $method
+	 * @param type $params
+	 * @return type 
+	 */
+	public function _remap($method, $params = array())
+	{
+		if ($method == 'plugin')
+		{
+			// don't let people go directly to the plugin system
+			show_404();
+		}
+
+		if ($this->plugins->is_controller_function($this->uri->segment_array()))
+		{
+			$plugin_controller = $this->plugins->get_controller_function($this->uri->segment_array());
+
+			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']),
+					array());
+		}
+		
+		if (method_exists($this, $method))
+		{
+			return call_user_func_array(array($this, $method), $params);
+		}
+		show_404();
+	}
+
+
+	/**
 	 * Controller for cron triggered by any visit
 	 * Currently defaulted crons:
 	 * -updates every 13 hours the blocked IPs
@@ -93,11 +130,13 @@ class MY_Controller extends CI_Controller
 		{
 			$this->db->query('
 				INSERT
-				INTO '.$this->db->protect_identifiers('preferences',TRUE).'
+				INTO ' . $this->db->protect_identifiers('preferences',
+					TRUE) . '
 				(name, value) VALUES (?, ?)
 				ON DUPLICATE KEY UPDATE
 				value = VALUES(value)
-			', array('fs_cron_stopforumspam', time()));
+			',
+				array('fs_cron_stopforumspam', time()));
 
 			$url = 'http://www.stopforumspam.com/downloads/listed_ip_90.zip';
 			if (function_exists('curl_init'))
@@ -111,8 +150,10 @@ class MY_Controller extends CI_Controller
 			}
 			if (!$zip)
 			{
-				log_message('error', 'MY_Controller cron(): impossible to get the update from stopforumspam');
-				$this->db->update('preferences', array('value' => time()), array('name' => 'fs_cron_stopforumspam'));
+				log_message('error',
+					'MY_Controller cron(): impossible to get the update from stopforumspam');
+				$this->db->update('preferences', array('value' => time()),
+					array('name' => 'fs_cron_stopforumspam'));
 				return FALSE;
 			}
 
@@ -126,17 +167,18 @@ class MY_Controller extends CI_Controller
 
 			$this->db->truncate('stopforumspam');
 			$ip_array = array();
-			foreach(preg_split("/((\r?\n)|(\r\n?))/", $ip_list) as $line){
-				$ip_array[] = '(INET_ATON('.$this->db->escape($line).'))';
+			foreach (preg_split("/((\r?\n)|(\r\n?))/", $ip_list) as $line)
+			{
+				$ip_array[] = '(INET_ATON(' . $this->db->escape($line) . '))';
 			}
 			$this->db->query('
-				INSERT IGNORE INTO ' . $this->db->protect_identifiers('stopforumspam', TRUE) . '
-				VALUES ' . implode(',',$ip_array).';');
+				INSERT IGNORE INTO ' . $this->db->protect_identifiers('stopforumspam',
+					TRUE) . '
+				VALUES ' . implode(',', $ip_array) . ';');
 
 
 			delete_files('content/cache/stopforumspam/', TRUE);
 		}
 	}
-
 
 }

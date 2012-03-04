@@ -20,7 +20,6 @@ class Statistics extends CI_Model
 		if (get_setting('fs_fuuka_boards_db'))
 		{
 			return $this->table = $this->db->protect_identifiers(get_setting('fs_fuuka_boards_db')) . '.' . $this->db->protect_identifiers($board->shortname);
-			;
 		}
 		return $this->table = $this->db->protect_identifiers('board_' . $board->shortname, TRUE);
 	}
@@ -55,9 +54,9 @@ class Statistics extends CI_Model
 					'grid' => TRUE,
 					'key' => 'left',
 					'plot' => array(
-						"'{{INFILE}}' using 1:2 t 'Posts' lt rgb '#008000' with filledcurve x1",
+						"'{{INFILE}}' using 1:2 t 'Posts'  lt rgb '#008000' with filledcurve x1",
 						"'{{INFILE}}' using 1:3 t 'Images' lt rgb '#0000ff' with filledcurve x1",
-						"'{{INFILE}}' using 1:4 t 'Sages' lt rgb '#ff0000' with filledcurve x1"
+						"'{{INFILE}}' using 1:4 t 'Sages'  lt rgb '#ff0000' with filledcurve x1"
 					)
 				)
 			),
@@ -104,9 +103,9 @@ class Statistics extends CI_Model
 					'boxwidth' => 3600,
 					'style' => 'fill solid border -1',
 					'plot' => array(
-						"'{{INFILE}}' using 1:2 t 'Posts' lt rgb '#008000' with boxes",
+						"'{{INFILE}}' using 1:2 t 'Posts'  lt rgb '#008000' with boxes",
 						"'{{INFILE}}' using 1:3 t 'Images' lt rgb '#0000ff' with boxes",
-						"'{{INFILE}}' using 1:4 t 'Sages' lt rgb '#ff0000' with boxes"
+						"'{{INFILE}}' using 1:4 t 'Sages'  lt rgb '#ff0000' with boxes"
 					)
 				)
 			),
@@ -136,9 +135,9 @@ class Statistics extends CI_Model
 					'grid' => TRUE,
 					'key' => 'left',
 					'plot' => array(
-						"'{{INFILE}}' using 1:2 t 'Posts' lt rgb '#008000' with filledcurve x1",
+						"'{{INFILE}}' using 1:2 t 'Posts'  lt rgb '#008000' with filledcurve x1",
 						"'{{INFILE}}' using 1:3 t 'Images' lt rgb '#0000ff' with filledcurve x1",
-						"'{{INFILE}}' using 1:4 t 'Sages' lt rgb '#ff0000' with filledcurve x1"
+						"'{{INFILE}}' using 1:4 t 'Sages'  lt rgb '#ff0000' with filledcurve x1"
 					)
 				)
 			),
@@ -168,9 +167,9 @@ class Statistics extends CI_Model
 					'grid' => TRUE,
 					'key' => 'left',
 					'plot' => array(
-						"'{{INFILE}}' using 1:4 t 'Anonymous' lt rgb '#008000' with filledcurve x1",
+						"'{{INFILE}}' using 1:4 t 'Anonymous'   lt rgb '#008000' with filledcurve x1",
 						"'{{INFILE}}' using 1:2 t 'Tripfriends' lt rgb '#0000ff' with filledcurve x1",
-						"'{{INFILE}}' using 1:3 t 'Namefags' lt rgb '#ff0000' with filledcurve x1"
+						"'{{INFILE}}' using 1:3 t 'Namefags'    lt rgb '#ff0000' with filledcurve x1"
 					)
 				)
 			),
@@ -261,6 +260,11 @@ class Statistics extends CI_Model
 	}
 
 
+	/**
+	 * Run a cron to update the statistics of all boards.
+	 *
+	 * @param int $id
+	 */
 	function cron($id = NULL)
 	{
 		$boards = new Board();
@@ -268,12 +272,19 @@ class Statistics extends CI_Model
 
 		$available = $this->get_available_stats();
 
+		/**
+		 * Obtain all of the statistics already stored on the database to check for update frequency.
+		 */
 		$stats = $this->db->query('
-			SELECT board_id, name, timestamp
+			SELECT
+				board_id, name, timestamp
 			FROM ' . $this->db->protect_identifiers('statistics', TRUE) . '
 			ORDER BY timestamp DESC
 		');
 
+		/**
+		 * Obtain the list of all statistics enabled.
+		 */
 		$avail = array();
 		foreach ($available as $k => $a)
 		{
@@ -285,42 +296,81 @@ class Statistics extends CI_Model
 			if(!is_null($id) && $id != $board->id)
 				continue;
 
+			/**
+			 * Update all statistics for the specified board or current board.
+			 */
 			echo $board->shortname . ' (' . $board->id . ')' . PHP_EOL;
 			foreach ($available as $k => $a)
 			{
-				echo $k . ' (' . $board->id . ')' . PHP_EOL;
-				$found = FALSE;
+				echo '  ' . $k . ' ';
+				$found = FALSE; $skip = FALSE;
 				foreach ($stats->result() as $r)
 				{
+					/**
+					 * Determine if the statistics already exists or that the information is outdated.
+					 */
 					if ($r->board_id == $board->id && $r->name == $k)
 					{
+						/**
+						 * This statistics report has run once already.
+						 */
 						$found = TRUE;
-						//$r->timestamp >= time() - strtotime($a['frequence']) ||
+
+						/**
+						 * This statistics report has not reached its frequency EOL.
+						 */
+						if ((time() - strtotime($r->timestamp)) <= $a['frequence'])
+						{
+							$skip = TRUE;
+							continue;
+						}
+
+						/**
+						 * This statistics report has another process locked.
+						 */
 						if (!$this->lock_stat($r->board_id, $k, $r->timestamp))
 						{
-							// another process took it up while we were O(n^3)ing!
 							continue;
 						}
 						break;
 					}
 				}
 
+				/**
+				 * This is an extremely rare case; however, this should avoid encountering any
+				 * racing conditions with our cron.
+				 */
 				if ($found === FALSE)
 				{
-					// extremely rare case, let's hope we don't get in a racing condition with this!
 					$this->save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
 				}
-				// we got the lock!
-				$process = 'process_' . $k;
-				$this->db->reconnect();
-				$result = $this->$process($board);
 
-				if (isset($this->stats[$k]['gnuplot']) && is_array($result))
+				/**
+				 * We were able to obtain a LOCK on the statistics report and has already reached the
+				 * targeted frequency time.
+				 */
+				if ($skip === FALSE)
 				{
-					$this->graph_gnuplot($board->shortname, $k, $result);
+					echo '* Processing...';
+					$process = 'process_' . $k;
+					$this->db->reconnect();
+					$result = $this->$process($board);
+
+					/**
+					 * This statistics report generates a graph via GNUPLOT.
+					 */
+					if (isset($this->stats[$k]['gnuplot']) && is_array($result) && !empty($result))
+					{
+						$this->graph_gnuplot($board->shortname, $k, $result);
+					}
+
+					/**
+					 * Save the statistics report in a JSON array.
+					 */
+					$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
 				}
 
-				$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
+				echo PHP_EOL;
 			}
 		}
 	}
@@ -346,7 +396,11 @@ class Statistics extends CI_Model
 	/**
 	 * To avoid really dangerous racing conditions, turn up the timer before starting the update
 	 *
+	 * @param int  $board_id
 	 * @param type $name
+	 * @param date $temp_timestamp
+	 *
+	 * @return boolean
 	 */
 	function lock_stat($board_id, $name, $temp_timestamp)
 	{
@@ -359,6 +413,7 @@ class Statistics extends CI_Model
 
 		if ($this->db->affected_rows() != 1)
 			return FALSE;
+
 		return TRUE;
 	}
 
@@ -380,13 +435,17 @@ class Statistics extends CI_Model
 	function process_availability($board)
 	{
 		$query = $this->db->query('
-				SELECT name,trip,count(num) AS posts,avg(timestamp%86400) AS avg1,std(timestamp%86400) AS std1,
-					(avg((timestamp+43200)%86400)+43200)%86400 avg2,std((timestamp+43200)%86400) AS std2
+				SELECT
+					name, trip, COUNT(num) AS posts,
+					AVG(timestamp%86400) AS avg1,
+					STD(timestamp%86400) AS std1,
+					(AVG((timestamp+43200)%86400)+43200)%86400 avg2,
+					STD((timestamp+43200)%86400) AS std2
 				FROM ' . $this->get_table($board) . '
 				WHERE timestamp > ?
-				GROUP BY name,trip
-				HAVING count(*)>4
-				ORDER BY name,trip
+				GROUP BY name, trip
+				HAVING count(*) > 4
+				ORDER BY name, trip
 		', array(time() - 2592000));
 
 		$array = $query->result_array();
@@ -398,14 +457,14 @@ class Statistics extends CI_Model
 	function process_daily_activity($board)
 	{
 		$query = $this->db->query('
-			SELECT (floor(timestamp/300)%288)*300 AS time, count(*),
-				count(case media_hash when \'\' then NULL else 1 end),
-				count(case email when \'sage\' then 1 else NULL end)
+			SELECT
+				(FLOOR(timestamp/300)%288)*300 AS time, COUNT(*), COUNT(media_hash),
+				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM ' . $this->get_table($board) . '
-			USE index(timestamp_index)
+			USE INDEX(timestamp_index)
 			WHERE timestamp > ?
-			GROUP BY floor(timestamp/300)%288
-			ORDER BY floor(timestamp/300)%288;
+			GROUP BY FLOOR(timestamp/300)%288
+			ORDER BY FLOOR(timestamp/300)%288;
 		', array(time() - 86400));
 
 		$array = $query->result_array();
@@ -417,13 +476,14 @@ class Statistics extends CI_Model
 	function process_daily_activity_archive($board)
 	{
 		$query = $this->db->query('
-			SELECT ((floor(timestamp/3600)%24)*3600)+1800 AS time,
-				count(*), count(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
+			SELECT
+				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(*),
+				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM ' . $this->get_table($board) . '
-			USE index(timestamp_index)
+			USE INDEX(timestamp_index)
 			WHERE timestamp> ? AND subnum != 0
-			GROUP BY floor(timestamp/3600)%24
-			ORDER BY floor(timestamp/3600)%24;
+			GROUP BY FLOOR(timestamp/3600)%24
+			ORDER BY FLOOR(timestamp/3600)%24;
 		', array(time() - 86400));
 
 		$array = $query->result_array();
@@ -435,14 +495,14 @@ class Statistics extends CI_Model
 	function process_daily_activity_hourly($board)
 	{
 		$query = $this->db->query('
-			SELECT ((floor(timestamp/3600)%24)*3600)+1800 AS time, count(*),
-				count(CASE media_hash WHEN \'\' THEN NULL ELSE 1 END),
-				count(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
+			SELECT
+				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(*), COUNT(media_hash),
+				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM ' . $this->get_table($board) . '
-			USE index(timestamp_index)
+			USE INDEX(timestamp_index)
 			WHERE timestamp > ?
-			GROUP BY floor(timestamp/3600)%24
-			ORDER BY floor(timestamp/3600)%24;
+			GROUP BY FLOOR(timestamp/3600)%24
+			ORDER BY FLOOR(timestamp/3600)%24;
 		', array(time() - 86400));
 
 		$array = $query->result_array();
@@ -454,11 +514,12 @@ class Statistics extends CI_Model
 	function process_image_reposts($board)
 	{
 		$query = $this->db->query('
-			SELECT media_hash AS hash, count(media_hash) AS total
+			SELECT
+				media_hash AS hash, COUNT(media_hash) AS total
 			FROM ' . $this->get_table($board) . '
-			WHERE media_hash != \'\'
+			WHERE media_hash IS NOT NULL
 			GROUP BY media_hash
-			ORDER BY count(media_hash) desc
+			ORDER BY COUNT(media_hash) DESC
 			LIMIT 32
 		');
 
@@ -467,25 +528,29 @@ class Statistics extends CI_Model
 		{
 			$sql[] = '
 				(
-					SELECT preview, media_filename, num, subnum, parent, media_hash, count(media_hash) as total
+					SELECT
+						preview, media_filename, num, subnum, parent, media_hash, COUNT(media_hash) as total
 					FROM
-					(
-						SELECT preview, media_filename, preview_w, num, subnum, parent, media_hash
-						FROM ' . $this->get_table($board) . '
-						USE index(media_hash)
-						WHERE media_hash = ' . $this->db->escape($row->hash) . '
-						ORDER BY preview_w DESC
-					) as x
+						(
+							SELECT
+								preview, media_filename, preview_w, num, subnum, parent, media_hash
+							FROM ' . $this->get_table($board) . '
+							USE INDEX(media_hash)
+							WHERE media_hash = ' . $this->db->escape($row->hash) . '
+							ORDER BY preview_w DESC
+						) as x
 				)
 			';
 		}
 		$query->free_result();
 
-		$sql = implode('UNION', $sql) . ' ORDER BY total DESC';
+		$query = $this->db->query('
+			' . implode('UNION', $sql) . '
+			ORDER BY total DESC
+		');
 
-		$query2 = $this->db->query($sql);
-		$array = $query2->result();
-		$query2->free_result();
+		$array = $query->result();
+		$query->free_result();
 		return $array;
 	}
 
@@ -493,11 +558,11 @@ class Statistics extends CI_Model
 	function process_karma($board)
 	{
 		$query = $this->db->query('
-			SELECT floor(timestamp/86400)*86400 AS time, count(*),
-				count(case media_hash when \'\' then NULL else 1 end),
-				count(case email when \'sage\' then 1 else NULL end)
+			SELECT
+				FLOOR(timestamp/86400)*86400 AS time, COUNT(*), COUNT(media_hash),
+				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM ' . $this->get_table($board) . '
-			FORCE index(timestamp_index)
+			FORCE INDEX(timestamp_index)
 			WHERE timestamp > ?
 			GROUP BY time
 			ORDER BY time;
@@ -512,12 +577,14 @@ class Statistics extends CI_Model
 	function process_new_tripfriends($board)
 	{
 		$query = $this->db->query('
-			SELECT * from
-			(
-				SELECT name, trip, min(timestamp) AS firstseen,
-					count(num) AS postcount
-				FROM ' . $this->get_table($board) . ' group by trip
-			) as l
+			SELECT *
+			FROM
+				(
+					SELECT
+						name, trip, MIN(timestamp) AS firstseen, COUNT(num) AS postcount
+					FROM ' . $this->get_table($board) . '
+					GROUP BY trip
+				) as l
 			WHERE l.postcount > 30
 			ORDER BY firstseen DESC;
 		');
@@ -531,12 +598,12 @@ class Statistics extends CI_Model
 	function process_population($board)
 	{
 		$query = $this->db->query('
-			SELECT floor(timestamp/86400)*86400 as time,
-				count(CASE WHEN trip != \'\' THEN 1 ELSE NULL END),
-				count(CASE WHEN name!=\'Anonymous\' AND trip = \'\' THEN 1 ELSE NULL END),
-				count(case WHEN name=\'Anonymous\' AND trip = \'\' THEN 1 ELSE NULL END)
+			SELECT
+				FLOOR(timestamp/86400)*86400 as time, COUNT(trip),
+				COUNT(CASE WHEN (name != \'Anonymous\' AND trip IS NULL) THEN 1 ELSE NULL END),
+				COUNT(CASE WHEN (name = \'Anonymous\' AND trip IS NULL) THEN 1 ELSE NULL END)
 			FROM ' . $this->get_table($board) . '
-			FORCE index(timestamp_index)
+			FORCE INDEX(timestamp_index)
 			WHERE timestamp > ?
 			GROUP BY time
 			ORDER BY time
@@ -551,7 +618,8 @@ class Statistics extends CI_Model
 	function process_post_count($board)
 	{
 		$query = $this->db->query('
-			SELECT name, trip, count(*)
+			SELECT
+				name, trip, COUNT(*)
 			FROM ' . $this->get_table($board) . '
 			GROUP BY name, trip
 			ORDER BY count(*) DESC
@@ -567,7 +635,8 @@ class Statistics extends CI_Model
 	function process_post_rate($board)
 	{
 		$query = $this->db->query('
-			SELECT count(*), count(*)/60
+			SELECT
+				COUNT(*), COUNT(*)/60
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ?
 		', array(time() - 3600));
@@ -581,7 +650,8 @@ class Statistics extends CI_Model
 	function process_post_rate_archive($board)
 	{
 		$query = $this->db->query('
-			SELECT count(*), count(*)/60
+			SELECT
+				COUNT(*), COUNT(*)/60
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ? AND subnum != 0
 		', array(time() - 3600));
@@ -595,11 +665,11 @@ class Statistics extends CI_Model
 	function process_users_online($board)
 	{
 		$query = $this->db->query('
-			SELECT name, trip, max(timestamp), num, subnum
+			SELECT name, trip, MAX(timestamp), num, subnum
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ?
 			GROUP BY name, trip
-			ORDER BY max(timestamp) DESC
+			ORDER BY MAX(timestamp) DESC
 		', array(time() - 1800));
 
 		$array = $query->result_array();
@@ -611,12 +681,12 @@ class Statistics extends CI_Model
 	function process_users_online_internal($board)
 	{
 		$query = $this->db->query('
-			SELECT group_concat(DISTINCT concat(name) separator \', \'),
-				max(timestamp), num, subnum
+			SELECT
+				GROUP_CONCAT(DISTINCT CONCAT(name) SEPARATOR \', \'), MAX(timestamp), num, subnum
 			FROM ' . $this->get_table($board) . '
 			WHERE id != 0 AND timestamp > ?
 			GROUP BY id
-			ORDER BY max(timestamp) DESC
+			ORDER BY MAX(timestamp) DESC
 		', array(time() - 3600));
 
 		$array = $query->result_array();
@@ -625,32 +695,49 @@ class Statistics extends CI_Model
 	}
 
 
+	/**
+	 * Generate the INFILE, OUTFILE, TEMPLATE files used by GNUPLOT to create graphs.
+	 *
+	 * @param $board name of the board
+	 * @param $stat  name of the statistics generated
+	 * @param $data  input dataset array
+	 *
+	 * @return void
+	 */
 	function graph_gnuplot($board, $stat, $data)
 	{
+		/**
+		 * Create all missing directory paths for statistics.
+		 */
 		if(!file_exists(FCPATH . 'content/cache/'))
 		{
 			mkdir(FCPATH . 'content/cache/');
 		}
-
-		if(!file_exists(FCPATH . 'content/reports/'))
+		if(!file_exists(FCPATH . 'content/statistics/'))
 		{
-			mkdir(FCPATH . 'content/reports/');
+			mkdir(FCPATH . 'content/statistics/');
+		}
+		if(!file_exists(FCPATH . 'content/statistics/' . $board . '/'))
+		{
+			mkdir(FCPATH . 'content/statistics/' . $board . '/');
 		}
 
-		if(!file_exists(FCPATH . 'content/reports/' . $board . '/'))
-		{
-			mkdir(FCPATH . 'content/reports/' . $board . '/');
-		}
+		/**
+		 * Set PATH for INFILE, GNUFILE, and OUTFILE for read/write.
+		 */
+		$INFILE  = FCPATH . 'content/cache/statistics-' . $board . '-' . $stat . '.dat';
+		$GNUFILE = FCPATH . 'content/cache/statistics-' . $board . '-' . $stat . '.gnu';
+		$OUTFILE = FCPATH . 'content/statistics/' . $board . '/' . $stat . '.png';
 
-		// File Locations
-		$INFILE = FCPATH . 'content/cache/reports-' . $board . '-' . $stat . '.dat';
-		$OUTFILE = FCPATH . 'content/reports/' . $board . '/' . $stat . '.png';
-		$GNUFILE = FCPATH . 'content/cache/reports-' . $board . '-' . $stat . '.gnu';
+		/**
+		 * Obtain starting and ending data points for x range.
+		 */
+		$X_START = (!empty($data) ? $data[0]['time'] : 0);
+		$X_END   = (!empty($data) ? $data[count($data) - 1]['time'] : 0);
 
-		// Graph Data
-		$X_START = $data[0]['time'];
-		$X_END = $data[count($data) - 1]['time'];
-
+		/**
+		 * Format and save the INFILE dataset for GNUPLOT.
+		 */
 		$graph_data = array();
 		foreach ($data as $line) {
 			$graph_data[] = implode("\t", $line);
@@ -658,38 +745,42 @@ class Statistics extends CI_Model
 		$graph_data = implode("\n", $graph_data);
 		write_file($INFILE, $graph_data);
 
-		// Template Variables
+		/**
+		 * Set template variables for replacement.
+		 */
 		$template_vars = array(
 			'{{INFILE}}',
 			'{{OUTFILE}}',
 			'{{X_START}}',
 			'{{X_END}}'
 		);
-
 		$template_vals = array(
 			$INFILE,
 			$OUTFILE,
 			$X_START,
 			$X_END
 		);
-	echo 'here';
+
 		$template = str_replace($template_vars, $template_vals, $this->generate_gnuplot_template($stat));
 		write_file($GNUFILE, $template);
 
-		// Run GNUPlot
+		/**
+		 * Execute GNUPLOT with GNUFILE input.
+		 */
 		$result = @exec('/usr/bin/gnuplot ' . $GNUFILE);
 		return $result;
 	}
+
 
 	function generate_gnuplot_template($stat)
 	{
 		$options = $this->stats[$stat]['gnuplot'];
 
-		$template = array();
-
+		$template   = array();
 		$template[] = "set terminal png transparent size 800,600";
 		$template[] = "set output '{{OUTFILE}}'";
 		$template[] = "show terminal";
+
 		foreach ($options as $key => $value)
 		{
 			if ($value === TRUE)

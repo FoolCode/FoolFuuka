@@ -1,7 +1,8 @@
 .DS_Store
+.idea
 *.pyc
 .svn
-.idea
 nbproject
-Thumbs.db
 Desktop.ini
+CI_phpStorm.php
+Thumbs.db

@@ -19,19 +19,19 @@ $data_array = json_decode($data);
 		<td>
 			<?php
 			$params = array(get_selected_radix()->shortname, 'search');
-			if ($d['name'])
-				array_push($params, 'username/' . urlencode($d['name']));
-			if ($d['trip'])
-				array_push($params, 'tripcode/' . urlencode($d['trip']));
+			if ($d->name)
+				array_push($params, 'username/' . urlencode($d->name));
+			if ($d->trip)
+				array_push($params, 'tripcode/' . urlencode($d->trip));
 
 			$poster_link = site_url($params);
 			?>
 			<a href="<?php echo $poster_link ?>">
-				<span class="poster_name"><?php echo $d['name'] ?></span> <span class="poster_trip"><?php echo $d['trip'] ?></span>
+				<span class="poster_name"><?php echo $d->name ?></span> <span class="poster_trip"><?php echo $d->trip ?></span>
 			</a>
 		</td>
-		<td style="width:350px"><?php date('d-M-Y H:i:s',$d['MAX(timestamp)']) ?></td>
-		<td><?php echo $d['COUNT(*)'] ?></td>
+		<td style="width:350px"><?php echo date('d-M-Y H:i:s', $d->{'MAX(timestamp)'}) ?></td>
+		<td><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : ''))) ?>">&gt;&gt;<?php echo $d->num . ($d->subnum ? ',' . $d->subnum : '') ?></a></td>
 	</tr><?php endforeach; ?>
 	</tbody>
 </table>

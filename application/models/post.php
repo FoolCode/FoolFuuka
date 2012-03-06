@@ -45,7 +45,7 @@ class Post extends CI_Model
 
 
 	/**
-	 * Returns the name of the correct threads table, protected in oblique 
+	 * Returns the name of the correct threads table, protected in oblique
 	 * quotes
 	 *
 	 * @param type $board
@@ -109,8 +109,8 @@ class Post extends CI_Model
 		return '
 			LEFT JOIN
 			(
-				SELECT id as report_id, post as report_post, 
-					reason as report_reason, status as report_status, 
+				SELECT id as report_id, post as report_post,
+					reason as report_reason, status as report_status,
 					created as report_created
 				FROM ' . $this->db->protect_identifiers('reports',
 				TRUE) . '
@@ -182,7 +182,7 @@ class Post extends CI_Model
 		return '
 			LEFT JOIN
 			(
-				SELECT id as poster_id_join, ip as poster_ip, 
+				SELECT id as poster_id_join, ip as poster_ip,
 					banned as poster_banned
 				FROM ' . $this->db->protect_identifiers('posters',
 				TRUE) . '
@@ -296,7 +296,7 @@ class Post extends CI_Model
 						FROM ' . $this->get_table_threads($board) . '
 						ORDER BY time_ghost_bump DESC
 						LIMIT ?, ?
-					) AS t	
+					) AS t
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
@@ -306,10 +306,10 @@ class Post extends CI_Model
 					)
 				);
 
-				// this might not actually be working, we need to test it 
+				// this might not actually be working, we need to test it
 				// somewhere
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1 
+					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1
 							AS pages
 					FROM ' . $this->get_table_threads($board) . '
 					WHERE time_ghost_bump IS NOT NULL
@@ -336,7 +336,7 @@ class Post extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1 
+					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1
 						AS pages
 					FROM ' . $this->get_table_threads($board) . '
 				');
@@ -362,7 +362,7 @@ class Post extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1 
+					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1
 						AS pages
 					FROM ' . $this->get_table_threads($board) . '
 				');
@@ -1735,8 +1735,8 @@ class Post extends CI_Model
 				VALUES
 				(
 					(
-						SELECT COALESCE(MAX(num), 0) + 1 
-						FROM 
+						SELECT COALESCE(MAX(num), 0) + 1
+						FROM
 						(
 							SELECT * from ' . $this->get_table($board) . '
 						) AS x
@@ -1761,23 +1761,23 @@ class Post extends CI_Model
 					VALUES
 					(
 						(
-							SELECT MAX(num) 
-							FROM 
+							SELECT MAX(num)
+							FROM
 							(
 								SELECT *
-								FROM ' . $this->get_table($board) . ' 
+								FROM ' . $this->get_table($board) . '
 								WHERE parent = ? or num = ?
 							) AS x
 						),
 						(
-							SELECT MAX(subnum)+1 
-							FROM 
+							SELECT MAX(subnum)+1
+							FROM
 							(
-								SELECT * 
-								FROM ' . $this->get_table($board) . ' 
+								SELECT *
+								FROM ' . $this->get_table($board) . '
 								WHERE num = (
-									SELECT MAX(num) 
-									FROM ' . $this->get_table($board) . ' 
+									SELECT MAX(num)
+									FROM ' . $this->get_table($board) . '
 									WHERE parent = ? OR num = ?
 									)
 							) AS x
@@ -1813,7 +1813,7 @@ class Post extends CI_Model
 				$this->db->query('
 					UPDATE ' . $this->get_table($board) . '
 					SET preview = ?, preview_w = ?, preview_h = ?, media = ?,
-						media_w = ?, media_h = ?, media_size = ?, media_hash = ?, 
+						media_w = ?, media_h = ?, media_size = ?, media_hash = ?,
 						media_filename = ?
 					WHERE doc_id=?
 					',
@@ -1992,11 +1992,10 @@ class Post extends CI_Model
 	function recalculate_thread($board, $num)
 	{
 		$query = $this->db->query('
-			SELECT parent, doc_id, timestamp, email, media_hash
+			SELECT num, subnum, parent, doc_id, timestamp, email, media_hash
 			FROM ' . $this->get_table($board) . '
 			WHERE parent = ? OR num = ?
-		',
-			array(intval($num), intval($num)));
+		', array(intval($num), intval($num)));
 
 		$doc_id_p = 0;
 		$parent = 0;
@@ -2048,12 +2047,11 @@ class Post extends CI_Model
 			$query->free_result();
 
 			$this->db->query('
-				INSERT
-				INTO ' . $this->get_table_threads($board) . '
+				INSERT INTO ' . $this->get_table_threads($board) . '
 				(doc_id_p, parent, time_op, time_last, time_bump,
 					time_ghost, time_ghost_bump, nreplies, nimages)
 				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-				ON DUPLICATE KEY UPDATE 
+				ON DUPLICATE KEY UPDATE
 					parent = VALUES(parent),
 					time_op = VALUES(time_op),
 					time_last = VALUES(time_last),
@@ -2065,7 +2063,8 @@ class Post extends CI_Model
 			',
 				array(
 				$doc_id_p, $parent, $time_op, $time_last,
-				$time_bump, $time_ghost, $time_ghost_bump
+				$time_bump, $time_ghost, $time_ghost_bump,
+				$nreplies, $nimages
 				)
 			);
 		}

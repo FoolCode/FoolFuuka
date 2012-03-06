@@ -1,7 +1,9 @@
 <?php
-if (!isset($page))
-	$page = 1;
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
 ?>
+
+<?php if ($enabled_tools_view) : ?>
 <div class="clearfix" style="border-bottom:1px dashed #aaa; margin-bottom: 5px; padding-left:10px;">
 	<!--- Post Input -->
 	<div>
@@ -25,7 +27,6 @@ if (!isset($page))
 		?>
 	</div>
 
-
 	<!--- Page Input -->
 	<div>
 		<?php
@@ -37,7 +38,7 @@ if (!isset($page))
 			'name' => 'page',
 			'id' => 'page',
 			'class' => 'mini',
-			'value' => $page
+			'value' => (isset($page)) ? $page : 1
 		));
 		echo form_submit(array(
 			'value' => 'Go',
@@ -84,7 +85,7 @@ if (!isset($page))
 	?>
 </div>
 
-<!--- Advanced Search Input -->
+<!--- Search Input (Advanced) -->
 <div id="search_advanced" style="display: none">
 	<?php
 	echo form_open(get_selected_radix()->shortname . '/search');
@@ -240,3 +241,4 @@ if (!isset($page))
 	<?php echo form_close(); ?>
 </div>
 <div class="clearfix"></div>
+<?php endif; ?>

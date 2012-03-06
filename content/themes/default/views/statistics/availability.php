@@ -1,8 +1,6 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-
-$data_array = json_decode($data);
 ?>
 
 <table class="bordered-table" style="width:600px; margin: 10px auto;">
@@ -14,6 +12,7 @@ $data_array = json_decode($data);
 		</tr>
 	</thead>
 	<tbody>
+		<?php $data_array = json_decode($data); ?>
 		<?php foreach ($data_array as $d) : ?>
 		<tr>
 			<td>
@@ -44,8 +43,10 @@ $data_array = json_decode($data);
 </table>
 
 <style type="text/css">
-	.poster_name {
+	.poster_name, .poster_trip {
 		color: #117743;
+	}
+	.poster_name {
 		font-weight: bold;
 	}
 </style>

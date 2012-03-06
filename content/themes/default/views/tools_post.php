@@ -3,6 +3,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
+<?php if ($enabled_tools_post) : ?>
 <div id="post_tools_modal" class="modal hide fade">
 	<div class="modal-header">
 		<a href="#" class="close">&times;</a>
@@ -18,3 +19,4 @@ if (!defined('BASEPATH'))
 		<a href="#" class="btn primary submitModal" data-function="submitModal" data-report="<?php echo site_url(get_selected_radix()->shortname . '/report/') ?>" data-delete="<?php echo site_url(get_selected_radix()->shortname . '/delete/') ?>">Submit</a>
 	</div>
 </div>
+<?php endif; ?>

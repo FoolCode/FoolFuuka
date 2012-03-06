@@ -3,7 +3,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<?php if (isset($thread_id)) : ?>
+<?php if ($enabled_post_reply) : ?>
 <section class="post reply" id="reply">
 	<header>
 		<span>Reply to Thread [<a href="#reply" data-rel="popover" data-original-title="Replying" data-content="Don't worry, your post will not be uploaded to the original board.">?</a>]</span>
@@ -14,7 +14,7 @@ if (!defined('BASEPATH'))
 	</header>
 	<div id="reply_ajax_notices"></div>
 	<div>
-		<?php echo form_open_multipart(get_selected_radix()->shortname.'/sending', array('class' => 'form-stacked', 'id' => 'reply_form')) ?>
+		<?php echo form_open_multipart(get_selected_radix()->shortname.'/submit', array('class' => 'form-stacked', 'id' => 'reply_form')) ?>
 		<fieldset>
 			<div class="clearfix">
 				<label for="reply_bokunonome">Name</label>
@@ -101,9 +101,7 @@ if (!defined('BASEPATH'))
 					)); ?>
 				</div>
 			</div>
-			<?php
-			// controls for administrators and moderators
-			if($this->tank_auth->is_allowed()) : ?>
+			<?php if($this->tank_auth->is_allowed()) : ?>
 			<div class="clearfix">
 				<label for="reply_postas">Post as</label>
 				<div class="input">

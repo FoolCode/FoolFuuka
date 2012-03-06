@@ -19,7 +19,7 @@ var bindFunctions = function()
 				var reply_alert = jQuery('#reply_ajax_notices');
 				reply_alert.removeClass('error').removeClass('success');
 				jQuery.ajax({
-					url: site_url + board_shortname + '/sending' ,
+					url: site_url + board_shortname + '/submit/' ,
 					dataType: 'json',
 					type: 'POST',
 					cache: false,
@@ -65,7 +65,7 @@ var bindFunctions = function()
 
 			case 'delete':
 				var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
-				modal.find(".title").html('Delete - Post No. ' + el.data("post-id"));
+				modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
 				modal.find(".modal-loading").hide();
 				modal.find(".modal-information").html('\
 					<span class="modal-label">Password</span>\n\
@@ -79,7 +79,7 @@ var bindFunctions = function()
 				break;
 
 			case 'report':
-				modal.find(".title").html('Report - Post No.' + el.data("post-id"));
+				modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
 				modal.find(".modal-loading").hide();
 				modal.find(".modal-information").html('\
 					<span class="modal-label">Post ID</span>\n\

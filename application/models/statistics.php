@@ -33,15 +33,15 @@ class Statistics extends CI_Model
 				'name' => _('Availability'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 60 * 6, // every 6 hours
+				'frequency' => 60 * 60 * 6, // every 6 hours
 				'interface' => 'availability'
 			),
 			'daily_activity' => array(
 				'location' =>'daily_activity',
-				'name' => _('Daily activity'),
+				'name' => _('Daily Activity'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 60 * 6, // every 6 hours
+				'frequency' => 60 * 60 * 6, // every 6 hours
 				'interface' => 'graph',
 				'gnuplot' => array(
 					'title' => "'5-Minute Intervals'",
@@ -62,10 +62,10 @@ class Statistics extends CI_Model
 			),
 			'daily_activity_archive' => array(
 				'location' =>'daily_activity_archive',
-				'name' => _('Daily activity archive'),
+				'name' => _('Daily Activity "Archive"'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 60, // every hour
+				'frequency' => 60 * 60, // every hour
 				'interface' => 'graph',
 				'gnuplot' => array(
 					'title' => "'1-Hour Intervals'",
@@ -86,10 +86,10 @@ class Statistics extends CI_Model
 			),
 			'daily_activity_hourly' => array(
 				'location' =>'daily_activity_hourly',
-				'name' => _('Daily activity hourly'),
+				'name' => _('Daily Activity "Hourly"'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 60, // every 6 hours
+				'frequency' => 60 * 60, // every 6 hours
 				'interface' => 'graph',
 				'gnuplot' => array(
 					'title' => "'1-Hour Intervals'",
@@ -111,10 +111,10 @@ class Statistics extends CI_Model
 			),
 			'image_reposts' => array(
 				'location' =>'image_reposts',
-				'name' => _('Image reposts'),
+				'name' => _('Image Reposts'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 60 * 24 * 7, // every 7 days
+				'frequency' => 60 * 60 * 24 * 7, // every 7 days
 				'interface' => 'image_reposts'
 			),
 			'karma' => array(
@@ -122,7 +122,7 @@ class Statistics extends CI_Model
 				'name' => _('Karma'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 60 * 24 * 7, // every 7 days
+				'frequency' => 60 * 60 * 24 * 7, // every 7 days
 				'interface' => 'graph',
 				'gnuplot' => array(
 					'title' => "'1-Day Intervals'",
@@ -143,10 +143,10 @@ class Statistics extends CI_Model
 			),
 			'new_tripfriends' => array(
 				'location' =>'new_tripfriends',
-				'name' => _('New tripfags'),
+				'name' => _('New Tripfriends'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 60 * 24 * 4, // every 4 days
+				'frequency' => 60 * 60 * 24 * 4, // every 4 days
 				'interface' => 'new_tripfriends'
 			),
 			'population' => array(
@@ -154,7 +154,7 @@ class Statistics extends CI_Model
 				'name' => _('Population'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 60 * 24, // every day
+				'frequency' => 60 * 60 * 24, // every day
 				'interface' => 'graph',
 				'gnuplot' => array(
 					'title' => "'Posters'",
@@ -175,42 +175,42 @@ class Statistics extends CI_Model
 			),
 			'post_count' => array(
 				'location' =>'post_count',
-				'name' => _('Post count'),
+				'name' => _('Post Count'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 60 * 24 * 4, // every 4 days
+				'frequency' => 60 * 60 * 24 * 4, // every 4 days
 				'interface' => 'post_count'
 			),
 			'post_rate' => array(
 				'location' =>'post_rate',
-				'name' => _('Post rate'),
+				'name' => _('Post Rate'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 3, // every 3 minutes
+				'frequency' => 60 * 3, // every 3 minutes
 				'interface' => 'post_rate'
 			),
 			'post_rate_archive' => array(
 				'location' =>'post_rate_archive',
-				'name' => _('Post rate archive'),
+				'name' => _('Post Rate "Archive"'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60 * 3, // every 3 minutes
+				'frequency' => 60 * 3, // every 3 minutes
 				'interface' => 'post_rate'
 			),
 			'users_online' => array(
 				'location' =>'users_online',
-				'name' => _('Users online'),
+				'name' => _('Users Online'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60, // every minute
+				'frequency' => 60, // every minute
 				'interface' => 'users_online'
 			),
 			'users_online_internal' => array(
 				'location' =>'users_online_internal',
-				'name' => _('Users posting in archive'),
+				'name' => _('Users Posting in Archive'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequence' => 60, // every minute
+				'frequency' => 60, // every minute
 				'interface' => 'users_online'
 			)
 		);
@@ -319,7 +319,7 @@ class Statistics extends CI_Model
 						/**
 						 * This statistics report has not reached its frequency EOL.
 						 */
-						if ((time() - strtotime($r->timestamp)) <= $a['frequence'])
+						if ((time() - strtotime($r->timestamp)) <= $a['frequency'])
 						{
 							$skip = TRUE;
 							continue;

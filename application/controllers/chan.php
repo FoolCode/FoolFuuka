@@ -11,21 +11,1068 @@ class Chan extends Public_Controller
 	function __construct()
 	{
 		parent::__construct();
-		
-		// everything moved in the remap function
 	}
 
+
 	/**
-	 * Show the boards
+	 * @param string $level
+	 * @return bool|string
+	 */
+	function _is_valid_allowed_level($level)
+	{
+		switch ($level)
+		{
+			case 'admin':
+					if ($this->tank_auth->is_admin())
+						return 'A';
+				break;
+
+			case 'mod':
+					if ($this->tank_auth->is_allowed())
+						return 'M';
+				break;
+
+			case 'user':
+					return 'N';
+				break;
+
+			default:
+				return FALSE;
+		}
+	}
+
+
+	/**
+	 * Remap the legacy $_GET queries to valid URI.
+	 */
+	function _map_query()
+	{
+		$url = array();
+
+		if ($this->input->get('task'))
+		{
+			array_push($url, get_selected_radix()->shortname);
+
+			/**
+			 * PAGE
+			 */
+			if ($this->input->get('task') == 'page')
+			{
+				if ($this->input->get('page') != '' || $this->input->get('ghost') != '')
+				{
+					array_push($url, ($this->input->get('ghost') != '') ? 'ghost' : 'page');
+					array_push($url, ($this->input->get('page') != '') ? $this->input->get('page') : 1);
+				}
+			}
+
+			/**
+			 * SEARCH
+			 */
+			if ($this->input->get('task') == 'search' || $this->input->get('task') == 'search2')
+			{
+				array_push($url, 'search');
+
+				if ($this->input->get('search_text') != '')
+					array_push($url, sprintf('text/%s', $this->input->get('search_text')));
+				if ($this->input->get('search_username') != '')
+					array_push($url, sprintf('username/%s', $this->input->get('search_username')));
+				if ($this->input->get('search_tripcode') != '')
+					array_push($url, sprintf('tripcode/%s', $this->input->get('search_tripcode')));
+				if ($this->input->get('search_del') != '')
+					array_push($url, sprintf('deleted/%s',
+						str_replace(
+							array('dontcare', 'yes', 'no'),
+							array('', 'deleted', 'not-deleted'),
+							$this->input->get('search_del'))));
+				if ($this->input->get('search_int') != '')
+					array_push($url, sprintf('ghost/%s',
+						str_replace(
+							array('dontcare', 'yes', 'no'),
+							array('', 'only', 'none'),
+							$this->input->get('search_int'))));
+				if ($this->input->get('search_ord') != '')
+					array_push($url, sprintf('order/%s',
+						str_replace(
+							array('old', 'new'),
+							array('asc', 'desc'),
+							$this->input->get('search_ord'))));
+			}
+		}
+
+		if (!empty($url))
+			redirect(site_url($url), 'location', 301);
+	}
+
+
+	/**
+	 * @param null $action
+	 * @param int $num
+	 * @return bool
+	 */
+	function _map_tools($action = NULL, $num = 0)
+	{
+		if (!$this->input->is_ajax_request())
+			show_404();
+
+		if (!is_numeric($num) || !$num = 0)
+			show_404();
+
+		switch ($action)
+		{
+			case 'delete':
+					$post = array(
+						'post'		=> $this->input->post('post'),
+						'password'	=> $this->input->post('password')
+					);
+
+					$result = $this->post->delete(get_selected_radix(), $post);
+				break;
+
+			case 'report':
+					$post = array(
+						'board'		=> get_selected_radix()->id,
+						'post'		=> $this->input->post('post'),
+						'reason'	=> $this->input->post('reason')
+					);
+
+					/*
+					$result = $this->post->report(get_selected_radix(), $post);
+					*/
+
+					$report = new Report();
+					if (!$report->add($post))
+					{
+						$this->output
+							->set_output(json_encode(array('status' => 'failed', 'reason' => 'Sorry, failed to report post to the moderators. Please try again later.')));
+						return FALSE;
+					}
+					$this->output
+						->set_output(json_encode(array('status' => 'success')));
+					return TRUE;
+				break;
+
+			default:
+				show_404();
+		}
+
+		if (isset($result['error']))
+		{
+			$this->output
+				->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
+			return FALSE;
+		}
+
+		if (isset($result['success']) && $result['success'] == TRUE)
+		{
+			$this->output
+				->set_output(json_encode(array('status' => 'success')));
+			return TRUE;
+		}
+	}
+
+
+	/**
+	 * @param $method
+	 * @param array $params
+	 * @return mixed|type
+	 */
+	function _remap($method, $params = array())
+	{
+		if (!empty($params))
+		{
+			/**
+			 * Determine if $board returns a valid response. If not, recheck the $method and $params.
+			 */
+			if (!($board = $this->radix->set_selected_by_shortname($method)))
+				return parent::_remap($method, $params);
+
+			/**
+			 * Load some default settings for the board.
+			 */
+			$this->load->model('post');
+			$this->template->set('board', $board);
+
+			$method = $params[0];
+				array_shift($params);
+		}
+
+		/**
+		 * Load helpers and libraries and initialize public controller.
+		 */
+		$this->load->helper('cookie');
+		$this->load->helper('number');
+		$this->load->library('template');
+		$this->template->set_layout('chan');
+
+		/**
+		 * PLUGINS: If available, allow plugins to override default functions.
+		 */
+		/*
+		if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
+		{
+			$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
+			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), array());
+		}
+		*/
+
+		/**
+		 * FUNCTIONS: If available, load custom functions to override default functions.
+		 */
+		if (method_exists($this->TC, $method))
+			return call_user_func_array(array($this->TC, $method), $params);
+
+		if (method_exists($this, $method))
+			return call_user_func_array(array($this, $method), $params);
+
+		/**
+		 * ERROR: We reached the end of the _remap and failed to return anything.
+		 */
+		show_404();
+	}
+
+
+	/**
+	 * @param array $variables
+	 * @param array $partials
+	 */
+	function _set_parameters($variables = array(), $partials = array())
+	{
+		if (!is_array($variables) || !is_array($partials))
+			show_404();
+
+		if (empty($variables) && empty($partials))
+			show_404();
+
+		/**
+		 * Initialize default values for valid
+		 */
+		$default = array(
+			'variables'	=> array('disable_headers', 'is_page', 'is_last50', 'is_statistics', '@modifiers'),
+			'partials'	=> array('post_reply', 'post_thread', 'tools_post', 'tools_view')
+		);
+
+		foreach ($default['variables'] as $k)
+		{
+			if (!isset($variables[$k]))
+			{
+				if (strpos($k, '@') === FALSE)
+					$variables[$k] = FALSE;
+				else
+					$variables[$k] = array();
+			}
+		}
+
+		foreach ($dfeault['partials'] as $k)
+		{
+			if (!isset($partials[$k]))
+			{
+				if (strpos($k, '@') === FALSE)
+					$partials[$k] = FALSE;
+				else
+					$partials[$k] = array();
+			}
+		}
+
+		/**
+		 * Set all of the variables and partials into the template.
+		 */
+		foreach ($variables as $name => $value)
+		{
+			$this->template->set($name, $value);
+		}
+
+		foreach ($partials as $view => $params)
+		{
+			if (is_array($params) || is_object($params))
+			{
+				$this->template->set('enabled_' . $view, TRUE);
+				$this->template->set_partial($view, $view, $params);
+			}
+			else
+			{
+				/**
+				 * Enable/Disable Partials
+				 */
+				if ($params == FALSE)
+					$this->template->set('enabled_' . $view, FALSE);
+				else
+					$this->template->set('enabled_' . $view, TRUE);
+
+				/**
+				 * Set the Partials with information.
+				 */
+				if (is_bool($params))
+					$this->template->set_partial($view, $view);
+				else
+					$this->template->set_partial($view, $params);
+			}
+		}
+	}
+
+
+	/**
+	 * Display a simple index page listing all of the boards, the latest posts, the most popular
+	 * threads and site statistics.
 	 */
 	public function index()
 	{
-		$this->template->set('disable_headers', TRUE);
+		/**
+		 * Set template variables required to build the HTML.
+		 */
 		$this->template->title('FoOlFuuka &raquo; 4chan Archiver');
+		$this->_set_parameters(
+			array(
+				'disable_headers'	=> TRUE,
+				'is_page'			=> FALSE,
+				'is_last50'			=> FALSE,
+				'is_statistics'		=> FALSE
+			),
+			array(
+				'post_reply'		=> FALSE,
+				'post_thread'		=> FALSE,
+				'tools_post'		=> FALSE,
+				'tools_view'		=> FALSE
+			)
+		);
 		$this->template->build('index');
 	}
 
 
+	/**
+	 * @param int $page
+	 * @param bool $by_thread
+	 */
+	public function page($page = 1, $by_thread = FALSE)
+	{
+		/**
+		 * POST -> GET Redirection to provide URL presentable for sharing links.
+		 */
+		$this->_map_query();
+		if ($this->input->post())
+			redirect(get_selected_radix()->shortname . '/page/' . $this->input->post('page'), 'location', 303);
+
+		/**
+		 * Fetch the latest posts.
+		 */
+		$page  = intval($page);
+		$posts = $this->post->get_latest(get_selected_radix(), $page,
+			array('type' => ($by_thread ? 'by_thread' : 'by_post')));
+
+		/**
+		 * Set template variables required to build the HTML.
+		 */
+		$this->template->title(get_selected_radix()->formatted_title .
+			(($page >1 ) ? ' &raquo; ' . _('Page') . ' ' . $page : ''));
+		$this->_set_parameters(
+			array(
+				'section_title'		=> (($page > 1) ?
+										(($by_thread ?
+											_('Latest by Thread') . ' - ' : '')
+											. _('Page') . ' ' . $page) : NULL),
+
+				'disable_headers'	=> FALSE,
+				'is_page'			=> TRUE,
+				'is_last50'			=> FALSE,
+				'is_statistics'		=> FALSE,
+				'modifiers'			=> array(),
+
+				'posts'				=> $posts['result'],
+				'posts_per_thread'	=> 5,
+
+				'pagination'		=> array(
+					'base_url'		=> site_url(array(get_selected_radix()->shortname,
+										($by_thread ? 'by_thread' : 'page'))),
+					'current_page'	=> $page,
+					'total'			=> $posts['pages']
+				)
+			),
+			array(
+				'post_reply'		=> FALSE,
+				'post_thread'		=> TRUE,
+				'tools_post'		=> TRUE,
+				'tools_view'		=> array('page' => $page)
+			)
+		);
+		$this->template->build('board');
+	}
+
+
+	public function by_thread($page = 1)
+	{
+		$this->page($page, TRUE);
+	}
+
+
+	/**
+	 * @param int $page
+	 */
+	public function ghost($page = 1)
+	{
+		/**
+		 * POST -> GET Redirection to provide URL presentable for sharing links.
+		 */
+		if ($this->input->post())
+			redirect(get_selected_radix()->shortname . '/ghost/' . $this->input->post('page'), 'location', 303);
+
+		/**
+		 * Fetch the latest ghost posts.
+		 */
+		$page  = intval($page);
+		$posts = $this->post->get_latest(get_selected_radix(), $page,
+			array('type' => 'ghost'));
+
+		/**
+		 * Set template variables required to build the HTML.
+		 */
+		$this->template->title(get_selected_radix()->formatted_title .
+			(($page >1 ) ? ' &raquo; ' . _('Ghost Page') . ' ' . $page : ''));
+		$this->_set_parameters(
+			array(
+				'section_title'		=> (($page > 1) ?
+										_('Ghost Page') . ' ' . $page : NULL),
+
+				'disable_headers'	=> FALSE,
+				'is_page'			=> TRUE,
+				'is_last50'			=> FALSE,
+				'is_statistics'		=> FALSE,
+				'modifiers'			=> array(),
+
+				'posts'				=> $posts['result'],
+				'posts_per_thread'	=> 5,
+
+				'pagination'		=> array(
+					'base_url'		=> site_url(array(get_selected_radix()->shortname, 'ghost')),
+					'current_page'	=> $page,
+					'total'			=> $posts['pages']
+				)
+			),
+			array(
+				'post_reply'		=> FALSE,
+				'post_thread'		=> TRUE,
+				'tools_post'		=> TRUE,
+				'tools_view'		=> array('page' => $page)
+			)
+		);
+		$this->template->build('board');
+	}
+
+
+	/**
+	 * Display the last X created threads in a gallery view.
+	 */
+	public function gallery()
+	{
+		/**
+		 * Disable GALLERY when thumbnails is disabled for normal users.
+		 */
+		if (!get_selected_radix()->thumbnails && !$this->tank_auth->is_allowed())
+			show_404();
+
+		/**
+		 * Fetch the last X created threads to generate the GALLERY.
+		 */
+		$threads = $this->post->get_gallery(get_selected_radix());
+
+		/**
+		 * Set template variables required to build the HTML.
+		 */
+		$this->template->title(get_selected_radix()->formatted_title .
+			' &raquo; ' . _('Gallery ß'));
+		$this->_set_parameters(
+			array(
+				'section_title'		=> _('Gallery ß - Showing Latest Created Threads'),
+
+				'disable_headers'	=> FALSE,
+				'is_page'			=> FALSE,
+				'is_last50'			=> FALSE,
+				'is_statistics'		=> FALSE,
+
+				'threads'			=> $threads,
+			),
+			array(
+				'post_reply'		=> FALSE,
+				'post_thread'		=> FALSE,
+				'tools_post'		=> TRUE,
+				'tools_view'		=> TRUE
+			)
+		);
+		$this->template->build('gallery');
+	}
+
+
+	/**
+	 * @param int $num
+	 * @param int $limit
+	 */
+	public function thread($num = 0, $limit = 0)
+	{
+		/**
+		 * Check if the $num is a valid integer.
+		 */
+		$num = str_replace('S', '', $num);
+		if (!is_numeric($num) || !$num > 0)
+			show_404();
+
+		/**
+		 * Fetch the THREAD specified and generate the THREAD.
+		 */
+		$num	= intval($num);
+		$thread = $this->post->get_thread(get_selected_radix(), $num);
+
+		if (!is_array($thread))
+			show_404();
+
+		if (!isset($thread[$num]['op']))
+			$this->post($num);
+
+		/**
+		 * Set template variables required to build the HTML.
+		 */
+		$this->template->title(get_selected_radix()->formatted_title .
+			' &raquo; ' . _('Thread') . ' #' . $num);
+		$this->_set_parameters(
+			array(
+				'disable_headers'	=> FALSE,
+				'is_page'			=> FALSE,
+				'is_last50'			=> FALSE,
+				'is_statistics'		=> FALSE,
+				'modifiers'			=> array(),
+
+				'thread_id'			=> $num,
+				'posts'				=> $thread
+			),
+			array(
+				'post_reply'		=> TRUE,
+				'post_thread'		=> FALSE,
+				'tools_post'		=> TRUE,
+				'tools_view'		=> TRUE,
+			)
+		);
+		$this->template->build('board');
+	}
+
+
+	/**
+	 * @param int $num
+	 */
+	public function last50($num = 0)
+	{
+		/**
+		 * Check if the $num is a valid integer.
+		 */
+		$num = str_replace('S', '', $num);
+		if (!is_numeric($num) || !$num > 0)
+			show_404();
+
+		/**
+		 * Fetch the THREAD specified and generate the THREAD.
+		 */
+		$num	= intval($num);
+		$thread = $this->post->get_thread(get_selected_radix(), $num,
+					array('type' => 'last_x', 'type_extra' => array('last_limit' => 50)));
+
+		if (!is_array($thread))
+			show_404();
+
+		if (!isset($thread[$num]['op']))
+			$this->post($num);
+
+		/**
+		 * Set template variables required to build the HTML.
+		 */
+		$this->template->title(get_selected_radix()->formatted_title .
+			' &raquo; '._('Thread') . ' #' . $num);
+		$this->_set_parameters(
+			array(
+				'section_title'		=> sprintf(_('Showing the last 50 posts for Thread No.%s'), $num),
+
+				'disable_headers'	=> FALSE,
+				'is_page'			=> FALSE,
+				'is_last50'			=> TRUE,
+				'is_statistics'		=> FALSE,
+				'@modifiers'		=> array(),
+
+				'thread_id'			=> $num,
+				'posts'				=> $thread
+			),
+			array(
+				'post_reply'		=> TRUE,
+				'post_thread'		=> FALSE,
+				'tools_post'		=> TRUE,
+				'tools_view'		=> TRUE
+			)
+		);
+		$this->template->build('board');
+	}
+
+
+	/**
+	 * @param int $num
+	 */
+	public function post($num = 0)
+	{
+		/**
+		 * POST -> GET Redirection to provide URL presentable for sharing links.
+		 */
+		if ($this->input->post())
+		{
+			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $this->input->post('post'), $post);
+			redirect(get_selected_radix()->shortname . '/post/' .
+				(isset($post[1]) ? $post[1] : '') . (isset($post[2]) ? '_' . $post[2] : ''),
+				'location', 303);
+		}
+
+		/**
+		 * Redirect to THREAD if it exists.
+		 */
+		$num	= str_replace('S', '', $num);
+		$subnum = 0;
+
+		if (strpos($num, '_') > 0)
+		{
+			$post = explode('_', $num);
+			if (count($post) != 2)
+				show_404();
+
+			$num	= $post[0];
+			$subnum = $post[1];
+		}
+
+		if ((!is_natural($num) || !$num > 0) && (!is_natural($subnum) || !$subnum > 0))
+			show_404();
+
+		/**
+		 * Fetch the THREAD specified and generate the THREAD with OP+LAST50.
+		 */
+		$num	= intval($num);
+		$subnum = intval($subnum);
+		$thread = $this->post->get_post_thread(get_selected_radix(), $num, $subnum);
+
+		if ($thread === FALSE)
+			show_404();
+
+		if ($thread->subnum > 0)
+		{
+			$url = site_url(array(get_selected_radix()->shortname, 'thread', $thread->parent)) .
+					'#' . $thread->num . '_' . $thread->subnum;
+		}
+		else if ($thread->parent > 0)
+		{
+			$url = site_url(array(get_selected_radix()->shortname, 'thread', $thread->parent)) .
+					'#' . $thread->num;
+		}
+		else
+		{
+			$url = site_url(array(get_selected_radix()->shortname, 'thread', $thread->num));
+		}
+
+		redirect($url, 'location', 301);
+	}
+
+
+	/**
+	 * Display all of the posts that contain the MEDIA HASH provided.
+	 */
+	public function image()
+	{
+		/**
+		 * Obtain the HASH from URI.
+		 */
+		$uri = $this->uri->segment_array();
+			array_shift($uri);
+			array_shift($uri);
+
+		$imploded_uri = urldecode(implode('/', $uri));
+		if (mb_strlen($imploded_uri) < 22)
+			show_404();
+
+		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
+
+		/**
+		 * Obtain the PAGE from URI.
+		 */
+		$page = 1;
+		if (mb_strlen($imploded_uri) > 23)
+		{
+			$page = substr($imploded_uri, 23);
+		}
+
+		if ($hash == '' || !is_natural($page))
+			show_404();
+
+		/**
+		 * Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
+		 */
+		$page	= intval($page);
+		$result = $this->post->get_image(get_selected_radix(), $hash . '==', $page);
+
+		/**
+		 * Set template variables required to build the HTML.
+		 */
+		$this->template->title(get_selected_radix()->formatted_title .
+			' &raquo; ' . _('Image Hash') . ': ' . base64_encode(urlsafe_b64decode($hash)));
+		$this->_set_parameters(
+			array(
+				'section_title'		=> sprintf(_('Search for image posts with the image hash: %s'),
+										base64_encode(urlsafe_b64decode($hash))),
+
+				'disable_headers'	=> FALSE,
+				'is_page'			=> FALSE,
+				'is_last50'			=> FALSE,
+				'is_statistics'		=> FALSE,
+				'modifiers'			=> array('post_show_view_button' => TRUE),
+
+				'posts'				=> $result['posts'],
+
+				'pagination'		=> array(
+					'base_url'		=> site_url(array(get_selected_radix()->shortname, 'image', $hash)),
+					'current_page'	=> $page,
+					'total'			=> ceil($result['total_found'] / 25)
+				)
+			),
+			array(
+				'post_reply'		=> FALSE,
+				'post_thread'		=> FALSE,
+				'tools_post'		=> TRUE,
+				'tools_view'		=> TRUE
+			)
+		);
+		$this->template->build('board');
+	}
+
+
+	/**
+	 * @param $filename
+	 */
+	public function full_image($filename)
+	{
+		/**
+		 * Check if $filename is valid.
+		 */
+		if (!in_array(substr($filename, -3), array('gif', 'jpg', 'png'))
+			|| !is_natural(substr($filename, 0, 13)))
+			show_404();
+
+		/**
+		 * Fetch the FULL IMAGE with the FILENAME specified.
+		 */
+		$image = $this->post->get_full_image(get_selected_radix(), $filename);
+
+		if (isset($image['image_href']))
+			redirect($image['image_href'], 'location', 301);
+
+		if (isset($image['error_type']))
+		{
+			/**
+			 * NOT FOUND, INVALID MEDIA HASH
+			 */
+			if ($image['error_type'] == 'no_record')
+			{
+				$this->output->set_status_header('404');
+				$this->template->title(_('Error'));
+				$this->_set_parameters(
+					array(
+						'section_title'		=> sprintf(_('Showing the last 50 posts for Thread No.%s'), $num),
+
+						'disable_headers'	=> FALSE,
+						'is_page'			=> FALSE,
+						'is_last50'			=> FALSE,
+						'is_statistics'		=> FALSE,
+
+						'error'				=> _('There is no record of the specified image in our database.')
+					),
+					array(
+						'post_reply'		=> FALSE,
+						'post_thread'		=> FALSE,
+						'tools_post'		=> FALSE,
+						'tools_view'		=> FALSE
+					)
+				);
+				$this->template->build('error');
+			}
+
+			/**
+			 * NOT AVAILABLE ON SERVER
+			 */
+			if ($image['error_type'] == 'not_on_server')
+			{
+				$this->output->set_status_header('404');
+				$this->template->title(get_selected_radix()->formatted_title .
+					' &raquo; ' . _('Image Pruned'));
+				$this->_set_parameters(
+					array(
+						'section_title'		=> _('Error 404: The image has been pruned from the server.'),
+
+						'disable_headers'	=> FALSE,
+						'is_page'			=> FALSE,
+						'is_last50'			=> FALSE,
+						'is_statistics'		=> FALSE,
+						'modifiers'			=> array('post_show_single_post' => TRUE, 'post_show_view_button' => TRUE),
+
+						'posts'				=> array('posts' => array('posts' => array($image['result'])))
+					),
+					array(
+						'post_reply'		=> FALSE,
+						'post_thread'		=> FALSE,
+						'tools_post'		=> FALSE,
+						'tools_view'		=> FALSE
+					)
+				);
+				$this->template->build('board');
+			}
+		}
+	}
+
+
+	/**
+	 * @param null $image
+	 */
+	public function redirect($image = NULL)
+	{
+		$this->template->set_layout('redirect');
+		$this->_set_parameters(
+			array(
+				'url'	=> get_selected_radix()->images_url . $image
+			)
+		);
+		$this->template->build('redirection');
+	}
+
+
+	/**
+	 * Display all results matching the search modifiers applied.
+	 * @return bool
+	 */
+	public function search()
+	{
+		/**
+		 * Check all allowed search modifiers and apply them only.
+		 */
+		$modifiers = array('text', 'subject', 'username', 'tripcode', 'deleted', 'ghost', 'filter', 'order', 'page');
+
+		/**
+		 * POST -> GET Redirection to provide URL presentable for sharing links.
+		 */
+		if ($this->input->post())
+		{
+			$redirect_url = array(get_selected_radix()->shortname, 'search');
+			foreach ($modifiers as $modifier)
+			{
+				if ($this->input->post($modifier))
+				{
+					array_push($redirect_url, $modifier);
+					array_push($redirect_url, rawurlencode($this->input->post($modifier)));
+				}
+			}
+
+			redirect(site_url($redirect_url), 'location', 301);
+		}
+
+		/**
+		 * Fetch the search results and display them.
+		 */
+		$search = $this->uri->ruri_to_assoc(2, $modifiers);
+		$result = $this->post->get_search(get_selected_radix(), $search);
+
+		/**
+		 * Stop! We have reached an error and shouldn't proceed any further!
+		 */
+		if (isset($result['error']))
+		{
+			$this->template->title(_('Error'));
+			$this->template->title(get_selected_radix()->formatted_title);
+			$this->_set_parameters(
+				array(
+					'disable_headers'	=> FALSE,
+					'is_page'			=> FALSE,
+					'is_last50'			=> FALSE,
+					'is_statistics'		=> FALSE,
+
+					'error'				=> $result['error']
+				),
+				array(
+					'post_reply'		=> FALSE,
+					'post_thread'		=> FALSE,
+					'tools_post'		=> FALSE,
+					'tools_view'		=> array('search' => $search)
+				)
+			);
+			$this->template->build('error');
+			return FALSE;
+		}
+
+		/**
+		 * Generate the $title with all search modifiers enabled.
+		 */
+		$title = array();
+
+		if ($search['text'])
+			array_push($title, sprintf(_('that contain "%s"'), trim(fuuka_htmlescape($search['text']))));
+		if ($search['subject'])
+			array_push($title, sprintf(_('with the subject "%s"'), trim(fuuka_htmlescape($search['subject']))));
+		if ($search['username'])
+			array_push($title, sprintf(_('with the username "%s"'), trim(fuuka_htmlescape($search['username']))));
+		if ($search['tripcode'])
+			array_push($title, sprintf(_('with the tripcode "%s"'), trim(fuuka_htmlescape($search['tripcode']))));
+		if ($search['deleted'] == 'deleted')
+			array_push($title, _('that has been deleted'));
+		if ($search['deleted'] == 'not-deleted')
+			array_push($title, _('that has not been deleted'));
+		if ($search['ghost'] == 'only')
+			array_push($title, _('that are by ghosts'));
+		if ($search['ghost'] == 'none')
+			array_push($title, _('that are not by ghosts'));
+		if ($search['order'] == 'asc')
+			array_push($title, _('in ascending order'));
+		if ($search['filter'])
+		{
+			$filters = explode('-', $search['filter']);
+				unset($search['filter']);
+
+			foreach ($filters as $k => $filter)
+			{
+				$search['filter'][$filter] = TRUE;
+			}
+
+			array_push($title, sprintf(_('with the following filters applied: %s'), implode(', ', $filters)));
+		}
+
+		$title = sprintf(_('Searching for posts %s.'), urldecode(implode(' ' . _('and') . ' ', $title)));
+		$page  = (!$search['page'] || !intval($search['page'])) ? 1 : $search['page'];
+
+		/**
+		 * Generate URI for pagination.
+		 */
+		$uri_array = $this->uri->ruri_to_assoc(2);
+		foreach ($uri_array as $key => $param)
+		{
+			if (!$param)
+				unset($uri_array[$key]);
+		}
+
+		if (isset($uri_array['page']))
+			unset($uri_array['page']);
+
+		/**
+		 * Set template variables required to build the HTML.
+		 */
+		$this->template->title(get_selected_radix()->formatted_title .
+			' &raquo; ' . $title);
+		$this->_set_parameters(
+			array(
+				'section_title'		=> $title,
+
+				'disable_headers'	=> FALSE,
+				'is_page'			=> FALSE,
+				'is_last50'			=> FALSE,
+				'is_statistics'		=> FALSE,
+				'modifiers'			=> array('post_show_view_button' => TRUE),
+
+				'posts'				=> $result['posts'],
+
+				'pagination'		=> array(
+					'base_url'		=> site_url(array($this->uri->assoc_to_uri($uri_array), 'page')),
+					'current_page'	=> $page,
+					'total'			=> ceil($result['total_found'] / 25)
+				)
+			),
+			array(
+				'post_reply'		=> FALSE,
+				'post_thread'		=> FALSE,
+				'tools_post'		=> TRUE,
+				'tools_view'		=> array('search' => $search)
+			)
+		);
+		$this->template->build('board');
+	}
+
+
+	/**
+	 * @param null $report
+	 */
+	public function statistics($report = NULL)
+	{
+		/**
+		 * Load Statistics Model
+		 */
+		$this->load->model('statistics');
+
+		if (is_null($report))
+		{
+			$stats = $this->statistics->get_available_stats();
+
+			/**
+			 * Set template variables required to build the HTML.
+			 */
+			$this->template->title(get_selected_radix()->formatted_title .
+				' &raquo; ' . _('Statistics'));
+			$this->_set_parameters(
+				array(
+					'section_title'		=> _('Statistics'),
+
+					'disable_headers'	=> FALSE,
+					'is_page'			=> FALSE,
+					'is_last50'			=> FALSE,
+					'is_statistics'		=> TRUE,
+					'is_statistics_list'=> TRUE,
+
+					'info'				=> $stats
+				),
+				array(
+					'post_reply'		=> FALSE,
+					'post_thread'		=> FALSE,
+					'tools_post'		=> FALSE,
+					'tools_view'		=> TRUE
+				)
+			);
+			$this->template->build('statistics');
+		}
+		else
+		{
+			$stats = $this->statistics->check_available_stats($report, get_selected_radix());
+
+			if (!is_array($stats))
+				show_404();
+
+			/**
+			 * Set template variables required to build the HTML.
+			 */
+			$this->load->helper('date');
+			$this->template->title(get_selected_radix()->formatted_title .
+				' &raquo; ' . _('Statistics') . ': ' . $stats['info']['name']);
+			$this->_set_parameters(
+				array(
+					'section_title'		=> sprintf(_('Statistics: %s (Next Update in %s)'),
+											$stats['info']['name'],
+											timespan($stats['info']['frequency'] + strtotime($stats['timestamp']))),
+
+					'disable_headers'	=> FALSE,
+					'is_page'			=> FALSE,
+					'is_last50'			=> FALSE,
+					'is_statistics'		=> TRUE,
+					'is_statistics_list'=> FALSE,
+
+					'info'				=> $stats['info'],
+					'data'				=> $stats['data']
+				),
+				array(
+					'stats_interface'	=> 'statistics/' . $stats['info']['interface'],
+
+					'post_reply'		=> FALSE,
+					'post_thread'		=> FALSE,
+					'tools_post'		=> FALSE,
+					'tools_view'		=> TRUE
+				)
+			);
+			$this->template->build('statistics');
+		}
+	}
+
+
+	/**
+	 * @param string $mode
+	 * @return bool
+	 */
 	function feeds($mode = 'rss_gallery_50')
 	{
 		//if (is_null($format))
@@ -88,200 +1135,47 @@ class Chan extends Public_Controller
 	}
 
 
-	public function gallery()
+	/**
+	 * @param int $num
+	 */
+	public function delete($num = 0)
 	{
-		if (!get_selected_radix()->thumbnails && !$this->tank_auth->is_allowed())
-		{
-			show_404();
-		}
-
-		$threads = $this->post->get_gallery(get_selected_radix());
-
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name);
-		$this->template->set('section_title', 'Gallery ß - Showing: threads');
-		$this->template->set('threads', $threads);
-		$this->template->set_partial('top_tools', 'top_tools');
-		$this->template->set_partial('post_tools', 'post_tools');
-		$this->template->build('gallery');
+		$this->_map_tools('delete', $num);
 	}
 
 
-	public function page($page = 1, $by_thread = FALSE)
+	/**
+	 * @param int $num
+	 */
+	public function report($num = 0)
 	{
-		$this->remap_query();
-		if ($this->input->post())
-		{
-			redirect(get_selected_radix()->shortname . '/page/' . $this->input->post('page'),
-				'location', 303);
-		}
-
-		if (!is_natural($page) || $page > 500)
-		{
-			show_404();
-		}
-
-		$page = intval($page);
-
-		$posts = $this->post->get_latest(get_selected_radix(), $page,
-			array('type' => ($by_thread ? 'by_thread' : 'by_post')));
-
-		$pages = $posts['pages'];
-		$posts = $posts['result'];
-
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1)
-					? ' &raquo; Page ' . $page : ''));
-		if ($page > 1)
-			$this->template->set('section_title',
-				($by_thread ? _('Latest by thread - Page ') : _('Page ')) . $page);
-		$pagination = array(
-			'base_url' => site_url(array(get_selected_radix()->shortname, ($by_thread ? 'by_thread'
-						: 'page'))),
-			'current_page' => $page,
-			'total' => $pages
-		);
-		$this->template->set('pagination', $pagination);
-		$this->template->set('posts', $posts);
-		$this->template->set('is_page', TRUE);
-		$this->template->set('posts_per_thread', 5);
-		$this->template->set_partial('top_tools', 'top_tools', array('page' => $page));
-		$this->template->set_partial('post_thread', 'post_thread');
-		$this->template->set_partial('post_tools', 'post_tools');
-		$this->template->build('board');
+		$this->_map_tools('report', $num);
 	}
 
 
-	public function by_thread($page = 1)
+	/**
+	 * @return bool
+	 */
+	public function submit()
 	{
-		$this->page($page, TRUE);
-	}
-
-
-	public function ghost($page = 1)
-	{
-		$this->input->set_cookie('fu_ghost_mode', TRUE, 86400);
-		if ($this->input->post())
-		{
-			redirect(get_selected_radix()->shortname . '/ghost/' . $this->input->post('page'),
-				'location', 303);
-		}
-
-		$values = array();
-
-		if (!is_natural($page) || $page > 500)
-		{
+		/**
+		 * Determine if the invalid post fields are populated by bots.
+		 */
+		if (mb_strlen($this->input->post('name')) > 0
+			|| mb_strlen($this->input->post('reply')) > 0
+			|| mb_strlen($this->input->post('email')) > 0)
 			show_404();
-		}
 
-		$page = intval($page);
-
-		$posts = $this->post->get_latest(get_selected_radix(), $page,
-			array('type' => 'ghost'));
-
-		$pages = $posts['pages'];
-		$posts = $posts['result'];
-
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Ghost' . (($page > 1)
-					? ' &raquo; Page ' . $page : ''));
-		if ($page > 1)
-			$this->template->set('section_title', _('Ghosts page ') . $page);
-		$pagination = array(
-			'base_url' => site_url(array(get_selected_radix()->shortname, 'ghost')),
-			'current_page' => $page,
-			'total' => $pages
-		);
-
-		$this->template->set('pagination', $pagination);
-		$this->template->set('posts', $posts);
-		$this->template->set('is_page', TRUE);
-		$this->template->set('posts_per_thread', 5);
-		$this->template->set_partial('top_tools', 'top_tools', array('page' => $page));
-		$this->template->set_partial('post_thread', 'post_thread');
-		$this->template->set_partial('post_tools', 'post_tools');
-		$this->template->build('board');
-	}
-
-
-	public function thread($num = 0)
-	{
-		$num = str_replace('S', '', $num);
-		if (!is_numeric($num) || !$num > 0)
-		{
-			show_404();
-		}
-
-		$num = intval($num);
-
-		$thread = $this->post->get_thread(get_selected_radix(), $num);
-
-		if (!is_array($thread))
-		{
-			show_404();
-		}
-
-		if (!isset($thread[$num]['op']))
-		{
-			$this->post($num);
-		}
-
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Thread #' . $num);
-		$this->template->set('posts', $thread);
-		$this->template->set('thread_id', $num);
-		$this->template->set_partial('top_tools', 'top_tools');
-		$this->template->set_partial('post_reply', 'post_reply');
-		$this->template->set_partial('post_tools', 'post_tools');
-		$this->template->build('board');
-	}
-
-
-	public function last50($num = 0)
-	{
-		$num = str_replace('S', '', $num);
-		if (!is_numeric($num) || !$num > 0)
-		{
-			show_404();
-		}
-
-		$num = intval($num);
-
-		$thread = $this->post->get_thread(
-			get_selected_radix(), $num,
-			array('type' => 'last_x', 'type_extra' => array('last_limit' => 50))
-		);
-
-		if (!is_array($thread))
-		{
-			show_404();
-		}
-
-		if (count($thread[$num]['posts']) < 50)
-		{
-			$this->post($num);
-		}
-
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Thread #' . $num);
-		$this->template->set('posts', $thread);
-		$this->template->set('section_title',
-			sprintf(_('Showing the last 50 posts for thread No.%s'), $num));
-		$this->template->set('thread_id', $num);
-		$this->template->set('last50', TRUE);
-		$this->template->set_partial('top_tools', 'top_tools');
-		$this->template->set_partial('post_reply', 'post_reply');
-		$this->template->set_partial('post_tools', 'post_tools');
-		$this->template->build('board');
-	}
-
-
-	public function sending()
-	{
-		// honey pot to get rid of bots with 99.8% more skill
-		if (mb_strlen($this->input->post('name')) > 0 || mb_strlen($this->input->post('reply')) > 0 || mb_strlen($this->input->post('email')) > 0)
-		{
-			show_404();
-		}
-
+		/**
+		 * The form has been submitted to be validated and processed.
+		 */
 		if ($this->input->post('reply_gattai') == 'Submit')
 		{
+			/**
+			 * Validate Form!
+			 */
 			$this->load->library('form_validation');
+
 			$this->form_validation->set_rules('reply_numero', 'Thread no.',
 				'required|is_natural|xss_clean');
 			$this->form_validation->set_rules('reply_bokunonome', 'Username',
@@ -295,19 +1189,27 @@ class Chan extends Public_Controller
 			$this->form_validation->set_rules('reply_nymphassword', 'Password',
 				'required|min_length[3]|max_length[32]|xss_clean');
 
+			/**
+			 * Verify if the user posting is a moderator or administrator and apply form validation.
+			 */
 			if ($this->tank_auth->is_allowed())
 			{
 				$this->form_validation->set_rules('reply_postas', 'Post as',
-					'required|callback__is_valid_allowed_tag|xss_clean');
-				$this->form_validation->set_message('_is_valid_allowed_tag',
-					'You didn\'t specify a correct type of user to post as');
+					'required|callback__is_valid_allowed_level|xss_clean');
+				$this->form_validation->set_message('_is_valid_allowed_level',
+					'You did not specify a correct type of user to post as.');
 			}
 
-
-			// get rid of the validation errors here for readability
+			/**
+			 * The validation of the form has failed! All errors will be formatted here for readability.
+			 */
 			if ($this->form_validation->run() == FALSE)
 			{
 				$this->form_validation->set_error_delimiters('', '');
+
+				/**
+				 * Display a JSON output for AJAX REQUESTS.
+				 */
 				if ($this->input->is_ajax_request())
 				{
 					$this->output
@@ -315,97 +1217,117 @@ class Chan extends Public_Controller
 						->set_output(json_encode(array('error' => validation_errors(), 'success' => '')));
 					return FALSE;
 				}
+
+				/**
+				 * Display a default/standard output for NON-AJAX REQUESTS.
+				 */
 				$this->template->title(_('Error'));
-				$this->template->set('error', validation_errors());
-				$this->template->set_partial('top_tools', 'top_tools');
-				$this->template->set_partial('post_tools', 'post_tools');
+				$this->_set_parameters(
+					array(
+						'disable_headers'	=> FALSE,
+						'is_page'			=> FALSE,
+						'is_last50'			=> FALSE,
+						'is_statistics'		=> FALSE,
+						'modifiers'			=> array(),
+
+						'error'				=> validation_errors()
+					),
+					array(
+						'post_reply'		=> FALSE,
+						'post_thread'		=> FALSE,
+						'tools_post'		=> TRUE,
+						'tools_view'		=> TRUE
+					)
+				);
 				$this->template->build('error');
 				return FALSE;
 			}
+
+			/**
+			 * Everything is GOOD! Continue with posting the content to the board.
+			 */
+			$data = array(
+				'num'		=> $this->input->post('reply_numero'),
+				'name'		=> $this->input->post('reply_bokunonome'),
+				'email'		=> $this->input->post('reply_elitterae'),
+				'subject'	=> $this->input->post('reply_talkingde'),
+				'comment'	=> $this->input->post('reply_chennodiscursus'),
+				'spoiler'	=> $this->input->post('reply_spoiler'),
+				'password'	=> $this->input->post('reply_nymphassword'),
+				'postas'	=> (($this->tank_auth->is_allowed()) ? $this->input->post('reply_postas') : 'N'),
+
+				'media'		=> '',
+				'ghost'		=> FALSE
+			);
+
+			/**
+			 * CHECK #1: Verify the TYPE of POST passing through and insert the data correctly.
+			 */
+			if (get_selected_radix()->archive)
+			{
+				/**
+				 * This POST is located in the ARCHIVE and MUST BE A GHOST POST.
+				 */
+				$data['ghost'] = TRUE;
+
+				/**
+				 * Check the $num to ensure that the thread actually exists in the database and that
+				 * $num is actually the OP of the thread.
+				 */
+				$check = $this->post->check_thread(get_selected_radix(), $data['num']);
+
+				if (isset($check['invalid_thread']) && $check['invalid_thread'] == TRUE)
+				{
+					if ($this->input->is_ajax_request())
+					{
+						$this->output
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => _('This thread does not exist.'), 'success' => '')));
+						return FALSE;
+					}
+
+					$this->template->title(_('Error'));
+					$this->_set_parameters(
+						array(
+							'disable_headers'	=> FALSE,
+							'is_page'			=> FALSE,
+							'is_last50'			=> FALSE,
+							'is_statistics'		=> FALSE,
+							'modifiers'			=> array(),
+
+							'error'				=> _('This thread does not exist.')
+						),
+						array(
+							'post_reply'		=> FALSE,
+							'post_thread'		=> FALSE,
+							'tools_post'		=> TRUE,
+							'tools_view'		=> TRUE
+						)
+					);
+					$this->template->build('error');
+					return FALSE;
+				}
+			}
 			else
 			{
-				$data['num'] = $this->input->post('reply_numero');
-				$data['name'] = $this->input->post('reply_bokunonome');
-				$data['email'] = $this->input->post('reply_elitterae');
-				$data['subject'] = $this->input->post('reply_talkingde');
-				$data['comment'] = $this->input->post('reply_chennodiscursus');
-				$data['password'] = $this->input->post('reply_nymphassword');
-				$data['spoiler'] = $this->input->post('reply_spoiler');
-
-				if ($this->tank_auth->is_allowed())
-				{
-					$data['postas'] = $this->input->post('reply_postas');
-				}
-				else
-				{
-					$data['postas'] = 'N';
-				}
-
-
-				/*
-				  |
-				  |	FIRST OF ALL, CHECK WHAT KIND OF POST IS PASSING THROUGH
-				  |
-				  |	CHECK IF IT GOES IN THE RIGHT PLACE
-				  |
+				/**
+				 * Determine if we are creating a new thread or replying to an existing thread.
 				 */
-
-				$data['ghost'] = FALSE;
-
-				// Check if thread exists and other things
-				if (!get_selected_radix()->archive)
+				if ($data['num'] == 0)
 				{
-
-					if ($data['num'] == 0) // making a new thread
-					{
-						// let's make it exactly 0
-						$data['num'] = 0;
-						// no issues here
-						$check = array();
-					}
-					else
-					{
-						// replying to a thread
-						// check that we do have the thread
-						$check = $this->post->check_thread(get_selected_radix(), $data['num']);
-
-						if (isset($check['invalid_thread']))
-						{
-							// probably the set OP num wasn't actually an OP
-							if ($this->input->is_ajax_request())
-							{
-								$this->output
-									->set_content_type('application/json')
-									->set_output(json_encode(array('error' => _('This thread does not exist.'), 'success' => '')));
-								return FALSE;
-							}
-
-							$this->template->title(_('Error'));
-							$this->template->set('error', _('This thread does not exist.'));
-							$this->template->set_partial('top_tools', 'top_tools');
-							$this->template->set_partial('post_tools', 'post_tools');
-							$this->template->build('error');
-							return FALSE;
-						}
-
-						// thread_dead means the rest of the posts are going to be ghost
-						// ghosts won't bump the thread
-						if (isset($check['thread_dead']))
-						{
-							$data['ghost'] = TRUE;
-						}
-					}
+					$data['num'] = 0;
+					$check = array();
 				}
 				else
 				{
-					// in the archive all posts are ghost
-					$data['ghost'] = TRUE;
-
+					/**
+					 * Check the $num to ensure that the thread actually exists in the database and that
+					 * $num is actually the OP of the thread.
+					 */
 					$check = $this->post->check_thread(get_selected_radix(), $data['num']);
 
-					if (isset($check['invalid_thread']))
+					if (isset($check['invalid_thread']) && $check['invalid_thread'] == TRUE)
 					{
-						// probably the wrong OP, or it tried creating a new thread with num = 0
 						if ($this->input->is_ajax_request())
 						{
 							$this->output
@@ -415,773 +1337,271 @@ class Chan extends Public_Controller
 						}
 
 						$this->template->title(_('Error'));
-						$this->template->set('error', _('This thread does not exist.'));
-						$this->template->set_partial('top_tools', 'top_tools');
-						$this->template->set_partial('post_tools', 'post_tools');
+						$this->_set_parameters(
+							array(
+								'disable_headers'	=> FALSE,
+								'is_page'			=> FALSE,
+								'is_last50'			=> FALSE,
+								'is_statistics'		=> FALSE,
+								'modifiers'			=> array(),
+
+								'error'				=> _('This thread does not exist.')
+							),
+							array(
+								'post_reply'		=> FALSE,
+								'post_thread'		=> FALSE,
+								'tools_post'		=> TRUE,
+								'tools_view'		=> TRUE
+							)
+						);
 						$this->template->build('error');
 						return FALSE;
 					}
 
-					// it should be pretty safe to post a ghost, right?
+					if (isset($check['thread_dead']) && $check['thread_dead'] == TRUE)
+					{
+						$data['ghost'] = TRUE;
+					}
+				}
+			}
+
+			/**
+			 * CHECK #2: Verify all IMAGE posts and set appropriate information.
+			 */
+			if ($data['num'] == 0
+				&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] == 4))
+			{
+				if ($this->input->is_ajax_request())
+				{
+					$this->output
+						->set_content_type('application/json')
+						->set_output(json_encode(array('error' => _('You are required to upload an image when posting a new thread.'), 'success' => '')));
+					return FALSE;
 				}
 
+				$this->template->title(_('Error'));
+				$this->_set_parameters(
+					array(
+						'disable_headers'	=> FALSE,
+						'is_page'			=> FALSE,
+						'is_last50'			=> FALSE,
+						'is_statistics'		=> FALSE,
+						'modifiers'			=> array(),
 
-				/*
-				  |
-				  |	SECOND, CHECK IMAGE-RELATED SWITCHES
-				  |
+						'error'				=> _('You are required to upload an image when posting a new thread.')
+					),
+					array(
+						'post_reply'		=> FALSE,
+						'post_thread'		=> FALSE,
+						'tools_post'		=> TRUE,
+						'tools_view'		=> TRUE
+					)
+				);
+				$this->template->build('error');
+				return FALSE;
+			}
+
+			/**
+			 * Check if the comment textarea is EMPTY when no image is uploaded.
+			 */
+			if (mb_strlen($data['comment']) < 3
+				&& (!isset($_FILES['file_image']) || $_FILES['file_image']['error'] == 4))
+			{
+				if ($this->input->is_ajax_request())
+				{
+					$this->output
+						->set_content_type('application/json')
+						->set_output(json_encode(array('error' => _('You are required to write a comment when no image upload is present.'), 'success' => '')));
+					return FALSE;
+				}
+
+				$this->template->title(_('Error'));
+				$this->_set_parameters(
+					array(
+						'disable_headers'	=> FALSE,
+						'is_page'			=> FALSE,
+						'is_last50'			=> FALSE,
+						'is_statistics'		=> FALSE,
+						'modifiers'			=> array(),
+
+						'error'				=> _('You are required to write a comment when no image upload is present.')
+					),
+					array(
+						'post_reply'		=> FALSE,
+						'post_thread'		=> FALSE,
+						'tools_post'		=> TRUE,
+						'tools_view'		=> TRUE
+					)
+				);
+				$this->template->build('error');
+				return FALSE;
+			}
+
+			/**
+			 * Check if the IMAGE LIMIT has been reached or if we are posting as a GHOST.
+			 */
+			if ((isset($check['disable_image_upload']) || $data['ghost'])
+				&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4))
+			{
+				if ($this->input->is_ajax_request())
+				{
+					$this->output
+						->set_content_type('application/json')
+						->set_output(json_encode(array('error' => _('The posting of images has been disabled for this thread.'), 'success' => '')));
+					return FALSE;
+				}
+
+				$this->template->title(_('Error'));
+				$this->_set_parameters(
+					array(
+						'disable_headers'	=> FALSE,
+						'is_page'			=> FALSE,
+						'is_last50'			=> FALSE,
+						'is_statistics'		=> FALSE,
+						'modifiers'			=> array(),
+
+						'error'				=> _('The posting of images has been disabled for this thread.')
+					),
+					array(
+						'post_reply'		=> FALSE,
+						'post_thread'		=> FALSE,
+						'tools_post'		=> TRUE,
+						'tools_view'		=> TRUE
+					)
+				);
+				$this->template->build('error');
+				return FALSE;
+			}
+
+			/**
+			 * Process the IMAGE upload.
+			 */
+			if (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4)
+			{
+				/**
+				 * Initialize the MEDIA CONFIG and load the UPLOAD library.
 				 */
+				$media_config['upload_path']	= 'content/cache/';
+				$media_config['allowed_types']	= 'jpg|png|gif';
+				$media_config['max_size']		= 3072;
+				$media_config['max_width']		= 5000;
+				$media_config['max_height']		= 5000;
+				$media_config['overwrite']		= TRUE;
 
-				// OP must always post an image
-				if ($data['num'] == 0
-					&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] == 4))
+				$this->load->library('upload', $media_config);
+
+				if ($this->upload->do_upload('image'))
+				{
+					$data['media'] = $this->upload->data();
+				}
+				else
 				{
 					if ($this->input->is_ajax_request())
 					{
 						$this->output
 							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => _('You must always upload an image when making new threads.'), 'success' => '')));
+							->set_output(json_encode(array('error' => $this->upload->display_errors(), 'success' => '')));
 						return FALSE;
 					}
 
 					$this->template->title(_('Error'));
-					$this->template->set('error',
-						_('You must always upload an image when making new threads.'));
-					$this->template->set_partial('top_tools', 'top_tools');
-					$this->template->set_partial('post_tools', 'post_tools');
+					$this->_set_parameters(
+						array(
+							'disable_headers'	=> FALSE,
+							'is_page'			=> FALSE,
+							'is_last50'			=> FALSE,
+							'is_statistics'		=> FALSE,
+							'modifiers'			=> array(),
+
+							'error'				=> $this->upload->display_errors()
+						),
+						array(
+							'post_reply'		=> FALSE,
+							'post_thread'		=> FALSE,
+							'tools_post'		=> TRUE,
+							'tools_view'		=> TRUE
+						)
+					);
 					$this->template->build('error');
 					return FALSE;
 				}
+			}
 
-				// poster must always write a comment if he didn't upload an image
-				if (mb_strlen($data['comment']) < 3
-					&& (!isset($_FILES['file_image']) || $_FILES['file_image']['error'] == 4))
+			/**
+			 * SEND: Process the entire post and insert the information appropriately.
+			 */
+			$result = $this->post->comment(get_selected_radix(), $data);
+
+			/**
+			 * RESULT: Output all errors, messages, etc.
+			 */
+			if (isset($result['error']))
+			{
+				if ($this->input->is_ajax_request())
 				{
-					// if there's no image, there must be a comment
-					if ($this->input->is_ajax_request())
-					{
-						$this->output
-							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => _('You must always write a comment when not uploading an image.'), 'success' => '')));
-						return FALSE;
-					}
-
-					$this->template->title(_('Error'));
-					$this->template->set('error',
-						_('You must always write a comment when not uploading an image.'));
-					$this->template->set_partial('top_tools', 'top_tools');
-					$this->template->set_partial('post_tools', 'post_tools');
-					$this->template->build('error');
+					$this->output
+						->set_content_type('application/json')
+						->set_output(json_encode(array('error' => $result['error'], 'success' => '')));
 					return FALSE;
 				}
 
-				// don't post images if it's ghost or the image limit has been hit
-				if ((isset($check['disable_image_upload']) || $data['ghost'])
-					&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4))
+				$this->template->title(_('Error'));
+				$this->_set_parameters(
+					array(
+						'disable_headers'	=> FALSE,
+						'is_page'			=> FALSE,
+						'is_last50'			=> FALSE,
+						'is_statistics'		=> FALSE,
+						'modifiers'			=> array(),
+
+						'error'				=> $result['error']
+					),
+					array(
+						'post_reply'		=> FALSE,
+						'post_thread'		=> FALSE,
+						'tools_post'		=> TRUE,
+						'tools_view'		=> TRUE
+					)
+				);
+				$this->template->build('error');
+				return FALSE;
+			}
+			else if (isset($result['success']))
+			{
+				if ($this->input->is_ajax_request())
 				{
-					if ($this->input->is_ajax_request())
-					{
-						$this->output
-							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => _('Image posting is disabled in this thread.'), 'success' => '')));
-						return FALSE;
-					}
-
-					$this->template->title(_('Error'));
-					$this->template->set('error',
-						_('Image posting is disabled in this thread.'));
-					$this->template->set_partial('top_tools', 'top_tools');
-					$this->template->set_partial('post_tools', 'post_tools');
-					$this->template->build('error');
-					return FALSE;
-				}
-
-				$data['media'] = '';
-
-				if (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4)
-				{
-					$media_config['upload_path'] = 'content/cache/';
-					$media_config['allowed_types'] = 'jpg|png|gif';
-					$media_config['max_size'] = 3072;
-					$media_config['max_width'] = 3000;
-					$media_config['max_height'] = 3000;
-					$media_config['overwrite'] = TRUE;
-					$this->load->library('upload', $media_config);
-					if ($this->upload->do_upload('file_image'))
-					{
-						$data['media'] = $this->upload->data();
-					}
-					else
-					{
-						$data['media_error'] = $this->upload->display_errors();
-
-						if (isset($data['media_error']))
-						{
-							if ($this->input->is_ajax_request())
-							{
-								$this->output
-									->set_content_type('application/json')
-									->set_output(json_encode(array('error' => $data['media_error'], 'success' => '')));
-								return FALSE;
-							}
-							$this->template->title(_('Error'));
-							$this->template->set('error', $data['media_error']);
-							$this->template->set_partial('top_tools', 'top_tools');
-							$this->template->set_partial('post_tools', 'post_tools');
-							$this->template->build('error');
-							return FALSE;
-						}
-					}
-				}
-
-				/*
-				  |
-				  |	SEND
-				  |
-				 */
-
-				// hopefully at this point it's all pretty much clean
-				// the comment function does a lot more processing though
-				$result = $this->post->comment(get_selected_radix(), $data);
-
-
-				/*
-				  |
-				  |	OUTPUT ERRORS OR SUCCESS
-				  |
-				 */
-
-
-				if (isset($result['error']))
-				{
-					if ($this->input->is_ajax_request())
-					{
-						$this->output
-							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => $result['error'], 'success' => '')));
-						return FALSE;
-					}
-					$this->template->title(_('Error'));
-					$this->template->set('error', $result['error']);
-					$this->template->set_partial('top_tools', 'top_tools');
-					$this->template->set_partial('post_tools', 'post_tools');
-					$this->template->build('error');
-					return FALSE;
-				}
-				else if (isset($result['success']))
-				{
-					if ($this->input->is_ajax_request())
-					{
-						$this->output
-							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => '', 'success' => 'Your comment has been posted.')));
-						return FALSE;
-					}
-
-					if ($result['posted']->parent == 0)
-					{
-						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->num)) . '#' . $result['posted']->num;
-					}
-					else
-					{
-						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->parent)) . '#' . $result['posted']->num . (($result['posted']->subnum > 0)
-									? '_' . $result['posted']->subnum : '');
-					}
-
-					redirect($url, 'location', 303);
+					$this->output
+						->set_content_type('application/json')
+						->set_output(json_encode(array('error' => '', 'success' => 'Your comment has been posted.')));
 					return TRUE;
 				}
-			}
-		}
-	}
 
-
-	public function _is_valid_allowed_tag($tag)
-	{
-		switch ($tag)
-		{
-			case 'user':
-				return 'N';
-				break;
-			case 'mod':
-				if ($this->tank_auth->is_allowed())
+				/**
+				 * Redirect back to the user's POST.
+				 */
+				if ($result['posted']->parent == 0)
 				{
-					return 'M';
-					break;
+					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
+						$result['posted']->num)) . '#' . $result['posted']->num;
 				}
-			case 'admin':
-				if ($this->tank_auth->is_admin())
+				else
 				{
-					return 'A';
-					break;
+					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
+						$result['posted']->parent)) . '#' . $result['posted']->num .
+						(($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 				}
-			default:
-				return FALSE;
-		}
-	}
 
-
-	public function post($num = 0)
-	{
-		if ($this->input->post())
-		{
-			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $this->input->post('post'),
-				$matches);
-			redirect(get_selected_radix()->shortname . '/post/' . (isset($matches[1]) ? $matches[1]
-						: '') . (isset($matches[2]) ? '_' . $matches[2] : ''), 'location', 302);
-		}
-
-		$num = str_replace('S', '', $num);
-
-		if (strpos($num, '_') > 0)
-		{
-			$nums = explode('_', $num);
-			if (count($nums) != 2)
-				show_404();
-			$subnum = $nums[1];
-			$num = $nums[0];
-			if (!is_natural($subnum) || !$subnum > 0)
-			{
-				show_404();
+				redirect($callback, 'location', 303);
+				return TRUE;
 			}
-			$subnum = intval($subnum);
+
 		}
 		else
 		{
-			$subnum = 0;
-		}
-
-		if (!is_natural($num) || !$num > 0)
-		{
 			show_404();
-		}
-		$num = intval($num);
-
-		$thread = $this->post->get_post_thread(get_selected_radix(), $num, $subnum);
-		if ($thread === FALSE)
-		{
-			show_404();
-		}
-
-		if ($thread->subnum > 0)
-		{
-			$url = site_url(get_selected_radix()->shortname . '/thread/' . $thread->parent) . '#' . $thread->num . '_' . $thread->subnum;
-		}
-		else if ($thread->parent > 0)
-		{
-			$url = site_url(get_selected_radix()->shortname . '/thread/' . $thread->parent) . '#' . $thread->num;
-		}
-		else
-		{
-			$url = site_url(get_selected_radix()->shortname . '/thread/' . $thread->num);
-		}
-
-		redirect($url, 'location', 301);
-	}
-
-
-	public function image()
-	{
-		$uri = $this->uri->segment_array();
-
-		array_shift($uri);
-		array_shift($uri);
-
-		$imploded_uri = urldecode(implode('/', $uri));
-		if (mb_strlen($imploded_uri) < 22)
-		{
-			show_404();
-		}
-
-		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
-		if (mb_strlen($imploded_uri) > 23)
-		{
-			$page = substr($imploded_uri, 23);
-		}
-		else
-		{
-			$page = 1;
-		}
-
-
-		if ($hash == '' || !is_natural($page) || $page > 500)
-		{
-			show_404();
-		}
-
-		$page = intval($page);
-		$result = $this->post->get_image(get_selected_radix(), $hash . '==', $page);
-
-		$total_pages = ceil($result['total_found'] / 25);
-		$pagination = array(
-			'base_url' => site_url(array(get_selected_radix()->shortname, 'image', $hash)),
-			'current_page' => $page,
-			'total' => (($total_pages > 200) ? 200 : $total_pages)
-		);
-		$this->template->set('pagination', $pagination);
-
-		$this->template->set('section_title',
-			_('Searching for posts with image hash: ') . base64_encode(urlsafe_b64decode($hash)));
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Image: ' . urlencode($hash));
-		$this->template->set('posts', $result['posts']);
-		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
-		$this->template->set_partial('top_tools', 'top_tools');
-		$this->template->set_partial('post_tools', 'post_tools');
-		$this->template->build('board');
-	}
-
-
-	public function similar_image()
-	{
-		$uri = $this->uri->segment_array();
-
-		array_shift($uri);
-		array_shift($uri);
-
-		$imploded_uri = urldecode(implode('/', $uri));
-		if (mb_strlen($imploded_uri) < 22)
-		{
-			show_404();
-		}
-
-		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
-		if (mb_strlen($imploded_uri) > 23)
-		{
-			$page = substr($imploded_uri, 23);
-		}
-		else
-		{
-			$page = 1;
-		}
-
-
-		if ($hash == '' || !is_natural($page) || $page > 500)
-		{
-			show_404();
-		}
-
-		$page = intval($page);
-		$result = $this->post->get_similar_image(get_selected_radix(), $hash . '==',
-			$page);
-
-		//$total_pages = ceil($result['total_found'] / 25);
-		/* $pagination = array(
-		  'base_url' => site_url(array(get_selected_radix()->shortname, 'image', $hash)),
-		  'current_page' => $page,
-		  'total' => (($total_pages > 200) ? 200 : $total_pages)
-		  );
-		  $this->template->set('pagination', $pagination);
-		 */
-		$this->template->set('section_title',
-			_('Searching for posts with image hash: ') . fuuka_htmlescape($hash));
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' - Images similar to: ' . urldecode($hash));
-		$this->template->set('posts', $result['posts']);
-		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
-		$this->template->build('board');
-	}
-
-
-	public function full_image($image)
-	{
-		if (!in_array(substr($image, -3), array('jpg', 'png', 'gif')) || !is_natural(substr($image,
-					0, 13)))
-		{
-			show_404();
-		}
-
-		$image_data = $this->post->get_full_image(get_selected_radix(), $image);
-
-		if (isset($image_data['image_href']))
-		{
-			redirect($image_data['image_href']);
-		}
-		if (isset($image_data['error_type']))
-		{
-			if ($image_data['error_type'] == 'no_record')
-			{
-				$this->output->set_status_header('404');
-				$this->template->title(_('Error'));
-				$this->template->set('error',
-					_('There\'s no record of such image in our database.'));
-				$this->template->set_partial('top_tools', 'top_tools');
-				$this->template->set_partial('post_tools', 'post_tools');
-				$this->template->build('error');
-			}
-
-			if ($image_data['error_type'] == 'not_on_server')
-			{
-				$this->output->set_status_header('404');
-				$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; Image pruned');
-				$this->template->set('posts',
-					array('posts' => array('posts' => array($image_data['result']))));
-				$this->template->set('modifiers',
-					array('post_show_single_post' => TRUE, 'post_show_view_button' => TRUE));
-				$this->template->set('section_title',
-					_('Error 404: The image has been pruned from the server. '));
-				$this->template->set_partial('top_tools', 'top_tools');
-				$this->template->set_partial('post_tools', 'post_tools');
-				$this->template->build('board');
-			}
 		}
 	}
 
-
-	public function redirect($image = NULL)
-	{
-		$this->template->set('url', get_selected_radix()->images_url . $image);
-		$this->template->set_layout('redirect');
-		$this->template->build('redirect');
-	}
-
-
-	// $query, $username = NULL, $tripcode = NULL, $deleted = 0, $internal = 0, $order = 'desc'
-	public function search()
-	{
-		$modifiers = array('text', 'subject', 'username', 'tripcode', 'deleted', 'ghost', 'filter', 'order', 'page');
-		if ($this->input->post())
-		{
-			$redirect_array = array(get_selected_radix()->shortname, 'search');
-			foreach ($modifiers as $modifier)
-			{
-				if ($this->input->post($modifier))
-				{
-					$redirect_array[] = $modifier;
-					$redirect_array[] = rawurlencode($this->input->post($modifier));
-				}
-			}
-
-			redirect(site_url($redirect_array));
-		}
-		$search = $this->uri->ruri_to_assoc(2, $modifiers);
-		$result = $this->post->get_search(get_selected_radix(), $search);
-
-		if (isset($result['error']))
-		{
-			$this->template->title(_('Error'));
-			$this->template->set('error', $result['error']);
-			$this->template->set_partial('top_tools', 'top_tools',
-				array('search' => $search));
-			$this->template->set_partial('post_tools', 'post_tools');
-			$this->template->build('error');
-			return FALSE;
-		}
-
-		$title = array();
-		if ($search['text'])
-			$title[] = _('including') . ' "' . trim(fuuka_htmlescape($search['text'])) . '"';
-		if ($search['subject'])
-			$title[] = _('with subject') . ' "' . trim(fuuka_htmlescape($search['subject'])) . '"';
-		if ($search['username'])
-			$title[] = _('with username') . ' "' . trim(fuuka_htmlescape($search['username'])) . '"';
-		if ($search['tripcode'])
-			$title[] = _('with tripcode') . ' "' . trim(fuuka_htmlescape($search['tripcode'])) . '"';
-		if ($search['deleted'] == 'deleted')
-			$title[] = _('that are deleted');
-		if ($search['deleted'] == 'not-deleted')
-			$title[] = _('that aren\'t deleted');
-		if ($search['ghost'] == 'only')
-			$title[] = _('that are by ghosts');
-		if ($search['ghost'] == 'none')
-			$title[] = _('that aren\'t by ghosts');
-		if ($search['order'] == 'asc')
-			$title[] = _('starting from the oldest ones');
-
-		if ($search["filter"]) :
-			$filters = explode('-', $search["filter"]);
-			unset($search["filter"]);
-			foreach ($filters as $key => $value)
-			{
-				$search["filter"][$value] = TRUE;
-			}
-
-			$title[] = _('with the following filters applied: ') . implode(', ', $filters);
-		endif;
-
-		if (!$search['page'] || !intval($search['page']))
-		{
-			$search['page'] = 1;
-		}
-
-		$title = _('Searching for posts ') . urldecode(implode(' ' . _('and') . ' ',
-					$title));
-		$this->template->set('section_title', $title);
-
-		$uri_array = $this->uri->ruri_to_assoc(2);
-		foreach ($uri_array as $key => $item)
-		{
-			if (!$item)
-				unset($uri_array[$key]);
-		}
-
-		if (isset($uri_array['filter']))
-			$uri_array['filter'] = implode('-', $filters);
-
-		if (isset($uri_array['page']))
-			unset($uri_array['page']);
-
-		$total_pages = ceil($result['total_found'] / 25);
-		$pagination = array(
-			'base_url' => site_url(array($this->uri->assoc_to_uri($uri_array), 'page')),
-			'current_page' => $search['page'],
-			'total' => (($total_pages > 200) ? 200 : $total_pages)
-		);
-		$this->template->set('pagination', $pagination);
-
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' &raquo; ' . $title);
-		$this->template->set('posts', $result['posts']);
-		$this->template->set('modifiers', array('post_show_view_button' => TRUE));
-		$this->template->set_partial('top_tools', 'top_tools',
-			array('search' => $search));
-		$this->template->set_partial('post_tools', 'post_tools');
-		$this->template->build('board');
-	}
-
-
-	public function report($num = 0)
-	{
-		if (!is_numeric($num) || !$num > 0)
-		{
-			show_404();
-		}
-
-		if (!$this->input->is_ajax_request())
-		{
-			show_404();
-		}
-
-		$post = array(
-			'board' => get_selected_radix()->id,
-			'post' => $this->input->post("post"),
-			'reason' => $this->input->post("reason")
-		);
-
-		$report = new Report();
-		if (!$report->add($post))
-		{
-			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => 'Sorry, failed to report post to the moderators. Please try again later.')));
-			return FALSE;
-		}
-		$this->output->set_output(json_encode(array('status' => 'success')));
-	}
-
-
-	public function delete($num = 0)
-	{
-		if (!is_numeric($num) || !$num > 0)
-		{
-			show_404();
-		}
-
-		if (!$this->input->is_ajax_request())
-		{
-			show_404();
-		}
-
-		$post = array(
-			'post' => $this->input->post("post"),
-			'password' => $this->input->post("password")
-		);
-
-
-		$result = $this->post->delete(get_selected_radix(), $post);
-		if (isset($result['error']))
-		{
-			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
-			return FALSE;
-		}
-		if (isset($result['success']) && $result['success'] === TRUE)
-		{
-			$this->output->set_output(json_encode(array('status' => 'success')));
-		}
-	}
-
-
-	public function spam($num = 0)
-	{
-		if (!$this->tank_auth->is_allowed())
-		{
-			show_404();
-		}
-
-		if (!is_numeric($num) || !$num > 0)
-		{
-			show_404();
-		}
-
-		if (!$this->input->is_ajax_request())
-		{
-			show_404();
-		}
-
-		$result = $this->post->spam($this->input->post("post"));
-		if (isset($result['error']))
-		{
-			$this->output->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
-			return FALSE;
-		}
-		if (isset($result['success']) && $result['success'] === TRUE)
-		{
-			$this->output->set_output(json_encode(array('status' => 'success')));
-		}
-	}
-
-
-	public function statistics($stat = NULL)
-	{
-		$this->load->model('statistics');
-		if (is_null($stat))
-		{
-			$stats_list = $this->statistics->get_available_stats();
-			$this->template->set('section_title', _('Statistics'));
-			$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . '&raquo; ' . _('statistics'));
-			$this->template->set('stats_list', $stats_list);
-			$this->template->set('is_statistics', TRUE);
-			$this->template->set_partial('statistics_interface',
-				'statistics/statistics_list');
-			$this->template->set_partial('top_tools', 'top_tools');
-			$this->template->build('statistics/statistics_show');
-			return TRUE;
-		}
-
-		$stat_array = $this->statistics->check_available_stats($stat,
-			get_selected_radix());
-		if (!is_array($stat_array))
-		{
-			show_404();
-		}
-
-		$time_left = $stat_array['info']['frequence'] + strtotime($stat_array['timestamp']);
-		$this->load->helper('date');
-		$this->template->set('section_title',
-			_('Statistics:') . ' ' . $stat_array['info']['name'] . '. Next update: ' . timespan(time(),
-				$time_left));
-		$this->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . '&raquo; ' . _('statistics'));
-		$this->template->set('info', $stat_array['info']);
-		$this->template->set('data', $stat_array['data']);
-		$this->template->set('is_statistics', TRUE);
-		$this->template->set_partial('statistics_interface',
-			'statistics/' . $stat_array['info']['interface']);
-		$this->template->set_partial('top_tools', 'top_tools');
-		$this->template->build('statistics/statistics_show');
-	}
-
-
-	public function remap_query()
-	{
-		$params = '';
-
-		// Page Redirect
-		if ($this->input->get('task') == "page")
-		{
-			if ($this->input->get('page') != "")
-			{
-				$params = 'page/' . $this->input->get('page') . '/';
-			}
-
-			if ($this->input->get('ghost') != "")
-			{
-				$params = 'ghost/' . $this->input->get('page') . '/';
-			}
-		}
-
-		// Search Redirect
-		if ($this->input->get('task') == "search" || $this->input->get('task') == "search2")
-		{
-			$params = 'search/';
-
-			// Build Redirect for Search
-			if ($this->input->get('search_text') != "")
-			{
-				$params .= 'text/' . $this->input->get('search_text') . '/';
-			}
-
-			if ($this->input->get('search_username') != "")
-			{
-				$params .= 'username/' . $this->input->get('search_username') . '/';
-			}
-
-			if ($this->input->get('search_tripcode') != "")
-			{
-				$params .= 'tripcode/' . $this->input->get('search_tripcode') . '/';
-			}
-
-			if ($this->input->get('search_del') != "")
-			{
-				$del = str_replace(array('dontcare', 'yes', 'no'),
-					array('', 'deleted', 'not-deleted'), $this->input->get('search_del'));
-				if ($del != "")
-				{
-					$params .= 'deleted/' . $del . '/';
-				}
-			}
-
-			if ($this->input->get('search_int') != "")
-			{
-				$int = str_replace(array('dontcare', 'yes', 'no'),
-					array('', 'only', 'none'), $this->input->get('search_int'));
-				if ($int != "")
-				{
-					$params .= 'ghost/' . $int . '/';
-				}
-			}
-
-			if ($this->input->get('search_ord') != "")
-			{
-				$ord = str_replace(array('old', 'new'), array('asc', 'desc'),
-					$this->input->get('search_ord'));
-				$params .= 'order/' . $ord . '/';
-			}
-		}
-
-		if ($params != "")
-		{
-			redirect(get_selected_radix()->shortname . '/' . $params, 'location', 301);
-		}
-	}
-
-	
-	public function _remap($method, $params = array())
-	{
-		if (isset($params[0]))
-		{
-			if (!($board = $this->radix->set_selected_by_shortname($method)))
-			{
-				// it's not a chan, let's check if it's some plugin
-				return parent::_remap($method, $params);
-			}
-			$this->template->set('board', $board);
-			$method = $params[0];
-			array_shift($params);
-			$this->load->model('post');
-		}
-
-		// load things this late to save some resources in case they aren't needed
-		$this->template->set('boards', $this->radix->get_all());
-		$this->load->library('template');
-		$this->load->helper('cookie');
-		$this->load->helper('number');
-		$this->template->set_layout('chan');
-
-		// see if some plugin completely overrides a function
-		if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
-		{
-			$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
-
-			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']),
-					array());
-		}
-		
-		// check if the theme has some custom version of the function
-		if (method_exists($this->TC, $method))
-		{
-			return call_user_func_array(array($this->TC, $method), $params);
-		}
-
-		if (method_exists($this, $method))
-		{
-			return call_user_func_array(array($this, $method), $params);
-		}
-		show_404();
-	}
 
 }
+

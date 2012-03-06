@@ -865,7 +865,10 @@ class Chan extends Public_Controller
 			array_push($title, sprintf(_('with the following filters applied: %s'), implode(', ', $filters)));
 		}
 
-		$title = sprintf(_('Searching for posts %s.'), urldecode(implode(' ' . _('and') . ' ', $title)));
+		if (!empty($title))
+			$title = sprintf(_('Searching for posts %s.'), urldecode(implode(' ' . _('and') . ' ', $title)));
+		else
+			$title = _('Displaying all posts with no filters applied.');
 		$page  = (!$search['page'] || !intval($search['page'])) ? 1 : $search['page'];
 
 		/**

@@ -132,6 +132,18 @@ if (!defined('BASEPATH'))
 			</div>
 		</div>
 		<div class="clearfix">
+			<label for="date_start">Starting Date</label>
+			<div class="input">
+				<?php echo form_input(array('type' => 'date', 'name' => 'start', 'id' => 'date_start', 'value' => (isset($search["date_start"])) ? rawurldecode($search["date_start"]) : '')); ?>
+			</div>
+		</div>
+		<div class="clearfix">
+			<label for="date_end">Ending Date</label>
+			<div class="input">
+				<?php echo form_input(array('type' => 'date', 'name' => 'end', 'id' => 'date_end', 'value' => (isset($search["date_end"])) ? rawurldecode($search["date_end"]) : '')); ?>
+			</div>
+		</div>
+		<div class="clearfix">
 			<label>Exclude</label>
 			<div class="input">
 				<ul class="inputs-list">

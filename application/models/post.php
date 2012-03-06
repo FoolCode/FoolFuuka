@@ -2173,6 +2173,7 @@ class Post extends CI_Model
 		$post->thumbnail_href = $this->get_image_href($board, $post, TRUE);
 		$post->image_href = $this->get_image_href($board, $post);
 		$post->remote_image_href = $this->get_remote_image_href($board, $post);
+		$post->safe_media_hash = substr(urlsafe_b64encode(urlsafe_b64decode($post->media_hash)), 0, -2);
 		$post->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE',
 				$this->get_comment_processed($board, $post));
 		$post->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);

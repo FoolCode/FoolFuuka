@@ -340,14 +340,15 @@ class Chan extends Public_Controller
 		 */
 		$this->_map_query();
 		if ($this->input->post())
-			redirect(get_selected_radix()->shortname . '/page/' . $this->input->post('page'), 'location', 303);
+			redirect(get_selected_radix()->shortname . ($by_thread ? '/by_thread/' : '/page/') .
+				$this->input->post('page'), 'location', 303);
 
 		/**
 		 * Fetch the latest posts.
 		 */
 		$page  = intval($page);
 		$posts = $this->post->get_latest(get_selected_radix(), $page,
-			array('type' => ($by_thread ? 'by_thread' : 'by_post')));
+			array('per_page' => 24, 'type' => ($by_thread ? 'by_thread' : 'by_post')));
 
 		/**
 		 * Set template variables required to build the HTML.
@@ -405,7 +406,7 @@ class Chan extends Public_Controller
 		 */
 		$page  = intval($page);
 		$posts = $this->post->get_latest(get_selected_radix(), $page,
-			array('type' => 'ghost'));
+			array('per_page' => 24, 'type' => 'ghost'));
 
 		/**
 		 * Set template variables required to build the HTML.
@@ -1106,7 +1107,7 @@ class Chan extends Public_Controller
 				$this->form_validation->set_rules('reply_postas', 'Post as',
 					'required|callback__is_valid_allowed_level|xss_clean');
 				$this->form_validation->set_message('_is_valid_allowed_level',
-					'You did not specify a correct type of user to post as.');
+					'You did not specify a valid user level to post as.');
 			}
 
 			/**

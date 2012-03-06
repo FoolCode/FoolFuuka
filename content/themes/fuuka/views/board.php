@@ -1,8 +1,6 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-if (!isset($modifiers))
-	$modifiers = array();
 
 if (isset($thread_id))
 	echo form_open_multipart(get_selected_radix()->shortname .'/sending', array('id' => 'postform'));

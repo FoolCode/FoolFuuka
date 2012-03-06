@@ -13,8 +13,8 @@ if (!defined('BASEPATH'))
 					Reply to Thread <a class="tooltip-red" href="#">[?] <span>Don't expect anything heroic. Your post will not be uploaded to the original board.</span></a>
 				</div>
 				<?php if(isset($reply_errors)) : ?>
-			<span style="color:red"><?php echo $reply_errors ?></span>
-		<?php endif; ?>
+				<span style="color:red"><?php echo $reply_errors ?></span>
+				<?php endif; ?>
 				<table>
 					<tbody>
 						<tr>

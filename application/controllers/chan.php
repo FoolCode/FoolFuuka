@@ -262,7 +262,7 @@ class Chan extends Public_Controller
 			}
 		}
 
-		foreach ($dfeault['partials'] as $k)
+		foreach ($default['partials'] as $k)
 		{
 			if (!isset($partials[$k]))
 			{
@@ -322,16 +322,7 @@ class Chan extends Public_Controller
 		$this->template->title('FoOlFuuka &raquo; 4chan Archiver');
 		$this->_set_parameters(
 			array(
-				'disable_headers'	=> TRUE,
-				'is_page'			=> FALSE,
-				'is_last50'			=> FALSE,
-				'is_statistics'		=> FALSE
-			),
-			array(
-				'post_reply'		=> FALSE,
-				'post_thread'		=> FALSE,
-				'tools_post'		=> FALSE,
-				'tools_view'		=> FALSE
+				'disable_headers'	=> TRUE
 			)
 		);
 		$this->template->build('index');
@@ -370,11 +361,7 @@ class Chan extends Public_Controller
 											_('Latest by Thread') . ' - ' : '')
 											. _('Page') . ' ' . $page) : NULL),
 
-				'disable_headers'	=> FALSE,
 				'is_page'			=> TRUE,
-				'is_last50'			=> FALSE,
-				'is_statistics'		=> FALSE,
-				'modifiers'			=> array(),
 
 				'posts'				=> $posts['result'],
 				'posts_per_thread'	=> 5,
@@ -387,7 +374,6 @@ class Chan extends Public_Controller
 				)
 			),
 			array(
-				'post_reply'		=> FALSE,
 				'post_thread'		=> TRUE,
 				'tools_post'		=> TRUE,
 				'tools_view'		=> array('page' => $page)
@@ -431,11 +417,7 @@ class Chan extends Public_Controller
 				'section_title'		=> (($page > 1) ?
 										_('Ghost Page') . ' ' . $page : NULL),
 
-				'disable_headers'	=> FALSE,
 				'is_page'			=> TRUE,
-				'is_last50'			=> FALSE,
-				'is_statistics'		=> FALSE,
-				'modifiers'			=> array(),
 
 				'posts'				=> $posts['result'],
 				'posts_per_thread'	=> 5,
@@ -447,7 +429,6 @@ class Chan extends Public_Controller
 				)
 			),
 			array(
-				'post_reply'		=> FALSE,
 				'post_thread'		=> TRUE,
 				'tools_post'		=> TRUE,
 				'tools_view'		=> array('page' => $page)
@@ -482,16 +463,9 @@ class Chan extends Public_Controller
 			array(
 				'section_title'		=> _('Gallery ß - Showing Latest Created Threads'),
 
-				'disable_headers'	=> FALSE,
-				'is_page'			=> FALSE,
-				'is_last50'			=> FALSE,
-				'is_statistics'		=> FALSE,
-
 				'threads'			=> $threads,
 			),
 			array(
-				'post_reply'		=> FALSE,
-				'post_thread'		=> FALSE,
 				'tools_post'		=> TRUE,
 				'tools_view'		=> TRUE
 			)
@@ -532,20 +506,13 @@ class Chan extends Public_Controller
 			' &raquo; ' . _('Thread') . ' #' . $num);
 		$this->_set_parameters(
 			array(
-				'disable_headers'	=> FALSE,
-				'is_page'			=> FALSE,
-				'is_last50'			=> FALSE,
-				'is_statistics'		=> FALSE,
-				'modifiers'			=> array(),
-
 				'thread_id'			=> $num,
 				'posts'				=> $thread
 			),
 			array(
 				'post_reply'		=> TRUE,
-				'post_thread'		=> FALSE,
 				'tools_post'		=> TRUE,
-				'tools_view'		=> TRUE,
+				'tools_view'		=> TRUE
 			)
 		);
 		$this->template->build('board');
@@ -586,18 +553,13 @@ class Chan extends Public_Controller
 			array(
 				'section_title'		=> sprintf(_('Showing the last 50 posts for Thread No.%s'), $num),
 
-				'disable_headers'	=> FALSE,
-				'is_page'			=> FALSE,
 				'is_last50'			=> TRUE,
-				'is_statistics'		=> FALSE,
-				'@modifiers'		=> array(),
 
 				'thread_id'			=> $num,
 				'posts'				=> $thread
 			),
 			array(
 				'post_reply'		=> TRUE,
-				'post_thread'		=> FALSE,
 				'tools_post'		=> TRUE,
 				'tools_view'		=> TRUE
 			)
@@ -716,10 +678,6 @@ class Chan extends Public_Controller
 				'section_title'		=> sprintf(_('Search for image posts with the image hash: %s'),
 										base64_encode(urlsafe_b64decode($hash))),
 
-				'disable_headers'	=> FALSE,
-				'is_page'			=> FALSE,
-				'is_last50'			=> FALSE,
-				'is_statistics'		=> FALSE,
 				'modifiers'			=> array('post_show_view_button' => TRUE),
 
 				'posts'				=> $result['posts'],
@@ -731,8 +689,6 @@ class Chan extends Public_Controller
 				)
 			),
 			array(
-				'post_reply'		=> FALSE,
-				'post_thread'		=> FALSE,
 				'tools_post'		=> TRUE,
 				'tools_view'		=> TRUE
 			)
@@ -774,18 +730,7 @@ class Chan extends Public_Controller
 					array(
 						'section_title'		=> sprintf(_('Showing the last 50 posts for Thread No.%s'), $num),
 
-						'disable_headers'	=> FALSE,
-						'is_page'			=> FALSE,
-						'is_last50'			=> FALSE,
-						'is_statistics'		=> FALSE,
-
 						'error'				=> _('There is no record of the specified image in our database.')
-					),
-					array(
-						'post_reply'		=> FALSE,
-						'post_thread'		=> FALSE,
-						'tools_post'		=> FALSE,
-						'tools_view'		=> FALSE
 					)
 				);
 				$this->template->build('error');
@@ -803,19 +748,9 @@ class Chan extends Public_Controller
 					array(
 						'section_title'		=> _('Error 404: The image has been pruned from the server.'),
 
-						'disable_headers'	=> FALSE,
-						'is_page'			=> FALSE,
-						'is_last50'			=> FALSE,
-						'is_statistics'		=> FALSE,
 						'modifiers'			=> array('post_show_single_post' => TRUE, 'post_show_view_button' => TRUE),
 
 						'posts'				=> array('posts' => array('posts' => array($image['result'])))
-					),
-					array(
-						'post_reply'		=> FALSE,
-						'post_thread'		=> FALSE,
-						'tools_post'		=> FALSE,
-						'tools_view'		=> FALSE
 					)
 				);
 				$this->template->build('board');
@@ -883,17 +818,9 @@ class Chan extends Public_Controller
 			$this->template->title(get_selected_radix()->formatted_title);
 			$this->_set_parameters(
 				array(
-					'disable_headers'	=> FALSE,
-					'is_page'			=> FALSE,
-					'is_last50'			=> FALSE,
-					'is_statistics'		=> FALSE,
-
 					'error'				=> $result['error']
 				),
 				array(
-					'post_reply'		=> FALSE,
-					'post_thread'		=> FALSE,
-					'tools_post'		=> FALSE,
 					'tools_view'		=> array('search' => $search)
 				)
 			);
@@ -962,10 +889,6 @@ class Chan extends Public_Controller
 			array(
 				'section_title'		=> $title,
 
-				'disable_headers'	=> FALSE,
-				'is_page'			=> FALSE,
-				'is_last50'			=> FALSE,
-				'is_statistics'		=> FALSE,
 				'modifiers'			=> array('post_show_view_button' => TRUE),
 
 				'posts'				=> $result['posts'],
@@ -977,8 +900,6 @@ class Chan extends Public_Controller
 				)
 			),
 			array(
-				'post_reply'		=> FALSE,
-				'post_thread'		=> FALSE,
 				'tools_post'		=> TRUE,
 				'tools_view'		=> array('search' => $search)
 			)
@@ -1010,18 +931,12 @@ class Chan extends Public_Controller
 				array(
 					'section_title'		=> _('Statistics'),
 
-					'disable_headers'	=> FALSE,
-					'is_page'			=> FALSE,
-					'is_last50'			=> FALSE,
 					'is_statistics'		=> TRUE,
 					'is_statistics_list'=> TRUE,
 
 					'info'				=> $stats
 				),
 				array(
-					'post_reply'		=> FALSE,
-					'post_thread'		=> FALSE,
-					'tools_post'		=> FALSE,
 					'tools_view'		=> TRUE
 				)
 			);
@@ -1046,9 +961,6 @@ class Chan extends Public_Controller
 											$stats['info']['name'],
 											timespan($stats['info']['frequency'] + strtotime($stats['timestamp']))),
 
-					'disable_headers'	=> FALSE,
-					'is_page'			=> FALSE,
-					'is_last50'			=> FALSE,
 					'is_statistics'		=> TRUE,
 					'is_statistics_list'=> FALSE,
 
@@ -1058,9 +970,6 @@ class Chan extends Public_Controller
 				array(
 					'stats_interface'	=> 'statistics/' . $stats['info']['interface'],
 
-					'post_reply'		=> FALSE,
-					'post_thread'		=> FALSE,
-					'tools_post'		=> FALSE,
 					'tools_view'		=> TRUE
 				)
 			);
@@ -1224,17 +1133,9 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'disable_headers'	=> FALSE,
-						'is_page'			=> FALSE,
-						'is_last50'			=> FALSE,
-						'is_statistics'		=> FALSE,
-						'modifiers'			=> array(),
-
 						'error'				=> validation_errors()
 					),
 					array(
-						'post_reply'		=> FALSE,
-						'post_thread'		=> FALSE,
 						'tools_post'		=> TRUE,
 						'tools_view'		=> TRUE
 					)
@@ -1289,17 +1190,9 @@ class Chan extends Public_Controller
 					$this->template->title(_('Error'));
 					$this->_set_parameters(
 						array(
-							'disable_headers'	=> FALSE,
-							'is_page'			=> FALSE,
-							'is_last50'			=> FALSE,
-							'is_statistics'		=> FALSE,
-							'modifiers'			=> array(),
-
 							'error'				=> _('This thread does not exist.')
 						),
 						array(
-							'post_reply'		=> FALSE,
-							'post_thread'		=> FALSE,
 							'tools_post'		=> TRUE,
 							'tools_view'		=> TRUE
 						)
@@ -1339,17 +1232,9 @@ class Chan extends Public_Controller
 						$this->template->title(_('Error'));
 						$this->_set_parameters(
 							array(
-								'disable_headers'	=> FALSE,
-								'is_page'			=> FALSE,
-								'is_last50'			=> FALSE,
-								'is_statistics'		=> FALSE,
-								'modifiers'			=> array(),
-
 								'error'				=> _('This thread does not exist.')
 							),
 							array(
-								'post_reply'		=> FALSE,
-								'post_thread'		=> FALSE,
 								'tools_post'		=> TRUE,
 								'tools_view'		=> TRUE
 							)
@@ -1382,17 +1267,9 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'disable_headers'	=> FALSE,
-						'is_page'			=> FALSE,
-						'is_last50'			=> FALSE,
-						'is_statistics'		=> FALSE,
-						'modifiers'			=> array(),
-
 						'error'				=> _('You are required to upload an image when posting a new thread.')
 					),
 					array(
-						'post_reply'		=> FALSE,
-						'post_thread'		=> FALSE,
 						'tools_post'		=> TRUE,
 						'tools_view'		=> TRUE
 					)
@@ -1418,17 +1295,9 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'disable_headers'	=> FALSE,
-						'is_page'			=> FALSE,
-						'is_last50'			=> FALSE,
-						'is_statistics'		=> FALSE,
-						'modifiers'			=> array(),
-
 						'error'				=> _('You are required to write a comment when no image upload is present.')
 					),
 					array(
-						'post_reply'		=> FALSE,
-						'post_thread'		=> FALSE,
 						'tools_post'		=> TRUE,
 						'tools_view'		=> TRUE
 					)
@@ -1454,17 +1323,9 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'disable_headers'	=> FALSE,
-						'is_page'			=> FALSE,
-						'is_last50'			=> FALSE,
-						'is_statistics'		=> FALSE,
-						'modifiers'			=> array(),
-
 						'error'				=> _('The posting of images has been disabled for this thread.')
 					),
 					array(
-						'post_reply'		=> FALSE,
-						'post_thread'		=> FALSE,
 						'tools_post'		=> TRUE,
 						'tools_view'		=> TRUE
 					)
@@ -1507,17 +1368,9 @@ class Chan extends Public_Controller
 					$this->template->title(_('Error'));
 					$this->_set_parameters(
 						array(
-							'disable_headers'	=> FALSE,
-							'is_page'			=> FALSE,
-							'is_last50'			=> FALSE,
-							'is_statistics'		=> FALSE,
-							'modifiers'			=> array(),
-
 							'error'				=> $this->upload->display_errors()
 						),
 						array(
-							'post_reply'		=> FALSE,
-							'post_thread'		=> FALSE,
 							'tools_post'		=> TRUE,
 							'tools_view'		=> TRUE
 						)
@@ -1548,17 +1401,9 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'disable_headers'	=> FALSE,
-						'is_page'			=> FALSE,
-						'is_last50'			=> FALSE,
-						'is_statistics'		=> FALSE,
-						'modifiers'			=> array(),
-
 						'error'				=> $result['error']
 					),
 					array(
-						'post_reply'		=> FALSE,
-						'post_thread'		=> FALSE,
 						'tools_post'		=> TRUE,
 						'tools_view'		=> TRUE
 					)

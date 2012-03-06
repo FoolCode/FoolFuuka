@@ -58,6 +58,56 @@ class Admin_Controller extends MY_Controller
 		}
 	}
 
+	
+	/**
+	 * Checks the form for and returns either a compiled array of values or
+	 * the error
+	 *  
+	 */
+	function form_validate($form)
+	{
+		$this->load->library('form_validation');
+		
+		foreach($form as $name => $item)
+		{if(isset($item['validation']))
+			{
+				$this->form_validation->set_rules($name, $item['label'], $item['validation']);
+			}
+		}
+		
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->form_validation->set_error_delimiters('', '');
+			return array('error' => validation_errors());
+		}
+		else
+		{
+			foreach($form as $name => $item)
+			{
+				
+				if($item['type'] == 'checkbox')
+				{
+					if($this->input->post($name) == 1)
+					{
+						$form['name']['value'] = 1;
+					}
+					else
+					{
+						$form['name']['value'] = 0;
+					}
+				}
+				else
+				{
+					$form['name']['value'] = $this->input->post($name);
+				}
+			}
+			
+			// returning a form with the new values
+			return array('success' => $form);
+		}
+	}
+	
+	
 
 	/**
 	 * Non-dynamic sidebar array.

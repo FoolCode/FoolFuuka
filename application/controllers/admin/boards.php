@@ -3,61 +3,80 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
+
 class Boards extends Admin_Controller
 {
+
+
 	function __construct()
 	{
 		parent::__construct();
 		$this->tank_auth->is_admin() or redirect('admin');
 
 		// title on top
-		$this->viewdata['controller_title'] = '<a href="'.site_url("admin/boards").'">' . _("Boards") . '</a>';;
+		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/boards") . '">' . _("Boards") . '</a>';
+		;
 	}
 
 
-	function _submit($post, $form)
+	function _board_structure()
 	{
-		// Support Checkbox Listing
-		$former = array();
-		foreach ($form as $key => $item)
-		{
-			if (isset($item[1]['value']) && is_array($item[1]['value'])) {
-				foreach ($item[1]['value'] as $key => $item2) {
-					$former[] = array('1', $item2);
-				}
-			}
-			else
-				$former[] = $form[$key];
-		}
-
-		foreach ($former as $key => $item)
-		{
-			if (isset($post[$item[1]['name']]))
-				$value = $post[$item[1]['name']];
-			else
-				$value = NULL;
-
-			$this->db->from('preferences');
-			$this->db->where(array('name' => $item[1]['name']));
-			if ($this->db->count_all_results() == 1)
-			{
-				$this->db->update('preferences', array('value' => $value), array('name' => $item[1]['name']));
-			}
-			else
-			{
-				$this->db->insert('preferences', array('name' => $item[1]['name'], 'value' => $value));
-			}
-		}
-
-		$CI = & get_instance();
-		$array = $CI->db->get('preferences')->result_array();
-		$result = array();
-		foreach ($array as $item)
-		{
-			$result[$item['name']] = $item['value'];
-		}
-		$CI->fs_options = $result;
-		flash_notice('notice', _('Updated settings.'));
+		return array(
+			'open' => array(
+				'type' => 'open',
+				'hidden' => array('id' => NULL)
+			),
+			'name' => array(
+				'type' => 'input',
+				'label' => _('Name'),
+				'help' => _('Insert the name of the board normally shown as title.'),
+				'placeholder' => _('Required'),
+				'class' => 'span3',
+				'validation' => 'required|max_length[128]'
+			),
+			'shortname' => array(
+				'type' => 'input',
+				'label' => _('Shortname'),
+				'help' => _('Insert the shorter name of the board. Reserved: "api", "cli", "admin".'),
+				'placeholder' => _('Required'),
+				'class' => 'span1',
+				'validation' => 'required|max_length[5]'
+			),
+			'separator-1' => array(
+				'type' => 'separator'
+			),
+			'archive' => array(
+				'type' => 'checkbox',
+				'help' => _('Is this a 4chan archiving board?')
+			),
+			'thumbnails' => array(
+				'type' => 'checkbox',
+				'help' => _('Display the thumbnails?')
+			),
+			'delay_thumbnails' => array(
+				'type' => 'checkbox',
+				'help' => _('Hide the thumbnails for 24 hours? (for moderation purposes)')
+			),
+			'sphinx' => array(
+				'type' => 'checkbox',
+				'help' => _('Use SphinxSearch as search engine?')
+			),
+			'hidden' => array(
+				'type' => 'checkbox',
+				'help' => _('Hide the board from public access? (only admins and mods will be able to browse it)')
+			),
+			'separator-2' => array(
+				'type' => 'separator-short'
+			),
+			'submit' => array(
+				'type' => 'submit',
+				'class' => 'btn-primary',
+				'value' => _('Submit')
+			),
+			'close' => array(
+				'type' => 'close'
+			),
+		);
 	}
 
 
@@ -69,37 +88,56 @@ class Boards extends Admin_Controller
 
 	function manage()
 	{
-		$this->viewdata["function_title"] = _('Manage');
-		$boards = new Board();
+		$this->viewdata["function_title"] = _('Manage boards');
 
+		$data["boards"] = $this->radix->get_all();
+		;
 
-		$boards->order_by('name', 'ASC');
-		$boards->get();
-		$data["boards"] = $boards;
-
-		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/manage.php", $data, TRUE);
+		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/manage.php",
+			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
-	}
-
-
-	function reports()
-	{
-		redirect('admin/reports/');
 	}
 
 
 	function board($shortname = NULL)
 	{
-		$board = new Board();
-		$board->where("shortname", $shortname)->get();
-		if ($board->result_count() == 0)
+		$data['form'] = $this->_board_structure();
+
+		if (is_null($shortname))
 		{
-			set_notice('warn', _('Sorry, the board you are looking for does not exist.'));
-			$this->manage();
-			return false;
+			// creating a new board
+			$this->viewdata["function_title"] = _('Creating a new board');
+
+			if ($this->input->post())
+			{
+				$result = $this->form_validate($data['form']);
+				if(isset($result['error']))
+				{
+					set_notice('warning', $result['error']);
+				}
+				else
+				{
+					// we aren't yet finished doing checks, there's still the 
+					// database and overriding part
+					$this->radix->save($form);
+				}
+			}
+
+			$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator', $data, TRUE);
+			$this->load->view('admin/default', $this->viewdata);
+			
+			return TRUE;
 		}
 
-		$this->viewdata["function_title"] = '<a href="' . site_url('/admin/boards/manage/') . '">' . _('Manage') . '</a>';
+		$board = $this->radix->get_by_shortname($shortname);
+		if ($board === FALSE)
+		{
+			show_404();
+		}
+
+		$data['object'] = $board;
+
+		$this->viewdata["function_title"] = _('Editing board:') . ' ' . $board->shortname;
 
 		$data["board"] = $board;
 
@@ -109,7 +147,8 @@ class Boards extends Admin_Controller
 			$old_shortname = $board->shortname;
 			$board->update_board_db($this->input->post());
 
-			flash_notice('notice', sprintf(_('Updated board information for %s.'), $board->name));
+			flash_notice('notice',
+				sprintf(_('Updated board information for %s.'), $board->name));
 			// Did we change the shortname of the board? We need to redirect to the new page then.
 			if (isset($old_shortname) && $old_shortname != $board->shortname)
 			{
@@ -117,12 +156,38 @@ class Boards extends Admin_Controller
 			}
 		}
 
-		$table = ormer($board);
-		$table = tabler($table);
-		$data['table'] = $table;
+		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator', $data, TRUE);
+		$this->load->view('admin/default', $this->viewdata);
+	}
 
-		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/board.php", $data, TRUE);
-		$this->load->view("admin/default.php", $this->viewdata);
+
+	function delete($type, $id = 0)
+	{
+		if (!isAjax())
+		{
+			$this->output->set_output(_('You can\'t delete from outside the admin panel through this link.'));
+			log_message("error", "Controller: board.php/remove: failed serie removal");
+			return false;
+		}
+		$id = intval($id);
+
+		switch ($type)
+		{
+			case("board"):
+				$board = new Board();
+				$board->where('id', $id)->get();
+				$title = $board->name;
+				if (!$board->remove())
+				{
+					flash_notice('error', sprintf(_('Failed to delete the board %s.'), $title));
+					log_message("error", "Controller: board.php/remove: failed board removal");
+					echo json_encode(array('href' => site_url("admin/boards/manage")));
+					return false;
+				}
+				flash_notice('notice', sprintf(_('The board %s has been deleted.'), $title));
+				$this->output->set_output(json_encode(array('href' => site_url("admin/boards/manage"))));
+				break;
+		}
 	}
 
 
@@ -209,7 +274,8 @@ class Boards extends Admin_Controller
 
 		$data['config'] = str_replace("\t\t\t", '', $this->generate_sphinx_config());
 
-		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/sphinx.php", $data, TRUE);
+		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/sphinx.php",
+			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
 	}
 
@@ -277,7 +343,8 @@ class Boards extends Admin_Controller
 				docinfo = extern
 				mlock = 0
 				morphology = none
-				min_word_len = ' . ((get_setting('fu_sphinx_mem_limit')) ? get_setting('fu_sphinx_mem_limit') : '2047M') . '
+				min_word_len = ' . ((get_setting('fu_sphinx_mem_limit'))
+					? get_setting('fu_sphinx_mem_limit') : '2047M') . '
 				charset_type = utf-8
 
 				charset_table =
@@ -293,7 +360,8 @@ class Boards extends Admin_Controller
 		{
 			if ($board->sphinx)
 			{
-				$config .= $this->generate_sphinx_definition_index($board->shortname, ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data');
+				$config .= $this->generate_sphinx_definition_index($board->shortname,
+					((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data');
 			}
 		}
 
@@ -304,7 +372,8 @@ class Boards extends Admin_Controller
 
 			indexer
 			{
-				mem_limit = ' . ((get_setting('fu_sphinx_mem_limit')) ? get_setting('fu_sphinx_mem_limit') : '2047M') . '
+				mem_limit = ' . ((get_setting('fu_sphinx_mem_limit'))
+					? get_setting('fu_sphinx_mem_limit') : '2047M') . '
 				max_xmlpipe2_field = 4M
 				write_buffer = 5M
 				max_file_field_buffer = 32M
@@ -318,14 +387,19 @@ class Boards extends Admin_Controller
 
 			searchd
 			{
-				listen = ' . ((get_setting('fu_sphinx_listen')) ? get_setting('fu_sphinx_listen') . ':sphinx' : '127.0.0.1:9312:sphinx') . '
-				listen = ' . ((get_setting('fu_sphinx_listen_mysql')) ? get_setting('fu_sphinx_listen_mysql') . ':mysql41' : '127.0.0.1:9312:mysql41') . '
-				log = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/searchd.log
-				query_log = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/query.log
+				listen = ' . ((get_setting('fu_sphinx_listen'))
+					? get_setting('fu_sphinx_listen') . ':sphinx' : '127.0.0.1:9312:sphinx') . '
+				listen = ' . ((get_setting('fu_sphinx_listen_mysql'))
+					? get_setting('fu_sphinx_listen_mysql') . ':mysql41' : '127.0.0.1:9312:mysql41') . '
+				log = ' . ((get_setting('fu_sphinx_path'))
+					? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/searchd.log
+				query_log = ' . ((get_setting('fu_sphinx_path'))
+					? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/query.log
 				read_timeout = 5
 				client_timeout = 300
 				max_children = 10
-				pid_file = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/searchd.pid
+				pid_file = ' . ((get_setting('fu_sphinx_path'))
+					? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/searchd.pid
 				max_matches = 5000
 				seamless_rotate = 1
 				preopen_indexes = 1
@@ -336,7 +410,8 @@ class Boards extends Admin_Controller
 				max_filter_values = 4096
 				max_batch_queries = 32
 				workers = threads
-				binlog_path = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data
+				binlog_path = ' . ((get_setting('fu_sphinx_path'))
+					? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data
 				collation_server = utf8_general_ci
 				collation_libc_locale = en_US.UTF-8
 				compat_sphinxsql_magics = 0
@@ -365,13 +440,13 @@ class Boards extends Admin_Controller
 
 			source " . $board . "_ancient : " . $board . "_main
 			{
-				sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $board ."
-				sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_ancient_id_" . $board .", \$maxid)
+				sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $board . "
+				sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_ancient_id_" . $board . ", \$maxid)
 			}
 
 			source " . $board . "_delta : " . $board . "_main
 			{
-				sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_'" . $board . "'), (SELECT MAX(doc_id) FROM " . $board .")
+				sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_'" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
 				sql_query_post_index =
 			}
 		";
@@ -400,59 +475,6 @@ class Boards extends Admin_Controller
 				path = " . $path . "/" . $board . "_delta
 			}
 		";
-	}
-
-
-	function add_new()
-	{
-		$this->viewdata["function_title"] = '<a href="#">' . _("Add New") . '</a>';
-		$board = new Board();
-		if ($this->input->post())
-		{
-			if ($board->add($this->input->post()))
-			{
-				flash_notice('notice', sprintf(_('The board %s has been added.'), $board->board));
-				redirect('/admin/boards/board/' . $board->shortname);
-			}
-		}
-
-		$table = ormer($board);
-
-		$table = tabler($table, FALSE, TRUE);
-		$data["form_title"] = _('Add New') . ' ' . _('Board');
-		$data['table'] = $table;
-
-		$this->viewdata["extra_title"][] = _("Board");
-		$this->viewdata["main_content_view"] = $this->load->view("admin/form.php", $data, TRUE);
-		$this->load->view("admin/default.php", $this->viewdata);
-	}
-
-	function delete($type, $id = 0) {
-		if (!isAjax())
-		{
-			$this->output->set_output(_('You can\'t delete from outside the admin panel through this link.'));
-			log_message("error", "Controller: board.php/remove: failed serie removal");
-			return false;
-		}
-		$id = intval($id);
-
-		switch ($type)
-		{
-			case("board"):
-				$board = new Board();
-				$board->where('id', $id)->get();
-				$title = $board->name;
-				if (!$board->remove())
-				{
-					flash_notice('error', sprintf(_('Failed to delete the board %s.'), $title));
-					log_message("error", "Controller: board.php/remove: failed board removal");
-					echo json_encode(array('href' => site_url("admin/boards/manage")));
-					return false;
-				}
-				flash_notice('notice', sprintf(_('The board %s has been deleted.'), $title));
-				$this->output->set_output(json_encode(array('href' => site_url("admin/boards/manage"))));
-				break;
-		}
 	}
 
 }

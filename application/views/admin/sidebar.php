@@ -14,7 +14,7 @@ if (!defined('BASEPATH'))
 			<?php foreach($item['content'] as $k => $i) : ?>
 				<li <?php echo ($i['active']?'class="active"':'') ?>>
 					<a href="<?php echo $i['href'] ?>">
-						<?php if($i['icon']) ?> <i class="<?php echo $i['icon'] ?>"></i>
+						<?php if($i['icon']) ?> <i class="<?php echo $i['icon'] ?><?php if($i['active']) echo ' icon-white' ?>"></i>
 						<?php echo $i['name'] ?>
 					</a>
 				</li>

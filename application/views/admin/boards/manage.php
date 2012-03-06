@@ -3,12 +3,12 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<a class="btn btn-success pull-right" href="<?php echo site_url('/admin/boards/add_new/') ?>">
-	<?php echo _('Add board') ?>
-</a>
-
-<h2><?php echo _('Boards'); ?></h2>
-
+<div class="btn-group">
+	<a class="btn btn-success btn-mini" href="<?php echo site_url('/admin/boards/board/') ?>">
+		<?php echo _('Add board') ?>
+	</a>
+</div>
+<br/>
 <table class="table table-bordered table-striped table-condensed">
 	<thead>
 			<tr>
@@ -30,7 +30,7 @@ if (!defined('BASEPATH'))
 				</td>
 				<td>
 					<div class="btn-group">
-					<a class="btn btn-primary" href="<?php echo site_url('admin/boards/manage/'.$board->shortname) ?>">
+					<a class="btn btn-primary" href="<?php echo site_url('admin/boards/board/'.$board->shortname) ?>">
 						<?php echo _('Edit') ?>
 					</a>
 					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
@@ -38,7 +38,7 @@ if (!defined('BASEPATH'))
 					</a>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="<?php echo site_url('admin/boards/manage/'.$board->shortname) ?>">
+							<a href="<?php echo site_url('admin/boards/board/'.$board->shortname) ?>">
 								<?php echo _('Edit') ?>
 							</a>
 						</li>

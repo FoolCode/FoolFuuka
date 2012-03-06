@@ -48,14 +48,20 @@ if (!defined('BASEPATH'))
 						?>
 					</ul>
 
+					<?php
+					if (isset($function_title))
+						echo '<h3>' . $function_title . '</h3>';
+					?>
+					
 					<div class="alerts">
 						<?php
 						echo get_notices();
 						?>
 					</div>
 
-
-					<?php echo $main_content_view; ?>
+					<?php
+					echo $main_content_view;
+					?>
 
 
 					<footer class="footer">

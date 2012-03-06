@@ -20,7 +20,7 @@ if (!function_exists('get_notices'))
 		$echo = '';
 		foreach ($merge as $key => $value)
 		{
-			$echo .= '<div class="alert-message ' . $value["type"] . ' fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' . $value["message"] . '</p></div>';
+			$echo .= '<div class="alert ' . $value["type"] . ' fade in" data-alert="alert"><a class="close" data-dismiss="alert">×</a>' . $value["message"] . '</div>';
 		}
 		return $echo;
 	}

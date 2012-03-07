@@ -69,7 +69,8 @@ class Admin_Controller extends MY_Controller
 		$this->load->library('form_validation');
 		
 		foreach($form as $name => $item)
-		{if(isset($item['validation']))
+		{
+			if(isset($item['validation']))
 			{
 				$this->form_validation->set_rules($name, $item['label'], $item['validation']);
 			}
@@ -84,7 +85,6 @@ class Admin_Controller extends MY_Controller
 		{
 			foreach($form as $name => $item)
 			{
-				
 				if($item['type'] == 'checkbox')
 				{
 					if($this->input->post($name) == 1)
@@ -172,7 +172,7 @@ class Admin_Controller extends MY_Controller
 				"information" => array("level" => "admin", "name" => _("Information"), "icon" => 'icon-info-sign'),
 				"preferences" => array("level" => "admin", "name" => _("Preferences"), "icon" => 'icon-check'),
 				"tools" => array("level" => "admin", "name" => _("Tools"), "icon" => 'icon-fire'),
-				"upgrade" => array("level" => "admin", "name" => _("Upgrade") . ((get_setting('fs_cron_autoupgrade_version') && version_compare(FOOLSLIDE_VERSION,
+				"upgrade" => array("level" => "admin", "name" => _("Upgrade") . ((get_setting('fs_cron_autoupgrade_version') && version_compare(FOOL_VERSION,
 						get_setting('fs_cron_autoupgrade_version')) < 0) ? ' <span class="label success">' . _('New') . '</span>'
 							: ''), "icon" => 'icon-refresh'),
 			)

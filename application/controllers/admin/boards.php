@@ -17,68 +17,7 @@ class Boards extends Admin_Controller
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/boards") . '">' . _("Boards") . '</a>';
 		;
 	}
-
-
-	function _board_structure()
-	{
-		return array(
-			'open' => array(
-				'type' => 'open',
-				'hidden' => array('id' => NULL)
-			),
-			'name' => array(
-				'type' => 'input',
-				'label' => _('Name'),
-				'help' => _('Insert the name of the board normally shown as title.'),
-				'placeholder' => _('Required'),
-				'class' => 'span3',
-				'validation' => 'required|max_length[128]'
-			),
-			'shortname' => array(
-				'type' => 'input',
-				'label' => _('Shortname'),
-				'help' => _('Insert the shorter name of the board. Reserved: "api", "cli", "admin".'),
-				'placeholder' => _('Required'),
-				'class' => 'span1',
-				'validation' => 'required|max_length[5]'
-			),
-			'separator-1' => array(
-				'type' => 'separator'
-			),
-			'archive' => array(
-				'type' => 'checkbox',
-				'help' => _('Is this a 4chan archiving board?')
-			),
-			'thumbnails' => array(
-				'type' => 'checkbox',
-				'help' => _('Display the thumbnails?')
-			),
-			'delay_thumbnails' => array(
-				'type' => 'checkbox',
-				'help' => _('Hide the thumbnails for 24 hours? (for moderation purposes)')
-			),
-			'sphinx' => array(
-				'type' => 'checkbox',
-				'help' => _('Use SphinxSearch as search engine?')
-			),
-			'hidden' => array(
-				'type' => 'checkbox',
-				'help' => _('Hide the board from public access? (only admins and mods will be able to browse it)')
-			),
-			'separator-2' => array(
-				'type' => 'separator-short'
-			),
-			'submit' => array(
-				'type' => 'submit',
-				'class' => 'btn-primary',
-				'value' => _('Submit')
-			),
-			'close' => array(
-				'type' => 'close'
-			),
-		);
-	}
-
+	
 
 	function index()
 	{
@@ -101,7 +40,7 @@ class Boards extends Admin_Controller
 
 	function board($shortname = NULL)
 	{
-		$data['form'] = $this->_board_structure();
+		$data['form'] = $this->radix->board_structure();
 
 		if (is_null($shortname))
 		{

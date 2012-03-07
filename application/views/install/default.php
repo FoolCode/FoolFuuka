@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Installing <?php echo FOOLSLIDE_NAME ?></title>
+		<title>Installing <?php echo FOOL_NAME ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap/style.css" />
@@ -101,7 +101,7 @@
 		<div class="topbar" data-dropdown="dropdown">
 			<div class="topbar-inner">
 				<div class="container-fluid">
-					<a class="brand" href="#">Installing <?php echo FOOLSLIDE_NAME ?></a>
+					<a class="brand" href="#">Installing <?php echo FOOL_NAME ?></a>
 				</div>
 			</div>
 		</div>
@@ -152,7 +152,7 @@
 		</div>
 		
 		<footer style="position: relative; bottom: 0px; width: 100%">
-			<p style="padding-left: 20px;"><?php echo FOOLSLIDE_NAME ?> Install</p>
+			<p style="padding-left: 20px;"><?php echo FOOL_NAME ?> Install</p>
 		</footer>
 		
 		<!-- Modal Container for Admin Panel -->

@@ -4,20 +4,20 @@
 	<head>
 		<meta charset="utf-8">
 			<title><?php echo htmlspecialchars($template['title']); ?></title>
-			<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
+			<meta name="generator" content="<?php echo FOOL_NAME ?> <?php echo FOOL_VERSION ?>" />
 			<link rel='index' title='<?php echo get_setting('fs_gen_site_title') ?>' href='<?php echo site_url() ?>' />
 			<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
 				<?php
 				if (file_exists('content/themes/' . $this->fu_theme . '/style.css'))
-					echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOLSLIDE_VERSION);
+					echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOL_VERSION);
 				?>
 			<?php else: ?>
 				<?php
 				if (file_exists('content/themes/' . $this->fu_theme . '/intro.css'))
-					echo link_tag('content/themes/' . $this->fu_theme . '/intro.css?v=' . FOOLSLIDE_VERSION);
+					echo link_tag('content/themes/' . $this->fu_theme . '/intro.css?v=' . FOOL_VERSION);
 				?>
 			<?php endif; ?>
-			<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
+			<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
 			<?php echo get_setting('fs_theme_header_code'); ?>
 
 	</head>

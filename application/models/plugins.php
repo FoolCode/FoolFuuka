@@ -36,7 +36,7 @@ class Plugins extends CI_Model
 	function lookup_plugins()
 	{
 		$this->load->helper('directory');
-		$slugs = directory_map(FOOLSLIDE_PLUGIN_DIR, 1);
+		$slugs = directory_map(FOOL_PLUGIN_DIR, 1);
 
 		return $slugs;
 	}
@@ -44,7 +44,7 @@ class Plugins extends CI_Model
 
 	function get_info_by_slug($slug)
 	{
-		include(FOOLSLIDE_PLUGIN_DIR . $slug . '/' . $slug . '_info.php');
+		include(FOOL_PLUGIN_DIR . $slug . '/' . $slug . '_info.php');
 		return (object) $info;
 	}
 

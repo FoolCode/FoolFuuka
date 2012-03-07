@@ -8,10 +8,10 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0" />
 		<?php
 		if (file_exists('content/themes/' . $this->fu_theme . '/style.css'))
-			echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOLSLIDE_VERSION);
+			echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOL_VERSION);
 		?>
-		<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
-		<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
+		<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<meta name="generator" content="<?php echo FOOL_NAME ?> <?php echo FOOL_VERSION ?>" />
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body bgcolor="#FFFFEE" text="#800000" link="#0000EE" vlink="#0000EE">

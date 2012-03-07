@@ -3,6 +3,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
+
 class Radix extends CI_Model
 {
 
@@ -16,10 +17,103 @@ class Radix extends CI_Model
 	var $selected_radix = null; // readily available if set
 	var $selected_radix_array = null;
 
+
 	function __construct($id = NULL)
 	{
 		parent::__construct();
 		$this->preload();
+	}
+
+
+	function board_structure()
+	{
+		return array(
+			'open' => array(
+				'type' => 'open',
+			),
+			'id' => array(
+				'type' => 'hidden',
+			),
+			'name' => array(
+				'type' => 'input',
+				'label' => _('Name'),
+				'help' => _('Insert the name of the board normally shown as title.'),
+				'placeholder' => _('Required'),
+				'class' => 'span3',
+				'validation' => 'required|max_length[128]'
+			),
+			'shortname' => array(
+				'type' => 'input',
+				'label' => _('Shortname'),
+				'help' => _('Insert the shorter name of the board. Reserved: "api", "cli", "admin".'),
+				'placeholder' => _('Required'),
+				'class' => 'span1',
+				'validation' => 'required|max_length[5]',
+				'validation_func' => function($shortname, $current = NULL)
+				{
+					// if we're not using the special subdomain for peripherals
+					if (get_setting('fs_srv_sys_subdomain', FOOL_PREF_SYS_SUBDOMAIN) === FALSE)
+					{
+						if (in_array($shortname, unserialize(FOOL_PROTECTED_RADIXES)))
+						{
+							return array(
+								'error_code' => 'PROTECTED_RADIX',
+								'error' => _('You can\'t use the protected shortnames unless you activate the system subdomain feature. The protected shortnames are:') . ' "' . implode(", ",
+									unserialize(FOOL_PROTECTED_RADIXES)) . '".'
+							);
+						}
+					}
+
+					if (!is_null($current))
+					{
+						// no change
+						if ($shortname == $current)
+						{
+							// no change
+							return array('success' => TRUE);
+						}
+					}
+					else 
+					{
+						
+					}
+				}
+			),
+			'separator-1' => array(
+				'type' => 'separator'
+			),
+			'archive' => array(
+				'type' => 'checkbox',
+				'help' => _('Is this a 4chan archiving board?')
+			),
+			'thumbnails' => array(
+				'type' => 'checkbox',
+				'help' => _('Display the thumbnails?')
+			),
+			'delay_thumbnails' => array(
+				'type' => 'checkbox',
+				'help' => _('Hide the thumbnails for 24 hours? (for moderation purposes)')
+			),
+			'sphinx' => array(
+				'type' => 'checkbox',
+				'help' => _('Use SphinxSearch as search engine?')
+			),
+			'hidden' => array(
+				'type' => 'checkbox',
+				'help' => _('Hide the board from public access? (only admins and mods will be able to browse it)')
+			),
+			'separator-2' => array(
+				'type' => 'separator-short'
+			),
+			'submit' => array(
+				'type' => 'submit',
+				'class' => 'btn-primary',
+				'value' => _('Submit')
+			),
+			'close' => array(
+				'type' => 'close'
+			),
+		);
 	}
 
 
@@ -30,7 +124,8 @@ class Radix extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT *
-			FROM ' . $this->db->protect_identifiers('boards', TRUE) . '
+			FROM ' . $this->db->protect_identifiers('boards',
+				TRUE) . '
 			ORDER BY shortname ASC
 		');
 
@@ -224,6 +319,14 @@ class Radix extends CI_Model
 	}
 
 
+	function save($data)
+	{
+		//if($data['shortname'])
+		// check presence of shortname in database
+		//$this->db->
+	}
+
+
 	/**
 	 * Returns only the type specified (exam)
 	 *
@@ -289,7 +392,8 @@ class Radix extends CI_Model
 		if (!is_null($this->loaded_radixes_archive_array))
 			return $this->loaded_radixes_archive_array;
 
-		return $this->loaded_radixes_archive_array = $this->filter_by_type('archive', TRUE, TRUE);
+		return $this->loaded_radixes_archive_array = $this->filter_by_type('archive',
+			TRUE, TRUE);
 	}
 
 
@@ -301,8 +405,8 @@ class Radix extends CI_Model
 		if (!is_null($this->loaded_radixes_board_array))
 			return $this->loaded_radixes_board_array;
 
-		return $this->loaded_radixes_board_array = $this->filter_by_type('archive', FALSE, TRUE);
+		return $this->loaded_radixes_board_array = $this->filter_by_type('archive',
+			FALSE, TRUE);
 	}
-
 
 }

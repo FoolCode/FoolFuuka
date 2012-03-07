@@ -7,11 +7,11 @@ if (!defined('BASEPATH'))
 		<title><?php echo get_setting('fs_gen_site_title'); ?> <?php echo _('Control Panel') ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/admin/admin.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
-		<script type="text/javascript" src="<?php echo site_url() ?>assets/js/jquery.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
-		<script type="text/javascript" src="<?php echo site_url() ?>assets/bootstrap2/js/bootstrap.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
-		<script type="text/javascript" src="<?php echo site_url() ?>assets/admin/admin.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/admin/admin.css?v=<?php echo FOOL_VERSION ?>" />
+		<script type="text/javascript" src="<?php echo site_url() ?>assets/js/jquery.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<script type="text/javascript" src="<?php echo site_url() ?>assets/bootstrap2/js/bootstrap.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<script type="text/javascript" src="<?php echo site_url() ?>assets/admin/admin.js?v=<?php echo FOOL_VERSION ?>"></script>
 		<script type="text/javascript">jQuery().alert();</script>
 	</head>
 
@@ -68,8 +68,8 @@ if (!defined('BASEPATH'))
 						<p style="padding-left: 20px;">FoOlSlide Version <?php
 					if (isset($this->tank_auth))
 					{
-						echo FOOLSLIDE_VERSION;
-						if ($this->tank_auth->is_admin() && (FOOLSLIDE_VERSION != get_setting('fs_cron_autoupgrade_version') && (get_setting('fs_cron_autoupgrade_version'))))
+						echo FOOL_VERSION;
+						if ($this->tank_auth->is_admin() && (FOOL_VERSION != get_setting('fs_cron_autoupgrade_version') && (get_setting('fs_cron_autoupgrade_version'))))
 							echo ' – <a href="' . site_url('admin/system/upgrade/') . '">' . _('New upgrade available:') . ' ' . get_setting('fs_cron_autoupgrade_version') . '</a>';
 					}
 					?></p>

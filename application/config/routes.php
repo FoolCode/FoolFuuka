@@ -69,8 +69,9 @@ $route_admin_controllers[] = 'plugins';
 $route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)'] = "admin/plugin/$2/";
 $route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)/(.*?)'] = "admin/plugin/$2/$3";
 
-$route['(?!(admin|account|install|feeds|api|cli))(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";
-$route['(?!(admin|account|install|feeds|api|cli))(\w+)/(.*?)'] = "chan/$2/$3";
+$protected_radixes = implode('|', unserialize(FOOL_PROTECTED_RADIXES));
+$route['(?!(' . $protected_radixes . '))(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";
+$route['(?!(' . $protected_radixes . '))(\w+)/(.*?)'] = "chan/$2/$3";
 $route['(\w+)'] = "chan/$1/page";
 
 $route['404_override'] = 'plugin';

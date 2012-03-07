@@ -41,7 +41,7 @@ class Upgrade_model extends CI_Model
 	    if(ENVIRONMENT != 'development' && strpos($new->name, '-dev-') !== FALSE)
 		break;
 	    
-	    if (!$this->is_bigger_version(FOOLSLIDE_VERSION, $new->name))
+	    if (!$this->is_bigger_version(FOOL_VERSION, $new->name))
 		break;
 	    $new_versions[] = $new;
 	}

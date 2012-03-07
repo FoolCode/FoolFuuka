@@ -7,17 +7,17 @@
 		<title><?php echo $template['title']; ?></title>
 		<meta http-equiv="imagetoolbar" content="false" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0">
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap/style.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap/style.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php
 		if ($this->config->item('theme_extends') != '' &&
 				$this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme : 'default') &&
 				$this->config->item('theme_extends_css') === TRUE &&
 				file_exists('content/themes/' . $this->config->item('theme_extends') . '/style.css'))
 		{
-			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOLSLIDE_VERSION);
+			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOL_VERSION);
 		}
 		if (file_exists('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css'))
-			echo link_tag('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css?v=' . FOOLSLIDE_VERSION);
+			echo link_tag('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css?v=' . FOOL_VERSION);
 		?>
 
 		<!--[if lt IE 9]>
@@ -28,7 +28,7 @@
 			<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url(get_selected_radix()->shortname) ?>atom_gallery_50.xml" />
 		<?php endif; ?>
 		<link rel='index' title='<?php echo get_setting('fs_gen_site_title') ?>' href='<?php echo site_url() ?>' />
-		<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
+		<meta name="generator" content="<?php echo FOOL_NAME ?> <?php echo FOOL_VERSION ?>" />
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body>
@@ -153,7 +153,7 @@
 
 			<div id="push"></div>
 		</div>
-		<footer id="footer"><?php echo FOOLSLIDE_NAME ?> - Version <?php echo FOOLSLIDE_VERSION ?>, <a href="http://code.google.com/p/fuuka/" target="_blank">Fuuka Fetcher</a> - Version r95
+		<footer id="footer"><?php echo FOOL_NAME ?> - Version <?php echo FOOL_VERSION ?>, <a href="http://code.google.com/p/fuuka/" target="_blank">Fuuka Fetcher</a> - Version r95
 			<div style="float:right">
 				Theme [ <a href="<?php echo site_url(array('functions', 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array('functions', 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> ]
 			</div>
@@ -162,8 +162,8 @@
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="<?php echo site_url() ?>assets/js/jquery.js"><\/script>')</script>
-		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
-		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/board.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
+		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/board.js?v=<?php echo FOOL_VERSION ?>"></script>
 		<?php if (get_setting('fs_theme_google_analytics')) : ?>
 			<script>
 				var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us'],['_trackPageview'],['_trackPageLoadTime']];

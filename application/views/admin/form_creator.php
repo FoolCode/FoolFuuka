@@ -94,24 +94,12 @@ foreach ($form as $name => $item) :
 		
 
 		case 'open':
-			// a special case for the hidden, let's try populating it
+			// a special case for the hidden
 			if(isset($item['hidden']))
 			{
-				foreach($item['hidden'] as $key => $hidden)
-				{
-					if(is_null($hidden))
-					{
-						if($this->input->post($key))
-						{
-							$item['hidden'][$key] = $this->input->post($key);
-						}
-						else if(isset($object->$key))
-						{
-							$item['hidden'][$key] = $object->$key;
-						}
-					}
-					
-				}
+				// better not supporting it, things might get messy
+				log_message('error', 'The form automator doesn\'t support hidden in form_opens.');
+				show_error('The form automator doesn\'t support hidden in form_opens.');
 			}
 			
 			echo form_open(
@@ -124,6 +112,30 @@ foreach ($form as $name => $item) :
 
 		case 'close':
 			echo form_close(); // I know there's a variable there but it's useless
+			break;
+		
+		
+		case 'hidden':
+			// to keep maximum functionality we want one value per hidden
+			if(isset($item['value']) && is_array($item['value']))
+			{
+				// better not supporting it, things might get messy
+				log_message('error', 'The form automator doesn\'t support arrays of hidden values in form_hidden.');
+				show_error('The form automator doesn\'t support arrays of hidden values in form_hidden.');
+			}
+			
+			
+			// this is outputted only if we actually have a value
+			// it will never be inserted by the user so don't take care of repopulation
+			if(isset($object->$name))
+			{
+				$item['value'] = $object->$name;
+			}
+			
+			if(isset($item['value']))
+			{
+				echo form_hidden($name, $item['value']);
+			}
 			break;
 
 

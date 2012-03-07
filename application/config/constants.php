@@ -41,17 +41,20 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 | FoOlSlide constants
 |--------------------------------------------------------------------------
 |
-| Version and all
+| Version and all the functions that are supported by the framework
 |
 */
 
-define('FOOLSLIDE_VERSION', '0.5.7');
-define('FOOLSLIDE_NAME', 'FoOlFuuka');
-define('FOOLSLIDE_MANUAL_INSTALL_URL', 'http://ask.foolrulez.com');
+define('FOOL_VERSION', '0.5.7');
+define('FOOL_NAME', 'FoOlFuuka');
+define('FOOL_MANUAL_INSTALL_URL', 'http://ask.foolrulez.com');
+define('FOOL_REQUIREMENT_PHP', '5.3.0');
+define('FOOL_PLUGIN_DIR', 'content/plugins/');
+define('FOOL_PROTECTED_RADIXES', serialize(array('admin', 'account', 'install', 'feeds', 'api', 'cli')));
 
-define('FOOLSLIDE_REQUIREMENT_PHP', '5.3.0');
+// preferences from get_setting('value', FOOL_PREF_ETC);
+define('FOOL_PREF_SYS_SUBDOMAIN', FALSE);
 
-define('FOOLSLIDE_PLUGIN_DIR', 'content/plugins/');
 
 /*
 |--------------------------------------------------------------------------

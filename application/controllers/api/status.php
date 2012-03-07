@@ -8,7 +8,7 @@ class Status extends REST_Controller
 	{
 		$result = array();
 		$result["title"] = get_setting('fs_gen_site_title');
-		$result["version"] = FOOLSLIDE_VERSION;
+		$result["version"] = FOOL_VERSION;
 		$result["home_team"] = get_home_team()->to_array();
 		$this->response($result, 200); // 200 being the HTTP response code
 	}

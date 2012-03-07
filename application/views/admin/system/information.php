@@ -52,14 +52,14 @@
 				array(
 					'name' => 'FoOlSlide Version',
 					'title' => _('FoOlSlide Version'),
-					'value' => FOOLSLIDE_VERSION,
+					'value' => FOOL_VERSION,
 					'text' => _('The version of FoOlSlide that you are currently running on your server.'),
 					'alert' => array(
 						'type' => 'success',
 						'type_text' => _('New Version Available'),
 						'title' => _('New Version Available'),
 						'text' => _('Upgrading FoOlSlide ensures that you have the most secure, stable and feature enhanced release.') . '<p class="vartext">' . _('Suggested') . ': ' . get_setting('fs_cron_autoupgrade_version') . '</p>',
-						'if' => get_setting('fs_cron_autoupgrade_version') && version_compare(FOOLSLIDE_VERSION, get_setting('fs_cron_autoupgrade_version')) < 0
+						'if' => get_setting('fs_cron_autoupgrade_version') && version_compare(FOOL_VERSION, get_setting('fs_cron_autoupgrade_version')) < 0
 					)
 				),
 				array(

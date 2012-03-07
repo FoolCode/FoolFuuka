@@ -784,7 +784,10 @@ class Chan extends Public_Controller
 		/**
 		 * Check all allowed search modifiers and apply them only.
 		 */
-		$modifiers = array('text', 'subject', 'username', 'tripcode', 'deleted', 'ghost', 'filter', 'order', 'page');
+		$modifiers = array(
+			'subject', 'text', 'username', 'tripcode', 'capcode',
+			'deleted', 'ghost', 'type', 'filter', 'start', 'end',
+			'order', 'page');
 
 		/**
 		 * POST -> GET Redirection to provide URL presentable for sharing links.
@@ -850,20 +853,20 @@ class Chan extends Public_Controller
 			array_push($title, _('that are by ghosts'));
 		if ($search['ghost'] == 'none')
 			array_push($title, _('that are not by ghosts'));
+		if ($search['type'] == 'op')
+			array_push($title, _('that are only OP posts'));
+		if ($search['type'] == 'posts')
+			array_push($title, _('that are only non-OP posts'));
+		if ($search['filter'] == 'image')
+			array_push($title, _('that do not contain images'));
+		if ($search['filter'] == 'text')
+			array_push($title, _('that only contain images'));
+		if ($search['start'])
+			array_push($title, sprintf(_('posts after %s'), $search['start']));
+		if ($search['end'])
+			array_push($title, sprintf(_('posts before %s'), $search['end']));
 		if ($search['order'] == 'asc')
 			array_push($title, _('in ascending order'));
-		if ($search['filter'])
-		{
-			$filters = explode('-', $search['filter']);
-				unset($search['filter']);
-
-			foreach ($filters as $k => $filter)
-			{
-				$search['filter'][$filter] = TRUE;
-			}
-
-			array_push($title, sprintf(_('with the following filters applied: %s'), implode(', ', $filters)));
-		}
 
 		if (!empty($title))
 			$title = sprintf(_('Searching for posts %s.'), urldecode(implode(' ' . _('and') . ' ', $title)));

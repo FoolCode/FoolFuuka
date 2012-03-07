@@ -818,18 +818,32 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param $board
+	 * @param $search
+	 * @param array $options
+	 *
+	 * @return array
+	 */
 	function get_search($board, $search, $options = array())
 	{
-		// defaults
-		$process = TRUE;
-		$clean = TRUE;
+		/**
+		 * Default actions applied to the resuts.
+		 */
+		$clean		= TRUE;
+		$process	= TRUE;
 
-		// overwrite defaults
+		/**
+		 * Override any defaults set by the function.
+		 */
 		foreach ($options as $key => $option)
 		{
 			$$key = $option;
 		}
 
+		/**
+		 * Set a valid $search['page'] used for LIMIT.
+		 */
 		if ($search['page'])
 		{
 			if (!is_numeric($search['page']))
@@ -843,7 +857,21 @@ class Post extends CI_Model
 			$search['page'] = 1;
 		}
 
-		if ($board->sphinx && ($search['subject'] || $search['username'] || $search['tripcode'] || $search['text']))
+		/**
+		 * This checks for certain search parameters and see if they have been set with a valid
+		 * query. It determines if the use of MySQL would be more benficial than Sphinx with the
+		 * use of INDEXES.
+		 */
+		foreach ($search as $param => $value)
+		{
+			if ($param != 'page' && $value)
+			{
+				$use_sphinx = TRUE;
+				break;
+			}
+		}
+
+		if ($board->sphinx)
 		{
 			/**
 			 * Establish connection to SphinxQL via MySQL Library.
@@ -855,25 +883,34 @@ class Post extends CI_Model
 			);
 
 			/**
-			 * Set default empty variables to store query information for SphinxQL.
+			 * Set the default variables to store query information for SphinxQL.
 			 */
-			$match = array();
-			$where = array();
+			$SphinxQL = array(
+				'SELECT'	=> array(),
+				'FROM'		=> array(),
+				'WHERE'		=> array(
+					'MATCH'		=> array(),
+					'CONDITION'	=> array(),
+				),
+				'GROUP BY'	=> array(),
+				'ORDER BY'	=> array(),
+				'LIMIT'		=> array(),
+				'OPTION'	=> array()
+			);
 
-			/*
-			 * Generate FULLTEXT query with $match array.
+			/**
+			 * Set all Sphinx tables to be searched from...
+			 */
+			array_push($SphinxQL['FROM'],
+				$board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta');
+
+			/**
+			 * Generate FULLTEXT MATCH QUERY for $SphinxQL.
 			 */
 			if ($search['subject'])
 			{
-				$match['@title'] = $this->sphinxql->EscapeString(urldecode($search['subject']));
-			}
-			if ($search['username'])
-			{
-				$match['@name'] = $this->sphinxql->EscapeString(urldecode($search['username']));
-			}
-			if ($search['tripcode'])
-			{
-				$match['@trip'] = $this->sphinxql->EscapeString(urldecode($search['tripcode']));
+				$SphinxQL['WHERE']['MATCH'] = array_merge($SphinxQL['WHERE']['MATCH'],
+					array('@title' => $this->sphinxql->HalfEscapeString($search['subject'], TRUE)));
 			}
 			if ($search['text'])
 			{
@@ -881,112 +918,118 @@ class Post extends CI_Model
 				{
 					return array(
 						'error' => _
-							('The text you were searching for was too short. It must be at least two characters long.')
+						('The text you were searching for was too short. It must be at least two characters long.')
 					);
 				}
-				$match['@comment'] = $this->sphinxql->HalfEscapeString(urldecode($search['text']));
+				$SphinxQL['WHERE']['MATCH'] = array_merge($SphinxQL['WHERE']['MATCH'],
+					array('@comment' => $this->sphinxql->HalfEscapeString($search['text'], TRUE)));
 			}
-			$AGAINST = '';
-			foreach ($match as $k => $v)
+			if ($search['username'])
 			{
-				$AGAINST .= "{$k} {$v} ";
+				$SphinxQL['WHERE']['MATCH'] = array_merge($SphinxQL['WHERE']['MATCH'],
+					array('@name' => $this->sphinxql->EscapeString($search['username'], TRUE)));
+			}
+			if ($search['tripcode'])
+			{
+				$SphinxQL['WHERE']['MATCH'] = array_merge($SphinxQL['WHERE']['MATCH'],
+					array('@trip' => $this->sphinxql->EscapeString($search['tripcode'], TRUE)));
 			}
 
-			/*
-			 * Generate FILTER conditions for SphinxQL query with $where array.
+			/**
+			 * Generate CONDITION QUERY for $SphinxQL.
 			 */
-			if ($search['deleted'] == "deleted")
+			if ($search['capcode'] == 'admin')
 			{
-				$where['is_deleted'] = 1;
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('cap' => 1));
 			}
-			if ($search['deleted'] == "not-deleted")
+			if ($search['capcode'] == 'mod')
 			{
-				$where['is_deleted'] = 0;
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('cap' => 2));
 			}
-			if ($search['ghost'] == "only")
+			if ($search['capcode'] == 'user')
 			{
-				$where['is_internal'] = 1;
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('cap' => 1, 'cap' => 2));
 			}
-			if ($search['ghost'] == "none")
+			if ($search['deleted'] == 'deleted')
 			{
-				$where['is_internal'] = 0;
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('is_deleted' => 1));
 			}
-			if ($search['filter'] != "")
+			if ($search['deleted'] == 'not-deleted')
 			{
-				/**
-				 * Expand the filter parameter and apply further filters provided.
-				 */
-				$filters = explode('-', $search['filter']);
-				unset($search['filter']);
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('is_deleted' => 0));
+			}
+			if ($search['ghost'] == 'only')
+			{
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('is_internal' => 1));
 
-				foreach ($filters as $key => $value)
-				{
-					$search['filter'][$value] = TRUE;
-				}
-
-				/**
-				 * Handle the filtering of capcode with semi-complex array manipulation.
-				 */
-				if (!empty($search['filter']['user']) || !empty($search['filter']['mod']) || !empty($search['filter']['admin']))
-				{
-					$where['cap'] = array();
-					if (!empty($search['filter']['user']))
-					{
-						array_push($where['cap'], 1);
-					}
-					if (!empty($search['filter']['mod']))
-					{
-						array_push($where['cap'], 2);
-					}
-					if (!empty($search['filter']['admin']))
-					{
-						array_push($where['cap'], 3);
-					}
-				}
-
-				if (!empty($search['filter']['text']))
-				{
-					$where['has_image'] = 1;
-				}
-				if (!empty($search['filter']['image']))
-				{
-					$where['has_image'] = 0;
-				}
 			}
-			$CONDITIONS = array();
-			foreach ($where as $k => $v)
+			if ($search['ghost'] == 'none')
 			{
-				if (is_array($v))
-				{
-					foreach ($v as $_k => $_v)
-					{
-						$CONDITIONS[] = "{$k} != {$_v}";
-					}
-				}
-				else
-				{
-					$CONDITIONS[] = "{$k} = {$v}";
-				}
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('is_internal' => 0));
 			}
+			if ($search['type'] == 'op')
+			{
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('is_op' => 1));
+			}
+			if ($search['type'] == 'posts')
+			{
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('is_op' => 0));
+			}
+			if ($search['filter'] == 'image')
+			{
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('has_image' => 0));
+			}
+			if ($search['filter'] == 'text')
+			{
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('has_image' => 1));
+			}
+
+			if ($search['start'])
+			{
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('timestamp >=' => intval(strtotime($search['start']))));
+			}
+			if ($search['end'])
+			{
+				$SphinxQL['WHERE']['CONDITION'] = array_merge($SphinxQL['WHERE']['CONDITION'],
+					array('timestamp <=' => intval(strtotime($search['end']))));
+			}
+
+			/**
+			 * Set ORDER BY for $SphinxQL.
+			 */
+			$SphinxQL['ORDER BY'] = array_merge($SphinxQL['ORDER BY'],
+				array('timestamp' => (($search['order'] == 'asc') ? 'ASC' : 'DESC')));
+
+			/**
+			 * Set LIMIT for $SphinxQL.
+			 */
+			$SphinxQL['LIMIT'] = array((($search['page'] * 25) - 25), 25);
+
+			/**
+			 * Set OPTION for $SphinxQL.
+			 */
+			$SphinxQL['OPTION'] = array_merge($SphinxQL['OPTION'],
+				array('max_matches' => 5000, 'reverse_scan' => (($search['order'] == 'asc') ? 0 : 1)));
 
 			/**
 			 * Query SphinxQL with our search parameters generated above.
 			 */
-			$search_result = $this->sphinxql->Query('
-				SELECT *
-				FROM ' . $board->shortname . '_ancient,
-					' . $board->shortname . '_main,
-					' . $board->shortname . '_delta
-				WHERE MATCH(\'' . trim($AGAINST) . '\')
-					' . ((!empty($CONDITIONS))
-						? 'AND ' . implode(' AND ', $CONDITIONS) : '') . '
-				ORDER BY timestamp ' . (($search['order'] == 'asc')
-						? 'ASC' : 'DESC') . '
-				LIMIT ' . (($search['page'] * 25) - 25) . ', 25
-				OPTION max_matches = 5000
-			');
+			$SQL = $this->sphinxql->PrepareQuery($SphinxQL);
+			$RESULT = $this->sphinxql->Query($SQL);
 
-			if (empty($search_result['matches']))
+			if (empty($RESULT['matches']))
 			{
 				return array('posts' => array(), 'total_found' => 0);
 			}
@@ -994,170 +1037,185 @@ class Post extends CI_Model
 			/*
 			 * Query MySQL for full records.
 			 */
-			$sql = array();
-			foreach ($search_result['matches'] as $key => $matches)
+			$MySQL = array();
+			foreach ($RESULT['matches'] as $key => $record)
 			{
-				$sql[] = '
+				array_push($MySQL, '
 					(
 						SELECT *
 						FROM ' . $this->get_table($board) . '
-						' . $this->get_sql_report($board) . '
-						WHERE num = ' . $matches['num'] . ' AND subnum = ' . $matches['subnum'] . '
+						WHERE
+							num = ' . $record['num'] . ' AND subnum = ' . $record['subnum'] . '
 					)
-				';
+				');
 			}
-
-			if ($search['order'] === 'asc')
-			{
-				$sql = implode('UNION', $sql) . '
-					ORDER BY timestamp ASC
-				';
-			}
+			if ($search['order'] == 'asc')
+				$MySQL = implode(' UNION ', $MySQL) . ' ORDER BY timestamp ASC';
 			else
-			{
-				$sql = implode('UNION', $sql) . '
-					ORDER BY timestamp DESC
-				';
-			}
+				$MySQL = implode(' UNION ', $MySQL) . ' ORDER BY timestamp DESC';
 
-			$query = $this->db->query($sql);
-			$total = $search_result['total_found'];
+			/**
+			 * Query MySQL and return results with total records.
+			 */
+			$query = $this->db->query($MySQL);
+			$total = $RESULT['total_found'];
 		}
 		else /* Use MySQL for both empty searches and non-sphinx indexed boards. */
 		{
 			/**
-			 * Set default empty variables to store query information for MySQL.
+			 * Set the default variables to store query information for MySQL.
 			 */
-			$field = array();
-			$value = array();
-			$index = array();
+			$MySQL = array(
+				'SELECT'	=> array(),
+				'FROM'		=> array(),
+				'USE INDEX'	=> array(),
+				'WHERE'		=> array(),
+				'GROUP BY'	=> array(),
+				'ORDER BY'	=> array(),
+				'LIMIT'		=> array()
+			);
 
+			/**
+			 * Set all Sphinx tables to be searched from...
+			 */
+			array_push($MySQL['FROM'],
+				$this->get_table($board));
+
+			/**
+			 * Generate FULLTEXT MATCH QUERY for $SphinxQL.
+			 */
 			if ($search['subject'])
 			{
-				array_push($field, 'title LIKE ?');
-				array_push($value, urldecode($search['subject']));
-			}
-			if ($search['username'])
-			{
-				array_push($field, 'name = ?');
-				array_push($value, urldecode($search['username']));
-				array_push($index, 'name_index');
-			}
-			if ($search['tripcode'])
-			{
-				array_push($field, 'trip = ?');
-				array_push($value, urldecode($search['tripcode']));
-				array_push($index, 'trip_index');
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('title LIKE' => urldecode($search['subject'])));
 			}
 			if ($search['text'])
 			{
 				if (mb_strlen($search['text']) < 2)
 				{
 					return array(
-						'error' =>
-						_('The text you were searching for was too short. It must be at least two characters long.')
+						'error' => _
+						('The text you were searching for was too short. It must be at least two characters long.')
 					);
 				}
-
-				array_push($field, 'comment LIKE ?');
-				array_push($value, urldecode($search['text']));
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('comment LIKE' => urldecode($search['text'])));
 			}
-
-			if ($search['deleted'] == "deleted")
+			if ($search['username'])
 			{
-				array_push($field, 'deleted = ?');
-				array_push($value, 1);
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('name' => urldecode($search['username'])));
+				array_push($MySQL['USE INDEX'], 'name_index');
 			}
-			if ($search['deleted'] == "not-deleted")
+			if ($search['tripcode'])
 			{
-				array_push($field, 'deleted = ?');
-				array_push($value, 0);
-			}
-			if ($search['ghost'] == "only")
-			{
-				array_push($field, 'subnum != ?');
-				array_push($value, 0);
-			}
-			if ($search['ghost'] == "none")
-			{
-				array_push($field, 'subnum = ?');
-				array_push($value, 0);
-			}
-			if ($search['filter'] != "")
-			{
-				$filters = explode('-', $search['filter']);
-				unset($search['filter']);
-
-				foreach ($filters as $k => $v)
-				{
-					$search['filter'][$v] = TRUE;
-				}
-
-				if (!empty($search['filter']['user']) ||
-					!empty($search['filter']['mod']) ||
-					!empty($search['filter']['admin']))
-				{
-					if (!empty($search['filter']['user']))
-					{
-						array_push($field, 'capcode != ?');
-						array_push($value, 'N');
-					}
-					if (!empty($search['filter']['mod']))
-					{
-						array_push($field, 'capcode != ?');
-						array_push($value, 'M');
-					}
-					if (!empty($search['filter']['admin']))
-					{
-						array_push($field, 'capcode != ?');
-						array_push($value, 'A');
-					}
-				}
-
-				if (!empty($search['filter']['text']))
-				{
-					array_push($field, 'media IS NOT ?');
-					array_push($value, NULL);
-				}
-				if (!empty($search['filter']['image']))
-				{
-					array_push($field, 'media IS ?');
-					array_push($value, NULL);
-				}
-			}
-			if ($search['order'] === 'asc')
-			{
-				$order = 'ORDER BY timestamp ASC';
-			}
-			else
-			{
-				$order = 'ORDER BY timestamp DESC';
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('trip' => urldecode($search['tripcode'])));
+				array_push($MySQL['USE INDEX'], 'trip_index');
 			}
 
-			$query = $this->db->query('
-				SELECT *
-				FROM ' . $this->get_table($board) .
-				((!empty($field)) ? ' WHERE ' . implode(' AND ', $field) : '') . '
-				' . $order . '
-				LIMIT ' . (($search['page'] * 25) - 25) . ', 25
-			',
-				$value);
+			/**
+			 * Generate CONDITION QUERY for $SphinxQL.
+			 */
+			if ($search['capcode'] == 'admin')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('capcode' => 'A'));
+			}
+			if ($search['capcode'] == 'mod')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('capcode' => 'M'));
+			}
+			if ($search['capcode'] == 'user')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('capcode !=' => 'A', 'capcode !=' => 'M'));
+			}
+			if ($search['deleted'] == 'deleted')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('deleted' => 1));
+			}
+			if ($search['deleted'] == 'not-deleted')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('deleted' => 0));
+			}
+			if ($search['ghost'] == 'only')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('subnum <>' => 0));
+				array_push($MySQL['USE INDEX'], 'subnum_index');
 
-			if ($query->num_rows() == 0)
+			}
+			if ($search['ghost'] == 'none')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('subnum' => 0));
+				array_push($MySQL['USE INDEX'], 'subnum_index');
+			}
+			if ($search['type'] == 'op')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('parent' => 0));
+				array_push($MySQL['USE INDEX'], 'parent_index');
+			}
+			if ($search['type'] == 'posts')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('parent <>' => 0));
+				array_push($MySQL['USE INDEX'], 'parent_index');
+			}
+			if ($search['filter'] == 'image')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('media IS_NOT' => NULL));
+				array_push($MySQL['USE INDEX'], 'media_hash_index');
+			}
+			if ($search['filter'] == 'text')
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('media IS' => NULL));
+				array_push($MySQL['USE INDEX'], 'media_hash_index');
+			}
+
+			if ($search['start'])
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('timestamp >=' => intval(strtotime($search['start']))));
+			}
+			if ($search['end'])
+			{
+				$MySQL['WHERE'] = array_merge($MySQL['WHERE'],
+					array('timestamp <=' => intval(strtotime($search['end']))));
+			}
+
+			/**
+			 * Do some counting before we output the results...
+			 */
+			$MySQL['LIMIT']		= array(5000);
+			$SQL_COUNT = get_prepared_query($MySQL, TRUE);
+			$COUNT = $this->db->query($SQL_COUNT['QUERY'], $SQL_COUNT['VALUES']);
+
+			if ($COUNT->num_rows() == 0)
 			{
 				return array('posts' => array(), 'total_found' => 0);
 			}
 
-			$count = $this->db->query('
-				SELECT count(*) AS total_found
-				FROM ' . $this->get_table($board) .
-				((!empty($field)) ? ' WHERE ' . implode(' AND ', $field) : '') . '
-				LIMIT 0, 5000
-			',
-				$value);
+			/**
+			 * Reset the SELECT and LIMIT parameters and include ORDER BY.
+			 */
+			$MySQL['SELECT'] 	= array();
 
-			$found = $count->result();
-			$total = $found[0]->total_found;
+			$MySQL['ORDER BY']	= array_merge($MySQL['ORDER BY'],
+				array('timestamp' => (($search['order'] == 'asc') ? 'ASC' : 'DESC')));
+				array_push($MySQL['USE INDEX'], 'timestamp_index');
+			$MySQL['LIMIT']		= array((($search['page'] * 25) - 25), 25);
+
+			$SQL = get_prepared_query($MySQL, TRUE);
+			$query = $this->db->query($SQL['QUERY'], $SQL['VALUES']);
+			$total = $COUNT->num_rows();
 		}
 
 		/**
@@ -2850,5 +2908,6 @@ class Post extends CI_Model
 
 		return $matches[0];
 	}
+
 
 }

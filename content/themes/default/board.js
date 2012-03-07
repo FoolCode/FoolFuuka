@@ -342,14 +342,48 @@ var getSearch = function(type, searchForm)
 		if (searchForm.tripcode.value != "")
 			location += 'tripcode/' + encodeURIComponent(searchForm.tripcode.value) + '/';
 
+        if (getRadioValue(searchForm.capcode) != "")
+            location += 'capcode/' + getRadioValue(searchForm.capcode) + '/';
+
 		if (getRadioValue(searchForm.deleted) != "")
 			location += 'deleted/' + getRadioValue(searchForm.deleted) + '/';
 
 		if (getRadioValue(searchForm.ghost) != "")
 			location += 'ghost/' + getRadioValue(searchForm.ghost) + '/';
 
-		if (getCheckValue(searchForm.filter) != "")
-			location += 'filter/' + getCheckValue(searchForm.filter) + '/';
+        if (getRadioValue(searchForm.type) != "")
+            location += 'type/' + getRadioValue(searchForm.type) + '/';
+
+		if (getRadioValue(searchForm.filter) != "")
+			location += 'filter/' + getRadioValue(searchForm.filter) + '/';
+
+        if (searchForm.date_start.value != "")
+        {
+            var validate_date = /^\d{4}-\d{2}-\d{2}$/;
+            if (validate_date.test(searchForm.date_start.value))
+            {
+                location += 'start/' + encodeURIComponent(searchForm.date_start.value) + '/';
+            }
+            else
+            {
+                alert('Sorry, you have entered an invalid date format. (Ex: YYYY-MM-DD)');
+                return false;
+            }
+        }
+
+        if (searchForm.date_end.value != "")
+        {
+            var validate_date = /^\d{4}-\d{2}-\d{2}$/;
+            if (validate_date.test(searchForm.date_end.value))
+            {
+                location += 'end/' + encodeURIComponent(searchForm.date_end.value) + '/';
+            }
+            else
+            {
+                alert('Sorry, you have entered an invalid date format. (Ex: YYYY-MM-DD)');
+                return false;
+            }
+        }
 
 		location += 'order/' + getRadioValue(searchForm.order) + '/';
 	}

@@ -59,7 +59,7 @@ if (!defined('BASEPATH'))
 foreach ($form as $name => $item) :
 
 	// separate up the array so we can put the rest in the form function
-	$not_input = array('help', 'label', 'validation', 'preferences');
+	$not_input = array('help', 'label', 'validation', 'validation_func', 'preferences');
 	$helpers = array();
 	foreach ($not_input as $not)
 	{

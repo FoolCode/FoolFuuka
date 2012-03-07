@@ -244,19 +244,25 @@ if (!defined('BASEPATH'))
 			</div>
 		</div>
 		<div class="clearfix">
-			<label>Exclude</label>
+			<label>Results</label>
 			<div class="input">
 				<ul class="inputs-list">
 					<li>
 						<label>
-							<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (empty($search["type"]) || (!empty($search["type"]) && $search["type"] == 'posts')) ? TRUE : FALSE)); ?>
-							<span>Posts Only</span>
+							<?php echo form_radio(array('name' => 'type', 'value' => '', 'checked' => (empty($search["type"])) ? TRUE : FALSE)); ?>
+							<span>Display All Posts</span>
 						</label>
 					</li>
 					<li>
 						<label>
 							<?php echo form_radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op') ? TRUE : FALSE)); ?>
 							<span>Thread OPs Only</span>
+						</label>
+					</li>
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (!empty($search["type"]) && $search["type"] == 'posts') ? TRUE : FALSE)); ?>
+							<span>Posts Only</span>
 						</label>
 					</li>
 				</ul>

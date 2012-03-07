@@ -28,46 +28,9 @@ class Theme_Controller
 	public function page($page = 1)
 	{
 		/**
-		 * POST -> GET Redirection to provide URL presentable for sharing links.
+		 * Remap everything to default theme and override array.
 		 */
-		$this->CI->_map_query();
-		if ($this->CI->input->post())
-			redirect(get_selected_radix()->shortname . '/page/' . $this->CI->input->post('page'), 'location', 303);
-
-		/**
-		 * Fetch the latest posts.
-		 */
-		$page  = intval($page);
-		$posts = $this->CI->post->get_latest(get_selected_radix(), $page,
-			array('per_page' => 24, 'type' => 'by_thread'));
-
-		/**
-		 * Set template variables required to build the HTML.
-		 */
-		$this->CI->template->title(get_selected_radix()->formatted_title .
-			(($page >1 ) ? ' &raquo; ' . _('Page') . ' ' . $page : ''));
-		$this->CI->_set_parameters(
-			array(
-				'section_title'		=> (($page > 1) ? _('Page') . ' ' . $page : ''),
-
-				'is_page'			=> TRUE,
-
-				'posts'				=> $posts['result'],
-				'posts_per_thread'	=> 5,
-
-				'pagination'		=> array(
-					'base_url'		=> site_url(array(get_selected_radix()->shortname, 'page')),
-					'current_page'	=> $page,
-					'total'			=> $posts['pages']
-				)
-			),
-			array(
-				'post_thread'		=> TRUE,
-				'tools_post'		=> TRUE,
-				'tools_view'		=> array('page' => $page)
-			)
-		);
-		$this->CI->template->build('board');
+		$this->CI->page($page, FALSE, array('per_page' => 24, 'type' => 'by_thread'));
 	}
 
 

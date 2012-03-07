@@ -330,10 +330,11 @@ class Chan extends Public_Controller
 
 
 	/**
-	 * @param int $page
-	 * @param bool $by_thread
+	 * @param int   $page
+	 * @param bool  $by_thread
+	 * @param array $options
 	 */
-	public function page($page = 1, $by_thread = FALSE)
+	public function page($page = 1, $by_thread = FALSE, $options = array())
 	{
 		/**
 		 * POST -> GET Redirection to provide URL presentable for sharing links.
@@ -348,7 +349,7 @@ class Chan extends Public_Controller
 		 */
 		$page  = intval($page);
 		$posts = $this->post->get_latest(get_selected_radix(), $page,
-			array('per_page' => 24, 'type' => ($by_thread ? 'by_thread' : 'by_post')));
+			(!empty($options)) ? $options : array('per_page' => 24, 'type' => ($by_thread ? 'by_thread' : 'by_post')));
 
 		/**
 		 * Set template variables required to build the HTML.
@@ -629,7 +630,7 @@ class Chan extends Public_Controller
 			$url = site_url(array(get_selected_radix()->shortname, 'thread', $thread->num));
 		}
 
-		redirect($url, 'location', 301);
+		redirect($url, 'location', 303);
 	}
 
 
@@ -716,7 +717,7 @@ class Chan extends Public_Controller
 		$image = $this->post->get_full_image(get_selected_radix(), $filename);
 
 		if (isset($image['image_href']))
-			redirect($image['image_href'], 'location', 301);
+			redirect($image['image_href'], 'location', 303);
 
 		if (isset($image['error_type']))
 		{
@@ -804,7 +805,7 @@ class Chan extends Public_Controller
 				}
 			}
 
-			redirect(site_url($redirect_url), 'location', 301);
+			redirect(site_url($redirect_url), 'location', 303);
 		}
 
 		/**

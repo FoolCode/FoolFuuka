@@ -966,9 +966,9 @@ class Post extends CI_Model
 			 */
 			//echo $this->db->statement();
 
-			$search = $this->sphinxql->query($this->db->statement());
+			$sphinx = $this->sphinxql->query($this->db->statement());
 
-			if (empty($search['matches']))
+			if (empty($sphinx['matches']))
 			{
 				return array('posts' => array(), 'total_found' => 0);
 			}
@@ -977,7 +977,7 @@ class Post extends CI_Model
 			 * Query MySQL for full records.
 			 */
 			$sql = array();
-			foreach ($search['matches'] as $row => $record)
+			foreach ($sphinx['matches'] as $row => $record)
 			{
 				$sql[] = '
 					(
@@ -997,7 +997,7 @@ class Post extends CI_Model
 			 * Query MySQL and return search with total records.
 			 */
 			$query = $this->db->query($sql);
-			$total = $search['total_found'];
+			$total = $sphinx['total_found'];
 		}
 		else /* Use MySQL for both empty searches and non-sphinx indexed boards. */
 		{
@@ -1006,7 +1006,7 @@ class Post extends CI_Model
 
 			if ($search['subject'])
 			{
-				$this->db->like('title', urldecode($search['subject']));
+				$this->db->like('title', rawurldecode($search['subject']));
 			}
 			if ($search['text'])
 			{
@@ -1017,17 +1017,17 @@ class Post extends CI_Model
 						('The text you were searching for was too short. It must be at least two characters long.')
 					);
 				}
-				$this->db->like('comment', urldecode($search['text']));
+				$this->db->like('comment', rawurldecode($search['text']));
 			}
 			if ($search['username'])
 			{
-				$this->db->like('name', urldecode($search['username']))
+				$this->db->like('name', rawurldecode($search['username']))
 					->use_index('name_index');
 
 			}
 			if ($search['tripcode'])
 			{
-				$this->db->like('trip', urldecode($search['tripcode']))
+				$this->db->like('trip', rawurldecode($search['tripcode']))
 					->use_index('trip_index');
 			}
 			if ($search['capcode'] == 'admin')

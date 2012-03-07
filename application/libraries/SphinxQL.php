@@ -5,16 +5,9 @@
  *
  */
 class SphinxQL {
-	var $conn_id;
 	var $db_host;
 	var $db_port;
-
-
-	function __construct()
-	{
-
-	}
-
+	var $conn_id;
 
 	public function set_host($host)
 	{

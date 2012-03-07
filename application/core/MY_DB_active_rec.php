@@ -4,23 +4,26 @@ if (! defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 /**
- * My_DB_active_rec
+ * MY_DB_active record
+ *
+ * This extends the CI Active Record Class to provide additional features such as index(),
+ * match(), and SphinxSearch support.
  */
-class My_DB_active_record extends CI_DB_active_record
+class MY_DB_active_record extends CI_DB_active_record
 {
-	var $ar_index				= array();
-	var $ar_where_match			= array();
+	var $ar_index               = array();
+	var $ar_where_match         = array();
 
-	var $ar_sphinx_match		= array();
-	var $ar_sphinx_where		= array();
-	var $ar_sphinx_option		= array();
+	var $ar_sphinx_match        = array();
+	var $ar_sphinx_where        = array();
+	var $ar_sphinx_option       = array();
 
-	var $ar_cache_index			= array();
-	var $ar_cache_sphinx_match	= array();
-	var $ar_cache_sphinx_where	= array();
+	var $ar_cache_index         = array();
+	var $ar_cache_sphinx_match  = array();
+	var $ar_cache_sphinx_where  = array();
 	var $ar_cache_sphinx_option = array();
 
-	var $ar_group_from			= TRUE;
+	var $ar_group_from          = TRUE;
 
 
 	/**

@@ -109,12 +109,19 @@ class Admin_Controller extends MY_Controller
 
 		// filter results, since the closures return ['success'] = TRUE on success
 		$validation_func_errors = array();
+		$validation_func_warnings = array();
 		foreach ($validation_func as $item)
 		{
 			// we want only the errors
 			if (isset($item['success']))
 			{
 				continue;
+			}
+			
+			if (isset($item['warning']))
+			{
+				// we want only the human readable error
+				$validation_func_warnings[] = $item['warning'];
 			}
 
 			if (isset($item['error']))
@@ -161,6 +168,11 @@ class Admin_Controller extends MY_Controller
 						$result[$name] = $this->input->post($name);
 					}
 				}
+			}
+			
+			if(count($validation_func_warnings) > 0)
+			{
+				return array('success' => $result, 'warning' => implode(' ', $validation_func_warnings));
 			}
 
 			// returning a form with the new values

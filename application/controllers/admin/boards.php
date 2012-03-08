@@ -201,8 +201,8 @@ class Boards extends Admin_Controller
 				if ($connection === FALSE)
 				{
 					return array(
-						'error_code' => 'CONNECTION_NOT_ESTABLISHED',
-						'error' => _('The Sphinx server couldn\'t be contacted at the specified address and port.')
+						'warning_code' => 'CONNECTION_NOT_ESTABLISHED',
+						'warning' => _('The Sphinx server couldn\'t be contacted at the specified address and port.')
 					);
 				}
 
@@ -285,6 +285,10 @@ class Boards extends Admin_Controller
 			}
 			else
 			{
+				if(isset($result['warning']))
+				{
+					set_notice('warning', $result['warning']);
+				}
 				$this->submit_preferences($result['success']);
 			}
 		}

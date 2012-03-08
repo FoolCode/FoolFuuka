@@ -14,7 +14,8 @@ if (!function_exists('get_notices'))
 	function get_notices()
 	{
 		$CI = & get_instance();
-		$merge = array_merge($CI->notices, $CI->flash_notice_data, $CI->session->flashdata('notices'));
+		$flash_notices = is_array($CI->session->flashdata('notices'))?$CI->session->flashdata('notices'):array();
+		$merge = array_merge($CI->notices, $CI->flash_notice_data, $flash_notices);
 		$CI->flash_notice_data = '';
 		$CI->session->set_flashdata('notices', array());
 		$echo = '';

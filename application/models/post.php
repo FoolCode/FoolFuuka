@@ -845,16 +845,16 @@ class Post extends CI_Model
 
 		if ($board->sphinx && ($search['subject'] || $search['username'] || $search['tripcode'] || $search['text']))
 		{
-			/**
+			/*
 			 * Establish connection to SphinxQL via MySQL Library.
 			 */
 			$this->load->library('SphinxQL');
-			$this->sphinxql->SetServer(
-				get_setting('fs_sphinx_hostname') ? get_setting('fs_sphinx_hostname') : '127.0.0.1',
-				get_setting('fs_sphinx_port') ? get_setting('fs_sphinx_port') : 9306
-			);
+			
+			$sphinx_ip_port = explode(':', get_setting('fu_sphinx_listen', FOOL_PREF_SPHINX_LISTEN));
+			
+			$this->sphinxql->SetServer($sphinx_ip_port[0], $sphinx_ip_port[1]);
 
-			/**
+			/*
 			 * Set default empty variables to store query information for SphinxQL.
 			 */
 			$match = array();
@@ -913,7 +913,7 @@ class Post extends CI_Model
 			}
 			if ($search['filter'] != "")
 			{
-				/**
+				/*
 				 * Expand the filter parameter and apply further filters provided.
 				 */
 				$filters = explode('-', $search['filter']);
@@ -924,7 +924,7 @@ class Post extends CI_Model
 					$search['filter'][$value] = TRUE;
 				}
 
-				/**
+				/*
 				 * Handle the filtering of capcode with semi-complex array manipulation.
 				 */
 				if (!empty($search['filter']['user']) || !empty($search['filter']['mod']) || !empty($search['filter']['admin']))
@@ -969,7 +969,7 @@ class Post extends CI_Model
 				}
 			}
 
-			/**
+			/*
 			 * Query SphinxQL with our search parameters generated above.
 			 */
 			$search_result = $this->sphinxql->Query('
@@ -1025,7 +1025,7 @@ class Post extends CI_Model
 		}
 		else /* Use MySQL for both empty searches and non-sphinx indexed boards. */
 		{
-			/**
+			/*
 			 * Set default empty variables to store query information for MySQL.
 			 */
 			$field = array();
@@ -1160,7 +1160,7 @@ class Post extends CI_Model
 			$total = $found[0]->total_found;
 		}
 
-		/**
+		/*
 		 * Process all results and format the posts for display.
 		 */
 		foreach ($query->result() as $post)

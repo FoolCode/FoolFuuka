@@ -13,12 +13,14 @@ if (!defined('BASEPATH'))
 if (!function_exists('get_setting'))
 {
 
-	function get_setting($option)
+	function get_setting($option, $fallback = NULL)
 	{
 		$CI = & get_instance();
 		$array = $CI->fs_options;
 		if (isset($array[$option]))
 			return $array[$option];
+		if(!is_null($fallback))
+			return $fallback;
 		return FALSE;
 	}
 

@@ -54,6 +54,11 @@ define('FOOL_PROTECTED_RADIXES', serialize(array('admin', 'account', 'install', 
 
 // preferences from get_setting('value', FOOL_PREF_ETC);
 define('FOOL_PREF_SYS_SUBDOMAIN', FALSE);
+define('FOOL_PREF_SPHINX_LISTEN', '127.0.0.1:9312');
+define('FOOL_PREF_SPHINX_LISTEN_MYSQL', '127.0.0.1:9306');
+define('FOOL_PREF_SPHINX_DIR', '/usr/local/sphinx/var');
+define('FOOL_PREF_SPHINX_MIN_WORD', 3);
+define('FOOL_PREF_SPHINX_MEMORY', 2047);
 
 
 /*

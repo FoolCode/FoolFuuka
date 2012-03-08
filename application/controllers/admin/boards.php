@@ -66,8 +66,6 @@ class Boards extends Admin_Controller
 				}
 				else
 				{
-					flash_notice('success', _('Board information updated.'));
-					redirect('admin/boards/board/' . $result['success']['shortname']);
 					set_notice('success', _('Board information updated.'));
 				}
 			}
@@ -108,11 +106,11 @@ class Boards extends Admin_Controller
 	function delete($type, $id = 0)
 	{
 		$board = $this->radix->get_by_id($id);
-		if($board == FALSE)
+		if ($board == FALSE)
 		{
 			show_404();
 		}
-		
+
 		if ($this->input->post())
 		{
 			switch ($type)
@@ -120,11 +118,13 @@ class Boards extends Admin_Controller
 				case("board"):
 					if (!$this->radix->remove($id))
 					{
-						flash_notice('error', sprintf(_('Failed to delete the board %s.'), $board->shortname));
+						flash_notice('error',
+							sprintf(_('Failed to delete the board %s.'), $board->shortname));
 						log_message("error", "Controller: board.php/remove: failed board removal");
 						redirect('admin/boards/manage');
 					}
-					flash_notice('success', sprintf(_('The board %s has been deleted.'), $board->shortname));
+					flash_notice('success',
+						sprintf(_('The board %s has been deleted.'), $board->shortname));
 					redirect('admin/boards/manage');
 					break;
 			}
@@ -138,7 +138,7 @@ class Boards extends Admin_Controller
 				$data['message'] = _('Do you really want to remove the board and all its data?') .
 					'<br/>' .
 					_('Notice: due to its size, you will have to remove the image folder manually. The folder will have the "removed_" prefix.');
-				
+
 				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
 					$data, TRUE);
 				$this->load->view('admin/default', $this->viewdata);
@@ -149,94 +149,156 @@ class Boards extends Admin_Controller
 
 	function sphinx()
 	{
-		$this->viewdata["function_title"] = '<a href="' . site_url('/admin/boards/sphinx/') . '">' . _('Sphinx') . '</a>';
+		$this->viewdata["function_title"] = _('Sphinx');
 
 		$form = array();
 
-		$form[] = array(
-			_('Listen (Sphinx)'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_listen',
-				'id' => 'sphinx_listen',
-				'maxlength' => '200',
-				'placeholder' => _('127.0.0.1:9312'),
-				'preferences' => 'fs_gen',
-			)
+		$form['open'] = array(
+			'type' => 'open'
 		);
 
-		$form[] = array(
-			_('Listen (MySQL)'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_listen_mysql',
-				'id' => 'sphinx_listen_mysql',
-				'maxlength' => '200',
-				'placeholder' => _('127.0.0.1:9306'),
-				'preferences' => 'fs_gen',
-				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
-			)
+		$form['fu_sphinx_listen'] = array(
+			'type' => 'input',
+			'label' => 'Listen (Sphinx)',
+			'placeholder' => FOOL_PREF_SPHINX_LISTEN,
+			'preferences' => TRUE,
+			'help' => _('Set the address and port to your Sphinx instance.'),
+			'class' => 'span2',
+			'validation' => 'trim|max_length[48]',
+			'validation_func' => function($input, $form)
+			{
+				if (strpos($input['fu_sphinx_listen'], ':') === FALSE)
+				{
+					return array(
+						'error_code' => 'MISSING_COLON',
+						'error' => _('The Sphinx listening address and port aren\'t formatted correctly.')
+					);
+				}
+
+				$sphinx_ip_port = explode(':', $input['fu_sphinx_listen']);
+
+				if (count($sphinx_ip_port) != 2)
+				{
+					return array(
+						'error_code' => 'WRONG_COLON_NUMBER',
+						'error' => _('The Sphinx listening address and port aren\'t formatted correctly.')
+					);
+				}
+
+				if (!is_natural($sphinx_ip_port[1]))
+				{
+					return array(
+						'error_code' => 'PORT_NOT_A_NUMBER',
+						'error' => _('The port specified isn\'t a valid number.')
+					);
+				}
+				
+				$CI = & get_instance();
+				$CI->load->library('SphinxQL');
+				$connection = @$CI->sphinxql->SetServer($sphinx_ip_port[0],
+					$sphinx_ip_port[1]);
+
+				if ($connection === FALSE)
+				{
+					return array(
+						'error_code' => 'CONNECTION_NOT_ESTABLISHED',
+						'error' => _('The Sphinx server couldn\'t be contacted at the specified address and port.')
+					);
+				}
+
+				return array('success' => TRUE);
+			}
 		);
 
-		$form[] = array(
-			_('Working Directory'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_path',
-				'id' => 'sphinx_path',
-				'maxlength' => '200',
-				'placeholder' => _('/usr/local/sphinx/var'),
-				'preferences' => 'fs_gen',
-				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
-			)
+		$form['fu_sphinx_listen_mysql'] = array(
+			'type' => 'input',
+			'label' => 'Listen (MySQL)',
+			'placeholder' => FOOL_PREF_SPHINX_LISTEN_MYSQL,
+			'preferences' => TRUE,
+			'validation' => 'trim|max_length[48]',
+			'help' => _('Set the address and port to your MySQL instance.'),
+			'class' => 'span2'
 		);
 
-		$form[] = array(
-			_('Minimum Word Length'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_min_word_len',
-				'id' => 'sphinx_min_word_len',
-				'maxlength' => '200',
-				'placeholder' => _('3'),
-				'preferences' => 'fs_gen',
-				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
-			)
+		$form['fu_sphinx_dir'] = array(
+			'type' => 'input',
+			'label' => 'Working Directory',
+			'placeholder' => FOOL_PREF_SPHINX_DIR,
+			'preferences' => TRUE,
+			'help' => _('Set the working directory to your Sphinx working directory.'),
+			'class' => 'span3',
+			'validation' => 'trim',
+			'validation_func' => function($input, $form)
+			{
+				if(!file_exists($input))
+				{
+					return array(
+						'error_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',
+						'error' => _('Couldn\'t find the Sphinx working directory.')
+					);
+				}
+				
+				return array('success' => TRUE);
+			}
 		);
 
-		$form[] = array(
-			_('Memory Limit'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_mem_limit',
-				'id' => 'sphinx_mem_limit',
-				'maxlength' => '200',
-				'placeholder' => _('2047M'),
-				'preferences' => 'fs_gen',
-				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
-			)
+		$form['fu_sphinx_min_word_len'] = array(
+			'type' => 'input',
+			'label' => 'Minimum Word Length',
+			'placeholder' => FOOL_PREF_SPHINX_MIN_WORD,
+			'preferences' => TRUE,
+			'help' => _('Set the minimum word length indexed by Sphinx.'),
+			'class' => 'span1',
+			'validation' => 'trim|is_natural_no_zero'
+		);
+
+		$form['fu_sphinx_mem_limit'] = array(
+			'type' => 'input',
+			'label' => 'Memory Limit',
+			'placeholder' => FOOL_PREF_SPHINX_MEMORY,
+			'validation' => 'is_natural|greater_than[256]',
+			'preferences' => TRUE,
+			'help' => _('Set the memory limit for the Sphinx instance in MegaBytes.'),
+			'class' => 'span1'
+		);
+
+		$form['separator'] = array(
+			'type' => 'separator'
+		);
+
+		$form['submit'] = array(
+			'type' => 'submit',
+			'value' => _('Submit'),
+			'class' => 'btn btn-primary'
+		);
+
+		$form['close'] = array(
+			'type' => 'close'
 		);
 
 		if ($post = $this->input->post())
 		{
-			$this->_submit($post, $form);
-			redirect('admin/boards/sphinx');
+			$result = $this->form_validate($form);
+			if (isset($result['error']))
+			{
+				set_notice('warning', $result['error']);
+			}
+			else
+			{
+				$this->submit_preferences($result['success']);
+			}
 		}
 
 		// create the form
-		$table = tabler($form, FALSE);
-		$data['form_title'] = _('Theme');
-		$data['table'] = $table;
+		$data['form'] = $form;
 
-		$data['config'] = str_replace("\t\t\t", '', $this->generate_sphinx_config());
-
-		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/sphinx.php",
+		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator",
 			$data, TRUE);
-		$this->load->view("admin/default.php", $this->viewdata);
+		$this->load->view("admin/default", $this->viewdata);
 	}
 
 
-	function generate_sphinx_config()
+	function _generate_sphinx_config()
 	{
 		$config = '
 			########################################################
@@ -299,8 +361,8 @@ class Boards extends Admin_Controller
 				docinfo = extern
 				mlock = 0
 				morphology = none
-				min_word_len = ' . ((get_setting('fu_sphinx_mem_limit'))
-					? get_setting('fu_sphinx_mem_limit') : '2047M') . '
+				min_word_len = ' . get_setting('fu_sphinx_mem_limit',
+				FOOL_PREF_SPHINX_MEMORY) . 'M
 				charset_type = utf-8
 
 				charset_table =
@@ -382,7 +444,7 @@ class Boards extends Admin_Controller
 	}
 
 
-	function generate_sphinx_definition_source($board)
+	function _generate_sphinx_definition_source($board)
 	{
 		return "
 			# /" . $board . "/
@@ -409,7 +471,7 @@ class Boards extends Admin_Controller
 	}
 
 
-	function generate_sphinx_definition_index($board, $path)
+	function _generate_sphinx_definition_index($board, $path)
 	{
 		return "
 			# /" . $board . "/

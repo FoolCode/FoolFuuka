@@ -137,7 +137,8 @@ class Admin_Controller extends MY_Controller
 			foreach ($form as $name => $item)
 			{
 				// not interested in data that is not related to database
-				if (!isset($item['database']) || $item['database'] !== TRUE)
+				if ((!isset($item['database']) || $item['database'] !== TRUE) &&
+					(!isset($item['preferences']) || $item['preferences'] !== TRUE))
 				{
 					continue;
 				}
@@ -155,7 +156,7 @@ class Admin_Controller extends MY_Controller
 				}
 				else
 				{
-					if ($this->input->post($name))
+					if ($this->input->post($name) !== FALSE)
 					{
 						$result[$name] = $this->input->post($name);
 					}
@@ -167,6 +168,25 @@ class Admin_Controller extends MY_Controller
 		}
 	}
 
+	
+	function submit_preferences($data)
+	{
+		foreach ($data as $name => $value)
+		{
+			$this->db->where(array('name' => $name));
+			if ($this->db->count_all_results('preferences') == 1)
+			{
+				$this->db->update('preferences', array('value' => $value), array('name' => $name));
+			}
+			else
+			{
+				$this->db->insert('preferences', array('name' => $name, 'value' => $value));
+			}
+		}
+		
+		// reload those preferences
+		load_settings();
+	}
 
 	/**
 	 * Non-dynamic sidebar array.

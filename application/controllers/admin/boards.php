@@ -17,7 +17,7 @@ class Boards extends Admin_Controller
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/boards") . '">' . _("Boards") . '</a>';
 		;
 	}
-	
+
 
 	function index()
 	{
@@ -42,30 +42,33 @@ class Boards extends Admin_Controller
 	{
 		$data['form'] = $this->radix->board_structure();
 
-		if (is_null($shortname))
+		if ($this->input->post())
 		{
-			// creating a new board
-			$this->viewdata["function_title"] = _('Creating a new board');
-
-			if ($this->input->post())
+			$result = $this->form_validate($data['form']);
+			if (isset($result['error']))
 			{
-				$result = $this->form_validate($data['form']);
-				if(isset($result['error']))
+				set_notice('warning', $result['error']);
+			}
+			else
+			{
+				// it's actually fully checked, we just have to throw it in DB
+				$this->radix->save($result['success']);
+				if (is_null($shortname))
 				{
-					set_notice('warning', $result['error']);
+					flash_notice('success', _('New board created!'));
+					redirect('admin/boards/board/' . $result['success']['shortname']);
+				}
+				else if ($shortname != $result['success']['shortname'])
+				{
+					// case in which letter was changed
+					flash_notice('success', _('Board information updated.'));
+					redirect('admin/boards/board/' . $result['success']['shortname']);
 				}
 				else
 				{
-					// we aren't yet finished doing checks, there's still the 
-					// database and overriding part
-					$this->radix->save($form);
+					set_notice('success', _('Board information updated.'));
 				}
 			}
-
-			$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator', $data, TRUE);
-			$this->load->view('admin/default', $this->viewdata);
-			
-			return TRUE;
 		}
 
 		$board = $this->radix->get_by_shortname($shortname);
@@ -77,26 +80,26 @@ class Boards extends Admin_Controller
 		$data['object'] = $board;
 
 		$this->viewdata["function_title"] = _('Editing board:') . ' ' . $board->shortname;
-
-		$data["board"] = $board;
-
-		if ($this->input->post())
-		{
-			// Prepare for stub change in case we have to redirect instead of just printing the view
-			$old_shortname = $board->shortname;
-			$board->update_board_db($this->input->post());
-
-			flash_notice('notice',
-				sprintf(_('Updated board information for %s.'), $board->name));
-			// Did we change the shortname of the board? We need to redirect to the new page then.
-			if (isset($old_shortname) && $old_shortname != $board->shortname)
-			{
-				redirect('/admin/boards/board/' . $board->shortname);
-			}
-		}
-
-		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator', $data, TRUE);
+		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
+			$data, TRUE);
 		$this->load->view('admin/default', $this->viewdata);
+	}
+
+
+	function add_new()
+	{
+		$data['form'] = $this->radix->board_structure();
+		
+		// the actual POST is in the board() function
+		$data['form']['open']['action'] = site_url('admin/boards/board');
+		
+		// panel for creating a new board
+		$this->viewdata["function_title"] = _('Creating a new board');
+		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
+			$data, TRUE);
+		$this->load->view('admin/default', $this->viewdata);
+
+		return TRUE;
 	}
 
 

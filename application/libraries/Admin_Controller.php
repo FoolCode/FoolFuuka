@@ -58,7 +58,7 @@ class Admin_Controller extends MY_Controller
 		}
 	}
 
-	
+
 	/**
 	 * Checks the form for and returns either a compiled array of values or
 	 * the error
@@ -66,48 +66,107 @@ class Admin_Controller extends MY_Controller
 	 */
 	function form_validate($form)
 	{
+		// this gets a bit complex because we want to show all errors at the same
+		// time, which means we have to run both CI validation and custom, then
+		// merge the result.
+
 		$this->load->library('form_validation');
-		
-		foreach($form as $name => $item)
+		foreach ($form as $name => $item)
 		{
-			if(isset($item['validation']))
+			if (isset($item['validation']))
 			{
 				$this->form_validation->set_rules($name, $item['label'], $item['validation']);
 			}
 		}
-		
-		if ($this->form_validation->run() == FALSE)
+
+		// we need to run both validation and closures
+		$this->form_validation->run();
+		$ci_validation_errors = $this->form_validation->get_errors_array();
+
+		$validation_func = array();
+		// we run this after form_validation in case form_validation edited the POST data
+		foreach ($form as $name => $item)
 		{
-			$this->form_validation->set_error_delimiters('', '');
-			return array('error' => validation_errors());
+			// the "required" MUST be handled with the standard form_validation
+			// or we'll never get in here
+			if (isset($item['validation_func']) && $this->input->post($name))
+			{
+				// contains TRUE for success and in array with ['error'] in case
+				$validation_func[$name] = $item['validation_func']($this->input->post(),
+					$form);
+				
+				// critical errors don't allow the continuation of the validation.
+				// this allows less checks for functions that come after the critical ones.
+				// criticals are usually the IDs in the hidden fields.
+				if(isset($validation_func[$name]['critical']) &&
+					$validation_func[$name]['critical'] == TRUE)
+				{
+					break;
+				}
+			}
+		}
+
+
+		// filter results, since the closures return ['success'] = TRUE on success
+		$validation_func_errors = array();
+		foreach ($validation_func as $item)
+		{
+			// we want only the errors
+			if (isset($item['success']))
+			{
+				continue;
+			}
+
+			if (isset($item['error']))
+			{
+				// we want only the human readable error
+				$validation_func_errors[] = $item['error'];
+			}
+		}
+
+		if (count($ci_validation_errors) > 0 || count($validation_func_errors) > 0)
+		{
+			$errors = array_merge($ci_validation_errors, $validation_func_errors);
+			return array('error' => implode(' ', $errors));
 		}
 		else
 		{
-			foreach($form as $name => $item)
+			// get rid of all the uninteresting inputs and simplify
+			$result = array();
+			
+			foreach ($form as $name => $item)
 			{
-				if($item['type'] == 'checkbox')
+				// not interested in data that is not related to database
+				if(!isset($item['database']) || $item['database'] !== TRUE)
 				{
-					if($this->input->post($name) == 1)
+					continue;
+				}
+				
+				if ($item['type'] == 'checkbox')
+				{
+					if ($this->input->post($name) == 1)
 					{
-						$form['name']['value'] = 1;
+						$result[$name] = 1;
 					}
 					else
 					{
-						$form['name']['value'] = 0;
+						$result[$name] = 0;
 					}
 				}
 				else
 				{
-					$form['name']['value'] = $this->input->post($name);
+					if ($this->input->post($name))
+					{
+						$result[$name] = $this->input->post($name);
+					}
 				}
 			}
-			
+
 			// returning a form with the new values
-			return array('success' => $form);
+			return array('success' => $result);
 		}
 	}
-	
-	
+
 
 	/**
 	 * Non-dynamic sidebar array.
@@ -253,11 +312,12 @@ class Admin_Controller extends MY_Controller
 				}
 
 				// adding or overriding the inner elements
-				if(isset($item['content']))
+				if (isset($item['content']))
 				{
-					if(isset($array1[$key]['content']))
+					if (isset($array1[$key]['content']))
 					{
-						$array1[$key]['content'] = $this->merge_sidebars($array1[$key]['content'], $item['content']);
+						$array1[$key]['content'] = $this->merge_sidebars($array1[$key]['content'],
+							$item['content']);
 					}
 					else
 					{
@@ -291,15 +351,15 @@ class Admin_Controller extends MY_Controller
 								$array1[$subkey] = $temp;
 								$array1[$key] = $item;
 							}
-							
+
 							unset($array_temp[$subkey]);
-							
+
 							// flush the rest
-							foreach($array_temp as $k => $t)
+							foreach ($array_temp as $k => $t)
 							{
 								$array1[$k] = $t;
 							}
-							
+
 							break;
 						}
 						else

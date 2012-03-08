@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 ?>
 
 <div class="btn-group">
-	<a class="btn btn-success btn-mini" href="<?php echo site_url('/admin/boards/board/') ?>">
+	<a class="btn btn-success btn-mini" href="<?php echo site_url('/admin/boards/add_new/') ?>">
 		<?php echo _('Add board') ?>
 	</a>
 </div>

@@ -33,8 +33,26 @@ class Radix extends CI_Model
 			),
 			'id' => array(
 				'type' => 'hidden',
+				'database' => TRUE,
+				'validation_func' => function($input, $form_internal)
+				{
+					// check that the ID exists
+					$CI = & get_instance();
+					$query = $CI->db->where('id', $input['id'])->get('boards');
+					if($query->num_rows() != 1)
+					{
+						return array(
+							'error_code' => 'ID_NOT_FOUND',
+							'error' => _('Couldn\'t find the board with the submitted ID.'),
+							'critical' => TRUE
+						);
+					}
+					
+					return array('success' => TRUE);
+				}
 			),
 			'name' => array(
+				'database' => TRUE,
 				'type' => 'input',
 				'label' => _('Name'),
 				'help' => _('Insert the name of the board normally shown as title.'),
@@ -43,18 +61,22 @@ class Radix extends CI_Model
 				'validation' => 'required|max_length[128]'
 			),
 			'shortname' => array(
+				'database' => TRUE,
 				'type' => 'input',
 				'label' => _('Shortname'),
 				'help' => _('Insert the shorter name of the board. Reserved: "api", "cli", "admin".'),
 				'placeholder' => _('Required'),
 				'class' => 'span1',
-				'validation' => 'required|max_length[5]',
-				'validation_func' => function($shortname, $current = NULL)
+				'validation' => 'required|max_length[5]|alpha_dash',
+				'validation_func' => function($input, $form_internal)
 				{
+					// as of PHP 5.3 we can't yet use $this in Closures, we could in 5.4
+					$CI = & get_instance();
+					
 					// if we're not using the special subdomain for peripherals
 					if (get_setting('fs_srv_sys_subdomain', FOOL_PREF_SYS_SUBDOMAIN) === FALSE)
 					{
-						if (in_array($shortname, unserialize(FOOL_PROTECTED_RADIXES)))
+						if (in_array($input['shortname'], unserialize(FOOL_PROTECTED_RADIXES)))
 						{
 							return array(
 								'error_code' => 'PROTECTED_RADIX',
@@ -64,41 +86,57 @@ class Radix extends CI_Model
 						}
 					}
 
-					if (!is_null($current))
+					// if we're working on the same object
+					if (isset($input['id']))
 					{
-						// no change
-						if ($shortname == $current)
+						// existence ensured by CRITICAL in the ID check
+						$query = $CI->db->where('id', $input['id'])->get('boards')->row();
+
+						// no change?
+						if ($input['shortname'] == $query->shortname)
 						{
 							// no change
 							return array('success' => TRUE);
 						}
 					}
-					else 
+					
+					// check that there isn't already a board with that name
+					$query = $CI->db->where('shortname', $input['shortname'])->get('boards');
+					if($query->num_rows() > 0)
 					{
-						
+						return array(
+							'error_code' => 'ALREADY_EXISTS',
+							'error' => _('The shortname is already used for another board.')
+						);
 					}
+					
 				}
 			),
 			'separator-1' => array(
 				'type' => 'separator'
 			),
 			'archive' => array(
+				'database' => TRUE,
 				'type' => 'checkbox',
 				'help' => _('Is this a 4chan archiving board?')
 			),
 			'thumbnails' => array(
+				'database' => TRUE,
 				'type' => 'checkbox',
 				'help' => _('Display the thumbnails?')
 			),
 			'delay_thumbnails' => array(
+				'database' => TRUE,
 				'type' => 'checkbox',
 				'help' => _('Hide the thumbnails for 24 hours? (for moderation purposes)')
 			),
 			'sphinx' => array(
+				'database' => TRUE,
 				'type' => 'checkbox',
 				'help' => _('Use SphinxSearch as search engine?')
 			),
 			'hidden' => array(
+				'database' => TRUE,
 				'type' => 'checkbox',
 				'help' => _('Hide the board from public access? (only admins and mods will be able to browse it)')
 			),
@@ -321,9 +359,19 @@ class Radix extends CI_Model
 
 	function save($data)
 	{
-		//if($data['shortname'])
-		// check presence of shortname in database
-		//$this->db->
+		// data must be already sanitized through the form array
+		if(isset($data['id']))
+		{
+			$this->db->where('id', $data['id'])->update('boards', $data);
+			return TRUE;
+		}
+		else
+		{
+			$this->db->insert('boards', $data);
+		}
+		
+		// update the cached boards
+		$this->radix->preload();
 	}
 
 

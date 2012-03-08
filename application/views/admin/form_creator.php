@@ -103,7 +103,7 @@ foreach ($form as $name => $item) :
 			}
 			
 			echo form_open(
-				isset($item['href']) ? $item['href'] : '',
+				isset($item['action']) ? $item['action'] : '',
 				isset($item['attributes']) ? $item['attributes'] : '',
 				isset($item['hidden']) ? $item['hidden'] : array()
 			);

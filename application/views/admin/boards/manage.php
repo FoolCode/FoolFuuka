@@ -44,7 +44,7 @@ if (!defined('BASEPATH'))
 						</li>
 						<li class="divider"></li>
 						<li>
-							<a href="<?php echo site_url('admin/boards/delete/'.$board->shortname) ?>">
+							<a href="<?php echo site_url('admin/boards/delete/board/'.$board->id) ?>">
 								<?php echo _('Delete') ?>
 							</a>
 						</li>

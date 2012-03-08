@@ -89,10 +89,10 @@ class Boards extends Admin_Controller
 	function add_new()
 	{
 		$data['form'] = $this->radix->board_structure();
-		
+
 		// the actual POST is in the board() function
 		$data['form']['open']['action'] = site_url('admin/boards/board');
-		
+
 		// panel for creating a new board
 		$this->viewdata["function_title"] = _('Creating a new board');
 		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
@@ -105,29 +105,38 @@ class Boards extends Admin_Controller
 
 	function delete($type, $id = 0)
 	{
-		if (!isAjax())
+		// for AJAX you will need to go down the API way
+		if ($this->input->post())
 		{
-			$this->output->set_output(_('You can\'t delete from outside the admin panel through this link.'));
-			log_message("error", "Controller: board.php/remove: failed serie removal");
-			return false;
+			switch ($type)
+			{
+				case("board"):
+					if (!$this->radix->remove($shortname))
+					{
+						flash_notice('error', sprintf(_('Failed to delete the board %s.'), $title));
+						log_message("error", "Controller: board.php/remove: failed board removal");
+						echo json_encode(array('href' => site_url("admin/boards/manage")));
+						return false;
+					}
+					flash_notice('notice', sprintf(_('The board %s has been deleted.'), $title));
+					$this->output->set_output(json_encode(array('href' => site_url("admin/boards/manage"))));
+					break;
+			}
 		}
-		$id = intval($id);
 
 		switch ($type)
 		{
-			case("board"):
-				$board = new Board();
-				$board->where('id', $id)->get();
-				$title = $board->name;
-				if (!$board->remove())
-				{
-					flash_notice('error', sprintf(_('Failed to delete the board %s.'), $title));
-					log_message("error", "Controller: board.php/remove: failed board removal");
-					echo json_encode(array('href' => site_url("admin/boards/manage")));
-					return false;
-				}
-				flash_notice('notice', sprintf(_('The board %s has been deleted.'), $title));
-				$this->output->set_output(json_encode(array('href' => site_url("admin/boards/manage"))));
+			case('board'):
+				$board = $this->radix->get_by_id($id);
+				$this->viewdata["function_title"] = _('Removing board:') . ' ' . $board->shortname;
+				$data['alert_level'] = 'warning';
+				$data['message'] = _('Do you really want to remove the board and all its data?') .
+					'<br/>' .
+					_('Notice: due to its size, you will have to remove the image folder manually. The folder will have the "removed_" prefix to help you finding it.');
+				
+				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
+					$data, TRUE);
+				$this->load->view('admin/default', $this->viewdata);
 				break;
 		}
 	}

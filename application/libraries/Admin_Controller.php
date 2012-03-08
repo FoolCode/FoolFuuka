@@ -94,11 +94,11 @@ class Admin_Controller extends MY_Controller
 				// contains TRUE for success and in array with ['error'] in case
 				$validation_func[$name] = $item['validation_func']($this->input->post(),
 					$form);
-				
+
 				// critical errors don't allow the continuation of the validation.
 				// this allows less checks for functions that come after the critical ones.
 				// criticals are usually the IDs in the hidden fields.
-				if(isset($validation_func[$name]['critical']) &&
+				if (isset($validation_func[$name]['critical']) &&
 					$validation_func[$name]['critical'] == TRUE)
 				{
 					break;
@@ -133,15 +133,15 @@ class Admin_Controller extends MY_Controller
 		{
 			// get rid of all the uninteresting inputs and simplify
 			$result = array();
-			
+
 			foreach ($form as $name => $item)
 			{
 				// not interested in data that is not related to database
-				if(!isset($item['database']) || $item['database'] !== TRUE)
+				if (!isset($item['database']) || $item['database'] !== TRUE)
 				{
 					continue;
 				}
-				
+
 				if ($item['type'] == 'checkbox')
 				{
 					if ($this->input->post($name) == 1)
@@ -185,7 +185,7 @@ class Admin_Controller extends MY_Controller
 			"level" => "admin",
 			"default" => "manage",
 			"content" => array(
-				"manage" => array("level" => "admin", "name" => _("Manage"), "icon" => 'icon-th-list'),
+				"manage" => array("alt_highlight" => array("board"), "level" => "admin", "name" => _("Manage"), "icon" => 'icon-th-list'),
 				"sphinx" => array("level" => "admin", "name" => _("Sphinx"), "icon" => 'icon-search'),
 				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 'icon-asterisk')
 			)
@@ -439,7 +439,12 @@ class Admin_Controller extends MY_Controller
 					$subsubresult = $subitem;
 					if (($this->tank_auth->is_admin() || $this->tank_auth->is_group($subitem['level'])))
 					{
-						if ($subresult['active'] && $this->uri->segment(3) == $subkey)
+						if ($subresult['active'] && ($this->uri->segment(3) == $subkey ||
+							(
+							isset($subitem['alt_highlight']) &&
+							in_array($this->uri->segment(3), $subitem['alt_highlight'])
+							)
+							))
 						{
 							$subsubresult['active'] = TRUE;
 						}

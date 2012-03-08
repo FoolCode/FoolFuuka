@@ -66,6 +66,8 @@ class Boards extends Admin_Controller
 				}
 				else
 				{
+					flash_notice('success', _('Board information updated.'));
+					redirect('admin/boards/board/' . $result['success']['shortname']);
 					set_notice('success', _('Board information updated.'));
 				}
 			}
@@ -105,21 +107,25 @@ class Boards extends Admin_Controller
 
 	function delete($type, $id = 0)
 	{
-		// for AJAX you will need to go down the API way
+		$board = $this->radix->get_by_id($id);
+		if($board == FALSE)
+		{
+			show_404();
+		}
+		
 		if ($this->input->post())
 		{
 			switch ($type)
 			{
 				case("board"):
-					if (!$this->radix->remove($shortname))
+					if (!$this->radix->remove($id))
 					{
-						flash_notice('error', sprintf(_('Failed to delete the board %s.'), $title));
+						flash_notice('error', sprintf(_('Failed to delete the board %s.'), $board->shortname));
 						log_message("error", "Controller: board.php/remove: failed board removal");
-						echo json_encode(array('href' => site_url("admin/boards/manage")));
-						return false;
+						redirect('admin/boards/manage');
 					}
-					flash_notice('notice', sprintf(_('The board %s has been deleted.'), $title));
-					$this->output->set_output(json_encode(array('href' => site_url("admin/boards/manage"))));
+					flash_notice('success', sprintf(_('The board %s has been deleted.'), $board->shortname));
+					redirect('admin/boards/manage');
 					break;
 			}
 		}
@@ -127,12 +133,11 @@ class Boards extends Admin_Controller
 		switch ($type)
 		{
 			case('board'):
-				$board = $this->radix->get_by_id($id);
 				$this->viewdata["function_title"] = _('Removing board:') . ' ' . $board->shortname;
 				$data['alert_level'] = 'warning';
 				$data['message'] = _('Do you really want to remove the board and all its data?') .
 					'<br/>' .
-					_('Notice: due to its size, you will have to remove the image folder manually. The folder will have the "removed_" prefix to help you finding it.');
+					_('Notice: due to its size, you will have to remove the image folder manually. The folder will have the "removed_" prefix.');
 				
 				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
 					$data, TRUE);

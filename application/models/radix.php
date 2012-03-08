@@ -160,12 +160,7 @@ class Radix extends CI_Model
 	 */
 	function preload()
 	{
-		$query = $this->db->query('
-			SELECT *
-			FROM ' . $this->db->protect_identifiers('boards',
-				TRUE) . '
-			ORDER BY shortname ASC
-		');
+		$query = $this->db->order_by('shortname', 'ASC')->get('boards');
 
 		if ($query->num_rows() == 0)
 		{
@@ -176,7 +171,6 @@ class Radix extends CI_Model
 
 		$object = $query->result();
 		$array = $query->result_array();
-		$result = array();
 
 		foreach ($object as $item)
 		{
@@ -371,6 +365,12 @@ class Radix extends CI_Model
 		
 		// update the cached boards
 		$this->radix->preload();
+	}
+	
+	
+	function remove($id)
+	{
+		$this->db->where('id', $id)->delete('boards');
 	}
 
 

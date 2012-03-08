@@ -363,7 +363,6 @@ class Radix extends CI_Model
 		if(isset($data['id']))
 		{
 			$this->db->where('id', $data['id'])->update('boards', $data);
-			return TRUE;
 		}
 		else
 		{

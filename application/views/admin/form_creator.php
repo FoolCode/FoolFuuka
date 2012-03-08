@@ -163,7 +163,7 @@ if (!defined('BASEPATH'))
 				?>
 				<label class="checkbox">
 					<?php
-					echo form_checkbox($name, $item['value'], $checed)
+					echo form_checkbox($name, $item['value'], $checked)
 					?>
 					<?php echo $helpers['help'] ?>
 				</label>

@@ -192,11 +192,11 @@ class Boards extends Admin_Controller
 						'error' => _('The port specified isn\'t a valid number.')
 					);
 				}
-				
+
 				$CI = & get_instance();
 				$CI->load->library('SphinxQL');
 				$connection = @$CI->sphinxql->SetServer($sphinx_ip_port[0],
-					$sphinx_ip_port[1]);
+						$sphinx_ip_port[1]);
 
 				if ($connection === FALSE)
 				{
@@ -230,14 +230,14 @@ class Boards extends Admin_Controller
 			'validation' => 'trim',
 			'validation_func' => function($input, $form)
 			{
-				if(!file_exists($input))
+				if (!file_exists($input))
 				{
 					return array(
 						'error_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',
 						'error' => _('Couldn\'t find the Sphinx working directory.')
 					);
 				}
-				
+
 				return array('success' => TRUE);
 			}
 		);
@@ -285,7 +285,7 @@ class Boards extends Admin_Controller
 			}
 			else
 			{
-				if(isset($result['warning']))
+				if (isset($result['warning']))
 				{
 					set_notice('warning', $result['warning']);
 				}
@@ -298,6 +298,7 @@ class Boards extends Admin_Controller
 
 		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator",
 			$data, TRUE);
+		$this->viewdata["main_content_view"] .= '<pre>' . $this->_generate_sphinx_config() . '</pre>';
 		$this->load->view("admin/default", $this->viewdata);
 	}
 
@@ -305,143 +306,143 @@ class Boards extends Admin_Controller
 	function _generate_sphinx_config()
 	{
 		$config = '
-			########################################################
-			## Sphinx Configuration for FoOlFuuka
-			########################################################
+########################################################
+## Sphinx Configuration for FoOlFuuka
+########################################################
 		';
 
 		$config .= '
-			########################################################
-			## data source definition
-			########################################################
+########################################################
+## data source definition
+########################################################
 
-			source main
-			{
-				# data source type. mandatory, no default value
-				# known types are mysql, pgsql, mssql, xmlpipe, xmlpipe2, odbc
-				type = mysql
+source main
+{
+	# data source type. mandatory, no default value
+	# known types are mysql, pgsql, mssql, xmlpipe, xmlpipe2, odbc
+	type = mysql
 
-				# SQL source information
-				sql_host =
-				sql_user =
-				sql_pass =
-				sql_db =
-				sql_port =
+	# SQL source information
+	sql_host =
+	sql_user =
+	sql_pass =
+	sql_db =
+	sql_port =
 
-				sql_query_pre = SET NAMES utf8
-				sql_range_step = 10000
-				sql_query =
+	sql_query_pre = SET NAMES utf8
+	sql_range_step = 10000
+	sql_query =
 
-				sql_attr_uint = num
-				sql_attr_uint = subnum
-				sql_attr_uint = int_capcode
-				sql_attr_bool = has_image
-				sql_attr_bool = is_internal
-				sql_attr_bool = is_deleted
-				sql_attr_timestamp = timestamp
+	sql_attr_uint = num
+	sql_attr_uint = subnum
+	sql_attr_uint = int_capcode
+	sql_attr_bool = has_image
+	sql_attr_bool = is_internal
+	sql_attr_bool = is_deleted
+	sql_attr_timestamp = timestamp
 
-				sql_query_info =
-				sql_query_post_index =
-			}
+	sql_query_info =
+	sql_query_post_index =
+}
 		';
 
 		foreach ($this->radix->get_all() as $key => $board)
 		{
 			if ($board->sphinx)
 			{
-				$config .= $this->generate_sphinx_definition_source($board->shortname);
+				$config .= $this->_generate_sphinx_definition_source($board->shortname);
 			}
 		}
 
 		$config .= '
-			########################################################
-			## index definition
-			########################################################
+########################################################
+## index definition
+########################################################
 
-			index main
-			{
-				source = main
-				path = ' . get_setting('fu_sphinx_path') . '/data/main
-				docinfo = extern
-				mlock = 0
-				morphology = none
-				min_word_len = ' . get_setting('fu_sphinx_mem_limit',
+index main
+{
+	source = main
+	path = ' . get_setting('fu_sphinx_dir') . '/data/main
+	docinfo = extern
+	mlock = 0
+	morphology = none
+	min_word_len = ' . get_setting('fu_sphinx_mem_limit',
 				FOOL_PREF_SPHINX_MEMORY) . 'M
-				charset_type = utf-8
+	charset_type = utf-8
 
-				charset_table =
+	charset_table =
 
-				min_prefix_len = 3
-				prefix_fields = comment, title
-				enable_star = 1
-				html_strip = 0
-			}
+	min_prefix_len = 3
+	prefix_fields = comment, title
+	enable_star = 1
+	html_strip = 0
+}
 		';
 
 		foreach ($this->radix->get_all() as $key => $board)
 		{
 			if ($board->sphinx)
 			{
-				$config .= $this->generate_sphinx_definition_index($board->shortname,
-					((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data');
+				$config .= $this->_generate_sphinx_definition_index($board->shortname,
+					((get_setting('fu_sphinx_dir')) ? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/data');
 			}
 		}
 
 		$config .= '
-			########################################################
-			## indexer settings
-			########################################################
+########################################################
+## indexer settings
+########################################################
 
-			indexer
-			{
-				mem_limit = ' . ((get_setting('fu_sphinx_mem_limit'))
+indexer
+{
+	mem_limit = ' . ((get_setting('fu_sphinx_mem_limit'))
 					? get_setting('fu_sphinx_mem_limit') : '2047M') . '
-				max_xmlpipe2_field = 4M
-				write_buffer = 5M
-				max_file_field_buffer = 32M
-			}
+	max_xmlpipe2_field = 4M
+	write_buffer = 5M
+	max_file_field_buffer = 32M
+}
+';
+
+		$config .= '
+########################################################
+## searchd settings
+########################################################
+
+searchd
+{
+	listen = ' . ((get_setting('fu_sphinx_listen'))
+		? get_setting('fu_sphinx_listen') . ':sphinx' : '127.0.0.1:9312:sphinx') . '
+	listen = ' . ((get_setting('fu_sphinx_listen_mysql'))
+		? get_setting('fu_sphinx_listen_mysql') . ':mysql41' : '127.0.0.1:9312:mysql41') . '
+	log = ' . ((get_setting('fu_sphinx_dir'))
+		? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/log/searchd.log
+	query_log = ' . ((get_setting('fu_sphinx_dir'))
+		? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/log/query.log
+	read_timeout = 5
+	client_timeout = 300
+	max_children = 10
+	pid_file = ' . ((get_setting('fu_sphinx_dir'))
+		? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/searchd.pid
+	max_matches = 5000
+	seamless_rotate = 1
+	preopen_indexes = 1
+	unlink_old = 1
+	mva_updates_pool = 1M
+	max_packet_size = 8M
+	max_filters = 256
+	max_filter_values = 4096
+	max_batch_queries = 32
+	workers = threads
+	binlog_path = ' . ((get_setting('fu_sphinx_dir'))
+		? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/data
+	collation_server = utf8_general_ci
+	collation_libc_locale = en_US.UTF-8
+	compat_sphinxsql_magics = 0
+}
 		';
 
 		$config .= '
-			########################################################
-			## searchd settings
-			########################################################
-
-			searchd
-			{
-				listen = ' . ((get_setting('fu_sphinx_listen'))
-					? get_setting('fu_sphinx_listen') . ':sphinx' : '127.0.0.1:9312:sphinx') . '
-				listen = ' . ((get_setting('fu_sphinx_listen_mysql'))
-					? get_setting('fu_sphinx_listen_mysql') . ':mysql41' : '127.0.0.1:9312:mysql41') . '
-				log = ' . ((get_setting('fu_sphinx_path'))
-					? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/searchd.log
-				query_log = ' . ((get_setting('fu_sphinx_path'))
-					? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/query.log
-				read_timeout = 5
-				client_timeout = 300
-				max_children = 10
-				pid_file = ' . ((get_setting('fu_sphinx_path'))
-					? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/searchd.pid
-				max_matches = 5000
-				seamless_rotate = 1
-				preopen_indexes = 1
-				unlink_old = 1
-				mva_updates_pool = 1M
-				max_packet_size = 8M
-				max_filters = 256
-				max_filter_values = 4096
-				max_batch_queries = 32
-				workers = threads
-				binlog_path = ' . ((get_setting('fu_sphinx_path'))
-					? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data
-				collation_server = utf8_general_ci
-				collation_libc_locale = en_US.UTF-8
-				compat_sphinxsql_magics = 0
-			}
-		';
-
-		$config .= '
-			# --eof--
+# --eof--
 		';
 
 		return $config;
@@ -451,26 +452,26 @@ class Boards extends Admin_Controller
 	function _generate_sphinx_definition_source($board)
 	{
 		return "
-			# /" . $board . "/
-			source " . $board . "_main : main
-			{
-				sql_query = SELECT doc_id, num, subnum, name, trip, (ascii(capcode)) as int_capcode, (subnnum != 0) as is_internal, deleted as is_deleted, timestamp, title, comment FROM " . $board . " WHERE doc_id >= \$start AND doc_id <= \$end
-				sql_query_info = SELECT * FROM " . $board . " WHERE doc_id = \$id
-				sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
-				sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_index_id_" . $board . ", \$maxid)
-			}
+# /" . $board . "/
+source " . $board . "_main : main
+{
+	sql_query = SELECT doc_id, num, subnum, name, trip, (ascii(capcode)) as int_capcode, (subnnum != 0) as is_internal, deleted as is_deleted, timestamp, title, comment FROM " . $board . " WHERE doc_id >= \$start AND doc_id <= \$end
+	sql_query_info = SELECT * FROM " . $board . " WHERE doc_id = \$id
+	sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
+	sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_index_id_" . $board . ", \$maxid)
+}
 
-			source " . $board . "_ancient : " . $board . "_main
-			{
-				sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $board . "
-				sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_ancient_id_" . $board . ", \$maxid)
-			}
+source " . $board . "_ancient : " . $board . "_main
+{
+	sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $board . "
+	sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_ancient_id_" . $board . ", \$maxid)
+}
 
-			source " . $board . "_delta : " . $board . "_main
-			{
-				sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_'" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
-				sql_query_post_index =
-			}
+source " . $board . "_delta : " . $board . "_main
+{
+	sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_'" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
+	sql_query_post_index =
+}
 		";
 	}
 
@@ -478,24 +479,24 @@ class Boards extends Admin_Controller
 	function _generate_sphinx_definition_index($board, $path)
 	{
 		return "
-			# /" . $board . "/
-			index " . $board . "_main : main
-			{
-				source = " . $board . "_main
-				path = " . $path . "/" . $board . "_main
-			}
+# /" . $board . "/
+index " . $board . "_main : main
+{
+	source = " . $board . "_main
+	path = " . $path . "/" . $board . "_main
+}
 
-			index " . $board . "_ancient : " . $board . "_main
-			{
-				source = " . $board . "_ancient
-				path = " . $path . "/" . $board . "_ancient
-			}
+index " . $board . "_ancient : " . $board . "_main
+{
+	source = " . $board . "_ancient
+	path = " . $path . "/" . $board . "_ancient
+}
 
-			index " . $board . "_delta : " . $board . "_main
-			{
-				source = " . $board . "_delta
-				path = " . $path . "/" . $board . "_delta
-			}
+index " . $board . "_delta : " . $board . "_main
+{
+	source = " . $board . "_delta
+	path = " . $path . "/" . $board . "_delta
+}
 		";
 	}
 

@@ -9,7 +9,7 @@
 |	http://codeigniter.com/user_guide/general/hooks.html
 |
 */
-
+/*
 $hook['display_override'] = array(
 		 'class'    => '',
 		 'function' => 'compress_html',
@@ -17,7 +17,7 @@ $hook['display_override'] = array(
 		 'filepath' => 'helpers',
 		 'params'   => array('beer', 'wine', 'snacks')
 	);
-
+*/
 
 /* End of file hooks.php */
 /* Location: ./application/config/hooks.php */

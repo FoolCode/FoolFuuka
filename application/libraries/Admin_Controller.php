@@ -117,7 +117,7 @@ class Admin_Controller extends MY_Controller
 			{
 				continue;
 			}
-			
+
 			if (isset($item['warning']))
 			{
 				// we want only the human readable error
@@ -169,10 +169,11 @@ class Admin_Controller extends MY_Controller
 					}
 				}
 			}
-			
-			if(count($validation_func_warnings) > 0)
+
+			if (count($validation_func_warnings) > 0)
 			{
-				return array('success' => $result, 'warning' => implode(' ', $validation_func_warnings));
+				return array('success' => $result, 'warning' => implode(' ',
+						$validation_func_warnings));
 			}
 
 			// returning a form with the new values
@@ -180,7 +181,7 @@ class Admin_Controller extends MY_Controller
 		}
 	}
 
-	
+
 	function submit_preferences($data)
 	{
 		foreach ($data as $name => $value)
@@ -188,17 +189,19 @@ class Admin_Controller extends MY_Controller
 			$this->db->where(array('name' => $name));
 			if ($this->db->count_all_results('preferences') == 1)
 			{
-				$this->db->update('preferences', array('value' => $value), array('name' => $name));
+				$this->db->update('preferences', array('value' => $value),
+					array('name' => $name));
 			}
 			else
 			{
 				$this->db->insert('preferences', array('name' => $name, 'value' => $value));
 			}
 		}
-		
+
 		// reload those preferences
 		load_settings();
 	}
+
 
 	/**
 	 * Non-dynamic sidebar array.
@@ -217,7 +220,8 @@ class Admin_Controller extends MY_Controller
 			"level" => "admin",
 			"default" => "manage",
 			"content" => array(
-				"manage" => array("alt_highlight" => array("board"), "level" => "admin", "name" => _("Manage"), "icon" => 'icon-th-list'),
+				"manage" => array("alt_highlight" => array("board"),
+					"level" => "admin", "name" => _("Manage"), "icon" => 'icon-th-list'),
 				"sphinx" => array("level" => "admin", "name" => _("Sphinx"), "icon" => 'icon-search'),
 				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 'icon-asterisk')
 			)
@@ -229,7 +233,7 @@ class Admin_Controller extends MY_Controller
 			"default" => "reports",
 			"content" => array(
 				"reports" => array("level" => "mod", "name" => _("Reports"), "icon" => 'icon-tag'),
-				"spam" => array("level" => "mod", "name" => _("Spam"), "icon" => 'icon-remove-circle')
+			//	"spam" => array("level" => "mod", "name" => _("Spam"), "icon" => 'icon-remove-circle')
 			)
 		);
 

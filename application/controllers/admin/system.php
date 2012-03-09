@@ -3,8 +3,11 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
+
 class System extends Admin_Controller
 {
+
+
 	function __construct()
 	{
 		parent::__construct();
@@ -19,12 +22,13 @@ class System extends Admin_Controller
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/system") . '">' . _("System") . '</a>';
 	}
 
-
 	/*
 	 * A page telling if there's an ugrade available
 	 *
 	 * @author Woxxy
 	 */
+
+
 	function index()
 	{
 		redirect('/admin/system/information');
@@ -39,7 +43,8 @@ class System extends Admin_Controller
 		$data["current_version"] = FOOL_VERSION;
 		$data["form_title"] = _("Information");
 
-		$this->viewdata["main_content_view"] = $this->load->view("admin/system/information", $data, TRUE);
+		$this->viewdata["main_content_view"] = $this->load->view("admin/system/information",
+			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
 	}
 
@@ -57,75 +62,77 @@ class System extends Admin_Controller
 		else
 		{
 			if (!$this->fs_imagick->exec)
-				$imagick_status = '<span class="label important">' . _('Not Available') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must have Safe Mode turned off and the exec() function enabled to allow ImageMagick to process your images. Please check the information panel for more details.')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388, 16) . '" class="icon icon-small"></a>';
+				$imagick_status = '<span class="label important">' . _('Not Available') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must have Safe Mode turned off and the exec() function enabled to allow ImageMagick to process your images. Please check the information panel for more details.')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
+						16) . '" class="icon icon-small"></a>';
 			else if (!$this->fs_imagick->found)
-				$imagick_status = '<span class="label important">' . _('Not Found') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must provide the correct path to the "convert" binary on your system. This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388, 16) . '" class="icon icon-small"></a>';
+				$imagick_status = '<span class="label important">' . _('Not Found') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must provide the correct path to the "convert" binary on your system. This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
+						16) . '" class="icon icon-small"></a>';
 			else if (!$this->fs_imagick->available)
-				$imagick_status = '<span class="label important">' . _('Not Working') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(sprintf(_('There has been an error encountered when testing your ImageMagick installation. To manually check for errors, access your server via shell or command line and type: %s'), '<br/><code>' . $this->fs_imagick->found . ' -version</code>')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388, 16) . '" class="icon icon-small"></a>';
+				$imagick_status = '<span class="label important">' . _('Not Working') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(sprintf(_('There has been an error encountered when testing your ImageMagick installation. To manually check for errors, access your server via shell or command line and type: %s'),
+							'<br/><code>' . $this->fs_imagick->found . ' -version</code>')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
+						16) . '" class="icon icon-small"></a>';
 		}
 
-
-		$form[] = array(
-			_('Path to ImageMagick') . ' ' . $imagick_status,
-			array(
-				'type' => 'input',
-				'name' => 'fs_serv_imagick_path',
-				'placeholder' => '/usr/bin',
-				'preferences' => 'fs_gen',
-				'help' => sprintf(_('FoOlSlide uses %s via command line to maximize the processor power for processing images. If ImageMagick %s automatically, enter the location of the "convert" binary on your server in the field above.'), '<a href="#" rel="popover-below" title="ImageMagick" data-content="' . _('This is a library used to dynamically create, edit, compose or convert images.') . '">ImageMagick</a>', '<a href="#" rel="popover-below" title="' . _('ImageMagick Binary') . '" data-content="' . htmlspecialchars(_('This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" >' . _('can\'t be found') . '</a>')
-			)
+		$form['open'] = array(
+			'type' => 'open'
 		);
 
-		$form[] = array(
-			_('Boards directory'),
-			array(
-				'type' => 'input',
-				'name' => 'fs_fuuka_boards_directory',
-				'preferences' => 'fs_gen',
-				'help' => _('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
-			)
+		$form['fs_serv_imagick_path'] = array(
+			'type' => 'input',
+			'label' => _('Path to ImageMagick') . ' ' . $imagick_status,
+			'placeholder' => '/usr/bin',
+			'preferences' => 'fs_gen',
+			'help' => sprintf(_('FoOlSlide uses %s via command line to maximize the processor power for processing images. If ImageMagick %s automatically, enter the location of the "convert" binary on your server in the field above.'),
+				'<a href="#" rel="popover-below" title="ImageMagick" data-content="' . _('This is a library used to dynamically create, edit, compose or convert images.') . '">ImageMagick</a>',
+				'<a href="#" rel="popover-below" title="' . _('ImageMagick Binary') . '" data-content="' . htmlspecialchars(_('This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" >' . _('can\'t be found') . '</a>')
 		);
 
-		$form[] = array(
-			_('Boards URL'),
-			array(
-				'type' => 'input',
-				'name' => 'fs_fuuka_boards_url',
-				'preferences' => 'fs_gen',
-				'help' => _('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
-			)
+		$form['fs_fuuka_boards_directory'] = array(
+			'type' => 'input',
+			'label' => _('Boards directory'),
+			'preferences' => TRUE,
+			'help' => _('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
 		);
 
-		$form[] = array(
-			_('Boards database'),
-			array(
-				'type' => 'input',
-				'name' => 'fs_fuuka_boards_db',
-				'preferences' => 'fs_gen',
-				'help' => _('Overrides the default database, and is compatible with the Fuuka perl fetcher (beware: uses no database prefixes)')
-			)
+		$form['fs_fuuka_boards_url'] = array(
+			'type' => 'input',
+			'label' => _('Boards URL'),
+			'preferences' => TRUE,
+			'help' => _('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
 		);
 
-		if ($post = $this->input->post())
-		{
-			$this->_submit($post, $form);
-			redirect('admin/system/preferences');
-		}
+		$form['fs_fuuka_boards_db'] = array(
+			'type' => 'input',
+			'label' => _('Boards database'),
+			'preferences' => TRUE,
+			'help' => _('Overrides the default database, and is compatible with the Fuuka perl fetcher (beware: uses no database prefixes)')
+		);
 
-		// create a form
-		$table = tabler($form, FALSE);
-		$data['table'] = $table;
+		$form['separator-2'] = array(
+			'type' => 'separator'
+		);
 
-		// print out
-		$this->viewdata["main_content_view"] = $this->load->view("admin/preferences/general.php", $data, TRUE);
+		$form['submit'] = array(
+			'type' => 'submit',
+			'value' => _('Submit'),
+			'class' => 'btn btn-primary'
+		);
 
+		$form['close'] = array(
+			'type' => 'close'
+		);
 
 		$data["form_title"] = _("Preferences");
 
-		$this->viewdata["main_content_view"] = $this->load->view("admin/system/preferences", $data, TRUE);
-		$this->load->view("admin/default.php", $this->viewdata);
-	}
+		$this->submit_preferences_auto($form);
 
+		$data['form'] = $form;
+
+		// create a form
+		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator",
+			$data, TRUE);
+		$this->load->view("admin/default", $this->viewdata);
+	}
 
 	/*
 	 * _submit is a private function that submits to the "preferences" table.
@@ -134,6 +141,8 @@ class System extends Admin_Controller
 	 *
 	 * @author Woxxy
 	 */
+
+
 	function _submit($post, $form)
 	{
 		// Support Checkbox Listing
@@ -162,11 +171,13 @@ class System extends Admin_Controller
 			$this->db->where(array('name' => $item[1]['name']));
 			if ($this->db->count_all_results() == 1)
 			{
-				$this->db->update('preferences', array('value' => $value), array('name' => $item[1]['name']));
+				$this->db->update('preferences', array('value' => $value),
+					array('name' => $item[1]['name']));
 			}
 			else
 			{
-				$this->db->insert('preferences', array('name' => $item[1]['name'], 'value' => $value));
+				$this->db->insert('preferences',
+					array('name' => $item[1]['name'], 'value' => $value));
 			}
 		}
 
@@ -203,7 +214,8 @@ class System extends Admin_Controller
 
 		$data["logs_space"] = round($data["logs_space"] / 1024);
 
-		$this->viewdata["main_content_view"] = $this->load->view("admin/system/tools", $data, TRUE);
+		$this->viewdata["main_content_view"] = $this->load->view("admin/system/tools",
+			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
 	}
 
@@ -406,16 +418,17 @@ class System extends Admin_Controller
 		if (!$this->input->is_cli_request())
 		{
 			$this->output->set_output(json_encode(array(
-						'status' => (count($warnings) > 0) ? 'warning' : 'success',
-						'messages' => $warnings,
-						'count' => $count
-					)));
+					'status' => (count($warnings) > 0) ? 'warning' : 'success',
+					'messages' => $warnings,
+					'count' => $count
+				)));
 		}
 		else
 		{
 			echo '#----------DONE----------#' . PHP_EOL;
 			if (!$repair)
-				echo sprintf(_('To repair automatically by removing the unidentified data and rebuilding the missing thumbnails, enter: %s'), 'php ' . FCPATH . 'index.php admin system tools_check_comics repair') . PHP_EOL;
+				echo sprintf(_('To repair automatically by removing the unidentified data and rebuilding the missing thumbnails, enter: %s'),
+					'php ' . FCPATH . 'index.php admin system tools_check_comics repair') . PHP_EOL;
 			else
 				echo _('Successfully repaired your library.') . PHP_EOL;
 		}
@@ -472,15 +485,15 @@ class System extends Admin_Controller
 				$pages = new Page();
 				$pages_count = $pages->count();
 				$this->output->set_output(json_encode(array(
-							'status' => 'done',
-							'pages_count' => $pages_count
-						)));
+						'status' => 'done',
+						'pages_count' => $pages_count
+					)));
 			}
 			else
 			{
 				$this->output->set_output(json_encode(array(
-							'status' => 'done'
-						)));
+						'status' => 'done'
+					)));
 			}
 			return TRUE;
 		}
@@ -509,10 +522,10 @@ class System extends Admin_Controller
 		}
 
 		$this->output->set_output(json_encode(array(
-					'status' => (count($warnings) > 0) ? 'warning' : 'success',
-					'messages' => $warnings,
-					'processed' => $items->result_count()
-				)));
+				'status' => (count($warnings) > 0) ? 'warning' : 'success',
+				'messages' => $warnings,
+				'processed' => $items->result_count()
+			)));
 	}
 
 
@@ -533,22 +546,24 @@ class System extends Admin_Controller
 
 		// look for the latest version available
 		$data["new_versions"] = $this->upgrade_model->check_latest();
-		
+
 		// we're going to use markdown here
 		$this->load->library('Markdown_Parser');
 		$data["changelog"] = $this->upgrade_model->get_changelog();
 
 		// print out
-		$this->viewdata["main_content_view"] = $this->load->view("admin/system/upgrade", $data, TRUE);
+		$this->viewdata["main_content_view"] = $this->load->view("admin/system/upgrade",
+			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
 	}
-
 
 	/*
 	 * This just triggers the upgrade function in the upgrade model
 	 *
 	 * @author Woxxy
 	 */
+
+
 	function do_upgrade()
 	{
 
@@ -616,6 +631,5 @@ class System extends Admin_Controller
 
 		$this->output->set_output(json_encode(array('href' => $response)));
 	}
-
 
 }

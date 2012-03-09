@@ -89,6 +89,7 @@ class Preferences extends Admin_Controller
 		flash_notice('notice', _('Updated settings.'));
 	}
 
+
 	/**
 	 * Generic info influcencing all of FoOlSlide
 	 * 
@@ -151,7 +152,7 @@ class Preferences extends Admin_Controller
 		$this->viewdata["function_title"] = _("Theme");
 
 		$form = array();
-		
+
 		$form['open'] = array(
 			'type' => 'open'
 		);
@@ -203,7 +204,7 @@ class Preferences extends Admin_Controller
 			'help' => _("This will insert the HTML code above after the &lt;BODY&gt;."),
 			'class' => 'span5'
 		);
-		
+
 		$form['separator'] = array(
 			'type' => 'separator'
 		);
@@ -239,11 +240,11 @@ class Preferences extends Admin_Controller
 		$this->viewdata["function_title"] = _("Advertising");
 
 		$form = array();
-		
+
 		$form['open'] = array(
 			'type' => 'open'
 		);
-		
+
 		$form['fs_ads_top_banner'] = array(
 			'type' => 'textarea',
 			'label' => _('Top banner'),
@@ -273,7 +274,7 @@ class Preferences extends Admin_Controller
 			'preferences' => TRUE,
 			'help' => _('Enable bottom banner')
 		);
-		
+
 		$form['separator'] = array(
 			'type' => 'separator'
 		);

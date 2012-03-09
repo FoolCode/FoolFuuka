@@ -950,6 +950,11 @@ class Post extends CI_Model
 			$this->db->sphinx_option('max_matches', 5000)
 				->sphinx_option('reverse_scan', ($search['order'] == 'asc') ? 0 : 1);
 
+			$this->db->limit(25, ($search['page'] * 25) - 25);
+
+			$this->db->sphinx_option('max_matches', 5000)
+				->sphinx_option('reverse_scan', ($search['order'] == 'asc') ? 0 : 1);
+
 			/*
 			 * Query SphinxQL with our search parameters generated above.
 			 */

@@ -7,21 +7,21 @@ if (!defined('BASEPATH'))
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="generator" content="<?php echo FOOLSLIDE_NAME ?> <?php echo FOOLSLIDE_VERSION ?>" />
+		<meta name="generator" content="<?php echo FOOL_NAME ?> <?php echo FOOL_VERSION ?>" />
 		<title><?php echo $template['title']; ?></title>
 		<?php
 		if ($disable_headers !== TRUE)
 		{
 			if (file_exists('content/themes/' . $this->fu_theme . '/style.css'))
-				echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOLSLIDE_VERSION);
+				echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOL_VERSION);
 		}
 		else
 		{
 			if (file_exists('content/themes/' . $this->fu_theme . '/intro.css'))
-				echo link_tag('content/themes/' . $this->fu_theme . '/intro.css?v=' . FOOLSLIDE_VERSION);
+				echo link_tag('content/themes/' . $this->fu_theme . '/intro.css?v=' . FOOL_VERSION);
 		}
 		?>
-		<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOLSLIDE_VERSION ?>"></script>
+		<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body>

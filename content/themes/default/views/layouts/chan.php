@@ -7,13 +7,13 @@
 		<meta http-equiv="imagetoolbar" content="false" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0">
 		<title><?php echo $template['title']; ?></title>
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap/style.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap/style.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php
 		if ($this->config->item('theme_extends') != ''
 			&& $this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme : 'default')
 			&& $this->config->item('theme_extends_css') === TRUE
 			&& file_exists('content/themes/' . $this->config->item('theme_extends') . '/style.css'))
-			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOLSLIDE_VERSION);
+			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOL_VERSION);
 
 		if (file_exists('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css'))
 			echo link_tag('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css?v=' . FOOL_VERSION);

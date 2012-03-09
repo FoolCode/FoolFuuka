@@ -1,10 +1,9 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-
-$data = json_decode($data, TRUE);
 ?>
 
+<?php $data_array = json_decode($data, TRUE); ?>
 <table class="bordered-table" style="width:600px; margin: 10px auto;">
 	<thead>
 		<tr>
@@ -13,8 +12,7 @@ $data = json_decode($data, TRUE);
 		</tr>
 	</thead>
 	<tbody>
-
-		<td><?php echo $data[0]['COUNT(*)']; ?></td>
-		<td><?php echo $data[0]['COUNT(*)/60']; ?></td>
+		<td><?php echo $data_array[0]['COUNT(*)']; ?></td>
+		<td><?php echo $data_array[0]['COUNT(*)/60']; ?></td>
 	</tbody>
 </table>

@@ -1,7 +1,9 @@
 <?php
-if (!isset($page))
-	$page = 1;
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
 ?>
+
+<?php if ($enabled_tools_view) : ?>
 <div class="clearfix" style="border-bottom:1px dashed #aaa; margin-bottom: 5px; padding-left:10px;">
 	<!--- Post Input -->
 	<div>
@@ -25,7 +27,6 @@ if (!isset($page))
 		?>
 	</div>
 
-
 	<!--- Page Input -->
 	<div>
 		<?php
@@ -37,7 +38,7 @@ if (!isset($page))
 			'name' => 'page',
 			'id' => 'page',
 			'class' => 'mini',
-			'value' => $page
+			'value' => (isset($page)) ? $page : 1
 		));
 		echo form_submit(array(
 			'value' => 'Go',
@@ -84,7 +85,7 @@ if (!isset($page))
 	?>
 </div>
 
-<!--- Advanced Search Input -->
+<!--- Search Input (Advanced) -->
 <div id="search_advanced" style="display: none">
 	<?php
 	echo form_open(get_selected_radix()->shortname . '/search');
@@ -113,6 +114,18 @@ if (!isset($page))
 	<br/>
 	<div style="max-width: 360px">
 		<div class="clearfix">
+			<label for="date_start">Starting Date</label>
+			<div class="input">
+				<?php echo form_input(array('type' => 'date', 'name' => 'start', 'id' => 'date_start', 'value' => (isset($search["date_start"])) ? rawurldecode($search["date_start"]) : '')); ?>
+			</div>
+		</div>
+		<div class="clearfix">
+			<label for="date_end">Ending Date</label>
+			<div class="input">
+				<?php echo form_input(array('type' => 'date', 'name' => 'end', 'id' => 'date_end', 'value' => (isset($search["date_end"])) ? rawurldecode($search["date_end"]) : '')); ?>
+			</div>
+		</div>
+		<div class="clearfix">
 			<label for="username">Subject</label>
 			<div class="input">
 				<?php echo form_input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"])) ? rawurldecode($search["subject"]) : '')); ?>
@@ -131,37 +144,25 @@ if (!isset($page))
 			</div>
 		</div>
 		<div class="clearfix">
-			<label>Exclude</label>
+			<label>Capcode</label>
 			<div class="input">
 				<ul class="inputs-list">
 					<li>
 						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'admin', 'checked' => (!empty($search["filter"]["admin"]) && $search["filter"]["admin"] === TRUE) ? TRUE : FALSE)); ?>
-							<span>All Admin Posts</span>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"])) ? TRUE : FALSE)); ?>
+							<span>Display All Posts</span>
 						</label>
 					</li>
 					<li>
 						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'mod', 'checked' => (!empty($search["filter"]["mod"]) && $search["filter"]["mod"] === TRUE) ? TRUE : FALSE)); ?>
-							<span>All Mod Posts</span>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod') ? TRUE : FALSE)); ?>
+							<span>Only Mod Posts</span>
 						</label>
 					</li>
 					<li>
 						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'user', 'checked' => (!empty($search["filter"]["user"]) && $search["filter"]["user"] === TRUE) ? TRUE : FALSE)); ?>
-							<span>All User Posts</span>
-						</label>
-					</li>
-					<li>
-						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]["text"]) && $search["filter"]["text"] === TRUE) ? TRUE : FALSE)); ?>
-							<span>All Text-Only Posts</span>
-						</label>
-					</li>
-					<li>
-						<label>
-							<?php echo form_checkbox(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]["image"]) && $search["filter"]["image"] === TRUE) ? TRUE : FALSE)); ?>
-							<span>All Image Posts</span>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin') ? TRUE : FALSE)); ?>
+							<span>Only Admin Posts</span>
 						</label>
 					</li>
 				</ul>
@@ -218,6 +219,56 @@ if (!isset($page))
 			</div>
 		</div>
 		<div class="clearfix">
+			<label>Exclude</label>
+			<div class="input">
+				<ul class="inputs-list">
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'filter', 'value' => '', 'checked' => (empty($search["filter"])) ? TRUE : FALSE)); ?>
+							<span>Display All Posts</span>
+						</label>
+					</li>
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'image') ? TRUE : FALSE)); ?>
+							<span>All Image Posts</span>
+						</label>
+					</li>
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text') ? TRUE : FALSE)); ?>
+							<span>All Text-Only Posts</span>
+						</label>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="clearfix">
+			<label>Results</label>
+			<div class="input">
+				<ul class="inputs-list">
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'type', 'value' => '', 'checked' => (empty($search["type"])) ? TRUE : FALSE)); ?>
+							<span>Display All Posts</span>
+						</label>
+					</li>
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op') ? TRUE : FALSE)); ?>
+							<span>Thread OPs Only</span>
+						</label>
+					</li>
+					<li>
+						<label>
+							<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (!empty($search["type"]) && $search["type"] == 'posts') ? TRUE : FALSE)); ?>
+							<span>Posts Only</span>
+						</label>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="clearfix">
 			<label>Order By</label>
 			<div class="input">
 				<ul class="inputs-list">
@@ -240,3 +291,4 @@ if (!isset($page))
 	<?php echo form_close(); ?>
 </div>
 <div class="clearfix"></div>
+<?php endif; ?>

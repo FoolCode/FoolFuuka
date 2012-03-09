@@ -4,18 +4,17 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title><?php echo $template['title']; ?></title>
 		<meta http-equiv="imagetoolbar" content="false" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0">
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap/style.css?v=<?php echo FOOL_VERSION ?>" />
+		<title><?php echo $template['title']; ?></title>
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap/style.css?v=<?php echo FOOLSLIDE_VERSION ?>" />
 		<?php
-		if ($this->config->item('theme_extends') != '' &&
-				$this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme : 'default') &&
-				$this->config->item('theme_extends_css') === TRUE &&
-				file_exists('content/themes/' . $this->config->item('theme_extends') . '/style.css'))
-		{
-			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOL_VERSION);
-		}
+		if ($this->config->item('theme_extends') != ''
+			&& $this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme : 'default')
+			&& $this->config->item('theme_extends_css') === TRUE
+			&& file_exists('content/themes/' . $this->config->item('theme_extends') . '/style.css'))
+			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOLSLIDE_VERSION);
+
 		if (file_exists('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css'))
 			echo link_tag('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css?v=' . FOOL_VERSION);
 		?>
@@ -23,7 +22,7 @@
 		<!--[if lt IE 9]>
 			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
+		<?php if ($disable_headers !== TRUE) : ?>
 			<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo site_url(get_selected_radix()->shortname) ?>rss_gallery_50.xml" />
 			<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url(get_selected_radix()->shortname) ?>atom_gallery_50.xml" />
 		<?php endif; ?>
@@ -34,9 +33,9 @@
 	<body>
 		<div class="container-fluid">
 			<header id="header">
-				<?php if (!isset($disable_headers) || $disable_headers !== TRUE) : ?>
+				<?php if ($disable_headers !== TRUE) : ?>
 					<aside id="top_tools">
-						<?php echo $template['partials']['top_tools']; ?>
+						<?php echo $template['partials']['tools_view']; ?>
 					</aside>
 					<?php
 					$parenthesis_open = FALSE;
@@ -89,18 +88,19 @@
 				<?php if (isset($section_title)): ?>
 					<h3 class="section_title"><?php echo $section_title ?></h3>
 				<?php else : ?>
+
 				<?php endif; ?>
 
 				<?php
-				if (isset($is_page))
+				if ($is_page)
 					echo $template['partials']['post_thread'];
 				?>
 
 				<?php echo $template['body']; ?>
 
 				<?php
-				if ((!isset($disable_headers) || $disable_headers !== TRUE) && !isset($is_statistics) && get_selected_radix())
-					echo $template['partials']['post_tools'];
+				if ($disable_headers !== TRUE && !$is_statistics && get_selected_radix())
+					echo $template['partials']['tools_post'];
 				?>
 
 				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>

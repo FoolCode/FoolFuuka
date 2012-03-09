@@ -200,12 +200,16 @@ class Radix extends CI_Model
 		foreach ($object as $item)
 		{
 			$result_object[$item->id] = $item;
+			$result_object[$item->id]->formatted_title = ($item->name) ?
+				'/' . $item->shortname . '/ - ' . $item->name : '/' . $item->shortname . '/';
 			$result_object[$item->id]->href = site_url(array($item->shortname));
 		}
 
 		foreach ($array as $item)
 		{
 			$result_array[$item['id']] = $item;
+			$result_array[$item['id']]['formatted_title'] = ($item['name']) ?
+				'/' . $item['shortname'] . '/ - ' . $item['name'] : '/' . $item['shortname'] . '/';
 			$result_array[$item['id']]['href'] = site_url(array($item['shortname']));
 		}
 
@@ -217,9 +221,9 @@ class Radix extends CI_Model
 	/**
 	 * Set a radix for execution (example: chan.php)
 	 * Always returns object, array can be returned by get_selected_radix_array()
-	 * 
+	 *
 	 * @param type $shortname
-	 * @return type 
+	 * @return type
 	 */
 	function set_selected_by_shortname($shortname)
 	{
@@ -262,7 +266,7 @@ class Radix extends CI_Model
 
 	/**
 	 * Returns all the radixes as array of objects
-	 * 
+	 *
 	 * @return array
 	 */
 	function get_all()
@@ -315,7 +319,7 @@ class Radix extends CI_Model
 	 * @param type $type
 	 * @param type $switch
 	 * @param type $array
-	 * @return type 
+	 * @return type
 	 */
 	function get_by_type($value, $type, $switch = TRUE)
 	{
@@ -340,7 +344,7 @@ class Radix extends CI_Model
 	 * @param type $type
 	 * @param type $switch
 	 * @param type $array
-	 * @return type 
+	 * @return type
 	 */
 	function get_by_type_array($value, $type, $switch = TRUE)
 	{
@@ -382,7 +386,7 @@ class Radix extends CI_Model
 	 * @param string $type 'archive'
 	 * @param boolean $switch 'archive'
 	 * @param type $array
-	 * @return type 
+	 * @return type
 	 */
 	function filter_by_type($type, $switch, $array = FALSE)
 	{

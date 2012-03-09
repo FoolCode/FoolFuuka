@@ -45,7 +45,7 @@ class Post extends CI_Model
 
 
 	/**
-	 * Returns the name of the correct threads table, protected in oblique 
+	 * Returns the name of the correct threads table, protected in oblique
 	 * quotes
 	 *
 	 * @param type $board
@@ -109,8 +109,8 @@ class Post extends CI_Model
 		return '
 			LEFT JOIN
 			(
-				SELECT id as report_id, post as report_post, 
-					reason as report_reason, status as report_status, 
+				SELECT id as report_id, post as report_post,
+					reason as report_reason, status as report_status,
 					created as report_created
 				FROM ' . $this->db->protect_identifiers('reports',
 				TRUE) . '
@@ -182,7 +182,7 @@ class Post extends CI_Model
 		return '
 			LEFT JOIN
 			(
-				SELECT id as poster_id_join, ip as poster_ip, 
+				SELECT id as poster_id_join, ip as poster_ip,
 					banned as poster_banned
 				FROM ' . $this->db->protect_identifiers('posters',
 				TRUE) . '
@@ -296,20 +296,21 @@ class Post extends CI_Model
 						FROM ' . $this->get_table_threads($board) . '
 						ORDER BY time_ghost_bump DESC
 						LIMIT ?, ?
-					) AS t	
+					) AS t
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				',
-					array(intval(($page * $per_page) - $per_page),
-					intval($per_page)
+					array(
+						intval(($page * $per_page) - $per_page),
+						intval($per_page)
 					)
 				);
 
-				// this might not actually be working, we need to test it 
+				// this might not actually be working, we need to test it
 				// somewhere
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1 
+					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1
 							AS pages
 					FROM ' . $this->get_table_threads($board) . '
 					WHERE time_ghost_bump IS NOT NULL
@@ -330,13 +331,14 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				',
-					array(intval(($page * $per_page) - $per_page),
-					intval($per_page)
+					array(
+						intval(($page * $per_page) - $per_page),
+						intval($per_page)
 					)
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1 
+					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1
 						AS pages
 					FROM ' . $this->get_table_threads($board) . '
 				');
@@ -356,13 +358,14 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				',
-					array(intval(($page * $per_page) - $per_page),
-					intval($per_page)
+					array(
+						intval(($page * $per_page) - $per_page),
+						intval($per_page)
 					)
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1 
+					SELECT FLOOR(count(parent)/' . intval($per_page) . ')+1
 						AS pages
 					FROM ' . $this->get_table_threads($board) . '
 				');
@@ -372,37 +375,34 @@ class Post extends CI_Model
 				return FALSE;
 		}
 
+		// set total pages available
+		$pages = NULL;
 		if (isset($query_pages))
 		{
-			$pages = $query_pages->result();
-			$query_pages->free_result();
-			$pages = $pages[0]->pages;
+			$pages = $query_pages->row()->pages;
 			if ($pages <= 1)
 				$pages = NULL;
-		}
-		else
-		{
-			$pages = NULL;
+
+			$query_pages->free_result();
 		}
 
 		if ($query->num_rows() == 0)
 		{
 			return array(
-				'result' => array(
-					'posts' => array(),
-					'op' => array()
+				'result'    => array(
+					'op'    => array(),
+					'posts' => array()
 				),
-				'pages' => $pages
+				'pages'     => $pages
 			);
 		}
 
 		// get all the posts
 		$threads = array();
 		$sql = array();
-		$sqlcount = array();
 		foreach ($query->result() as $row)
 		{
-			$threads[] = $row->unq_parent;
+			$threads[$row->unq_parent] = array('replies' => $row->nreplies, 'images' => $row->nimages);
 			$sql[] = '
 				(
 					SELECT *
@@ -413,25 +413,14 @@ class Post extends CI_Model
 					LIMIT 0, 5
 				)
 			';
-
-			$sqlcount[] = '
-				(
-					SELECT count(*) AS count_all, count(distinct preview) AS count_images, num, parent
-					FROM ' . $this->get_table($board) . '
-					WHERE parent = ' . $row->unq_parent . '
-				)
-			';
 		}
 
 		$sql = implode('UNION', $sql) . '
 			ORDER BY num DESC
 		';
 
-		$sqlcount = implode('UNION', $sqlcount);
-
 		// quite disordered array
 		$query2 = $this->db->query($sql);
-		$querycount = $this->db->query($sqlcount);
 
 		// associative array with keys
 		$result = array();
@@ -465,12 +454,12 @@ class Post extends CI_Model
 			$post_num = ($post->parent > 0) ? $post->parent : $post->num;
 			if (!isset($result[$post_num]['omitted']))
 			{
-				foreach ($querycount->result() as $counter)
+				foreach ($threads as $parent => $count)
 				{
-					if ($counter->parent == $post->num)
-					{
-						$result[$post_num]['omitted'] = $counter->count_all - 5;
-						$result[$post_num]['images_omitted'] = $counter->count_images - 1;
+					if ($parent == $post_num)
+						{
+						$result[$post_num]['omitted'] = ($count['replies'] - 5);
+						$result[$post_num]['images_omitted'] = $count['images'];
 					}
 				}
 			}
@@ -818,18 +807,32 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param $board
+	 * @param $search
+	 * @param array $options
+	 *
+	 * @return array
+	 */
 	function get_search($board, $search, $options = array())
 	{
-		// defaults
-		$process = TRUE;
-		$clean = TRUE;
+		/**
+		 * Default actions applied to the resuts.
+		 */
+		$clean		= TRUE;
+		$process	= TRUE;
 
-		// overwrite defaults
+		/**
+		 * Override any defaults set by the function.
+		 */
 		foreach ($options as $key => $option)
 		{
 			$$key = $option;
 		}
 
+		/**
+		 * Set a valid $search['page'] used for LIMIT.
+		 */
 		if ($search['page'])
 		{
 			if (!is_numeric($search['page']))
@@ -843,7 +846,7 @@ class Post extends CI_Model
 			$search['page'] = 1;
 		}
 
-		if ($board->sphinx && ($search['subject'] || $search['username'] || $search['tripcode'] || $search['text']))
+		if ($board->sphinx)
 		{
 			/*
 			 * Establish connection to SphinxQL via MySQL Library.
@@ -854,26 +857,11 @@ class Post extends CI_Model
 			
 			$this->sphinxql->SetServer($sphinx_ip_port[0], $sphinx_ip_port[1]);
 
-			/*
-			 * Set default empty variables to store query information for SphinxQL.
-			 */
-			$match = array();
-			$where = array();
+			$this->db->from(array($board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta'), FALSE, FALSE);
 
-			/*
-			 * Generate FULLTEXT query with $match array.
-			 */
 			if ($search['subject'])
 			{
-				$match['@title'] = $this->sphinxql->EscapeString(urldecode($search['subject']));
-			}
-			if ($search['username'])
-			{
-				$match['@name'] = $this->sphinxql->EscapeString(urldecode($search['username']));
-			}
-			if ($search['tripcode'])
-			{
-				$match['@trip'] = $this->sphinxql->EscapeString(urldecode($search['tripcode']));
+				$this->db->sphinx_match('title', $search['subject']);
 			}
 			if ($search['text'])
 			{
@@ -881,112 +869,95 @@ class Post extends CI_Model
 				{
 					return array(
 						'error' => _
-							('The text you were searching for was too short. It must be at least two characters long.')
+						('The text you were searching for was too short. It must be at least two characters long.')
 					);
 				}
-				$match['@comment'] = $this->sphinxql->HalfEscapeString(urldecode($search['text']));
+
+				$this->db->sphinx_match('comment', $search['text']);
 			}
-			$AGAINST = '';
-			foreach ($match as $k => $v)
+			if ($search['username'])
 			{
-				$AGAINST .= "{$k} {$v} ";
+				$this->db->sphinx_match('name', $search['username']);
+			}
+			if ($search['tripcode'])
+			{
+				$this->db->sphinx_match('name', $search['tripcode']);
+			}
+			if ($search['capcode'] == 'admin')
+			{
+				$this->db->where('cap', 1);
+			}
+			if ($search['capcode'] == 'mod')
+			{
+				$this->db->where('cap', 2);
+			}
+			if ($search['capcode'] == 'user')
+			{
+				$this->db->where('cap !=', 1)
+					->where('cap !=', 2);
+			}
+			if ($search['deleted'] == 'deleted')
+			{
+				$this->db->where('is_deleted', 1);
+			}
+			if ($search['deleted'] == 'not-deleted')
+			{
+				$this->db->where('is_deleted', 0);
+			}
+			if ($search['ghost'] == 'only')
+			{
+				$this->db->where('is_internal', 1);
+			}
+			if ($search['ghost'] == 'none')
+			{
+				$this->db->where('is_internal', 0);
+			}
+			if ($search['type'] == 'op')
+			{
+				$this->db->where('is_op', 1);
+			}
+			if ($search['type'] == 'posts')
+			{
+				$this->db->where('is_op', 0);
+			}
+			if ($search['filter'] == 'image')
+			{
+				$this->db->where('has_image', 0);
+			}
+			if ($search['filter'] == 'text')
+			{
+				$this->db->where('has_image', 1);
+			}
+			if ($search['start'])
+			{
+				$this->db->where('timestamp >=', intval(strtotime($search['start'])));
+			}
+			if ($search['end'])
+			{
+				$this->db->where('timestamp <=', intval(strtotime($search['end'])));
+			}
+			if ($search['order'] == 'asc')
+			{
+				$this->db->order_by('timestamp', 'ASC');
+			}
+			else
+			{
+				$this->db->order_by('timestamp', 'DESC');
 			}
 
-			/*
-			 * Generate FILTER conditions for SphinxQL query with $where array.
-			 */
-			if ($search['deleted'] == "deleted")
-			{
-				$where['is_deleted'] = 1;
-			}
-			if ($search['deleted'] == "not-deleted")
-			{
-				$where['is_deleted'] = 0;
-			}
-			if ($search['ghost'] == "only")
-			{
-				$where['is_internal'] = 1;
-			}
-			if ($search['ghost'] == "none")
-			{
-				$where['is_internal'] = 0;
-			}
-			if ($search['filter'] != "")
-			{
-				/*
-				 * Expand the filter parameter and apply further filters provided.
-				 */
-				$filters = explode('-', $search['filter']);
-				unset($search['filter']);
+			$this->db->limit(25, ($search['page'] * 25) - 25);
 
-				foreach ($filters as $key => $value)
-				{
-					$search['filter'][$value] = TRUE;
-				}
-
-				/*
-				 * Handle the filtering of capcode with semi-complex array manipulation.
-				 */
-				if (!empty($search['filter']['user']) || !empty($search['filter']['mod']) || !empty($search['filter']['admin']))
-				{
-					$where['cap'] = array();
-					if (!empty($search['filter']['user']))
-					{
-						array_push($where['cap'], 1);
-					}
-					if (!empty($search['filter']['mod']))
-					{
-						array_push($where['cap'], 2);
-					}
-					if (!empty($search['filter']['admin']))
-					{
-						array_push($where['cap'], 3);
-					}
-				}
-
-				if (!empty($search['filter']['text']))
-				{
-					$where['has_image'] = 1;
-				}
-				if (!empty($search['filter']['image']))
-				{
-					$where['has_image'] = 0;
-				}
-			}
-			$CONDITIONS = array();
-			foreach ($where as $k => $v)
-			{
-				if (is_array($v))
-				{
-					foreach ($v as $_k => $_v)
-					{
-						$CONDITIONS[] = "{$k} != {$_v}";
-					}
-				}
-				else
-				{
-					$CONDITIONS[] = "{$k} = {$v}";
-				}
-			}
+			$this->db->sphinx_option('max_matches', 5000)
+				->sphinx_option('reverse_scan', ($search['order'] == 'asc') ? 0 : 1);
 
 			/*
 			 * Query SphinxQL with our search parameters generated above.
 			 */
-			$search_result = $this->sphinxql->Query('
-				SELECT *
-				FROM ' . $board->shortname . '_ancient,
-					' . $board->shortname . '_main,
-					' . $board->shortname . '_delta
-				WHERE MATCH(\'' . trim($AGAINST) . '\')
-					' . ((!empty($CONDITIONS))
-						? 'AND ' . implode(' AND ', $CONDITIONS) : '') . '
-				ORDER BY timestamp ' . (($search['order'] == 'asc')
-						? 'ASC' : 'DESC') . '
-				LIMIT ' . (($search['page'] * 25) - 25) . ', 25
-				OPTION max_matches = 5000
-			');
+			//echo $this->db->statement();
 
-			if (empty($search_result['matches']))
+			$sphinx = $this->sphinxql->query($this->db->statement());
+
+			if (empty($sphinx['matches']))
 			{
 				return array('posts' => array(), 'total_found' => 0);
 			}
@@ -995,169 +966,144 @@ class Post extends CI_Model
 			 * Query MySQL for full records.
 			 */
 			$sql = array();
-			foreach ($search_result['matches'] as $key => $matches)
+			foreach ($sphinx['matches'] as $row => $record)
 			{
 				$sql[] = '
 					(
 						SELECT *
 						FROM ' . $this->get_table($board) . '
-						' . $this->get_sql_report($board) . '
-						WHERE num = ' . $matches['num'] . ' AND subnum = ' . $matches['subnum'] . '
+						WHERE num = ' . $record['num'] . ' AND subnum = ' . $record['subnum'] . '
 					)
 				';
 			}
 
-			if ($search['order'] === 'asc')
-			{
-				$sql = implode('UNION', $sql) . '
-					ORDER BY timestamp ASC
-				';
-			}
+			if ($search['order'] == 'asc')
+				$sql = implode(' UNION ', $sql) . ' ORDER BY timestamp ASC';
 			else
-			{
-				$sql = implode('UNION', $sql) . '
-					ORDER BY timestamp DESC
-				';
-			}
+				$sql = implode(' UNION ', $sql) . ' ORDER BY timestamp DESC';
 
+			/**
+			 * Query MySQL and return search with total records.
+			 */
 			$query = $this->db->query($sql);
-			$total = $search_result['total_found'];
+			$total = $sphinx['total_found'];
 		}
 		else /* Use MySQL for both empty searches and non-sphinx indexed boards. */
 		{
-			/*
-			 * Set default empty variables to store query information for MySQL.
-			 */
-			$field = array();
-			$value = array();
-			$index = array();
+			$this->db->start_cache();
+			$this->db->from($this->get_table($board), FALSE);
 
 			if ($search['subject'])
 			{
-				array_push($field, 'title LIKE ?');
-				array_push($value, urldecode($search['subject']));
-			}
-			if ($search['username'])
-			{
-				array_push($field, 'name = ?');
-				array_push($value, urldecode($search['username']));
-				array_push($index, 'name_index');
-			}
-			if ($search['tripcode'])
-			{
-				array_push($field, 'trip = ?');
-				array_push($value, urldecode($search['tripcode']));
-				array_push($index, 'trip_index');
+				$this->db->like('title', rawurldecode($search['subject']));
 			}
 			if ($search['text'])
 			{
 				if (mb_strlen($search['text']) < 2)
 				{
 					return array(
-						'error' =>
-						_('The text you were searching for was too short. It must be at least two characters long.')
+						'error' => _
+						('The text you were searching for was too short. It must be at least two characters long.')
 					);
 				}
-
-				array_push($field, 'comment LIKE ?');
-				array_push($value, urldecode($search['text']));
+				$this->db->like('comment', rawurldecode($search['text']));
 			}
-
-			if ($search['deleted'] == "deleted")
+			if ($search['username'])
 			{
-				array_push($field, 'deleted = ?');
-				array_push($value, 1);
-			}
-			if ($search['deleted'] == "not-deleted")
-			{
-				array_push($field, 'deleted = ?');
-				array_push($value, 0);
-			}
-			if ($search['ghost'] == "only")
-			{
-				array_push($field, 'subnum != ?');
-				array_push($value, 0);
-			}
-			if ($search['ghost'] == "none")
-			{
-				array_push($field, 'subnum = ?');
-				array_push($value, 0);
-			}
-			if ($search['filter'] != "")
-			{
-				$filters = explode('-', $search['filter']);
-				unset($search['filter']);
+				$this->db->like('name', rawurldecode($search['username']))
+					->use_index('name_index');
 
-				foreach ($filters as $k => $v)
-				{
-					$search['filter'][$v] = TRUE;
-				}
-
-				if (!empty($search['filter']['user']) ||
-					!empty($search['filter']['mod']) ||
-					!empty($search['filter']['admin']))
-				{
-					if (!empty($search['filter']['user']))
-					{
-						array_push($field, 'capcode != ?');
-						array_push($value, 'N');
-					}
-					if (!empty($search['filter']['mod']))
-					{
-						array_push($field, 'capcode != ?');
-						array_push($value, 'M');
-					}
-					if (!empty($search['filter']['admin']))
-					{
-						array_push($field, 'capcode != ?');
-						array_push($value, 'A');
-					}
-				}
-
-				if (!empty($search['filter']['text']))
-				{
-					array_push($field, 'media IS NOT ?');
-					array_push($value, NULL);
-				}
-				if (!empty($search['filter']['image']))
-				{
-					array_push($field, 'media IS ?');
-					array_push($value, NULL);
-				}
 			}
-			if ($search['order'] === 'asc')
+			if ($search['tripcode'])
 			{
-				$order = 'ORDER BY timestamp ASC';
+				$this->db->like('trip', rawurldecode($search['tripcode']))
+					->use_index('trip_index');
 			}
-			else
+			if ($search['capcode'] == 'admin')
 			{
-				$order = 'ORDER BY timestamp DESC';
+				$this->db->where('capcode', 'A');
 			}
+			if ($search['capcode'] == 'mod')
+			{
+				$this->db->where('capcode', 'M');
+			}
+			if ($search['capcode'] == 'user')
+			{
+				$this->db->where('capcode !=', 'A')
+					->where('capcode !=', 'M');
+			}
+			if ($search['deleted'] == 'deleted')
+			{
+				$this->db->where('deleted', 1);
+			}
+			if ($search['deleted'] == 'not-deleted')
+			{
+				$this->db->where('deleted', 0);
+			}
+			if ($search['ghost'] == 'only')
+			{
+				$this->db->where('subnum <>', 0)
+					->use_index('subnum_index');
+			}
+			if ($search['ghost'] == 'none')
+			{
+				$this->db->where('subnum', 0)
+					->use_index('subnum_index');
+			}
+			if ($search['type'] == 'op')
+			{
+				$this->db->where('parent', 0)
+					->use_index('parent_index');
+			}
+			if ($search['type'] == 'posts')
+			{
+				$this->db->where('parent <>', 0)
+					->use_index('parent_index');
+			}
+			if ($search['filter'] == 'image')
+			{
+				$this->db->where('media IS NOT NULL')
+					->use_index('media_hash_index');
+			}
+			if ($search['filter'] == 'text')
+			{
+				$this->db->where('media IS NULL')
+					->use_index('media_hash_index');
+			}
+			if ($search['start'])
+			{
+				$this->db->where('timestamp >=', intval(strtotime($search['start'])))
+					->use_index('timestamp_index');
+			}
+			if ($search['end'])
+			{
+				$this->db->where('timestamp <=', intval(strtotime($search['end'])))
+					->use_index('timestamp_index');
+			}
+			$this->db->limit(5000);
+			$this->db->stop_cache();
+			$count = $this->db->query($this->db->statement());
 
-			$query = $this->db->query('
-				SELECT *
-				FROM ' . $this->get_table($board) .
-				((!empty($field)) ? ' WHERE ' . implode(' AND ', $field) : '') . '
-				' . $order . '
-				LIMIT ' . (($search['page'] * 25) - 25) . ', 25
-			',
-				$value);
-
-			if ($query->num_rows() == 0)
+			if ($count->num_rows() == 0)
 			{
 				return array('posts' => array(), 'total_found' => 0);
 			}
 
-			$count = $this->db->query('
-				SELECT count(*) AS total_found
-				FROM ' . $this->get_table($board) .
-				((!empty($field)) ? ' WHERE ' . implode(' AND ', $field) : '') . '
-				LIMIT 0, 5000
-			',
-				$value);
+			if ($search['order'] == 'asc')
+			{
+				$this->db->order_by('timestamp', 'ASC')
+					->use_index('timestamp_index');
+			}
+			else
+			{
+				$this->db->order_by('timestamp', 'DESC')
+					->use_index('timestamp_index');
+			}
 
-			$found = $count->result();
-			$total = $found[0]->total_found;
+			$this->db->limit(25, ($search['page'] * 25) - 25);
+			$query = $this->db->query($this->db->statement());
+			$total = $count->num_rows();
+			$this->db->flush_cache();
 		}
 
 		/*
@@ -1735,8 +1681,8 @@ class Post extends CI_Model
 				VALUES
 				(
 					(
-						SELECT COALESCE(MAX(num), 0) + 1 
-						FROM 
+						SELECT COALESCE(MAX(num), 0) + 1
+						FROM
 						(
 							SELECT * from ' . $this->get_table($board) . '
 						) AS x
@@ -1761,23 +1707,23 @@ class Post extends CI_Model
 					VALUES
 					(
 						(
-							SELECT MAX(num) 
-							FROM 
+							SELECT MAX(num)
+							FROM
 							(
 								SELECT *
-								FROM ' . $this->get_table($board) . ' 
+								FROM ' . $this->get_table($board) . '
 								WHERE parent = ? or num = ?
 							) AS x
 						),
 						(
-							SELECT MAX(subnum)+1 
-							FROM 
+							SELECT MAX(subnum)+1
+							FROM
 							(
-								SELECT * 
-								FROM ' . $this->get_table($board) . ' 
+								SELECT *
+								FROM ' . $this->get_table($board) . '
 								WHERE num = (
-									SELECT MAX(num) 
-									FROM ' . $this->get_table($board) . ' 
+									SELECT MAX(num)
+									FROM ' . $this->get_table($board) . '
 									WHERE parent = ? OR num = ?
 									)
 							) AS x
@@ -1813,7 +1759,7 @@ class Post extends CI_Model
 				$this->db->query('
 					UPDATE ' . $this->get_table($board) . '
 					SET preview = ?, preview_w = ?, preview_h = ?, media = ?,
-						media_w = ?, media_h = ?, media_size = ?, media_hash = ?, 
+						media_w = ?, media_h = ?, media_size = ?, media_hash = ?,
 						media_filename = ?
 					WHERE doc_id=?
 					',
@@ -1992,11 +1938,10 @@ class Post extends CI_Model
 	function recalculate_thread($board, $num)
 	{
 		$query = $this->db->query('
-			SELECT parent, doc_id, timestamp, email, media_hash
+			SELECT num, subnum, parent, doc_id, timestamp, email, media_hash
 			FROM ' . $this->get_table($board) . '
 			WHERE parent = ? OR num = ?
-		',
-			array(intval($num), intval($num)));
+		', array(intval($num), intval($num)));
 
 		$doc_id_p = 0;
 		$parent = 0;
@@ -2048,12 +1993,11 @@ class Post extends CI_Model
 			$query->free_result();
 
 			$this->db->query('
-				INSERT
-				INTO ' . $this->get_table_threads($board) . '
+				INSERT INTO ' . $this->get_table_threads($board) . '
 				(doc_id_p, parent, time_op, time_last, time_bump,
 					time_ghost, time_ghost_bump, nreplies, nimages)
 				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-				ON DUPLICATE KEY UPDATE 
+				ON DUPLICATE KEY UPDATE
 					parent = VALUES(parent),
 					time_op = VALUES(time_op),
 					time_last = VALUES(time_last),
@@ -2065,7 +2009,8 @@ class Post extends CI_Model
 			',
 				array(
 				$doc_id_p, $parent, $time_op, $time_last,
-				$time_bump, $time_ghost, $time_ghost_bump
+				$time_bump, $time_ghost, $time_ghost_bump,
+				$nreplies, $nimages
 				)
 			);
 		}
@@ -2174,6 +2119,7 @@ class Post extends CI_Model
 		$post->thumbnail_href = $this->get_image_href($board, $post, TRUE);
 		$post->image_href = $this->get_image_href($board, $post);
 		$post->remote_image_href = $this->get_remote_image_href($board, $post);
+		$post->safe_media_hash = substr(urlsafe_b64encode(urlsafe_b64decode($post->media_hash)), 0, -2);
 		$post->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE',
 				$this->get_comment_processed($board, $post));
 		$post->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
@@ -2850,5 +2796,6 @@ class Post extends CI_Model
 
 		return $matches[0];
 	}
+
 
 }

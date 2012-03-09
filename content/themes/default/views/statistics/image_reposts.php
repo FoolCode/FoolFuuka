@@ -1,10 +1,9 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-
-$data_array = json_decode($data);
 ?>
 
+<?php $data_array = json_decode($data); ?>
 <?php foreach ($data_array as $key => $item) : ?>
 	<div class="image_reposts_image">
 		<div class="image_reposts_number">

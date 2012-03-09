@@ -1,4 +1,8 @@
-<?php $title = fuuka_title($message) ?>
+<?php
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>

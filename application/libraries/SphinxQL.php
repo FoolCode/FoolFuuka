@@ -1,68 +1,82 @@
 <?php
 
+
+/**
+ *
+ */
 class SphinxQL {
+	var $db_host;
+	var $db_port;
 	var $conn_id;
-	var $host;
-	var $port;
 
-
-	public function setHost($host)
+	public function set_host($host)
 	{
-		$this->host = (string)$host;
+		$this->db_host = (string)$host;
+
 	}
 
 
-	public function setPort($port)
+	public function set_port($port)
 	{
 		if (is_natural($port) && $port > 0 && $port < 65536)
 		{
-			$this->port = (int)$port;
+			$this->db_port = (int)$port;
 		}
 	}
 
 
-	public function SetServer($host = 'localhost', $port = 9306, $persistent = FALSE)
+	public function set_server($host = 'localhost', $port = 9306, $persistent = FALSE)
 	{
-		$this->setHost($host); $this->setPort($port);
+		$this->set_host($host);
+		$this->set_port($port);
+
 		$connect = ($persistent == TRUE) ? 'mysql_pconnect' : 'mysql_connect';
 
-		$this->conn_id = $connect($this->host . ':' . $this->port, '', '');
+		$this->conn_id = $connect($this->db_host . ':' . $this->db_port, '', '');
 		return $this->conn_id;
 	}
 
 
-	public function Query($sql)
+	public function query($statement)
 	{
-		$results['matches'] = array();
-		$result = @mysql_query($sql, $this->conn_id);
-		if (stristr($sql, 'select'))
+		$result = array(
+			'matches' => array()
+		);
+
+		$search = @mysql_query($statement, $this->conn_id);
+
+		if (stristr($statement, 'SELECT'))
 		{
-			while (@$row = mysql_fetch_assoc($result))
-			{
-				array_push($results['matches'], $row);
-			}
-			$results['total_found'] = count($results['matches']);
-			return $results;
+			$meta_query		= @mysql_query("SHOW META", $this->conn_id);
+			while (@$row = mysql_fetch_assoc($meta_query))
+				$result = array_merge($result, array($row['Variable_name'] => $row['Value']));
+
+			while (@$row = mysql_fetch_assoc($search))
+				array_push($result['matches'], $row);
+
+			return $result;
 		}
 		return $result;
 	}
 
 
-	function EscapeString ($string)
+	function EscapeString ($string, $decode = FALSE)
 	{
-		$from = array ('\\', '(',')','|','-','!','@','~','"','&', '/', '^', '$', '=');
-		$to   = array ('\\\\', '\(','\)','\|','\-','\!','\@','\~','\"', '\&', '\/', '\^', '\$', '\=');
-		return str_replace ( $from, $to, $string );
+		$from	= array ('\\', '(',')','|','-','!','@','~','"','&', '/', '^', '$', '=');
+		$to		= array ('\\\\', '\(','\)','\|','\-','\!','\@','\~','\"', '\&', '\/', '\^', '\$', '\=');
+		$string	= str_replace ($from, $to, $string);
+		return (($decode) ? urldecode($string) : $string);
 	}
 
 
-	function HalfEscapeString($string)
+	function HalfEscapeString($string, $decode = FALSE)
 	{
 		$from = array ('\\', '(',')','!','@','~','&', '/', '^', '$', '=');
 		$to   = array ('\\\\', '\(','\)','\!','\@','\~', '\&', '\/', '\^', '\$', '\=');
 		$string = str_replace ( $from, $to, $string );
 		$string = preg_replace("'\"([^\s]+)-([^\s]*)\"'", "\\1\-\\2", $string);
-		return preg_replace("'([^\s]+)-([^\s]*)'", "\"\\1\-\\2\"", $string);
+		$string = preg_replace("'([^\s]+)-([^\s]*)'", "\"\\1\-\\2\"", $string);
+		return (($decode) ? urldecode($string) : $string);
 	}
 }
 

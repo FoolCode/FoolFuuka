@@ -1,8 +1,6 @@
 <?php
 if (!defined('BASEPATH'))
-exit('No direct script access allowed');
-if(!isset($modifiers))
-$modifiers = array();
+	exit('No direct script access allowed');
 ?>
 
 <div id="thread_o_matic" class="clearfix">

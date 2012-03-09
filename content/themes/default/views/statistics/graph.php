@@ -4,5 +4,5 @@ if (!defined('BASEPATH'))
 ?>
 
 <?php if (!empty($data)) : ?>
-<img src="<?php echo site_url(array('content', 'statistics', get_selected_radix()->shortname)) . $info['location'] . '.png' ?>"/>
+	<img src="<?php echo site_url(array('content', 'statistics', get_selected_radix()->shortname)) . $info['location'] . '.png' ?>"/>
 <?php endif; ?>

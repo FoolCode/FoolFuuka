@@ -154,6 +154,31 @@ class Radix extends CI_Model
 		);
 	}
 
+	
+	function save($data)
+	{
+		// data must be already sanitized through the form array
+		if(isset($data['id']))
+		{
+			$this->db->where('id', $data['id'])->update('boards', $data);
+		}
+		else
+		{
+			$this->db->insert('boards', $data);
+		}
+		
+		// update the cached boards
+		$this->radix->preload();
+	}
+	
+	
+	function remove($id)
+	{
+		$this->db->where('id', $id)->delete('boards');
+		
+		return TRUE;
+	}
+	
 
 	/**
 	 * Puts the table in readily available variables
@@ -348,29 +373,6 @@ class Radix extends CI_Model
 	function get_by_shortname_array($shortname)
 	{
 		return $this->get_by_type_array($shortname, 'shortname');
-	}
-
-
-	function save($data)
-	{
-		// data must be already sanitized through the form array
-		if(isset($data['id']))
-		{
-			$this->db->where('id', $data['id'])->update('boards', $data);
-		}
-		else
-		{
-			$this->db->insert('boards', $data);
-		}
-		
-		// update the cached boards
-		$this->radix->preload();
-	}
-	
-	
-	function remove($id)
-	{
-		$this->db->where('id', $id)->delete('boards');
 	}
 
 

@@ -203,6 +203,29 @@ class Admin_Controller extends MY_Controller
 	}
 
 
+	function submit_preferences_auto($form)
+	{
+		if ($this->input->post())
+		{
+			$result = $this->form_validate($form);
+			if (isset($result['error']))
+			{
+				set_notice('warning', $result['error']);
+			}
+			else
+			{
+				if (isset($result['warning']))
+				{
+					set_notice('warning', $result['warning']);
+				}
+				
+				set_notice('success', _('Preferences updated.'));
+				$this->submit_preferences($result['success']);
+			}
+		}
+	}
+
+
 	/**
 	 * Non-dynamic sidebar array.
 	 * Permissions are set inside

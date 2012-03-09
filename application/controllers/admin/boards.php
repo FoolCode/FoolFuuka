@@ -149,7 +149,7 @@ class Boards extends Admin_Controller
 
 	function sphinx()
 	{
-		$this->viewdata["function_title"] = _('Sphinx');
+		$this->viewdata["function_title"] = 'Sphinx';
 
 		$form = array();
 
@@ -276,22 +276,7 @@ class Boards extends Admin_Controller
 			'type' => 'close'
 		);
 
-		if ($post = $this->input->post())
-		{
-			$result = $this->form_validate($form);
-			if (isset($result['error']))
-			{
-				set_notice('warning', $result['error']);
-			}
-			else
-			{
-				if (isset($result['warning']))
-				{
-					set_notice('warning', $result['warning']);
-				}
-				$this->submit_preferences($result['success']);
-			}
-		}
+		$this->submit_preferences_auto($form);
 
 		// create the form
 		$data['form'] = $form;

@@ -89,6 +89,13 @@ if (!defined('BASEPATH'))
 				<br/>
 				<?php
 				break;
+			
+			
+			case 'paragraph':
+				?>
+				<p><?php echo $helpers['help'] ?></p>
+				<?php
+				break;
 
 
 			case 'open':

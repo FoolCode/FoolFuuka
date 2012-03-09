@@ -301,8 +301,9 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				',
-					array(intval(($page * $per_page) - $per_page),
-					intval($per_page)
+					array(
+						intval(($page * $per_page) - $per_page),
+						intval($per_page)
 					)
 				);
 
@@ -330,8 +331,9 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				',
-					array(intval(($page * $per_page) - $per_page),
-					intval($per_page)
+					array(
+						intval(($page * $per_page) - $per_page),
+						intval($per_page)
 					)
 				);
 
@@ -356,8 +358,9 @@ class Post extends CI_Model
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
 				',
-					array(intval(($page * $per_page) - $per_page),
-					intval($per_page)
+					array(
+						intval(($page * $per_page) - $per_page),
+						intval($per_page)
 					)
 				);
 
@@ -372,37 +375,34 @@ class Post extends CI_Model
 				return FALSE;
 		}
 
+		// set total pages available
+		$pages = NULL;
 		if (isset($query_pages))
 		{
-			$pages = $query_pages->result();
-			$query_pages->free_result();
-			$pages = $pages[0]->pages;
+			$pages = $query_pages->row()->pages;
 			if ($pages <= 1)
 				$pages = NULL;
-		}
-		else
-		{
-			$pages = NULL;
+
+			$query_pages->free_result();
 		}
 
 		if ($query->num_rows() == 0)
 		{
 			return array(
-				'result' => array(
-					'posts' => array(),
-					'op' => array()
+				'result'    => array(
+					'op'    => array(),
+					'posts' => array()
 				),
-				'pages' => $pages
+				'pages'     => $pages
 			);
 		}
 
 		// get all the posts
 		$threads = array();
 		$sql = array();
-		$sqlcount = array();
 		foreach ($query->result() as $row)
 		{
-			$threads[] = $row->unq_parent;
+			$threads[$row->unq_parent] = array('replies' => $row->nreplies, 'images' => $row->nimages);
 			$sql[] = '
 				(
 					SELECT *
@@ -413,25 +413,14 @@ class Post extends CI_Model
 					LIMIT 0, 5
 				)
 			';
-
-			$sqlcount[] = '
-				(
-					SELECT count(*) AS count_all, count(distinct preview) AS count_images, num, parent
-					FROM ' . $this->get_table($board) . '
-					WHERE parent = ' . $row->unq_parent . '
-				)
-			';
 		}
 
 		$sql = implode('UNION', $sql) . '
 			ORDER BY num DESC
 		';
 
-		$sqlcount = implode('UNION', $sqlcount);
-
 		// quite disordered array
 		$query2 = $this->db->query($sql);
-		$querycount = $this->db->query($sqlcount);
 
 		// associative array with keys
 		$result = array();
@@ -465,12 +454,12 @@ class Post extends CI_Model
 			$post_num = ($post->parent > 0) ? $post->parent : $post->num;
 			if (!isset($result[$post_num]['omitted']))
 			{
-				foreach ($querycount->result() as $counter)
+				foreach ($threads as $parent => $count)
 				{
-					if ($counter->parent == $post->num)
-					{
-						$result[$post_num]['omitted'] = $counter->count_all - 5;
-						$result[$post_num]['images_omitted'] = $counter->count_images - 1;
+					if ($parent == $post_num)
+						{
+						$result[$post_num]['omitted'] = ($count['replies'] - 5);
+						$result[$post_num]['images_omitted'] = $count['images'];
 					}
 				}
 			}

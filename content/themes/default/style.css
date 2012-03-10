@@ -100,6 +100,7 @@ body {
 }
 
 .search-dropdown .search-dropdown-menu {
+	z-index:100;
 	display:none;
 	position:absolute;
 	background:#000;
@@ -187,11 +188,25 @@ body {
 }
 
 .btnr, .btnr:visited {
+	padding:0px 3px 1px;
+	background:transparent;
+	border:1px solid #ccc;
+	border: 1px solid rgba(0,0,0,0.1);
+	text-shadow:none;
+	margin: 0 2px;
 	color:#333;
+	font-size:11px;
+	line-height:11px;
+	position:relative;
+	top:-1px;
 }
 
 .btnr:hover {
+	border:1px solid #888;
+	border: 1px solid rgba(0,0,0,0.4);
 	color:#000;
+	text-decoration: none;
+	cursor:pointer;
 }
 
 /* board */
@@ -254,14 +269,7 @@ article.thread > .thread_tools_bottom .omitted {
 }
 
 article.thread .post_type {
-	position:absolute;
-	left:-20px;
-	top:5px;
-	width:20px;
-	text-align:center;
-	color:#fff;
-	color: rgba(255,255,255,0.96);
-	font-size:12px;
+	margin-left:4px;
 }
 
 article.thread .post_type img {
@@ -324,14 +332,13 @@ article.thread > .text {
 }
 
 .post {
-	margin:2px 20px 2px 15px;
+	margin:2px 20px;
 	margin-right:0px;
 	padding: 0 0 10px 10px;
 	background: #d6f0da;
 	border-bottom:1px solid #ccc;
 	float:left;
 	clear:both;
-	position:relative;
 }
 
 article.thread article.post:nth-of-type(-n+4) {
@@ -386,7 +393,7 @@ article.thread article.post:nth-of-type(-n+4) {
 }
 
 .post header{
-	padding-top:2px;
+	padding-top:5px;
 	overflow:hidden;
 	display:-moz-inline-stack;
 }
@@ -417,14 +424,6 @@ article.thread article.post:nth-of-type(-n+4) {
 
 .post.post_ghost {
 	border-left:20px solid #3a533f;
-}
-
-.post.post_spoiler {
-	border-left:20px solid #446180;
-}
-
-.post.post_deleted {
-	border-left:20px solid #c03434;
 }
 
 .post.reported {

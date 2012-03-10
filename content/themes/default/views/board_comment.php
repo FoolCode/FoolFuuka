@@ -6,8 +6,6 @@ if (!defined('BASEPATH'))
 <article class="post doc_id_<?php echo $p->doc_id ?>
 	<?php if ($p->subnum > 0)   : ?> post_ghost<?php endif; ?>
 	<?php if ($p->parent == $p->num) : ?> post_is_op<?php endif; ?> 
-	<?php if ($p->spoiler) : ?> post_spoiler<?php endif; ?>
-	<?php if ($p->deleted) : ?> post_deleted<?php endif; ?>
 	<?php echo ((isset($p->report_status) && !is_null($p->report_status)) ? ' reported' : '') ?><?php echo ($p->media ? ' has_image' : '') ?><?php if ($p->media) : ?> clearfix<?php endif; ?><?php if (false && $p->spam == 1) : ?> is_spam<?php endif; ?>" id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
 	<?php if ($p->preview) : ?>
 		<div class="post_file">
@@ -66,29 +64,18 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>" rel="tooltip" title="<?php echo _('4chan time') . ': ' . date('D M d H:i:s Y', $p->timestamp-18000) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
+				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>" rel="tooltip" title="<?php echo _('4chan time') . ': ' . date('D M d H:i:s Y', $op->timestamp-18000) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
 			</span>
 
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#'  . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-post="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="highlight">No.</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#q' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-post="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-function="quote"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 
 			<span class="post_controls">
-				<?php if (isset($modifiers['post_show_view_button'])) : ?>
-				<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" class="btnr parent" rel="tooltip" title="<?php echo _('View') ?>">
-					<i class="icon-eye-open"></i></a>
-				<?php endif; ?>
-				<a href="<?php echo site_url(get_selected_radix()->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report" rel="tooltip" title="<?php echo _('Report') ?>">
-					<i class="icon-exclamation-sign"></i></a>
-				<?php if ($p->subnum > 0 || $this->tank_auth->is_allowed() || !get_selected_radix()->archive) : ?>
-				<a href="<?php echo site_url(get_selected_radix()->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete" rel="tooltip" title="<?php echo _('Delete') ?>">
-					<i class="icon-remove-sign"></i></a>
-				<?php endif; ?>
+				<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" class="btnr parent">View</a><?php endif; ?><a href="<?php echo site_url(get_selected_radix()->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report">Report</a><?php if ($p->subnum > 0 || $this->tank_auth->is_allowed() || !get_selected_radix()->archive) : ?><a href="<?php echo site_url(get_selected_radix()->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-post="<?php echo $p->doc_id ?>" data-post-id="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete">Delete</a><?php endif; ?>
 			</span>
 
-			<span class="post_type">
-				<?php if ($p->deleted == 1) : ?><span rel="tooltip_right" title="This post was deleted from 4chan."/><i class="icon-fire"></i></span><?php endif ?>
-				<?php if ($p->spoiler == 1) : ?><span rel="tooltip_right" title="This post contains a spoilered image."/><i class="icon-eye-close"></i></span><?php endif ?>
-				<?php if ($p->subnum > 0)   : ?><span rel="tooltip_right" title="This post was made in the archive."/><i class="icon-comment"></i></span><?php endif ?>
-			</span>
+			<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan."/></span><?php endif ?>
+			<?php if ($p->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
+			<?php if ($p->subnum > 0)   : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/communicate-icon.png'; ?>" width="16" height="16" title="This post was made in the archive."/></span><?php endif ?>
 		</div>
 	</header>
 

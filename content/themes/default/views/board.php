@@ -46,8 +46,10 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" rel="tooltip" title="<?php echo _('4chan time') . ': ' . date('D M d H:i:s Y', $op->timestamp-18000) ?>"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
-				
+				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
+				<time datetime="<?php echo date(DATE_W3C, $op->timestamp-18000) ?>" class="hidden_time" title="4chan DateTime"><?php echo date('D M d H:i:s Y', $op->timestamp-18000) ?></time>
+			</span>
+
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#'  . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="highlight">No.</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="quote"><?php echo $op->num ?></a>
 
 			<span class="post_controls">
@@ -57,7 +59,7 @@ if (!defined('BASEPATH'))
 			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan manually."/></span><?php endif ?>
 			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
 		</div>
-
+ 
 		<div class="backlink_list"<?php echo (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
 			<?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
 		</div>

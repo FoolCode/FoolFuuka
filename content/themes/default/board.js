@@ -135,6 +135,16 @@ var bindFunctions = function()
 				}, 'json');
 				return false;
 				break;
+				
+			case 'searchShow':
+				el.parent().find('.search-dropdown-menu').show();
+				el.parent().parent().addClass('active');
+				break;
+				
+			case 'searchHide':
+				el.parent().parent().hide();
+				el.parent().parent().parent().parent().removeClass('active');
+				break;
 
 			default:
 				break;
@@ -283,6 +293,8 @@ var realtimethread = function(){
 					found_posts = true;
 					post = jQuery(value.formatted)
 					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+					post.find('[rel=tooltip]').tooltip({placement: 'bottom', delay: 200});
+					post.find('[rel=tooltip_right]').tooltip({placement: 'right', delay: 200});
 					backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
 					jQuery('article.thread aside').append(post);
 					if(latest_doc_id < value.doc_id)
@@ -586,4 +598,6 @@ jQuery(document).ready(function() {
 
 	bindFunctions();
 	jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy');
+	jQuery('[rel=tooltip]').tooltip({placement: 'bottom', delay: 200});
+	jQuery('[rel=tooltip_right]').tooltip({placement: 'right', delay: 200});
 });

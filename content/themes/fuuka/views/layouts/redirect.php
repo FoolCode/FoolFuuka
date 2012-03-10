@@ -6,7 +6,7 @@ if (!defined('BASEPATH'))
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo $title ?></title>
+		<title><?php if(isset($title)) echo $title; else echo $template['title'] ?></title>
 		<style type="text/css">
 			.outer { text-align: center }
 			.inner { margin: auto; display: table; display: inline-block; text-decoration: none; text-align: left; padding: 1em; border: thin dotted }
@@ -25,7 +25,7 @@ if (!defined('BASEPATH'))
 	</head>
 	<body>
 		<?php if (!isset($fast_redirect)) : ?>
-		<h1><?php echo $title ?></h1>
+		<h1><?php if(isset($title)) echo $title; else echo $template['title'] ?></h1>
 		<div class="outer">
 			<div class="inner">
 				<span class="text"><?php echo nl2br(fuuka_message()) ?></span>

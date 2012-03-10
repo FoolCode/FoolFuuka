@@ -7,10 +7,12 @@
 		<meta http-equiv="imagetoolbar" content="false" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0">
 		<title><?php echo $template['title']; ?></title>
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap/style.css?v=<?php echo FOOL_VERSION ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/font-awesome/css/font-awesome.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php
 		if ($this->config->item('theme_extends') != ''
-			&& $this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme : 'default')
+			&& $this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme
+					: 'default')
 			&& $this->config->item('theme_extends_css') === TRUE
 			&& file_exists('content/themes/' . $this->config->item('theme_extends') . '/style.css'))
 			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOL_VERSION);
@@ -22,7 +24,7 @@
 		<!--[if lt IE 9]>
 			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<?php if ($disable_headers !== TRUE) : ?>
+		<?php if (get_selected_radix()) : ?>
 			<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo site_url(get_selected_radix()->shortname) ?>rss_gallery_50.xml" />
 			<link rel="alternate" type="application/atom+xml" title="Atom" href="<?php echo site_url(get_selected_radix()->shortname) ?>atom_gallery_50.xml" />
 		<?php endif; ?>
@@ -31,59 +33,58 @@
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body>
-		<div class="container-fluid">
-			<header id="header">
-				<?php if ($disable_headers !== TRUE) : ?>
-					<aside id="top_tools">
+		<?php if (get_selected_radix()) : ?>
+			<div class="navbar navbar-fixed-top">
+				<div class="navbar-inner">
+					<div class="container">
+						<ul class="nav">
+							<li class="dropdown">
+								<a href="<?php echo site_url() ?>" class="brand dropdown-toggle" data-toggle="dropdown">
+									/<?php echo $board->shortname ?>/ - <?php echo $board->name ?>
+									<b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<?php
+									foreach ($this->radix->get_archives() as $key => $item)
+									{
+										echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . ' (archive)</a></li>';
+									}
+									?>
+									<li class="divider"></li>
+									<?php
+									foreach ($this->radix->get_boards() as $key => $item)
+									{
+										echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
+									}
+									?>
+								</ul>
+							</li>
+						</ul>
+						<ul class="nav">
+							<li>
+								<a href="<?php echo site_url(array($board->shortname)) ?>"><?php echo _('Index') ?></a>
+							</li>
+							<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo _('Ghost') ?></a>
+							</li>
+							<li><a href="<?php echo site_url(array($board->shortname, 'gallery')) ?>"><?php echo _('Gallery') ?></a>
+							</li>
+							<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo _('Stats') ?></a>
+							</li>
+							<li>
+								<a href="<?php echo site_url(array($board->shortname, 'by_thread')) ?>"><?php echo _('By thread') ?></a>
+							</li>
+
+
+
+						</ul>
+
 						<?php echo $template['partials']['tools_view']; ?>
-					</aside>
-					<?php
-					$parenthesis_open = FALSE;
-					$board_urls = array();
-					foreach ($this->radix->get_archives() as $key => $item)
-					{
-						if (!$parenthesis_open)
-						{
-							echo 'Archives: [ ';
-							$parenthesis_open = TRUE;
-						}
+					</div>
+				</div>
+			</div>
+		<?php endif; ?>
 
-						$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
-					}
-					echo implode(' / ', $board_urls);
-					if ($parenthesis_open)
-					{
-						echo ' ]';
-						$parenthesis_open = FALSE;
-					}
-					?>
-					<?php
-					$parenthesis_open = FALSE;
-					$board_urls = array();
-					foreach ($this->radix->get_boards() as $key => $item)
-					{
-						if (!$parenthesis_open)
-						{
-							echo 'Boards: [ ';
-							$parenthesis_open = TRUE;
-						}
-
-						$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
-					}
-					echo implode(' / ', $board_urls);
-					if ($parenthesis_open)
-					{
-						echo ' ]';
-						$parenthesis_open = FALSE;
-					}
-					?>
-
-					[ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
-					<h1 id="logo" style="font-size:30px; line-height:30px; margin:4px 0 0;">/<?php echo $board->shortname ?>/ - <?php echo $board->name ?></h1>
-					[ <a href="<?php echo $board->href ?>by_thread">latest by thread</a> <?php if ($item->thumbnails || $this->tank_auth->is_allowed()) : ?>/ <a href="<?php echo $board->href ?>gallery">gallery</a><?php endif; ?> ]
-				<?php endif; ?>
-			</header>
-
+		<div class="container-fluid">
 			<div role="main" id="main">
 				<?php if (isset($section_title)): ?>
 					<h3 class="section_title"><?php echo $section_title ?></h3>
@@ -113,31 +114,37 @@
 							<?php endif; ?>
 
 							<?php
-								if ($pagination['total'] <= 15) :
-									for ($index = 1; $index <= $pagination['total']; $index++)
+							if ($pagination['total'] <= 15) :
+								for ($index = 1; $index <= $pagination['total']; $index++)
+								{
+									echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"'
+											: '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+								}
+							else :
+								if ($pagination['current_page'] < 15) :
+									for ($index = 1; $index <= 15; $index++)
 									{
-										echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+										echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"'
+												: '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
 									}
+									echo '<li class="disabled"><span>...</span></li>';
 								else :
-									if ($pagination['current_page'] < 15) :
-										for ($index = 1; $index <= 15; $index++)
-										{
-											echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
-										}
+									for ($index = 1; $index < 10; $index++)
+									{
+										echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"'
+												: '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+									}
+									echo '<li class="disabled"><span>...</span></li>';
+									for ($index = ((($pagination['current_page'] + 2) > $pagination['total'])
+											? ($pagination['current_page'] - 4) : ($pagination['current_page'] - 2)); $index <= ((($pagination['current_page'] + 2) > $pagination['total'])
+												? $pagination['total'] : ($pagination['current_page'] + 2)); $index++)
+									{
+										echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"'
+												: '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+									}
+									if (($pagination['current_page'] + 2) < $pagination['total'])
 										echo '<li class="disabled"><span>...</span></li>';
-									else :
-										for ($index = 1; $index < 10; $index++)
-										{
-											echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
-										}
-										echo '<li class="disabled"><span>...</span></li>';
-										for ($index = ((($pagination['current_page'] + 2) > $pagination['total']) ? ($pagination['current_page'] - 4) : ($pagination['current_page'] - 2)); $index <= ((($pagination['current_page'] + 2) > $pagination['total']) ? $pagination['total'] : ($pagination['current_page'] + 2)); $index++)
-										{
-											echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
-										}
-										if (($pagination['current_page'] + 2) < $pagination['total'])
-											echo '<li class="disabled"><span>...</span></li>';
-									endif;
+								endif;
 							endif;
 							?>
 
@@ -162,9 +169,14 @@
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="<?php echo site_url() ?>assets/js/jquery.js"><\/script>')</script>
-		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
-		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/board.js?v=<?php echo FOOL_VERSION ?>"></script>
-		<?php if (get_setting('fs_theme_google_analytics')) : ?>
+		<script defer src="<?php echo site_url() ?>assets/bootstrap2/js/bootstrap.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<script defer src="<?php echo site_url() ?>content/themes/<?php
+				echo $this->fu_theme ? $this->fu_theme : 'default'
+				?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<script defer src="<?php echo site_url() ?>content/themes/<?php
+				echo $this->fu_theme ? $this->fu_theme : 'default'
+				?>/board.js?v=<?php echo FOOL_VERSION ?>"></script>
+				<?php if (get_setting('fs_theme_google_analytics')) : ?>
 			<script>
 				var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us'],['_trackPageview'],['_trackPageLoadTime']];
 				(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

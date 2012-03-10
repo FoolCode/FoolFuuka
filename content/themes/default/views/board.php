@@ -46,10 +46,8 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
-				<time datetime="<?php echo date(DATE_W3C, $op->timestamp-18000) ?>" class="hidden_time" title="4chan DateTime"><?php echo date('D M d H:i:s Y', $op->timestamp-18000) ?></time>
-			</span>
-
+				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" rel="tooltip" title="<?php echo _('4chan time') . ': ' . date('D M d H:i:s Y', $op->timestamp-18000) ?>"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
+				
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#'  . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="highlight">No.</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="quote"><?php echo $op->num ?></a>
 
 			<span class="post_controls">

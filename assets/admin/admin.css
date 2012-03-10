@@ -15,3 +15,12 @@ h3 {
 form {
 	margin: 0 0 0px;
 }
+
+i {
+	font-size:110%;
+	color:#000;
+}
+
+i.icon-white {
+	color:#fff;
+}

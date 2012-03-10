@@ -855,7 +855,7 @@ class Post extends CI_Model
 			
 			$sphinx_ip_port = explode(':', get_setting('fu_sphinx_listen', FOOL_PREF_SPHINX_LISTEN));
 			
-			$this->sphinxql->SetServer($sphinx_ip_port[0], $sphinx_ip_port[1]);
+			$this->sphinxql->set_server($sphinx_ip_port[0], $sphinx_ip_port[1]);
 
 			$this->db->from(array($board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta'), FALSE, FALSE);
 

@@ -50,7 +50,7 @@ define('FOOL_NAME', 'FoOlFuuka');
 define('FOOL_MANUAL_INSTALL_URL', 'http://ask.foolrulez.com');
 define('FOOL_REQUIREMENT_PHP', '5.3.0');
 define('FOOL_PLUGIN_DIR', 'content/plugins/');
-define('FOOL_PROTECTED_RADIXES', serialize(array('admin', 'account', 'install', 'feeds', 'api', 'cli')));
+define('FOOL_PROTECTED_RADIXES', serialize(array('admin', 'account', 'install', 'feeds', 'api', 'cli', 'functions')));
 
 // preferences from get_setting('value', FOOL_PREF_ETC);
 define('FOOL_PREF_SYS_SUBDOMAIN', FALSE);

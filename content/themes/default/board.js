@@ -3,6 +3,7 @@ var bindFunctions = function()
 	jQuery('.search-dropdown').on('dragover', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
+		e.originalEvent.dataTransfer.dropEffect = 'copy';
 	});
 	jQuery('.search-dropdown').on('dragenter', function(e) {
 		e.preventDefault();

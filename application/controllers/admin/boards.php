@@ -195,7 +195,7 @@ class Boards extends Admin_Controller
 
 				$CI = & get_instance();
 				$CI->load->library('SphinxQL');
-				$connection = @$CI->sphinxql->SetServer($sphinx_ip_port[0],
+				$connection = @$CI->sphinxql->set_server($sphinx_ip_port[0],
 						$sphinx_ip_port[1]);
 
 				if ($connection === FALSE)

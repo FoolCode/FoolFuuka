@@ -873,15 +873,15 @@ class Post extends CI_Model
 					);
 				}
 
-				$this->db->sphinx_match('comment', $search['text']);
+				$this->db->sphinx_match('comment', rawurldecode($search['text']));
 			}
 			if ($search['username'])
 			{
-				$this->db->sphinx_match('name', $search['username']);
+				$this->db->sphinx_match('name', rawurldecode($search['username']));
 			}
 			if ($search['tripcode'])
 			{
-				$this->db->sphinx_match('name', $search['tripcode']);
+				$this->db->sphinx_match('name', rawurldecode($search['tripcode']));
 			}
 			if ($search['capcode'] == 'admin')
 			{

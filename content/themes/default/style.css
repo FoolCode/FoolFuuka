@@ -4,6 +4,7 @@
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
 
+.tooltip-inner{max-width:300px;}
 
 a, a:visited {
 	color: #34345c;
@@ -221,6 +222,7 @@ article.thread {
 
 article.thread > header {
 	overflow:hidden;
+	font-family: Verdana, Arial, sans-serif;
 }
 
 article.thread > .thread_image_box {
@@ -376,26 +378,11 @@ article.thread article.post:nth-of-type(-n+4) {
 	margin-bottom:-4px;
 }
 
-.post .post_file .post_file_filename.shown {
-	display:inline;
-}
-
-.post .post_file .post_file_filename.unshown {
-	display:none;
-}
-
-.post .post_file:hover .post_file_filename.shown {
-	display:none;
-}
-
-.post .post_file:hover .post_file_filename.unshown {
-	display:inline;
-}
-
 .post header{
 	padding-top:5px;
 	overflow:hidden;
 	display:-moz-inline-stack;
+	font-family: Verdana, Arial, sans-serif;
 }
 
 .post > .text {

@@ -8,7 +8,6 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0">
 		<title><?php echo $template['title']; ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/font-awesome/css/font-awesome.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php
 		if ($this->config->item('theme_extends') != ''
 			&& $this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme
@@ -33,7 +32,8 @@
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body>
-		<?php if (get_selected_radix()) : ?>
+		<div class="container-fluid">
+			<?php if (get_selected_radix()) : ?>
 			<div class="navbar navbar-fixed-top">
 				<div class="navbar-inner">
 					<div class="container">
@@ -83,8 +83,6 @@
 				</div>
 			</div>
 		<?php endif; ?>
-
-		<div class="container-fluid">
 			<div role="main" id="main">
 				<?php if (isset($section_title)): ?>
 					<h3 class="section_title"><?php echo $section_title ?></h3>
@@ -184,13 +182,17 @@
 					s.parentNode.insertBefore(g,s)}(document,'script'));
 			</script>
 		<?php endif; ?>
-
+			
 		<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
 			 chromium.org/developers/how-tos/chrome-frame-getting-started -->
 		<!--[if lt IE 7 ]>
 		  <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
 		  <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 		<![endif]-->
+		
+		<script>
+			var backend_vars = <?php echo json_encode($backend_vars) ?>;
+		</script>
 
 		<?php echo get_setting('fs_theme_footer_code'); ?>
 	</body>

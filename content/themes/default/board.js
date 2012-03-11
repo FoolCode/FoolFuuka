@@ -1,155 +1,178 @@
 var bindFunctions = function()
 {
-	jQuery("body").on("click", "a.[data-function], button.[data-function], input.[data-function]", function(event) {
-		var el = jQuery(this);
-		var post = el.data("post");
-		var modal = jQuery("#post_tools_modal");
-		switch (el.data("function")) {
-			case 'highlight':
-				if (post) replyHighlight(post);
-				break;
+	jQuery('.search-dropdown').on('dragover', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+	});
+	jQuery('.search-dropdown').on('dragenter', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+	});
+	
+	jQuery('.search-dropdown').on('drop', function(event) {
+		if(event.originalEvent.dataTransfer){
+			if(event.originalEvent.dataTransfer.files.length) {
+				event.preventDefault();
+				event.stopPropagation();
+                
+				findSameImageFromFile(event.originalEvent.dataTransfer);
+			}   
+		}
+	});
+	
+	
+	jQuery("body").on("click", 
+		"a.[data-function], button.[data-function], input.[data-function]", 
+		function(event) {
+			var el = jQuery(this);
+			var post = el.data("post");
+			var modal = jQuery("#post_tools_modal");
+			switch (el.data("function")) {
+				case 'highlight':
+					if (post) replyHighlight(post);
+					break;
 
-			case 'quote':
-				jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
-				break;
+				case 'quote':
+					jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
+					break;
 
-			case 'comment':
-				if(jQuery("#file_image").val())
-					return true;
-				var reply_alert = jQuery('#reply_ajax_notices');
-				reply_alert.removeClass('error').removeClass('success');
-				jQuery.ajax({
-					url: site_url + board_shortname + '/submit/' ,
-					dataType: 'json',
-					type: 'POST',
-					cache: false,
-					data: {
-						reply_numero: post,
-						reply_bokunonome: jQuery("#reply_bokunonome").val(),
-						reply_elitterae: jQuery("#reply_elitterae").val(),
-						reply_talkingde: jQuery("#reply_talkingde").val(),
-						reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
-						reply_nymphassword: jQuery("#reply_nymphassword").val(),
-						reply_postas: jQuery("#reply_postas").val(),
-						reply_gattai: 'Submit'
-					},
-					success: function(data){
-						if (data.error != "")
-						{
-							reply_alert.html(data.error);
+				case 'comment':
+					if(jQuery("#file_image").val())
+						return true;
+					var reply_alert = jQuery('#reply_ajax_notices');
+					reply_alert.removeClass('error').removeClass('success');
+					jQuery.ajax({
+						url: site_url + board_shortname + '/submit/' ,
+						dataType: 'json',
+						type: 'POST',
+						cache: false,
+						data: {
+							reply_numero: post,
+							reply_bokunonome: jQuery("#reply_bokunonome").val(),
+							reply_elitterae: jQuery("#reply_elitterae").val(),
+							reply_talkingde: jQuery("#reply_talkingde").val(),
+							reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
+							reply_nymphassword: jQuery("#reply_nymphassword").val(),
+							reply_postas: jQuery("#reply_postas").val(),
+							reply_gattai: 'Submit'
+						},
+						success: function(data){
+							if (data.error != "")
+							{
+								reply_alert.html(data.error);
+								reply_alert.addClass('error');
+								reply_alert.show();
+								return false;
+							}
+							reply_alert.html(data.success);
+							reply_alert.addClass('success');
+							reply_alert.show();
+							jQuery("#reply_chennodiscursus").val("");
+							realtimethread();
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							reply_alert.html('Connection error.');
 							reply_alert.addClass('error');
 							reply_alert.show();
-							return false;
+						},
+						complete: function() {
 						}
-						reply_alert.html(data.success);
-						reply_alert.addClass('success');
-						reply_alert.show();
-						jQuery("#reply_chennodiscursus").val("");
-						realtimethread();
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						reply_alert.html('Connection error.');
-						reply_alert.addClass('error');
-						reply_alert.show();
-					},
-					complete: function() {
-					}
-				});
-				event.preventDefault();
-				break;
+					});
+					event.preventDefault();
+					break;
 
-			case 'realtimethread':
-				realtimethread();
-				event.preventDefault();
-				break
+				case 'realtimethread':
+					realtimethread();
+					event.preventDefault();
+					break
 
-			case 'delete':
-				var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
-				modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
-				modal.find(".modal-loading").hide();
-				modal.find(".modal-information").html('\
+				case 'delete':
+					var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
+					modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
+					modal.find(".modal-loading").hide();
+					modal.find(".modal-information").html('\
 					<span class="modal-label">Password</span>\n\
 					<input type="password" class="modal-password" />\n\
 					<input type="hidden" class="modal-post-id" value="' + post + '" />');
-				modal.find(".submitModal").data("action", 'delete');
-				if(foolfuuka_reply_password != null)
-				{
-					modal.find(".modal-password").val(foolfuuka_reply_password);
-				}
-				break;
+					modal.find(".submitModal").data("action", 'delete');
+					if(foolfuuka_reply_password != null)
+					{
+						modal.find(".modal-password").val(foolfuuka_reply_password);
+					}
+					break;
 
-			case 'report':
-				modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
-				modal.find(".modal-loading").hide();
-				modal.find(".modal-information").html('\
+				case 'report':
+					modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
+					modal.find(".modal-loading").hide();
+					modal.find(".modal-information").html('\
 					<span class="modal-label">Post ID</span>\n\
 					<input type="text" class="modal-post" value="' + el.data("post-id") + '" readonly="readonly" />\n\
 					<input type="hidden" class="modal-post-id" value="' + post + '" />\n\
 					<span class="modal-field">Comment</span>\n\
 					<textarea class="modal-comment"></textarea>');
-				modal.find(".submitModal").data("action", 'report');
-				break;
+					modal.find(".submitModal").data("action", 'report');
+					break;
 
-			case 'closeModal':
-				el.closest(".modal").modal('hide');
-				return false;
-				break;
-
-			case 'submitModal':
-				var loading = modal.find(".modal-loading");
-				var action = $(this).data("action");
-				var _post = modal.find(".modal-post-id").val();
-				var _href = $(this).data(action) + '/' + _post + '/';
-
-				if (action == 'report') {
-					var _data = {
-						post: _post,
-						reason: modal.find(".modal-comment").val()
-					};
-				}
-				else if (action == 'delete') {
-					var _data = {
-						post: _post,
-						password: modal.find(".modal-password").val()
-					};
-				}
-				else {
-					// Stop It! Unable to determine what action to use.
+				case 'closeModal':
+					el.closest(".modal").modal('hide');
 					return false;
-				}
+					break;
 
-				jQuery.post(_href, _data, function(result) {
-					loading.hide();
-					if (result.status == 'failed') {
-						modal.find(".modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
-						return false;
-					}
-					modal.modal('hide');
+				case 'submitModal':
+					var loading = modal.find(".modal-loading");
+					var action = $(this).data("action");
+					var _post = modal.find(".modal-post-id").val();
+					var _href = $(this).data(action) + '/' + _post + '/';
 
 					if (action == 'report') {
-						toggleHighlight(modal.find(".modal-post").val().replace(',', '_'), 'reported', false);
+						var _data = {
+							post: _post,
+							reason: modal.find(".modal-comment").val()
+						};
 					}
 					else if (action == 'delete') {
-						jQuery('.doc_id_' + post).hide();
+						var _data = {
+							post: _post,
+							password: modal.find(".modal-password").val()
+						};
 					}
-				}, 'json');
-				return false;
-				break;
-				
-			case 'searchShow':
-				el.parent().find('.search-dropdown-menu').show();
-				el.parent().parent().addClass('active');
-				break;
-				
-			case 'searchHide':
-				el.parent().parent().hide();
-				el.parent().parent().parent().parent().removeClass('active');
-				break;
+					else {
+						// Stop It! Unable to determine what action to use.
+						return false;
+					}
 
-			default:
-				break;
-		}
-	});
+					jQuery.post(_href, _data, function(result) {
+						loading.hide();
+						if (result.status == 'failed') {
+							modal.find(".modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
+							return false;
+						}
+						modal.modal('hide');
+
+						if (action == 'report') {
+							toggleHighlight(modal.find(".modal-post").val().replace(',', '_'), 'reported', false);
+						}
+						else if (action == 'delete') {
+							jQuery('.doc_id_' + post).hide();
+						}
+					}, 'json');
+					return false;
+					break;
+				
+				case 'searchShow':
+					el.parent().find('.search-dropdown-menu').show();
+					el.parent().parent().addClass('active');
+					break;
+				
+				case 'searchHide':
+					el.parent().parent().hide();
+					el.parent().parent().parent().parent().removeClass('active');
+					break;
+
+				default:
+					break;
+			}
+		});
 
 	// how could we make it working well on cellphones?
 	if( navigator.userAgent.match(/Android/i) ||
@@ -293,8 +316,14 @@ var realtimethread = function(){
 					found_posts = true;
 					post = jQuery(value.formatted)
 					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
-					post.find('[rel=tooltip]').tooltip({placement: 'bottom', delay: 200});
-					post.find('[rel=tooltip_right]').tooltip({placement: 'right', delay: 200});
+					post.find('[rel=tooltip]').tooltip({
+						placement: 'bottom', 
+						delay: 200
+					});
+					post.find('[rel=tooltip_right]').tooltip({
+						placement: 'right', 
+						delay: 200
+					});
 					backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
 					jQuery('article.thread aside').append(post);
 					if(latest_doc_id < value.doc_id)
@@ -336,6 +365,25 @@ var toggleSearch = function(mode)
 	search.style.display = search.style.display ? "" : "none";
 }
 
+
+var findSameImageFromFile = function(obj)
+{
+	var reader = new FileReader();
+	reader.onloadend = function(evt){
+		if (evt.target.readyState == FileReader.DONE) {
+			var fileContents = evt.target.result;
+			var digestBytes = Crypto.MD5(Crypto.charenc.Binary.stringToBytes(fileContents), {
+				asBytes: true
+			});
+			var digestBase64 = Crypto.util.bytesToBase64(digestBytes);
+			var digestBase64URL = digestBase64.replace('==', '').replace(/\//g, '_').replace(/\+/g, '-');
+			document.location = backend_vars.site_url + backend_vars.shortname + '/image/' + digestBase64URL;
+		}
+	}
+	
+	reader.readAsBinaryString(obj.files[0]);
+}
+
 var getSearch = function(type, searchForm)
 {
 	var location = searchForm.action;
@@ -354,8 +402,8 @@ var getSearch = function(type, searchForm)
 		if (searchForm.tripcode.value != "")
 			location += 'tripcode/' + encodeURIComponent(searchForm.tripcode.value) + '/';
 
-        if (getRadioValue(searchForm.capcode) != "")
-            location += 'capcode/' + getRadioValue(searchForm.capcode) + '/';
+		if (getRadioValue(searchForm.capcode) != "")
+			location += 'capcode/' + getRadioValue(searchForm.capcode) + '/';
 
 		if (getRadioValue(searchForm.deleted) != "")
 			location += 'deleted/' + getRadioValue(searchForm.deleted) + '/';
@@ -363,39 +411,39 @@ var getSearch = function(type, searchForm)
 		if (getRadioValue(searchForm.ghost) != "")
 			location += 'ghost/' + getRadioValue(searchForm.ghost) + '/';
 
-        if (getRadioValue(searchForm.type) != "")
-            location += 'type/' + getRadioValue(searchForm.type) + '/';
+		if (getRadioValue(searchForm.type) != "")
+			location += 'type/' + getRadioValue(searchForm.type) + '/';
 
 		if (getRadioValue(searchForm.filter) != "")
 			location += 'filter/' + getRadioValue(searchForm.filter) + '/';
 
-        if (searchForm.date_start.value != "")
-        {
-            var validate_date = /^\d{4}-\d{2}-\d{2}$/;
-            if (validate_date.test(searchForm.date_start.value))
-            {
-                location += 'start/' + encodeURIComponent(searchForm.date_start.value) + '/';
-            }
-            else
-            {
-                alert('Sorry, you have entered an invalid date format. (Ex: YYYY-MM-DD)');
-                return false;
-            }
-        }
+		if (searchForm.date_start.value != "")
+		{
+			var validate_date = /^\d{4}-\d{2}-\d{2}$/;
+			if (validate_date.test(searchForm.date_start.value))
+			{
+				location += 'start/' + encodeURIComponent(searchForm.date_start.value) + '/';
+			}
+			else
+			{
+				alert('Sorry, you have entered an invalid date format. (Ex: YYYY-MM-DD)');
+				return false;
+			}
+		}
 
-        if (searchForm.date_end.value != "")
-        {
-            var validate_date = /^\d{4}-\d{2}-\d{2}$/;
-            if (validate_date.test(searchForm.date_end.value))
-            {
-                location += 'end/' + encodeURIComponent(searchForm.date_end.value) + '/';
-            }
-            else
-            {
-                alert('Sorry, you have entered an invalid date format. (Ex: YYYY-MM-DD)');
-                return false;
-            }
-        }
+		if (searchForm.date_end.value != "")
+		{
+			var validate_date = /^\d{4}-\d{2}-\d{2}$/;
+			if (validate_date.test(searchForm.date_end.value))
+			{
+				location += 'end/' + encodeURIComponent(searchForm.date_end.value) + '/';
+			}
+			else
+			{
+				alert('Sorry, you have entered an invalid date format. (Ex: YYYY-MM-DD)');
+				return false;
+			}
+		}
 
 		location += 'order/' + getRadioValue(searchForm.order) + '/';
 	}
@@ -480,16 +528,8 @@ var changeTheme = function(theme)
 
 function setCookie( name, value, expires, path, domain, secure )
 {
-	// set time, it's in milliseconds
 	var today = new Date();
 	today.setTime( today.getTime() );
-
-	/*
-if the expires variable is set, make the correct
-expires time, the current script below will set
-it for x number of days, to make it for hours,
-delete * 24, for minutes, delete * 60 * 24
-*/
 	if ( expires )
 	{
 		expires = expires * 1000 * 60 * 60 * 24;
@@ -505,33 +545,22 @@ delete * 24, for minutes, delete * 60 * 24
 
 
 function getCookie( check_name ) {
-	// first we'll split this cookie up into name/value pairs
-	// note: document.cookie only returns name=value, not the other components
 	var a_all_cookies = document.cookie.split( ';' );
 	var a_temp_cookie = '';
 	var cookie_name = '';
 	var cookie_value = '';
-	var b_cookie_found = false; // set boolean t/f default f
-
+	var b_cookie_found = false;
 	for ( i = 0; i < a_all_cookies.length; i++ )
 	{
-		// now we'll split apart each name=value pair
 		a_temp_cookie = a_all_cookies[i].split( '=' );
-
-
-		// and trim left/right whitespace while we're at it
 		cookie_name = a_temp_cookie[0].replace(/^\s+|\s+$/g, '');
-
-		// if the extracted name matches passed check_name
 		if ( cookie_name == check_name )
 		{
 			b_cookie_found = true;
-			// we need to handle case where cookie has no value but exists (no = sign, that is):
 			if ( a_temp_cookie.length > 1 )
 			{
 				cookie_value = unescape( a_temp_cookie[1].replace(/^\s+|\s+$/g, '') );
 			}
-			// note that in cases where cookie is initialized but no value, null is returned
 			return cookie_value;
 			break;
 		}
@@ -571,16 +600,7 @@ jQuery(document).ready(function() {
 		});
 	}
 
-	jQuery("a.[data-rel=popover-below]").popover({
-		offset: 10,
-		html: true
-	});
-	jQuery("a.[data-rel=popover]").popover({
-		offset: 10,
-		html: true
-	});
-
-	post = location.href.split(/#/);
+	var post = location.href.split(/#/);
 	if (post[1]) {
 		if (post[1].match(/^q\d+(_\d+)?$/)) {
 			post[1] = post[1].replace('q', '').replace('_', ',');
@@ -598,6 +618,12 @@ jQuery(document).ready(function() {
 
 	bindFunctions();
 	jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy');
-	jQuery('[rel=tooltip]').tooltip({placement: 'bottom', delay: 200});
-	jQuery('[rel=tooltip_right]').tooltip({placement: 'right', delay: 200});
+	jQuery('[rel=tooltip]').tooltip({
+		placement: 'bottom', 
+		delay: 200
+	});
+	jQuery('[rel=tooltip_right]').tooltip({
+		placement: 'right', 
+		delay: 200
+	});
 });

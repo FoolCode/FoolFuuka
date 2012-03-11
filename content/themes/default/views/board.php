@@ -18,10 +18,14 @@ if (!defined('BASEPATH'))
 			</div>
 			<div class="post_file_controls">
 				<?php if (get_selected_radix()->thumbnails || $this->tank_auth->is_allowed()) : ?>
-				<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . $op->safe_media_hash) ?>" class="btnr parent">View Same</a>
-				<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>" target="_blank" class="btnr parent">Google</a>
-				<a href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>" target="_blank" class="btnr parent">iqdb</a>
-				<a href="http://saucenao.com/search.php?url=<?php echo $op->thumbnail_href ?>" target="_blank" class="btnr parent">SauceNAO</a>
+				<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . $op->safe_media_hash) ?>" 
+				   class="btnr parent">View Same</a><a
+					   href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>" target="_blank" 
+					   class="btnr parent">Google</a><a 
+						   href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>" target="_blank" 
+						   class="btnr parent">iqdb</a><a 
+							   href="http://saucenao.com/search.php?url=<?php echo $op->thumbnail_href ?>" target="_blank" 
+							   class="btnr parent">SauceNAO</a>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -46,8 +50,7 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
-				<time datetime="<?php echo date(DATE_W3C, $op->timestamp-18000) ?>" class="hidden_time" title="4chan DateTime"><?php echo date('D M d H:i:s Y', $op->timestamp-18000) ?></time>
+				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if(get_selected_radix()->archive) : ?>rel="tooltip" title="<?php echo _('4chan time') . ': ' .date('D M d H:i:s Y', $op->timestamp-18000) ?>"<?php endif; ?>><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
 			</span>
 
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#'  . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="highlight">No.</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="quote"><?php echo $op->num ?></a>

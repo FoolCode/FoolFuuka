@@ -289,6 +289,11 @@ function is_natural($str)
 	return (bool) preg_match('/^[0-9]+$/', $str);
 }
 
+function is_post_number($str)
+{
+	return (bool) preg_match('/^[0-9]+(,|_)[0-9]$/', $str);
+}
+
 
 /**
  * Parse BBCode

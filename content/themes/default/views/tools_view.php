@@ -20,8 +20,17 @@
 				<?php
 				echo form_submit(array(
 					'class' => 'btn btn-success btn-mini',
+					'value' => _('Undefined'),
+					'name' => 'submit_undefined',
+					'style' => 'display:none;'
+				))
+				?>
+				
+				<?php
+				echo form_submit(array(
+					'class' => 'btn btn-success btn-mini',
 					'value' => _('Search'),
-					'name' => 'search'
+					'name' => 'submit_search'
 				))
 				?>
 
@@ -29,10 +38,10 @@
 				echo form_submit(array(
 					'class' => 'btn btn-success btn-mini',
 					'value' => _('Go to post'),
-					'name' => 'search'
+					'name' => 'submit_post'
 				))
 				?>
-				
+								
 				<?php
 				echo form_button(array(
 					'data-function' => 'searchHide',

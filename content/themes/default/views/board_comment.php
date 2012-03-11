@@ -14,18 +14,16 @@ if (!defined('BASEPATH'))
 				<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . $p->safe_media_hash) ?>" class="btnr parent">View Same</a><a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" target="_blank" class="btnr parent">Google</a><a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" target="_blank" class="btnr parent">iqdb</a><a href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>" target="_blank" class="btnr parent">SauceNAO</a>
 				<?php endif; ?>
 			</span>
-
-			<span class="post_file_filename unshown">
-				<?php echo $p->media . ', ' ?>
-			</span>
-			<span class="post_file_filename shown">
+			
 				<?php
-				if (mb_strlen($p->media) > 38)
-					echo mb_substr($p->media, 0, 32) . ' (...)' . mb_substr($p->media, mb_strrpos($p->media, '.')) . ', ';
-				else
-					echo $p->media . ', ';
+				if (mb_strlen($p->media) > 38) : ?>
+					<span class="post_file_filename" rel="tooltip" title="<?php echo form_prep($p->media) ?>">
+					<?php echo mb_substr($p->media, 0, 32) . ' (...)' . mb_substr($p->media, mb_strrpos($p->media, '.')) . ', '; ?>
+					</span>
+				<?php else :
+						echo $p->media . ', ';
+					endif;
 				?>
-			</span>
 			<span class="post_file_metadata">
 				<?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?>
 			</span>
@@ -64,7 +62,7 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>" rel="tooltip" title="<?php echo _('4chan time') . ': ' . date('D M d H:i:s Y', $op->timestamp-18000) ?>"><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
+				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>" <?php if(get_selected_radix()->archive) : ?>rel="tooltip" title="<?php echo _('4chan time') . ': ' . date('D M d H:i:s Y', $p->timestamp-18000) ?>"<?php endif; ?>><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
 			</span>
 
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#'  . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-post="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="highlight">No.</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#q' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-post="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-function="quote"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>

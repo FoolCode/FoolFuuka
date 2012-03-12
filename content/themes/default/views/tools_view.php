@@ -1,7 +1,7 @@
 <ul class="nav pull-right">
 	<li class="search-dropdown">
 		<?php
-		echo form_open(
+		echo form_open_multipart(
 			$board->shortname . '/search',
 			array(
 			'class' => 'navbar-search pull-right',
@@ -220,7 +220,7 @@
 					'value' => _('Search image'),
 					'name' => 'submit_image',
 					'rel' => 'tooltip_right',
-					'title' => _('You can also drop the file on the search bar.'),
+					'title' => _('You most browsers can also drop the file on the search bar.'),
 					'style' => 'margin-top:0;'
 				))
 				?></li>

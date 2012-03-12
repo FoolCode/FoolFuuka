@@ -32,57 +32,107 @@
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body>
-		<div class="container-fluid">
-			<?php if (get_selected_radix()) : ?>
+		<?php if (get_selected_radix()) : ?>
 			<div class="navbar navbar-fixed-top">
 				<div class="navbar-inner">
 					<div class="container">
-						<ul class="nav">
-							<li class="dropdown">
-								<a href="<?php echo site_url() ?>" class="brand dropdown-toggle" data-toggle="dropdown">
-									/<?php echo $board->shortname ?>/ - <?php echo $board->name ?>
-									<b class="caret"></b>
-								</a>
-								<ul class="dropdown-menu">
-									<?php
-									foreach ($this->radix->get_archives() as $key => $item)
-									{
-										echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . ' (archive)</a></li>';
-									}
-									?>
-									<li class="divider"></li>
-									<?php
-									foreach ($this->radix->get_boards() as $key => $item)
-									{
-										echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
-									}
-									?>
-								</ul>
-							</li>
-						</ul>
-						<ul class="nav">
-							<li>
-								<a href="<?php echo site_url(array($board->shortname)) ?>"><?php echo _('Index') ?></a>
-							</li>
-							<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo _('Ghost') ?></a>
-							</li>
-							<li><a href="<?php echo site_url(array($board->shortname, 'gallery')) ?>"><?php echo _('Gallery') ?></a>
-							</li>
-							<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo _('Stats') ?></a>
-							</li>
-							<li>
-								<a href="<?php echo site_url(array($board->shortname, 'by_thread')) ?>"><?php echo _('By thread') ?></a>
-							</li>
+						<div class="letters" style="display:none">
+							<?php
+							$parenthesis_open = FALSE;
+							$board_urls = array();
+							foreach ($this->radix->get_archives() as $key => $item)
+							{
+								if (!$parenthesis_open)
+								{
+									echo 'Archives: [ ';
+									$parenthesis_open = TRUE;
+								}
 
+								$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
+							}
+							echo implode(' / ', $board_urls);
+							if ($parenthesis_open)
+							{
+								echo ' ]';
+								$parenthesis_open = FALSE;
+							}
+							?>
+							<?php
+							$parenthesis_open = FALSE;
+							$board_urls = array();
+							foreach ($this->radix->get_boards() as $key => $item)
+							{
+								if (!$parenthesis_open)
+								{
+									echo 'Boards: [ ';
+									$parenthesis_open = TRUE;
+								}
 
-
-						</ul>
-
-						<?php echo $template['partials']['tools_view']; ?>
+								$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
+							}
+							echo implode(' / ', $board_urls);
+							if ($parenthesis_open)
+							{
+								echo ' ]';
+								$parenthesis_open = FALSE;
+							}
+							?>
+						</div>
 					</div>
 				</div>
 			</div>
 		<?php endif; ?>
+		<div class="container-fluid">
+			<?php if (get_selected_radix()) : ?>
+				<div class="navbar navbar-fixed-top">
+					<div class="navbar-inner">
+						<div class="container">
+							<ul class="nav">
+								<li class="dropdown">
+									<a href="<?php echo site_url() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">
+										/<?php echo $board->shortname ?>/ - <?php echo $board->name ?>
+										<b class="caret"></b>
+									</a>
+									<ul class="dropdown-menu">
+										<?php
+										foreach ($this->radix->get_archives() as $key => $item)
+										{
+											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . ' (archive)</a></li>';
+										}
+										?>
+										<li class="divider"></li>
+										<?php
+										foreach ($this->radix->get_boards() as $key => $item)
+										{
+											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
+										}
+										?>
+									</ul>
+								</li>
+							</ul>
+							<ul class="nav">
+								<li>
+									<a href="<?php echo site_url(array($board->shortname)) ?>"><?php echo _('Index') ?></a>
+								</li>
+								<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo _('Ghost') ?></a>
+								</li>
+								<li><a href="<?php echo site_url(array($board->shortname, 'gallery')) ?>"><?php echo _('Gallery') ?></a>
+								</li>
+								<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo _('Stats') ?></a>
+								</li>
+								<li>
+									<a href="<?php echo site_url(array($board->shortname, 'by_thread')) ?>"><?php echo _('By thread') ?></a>
+								</li>
+
+
+
+							</ul>
+
+							<?php echo $template['partials']['tools_view']; ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
 			<div role="main" id="main">
 				<?php if (isset($section_title)): ?>
 					<h3 class="section_title"><?php echo $section_title ?></h3>
@@ -182,14 +232,14 @@
 					s.parentNode.insertBefore(g,s)}(document,'script'));
 			</script>
 		<?php endif; ?>
-			
+
 		<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
 			 chromium.org/developers/how-tos/chrome-frame-getting-started -->
 		<!--[if lt IE 7 ]>
 		  <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
 		  <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 		<![endif]-->
-		
+
 		<script>
 			var backend_vars = <?php echo json_encode($backend_vars) ?>;
 		</script>

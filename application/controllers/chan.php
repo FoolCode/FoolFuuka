@@ -714,13 +714,50 @@ class Chan extends Public_Controller
 	 */
 	public function search()
 	{
+		if ($this->input->post('submit_image'))
+		{
+			if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0)
+			{
+				if (false && $_FILES["image"]["size"] > 8000000)
+				{
+					$this->template->title(_('Error'));
+					$this->template->title(get_selected_radix()->formatted_title);
+					$this->_set_parameters(
+						array(
+							'error' => _('You uploaded a too big file. The maximum file size is 8 MegaBytes.')
+						)
+					);
+					$this->template->build('error');
+					return FALSE;
+				}
+
+				$md5 = base64_encode(pack("H*",
+						md5(file_get_contents($_FILES['image']['tmp_name']))));
+
+				$md5 = substr(urlsafe_b64encode(urlsafe_b64decode($md5)), 0, -2);
+				redirect(get_selected_radix()->shortname . '/image/' . $md5);
+			}
+			else
+			{
+				$this->template->title(_('Error'));
+				$this->template->title(get_selected_radix()->formatted_title);
+				$this->_set_parameters(
+					array(
+						'error' => _('You seem not to have uploaded a valid file.')
+					)
+				);
+				$this->template->build('error');
+				return FALSE;
+			}
+		}
+
 		$this->load->library('form_validation');
-		
+
 		$this->form_validation->set_rules('text', _('Searched text'), 'trim');
-			
-		$this->form_validation->run(); 
-		
-		
+
+		$this->form_validation->run();
+
+
 		// submit_post forces into $this->post()
 		// if submit_undefined we check if it's a natural number or a
 		// local or 4chan board
@@ -730,7 +767,7 @@ class Chan extends Public_Controller
 			strpos($this->input->post('text'), 'http://boards.4chan.org') !== FALSE ||
 			strpos($this->input->post('text'), site_url()) !== FALSE )))
 		{
-			if(is_post_number($this->input->post('text')))
+			if (is_post_number($this->input->post('text')))
 			{
 				$text = str_replace(',', '_', $this->input->post('text'));
 			}

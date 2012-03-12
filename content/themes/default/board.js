@@ -25,7 +25,7 @@ var bindFunctions = function()
 			}
 		});
 	}
-	
+
 	if(!!window.FileReader)
 	{
 		search_dropdown.find('input[name=image]').on('change', function(event) {
@@ -655,6 +655,14 @@ jQuery(document).ready(function() {
 		});
 	}
 
+	// spin it fast
+	var brand = jQuery('.brand:eq(0)');
+	jQuery('.letters').show();
+	var brand_offset = brand.offset().top;
+	if(jQuery(window).scrollTop() <= brand_offset)
+		jQuery.scrollTo(brand_offset);
+	
+	
 	var post = location.href.split(/#/);
 	if (post[1]) {
 		if (post[1].match(/^q\d+(_\d+)?$/)) {
@@ -664,6 +672,7 @@ jQuery(document).ready(function() {
 		}
 		replyHighlight(post[1]);
 	}
+	
 
 	if (typeof thread_id !== "undefined")
 	{

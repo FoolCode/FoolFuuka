@@ -1,26 +1,37 @@
 var bindFunctions = function()
 {
-	jQuery('.search-dropdown').on('dragover', function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		e.originalEvent.dataTransfer.dropEffect = 'copy';
-	});
-	jQuery('.search-dropdown').on('dragenter', function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-	});
+	var search_dropdown = jQuery('.search-dropdown');
+		
+	if(isEventSupported('dragstart') && isEventSupported('drop') && !!window.FileReader)
+	{
+		search_dropdown.on('dragover', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			e.originalEvent.dataTransfer.dropEffect = 'copy';
+		});
+		search_dropdown.on('dragenter', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+		});
 	
-	jQuery('.search-dropdown').on('drop', function(event) {
-		if(event.originalEvent.dataTransfer){
-			if(event.originalEvent.dataTransfer.files.length) {
-				event.preventDefault();
-				event.stopPropagation();
+		search_dropdown.on('drop', function(event) {
+			if(event.originalEvent.dataTransfer){
+				if(event.originalEvent.dataTransfer.files.length) {
+					event.preventDefault();
+					event.stopPropagation();
                 
-				findSameImageFromFile(event.originalEvent.dataTransfer);
-			}   
-		}
-	});
+					findSameImageFromFile(event.originalEvent.dataTransfer);
+				}   
+			}
+		});
+	}
 	
+	if(!!window.FileReader)
+	{
+		search_dropdown.find('input[name=image]').on('change', function(event) {
+			findSameImageFromFile(event.originalEvent.target);
+		});
+	}
 	
 	jQuery("body").on("click", 
 		"a.[data-function], button.[data-function], input.[data-function]", 
@@ -589,6 +600,49 @@ function eliminateDuplicates(arr) {
 	}
 	return out;
 }
+
+var isEventSupported = (function() {
+
+	var TAGNAMES = {
+		'select': 'input', 
+		'change': 'input',
+		'submit': 'form', 
+		'reset': 'form',
+		'error': 'img', 
+		'load': 'img', 
+		'abort': 'img'
+	};
+
+	function isEventSupported( eventName, element ) {
+
+		element = element || document.createElement(TAGNAMES[eventName] || 'div');
+		eventName = 'on' + eventName;
+
+		// When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
+		var isSupported = eventName in element;
+
+		if ( !isSupported ) {
+			// If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
+			if ( !element.setAttribute ) {
+				element = document.createElement('div');
+			}
+			if ( element.setAttribute && element.removeAttribute ) {
+				element.setAttribute(eventName, '');
+				isSupported = typeof element[eventName] == 'function';
+
+				// If property was created, "remove it" (by setting value to `undefined`)
+				if ( typeof element[eventName] != 'undefined' ) {
+					element[eventName] = undefined;
+				}
+				element.removeAttribute(eventName);
+			}
+		}
+
+		element = null;
+		return isSupported;
+	}
+	return isEventSupported;
+})();
 
 jQuery(document).ready(function() {
 

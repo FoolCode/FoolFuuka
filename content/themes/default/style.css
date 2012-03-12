@@ -157,11 +157,24 @@ body {
 }
 
 .search-dropdown ul.search-dropdown-menu input[type=text],
+.search-dropdown ul.search-dropdown-menu input[type=file],
 .search-dropdown ul.search-dropdown-menu input[type=date] {
 	padding:2px;
 	font-size:11px;
 	height:16px;
 	width: 70%;
+}
+
+.search-dropdown ul.search-dropdown-menu input[type=file]{
+	padding:0 3px;
+	height:22px;
+	background:#fff;
+	webkit-appearance: none;
+}
+
+.search-dropdown ul.search-dropdown-menu input[type=file]::-webkit-file-upload-button {
+	position:relative;
+	bottom:3px;
 }
 
 .search-dropdown label input, .search-dropdown label textarea, .search-dropdown label date {

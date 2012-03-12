@@ -78,7 +78,7 @@
 					array(
 						'type' => 'date',
 						'name' => 'start',
-						'id' => 'date_start',
+						'id' => 'date_end',
 						'placeholder' => 'yyyy-mm-dd',
 						'value' => (isset($search["date_start"])) ?
 							rawurldecode($search["date_start"]) : ''));
@@ -211,6 +211,19 @@
 				</label>
 			</li>
 
+			<li class="divider"></li>
+			<li class="input-prepend"><span class="add-on">Image</span><?php echo form_upload(array('name' => 'image'))
+				?>
+				<?php
+				echo form_submit(array(
+					'class' => 'btn btn-success btn-mini',
+					'value' => _('Search image'),
+					'name' => 'submit_image',
+					'rel' => 'tooltip_right',
+					'title' => _('You can also drop the file on the search bar.'),
+					'style' => 'margin-top:0;'
+				))
+				?></li>
 
 
 		</ul>

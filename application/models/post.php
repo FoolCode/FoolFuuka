@@ -861,7 +861,7 @@ class Post extends CI_Model
 
 			if ($search['subject'])
 			{
-				$this->db->sphinx_match('title', $search['subject']);
+				$this->db->sphinx_match('title', $search['subject'], 'full', TRUE);
 			}
 			if ($search['text'])
 			{
@@ -873,15 +873,15 @@ class Post extends CI_Model
 					);
 				}
 
-				$this->db->sphinx_match('comment', rawurldecode($search['text']));
+				$this->db->sphinx_match('comment', $search['text'], 'half', TRUE);
 			}
 			if ($search['username'])
 			{
-				$this->db->sphinx_match('name', rawurldecode($search['username']));
+				$this->db->sphinx_match('name', $search['username'], 'full', TRUE);
 			}
 			if ($search['tripcode'])
 			{
-				$this->db->sphinx_match('name', rawurldecode($search['tripcode']));
+				$this->db->sphinx_match('tripcode', $search['tripcode'], 'full', TRUE);
 			}
 			if ($search['capcode'] == 'admin')
 			{
@@ -1009,7 +1009,7 @@ class Post extends CI_Model
 			}
 			if ($search['text'])
 			{
-				if (mb_strlen($search['text']) < 2)
+				if (mb_strlen($search['text']) < 1)
 				{
 					return array(
 						'error' => _

@@ -113,7 +113,7 @@ class MY_Controller extends CI_Controller
 		show_404();
 	}
 
-
+	
 	/**
 	 * Controller for cron triggered by any visit
 	 * Currently defaulted crons:

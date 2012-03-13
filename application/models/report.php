@@ -3,105 +3,90 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-class Report extends DataMapper
+class Report extends CI_Model
 {
-
-	var $has_one = array();
-	var $has_many = array();
-	var $validation = array(
-		'board' => array(
-			'rules' => array('required', 'is_int'),
-			'label' => 'Board',
-			'type' => 'input'
-		),
-		'post' => array(
-			'rules' => array('required', 'is_int'),
-			'label' => 'Post',
-			'type' => 'input'
-		),
-		'reason' => array(
-			'rules' => array(),
-			'label' => 'Reason',
-			'type' => 'textarea'
-		)
-	);
-
-	function __construct($id = NULL)
+	
+	function __construct()
 	{
 		parent::__construct(NULL);
-
-		// We've overwrote some functions, and we need to use the get() from THIS model
-		if (!empty($id) && is_numeric($id))
-		{
-			$this->where('id', $id)->get();
-		}
 	}
 
-
-	function post_model_init($from_cache = FALSE)
+	function report_structure()
 	{
-
+		return array(
+			'open' => array(
+				'type' => 'open',
+			),
+			'board_id' => array(
+				'type' => 'hidden',
+				'database' => TRUE,
+				'validation' => 'required|is_int',
+				'validation_func' => function($input, $form_internal)
+				{
+					// check that the ID exists
+					$CI = & get_instance();
+					$query = $CI->db->where('id', $input['id'])->get('boards');
+					if($query->num_rows() != 1)
+					{
+						return array(
+							'error_code' => 'BOARD_ID_NOT_FOUND',
+							'error' => _('Couldn\'t find the board with the submitted ID.'),
+							'critical' => TRUE
+						);
+					}
+					
+					return array('success' => TRUE);
+				}
+			),
+			'post' => array(
+				'type' => 'hidden',
+				'database' => TRUE,
+				'validation' => 'required|is_int',
+				'validation_func' => function($input, $form_internal)
+				{
+					// check that the doc_id of the post exists
+					$CI = & get_instance();
+					$board = $CI->radix->get_by_id($input['board_id']);
+					$post = $CI->post->get_post_by_doc_id($board, $input['doc_id']);
+					if($post === FALSE)
+					{
+						return array(
+							'error_code' => 'POST_DOC_ID_NOT_FOUND',
+							'error' => _('Couldn\'t find the post with the submitted doc_id.'),
+							'critical' => TRUE
+						);
+					}
+					
+					return array('success' => TRUE);
+				}
+				
+			),
+			'reason' => array(
+				'type' => 'textarea',
+				'database' => TRUE,
+				'validation' => 'trim|max_length[512]'
+			),
+			'separator-2' => array(
+				'type' => 'separator-short'
+			),
+			'submit' => array(
+				'type' => 'submit',
+				'class' => 'btn-primary',
+				'value' => _('Submit')
+			),
+			'close' => array(
+				'type' => 'close'
+			),
+		);
 	}
 
-
-	public function get($limit = NULL, $offset = NULL)
+	function add($data = array())
 	{
-		$CI = & get_instance();
-
-		return parent::get($limit, $offset);
+		
 	}
-
-
-	public function add($data = array())
-	{
-		if (!$this->update_report_db($data))
-		{
-			log_message('error', 'add_report: failed writing to database');
-			return FALSE;
-		}
-
-		return TRUE;
-	}
-
-
-	public function update_report_db($data = array())
-	{
-		if (isset($data["id"]) && $data["id"] != '')
-		{
-			$this->where("id", $data["id"])->get();
-			if ($this->result_count() == 0)
-			{
-				set_notice('error', 'The report you wish to modify doesn\'t exist.');
-				log_message('error', 'update_report_db: failed to find requested id');
-				return FALSE;
-			}
-		}
-
-		// Loop over the array and assign values to the variables.
-		foreach ($data as $key => $value)
-		{
-			$this->$key = $value;
-		}
-
-		if (!$this->save())
-		{
-			if (!$this->valid)
-			{
-				set_notice('error', 'Please check that you have filled all of the required fields.');
-				log_message('error', 'update_report_db: failed validation check');
-			}
-			else
-			{
-				set_notice('error', 'Failed to save this entry to the database for unknown reasons.');
-				log_message('error', 'update_report_db: failed to save entry');
-			}
-			return FALSE;
-		}
-
-		return TRUE;
-	}
-
-
+	
+	/*
+	
 	public function remove_report_db()
 	{
 		if (!$this->delete())
@@ -139,12 +124,11 @@ class Report extends DataMapper
 
 	public function list_all_reports($page = 1, $per_page = 15)
 	{
-		$CI = & get_instance();
-		$CI->load->model('post');
+		$this->load->model('post');
 
 		$reports = $this->get_paged($page, $per_page);
-		$boards = new Board();
-		$boards->get();
+		$boards = $this->radix->get_all();
+		
 
 		if ($reports->paged->total_rows == 0)
 		{
@@ -313,6 +297,6 @@ class Report extends DataMapper
 
 		return array('error' => TRUE, 'message' => 'Invalid Operation.');
 	}
-
+	*/
 
 }

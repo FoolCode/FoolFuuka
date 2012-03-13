@@ -740,7 +740,6 @@ class Post extends CI_Model
 		$this->backlinks_hash_only_url = FALSE;
 		$this->realtime = FALSE;
 
-		//print_r($result);
 		return $result;
 	}
 
@@ -755,6 +754,30 @@ class Post extends CI_Model
 			',
 			array($num, $subnum));
 
+		if ($query->num_rows() == 0)
+		{
+			return FALSE;
+		}
+
+		foreach ($query->result() as $post)
+		{
+			return $post;
+		}
+
+		return FALSE;
+	}
+	
+	
+	function get_post_by_doc_id($board, $doc_id)
+	{
+		$query = $this->db->query('
+				SELECT * FROM ' . $this->get_table($board) . '
+				' . $this->get_sql_report($board) . '
+				WHERE doc_id = ?
+				LIMIT 0, 1;
+			',
+			array($doc_id));
+		
 		if ($query->num_rows() == 0)
 		{
 			return FALSE;
@@ -1214,7 +1237,7 @@ class Post extends CI_Model
 		return array('posts' => $result, 'total_found' => $search_result['total_found']);
 	}
 
-
+	/* THIS JUST WORKS TOO BADLY
 	function get_similar_image($board, $hash, $page, $options = array())
 	{
 		// defaults
@@ -1321,6 +1344,8 @@ class Post extends CI_Model
 
 		return array('posts' => $result);
 	}
+	 * 
+	 */
 
 
 	function get_full_image($board, $image)

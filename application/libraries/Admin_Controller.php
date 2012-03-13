@@ -21,8 +21,6 @@ class Admin_Controller extends MY_Controller
 			redirect('/admin/auth/login');
 		}
 		
-		$this->load->library('datamapper');
-
 		// a bit of looping to create the sidebar
 		// 
 		// returns the static sidebar array (can't use functions in )
@@ -276,9 +274,9 @@ class Admin_Controller extends MY_Controller
 			"default" => "members",
 			"content" => array(
 				"members" => array("level" => "mod", "name" => _("Member List"), "icon" => 'icon-user'),
-				"teams" => array("level" => "member", "name" => _("Team List"), "icon" => 'icon-star-empty'),
-				"home_team" => array("level" => "member", "name" => _("Home Team"), "icon" => 'icon-star'),
-				"add_team" => array("level" => "mod", "name" => _("Add Team"), "icon" => 'icon-asterisk')
+			//	"teams" => array("level" => "member", "name" => _("Team List"), "icon" => 'icon-star-empty'),
+			//	"home_team" => array("level" => "member", "name" => _("Home Team"), "icon" => 'icon-star'),
+			//	"add_team" => array("level" => "mod", "name" => _("Add Team"), "icon" => 'icon-asterisk')
 			)
 		);
 		

@@ -44,7 +44,8 @@ class Boards extends Admin_Controller
 
 		if ($this->input->post())
 		{
-			$result = $this->form_validate($data['form']);
+			$this->load->library('form_validation');
+			$result = $this->form_validation->form_validate($data['form']);
 			if (isset($result['error']))
 			{
 				set_notice('warning', $result['error']);

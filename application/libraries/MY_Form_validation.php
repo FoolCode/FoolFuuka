@@ -21,6 +21,7 @@ class MY_Form_validation extends CI_Form_validation
 	 */
 	public function form_validate($form)
 	{
+		$CI = & get_instance();
 		// this gets a bit complex because we want to show all errors at the same
 		// time, which means we have to run both CI validation and custom, then
 		// merge the result.
@@ -29,13 +30,13 @@ class MY_Form_validation extends CI_Form_validation
 		{
 			if (isset($item['validation']))
 			{
-				$this->form_validation->set_rules($name, $item['label'], $item['validation']);
+				$this->set_rules($name, $item['label'], $item['validation']);
 			}
 		}
 
 		// we need to run both validation and closures
-		$this->form_validation->run();
-		$ci_validation_errors = $this->form_validation->get_errors_array();
+		$this->run();
+		$ci_validation_errors = $this->get_errors_array();
 
 		$validation_func = array();
 		// we run this after form_validation in case form_validation edited the POST data
@@ -43,10 +44,10 @@ class MY_Form_validation extends CI_Form_validation
 		{
 			// the "required" MUST be handled with the standard form_validation
 			// or we'll never get in here
-			if (isset($item['validation_func']) && $this->input->post($name))
+			if (isset($item['validation_func']) && $CI->input->post($name))
 			{
 				// contains TRUE for success and in array with ['error'] in case
-				$validation_func[$name] = $item['validation_func']($this->input->post(),
+				$validation_func[$name] = $item['validation_func']($CI->input->post(),
 					$form);
 
 				// critical errors don't allow the continuation of the validation.
@@ -106,7 +107,7 @@ class MY_Form_validation extends CI_Form_validation
 
 				if ($item['type'] == 'checkbox')
 				{
-					if ($this->input->post($name) == 1)
+					if ($CI->input->post($name) == 1)
 					{
 						$result[$name] = 1;
 					}
@@ -117,9 +118,9 @@ class MY_Form_validation extends CI_Form_validation
 				}
 				else
 				{
-					if ($this->input->post($name) !== FALSE)
+					if ($CI->input->post($name) !== FALSE)
 					{
-						$result[$name] = $this->input->post($name);
+						$result[$name] = $CI->input->post($name);
 					}
 				}
 			}

@@ -15,13 +15,12 @@ class Admin_Controller extends MY_Controller
 	{
 		parent::__construct();
 
-		if (!$this->tank_auth->is_logged_in())
+		if (!$this->tank_auth->is_allowed() && $this->uri->segment(2) != 'auth')
 		{
 			$this->session->set_userdata('login_redirect', $this->uri->uri_string());
-			redirect('/account/auth/login');
+			redirect('/admin/auth/login');
 		}
-		$this->tank_auth->is_allowed() or show_404();
-
+		
 		$this->load->library('datamapper');
 
 		// a bit of looping to create the sidebar

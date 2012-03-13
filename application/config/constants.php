@@ -50,11 +50,11 @@ define('FOOL_NAME', 'FoOlFuuka');
 define('FOOL_MANUAL_INSTALL_URL', 'http://ask.foolrulez.com');
 define('FOOL_REQUIREMENT_PHP', '5.3.0');
 define('FOOL_PLUGIN_DIR', 'content/plugins/');
-define('FOOL_PROTECTED_RADIXES', serialize(array('admin', 'account', 'install', 'feeds', 'api', 'cli', 'functions')));
+define('FOOL_PROTECTED_RADIXES', serialize(array('admin', 'install', 'feeds', 'api', 'cli', 'functions')));
 
 // preferences from get_setting('value', FOOL_PREF_ETC);
 define('FOOL_PREF_SYS_SUBDOMAIN', FALSE);
-define('FOOL_PREF_SPHINX_LISTEN', '127.0.0.1:9312');
+define('FOOL_PREF_SPHINX_LISTEN', '127.0.0.1:9306');
 define('FOOL_PREF_SPHINX_LISTEN_MYSQL', '127.0.0.1:9306');
 define('FOOL_PREF_SPHINX_DIR', '/usr/local/sphinx/var');
 define('FOOL_PREF_SPHINX_MIN_WORD', 3);

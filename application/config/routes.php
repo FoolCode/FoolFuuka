@@ -39,18 +39,9 @@
 */
 
 $route['default_controller'] = "chan";
-$route['sitemap.xml'] = "feeds/sitemap";
-$route['rss.xml'] = "feeds/feeds";
-$route['atom.xml'] = "feeds/feeds/atom";
 $route['install'] = "install";
 $route['api'] = "api";
 $route['cli'] = "cli";
-$route['account'] = "account/index/profile";
-$route['account/profile'] = "account/index/profile";
-$route['account/teams'] = "account/index/teams";
-$route['account/leave_team/(:any)'] = "account/index/leave_team/$1";
-$route['account/request/(:any)'] = "account/index/request/$1";
-$route['account/leave_leadership/(:any)'] = "account/index/leave_leadership/$1";
 $route['admin'] = "admin/preferences";
 $route['admin/members/members'] = 'admin/members/membersa';
 $route['admin/plugins/(.*?)'] = "admin/plugins_admin/$1";

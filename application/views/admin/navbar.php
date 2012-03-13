@@ -35,14 +35,14 @@ if (!defined('BASEPATH'))
 								</a>
 							</li>
 							<li>
-								<a href="<?php echo site_url('/account/auth/logout'); ?>">
+								<a href="<?php echo site_url('/admin/auth/logout'); ?>">
 									<?php echo _("Logout") ?>
 								</a>
 							</li>
 						</ul>
 					</li>
 				<?php else : ?>
-					<li><a href="#"><?php echo _('Login') ?></a></li>
+					<li><a href="<?php echo site_url('admin/auth/login') ?>"><?php echo _('Login') ?></a></li>
 				<?php endif; ?>
 			</ul>
 		</div>

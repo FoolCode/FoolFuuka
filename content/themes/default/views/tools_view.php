@@ -220,7 +220,7 @@
 					'value' => _('Search image'),
 					'name' => 'submit_image',
 					'rel' => 'tooltip_right',
-					'title' => _('You most browsers can also drop the file on the search bar.'),
+					'title' => _('On most browsers you can also drop the file on the search bar.'),
 					'style' => 'margin-top:0;'
 				))
 				?></li>

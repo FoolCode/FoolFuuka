@@ -35,7 +35,7 @@ $config['enable_emulate_request'] = TRUE;
 |	E.g: My Secret REST API
 |
 */
-$config['rest_realm'] = 'FoOlSlide API';
+$config['rest_realm'] = 'FoOl API';
 
 /*
 |--------------------------------------------------------------------------

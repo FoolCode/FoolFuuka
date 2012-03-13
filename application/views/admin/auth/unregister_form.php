@@ -1,22 +1,27 @@
-<div class="incontent login">
+<div class="well">
 	<?php
 	$password = array(
 		'name' => 'password',
 		'id' => 'password',
 		'size' => 30,
+		'placeholder' => _('Required')
 	);
 	?>
-	<?php echo form_open($this->uri->uri_string()); ?>
-	<div class="formgroup">
-		<div><?php echo form_label('Password', $password['id']); ?></div>
-		<div><?php echo form_password($password); ?></div>
-		<div style="color: red;"><?php echo form_error($password['name']); ?><?php echo isset($errors[$password['name']]) ? $errors[$password['name']] : ''; ?></div>
-	</div>	
-	<div class="formgroup">
-		<div>
-			<?php echo form_submit('cancel', 'Delete account'); ?>
-		</div>
-	</div>
+	<?php echo form_open(); ?>
+	
+	<label><?php echo form_label('Password', $password['id']); ?></label>
+	<?php echo form_password($password); ?>
+	<span class="help-inline" style="color: red;"><?php echo form_error($password['name']); ?><?php echo isset($errors[$password['name']]) ? $errors[$password['name']] : ''; ?></span>	
+	
+	<br/>
+	
+	<?php
+	echo form_submit(array(
+		'name' => 'cancel',
+		'value' => _('Delete account'),
+		'class' => 'btn btn-primary')
+	);
+	?>
+	
 	<?php echo form_close(); ?>
-	<a href="<? echo site_url('/account/profile/') ?>" class="button yellow"><?php echo _("Back to profile") ?></a>
 </div>

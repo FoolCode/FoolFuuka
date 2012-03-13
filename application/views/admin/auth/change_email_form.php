@@ -1,4 +1,4 @@
-<div class="incontent login">
+<div class="well">
 	<?php
 	$password = array(
 		'name' => 'password',

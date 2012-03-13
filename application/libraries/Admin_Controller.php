@@ -258,6 +258,17 @@ class Admin_Controller extends MY_Controller
 			//	"spam" => array("level" => "mod", "name" => _("Spam"), "icon" => 'icon-remove-circle')
 			)
 		);
+		
+		$sidebar["auth"] = array(
+			"name" => _("Account"),
+			"level" => "member",
+			"default" => "change_email",
+			"content" => array(
+				"change_email" => array("level" => "member", "name" => _("Change Email"), "icon" => 'icon-envelope'),
+				"change_password" => array("level" => "member", "name" => _("Change Password"), "icon" => 'icon-lock'),
+				"unregister" => array("level" => "mod", "name" => _("Unregister"), "icon" => 'icon-remove-circle')
+			)
+		);
 
 		$sidebar["members"] = array(
 			"name" => _("Members"),
@@ -270,6 +281,7 @@ class Admin_Controller extends MY_Controller
 				"add_team" => array("level" => "mod", "name" => _("Add Team"), "icon" => 'icon-asterisk')
 			)
 		);
+		
 		$sidebar["preferences"] = array(
 			"name" => _("Preferences"),
 			"level" => "admin",
@@ -281,6 +293,7 @@ class Admin_Controller extends MY_Controller
 				"advertising" => array("level" => "admin", "name" => _("Advertising"), "icon" => 'icon-lock'),
 			)
 		);
+		
 		$sidebar["system"] = array(
 			"name" => _("System"),
 			"level" => "admin",

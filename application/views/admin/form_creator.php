@@ -76,148 +76,149 @@ if (!defined('BASEPATH'))
 			$item['value'] = $this->input->post($item['name']);
 		}
 
-		switch ($item['type']):
+		if (isset($item['type'])) :
+			switch ($item['type']):
 
-			case 'separator':
-				?>
-				<br/><br/>
-				<?php
-				break;
-
-			case 'separator-short':
-				?>
-				<br/>
-				<?php
-				break;
-			
-			
-			case 'paragraph':
-				?>
-				<p><?php echo $helpers['help'] ?></p>
-				<?php
-				break;
-
-
-			case 'open':
-				// a special case for the hidden
-				if (isset($item['hidden']))
-				{
-					// better not supporting it, things might get messy
-					log_message('error',
-						'The form automator doesn\'t support hidden in form_opens.');
-					show_error('The form automator doesn\'t support hidden in form_opens.');
-				}
-
-				echo form_open(
-					isset($item['action']) ? $item['action'] : '',
-					isset($item['attributes']) ? $item['attributes'] : '',
-					isset($item['hidden']) ? $item['hidden'] : array()
-				);
-				break;
-
-
-			case 'close':
-				echo form_close(); // I know there's a variable there but it's useless
-				break;
-
-
-			case 'hidden':
-				// to keep maximum functionality we want one value per hidden
-				if (isset($item['value']) && is_array($item['value']))
-				{
-					// better not supporting it, things might get messy
-					log_message('error',
-						'The form automator doesn\'t support arrays of hidden values in form_hidden.');
-					show_error('The form automator doesn\'t support arrays of hidden values in form_hidden.');
-				}
-
-
-				// this is outputted only if we actually have a value
-				// it will never be inserted by the user so don't take care of repopulation
-				if (isset($object->$name))
-				{
-					$item['value'] = $object->$name;
-				}
-
-				if (isset($item['value']))
-				{
-					echo form_hidden($name, $item['value']);
-				}
-				break;
-
-
-			case 'submit':
-			case 'reset':
-				echo call_user_func('form_' . $item['type'], $item);
-				break;
-
-
-			case 'radio':
-			case 'checkbox':
-				if (!isset($item['value']))
-				{
-					$item['value'] = 1;
-				}
-
-				if (isset($helpers['preferences']) && $helpers['preferences'])
-				{
-					$checked = get_setting($name);
-				}
-				else
-				{
-					$checked = isset($object->$name) ? $object->$name : FALSE;
-				}
-				?>
-				<label class="checkbox">
-					<?php
-					echo form_checkbox($name, $item['value'], $checked)
+				case 'separator':
 					?>
-					<?php echo $helpers['help'] ?>
-				</label>
-				<?php
-				break;
+					<br/><br/>
+					<?php
+					break;
+
+				case 'separator-short':
+					?>
+					<br/>
+					<?php
+					break;
 
 
-			// These are the standard CodeIgniter functions that accept array 
-			// http://codeigniter.com/user_guide/helpers/form_helper.html
-			case 'input':
-			case 'password':
-			case 'upload':
-			case 'textarea':
-			case 'dropdown':
-			case 'multiselect':
-			case 'button':
+				case 'paragraph':
+					?>
+					<p><?php echo $helpers['help'] ?></p>
+					<?php
+					break;
 
-				if (!isset($item['value']))
-				{
+
+				case 'open':
+					// a special case for the hidden
+					if (isset($item['hidden']))
+					{
+						// better not supporting it, things might get messy
+						log_message('error',
+							'The form automator doesn\'t support hidden in form_opens.');
+						show_error('The form automator doesn\'t support hidden in form_opens.');
+					}
+
+					echo form_open(
+						isset($item['action']) ? $item['action'] : '',
+						isset($item['attributes']) ? $item['attributes'] : '',
+						isset($item['hidden']) ? $item['hidden'] : array()
+					);
+					break;
+
+
+				case 'close':
+					echo form_close(); // I know there's a variable there but it's useless
+					break;
+
+
+				case 'hidden':
+					// to keep maximum functionality we want one value per hidden
+					if (isset($item['value']) && is_array($item['value']))
+					{
+						// better not supporting it, things might get messy
+						log_message('error',
+							'The form automator doesn\'t support arrays of hidden values in form_hidden.');
+						show_error('The form automator doesn\'t support arrays of hidden values in form_hidden.');
+					}
+
+
+					// this is outputted only if we actually have a value
+					// it will never be inserted by the user so don't take care of repopulation
+					if (isset($object->$name))
+					{
+						$item['value'] = $object->$name;
+					}
+
+					if (isset($item['value']))
+					{
+						echo form_hidden($name, $item['value']);
+					}
+					break;
+
+
+				case 'submit':
+				case 'reset':
+					echo call_user_func('form_' . $item['type'], $item);
+					break;
+
+
+				case 'radio':
+				case 'checkbox':
+					if (!isset($item['value']))
+					{
+						$item['value'] = 1;
+					}
+
 					if (isset($helpers['preferences']) && $helpers['preferences'])
 					{
-						$item['value'] = get_setting($name);
+						$checked = get_setting($name);
 					}
 					else
 					{
-						$item['value'] = isset($object->$name) ? $object->$name : '';
+						$checked = isset($object->$name) ? $object->$name : FALSE;
 					}
-					
-				}
-				?>
-				<label><?php echo $helpers['label'] ?></label>
-				<?php
-				echo call_user_func('form_' . $item['type'], $item);
-				?>
-				<span class="help-inline">
-					<?php echo isset($helpers['help']) ? $helpers['help']
-							: NULL
 					?>
-				</span>
+					<label class="checkbox">
+						<?php
+						echo form_checkbox($name, $item['value'], $checked)
+						?>
+						<?php echo $helpers['help'] ?>
+					</label>
+					<?php
+					break;
 
-				<?php
-				break;
 
-			default:
-				break;
+				// These are the standard CodeIgniter functions that accept array 
+				// http://codeigniter.com/user_guide/helpers/form_helper.html
+				case 'input':
+				case 'password':
+				case 'upload':
+				case 'textarea':
+				case 'dropdown':
+				case 'multiselect':
+				case 'button':
 
-		endswitch;
+					if (!isset($item['value']))
+					{
+						if (isset($helpers['preferences']) && $helpers['preferences'])
+						{
+							$item['value'] = get_setting($name);
+						}
+						else
+						{
+							$item['value'] = isset($object->$name) ? $object->$name : '';
+						}
+					}
+					?>
+					<label><?php echo $helpers['label'] ?></label>
+					<?php
+					echo call_user_func('form_' . $item['type'], $item);
+					?>
+					<span class="help-inline">
+						<?php
+						echo isset($helpers['help']) ? $helpers['help'] : NULL
+						?>
+					</span>
+
+					<?php
+					break;
+
+				default:
+					break;
+
+			endswitch;
+		endif;
 		?>
 
 

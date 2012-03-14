@@ -8,20 +8,24 @@ class MY_Form_validation extends CI_Form_validation
 {
 
 
-	public function get_errors_array()
-	{
-		return $this->_error_array;
-	}
-	
-	
 	/**
 	 * Checks the form for and returns either a compiled array of values or
 	 * the error
 	 *  
 	 */
-	public function form_validate($form)
+	public function form_validate($form, $alternate = NULL)
 	{
 		$CI = & get_instance();
+		
+		// allow overriding the POST array
+		$temp_post = $CI->input->post();
+		if (is_array($alternate))
+		{
+			$_POST = $alternate;
+			$this->_reset_post_array();
+		}
+
+		
 		// this gets a bit complex because we want to show all errors at the same
 		// time, which means we have to run both CI validation and custom, then
 		// merge the result.
@@ -36,7 +40,7 @@ class MY_Form_validation extends CI_Form_validation
 
 		// we need to run both validation and closures
 		$this->run();
-		$ci_validation_errors = $this->get_errors_array();
+		$ci_validation_errors = $this->_error_array;
 
 		$validation_func = array();
 		// we run this after form_validation in case form_validation edited the POST data
@@ -47,8 +51,7 @@ class MY_Form_validation extends CI_Form_validation
 			if (isset($item['validation_func']) && $CI->input->post($name))
 			{
 				// contains TRUE for success and in array with ['error'] in case
-				$validation_func[$name] = $item['validation_func']($CI->input->post(),
-					$form);
+				$validation_func[$name] = $item['validation_func']($CI->input->post(), $form);
 
 				// critical errors don't allow the continuation of the validation.
 				// this allows less checks for functions that come after the critical ones.
@@ -57,6 +60,18 @@ class MY_Form_validation extends CI_Form_validation
 					$validation_func[$name]['critical'] == TRUE)
 				{
 					break;
+				}
+
+				if (isset($validation_func[$name]['push']) &&
+					is_array($validation_func[$name]['push'] == TRUE))
+				{
+					// overwrite the $_POST array and reload it
+					foreach ($validation_func[$name]['push'] as $n => $i)
+					{
+						$_POST[$n] = $i;
+					}
+
+					$this->_reset_post_array();
 				}
 			}
 		}
@@ -89,6 +104,12 @@ class MY_Form_validation extends CI_Form_validation
 		if (count($ci_validation_errors) > 0 || count($validation_func_errors) > 0)
 		{
 			$errors = array_merge($ci_validation_errors, $validation_func_errors);
+			// restore post
+			if (is_array($alternate))
+			{
+				$_POST = $temp_post;
+				$this->_reset_post_array();
+			}
 			return array('error' => implode(' ', $errors));
 		}
 		else
@@ -123,6 +144,13 @@ class MY_Form_validation extends CI_Form_validation
 						$result[$name] = $CI->input->post($name);
 					}
 				}
+			}
+			
+			// restore post
+			if (is_array($alternate))
+			{
+				$_POST = $temp_post;
+				$this->_reset_post_array();
 			}
 
 			if (count($validation_func_warnings) > 0)

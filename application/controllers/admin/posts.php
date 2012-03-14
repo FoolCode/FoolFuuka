@@ -12,6 +12,8 @@ class Posts extends Admin_Controller
 		if (!($this->tank_auth->is_allowed()))
 			redirect('admin');
 
+		$this->load->model('post');
+		
 		// title on top
 		$this->viewdata['controller_title'] = '<a href="'.site_url("admin/posts").'">' . _("Posts") . '</a>';;
 	}
@@ -26,18 +28,12 @@ class Posts extends Admin_Controller
 	function reports($page = 1)
 	{
 		$this->viewdata["function_title"] = _('Reports');
-		$reports = new Report();
-
-		$data["reports"] = $reports->list_all_reports($page);
+		
+		
+		$data['posts'] = $this->post->get_reports($page);
 
 		$this->viewdata["main_content_view"] = $this->load->view("admin/reports/manage.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
-	}
-
-
-	function spam($page = 1)
-	{
-
 	}
 
 

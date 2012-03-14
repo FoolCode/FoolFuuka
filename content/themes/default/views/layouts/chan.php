@@ -31,7 +31,7 @@
 		<meta name="generator" content="<?php echo FOOL_NAME ?> <?php echo FOOL_VERSION ?>" />
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
-	<body>
+	<body class="theme_default">
 		<?php if (get_selected_radix()) : ?>
 			<div class="navbar navbar-fixed-top">
 				<div class="navbar-inner">

@@ -1685,7 +1685,7 @@ class Post extends CI_Model
 			ORDER BY timestamp DESC
 			LIMIT 0,1
 		',
-			array(inet_ptod($this->input->ip_address())));
+			array(inet_pton($this->input->ip_address())));
 
 		if ($query->num_rows() > 0)
 		{
@@ -1696,8 +1696,8 @@ class Post extends CI_Model
 					return array('error' => _('You\'re posting again the same comment as the last time!'));
 				}
 
-				if (time() - strtotime($row->lastpost) < 10 &&
-					time() - strtotime($row->lastpost) > 0 &&
+				if (time() - $row->lastpost < 10 &&
+					time() - $row->lastpost > 0 &&
 					!$this->tank_auth->is_allowed()) // 10 seconds
 				{
 					return array('error' => 'You must wait at least 10 seconds before posting again.');
@@ -1712,7 +1712,7 @@ class Post extends CI_Model
 			$this->db->query('
 				INSERT INTO ' . $this->get_table($board) . '
 				(num, subnum, parent, timestamp, capcode, email,
-					name, trip, title, comment, delpass, spoiler)
+					name, trip, title, comment, delpass, spoiler, id)
 				VALUES
 				(
 					(
@@ -1722,11 +1722,11 @@ class Post extends CI_Model
 							SELECT * from ' . $this->get_table($board) . '
 						) AS x
 					),
-					?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+					?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 				)
 				',
 				array(0, $num, time(), $postas, $email, $name, $trip,
-				$subject, $comment, $password, $spoiler
+				$subject, $comment, $password, $spoiler, inet_pton($this->input->ip_address())
 				)
 			);
 		}
@@ -1738,7 +1738,7 @@ class Post extends CI_Model
 			$this->db->query('
 					INSERT INTO ' . $this->get_table($board) . '
 					(num, subnum, parent, timestamp, capcode, email,
-						name, trip, title, comment, delpass)
+						name, trip, title, comment, delpass, id)
 					VALUES
 					(
 						(
@@ -1763,14 +1763,15 @@ class Post extends CI_Model
 									)
 							) AS x
 						),
-						?, ?, ?, ?, ?, ?, ?, ?, ?
+						?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 					)
 				',
 				array(
 				$num, $num,
 				$num, $num,
 				$num, time(), $postas, $email,
-				$name, $trip, $subject, $comment, $password
+				$name, $trip, $subject, $comment, $password,
+					inet_pton($this->input->ip_address())
 				)
 			);
 		}

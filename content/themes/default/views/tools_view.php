@@ -11,7 +11,7 @@
 			'name' => 'text',
 			'data-function' => 'searchShow',
 			'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : '',
-			'class' => 'span3 search-query',
+			'class' => 'span4 search-query',
 			'placeholder' => _('Search or insert post no. or thread URL')
 		));
 		?>
@@ -71,9 +71,9 @@
 						'id' => 'date_start',
 						'value' => (isset($search["date_start"])) ?
 							rawurldecode($search["date_start"]) : ''));
-				?>
+				?></li>
 
-				<span class="add-on">Date end</span><?php
+			<li class="input-prepend"><span class="add-on">Date end</span><?php
 				echo form_input(
 					array(
 						'type' => 'date',
@@ -214,7 +214,7 @@
 			<li class="divider"></li>
 			<li class="input-prepend"><span class="add-on">Image</span><?php echo form_upload(array('name' => 'image'))
 				?>
-				<?php
+				</li><li><?php
 				echo form_submit(array(
 					'class' => 'btn btn-success btn-mini',
 					'value' => _('Search image'),

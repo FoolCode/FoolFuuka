@@ -30,6 +30,14 @@
 		<link rel='index' title='<?php echo get_setting('fs_gen_site_title') ?>' href='<?php echo site_url() ?>' />
 		<meta name="generator" content="<?php echo FOOL_NAME ?> <?php echo FOOL_VERSION ?>" />
 		<?php echo get_setting('fs_theme_header_code'); ?>
+		<style>
+			html {
+				height:100%;
+				background:#6A836F;
+				margin:0;
+				padding:0;
+			}
+		</style>
 	</head>
 	<body class="theme_default">
 		<?php if (get_selected_radix()) : ?>

@@ -239,7 +239,7 @@ class Chan extends Public_Controller
 		$default = array(
 			'variables' => array('disable_headers', 'is_page', 'is_last50', 'is_statistics', '@modifiers'),
 			'partials' => array('post_reply', 'post_thread', 'tools_post', 'tools_view'),
-			'backend_vars' => array('site_url' => site_url())
+			'backend_vars' => array('site_url' => site_url(), 'api_url' => site_url())
 		);
 
 		// include the board shortname in the backend_vars if it's set

@@ -124,6 +124,46 @@ var bindFunctions = function()
 					<textarea class="modal-comment"></textarea>');
 					modal.find(".submitModal").data("action", 'report');
 					break;
+					
+				case 'mod':
+					jQuery.ajax({
+						url: backend_vars.api_url + '/api/chan/' + el.data('board') + '/submit/' ,
+						dataType: 'json',
+						type: 'POST',
+						cache: false,
+						data: {
+							reply_numero: post,
+							reply_bokunonome: jQuery("#reply_bokunonome").val(),
+							reply_elitterae: jQuery("#reply_elitterae").val(),
+							reply_talkingde: jQuery("#reply_talkingde").val(),
+							reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
+							reply_nymphassword: jQuery("#reply_nymphassword").val(),
+							reply_postas: jQuery("#reply_postas").val(),
+							reply_gattai: 'Submit'
+						},
+						success: function(data){
+							if (data.error != "")
+							{
+								reply_alert.html(data.error);
+								reply_alert.addClass('error');
+								reply_alert.show();
+								return false;
+							}
+							reply_alert.html(data.success);
+							reply_alert.addClass('success');
+							reply_alert.show();
+							jQuery("#reply_chennodiscursus").val("");
+							realtimethread();
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							reply_alert.html('Connection error.');
+							reply_alert.addClass('error');
+							reply_alert.show();
+						},
+						complete: function() {
+						}
+					});
+					break;
 
 				case 'closeModal':
 					el.closest(".modal").modal('hide');

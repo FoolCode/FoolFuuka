@@ -4,13 +4,14 @@
 .theme_default .clearfix:after { clear: both; }
 .theme_default .clearfix { zoom: 1; }
 
-.tooltip-inner{max-width:300px;}
+.theme_default .tooltip-inner{max-width:300px;}
 
-a, a:visited {
+.theme_default a, 
+.theme_default a:visited {
 	color: #34345c;
 }
 
-a:hover {
+.theme_default a:hover {
 	color: #dd0000;
 }
 
@@ -63,6 +64,11 @@ body.theme_default {
 .theme_default .navbar {
 	position:static;
 	margin-bottom:0;
+}
+
+.theme_default .navbar-fixed-top .container {
+	width:auto;
+	padding: 0 30px;
 }
 
 .theme_default .navbar .navbar-inner {
@@ -150,7 +156,13 @@ body.theme_default {
 	color: #999;
 }
 
+.theme_default .search-dropdown ul.search-dropdown-menu li.input-prepend {
+	padding:0px 7px 6px;
+	color: #999;
+}
+
 .theme_default .search-dropdown ul.search-dropdown-menu li.divider {
+	padding:0;
 	height: 1px;
 	margin: 3px 1px;
 	overflow: hidden;
@@ -181,6 +193,7 @@ body.theme_default {
 	font-size:11px;
 	height:16px;
 	width: 70%;
+	margin-bottom:0;
 }
 
 .theme_default .search-dropdown ul.search-dropdown-menu input[type=file]{

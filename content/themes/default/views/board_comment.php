@@ -78,15 +78,28 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 			<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.((isset($this->fu_theme) && $this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan."/></span><?php endif ?>
 			<?php if ($p->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.((isset($this->fu_theme) && $this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
 			<?php if ($p->subnum > 0)   : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.((isset($this->fu_theme) && $this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/communicate-icon.png'; ?>" width="16" height="16" title="This post was made in the archive."/></span><?php endif ?>
+		
 		</div>
 	</header>
-
 	<div class="backlink_list"<?php echo (isset($p->backlinks)) ? ' style="display:block"' : '' ?>>
 		<?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $p->num ?>"><?php echo (isset($p->backlinks)) ? implode(' ', $p->backlinks) : '' ?></span>
 	</div>
 
 	<div class="text">
 		<?php echo $p->comment_processed ?>
+	</div>
+	<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
+		<button class="btn btn-mini">Delete</button>
+		<button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			<li><a href="#" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_post"><?php echo _('Remove') ?></a></li>
+			<li><a href="#" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_image"><?php echo _('Remove image') ?></a></li>
+			<li><a href="#" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_user"><?php echo _('Ban user') ?></a></li>
+			<li><a href="#" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_md5"><?php echo _('Ban image') ?></a></li>
+			<li><a href="#" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_report"><?php echo _('Remove report') ?></a></li>
+		</ul>
 	</div>
 </article>
 <br/>

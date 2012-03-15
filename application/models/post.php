@@ -302,8 +302,8 @@ class Post extends CI_Model
 					' . $this->get_sql_report_after_join($board) . '
 				',
 					array(
-						intval(($page * $per_page) - $per_page),
-						intval($per_page)
+					intval(($page * $per_page) - $per_page),
+					intval($per_page)
 					)
 				);
 
@@ -332,8 +332,8 @@ class Post extends CI_Model
 					' . $this->get_sql_report_after_join($board) . '
 				',
 					array(
-						intval(($page * $per_page) - $per_page),
-						intval($per_page)
+					intval(($page * $per_page) - $per_page),
+					intval($per_page)
 					)
 				);
 
@@ -359,8 +359,8 @@ class Post extends CI_Model
 					' . $this->get_sql_report_after_join($board) . '
 				',
 					array(
-						intval(($page * $per_page) - $per_page),
-						intval($per_page)
+					intval(($page * $per_page) - $per_page),
+					intval($per_page)
 					)
 				);
 
@@ -389,11 +389,11 @@ class Post extends CI_Model
 		if ($query->num_rows() == 0)
 		{
 			return array(
-				'result'    => array(
-					'op'    => array(),
+				'result' => array(
+					'op' => array(),
 					'posts' => array()
 				),
-				'pages'     => $pages
+				'pages' => $pages
 			);
 		}
 
@@ -457,7 +457,7 @@ class Post extends CI_Model
 				foreach ($threads as $parent => $count)
 				{
 					if ($parent == $post_num)
-						{
+					{
 						$result[$post_num]['omitted'] = ($count['replies'] - 5);
 						$result[$post_num]['images_omitted'] = $count['images'];
 					}
@@ -766,8 +766,8 @@ class Post extends CI_Model
 
 		return FALSE;
 	}
-	
-	
+
+
 	function get_by_doc_id($board, $doc_id)
 	{
 		$query = $this->db->query('
@@ -777,7 +777,7 @@ class Post extends CI_Model
 				LIMIT 0, 1;
 			',
 			array($doc_id));
-		
+
 		if ($query->num_rows() == 0)
 		{
 			return FALSE;
@@ -830,22 +830,22 @@ class Post extends CI_Model
 
 		return $results;
 	}
-	
-	
+
+
 	function get_reports($page)
 	{
 		$this->load->model('report');
 		$reports = $this->report->get_reports($page);
-		
+
 		$posts = array();
-		foreach($reports as $report)
+		foreach ($reports as $report)
 		{
 			$posts[] = array(
-				'board_id' => $report->board_id, 
+				'board_id' => $report->board_id,
 				'doc_id' => array($report->doc_id)
-				);
+			);
 		}
-		
+
 		return $this->get_multi_posts($posts);
 	}
 
@@ -862,8 +862,8 @@ class Post extends CI_Model
 		/**
 		 * Default actions applied to the resuts.
 		 */
-		$clean		= TRUE;
-		$process	= TRUE;
+		$clean = TRUE;
+		$process = TRUE;
 
 		/**
 		 * Override any defaults set by the function.
@@ -895,12 +895,14 @@ class Post extends CI_Model
 			 * Establish connection to SphinxQL via MySQL Library.
 			 */
 			$this->load->library('SphinxQL');
-			
-			$sphinx_ip_port = explode(':', get_setting('fu_sphinx_listen', FOOL_PREF_SPHINX_LISTEN));
-			
+
+			$sphinx_ip_port = explode(':',
+				get_setting('fu_sphinx_listen', FOOL_PREF_SPHINX_LISTEN));
+
 			$this->sphinxql->set_server($sphinx_ip_port[0], $sphinx_ip_port[1]);
 
-			$this->db->from(array($board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta'), FALSE, FALSE);
+			$this->db->from(array($board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta'),
+				FALSE, FALSE);
 
 			if ($search['subject'])
 			{
@@ -912,7 +914,7 @@ class Post extends CI_Model
 				{
 					return array(
 						'error' => _
-						('The text you were searching for was too short. It must be at least two characters long.')
+							('The text you were searching for was too short. It must be at least two characters long.')
 					);
 				}
 
@@ -1056,7 +1058,7 @@ class Post extends CI_Model
 				{
 					return array(
 						'error' => _
-						('The text you were searching for was too short. It must be at least two characters long.')
+							('The text you were searching for was too short. It must be at least two characters long.')
 					);
 				}
 				$this->db->like('comment', rawurldecode($search['text']));
@@ -1065,7 +1067,6 @@ class Post extends CI_Model
 			{
 				$this->db->like('name', rawurldecode($search['username']))
 					->use_index('name_index');
-
 			}
 			if ($search['tripcode'])
 			{
@@ -1287,9 +1288,6 @@ class Post extends CI_Model
 
 		return array('image_href' => $image_href);
 	}
-	
-	
-	
 
 
 	function check_thread($board, $num)
@@ -1684,7 +1682,7 @@ class Post extends CI_Model
 				$num, $num,
 				$num, time(), $postas, $email,
 				$name, $trip, $subject, $comment, $password,
-					inet_pton($this->input->ip_address())
+				inet_pton($this->input->ip_address())
 				)
 			);
 		}
@@ -1890,7 +1888,8 @@ class Post extends CI_Model
 			SELECT num, subnum, parent, doc_id, timestamp, email, media_hash
 			FROM ' . $this->get_table($board) . '
 			WHERE parent = ? OR num = ?
-		', array(intval($num), intval($num)));
+		',
+			array(intval($num), intval($num)));
 
 		$doc_id_p = 0;
 		$parent = 0;
@@ -2068,7 +2067,8 @@ class Post extends CI_Model
 		$post->thumbnail_href = $this->get_image_href($board, $post, TRUE);
 		$post->image_href = $this->get_image_href($board, $post);
 		$post->remote_image_href = $this->get_remote_image_href($board, $post);
-		$post->safe_media_hash = substr(urlsafe_b64encode(urlsafe_b64decode($post->media_hash)), 0, -2);
+		$post->safe_media_hash = substr(urlsafe_b64encode(urlsafe_b64decode($post->media_hash)),
+			0, -2);
 		$post->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE',
 				$this->get_comment_processed($board, $post));
 		$post->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
@@ -2501,10 +2501,15 @@ class Post extends CI_Model
 		else
 		{
 			$number = $row->media_filename;
-			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url')
-						: site_url() . FOOLFUUKA_BOARDS_DIRECTORY) .
-				'/' . $board->shortname . '/' . 'img' . '/' . substr($number, 0, 4) .
-				'/' . substr($number, 4, 2) . '/' . $row->media_filename;
+
+			if (file_exists('content/boards/' . $board->shortname . '/' . 'img' . '/' . substr($number,
+						0, 4) . '/' . substr($number, 4, 2) . '/' . $row->media_filename))
+				return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url')
+							: site_url() . FOOLFUUKA_BOARDS_DIRECTORY) .
+					'/' . $board->shortname . '/' . 'img' . '/' . substr($number, 0, 4) .
+					'/' . substr($number, 4, 2) . '/' . $row->media_filename;
+			else
+				return site_url() . 'content/themes/default/images/image_missing.jpg';
 		}
 	}
 
@@ -2745,6 +2750,5 @@ class Post extends CI_Model
 
 		return $matches[0];
 	}
-
 
 }

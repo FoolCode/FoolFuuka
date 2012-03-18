@@ -238,8 +238,12 @@ class Chan extends Public_Controller
 		// Initialize default values for valid
 		$default = array(
 			'variables' => array('disable_headers', 'is_page', 'is_last50', 'is_statistics', '@modifiers'),
-			'partials' => array('post_reply', 'post_thread', 'tools_post', 'tools_view'),
-			'backend_vars' => array('site_url' => site_url(), 'api_url' => site_url())
+			'partials' => array('post_thread', 'tools_post', 'tools_view'),
+			'backend_vars' => array(
+				'site_url' => site_url(), 
+				'api_url' => site_url(), 
+				'csrf_hash' => $this->security->get_csrf_hash()
+			)
 		);
 
 		// include the board shortname in the backend_vars if it's set
@@ -474,10 +478,10 @@ class Chan extends Public_Controller
 		$this->_set_parameters(
 			array(
 			'thread_id' => $num,
-			'posts' => $thread
+			'posts' => $thread,
 			),
 			array(
-			'post_reply' => TRUE,
+			'post_thread' => TRUE,
 			'tools_post' => TRUE,
 			'tools_view' => TRUE
 			)
@@ -1059,7 +1063,7 @@ class Chan extends Public_Controller
 			show_404();
 
 		// The form has been submitted to be validated and processed.
-		if ($this->input->post('reply_gattai') == 'Submit')
+		if ($this->input->post('reply_gattai') || $this->input->post('reply_gattai_spoilered'))
 		{
 			// Validate Form!
 			$this->load->library('form_validation');
@@ -1121,7 +1125,7 @@ class Chan extends Public_Controller
 				'email' => $this->input->post('reply_elitterae'),
 				'subject' => $this->input->post('reply_talkingde'),
 				'comment' => $this->input->post('reply_chennodiscursus'),
-				'spoiler' => $this->input->post('reply_spoiler'),
+				'spoiler' => $this->input->post('reply_gattai_spoilered')?1:$this->input->post('reply_spoiler'),
 				'password' => $this->input->post('reply_nymphassword'),
 				'postas' => (($this->tank_auth->is_allowed()) ? $this->input->post('reply_postas')
 						: 'N'),
@@ -1302,7 +1306,7 @@ class Chan extends Public_Controller
 
 				$this->load->library('upload', $media_config);
 
-				if ($this->upload->do_upload('image'))
+				if ($this->upload->do_upload('file_image'))
 				{
 					$data['media'] = $this->upload->data();
 				}

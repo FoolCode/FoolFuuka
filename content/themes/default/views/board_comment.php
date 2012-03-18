@@ -88,11 +88,13 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 	<div class="text">
 		<?php echo $p->comment_processed ?>
 	</div>
+	<?php if($this->tank_auth->is_allowed()) : ?>
 	<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
 		<button class="btn btn-mini">Delete</button>
 		<button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
 			<span class="caret"></span>
 		</button>
+		
 		<ul class="dropdown-menu">
 			<li><a href="#" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_post"><?php echo _('Remove') ?></a></li>
 			<li><a href="#" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_image"><?php echo _('Remove image') ?></a></li>
@@ -101,5 +103,6 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 			<li><a href="#" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_report"><?php echo _('Remove report') ?></a></li>
 		</ul>
 	</div>
+	<?php endif; ?>
 </article>
 <br/>

@@ -1576,7 +1576,7 @@ class Post extends CI_Model
 			WHERE ip = ?
 			LIMIT 0,1
 		',
-			array(inet_ptod($this->input->ip_address())));
+			array(inet_pton($this->input->ip_address())));
 
 		if ($query->num_rows() > 0)
 		{
@@ -1607,8 +1607,8 @@ class Post extends CI_Model
 					return array('error' => _('You\'re posting again the same comment as the last time!'));
 				}
 
-				if (time() - $row->lastpost < 10 &&
-					time() - $row->lastpost > 0 &&
+				if (time() - $row->timestamp < 10 &&
+					time() - $row->timestamp > 0 &&
 					!$this->tank_auth->is_allowed()) // 10 seconds
 				{
 					return array('error' => 'You must wait at least 10 seconds before posting again.');
@@ -2271,7 +2271,7 @@ class Post extends CI_Model
 				return site_url() . 'content/themes/default/images/banned-image.png';
 			}
 
-			return '';
+			return site_url() . 'content/themes/default/images/banned-image.png';
 		}
 		/**
 		 * End Check

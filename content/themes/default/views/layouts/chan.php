@@ -128,12 +128,6 @@
 								</li>
 								<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo _('Stats') ?></a>
 								</li>
-								<li>
-									<a href="<?php echo site_url(array($board->shortname, 'by_thread')) ?>"><?php echo _('By thread') ?></a>
-								</li>
-
-
-
 							</ul>
 
 							<?php echo $template['partials']['tools_view']; ?>

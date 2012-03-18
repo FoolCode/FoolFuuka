@@ -16,7 +16,7 @@ class Chan extends REST_Controller
 	 */
 	function threads_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if ($this->get('page'))
 		{
@@ -85,7 +85,7 @@ class Chan extends REST_Controller
 	 */
 	function ghost_threads_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if ($this->get('page'))
 		{
@@ -155,7 +155,7 @@ class Chan extends REST_Controller
 	 */
 	function thread_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if (!$this->get('num'))
 		{
@@ -215,7 +215,7 @@ class Chan extends REST_Controller
 
 	function thread_ghosts_posts_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if (!$this->get('num'))
 		{
@@ -255,7 +255,7 @@ class Chan extends REST_Controller
 
 	function ghost_posts_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if ($this->get('page'))
 		{
@@ -320,8 +320,8 @@ class Chan extends REST_Controller
 		{
 			$this->response(array('error' => _('Forbidden')), 403);
 		}
-
-		$this->_check_board();
+		
+		$this->check_board();
 
 		if (!$this->post('actions') || !$this->post('doc_id'))
 		{

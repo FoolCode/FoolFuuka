@@ -880,33 +880,5 @@ class REST_Controller extends Public_Controller
 	}
 
 
-	/*
-	 * 
-	 * FUNCTIONS ADDED FOR FOOLSLIDE
-	 * 
-	 */
-
-	/*
-	 * Commodity to check that the ID is not wrong and return a coherent error
-	 * 
-	 * @author Woxxy
-	 */
-	function _check_board()
-	{
-		if (!$this->get('board'))
-		{
-			$this->response(array('error' => _('You didn\'t select a board')), 404);
-		}
-			
-		$board = new Board();
-		if(!$this->radix->set_selected_by_shortname($this->get('board')))
-		{
-			$this->response(array('error' => _('The board you selected doesn\'t exist')), 404);
-		}
-
-		$this->load->model('post');
-	}
-
-
 
 }

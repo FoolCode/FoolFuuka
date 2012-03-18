@@ -21,6 +21,7 @@ class Report extends CI_Model
 				'type' => 'open',
 			),
 			'board' => array(
+				'label' => _('Board shortname'),
 				'validation_func' => function($input, $form_internal)
 				{
 					// no need to check if isset, we wouldn't be here if
@@ -42,6 +43,7 @@ class Report extends CI_Model
 			),
 			'board_id' => array(
 				'type' => 'hidden',
+				'label' => _('Board ID'),
 				'database' => TRUE,
 				'validation' => 'is_int',
 				'validation_func' => function($input, $form_internal)
@@ -59,8 +61,8 @@ class Report extends CI_Model
 					if (!is_object($input['board_id']))
 					{
 						$CI = & get_instance();
-						$query = $CI->db->where('id', $input['board_id'])->get('boards');
-						if ($query->num_rows() != 1)
+						$board = $CI->radix->get_by_id($input['board_id']);
+						if ($board == FALSE)
 						{
 							return array(
 								'error_code' => 'BOARD_ID_NOT_FOUND',
@@ -73,12 +75,45 @@ class Report extends CI_Model
 					return array('success' => TRUE, 'push' => array('board_id' => $board->id));
 				}
 			),
-			'doc_id' => array(
+			'post' => array(
 				'type' => 'hidden',
-				'database' => TRUE,
-				'validation' => 'required|is_int',
+				'validation' => 'trim',
+				'label' => _('Post number'),
 				'validation_func' => function($input, $form_internal)
 				{
+					// check that the doc_id of the post exists
+					$CI = & get_instance();
+					$board = $CI->radix->get_by_id($input['board_id']);
+					$post = $CI->post->get_by_num($board, $input['post']);
+					
+					if ($post === FALSE)
+					{
+						return array(
+							'error_code' => 'POST_NUM_NOT_FOUND',
+							'error' => _('Couldn\'t find the post with the submitted post number.'),
+							'critical' => TRUE
+						);
+					}
+					
+					return array('success' => TRUE, 'push' => array('doc_id' => $post->doc_id));
+				}
+			),
+			'doc_id' => array(
+				'type' => 'hidden',
+				'label' => _('Post ID'),
+				'database' => TRUE,
+				'validation' => 'is_int',
+				'validation_func' => function($input, $form_internal)
+				{
+					if(!isset($input['doc_id']))
+					{
+						return array(
+							'error_code' => 'POST_ID_NOT_SENT',
+							'error' => _('You didn\'t send a post ID.'),
+							'critical' => TRUE
+						);
+					}
+				
 					// check that the doc_id of the post exists
 					$CI = & get_instance();
 					$board = $CI->radix->get_by_id($input['board_id']);
@@ -97,6 +132,7 @@ class Report extends CI_Model
 			),
 			'reason' => array(
 				'type' => 'textarea',
+				'label' => _('Reason'),
 				'database' => TRUE,
 				'validation' => 'trim|max_length[512]'
 			),

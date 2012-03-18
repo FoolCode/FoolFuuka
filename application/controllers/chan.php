@@ -114,8 +114,8 @@ class Chan extends Public_Controller
 		if (!$this->input->is_ajax_request())
 			show_404();
 
-		if (!is_numeric($num) || !$num = 0)
-			show_404();
+		if (!is_natural($num) || $num == 0)
+			show_404();	
 
 		switch ($action)
 		{
@@ -129,21 +129,19 @@ class Chan extends Public_Controller
 				break;
 
 			case 'report':
+				$this->load->model('report');
 				$post = array(
-					'board' => get_selected_radix()->id,
-					'post' => $this->input->post('post'),
+					'board_id' => get_selected_radix()->id,
+					'doc_id' => $this->input->post('post'),
 					'reason' => $this->input->post('reason')
 				);
 
-				/*
-				  $result = $this->post->report(get_selected_radix(), $post);
-				 */
+				$result = $this->report->add($post);
 
-				$report = new Report();
-				if (!$report->add($post))
+				if (isset($result['error']))
 				{
 					$this->output
-						->set_output(json_encode(array('status' => 'failed', 'reason' => 'Sorry, failed to report post to the moderators. Please try again later.')));
+						->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
 					return FALSE;
 				}
 				$this->output

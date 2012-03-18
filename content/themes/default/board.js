@@ -177,7 +177,7 @@ var bindFunctions = function()
 					var loading = modal.find(".modal-loading");
 					var action = $(this).data("action");
 					var _post = modal.find(".modal-post-id").val();
-					var _href = $(this).data(action) + '/' + _post + '/';
+					var _href = $(this).data(action) + _post + '/';
 
 					if (action == 'report') {
 						var _data = {
@@ -201,7 +201,7 @@ var bindFunctions = function()
 					jQuery.post(_href, _data, function(result) {
 						loading.hide();
 						if (result.status == 'failed') {
-							modal.find(".modal-error").html('<div class="alert-message error fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
+							modal.find(".modal-error").html('<div class="alert alert-error" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
 							return false;
 						}
 						modal.modal('hide');

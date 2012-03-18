@@ -767,6 +767,44 @@ class Post extends CI_Model
 		return FALSE;
 	}
 
+	
+	function get_by_num($board, $num)
+	{
+		$subnum = 0;
+		if(strpos($num, '_') !== FALSE)
+		{
+			$num_array = explode('_', $num);
+			if(count($num_array) != 2)
+			{
+				return FALSE;
+			}
+			
+			$num = $num_array[0];
+			$subnum = intval($num_array[1]);
+		}
+		
+		$num = intval($num);
+		
+		$query = $this->db->query('
+				SELECT * FROM ' . $this->get_table($board) . '
+				' . $this->get_sql_report($board) . '
+				WHERE num = ? AND subnum = ?
+				LIMIT 0, 1;
+			',
+			array($num, $subnum));
+
+		if ($query->num_rows() == 0)
+		{
+			return FALSE;
+		}
+
+		foreach ($query->result() as $post)
+		{
+			return $post;
+		}
+
+		return FALSE;
+	}
 
 	function get_by_doc_id($board, $doc_id)
 	{
@@ -1804,7 +1842,7 @@ class Post extends CI_Model
 
 			// If reports exist, remove
 			$this->db->delete('reports',
-				array('board' => $board->id, 'post' => $row->doc_id));
+				array('board_id' => $board->id, 'doc_id' => $row->doc_id));
 
 			// nobody will post in here anymore, so we can take it easy
 			// get all child posts
@@ -1828,7 +1866,7 @@ class Post extends CI_Model
 
 					// If reports exist, remove
 					$this->db->delete('reports',
-						array('board' => $board->id, 'post' => $t->doc_id));
+						array('board_id' => $board->id, 'doc_id' => $t->doc_id));
 				}
 
 				$this->db->query('
@@ -1873,7 +1911,7 @@ class Post extends CI_Model
 
 			// If reports exist, remove
 			$this->db->delete('reports',
-				array('board' => $board->id, 'post' => $row->doc_id));
+				array('board_id' => $board->id, 'doc_id' => $row->doc_id));
 			$this->recalculate_thread($board, ($row->parent ? $row->parent : $row->num));
 			return array('success' => TRUE);
 		}

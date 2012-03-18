@@ -119,8 +119,17 @@
 								</li>
 							</ul>
 							<ul class="nav">
-								<li>
-									<a href="<?php echo site_url(array($board->shortname)) ?>"><?php echo _('Index') ?></a>
+								<li style="padding-right:0px;">
+									<a href="<?php echo site_url(array($board->shortname)) ?>" style="padding-right:4px;"><?php echo _('Index') ?></a>
+								</li>
+								<li class="dropdown"">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:2px; padding-right:4px;">
+										<b class="caret"></b>
+									</a>
+									<ul class="dropdown-menu" style="margin-left:-9px">
+										<li><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_post')) ?>"><?php echo _('By post') ?></a></li>
+										<li><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_thread')) ?>"><?php echo _('By thread') ?></a></li>
+									</ul>
 								</li>
 								<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo _('Ghost') ?></a>
 								</li>

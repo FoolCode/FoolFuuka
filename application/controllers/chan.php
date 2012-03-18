@@ -115,7 +115,7 @@ class Chan extends Public_Controller
 			show_404();
 
 		if (!is_natural($num) || $num == 0)
-			show_404();	
+			show_404();
 
 		switch ($action)
 		{
@@ -238,8 +238,8 @@ class Chan extends Public_Controller
 			'variables' => array('disable_headers', 'is_page', 'is_last50', 'is_statistics', '@modifiers'),
 			'partials' => array('post_thread', 'tools_post', 'tools_view'),
 			'backend_vars' => array(
-				'site_url' => site_url(), 
-				'api_url' => site_url(), 
+				'site_url' => site_url(),
+				'api_url' => site_url(),
 				'csrf_hash' => $this->security->get_csrf_hash()
 			)
 		);
@@ -341,9 +341,12 @@ class Chan extends Public_Controller
 
 		// Fetch the latest posts.
 		$page = intval($page);
+		
 		$posts = $this->post->get_latest(get_selected_radix(), $page,
-			(!empty($options)) ? $options : array('per_page' => 24, 'type' => ($by_thread
-						? 'by_thread' : 'by_post')));
+			(!empty($options)) ? 
+					$options : 
+					array('per_page' => 24, 'type' => 
+				($this->input->cookie('foolfuuka_default_theme_by_thread') ? 'by_thread' : 'by_post')));
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
@@ -374,9 +377,17 @@ class Chan extends Public_Controller
 	}
 
 
-	public function by_thread($page = 1)
+	public function by_thread()
 	{
-		$this->page($page, TRUE);
+		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1', 60 * 60 * 24 * 30);
+		redirect(get_selected_radix()->shortname);
+	}
+	
+	
+	public function by_post()
+	{
+		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1','');
+		redirect(get_selected_radix()->shortname);
 	}
 
 
@@ -1123,7 +1134,7 @@ class Chan extends Public_Controller
 				'email' => $this->input->post('reply_elitterae'),
 				'subject' => $this->input->post('reply_talkingde'),
 				'comment' => $this->input->post('reply_chennodiscursus'),
-				'spoiler' => $this->input->post('reply_gattai_spoilered')?1:$this->input->post('reply_spoiler'),
+				'spoiler' => $this->input->post('reply_gattai_spoilered') ? 1 : $this->input->post('reply_spoiler'),
 				'password' => $this->input->post('reply_nymphassword'),
 				'postas' => (($this->tank_auth->is_allowed()) ? $this->input->post('reply_postas')
 						: 'N'),

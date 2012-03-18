@@ -102,18 +102,26 @@
 										<b class="caret"></b>
 									</a>
 									<ul class="dropdown-menu">
+										<?php if($this->radix->get_archives()) : ?>
+										<li class="nav-header"><?php echo _('Archives') ?></li>
 										<?php
 										foreach ($this->radix->get_archives() as $key => $item)
 										{
-											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . ' (archive)</a></li>';
+											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
 										}
+										endif;
+										if($this->radix->get_boards()) : 
 										?>
+										
 										<li class="divider"></li>
+										<li class="nav-header"><?php echo _('Boards') ?></li>
 										<?php
 										foreach ($this->radix->get_boards() as $key => $item)
 										{
 											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
 										}
+										
+										endif;
 										?>
 									</ul>
 								</li>

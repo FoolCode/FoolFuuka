@@ -57,6 +57,8 @@ if (!defined('BASEPATH'))
 		?>
 				</div>
 
+				
+				<?php if(!get_selected_radix()->archive) : ?>
 				<div class="input-prepend">
 					<label class="add-on" for="reply_file"><?php echo _('File') ?></label><?php
 				echo form_upload(array(
@@ -66,6 +68,7 @@ if (!defined('BASEPATH'))
 				));
 				echo form_hidden('MAX_FILE_SIZE', 3072);
 		?>
+				<?php endif; ?>
 				</div>
 				<div class="input-prepend">
 					<label class="add-on" for="reply_nymphassword"><?php echo _('Password') ?></label><?php

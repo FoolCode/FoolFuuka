@@ -278,7 +278,7 @@ class Theme_Controller
 
 				$this->CI->load->library('upload', $media_config);
 
-				if ($this->CI->upload->do_upload('image'))
+				if ($this->CI->upload->do_upload('file_image'))
 				{
 					$data['media'] = $this->CI->upload->data();
 				}

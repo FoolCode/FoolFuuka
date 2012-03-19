@@ -5,12 +5,64 @@ if (!defined('BASEPATH'))
 
 <?php if ((isset($enabled_post_thread) && $enabled_post_thread && !get_selected_radix()->archive) ||
 	(isset($thread_id))) : ?>
-	<section class="thread_form">
+<div class="thread_form_wrap clearfix">
+	<section class="thread_form clearfix">
 		<?php
 		echo form_open_multipart(get_selected_radix()->shortname . '/submit');
 		echo form_hidden('reply_numero', isset($thread_id)?$thread_id:0);
 		?>
 		<fieldset>
+			
+			<?php if(!isset($thread_id) || $thread_id == 0) : ?>
+			<div class="rules pull-right">
+				<p>Rules and uses:</p>
+				<ul>
+					<li>Currently this is a strictly SAFE FOR WORK board.</li>
+					<li>Use this board not to create meta threads on 4chan.</li>
+					<li>It can be used as backup when 4chan is down.</li>
+					<li>You can use this board for your projects. You can function and discuss here, NOT advertise here.</li>
+					<li>You are responsible for your posts and images.</li>
+					<li>Max image size: 3 MegaBytes</li>
+				</ul>
+			
+			
+			<div class="btn-group">
+
+				<?php
+				echo form_reset(array('class' => 'btn', 'name' => 'reset', 'value' => _('Reset')));
+				
+				$submit_array = array(
+					'name' => 'reply_gattai_spoilered',
+					'value' => _('Submit spoilered'),
+					'class' => 'btn',
+				);
+
+				if (isset($thread_id) && $thread_id > 0)
+				{
+					$submit_array['data-function'] = 'comment';
+					$submit_array['data-post'] = $thread_id;
+				}
+				echo form_submit($submit_array);
+				
+				$submit_array = array(
+					'name' => 'reply_gattai',
+					'value' => _('Submit'),
+					'class' => 'btn btn-primary',
+				);
+
+				if (isset($thread_id) && $thread_id > 0)
+				{
+					$submit_array['data-function'] = 'comment';
+					$submit_array['data-post'] = $thread_id;
+				}
+				echo form_submit($submit_array);
+				
+				?>
+				
+			</div>
+			</div>
+			<?php endif; ?>
+			
 
 			<div class="input-prepend">
 				<label class="add-on" for="reply_talkingde"><?php echo _('Subject') ?></label><?php
@@ -116,21 +168,9 @@ if (!defined('BASEPATH'))
 				?>
 			</div>
 
-			<?php if(!isset($thread_id) || $thread_id == 0) : ?>
-			<div class="rules">
-				<p>Rules and uses:</p>
-				<ul>
-					<li>Currently this is a strictly SAFE FOR WORK board.</li>
-					<li>Use this board not to create meta threads on 4chan.</li>
-					<li>It can be used as backup when 4chan is down.</li>
-					<li>You can use this board for your projects. You can function and discuss here, NOT advertise here.</li>
-					<li>You are responsible for your posts and images.</li>
-					<li>Max image size: 3 MegaBytes</li>
-				</ul>
-			</div>
-			<?php endif; ?>
+			
 
-
+			<?php if(isset($thread_id)) : ?>
 			<div class="btn-group" style="clear:both">
 
 				<?php
@@ -165,6 +205,7 @@ if (!defined('BASEPATH'))
 				?>
 				
 			</div>
+			<?php endif ?>
 
 			<div id="reply_ajax_notices"></div>
 			<?php if(isset($reply_errors)) : ?>
@@ -174,4 +215,5 @@ if (!defined('BASEPATH'))
 		</fieldset>
 		<?php echo form_close() ?>
 	</section>
+</div>
 <?php endif; ?>

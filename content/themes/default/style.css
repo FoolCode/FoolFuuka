@@ -116,6 +116,13 @@ body.theme_default {
 	padding: 0 10px;
 }
 
+.theme_default .dropdown-menu li > a:hover, 
+.theme_default .dropdown-menu .active > a, 
+.theme_default .dropdown-menu .active > a:hover {
+	background:#6A836F;
+}
+
+
 .theme_default .search-dropdown.active {
 	box-shadow: inset 0px 0px 10px #000;
 	-webkit-box-shadow: inset 0px 0px 10px #000;
@@ -280,10 +287,14 @@ body.theme_default {
 .theme_default article.thread {
 	padding: 15px 0;
 	word-wrap: break-word;
-	border-bottom:1px solid #364041;
-	border-bottom:1px solid rgba(0,0,0,0.5);
+	border-top:1px solid #364041;
+	border-top:1px solid rgba(0,0,0,0.5);
 }
 
+
+.theme_default article.thread:nth-of-type(1) {
+	border-top:none;
+}
 
 .theme_default article.thread > header {
 	overflow:hidden;
@@ -515,20 +526,33 @@ body.theme_default {
 	border-bottom: 1px dotted #000;
 }
 
-.theme_default .thread_form {
+.theme_default .thread_form_wrap {
 	background:#d6f0da;
-	border-bottom:1px solid #364041;
-	border-bottom:1px solid rgba(0,0,0,0.5);
-	padding:18px 20px 0px 20px;
+	border-bottom:2px solid #364041;
+	padding:18px 20px 5px 20px;
+}
+
+
+.theme_default .thread_form {
 	position:relative;
+	width: 980px;
+	margin: 0 auto;
+}
+
+.theme_default .thread_form form {
+	margin-bottom: 0px;
+}
+
+
+.theme_default article.thread .thread_form_wrap {
+	border: 2px solid #364041;
+	float:left;
+	margin: 20px;
+	padding-bottom:20px;
 }
 
 .theme_default article.thread .thread_form {
-	margin:10px 20px;
-	border-top: 2px solid #364041;
-	border-left: 2px solid #364041;
-	border-right:2px solid #364041;
-	float:left;
+	width:auto;
 }
 
 
@@ -540,8 +564,8 @@ body.theme_default {
 
 .theme_default .thread_form .comment_label {
 	position:absolute;
-	left:570px;
-	top: 29px;
+	left:550px;
+	top: 11px;
 	width:70px;
 	background-color: #EEEEEE;
 	border: 1px solid #CCCCCC;
@@ -560,7 +584,6 @@ body.theme_default {
 	-webkit-border-top-right-radius: 3px;
 	-moz-border-radius-topleft: 3px;
 	-moz-border-radius-topright: 3px;
-	
 }
 
 .theme_default .thread_form input[type=text], 
@@ -575,6 +598,7 @@ body.theme_default {
 
 .theme_default .thread_form label {
 	width:70px;
+	color:#888;
 }
 
 .theme_default .thread_form input[type=file], 
@@ -606,7 +630,6 @@ body.theme_default {
 
 .theme_default .thread_form .rules {
 	font-size:11px;
-	float:left;
 	max-width:300px;
 	line-height:10px;
 	padding: 0 10px;

@@ -1753,7 +1753,6 @@ class Post extends CI_Model
 			}
 		}
 
-		$this->recalculate_thread($board, $num);
 		return array('success' => TRUE, 'posted' => $posted);
 	}
 
@@ -1803,7 +1802,6 @@ class Post extends CI_Model
 			// If reports exist, remove
 			$this->db->delete('reports',
 				array('board' => $board->id, 'post' => $row->doc_id));
-			$this->recalculate_thread($board, ($row->parent ? $row->parent : $row->num));
 			return array('success' => TRUE);
 		}
 
@@ -1877,7 +1875,6 @@ class Post extends CI_Model
 					array($row->num));
 			}
 
-			$this->recalculate_thread($board, ($row->parent ? $row->parent : $row->num));
 			return array('success' => TRUE);
 		}
 		else
@@ -1912,94 +1909,10 @@ class Post extends CI_Model
 			// If reports exist, remove
 			$this->db->delete('reports',
 				array('board_id' => $board->id, 'doc_id' => $row->doc_id));
-			$this->recalculate_thread($board, ($row->parent ? $row->parent : $row->num));
 			return array('success' => TRUE);
 		}
 
 		return FALSE;
-	}
-
-
-	function recalculate_thread($board, $num)
-	{
-		$query = $this->db->query('
-			SELECT num, subnum, parent, doc_id, timestamp, email, media_hash
-			FROM ' . $this->get_table($board) . '
-			WHERE parent = ? OR num = ?
-		',
-			array(intval($num), intval($num)));
-
-		$doc_id_p = 0;
-		$parent = 0;
-		$time_op = 0;
-		$time_last = 0;
-		$time_bump = 0;
-		$time_ghost = NULL;
-		$time_ghost_bump = NULL;
-		$nreplies = 0;
-		$nimages = 0;
-
-		foreach ($query->result() as $row)
-		{
-			if ($row->parent == 0)
-			{
-				$doc_id_p = $row->doc_id;
-				$parent = $row->num;
-				$time_op = $row->timestamp;
-			}
-
-			if ($row->timestamp > $time_last)
-			{
-				$time_last = $row->timestamp;
-			}
-
-			if ($row->email != 'sage' && $row->timestamp > $time_bump)
-			{
-				$time_bump = $row->timestamp;
-			}
-
-			if ($row->subnum > 0 && (is_null($time_ghost) || $row->timestamp > $time_ghost))
-			{
-				$time_ghost = $row->timestamp;
-			}
-
-			if ($row->subnum > 0 && $row->email != 'sage' &&
-				(is_null($time_ghost_bump) || $row->timestamp > $time_ghost_bump))
-			{
-				$time_ghost_bump = $row->timestamp;
-			}
-
-			$nreplies++;
-
-			if ($row->media_hash)
-			{
-				$nimages++;
-			}
-
-			$query->free_result();
-
-			$this->db->query('
-				INSERT INTO ' . $this->get_table_threads($board) . '
-				(doc_id_p, parent, time_op, time_last, time_bump,
-					time_ghost, time_ghost_bump, nreplies, nimages)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-				ON DUPLICATE KEY UPDATE
-					parent = VALUES(parent),
-					time_op = VALUES(time_op),
-					time_last = VALUES(time_last),
-					time_bump = VALUES(time_bump),
-					time_ghost = VALUES(time_ghost),
-					time_ghost_bump = VALUES(time_ghost_bump),
-					nreplies = VALUES(nreplies),
-					nimages = VALUES(nimages)
-			',
-				array(
-				$doc_id_p, $parent, $time_op, $time_last,
-				$time_bump, $time_ghost, $time_ghost_bump,
-				$nreplies, $nimages
-				)
-			);
-		}
 	}
 
 

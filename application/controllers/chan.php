@@ -956,11 +956,22 @@ class Chan extends Public_Controller
 			$this->load->helper('date');
 			$this->template->title(get_selected_radix()->formatted_title .
 				' &raquo; ' . _('Statistics') . ': ' . $stats['info']['name']);
+			
+			if(isset($stats['info']['frequency']))
+			{
+				$section_title = sprintf(_('Statistics: %s (Next Update in %s)'),
+					$stats['info']['name'],
+					timespan($stats['info']['frequency'] + strtotime($stats['timestamp'])));
+			}
+			else
+			{
+				$section_title = sprintf(_('Statistics: %s'),
+					$stats['info']['name']);
+			}
+			
 			$this->_set_parameters(
 				array(
-				'section_title' => sprintf(_('Statistics: %s (Next Update in %s)'),
-					$stats['info']['name'],
-					timespan($stats['info']['frequency'] + strtotime($stats['timestamp']))),
+				'section_title' => $section_title,
 				'is_statistics' => TRUE,
 				'is_statistics_list' => FALSE,
 				'info' => $stats['info'],

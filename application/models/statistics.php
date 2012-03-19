@@ -3,10 +3,12 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
+
 class Statistics extends CI_Model
 {
 
 	var $stats = array();
+
 
 	function __construct($id = NULL)
 	{
@@ -15,13 +17,18 @@ class Statistics extends CI_Model
 	}
 
 
-	function get_table($board)
+	function get_table($board, $suffix = '')
 	{
+		if ($suffix != '')
+		{
+			$suffix = '_' . $suffix;
+		}
 		if (get_setting('fs_fuuka_boards_db'))
 		{
-			return $this->table = $this->db->protect_identifiers(get_setting('fs_fuuka_boards_db')) . '.' . $this->db->protect_identifiers($board->shortname);
+			return $this->table = $this->db->protect_identifiers(get_setting('fs_fuuka_boards_db')) . '.' . $this->db->protect_identifiers($board->shortname . $suffix);
 		}
-		return $this->table = $this->db->protect_identifiers('board_' . $board->shortname, TRUE);
+		return $this->table = $this->db->protect_identifiers('board_' . $board->shortname . $suffix,
+			TRUE);
 	}
 
 
@@ -29,15 +36,14 @@ class Statistics extends CI_Model
 	{
 		$this->stats = array(
 			'availability' => array(
-				'location' =>'availability',
+				'location' => 'availability',
 				'name' => _('Availability'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequency' => 60 * 60 * 6, // every 6 hours
 				'interface' => 'availability'
 			),
 			'daily_activity' => array(
-				'location' =>'daily_activity',
+				'location' => 'daily_activity',
 				'name' => _('Daily Activity'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
@@ -61,7 +67,7 @@ class Statistics extends CI_Model
 				)
 			),
 			'daily_activity_archive' => array(
-				'location' =>'daily_activity_archive',
+				'location' => 'daily_activity_archive',
 				'name' => _('Daily Activity "Archive"'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
@@ -85,7 +91,7 @@ class Statistics extends CI_Model
 				)
 			),
 			'daily_activity_hourly' => array(
-				'location' =>'daily_activity_hourly',
+				'location' => 'daily_activity_hourly',
 				'name' => _('Daily Activity "Hourly"'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
@@ -110,15 +116,14 @@ class Statistics extends CI_Model
 				)
 			),
 			'image_reposts' => array(
-				'location' =>'image_reposts',
+				'location' => 'image_reposts',
 				'name' => _('Image Reposts'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequency' => 60 * 60 * 24 * 7, // every 7 days
 				'interface' => 'image_reposts'
 			),
 			'karma' => array(
-				'location' =>'karma',
+				'location' => 'karma',
 				'name' => _('Karma'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
@@ -141,16 +146,15 @@ class Statistics extends CI_Model
 					)
 				)
 			),
-			'new_tripfriends' => array(
-				'location' =>'new_tripfriends',
-				'name' => _('New Tripfriends'),
+			'new_users' => array(
+				'location' => 'new_users',
+				'name' => _('New Users'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequency' => 60 * 60 * 24 * 4, // every 4 days
-				'interface' => 'new_tripfriends'
+				'interface' => 'new_users'
 			),
 			'population' => array(
-				'location' =>'population',
+				'location' => 'population',
 				'name' => _('Population'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
@@ -174,43 +178,38 @@ class Statistics extends CI_Model
 				)
 			),
 			'post_count' => array(
-				'location' =>'post_count',
+				'location' => 'post_count',
 				'name' => _('Post Count'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequency' => 60 * 60 * 24 * 4, // every 4 days
 				'interface' => 'post_count'
 			),
 			'post_rate' => array(
-				'location' =>'post_rate',
+				'location' => 'post_rate',
 				'name' => _('Post Rate'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequency' => 60 * 3, // every 3 minutes
 				'interface' => 'post_rate'
 			),
 			'post_rate_archive' => array(
-				'location' =>'post_rate_archive',
+				'location' => 'post_rate_archive',
 				'name' => _('Post Rate "Archive"'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequency' => 60 * 3, // every 3 minutes
 				'interface' => 'post_rate'
 			),
 			'users_online' => array(
-				'location' =>'users_online',
+				'location' => 'users_online',
 				'name' => _('Users Online'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequency' => 60, // every minute
 				'interface' => 'users_online'
 			),
 			'users_online_internal' => array(
-				'location' =>'users_online_internal',
+				'location' => 'users_online_internal',
 				'name' => _('Users Posting in Archive'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
-				'frequency' => 60, // every minute
 				'interface' => 'users_online'
 			)
 		);
@@ -240,20 +239,35 @@ class Statistics extends CI_Model
 	function check_available_stats($stat, $selected_board)
 	{
 		$available = $this->get_available_stats();
+
 		if (isset($available[$stat]) && $available[$stat]['enabled'] === TRUE)
 		{
-			$query = $this->db->query('
-				SELECT *
-				FROM ' . $this->db->protect_identifiers('statistics', TRUE) . '
-				WHERE board_id = ? AND name = ?
-				LIMIT 0,1
-			', array($selected_board->id, $stat));
-			if ($query->num_rows() != 1)
+			if (!isset($available[$stat]['frequency']))
 			{
-				return FALSE;
+				// real time stat
+				$process_function = 'process_' . $stat;
+				$result = $this->$process_function($selected_board);
+
+				return array('info' => $available[$stat], 'data' => json_encode($result));
+			}
+			else
+			{
+				$query = $this->db->query('
+					SELECT *
+					FROM ' . $this->db->protect_identifiers('statistics',
+						TRUE) . '
+					WHERE board_id = ? AND name = ?
+					LIMIT 0,1
+				',
+					array($selected_board->id, $stat));
+				if ($query->num_rows() != 1)
+				{
+					return FALSE;
+				}
+
+				$result = $query->result();
 			}
 
-			$result = $query->result();
 			return array('info' => $available[$stat], 'data' => $result[0]->data, 'timestamp' => $result[0]->timestamp);
 		}
 		return FALSE;
@@ -278,7 +292,8 @@ class Statistics extends CI_Model
 		$stats = $this->db->query('
 			SELECT
 				board_id, name, timestamp
-			FROM ' . $this->db->protect_identifiers('statistics', TRUE) . '
+			FROM ' . $this->db->protect_identifiers('statistics',
+				TRUE) . '
 			ORDER BY timestamp DESC
 		');
 
@@ -288,12 +303,14 @@ class Statistics extends CI_Model
 		$avail = array();
 		foreach ($available as $k => $a)
 		{
-			$avail[] = $k;
+			// get only the non-realtime ones
+			if (isset($available['frequency']))
+				$avail[] = $k;
 		}
 
 		foreach ($boards->all as $board)
 		{
-			if(!is_null($id) && $id != $board->id)
+			if (!is_null($id) && $id != $board->id)
 				continue;
 
 			/**
@@ -303,7 +320,8 @@ class Statistics extends CI_Model
 			foreach ($available as $k => $a)
 			{
 				echo '  ' . $k . ' ';
-				$found = FALSE; $skip = FALSE;
+				$found = FALSE;
+				$skip = FALSE;
 				foreach ($stats->result() as $r)
 				{
 					/**
@@ -380,11 +398,12 @@ class Statistics extends CI_Model
 	{
 		$stat = $this->db->query('
 			SELECT *
-			FROM ' . $this->db->protect_identifiers('statistics', TRUE) . '
+			FROM ' . $this->db->protect_identifiers('statistics',
+				TRUE) . '
 			WHERE board_id = ? and name = ?
 		', array($board_id, $name));
 
-		if($stat->num_rows() == 0)
+		if ($stat->num_rows() == 0)
 			return FALSE;
 
 		$result = $stat->result();
@@ -406,10 +425,12 @@ class Statistics extends CI_Model
 	{
 		// again, to avoid racing conditions, let's also check that the timestamp hasn't been changed
 		$this->db->query('
-			UPDATE ' . $this->db->protect_identifiers('statistics', TRUE) . '
+			UPDATE ' . $this->db->protect_identifiers('statistics',
+				TRUE) . '
 			SET timestamp = ?
 			WHERE board_id = ? AND name = ? AND timestamp = ?
-		', array(date('Y-m-d H:i:s', time() + 600), $board_id, $name, $temp_timestamp)); // hopefully 10 minutes is enough for everything
+		',
+			array(date('Y-m-d H:i:s', time() + 600), $board_id, $name, $temp_timestamp)); // hopefully 10 minutes is enough for everything
 
 		if ($this->db->affected_rows() != 1)
 			return FALSE;
@@ -422,13 +443,15 @@ class Statistics extends CI_Model
 	{
 		$this->db->query('
 			INSERT
-			INTO ' . $this->db->protect_identifiers('statistics', TRUE) . '
+			INTO ' . $this->db->protect_identifiers('statistics',
+				TRUE) . '
 			(board_id, name, timestamp, data)
 			VALUES
 				(?, ?, ?, ?)
 			ON DUPLICATE KEY UPDATE
 				timestamp = VALUES(timestamp), data = VALUES(data);
-		', array($board_id, $name, $timestamp, json_encode($data)));
+		',
+			array($board_id, $name, $timestamp, json_encode($data)));
 	}
 
 
@@ -446,7 +469,8 @@ class Statistics extends CI_Model
 				GROUP BY name, trip
 				HAVING count(*) > 4
 				ORDER BY name, trip
-		', array(time() - 2592000));
+		',
+			array(time() - 2592000));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -465,7 +489,8 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 			GROUP BY FLOOR(timestamp/300)%288
 			ORDER BY FLOOR(timestamp/300)%288;
-		', array(time() - 86400));
+		',
+			array(time() - 86400));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -484,7 +509,8 @@ class Statistics extends CI_Model
 			WHERE timestamp> ? AND subnum != 0
 			GROUP BY FLOOR(timestamp/3600)%24
 			ORDER BY FLOOR(timestamp/3600)%24;
-		', array(time() - 86400));
+		',
+			array(time() - 86400));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -503,7 +529,8 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 			GROUP BY FLOOR(timestamp/3600)%24
 			ORDER BY FLOOR(timestamp/3600)%24;
-		', array(time() - 86400));
+		',
+			array(time() - 86400));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -514,39 +541,11 @@ class Statistics extends CI_Model
 	function process_image_reposts($board)
 	{
 		$query = $this->db->query('
-			SELECT
-				media_hash AS hash, COUNT(media_hash) AS total
-			FROM ' . $this->get_table($board) . '
-			WHERE media_hash IS NOT NULL
-			GROUP BY media_hash
-			ORDER BY COUNT(media_hash) DESC
-			LIMIT 32
-		');
-
-		$sql = array();
-		foreach ($query->result() as $row)
-		{
-			$sql[] = '
-				(
-					SELECT
-						preview, media_filename, num, subnum, parent, media_hash, COUNT(media_hash) as total
-					FROM
-						(
-							SELECT
-								preview, media_filename, preview_w, num, subnum, parent, media_hash
-							FROM ' . $this->get_table($board) . '
-							USE INDEX(media_hash)
-							WHERE media_hash = ' . $this->db->escape($row->hash) . '
-							ORDER BY preview_w DESC
-						) as x
-				)
-			';
-		}
-		$query->free_result();
-
-		$query = $this->db->query('
-			' . implode('UNION', $sql) . '
-			ORDER BY total DESC
+			SELECT preview, num, subnum, parent, media_hash, total 
+			FROM ' . $this->get_table($board,
+				'images') . '
+			ORDER BY total DESC 
+			LIMIT 0, 200;
 		');
 
 		$array = $query->result();
@@ -558,15 +557,15 @@ class Statistics extends CI_Model
 	function process_karma($board)
 	{
 		$query = $this->db->query('
-			SELECT
-				FLOOR(timestamp/86400)*86400 AS time, COUNT(*), COUNT(media_hash),
-				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
-			FROM ' . $this->get_table($board) . '
-			FORCE INDEX(timestamp_index)
-			WHERE timestamp > ?
-			GROUP BY time
-			ORDER BY time;
-		', array(time() - 31536000));
+			SELECT 
+				day,posts,images,sage 
+			FROM ' . $this->board($board,
+				'daily') . '
+			WHERE day > floor((%%NOW%%-31536000)/86400)*86400 
+			GROUP BY day 
+			ORDER BY day;
+		',
+			array(time() - 31536000));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -574,18 +573,14 @@ class Statistics extends CI_Model
 	}
 
 
-	function process_new_tripfriends($board)
+	function process_new_users($board)
 	{
 		$query = $this->db->query('
-			SELECT *
-			FROM
-				(
-					SELECT
-						name, trip, MIN(timestamp) AS firstseen, COUNT(num) AS postcount
-					FROM ' . $this->get_table($board) . '
-					GROUP BY trip
-				) as l
-			WHERE l.postcount > 30
+			SELECT
+				name, trip, firstseen, postcount 
+			FROM ' . $this->get_table($board,
+				'users') . ' 
+			WHERE postcount > 30 
 			ORDER BY firstseen DESC;
 		');
 
@@ -598,16 +593,15 @@ class Statistics extends CI_Model
 	function process_population($board)
 	{
 		$query = $this->db->query('
-			SELECT
-				FLOOR(timestamp/86400)*86400 as time, COUNT(trip),
-				COUNT(CASE WHEN (name != \'Anonymous\' AND trip IS NULL) THEN 1 ELSE NULL END),
-				COUNT(CASE WHEN (name = \'Anonymous\' AND trip IS NULL) THEN 1 ELSE NULL END)
-			FROM ' . $this->get_table($board) . '
-			FORCE INDEX(timestamp_index)
-			WHERE timestamp > ?
-			GROUP BY time
-			ORDER BY time
-		', array(time() - 31536000));
+			SELECT 
+				day, trips, names, anons 
+			FROM ' . $this->get_table($board,
+				'daily') . '
+			WHERE day > floor((%%NOW%%-31536000)/86400)*86400 
+			GROUP BY day 
+			ORDER BY day
+		',
+			array(time() - 31536000));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -618,11 +612,11 @@ class Statistics extends CI_Model
 	function process_post_count($board)
 	{
 		$query = $this->db->query('
-			SELECT
-				name, trip, COUNT(*)
-			FROM ' . $this->get_table($board) . '
-			GROUP BY name, trip
-			ORDER BY count(*) DESC
+			SELECT 
+				name, trip, postcount 
+			FROM ' . $this->get_table($board,
+				'users') . '
+			ORDER BY postcount DESC 
 			LIMIT 512
 		');
 
@@ -639,7 +633,8 @@ class Statistics extends CI_Model
 				COUNT(*), COUNT(*)/60
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ?
-		', array(time() - 3600));
+		',
+			array(time() - 3600));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -654,7 +649,8 @@ class Statistics extends CI_Model
 				COUNT(*), COUNT(*)/60
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ? AND subnum != 0
-		', array(time() - 3600));
+		',
+			array(time() - 3600));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -670,7 +666,8 @@ class Statistics extends CI_Model
 			WHERE timestamp > ?
 			GROUP BY name, trip
 			ORDER BY MAX(timestamp) DESC
-		', array(time() - 1800));
+		',
+			array(time() - 1800));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -687,7 +684,8 @@ class Statistics extends CI_Model
 			WHERE id != 0 AND timestamp > ?
 			GROUP BY id
 			ORDER BY MAX(timestamp) DESC
-		', array(time() - 3600));
+		',
+			array(time() - 3600));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -709,15 +707,15 @@ class Statistics extends CI_Model
 		/**
 		 * Create all missing directory paths for statistics.
 		 */
-		if(!file_exists(FCPATH . 'content/cache/'))
+		if (!file_exists(FCPATH . 'content/cache/'))
 		{
 			mkdir(FCPATH . 'content/cache/');
 		}
-		if(!file_exists(FCPATH . 'content/statistics/'))
+		if (!file_exists(FCPATH . 'content/statistics/'))
 		{
 			mkdir(FCPATH . 'content/statistics/');
 		}
-		if(!file_exists(FCPATH . 'content/statistics/' . $board . '/'))
+		if (!file_exists(FCPATH . 'content/statistics/' . $board . '/'))
 		{
 			mkdir(FCPATH . 'content/statistics/' . $board . '/');
 		}
@@ -725,7 +723,7 @@ class Statistics extends CI_Model
 		/**
 		 * Set PATH for INFILE, GNUFILE, and OUTFILE for read/write.
 		 */
-		$INFILE  = FCPATH . 'content/cache/statistics-' . $board . '-' . $stat . '.dat';
+		$INFILE = FCPATH . 'content/cache/statistics-' . $board . '-' . $stat . '.dat';
 		$GNUFILE = FCPATH . 'content/cache/statistics-' . $board . '-' . $stat . '.gnu';
 		$OUTFILE = FCPATH . 'content/statistics/' . $board . '/' . $stat . '.png';
 
@@ -733,13 +731,14 @@ class Statistics extends CI_Model
 		 * Obtain starting and ending data points for x range.
 		 */
 		$X_START = (!empty($data) ? $data[0]['time'] : 0);
-		$X_END   = (!empty($data) ? $data[count($data) - 1]['time'] : 0);
+		$X_END = (!empty($data) ? $data[count($data) - 1]['time'] : 0);
 
 		/**
 		 * Format and save the INFILE dataset for GNUPLOT.
 		 */
 		$graph_data = array();
-		foreach ($data as $line) {
+		foreach ($data as $line)
+		{
 			$graph_data[] = implode("\t", $line);
 		}
 		$graph_data = implode("\n", $graph_data);
@@ -761,7 +760,8 @@ class Statistics extends CI_Model
 			$X_END
 		);
 
-		$template = str_replace($template_vars, $template_vals, $this->generate_gnuplot_template($stat));
+		$template = str_replace($template_vars, $template_vals,
+			$this->generate_gnuplot_template($stat));
 		write_file($GNUFILE, $template);
 
 		/**
@@ -776,7 +776,7 @@ class Statistics extends CI_Model
 	{
 		$options = $this->stats[$stat]['gnuplot'];
 
-		$template   = array();
+		$template = array();
 		$template[] = "set terminal png transparent size 800,600";
 		$template[] = "set output '{{OUTFILE}}'";
 		$template[] = "show terminal";
@@ -803,4 +803,5 @@ class Statistics extends CI_Model
 
 		return implode("\n", $template);
 	}
+
 }

@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 ?>
 
 <?php foreach ($posts as $key => $post) : ?>
-<article<?php echo (isset($post['op'])) ? ' id="' . $post['op']->num . '" class="thread doc_id_' . $post['op']->doc_id . '"' : ' class="thread"' ?>>
+<article<?php echo (isset($post['op'])) ? ' id="' . $post['op']->num . '" class="clearfix thread doc_id_' . $post['op']->doc_id . '"' : ' class="thread"' ?>>
 	<div class="thread_divider"></div>
 	<?php if (isset($post['op'])) : $op = $post['op']; ?>
 	<?php if ($op->preview) : ?>

@@ -250,7 +250,7 @@ body.theme_default {
 .theme_default #main .section_title {
 	padding:2px 10px 2px 35px;
 	border-bottom:3px solid #888;
-	background:#eefff2;
+	font-weight: normal;
 }
 
 .theme_default .btnr, .btnr:visited {
@@ -280,8 +280,8 @@ body.theme_default {
 .theme_default article.thread {
 	padding: 15px 0;
 	word-wrap: break-word;
-	border-bottom:3px solid #364041;
-	overflow:hidden;
+	border-bottom:1px solid #364041;
+	border-bottom:1px solid rgba(0,0,0,0.5);
 }
 
 
@@ -517,8 +517,8 @@ body.theme_default {
 
 .theme_default .thread_form {
 	background:#d6f0da;
-	border-bottom:2px solid #364041;
-	margin:0 0 15px 0;
+	border-bottom:1px solid #364041;
+	border-bottom:1px solid rgba(0,0,0,0.5);
 	padding:18px 20px 0px 20px;
 	position:relative;
 }
@@ -592,9 +592,7 @@ body.theme_default {
 @media not screen and (1)
 {
     .theme_default .thread_form input[type=file], 
-	.theme_default .thread_form select,
-	.theme_default .thread_post input[type=file], 
-	.theme_default .thread_post select {
+	.theme_default .thread_form select{
         height: 28px;
 		width: 220px;
     }

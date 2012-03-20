@@ -285,7 +285,8 @@ body.theme_default {
 /* board */
 
 .theme_default article.thread {
-	padding: 15px 0;
+	padding: 25px 0;
+	margin: 0 15px;
 	word-wrap: break-word;
 	border-top:1px solid #364041;
 	border-top:1px solid rgba(0,0,0,0.5);
@@ -299,6 +300,7 @@ body.theme_default {
 .theme_default article.thread > header {
 	overflow:hidden;
 	font-family: Verdana, Arial, sans-serif;
+	margin-left:23px;
 }
 
 .theme_default article.thread > .thread_image_box {
@@ -535,8 +537,6 @@ body.theme_default {
 
 .theme_default .thread_form {
 	position:relative;
-	width: 980px;
-	margin: 0 auto;
 }
 
 .theme_default .thread_form form {

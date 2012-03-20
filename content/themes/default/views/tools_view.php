@@ -77,7 +77,7 @@
 				echo form_input(
 					array(
 						'type' => 'date',
-						'name' => 'start',
+						'name' => 'end',
 						'id' => 'date_end',
 						'placeholder' => 'yyyy-mm-dd',
 						'value' => (isset($search["date_start"])) ?

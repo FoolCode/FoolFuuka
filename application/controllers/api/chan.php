@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Chan extends REST_Controller
+class Chan extends API_Controller
 {
 
 
@@ -338,7 +338,7 @@ class Chan extends REST_Controller
 		}
 
 		$doc_id = $this->post('doc_id');
-		$board = $this->radix->get_by_shortname($this->get('board'));
+		$board = $this->radix->get_by_shortname($this->post('board'));
 
 		$this->load->model('post');
 		$post = $this->post->get_by_doc_id($board, $doc_id);
@@ -393,8 +393,8 @@ class Chan extends REST_Controller
 
 		if (in_array('remove_report', $actions))
 		{
-			$this->load->model('reports');
-			$this->reports->remove_by_doc_id($board, $doc_id);
+			$this->load->model('report');
+			$this->report->remove_by_doc_id($board, $doc_id);
 		}
 		
 		

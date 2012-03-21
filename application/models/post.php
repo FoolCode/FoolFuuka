@@ -2040,7 +2040,7 @@ class Post extends CI_Model
 			unset($post->delpass);
 			if (!$this->tank_auth->is_allowed())
 			{
-				unset($post->poster_id);
+				unset($post->id);
 			}
 		}
 

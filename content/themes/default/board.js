@@ -128,18 +128,20 @@ var bindFunctions = function()
 					
 				case 'mod':
 					jQuery.ajax({
-						url: backend_vars.api_url + 'api/chan/mod_post_actions/board/' + el.data('board') + '/',
+						url: backend_vars.api_url + 'api/chan/mod_post_actions/',
 						dataType: 'json',
 						type: 'POST',
 						cache: false,
 						data: {
-							doc_id: el.data('doc_id'),
+							board: el.data('board'),
+							doc_id: el.data('id'),
 							actions: [el.data('action')],
 							csrf_fool: backend_vars.csrf_hash
 						},
 						success: function(data){
-							if (data.error != "")
+							if (typeof data.error !== "undefined")
 							{
+								alert(data.error);
 								return false;
 							}
 							
@@ -147,7 +149,7 @@ var bindFunctions = function()
 							switch(el.data('action'))
 							{
 								case 'remove_post':
-									jQuery('.doc_id_' + el.data('doc_id')).remove();
+									jQuery('.doc_id_' + el.data('id')).remove();
 									break;
 								case 'remove_image':
 									break;

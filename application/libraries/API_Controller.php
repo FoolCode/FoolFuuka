@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class API_Controller extends Public_Controller
+class API_Controller extends REST_Controller
 {
 	public function __construct()
 	{
@@ -16,12 +16,15 @@ class API_Controller extends Public_Controller
 	 */
 	function check_board()
 	{
-		if (!$this->get('board'))
+		if (!$this->get('board') && !$this->post('board'))
 		{
 			$this->response(array('error' => _('You didn\'t select a board')), 404);
 		}
 			
-		if(!$this->radix->set_selected_by_shortname($this->get('board')))
+		$board = ($this->get('board'))?$this->get('board'):$this->post('board');
+
+			
+		if(!$this->radix->set_selected_by_shortname($board))
 		{
 			$this->response(array('error' => _('The board you selected doesn\'t exist')), 404);
 		}

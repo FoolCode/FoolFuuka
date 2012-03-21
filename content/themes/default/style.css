@@ -335,6 +335,11 @@ body.theme_default {
 	font-size:12px;
 }
 
+
+.theme_default article.thread > .thread_image_box > .thread_image_link{
+	display:block;
+}
+
 .theme_default article.thread > .thread_tools_bottom {
 	margin-left: 30px;
 	padding: 6px 0px;
@@ -684,6 +689,7 @@ body.theme_default {
 
 .theme_default #thread_o_matic > article.thread > header {
 	text-align:center;
+	margin:0;
 }
 
 .theme_default #thread_o_matic > article.thread > header .post_controls{

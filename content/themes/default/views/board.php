@@ -66,6 +66,22 @@ if (!defined('BASEPATH'))
 		<div class="backlink_list"<?php echo (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
 			<?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
 		</div>
+		
+		<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
+			<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_post"><?php echo _('Remove') ?></button>
+			<?php if($op->preview) : ?>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_image"><?php echo _('Remove image') ?></button>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_md5"><?php echo _('Ban image') ?></button>
+			<?php endif; ?>
+			<?php if($op->id) : ?>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_user"><?php echo _('Ban user:') . ' ' . inet_dtop($op->id) ?></button>
+			<?php endif; ?>
+			<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_report"><?php echo _('Remove report') ?></button>
+			<?php endif; ?>
+		</ul>
+	</div>
+		
 	</header>
 
 	<div class="text">
@@ -75,7 +91,7 @@ if (!defined('BASEPATH'))
 		<?php echo (isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' posts ' . ((isset($post['images_omitted']) && $post['images_omitted'] > 0) ? 'and ' . $post['images_omitted'] . ' images' : '') . ' omitted.</span>' : '' ?>
 	</div>
 	<?php endif; ?>
-
+	
 	<aside class="posts">
 	<?php
 	if (isset($post['posts']))

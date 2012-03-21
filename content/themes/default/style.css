@@ -292,7 +292,6 @@ body.theme_default {
 	border-top:1px solid rgba(0,0,0,0.5);
 }
 
-
 .theme_default article.thread:nth-of-type(1) {
 	border-top:none;
 }
@@ -414,6 +413,11 @@ body.theme_default {
 .theme_default article.thread > .text {
 	padding:10px 10px 10px 30px;
 	word-wrap: break-word;
+}
+
+.theme_default article.thread > aside > br {
+	height:0px;
+	line-height:0px;
 }
 
 .theme_default .post {

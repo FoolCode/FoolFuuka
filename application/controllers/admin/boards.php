@@ -30,7 +30,6 @@ class Boards extends Admin_Controller
 		$this->viewdata["function_title"] = _('Manage boards');
 
 		$data["boards"] = $this->radix->get_all();
-		;
 
 		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/manage.php",
 			$data, TRUE);

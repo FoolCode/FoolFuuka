@@ -2,16 +2,13 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
-
-<h3 style="float: left"><?php echo _('Available plugins'); ?></h3>
-
 <table class="table table-bordered table-striped table-condensed">
 	<thead>
 		<tr>
-			<th>Plugin name</th>
-			<th>Description</th>
-			<th>Status</th>
-			<th>Remove</th>
+			<th><?php echo _('Plugin name') ?></th>
+			<th><?php echo _('Description') ?></th>
+			<th><?php echo _('Status') ?></th>
+			<th><?php echo _('Remove') ?></th>
 		</tr>
 	</thead>
 	<tbody>

@@ -30,10 +30,10 @@ if (!defined('BASEPATH'))
 				</td>
 				<td>
 					<div class="btn-group">
-					<a class="btn btn-primary" href="<?php echo site_url('admin/boards/board/'.$board->shortname) ?>">
+					<a class="btn btn-mini btn-primary" href="<?php echo site_url('admin/boards/board/'.$board->shortname) ?>">
 						<?php echo _('Edit') ?>
 					</a>
-					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+					<a class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">

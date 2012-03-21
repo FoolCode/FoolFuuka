@@ -11,7 +11,6 @@ class Profile extends CI_Model
 	function __construct($id = NULL)
 	{
 		parent::__construct();
-		$this->preload();
 	}
 
 

@@ -12,8 +12,8 @@ class Members extends Admin_Controller
 	}
 
 
-	/*
-	 * Index redirects to the own page
+	/**
+	 * Index redirects to the list page
 	 * 
 	 * @author Woxxy
 	 */
@@ -23,21 +23,27 @@ class Members extends Admin_Controller
 	}
 
 
-	/*
-	 * Lists registered members, and supports search via POST
+	/**
+	 * Lists registered member
 	 * 
-	 * membersa instead of members because clash with class name. routes fix this
+	 * "membersa" instead of "members" because clash with class name. routes fix this
 	 * 
 	 * @author Woxxy
 	 */
-	function membersa($page = 1)
+	function membersa()
 	{
-
+		$this->load->model('member');
+		$data['users'] = $this->member->get_all_with_profile();
+		
+		$this->viewdata["main_content_view"] = $this->load->view("admin/members/manage.php",
+			$data, TRUE);
+		$this->load->view("admin/default.php", $this->viewdata);
 	}
 
 
-	/*
+	/**
 	 * shows the data of a member, and allows admins and mods to change it
+	 * or the user himself if the 
 	 */
 	function member($id)
 	{

@@ -66,7 +66,7 @@ if (!defined('BASEPATH'))
 
 
 					<footer class="footer">
-						<p style="padding-left: 20px;">FoOlSlide Version <?php
+						<p style="padding-left: 20px;"><?php echo FOOL_NAME ?> Version <?php
 					if (isset($this->tank_auth))
 					{
 						echo FOOL_VERSION;
@@ -77,23 +77,6 @@ if (!defined('BASEPATH'))
 					</footer>
 				</div>
 				<div style="clear:both"></div>
-			</div>
-		</div>
-
-
-		<!-- Modal Container for Admin Panel -->
-		<div id="modal-container" class="modal hide fade">
-			<div class="modal-header">
-				<a href="#" class="close">&times;</a>
-				<h3 id="modal-text-head">Warning!</h3>
-			</div>
-			<div class="modal-body">
-				<p id="modal-text-desc"></p>
-				<div id="modal-loading" class="loading"><img src="<?php echo site_url() ?>assets/js/images/loader-18.gif"/></div>
-			</div>
-			<div class="modal-footer">
-				<a href="#" id="modal-btn-no" class="btn primary"><?php echo _('No'); ?></a>
-				<a href="#" id="modal-btn-yes" class="btn secondary"><?php echo _('Yes'); ?></a>
 			</div>
 		</div>
 	</body>

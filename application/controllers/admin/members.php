@@ -34,7 +34,7 @@ class Members extends Admin_Controller
 	{
 		$this->load->model('member');
 		$data['users'] = $this->member->get_all_with_profile();
-		
+		$this->viewdata['function_title'] = _('Manage');
 		$this->viewdata["main_content_view"] = $this->load->view("admin/members/manage.php",
 			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
@@ -47,7 +47,38 @@ class Members extends Admin_Controller
 	 */
 	function member($id)
 	{
+		$this->load->model('member');
+		$this->load->model('profile');
+		$data['form'] = $this->profile->structure();
 		
+		if($this->input->post())
+		{
+			$this->load->library('form_validation');
+			$result = $this->form_validation->form_validate($data['form']);
+			if (isset($result['error']))
+			{
+				set_notice('warning', $result['error']);
+			}
+			else
+			{
+				// it's actually fully checked, we just have to throw it in DB
+				$this->profile->save($result['success']);
+				set_notice('success', _('User profile saved!'));
+			}
+
+		}
+		
+		$data['object'] = $this->member->get($id);
+		if($data['object'] == FALSE)
+		{
+			show_404();
+		}
+
+		$this->viewdata['function_title'] = _('Editing user:') . ' ' . $data['object']->username;
+
+		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator.php",
+			$data, TRUE);
+		$this->load->view("admin/default.php", $this->viewdata);
 	}
 
 

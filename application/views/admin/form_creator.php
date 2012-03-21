@@ -154,6 +154,35 @@ if (!defined('BASEPATH'))
 
 
 				case 'radio':
+					?>
+					<div style="margin: 0px 0px 15px;">
+						<?php
+						echo '<label>'.$helpers['help'].'</label>';
+						foreach ($item['radio_values'] as $radio_key => $radio_value)
+						{
+							if (isset($object->$name) && $object->$name == $radio_key)
+							{
+								$checked = TRUE;
+							}
+							else
+							{
+								$checked = FALSE;
+							}
+							?>
+							<label class="radio">
+								<?php
+								echo form_radio($name, $radio_key, $checked)
+								?>
+								<?php echo $radio_value ?>
+							</label>
+							<?php
+						}
+						?>
+					</div>
+					<?php
+					break;
+
+
 				case 'checkbox':
 					if (!isset($item['value']))
 					{

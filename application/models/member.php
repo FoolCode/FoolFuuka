@@ -41,5 +41,19 @@ class Member extends CI_Model
 		return $query->result();
 	}
 	
+	function get($id)
+	{
+		// this actually calls members
+		$query = $this->db->where('users.id', $id)
+			->join('profiles', 'users.id = profiles.user_id')->get('users');
+		
+		if($query->num_rows() == 0)
+		{
+			return FALSE;
+		}
+		
+		return $query->row();
+	}
+	
 	
 }

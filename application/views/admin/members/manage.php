@@ -15,12 +15,12 @@
 		<?php foreach ($users as $user) : ?>
 			<tr>
 				<td>
-					<a href="<?php site_url('admin/members/member/' . $user->id) ?>">
+					<a href="<?php echo site_url('admin/members/member/' . $user->id) ?>">
 						<?php echo $user->id ?>
 					</a>
 				</td>
 				<td>
-					<a href="<?php site_url('admin/members/member/' . $user->id) ?>">
+					<a href="<?php echo site_url('admin/members/member/' . $user->id) ?>">
 						<?php echo fuuka_htmlescape($user->username) ?>
 					</a>
 				</td>

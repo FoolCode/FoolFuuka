@@ -1658,6 +1658,7 @@ class Post extends CI_Model
 		{
 			// NORMAL REPLY
 
+			
 			$this->db->query('
 				INSERT INTO ' . $this->get_table($board) . '
 				(num, subnum, parent, timestamp, capcode, email,
@@ -1675,7 +1676,7 @@ class Post extends CI_Model
 				)
 				',
 				array(0, $num, time(), $postas, $email, $name, $trip,
-				$subject, $comment, $password, $spoiler, inet_pton($this->input->ip_address())
+				$subject, $comment, $password, $spoiler, inet_ptod($this->input->ip_address())
 				)
 			);
 		}
@@ -1720,7 +1721,7 @@ class Post extends CI_Model
 				$num, $num,
 				$num, time(), $postas, $email,
 				$name, $trip, $subject, $comment, $password,
-				inet_pton($this->input->ip_address())
+				inet_ptod($this->input->ip_address())
 				)
 			);
 		}

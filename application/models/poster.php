@@ -23,9 +23,9 @@ class Poster extends CI_Model
 	 */
 	function ban($decimal_ip, $length_in_hours = NULL, $reason = NULL)
 	{
-		$this->db->where('ip', $decimal_ip)->get('posters');
+		$query = $this->db->where('ip', $decimal_ip)->get('posters');
 		
-		if($this->num_rows() == 0)
+		if($query->num_rows() == 0)
 		{
 			$this->db->insert('posters', array(
 				'ip' => $decimal_ip,

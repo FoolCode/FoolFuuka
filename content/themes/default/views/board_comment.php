@@ -95,7 +95,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_image"><?php echo _('Remove image') ?></button>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_md5"><?php echo _('Ban image') ?></button>
 			<?php endif; ?>
-			<?php if($p->id > 0) : ?>
+			<?php if($p->id) : ?>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_user"><?php echo _('Ban user:') . ' ' . inet_dtop($p->id) ?></button>
 			<?php endif; ?>
 			<?php if(isset($p->report_status) && !is_null($p->report_status)) : ?>

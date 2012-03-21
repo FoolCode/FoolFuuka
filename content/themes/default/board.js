@@ -154,8 +154,10 @@ var bindFunctions = function()
 								case 'remove_image':
 									break;
 								case 'remove_report':
+									jQuery('.doc_id_' + el.data('id')).removeClass('reported')
 									break;
 								case 'ban_user':
+									jQuery('.doc_id_' + el.data('id')).find('[data-action=ban_user]').text('Banned');
 									break;
 								case 'ban_md5':
 									break;

@@ -386,7 +386,7 @@ class Chan extends API_Controller
 		{
 			$this->load->model('poster');
 			$this->poster->ban(
-				$post->ip, isset($data['length']) ? $data['length'] : NULL,
+				$post->id, isset($data['length']) ? $data['length'] : NULL,
 				isset($data['reason']) ? $data['reason'] : NULL
 			);
 		}

@@ -131,7 +131,6 @@ class Admin_Controller extends MY_Controller
 			"default" => "reports",
 			"content" => array(
 				"reports" => array("level" => "mod", "name" => _("Reports"), "icon" => 'icon-tag'),
-			//	"spam" => array("level" => "mod", "name" => _("Spam"), "icon" => 'icon-remove-circle')
 			)
 		);
 		
@@ -151,10 +150,8 @@ class Admin_Controller extends MY_Controller
 			"level" => "member",
 			"default" => "members",
 			"content" => array(
-				"members" => array("level" => "mod", "name" => _("Member List"), "icon" => 'icon-user'),
-			//	"teams" => array("level" => "member", "name" => _("Team List"), "icon" => 'icon-star-empty'),
-			//	"home_team" => array("level" => "member", "name" => _("Home Team"), "icon" => 'icon-star'),
-			//	"add_team" => array("level" => "mod", "name" => _("Add Team"), "icon" => 'icon-asterisk')
+				"members" => array("alt_highlight" => array("member"),
+					"level" => "mod", "name" => _("Member List"), "icon" => 'icon-user'),
 			)
 		);
 		
@@ -450,7 +447,7 @@ class Admin_Controller extends MY_Controller
 			$last_check = get_setting('fs_cron_autoupgrade');
 
 			// hourly cron
-			if (time() - $last_check > 3600)
+			if (time() - $last_check > 0)
 			{
 				// update autoupgrade cron time
 				$this->db->update('preferences', array('value' => time()),

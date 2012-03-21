@@ -2,7 +2,7 @@
 	echo link_tag('content/themes/default/style.css?v=' . FOOL_VERSION);
 ?>
 
-<div class="theme_default" style="padding-bottom: 15px">
+<div class="theme_default clearfix" style="padding-bottom: 15px">
 	<article class="thread">
 	<?php 
 	foreach($posts as $key => $p)

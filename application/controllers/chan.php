@@ -547,10 +547,13 @@ class Chan extends Public_Controller
 	public function post($num = 0)
 	{
 		// POST -> GET Redirection to provide URL presentable for sharing links.
-		if ($this->input->post('post') || !is_natural($num))
+		if ($this->input->post('post') || !is_post_number($num))
 		{
-			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $this->input->post('post'),
+			$num = $this->input->post('post')?:$num;
+
+			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $num,
 				$post);
+
 			redirect(get_selected_radix()->shortname . '/post/' .
 				(isset($post[1]) ? $post[1] : '') . (isset($post[2]) ? '_' . $post[2] : ''),
 				'location', 303);

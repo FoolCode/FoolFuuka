@@ -211,6 +211,10 @@ function is_natural($str)
 
 function is_post_number($str)
 {
+	if(is_natural($str))
+	{
+		return TRUE;
+	}
 	return (bool) preg_match('/^[0-9]+(,|_)[0-9]$/', $str);
 }
 

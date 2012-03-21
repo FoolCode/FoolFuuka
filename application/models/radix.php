@@ -185,8 +185,13 @@ class Radix extends CI_Model
 	 */
 	function preload()
 	{
-		$query = $this->db->order_by('shortname', 'ASC')->get('boards');
-
+		if(!$this->tank_auth->is_allowed())
+		{
+			$this->db->where('hidden', 0);
+		}
+		
+		$this->db->order_by('shortname', 'ASC');
+		$query = $this->db->get('boards');
 		if ($query->num_rows() == 0)
 		{
 			$this->preloaded_radixes = array();

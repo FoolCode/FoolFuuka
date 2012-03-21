@@ -1634,7 +1634,7 @@ class Post extends CI_Model
 			ORDER BY timestamp DESC
 			LIMIT 0,1
 		',
-			array(inet_pton($this->input->ip_address())));
+			array(inet_ptod($this->input->ip_address())));
 
 		if ($query->num_rows() > 0)
 		{

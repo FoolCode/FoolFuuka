@@ -547,7 +547,7 @@ class Chan extends Public_Controller
 	public function post($num = 0)
 	{
 		// POST -> GET Redirection to provide URL presentable for sharing links.
-		if ($this->input->post('post'))
+		if ($this->input->post('post') || !is_natural($num))
 		{
 			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $this->input->post('post'),
 				$post);

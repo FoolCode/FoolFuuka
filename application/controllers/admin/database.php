@@ -64,7 +64,7 @@ class Database extends Admin_Controller
 	 */
 	function do_upgrade()
 	{
-		if (!isAjax() && !$this->input->is_cli_request())
+		if (!$this->input->is_ajax_request() && !$this->input->is_cli_request())
 			return FALSE;
 		// migrate
 		$this->migration->latest();

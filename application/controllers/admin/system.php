@@ -174,7 +174,7 @@ class System extends Admin_Controller
 	function do_upgrade()
 	{
 
-		if (!isAjax())
+		if (!$this->input->is_ajax_request())
 		{
 			return false;
 		}

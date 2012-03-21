@@ -8,6 +8,10 @@ h3 {
 	margin-bottom:10px;
 }
 
+.popover-title h3 {
+	margin-bottom:0px;
+}
+
 form {
 	margin: 0 0 0px;
 }

@@ -194,7 +194,8 @@ class Preferences extends Admin_Controller
 			'type' => 'textarea',
 			'label' => _('Footer Text'),
 			'preferences' => TRUE,
-			'help' => _('')
+			'help' => _('Credits in the footer and similar.'),
+			'class' => 'span5'
 		);
 
 		$form['fs_theme_footer_code'] = array(

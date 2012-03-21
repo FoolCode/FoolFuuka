@@ -174,9 +174,8 @@ class Admin_Controller extends MY_Controller
 			"content" => array(
 				"information" => array("level" => "admin", "name" => _("Information"), "icon" => 'icon-info-sign'),
 				"preferences" => array("level" => "admin", "name" => _("Preferences"), "icon" => 'icon-check'),
-				"tools" => array("level" => "admin", "name" => _("Tools"), "icon" => 'icon-fire'),
 				"upgrade" => array("level" => "admin", "name" => _("Upgrade") . ((get_setting('fs_cron_autoupgrade_version') && version_compare(FOOL_VERSION,
-						get_setting('fs_cron_autoupgrade_version')) < 0) ? ' <span class="label success">' . _('New') . '</span>'
+						get_setting('fs_cron_autoupgrade_version')) < 0) ? ' <span class="label label-success">' . _('New') . '</span>'
 							: ''), "icon" => 'icon-refresh'),
 			)
 		);
@@ -196,7 +195,6 @@ class Admin_Controller extends MY_Controller
 			"default" => "balancers",
 			"content" => array(
 				"balancers" => array("level" => "admin", "name" => _("Master"), "icon" => 'icon-download'),
-				"client" => array("level" => "admin", "name" => _("Client"), "icon" => 'icon-upload'),
 			)
 		);
 

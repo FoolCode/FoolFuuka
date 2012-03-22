@@ -11,7 +11,7 @@ if (!defined('BASEPATH'))
 			</a>
 			<ul class="nav">
 				<li class="active">
-					<a href="#">Home</a>
+					<a href="<?php echo site_url('admin') ?>">Home</a>
 				</li>
 			</ul>
 			<ul class="nav pull-right">

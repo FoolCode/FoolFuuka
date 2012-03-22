@@ -3,6 +3,8 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
+
+<?php if(!empty($sidebar)) : ?>
 <div class="well">
 	<ul class="nav nav-list" style="padding: 9px 0">
 		<?php 
@@ -21,3 +23,9 @@ if (!defined('BASEPATH'))
 			<?php endforeach; endforeach; ?>
 	</ul>
 </div>
+<?php else : ?>
+
+<div class="span3" style="height:10px;">
+</div>
+
+<?php endif; ?>

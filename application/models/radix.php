@@ -165,6 +165,7 @@ class Radix extends CI_Model
 		else
 		{
 			$this->db->insert('boards', $data);
+			
 		}
 		
 		// update the cached boards

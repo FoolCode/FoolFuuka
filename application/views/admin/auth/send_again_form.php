@@ -26,7 +26,7 @@ $email = array(
 	);
 	?>
 
-	<input type="button" onClick="window.location.href='<?php echo site_url('/admin/auth/login/') ?>'" class="btn" value="<?php echo form_prep(_("Back to login")) ?>" />
+	<input type="button" onClick="window.location.href='<?php echo site_url('/admin/auth/login/') ?>'" class="btn" value="<?php echo form_prep(_("Back to login (you must be activated)")) ?>" />
 
 
 	<?php echo form_close(); ?>

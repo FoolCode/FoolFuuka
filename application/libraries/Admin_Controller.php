@@ -15,10 +15,17 @@ class Admin_Controller extends MY_Controller
 	{
 		parent::__construct();
 
-		if (!$this->tank_auth->is_allowed() && $this->uri->segment(2) != 'auth')
+		// auth controller can protect itself, other controllers not so sure,
+		// this is a good layer of security in case there's some bug down the stream
+		if (!$this->tank_auth->is_logged_in() && $this->uri->segment(2) != 'auth')
 		{
 			$this->session->set_userdata('login_redirect', $this->uri->uri_string());
-			redirect('/admin/auth/login');
+			redirect('admin/auth');
+		}
+		
+		if(!$this->tank_auth->is_allowed() && $this->uri->segment(2) != 'auth')
+		{
+			redirect('admin/auth/change_email');
 		}
 		
 		// a bit of looping to create the sidebar
@@ -141,13 +148,13 @@ class Admin_Controller extends MY_Controller
 			"content" => array(
 				"change_email" => array("level" => "member", "name" => _("Change Email"), "icon" => 'icon-envelope'),
 				"change_password" => array("level" => "member", "name" => _("Change Password"), "icon" => 'icon-lock'),
-				"unregister" => array("level" => "mod", "name" => _("Unregister"), "icon" => 'icon-remove-circle')
+				"unregister" => array("level" => "member", "name" => _("Unregister"), "icon" => 'icon-remove-circle')
 			)
 		);
 
 		$sidebar["members"] = array(
 			"name" => _("Members"),
-			"level" => "member",
+			"level" => "mod",
 			"default" => "members",
 			"content" => array(
 				"members" => array("alt_highlight" => array("member"),

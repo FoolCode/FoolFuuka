@@ -8,6 +8,9 @@ class Members extends Admin_Controller
 	function __construct()
 	{
 		parent::__construct();
+		// members are editable by mods!
+		// only admins can change levels though
+		$this->tank_auth->is_allowed() or redirect('admin');
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/members") . '">' . _("Members") . '</a>';
 	}
 

@@ -61,12 +61,12 @@ if (!defined('BASEPATH'))
 
 			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan manually."/></span><?php endif ?>
 			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
-		</div>
  
 		<div class="backlink_list"<?php echo (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
 			<?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
 		</div>
 		
+		<?php if($this->tank_auth->is_allowed()) : ?>
 		<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
 			<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_post"><?php echo _('Remove') ?></button>
 			<?php if($op->preview) : ?>
@@ -79,7 +79,8 @@ if (!defined('BASEPATH'))
 			<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_report"><?php echo _('Remove report') ?></button>
 			<?php endif; ?>
-		</ul>
+		</div>
+		<?php endif; ?>
 	</div>
 		
 	</header>

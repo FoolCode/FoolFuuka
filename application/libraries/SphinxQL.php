@@ -32,7 +32,7 @@ class SphinxQL {
 
 		$connect = ($persistent == TRUE) ? 'mysql_pconnect' : 'mysql_connect';
 
-		$this->conn_id = $connect($this->db_host . ':' . $this->db_port, '', '');
+		$this->conn_id = @$connect($this->db_host . ':' . $this->db_port, '', '');
 		return $this->conn_id;
 	}
 

@@ -938,8 +938,13 @@ class Post extends CI_Model
 			$sphinx_ip_port = explode(':',
 				get_setting('fu_sphinx_listen', FOOL_PREF_SPHINX_LISTEN));
 
-			$this->sphinxql->set_server($sphinx_ip_port[0], $sphinx_ip_port[1]);
+			$connected = $this->sphinxql->set_server($sphinx_ip_port[0], $sphinx_ip_port[1]);
 
+			if(!$connected)
+			{
+				return array('error' => _('The search backend is currently not online. Try later or contact us in case it\'s offline for too long.'));
+			}
+			
 			$this->db->from(array($board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta'),
 				FALSE, FALSE);
 

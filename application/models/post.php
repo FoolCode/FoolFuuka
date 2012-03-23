@@ -180,15 +180,15 @@ class Post extends CI_Model
 			return '';
 
 		return '
-			LEFT JOIN
+				LEFT JOIN
 			(
-				SELECT id as poster_id_join, ip as poster_ip,
+				SELECT id as poster_id_join, ip as poster_id,
 					banned as poster_banned
 				FROM ' . $this->db->protect_identifiers('posters',
 				TRUE) . '
 			) as p
 			ON
-			g.`poster_id`
+			g.`id`
 			=
 			' . $this->db->protect_identifiers('p') . '.`poster_id_join`
 		';

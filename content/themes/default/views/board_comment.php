@@ -36,7 +36,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 		<div class="thread_image_box">
 			<a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 				<img <?php echo (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) ? 'src="' . site_url('content/themes/default/images/transparent_pixel.png') . '" data-original="' . $p->thumbnail_href . '"' : 'src="' . $p->thumbnail_href . '"' ?> <?php echo ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?php echo ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?php echo $p->media_hash ?>" />
-				<?php if (isset($modifiers['lazyload']) && $modifers['lazyload'] == TRUE) : ?>
+				<?php if (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
 					<noscript>
 						<a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 							<img src="<?php echo $p->thumbnail_href ?>" style="margin-left: -<?php echo $p->preview_w ?>px" <?php echo ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?php echo ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?php echo $p->media_hash ?>" />

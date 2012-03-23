@@ -767,24 +767,24 @@ class Post extends CI_Model
 		return FALSE;
 	}
 
-	
+
 	function get_by_num($board, $num)
 	{
 		$subnum = 0;
-		if(strpos($num, '_') !== FALSE)
+		if (strpos($num, '_') !== FALSE)
 		{
 			$num_array = explode('_', $num);
-			if(count($num_array) != 2)
+			if (count($num_array) != 2)
 			{
 				return FALSE;
 			}
-			
+
 			$num = $num_array[0];
 			$subnum = intval($num_array[1]);
 		}
-		
+
 		$num = intval($num);
-		
+
 		$query = $this->db->query('
 				SELECT * FROM ' . $this->get_table($board) . '
 				' . $this->get_sql_report($board) . '
@@ -805,6 +805,7 @@ class Post extends CI_Model
 
 		return FALSE;
 	}
+
 
 	function get_by_doc_id($board, $doc_id)
 	{
@@ -1658,11 +1659,51 @@ class Post extends CI_Model
 		{
 			// NORMAL REPLY
 
+			$normal_post_arr = array(
+				0,
+				$num,
+				time(),
+				$postas,
+				$email,
+				$name,
+				$trip,
+				$subject,
+				$comment,
+				$password,
+				$spoiler,
+				inet_ptod($this->input->ip_address())
+				);
 			
+			if (isset($media))
+			{
+				$image = $this->process_media($board, $media, $media_hash);
+				if (!$image)
+				{
+					return array('error' => _('Your image was invalid.'));
+				}
+				
+				//$thumb_filename, $thumb_dimensions[0], $thumb_dimensions[1],
+				//$media["file_name"], $media["image_width"], $media["image_height"],
+				//($media["file_size"] * 1024), $media_hash, $media_filename, $post->doc_id
+				
+				// override the timestamp with the one created by the image system
+				$normal_post_arr[3] = end($image);
+				array_pop($image);
+				$normal_post_arr = array_merge($normal_post_arr, $image);
+			}
+			else
+			{
+				$normal_post_arr = array_merge($normal_post_arr, array(NULL, 0, 0, NULL, 0, 0, 0, NULL, NULL));
+			}
+
+
 			$this->db->query('
 				INSERT INTO ' . $this->get_table($board) . '
 				(num, subnum, parent, timestamp, capcode, email,
-					name, trip, title, comment, delpass, spoiler, id)
+					name, trip, title, comment, delpass, spoiler, id,
+					preview, preview_w, preview_h, media,
+					media_w, media_h, media_size, media_hash,
+					media_filename)
 				VALUES
 				(
 					(
@@ -1672,12 +1713,11 @@ class Post extends CI_Model
 							SELECT * from ' . $this->get_table($board) . '
 						) AS x
 					),
-					?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+					?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+					?, ?, ?, ?, ?, ?, ?, ?, ?
 				)
 				',
-				array(0, $num, time(), $postas, $email, $name, $trip,
-				$subject, $comment, $password, $spoiler, inet_ptod($this->input->ip_address())
-				)
+				$normal_post_arr
 			);
 		}
 		else
@@ -1688,7 +1728,8 @@ class Post extends CI_Model
 			$this->db->query('
 					INSERT INTO ' . $this->get_table($board) . '
 					(num, subnum, parent, timestamp, capcode, email,
-						name, trip, title, comment, delpass, id)
+						name, trip, title, comment, delpass, id
+						)
 					VALUES
 					(
 						(
@@ -1717,11 +1758,20 @@ class Post extends CI_Model
 					)
 				',
 				array(
-				$num, $num,
-				$num, $num,
-				$num, time(), $postas, $email,
-				$name, $trip, $subject, $comment, $password,
-				inet_ptod($this->input->ip_address())
+				$num,
+				$num,
+				$num,
+				$num,
+				$num,
+				time(),
+				$postas,
+				$email,
+				$name,
+				$trip,
+				$subject,
+				$comment,
+				$password,
+				inet_ptod($this->input->ip_address()),
 				)
 			);
 		}
@@ -1736,23 +1786,6 @@ class Post extends CI_Model
 
 		$posted = $posted->result();
 		$posted = $posted[0];
-
-		if (isset($media))
-		{
-			$image = $this->process_media($board, $posted, $media, $media_hash);
-			if ($image)
-			{
-				$this->db->query('
-					UPDATE ' . $this->get_table($board) . '
-					SET preview = ?, preview_w = ?, preview_h = ?, media = ?,
-						media_w = ?, media_h = ?, media_size = ?, media_hash = ?,
-						media_filename = ?
-					WHERE doc_id=?
-					',
-					$image
-				);
-			}
-		}
 
 		return array('success' => TRUE, 'posted' => $posted);
 	}
@@ -2062,7 +2095,7 @@ class Post extends CI_Model
 	}
 
 
-	function process_media($board, $post, $media, $media_hash)
+	function process_media($board, $media, $media_hash)
 	{
 		if (!$board->archive)
 		{
@@ -2071,41 +2104,44 @@ class Post extends CI_Model
 			 *  @todo
 			 * 
 			 * 
-			$query = $this->db->query('
-				SELECT *
-				FROM ' . $this->get_table($board) . '
-				WHERE media_hash = ?
-				ORDER BY doc_id DESC
-				LIMIT 0,1;
-			',
-				array($media_hash));
-			
-			if ($query->num_rows() != 0)
-			{
-				$file = $query->row();
+			  $query = $this->db->query('
+			  SELECT *
+			  FROM ' . $this->get_table($board) . '
+			  WHERE media_hash = ?
+			  ORDER BY doc_id DESC
+			  LIMIT 0,1;
+			  ',
+			  array($media_hash));
 
-				if (file_exists($this->get_image_dir($board, $file, FALSE)) !== FALSE)
-				{
-					if (!unlink($media["full_path"]))
-					{
-						log_message('error',
-							'process_media: failed to remove media file from cache');
-					}
+			  if ($query->num_rows() != 0)
+			  {
+			  $file = $query->row();
 
-					return array(
-						$file->preview, $file->preview_w, $file->preview_h,
-						$media["file_name"], $file->media_w, $file->media_h,
-						$file->media_size, $file->media_hash, $file->media_filename,
-						$post->doc_id);
-				}
-			}
+			  if (file_exists($this->get_image_dir($board, $file, FALSE)) !== FALSE)
+			  {
+			  if (!unlink($media["full_path"]))
+			  {
+			  log_message('error',
+			  'process_media: failed to remove media file from cache');
+			  }
+
+			  return array(
+			  $file->preview, $file->preview_w, $file->preview_h,
+			  $media["file_name"], $file->media_w, $file->media_h,
+			  $file->media_size, $file->media_hash, $file->media_filename,
+			  $post->doc_id);
+			  }
+			  }
 			 * 
 			 */
 
-			$number = $post->timestamp;
+			$number = time();
 		}
 		else
 		{
+			/*
+			 * We aren't allowing image uploading in ghosts/archive
+			 * 
 			if ($post->parent > 0)
 			{
 				$number = $post->parent;
@@ -2119,6 +2155,9 @@ class Post extends CI_Model
 			{
 				$number = '0' . $number;
 			}
+			 * 
+			 */
+			return FALSE;
 		}
 
 		// generate random filename based on timestamp
@@ -2184,7 +2223,7 @@ class Post extends CI_Model
 		return array(
 			$thumb_filename, $thumb_dimensions[0], $thumb_dimensions[1],
 			$media["file_name"], $media["image_width"], $media["image_height"],
-			($media["file_size"] * 1024), $media_hash, $media_filename, $post->doc_id
+			($media["file_size"] * 1024), $media_hash, $media_filename, $number
 		);
 	}
 

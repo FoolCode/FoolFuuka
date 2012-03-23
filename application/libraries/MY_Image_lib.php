@@ -16,7 +16,7 @@ class MY_Image_lib extends CI_Image_lib
 	function image_process_imagemagick($action = 'resize')
 	{
 		if($action != 'resize' || strtolower(pathinfo($this->full_src_path, PATHINFO_EXTENSION)) != 'gif')
-		{echo 'here'; die();
+		{
 			return parent::image_process_imagemagick($action);
 		}	
 			

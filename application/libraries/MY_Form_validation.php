@@ -7,6 +7,10 @@ if (!defined('BASEPATH'))
 class MY_Form_validation extends CI_Form_validation
 {
 
+	function __construct()
+	{
+		parent::__construct();
+	}
 
 	/**
 	 * Checks the form for and returns either a compiled array of values or

@@ -17,7 +17,7 @@ class Post extends CI_Model
 	var $backlinks_hash_only_url = FALSE;
 
 
-	function __construct($id = NULL)
+	function __construct()
 	{
 		parent::__construct();
 	}
@@ -2066,6 +2066,11 @@ class Post extends CI_Model
 	{
 		if (!$board->archive)
 		{
+			/*
+			 *  THIS IS NOT COMPATIBLE WITH THE DELETION OF IMAGES
+			 *  @todo
+			 * 
+			 * 
 			$query = $this->db->query('
 				SELECT *
 				FROM ' . $this->get_table($board) . '
@@ -2074,7 +2079,7 @@ class Post extends CI_Model
 				LIMIT 0,1;
 			',
 				array($media_hash));
-
+			
 			if ($query->num_rows() != 0)
 			{
 				$file = $query->row();
@@ -2094,6 +2099,8 @@ class Post extends CI_Model
 						$post->doc_id);
 				}
 			}
+			 * 
+			 */
 
 			$number = $post->timestamp;
 		}

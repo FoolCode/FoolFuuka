@@ -1374,11 +1374,22 @@ class Post extends CI_Model
 			{
 				$count['images']++;
 			}
+			
 			$count['posts']++;
+			
+			if($post->subnum == 0 && $last_bump < $post->timestamp)
+			{
+				$last_bump = $post->timestamp;
+			}
 		}
 
 		$query->free_result();
-
+		
+		if(time() - $last_bump > 432000)
+		{
+			return array('thread_dead' => TRUE, 'disable_image_upload' => TRUE);
+		}
+		
 		if (!$thread_op_present)
 		{
 			// we didn't point to the thread OP, this is not a thread
@@ -1666,7 +1677,7 @@ class Post extends CI_Model
 
 			$normal_post_arr = array(
 				0,
-				($num == 0)?NULL:$num,
+				$num,
 				time(),
 				$postas,
 				($email == '')?NULL:$email,
@@ -1767,7 +1778,7 @@ class Post extends CI_Model
 				$num,
 				$num,
 				$num,
-				($num == 0)?NULL:$num,
+				$num,
 				time(),
 				$postas,
 				($email == '')?NULL:$email,

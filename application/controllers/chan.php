@@ -1321,7 +1321,7 @@ class Chan extends Public_Controller
 				 * Initialize the MEDIA CONFIG and load the UPLOAD library.
 				 */
 				$media_config['upload_path'] = 'content/cache/';
-				$media_config['allowed_types'] = 'jpg|png|gif';
+				$media_config['allowed_types'] = 'jpg|jpeg|png|gif';
 				$media_config['max_size'] = 3072;
 				$media_config['max_width'] = 5000;
 				$media_config['max_height'] = 5000;

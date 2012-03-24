@@ -252,7 +252,8 @@ class Radix extends CI_Model
 	{
 		if (is_null($this->selected_radix))
 		{
-			log_message('error', 'radix.php get_selected_radix(): no radix selected');
+			// we are now using this even to check if any is selected
+			//log_message('error', 'radix.php get_selected_radix(): no radix selected');
 			return FALSE;
 		}
 

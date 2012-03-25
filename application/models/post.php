@@ -800,6 +800,7 @@ class Post extends CI_Model
 
 		foreach ($query->result() as $post)
 		{
+			$this->process_post($board, $post, TRUE);
 			return $post;
 		}
 

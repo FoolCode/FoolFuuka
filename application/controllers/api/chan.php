@@ -211,6 +211,32 @@ class Chan extends API_Controller
 			$this->response(array('error' => _('Thread could not be found')), 200);
 		}
 	}
+	
+	
+	function post_get()
+	{
+		$this->check_board();
+		
+		if (!$this->get('num'))
+		{
+			$this->response(array('error' => _('You have to select a thread number')),
+				404);
+		}
+		
+		if (!is_post_number($this->get('num')))
+		{
+			$this->response(array('error' => _('Faulty thread number')), 404);
+		}
+		
+		$post = $this->post->get_by_num(get_selected_radix(), $$this->get('num'));
+		
+		if(!$post)
+		{
+			$this->response(array('error' => _('Post could not be found')), 404);
+		}
+		
+		$this->response($post, 200);
+	}
 
 
 	function thread_ghosts_posts_get()

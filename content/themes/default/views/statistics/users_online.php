@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 
 ?>
 
-<table class="bordered-table" style="width:600px; margin: 10px auto;">
+<table class="bordered-table table-striped" style="width:600px; margin: 10px auto;">
 	<thead>
 		<tr>
 			<th><?php echo _('Poster') ?></th>
@@ -30,7 +30,7 @@ if (!defined('BASEPATH'))
 					<span class="poster_name"><?php echo $d->name ?></span> <span class="poster_trip"><?php echo $d->trip ?></span>
 				</a>
 			</td>
-			<td style="width:350px"><?php echo date('d-M-Y H:i:s', $d->{'MAX(timestamp)'}) ?></td>
+			<td style="width:350px; text-align:center;"><?php echo date('d-M-Y H:i:s', $d->{'MAX(timestamp)'}) ?></td>
 			<td><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : ''))) ?>">&gt;&gt;<?php echo $d->num . ($d->subnum ? ',' . $d->subnum : '') ?></a></td>
 		</tr>
 		<?php endforeach; ?>

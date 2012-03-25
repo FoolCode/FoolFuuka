@@ -15,7 +15,6 @@ if (!defined('BASEPATH'))
 	<thead>
 		<tr>
 			<th><?php echo _('Poster') ?></th>
-			<th><?php echo _('Trip') ?></th>
 			<th><?php echo _('First Seen') ?></th>
 			<th><?php echo _('Total Posts') ?></th>
 		</tr>
@@ -24,7 +23,7 @@ if (!defined('BASEPATH'))
 		<?php $data_array = json_decode($data, TRUE)?>
 		<?php foreach ($data_array as $d) : ?>
 		<tr>
-			<td>
+			<td style="width:50%">
 				<?php
 				$params = array(get_selected_radix()->shortname, 'search');
 				if ($d['name'])
@@ -38,9 +37,8 @@ if (!defined('BASEPATH'))
 					<span class="poster_name"><?php echo $d['name'] ?></span> <span class="poster_trip"><?php echo $d['trip'] ?></span>
 				</a>
 			</td>
-			<td><?php echo $d['trip'] ?></td>
 			<td><?php echo date('d-M-Y H:i:s', $d['firstseen']) ?></td>
-			<td><?php echo $d['postcount'] ?></td>
+			<td style="text-align:right"><?php echo $d['postcount'] ?></td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody>

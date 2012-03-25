@@ -11,7 +11,7 @@ if (!defined('BASEPATH'))
 			<th><?php echo _('Posts per Minute') ?></th>
 		</tr>
 	</thead>
-	<tbody>
+	<tbody style="text-align:center;">
 		<td><?php echo $data_array[0]['COUNT(*)']; ?></td>
 		<td><?php echo $data_array[0]['COUNT(*)/60']; ?></td>
 	</tbody>

@@ -281,8 +281,7 @@ class Statistics extends CI_Model
 	 */
 	function cron($id = NULL)
 	{
-		$boards = new Board();
-		$boards->get();
+		$boards = $this->radix->get_all();
 
 		$available = $this->get_available_stats();
 
@@ -308,7 +307,7 @@ class Statistics extends CI_Model
 				$avail[] = $k;
 		}
 
-		foreach ($boards->all as $board)
+		foreach ($boards as $board)
 		{
 			if (!is_null($id) && $id != $board->id)
 				continue;
@@ -324,17 +323,23 @@ class Statistics extends CI_Model
 				$skip = FALSE;
 				foreach ($stats->result() as $r)
 				{
-					/**
+					/*
 					 * Determine if the statistics already exists or that the information is outdated.
 					 */
 					if ($r->board_id == $board->id && $r->name == $k)
 					{
-						/**
+						/*
 						 * This statistics report has run once already.
 						 */
 						$found = TRUE;
+						
+						if(!isset($a['frequency']))
+						{
+							$skip = TRUE;
+							continue;
+						}
 
-						/**
+						/*
 						 * This statistics report has not reached its frequency EOL.
 						 */
 						if ((time() - strtotime($r->timestamp)) <= $a['frequency'])
@@ -559,13 +564,13 @@ class Statistics extends CI_Model
 		$query = $this->db->query('
 			SELECT 
 				day,posts,images,sage 
-			FROM ' . $this->board($board,
+			FROM ' . $this->get_table($board,
 				'daily') . '
-			WHERE day > floor((%%NOW%%-31536000)/86400)*86400 
-			GROUP BY day 
-			ORDER BY day;
+			WHERE day > floor((?)/86400)*86400 
+			GROUP BY day
+			ORDER BY day
 		',
-			array(time() - 31536000));
+			array(time()));
 
 		$array = $query->result_array();
 		$query->free_result();
@@ -597,11 +602,12 @@ class Statistics extends CI_Model
 				day, trips, names, anons 
 			FROM ' . $this->get_table($board,
 				'daily') . '
-			WHERE day > floor((%%NOW%%-31536000)/86400)*86400 
-			GROUP BY day 
-			ORDER BY day
+			WHERE day > floor((?-31536000)/86400)*86400 
+			GROUP BY day
+			ORDER BY day 
 		',
-			array(time() - 31536000));
+			array(time())
+		);
 
 		$array = $query->result_array();
 		$query->free_result();

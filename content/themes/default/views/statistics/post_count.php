@@ -3,7 +3,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<table class="bordered-table" style="width:600px; margin: 10px auto;">
+<table class="bordered-table table-striped" style="width:600px; margin: 10px auto;">
 	<thead>
 		<tr>
 			<th><?php echo _('Poster') ?></th>
@@ -28,7 +28,7 @@ if (!defined('BASEPATH'))
 					<span class="poster_name"><?php echo $d['name'] ?></span> <span class="poster_trip"><?php echo $d['trip'] ?></span>
 				</a>
 			</td>
-			<td><?php echo $d['COUNT(*)'] ?></td>
+			<td><?php echo $d['postcount'] ?></td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody>

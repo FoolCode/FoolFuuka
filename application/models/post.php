@@ -202,61 +202,58 @@ class Post extends CI_Model
 	 * @param type $board
 	 * @return type
 	 */
-	function get_gallery($board)
+	function get_gallery($board, $page = 1, $options = array())
 	{
+		// defaults
+		$per_page = 200;
+		$type = 'by_thread';
+		$process = TRUE;
+		$clean = TRUE;
 
-		$query = $this->db->query('
-			SELECT *
-			FROM
-			(
-				SELECT *, parent as unq_parent
-				FROM ' . $this->get_table_threads($board) . '
-				ORDER BY time_op DESC
-				LIMIT 0, 200
-			) AS t
-			LEFT JOIN ' . $this->get_table($board) . ' AS g
-				ON g.num = t.unq_parent AND g.subnum = 0
-		');
-
-		$sql = array();
-		$result = $query->result();
-		foreach ($result as $row)
+		// overwrite defaults
+		foreach ($options as $key => $option)
 		{
-			$sql[] = '
+			$$key = $option;
+		}
+
+		if($type == 'by_post')
+		{
+			$query = $this->db->query('
+				SELECT *
+				FROM ' . $this->get_table($board) . '
+				WHERE media_filename IS NOT NULL
+				ORDER BY timestamp DESC
+				LIMIT ?, ?
+			',
+			array(intval(($page * $per_page) - $per_page), intval($per_page)));
+		}
+		else
+		{
+			$query = $this->db->query('
+				SELECT *
+				FROM
 				(
-					SELECT count(*) AS count_all, count(distinct preview) AS count_images, parent
-					FROM ' . $this->get_table($board) . '
-					WHERE parent = ' . intval($row->num) . '
-				)
-			';
+					SELECT *, parent as unq_parent
+					FROM ' . $this->get_table_threads($board) . '
+					ORDER BY time_op DESC
+					LIMIT ?, ?
+				) AS t
+				LEFT JOIN ' . $this->get_table($board) . ' AS g
+					ON g.num = t.unq_parent AND g.subnum = 0
+			',
+			array(intval(($page * $per_page) - $per_page), intval($per_page)));
 		}
 
-		$sql = implode('UNION', $sql) . '
-			ORDER BY parent DESC
-		';
-
-		$query2 = $this->db->query($sql);
-		$result2 = $query2->result();
-		foreach ($result as $key => $row)
-		{
-			$result[$key]->count_all = 0;
-			$result[$key]->count_images = 0;
-			// it should basically always be the first found anyway unless not found
-			foreach ($result2 as $k => $r)
-			{
-				if ($r->parent == $row->num)
-				{
-					$result[$key]->count_all = $result2[$k]->count_all;
-					$result[$key]->count_images = $result2[$k]->count_images;
-				}
-			}
-		}
+		$result = $query->result();
 
 		$result_num_as_key = array();
 		foreach ($result as $key => $post)
 		{
-			$this->process_post($board, $post, TRUE, TRUE);
-			$result_num_as_key[$post->num] = $post;
+			if($post->media)
+			{
+				$this->process_post($board, $post, $clean, $process);
+				$result_num_as_key[$post->num] = $post;
+			}
 		}
 
 		return $result_num_as_key;

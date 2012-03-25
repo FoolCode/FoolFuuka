@@ -435,14 +435,14 @@ class Chan extends Public_Controller
 	/**
 	 * Display the last X created threads in a gallery view.
 	 */
-	public function gallery()
+	public function gallery($type = 'by_thread', $page = 1)
 	{
 		// Disable GALLERY when thumbnails is disabled for normal users.
 		if (!get_selected_radix()->thumbnails && !$this->tank_auth->is_allowed())
 			show_404();
 
 		// Fetch the last X created threads to generate the GALLERY.
-		$threads = $this->post->get_gallery(get_selected_radix());
+		$threads = $this->post->get_gallery(get_selected_radix(), $page, array('type' => $type));
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .

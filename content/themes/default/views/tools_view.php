@@ -148,7 +148,7 @@
 			</li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'image')
+<?php echo form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'image')
 			? TRUE : FALSE));
 ?>
 					<span>Only with image</span>
@@ -156,7 +156,7 @@
 			</li>
 			<li>
 				<label>
-					<?php echo form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text')
+					<?php echo form_radio(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text')
 								? TRUE : FALSE));
 					?>
 					<span>Only without image</span>

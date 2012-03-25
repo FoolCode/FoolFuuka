@@ -7,13 +7,16 @@ class Plugins extends CI_Model
 {
 
 	var $_controller_uris = array();
+
+
 	//var $viewdata = array();
 
 	function __construct()
 	{
 		parent::__construct();
 	}
-	
+
+
 	/**
 	 * We're dealing with making plugins that play well with controllers
 	 * and we need Arrays to work properly. Without this $this->var[] = $data
@@ -25,7 +28,7 @@ class Plugins extends CI_Model
 	 */
 	function &__get($key)
 	{
-		$CI =& get_instance();
+		$CI = & get_instance();
 		return $CI->$key;
 	}
 
@@ -36,7 +39,7 @@ class Plugins extends CI_Model
 	function lookup_plugins()
 	{
 		$this->load->helper('directory');
-		$slugs = directory_map(FOOLSLIDE_PLUGIN_DIR, 1);
+		$slugs = directory_map(FOOL_PLUGIN_DIR, 1);
 
 		return $slugs;
 	}
@@ -44,7 +47,7 @@ class Plugins extends CI_Model
 
 	function get_info_by_slug($slug)
 	{
-		include(FOOLSLIDE_PLUGIN_DIR . $slug . '/' . $slug . '_info.php');
+		include(FOOL_PLUGIN_DIR . $slug . '/' . $slug . '_info.php');
 		return (object) $info;
 	}
 
@@ -56,21 +59,29 @@ class Plugins extends CI_Model
 	{
 		$slugs = $this->lookup_plugins();
 
-		// we don't care if the database doesn't contain an entry for a plugin
-		// in that case, it means it was never installed
-		$slugs_to_sql = $slugs;
-		foreach ($slugs_to_sql as $key => $slug_to_sql)
+		if (count($slugs) > 0)
 		{
-			$slugs_to_sql[$key] = $this->db->escape($slug_to_sql);
-		}
-		$sql = implode(' OR slug = ', $slugs_to_sql);
-		$query = $this->db->query('
+
+			// we don't care if the database doesn't contain an entry for a plugin
+			// in that case, it means it was never installed
+			$slugs_to_sql = $slugs;
+			foreach ($slugs_to_sql as $key => $slug_to_sql)
+			{
+				$slugs_to_sql[$key] = $this->db->escape($slug_to_sql);
+			}
+			$sql = implode(' OR slug = ', $slugs_to_sql);
+			$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->db->dbprefix('plugins') . '
 			WHERE slug = ' . $sql . '
 		');
 
-		$result = $query->result();
+			$result = $query->result();
+		}
+		else
+		{
+			$result = array();
+		}
 
 		$slugs_with_data = array();
 		foreach ($slugs as $slug)

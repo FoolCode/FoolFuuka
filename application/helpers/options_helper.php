@@ -13,12 +13,14 @@ if (!defined('BASEPATH'))
 if (!function_exists('get_setting'))
 {
 
-	function get_setting($option)
+	function get_setting($option, $fallback = NULL)
 	{
 		$CI = & get_instance();
 		$array = $CI->fs_options;
 		if (isset($array[$option]))
 			return $array[$option];
+		if(!is_null($fallback))
+			return $fallback;
 		return FALSE;
 	}
 
@@ -125,54 +127,7 @@ if (!function_exists('generate_file_path'))
 
 }
 
-/**
- * Caches in a variable and returns the home team's object
- *
- * @author Woxxy
- * @return object home team
- */
-if (!function_exists('get_home_team'))
-{
 
-	function get_home_team()
-	{
-		$CI = & get_instance();
-		if (isset($CI->fs_loaded->home_team))
-			return $CI->fs_loaded->home_team;
-		$hometeam = get_setting('fs_gen_default_team');
-		$team = new Team();
-		$team->where('name', $hometeam)->limit(1)->get();
-		if ($team->result_count() < 1)
-		{
-			$team = new Team();
-			$team->limit(1)->get();
-		}
-
-		$CI->fs_loaded->home_team = $team;
-		return $team;
-	}
-
-
-}
-
-if (!function_exists('parse_irc'))
-{
-
-	function parse_irc($string)
-	{
-		if (substr($string, 0, 1) == '#')
-		{
-			$echo = 'irc://';
-			$at = strpos($string, '@');
-			$echo .= substr($string, $at + 1);
-			$echo .= '/' . substr($string, 1, $at - 1);
-			return $echo;
-		}
-		return $string;
-	}
-
-
-}
 /**
  * Locate ImageMagick and determine if it has been installed or not.
  */
@@ -221,34 +176,6 @@ function find_imagick()
 
 
 /**
- * Checks that the call is made from Ajax
- *
- * @author Woxxy
- * @return bool true if ajax request
- */
-function isAjax()
-{
-	return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-			($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'));
-}
-
-
-function current_url_real()
-{
-	$pageURL = (isset($_SERVER["HTTPS"]) && @$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
-	if ($_SERVER["SERVER_PORT"] != "80")
-	{
-		$pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-	}
-	else
-	{
-		$pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-	}
-	return $pageURL;
-}
-
-
-/**
  * Get either a Gravatar URL or complete image tag for a specified email address.
  *
  * @param string $email The email address
@@ -276,15 +203,19 @@ function get_gravatar($email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts 
 }
 
 
-function icons($num, $size = '32', $icons = 'sweeticons2')
-{
-	return site_url() . 'assets/icons/' . $icons . '/' . $size . '/' . $num . '.png';
-}
-
-
 function is_natural($str)
 {
 	return (bool) preg_match('/^[0-9]+$/', $str);
+}
+
+
+function is_post_number($str)
+{
+	if(is_natural($str))
+	{
+		return TRUE;
+	}
+	return (bool) preg_match('/^[0-9]+(,|_)[0-9]$/', $str);
 }
 
 
@@ -434,7 +365,6 @@ function compress_html()
 	$CI->output->_display();
 }
 
-
 /**
  * Convert an IP address from presentation to decimal(39,0) format suitable for storage in MySQL
  *
@@ -442,7 +372,7 @@ function compress_html()
  * @return string The IP address in decimal notation
  */
 function inet_ptod($ip_address)
-{
+{	
     // IPv4 address
     if (strpos($ip_address, ':') === false && strpos($ip_address, '.') !== false) {
         $ip_address = '::' . $ip_address;

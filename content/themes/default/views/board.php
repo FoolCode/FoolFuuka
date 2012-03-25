@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 ?>
 
 <?php foreach ($posts as $key => $post) : ?>
-<article<?php echo (isset($post['op'])) ? ' id="' . $post['op']->num . '" class="thread doc_id_' . $post['op']->doc_id . '"' : ' class="thread"' ?>>
+<article<?php echo (isset($post['op'])) ? ' id="' . $post['op']->num . '" class="clearfix thread doc_id_' . $post['op']->doc_id . '"' : ' class="clearfix thread"' ?>>
 	<div class="thread_divider"></div>
 	<?php if (isset($post['op'])) : $op = $post['op']; ?>
 	<?php if ($op->preview) : ?>
@@ -18,14 +18,18 @@ if (!defined('BASEPATH'))
 			</div>
 			<div class="post_file_controls">
 				<?php if (get_selected_radix()->thumbnails || $this->tank_auth->is_allowed()) : ?>
-				<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . $op->safe_media_hash) ?>" class="btnr parent">View Same</a>
-				<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>" target="_blank" class="btnr parent">Google</a>
-				<a href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>" target="_blank" class="btnr parent">iqdb</a>
-				<a href="http://saucenao.com/search.php?url=<?php echo $op->thumbnail_href ?>" target="_blank" class="btnr parent">SauceNAO</a>
+				<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . $op->safe_media_hash) ?>"
+				   class="btnr parent">View Same</a><a
+					href="http://google.com/searchbyimage?image_url=<?php echo $op->thumbnail_href ?>" target="_blank"
+					class="btnr parent">Google</a><a
+					href="http://iqdb.org/?url=<?php echo $op->thumbnail_href ?>" target="_blank"
+					class="btnr parent">iqdb</a><a
+					href="http://saucenao.com/search.php?url=<?php echo $op->thumbnail_href ?>" target="_blank"
+					class="btnr parent">SauceNAO</a>
 				<?php endif; ?>
 			</div>
 		</div>
-	<?php endif; ?>
+		<?php endif; ?>
 
 	<header<?php echo (isset($op->report_status) && !is_null($op->report_status)) ? ' class="reported"' : '' ?>>
 		<div class="post_data">
@@ -34,20 +38,19 @@ if (!defined('BASEPATH'))
 			<span class="post_author"><?php echo ($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed ?></span>
 			<?php echo ($op->trip_processed) ? '<span class="post_trip">'. $op->trip_processed . '</span>' : '' ?>
 			<?php if ($op->capcode != 'N') : ?>
-				<?php if ($op->capcode == 'M') : ?>
-					<span class="post_level post_level_moderator">## Mod</span>
+			<?php if ($op->capcode == 'M') : ?>
+				<span class="post_level post_level_moderator">## Mod</span>
 				<?php endif ?>
-				<?php if ($op->capcode == 'G') : ?>
-					<span class="post_level post_level_global_moderator">## Global Mod</span>
+			<?php if ($op->capcode == 'G') : ?>
+				<span class="post_level post_level_global_moderator">## Global Mod</span>
 				<?php endif ?>
-				<?php if ($op->capcode == 'A') : ?>
-					<span class="post_level post_level_administrator">## Admin</span>
+			<?php if ($op->capcode == 'A') : ?>
+				<span class="post_level post_level_administrator">## Admin</span>
 				<?php endif ?>
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time"><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
-				<time datetime="<?php echo date(DATE_W3C, $op->timestamp-18000) ?>" class="hidden_time" title="4chan DateTime"><?php echo date('D M d H:i:s Y', $op->timestamp-18000) ?></time>
+				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if(get_selected_radix()->archive) : ?>rel="tooltip" title="<?php echo _('4chan time') . ': ' .date('D M d H:i:s Y', $op->timestamp-18000) ?>"<?php endif; ?>><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
 			</span>
 
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#'  . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="highlight">No.</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="quote"><?php echo $op->num ?></a>
@@ -58,11 +61,28 @@ if (!defined('BASEPATH'))
 
 			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan manually."/></span><?php endif ?>
 			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
+
+			<div class="backlink_list"<?php echo (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
+				<?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
+			</div>
+
+			<?php if($this->tank_auth->is_allowed()) : ?>
+			<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_post"><?php echo _('Remove') ?></button>
+				<?php if($op->preview) : ?>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_image"><?php echo _('Remove image') ?></button>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_md5"><?php echo _('Ban image') ?></button>
+				<?php endif; ?>
+				<?php if($op->id) : ?>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_user"><?php echo _('Ban user:') . ' ' . inet_dtop($op->id) ?></button>
+				<?php endif; ?>
+				<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_report"><?php echo _('Remove report') ?></button>
+				<?php endif; ?>
+			</div>
+			<?php endif; ?>
 		</div>
 
-		<div class="backlink_list"<?php echo (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
-			<?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
-		</div>
 	</header>
 
 	<div class="text">
@@ -74,34 +94,34 @@ if (!defined('BASEPATH'))
 	<?php endif; ?>
 
 	<aside class="posts">
-	<?php
-	if (isset($post['posts']))
-	{
-		$post_counter = 0;
-		foreach ($post['posts'] as $p)
+		<?php
+		if (isset($post['posts']))
 		{
-			if ($p->preview)
-				$post_counter++;
+			$post_counter = 0;
+			foreach ($post['posts'] as $p)
+			{
+				if ($p->preview)
+					$post_counter++;
 
-			if ($post_counter == 150)
-				$modifiers['lazyload'] = TRUE;
+				if ($post_counter == 150)
+					$modifiers['lazyload'] = TRUE;
 
-			if ($p->parent == 0)
-				$p->parent  = $p->num;
+				if ($p->parent == 0)
+					$p->parent  = $p->num;
 
-			if (file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
-				include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
-			else
-				include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
+				if (file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
+					include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
+				else
+					include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
+			}
 		}
-	}
-	?>
+		?>
 	</aside>
 
 	<?php if (isset($thread_id)) : ?>
-		<div class="js_hook_realtimethread"></div>
-		<?php echo $template['partials']['post_reply']; ?>
-		<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
+	<div class="js_hook_realtimethread"></div>
+	<?php echo $template['partials']['post_thread']; ?>
+	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
 	<?php endif; ?>
 </article>
 <?php endforeach; ?>
@@ -114,7 +134,7 @@ if (!defined('BASEPATH'))
 	thread_id = <?php echo $thread_id ?>;
 		<?php if (!$is_last50) : ?>
 		thread_op_json = <?php echo json_encode($posts[$thread_id]['op']) ?>;
-		<?php endif; ?>
+			<?php endif; ?>
 		<?php
 		$latest_doc_id = (isset($posts[$thread_id]['op'])) ? $posts[$thread_id]['op']->doc_id : 0;
 		if (isset($posts[$thread_id]['posts']))
@@ -126,6 +146,6 @@ if (!defined('BASEPATH'))
 			}
 		}
 		?>
-		latest_doc_id = <?php echo $latest_doc_id ?>;
-	<?php endif; ?>
+	latest_doc_id = <?php echo $latest_doc_id ?>;
+		<?php endif; ?>
 </script>

@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
 
 if (!function_exists('get_notices'))
 {
-	/*
+	/**
 	 * Returns the notices with the Twitter Bootstrap notices formatting, and unsets
 	 * the array lines from the flash
 	 * 
@@ -14,13 +14,14 @@ if (!function_exists('get_notices'))
 	function get_notices()
 	{
 		$CI = & get_instance();
-		$merge = array_merge($CI->notices, $CI->flash_notice_data);
+		$flash_notices = is_array($CI->session->flashdata('notices'))?$CI->session->flashdata('notices'):array();
+		$merge = array_merge($CI->notices, $CI->flash_notice_data, $flash_notices);
 		$CI->flash_notice_data = '';
 		$CI->session->set_flashdata('notices', array());
 		$echo = '';
 		foreach ($merge as $key => $value)
 		{
-			$echo .= '<div class="alert-message ' . $value["type"] . ' fade in" data-alert="alert"><a class="close" href="#">&times;</a><p>' . $value["message"] . '</p></div>';
+			$echo .= '<div class="alert alert-' . $value["type"] . ' fade in" data-alert="alert"><a class="close" data-dismiss="alert">×</a>' . $value["message"] . '</div>';
 		}
 		return $echo;
 	}
@@ -30,7 +31,7 @@ if (!function_exists('get_notices'))
 
 if (!function_exists('clear_notices'))
 {
-	/*
+	/**
 	 * Flushes flashdata and standard notices
 	 * 
 	 * @author Woxxy
@@ -47,7 +48,7 @@ if (!function_exists('clear_notices'))
 
 if (!function_exists('set_notice'))
 {
-	/*
+	/**
 	 * Sets a notice in the currently loading page. Can be used for multiple notices
 	 * Notice types: error, warn, notice
 	 * 
@@ -74,7 +75,7 @@ if (!function_exists('set_notice'))
 
 if (!function_exists('flash_notice'))
 {
-	/*
+	/**
 	 * Sets a notice in the next loaded page. Can be used for multiple notices
 	 * Notice types: error, warn, notice
 	 * 

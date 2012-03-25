@@ -2,10 +2,6 @@
 	exit('No direct script access allowed'); ?>
 
 <div class="table">
-	<?php if (isset($form_title))
-		echo '<h3 style="float: left">' . $form_title . '</h3>'; ?>
-	<span style="float: right; padding: 5px"><a href="#" class="btn" data-keyboard="true" data-backdrop="true" data-controls-modal="modal-for-information"><?php echo _('Output Server Information'); ?></a></span>
-	<hr class="clear"/>
 	<div style="margin-right: 10px; padding-bottom: 10px">
 		<?php
 		// name = non-localized for developers
@@ -28,7 +24,7 @@
 					'alert' => array(
 						'type' => 'important',
 						'title' => _('Old PHP version'),
-						'text' => _('To run FoOlSlide, you need at least PHP  version 5.2.0.') . '<p class="vartext">' . _('Suggested') . ': 5.3.0+</p>',
+						'text' => _('To run FoOlFuuka, you need at least PHP  version 5.2.0.') . '<p class="vartext">' . _('Suggested') . ': 5.3.0+</p>',
 						'if' => version_compare(phpversion(), '5.2.0') < 0
 					)
 				)
@@ -50,23 +46,23 @@
 			'title' => _('Software Information'),
 			'data' => array(
 				array(
-					'name' => 'FoOlSlide Version',
-					'title' => _('FoOlSlide Version'),
-					'value' => FOOLSLIDE_VERSION,
-					'text' => _('The version of FoOlSlide that you are currently running on your server.'),
+					'name' => 'FoOlFuuka Version',
+					'title' => _('FoOlFuuka Version'),
+					'value' => FOOL_VERSION,
+					'text' => _('The version of FoOlFuuka that you are currently running on your server.'),
 					'alert' => array(
 						'type' => 'success',
 						'type_text' => _('New Version Available'),
 						'title' => _('New Version Available'),
-						'text' => _('Upgrading FoOlSlide ensures that you have the most secure, stable and feature enhanced release.') . '<p class="vartext">' . _('Suggested') . ': ' . get_setting('fs_cron_autoupgrade_version') . '</p>',
-						'if' => get_setting('fs_cron_autoupgrade_version') && version_compare(FOOLSLIDE_VERSION, get_setting('fs_cron_autoupgrade_version')) < 0
+						'text' => _('Upgrading FoOlFuuka ensures that you have the most secure, stable and feature enhanced release.') . '<p class="vartext">' . _('Suggested') . ': ' . get_setting('fs_cron_autoupgrade_version') . '</p>',
+						'if' => get_setting('fs_cron_autoupgrade_version') && version_compare(FOOL_VERSION, get_setting('fs_cron_autoupgrade_version')) < 0
 					)
 				),
 				array(
 					'name' => 'Environment',
 					'title' => _('Environment'),
 					'value' => ucfirst(ENVIRONMENT),
-					'text' => _('The environment FoOlSlide is current running as on the server.'),
+					'text' => _('The environment FoOlFuuka is currently running as on the server.'),
 				)
 			)
 		);
@@ -90,7 +86,7 @@
 					'alert' => array(
 						'type' => 'important',
 						'title' => _('Safe Mode'),
-						'text' => _('Safe Mode has been enabled on your PHP installation. This setting has nothing to do with security, and it\'s used by shared server hosts to limit your actions. This variable should be turned off for FoOlSlide to function correctly.') . '<p class="vartext">' . _('Suggested') . ': Off</p>',
+						'text' => _('Safe Mode has been enabled on your PHP installation. This setting has nothing to do with security, and it\'s used by shared server hosts to limit your actions. This variable should be turned off for FoOlFuuka to function correctly.') . '<p class="vartext">' . _('Suggested') . ': Off</p>',
 						'if' => ini_get('safe_mode')
 					)
 				),
@@ -102,7 +98,7 @@
 					'alert' => array(
 						'type' => 'important',
 						'title' => _('Disabled'),
-						'text' => _('Your PHP configuration currently has URL-aware fopen wrappers disabled. This affects FoOlSlide functions that require accessing remote files in case cURL is not installed on the system. If it is possible, this variable should be enabled with cURL installed as well.') . '<p class="vartext">' . _('Suggested') . ': On</p>',
+						'text' => _('Your PHP configuration currently has URL-aware fopen wrappers disabled. This affects FoOlFuuka functions that require accessing remote files in case cURL is not installed on the system. If it is possible, this variable should be enabled with cURL installed as well.') . '<p class="vartext">' . _('Suggested') . ': On</p>',
 						'if' => !ini_get('allow_url_fopen')
 					)
 				),
@@ -126,7 +122,7 @@
 					'alert' => array(
 						'type' => 'important',
 						'title' => _('Disabled'),
-						'text' => _('Your PHP configuration currently has file uploads disabled. This variable must be enabled or FoOlSlide will not operate correctly.') . '<p class="vartext">' . _('Suggested') . ': On</p>',
+						'text' => _('Your PHP configuration currently has file uploads disabled. This variable must be enabled or FoOlFuuka will not operate correctly.') . '<p class="vartext">' . _('Suggested') . ': On</p>',
 						'if' => !ini_get('file_uploads')
 					)
 				),
@@ -200,69 +196,18 @@
 			echo '<h4>' . $item['title'] . '</h4>';
 			if (isset($item['text']))
 				echo '<p>' . $item['text'] . '</p>';
-			echo '<table class="zebra-striped fixed-table"><tbody>';
+			echo '<table class="table table-striped fixed-table"><tbody>';
 			foreach ($item['data'] as $subkey => $subitem)
 			{
-				$tooltip = (isset($subitem['text']) && $subitem['text'] != "") ? '<a rel="popover-right" href="#" data-content="' . htmlspecialchars($subitem['text']) . '" data-original-title="' . htmlspecialchars($subitem['title']) . '"><img src="' . icons(219, 16) . '" class="icon icon-small"></a>' : '';
-				$tooltip2 = (isset($subitem['alert']) && $subitem['alert']['text'] != "" && $subitem['alert']['if']) ? '<span class="label ' . $subitem['alert']['type'] . '">' . _(isset($subitem['alert']['type_text'])?$subitem['alert']['type_text']:$subitem['alert']['type']) . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars($subitem['alert']['text']) . '" data-original-title="' . htmlspecialchars($subitem['alert']['title']) . '"><img src="' . icons(388, 16) . '" class="icon icon-small"></a>' : '';
-				echo '<tr><td>' . $subitem['title'] . ' ' . $tooltip . '</td><td>' . $subitem['value'] . ' ' . $tooltip2 . '</td></tr>';
+				$tooltip = (isset($subitem['text']) && $subitem['text'] != "") ? '<a rel="popover-right" href="#" data-content="' . htmlspecialchars($subitem['text']) . '" data-original-title="' . htmlspecialchars($subitem['title']) . '"><i class="icon-info-sign"></i></a>' : '';
+				$tooltip2 = (isset($subitem['alert']) && $subitem['alert']['text'] != "" && $subitem['alert']['if']) ? '<span class="label label-' . $subitem['alert']['type'] . '">' . _(isset($subitem['alert']['type_text'])?$subitem['alert']['type_text']:$subitem['alert']['type']) . '</span> <a rel="popover-right" href="#" data-content="' . htmlspecialchars($subitem['alert']['text']) . '" data-original-title="' . htmlspecialchars($subitem['alert']['title']) . '"><i class="icon-info-sign"></i></a>' : '';
+				echo '<tr>
+					<td style="width:50%;">' . $subitem['title'] . ' ' . $tooltip . '</td>
+					<td style="width:50%;">' . $subitem['value'] . ' ' . $tooltip2 . '</td></tr>';
 			}
 			echo '</tbody></table>';
 		}
 		?>
 
-		<?php echo _('If you are asked to provide an output of your server information, please click the "Output Server Information" button at the top right and provide it to us via <a href="http://pastebin.com">Pastebin</a> or some similar service.'); ?>
 	</div>
 </div>
-
-<div id="modal-for-information" class="modal hide fade" style="display: none">
-	<div class="modal-header">
-		<a class="close" href="#">&times;</a>
-		<h3><?php echo _('System Information'); ?></h3>
-	</div>
-	<div class="modal-body" style="text-align: center">
-		<textarea id="server-information-output" style="min-height: 300px; font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace !important" readonly="readonly"><?php
-		foreach ($information as $key => $item)
-		{
-			echo $item['name'] . "\n";
-			echo "------------------------------\n";
-			foreach ($item['data'] as $subkey => $subitem)
-			{
-				echo $subitem['name'] . ' = ' . $subitem['value'] . "\n";
-			}
-			echo "\n";
-		}
-		echo 'Report Generated: ' . date(DATE_RFC822) . "\n";
-		?></textarea>
-	</div>
-	<div class="modal-footer">
-		<?php
-		if (function_exists('curl_init'))
-		{
-			echo '<center><a class="btn" style="float: none" href="#" onclick="return pasteSystemInfo();">' . _('Pastebin It!') . '</a></center>';
-		}
-		?>
-	</div>
-</div>
-
-<script type="text/javascript">
-	
-	var pasteSystemInfo = function() {
-		var modalInfoOutput = jQuery("#modal-for-information");
-		jQuery.post('<?php echo site_url("admin/system/pastebin") ?>', { output: modalInfoOutput.find("#server-information-output").val() }, function(result) {
-			if (result.href != "") {
-				modalInfoOutput.find(".modal-footer").html('<center><input value="' + result.href + '" style="text-align: center" onclick="select(this);" readonly="readonly" /><br/><?php echo _('Note: This paste expires in 1 hour.'); ?></center>');
-			}
-		}, 'json');
-	}
-			
-	jQuery(document).ready(function() {
-		var modalInfoContainer = jQuery("#modal-for-information").find("#server-information-output");
-		modalInfoContainer.click(function() {
-			modalInfoContainer.select();
-			// Chrome Fix
-			modalInfoContainer.mouseup(function() { modalInfoContainer.unbind('mouseup'); return false; });
-		});
-		return false;
-	});
-</script>

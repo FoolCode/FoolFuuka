@@ -17,7 +17,7 @@ class Balancer extends Admin_Controller
 	}
 
 
-	/*
+	/**
 	 * _submit is a private function that submits to the "preferences" table.
 	 * entries that don't exist are created. the preferences table could get very large
 	 * but it's not really an issue as long as the variables are kept all different.

@@ -2,8 +2,11 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Chan extends REST_Controller
+
+class Chan extends API_Controller
 {
+
+
 	/**
 	 * Returns the latest threads
 	 *
@@ -13,7 +16,7 @@ class Chan extends REST_Controller
 	 */
 	function threads_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if ($this->get('page'))
 		{
@@ -44,7 +47,8 @@ class Chan extends REST_Controller
 			}
 			else if ($this->get('per_page') > 50)
 			{
-				$this->response(array('error' => _('Can\'t return more than 50 threads')), 404);
+				$this->response(array('error' => _('Can\'t return more than 50 threads')),
+					404);
 			}
 			else
 			{
@@ -58,7 +62,8 @@ class Chan extends REST_Controller
 
 
 
-		$posts = $this->post->get_latest(get_selected_radix(), $page, array('per_page' => $per_page));
+		$posts = $this->post->get_latest(get_selected_radix(), $page,
+			array('per_page' => $per_page));
 
 		if (count($posts) > 0)
 		{
@@ -80,7 +85,7 @@ class Chan extends REST_Controller
 	 */
 	function ghost_threads_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if ($this->get('page'))
 		{
@@ -111,7 +116,8 @@ class Chan extends REST_Controller
 			}
 			else if ($this->get('per_page') > 50)
 			{
-				$this->response(array('error' => _('Can\'t return more than 50 threads')), 404);
+				$this->response(array('error' => _('Can\'t return more than 50 threads')),
+					404);
 			}
 			else
 			{
@@ -125,7 +131,8 @@ class Chan extends REST_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest_ghost(get_selected_radix(), $page, array('per_page' => $per_page));
+		$posts = $this->post->get_latest_ghost(get_selected_radix(), $page,
+			array('per_page' => $per_page));
 
 		if (count($posts) > 0)
 		{
@@ -148,11 +155,12 @@ class Chan extends REST_Controller
 	 */
 	function thread_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if (!$this->get('num'))
 		{
-			$this->response(array('error' => _('You have to select a thread number')), 404);
+			$this->response(array('error' => _('You have to select a thread number')),
+				404);
 		}
 
 		if (!is_natural($this->get('num')))
@@ -176,13 +184,14 @@ class Chan extends REST_Controller
 			$from_realtime = TRUE;
 
 			$thread = $this->post->get_thread(
-					get_selected_radix(), $num, array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
+				get_selected_radix(), $num,
+				array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
 			);
 		}
 		else
 		{
 			$thread = $this->post->get_thread(
-					get_selected_radix(), $num, array()
+				get_selected_radix(), $num, array()
 			);
 		}
 
@@ -206,11 +215,12 @@ class Chan extends REST_Controller
 
 	function thread_ghosts_posts_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if (!$this->get('num'))
 		{
-			$this->response(array('error' => _('You have to select a thread number')), 404);
+			$this->response(array('error' => _('You have to select a thread number')),
+				404);
 		}
 
 		if (!is_natural($this->get('num')))
@@ -221,7 +231,8 @@ class Chan extends REST_Controller
 		$num = intval($this->get('num'));
 
 		$thread = $this->post->get_thread(
-				get_selected_radix(), $num, array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
+			get_selected_radix(), $num,
+			array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
 		);
 
 		if ($thread !== FALSE)
@@ -244,7 +255,7 @@ class Chan extends REST_Controller
 
 	function ghost_posts_get()
 	{
-		$this->_check_board();
+		$this->check_board();
 
 		if ($this->get('page'))
 		{
@@ -275,7 +286,8 @@ class Chan extends REST_Controller
 			}
 			else if ($this->get('per_page') > 3000)
 			{
-				$this->response(array('error' => _('Can\'t return more than 3000 ghost posts')), 404);
+				$this->response(array('error' => _('Can\'t return more than 3000 ghost posts')),
+					404);
 			}
 			else
 			{
@@ -287,7 +299,8 @@ class Chan extends REST_Controller
 			$per_page = 1000;
 		}
 
-		$posts = $this->post->get_posts_ghost(get_selected_radix(), $page, array('per_page' => $per_page));
+		$posts = $this->post->get_posts_ghost(get_selected_radix(), $page,
+			array('per_page' => $per_page));
 
 		if (count($posts['posts']) > 0)
 		{
@@ -300,5 +313,92 @@ class Chan extends REST_Controller
 		}
 	}
 
+
+	function mod_post_actions_post()
+	{
+		if (!$this->tank_auth->is_allowed())
+		{
+			$this->response(array('error' => _('Forbidden')), 403);
+		}
+		
+		$this->check_board();
+
+		if (!$this->post('actions') || !$this->post('doc_id'))
+		{
+			$this->response(array('error' => _('Missing arguments')), 404);
+		}
+
+
+		// action should be an array 
+		// array('ban_md5', 'ban_user', 'remove_image', 'remove_post', 'remove_report');
+		$actions = $this->post('actions');
+		if (!is_array($actions))
+		{
+			$this->response(array('error' => _('Invalid action')), 404);
+		}
+
+		$doc_id = $this->post('doc_id');
+		$board = $this->radix->get_by_shortname($this->post('board'));
+
+		$this->load->model('post');
+		$post = $this->post->get_by_doc_id($board, $doc_id);
+
+		if ($post === FALSE)
+		{
+			$this->response(array('error' => _('Post not found')), 404);
+		}
+
+
+		if (in_array('ban_md5', $actions))
+		{
+			$this->post->ban_image_hash($post->media_hash);
+			$actions = array_diff($actions, array('remove_image'));
+		}
+
+		if (in_array('remove_post', $actions))
+		{
+			$this->post->delete(
+				$board,
+				array(
+				'post' => $post->doc_id,
+				'password' => '',
+				'type' => 'post'
+				)
+			);
+
+			$actions = array_diff($actions, array('remove_image', 'remove_report'));
+		}
+
+		// if we banned md5 we already removed the image
+		if (in_array('remove_image', $actions))
+		{
+			$this->post->delete(
+				$board,
+				array(
+				'post' => $post->doc_id,
+				'password' => '',
+				'type' => 'image'
+				)
+			);
+		}
+
+		if (in_array('ban_user', $actions))
+		{
+			$this->load->model('poster');
+			$this->poster->ban(
+				$post->id, isset($data['length']) ? $data['length'] : NULL,
+				isset($data['reason']) ? $data['reason'] : NULL
+			);
+		}
+
+		if (in_array('remove_report', $actions))
+		{
+			$this->load->model('report');
+			$this->report->remove_by_doc_id($board, $doc_id);
+		}
+		
+		
+		$this->response(array('success' => TRUE), 200);
+	}
 
 }

@@ -7,8 +7,8 @@
 | These details are used in emails sent by authentication library.
 |--------------------------------------------------------------------------
 */
-$config['website_name'] = 'FoOlSlide';
-$config['webmaster_email'] = 'webmaster@your-site.com';
+$config['website_name'] = site_url();
+$config['webmaster_email'] = 'no-reply@' . isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'localhost';
 
 /*
 |--------------------------------------------------------------------------

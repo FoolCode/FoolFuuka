@@ -32,7 +32,7 @@ class SphinxQL {
 
 		$connect = ($persistent == TRUE) ? 'mysql_pconnect' : 'mysql_connect';
 
-		$this->conn_id = $connect($this->db_host . ':' . $this->db_port, '', '');
+		$this->conn_id = @$connect($this->db_host . ':' . $this->db_port, '', '');
 		return $this->conn_id;
 	}
 
@@ -62,8 +62,8 @@ class SphinxQL {
 
 	function EscapeString ($string, $decode = FALSE)
 	{
-		$from	= array ('\\', '(',')','|','-','!','@','~','"','&', '/', '^', '$', '=');
-		$to		= array ('\\\\', '\(','\)','\|','\-','\!','\@','\~','\"', '\&', '\/', '\^', '\$', '\=');
+		$from	= array('\\', '(', ')', '|', '-', '!', '@', '~', '"', '&', '/', '^', '$', '=');
+		$to		= array('\\\\', '\(', '\)', '\|', '\-', '\!', '\@', '\~', '\"', '\&', '\/', '\^', '\$', '\=');
 		$string	= str_replace ($from, $to, $string);
 		return (($decode) ? urldecode($string) : $string);
 	}
@@ -71,8 +71,8 @@ class SphinxQL {
 
 	function HalfEscapeString($string, $decode = FALSE)
 	{
-		$from = array ('\\', '(',')','!','@','~','&', '/', '^', '$', '=');
-		$to   = array ('\\\\', '\(','\)','\!','\@','\~', '\&', '\/', '\^', '\$', '\=');
+		$from = array('\\', '(', ')', '!', '@', '~', '&', '/', '^', '$', '=');
+		$to   = array('\\\\', '\(', '\)', '\!', '\@', '\~', '\&', '\/', '\^', '\$', '\=');
 		$string = str_replace ( $from, $to, $string );
 		$string = preg_replace("'\"([^\s]+)-([^\s]*)\"'", "\\1\-\\2", $string);
 		$string = preg_replace("'([^\s]+)-([^\s]*)'", "\"\\1\-\\2\"", $string);

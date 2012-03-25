@@ -109,7 +109,7 @@ class Install extends Install_Controller
 				'id' => 'db_prefix',
 				'maxlength' => '200',
 				'value' => 'fu_',
-				'help' => _('Add a  database prefix to avoid collisions, in example if you have other ' . FOOLSLIDE_NAME)
+				'help' => _('Add a  database prefix to avoid collisions, in example if you have other ' . FOOL_NAME)
 			)
 		);
 
@@ -293,7 +293,7 @@ class Install extends Install_Controller
 		}
 
 		// a nice notice to tell that FoOlSlide install was a success
-		flash_notice('notice', _(FOOLSLIDE_NAME . ' has installed successfully. Check the preferences and make sure you create a team for your own chapters.'));
+		flash_notice('notice', _(FOOL_NAME . ' has installed successfully. Check the preferences and make sure you create a team for your own chapters.'));
 		redirect('/admin/');
 	}
 
@@ -308,30 +308,30 @@ class Install extends Install_Controller
 	{
 		$prob = FALSE;
 
-		if (version_compare(phpversion(), FOOLSLIDE_REQUIREMENT_PHP) < 0)
+		if (version_compare(phpversion(), FOOL_REQUIREMENT_PHP) < 0)
 		{
-			set_notice('error', _('You need at least PHP version 5.2.0 to run ' . FOOLSLIDE_NAME . '. This means you have a many years old version. It is suggested to upgrade to a more recent version of PHP to avoid security issues with your server in general.'));
+			set_notice('error', _('You need at least PHP version 5.2.0 to run ' . FOOL_NAME . '. This means you have a many years old version. It is suggested to upgrade to a more recent version of PHP to avoid security issues with your server in general.'));
 			$prob = TRUE;
 			return FALSE;
 		}
 
 		if (!file_exists('assets/config.sample.php'))
 		{
-			set_notice('error', sprintf(_('The file %s was removed. The installation can\'t continue without that file. You can find it in the ' . FOOLSLIDE_NAME . ' download.'), FCPATH . 'config.sample.php'));
+			set_notice('error', sprintf(_('The file %s was removed. The installation can\'t continue without that file. You can find it in the ' . FOOL_NAME . ' download.'), FCPATH . 'config.sample.php'));
 			$prob = TRUE;
 			return FALSE;
 		}
 
 		if (!is_writable('content'))
 		{
-			set_notice('error', sprintf(_('The %s directory needs to be writable. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOLSLIDE_NAME . ' without this.'), FCPATH . 'content/', '<br/><b><code>chmod -R 777 ' . FCPATH . 'content/</code></b><br/>'));
+			set_notice('error', sprintf(_('The %s directory needs to be writable. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOL_NAME . ' without this.'), FCPATH . 'content/', '<br/><b><code>chmod -R 777 ' . FCPATH . 'content/</code></b><br/>'));
 			$prob = TRUE;
 			return FALSE;
 		}
 
 		if (!is_writable('content/themes'))
 		{
-			set_notice('error', sprintf(_('The %s directory needs to be writable as well. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOLSLIDE_NAME . ' without this.'), FCPATH . 'content/themes', '<br/><b><code>chmod -R 777 ' . FCPATH . 'content/</code></b><br/>'));
+			set_notice('error', sprintf(_('The %s directory needs to be writable as well. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOL_NAME . ' without this.'), FCPATH . 'content/themes', '<br/><b><code>chmod -R 777 ' . FCPATH . 'content/</code></b><br/>'));
 			$prob = TRUE;
 			return FALSE;
 		}

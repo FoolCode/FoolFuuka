@@ -6,7 +6,8 @@ if (!defined('BASEPATH'))
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo $title ?></title>
+		<title><?php if(isset($title)) echo $title; else echo $template['title'] ?></title>
+		<meta charset="utf-8">
 		<style type="text/css">
 			.outer { text-align: center }
 			.inner { margin: auto; display: table; display: inline-block; text-decoration: none; text-align: left; padding: 1em; border: thin dotted }
@@ -18,23 +19,23 @@ if (!defined('BASEPATH'))
 			a:hover { color: #DD0000 }
 		</style>
 		<?php if (isset($fast_redirect)) : ?>
-		<meta http-equiv="Refresh" content="0; url=<?php echo $url ?>" />
+		<meta http-equiv="Refresh" content="0; url=<?php echo $redirection_url ?>" />
 		<?php else : ?>
-		<meta http-equiv="Refresh" content="2; url=<?php echo $url ?>" />
+		<meta http-equiv="Refresh" content="2; url=<?php echo $redirection_url ?>" />
 		<?php endif; ?>
 	</head>
 	<body>
 		<?php if (!isset($fast_redirect)) : ?>
-		<h1><?php echo $title ?></h1>
+		<h1><?php if(isset($title)) echo $title; else echo $template['title'] ?></h1>
 		<div class="outer">
 			<div class="inner">
 				<span class="text"><?php echo nl2br(fuuka_message()) ?></span>
 			</div>
 		</div>
-		<p><a href="<?php echo $url ?>" rel="noreferrer"><?php echo $url ?></a><br/>All characters <acronym title="DO NOT STEAL MY ART">&#169;</acronym> Darkpa's party</p>
+		<p><a href="<?php echo $redirection_url ?>" rel="noreferrer"><?php echo $redirection_url ?></a><br/>All characters <acronym title="DO NOT STEAL MY ART">&#169;</acronym> Darkpa's party</p>
 		<?php else: ?>
 		<script type="text/javascript">
-			window.location.href = '<?php echo $url ?>';
+			window.location.href = '<?php echo $redirection_url ?>';
 		</script>
 		<?php endif; ?>
 	</body>

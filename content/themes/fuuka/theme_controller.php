@@ -278,7 +278,7 @@ class Theme_Controller
 
 				$this->CI->load->library('upload', $media_config);
 
-				if ($this->CI->upload->do_upload('image'))
+				if ($this->CI->upload->do_upload('file_image'))
 				{
 					$data['media'] = $this->CI->upload->data();
 				}
@@ -372,7 +372,7 @@ class Theme_Controller
 				array(
 					'redirection_msg'	=> 0,
 					'redirection_url'	=> site_url(get_selected_radix()->shortname . '/thread/' .
-											$this->CI->CI->input->post('parent'))
+						$this->CI->CI->input->post('parent'))
 				)
 			);
 		}
@@ -401,7 +401,7 @@ class Theme_Controller
 				array(
 					'redirection_msg'	=> 0,
 					'redirection_url'	=> site_url(get_selected_radix()->shortname . '/thread/' .
-											$this->CI->input->post('parent'))
+						$this->CI->input->post('parent'))
 				)
 			);
 		}

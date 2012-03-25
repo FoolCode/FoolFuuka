@@ -3,61 +3,19 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
+
 class Boards extends Admin_Controller
 {
+
+
 	function __construct()
 	{
 		parent::__construct();
 		$this->tank_auth->is_admin() or redirect('admin');
 
 		// title on top
-		$this->viewdata['controller_title'] = '<a href="'.site_url("admin/boards").'">' . _("Boards") . '</a>';;
-	}
-
-
-	function _submit($post, $form)
-	{
-		// Support Checkbox Listing
-		$former = array();
-		foreach ($form as $key => $item)
-		{
-			if (isset($item[1]['value']) && is_array($item[1]['value'])) {
-				foreach ($item[1]['value'] as $key => $item2) {
-					$former[] = array('1', $item2);
-				}
-			}
-			else
-				$former[] = $form[$key];
-		}
-
-		foreach ($former as $key => $item)
-		{
-			if (isset($post[$item[1]['name']]))
-				$value = $post[$item[1]['name']];
-			else
-				$value = NULL;
-
-			$this->db->from('preferences');
-			$this->db->where(array('name' => $item[1]['name']));
-			if ($this->db->count_all_results() == 1)
-			{
-				$this->db->update('preferences', array('value' => $value), array('name' => $item[1]['name']));
-			}
-			else
-			{
-				$this->db->insert('preferences', array('name' => $item[1]['name'], 'value' => $value));
-			}
-		}
-
-		$CI = & get_instance();
-		$array = $CI->db->get('preferences')->result_array();
-		$result = array();
-		foreach ($array as $item)
-		{
-			$result[$item['name']] = $item['value'];
-		}
-		$CI->fs_options = $result;
-		flash_notice('notice', _('Updated settings.'));
+		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/boards") . '">' . _("Boards") . '</a>';
+		;
 	}
 
 
@@ -69,390 +27,462 @@ class Boards extends Admin_Controller
 
 	function manage()
 	{
-		$this->viewdata["function_title"] = _('Manage');
-		$boards = new Board();
+		$this->viewdata["function_title"] = _('Manage boards');
 
+		$data["boards"] = $this->radix->get_all();
 
-		$boards->order_by('name', 'ASC');
-		$boards->get();
-		$data["boards"] = $boards;
-
-		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/manage.php", $data, TRUE);
+		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/manage.php",
+			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
-	}
-
-
-	function reports()
-	{
-		redirect('admin/reports/');
 	}
 
 
 	function board($shortname = NULL)
 	{
-		$board = new Board();
-		$board->where("shortname", $shortname)->get();
-		if ($board->result_count() == 0)
-		{
-			set_notice('warn', _('Sorry, the board you are looking for does not exist.'));
-			$this->manage();
-			return false;
-		}
-
-		$this->viewdata["function_title"] = '<a href="' . site_url('/admin/boards/manage/') . '">' . _('Manage') . '</a>';
-
-		$data["board"] = $board;
+		$data['form'] = $this->radix->board_structure();
 
 		if ($this->input->post())
 		{
-			// Prepare for stub change in case we have to redirect instead of just printing the view
-			$old_shortname = $board->shortname;
-			$board->update_board_db($this->input->post());
-
-			flash_notice('notice', sprintf(_('Updated board information for %s.'), $board->name));
-			// Did we change the shortname of the board? We need to redirect to the new page then.
-			if (isset($old_shortname) && $old_shortname != $board->shortname)
+			$this->load->library('form_validation');
+			$result = $this->form_validation->form_validate($data['form']);
+			if (isset($result['error']))
 			{
-				redirect('/admin/boards/board/' . $board->shortname);
+				set_notice('warning', $result['error']);
+			}
+			else
+			{
+				// it's actually fully checked, we just have to throw it in DB
+				$this->radix->save($result['success']);
+				if (is_null($shortname))
+				{
+					flash_notice('success', _('New board created!'));
+					redirect('admin/boards/board/' . $result['success']['shortname']);
+				}
+				else if ($shortname != $result['success']['shortname'])
+				{
+					// case in which letter was changed
+					flash_notice('success', _('Board information updated.'));
+					redirect('admin/boards/board/' . $result['success']['shortname']);
+				}
+				else
+				{
+					set_notice('success', _('Board information updated.'));
+				}
 			}
 		}
 
-		$table = ormer($board);
-		$table = tabler($table);
-		$data['table'] = $table;
+		$board = $this->radix->get_by_shortname($shortname);
+		if ($board === FALSE)
+		{
+			show_404();
+		}
 
-		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/board.php", $data, TRUE);
-		$this->load->view("admin/default.php", $this->viewdata);
+		$data['object'] = $board;
+
+		$this->viewdata["function_title"] = _('Editing board:') . ' ' . $board->shortname;
+		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
+			$data, TRUE);
+		$this->load->view('admin/default', $this->viewdata);
+	}
+
+
+	function add_new()
+	{
+		$data['form'] = $this->radix->board_structure();
+
+		// the actual POST is in the board() function
+		$data['form']['open']['action'] = site_url('admin/boards/board');
+
+		// panel for creating a new board
+		$this->viewdata["function_title"] = _('Creating a new board');
+		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
+			$data, TRUE);
+		$this->load->view('admin/default', $this->viewdata);
+
+		return TRUE;
+	}
+
+
+	function delete($type, $id = 0)
+	{
+		$board = $this->radix->get_by_id($id);
+		if ($board == FALSE)
+		{
+			show_404();
+		}
+
+		if ($this->input->post())
+		{
+			switch ($type)
+			{
+				case("board"):
+					if (!$this->radix->remove($id))
+					{
+						flash_notice('error',
+							sprintf(_('Failed to delete the board %s.'), $board->shortname));
+						log_message("error", "Controller: board.php/remove: failed board removal");
+						redirect('admin/boards/manage');
+					}
+					flash_notice('success',
+						sprintf(_('The board %s has been deleted.'), $board->shortname));
+					redirect('admin/boards/manage');
+					break;
+			}
+		}
+
+		switch ($type)
+		{
+			case('board'):
+				$this->viewdata["function_title"] = _('Removing board:') . ' ' . $board->shortname;
+				$data['alert_level'] = 'warning';
+				$data['message'] = _('Do you really want to remove the board and all its data?') .
+					'<br/>' .
+					_('Notice: due to its size, you will have to remove the image folder manually. The folder will have the "removed_" prefix.');
+
+				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
+					$data, TRUE);
+				$this->load->view('admin/default', $this->viewdata);
+				break;
+		}
 	}
 
 
 	function sphinx()
 	{
-		$this->viewdata["function_title"] = '<a href="' . site_url('/admin/boards/sphinx/') . '">' . _('Sphinx') . '</a>';
+		$this->viewdata["function_title"] = 'Sphinx';
 
 		$form = array();
 
-		$form[] = array(
-			_('Listen (Sphinx)'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_listen',
-				'id' => 'sphinx_listen',
-				'maxlength' => '200',
-				'placeholder' => _('127.0.0.1:9312'),
-				'preferences' => 'fs_gen',
-			)
+		$form['open'] = array(
+			'type' => 'open'
 		);
 
-		$form[] = array(
-			_('Listen (MySQL)'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_listen_mysql',
-				'id' => 'sphinx_listen_mysql',
-				'maxlength' => '200',
-				'placeholder' => _('127.0.0.1:9306'),
-				'preferences' => 'fs_gen',
-				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
-			)
+		$form['fu_sphinx_listen'] = array(
+			'type' => 'input',
+			'label' => 'Listen (Sphinx)',
+			'placeholder' => FOOL_PREF_SPHINX_LISTEN,
+			'preferences' => TRUE,
+			'help' => _('Set the address and port to your Sphinx instance.'),
+			'class' => 'span2',
+			'validation' => 'trim|max_length[48]',
+			'validation_func' => function($input, $form)
+			{
+				if (strpos($input['fu_sphinx_listen'], ':') === FALSE)
+				{
+					return array(
+						'error_code' => 'MISSING_COLON',
+						'error' => _('The Sphinx listening address and port aren\'t formatted correctly.')
+					);
+				}
+
+				$sphinx_ip_port = explode(':', $input['fu_sphinx_listen']);
+
+				if (count($sphinx_ip_port) != 2)
+				{
+					return array(
+						'error_code' => 'WRONG_COLON_NUMBER',
+						'error' => _('The Sphinx listening address and port aren\'t formatted correctly.')
+					);
+				}
+
+				if (!is_natural($sphinx_ip_port[1]))
+				{
+					return array(
+						'error_code' => 'PORT_NOT_A_NUMBER',
+						'error' => _('The port specified isn\'t a valid number.')
+					);
+				}
+
+				$CI = & get_instance();
+				$CI->load->library('SphinxQL');
+				$connection = @$CI->sphinxql->set_server($sphinx_ip_port[0],
+						$sphinx_ip_port[1]);
+
+				if ($connection === FALSE)
+				{
+					return array(
+						'warning_code' => 'CONNECTION_NOT_ESTABLISHED',
+						'warning' => _('The Sphinx server couldn\'t be contacted at the specified address and port.')
+					);
+				}
+
+				return array('success' => TRUE);
+			}
 		);
 
-		$form[] = array(
-			_('Working Directory'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_path',
-				'id' => 'sphinx_path',
-				'maxlength' => '200',
-				'placeholder' => _('/usr/local/sphinx/var'),
-				'preferences' => 'fs_gen',
-				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
-			)
+		$form['fu_sphinx_listen_mysql'] = array(
+			'type' => 'input',
+			'label' => 'Listen (MySQL)',
+			'placeholder' => FOOL_PREF_SPHINX_LISTEN_MYSQL,
+			'preferences' => TRUE,
+			'validation' => 'trim|max_length[48]',
+			'help' => _('Set the address and port to your MySQL instance.'),
+			'class' => 'span2'
 		);
 
-		$form[] = array(
-			_('Minimum Word Length'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_min_word_len',
-				'id' => 'sphinx_min_word_len',
-				'maxlength' => '200',
-				'placeholder' => _('3'),
-				'preferences' => 'fs_gen',
-				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
-			)
+		$form['fu_sphinx_dir'] = array(
+			'type' => 'input',
+			'label' => 'Working Directory',
+			'placeholder' => FOOL_PREF_SPHINX_DIR,
+			'preferences' => TRUE,
+			'help' => _('Set the working directory to your Sphinx working directory.'),
+			'class' => 'span3',
+			'validation' => 'trim',
+			'validation_func' => function($input, $form)
+			{
+				if (!file_exists($input))
+				{
+					return array(
+						'error_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',
+						'error' => _('Couldn\'t find the Sphinx working directory.')
+					);
+				}
+
+				return array('success' => TRUE);
+			}
 		);
 
-		$form[] = array(
-			_('Memory Limit'),
-			array(
-				'type' => 'input',
-				'name' => 'fu_sphinx_mem_limit',
-				'id' => 'sphinx_mem_limit',
-				'maxlength' => '200',
-				'placeholder' => _('2047M'),
-				'preferences' => 'fs_gen',
-				'help' => _('Sets the title of your FoOlSlide. This appears in the title of every page.')
-			)
+		$form['fu_sphinx_min_word_len'] = array(
+			'type' => 'input',
+			'label' => 'Minimum Word Length',
+			'placeholder' => FOOL_PREF_SPHINX_MIN_WORD,
+			'preferences' => TRUE,
+			'help' => _('Set the minimum word length indexed by Sphinx.'),
+			'class' => 'span1',
+			'validation' => 'trim|is_natural_no_zero'
 		);
 
-		if ($post = $this->input->post())
-		{
-			$this->_submit($post, $form);
-			redirect('admin/boards/sphinx');
-		}
+		$form['fu_sphinx_mem_limit'] = array(
+			'type' => 'input',
+			'label' => 'Memory Limit',
+			'placeholder' => FOOL_PREF_SPHINX_MEMORY,
+			'validation' => 'is_natural|greater_than[256]',
+			'preferences' => TRUE,
+			'help' => _('Set the memory limit for the Sphinx instance in MegaBytes.'),
+			'class' => 'span1'
+		);
+
+		$form['separator'] = array(
+			'type' => 'separator'
+		);
+
+		$form['submit'] = array(
+			'type' => 'submit',
+			'value' => _('Submit'),
+			'class' => 'btn btn-primary'
+		);
+
+		$form['close'] = array(
+			'type' => 'close'
+		);
+
+		$this->submit_preferences_auto($form);
 
 		// create the form
-		$table = tabler($form, FALSE);
-		$data['form_title'] = _('Theme');
-		$data['table'] = $table;
+		$data['form'] = $form;
 
-		$data['config'] = str_replace("\t\t\t", '', $this->generate_sphinx_config());
-
-		$this->viewdata["main_content_view"] = $this->load->view("admin/boards/sphinx.php", $data, TRUE);
-		$this->load->view("admin/default.php", $this->viewdata);
+		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator",
+			$data, TRUE);
+		$this->viewdata["main_content_view"] .= '<pre>' . $this->_generate_sphinx_config() . '</pre>';
+		$this->load->view("admin/default", $this->viewdata);
 	}
 
 
-	function generate_sphinx_config()
+	function _generate_sphinx_config()
 	{
 		$config = '
-			########################################################
-			## Sphinx Configuration for FoOlFuuka
-			########################################################
+########################################################
+## Sphinx Configuration for FoOlFuuka
+########################################################
 		';
 
 		$config .= '
-			########################################################
-			## data source definition
-			########################################################
+########################################################
+## data source definition
+########################################################
 
-			source main
-			{
-				# data source type. mandatory, no default value
-				# known types are mysql, pgsql, mssql, xmlpipe, xmlpipe2, odbc
-				type = mysql
+source main
+{
+	# data source type. mandatory, no default value
+	# known types are mysql, pgsql, mssql, xmlpipe, xmlpipe2, odbc
+	type = mysql
 
-				# SQL source information
-				sql_host =
-				sql_user =
-				sql_pass =
-				sql_db =
-				sql_port =
+	# SQL source information
+	sql_host =
+	sql_user =
+	sql_pass =
+	sql_db =
+	sql_port =
 
-				sql_query_pre = SET NAMES utf8
-				sql_range_step = 10000
-				sql_query =
+	sql_query_pre = SET NAMES utf8
+	sql_range_step = 10000
+	sql_query =
 
-				sql_attr_uint = num
-				sql_attr_uint = subnum
-				sql_attr_uint = int_capcode
-				sql_attr_bool = has_image
-				sql_attr_bool = is_internal
-				sql_attr_bool = is_deleted
-				sql_attr_timestamp = timestamp
+	sql_attr_uint = num
+	sql_attr_uint = subnum
+	sql_attr_uint = int_capcode
+	sql_attr_bool = has_image
+	sql_attr_bool = is_internal
+	sql_attr_bool = is_deleted
+	sql_attr_timestamp = timestamp
 
-				sql_query_info =
-				sql_query_post_index =
-			}
-		';
-
-		foreach ($this->radix->get_all() as $key => $board)
-		{
-			if ($board->sphinx)
-			{
-				$config .= $this->generate_sphinx_definition_source($board->shortname);
-			}
-		}
-
-		$config .= '
-			########################################################
-			## index definition
-			########################################################
-
-			index main
-			{
-				source = main
-				path = ' . get_setting('fu_sphinx_path') . '/data/main
-				docinfo = extern
-				mlock = 0
-				morphology = none
-				min_word_len = ' . ((get_setting('fu_sphinx_mem_limit')) ? get_setting('fu_sphinx_mem_limit') : '2047M') . '
-				charset_type = utf-8
-
-				charset_table =
-
-				min_prefix_len = 3
-				prefix_fields = comment, title
-				enable_star = 1
-				html_strip = 0
-			}
+	sql_query_info =
+	sql_query_post_index =
+}
 		';
 
 		foreach ($this->radix->get_all() as $key => $board)
 		{
 			if ($board->sphinx)
 			{
-				$config .= $this->generate_sphinx_definition_index($board->shortname, ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data');
+				$config .= $this->_generate_sphinx_definition_source($board->shortname);
 			}
 		}
 
 		$config .= '
-			########################################################
-			## indexer settings
-			########################################################
+########################################################
+## index definition
+########################################################
 
-			indexer
+index main
+{
+	source = main
+	path = ' . get_setting('fu_sphinx_dir') . '/data/main
+	docinfo = extern
+	mlock = 0
+	morphology = none
+	min_word_len = ' . get_setting('fu_sphinx_mem_limit',
+				FOOL_PREF_SPHINX_MEMORY) . 'M
+	charset_type = utf-8
+
+	charset_table =
+
+	min_prefix_len = 3
+	prefix_fields = comment, title
+	enable_star = 1
+	html_strip = 0
+}
+		';
+
+		foreach ($this->radix->get_all() as $key => $board)
+		{
+			if ($board->sphinx)
 			{
-				mem_limit = ' . ((get_setting('fu_sphinx_mem_limit')) ? get_setting('fu_sphinx_mem_limit') : '2047M') . '
-				max_xmlpipe2_field = 4M
-				write_buffer = 5M
-				max_file_field_buffer = 32M
+				$config .= $this->_generate_sphinx_definition_index($board->shortname,
+					((get_setting('fu_sphinx_dir')) ? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/data');
 			}
+		}
+
+		$config .= '
+########################################################
+## indexer settings
+########################################################
+
+indexer
+{
+	mem_limit = ' . ((get_setting('fu_sphinx_mem_limit'))
+					? get_setting('fu_sphinx_mem_limit') : '2047M') . '
+	max_xmlpipe2_field = 4M
+	write_buffer = 5M
+	max_file_field_buffer = 32M
+}
+';
+
+		$config .= '
+########################################################
+## searchd settings
+########################################################
+
+searchd
+{
+	listen = ' . ((get_setting('fu_sphinx_listen'))
+		? get_setting('fu_sphinx_listen') . ':sphinx' : '127.0.0.1:9312:sphinx') . '
+	listen = ' . ((get_setting('fu_sphinx_listen_mysql'))
+		? get_setting('fu_sphinx_listen_mysql') . ':mysql41' : '127.0.0.1:9312:mysql41') . '
+	log = ' . ((get_setting('fu_sphinx_dir'))
+		? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/log/searchd.log
+	query_log = ' . ((get_setting('fu_sphinx_dir'))
+		? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/log/query.log
+	read_timeout = 5
+	client_timeout = 300
+	max_children = 10
+	pid_file = ' . ((get_setting('fu_sphinx_dir'))
+		? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/searchd.pid
+	max_matches = 5000
+	seamless_rotate = 1
+	preopen_indexes = 1
+	unlink_old = 1
+	mva_updates_pool = 1M
+	max_packet_size = 8M
+	max_filters = 256
+	max_filter_values = 4096
+	max_batch_queries = 32
+	workers = threads
+	binlog_path = ' . ((get_setting('fu_sphinx_dir'))
+		? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/data
+	collation_server = utf8_general_ci
+	collation_libc_locale = en_US.UTF-8
+	compat_sphinxsql_magics = 0
+}
 		';
 
 		$config .= '
-			########################################################
-			## searchd settings
-			########################################################
-
-			searchd
-			{
-				listen = ' . ((get_setting('fu_sphinx_listen')) ? get_setting('fu_sphinx_listen') . ':sphinx' : '127.0.0.1:9312:sphinx') . '
-				listen = ' . ((get_setting('fu_sphinx_listen_mysql')) ? get_setting('fu_sphinx_listen_mysql') . ':mysql41' : '127.0.0.1:9312:mysql41') . '
-				log = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/searchd.log
-				query_log = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/log/query.log
-				read_timeout = 5
-				client_timeout = 300
-				max_children = 10
-				pid_file = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/searchd.pid
-				max_matches = 5000
-				seamless_rotate = 1
-				preopen_indexes = 1
-				unlink_old = 1
-				mva_updates_pool = 1M
-				max_packet_size = 8M
-				max_filters = 256
-				max_filter_values = 4096
-				max_batch_queries = 32
-				workers = threads
-				binlog_path = ' . ((get_setting('fu_sphinx_path')) ? get_setting('fu_sphinx_path') : '/usr/local/sphinx/var' ) . '/data
-				collation_server = utf8_general_ci
-				collation_libc_locale = en_US.UTF-8
-				compat_sphinxsql_magics = 0
-			}
-		';
-
-		$config .= '
-			# --eof--
+# --eof--
 		';
 
 		return $config;
 	}
 
 
-	function generate_sphinx_definition_source($board)
+	function _generate_sphinx_definition_source($board)
 	{
 		return "
-			# /" . $board . "/
-			source " . $board . "_main : main
-			{
-				sql_query = SELECT doc_id, num, subnum, name, trip, (ascii(capcode)) as int_capcode, (subnnum != 0) as is_internal, deleted as is_deleted, timestamp, title, comment FROM " . $board . " WHERE doc_id >= \$start AND doc_id <= \$end
-				sql_query_info = SELECT * FROM " . $board . " WHERE doc_id = \$id
-				sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
-				sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_index_id_" . $board . ", \$maxid)
-			}
+# /" . $board . "/
+source " . $board . "_main : main
+{
+	sql_query = SELECT doc_id, num, subnum, name, trip, (ascii(capcode)) as int_capcode, (subnnum != 0) as is_internal, deleted as is_deleted, timestamp, title, comment FROM " . $board . " WHERE doc_id >= \$start AND doc_id <= \$end
+	sql_query_info = SELECT * FROM " . $board . " WHERE doc_id = \$id
+	sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
+	sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_index_id_" . $board . ", \$maxid)
+}
 
-			source " . $board . "_ancient : " . $board . "_main
-			{
-				sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $board ."
-				sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_ancient_id_" . $board .", \$maxid)
-			}
+source " . $board . "_ancient : " . $board . "_main
+{
+	sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $board . "
+	sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_ancient_id_" . $board . ", \$maxid)
+}
 
-			source " . $board . "_delta : " . $board . "_main
-			{
-				sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_'" . $board . "'), (SELECT MAX(doc_id) FROM " . $board .")
-				sql_query_post_index =
-			}
+source " . $board . "_delta : " . $board . "_main
+{
+	sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_'" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
+	sql_query_post_index =
+}
 		";
 	}
 
 
-	function generate_sphinx_definition_index($board, $path)
+	function _generate_sphinx_definition_index($board, $path)
 	{
 		return "
-			# /" . $board . "/
-			index " . $board . "_main : main
-			{
-				source = " . $board . "_main
-				path = " . $path . "/" . $board . "_main
-			}
+# /" . $board . "/
+index " . $board . "_main : main
+{
+	source = " . $board . "_main
+	path = " . $path . "/" . $board . "_main
+}
 
-			index " . $board . "_ancient : " . $board . "_main
-			{
-				source = " . $board . "_ancient
-				path = " . $path . "/" . $board . "_ancient
-			}
+index " . $board . "_ancient : " . $board . "_main
+{
+	source = " . $board . "_ancient
+	path = " . $path . "/" . $board . "_ancient
+}
 
-			index " . $board . "_delta : " . $board . "_main
-			{
-				source = " . $board . "_delta
-				path = " . $path . "/" . $board . "_delta
-			}
+index " . $board . "_delta : " . $board . "_main
+{
+	source = " . $board . "_delta
+	path = " . $path . "/" . $board . "_delta
+}
 		";
-	}
-
-
-	function add_new()
-	{
-		$this->viewdata["function_title"] = '<a href="#">' . _("Add New") . '</a>';
-		$board = new Board();
-		if ($this->input->post())
-		{
-			if ($board->add($this->input->post()))
-			{
-				flash_notice('notice', sprintf(_('The board %s has been added.'), $board->board));
-				redirect('/admin/boards/board/' . $board->shortname);
-			}
-		}
-
-		$table = ormer($board);
-
-		$table = tabler($table, FALSE, TRUE);
-		$data["form_title"] = _('Add New') . ' ' . _('Board');
-		$data['table'] = $table;
-
-		$this->viewdata["extra_title"][] = _("Board");
-		$this->viewdata["main_content_view"] = $this->load->view("admin/form.php", $data, TRUE);
-		$this->load->view("admin/default.php", $this->viewdata);
-	}
-
-	function delete($type, $id = 0) {
-		if (!isAjax())
-		{
-			$this->output->set_output(_('You can\'t delete from outside the admin panel through this link.'));
-			log_message("error", "Controller: board.php/remove: failed serie removal");
-			return false;
-		}
-		$id = intval($id);
-
-		switch ($type)
-		{
-			case("board"):
-				$board = new Board();
-				$board->where('id', $id)->get();
-				$title = $board->name;
-				if (!$board->remove())
-				{
-					flash_notice('error', sprintf(_('Failed to delete the board %s.'), $title));
-					log_message("error", "Controller: board.php/remove: failed board removal");
-					echo json_encode(array('href' => site_url("admin/boards/manage")));
-					return false;
-				}
-				flash_notice('notice', sprintf(_('The board %s has been deleted.'), $title));
-				$this->output->set_output(json_encode(array('href' => site_url("admin/boards/manage"))));
-				break;
-		}
 	}
 
 }

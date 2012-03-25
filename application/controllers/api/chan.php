@@ -236,7 +236,7 @@ class Chan extends API_Controller
 			$this->response(array('error' => _('Faulty thread number')), 404);
 		}
 
-		$post = $this->post->get_by_num(get_selected_radix(), $$this->get('num'));
+		$post = $this->post->get_by_num(get_selected_radix(), $this->get('num'));
 
 		if (!$post)
 		{

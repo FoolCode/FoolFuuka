@@ -442,15 +442,32 @@ class Chan extends Public_Controller
 			show_404();
 
 		// Fetch the last X created threads to generate the GALLERY.
-		$threads = $this->post->get_gallery(get_selected_radix(), $page, array('type' => $type));
+		$result = $this->post->get_gallery(get_selected_radix(), $page, array('type' => $type));
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
 			' &raquo; ' . _('Gallery'));
+		
+		if($type == 'by_image')
+		{
+			$title = _('Gallery - Showing Latest Submitted Images') . 
+				' - ' . '<a href="'.site_url(array(get_selected_radix()->shortname, 'gallery', 'by_thread')).'">By thread</a>';
+		}
+		else
+		{
+			$title = _('Gallery - Showing Latest Created Threads') . 
+				' - ' . '<a href="'.site_url(array(get_selected_radix()->shortname, 'gallery', 'by_image')).'">By image</a>';
+		}
+		
 		$this->_set_parameters(
 			array(
-			'section_title' => _('Gallery - Showing Latest Created Threads'),
-			'threads' => $threads,
+			'section_title' => $title,
+			'threads' => $result['threads'],
+			'pagination' => array(
+				'base_url' => site_url(array(get_selected_radix()->shortname, 'gallery', $type)),
+				'current_page' => $page,
+				'total' => ceil($result['total_found'] / 25)
+			)
 			), array(
 			'tools_post' => TRUE,
 			'tools_view' => TRUE

@@ -216,7 +216,7 @@ class Post extends CI_Model
 			$$key = $option;
 		}
 
-		if($type == 'by_post')
+		if($type == 'by_image')
 		{
 			$query = $this->db->query('
 				SELECT *
@@ -226,6 +226,12 @@ class Post extends CI_Model
 				LIMIT ?, ?
 			',
 			array(intval(($page * $per_page) - $per_page), intval($per_page)));
+			
+			$query2 = $this->db->query('
+				SELECT COUNT(*) AS count
+				FROM ' . $this->get_table($board) . '
+				WHERE media_filename IS NOT NULL
+			');
 		}
 		else
 		{
@@ -242,9 +248,16 @@ class Post extends CI_Model
 					ON g.num = t.unq_parent AND g.subnum = 0
 			',
 			array(intval(($page * $per_page) - $per_page), intval($per_page)));
+			
+			$query2 = $this->db->query('
+				SELECT COUNT(*) AS count
+				FROM ' . $this->get_table($board) . '
+				WHERE parent = 0
+			');
 		}
 
 		$result = $query->result();
+		$result2 = $query2->result();
 
 		$result_num_as_key = array();
 		foreach ($result as $key => $post)
@@ -256,7 +269,7 @@ class Post extends CI_Model
 			}
 		}
 
-		return $result_num_as_key;
+		return array('threads' => $result_num_as_key, 'total_found' => $result2[0]->count);
 	}
 
 

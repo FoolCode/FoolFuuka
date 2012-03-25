@@ -260,6 +260,10 @@ body.theme_default {
 	font-weight: normal;
 }
 
+.theme_default #main .section_title a {
+	text-decoration: underline;
+}
+
 .theme_default .btnr, .btnr:visited {
 	padding:0px 3px 1px;
 	background:transparent;

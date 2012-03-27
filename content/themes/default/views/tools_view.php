@@ -1,3 +1,4 @@
+<?php if (isset($board)) : ?>
 <ul class="nav pull-right">
 	<li class="search-dropdown">
 		<?php
@@ -25,7 +26,7 @@
 					'style' => 'display:none;'
 				))
 				?>
-				
+
 				<?php
 				echo form_submit(array(
 					'class' => 'btn btn-success btn-mini',
@@ -41,7 +42,7 @@
 					'name' => 'submit_post'
 				))
 				?>
-								
+
 				<?php
 				echo form_button(array(
 					'data-function' => 'searchHide',
@@ -230,3 +231,4 @@
 <?php echo form_close(); ?>
 	</li>
 </ul>
+<?php endif; ?>

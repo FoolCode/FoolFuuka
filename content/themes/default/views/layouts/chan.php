@@ -110,9 +110,9 @@
 											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
 										}
 										endif;
-										if($this->radix->get_boards()) : 
+										if($this->radix->get_boards()) :
 										?>
-										
+
 										<li class="divider"></li>
 										<li class="nav-header"><?php echo _('Boards') ?></li>
 										<?php
@@ -120,7 +120,7 @@
 										{
 											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
 										}
-										
+
 										endif;
 										?>
 									</ul>

@@ -34,9 +34,9 @@ class Post extends CI_Model
 		if (get_setting('fs_fuuka_boards_db'))
 		{
 			return $this->table = $this->db->protect_identifiers(
-					get_setting('fs_fuuka_boards_db')) . '.' .
+				get_setting('fs_fuuka_boards_db')) . '.' .
 				$this->db->protect_identifiers($board->shortname
-			);
+				);
 		}
 		return $this->table = $this->db->protect_identifiers(
 			'board_' . $board->shortname, TRUE
@@ -56,9 +56,9 @@ class Post extends CI_Model
 		if (get_setting('fs_fuuka_boards_db'))
 		{
 			return $this->table = $this->db->protect_identifiers(
-					get_setting('fs_fuuka_boards_db')) . '.' .
+				get_setting('fs_fuuka_boards_db')) . '.' .
 				$this->db->protect_identifiers($board->shortname . '_threads'
-			);
+				);
 		}
 		return $this->table = $this->db->protect_identifiers(
 			'board_' . $board->shortname . '_threads', TRUE
@@ -83,7 +83,7 @@ class Post extends CI_Model
 				SELECT id as report_id, doc_id as report_doc_id,
 					reason as report_reason, status as report_status
 				FROM ' . $this->db->protect_identifiers('reports',
-				TRUE) . '
+			TRUE) . '
 				WHERE `board_id` = ' . $board->id . '
 			) as q
 			ON
@@ -113,7 +113,7 @@ class Post extends CI_Model
 					reason as report_reason, status as report_status,
 					created as report_created
 				FROM ' . $this->db->protect_identifiers('reports',
-				TRUE) . '
+			TRUE) . '
 				WHERE `board_id` = ' . $board->id . '
 			) as q
 			ON
@@ -135,7 +135,7 @@ class Post extends CI_Model
 	 * @return type
 	 */
 	function get_with_delay($board, $limit = 500, $delay = 0, $latest_doc_id = 0,
-		$inferior_doc_id = NULL)
+							$inferior_doc_id = NULL)
 	{
 
 		if (is_null($inferior_doc_id))
@@ -185,7 +185,7 @@ class Post extends CI_Model
 				SELECT id as poster_id_join, ip as poster_id,
 					banned as poster_banned
 				FROM ' . $this->db->protect_identifiers('posters',
-				TRUE) . '
+			TRUE) . '
 			) as p
 			ON
 			g.`id`
@@ -226,7 +226,7 @@ class Post extends CI_Model
 				LIMIT ?, ?
 			',
 			array(intval(($page * $per_page) - $per_page), intval($per_page)));
-			
+
 			$query2 = $this->db->query('
 				SELECT COUNT(*) AS count
 				FROM ' . $this->get_table($board) . '
@@ -248,7 +248,7 @@ class Post extends CI_Model
 					ON g.num = t.unq_parent AND g.subnum = 0
 			',
 			array(intval(($page * $per_page) - $per_page), intval($per_page)));
-			
+
 			$query2 = $this->db->query('
 				SELECT COUNT(*) AS count
 				FROM ' . $this->get_table($board) . '
@@ -312,8 +312,8 @@ class Post extends CI_Model
 					' . $this->get_sql_report_after_join($board) . '
 				',
 					array(
-					intval(($page * $per_page) - $per_page),
-					intval($per_page)
+						intval(($page * $per_page) - $per_page),
+						intval($per_page)
 					)
 				);
 
@@ -342,8 +342,8 @@ class Post extends CI_Model
 					' . $this->get_sql_report_after_join($board) . '
 				',
 					array(
-					intval(($page * $per_page) - $per_page),
-					intval($per_page)
+						intval(($page * $per_page) - $per_page),
+						intval($per_page)
 					)
 				);
 
@@ -369,8 +369,8 @@ class Post extends CI_Model
 					' . $this->get_sql_report_after_join($board) . '
 				',
 					array(
-					intval(($page * $per_page) - $per_page),
-					intval($per_page)
+						intval(($page * $per_page) - $per_page),
+						intval($per_page)
 					)
 				);
 
@@ -856,7 +856,7 @@ class Post extends CI_Model
 					' . $this->get_sql_report_after_join($board) . '
 					' . $this->get_sql_poster_after_join() . '
 					WHERE g.`doc_id` = ' . implode(' OR g.`doc_id` = ',
-					$post['doc_id']) . '
+				$post['doc_id']) . '
 				)
 			';
 		}
@@ -955,7 +955,7 @@ class Post extends CI_Model
 			{
 				return array('error' => _('The search backend is currently not online. Try later or contact us in case it\'s offline for too long.'));
 			}
-			
+
 			$this->db->from(array($board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta'),
 				FALSE, FALSE);
 
@@ -965,11 +965,11 @@ class Post extends CI_Model
 			}
 			if ($search['text'])
 			{
-				if (mb_strlen($search['text']) < 2)
+				if (mb_strlen($search['text']) < 1)
 				{
 					return array(
 						'error' => _
-							('The text you were searching for was too short. It must be at least two characters long.')
+						('The text you were searching for was too short. It must be at least two characters long.')
 					);
 				}
 
@@ -981,7 +981,7 @@ class Post extends CI_Model
 			}
 			if ($search['tripcode'])
 			{
-				$this->db->sphinx_match('tripcode', $search['tripcode'], 'full', TRUE);
+				$this->db->sphinx_match('trip', '"' . $search['tripcode'] . '"', 'full', TRUE);
 			}
 			if ($search['capcode'] == 'admin')
 			{
@@ -1113,7 +1113,7 @@ class Post extends CI_Model
 				{
 					return array(
 						'error' => _
-							('The text you were searching for was too short. It must be at least two characters long.')
+						('The text you were searching for was too short. It must be at least two characters long.')
 					);
 				}
 				$this->db->like('comment', rawurldecode($search['text']));
@@ -1385,9 +1385,9 @@ class Post extends CI_Model
 			{
 				$count['images']++;
 			}
-			
+
 			$count['posts']++;
-			
+
 			if($post->subnum == 0 && $last_bump < $post->timestamp)
 			{
 				$last_bump = $post->timestamp;
@@ -1395,12 +1395,12 @@ class Post extends CI_Model
 		}
 
 		$query->free_result();
-		
+
 		if(time() - $last_bump > 432000)
 		{
 			return array('thread_dead' => TRUE, 'disable_image_upload' => TRUE);
 		}
-		
+
 		if (!$thread_op_present)
 		{
 			// we didn't point to the thread OP, this is not a thread
@@ -1562,7 +1562,7 @@ class Post extends CI_Model
 				if (strlen($data['media_error']) == 79)
 				{
 					return array('error' =>
-						_('The image you are attempting to upload is larger than the permitted size.')
+								 _('The image you are attempting to upload is larger than the permitted size.')
 					);
 				}
 			}
@@ -1592,7 +1592,7 @@ class Post extends CI_Model
 			}
 
 			$media_hash = base64_encode(pack("H*",
-					md5(file_get_contents($media["full_path"]))));
+				md5(file_get_contents($media["full_path"]))));
 
 			$check = $this->db->get_where('banned_md5', array('md5' => $media_hash));
 
@@ -1626,8 +1626,8 @@ class Post extends CI_Model
 
 		// phpass password for extra security, using the same tank_auth setting since it's cool
 		$hasher = new PasswordHash(
-				$this->config->item('phpass_hash_strength', 'tank_auth'),
-				$this->config->item('phpass_hash_portable', 'tank_auth'));
+			$this->config->item('phpass_hash_strength', 'tank_auth'),
+			$this->config->item('phpass_hash_portable', 'tank_auth'));
 		$password = $hasher->HashPassword($password);
 
 		$num = $data['num'];
@@ -1699,8 +1699,8 @@ class Post extends CI_Model
 				$password,
 				$spoiler,
 				inet_ptod($this->input->ip_address())
-				);
-			
+			);
+
 			if (isset($media))
 			{
 				$image = $this->process_media($board, $media, $media_hash);
@@ -1708,11 +1708,11 @@ class Post extends CI_Model
 				{
 					return array('error' => _('Your image was invalid.'));
 				}
-				
+
 				//$thumb_filename, $thumb_dimensions[0], $thumb_dimensions[1],
 				//$media["file_name"], $media["image_width"], $media["image_height"],
 				//($media["file_size"] * 1024), $media_hash, $media_filename, $post->doc_id
-				
+
 				// override the timestamp with the one created by the image system
 				$normal_post_arr[3] = end($image);
 				array_pop($image);
@@ -1785,20 +1785,20 @@ class Post extends CI_Model
 					)
 				',
 				array(
-				$num,
-				$num,
-				$num,
-				$num,
-				$num,
-				time(),
-				$postas,
-				($email == '')?NULL:$email,
-				($name == '')?NULL:$name,
-				($trip == '')?NULL:$trip,
-				($subject == '')?NULL:$subject,
-				($comment == '')?NULL:$comment,
-				$password,
-				inet_ptod($this->input->ip_address()),
+					$num,
+					$num,
+					$num,
+					$num,
+					$num,
+					time(),
+					$postas,
+					($email == '')?NULL:$email,
+					($name == '')?NULL:$name,
+					($trip == '')?NULL:$trip,
+					($subject == '')?NULL:$subject,
+					($comment == '')?NULL:$comment,
+					$password,
+					inet_ptod($this->input->ip_address()),
 				)
 			);
 		}
@@ -1838,8 +1838,8 @@ class Post extends CI_Model
 		$row = $query->row();
 
 		$hasher = new PasswordHash(
-				$this->config->item('phpass_hash_strength', 'tank_auth'),
-				$this->config->item('phpass_hash_portable', 'tank_auth'));
+			$this->config->item('phpass_hash_strength', 'tank_auth'),
+			$this->config->item('phpass_hash_portable', 'tank_auth'));
 
 		if ($hasher->CheckPassword($data['password'], $row->delpass) !== TRUE &&
 			!$this->tank_auth->is_allowed())
@@ -2062,7 +2062,7 @@ class Post extends CI_Model
 
 		//$sectrip='!!'.substr(sha1_base64($sectrip.decode_base64($self->{secret})), 0, 11);
 		return substr(base64_encode(sha1($plain . (base64_decode($secure)), TRUE)), 0,
-				11);
+			11);
 	}
 
 	/*
@@ -2082,16 +2082,16 @@ class Post extends CI_Model
 		$post->safe_media_hash = substr(urlsafe_b64encode(urlsafe_b64decode($post->media_hash)),
 			0, -2);
 		$post->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE',
-				$this->get_comment_processed($board, $post));
+			$this->get_comment_processed($board, $post));
 		$post->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
 
 		foreach (array(
-		'title', 'name', 'email', 'trip', 'media',
-		'preview', 'media_filename', 'media_hash') as $element)
+					 'title', 'name', 'email', 'trip', 'media',
+					 'preview', 'media_filename', 'media_hash') as $element)
 		{
 			$element_processed = $element . '_processed';
 			$post->$element_processed = @iconv('UTF-8', 'UTF-8//IGNORE',
-					fuuka_htmlescape($post->$element));
+				fuuka_htmlescape($post->$element));
 			$post->$element = @iconv('UTF-8', 'UTF-8//IGNORE', $post->$element);
 		}
 
@@ -2129,8 +2129,8 @@ class Post extends CI_Model
 			/*
 			 *  THIS IS NOT COMPATIBLE WITH THE DELETION OF IMAGES
 			 *  @todo
-			 * 
-			 * 
+			 *
+			 *
 			  $query = $this->db->query('
 			  SELECT *
 			  FROM ' . $this->get_table($board) . '
@@ -2159,7 +2159,7 @@ class Post extends CI_Model
 			  $post->doc_id);
 			  }
 			  }
-			 * 
+			 *
 			 */
 
 			$number = time();
@@ -2168,7 +2168,7 @@ class Post extends CI_Model
 		{
 			/*
 			 * We aren't allowing image uploading in ghosts/archive
-			 * 
+			 *
 			if ($post->parent > 0)
 			{
 				$number = $post->parent;
@@ -2182,7 +2182,7 @@ class Post extends CI_Model
 			{
 				$number = '0' . $number;
 			}
-			 * 
+			 *
 			 */
 			return FALSE;
 		}
@@ -2195,10 +2195,10 @@ class Post extends CI_Model
 		// image and thumb paths
 		$path = array(
 			'image_dir' => (get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory')
-					: FOOLFUUKA_BOARDS_DIRECTORY) . "/" . $board->shortname . "/img/" . substr($number,
+				: FOOLFUUKA_BOARDS_DIRECTORY) . "/" . $board->shortname . "/img/" . substr($number,
 				0, 4) . "/" . substr($number, 4, 2) . "/",
 			'thumb_dir' => (get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory')
-					: FOOLFUUKA_BOARDS_DIRECTORY) . "/" . $board->shortname . "/thumb/" . substr($number,
+				: FOOLFUUKA_BOARDS_DIRECTORY) . "/" . $board->shortname . "/thumb/" . substr($number,
 				0, 4) . "/" . substr($number, 4, 2) . "/"
 		);
 
@@ -2225,7 +2225,7 @@ class Post extends CI_Model
 			$CI->load->library('image_lib');
 			$img_config['image_library'] = (find_imagick()) ? 'ImageMagick' : 'GD2'; // Use GD2 as fallback
 			$img_config['library_path'] = (find_imagick()) ? (get_setting('fs_serv_imagick_path')
-						? get_setting('fs_serv_imagick_path') : '/usr/bin') : ''; // If GD2, use none
+				? get_setting('fs_serv_imagick_path') : '/usr/bin') : ''; // If GD2, use none
 			$img_config['source_image'] = $path["image_dir"] . $media_filename;
 			$img_config["new_image"] = $path["thumb_dir"] . $thumb_filename;
 			$img_config['width'] = ($media["image_width"] > 250) ? 250 : $media["image_width"];
@@ -2349,7 +2349,7 @@ class Post extends CI_Model
 				$matches[2] = '';
 
 			$number = str_pad($matches[1], 4, "0", STR_PAD_LEFT) . str_pad($matches[2],
-					2, "0", STR_PAD_LEFT);
+				2, "0", STR_PAD_LEFT);
 		}
 
 		if (file_exists($this->get_image_dir($board, $row, $thumbnail)) !== FALSE)
@@ -2364,14 +2364,14 @@ class Post extends CI_Model
 					$server_num = (intval($matches[1])) % (count($balancer_servers));
 					return $balancer_servers[$server_num]['url'] . '/' .
 						$board->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number,
-							0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview
-								: $row->media_filename);
+						0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview
+						: $row->media_filename);
 				}
 			}
 			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url')
-						: site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' .
+				: site_url() . FOOLFUUKA_BOARDS_DIRECTORY) . '/' .
 				$board->shortname . '/' . (($thumbnail) ? 'thumb' : 'img') . '/' . substr($number,
-					0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview : $row->media_filename);
+				0, 4) . '/' . substr($number, 4, 2) . '/' . (($thumbnail) ? $row->preview : $row->media_filename);
 		}
 		if ($thumbnail)
 		{
@@ -2423,13 +2423,13 @@ class Post extends CI_Model
 				$matches[2] = '';
 
 			$number = str_pad($matches[1], 4, "0", STR_PAD_LEFT) . str_pad($matches[2],
-					2, "0", STR_PAD_LEFT);
+				2, "0", STR_PAD_LEFT);
 		}
 
 		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory')
-					: FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . $board->shortname . '/' . (($thumbnail === TRUE)
-					? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4,
-				2) . '/' . (($thumbnail === TRUE) ? $row->preview : $row->media_filename);
+			: FOOLFUUKA_BOARDS_DIRECTORY)) . '/' . $board->shortname . '/' . (($thumbnail === TRUE)
+			? 'thumb' : 'img') . '/' . substr($number, 0, 4) . '/' . substr($number, 4,
+			2) . '/' . (($thumbnail === TRUE) ? $row->preview : $row->media_filename);
 	}
 
 
@@ -2458,7 +2458,7 @@ class Post extends CI_Model
 				{
 					log_message('error',
 						'post.php delete_thumbnail(): couldn\'t remove thumbnail: ' .
-						$this->get_image_dir($board, $row, TRUE));
+							$this->get_image_dir($board, $row, TRUE));
 					return FALSE;
 				}
 			}
@@ -2528,9 +2528,9 @@ class Post extends CI_Model
 			$number = $row->media_filename;
 
 			if (file_exists('content/boards/' . $board->shortname . '/' . 'img' . '/' . substr($number,
-						0, 4) . '/' . substr($number, 4, 2) . '/' . $row->media_filename))
+				0, 4) . '/' . substr($number, 4, 2) . '/' . $row->media_filename))
 				return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url')
-							: site_url() . FOOLFUUKA_BOARDS_DIRECTORY) .
+					: site_url() . FOOLFUUKA_BOARDS_DIRECTORY) .
 					'/' . $board->shortname . '/' . 'img' . '/' . substr($number, 0, 4) .
 					'/' . substr($number, 4, 2) . '/' . $row->media_filename;
 			else
@@ -2579,7 +2579,7 @@ class Post extends CI_Model
 
 		// get rid of moot's formatting
 		if ($row->capcode == 'A' && mb_strpos($regexing,
-				'<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
+			'<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
 		{
 			$regexing = str_replace('<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">',
 				'', $regexing);
@@ -2592,7 +2592,7 @@ class Post extends CI_Model
 
 		// get rid of another of moot's cancerous formatting
 		if ($row->capcode == 'A' && mb_strpos($regexing,
-				'<span style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
+			'<span style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">') === 0)
 		{
 			$regexing = str_replace('<span style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">',
 				'', $regexing);
@@ -2660,11 +2660,11 @@ class Post extends CI_Model
 		$_prefix = '';
 		$_urltag = '#';
 		$_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . str_replace(',',
-				'_', $num) . '"';
+			'_', $num) . '"';
 		$_option_op = ' class="backlink op" data-function="highlight" data-backlink="true" data-post="' . str_replace(',',
-				'_', $num) . '"';
+			'_', $num) . '"';
 		$_backlink_option = ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . $this->current_row->num . (($this->current_row->subnum == 0)
-					? '' : '_' . $this->current_row->subnum) . '"';
+			? '' : '_' . $this->current_row->subnum) . '"';
 		$_suffix = '';
 		if ($this->features == FALSE)
 		{
@@ -2681,18 +2681,18 @@ class Post extends CI_Model
 				$_prefix = '<font class="unkfunc">';
 				$_urltag = '#';
 				$_option = ' class="quotelink" onclick="replyhl(\'' . str_replace(',', '_',
-						$num) . '\');"';
+					$num) . '\');"';
 				$_suffix = '</font>';
 			}
 		}
 
 		$this->backlinks[str_replace(',', '_', $num)][$this->current_row->num] = $_prefix
 			. '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', ($this->current_row->parent == 0)
-						? $this->current_row->num : $this->current_row->parent))
+			? $this->current_row->num : $this->current_row->parent))
 			. $_urltag . $this->current_row->num . (($this->current_row->subnum == 0) ? ''
-					: '_' . $this->current_row->subnum)
+			: '_' . $this->current_row->subnum)
 			. '"' . $_backlink_option . '>&gt;&gt;' . $this->current_row->num . (($this->current_row->subnum == 0)
-					? '' : ',' . $this->current_row->subnum) . '</a>' . $_suffix;
+			? '' : ',' . $this->current_row->subnum) . '</a>' . $_suffix;
 
 		if (array_key_exists($num, $this->existing_posts))
 		{
@@ -2701,7 +2701,7 @@ class Post extends CI_Model
 				return $_prefix . '<a href="' . $_urltag . str_replace(',', '_', $num) . '"' . $_option_op . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 			}
 			return $_prefix . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', $num)) . $_urltag . str_replace(',',
-					'_', $num) . '"' . $_option_op . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+				'_', $num) . '"' . $_option_op . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 		}
 
 		foreach ($this->existing_posts as $key => $thread)
@@ -2713,19 +2713,19 @@ class Post extends CI_Model
 					return $_prefix . '<a href="' . $_urltag . str_replace(',', '_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 				}
 				return $_prefix . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', $key)) . $_urltag . str_replace(',',
-						'_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+					'_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 			}
 		}
 
 		if ($this->realtime === TRUE)
 		{
 			return $_prefix . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', $key)) . $_urltag . str_replace(',',
-					'_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
+				'_', $num) . '"' . $_option . '>&gt;&gt;' . $num . '</a>' . $_suffix;
 		}
 
 		// nothing yet? make a generic link with post
 		return $_prefix . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'post', str_replace(',',
-					'_', $num))) . '">&gt;&gt;' . $num . '</a>' . $_suffix;
+			'_', $num))) . '">&gt;&gt;' . $num . '</a>' . $_suffix;
 
 		// return the thing untouched
 		return $matches[0];

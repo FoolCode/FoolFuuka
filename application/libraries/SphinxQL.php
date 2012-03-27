@@ -47,12 +47,16 @@ class SphinxQL {
 
 		if (stristr($statement, 'SELECT'))
 		{
-			$meta_query		= @mysql_query("SHOW META", $this->conn_id);
+			$meta_query = @mysql_query("SHOW META", $this->conn_id);
 			while (@$row = mysql_fetch_assoc($meta_query))
 				$result = array_merge($result, array($row['Variable_name'] => $row['Value']));
 
-			while (@$row = mysql_fetch_assoc($search))
-				array_push($result['matches'], $row);
+			//check to see if the query returns a resource or bool
+			if (is_resource($search))
+			{
+				while (@$row = mysql_fetch_assoc($search))
+					array_push($result['matches'], $row);
+			}
 
 			return $result;
 		}
@@ -62,8 +66,8 @@ class SphinxQL {
 
 	function EscapeString ($string, $decode = FALSE)
 	{
-		$from	= array ('\\', '(',')','|','-','!','@','~','"','&', '/', '^', '$', '=');
-		$to		= array ('\\\\', '\(','\)','\|','\-','\!','\@','\~','\"', '\&', '\/', '\^', '\$', '\=');
+		$from	= array('\\', '(', ')', '|', '-', '!', '@', '~', '"', '&', '/', '^', '$', '=');
+		$to		= array('\\\\', '\(', '\)', '\|', '\-', '\!', '\@', '\~', '\"', '\&', '\/', '\^', '\$', '\=');
 		$string	= str_replace ($from, $to, $string);
 		return (($decode) ? urldecode($string) : $string);
 	}
@@ -71,8 +75,8 @@ class SphinxQL {
 
 	function HalfEscapeString($string, $decode = FALSE)
 	{
-		$from = array ('\\', '(',')','!','@','~','&', '/', '^', '$', '=');
-		$to   = array ('\\\\', '\(','\)','\!','\@','\~', '\&', '\/', '\^', '\$', '\=');
+		$from = array('\\', '(', ')', '!', '@', '~', '&', '/', '^', '$', '=');
+		$to   = array('\\\\', '\(', '\)', '\!', '\@', '\~', '\&', '\/', '\^', '\$', '\=');
 		$string = str_replace ( $from, $to, $string );
 		$string = preg_replace("'\"([^\s]+)-([^\s]*)\"'", "\\1\-\\2", $string);
 		$string = preg_replace("'([^\s]+)-([^\s]*)'", "\"\\1\-\\2\"", $string);

@@ -5,31 +5,31 @@ if (!defined('BASEPATH'))
 
 <table class="bordered-table table-striped" style="width:600px; margin: 10px auto;">
 	<thead>
-		<tr>
-			<th><?php echo _('Poster') ?></th>
-			<th><?php echo _('Total Posts') ?></th>
-		</tr>
+	<tr>
+		<th><?php echo _('Poster') ?></th>
+		<th><?php echo _('Total Posts') ?></th>
+	</tr>
 	</thead>
 	<tbody>
-		<?php $data_array = json_decode($data, TRUE); ?>
-		<?php foreach ($data_array as $d) : ?>
-		<tr>
-			<td>
-				<?php
-				$params = array(get_selected_radix()->shortname, 'search');
-				if ($d['name'])
-					array_push($params, 'username/' . urlencode($d['name']));
-				if ($d['trip'])
-					array_push($params, 'tripcode/' . urlencode($d['trip']));
+	<?php $data_array = json_decode($data, TRUE); ?>
+	<?php foreach ($data_array as $d) : ?>
+	<tr>
+		<td>
+			<?php
+			$params = array(get_selected_radix()->shortname, 'search');
+			if ($d['name'])
+				array_push($params, 'username/' . urlencode($d['name']));
+			if ($d['trip'])
+				array_push($params, 'tripcode/' . urlencode($d['trip']));
 
-				$poster_link = site_url($params);
-				?>
-				<a href="<?php echo $poster_link ?>">
-					<span class="poster_name"><?php echo $d['name'] ?></span> <span class="poster_trip"><?php echo $d['trip'] ?></span>
-				</a>
-			</td>
-			<td><?php echo $d['postcount'] ?></td>
-		</tr>
+			$poster_link = site_url($params);
+			?>
+			<a href="<?php echo $poster_link ?>">
+				<span class="poster_name"><?php echo $d['name'] ?></span> <span class="poster_trip"><?php echo $d['trip'] ?></span>
+			</a>
+		</td>
+		<td><?php echo $d['postcount'] ?></td>
+	</tr>
 		<?php endforeach; ?>
 	</tbody>
 </table>

@@ -292,7 +292,7 @@ class Statistics extends CI_Model
 			SELECT
 				board_id, name, timestamp
 			FROM ' . $this->db->protect_identifiers('statistics',
-				TRUE) . '
+			TRUE) . '
 			ORDER BY timestamp DESC
 		');
 
@@ -332,7 +332,7 @@ class Statistics extends CI_Model
 						 * This statistics report has run once already.
 						 */
 						$found = TRUE;
-						
+
 						if(!isset($a['frequency']))
 						{
 							$skip = TRUE;
@@ -404,7 +404,7 @@ class Statistics extends CI_Model
 		$stat = $this->db->query('
 			SELECT *
 			FROM ' . $this->db->protect_identifiers('statistics',
-				TRUE) . '
+			TRUE) . '
 			WHERE board_id = ? and name = ?
 		', array($board_id, $name));
 
@@ -546,10 +546,10 @@ class Statistics extends CI_Model
 	function process_image_reposts($board)
 	{
 		$query = $this->db->query('
-			SELECT preview, num, subnum, parent, media_hash, total 
+			SELECT preview, num, subnum, parent, media_hash, total
 			FROM ' . $this->get_table($board,
-				'images') . '
-			ORDER BY total DESC 
+			'images') . '
+			ORDER BY total DESC
 			LIMIT 0, 200;
 		');
 
@@ -562,11 +562,11 @@ class Statistics extends CI_Model
 	function process_karma($board)
 	{
 		$query = $this->db->query('
-			SELECT 
-				day,posts,images,sage 
+			SELECT
+				day,posts,images,sage
 			FROM ' . $this->get_table($board,
 				'daily') . '
-			WHERE day > floor((?)/86400)*86400 
+			WHERE day > floor((?)/86400)*86400
 			GROUP BY day
 			ORDER BY day
 		',
@@ -582,10 +582,10 @@ class Statistics extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT
-				name, trip, firstseen, postcount 
+				name, trip, firstseen, postcount
 			FROM ' . $this->get_table($board,
-				'users') . ' 
-			WHERE postcount > 30 
+			'users') . '
+			WHERE postcount > 30
 			ORDER BY firstseen DESC;
 		');
 
@@ -598,13 +598,13 @@ class Statistics extends CI_Model
 	function process_population($board)
 	{
 		$query = $this->db->query('
-			SELECT 
-				day, trips, names, anons 
+			SELECT
+				day, trips, names, anons
 			FROM ' . $this->get_table($board,
 				'daily') . '
-			WHERE day > floor((?-31536000)/86400)*86400 
+			WHERE day > floor((?-31536000)/86400)*86400
 			GROUP BY day
-			ORDER BY day 
+			ORDER BY day
 		',
 			array(time())
 		);
@@ -618,11 +618,11 @@ class Statistics extends CI_Model
 	function process_post_count($board)
 	{
 		$query = $this->db->query('
-			SELECT 
-				name, trip, postcount 
+			SELECT
+				name, trip, postcount
 			FROM ' . $this->get_table($board,
-				'users') . '
-			ORDER BY postcount DESC 
+			'users') . '
+			ORDER BY postcount DESC
 			LIMIT 512
 		');
 

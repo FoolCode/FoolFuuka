@@ -47,12 +47,16 @@ class SphinxQL {
 
 		if (stristr($statement, 'SELECT'))
 		{
-			$meta_query		= @mysql_query("SHOW META", $this->conn_id);
+			$meta_query = @mysql_query("SHOW META", $this->conn_id);
 			while (@$row = mysql_fetch_assoc($meta_query))
 				$result = array_merge($result, array($row['Variable_name'] => $row['Value']));
 
-			while (@$row = mysql_fetch_assoc($search))
-				array_push($result['matches'], $row);
+			//check to see if the query returns a resource or bool
+			if (is_resource($search))
+			{
+				while (@$row = mysql_fetch_assoc($search))
+					array_push($result['matches'], $row);
+			}
 
 			return $result;
 		}

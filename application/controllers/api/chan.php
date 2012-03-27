@@ -7,6 +7,14 @@ class Chan extends API_Controller
 {
 
 
+	function __construct()
+	{
+		header("Access-Control-Allow-Origin: http://boards.4chan.org");
+		header("Access-Control-Allow-Origin: https://boards.4chan.org");
+		parent::__construct();
+	}
+
+
 	/**
 	 * Returns the latest threads
 	 *
@@ -213,6 +221,32 @@ class Chan extends API_Controller
 	}
 
 
+	function post_get()
+	{
+		$this->check_board();
+
+		if (!$this->get('num'))
+		{
+			$this->response(array('error' => _('You have to select a thread number')),
+				404);
+		}
+
+		if (!is_post_number($this->get('num')))
+		{
+			$this->response(array('error' => _('Faulty thread number')), 404);
+		}
+
+		$post = $this->post->get_by_num(get_selected_radix(), $this->get('num'));
+
+		if (!$post)
+		{
+			$this->response(array('error' => _('Post could not be found')), 404);
+		}
+
+		$this->response($post, 200);
+	}
+
+
 	function thread_ghosts_posts_get()
 	{
 		$this->check_board();
@@ -320,7 +354,7 @@ class Chan extends API_Controller
 		{
 			$this->response(array('error' => _('Forbidden')), 403);
 		}
-		
+
 		$this->check_board();
 
 		if (!$this->post('actions') || !$this->post('doc_id'))
@@ -396,8 +430,8 @@ class Chan extends API_Controller
 			$this->load->model('report');
 			$this->report->remove_by_doc_id($board, $doc_id);
 		}
-		
-		
+
+
 		$this->response(array('success' => TRUE), 200);
 	}
 

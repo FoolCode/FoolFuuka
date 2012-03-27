@@ -2686,7 +2686,7 @@ class Post extends CI_Model
 			}
 		}
 
-		$this->backlinks[str_replace(',', '_', $num)][] = $_prefix
+		$this->backlinks[str_replace(',', '_', $num)][$this->current_row->num] = $_prefix
 			. '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', ($this->current_row->parent == 0)
 						? $this->current_row->num : $this->current_row->parent))
 			. $_urltag . $this->current_row->num . (($this->current_row->subnum == 0) ? ''

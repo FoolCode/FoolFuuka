@@ -1101,7 +1101,7 @@ class Post extends CI_Model
 				$sql[] = '
 					(
 						SELECT *
-						FROM ' . $this->get_table($this->radix->get_by_shortname($record['board'])) . '
+						FROM ' . $this->get_table($this->radix->get_by_id($record['board'])) . '
 						WHERE num = ' . $record['num'] . ' AND subnum = ' . $record['subnum'] . '
 					)
 				';

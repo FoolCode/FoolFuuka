@@ -196,15 +196,6 @@ class Admin_Controller extends MY_Controller
 			)
 		);
 
-		$sidebar["balancer"] = array(
-			"name" => _("Load Balancer"),
-			"level" => "admin",
-			"default" => "balancers",
-			"content" => array(
-				"balancers" => array("level" => "admin", "name" => _("Master"), "icon" => 'icon-download'),
-			)
-		);
-
 		$sidebar["meta"] = array(
 			"name" => "Meta", // no gettext because meta must be meta
 			"level" => "member",

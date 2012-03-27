@@ -52,7 +52,7 @@ define('FOOL_GIT_TAGS_URL', 'https://api.github.com/repos/foolrulez/foolfuuka/ta
 define('FOOL_GIT_CHANGELOG_URL', 'https://raw.github.com/foolrulez/FoOlFuuka/master/CHANGELOG.md');
 define('FOOL_REQUIREMENT_PHP', '5.3.0');
 define('FOOL_PLUGIN_DIR', 'content/plugins/');
-define('FOOL_PROTECTED_RADIXES', serialize(array('content', 'assets', 'admin', 'install', 'feeds', 'api', 'cli', 'functions')));
+define('FOOL_PROTECTED_RADIXES', serialize(array('content', 'assets', 'admin', 'install', 'feeds', 'api', 'cli', 'functions', 'search')));
 
 // preferences from get_setting('value', FOOL_PREF_ETC);
 define('FOOL_PREF_SYS_SUBDOMAIN', FALSE);

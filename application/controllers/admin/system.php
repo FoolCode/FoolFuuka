@@ -107,6 +107,18 @@ class System extends Admin_Controller
 			'preferences' => TRUE,
 			'help' => _('Overrides the default database, and is compatible with the Fuuka perl fetcher (beware: uses no database prefixes)')
 		);
+		
+		$form['separator-3'] = array(
+			'type' => 'separator'
+		);
+		
+		$form['fs_sphinx_global'] = array(
+			'type' => 'checkbox',
+			'label' => 'Global SphinxSearch',
+			'placeholder' => 'FoOlFuuka',
+			'preferences' => TRUE,
+			'help' => _('Activate Sphinx globally (enables crossboard search)')
+		);
 
 		$form['separator-2'] = array(
 			'type' => 'separator'

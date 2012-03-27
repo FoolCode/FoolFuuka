@@ -176,7 +176,11 @@ class Chan extends Public_Controller
 	 */
 	function _remap($method, $params = array())
 	{
-		if (!empty($params))
+		if ($method == 'search')
+		{
+			$this->load->model('post');
+		}
+		else if (!empty($params))
 		{
 
 			// Determine if $board returns a valid response. If not, recheck the $method and $params.

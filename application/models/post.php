@@ -939,7 +939,8 @@ class Post extends CI_Model
 			$search['page'] = 1;
 		}
 
-		if ($board->sphinx)
+		// if it's a crossboard search or a board
+		if (($board === FALSE && get_setting('fs_sphinx_global')) || $board->sphinx)
 		{
 			/*
 			 * Establish connection to SphinxQL via MySQL Library.
@@ -956,8 +957,27 @@ class Post extends CI_Model
 				return array('error' => _('The search backend is currently not online. Try later or contact us in case it\'s offline for too long.'));
 			}
 
-			$this->db->from(array($board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta'),
-				FALSE, FALSE);
+			// we need to list all the boards if crossboard search
+			if($board === FALSE)
+			{
+				$indexes = array();
+				foreach($this->radix->get_all() as $radix)
+				{
+					// still ignore boards that don't have Sphinx enabled
+					if(!$radix->sphinx)
+						continue;
+					
+					$indexes[] = $radix->shortname . '_ancient';
+					$indexes[] = $radix->shortname . '_main';
+					$indexes[] = $radix->shortname . '_delta';
+				}
+			}
+			else
+			{
+				$indexes = array($board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta');
+			}
+			
+			$this->db->from($indexes, FALSE, FALSE);
 
 			if ($search['subject'])
 			{
@@ -1081,7 +1101,7 @@ class Post extends CI_Model
 				$sql[] = '
 					(
 						SELECT *
-						FROM ' . $this->get_table($board) . '
+						FROM ' . $this->get_table($this->radix->get_by_shortname($record['board'])) . '
 						WHERE num = ' . $record['num'] . ' AND subnum = ' . $record['subnum'] . '
 					)
 				';

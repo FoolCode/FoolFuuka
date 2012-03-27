@@ -226,7 +226,7 @@ class Post extends CI_Model
 				LIMIT ?, ?
 			',
 			array(intval(($page * $per_page) - $per_page), intval($per_page)));
-			
+
 			$query2 = $this->db->query('
 				SELECT COUNT(*) AS count
 				FROM ' . $this->get_table($board) . '
@@ -248,7 +248,7 @@ class Post extends CI_Model
 					ON g.num = t.unq_parent AND g.subnum = 0
 			',
 			array(intval(($page * $per_page) - $per_page), intval($per_page)));
-			
+
 			$query2 = $this->db->query('
 				SELECT COUNT(*) AS count
 				FROM ' . $this->get_table($board) . '
@@ -965,7 +965,7 @@ class Post extends CI_Model
 			}
 			if ($search['text'])
 			{
-				if (mb_strlen($search['text']) < 2)
+				if (mb_strlen($search['text']) < 1)
 				{
 					return array(
 						'error' => _
@@ -981,7 +981,7 @@ class Post extends CI_Model
 			}
 			if ($search['tripcode'])
 			{
-				$this->db->sphinx_match('tripcode', $search['tripcode'], 'full', TRUE);
+				$this->db->sphinx_match('trip', '"' . $search['tripcode'] . '"', 'full', TRUE);
 			}
 			if ($search['capcode'] == 'admin')
 			{

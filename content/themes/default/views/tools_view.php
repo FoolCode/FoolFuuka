@@ -1,4 +1,13 @@
-<?php if (isset($board)) : ?>
+<?php 
+	if (!isset($board) && get_setting('fs_sphinx_global')) 
+	{
+		// searh can work also without a board selected
+		$board->shortname = '';
+	}
+	
+	if(isset($board)) :
+?>
+
 <ul class="nav pull-right">
 	<li class="search-dropdown">
 		<?php
@@ -231,4 +240,5 @@
 <?php echo form_close(); ?>
 	</li>
 </ul>
+
 <?php endif; ?>

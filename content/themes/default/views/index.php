@@ -61,4 +61,5 @@ if (!defined('BASEPATH'))
 				}
 				?>
 	</h2>
+		
 </article>

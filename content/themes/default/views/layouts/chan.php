@@ -91,10 +91,10 @@
 			</div>
 		<?php endif; ?>
 		<div class="container-fluid">
-			<?php if (get_selected_radix()) : ?>
-				<div class="navbar navbar-fixed-top">
-					<div class="navbar-inner">
-						<div class="container">
+			<div class="navbar navbar-fixed-top">
+				<div class="navbar-inner">
+					<div class="container">
+						<?php if (get_selected_radix()) : ?>
 							<ul class="nav">
 								<li class="dropdown">
 									<a href="<?php echo site_url() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">
@@ -102,24 +102,24 @@
 										<b class="caret"></b>
 									</a>
 									<ul class="dropdown-menu">
-										<?php if($this->radix->get_archives()) : ?>
-										<li class="nav-header"><?php echo _('Archives') ?></li>
-										<?php
-										foreach ($this->radix->get_archives() as $key => $item)
-										{
-											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
-										}
+										<?php if ($this->radix->get_archives()) : ?>
+											<li class="nav-header"><?php echo _('Archives') ?></li>
+											<?php
+											foreach ($this->radix->get_archives() as $key => $item)
+											{
+												echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
+											}
 										endif;
-										if($this->radix->get_boards()) :
-										?>
+										if ($this->radix->get_boards()) :
+											?>
 
-										<li class="divider"></li>
-										<li class="nav-header"><?php echo _('Boards') ?></li>
-										<?php
-										foreach ($this->radix->get_boards() as $key => $item)
-										{
-											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
-										}
+											<li class="divider"></li>
+											<li class="nav-header"><?php echo _('Boards') ?></li>
+											<?php
+											foreach ($this->radix->get_boards() as $key => $item)
+											{
+												echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
+											}
 
 										endif;
 										?>
@@ -146,12 +146,19 @@
 								<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo _('Stats') ?></a>
 								</li>
 							</ul>
-
-							<?php echo $template['partials']['tools_view']; ?>
-						</div>
+						<?php else : ?>
+							<ul class="nav">
+								<li class="dropdown">
+									<a href="<?php echo site_url() ?>" id="brand" class="brand">
+										<?php echo get_setting('fs_gen_site_title') ?>
+									</a>
+								</li>
+							</ul>
+						<?php endif; ?>
+						<?php echo $template['partials']['tools_view']; ?>
 					</div>
 				</div>
-			<?php endif; ?>
+			</div>
 			<div role="main" id="main">
 				<?php if (isset($section_title)): ?>
 					<h3 class="section_title"><?php echo $section_title ?></h3>

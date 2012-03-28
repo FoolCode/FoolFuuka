@@ -70,8 +70,9 @@ if (!defined('BASEPATH'))
 		));
 		echo form_hidden('MAX_FILE_SIZE', 3072);
 		?>
+					</div>
 		<?php endif; ?>
-	</div>
+	
 		<div class="input-prepend">
 			<label class="add-on" for="reply_nymphassword"><?php echo _('Password') ?></label><?php
 			echo form_password(array(

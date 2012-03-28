@@ -54,7 +54,7 @@ var bindFunctions = function()
                     var reply_alert = jQuery('#reply_ajax_notices');
                     reply_alert.removeClass('error').removeClass('success');
                     jQuery.ajax({
-                        url: backend_vars.site_url + board_shortname + '/submit/' ,
+                        url: backend_vars.site_url + backend_vars.board_shortname + '/submit/' ,
                         dataType: 'json',
                         type: 'POST',
                         cache: false,
@@ -260,15 +260,15 @@ var bindFunctions = function()
             if(that.attr('data-backlink') != 'true')
             {
                 // gallery
-                thread_id = that.attr('data-backlink');
-                quote = thread_json[thread_id];
+                var thread_id = that.attr('data-backlink');
+                quote = backend_vars.threads_data[thread_id];
                 backlink.css('display', 'block');
                 backlink.html(quote.formatted);
             }
-            else if(thread_id == that.data('post'))
+            else if(backend_vars.thread_id == that.data('post'))
             {
                 // OP
-                quote = thread_op_json;
+                quote = backend_vars.thread_op_data;
                 backlink.css('display', 'block');
                 backlink.html(quote.formatted);
             }
@@ -301,7 +301,9 @@ var bindFunctions = function()
 
             backlink.find("article").removeAttr("id").find(".post_controls").remove();
             backlink.find(".post_file_controls").remove();
-            if(typeof page_function !== 'undefined' && page_function == "gallery")
+			
+			// remove the image from the backlink box if it's a gallery
+            if(typeof page_function !== 'undefined' && backend_vars.page_function == "gallery")
             {
                 backlink.find(".thread_image_box").remove();
             }
@@ -332,7 +334,7 @@ var backlinkify = function(elem, post_id, subnum)
             backlinks[p_id] = [];
         }
 
-        backlinks[p_id].push('<a href="' + site_url + board_shortname + '/thread/' + thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+        backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
         backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
     });
 
@@ -360,20 +362,20 @@ var currentlapse = 0;
 var realtimethread = function(){
     clearTimeout(currentlapse);
     jQuery.ajax({
-        url: site_url + 'api/chan/thread/',
+        url: backend_vars.site_url + 'api/chan/thread/',
         dataType: 'json',
         type: 'GET',
         cache: false,
         data: {
-            num : thread_id,
-            board: board_shortname,
-            latest_doc_id: latest_doc_id
+            num : backend_vars.thread_id,
+            board: backend_vars.board_shortname,
+            latest_doc_id: backend_vars.latest_doc_id
         },
         success: function(data){
             var w_height = jQuery(document).height();
             var found_posts = false;
-            if(typeof data[thread_id] !== "undefined" && typeof data[thread_id].posts !== "undefined") {
-                jQuery.each(data[thread_id].posts, function(idx, value){
+            if(typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined") {
+                jQuery.each(data[backend_vars.thread_id].posts, function(idx, value){
                     found_posts = true;
                     post = jQuery(value.formatted)
                     post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
@@ -387,8 +389,8 @@ var realtimethread = function(){
                     });
                     backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
                     jQuery('article.thread aside').append(post);
-                    if(latest_doc_id < value.doc_id)
-                        latest_doc_id = value.doc_id;
+                    if(backend_vars.latest_doc_id < value.doc_id)
+                        backend_vars.latest_doc_id = value.doc_id;
                 });
             }
 
@@ -438,7 +440,7 @@ var findSameImageFromFile = function(obj)
             });
             var digestBase64 = Crypto.util.bytesToBase64(digestBytes);
             var digestBase64URL = digestBase64.replace('==', '').replace(/\//g, '_').replace(/\+/g, '-');
-            document.location = backend_vars.site_url + backend_vars.shortname + '/image/' + digestBase64URL;
+            document.location = backend_vars.site_url + backend_vars.board_shortname + '/image/' + digestBase64URL;
         }
     }
 
@@ -723,7 +725,7 @@ jQuery(document).ready(function() {
     }
 
 
-    if (typeof thread_id !== "undefined")
+    if (typeof backend_vars.thread_id !== "undefined")
     {
         jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
         setTimeout(realtimethread, 10000);

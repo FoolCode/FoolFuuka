@@ -49,11 +49,4 @@ if (!defined('BASEPATH'))
 	if($count%4 == 0) echo '<div class="clearfix"></div>';
 	endforeach; ?>
 
-	<script type="text/javascript">
-	site_url = '<?php echo site_url() ?>';
-	board_shortname = '<?php echo get_selected_radix()->shortname ?>';
-	page_function = "gallery";
-	thread_json = <?php echo json_encode($threads) ?>;
-</script>
-
 </div>

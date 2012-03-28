@@ -3,10 +3,15 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<?php foreach ($posts as $key => $post) : ?>
-<article<?php echo (isset($post['op'])) ? ' id="' . $post['op']->num . '" class="clearfix thread doc_id_' . $post['op']->doc_id . '"' : ' class="clearfix thread"' ?>>
-	<div class="thread_divider"></div>
-	<?php if (isset($post['op'])) : $op = $post['op']; ?>
+<?php foreach ($posts as $key => $post) : 
+	if (isset($post['op']))
+	{
+		$op = $post['op'];
+		$selected_radix = isset($op->board)?$op->board:get_selected_radix();
+	}
+?>
+<article<?php if (isset($op)) : ?> id="<?php echo $op->num ?>"<?php endif; ?> class="clearfix thread<?php if(isset($op)) : ?> doc_id_<?php echo $op->num ?> board_<?php echo $selected_radix->shortname ?><?php endif;?>">
+	<?php if (isset($op)) : ?>
 	<?php if ($op->preview) : ?>
 		<div class="thread_image_box">
 			<a href="<?php echo ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
@@ -125,27 +130,3 @@ if (!defined('BASEPATH'))
 	<?php endif; ?>
 </article>
 <?php endforeach; ?>
-
-<script type="text/javascript">
-	board_shortname = '<?php echo get_selected_radix()->shortname ?>';
-	site_url = '<?php echo site_url() ?>';
-
-	<?php if (isset($thread_id)) : ?>
-	thread_id = <?php echo $thread_id ?>;
-		<?php if (!$is_last50) : ?>
-		thread_op_json = <?php echo json_encode($posts[$thread_id]['op']) ?>;
-			<?php endif; ?>
-		<?php
-		$latest_doc_id = (isset($posts[$thread_id]['op'])) ? $posts[$thread_id]['op']->doc_id : 0;
-		if (isset($posts[$thread_id]['posts']))
-		{
-			foreach ($posts[$thread_id]['posts'] as $post)
-			{
-				if ($latest_doc_id < $post->doc_id)
-					$latest_doc_id = $post->doc_id;
-			}
-		}
-		?>
-	latest_doc_id = <?php echo $latest_doc_id ?>;
-		<?php endif; ?>
-</script>

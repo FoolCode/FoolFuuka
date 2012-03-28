@@ -257,7 +257,7 @@ class Chan extends Public_Controller
 		// include the board shortname in the backend_vars if it's set
 		if (get_selected_radix())
 		{
-			$default['backend_vars']['shortname'] = get_selected_radix()->shortname;
+			$default['backend_vars']['board_shortname'] = get_selected_radix()->shortname;
 		}
 
 		foreach ($default['variables'] as $k)
@@ -481,6 +481,9 @@ class Chan extends Public_Controller
 			), array(
 				'tools_post' => TRUE,
 				'tools_view' => TRUE
+			), array(
+				'threads_data' => $result['threads'],
+				'page_function' => 'gallery'
 			)
 		);
 		$this->template->build('gallery');
@@ -506,7 +509,21 @@ class Chan extends Public_Controller
 			show_404();
 
 		if (!isset($thread[$num]['op']))
+		{
 			$this->post($num);
+			return TRUE;
+		}
+		
+		// get the latest doc_id
+		$latest_doc_id = (isset($thread[$num]['op'])) ? $thread[$num]['op']->doc_id : 0;
+		if (isset($thread[$num]['posts']))
+		{
+			foreach ($thread[$num]['posts'] as $post)
+			{
+				if ($latest_doc_id < $post->doc_id)
+					$latest_doc_id = $post->doc_id;
+			}
+		}
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
@@ -520,6 +537,11 @@ class Chan extends Public_Controller
 				'post_thread' => TRUE,
 				'tools_post' => TRUE,
 				'tools_view' => TRUE
+			),
+			array(
+				'thread_id' => $num,
+				'latest_doc_id' => $latest_doc_id,
+				'thread_op_data' => $thread[$num]['op']
 			)
 		);
 		$this->template->build('board');
@@ -545,7 +567,21 @@ class Chan extends Public_Controller
 			show_404();
 
 		if (!isset($thread[$num]['op']))
+		{
 			$this->post($num);
+			return TRUE;
+		}
+		
+		// get the latest doc_id
+		$latest_doc_id = (isset($thread[$num]['op'])) ? $thread[$num]['op']->doc_id : 0;
+		if (isset($thread[$num]['posts']))
+		{
+			foreach ($thread[$num]['posts'] as $post)
+			{
+				if ($latest_doc_id < $post->doc_id)
+					$latest_doc_id = $post->doc_id;
+			}
+		}
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
@@ -562,6 +598,10 @@ class Chan extends Public_Controller
 				'post_reply' => TRUE,
 				'tools_post' => TRUE,
 				'tools_view' => TRUE
+			),
+			array(
+				'thread_id' => $num,
+				'latest_doc_id' => $latest_doc_id
 			)
 		);
 		$this->template->build('board');

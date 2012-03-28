@@ -1,7 +1,7 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-//print_r($p);
+
 $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 ?>
 

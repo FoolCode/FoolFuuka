@@ -79,5 +79,15 @@ if (!defined('BASEPATH'))
 				<div style="clear:both"></div>
 			</div>
 		</div>
+		
+		<script>
+			
+		var backend_vars = <?php echo json_encode(array(
+			'site_url' => site_url(),
+			'api_url' => site_url(),
+			'csrf_hash' => $this->security->get_csrf_hash()
+		)) ?>
+		
+		</script>
 	</body>
 </html>

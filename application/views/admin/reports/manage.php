@@ -1,12 +1,20 @@
-<?php 			
+<?php 
+	/*
+	 * This view depends fully on the default theme
+	 */
 	echo link_tag('content/themes/default/style.css?v=' . FOOL_VERSION);
 ?>
+<script src="<?php echo site_url() ?>content/themes/default/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
+<script src="<?php echo site_url() ?>content/themes/default/board.js?v=<?php echo FOOL_VERSION ?>"></script>
 
 <div class="theme_default clearfix" style="padding-bottom: 15px">
 	<article class="thread">
 	<?php 
 	foreach($posts as $key => $p)
 	{
+		if ($p->parent == 0)
+			$p->parent  = $p->num;
+		
 		include('content/themes/default/views/board_comment.php');
 	}
 	

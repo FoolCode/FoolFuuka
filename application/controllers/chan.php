@@ -578,9 +578,8 @@ class Chan extends Public_Controller
 		{
 			$num = $this->input->post('post')?:$num;
 
-			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $num,
-				$post);
-
+			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $num, $post);
+			print_r($post);
 			redirect(get_selected_radix()->shortname . '/post/' .
 				(isset($post[1]) ? $post[1] : '') . (isset($post[2]) ? '_' . $post[2] : ''),
 				'location', 303);
@@ -757,7 +756,7 @@ class Chan extends Public_Controller
 	 */
 	public function search()
 	{
-		if ($this->input->post('submit_image'))
+		if ($this->input->post('submit_image') && get_selected_radix())
 		{
 			if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0)
 			{
@@ -832,7 +831,15 @@ class Chan extends Public_Controller
 		// POST -> GET Redirection to provide URL presentable for sharing links.
 		if ($this->input->post())
 		{
-			$redirect_url = array(get_selected_radix()->shortname, 'search');
+			if(get_selected_radix())
+			{
+				$redirect_url = array(get_selected_radix()->shortname, 'search');
+			}
+			else
+			{
+				$redirect_url = array('search');
+			}
+			
 			foreach ($modifiers as $modifier)
 			{
 				if ($this->input->post($modifier))
@@ -853,7 +860,12 @@ class Chan extends Public_Controller
 		if (isset($result['error']))
 		{
 			$this->template->title(_('Error'));
-			$this->template->title(get_selected_radix()->formatted_title);
+			
+			if(get_selected_radix())
+			{
+				$this->template->title(get_selected_radix()->formatted_title);
+			}
+			
 			$this->_set_parameters(
 				array(
 					'error' => $result['error']

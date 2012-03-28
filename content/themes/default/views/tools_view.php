@@ -22,7 +22,7 @@
 			'data-function' => 'searchShow',
 			'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : '',
 			'class' => 'span4 search-query',
-			'placeholder' => _('Search or insert post no. or thread URL')
+			'placeholder' => ($board->shortname)?_('Search or insert post no. or thread URL'):_('Global search')
 		));
 		?>
 		<ul class="search-dropdown-menu">
@@ -45,11 +45,14 @@
 				?>
 
 				<?php
-				echo form_submit(array(
-					'class' => 'btn btn-success btn-mini',
-					'value' => _('Go to post'),
-					'name' => 'submit_post'
-				))
+				if($board->shortname)
+				{
+					echo form_submit(array(
+						'class' => 'btn btn-success btn-mini',
+						'value' => _('Go to post'),
+						'name' => 'submit_post'
+					));
+				}
 				?>
 
 				<?php
@@ -220,7 +223,8 @@
 					<span>Old First</span>
 				</label>
 			</li>
-
+			
+			<?php if($board->shortname) : ?>
 			<li class="divider"></li>
 			<li class="input-prepend"><span class="add-on">Image</span><?php echo form_upload(array('name' => 'image'))
 				?>
@@ -234,7 +238,7 @@
 					'style' => 'margin-top:0;'
 				))
 				?></li>
-
+			<?php endif; ?>
 
 		</ul>
 <?php echo form_close(); ?>

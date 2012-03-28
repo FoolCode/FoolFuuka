@@ -34,11 +34,11 @@
 				<?php if ($p->media) : ?>
 					<br>
 					<span class="filesize">
-						File <a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" target="_blank"><?php echo ($p->media_filename) ? $p->media_filename : $p->media ?></a><?php echo '-(' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ')' ?>
+						File <a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank"><?php echo ($p->media_filename) ? $p->media_filename : $p->media ?></a><?php echo '-(' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ')' ?>
 					</span>
 					<br>
-					<a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" target="_blank">
-						<img src="<?php echo $p->thumbnail_href ?>" border="0" align="left" <?php if ($p->preview_w > 0 && $p->preview_h > 0) : ?>width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" <?php endif; ?> hspace="20" alt="<?php echo byte_format($p->media_size, 0) ?>" md5="<?php echo $p->media_hash ?>"/>
+					<a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank">
+						<img src="<?php echo $p->thumb_link ?>" border="0" align="left" <?php if ($p->preview_w > 0 && $p->preview_h > 0) : ?>width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" <?php endif; ?> hspace="20" alt="<?php echo byte_format($p->media_size, 0) ?>" md5="<?php echo $p->media_hash ?>"/>
 					</a>
 				<?php endif; ?>
 

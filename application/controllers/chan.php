@@ -239,7 +239,13 @@ class Chan extends Public_Controller
 
 		// Initialize default values for valid
 		$default = array(
-			'variables' => array('disable_headers', 'is_page', 'is_last50', 'is_statistics', '@modifiers'),
+			'variables' => array(
+				'disable_headers', 
+				'is_page', 
+				'is_last50', 
+				'is_statistics', 
+				'@modifiers'
+				),
 			'partials' => array('post_thread', 'tools_post', 'tools_view'),
 			'backend_vars' => array(
 				'site_url' => site_url(),
@@ -690,8 +696,8 @@ class Chan extends Public_Controller
 		// Fetch the FULL IMAGE with the FILENAME specified.
 		$image = $this->post->get_full_image(get_selected_radix(), $filename);
 
-		if (isset($image['image_href']))
-			redirect($image['image_href'], 'location', 303);
+		if (isset($image['media_link']))
+			redirect($image['media_link'], 'location', 303);
 
 		if (isset($image['error_type']))
 		{
@@ -919,12 +925,15 @@ class Chan extends Public_Controller
 			unset($uri_array['page']);
 
 		// Set template variables required to build the HTML.
-		$this->template->title(get_selected_radix()->formatted_title .
-			' &raquo; ' . $title);
+	//	$this->template->title(get_selected_radix()->formatted_title .
+	//		' &raquo; ' . $title);
 		$this->_set_parameters(
 			array(
 				'section_title' => $title,
-				'modifiers' => array('post_show_view_button' => TRUE),
+				'modifiers' => array(
+					'post_show_view_button' => TRUE,
+					'post_show_board_name' => !get_selected_radix()
+				),
 				'posts' => $result['posts'],
 				'pagination' => array(
 					'base_url' => site_url(array($this->uri->assoc_to_uri($uri_array), 'page')),
@@ -1046,7 +1055,7 @@ class Chan extends Public_Controller
 					foreach ($threads as $num => $thread)
 					{
 						$result['threads'][$key]['title'] = $thread->title_processed;
-						$result['threads'][$key]['thumb'] = $thread->thumbnail_href;
+						$result['threads'][$key]['thumb'] = $thread->thumb_link;
 						$result['threads'][$key]['href'] = site_url(array(get_selected_radix()->shortname, 'thread', $thread->num));
 						$result['threads'][$key]['created'] = $thread->timestamp;
 						$key++;

@@ -13,7 +13,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 	<div class="post_file">
 			<span class="post_file_controls">
 				<?php if ($selected_radix->thumbnails || $this->tank_auth->is_allowed()) : ?>
-				<a href="<?php echo site_url($selected_radix->shortname . '/image/' . $p->safe_media_hash) ?>" class="btnr parent">View Same</a><a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumbnail_href ?>" target="_blank" class="btnr parent">Google</a><a href="http://iqdb.org/?url=<?php echo $p->thumbnail_href ?>" target="_blank" class="btnr parent">iqdb</a><a href="http://saucenao.com/search.php?url=<?php echo $p->thumbnail_href ?>" target="_blank" class="btnr parent">SauceNAO</a>
+				<a href="<?php echo site_url($selected_radix->shortname . '/image/' . $p->safe_media_hash) ?>" class="btnr parent">View Same</a><a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumb_link ?>" target="_blank" class="btnr parent">Google</a><a href="http://iqdb.org/?url=<?php echo $p->thumb_link ?>" target="_blank" class="btnr parent">iqdb</a><a href="http://saucenao.com/search.php?url=<?php echo $p->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
 				<?php endif; ?>
 			</span>
 
@@ -32,12 +32,12 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 	</div>
 
 	<div class="thread_image_box">
-		<a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-			<img <?php echo (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) ? 'src="' . site_url('content/themes/default/images/transparent_pixel.png') . '" data-original="' . $p->thumbnail_href . '"' : 'src="' . $p->thumbnail_href . '"' ?> <?php echo ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?php echo ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?php echo $p->media_hash ?>" />
+		<a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+			<img <?php echo (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) ? 'src="' . site_url('content/themes/default/images/transparent_pixel.png') . '" data-original="' . $p->thumb_link . '"' : 'src="' . $p->thumb_link . '"' ?> <?php echo ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?php echo ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?php echo $p->media_hash ?>" />
 			<?php if (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
 			<noscript>
-				<a href="<?php echo ($p->image_href) ? $p->image_href : $p->remote_image_href ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-					<img src="<?php echo $p->thumbnail_href ?>" style="margin-left: -<?php echo $p->preview_w ?>px" <?php echo ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?php echo ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?php echo $p->media_hash ?>" />
+				<a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+					<img src="<?php echo $p->thumb_link ?>" style="margin-left: -<?php echo $p->preview_w ?>px" <?php echo ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?php echo ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?php echo $p->media_hash ?>" />
 				</a>
 			</noscript>
 			<?php endif; ?>
@@ -47,6 +47,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 
 	<header>
 		<div class="post_data">
+			<?php if(isset($modifiers['post_show_board_name']) &&  $modifiers['post_show_board_name']): ?><span class="post_show_board">/<?php echo $selected_radix->shortname ?>/</span><?php endif; ?>
 			<?php echo ($p->title_processed) ? '<h2 class="post_title">' . $p->title_processed . '</h2>' : '' ?>
 
 			<span class="post_author"><?php echo ($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed ?></span>

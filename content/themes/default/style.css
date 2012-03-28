@@ -363,7 +363,8 @@ body.theme_default {
     vertical-align:bottom
 }
 
-.theme_default article.thread .post_type_is_op {
+.theme_default article.thread .post_type_is_op,
+.theme_default article.thread .post_show_board {
     font-weight: bold;
     color:#000;
 }

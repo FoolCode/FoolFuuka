@@ -26,11 +26,11 @@ foreach ($posts as $key => $post) : ?>
 	?>
 		<?php if ($op->media) : ?>
 		<span class="filesize">
-			File : <a href="<?php echo ($op->image_href) ? $op->image_href : $op->remote_image_href ?>" target="_blank"><?php echo ($op->media_filename) ? $op->media_filename : $op->media ?></a><?php echo '-(' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ')' ?>
+			File : <a href="<?php echo ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank"><?php echo ($op->media_filename) ? $op->media_filename : $op->media ?></a><?php echo '-(' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ')' ?>
 		</span>
 		<br>
-		<a href="<?php echo ($op->image_href) ? $op->image_href : $op->remote_image_href ?>" target="_blank">
-			<img src="<?php echo $op->thumbnail_href ?>" border="0" align="left" <?php if ($op->preview_w > 0 && $op->preview_h > 0) : ?> width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>"<?php endif; ?> hspace="20" alt="<?php echo byte_format($op->media_size, 0) ?>" md5="<?php echo $op->media_hash ?>"/>
+		<a href="<?php echo ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank">
+			<img src="<?php echo $op->thumb_link ?>" border="0" align="left" <?php if ($op->preview_w > 0 && $op->preview_h > 0) : ?> width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>"<?php endif; ?> hspace="20" alt="<?php echo byte_format($op->media_size, 0) ?>" md5="<?php echo $op->media_hash ?>"/>
 		</a>
 		<?php endif; ?>
 

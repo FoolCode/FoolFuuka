@@ -966,7 +966,7 @@ class Post extends CI_Model
 					// still ignore boards that don't have Sphinx enabled
 					if(!$radix->sphinx)
 						continue;
-					
+
 					$indexes[] = $radix->shortname . '_ancient';
 					$indexes[] = $radix->shortname . '_main';
 					$indexes[] = $radix->shortname . '_delta';
@@ -1100,8 +1100,8 @@ class Post extends CI_Model
 			{
 				$sql[] = '
 					(
-						SELECT *
-						FROM ' . $this->get_table($this->radix->get_by_id($record['board'])) . '
+						SELECT *, 1 AS board
+						FROM ' . $this->get_table($this->radix->get_by_id(1)) . '
 						WHERE num = ' . $record['num'] . ' AND subnum = ' . $record['subnum'] . '
 					)
 				';
@@ -1240,6 +1240,11 @@ class Post extends CI_Model
 		 */
 		foreach ($query->result() as $post)
 		{
+			if(isset($post->board))
+			{
+				$post->board = $this->radix->get_by_id($post->board);
+			}
+			
 			if ($post->parent == 0)
 			{
 				$this->existing_posts[$post->num][] = $post->num;
@@ -1353,15 +1358,15 @@ class Post extends CI_Model
 		$result = $query->result();
 		$result = $result[0];
 
-		$image_href = $this->get_image_href($board, $result);
+		$media_link = $this->get_media_link($board, $result);
 
-		if ($image_href == '')
+		if ($media_link == '')
 		{
 			$this->process_post($board, $result, TRUE);
 			return array('error_type' => 'not_on_server', 'error_code' => 404, 'result' => $result);
 		}
 
-		return array('image_href' => $image_href);
+		return array('media_link' => $media_link);
 	}
 
 
@@ -2096,9 +2101,9 @@ class Post extends CI_Model
 	{
 		$this->current_row = $post;
 		$this->load->helper('text');
-		$post->thumbnail_href = $this->get_image_href($board, $post, TRUE);
-		$post->image_href = $this->get_image_href($board, $post);
-		$post->remote_image_href = $this->get_remote_image_href($board, $post);
+		$post->thumb_link = $this->get_media_link($board, $post, TRUE);
+		$post->media_link = $this->get_media_link($board, $post);
+		$post->remote_media_link = $this->get_remote_media_link($board, $post);
 		$post->safe_media_hash = substr(urlsafe_b64encode(urlsafe_b64decode($post->media_hash)),
 			0, -2);
 		$post->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE',
@@ -2297,7 +2302,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_image_href($board, $row, $thumbnail = FALSE)
+	function get_media_link($board, $row, $thumbnail = FALSE)
 	{
 		if (!$row->preview)
 			return FALSE;
@@ -2525,7 +2530,7 @@ class Post extends CI_Model
 	}
 
 
-	function get_remote_image_href($board, $row)
+	function get_remote_media_link($board, $row)
 	{
 		if (!$row->media)
 			return '';

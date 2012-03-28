@@ -240,12 +240,12 @@ class Chan extends Public_Controller
 		// Initialize default values for valid
 		$default = array(
 			'variables' => array(
-				'disable_headers', 
-				'is_page', 
-				'is_last50', 
-				'is_statistics', 
+				'disable_headers',
+				'is_page',
+				'is_last50',
+				'is_statistics',
 				'modifiers'
-				),
+			),
 			'partials' => array('post_thread', 'tools_post', 'tools_view'),
 			'backend_vars' => array(
 				'site_url' => site_url(),
@@ -267,7 +267,7 @@ class Chan extends Public_Controller
 				if (strpos($k, '@') === FALSE)
 					$variables[$k] = FALSE;
 				else
-					$variables[substr($k,1)] = array();
+					$variables[substr($k, 1)] = array();
 			}
 		}
 
@@ -278,7 +278,7 @@ class Chan extends Public_Controller
 				if (strpos($k, '@') === FALSE)
 					$partials[$k] = FALSE;
 				else
-					$partials[substr($k,1)] = array();
+					$partials[substr($k, 1)] = array();
 			}
 		}
 
@@ -354,8 +354,8 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest(get_selected_radix(), $page,
 			(!empty($options)) ?
-					$options :
-					array('per_page' => 24, 'type' =>
+				$options :
+				array('per_page' => 24, 'type' =>
 				($this->input->cookie('foolfuuka_default_theme_by_thread') ? 'by_thread' : 'by_post')));
 
 		// Set template variables required to build the HTML.
@@ -363,24 +363,24 @@ class Chan extends Public_Controller
 			(($page > 1 ) ? ' &raquo; ' . _('Page') . ' ' . $page : ''));
 		$this->_set_parameters(
 			array(
-				'section_title' => (($page > 1) ?
-					(($by_thread ?
-						_('Latest by Thread') . ' - ' : '')
-					. _('Page') . ' ' . $page) : NULL),
-				'is_page' => TRUE,
-				'posts' => $posts['result'],
-				'posts_per_thread' => 5,
-				'pagination' => array(
-					'base_url' => site_url(array(get_selected_radix()->shortname,
-						($by_thread ? 'by_thread' : 'page'))),
-					'current_page' => $page,
-					'total' => $posts['pages']
-				)
+			'section_title' => (($page > 1) ?
+				(($by_thread ?
+					_('Latest by Thread') . ' - ' : '')
+				. _('Page') . ' ' . $page) : NULL),
+			'is_page' => TRUE,
+			'posts' => $posts['result'],
+			'posts_per_thread' => 5,
+			'pagination' => array(
+				'base_url' => site_url(array(get_selected_radix()->shortname,
+					($by_thread ? 'by_thread' : 'page'))),
+				'current_page' => $page,
+				'total' => $posts['pages']
+			)
 			),
 			array(
-				'post_thread' => TRUE,
-				'tools_post' => TRUE,
-				'tools_view' => array('page' => $page)
+			'post_thread' => TRUE,
+			'tools_post' => TRUE,
+			'tools_view' => array('page' => $page)
 			)
 		);
 		$this->template->build('board');
@@ -389,14 +389,15 @@ class Chan extends Public_Controller
 
 	public function by_thread()
 	{
-		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1', 60 * 60 * 24 * 30);
+		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1',
+			60 * 60 * 24 * 30);
 		redirect(get_selected_radix()->shortname);
 	}
 
 
 	public function by_post()
 	{
-		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1','');
+		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1', '');
 		redirect(get_selected_radix()->shortname);
 	}
 
@@ -421,21 +422,21 @@ class Chan extends Public_Controller
 			(($page > 1 ) ? ' &raquo; ' . _('Ghost Page') . ' ' . $page : ''));
 		$this->_set_parameters(
 			array(
-				'section_title' => (($page > 1) ?
-					_('Ghost Page') . ' ' . $page : NULL),
-				'is_page' => TRUE,
-				'posts' => $posts['result'],
-				'posts_per_thread' => 5,
-				'pagination' => array(
-					'base_url' => site_url(array(get_selected_radix()->shortname, 'ghost')),
-					'current_page' => $page,
-					'total' => $posts['pages']
-				)
+			'section_title' => (($page > 1) ?
+				_('Ghost Page') . ' ' . $page : NULL),
+			'is_page' => TRUE,
+			'posts' => $posts['result'],
+			'posts_per_thread' => 5,
+			'pagination' => array(
+				'base_url' => site_url(array(get_selected_radix()->shortname, 'ghost')),
+				'current_page' => $page,
+				'total' => $posts['pages']
+			)
 			),
 			array(
-				'post_thread' => TRUE,
-				'tools_post' => TRUE,
-				'tools_view' => array('page' => $page)
+			'post_thread' => TRUE,
+			'tools_post' => TRUE,
+			'tools_view' => array('page' => $page)
 			)
 		);
 		$this->template->build('board');
@@ -452,38 +453,40 @@ class Chan extends Public_Controller
 			show_404();
 
 		// Fetch the last X created threads to generate the GALLERY.
-		$result = $this->post->get_gallery(get_selected_radix(), $page, array('type' => $type));
+		$result = $this->post->get_gallery(get_selected_radix(), $page,
+			array('type' => $type));
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
 			' &raquo; ' . _('Gallery'));
 
-		if($type == 'by_image')
+		if ($type == 'by_image')
 		{
 			$title = _('Gallery - Showing Latest Submitted Images') .
-				' - ' . '<a href="'.site_url(array(get_selected_radix()->shortname, 'gallery', 'by_thread')).'">By thread</a>';
+				' - ' . '<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_thread')) . '">By thread</a>';
 		}
 		else
 		{
 			$title = _('Gallery - Showing Latest Created Threads') .
-				' - ' . '<a href="'.site_url(array(get_selected_radix()->shortname, 'gallery', 'by_image')).'">By image</a>';
+				' - ' . '<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_image')) . '">By image</a>';
 		}
 
 		$this->_set_parameters(
 			array(
-				'section_title' => $title,
-				'threads' => $result['threads'],
-				'pagination' => array(
-					'base_url' => site_url(array(get_selected_radix()->shortname, 'gallery', $type)),
-					'current_page' => $page,
-					'total' => ceil($result['total_found'] / 25)
-				)
+			'section_title' => $title,
+			'threads' => $result['threads'],
+			'pagination' => array(
+				'base_url' => site_url(array(get_selected_radix()->shortname, 'gallery', $type)),
+				'current_page' => $page,
+				'total' => ceil($result['total_found'] / 25)
+			)
 			), array(
-				'tools_post' => TRUE,
-				'tools_view' => TRUE
-			), array(
-				'threads_data' => $result['threads'],
-				'page_function' => 'gallery'
+			'tools_post' => TRUE,
+			'tools_view' => TRUE
+			),
+			array(
+			'threads_data' => $result['threads'],
+			'page_function' => 'gallery'
 			)
 		);
 		$this->template->build('gallery');
@@ -513,7 +516,7 @@ class Chan extends Public_Controller
 			$this->post($num);
 			return TRUE;
 		}
-		
+
 		// get the latest doc_id
 		$latest_doc_id = (isset($thread[$num]['op'])) ? $thread[$num]['op']->doc_id : 0;
 		if (isset($thread[$num]['posts']))
@@ -530,18 +533,18 @@ class Chan extends Public_Controller
 			' &raquo; ' . _('Thread') . ' #' . $num);
 		$this->_set_parameters(
 			array(
-				'thread_id' => $num,
-				'posts' => $thread,
+			'thread_id' => $num,
+			'posts' => $thread,
 			),
 			array(
-				'post_thread' => TRUE,
-				'tools_post' => TRUE,
-				'tools_view' => TRUE
+			'post_thread' => TRUE,
+			'tools_post' => TRUE,
+			'tools_view' => TRUE
 			),
 			array(
-				'thread_id' => $num,
-				'latest_doc_id' => $latest_doc_id,
-				'thread_op_data' => $thread[$num]['op']
+			'thread_id' => $num,
+			'latest_doc_id' => $latest_doc_id,
+			'thread_op_data' => $thread[$num]['op']
 			)
 		);
 		$this->template->build('board');
@@ -571,7 +574,7 @@ class Chan extends Public_Controller
 			$this->post($num);
 			return TRUE;
 		}
-		
+
 		// get the latest doc_id
 		$latest_doc_id = (isset($thread[$num]['op'])) ? $thread[$num]['op']->doc_id : 0;
 		if (isset($thread[$num]['posts']))
@@ -588,20 +591,19 @@ class Chan extends Public_Controller
 			' &raquo; ' . _('Thread') . ' #' . $num);
 		$this->_set_parameters(
 			array(
-				'section_title' => sprintf(_('Showing the last 50 posts for Thread No.%s'),
-					$num),
-				'is_last50' => TRUE,
-				'thread_id' => $num,
-				'posts' => $thread
+			'section_title' => sprintf(_('Showing the last 50 posts for Thread No.%s'),
+				$num),
+			'is_last50' => TRUE,
+			'thread_id' => $num,
+			'posts' => $thread
 			),
 			array(
-				'post_reply' => TRUE,
-				'tools_post' => TRUE,
-				'tools_view' => TRUE
-			),
-			array(
-				'thread_id' => $num,
-				'latest_doc_id' => $latest_doc_id
+			'post_reply' => TRUE,
+			'tools_post' => TRUE,
+			'tools_view' => TRUE
+			), array(
+			'thread_id' => $num,
+			'latest_doc_id' => $latest_doc_id
 			)
 		);
 		$this->template->build('board');
@@ -616,7 +618,7 @@ class Chan extends Public_Controller
 		// POST -> GET Redirection to provide URL presentable for sharing links.
 		if ($this->input->post('post') || !is_post_number($num))
 		{
-			$num = $this->input->post('post')?:$num;
+			$num = $this->input->post('post')? : $num;
 
 			preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $num, $post);
 			print_r($post);
@@ -704,18 +706,18 @@ class Chan extends Public_Controller
 			' &raquo; ' . _('Image Hash') . ': ' . base64_encode(urlsafe_b64decode($hash)));
 		$this->_set_parameters(
 			array(
-				'section_title' => sprintf(_('Search for image posts with the image hash: %s'),
-					base64_encode(urlsafe_b64decode($hash))),
-				'modifiers' => array('post_show_view_button' => TRUE),
-				'posts' => $result['posts'],
-				'pagination' => array(
-					'base_url' => site_url(array(get_selected_radix()->shortname, 'image', $hash)),
-					'current_page' => $page,
-					'total' => ceil($result['total_found'] / 25)
-				)
+			'section_title' => sprintf(_('Search for image posts with the image hash: %s'),
+				base64_encode(urlsafe_b64decode($hash))),
+			'modifiers' => array('post_show_view_button' => TRUE),
+			'posts' => $result['posts'],
+			'pagination' => array(
+				'base_url' => site_url(array(get_selected_radix()->shortname, 'image', $hash)),
+				'current_page' => $page,
+				'total' => ceil($result['total_found'] / 25)
+			)
 			), array(
-				'tools_post' => TRUE,
-				'tools_view' => TRUE
+			'tools_post' => TRUE,
+			'tools_view' => TRUE
 			)
 		);
 		$this->template->build('board');
@@ -871,7 +873,7 @@ class Chan extends Public_Controller
 		// POST -> GET Redirection to provide URL presentable for sharing links.
 		if ($this->input->post())
 		{
-			if(get_selected_radix())
+			if (get_selected_radix())
 			{
 				$redirect_url = array(get_selected_radix()->shortname, 'search');
 			}
@@ -879,7 +881,7 @@ class Chan extends Public_Controller
 			{
 				$redirect_url = array('search');
 			}
-			
+
 			foreach ($modifiers as $modifier)
 			{
 				if ($this->input->post($modifier))
@@ -900,17 +902,17 @@ class Chan extends Public_Controller
 		if (isset($result['error']))
 		{
 			$this->template->title(_('Error'));
-			
-			if(get_selected_radix())
+
+			if (get_selected_radix())
 			{
 				$this->template->title(get_selected_radix()->formatted_title);
 			}
-			
+
 			$this->_set_parameters(
 				array(
-					'error' => $result['error']
+				'error' => $result['error']
 				), array(
-					'tools_view' => array('search' => $search)
+				'tools_view' => array('search' => $search)
 				)
 			);
 			$this->template->build('error');
@@ -983,27 +985,37 @@ class Chan extends Public_Controller
 			unset($uri_array['page']);
 
 		// Set template variables required to build the HTML.
-	//	$this->template->title(get_selected_radix()->formatted_title .
-	//		' &raquo; ' . $title);
+		//	$this->template->title(get_selected_radix()->formatted_title .
+		//		' &raquo; ' . $title);
 		$this->_set_parameters(
 			array(
-				'section_title' => $title,
-				'modifiers' => array(
-					'post_show_view_button' => TRUE,
-					'post_show_board_name' => !get_selected_radix()
-				),
-				'posts' => $result['posts'],
-				'pagination' => array(
-					'base_url' => site_url(array($this->uri->assoc_to_uri($uri_array), 'page')),
-					'current_page' => $page,
-					'total' => ceil((($result['total_found'] > 5000) ? 5000 : $result['total_found']) / 25)
-				)
+			'section_title' => $title,
+			'modifiers' => array(
+				'post_show_view_button' => TRUE,
+				'post_show_board_name' => !get_selected_radix()
+			),
+			'posts' => $result['posts'],
+			'pagination' => array(
+				'base_url' => site_url(array($this->uri->assoc_to_uri($uri_array), 'page')),
+				'current_page' => $page,
+				'total' => ceil((($result['total_found'] > 5000) ? 5000 : $result['total_found']) / 25)
+			)
 			),
 			array(
-				'tools_post' => TRUE,
-				'tools_view' => array('search' => $search)
+			'tools_post' => TRUE,
+			'tools_view' => array('search' => $search)
 			)
 		);
+		
+		if (get_selected_radix())
+		{
+			$this->template->title(get_selected_radix()->formatted_title);
+		}
+		else
+		{
+			$this->template->title(_('Global search'));
+		}
+
 		$this->template->build('board');
 	}
 
@@ -1025,12 +1037,12 @@ class Chan extends Public_Controller
 				' &raquo; ' . _('Statistics'));
 			$this->_set_parameters(
 				array(
-					'section_title' => _('Statistics'),
-					'is_statistics' => TRUE,
-					'is_statistics_list' => TRUE,
-					'info' => $stats
+				'section_title' => _('Statistics'),
+				'is_statistics' => TRUE,
+				'is_statistics_list' => TRUE,
+				'info' => $stats
 				), array(
-					'tools_view' => TRUE
+				'tools_view' => TRUE
 				)
 			);
 			$this->template->build('statistics');
@@ -1048,7 +1060,7 @@ class Chan extends Public_Controller
 			$this->template->title(get_selected_radix()->formatted_title .
 				' &raquo; ' . _('Statistics') . ': ' . $stats['info']['name']);
 
-			if(isset($stats['info']['frequency']))
+			if (isset($stats['info']['frequency']))
 			{
 				$section_title = sprintf(_('Statistics: %s (Next Update in %s)'),
 					$stats['info']['name'],
@@ -1056,21 +1068,20 @@ class Chan extends Public_Controller
 			}
 			else
 			{
-				$section_title = sprintf(_('Statistics: %s'),
-					$stats['info']['name']);
+				$section_title = sprintf(_('Statistics: %s'), $stats['info']['name']);
 			}
 
 			$this->_set_parameters(
 				array(
-					'section_title' => $section_title,
-					'is_statistics' => TRUE,
-					'is_statistics_list' => FALSE,
-					'info' => $stats['info'],
-					'data' => $stats['data']
+				'section_title' => $section_title,
+				'is_statistics' => TRUE,
+				'is_statistics_list' => FALSE,
+				'info' => $stats['info'],
+				'data' => $stats['data']
 				),
 				array(
-					'stats_interface' => 'statistics/' . $stats['info']['interface'],
-					'tools_view' => TRUE
+				'stats_interface' => 'statistics/' . $stats['info']['interface'],
+				'tools_view' => TRUE
 				)
 			);
 			$this->template->build('statistics');
@@ -1219,10 +1230,10 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'error' => validation_errors()
+					'error' => validation_errors()
 					), array(
-						'tools_post' => TRUE,
-						'tools_view' => TRUE
+					'tools_post' => TRUE,
+					'tools_view' => TRUE
 					)
 				);
 				$this->template->build('error');
@@ -1272,10 +1283,10 @@ class Chan extends Public_Controller
 					$this->template->title(_('Error'));
 					$this->_set_parameters(
 						array(
-							'error' => _('This thread does not exist.')
+						'error' => _('This thread does not exist.')
 						), array(
-							'tools_post' => TRUE,
-							'tools_view' => TRUE
+						'tools_post' => TRUE,
+						'tools_view' => TRUE
 						)
 					);
 					$this->template->build('error');
@@ -1309,11 +1320,11 @@ class Chan extends Public_Controller
 						$this->template->title(_('Error'));
 						$this->_set_parameters(
 							array(
-								'error' => _('This thread does not exist.')
+							'error' => _('This thread does not exist.')
 							),
 							array(
-								'tools_post' => TRUE,
-								'tools_view' => TRUE
+							'tools_post' => TRUE,
+							'tools_view' => TRUE
 							)
 						);
 						$this->template->build('error');
@@ -1342,10 +1353,10 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'error' => _('You are required to upload an image when posting a new thread.')
+					'error' => _('You are required to upload an image when posting a new thread.')
 					), array(
-						'tools_post' => TRUE,
-						'tools_view' => TRUE
+					'tools_post' => TRUE,
+					'tools_view' => TRUE
 					)
 				);
 				$this->template->build('error');
@@ -1367,10 +1378,10 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'error' => _('You are required to write a comment when no image upload is present.')
+					'error' => _('You are required to write a comment when no image upload is present.')
 					), array(
-						'tools_post' => TRUE,
-						'tools_view' => TRUE
+					'tools_post' => TRUE,
+					'tools_view' => TRUE
 					)
 				);
 				$this->template->build('error');
@@ -1392,10 +1403,10 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'error' => _('The posting of images has been disabled for this thread.')
+					'error' => _('The posting of images has been disabled for this thread.')
 					), array(
-						'tools_post' => TRUE,
-						'tools_view' => TRUE
+					'tools_post' => TRUE,
+					'tools_view' => TRUE
 					)
 				);
 				$this->template->build('error');
@@ -1434,10 +1445,10 @@ class Chan extends Public_Controller
 					$this->template->title(_('Error'));
 					$this->_set_parameters(
 						array(
-							'error' => $this->upload->display_errors()
+						'error' => $this->upload->display_errors()
 						), array(
-							'tools_post' => TRUE,
-							'tools_view' => TRUE
+						'tools_post' => TRUE,
+						'tools_view' => TRUE
 						)
 					);
 					$this->template->build('error');
@@ -1462,10 +1473,10 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'error' => $result['error']
+					'error' => $result['error']
 					), array(
-						'tools_post' => TRUE,
-						'tools_view' => TRUE
+					'tools_post' => TRUE,
+					'tools_view' => TRUE
 					)
 				);
 				$this->template->build('error');
@@ -1485,12 +1496,12 @@ class Chan extends Public_Controller
 				if ($result['posted']->parent == 0)
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
-						$result['posted']->num)) . '#' . $result['posted']->num;
+							$result['posted']->num)) . '#' . $result['posted']->num;
 				}
 				else
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
-						$result['posted']->parent)) . '#' . $result['posted']->num .
+							$result['posted']->parent)) . '#' . $result['posted']->num .
 						(($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 				}
 

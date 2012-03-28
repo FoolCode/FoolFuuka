@@ -951,6 +951,12 @@ class Chan extends Public_Controller
 			array_push($title, _('that do not contain images'));
 		if ($search['filter'] == 'text')
 			array_push($title, _('that only contain images'));
+		if ($search['capcode'] == 'user')
+			array_push($title, _('that were made by users'));
+		if ($search['capcode'] == 'mod')
+			array_push($title, _('that were made by mods'));
+		if ($search['capcode'] == 'admin')
+			array_push($title, _('that were made by admins'));
 		if ($search['start'])
 			array_push($title, sprintf(_('posts after %s'), $search['start']));
 		if ($search['end'])

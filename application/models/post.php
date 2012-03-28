@@ -1005,7 +1005,7 @@ class Post extends CI_Model
 			}
 			if ($search['capcode'] == 'admin')
 			{
-				$this->db->where('cap', 1);
+				$this->db->where('cap', 3);
 			}
 			if ($search['capcode'] == 'mod')
 			{
@@ -1013,8 +1013,7 @@ class Post extends CI_Model
 			}
 			if ($search['capcode'] == 'user')
 			{
-				$this->db->where('cap !=', 1)
-					->where('cap !=', 2);
+				$this->db->where('cap', 1);
 			}
 			if ($search['deleted'] == 'deleted')
 			{

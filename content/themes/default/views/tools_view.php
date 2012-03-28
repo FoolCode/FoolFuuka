@@ -212,6 +212,44 @@
 					<span>Replies Only</span>
 				</label>
 			</li>
+			
+			
+			<li class="divider"></li>
+
+			<li>
+				<label>
+<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"]))
+			? TRUE : FALSE));
+?>
+					<span>All</span>
+				</label>
+			</li>
+			
+			<li>
+				<label>
+<?php echo form_radio(array('name' => 'capcode', 'value' => 'user', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'user')
+			? TRUE : FALSE));
+?>
+					<span>Only by users</span>
+				</label>
+			</li>
+			<li>
+				<label>
+<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod')
+			? TRUE : FALSE));
+?>
+					<span>Only by mods</span>
+				</label>
+			</li>
+			<li>
+				<label>
+					<?php echo form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin')
+								? TRUE : FALSE));
+					?>
+					<span>Only by admins</span>
+				</label>
+			</li>
+			
 
 
 			<li class="divider"></li>

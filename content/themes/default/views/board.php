@@ -55,7 +55,7 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if(get_selected_radix()->archive) : ?>rel="tooltip" title="<?php echo _('4chan time') . ': ' .date('D M d H:i:s Y', $op->timestamp-18000) ?>"<?php endif; ?>><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
+				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if(get_selected_radix()->archive) : ?> title="<?php echo _('4chan time') . ': ' .date('D M d H:i:s Y', $op->timestamp-18000) ?>"<?php endif; ?>><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
 			</span>
 
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#'  . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="highlight">No.</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="quote"><?php echo $op->num ?></a>

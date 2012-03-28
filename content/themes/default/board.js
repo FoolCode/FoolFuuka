@@ -732,12 +732,14 @@ jQuery(document).ready(function() {
     }
 
     bindFunctions();
-    jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy');
-    jQuery('[rel=tooltip]').tooltip({
+	
+	// localize and add 4chan tooltip where title
+    jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy').filter('[title]').tooltip({
         placement: 'bottom',
         delay: 200
     });
-    jQuery('[rel=tooltip_right]').tooltip({
+	
+    jQuery('input[title]').tooltip({
         placement: 'right',
         delay: 200
     });

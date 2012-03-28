@@ -244,7 +244,7 @@ class Chan extends Public_Controller
 				'is_page', 
 				'is_last50', 
 				'is_statistics', 
-				'@modifiers'
+				'modifiers'
 				),
 			'partials' => array('post_thread', 'tools_post', 'tools_view'),
 			'backend_vars' => array(
@@ -267,7 +267,7 @@ class Chan extends Public_Controller
 				if (strpos($k, '@') === FALSE)
 					$variables[$k] = FALSE;
 				else
-					$variables[$k] = array();
+					$variables[substr($k,1)] = array();
 			}
 		}
 
@@ -278,7 +278,7 @@ class Chan extends Public_Controller
 				if (strpos($k, '@') === FALSE)
 					$partials[$k] = FALSE;
 				else
-					$partials[$k] = array();
+					$partials[substr($k,1)] = array();
 			}
 		}
 

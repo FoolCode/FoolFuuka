@@ -77,24 +77,34 @@
 							? rawurldecode($search["tripcode"]) : ''))
 				?></li>
 			<li class="input-prepend"><span class="add-on">Date start</span><?php
-				echo form_input(
-					array('type' => 'date',
-						'name' => 'start',
+				$date_array = array(
 						'placeholder' => 'yyyy-mm-dd',
-						'id' => 'date_start',
-						'value' => (isset($search["date_start"])) ?
-							rawurldecode($search["date_start"]) : ''));
+						'type' => 'date',
+						'name' => 'start',
+						'id' => 'date_start'
+					);
+				if(isset($search["date_start"]))
+				{
+					$date_array['value'] = rawurldecode($search["date_start"]);
+				}
+			
+				echo form_input($date_array);
 				?></li>
 
 			<li class="input-prepend"><span class="add-on">Date end</span><?php
-				echo form_input(
-					array(
+				$date_array = array(
+						'placeholder' => 'yyyy-mm-dd',
 						'type' => 'date',
 						'name' => 'end',
 						'id' => 'date_end',
-						'placeholder' => 'yyyy-mm-dd',
-						'value' => (isset($search["date_start"])) ?
-							rawurldecode($search["date_start"]) : ''));
+					);
+				
+				if(isset($search["date_end"]))
+				{
+					$date_array['value'] = rawurldecode($search["date_end"]);
+				}
+				echo form_input($date_array);
+					
 				?></li>
 			<li><?php echo _('Filters:') ?></li>
 			<li>
@@ -226,14 +236,12 @@
 			
 			<?php if($board->shortname) : ?>
 			<li class="divider"></li>
-			<li class="input-prepend"><span class="add-on">Image</span><?php echo form_upload(array('name' => 'image'))
-				?>
+			<li class="input-prepend"><span class="add-on">Image</span><input type="file" name="image" />
 				</li><li><?php
 				echo form_submit(array(
 					'class' => 'btn btn-success btn-mini',
 					'value' => _('Search image'),
 					'name' => 'submit_image',
-					'rel' => 'tooltip_right',
 					'title' => _('On most browsers you can also drop the file on the search bar.'),
 					'style' => 'margin-top:0;'
 				))

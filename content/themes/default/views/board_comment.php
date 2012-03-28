@@ -65,7 +65,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>" <?php if($selected_radix->archive) : ?>rel="tooltip" title="<?php echo _('4chan time') . ': ' . date('D M d H:i:s Y', $p->timestamp-18000) ?>"<?php endif; ?>><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
+				<time datetime="<?php echo date(DATE_W3C, $p->timestamp) ?>" <?php if($selected_radix->archive) : ?> title="<?php echo _('4chan time') . ': ' . date('D M d H:i:s Y', $p->timestamp-18000) ?>"<?php endif; ?>><?php echo date('D M d H:i:s Y', $p->timestamp) ?></time>
 			</span>
 
 			<a href="<?php echo site_url($selected_radix->shortname . '/thread/' . $p->parent) . '#'  . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-post="<?php echo $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="highlight">No.</a><a href="<?php echo site_url($selected_radix->shortname . '/thread/' . $p->parent) . '#q' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-post="<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-function="quote"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>

@@ -67,6 +67,48 @@ class Post extends CI_Model
 
 
 	/**
+	 * @param $board
+	 * @return string
+	 */
+	function get_sql_media_banned($board)
+	{
+		return '
+			LEFT JOIN
+			(
+				SELECT md5 as media_banned
+				FROM ' . $this->db->protect_identifiers('banned_md5',
+			TRUE) .'
+			) as m
+			ON
+			' . $this->get_table($board) . '.`media_hash`
+			=
+			' . $this->db->protect_identifiers('m') . '.`media_banned`
+		';
+	}
+
+
+	/**
+	 * @param $board
+	 * @return string
+	 */
+	function get_sql_media_banned_after_join($board)
+	{
+		return '
+			LEFT JOIN
+			(
+				SELECT md5 as media_banned
+				FROM ' . $this->db->protect_identifiers('banned_md5',
+				TRUE) .'
+			) as m
+			ON
+			g.`media_hash`
+			=
+			' . $this->db->protect_identifiers('m') . '.`media_banned`
+		';
+	}
+
+
+	/**
 	 * Returns the SQL string to get the report data with the post
 	 *
 	 * @param type $board
@@ -221,6 +263,7 @@ class Post extends CI_Model
 			$query = $this->db->query('
 				SELECT *
 				FROM ' . $this->get_table($board) . '
+				' . $this->get_sql_media_banned($board) . '
 				WHERE media_filename IS NOT NULL
 				ORDER BY timestamp DESC
 				LIMIT ?, ?
@@ -241,6 +284,7 @@ class Post extends CI_Model
 				(
 					SELECT *, parent as unq_parent
 					FROM ' . $this->get_table_threads($board) . '
+					' . $this->get_sql_media_banned($board) . '
 					ORDER BY time_op DESC
 					LIMIT ?, ?
 				) AS t
@@ -310,6 +354,7 @@ class Post extends CI_Model
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
+					' . $this->get_sql_media_banned_after_join($board) . '
 				',
 					array(
 						intval(($page * $per_page) - $per_page),
@@ -340,6 +385,7 @@ class Post extends CI_Model
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
+					' . $this->get_sql_media_banned_after_join($board) . '
 				',
 					array(
 						intval(($page * $per_page) - $per_page),
@@ -367,6 +413,7 @@ class Post extends CI_Model
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
+					' . $this->get_sql_media_banned_after_join($board) . '
 				',
 					array(
 						intval(($page * $per_page) - $per_page),
@@ -418,6 +465,7 @@ class Post extends CI_Model
 					SELECT *
 					FROM ' . $this->get_table($board) . '
 					' . $this->get_sql_report($board) . '
+					' . $this->get_sql_media_banned($board) . '
 					WHERE parent = ' . $row->unq_parent . '
 					ORDER BY num DESC, subnum DESC
 					LIMIT 0, 5
@@ -530,6 +578,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->get_table($board) . '
+					' . $this->get_sql_media_banned($board) . '
 					WHERE num = ' . intval($row->num) . ' AND subnum = ' . intval($row->subnum) . '
 				)
 			';
@@ -613,6 +662,7 @@ class Post extends CI_Model
 
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->get_table($board) . '
+					' . $this->get_sql_media_banned($board) . '
 					WHERE parent = ? AND doc_id > ?
 					ORDER BY num, subnum ASC;
 				',
@@ -633,6 +683,7 @@ class Post extends CI_Model
 					(
 						(
 							SELECT * FROM ' . $this->get_table($board) . '
+							' . $this->get_sql_media_banned($board) . '
 							WHERE num = ? OR parent = ?
 							ORDER BY num DESC, subnum DESC
 							LIMIT ' . intval($type_extra['last_limit']) . '
@@ -640,6 +691,7 @@ class Post extends CI_Model
 						UNION
 						(
 							SELECT * FROM ' . $this->get_table($board) . '
+							' . $this->get_sql_media_banned($board) . '
 							WHERE num = ?
 							LIMIT 0, 1
 						)
@@ -655,6 +707,7 @@ class Post extends CI_Model
 
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->get_table($board) . '
+					' . $this->get_sql_media_banned($board) . '
 					WHERE num = ? OR parent = ?
 					ORDER BY num, subnum ASC;
 				',
@@ -666,6 +719,7 @@ class Post extends CI_Model
 
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->get_table($board) . '
+					' . $this->get_sql_media_banned($board) . '
 					WHERE parent = ? AND subnum != 0
 					ORDER BY num, subnum ASC;
 				',
@@ -759,6 +813,7 @@ class Post extends CI_Model
 		$query = $this->db->query('
 				SELECT num, parent, subnum FROM ' . $this->get_table($board) . '
 				' . $this->get_sql_report($board) . '
+				' . $this->get_sql_media_banned($board) . '
 				WHERE num = ? AND subnum = ?
 				LIMIT 0, 1;
 			',
@@ -798,6 +853,7 @@ class Post extends CI_Model
 		$query = $this->db->query('
 				SELECT * FROM ' . $this->get_table($board) . '
 				' . $this->get_sql_report($board) . '
+				' . $this->get_sql_media_banned($board) . '
 				WHERE num = ? AND subnum = ?
 				LIMIT 0, 1;
 			',
@@ -823,6 +879,7 @@ class Post extends CI_Model
 		$query = $this->db->query('
 				SELECT * FROM ' . $this->get_table($board) . '
 				' . $this->get_sql_report($board) . '
+				' . $this->get_sql_media_banned($board) . '
 				WHERE doc_id = ?
 				LIMIT 0, 1;
 			',
@@ -855,6 +912,7 @@ class Post extends CI_Model
 					FROM ' . $this->get_table($board) . ' as g
 					' . $this->get_sql_report_after_join($board) . '
 					' . $this->get_sql_poster_after_join() . '
+					' . $this->get_sql_media_banned_after_join($board) . '
 					WHERE g.`doc_id` = ' . implode(' OR g.`doc_id` = ',
 				$post['doc_id']) . '
 				)
@@ -976,7 +1034,7 @@ class Post extends CI_Model
 			{
 				$indexes = array($board->shortname . '_ancient', $board->shortname . '_main', $board->shortname . '_delta');
 			}
-			
+
 			$this->db->from($indexes, FALSE, FALSE);
 
 			if ($search['subject'])
@@ -1082,8 +1140,6 @@ class Post extends CI_Model
 			/*
 			 * Query SphinxQL with our search parameters generated above.
 			 */
-			//echo $this->db->statement();
-
 			$sphinx = $this->sphinxql->query($this->db->statement());
 
 			if (empty($sphinx['matches']))
@@ -1101,6 +1157,7 @@ class Post extends CI_Model
 					(
 						SELECT *, 1 AS board
 						FROM ' . $this->get_table($this->radix->get_by_id(1)) . '
+						' . $this->get_sql_media_banned($this->radix->get_by_id(1)) . '
 						WHERE num = ' . $record['num'] . ' AND subnum = ' . $record['subnum'] . '
 					)
 				';
@@ -1208,6 +1265,16 @@ class Post extends CI_Model
 				$this->db->where('timestamp <=', intval(strtotime($search['end'])))
 					->use_index('timestamp_index');
 			}
+
+
+			$this->db->join(
+				'(SELECT md5 as media_banned
+					FROM ' . $this->db->protect_identifiers('banned_md5',TRUE) .') as m',
+				$this->get_table($board) . '.`media_hash` = ' . $this->db->protect_identifiers('m') . '.`media_banned`',
+				'left',
+				FALSE);
+
+
 			$this->db->limit(5000);
 			$this->db->stop_cache();
 			$count = $this->db->query($this->db->statement());
@@ -1243,7 +1310,7 @@ class Post extends CI_Model
 			{
 				$post->board = $this->radix->get_by_id($post->board);
 			}
-			
+
 			if ($post->parent == 0)
 			{
 				$this->existing_posts[$post->num][] = $post->num;
@@ -1287,6 +1354,7 @@ class Post extends CI_Model
 			SELECT *
 			FROM ' . $this->get_table($board) . '
 			' . $this->get_sql_report($board) . '
+			' . $this->get_sql_media_banned($board) . '
 			WHERE media_hash = ?
 			ORDER BY num DESC
 			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
@@ -1343,6 +1411,7 @@ class Post extends CI_Model
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->get_table($board) . '
+			' . $this->get_sql_media_banned($board) . '
 			WHERE media_filename = ?
 			ORDER BY num DESC
 			LIMIT 0, 1
@@ -2306,12 +2375,7 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		/**
-		 * Checking for Banned MD5 Hashes
-		 */
-		$query = $this->db->get_where('banned_md5', array('md5' => $row->media_hash));
-
-		if ($query->num_rows() > 0)
+		if ($row->media_banned !== NULL)
 		{
 			if ($thumbnail)
 			{
@@ -2322,9 +2386,7 @@ class Post extends CI_Model
 
 			return site_url() . 'content/themes/default/images/banned-image.png';
 		}
-		/**
-		 * End Check
-		 */
+
 		if (!$board->thumbnails && !$this->tank_auth->is_allowed())
 		{
 			if ($thumbnail)

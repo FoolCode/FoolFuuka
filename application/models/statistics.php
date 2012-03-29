@@ -546,9 +546,18 @@ class Statistics extends CI_Model
 	function process_image_reposts($board)
 	{
 		$query = $this->db->query('
-			SELECT preview, num, subnum, parent, media_hash, total
-			FROM ' . $this->get_table($board,
-			'images') . '
+			SELECT *
+			FROM ' . $this->get_table($board, 'images') . '
+			LEFT JOIN
+			(
+				SELECT md5 as media_banned
+				FROM ' . $this->db->protect_identifiers('banned_md5',
+				TRUE) .'
+			) as m
+			ON
+			' . $this->get_table($board, 'images') . '.`media_hash`
+			=
+			' . $this->db->protect_identifiers('m') . '.`media_banned`
 			ORDER BY total DESC
 			LIMIT 0, 200;
 		');

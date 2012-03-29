@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
+/*
  *  This is a fake config file that redirects to the current theme's config file
  */
 

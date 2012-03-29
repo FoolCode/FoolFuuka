@@ -156,6 +156,14 @@ class Boards extends Admin_Controller
 		$form['open'] = array(
 			'type' => 'open'
 		);
+		
+		$form['fs_sphinx_global'] = array(
+			'type' => 'checkbox',
+			'label' => 'Global SphinxSearch',
+			'placeholder' => 'FoOlFuuka',
+			'preferences' => TRUE,
+			'help' => _('Activate Sphinx globally (enables crossboard search)')
+		);
 
 		$form['fu_sphinx_listen'] = array(
 			'type' => 'input',
@@ -486,3 +494,6 @@ index " . $board . "_delta : " . $board . "_main
 	}
 
 }
+
+/* End of file boards.php */
+/* Location: ./application/controllers/admin/boards.php */

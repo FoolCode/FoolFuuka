@@ -598,7 +598,7 @@ class Chan extends Public_Controller
 			'posts' => $thread
 			),
 			array(
-			'post_reply' => TRUE,
+			'post_thread' => TRUE,
 			'tools_post' => TRUE,
 			'tools_view' => TRUE
 			), array(

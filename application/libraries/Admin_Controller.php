@@ -63,11 +63,24 @@ class Admin_Controller extends MY_Controller
 	}
 
 
+	/**
+	 * Save in the preferences table the name/value pairs
+	 * 
+	 * @param array $data name => value
+	 */
 	function submit_preferences($data)
 	{
 		foreach ($data as $name => $value)
 		{
+			// in case it's an array of values from name="thename[]"
+			if(is_array($value))
+			{
+				// remove also empty values with array_filter
+				$value = serialize(array_filter($value));
+			}
+			
 			$this->db->where(array('name' => $name));
+			// we can update only if it already exists
 			if ($this->db->count_all_results('preferences') == 1)
 			{
 				$this->db->update('preferences', array('value' => $value),
@@ -84,6 +97,16 @@ class Admin_Controller extends MY_Controller
 	}
 
 
+	/**
+	 * A lazy way to submit the preference panel input, saves some code in controller
+	 * 
+	 * This function runs the custom validation function that uses the $form array
+	 * to first run the original CodeIgniter validation and then the anonymous
+	 * functions included in the $form array. It sets a proper notice for the 
+	 * admin interface on conclusion.
+	 * 
+	 * @param array $form 
+	 */
 	function submit_preferences_auto($form)
 	{
 		if ($this->input->post())
@@ -209,6 +232,12 @@ class Admin_Controller extends MY_Controller
 	}
 
 
+	/**
+	 * Sets new sidebar elements, the array must match the defaults' structure.
+	 * It can override the methods.
+	 * 
+	 * @param array $array 
+	 */
 	public function add_sidebar_element($array)
 	{
 		if (is_null($this->sidebar_dynamic))
@@ -220,6 +249,14 @@ class Admin_Controller extends MY_Controller
 	}
 
 
+	/**
+	 * Merges without destroying twi sidebars, where $array2 overwrites values of
+	 * $array1.
+	 * 
+	 * @param array $array1 sidebar array to be merged into
+	 * @param array $array2 sidebar array with elements to merge
+	 * @return array resulting sidebar
+	 */
 	public function merge_sidebars($array1, $array2)
 	{
 		foreach ($array2 as $key => $item)
@@ -426,7 +463,7 @@ class Admin_Controller extends MY_Controller
 		return $result;
 	}
 
-	/*
+	/**
 	 * Controller for cron triggered by admin panel
 	 * Currently defaulted crons:
 	 * -check for updates
@@ -434,8 +471,6 @@ class Admin_Controller extends MY_Controller
 	 *
 	 * @author Woxxy
 	 */
-
-
 	public function cron()
 	{
 		if ($this->tank_auth->is_admin())
@@ -443,7 +478,7 @@ class Admin_Controller extends MY_Controller
 			$last_check = get_setting('fs_cron_autoupgrade');
 
 			// hourly cron
-			if (time() - $last_check > 0)
+			if (time() - $last_check > 3600)
 			{
 				// update autoupgrade cron time
 				$this->db->update('preferences', array('value' => time()),

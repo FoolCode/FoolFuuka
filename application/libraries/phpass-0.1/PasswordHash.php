@@ -1,4 +1,8 @@
 <?php
+
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
+
 #
 # Portable PHP password hashing framework.
 #

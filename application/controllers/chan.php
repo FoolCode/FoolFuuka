@@ -749,8 +749,6 @@ class Chan extends Public_Controller
 				$this->template->title(_('Error'));
 				$this->_set_parameters(
 					array(
-						'section_title' => sprintf(_('Showing the last 50 posts for Thread No.%s'),
-							$num),
 						'error' => _('There is no record of the specified image in our database.')
 					)
 				);
@@ -1006,7 +1004,7 @@ class Chan extends Public_Controller
 			'tools_view' => array('search' => $search)
 			)
 		);
-		
+
 		if (get_selected_radix())
 		{
 			$this->template->title(get_selected_radix()->formatted_title);

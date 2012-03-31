@@ -45,7 +45,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 |
 */
 
-define('FOOL_VERSION', '0.5.9');
+define('FOOL_VERSION', '0.6.0');
 define('FOOL_NAME', 'FoOlFuuka');
 define('FOOL_MANUAL_INSTALL_URL', 'http://ask.foolrulez.com');
 define('FOOL_GIT_TAGS_URL', 'https://api.github.com/repos/foolrulez/foolfuuka/tags');

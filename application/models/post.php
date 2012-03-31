@@ -284,7 +284,6 @@ class Post extends CI_Model
 				(
 					SELECT *, parent as unq_parent
 					FROM ' . $this->get_table_threads($board) . '
-					' . $this->get_sql_media_banned($board) . '
 					ORDER BY time_op DESC
 					LIMIT ?, ?
 				) AS t
@@ -1155,9 +1154,9 @@ class Post extends CI_Model
 			{
 				$sql[] = '
 					(
-						SELECT *, 1 AS board
-						FROM ' . $this->get_table($this->radix->get_by_id(1)) . '
-						' . $this->get_sql_media_banned($this->radix->get_by_id(1)) . '
+						SELECT *, '.$record['board'].' AS board
+						FROM ' . $this->get_table($this->radix->get_by_id($record['board'])) . '
+						' . $this->get_sql_media_banned($this->radix->get_by_id($record['board'])) . '
 						WHERE num = ' . $record['num'] . ' AND subnum = ' . $record['subnum'] . '
 					)
 				';

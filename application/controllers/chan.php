@@ -242,6 +242,7 @@ class Chan extends Public_Controller
 			'variables' => array(
 				'disable_headers',
 				'is_page',
+				'is_thread',
 				'is_last50',
 				'is_statistics',
 				'modifiers'
@@ -535,6 +536,7 @@ class Chan extends Public_Controller
 			array(
 			'thread_id' => $num,
 			'posts' => $thread,
+			'is_thread' => TRUE
 			),
 			array(
 			'post_thread' => TRUE,

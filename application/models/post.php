@@ -1309,6 +1309,7 @@ class Post extends CI_Model
 			if(isset($post->board))
 			{
 				$post->board = $this->radix->get_by_id($post->board);
+				$board = $post->board;
 			}
 
 			if ($post->parent == 0)

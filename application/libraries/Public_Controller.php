@@ -47,10 +47,23 @@ class Public_Controller extends MY_Controller
 		$this->config->load('theme');
 
 		// Set theme by using the theme variable
-		$this->fu_theme = (get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default');
-		if($this->input->cookie('foolfuuka_theme') && in_array($this->input->cookie('foolfuuka_theme'), array('default', 'fuuka', 'yotsuba', 'another')))
+		if($this->uri->segment(1) == 'a')
 		{
-			$this->fu_theme = $this->input->cookie('foolfuuka_theme');
+			$this->fu_theme = 'another';
+		}
+		else if(in_array($this->uri->segment(1), array('jp', 'tg','tv','u','mlp','m','v','vg')))
+		{
+			$this->fu_theme = 'yotsuba';
+		}
+		else
+		{
+			$this->fu_theme = 'default';
+		}
+		
+		//$this->fu_theme = (get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default');
+		if($this->input->cookie('foolfuuka_theme2') && in_array($this->input->cookie('foolfuuka_theme2'), array('default', 'fuuka', 'yotsuba', 'another')))
+		{
+			$this->fu_theme = $this->input->cookie('foolfuuka_theme2');
 		}
 
 		$this->template->set_theme($this->fu_theme);

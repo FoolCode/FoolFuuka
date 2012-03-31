@@ -15,7 +15,9 @@ class MY_Form_validation extends CI_Form_validation
 	/**
 	 * Checks the form for and returns either a compiled array of values or
 	 * the error
-	 *  
+	 * 
+	 * $form array 
+	 * $alternate array name/value pairs to use instead of the POST array 
 	 */
 	public function form_validate($form, $alternate = NULL)
 	{
@@ -38,7 +40,8 @@ class MY_Form_validation extends CI_Form_validation
 		{
 			if (isset($item['validation']))
 			{
-				$this->set_rules($name, $item['label'], $item['validation']);
+				// set the rules and add [] to the name if array
+				$this->set_rules($name . ((isset($item['array']) && $item['array'])?'[]':''), $item['label'], $item['validation']);
 			}
 		}
 

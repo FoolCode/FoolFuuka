@@ -57,18 +57,19 @@ class System extends Admin_Controller
 
 		if (find_imagick())
 		{
-			$imagick_status = '<span class="label success">' . _('Found and Working') . '</span>';
+			$imagick_status = '<span class="label label-success">' . _('Found and Working') . '</span>';
 		}
 		else
 		{
+			// @todo update the imagick statuses to match bootstrap 2.0
 			if (!$this->fs_imagick->exec)
-				$imagick_status = '<span class="label important">' . _('Not Available') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must have Safe Mode turned off and the exec() function enabled to allow ImageMagick to process your images. Please check the information panel for more details.')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
+				$imagick_status = '<span class="label label-important">' . _('Not Available') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must have Safe Mode turned off and the exec() function enabled to allow ImageMagick to process your images. Please check the information panel for more details.')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
 						16) . '" class="icon icon-small"></a>';
 			else if (!$this->fs_imagick->found)
-				$imagick_status = '<span class="label important">' . _('Not Found') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must provide the correct path to the "convert" binary on your system. This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
+				$imagick_status = '<span class="label label-important">' . _('Not Found') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must provide the correct path to the "convert" binary on your system. This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
 						16) . '" class="icon icon-small"></a>';
 			else if (!$this->fs_imagick->available)
-				$imagick_status = '<span class="label important">' . _('Not Working') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(sprintf(_('There has been an error encountered when testing your ImageMagick installation. To manually check for errors, access your server via shell or command line and type: %s'),
+				$imagick_status = '<span class="label label-important">' . _('Not Working') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(sprintf(_('There has been an error encountered when testing your ImageMagick installation. To manually check for errors, access your server via shell or command line and type: %s'),
 							'<br/><code>' . $this->fs_imagick->found . ' -version</code>')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
 						16) . '" class="icon icon-small"></a>';
 		}
@@ -82,9 +83,7 @@ class System extends Admin_Controller
 			'label' => _('Path to ImageMagick') . ' ' . $imagick_status,
 			'placeholder' => '/usr/bin',
 			'preferences' => 'fs_gen',
-			'help' => sprintf(_('FoOlSlide uses %s via command line to maximize the processor power for processing images. If ImageMagick %s automatically, enter the location of the "convert" binary on your server in the field above.'),
-				'<a href="#" rel="popover-below" title="ImageMagick" data-content="' . _('This is a library used to dynamically create, edit, compose or convert images.') . '">ImageMagick</a>',
-				'<a href="#" rel="popover-below" title="' . _('ImageMagick Binary') . '" data-content="' . htmlspecialchars(_('This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" >' . _('can\'t be found') . '</a>')
+			'help' => _('The location of your ImageMagick "convert" executable')
 		);
 
 		$form['fs_fuuka_boards_directory'] = array(
@@ -108,16 +107,19 @@ class System extends Admin_Controller
 			'help' => _('Overrides the default database, and is compatible with the Fuuka perl fetcher (beware: uses no database prefixes)')
 		);
 		
-		$form['separator-3'] = array(
-			'type' => 'separator'
+		$form['fs_sys_subdomain'] = array(
+			'type' => 'input',
+			'label' => _('System Subdomain'),
+			'preferences' => TRUE,
+			'help' => _('Insert an alternative base URL to FoOlFuuka to separate the system functions from the boards.')
 		);
 		
-		$form['fs_sphinx_global'] = array(
-			'type' => 'checkbox',
-			'label' => 'Global SphinxSearch',
-			'placeholder' => 'FoOlFuuka',
+		$form['fs_sys_subdomain'] = array(
+			'type' => 'input',
+			'array' => TRUE,
+			'label' => _('CDN subdomains'),
 			'preferences' => TRUE,
-			'help' => _('Activate Sphinx globally (enables crossboard search)')
+			'help' => _('Insert an alternative base URL to FoOlFuuka to separate the system functions from the boards.')
 		);
 
 		$form['separator-2'] = array(

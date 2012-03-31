@@ -10,8 +10,31 @@ class Chan extends API_Controller
 	function __construct()
 	{
 		header("Access-Control-Allow-Origin: http://boards.4chan.org");
-		header("Access-Control-Allow-Origin: https://boards.4chan.org");
+		header("Access-Control-Allow-Origin: https://boards.4chan.org", FALSE);
 		parent::__construct();
+	}
+	
+	function vote_post()
+	{
+		$this->check_board();
+		
+		if(!$this->post('doc_id') || !is_natural($this->post('doc_id')) ||
+			!$this->post('vote') || !in_array($this->post('vote'), array(-1, 1)))
+		{
+			$this->response(array('error' => _('Faulty value')), 404);
+		}
+		
+		$this->load->model('vote');
+		$vote = $this->vote->add(get_selected_radix(), $this->post('doc_id'), $this->post('vote'));
+		
+		if(isset($vote['error']))
+		{
+			$this->response($vote, 404);
+		}
+		
+		$count = $this->vote->count(get_selected_radix(), $this->post('doc_id'));
+		
+		$this->response(array('success' => $count), 200);
 	}
 
 

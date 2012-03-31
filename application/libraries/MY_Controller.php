@@ -33,6 +33,7 @@ class MY_Controller extends CI_Controller
 
 			// load the radixes (boards)
 			$this->load->model('radix');
+			$this->load->model('vote');
 
 			// create an array for the set_notice system
 			$this->notices = array();

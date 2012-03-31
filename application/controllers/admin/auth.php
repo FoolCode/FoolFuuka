@@ -1,5 +1,17 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-
+/**
+ * Auth Controller
+ *
+ * This class is Tank Auth's controller slightly modified to match our views.
+ *
+ * @package		FoOlFuuka
+ * @subpackage	Controllers
+ * @category	Authentication
+ * @author		Ilya Konyukhov (http://konyukhov.com/soft/)
+ * @link		http://www.konyukhov.com/soft/tank_auth/
+ * @license     MIT License Copyright (c) 2008 Erick Hartanto
+ * @version     1.0.9
+ */
 class Auth extends Admin_Controller
 {
 	function __construct()
@@ -610,4 +622,4 @@ class Auth extends Admin_Controller
 }
 
 /* End of file auth.php */
-/* Location: ./application/controllers/auth.php */
+/* Location: ./application/controllers/admin/auth.php */

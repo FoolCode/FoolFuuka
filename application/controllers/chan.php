@@ -1253,9 +1253,7 @@ class Chan extends Public_Controller
 				'ghost' => FALSE
 			);
 
-			/**
-			 * CHECK #1: Verify the TYPE of POST passing through and insert the data correctly.
-			 */
+			//CHECK #1: Verify the TYPE of POST passing through and insert the data correctly.
 			if (get_selected_radix()->archive)
 			{
 				// This POST is located in the ARCHIVE and MUST BE A GHOST POST.
@@ -1414,9 +1412,7 @@ class Chan extends Public_Controller
 			// Process the IMAGE upload.
 			if (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4)
 			{
-				/**
-				 * Initialize the MEDIA CONFIG and load the UPLOAD library.
-				 */
+				//Initialize the MEDIA CONFIG and load the UPLOAD library.
 				$media_config['upload_path'] = 'content/cache/';
 				$media_config['allowed_types'] = 'jpg|jpeg|png|gif';
 				$media_config['max_size'] = 3072;

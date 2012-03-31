@@ -12,262 +12,290 @@ if (!defined('BASEPATH'))
  *
  * For more information, refer to the support sites linked in your admin panel.
  */
+class Theme_Controller
+{
 
-class Theme_Controller {
 
 	function __construct() {
 		$this->CI = & get_instance();
 	}
 
 
-	public function page($page = 1)
+	/**
+	 * Disable GALLERY for this theme by showing 404!
+	 */
+	public function gallery()
 	{
-		$this->CI->remap_query();
-		$this->CI->input->set_cookie('fu_ghost_mode', FALSE, 86400);
-		if ($this->CI->input->post())
-		{
-			redirect(get_selected_radix()->shortname . '/page/' . $this->CI->input->post('page'), 'location', 303);
-		}
-
-		if (!is_natural($page) || $page > 500)
-		{
-			show_404();
-		}
-
-		$page = intval($page);
-
-		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest(get_selected_radix(), $page);
-
-		$pages = $posts['pages'];
-		$posts = $posts['result'];
-
-		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . (($page > 1)?' » Page '.$page:''));
-		if ($page > 1)
-			$this->CI->template->set('section_title', _('Page ') . $page);
-
-		$pages_links = array();
-		for($i = 1; $i < 16; $i++)
-		{
-			$pages_links[$i] = site_url(array(get_selected_radix()->shortname, 'page', $i));
-		}
-		$this->CI->template->set('pages_links', $pages_links);
-		$this->CI->template->set('pages_links_current', $page);
-		$this->CI->template->set('posts',  $posts);
-		$this->CI->template->set('is_page', TRUE);
-		$this->CI->template->set('posts_per_thread', 5);
-		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
-		$this->CI->template->set_partial('post_thread', 'post_thread');
-		$this->CI->template->set_partial('post_tools', 'post_tools');
-		$this->CI->template->build('board');
+		show_404();
 	}
 
 
-	public function ghost($page = 1)
-	{
-		$this->CI->input->set_cookie('fu_ghost_mode', TRUE, 86400);
-		if ($this->CI->input->post())
-		{
-			redirect(get_selected_radix()->shortname . '/ghost/' . $this->CI->input->post('page'), 'location', 303);
-		}
-
-		$values = array();
-
-		if (!is_natural($page) || $page > 500)
-		{
-			show_404();
-		}
-
-		$page = intval($page);
-
-		$this->CI->post->features = FALSE;
-		$posts = $this->CI->post->get_latest(get_selected_radix(), $page, array('per_page' => 20, 'type' => 'ghost'));
-
-		$pages = $posts['pages'];
-		$posts = $posts['result'];
-
-		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' » Ghost' . (($page > 1)?' » Page '.$page:''));
-		if ($page > 1)
-			$this->CI->template->set('section_title', _('Ghosts page ') . $page);
-		$pages_links = array();
-		for($i = 1; $i < 16; $i++)
-		{
-			$pages_links[$i] = site_url(array(get_selected_radix()->shortname, 'ghost', $i));
-		}
-		$this->CI->template->set('pages_links', $pages_links);
-		$this->CI->template->set('pages_links_current', $page);
-		$this->CI->template->set('posts', $posts);
-		$this->CI->template->set('is_page', TRUE);
-		$this->CI->template->set('posts_per_thread', 5);
-		$this->CI->template->set_partial('top_tools', 'top_tools', array('page' => $page));
-		$this->CI->template->set_partial('post_thread', 'post_thread');
-		$this->CI->template->set_partial('post_tools', 'post_tools');
-		$this->CI->template->build('board');
-	}
-
-
-	public function thread($num = 0)
-	{
-		$num = str_replace('S', '', $num);
-		if (!is_numeric($num) || !$num > 0)
-		{
-			show_404();
-		}
-
-		$num = intval($num);
-
-		$this->CI->post->features = FALSE;
-		$thread = $this->CI->post->get_thread(get_selected_radix(), $num);
-
-		if (!is_array($thread))
-		{
-			show_404();
-		}
-
-		$this->CI->template->title('/' . get_selected_radix()->shortname . '/ - ' . get_selected_radix()->name . ' » Thread #' . $num);
-		$this->CI->template->set('posts', $thread);
-
-		$this->CI->template->set('thread_id', $num);
-		$this->CI->template->set_partial('top_tools', 'top_tools');
-		$this->CI->template->set_partial('post_reply', 'post_reply');
-		$this->CI->template->set_partial('post_tools', 'post_tools');
-		$this->CI->template->build('board');
-	}
-
-
+	/**
+	 * @return bool
+	 */
 	public function sending()
 	{
-		
-		show_404();
-		
+		// The form has been submitted to be validated and processed.
 		if ($this->CI->input->post('com_submit') == 'Submit') {
+
+			// Validate Form!
 			$this->CI->load->library('form_validation');
-			$this->CI->form_validation->set_rules('resto', 'Thread no.', 'required|is_natural|xss_clean');
-			$this->CI->form_validation->set_rules('name', 'Username', 'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('email', 'Email', 'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('sub', 'Subject', 'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('com', 'Comment', 'trim|required|min_length[3]|max_length[1000]|xss_clean');
-			$this->CI->form_validation->set_rules('pwd', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
+			$this->CI->form_validation->set_rules('resto', 'Thread no.',
+				'required|is_natural|xss_clean');
+			$this->CI->form_validation->set_rules('name', 'Username',
+				'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('email', 'Email',
+				'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('sub', 'Subject',
+				'trim|xss_clean|max_length[64]');
+			if ($this->CI->input->post('resto') == 0)
+			{
+				$this->CI->form_validation->set_rules('com', 'Comment',
+					'trim|xss_clean');
+			}
+			else
+			{
+				$this->CI->form_validation->set_rules('com', 'Comment',
+					'trim|min_length[3]|max_length[4096]|xss_clean');
+			}
+			$this->CI->form_validation->set_rules('pwd', 'Password',
+				'required|min_length[3]|max_length[32]|xss_clean');
 
+			// Verify if the user posting is a moderator or administrator and apply form validation.
 			if ($this->CI->tank_auth->is_allowed())
 			{
-				$this->CI->form_validation->set_rules('reply_postas', 'Post as', 'required|callback__is_valid_allowed_tag|xss_clean');
-				$this->CI->form_validation->set_message('_is_valid_allowed_tag', 'You didn\'t specify a correct type of user to post as');
+				$this->CI->form_validation->set_rules('reply_postas', 'Post as',
+					'required|callback__is_valid_allowed_level|xss_clean');
+				$this->CI->form_validation->set_message('_is_valid_allowed_tag',
+					'You did not specify a valid user level to post as.');
 			}
 
-
-			if ($this->CI->form_validation->run() !== FALSE)
+			// The validation of the form has failed! All errors will be formatted here for readability.
+			if ($this->CI->form_validation->run() == FALSE)
 			{
-				$data['num'] = $this->CI->input->post('resto');
+				$this->CI->form_validation->set_error_delimiters('', '');
 
-				$data['name'] = $this->CI->input->post('name');
-				$data['email'] = $this->CI->input->post('email');
-				$data['subject'] = $this->CI->input->post('sub');
-				$data['comment'] = $this->CI->input->post('com');
-				$data['password'] = $this->CI->input->post('pwd');
-				$data['spoiler'] = $this->CI->input->post('spoiler');
-				$data['postas'] = 'N';
+				// Display a default/standard output for NON-AJAX REQUESTS.
+				$this->CI->template->title(_('Error'));
+				$this->CI->_set_parameters(
+					array(
+						'error'				=> validation_errors()
+					),
+					array(
+						'tools_view'		=> TRUE
+					)
+				);
+				$this->CI->template->build('error');
+				return FALSE;
+			}
 
-				if ($this->CI->tank_auth->is_allowed())
-				{
-					$data['postas'] = $this->CI->input->post('reply_postas');
-				}
-				else
-				{
-					$data['postas'] = 'N';
-				}
+			// Everything is GOOD! Continue with posting the content to the board.
+			$data = array(
+				'num'		=> $this->CI->input->post('resto'),
+				'name'		=> $this->CI->input->post('name'),
+				'email'		=> $this->CI->input->post('email'),
+				'subject'	=> $this->CI->input->post('sub'),
+				'comment'	=> $this->CI->input->post('com'),
+				'spoiler'	=> $this->CI->input->post('spoiler'),
+				'password'	=> $this->CI->input->post('pwd'),
+				'postas'	=> (($this->CI->tank_auth->is_allowed()) ? $this->CI->input->post('reply_postas') : 'N'),
 
-				// Check if thread exists
+				'media'		=> '',
+				'ghost'		=> FALSE
+			);
+
+
+			// CHECK #1: Verify the TYPE of POST passing through and insert the data correctly.
+			if (get_selected_radix()->archive)
+			{
+				// This POST is located in the ARCHIVE and MUST BE A GHOST POST.
+				$data['ghost'] = TRUE;
+
+				// Check the $num to ensure that the thread actually exists in the database and that
+				// $num is actually the OP of the thread.
 				$check = $this->CI->post->check_thread(get_selected_radix(), $data['num']);
-				if (!get_selected_radix()->archive)
+
+				if (isset($check['invalid_thread']) && $check['invalid_thread'] == TRUE)
 				{
-					// Normal Posting
-					if (isset($check['invalid_thread']) && $this->CI->input->post('resto') == 0)
-					{
-						$data['num'] = array('parent' => 0);
-					}
-					else if (isset($check['thread_dead']))
-					{
-						$data['num'] = $this->CI->input->post('resto');
-					}
-					else
-					{
-						$data['num'] = array('parent' => $this->CI->input->post('resto'));
-					}
+					$this->CI->template->title(_('Error'));
+					$this->CI->_set_parameters(
+						array(
+							'error'				=> _('This thread does not exist.')
+						),
+						array(
+							'tools_view'		=> TRUE
+						)
+					);
+					$this->CI->template->build('error');
+					return FALSE;
+				}
+			}
+			else
+			{
+				// Determine if we are creating a new thread or replying to an existing thread.
+				if ($data['num'] == 0)
+				{
+					$data['num'] = 0;
+					$check = array();
 				}
 				else
 				{
-					if (isset($check['invalid_thread']))
+					// Check the $num to ensure that the thread actually exists in the database and that
+					// $num is actually the OP of the thread.
+					$check = $this->CI->post->check_thread(get_selected_radix(), $data['num']);
+
+					if (isset($check['invalid_thread']) && $check['invalid_thread'] == TRUE)
 					{
-						show_404();
+						$this->CI->template->title(_('Error'));
+						$this->CI->_set_parameters(
+							array(
+								'error'				=> _('This thread does not exist.')
+							),
+							array(
+								'tools_view'		=> TRUE
+							)
+						);
+						$this->CI->template->build('error');
+						return FALSE;
+					}
+
+					if (isset($check['thread_dead']) && $check['thread_dead'] == TRUE)
+					{
+						$data['ghost'] = TRUE;
 					}
 				}
+			}
 
-				$media_config['upload_path'] = 'content/cache/';
-				$media_config['allowed_types'] = 'jpg|png|gif';
-				$media_config['max_size'] = 3072;
-				$media_config['max_width'] = 3000;
-				$media_config['max_height'] = 3000;
-				$media_config['overwrite'] = TRUE;
+			// CHECK #2: Verify all IMAGE posts and set appropriate information.
+			if ($data['num'] == 0
+				&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] == 4))
+			{
+				$this->CI->template->title(_('Error'));
+				$this->CI->_set_parameters(
+					array(
+						'error'				=> _('You are required to upload an image when posting a new thread.')
+					),
+					array(
+						'tools_view'		=> TRUE
+					)
+				);
+				$this->CI->template->build('error');
+				return FALSE;
+			}
+
+			// Check if the comment textarea is EMPTY when no image is uploaded.
+			if (mb_strlen($data['comment']) < 3
+				&& (!isset($_FILES['file_image']) || $_FILES['file_image']['error'] == 4))
+			{
+				$this->CI->template->title(_('Error'));
+				$this->CI->_set_parameters(
+					array(
+						'error'				=> _('You are required to write a comment when no image upload is present.')
+					),
+					array(
+						'tools_view'		=> TRUE
+					)
+				);
+				$this->CI->template->build('error');
+				return FALSE;
+			}
+
+			// Check if the IMAGE LIMIT has been reached or if we are posting as a GHOST.
+			if ((isset($check['disable_image_upload']) || $data['ghost'])
+				&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4))
+			{
+				$this->CI->template->title(_('Error'));
+				$this->CI->_set_parameters(
+					array(
+						'error'				=> _('The posting of images has been disabled for this thread.')
+					),
+					array(
+						'tools_view'		=> TRUE
+					)
+				);
+				$this->CI->template->build('error');
+				return FALSE;
+			}
+
+			// Process the IMAGE upload.
+			if (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4)
+			{
+				//Initialize the MEDIA CONFIG and load the UPLOAD library.
+				$media_config['upload_path']	= 'content/cache/';
+				$media_config['allowed_types']	= 'jpg|png|gif';
+				$media_config['max_size']		= 3072;
+				$media_config['max_width']		= 5000;
+				$media_config['max_height']		= 5000;
+				$media_config['overwrite']		= TRUE;
+
 				$this->CI->load->library('upload', $media_config);
-				if ($this->CI->upload->do_upload('upfile'))
+
+				if ($this->CI->upload->do_upload('file_image'))
 				{
 					$data['media'] = $this->CI->upload->data();
 				}
 				else
 				{
-					$data['media'] = '';
-					$data['media_error'] = $this->CI->upload->display_errors();
+					$this->CI->template->title(_('Error'));
+					$this->CI->_set_parameters(
+						array(
+							'error'				=> $this->CI->upload->display_errors()
+						),
+						array(
+							'tools_view'		=> TRUE
+						)
+					);
+					$this->CI->template->build('error');
+					return FALSE;
 				}
+			}
 
-				if (isset($check['disable_image_upload']))
+			// SEND: Process the entire post and insert the information appropriately.
+			$result = $this->CI->post->comment(get_selected_radix(), $data);
+
+			// RESULT: Output all errors, messages, etc.
+			if (isset($result['error']))
+			{
+				$this->CI->template->title(_('Error'));
+				$this->CI->_set_parameters(
+					array(
+						'error'				=> $result['error']
+					),
+					array(
+						'tools_view'		=> TRUE
+					)
+				);
+				$this->CI->template->build('error');
+				return FALSE;
+			}
+			else if (isset($result['success']))
+			{
+				// Redirect back to the user's POST.
+				if ($result['posted']->parent == 0)
 				{
-					$result = $this->CI->post->comment(get_selected_radix(), $data, FALSE);
+					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
+						$result['posted']->num)) . '#' . $result['posted']->num;
 				}
 				else
 				{
-					$result = $this->CI->post->comment(get_selected_radix(), $data);
+					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
+						$result['posted']->parent)) . '#' . $result['posted']->num .
+						(($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 				}
 
-				if (isset($result['error']))
-				{
-					$this->CI->template->set('reply_errors', $result['error']);
-					return FALSE;
-				}
-				else if (isset($result['success']))
-				{
-					if ($result['posted']->parent == 0)
-					{
-						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->num)) . '#p' . $result['posted']->num;
-					}
-					else
-					{
-						$url = site_url(array(get_selected_radix()->shortname, 'thread', $result['posted']->parent)) . '#p' . $result['posted']->num . (($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
-					}
-
-					$this->CI->template->set('url', $url);
-					$this->CI->template->set_layout('redirect');
-					$this->CI->template->build('redirect');
-					return TRUE;
-				}
-			}
-			else
-			{
-				$this->CI->form_validation->set_error_delimiters('', '');
-				$this->CI->template->set('error', validation_errors());
-				$this->CI->template->build('error');
-				return FALSE;
+				redirect($callback, 'location', 303);
+				return TRUE;
 			}
 		}
 
 		if ($this->CI->input->post('com_delete') == 'Delete')
 		{
-			foreach ($this->CI->input->post('delete') as $key => $value)
+			foreach ($this->CI->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
-					'post' => $value,
-					'password' => $this->CI->input->post('pwd')
+					'post'		=> $value,
+					'password'	=> $this->CI->input->post('pwd')
 				);
 
 				$result = $this->CI->post->delete(get_selected_radix(), $post);
@@ -282,17 +310,20 @@ class Theme_Controller {
 			$this->CI->template->build('redirect');
 		}
 
+		/**
+		 * The form has been submitted to be validated and processed.
+		 */
 		if ($this->CI->input->post('com_report') == 'Report')
 		{
-			foreach ($this->CI->input->post('delete') as $key => $value)
+			$report = new Report();
+			foreach ($this->CI->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
-					'board' => get_selected_radix()->id,
-					'post' => $value,
-					'reason' => ''
+					'board'		=> get_selected_radix()->id,
+					'post'		=> $doc_id,
+					'reason'	=> ''
 				);
 
-				$report = new Report();
 				$report->add($post);
 			}
 
@@ -304,12 +335,12 @@ class Theme_Controller {
 			$this->CI->template->set_layout('redirect');
 			$this->CI->template->build('redirect');
 		}
-	}
 
-
-	public function gallery()
-	{
+		/**
+		 * ERROR: We reached the point of no return and wasn't able to do anything.
+		 */
 		show_404();
 	}
+
 
 }

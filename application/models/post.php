@@ -1465,6 +1465,7 @@ class Post extends CI_Model
 
 		$count = array('posts' => 0, 'images' => 0);
 		$thread_op_present = FALSE;
+		$last_bump = 0;
 		foreach ($query->result() as $post)
 		{
 			// we need to find if there's the OP in the list

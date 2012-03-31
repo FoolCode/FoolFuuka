@@ -1,8 +1,13 @@
+<?php
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
+?>
+
 <a name="<?php echo ($p->subnum > 0) ? $p->num . '_' . $p->subnum : $p->num ?>"></a>
 <table>
 	<tbody>
 		<tr>
-			<td nowrap class="doubledash">&gt;&gt;</td>
+			<td class="doubledash" nowrap="">&gt;&gt;</td>
 			<td id="<?php echo ($p->subnum > 0) ? $p->num . '_' . $p->subnum : $p->num ?>" class="<?php echo ($p->subnum > 0) ? 'subreply' : 'reply' ?>">
 				<input type="checkbox" name="delete[]" value="<?php echo $p->doc_id ?>"/>
 				<span class="replytitle"><?php echo $p->title_processed ?></span>
@@ -19,22 +24,22 @@
 				<?php if ($p->capcode == 'A') : ?>
 					<span class="post_level_administrator">## Admin</span>
 				<?php endif ?>
-				<?php echo date('m/d/y(D)H:i', $p->timestamp + 18000) ?>
+				<span class="posttime"><?php echo date('m/d/y(D)H:i', $p->timestamp + 18000) ?></span>
 
 				<?php if ($p->subnum > 0) : ?>
 					<span id="norep<?php echo $p->num . '_' . $p->subnum ?>">
-						<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>" class="quotejs">No.</a><a href="<?php echo (isset($thread_id)) ? site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum : 'javascript:quote(\'' . $p->num . ',' . $p->subnum . '\')' ?>" class="quotejs"><?php echo $p->num . ',' . $p->subnum ?></a>
+						<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#' . $p->num . '_' . $p->subnum ?>" class="quotejs">No.</a><a href="<?php echo (!isset($thread_id)) ? site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#q' . $p->num . '_' . $p->subnum : 'javascript:quote(\'' . $p->num . ',' . $p->subnum . '\')' ?>" class="quotejs"><?php echo $p->num . ',' . $p->subnum ?></a>
 					</span>
 				<?php else : ?>
 					<span id="norep<?php echo $p->num ?>">
-						<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#' . $p->num ?>" class="quotejs">No.</a><a href="<?php echo (isset($thread_id)) ? site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#q' . $p->num : 'javascript:quote(\'' . $p->num . '\')' ?>" class="quotejs"><?php echo $p->num ?></a>
+						<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#' . $p->num ?>" class="quotejs">No.</a><a href="<?php echo (!isset($thread_id)) ? site_url(get_selected_radix()->shortname . '/thread/' . $p->parent) . '#q' . $p->num : 'javascript:quote(\'' . $p->num . '\')' ?>" class="quotejs"><?php echo $p->num ?></a>
 					</span>
 				<?php endif; ?>
 
-				<?php if ($p->media) : ?>
+				<?php if ($p->preview) : ?>
 					<br>
 					<span class="filesize">
-						File <a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank"><?php echo ($p->media_filename) ? $p->media_filename : $p->media ?></a><?php echo '-(' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ')' ?>
+						File: <a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank"><?php echo ($p->media_filename) ? $p->media_filename : $p->media ?></a><?php echo '-(' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ')' ?>
 					</span>
 					<br>
 					<a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank">

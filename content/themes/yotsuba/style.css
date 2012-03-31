@@ -181,6 +181,7 @@ form {
     color: #000;
 }
 .subreply {
+    padding-right: 3px;
     background: #C2C9F2;
     color: #000;
 }

@@ -354,16 +354,16 @@ class Theme_Controller
 		/**
 		 * The form has been submitted to be validated and processed.
 		 */
-		if ($this->CI->CI->input->post('reply_delete') == 'Delete Selected Posts')
+		if ($this->CI->input->post('reply_delete') == 'Delete Selected Posts')
 		{
-			foreach ($this->CI->CI->input->post('delete') as $idx => $doc_id)
+			foreach ($this->CI->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
 					'post'		=> $doc_id,
-					'password'	=> $this->CI->CI->input->post('delpass')
+					'password'	=> $this->CI->input->post('delpass')
 				);
 
-				$this->CI->CI->post->delete(get_selected_radix(), $post);
+				$this->CI->post->delete(get_selected_radix(), $post);
 			}
 
 			$this->CI->template->set_layout('redirect');
@@ -372,7 +372,7 @@ class Theme_Controller
 				array(
 					'redirection_msg'	=> 0,
 					'redirection_url'	=> site_url(get_selected_radix()->shortname . '/thread/' .
-						$this->CI->CI->input->post('parent'))
+						$this->CI->input->post('parent'))
 				)
 			);
 		}
@@ -381,15 +381,15 @@ class Theme_Controller
 		/**
 		 * The form has been submitted to be validated and processed.
 		 */
-		if ($this->CI->CI->input->post('reply_report') == 'Report Selected Posts')
+		if ($this->CI->input->post('reply_report') == 'Report Selected Posts')
 		{
 			$report = new Report();
-			foreach ($this->CI->CI->input->post('delete') as $idx => $doc_id)
+			foreach ($this->CI->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
 					'board'		=> get_selected_radix()->id,
 					'post'		=> $doc_id,
-					'reason'	=> $this->CI->CI->intput->post('KOMENTO')
+					'reason'	=> $this->CI->intput->post('KOMENTO')
 				);
 
 				$report->add($post);

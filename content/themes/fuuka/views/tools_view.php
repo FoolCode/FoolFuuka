@@ -23,7 +23,6 @@ if (!isset($page))
 		));
 		?>
 		<a href="<?php echo site_url(get_selected_radix()->shortname . '/advanced-search') ?>" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ Advanced ]</a>
-
 	</div>
 	<?php echo form_close(); ?>
 

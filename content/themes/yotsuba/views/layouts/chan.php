@@ -46,14 +46,11 @@
 
 			<hr width="90%" size="1">
 
-			<?php echo $template['partials']['top_tools'] ?>
+			<?php echo $template['partials']['tools_view'] ?>
 
 			<hr>
 
-			<?php
-			if (isset($is_page))
-				echo $template['partials']['post_thread'];
-			?>
+			<?php if ($is_page) : echo $template['partials']['post_thread']; endif ?>
 
 		<?php endif; ?>
 

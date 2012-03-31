@@ -48,7 +48,7 @@ class Theme_Controller
 		/**
 		 * Remap everything to default theme and override array.
 		 */
-		$this->CI->page($page, FALSE, array('per_page' => 24, 'type' => 'by_thread'));
+		$this->CI->page($page, TRUE, array('per_page' => 24, 'type' => 'by_thread'));
 	}
 
 

@@ -87,18 +87,20 @@ foreach ($posts as $key => $post) : ?>
 	<br clear="left">
 	<hr>
 <?php endforeach; ?>
-	
-	<hr style="margin:2px" />
-		<div style="text-align: center; text-side:12px;">
-		<a href="http://pocky.jlist.com/click/3953/111" target="_blank" onmouseover="window.status='Hentai dating-sim games in English - click to see'; return true;" onmouseout="window.status=''; return true;" title="Hentai dating-sim games in English - click to see">
-		<img src="http://pocky.jlist.com/media/3953/111" width="728" height="90" alt="Hentai dating-sim games in English - click to see" border="0">
-		</div>
-		<hr style="margin:2px" />
 
-<span style="left: 5px; position: absolute;">
-	[<a href="<?php echo site_url(get_selected_radix()->shortname) ?>">Return</a>] [<a href="#top">Top</a>]
-</span>
+<div style="text-align: center; text-side:12px;">
+	<a href="http://pocky.jlist.com/click/3953/111" target="_blank" onmouseover="window.status='Hentai dating-sim games in English - click to see'; return true;" onmouseout="window.status=''; return true;" title="Hentai dating-sim games in English - click to see">
+	<img src="http://pocky.jlist.com/media/3953/111" width="728" height="90" alt="Hentai dating-sim games in English - click to see" border="0">
+	</a>
+</div>
+<hr>
+
+<?php if (isset($thread_id)) : ?>
+	<span style="left: 5px; position: absolute;">
+		[<a href="<?php echo site_url(get_selected_radix()->shortname) ?>">Return</a>] [<a href="#top">Top</a>]
+	</span>
 <br>
+<?php endif; ?>
 <table align="right">
 	<tbody>
 		<tr>
@@ -115,5 +117,34 @@ foreach ($posts as $key => $post) : ?>
 		</tr>
 	</tbody>
 </table>
+<?php if (!isset($thread_id)) : ?>
+<table class="pages" align="left" border="1">
+	<tbody>
+	<tr>
+		<?php if ($pagination['current_page'] == 1) : ?>
+		<td>Previous</td>
+		<?php else : ?>
+		<td><input type="submit" value="Previous" onclick="location.href='<?php echo $pagination['base_url'] . ($pagination['current_page'] - 1); ?>';return false;"></td>
+		<?php endif; ?>
+		<td>
+			<?php
+			for ($index = 1; $index <= (($pagination['total'] > 15) ? 15 : $pagination['total']); $index++)
+			{
+				if ($pagination['current_page'] == $index)
+					echo '[<b>' . $index  . '</b>] ';
+				else
+					echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
+			}
+			?>
+		</td>
+		<?php if (15 == $pagination['current_page']) : ?>
+		<td>Next</td>
+		<?php else : ?>
+		<td><input type="submit" value="Next" onclick="location.href='<?php echo $pagination['base_url'] . ($pagination['current_page'] + 1); ?>';return false;"></td>
+		<?php endif; ?>
+	</tr>
+	</tbody>
+</table>
+<?php endif; ?>
 
 <?php echo form_close() ?>

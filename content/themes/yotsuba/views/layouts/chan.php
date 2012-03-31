@@ -19,20 +19,18 @@
 
 			<div id="header">
 				<span id="navtop">
-					[
-					<?php
+					[<?php
 					$boards_urls = array();
 					foreach ($this->radix->get_all() as $key => $item)
 					{
 						$boards_urls[] = '<a href="' . $item->href . '" title="' . $item->name . '">' . $item->shortname . '</a>';
 					}
 					echo implode(' / ', $boards_urls);
-					?>
-					]
+					?>]
 				</span>
 
 				<span id="navtopr">
-					[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / statistics / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
+					[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
 				</span>
 			</div>
 			<br/>
@@ -44,22 +42,19 @@
 				</font>
 				<br>
 				<font size="1"><?php if(isset($section_title)): ?><?php echo $section_title ?><?php endif; ?></font>
-				<hr width="90%" size="1" style="margin:2px" />
-				<!-- Start J-List Affiliate Code -->
-				<div style="text-align: center; text-side:12px;">
-				<a href="http://pocky.jlist.com/click/3953/111" target="_blank" onmouseover="window.status='Hentai dating-sim games in English - click to see'; return true;" onmouseout="window.status=''; return true;" title="Hentai dating-sim games in English - click to see">
-				<img src="http://pocky.jlist.com/media/3953/111" width="728" height="90" alt="Hentai dating-sim games in English - click to see" border="0">
-				</div>
-				<!-- End J-List Affiliate Code -->
-				<hr style="margin:2px" />
-			
 			</div>
 
-			
+			<hr width="90%" size="1">
+			<!-- Start J-List Affiliate Code -->
+			<div style="text-align: center; text-side:12px;">
+				<a href="http://pocky.jlist.com/click/3953/111" target="_blank" onmouseover="window.status='Hentai dating-sim games in English - click to see'; return true;" onmouseout="window.status=''; return true;" title="Hentai dating-sim games in English - click to see">
+					<img src="http://pocky.jlist.com/media/3953/111" width="728" height="90" alt="Hentai dating-sim games in English - click to see" border="0">
+				</a>
+			</div>
+			<!-- End J-List Affiliate Code -->
+			<hr>
 
 			<?php //echo $template['partials']['tools_view']<hr> <hr width="90%" size="1">?>
-
-			
 
 			<?php if ($is_page) : echo $template['partials']['post_thread']; endif ?>
 
@@ -67,32 +62,32 @@
 
 		<?php echo $template['body']; ?>
 
-		
-		
-			
-		<?php if (isset($pages_links)) : ?>
-			<table class="pages" align="left" border="1">
-				<tbody>
-					<tr>
-						<?php if ($pages_links_current == 1) : ?>
-							<td>Previous</td>
-						<?php else : ?>
-							<td><input type="submit" value="Previous" onclick="location.href='<?php echo $pages_links[$pages_links_current-1]; ?>';return false;"></td>
-						<?php endif; ?>
-							<td>
-							<?php foreach ($pages_links as $key => $item) : ?>
-								[<a href="<?php echo $item ?>"><?php if ($key == $pages_links_current) echo '<b>'; ?><?php echo $key ?><?php if ($key == $pages_links_current) echo '</b>'; ?></a>]
-							<?php endforeach; ?>
-							</td>
-						<?php if ((count($pages_links) > 1) && ($pages_links_current >= 1 && $pages_links_current < 15)) : ?>
-							<td><input type="submit" value="Next" onclick="location.href='<?php echo $pages_links[$pages_links_current+1]; ?>';return false;"></td>
-						<?php else : ?>
-							<td>Next</td>
-						<?php endif; ?>
-					</tr>
-				</tbody>
-			</table>
-		<?php endif; ?>
+		<br clear="all">
+
+		<div id="footer">
+			<span id="navbot">
+				[<?php
+				$boards_urls = array();
+				foreach ($this->radix->get_all() as $key => $item)
+				{
+					$boards_urls[] = '<a href="' . $item->href . '" title="' . $item->name . '">' . $item->shortname . '</a>';
+				}
+				echo implode(' / ', $boards_urls);
+				?>]
+			</span>
+			<span id="navbotr">
+				[<a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a>]
+			</span>
+			<br>
+			<br>
+			<center>
+				<font size="2">
+					- fuuka + foolfuuka -
+					<br>
+					All trademarks and copyrights on this page are owned by their respective parties. Images uploaded are the responsibility of the Poster. Comments are owned by the Poster.
+				</font>
+			</center>
+		</div>
 
 		<?php if(get_setting('fs_theme_google_analytics')) : ?>
 		<script>

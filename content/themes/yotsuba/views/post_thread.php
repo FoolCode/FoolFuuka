@@ -135,7 +135,6 @@ if (!defined('BASEPATH'))
 			</td>
 			<td>
 				<?php echo form_input(array('class' => 'inputtext', 'name' => 'sub', 'size' => 28)) ?>
-				[<label><?php echo form_checkbox(array('name' => 'spoiler', 'id' => 'spoiler', 'value' => 1)); ?> Spoiler Image?</label>]
 			</td>
 		</tr>
 		<tr>

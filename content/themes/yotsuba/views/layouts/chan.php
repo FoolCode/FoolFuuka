@@ -37,6 +37,8 @@
 			</div>
 			<br/>
 			<div class="logo">
+				<img width="300" height="100" src="<?php echo get_banner() ?>"/>
+				<br>
 				<font size="5">
 					<b><span>/<?php echo $board->shortname ?>/ - <?php echo htmlspecialchars($board->name) ?></span></b>
 				</font>

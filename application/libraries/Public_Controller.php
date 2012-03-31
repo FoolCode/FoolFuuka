@@ -51,7 +51,7 @@ class Public_Controller extends MY_Controller
 		{
 			$this->fu_theme = 'another';
 		}
-		else if(in_array($this->uri->segment(1), array('jp', 'tg','tv','u','mlp','m','v','vg')))
+		else if(in_array($this->uri->segment(1), array('jp', 'tg','tv','u','mlp','m','v','vg','foolz')))
 		{
 			$this->fu_theme = 'yotsuba';
 		}

@@ -11,3 +11,8 @@
  *
  * For more information, refer to the support sites linked in your admin panel.
  */
+
+function get_banner() {
+	$banners = glob('content/themes/yotsuba/images/banners/*.*');
+	return site_url() . $banners[array_rand($banners)];
+}

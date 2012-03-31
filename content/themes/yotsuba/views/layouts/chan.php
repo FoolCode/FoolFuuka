@@ -44,13 +44,22 @@
 				</font>
 				<br>
 				<font size="1"><?php if(isset($section_title)): ?><?php echo $section_title ?><?php endif; ?></font>
+				<hr width="90%" size="1" style="margin:2px" />
+				<!-- Start J-List Affiliate Code -->
+				<div style="text-align: center; text-side:12px;">
+				<a href="http://pocky.jlist.com/click/3953/111" target="_blank" onmouseover="window.status='Hentai dating-sim games in English - click to see'; return true;" onmouseout="window.status=''; return true;" title="Hentai dating-sim games in English - click to see">
+				<img src="http://pocky.jlist.com/media/3953/111" width="728" height="90" alt="Hentai dating-sim games in English - click to see" border="0">
+				</div>
+				<!-- End J-List Affiliate Code -->
+				<hr style="margin:2px" />
+			
 			</div>
 
-			<hr width="90%" size="1">
+			
 
-			<?php echo $template['partials']['tools_view'] ?>
+			<?php //echo $template['partials']['tools_view']<hr> <hr width="90%" size="1">?>
 
-			<hr>
+			
 
 			<?php if ($is_page) : echo $template['partials']['post_thread']; endif ?>
 
@@ -58,6 +67,9 @@
 
 		<?php echo $template['body']; ?>
 
+		
+		
+			
 		<?php if (isset($pages_links)) : ?>
 			<table class="pages" align="left" border="1">
 				<tbody>

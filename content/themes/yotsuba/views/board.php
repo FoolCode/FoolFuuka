@@ -87,6 +87,13 @@ foreach ($posts as $key => $post) : ?>
 	<br clear="left">
 	<hr>
 <?php endforeach; ?>
+	
+	<hr style="margin:2px" />
+		<div style="text-align: center; text-side:12px;">
+		<a href="http://pocky.jlist.com/click/3953/111" target="_blank" onmouseover="window.status='Hentai dating-sim games in English - click to see'; return true;" onmouseout="window.status=''; return true;" title="Hentai dating-sim games in English - click to see">
+		<img src="http://pocky.jlist.com/media/3953/111" width="728" height="90" alt="Hentai dating-sim games in English - click to see" border="0">
+		</div>
+		<hr style="margin:2px" />
 
 <span style="left: 5px; position: absolute;">
 	[<a href="<?php echo site_url(get_selected_radix()->shortname) ?>">Return</a>] [<a href="#top">Top</a>]

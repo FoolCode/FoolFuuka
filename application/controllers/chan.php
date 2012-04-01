@@ -245,7 +245,8 @@ class Chan extends Public_Controller
 				'is_thread',
 				'is_last50',
 				'is_statistics',
-				'modifiers'
+				'modifiers',
+				'order'
 			),
 			'partials' => array('post_thread', 'tools_post', 'tools_view'),
 			'backend_vars' => array(
@@ -376,7 +377,8 @@ class Chan extends Public_Controller
 					($by_thread ? 'by_thread' : 'page'))),
 				'current_page' => $page,
 				'total' => $posts['pages']
-			)
+			),
+			'order' => ($by_thread ? 'by_thread' : 'by_post')
 			),
 			array(
 			'post_thread' => TRUE,

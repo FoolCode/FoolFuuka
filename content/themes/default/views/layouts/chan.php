@@ -240,6 +240,11 @@
 			</div>
 		</footer>
 
+		
+		<script>
+			var backend_vars = <?php echo json_encode($backend_vars) ?>;
+		</script>
+
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="<?php echo site_url() ?>assets/js/jquery.js"><\/script>')</script>
@@ -266,10 +271,7 @@
 		  <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 		<![endif]-->
 
-		<script>
-			var backend_vars = <?php echo json_encode($backend_vars) ?>;
-		</script>
-
+		
 		<?php echo get_setting('fs_theme_footer_code'); ?>
 	</body>
 </html>

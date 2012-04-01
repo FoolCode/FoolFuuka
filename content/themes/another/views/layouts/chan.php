@@ -69,9 +69,10 @@
 					<?php if($is_thread || $is_last50) : ?>
 							<a class="active" href="<?php echo site_url(get_selected_radix()->shortname.'/hot/') ?>">comments</a>
 					<?php else : ?>
-					<a class="active" href="<?php echo site_url(get_selected_radix()->shortname.'/hot/') ?>">what's hot</a>
-					<a href="<?php echo site_url(get_selected_radix()->shortname.'/newest/') ?>">new</a>
+					<a <?php if(isset($order) && $order == 'by_post') : ?>class="active"<?php endif; ?> href="<?php echo site_url(get_selected_radix()->shortname.'/hot/') ?>">what's hot</a>
+					<a <?php if(isset($order) && $order == 'by_thread') : ?>class="active"<?php endif; ?> href="<?php echo site_url(get_selected_radix()->shortname.'/newest/') ?>">new</a>
 					<a href="<?php echo site_url(get_selected_radix()->shortname.'/search/text/faggot/') ?>">controversial</a>
+					<a <?php if($this->uri->segment(2) == 'ghost') : ?>class="active"<?php endif; ?> href="<?php echo site_url(get_selected_radix()->shortname.'/ghost/') ?>">alternative</a>
 					<?php endif; ?>
 				</div>
 

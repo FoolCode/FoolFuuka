@@ -263,7 +263,6 @@ class Post extends CI_Model
 			$query = $this->db->query('
 				SELECT *
 				FROM ' . $this->get_table($board) . '
-				' . $this->get_sql_media_banned($board) . '
 				WHERE media_filename IS NOT NULL
 				ORDER BY timestamp DESC
 				LIMIT ?, ?
@@ -2376,7 +2375,7 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		if ($row->media_banned !== NULL)
+		if (isset($row->media_banned) && $row->media_banned !== NULL)
 		{
 			if ($thumbnail)
 			{

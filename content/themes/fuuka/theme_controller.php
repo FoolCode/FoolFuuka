@@ -341,8 +341,8 @@ class Theme_Controller
 				$this->CI->template->title(_('Redirecting...'));
 				$this->CI->_set_parameters(
 					array(
-						'redirection_msg'	=> 0,
-						'redirection_url'	=> $callback
+						'title' => fuuka_title(0),
+						'url' => $callback
 					)
 				);
 				$this->CI->template->build('redirection');
@@ -370,8 +370,8 @@ class Theme_Controller
 			$this->CI->template->title(_('Redirecting...'));
 			$this->CI->_set_parameters(
 				array(
-					'redirection_msg'	=> 0,
-					'redirection_url'	=> site_url(get_selected_radix()->shortname . '/thread/' .
+					'title' => fuuka_title(0),
+					'url' => site_url(get_selected_radix()->shortname . '/thread/' .
 						$this->CI->input->post('parent'))
 				)
 			);
@@ -399,8 +399,8 @@ class Theme_Controller
 			$this->CI->template->title(_('Redirecting...'));
 			$this->CI->_set_parameters(
 				array(
-					'redirection_msg'	=> 0,
-					'redirection_url'	=> site_url(get_selected_radix()->shortname . '/thread/' .
+					'title' => fuuka_title(0),
+					'url' => site_url(get_selected_radix()->shortname . '/thread/' .
 						$this->CI->input->post('parent'))
 				)
 			);

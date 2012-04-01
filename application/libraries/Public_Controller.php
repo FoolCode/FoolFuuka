@@ -59,11 +59,11 @@ class Public_Controller extends MY_Controller
 		{
 			$this->fu_theme = 'default';
 		}
-		
+
 		//$this->fu_theme = (get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default');
-		if($this->input->cookie('foolfuuka_theme2') && in_array($this->input->cookie('foolfuuka_theme2'), array('default', 'fuuka', 'yotsuba', 'another')))
+		if($this->input->cookie('foolfuuka_theme') && in_array($this->input->cookie('foolfuuka_theme'), array('default', 'fuuka', 'yotsuba', 'another')))
 		{
-			$this->fu_theme = $this->input->cookie('foolfuuka_theme2');
+			$this->fu_theme = $this->input->cookie('foolfuuka_theme');
 		}
 
 		$this->template->set_theme($this->fu_theme);

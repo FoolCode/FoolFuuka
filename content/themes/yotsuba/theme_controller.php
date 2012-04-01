@@ -22,6 +22,31 @@ class Theme_Controller
 
 
 	/**
+	 * Disabling some of the formatting.
+	 */
+	public function page($page = 1)
+	{
+		$this->CI->post->features = FALSE;
+		$this->CI->page($page);
+	}
+
+
+	public function ghost($page = 1)
+	{
+		$this->CI->post->features = FALSE;
+		$this->CI->ghost($page);
+	}
+
+
+	public function thread($num = 0, $limit = 0)
+	{
+		$this->CI->post->features = FALSE;
+		$this->CI->thread($num, $limit);
+	}
+
+
+
+	/**
 	 * Disable GALLERY for this theme by showing 404!
 	 */
 	public function gallery()

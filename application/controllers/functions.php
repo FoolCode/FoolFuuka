@@ -16,8 +16,8 @@ class Functions extends Public_Controller
 
 	public function theme($theme = 'default')
 	{
-		$this->template->title(_('Changing theme'));
-		$this->input->set_cookie('foolfuuka_theme2', $theme, 31536000);
+		$this->template->title(_('Changing Theme'));
+		$this->input->set_cookie('foolfuuka_theme', $theme, 31536000);
 		if ($this->input->server('HTTP_REFERER') && strpos($this->agent->referrer(), site_url()) === 0) :
 			$this->template->set('url', $this->input->server('HTTP_REFERER'));
 		else :
@@ -26,6 +26,5 @@ class Functions extends Public_Controller
 		$this->template->set_layout('redirect');
 		$this->template->build('redirection');
 	}
-	
+
 }
-	

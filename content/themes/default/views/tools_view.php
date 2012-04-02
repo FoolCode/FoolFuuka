@@ -45,14 +45,22 @@
 				?>
 
 				<?php
-				if($board->shortname)
-				{
+				if($board->shortname) :
+				
+					echo form_submit(array(
+						'class' => 'btn btn-success btn-mini',
+						'value' => _('Global Search'),
+						'name' => 'submit_search_global'
+					));
+				?>
+				
+				<?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
 						'value' => _('Go to post'),
 						'name' => 'submit_post'
 					));
-				}
+				endif;
 				?>
 
 			</li>

@@ -800,14 +800,22 @@ class Chan extends Public_Controller
 	 */
 	public function search()
 	{
-		if ($this->input->post('submit_image') && get_selected_radix())
+		$radix = get_selected_radix();
+		
+		// just disable the radix to run a global search
+		if($this->input->post('submit_search_global'))
+		{
+			$radix = FALSE;
+		}
+		
+		if ($this->input->post('submit_image') && $radix)
 		{
 			if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0)
 			{
 				if (false && $_FILES["image"]["size"] > 8000000)
 				{
 					$this->template->title(_('Error'));
-					$this->template->title(get_selected_radix()->formatted_title);
+					$this->template->title($radix->formatted_title);
 					$this->_set_parameters(
 						array(
 							'error' => _('You uploaded a too big file. The maximum file size is 8 MegaBytes.')
@@ -821,12 +829,12 @@ class Chan extends Public_Controller
 						md5(file_get_contents($_FILES['image']['tmp_name']))));
 
 				$md5 = substr(urlsafe_b64encode(urlsafe_b64decode($md5)), 0, -2);
-				redirect(get_selected_radix()->shortname . '/image/' . $md5);
+				redirect($radix->shortname . '/image/' . $md5);
 			}
 			else
 			{
 				$this->template->title(_('Error'));
-				$this->template->title(get_selected_radix()->formatted_title);
+				$this->template->title($radix->formatted_title);
 				$this->_set_parameters(
 					array(
 						'error' => _('You seem not to have uploaded a valid file.')
@@ -875,9 +883,9 @@ class Chan extends Public_Controller
 		// POST -> GET Redirection to provide URL presentable for sharing links.
 		if ($this->input->post())
 		{
-			if (get_selected_radix())
+			if ($radix)
 			{
-				$redirect_url = array(get_selected_radix()->shortname, 'search');
+				$redirect_url = array($radix->shortname, 'search');
 			}
 			else
 			{
@@ -898,16 +906,16 @@ class Chan extends Public_Controller
 
 		// Fetch the search results and display them.
 		$search = $this->uri->ruri_to_assoc(2, $modifiers);
-		$result = $this->post->get_search(get_selected_radix(), $search);
+		$result = $this->post->get_search($radix, $search);
 
 		// Stop! We have reached an error and shouldn't proceed any further!
 		if (isset($result['error']))
 		{
 			$this->template->title(_('Error'));
 
-			if (get_selected_radix())
+			if ($radix)
 			{
-				$this->template->title(get_selected_radix()->formatted_title);
+				$this->template->title($radix->formatted_title);
 			}
 
 			$this->_set_parameters(
@@ -976,7 +984,7 @@ class Chan extends Public_Controller
 		$page = (!$search['page'] || !intval($search['page'])) ? 1 : $search['page'];
 
 		// Generate URI for pagination.
-		$uri_array = $this->uri->ruri_to_assoc(2);
+		$uri_array = $this->uri->ruri_to_assoc($radix?4:3, $modifiers);
 		foreach ($uri_array as $key => $param)
 		{
 			if (!$param)
@@ -985,20 +993,27 @@ class Chan extends Public_Controller
 
 		if (isset($uri_array['page']))
 			unset($uri_array['page']);
+		
+		// we need to add the shortname and the search
+		$prepend_uri = '';
+		if($radix)
+			$prepend_uri .= $radix->shortname;
+		$prepend_uri .= '/search';
+		
 
 		// Set template variables required to build the HTML.
-		//	$this->template->title(get_selected_radix()->formatted_title .
+		//	$this->template->title($radix->formatted_title .
 		//		' &raquo; ' . $title);
 		$this->_set_parameters(
 			array(
 			'section_title' => $title,
 			'modifiers' => array(
 				'post_show_view_button' => TRUE,
-				'post_show_board_name' => !get_selected_radix()
+				'post_show_board_name' => !$radix
 			),
 			'posts' => $result['posts'],
 			'pagination' => array(
-				'base_url' => site_url(array($this->uri->assoc_to_uri($uri_array), 'page')),
+				'base_url' => site_url($prepend_uri . '/' . $this->uri->assoc_to_uri($uri_array). '/page'),
 				'current_page' => $page,
 				'total' => ceil((($result['total_found'] > 5000) ? 5000 : $result['total_found']) / 25)
 			)
@@ -1009,9 +1024,9 @@ class Chan extends Public_Controller
 			)
 		);
 
-		if (get_selected_radix())
+		if ($radix)
 		{
-			$this->template->title(get_selected_radix()->formatted_title);
+			$this->template->title($radix->formatted_title);
 		}
 		else
 		{

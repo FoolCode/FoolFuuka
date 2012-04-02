@@ -728,8 +728,7 @@ jQuery(document).ready(function() {
         replyHighlight(post[1]);
     }
 
-
-    if (typeof backend_vars.thread_id !== "undefined")
+    if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 24 * 60 * 60))
     {
         jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
         setTimeout(realtimethread, 10000);

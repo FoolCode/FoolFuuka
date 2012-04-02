@@ -520,14 +520,18 @@ class Chan extends Public_Controller
 			return TRUE;
 		}
 
-		// get the latest doc_id
+		// get the latest doc_id and latest timestamp
 		$latest_doc_id = (isset($thread[$num]['op'])) ? $thread[$num]['op']->doc_id : 0;
+		$latest_timestamp = (isset($thread[$num]['op'])) ? $thread[$num]['op']->timestamp : 0;
 		if (isset($thread[$num]['posts']))
 		{
 			foreach ($thread[$num]['posts'] as $post)
 			{
 				if ($latest_doc_id < $post->doc_id)
 					$latest_doc_id = $post->doc_id;
+				
+				if ($latest_timestamp < $post->timestamp)
+					$latest_timestamp = $post->timestamp;
 			}
 		}
 
@@ -548,6 +552,7 @@ class Chan extends Public_Controller
 			array(
 			'thread_id' => $num,
 			'latest_doc_id' => $latest_doc_id,
+			'latest_timestamp' => $latest_timestamp,
 			'thread_op_data' => $thread[$num]['op']
 			)
 		);

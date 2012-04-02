@@ -501,7 +501,7 @@ body.theme_default {
 }
 
 .theme_default .post.post_ghost {
-    border-left:20px solid #3a533f;
+    border-left:5px solid #3a533f;
 }
 
 .theme_default .post.reported {

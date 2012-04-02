@@ -55,14 +55,6 @@
 				}
 				?>
 
-				<?php
-				echo form_button(array(
-					'data-function' => 'searchHide',
-					'class' => 'btn btn-danger btn-mini pull-right',
-					'content' => _('Close'),
-				))
-				?>
-
 			</li>
 
 			<li class="divider"></li>

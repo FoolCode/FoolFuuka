@@ -32,6 +32,15 @@ var bindFunctions = function()
             findSameImageFromFile(event.originalEvent.target);
         });
     }
+	
+	jQuery("body").click(function(event){
+		var search_el = jQuery('.search-dropdown');
+		if(search_el.find(event.target).length != 1)
+		{
+			search_el.find('.search-dropdown-menu').hide();
+			search_el.removeClass('active');
+		}
+	});
 
     jQuery("body").on("click",
         "a.[data-function], button.[data-function], input.[data-function]",
@@ -224,12 +233,7 @@ var bindFunctions = function()
                     el.parent().find('.search-dropdown-menu').show();
                     el.parent().parent().addClass('active');
                     break;
-
-                case 'searchHide':
-                    el.parent().parent().hide();
-                    el.parent().parent().parent().parent().removeClass('active');
-                    break;
-
+					
                 default:
                     break;
             }

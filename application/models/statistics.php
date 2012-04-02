@@ -40,6 +40,7 @@ class Statistics extends CI_Model
 				'name' => _('Availability'),
 				'description' => _('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
+				'frequency' => 60 * 60 * 5,
 				'interface' => 'availability'
 			),
 			'daily_activity' => array(

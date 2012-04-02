@@ -910,7 +910,7 @@ class Chan extends Public_Controller
 		}
 
 		// Fetch the search results and display them.
-		$search = $this->uri->ruri_to_assoc(2, $modifiers);
+		$search = $this->uri->ruri_to_assoc($radix?2:1, $modifiers);
 		$result = $this->post->get_search($radix, $search);
 
 		// Stop! We have reached an error and shouldn't proceed any further!

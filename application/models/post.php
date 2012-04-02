@@ -660,7 +660,6 @@ class Post extends CI_Model
 
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->get_table($board) . '
-					' . $this->get_sql_media_banned($board) . '
 					WHERE parent = ? AND doc_id > ?
 					ORDER BY num, subnum ASC;
 				',

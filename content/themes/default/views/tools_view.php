@@ -1,10 +1,10 @@
-<?php 
-	if (!isset($board) && get_setting('fs_sphinx_global')) 
+<?php
+	if (!isset($board) && get_setting('fs_sphinx_global'))
 	{
 		// searh can work also without a board selected
 		$board->shortname = '';
 	}
-	
+
 	if(isset($board)) :
 ?>
 
@@ -22,7 +22,7 @@
 			'data-function' => 'searchShow',
 			'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : '',
 			'class' => 'span4 search-query',
-			'placeholder' => ($board->shortname)?_('Search or insert post no. or thread URL'):_('Global search')
+			'placeholder' => ($board->shortname)?_('Search or insert post no. or thread URL'):_('Global Search')
 		));
 		?>
 		<ul class="search-dropdown-menu">
@@ -46,14 +46,14 @@
 
 				<?php
 				if($board->shortname) :
-				
+
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
 						'value' => _('Global Search'),
 						'name' => 'submit_search_global'
 					));
 				?>
-				
+
 				<?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
@@ -87,7 +87,7 @@
 				{
 					$date_array['value'] = rawurldecode($search["date_start"]);
 				}
-			
+
 				echo form_input($date_array);
 				?></li>
 
@@ -98,36 +98,36 @@
 						'name' => 'end',
 						'id' => 'date_end',
 					);
-				
+
 				if(isset($search["date_end"]))
 				{
 					$date_array['value'] = rawurldecode($search["date_end"]);
 				}
 				echo form_input($date_array);
-					
+
 				?></li>
 			<li><?php echo _('Filters:') ?></li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'deleted', 'value' => '', 'checked' => (empty($search["deleted"]))
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'deleted', 'value' => '', 'checked' => (empty($search["deleted"]))
+								? TRUE : FALSE));
+					?>
 					All
 				</label>
 			</li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'deleted', 'value' => 'deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'deleted')
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'deleted', 'value' => 'deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'deleted')
+								? TRUE : FALSE));
+					?>
 					Only Deleted
 				</label>
 			</li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'deleted', 'value' => 'not-deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'not-deleted')
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'deleted', 'value' => 'not-deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'not-deleted')
+								? TRUE : FALSE));
+					?>
 					Only Non-Deleted
 				</label>
 			</li>
@@ -152,9 +152,9 @@
 			</li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'ghost', 'value' => 'none', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'none')
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'ghost', 'value' => 'none', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'none')
+								? TRUE : FALSE));
+					?>
 					<span>Only Original</span>
 				</label>
 			</li>
@@ -163,17 +163,17 @@
 
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'filter', 'value' => '', 'checked' => (empty($search["filter"]))
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'filter', 'value' => '', 'checked' => (empty($search["filter"]))
+								? TRUE : FALSE));
+					?>
 					<span>All</span>
 				</label>
 			</li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text')
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text')
+								? TRUE : FALSE));
+					?>
 					<span>Only with image</span>
 				</label>
 			</li>
@@ -190,55 +190,55 @@
 
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'type', 'value' => '', 'checked' => (empty($search["type"]))
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'type', 'value' => '', 'checked' => (empty($search["type"]))
+								? TRUE : FALSE));
+					?>
 					<span>All</span>
 				</label>
 			</li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op')
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op')
+								? TRUE : FALSE));
+					?>
 					<span>Thread OPs Only</span>
 				</label>
 			</li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (!empty($search["type"]) && $search["type"] == 'posts')
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (!empty($search["type"]) && $search["type"] == 'posts')
+								? TRUE : FALSE));
+					?>
 					<span>Replies Only</span>
 				</label>
 			</li>
-			
-			
+
+
 			<li class="divider"></li>
 
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"]))
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"]))
+								? TRUE : FALSE));
+					?>
 					<span>All</span>
 				</label>
 			</li>
-			
+
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'capcode', 'value' => 'user', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'user')
-			? TRUE : FALSE));
-?>
-					<span>Only by users</span>
+					<?php echo form_radio(array('name' => 'capcode', 'value' => 'user', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'user')
+								? TRUE : FALSE));
+					?>
+					<span>Only by Users</span>
 				</label>
 			</li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod')
-			? TRUE : FALSE));
-?>
-					<span>Only by mods</span>
+					<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod')
+								? TRUE : FALSE));
+					?>
+					<span>Only by Mods</span>
 				</label>
 			</li>
 			<li>
@@ -246,10 +246,10 @@
 					<?php echo form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin')
 								? TRUE : FALSE));
 					?>
-					<span>Only by admins</span>
+					<span>Only by Admins</span>
 				</label>
 			</li>
-			
+
 
 
 			<li class="divider"></li>
@@ -257,21 +257,21 @@
 
 			<li>
 				<label>
-		<?php echo form_radio(array('name' => 'order', 'value' => 'desc', 'checked' => (empty($search["order"]) || (!empty($search["order"]) && $search["order"] == 'desc'))
-					? TRUE : FALSE));
-		?>
+					<?php echo form_radio(array('name' => 'order', 'value' => 'desc', 'checked' => (empty($search["order"]) || (!empty($search["order"]) && $search["order"] == 'desc'))
+								? TRUE : FALSE));
+					?>
 					<span>New First</span>
 				</label>
 			</li>
 			<li>
 				<label>
-<?php echo form_radio(array('name' => 'order', 'value' => 'asc', 'checked' => (!empty($search["order"]) && $search["order"] == 'asc')
-			? TRUE : FALSE));
-?>
+					<?php echo form_radio(array('name' => 'order', 'value' => 'asc', 'checked' => (!empty($search["order"]) && $search["order"] == 'asc')
+								? TRUE : FALSE));
+					?>
 					<span>Old First</span>
 				</label>
 			</li>
-			
+
 			<?php if($board->shortname) : ?>
 			<li class="divider"></li>
 			<li class="input-prepend"><span class="add-on">Image</span><input type="file" name="image" />
@@ -287,7 +287,7 @@
 			<?php endif; ?>
 
 		</ul>
-<?php echo form_close(); ?>
+		<?php echo form_close(); ?>
 	</li>
 </ul>
 

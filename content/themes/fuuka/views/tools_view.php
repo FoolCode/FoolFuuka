@@ -41,6 +41,12 @@ if (!isset($page))
 					</td>
 				</tr>
 				<tr>
+					<td class="postblock">Subject</td>
+					<td>
+						<?php echo form_input(array('name' => 'subject', 'size' => '32', 'id' => 'subject', 'value' => (isset($search["subject"])) ? rawurldecode($search["subject"]) : '')); ?>
+					</td>
+				</tr>
+				<tr>
 					<td class="postblock">Username <a class="tooltip" href="#">[?]<span>Search for <b>exact</b> username. Leave empty for any username.</span></a></td>
 					<td>
 						<?php echo form_input(array('name' => 'username', 'size' => '32', 'id' => 'username', 'value' => (isset($search["username"])) ? rawurldecode($search["username"]) : '')); ?>
@@ -132,12 +138,33 @@ if (!isset($page))
 					<td class="postblock">Results</td>
 					<td>
 						<label>
-							<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (!empty($search["type"]) && $search["type"] == 'posts'))); ?>
+							<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (empty($search["type"]) || (!empty($search["type"]) && $search["type"] == 'posts')) ? TRUE : FALSE)); ?>
 							<span>Post</span>
 						</label><br />
 						<label>
-							<?php echo form_radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op'))); ?>
+							<?php echo form_radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op') ? TRUE : FALSE)); ?>
 							<span>Threads</span>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="postblock">Capcode</td>
+					<td>
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"])) ? TRUE : FALSE)); ?>
+							<span>All</span>
+						</label><br />
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'user', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'user') ? TRUE : FALSE)); ?>
+							<span>Only by Users</span>
+						</label><br />
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod') ? TRUE : FALSE)); ?>
+							<span>Only by Mods</span>
+						</label><br />
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin') ? TRUE : FALSE)); ?>
+							<span>Only by Admins</span>
 						</label>
 					</td>
 				</tr>

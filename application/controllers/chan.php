@@ -529,7 +529,7 @@ class Chan extends Public_Controller
 			{
 				if ($latest_doc_id < $post->doc_id)
 					$latest_doc_id = $post->doc_id;
-				
+
 				if ($latest_timestamp < $post->timestamp)
 					$latest_timestamp = $post->timestamp;
 			}
@@ -806,13 +806,13 @@ class Chan extends Public_Controller
 	public function search()
 	{
 		$radix = get_selected_radix();
-		
+
 		// just disable the radix to run a global search
 		if($this->input->post('submit_search_global'))
 		{
 			$radix = FALSE;
 		}
-		
+
 		if ($this->input->post('submit_image') && $radix)
 		{
 			if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0)
@@ -998,13 +998,13 @@ class Chan extends Public_Controller
 
 		if (isset($uri_array['page']))
 			unset($uri_array['page']);
-		
+
 		// we need to add the shortname and the search
 		$prepend_uri = '';
 		if($radix)
 			$prepend_uri .= $radix->shortname;
 		$prepend_uri .= '/search';
-		
+
 
 		// Set template variables required to build the HTML.
 		//	$this->template->title($radix->formatted_title .

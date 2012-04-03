@@ -1,11 +1,14 @@
 <?php
-	if (!isset($board) && get_setting('fs_sphinx_global'))
-	{
-		// searh can work also without a board selected
-		$board->shortname = '';
-	}
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
 
-	if(isset($board)) :
+if (!isset($board) && get_setting('fs_sphinx_global'))
+{
+	// searh can work also without a board selected
+	$board->shortname = '';
+}
+
+if(isset($board)) :
 ?>
 
 <ul class="nav pull-right">
@@ -46,15 +49,12 @@
 
 				<?php
 				if($board->shortname) :
-
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
 						'value' => _('Global Search'),
 						'name' => 'submit_search_global'
 					));
-				?>
 
-				<?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
 						'value' => _('Go to post'),

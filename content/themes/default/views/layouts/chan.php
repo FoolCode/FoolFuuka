@@ -1,4 +1,8 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -240,7 +244,7 @@
 			</div>
 		</footer>
 
-		
+
 		<script>
 			var backend_vars = <?php echo json_encode($backend_vars) ?>;
 		</script>
@@ -271,7 +275,7 @@
 		  <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 		<![endif]-->
 
-		
+
 		<?php echo get_setting('fs_theme_footer_code'); ?>
 	</body>
 </html>

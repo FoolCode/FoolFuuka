@@ -1,10 +1,10 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-?>
 
-<?php if ((isset($enabled_post_thread) && $enabled_post_thread && !get_selected_radix()->archive) ||
-	(isset($thread_id))) : ?>
+if ((isset($enabled_post_thread) && $enabled_post_thread && !get_selected_radix()->archive) ||
+	(isset($thread_id))) :
+?>
 
 <div class="thread_form_wrap clearfix">
 <section class="thread_form clearfix">
@@ -72,7 +72,7 @@ if (!defined('BASEPATH'))
 		?>
 					</div>
 		<?php endif; ?>
-	
+
 		<div class="input-prepend">
 			<label class="add-on" for="reply_nymphassword"><?php echo _('Password') ?></label><?php
 			echo form_password(array(

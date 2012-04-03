@@ -1,10 +1,17 @@
 <?php
-if (!isset($page))
-	$page = 1;
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
+
+if (!isset($board) && get_setting('fs_sphinx_global'))
+{
+	// searh can work also without a board selected
+	$board->shortname = '';
+}
 ?>
+
 <div style="overflow:hidden;">
 	<!--- Search Input -->
-	<?php echo form_open(get_selected_radix()->shortname . '/search'); ?>
+	<?php echo form_open($board->shortname . '/search'); ?>
 	<div id="simple-search" class="postspan" style="float:left">
 		Text search [<a class="tooltip" href="#">?<span>Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing the word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt></span></a>]
 
@@ -22,12 +29,12 @@ if (!isset($page))
 			'value' => 'Go'
 		));
 		?>
-		<a href="<?php echo site_url(get_selected_radix()->shortname . '/advanced-search') ?>" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ Advanced ]</a>
+		<a href="<?php echo site_url($board->shortname . '/advanced-search') ?>" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ Advanced ]</a>
 	</div>
 	<?php echo form_close(); ?>
 
 	<!--- Advanced Search Input -->
-	<?php echo form_open(get_selected_radix()->shortname . '/search'); ?>
+	<?php echo form_open($board->shortname . '/search'); ?>
 	<div id="advanced-search" class="postspan" style="float:left;display:none">
 		<table style="float:left">
 			<tbody>
@@ -173,7 +180,13 @@ if (!isset($page))
 					<td>
 						<?php
 						echo form_submit(array(
-							'value' => 'Search'
+							'value' => 'Search',
+							'name' => 'submit_search'
+						));
+
+						echo form_submit(array(
+							'value' => 'Global Search',
+							'name' => 'submit_search_global'
 						));
 						?>
 						<a href="#" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ Simple ]</a>
@@ -184,6 +197,7 @@ if (!isset($page))
 	</div>
 	<?php echo form_close(); ?>
 
+<?php if(get_selected_radix()) : ?>
 	<!--- Post Input -->
 	<?php echo form_open(get_selected_radix()->shortname . '/post'); ?>
 	<div class="postspan" style="float:left">
@@ -232,4 +246,5 @@ if (!isset($page))
 		<input type="button" value="View in Ghost mode" onclick="location.href='<?php echo site_url(get_selected_radix()->shortname . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
 	</div>
 	<?php echo form_close(); ?>
+<?php endif; ?>
 </div>

@@ -47,13 +47,13 @@ if (!defined('BASEPATH'))
 				$parenthesis_open = FALSE;
 			}
 			?>
-			[ <a href="<?php echo site_url() ?>">index</a> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
+			[ <a href="<?php echo site_url() ?>">index</a><?php if (get_selected_radix()) : ?> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a><?php endif; ?> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
 		</div>
 		<?php endif; ?>
 
 		<?php if ($disable_headers !== TRUE) : ?>
 		<div style="min-height:30px;">
-			<h1><?php echo get_selected_radix()->formatted_title ?></h1>
+			<h1><?php echo (get_selected_radix()) ? get_selected_radix()->formatted_title : '' ?></h1>
 			<?php if (isset($section_title)) : echo '<h2>' . $section_title . '</h2>'; endif ?>
 			<hr />
 			<?php echo $template['partials']['tools_view']; ?>

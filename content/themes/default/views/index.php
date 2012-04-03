@@ -2,6 +2,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
+
 <article style="padding:50px;">
 	<h1><?php echo _('Welcome on the 4chan Archiver "FoOlFuuka"'); ?></h1>
 	<h2><?php
@@ -61,5 +62,5 @@ if (!defined('BASEPATH'))
 				}
 				?>
 	</h2>
-		
+
 </article>

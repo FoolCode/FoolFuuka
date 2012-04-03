@@ -48,5 +48,4 @@ if (!defined('BASEPATH'))
 	<?php
 	if($count%4 == 0) echo '<div class="clearfix"></div>';
 	endforeach; ?>
-
 </div>

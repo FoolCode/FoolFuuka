@@ -7,11 +7,11 @@ if (isset($thread_id))
 ?>
 
 <div class="content">
-
 <?php
 foreach ($posts as $key => $post) : ?>
 	<?php if (isset($post['op'])) :
 		$op = $post['op'];
+		$selected_radix = isset($op->board)?$op->board:get_selected_radix();
 	?>
 	<div id="p<?php echo $op->num ?>">
 		<?php if ($op->preview) : ?>
@@ -39,15 +39,15 @@ foreach ($posts as $key => $post) : ?>
 		</label>
 
 		<?php if(!isset($thread_id)) : ?>
-		<a class="js" href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>">No.<?php echo $op->num ?></a>
+		<a class="js" href="<?php echo site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.<?php echo $op->num ?></a>
 		<?php else : ?>
-		<a class="js" href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $op->num ?>\n')"><?php echo $op->num ?></a>
+		<a class="js" href="<?php echo site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $op->num ?>\n')"><?php echo $op->num ?></a>
 		<?php endif; ?>
 
 		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="This post was deleted before its lifetime has expired."/><?php endif ?>
 		<?php if ($op->spoiler == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="The image in this post is marked as spoiler."/><?php endif ?>
 
-		[<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url(get_selected_radix()->shortname . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?><?php if (get_selected_radix()->archive) : ?> [<a href="http://boards.4chan.org/<?php echo get_selected_radix()->shortname . '/res/' . $op->num ?>">Original</a>]<?php endif; ?>
+		[<a href="<?php echo site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($selected_radix->shortname . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?><?php if ($selected_radix->archive) : ?> [<a href="http://boards.4chan.org/<?php echo $selected_radix->shortname . '/res/' . $op->num ?>">Original</a>]<?php endif; ?>
 
 		<blockquote><p><?php echo $op->comment_processed ?></p></blockquote>
 		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omittedposts">' . $post['omitted'] . ' posts omitted. Click Reply to view.</span>' : '') ?>
@@ -93,6 +93,8 @@ foreach ($posts as $key => $post) : ?>
 	<hr />
 <?php endforeach; ?>
 </div>
+
 <?php
 if (isset($thread_id))
 	echo form_close();
+?>

@@ -54,7 +54,9 @@ if(isset($board)) :
 						'value' => _('Global Search'),
 						'name' => 'submit_search_global'
 					));
+				?>
 
+				<?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
 						'value' => _('Go to post'),

@@ -352,7 +352,6 @@ class Post extends CI_Model
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
-					' . $this->get_sql_media_banned_after_join($board) . '
 				',
 					array(
 						intval(($page * $per_page) - $per_page),
@@ -383,7 +382,6 @@ class Post extends CI_Model
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
-					' . $this->get_sql_media_banned_after_join($board) . '
 				',
 					array(
 						intval(($page * $per_page) - $per_page),
@@ -411,7 +409,6 @@ class Post extends CI_Model
 					LEFT JOIN ' . $this->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
 					' . $this->get_sql_report_after_join($board) . '
-					' . $this->get_sql_media_banned_after_join($board) . '
 				',
 					array(
 						intval(($page * $per_page) - $per_page),
@@ -542,87 +539,6 @@ class Post extends CI_Model
 		$query2->free_result();
 
 		return array('result' => $result, 'pages' => $pages);
-	}
-
-
-	function get_posts_ghost($board, $page = 1, $options = array())
-	{
-		// defaults
-		$per_page = 1000;
-		$process = TRUE;
-		$clean = TRUE;
-
-		// overwrite defaults
-		foreach ($options as $key => $option)
-		{
-			$$key = $option;
-		}
-
-		// get exactly 20 be it thread starters or parents with different parent
-		$query = $this->db->query('
-			SELECT num, subnum, timestamp
-			FROM ' . $this->get_table($board) . '
-			WHERE subnum > 0
-			ORDER BY timestamp DESC
-			LIMIT ' . intval(($page * $per_page) - $per_page) . ', ' . intval($per_page) . '
-		');
-
-		// get all the posts
-		$sql = array();
-		$threads = array();
-		foreach ($query->result() as $row)
-		{
-			$sql[] = '
-				(
-					SELECT *
-					FROM ' . $this->get_table($board) . '
-					' . $this->get_sql_media_banned($board) . '
-					WHERE num = ' . intval($row->num) . ' AND subnum = ' . intval($row->subnum) . '
-				)
-			';
-		}
-
-		$sql = implode('UNION', $sql) . '
-			ORDER BY timestamp DESC
-		';
-
-		// clean up, even if it's supposedly just little data
-		$query->free_result();
-
-		// quite disordered array
-		$query2 = $this->db->query($sql);
-
-		// associative array with keys
-		$result = array();
-
-		// cool amount of posts: throw the nums in the cache
-		foreach ($query2->result() as $post)
-		{
-			if ($post->parent == 0)
-			{
-				$this->existing_posts[$post->num][] = $post->num;
-			}
-			else
-			{
-				if ($post->subnum == 0)
-					$this->existing_posts[$post->parent][] = $post->num;
-				else
-					$this->existing_posts[$post->parent][] = $post->num . ',' . $post->subnum;
-			}
-		}
-
-		// order the array
-		foreach ($query2->result() as $post)
-		{
-			if ($process === TRUE)
-			{
-				$this->process_post($board, $post, $clean);
-			}
-			// the first you create from a parent is the first thread
-			$result['posts'][] = $post;
-		}
-
-		return $result;
 	}
 
 
@@ -810,7 +726,6 @@ class Post extends CI_Model
 		$query = $this->db->query('
 				SELECT num, parent, subnum FROM ' . $this->get_table($board) . '
 				' . $this->get_sql_report($board) . '
-				' . $this->get_sql_media_banned($board) . '
 				WHERE num = ? AND subnum = ?
 				LIMIT 0, 1;
 			',
@@ -850,7 +765,6 @@ class Post extends CI_Model
 		$query = $this->db->query('
 				SELECT * FROM ' . $this->get_table($board) . '
 				' . $this->get_sql_report($board) . '
-				' . $this->get_sql_media_banned($board) . '
 				WHERE num = ? AND subnum = ?
 				LIMIT 0, 1;
 			',
@@ -876,7 +790,6 @@ class Post extends CI_Model
 		$query = $this->db->query('
 				SELECT * FROM ' . $this->get_table($board) . '
 				' . $this->get_sql_report($board) . '
-				' . $this->get_sql_media_banned($board) . '
 				WHERE doc_id = ?
 				LIMIT 0, 1;
 			',
@@ -1158,7 +1071,6 @@ class Post extends CI_Model
 					(
 						SELECT *, '.$record['board'].' AS board
 						FROM ' . $this->get_table($this->radix->get_by_id($record['board'])) . '
-						' . $this->get_sql_media_banned($this->radix->get_by_id($record['board'])) . '
 						WHERE num = ' . $record['num'] . ' AND subnum = ' . $record['subnum'] . '
 					)
 				';
@@ -1272,15 +1184,6 @@ class Post extends CI_Model
 					->use_index('timestamp_index');
 			}
 
-
-			$this->db->join(
-				'(SELECT md5 as media_banned
-					FROM ' . $this->db->protect_identifiers('banned_md5',TRUE) .') as m',
-				$this->get_table($board) . '.`media_hash` = ' . $this->db->protect_identifiers('m') . '.`media_banned`',
-				'left',
-				FALSE);
-
-
 			$this->db->limit(5000);
 			$this->db->stop_cache();
 			$count = $this->db->query($this->db->statement());
@@ -1357,16 +1260,32 @@ class Post extends CI_Model
 			$$key = $option;
 		}
 
-		$query = $this->db->query('
-			SELECT *
-			FROM ' . $this->get_table($board) . '
-			' . $this->get_sql_report($board) . '
-			' . $this->get_sql_media_banned($board) . '
-			WHERE media_hash = ?
-			ORDER BY num DESC
-			LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
-		',
-			array($hash));
+		$check = $this->db->get_where('banned_md5', array('md5' => $hash));
+
+		if ($check->num_rows() > 0)
+		{
+			$query = $this->db->query('
+				SELECT *, TRUE as media_banned
+				FROM ' . $this->get_table($board) . '
+				' . $this->get_sql_report($board) . '
+				WHERE media_hash = ?
+				ORDER BY num DESC
+				LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
+			',
+					array($hash));
+		}
+		else
+		{
+			$query = $this->db->query('
+				SELECT *
+				FROM ' . $this->get_table($board) . '
+				' . $this->get_sql_report($board) . '
+				WHERE media_hash = ?
+				ORDER BY num DESC
+				LIMIT ' . (($page * $per_page) - $per_page) . ', ' . $per_page . '
+			',
+					array($hash));
+		}
 
 		$query2 = $this->db->query('
 			SELECT count(*) AS total_found
@@ -1418,7 +1337,6 @@ class Post extends CI_Model
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->get_table($board) . '
-			' . $this->get_sql_media_banned($board) . '
 			WHERE media_filename = ?
 			ORDER BY num DESC
 			LIMIT 0, 1
@@ -2383,16 +2301,35 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
-		if (isset($row->media_banned) && $row->media_banned !== NULL)
+		if (isset($row->media_banned))
 		{
-			if ($thumbnail)
+			if ($row->media_banned !== NULL)
 			{
-				$row->preview_h = 150;
-				$row->preview_w = 150;
+				if ($thumbnail)
+				{
+					$row->preview_h = 150;
+					$row->preview_w = 150;
+					return site_url() . 'content/themes/default/images/banned-image.png';
+				}
+
 				return site_url() . 'content/themes/default/images/banned-image.png';
 			}
+		}
+		else
+		{
+			$check = $this->db->get_where('banned_md5', array('md5' => $row->media_hash));
 
-			return site_url() . 'content/themes/default/images/banned-image.png';
+			if ($check->num_rows() > 0)
+			{
+				if ($thumbnail)
+				{
+					$row->preview_h = 150;
+					$row->preview_w = 150;
+					return site_url() . 'content/themes/default/images/banned-image.png';
+				}
+
+				return site_url() . 'content/themes/default/images/banned-image.png';
+			}
 		}
 
 		if (!$board->thumbnails && !$this->tank_auth->is_allowed())

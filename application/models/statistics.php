@@ -549,16 +549,6 @@ class Statistics extends CI_Model
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->get_table($board, 'images') . '
-			LEFT JOIN
-			(
-				SELECT md5 as media_banned
-				FROM ' . $this->db->protect_identifiers('banned_md5',
-				TRUE) .'
-			) as m
-			ON
-			' . $this->get_table($board, 'images') . '.`media_hash`
-			=
-			' . $this->db->protect_identifiers('m') . '.`media_banned`
 			ORDER BY total DESC
 			LIMIT 0, 200;
 		');
@@ -573,10 +563,10 @@ class Statistics extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT
-				day,posts,images,sage
+				day AS time, posts, images, sage
 			FROM ' . $this->get_table($board,
 				'daily') . '
-			WHERE day > floor((?)/86400)*86400
+			WHERE day > floor((?-31536000)/86400)*86400
 			GROUP BY day
 			ORDER BY day
 		',
@@ -609,7 +599,7 @@ class Statistics extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT
-				day, trips, names, anons
+				day AS time, trips, names, anons
 			FROM ' . $this->get_table($board,
 				'daily') . '
 			WHERE day > floor((?-31536000)/86400)*86400

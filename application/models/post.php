@@ -1058,6 +1058,10 @@ class Post extends CI_Model
 			{
 				$this->db->sphinx_match('trip', '"' . $search['tripcode'] . '"', 'full', TRUE);
 			}
+			if ($search['email'])
+			{
+				$this->db->sphinx_match('email', $search['email'], 'full', TRUE);
+			}
 			if ($search['capcode'] == 'admin')
 			{
 				$this->db->where('cap', 3);
@@ -1200,6 +1204,11 @@ class Post extends CI_Model
 			{
 				$this->db->like('trip', rawurldecode($search['tripcode']))
 					->use_index('trip_index');
+			}
+			if ($search['email'])
+			{
+				$this->db->like('email', rawurldecode($search['email']))
+					->use_index('email_index');
 			}
 			if ($search['capcode'] == 'admin')
 			{

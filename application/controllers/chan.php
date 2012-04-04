@@ -881,7 +881,7 @@ class Chan extends Public_Controller
 
 		// Check all allowed search modifiers and apply them only.
 		$modifiers = array(
-			'subject', 'text', 'username', 'tripcode', 'capcode',
+			'subject', 'text', 'username', 'tripcode', 'email', 'capcode',
 			'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
 
@@ -1035,7 +1035,7 @@ class Chan extends Public_Controller
 		}
 		else
 		{
-			$this->template->title(_('Global search'));
+			$this->template->title(_('Global Search'));
 		}
 
 		$this->template->build('board');

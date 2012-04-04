@@ -76,6 +76,9 @@ if(isset($board)) :
 			<li class="input-prepend"><span class="add-on">Tripcode</span><?php echo form_input(array('name' => 'tripcode', 'id' => 'tripcode', 'value' => (isset($search["tripcode"]))
 							? rawurldecode($search["tripcode"]) : ''))
 				?></li>
+			<li class="input-prepend"><span class="add-on">E-mail</span><?php echo form_input(array('name' => 'email', 'id' => 'email', 'value' => (isset($search["email"]))
+				? rawurldecode($search["email"]) : ''))
+				?></li>
 			<li class="input-prepend"><span class="add-on">Date start</span><?php
 				$date_array = array(
 						'placeholder' => 'yyyy-mm-dd',

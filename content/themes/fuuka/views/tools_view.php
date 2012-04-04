@@ -66,6 +66,12 @@ if (!isset($board) && get_setting('fs_sphinx_global'))
 					</td>
 				</tr>
 				<tr>
+					<td class="postblock">E-mail</td>
+					<td>
+						<?php echo form_input(array('name' => 'email', 'size' => '32', 'id' => 'email', 'value' => (isset($search["email"])) ? rawurldecode($search["email"]) : '')); ?>
+					</td>
+				</tr>
+				<tr>
 					<td class="postblock">From Date <a class="tooltip" href="#">[?]<span>Enter what date to start searching from.<br/>Format is YYYY-MM-DD</span></a></td>
 					<td>
 						<?php
@@ -230,7 +236,7 @@ if (!isset($board) && get_setting('fs_sphinx_global'))
 			'name' => 'page',
 			'id' => 'page',
 			'size' => '6',
-			'value' => $page
+			'value' => ((isset($page)) ? $page : 1)
 		));
 		?>
 

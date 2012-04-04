@@ -98,68 +98,67 @@ if (!defined('BASEPATH'))
 			<div class="navbar navbar-fixed-top">
 				<div class="navbar-inner">
 					<div class="container">
-						<?php if (get_selected_radix()) : ?>
-							<ul class="nav">
-								<li class="dropdown">
-									<a href="<?php echo site_url() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">
-										/<?php echo $board->shortname ?>/ - <?php echo $board->name ?>
-										<b class="caret"></b>
-									</a>
-									<ul class="dropdown-menu">
+
+						<ul class="nav">
+							<li class="dropdown">
+								<a href="<?php echo site_url() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">
+									<?php
+									if (get_selected_radix()) :
+										echo '/' . $board->shortname . '/' . ' - ' . $board->name;
+									else :
+										echo get_setting('fs_gen_site_title');
+									endif;
+									?>
+									<b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<?php if ($this->radix->get_archives()) : ?>
+										<li class="nav-header"><?php echo _('Archives') ?></li>
+										<?php
+										foreach ($this->radix->get_archives() as $key => $item)
+										{
+											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
+										}
+									endif;
+									if ($this->radix->get_boards()) :
+									?>
 										<?php if ($this->radix->get_archives()) : ?>
-											<li class="nav-header"><?php echo _('Archives') ?></li>
-											<?php
-											foreach ($this->radix->get_archives() as $key => $item)
-											{
-												echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
-											}
-										endif;
-										if ($this->radix->get_boards()) :
-											?>
-
-											<li class="divider"></li>
-											<li class="nav-header"><?php echo _('Boards') ?></li>
-											<?php
-											foreach ($this->radix->get_boards() as $key => $item)
-											{
-												echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
-											}
-
-										endif;
-										?>
-									</ul>
-								</li>
-							</ul>
-							<ul class="nav">
-								<li style="padding-right:0px;">
-									<a href="<?php echo site_url(array($board->shortname)) ?>" style="padding-right:4px;"><?php echo _('Index') ?></a>
-								</li>
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:2px; padding-right:4px;">
-										<b class="caret"></b>
-									</a>
-									<ul class="dropdown-menu" style="margin-left:-9px">
-										<li><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_post')) ?>"><?php echo _('By post') ?></a></li>
-										<li><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_thread')) ?>"><?php echo _('By thread') ?></a></li>
-									</ul>
-								</li>
-								<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo _('Ghost') ?></a>
-								</li>
-								<li><a href="<?php echo site_url(array($board->shortname, 'gallery')) ?>"><?php echo _('Gallery') ?></a>
-								</li>
-								<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo _('Stats') ?></a>
-								</li>
-							</ul>
-						<?php else : ?>
-							<ul class="nav">
-								<li class="dropdown">
-									<a href="<?php echo site_url() ?>" id="brand" class="brand">
-										<?php echo get_setting('fs_gen_site_title') ?>
-									</a>
-								</li>
-							</ul>
+										<li class="divider"></li>
+										<?php endif; ?>
+										<li class="nav-header"><?php echo _('Boards') ?></li>
+									<?php
+										foreach ($this->radix->get_boards() as $key => $item)
+										{
+											echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
+										}
+									endif;
+									?>
+								</ul>
+							</li>
+						</ul>
+						<?php if (get_selected_radix()) : ?>
+						<ul class="nav">
+							<li style="padding-right:0px;">
+								<a href="<?php echo site_url(array($board->shortname)) ?>" style="padding-right:4px;"><?php echo _('Index') ?></a>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:2px; padding-right:4px;">
+									<b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu" style="margin-left:-9px">
+									<li><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_post')) ?>"><?php echo _('By post') ?></a></li>
+									<li><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_thread')) ?>"><?php echo _('By thread') ?></a></li>
+								</ul>
+							</li>
+							<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo _('Ghost') ?></a>
+							</li>
+							<li><a href="<?php echo site_url(array($board->shortname, 'gallery')) ?>"><?php echo _('Gallery') ?></a>
+							</li>
+							<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo _('Stats') ?></a>
+							</li>
+						</ul>
 						<?php endif; ?>
-						<?php echo $template['partials']['tools_view']; ?>
+					<?php echo $template['partials']['tools_view']; ?>
 					</div>
 				</div>
 			</div>

@@ -2301,6 +2301,29 @@ class Post extends CI_Model
 		if (!$row->preview)
 			return FALSE;
 
+		if (!$board->thumbnails && !$this->tank_auth->is_allowed())
+		{
+			if ($thumbnail)
+			{
+				return site_url() . 'content/themes/default/images/null-image.png';
+			}
+
+			return '';
+		}
+
+		if ($board->delay_thumbnails && !$this->tank_auth->is_allowed())
+		{
+			if (isset($row->timestamp) && ($row->timestamp + 86400 > time()))
+			{
+				if ($thumbnail)
+				{
+					return site_url() . 'content/themes/default/images/null-image.png';
+				}
+
+				return '';
+			}
+		}
+
 		if (isset($row->media_banned))
 		{
 			if ($row->media_banned !== NULL)
@@ -2332,37 +2355,15 @@ class Post extends CI_Model
 			}
 		}
 
-		if (!$board->thumbnails && !$this->tank_auth->is_allowed())
-		{
-			if ($thumbnail)
-			{
-				return site_url() . 'content/themes/default/images/null-image.png';
-			}
-
-			return '';
-		}
-
-		if ($board->delay_thumbnails && !$this->tank_auth->is_allowed())
-		{
-			if (isset($row->timestamp) && ($row->timestamp + 86400 > time()))
-			{
-				if ($thumbnail)
-				{
-					return site_url() . 'content/themes/default/images/null-image.png';
-				}
-
-				return '';
-			}
-		}
-
 		if (!$board->archive)
 		{
 			$number = (($thumbnail) ? $row->preview : $row->media_filename);
 
+			if (!isset($row->media_filename))
+				$row->media_filename = $row->preview;
+
 			if (strpos($number, 's.') === FALSE)
-			{
 				$thumbnail = FALSE;
-			}
 		}
 		else
 		{

@@ -37,9 +37,10 @@ class Boards extends Admin_Controller
 	}
 
 
-	function board($shortname = NULL)
+	function board($shortname)
 	{
-		$data['form'] = $this->radix->board_structure();
+		$board = $this->radix->get_by_shortname($shortname);
+		$data['form'] = $this->radix->structure($board);
 
 		if ($this->input->post())
 		{
@@ -88,7 +89,7 @@ class Boards extends Admin_Controller
 
 	function add_new()
 	{
-		$data['form'] = $this->radix->board_structure();
+		$data['form'] = $this->radix->structure();
 
 		// the actual POST is in the board() function
 		$data['form']['open']['action'] = site_url('admin/boards/board');

@@ -25,7 +25,12 @@ class Radix extends CI_Model
 	}
 
 
-	function board_structure()
+	/**
+	 * The structure of the radix table to be used with validation and form creator
+	 *
+	 * @param Object $radix If available insert to customize the 
+	 */
+	function structure($radix = NULL)
 	{
 		return array(
 			'open' => array(
@@ -118,7 +123,90 @@ class Radix extends CI_Model
 			'archive' => array(
 				'database' => TRUE,
 				'type' => 'checkbox',
-				'help' => _('Is this a 4chan archiving board?')
+				'help' => _('Is this a 4chan archiving board?'),
+				'sub' => array(
+					'board_url' => array(
+						'database' => TRUE,
+						'type' => 'input',
+						'label' => _('URL to the 4chan board (facultative)'),
+						'placeholder' => 'http://boards.4chan.org/' . (is_null($radix)?'shortname':$radix->shortname) . '/',
+						'class' => 'span4',
+						'validation' => 'trim|max_length[256]'
+					),
+					'thumbs_url' => array(
+						'database' => TRUE,
+						'type' => 'input',
+						'label' => _('URL to the board thumbnails (facultative)'),
+						'placeholder' => 'http://0.thumbs.4chan.org/' . (is_null($radix)?'shortname':$radix->shortname) . '/',
+						'class' => 'span4',
+						'validation' => 'trim|max_length[256]'
+					),
+					'images_url' => array(
+						'database' => TRUE,
+						'type' => 'input',
+						'label' => _('URL to the board images (facultative)'),
+						'placeholder' => 'http://images.4chan.org/' . (is_null($radix)?'shortname':$radix->shortname) . '/',
+						'class' => 'span4',
+						'validation' => 'trim|max_length[256]'
+					),
+					'media_threads' => array(
+						'database' => TRUE,
+						'type' => 'input',
+						'label' => _('Image fetching workers'),
+						'help' => _('The number of workers that will fetch full images'),
+						'placeholder' => 5,
+						'class' => 'span1',
+						'validation' => 'trim|is_natural|less_than[32]'
+					),
+					'thumb_threads' => array(
+						'database' => TRUE,
+						'type' => 'input',
+						'label' => _('Thumbnail fetching workers'),
+						'help' => _('The number of workers that will fetch thumbnails'),
+						'placeholder' => 5,
+						'class' => 'span1',
+						'validation' => 'trim|is_natural|less_than[32]'
+					),
+					'new_threads_threads' => array(
+						'database' => TRUE,
+						'type' => 'input',
+						'label' => _('Thread fetching workers'),
+						'help' => _('The number of threads that will fetch thumbnails'),
+						'placeholder' => 5,
+						'class' => 'span1',
+						'validation' => 'trim|is_natural|less_than[32]'
+					),
+					'thread_refresh_rate' => array(
+						'database' => TRUE,
+						'type' => 'hidden',
+						'value' => 3,
+						'label' => _('Minutes to refresh the thread'),
+						'placeholder' => 3,
+						'validation' => 'trim|is_natural|less_than[32]'
+					),
+					'page_settings' => array(
+						'database' => TRUE,
+						'type' => 'textarea',
+						'label' => _('Thread refresh rate'),
+						'help' => _('Array of refresh rates  in seconds per page in JSON format'),
+						'placeholder' => form_prep('[{"delay": 30, "pages": [0, 1, 2]},
+{"delay": 120, "pages": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},
+{"delay": 30, "pages": [13, 14, 15]}]'),
+						'class' => 'span4',
+						'style' => 'height:70px;',
+						'validation_func' =>  function($input, $form_internal)
+						{
+							$json = @json_decode($input['page_settings']);
+							if(is_null($json))
+							{
+								return array(
+									'error_code' => 'NOT_JSON',
+									'error' => _('The JSON inputted is not valid.')
+								);
+							}
+						}
+					)
+				)
 			),
 			'thumbnails' => array(
 				'database' => TRUE,

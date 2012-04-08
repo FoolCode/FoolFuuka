@@ -37,10 +37,9 @@ class Boards extends Admin_Controller
 	}
 
 
-	function board($shortname)
+	function board($shortname = NULL)
 	{
-		$board = $this->radix->get_by_shortname($shortname);
-		$data['form'] = $this->radix->structure($board);
+		$data['form'] = $this->radix->structure();
 
 		if ($this->input->post())
 		{
@@ -91,8 +90,25 @@ class Boards extends Admin_Controller
 	{
 		$data['form'] = $this->radix->structure();
 
+		if ($this->input->post())
+		{
+			$this->load->library('form_validation');
+			$result = $this->form_validation->form_validate($data['form']);
+			if (isset($result['error']))
+			{
+				set_notice('warning', $result['error']);
+			}
+			else
+			{
+				// it's actually fully checked, we just have to throw it in DB
+				$this->radix->save($result['success']);
+				flash_notice('success', _('New board created!'));
+				redirect('admin/boards/board/' . $result['success']['shortname']);
+			}
+		}
+		
 		// the actual POST is in the board() function
-		$data['form']['open']['action'] = site_url('admin/boards/board');
+		$data['form']['open']['action'] = site_url('admin/boards/add_new');
 
 		// panel for creating a new board
 		$this->viewdata["function_title"] = _('Creating a new board');
@@ -147,6 +163,69 @@ class Boards extends Admin_Controller
 		}
 	}
 
+	
+	function asagi()
+	{
+		$this->load->model('asagi');
+		
+		if($this->input->post('install') || $this->input->post('upgrade'))
+		{
+			$this->asagi->install();
+			set_notice('success', _('Downloaded and installed the latest version of Asagi.'));
+		}
+		
+		if($this->asagi->is_installed() && $this->input->post('remove'))
+		{
+			$this->asagi->remove();
+			set_notice('success', _('Asagi has been removed.'));
+		}
+		
+		if($this->asagi->is_installed() && $this->input->post('update_settings'))
+		{
+			$this->asagi->update_settings();
+			set_notice('success', _('Settings updated.'));
+		}
+		
+		if($this->asagi->is_installed() && $this->input->post('run'))
+		{
+			$this->asagi->run();
+			set_notice('success', _('Ran Asagi.'));
+		}
+		
+		if($this->asagi->is_installed() && $this->input->post('kill'))
+		{
+			$this->asagi->stop();
+			set_notice('success', _('Stopped Asagi.'));
+		}
+		
+		if($this->asagi->is_installed() && $this->input->post('enable_autorun'))
+		{
+			$this->submit_preferences(array('fs_asagi_autorun_enabled' => 1));
+			set_notice('success', _('Enabled Asagi autorun.'));
+		}
+		
+		if($this->asagi->is_installed() && $this->input->post('disable_autorun'))
+		{
+			$this->submit_preferences(array('fs_asagi_autorun_enabled' => 0));
+			set_notice('success', _('Disabled Asagi autorun.'));
+		}
+		
+		if($this->asagi->is_installed())
+		{
+			$this->viewdata["function_title"] = _('Asagi');
+			$this->viewdata["main_content_view"] = $this->load->view('admin/boards/asagi',
+					NULL, TRUE);
+			$this->load->view('admin/default', $this->viewdata);
+			return TRUE;
+		}
+		else
+		{
+			$this->viewdata["function_title"] = _('Asagi installation');
+			$this->viewdata["main_content_view"] = $this->load->view('admin/boards/asagi_install',
+					NULL, TRUE);
+			$this->load->view('admin/default', $this->viewdata);
+		}
+	}
 
 	function sphinx()
 	{

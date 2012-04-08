@@ -151,6 +151,7 @@ class Admin_Controller extends MY_Controller
 				"manage" => array("alt_highlight" => array("board"),
 					"level" => "admin", "name" => _("Manage"), "icon" => 'icon-th-list'),
 				"sphinx" => array("level" => "admin", "name" => _("Sphinx"), "icon" => 'icon-search'),
+				"asagi" => array("level" => "admin", "name" => _("Asagi"), "icon" => 'icon-cogs'),
 				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 'icon-asterisk')
 			)
 		);

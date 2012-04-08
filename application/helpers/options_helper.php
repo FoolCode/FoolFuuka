@@ -446,3 +446,79 @@ function inet_dtop($decimal)
 
     return $ip_address;
 }
+
+
+function get_webserver_user()
+{
+	$whoami = FALSE;
+
+	// if exec is enable, just check with whoami function who's running php
+	if (exec_enabled())
+		$whoami = exec('whoami');
+
+	// if exec is not enabled, write a file and check who has the permissions on it
+	if (!$whoami && is_writable('content') && function_exists('posix_getpwid'))
+	{
+		write_file('content/testing_123.txt', 'testing_123');
+		$whoami = posix_getpwuid(fileowner('content/testing_123.txt'));
+		$whoami = $whoami['name'];
+		unlink('content/testing_123.txt');
+	}
+
+	// if absolutely unable to tell who's the php user, just apologize
+	// else, give a precise command for shell to enter
+	if (!$whoami)
+		return FALSE;
+	else 
+		return $whoami;
+}
+
+function get_webserver_group()
+{
+	$whoami = FALSE;
+
+	// if exec is enable, just check with groups function who's running php's groups
+	if (exec_enabled())
+	{
+		$whoami = exec('groups');
+		// it might be a list, get only the first
+		$whoami = explode(' ', $whoami);
+		if(count($whoami) > 0)
+			return $whoami[0];
+	}
+
+	// if exec is not enabled, write a file and check who has the permissions on it
+	if (is_writable('content') && function_exists('posix_getpwid'))
+	{
+		write_file('content/testing_123.txt', 'testing_123');
+		$whoami = posix_getgrgid(filegroup('content/testing_123.txt'));
+		$whoami = $whoami['name'];
+		unlink('content/testing_123.txt');
+		return $whoami;
+	}
+
+	// if absolutely unable to tell who's the php user, just apologize
+	// else, give a precise command for shell to enter
+	return FALSE;
+}
+
+function exec_enabled()
+{
+	$disabled = explode(',', ini_get('disable_functions'));
+	return!in_array('exec', $disabled);
+}
+
+function java_enabled()
+{
+	if(exec_enabled())
+	{
+		$output = array();
+		exec(get_setting('fs_serv_java_path', FOOL_PREF_SERV_JAVA_PATH) . ' -version', $output);
+		
+		if(isset($output[0]) && strpos($output[0], 'java') === 0)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}

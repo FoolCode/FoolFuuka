@@ -70,7 +70,7 @@ class Radix extends CI_Model
 				'type' => 'input',
 				'label' => _('Shortname'),
 				'help' => _('Insert the shorter name of the board. Reserved: "api", "cli", "admin".'),
-				'placeholder' => _('Required'),
+				'placeholder' => _('Req.'),
 				'class' => 'span1',
 				'validation' => 'required|max_length[5]|alpha_dash',
 				'validation_func' => function($input, $form_internal)
@@ -117,6 +117,25 @@ class Radix extends CI_Model
 					
 				}
 			),
+			'rules' => array(
+				'databse' => TRUE,
+				'type' => 'textarea',
+				'label' => _('General rules'),
+				'help' => _('Full board rules displayed in a separate page, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
+				'class' => 'span6',
+				'placeholder' => _('MarkDown goes here')
+			),
+			'separator-3' => array(
+				'type' => 'separator'
+			),
+			'posting_rules' => array(
+				'databse' => TRUE,
+				'type' => 'textarea',
+				'label' => _('Posting rules'),
+				'help' => _('Posting rules displayed in the posting area, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
+				'class' => 'span6',
+				'placeholder' => _('MarkDown goes here')
+			),
 			'separator-1' => array(
 				'type' => 'separator'
 			),
@@ -129,7 +148,7 @@ class Radix extends CI_Model
 						'database' => TRUE,
 						'type' => 'input',
 						'label' => _('URL to the 4chan board (facultative)'),
-						'placeholder' => 'http://boards.4chan.org/' . (is_null($radix)?'shortname':$radix->shortname) . '/',
+						'placeholder' => 'http://boards.4chan.org/' . (is_object($radix)?$radix->shortname:'shortname') . '/',
 						'class' => 'span4',
 						'validation' => 'trim|max_length[256]'
 					),
@@ -137,7 +156,7 @@ class Radix extends CI_Model
 						'database' => TRUE,
 						'type' => 'input',
 						'label' => _('URL to the board thumbnails (facultative)'),
-						'placeholder' => 'http://0.thumbs.4chan.org/' . (is_null($radix)?'shortname':$radix->shortname) . '/',
+						'placeholder' => 'http://0.thumbs.4chan.org/' . (is_object($radix)?$radix->shortname:'shortname') . '/',
 						'class' => 'span4',
 						'validation' => 'trim|max_length[256]'
 					),
@@ -145,7 +164,7 @@ class Radix extends CI_Model
 						'database' => TRUE,
 						'type' => 'input',
 						'label' => _('URL to the board images (facultative)'),
-						'placeholder' => 'http://images.4chan.org/' . (is_null($radix)?'shortname':$radix->shortname) . '/',
+						'placeholder' => 'http://images.4chan.org/' . (is_object($radix)?$radix->shortname:'shortname') . '/',
 						'class' => 'span4',
 						'validation' => 'trim|max_length[256]'
 					),
@@ -208,10 +227,10 @@ class Radix extends CI_Model
 					)
 				)
 			),
-			'thumbnails' => array(
+			'hide_thumbnails' => array(
 				'database' => TRUE,
 				'type' => 'checkbox',
-				'help' => _('Display the thumbnails?')
+				'help' => _('Hide the thumbnails?')
 			),
 			'delay_thumbnails' => array(
 				'database' => TRUE,

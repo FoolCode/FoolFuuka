@@ -2395,7 +2395,7 @@ class Post extends CI_Model
 			return site_url() . 'content/themes/default/images/banned-image.png';
 		}
 
-		if (!$board->thumbnails && !$this->tank_auth->is_allowed())
+		if ($board->hide_thumbnails && !$this->tank_auth->is_allowed())
 		{
 			if ($thumbnail)
 			{

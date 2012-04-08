@@ -126,6 +126,28 @@ class MY_Controller extends CI_Controller
 	{
 		$last_check = get_setting('fs_cron_stopforumspam');
 
+		// every 10 minutes
+		// only needed for asagi autorun
+		if(get_setting('fs_asagi_autorun_enabled') && time() - $last_check > 600)
+		{
+			$this->db->query('
+				INSERT
+				INTO ' . $this->db->protect_identifiers('preferences',
+					TRUE) . '
+				(name, value) VALUES (?, ?)
+				ON DUPLICATE KEY UPDATE
+				value = VALUES(value)
+			',
+				array('fs_cron_10m', time()));
+			
+			if('fs_asagi_autorun_enabled')
+			{
+				$this->load->model('asagi');
+				$this->asagi->run();
+			}
+			
+		}
+		
 		// every 13 hours
 		if (time() - $last_check > 86400)
 		{
@@ -137,7 +159,7 @@ class MY_Controller extends CI_Controller
 				ON DUPLICATE KEY UPDATE
 				value = VALUES(value)
 			',
-				array('fs_cron_stopforumspam', time()));
+				array('fs_cron_13h', time()));
 
 			$url = 'http://www.stopforumspam.com/downloads/listed_ip_90.zip';
 			if (function_exists('curl_init'))
@@ -154,7 +176,7 @@ class MY_Controller extends CI_Controller
 				log_message('error',
 					'MY_Controller cron(): impossible to get the update from stopforumspam');
 				$this->db->update('preferences', array('value' => time()),
-					array('name' => 'fs_cron_stopforumspam'));
+					array('name' => 'fs_cron_13h'));
 				return FALSE;
 			}
 

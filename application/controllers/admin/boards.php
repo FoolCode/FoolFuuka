@@ -404,14 +404,23 @@ source main
 
 	sql_query_pre = SET NAMES utf8
 	sql_range_step = 10000
-	sql_query =
+	sql_query = \ 
+		SELECT doc_id, 1 AS board, num, subnum, name, trip, email, media, (CASE parent WHEN 0 THEN num ELSE parent END) AS tnum,        \
+		CAST(capcode AS UNSIGNED) AS cap, (media !=	\'\' AND media IS NOT NULL) AS has_image, (subnum != 0) AS is_internal,   \
+		spoiler AS is_spoiler, deleted AS is_deleted, sticky as is_sticky, (parent = 0) AS is_op, timestamp, title, comment \
+		FROM a LIMIT 1
 
 	sql_attr_uint = num
 	sql_attr_uint = subnum
-	sql_attr_uint = int_capcode
+	sql_attr_uint = tnum
+	sql_attr_uint = cap
+	sql_attr_uint = board
 	sql_attr_bool = has_image
 	sql_attr_bool = is_internal
+	sql_attr_bool = is_spoiler
 	sql_attr_bool = is_deleted
+	sql_attr_bool = is_sticky
+	sql_attr_bool = is_op
 	sql_attr_timestamp = timestamp
 
 	sql_query_info =
@@ -423,7 +432,7 @@ source main
 		{
 			if ($board->sphinx)
 			{
-				$config .= $this->_generate_sphinx_definition_source($board->shortname);
+				$config .= $this->_generate_sphinx_definition_source($board);
 			}
 		}
 
@@ -443,7 +452,54 @@ index main
 				FOOL_PREF_SPHINX_MEMORY) . 'M
 	charset_type = utf-8
 
-	charset_table =
+	charset_table=0..9, A..Z->a..z, _, a..z, _,   \
+	U+410..U+42F->U+430..U+44F, U+430..U+44F, \
+	U+C0->a, U+C1->a, U+C2->a, U+C3->a, U+C7->c, U+C8->e, U+C9->e, U+CA->e, U+CB->e, U+CC->i, U+CD->i, \
+	U+CE->i, U+CF->i, U+D2->o, U+D3->o, U+D4->o, U+D5->o, U+D9->u, U+DA->u, U+DB->u, U+E0->a, U+E1->a, \
+	U+E2->a, U+E3->a, U+E7->c, U+E8->e, U+E9->e, U+EA->e, U+EB->e, U+EC->i, U+ED->i, U+EE->i, U+EF->i, \
+	U+F2->o, U+F3->o, U+F4->o, U+F5->o, U+F9->u, U+FA->u, U+FB->u, U+FF->y, U+102->a, U+103->a, U+15E->s, \
+	U+15F->s, U+162->t, U+163->t, U+178->y,   \
+	U+FF10..U+FF19->0..9, U+FF21..U+FF3A->a..z, \
+	U+FF41..U+FF5A->a..z, U+4E00..U+9FCF, U+3400..U+4DBF, \
+	U+20000..U+2A6DF, U+3040..U+309F, U+30A0..U+30FF, U+3000..U+303F, U+3042->U+3041, \
+	U+3044->U+3043, U+3046->U+3045, U+3048->U+3047, U+304A->U+3049, \
+	U+304C->U+304B, U+304E->U+304D, U+3050->U+304F, U+3052->U+3051, \
+	U+3054->U+3053, U+3056->U+3055, U+3058->U+3057, U+305A->U+3059, \
+	U+305C->U+305B, U+305E->U+305D, U+3060->U+305F, U+3062->U+3061, \
+	U+3064->U+3063, U+3065->U+3063, U+3067->U+3066, U+3069->U+3068, \
+	U+3070->U+306F, U+3071->U+306F, U+3073->U+3072, U+3074->U+3072, \
+	U+3076->U+3075, U+3077->U+3075, U+3079->U+3078, U+307A->U+3078, \
+	U+307C->U+307B, U+307D->U+307B, U+3084->U+3083, U+3086->U+3085, \
+	U+3088->U+3087, U+308F->U+308E, U+3094->U+3046, U+3095->U+304B, \
+	U+3096->U+3051, U+30A2->U+30A1, U+30A4->U+30A3, U+30A6->U+30A5, \
+	U+30A8->U+30A7, U+30AA->U+30A9, U+30AC->U+30AB, U+30AE->U+30AD, \
+	U+30B0->U+30AF, U+30B2->U+30B1, U+30B4->U+30B3, U+30B6->U+30B5, \
+	U+30B8->U+30B7, U+30BA->U+30B9, U+30BC->U+30BB, U+30BE->U+30BD, \
+	U+30C0->U+30BF, U+30C2->U+30C1, U+30C5->U+30C4, U+30C7->U+30C6, \
+	U+30C9->U+30C8, U+30D0->U+30CF, U+30D1->U+30CF, U+30D3->U+30D2, \
+	U+30D4->U+30D2, U+30D6->U+30D5, U+30D7->U+30D5, U+30D9->U+30D8, \
+	U+30DA->U+30D8, U+30DC->U+30DB, U+30DD->U+30DB, U+30E4->U+30E3, \
+	U+30E6->U+30E5, U+30E8->U+30E7, U+30EF->U+30EE, U+30F4->U+30A6, \
+	U+30AB->U+30F5, U+30B1->U+30F6, U+30F7->U+30EF, U+30F8->U+30F0, \
+	U+30F9->U+30F1, U+30FA->U+30F2, U+30AF->U+31F0, U+30B7->U+31F1, \
+	U+30B9->U+31F2, U+30C8->U+31F3, U+30CC->U+31F4, U+30CF->U+31F5, \
+	U+30D2->U+31F6, U+30D5->U+31F7, U+30D8->U+31F8, U+30DB->U+31F9, \
+	U+30E0->U+31FA, U+30E9->U+31FB, U+30EA->U+31FC, U+30EB->U+31FD, \
+	U+30EC->U+31FE, U+30ED->U+31FF, U+FF66->U+30F2, U+FF67->U+30A1, \
+	U+FF68->U+30A3, U+FF69->U+30A5, U+FF6A->U+30A7, U+FF6B->U+30A9, \
+	U+FF6C->U+30E3, U+FF6D->U+30E5, U+FF6E->U+30E7, U+FF6F->U+30C3, \
+	U+FF71->U+30A1, U+FF72->U+30A3, U+FF73->U+30A5, U+FF74->U+30A7, \
+	U+FF75->U+30A9, U+FF76->U+30AB, U+FF77->U+30AD, U+FF78->U+30AF, \
+	U+FF79->U+30B1, U+FF7A->U+30B3, U+FF7B->U+30B5, U+FF7C->U+30B7, \
+	U+FF7D->U+30B9, U+FF7E->U+30BB, U+FF7F->U+30BD, U+FF80->U+30BF, \
+	U+FF81->U+30C1, U+FF82->U+30C3, U+FF83->U+30C6, U+FF84->U+30C8, \
+	U+FF85->U+30CA, U+FF86->U+30CB, U+FF87->U+30CC, U+FF88->U+30CD, \
+	U+FF89->U+30CE, U+FF8A->U+30CF, U+FF8B->U+30D2, U+FF8C->U+30D5, \
+	U+FF8D->U+30D8, U+FF8E->U+30DB, U+FF8F->U+30DE, U+FF90->U+30DF, \
+	U+FF91->U+30E0, U+FF92->U+30E1, U+FF93->U+30E2, U+FF94->U+30E3, \
+	U+FF95->U+30E5, U+FF96->U+30E7, U+FF97->U+30E9, U+FF98->U+30EA, \
+	U+FF99->U+30EB, U+FF9A->U+30EC, U+FF9B->U+30ED, U+FF9C->U+30EF, \
+	U+FF9D->U+30F3
 
 	min_prefix_len = 3
 	prefix_fields = comment, title
@@ -456,7 +512,7 @@ index main
 		{
 			if ($board->sphinx)
 			{
-				$config .= $this->_generate_sphinx_definition_index($board->shortname,
+				$config .= $this->_generate_sphinx_definition_index($board,
 					((get_setting('fu_sphinx_dir')) ? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/data');
 			}
 		}
@@ -525,24 +581,24 @@ searchd
 	function _generate_sphinx_definition_source($board)
 	{
 		return "
-# /" . $board . "/
-source " . $board . "_main : main
+# /" . $board->shortname . "/
+source " . $board->shortname . "_main : main
 {
-	sql_query = SELECT doc_id, num, subnum, name, trip, (ascii(capcode)) as int_capcode, (subnnum != 0) as is_internal, deleted as is_deleted, timestamp, title, comment FROM " . $board . " WHERE doc_id >= \$start AND doc_id <= \$end
-	sql_query_info = SELECT * FROM " . $board . " WHERE doc_id = \$id
-	sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
-	sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_index_id_" . $board . ", \$maxid)
+	sql_query = SELECT doc_id, " . $board->id . " AS board, num, subnum, name, trip, (ascii(capcode)) as int_capcode, (subnnum != 0) as is_internal, deleted as is_deleted, timestamp, title, comment FROM " . $board->table . " WHERE doc_id >= \$start AND doc_id <= \$end
+	sql_query_info = SELECT * FROM " . $board->table . " WHERE doc_id = \$id
+	sql_query_range = SELECT (SELECT max_ancient_id FROM `" . $this->db->database . "`." . $this->db->protect_identifiers('boards', TRUE) . " WHERE id = " . $board->id . "), (SELECT MAX(doc_id) FROM " . $board->table . ")
+	sql_query_post_index = UPDATE `" . $this->db->database . "`." . $this->db->protect_identifiers('boards', TRUE) . " SET max_indexed_id = \$maxid WHERE id = " . $board->id . "
 }
 
-source " . $board . "_ancient : " . $board . "_main
+source " . $board->shortname . "_ancient : " . $board->shortname . "_main
 {
-	sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $board . "
-	sql_query_post_index = REPLACE INTO index_counters (id, val) VALUES ('max_ancient_id_" . $board . ", \$maxid)
+	sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $board->table . "
+	sql_query_post_index = UPDATE `" . $this->db->database . "`." . $this->db->protect_identifiers('boards', TRUE) . " SET max_ancient_id =  \$maxid WHERE id = " . $board->id . "
 }
 
-source " . $board . "_delta : " . $board . "_main
+source " . $board->shortname . "_delta : " . $board->shortname . "_main
 {
-	sql_query_range = SELECT (SELECT val FROM index_counters WHERE id = 'max_ancient_id_'" . $board . "'), (SELECT MAX(doc_id) FROM " . $board . ")
+	sql_query_range = SELECT (SELECT max_ancient_id FROM `" . $this->db->database . "`." . $this->db->protect_identifiers('boards', TRUE) . " WHERE id = " . $board->id . "), (SELECT MAX(doc_id) FROM " . $board->table . ")
 	sql_query_post_index =
 }
 		";
@@ -552,23 +608,23 @@ source " . $board . "_delta : " . $board . "_main
 	function _generate_sphinx_definition_index($board, $path)
 	{
 		return "
-# /" . $board . "/
-index " . $board . "_main : main
+# /" . $board->shortname . "/
+index " . $board->shortname . "_main : main
 {
-	source = " . $board . "_main
-	path = " . $path . "/" . $board . "_main
+	source = " . $board->shortname . "_main
+	path = " . $path . "/" . $board->shortname . "_main
 }
 
-index " . $board . "_ancient : " . $board . "_main
+index " . $board->shortname . "_ancient : " . $board->shortname . "_main
 {
-	source = " . $board . "_ancient
-	path = " . $path . "/" . $board . "_ancient
+	source = " . $board->shortname . "_ancient
+	path = " . $path . "/" . $board->shortname . "_ancient
 }
 
-index " . $board . "_delta : " . $board . "_main
+index " . $board->shortname . "_delta : " . $board->shortname . "_main
 {
-	source = " . $board . "_delta
-	path = " . $path . "/" . $board . "_delta
+	source = " . $board->shortname . "_delta
+	path = " . $path . "/" . $board->shortname . "_delta
 }
 		";
 	}

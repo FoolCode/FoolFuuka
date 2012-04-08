@@ -316,6 +316,7 @@ class Radix extends CI_Model
 			$result_object[$item->id]->formatted_title = ($item->name) ?
 				'/' . $item->shortname . '/ - ' . $item->name : '/' . $item->shortname . '/';
 			$result_object[$item->id]->href = site_url(array($item->shortname));
+			$result_object[$item->id]->table = get_setting('fs_fuuka_boards_db')?$item->shortname:$this->db->prefix('board_' . $item->shortname);
 		}
 
 		foreach ($array as $item)
@@ -324,6 +325,7 @@ class Radix extends CI_Model
 			$result_array[$item['id']]['formatted_title'] = ($item['name']) ?
 				'/' . $item['shortname'] . '/ - ' . $item['name'] : '/' . $item['shortname'] . '/';
 			$result_array[$item['id']]['href'] = site_url(array($item['shortname']));
+			$result_array[$item['id']]['table'] = get_setting('fs_fuuka_boards_db')?$item['shortname']:$this->db->prefix('board_' . $item['shortname']);			
 		}
 
 		$this->preloaded_radixes = $result_object;

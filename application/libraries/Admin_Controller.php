@@ -150,8 +150,8 @@ class Admin_Controller extends MY_Controller
 			"content" => array(
 				"manage" => array("alt_highlight" => array("board"),
 					"level" => "admin", "name" => _("Manage"), "icon" => 'icon-th-list'),
-				"sphinx" => array("level" => "admin", "name" => _("Sphinx"), "icon" => 'icon-search'),
-				"asagi" => array("level" => "admin", "name" => _("Asagi"), "icon" => 'icon-cogs'),
+				"sphinx" => array("level" => "admin", "name" => _("Sphinx Search"), "icon" => 'icon-search'),
+				"asagi" => array("level" => "admin", "name" => _("Asagi Fetcher"), "icon" => 'icon-cogs'),
 				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 'icon-asterisk')
 			)
 		);
@@ -210,7 +210,7 @@ class Admin_Controller extends MY_Controller
 							: ''), "icon" => 'icon-refresh'),
 			)
 		);
-
+/*
 		$sidebar["plugins"] = array(
 			"name" => _("Plugins"),
 			"level" => "admin",
@@ -219,7 +219,7 @@ class Admin_Controller extends MY_Controller
 				"manage" => array("level" => "admin", "name" => _("Manage"), "icon" => 'icon-gift'),
 			)
 		);
-
+*/
 		$sidebar["meta"] = array(
 			"name" => "Meta", // no gettext because meta must be meta
 			"level" => "member",

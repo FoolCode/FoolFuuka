@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 echo form_open();
-if(exec_enabled() && !java_enabled())
+if(exec_enabled() && java_enabled())
 {
 	echo form_submit(array('name' => 'run', 'value' => _('Run'), 'class' => 'btn btn-success')) . ' ';
 	echo form_submit(array('name' => 'kill', 'value' => _('Kill'), 'class' => 'btn btn-danger')) . ' ';

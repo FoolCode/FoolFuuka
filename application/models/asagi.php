@@ -56,7 +56,7 @@ class Asagi extends CI_Model
 			
 			if(!get_setting('fs_fuuka_boards_db'))
 			{
-				$settings[$archive->shortname]['table'] = $this->db->dbprefix('_board_' . $archive->shortname);
+				$settings[$archive->shortname]['table'] = $this->db->dbprefix('board_' . $archive->shortname);
 			}
 			
 			if($archive->page_settings)

@@ -11,6 +11,10 @@ class MY_Controller extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
+		
+		// create an array for the set_notice system
+		$this->notices = array();
+		$this->flash_notice_data = array();
 
 		if (!file_exists(FCPATH . "config.php"))
 		{
@@ -34,10 +38,6 @@ class MY_Controller extends CI_Controller
 			// load the radixes (boards)
 			$this->load->model('radix');
 			$this->load->model('vote');
-
-			// create an array for the set_notice system
-			$this->notices = array();
-			$this->flash_notice_data = array();
 
 			// This is the first chance we get to load the right translation file
 			if (get_setting('fs_gen_lang'))
@@ -99,6 +99,7 @@ class MY_Controller extends CI_Controller
 			show_404();
 		}
 
+		/*
 		if ($this->plugins->is_controller_function($this->uri->segment_array()))
 		{
 			$plugin_controller = $this->plugins->get_controller_function($this->uri->segment_array());
@@ -106,6 +107,8 @@ class MY_Controller extends CI_Controller
 			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']),
 					array());
 		}
+		 * 
+		 */
 		
 		if (method_exists($this, $method))
 		{

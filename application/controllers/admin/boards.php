@@ -194,7 +194,7 @@ class Boards extends Admin_Controller
 		
 		if($this->asagi->is_installed() && $this->input->post('kill'))
 		{
-			$this->asagi->stop();
+			$this->asagi->kill();
 			set_notice('success', _('Stopped Asagi.'));
 		}
 		

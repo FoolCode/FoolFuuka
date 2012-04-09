@@ -270,6 +270,7 @@ class Radix extends CI_Model
 		if (isset($data['id']))
 		{
 			$this->db->where('id', $data['id'])->update('boards', $data);
+			$this->radix->preload();
 		}
 		else
 		{
@@ -323,7 +324,8 @@ class Radix extends CI_Model
 			");
 
 			$this->db->query("
-				CREATE TABLE IF NOT EXISTS " . $this->get_table($board, '_threads') . " (
+				CREATE TABLE IF NOT EXISTS " . $this->get_table($board,
+					'_threads') . " (
 					`doc_id_p` int unsigned NOT NULL,
 					`parent` int unsigned NOT NULL,
 					`time_op` int unsigned NOT NULL,
@@ -342,7 +344,8 @@ class Radix extends CI_Model
 
 
 			$this->db->query("
-				CREATE TABLE IF NOT EXISTS " . $this->get_table($board, '_users') . " (
+				CREATE TABLE IF NOT EXISTS " . $this->get_table($board,
+					'_users') . " (
 					`name` varchar(100) NOT NULL DEFAULT '',
 					`trip` varchar(25) NOT NULL DEFAULT '',
 					`firstseen` int(11) NOT NULL,
@@ -355,7 +358,8 @@ class Radix extends CI_Model
 			");
 
 			$this->db->query("
-				CREATE TABLE IF NOT EXISTS " . $this->get_table($board, '_images') . " (
+				CREATE TABLE IF NOT EXISTS " . $this->get_table($board,
+					'_images') . " (
 					`id` int unsigned NOT NULL auto_increment,
 					`media_hash` varchar(25) NOT NULL,
 					`media_filename` varchar(20),
@@ -370,7 +374,8 @@ class Radix extends CI_Model
 			");
 
 			$this->db->query("
-				CREATE TABLE IF NOT EXISTS " . $this->get_table($board, '_daily') . " (
+				CREATE TABLE IF NOT EXISTS " . $this->get_table($board,
+					'_daily') . " (
 					`day` int(10) unsigned NOT NULL,
 					`posts` int(10) unsigned NOT NULL,
 					`images` int(10) unsigned NOT NULL,
@@ -381,11 +386,11 @@ class Radix extends CI_Model
 					PRIMARY KEY (`day`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 			");
-			
+
 			$this->db->query("
 				DROP PROCEDURE IF EXISTS `update_thread_" . $board->shortname . "`;
 			");
-			
+
 			$this->db->query("
 				CREATE PROCEDURE `update_thread_" . $board->shortname . "` (tnum INT)
 				BEGIN
@@ -427,61 +432,70 @@ class Radix extends CI_Model
 					WHERE op.parent = tnum;
 				END;
 			");
-			
+
 			$this->db->query("
 				DROP PROCEDURE IF EXISTS `create_thread_" . $board->shortname . "`;
 			");
-			
+
 			$this->db->query("
 				CREATE PROCEDURE `create_thread_" . $board->shortname . "` (doc_id INT, num INT, timestamp INT)
 				BEGIN
-					INSERT IGNORE INTO " . $this->get_table($board, '_threads') . " VALUES (doc_id, num, timestamp, timestamp,
+					INSERT IGNORE INTO " . $this->get_table($board,
+					'_threads') . " VALUES (doc_id, num, timestamp, timestamp,
 						timestamp, NULL, NULL, 0, 0);
 				END;
+			");
+
+			$this->db->query("
+				DROP PROCEDURE IF EXISTS `delete_thread_" . $board->shortname . "`;
 			");
 			
 			$this->db->query("
 				CREATE PROCEDURE `delete_thread_" . $board->shortname . "` (tnum INT)
 				BEGIN
-					DELETE FROM " . $this->get_table($board, '_threads') . " WHERE parent = tnum;
+					DELETE FROM " . $this->get_table($board,
+					'_threads') . " WHERE parent = tnum;
 				END;
 			");
-			
+
 			$this->db->query("
 				DROP PROCEDURE IF EXISTS `insert_image_" . $board->shortname . "`;
 			");
-			
+
 			$this->db->query("
 				CREATE PROCEDURE `insert_image_" . $board->shortname . "` (n_media_hash VARCHAR(25),
 					n_media_filename VARCHAR(20), n_preview VARCHAR(20), n_parent INT, n_doc_id INT)
 				BEGIN
 					IF n_parent = 0 THEN
-						INSERT INTO " . $this->get_table($board, '_images') . " (media_hash, media_filename, preview_op, total)
+						INSERT INTO " . $this->get_table($board,
+					'_images') . " (media_hash, media_filename, preview_op, total)
 						VALUES (n_media_hash, n_media_filename, n_preview, 1) 
 						ON DUPLICATE KEY UPDATE total = (total + 1), preview_op = IFNULL(preview_op, VALUES(preview_op));
 					ELSE
-						INSERT INTO " . $this->get_table($board, '_images') . " (media_hash, media_filename, preview_reply, total)
+						INSERT INTO " . $this->get_table($board,
+					'_images') . " (media_hash, media_filename, preview_reply, total)
 						VALUES (n_media_hash, n_media_filename, n_preview, 1) 
 						ON DUPLICATE KEY UPDATE total = (total + 1), preview_reply = IFNULL(preview_reply, VALUES(preview_reply));
 					END IF;
 				END;
 			");
-			
+
 			$this->db->query("
 				DROP PROCEDURE IF EXISTS `delete_image_" . $board->shortname . "`;
 			");
-			
+
 			$this->db->query("
 				CREATE PROCEDURE `delete_image_" . $board->shortname . "` (n_media_id INT)
 				BEGIN
-					UPDATE " . $this->get_table($board, '_images') . " SET total = (total - 1) WHERE id = n_media_id;
+					UPDATE " . $this->get_table($board,
+					'_images') . " SET total = (total - 1) WHERE id = n_media_id;
 				END;
 			");
-			
+
 			$this->db->query("
 				DROP PROCEDURE IF EXISTS `insert_post_" . $board->shortname . "`;
 			");
-			
+
 			$this->db->query("
 				CREATE PROCEDURE `insert_post_" . $board->shortname . "` (p_timestamp INT, p_media_hash VARCHAR(25),
 					p_email VARCHAR(100), p_name VARCHAR(100), p_trip VARCHAR(25))
@@ -500,28 +514,31 @@ class Radix extends CI_Model
 					SET d_trip = p_trip IS NOT NULL;
 					SET d_name = COALESCE(p_name <> 'Anonymous' AND p_trip IS NULL, 1);
 
-					INSERT INTO " . $this->get_table($board, '_daily') . " VALUES(d_day, 1, d_image, d_sage, d_anon, d_trip,
+					INSERT INTO " . $this->get_table($board,
+					'_daily') . " VALUES(d_day, 1, d_image, d_sage, d_anon, d_trip,
 						d_name)
 						ON DUPLICATE KEY UPDATE posts=posts+1, images=images+d_image,
 						sage=sage+d_sage, anons=anons+d_anon, trips=trips+d_trip,
 						names=names+d_name;
 
-					IF (SELECT trip FROM a_users WHERE trip = p_trip) IS NOT NULL THEN
-						UPDATE " . $this->get_table($board, '_users') . " SET postcount=postcount+1,
+					IF (SELECT trip FROM " . $this->get_table($board, '_users') . " WHERE trip = p_trip) IS NOT NULL THEN
+						UPDATE " . $this->get_table($board,
+					'_users') . " SET postcount=postcount+1,
 						firstseen = LEAST(p_timestamp, firstseen)
 						WHERE trip = p_trip;
 					ELSE
-						INSERT INTO " . $this->get_table($board, '_users') . " VALUES(COALESCE(p_name,''), COALESCE(p_trip,''), p_timestamp, 1)
+						INSERT INTO " . $this->get_table($board,
+					'_users') . " VALUES(COALESCE(p_name,''), COALESCE(p_trip,''), p_timestamp, 1)
 						ON DUPLICATE KEY UPDATE postcount=postcount+1,
 						firstseen = LEAST(VALUES(firstseen), firstseen);
 					END IF;
 				END;
 			");
-			
+
 			$this->db->query("
 				DROP PROCEDURE IF EXISTS `delete_post_" . $board->shortname . "`;
 			");
-			
+
 			$this->db->query("
 				CREATE PROCEDURE `delete_post_" . $board->shortname . "` (p_timestamp INT, p_media_hash VARCHAR(25), p_email VARCHAR(100), p_name VARCHAR(100), p_trip VARCHAR(25))
 				BEGIN
@@ -539,72 +556,131 @@ class Radix extends CI_Model
 					SET d_trip = p_trip IS NOT NULL;
 					SET d_name = COALESCE(p_name <> 'Anonymous' AND p_trip IS NULL, 1);
 
-					UPDATE a_daily SET posts=posts-1, images=images-d_image,
+					UPDATE " . $this->get_table($board, '_daily') . " SET posts=posts-1, images=images-d_image,
 						sage=sage-d_sage, anons=anons-d_anon, trips=trips-d_trip,
 						names=names-d_name WHERE day = d_day;
 
-					IF (SELECT trip FROM " . $this->get_table($board, '_users') . " WHERE trip = p_trip) IS NOT NULL THEN
-						UPDATE " . $this->get_table($board, '_users') . " SET postcount = postcount-1 WHERE trip = p_trip;
+					IF (SELECT trip FROM " . $this->get_table($board,
+					'_users') . " WHERE trip = p_trip) IS NOT NULL THEN
+						UPDATE " . $this->get_table($board,
+					'_users') . " SET postcount = postcount-1 WHERE trip = p_trip;
 					ELSE
-						UPDATE " . $this->get_table($board, '_users') . " SET postcount = postcount-1 WHERE
+						UPDATE " . $this->get_table($board,
+					'_users') . " SET postcount = postcount-1 WHERE
 						name = COALESCE(p_name, '') AND trip = COALESCE(p_trip, '');
 					END IF;
 				END;
 			");
-			
+
 			$this->db->query("
-				DROP TRIGGER IF EXISTS `before_ins_" . $this->shortname . "`;
+				DROP TRIGGER IF EXISTS `before_ins_" . $board->shortname . "`;
 			");
-			
+
 			$this->db->query("
-				CREATE TRIGGER `before_ins_" . $board->shorname . "` BEFORE INSERT ON " . $this->get_table($board) . "
+				CREATE TRIGGER `before_ins_" . $board->shortname . "` BEFORE INSERT ON " . $this->get_table($board) . "
 				FOR EACH ROW
 				BEGIN
 				SET @COUNT = (SELECT COUNT(*) FROM " . $this->get_table($board) . " WHERE num = NEW.num AND subnum = NEW.subnum);
 				IF @COUNT = 0 THEN
 					IF NEW.parent = 0 THEN
-					CALL create_thread_" . $board->shorname . "(NEW.doc_id, NEW.num, NEW.timestamp);
+					CALL create_thread_" . $board->shortname . "(NEW.doc_id, NEW.num, NEW.timestamp);
 					END IF;
-					CALL update_thread_" . $board->shorname . "(NEW.parent);
-					CALL insert_post_" . $board->shorname . "(NEW.timestamp, NEW.media_hash, NEW.email, NEW.name,
+					CALL update_thread_" . $board->shortname . "(NEW.parent);
+					CALL insert_post_" . $board->shortname . "(NEW.timestamp, NEW.media_hash, NEW.email, NEW.name,
 					NEW.trip);
 					IF NEW.media_hash IS NOT NULL THEN
-					CALL insert_image_" . $board->shorname . "(NEW.media_hash, NEW.media_filename, NEW.preview, NEW.parent, NEW.doc_id);
+					CALL insert_image_" . $board->shortname . "(NEW.media_hash, NEW.media_filename, NEW.preview, NEW.parent, NEW.doc_id);
 					SET NEW.media_id = LAST_INSERT_ID();
 					END IF;
 				END IF;
 				END;
 			");
-			
+
 			$this->db->query("
-				DROP TRIGGER IF EXISTS `after_del_" . $board->shorname . "`;
+				DROP TRIGGER IF EXISTS `after_del_" . $board->shortname . "`;
 			");
-			
+
 			$this->db->query("
-				CREATE TRIGGER `after_del_" . $board->shorname . "` AFTER DELETE ON " . $this->get_table($board) . "
+				CREATE TRIGGER `after_del_" . $board->shortname . "` AFTER DELETE ON " . $this->get_table($board) . "
 				FOR EACH ROW
 				BEGIN
-				CALL update_thread_" . $board->shorname . "(OLD.parent);
+				CALL update_thread_" . $board->shortname . "(OLD.parent);
 				IF OLD.parent = 0 THEN
-					CALL delete_thread_" . $board->shorname . "(OLD.num);
+					CALL delete_thread_" . $board->shortname . "(OLD.num);
 				END IF;
-				CALL delete_post_" . $board->shorname . "(OLD.timestamp, OLD.media_hash, OLD.email, OLD.name,
+				CALL delete_post_" . $board->shortname . "(OLD.timestamp, OLD.media_hash, OLD.email, OLD.name,
 					OLD.trip);
 				IF OLD.media_hash IS NOT NULL THEN
-					CALL delete_image_" . $board->shorname . "(OLD.media_id);
+					CALL delete_image_" . $board->shortname . "(OLD.media_id);
 				END IF;
 				END;
 			");
 		}
-
-		// update the cached boards
-		$this->radix->preload();
 	}
 
 
 	function remove($id)
 	{
+		$board = $this->get_by_id($id);
+		
+		$this->db->query("
+			DROP TABLE IF EXISTS " . $this->get_table($board) . "
+		");
+		
+		$this->db->query("
+			DROP TABLE IF EXISTS " . $this->get_table($board, '_images') . "
+		");
+		
+		$this->db->query("
+			DROP TABLE IF EXISTS " . $this->get_table($board, '_daily') . "
+		");
+		
+		$this->db->query("
+			DROP TABLE IF EXISTS " . $this->get_table($board, '_users') . "
+		");
+		
+		$this->db->query("
+			DROP TABLE IF EXISTS " . $this->get_table($board, '_threads') . "
+		");
+
+		$this->db->query("
+			DROP PROCEDURE IF EXISTS `update_thread_" . $board->shortname . "`;
+		");
+
+		$this->db->query("
+			DROP PROCEDURE IF EXISTS `create_thread_" . $board->shortname . "`;
+		");
+		
+		$this->db->query("
+			DROP PROCEDURE IF EXISTS `delete_thread_" . $board->shortname . "`;
+		");
+
+		$this->db->query("
+			DROP PROCEDURE IF EXISTS `insert_image_" . $board->shortname . "`;
+		");
+
+		$this->db->query("
+			DROP PROCEDURE IF EXISTS `delete_image_" . $board->shortname . "`;
+		");
+
+		$this->db->query("
+			DROP PROCEDURE IF EXISTS `insert_post_" . $board->shortname . "`;
+		");
+
+		$this->db->query("
+			DROP PROCEDURE IF EXISTS `delete_post_" . $board->shortname . "`;
+		");
+
+		$this->db->query("
+			DROP TRIGGER IF EXISTS `before_ins_" . $board->shortname . "`;
+		");
+
+		$this->db->query("
+			DROP TRIGGER IF EXISTS `after_del_" . $board->shortname . "`;
+		");
+		
 		$this->db->where('id', $id)->delete('boards');
+
 
 		return TRUE;
 	}
@@ -659,21 +735,23 @@ class Radix extends CI_Model
 	 * @param string $suffix board suffix like _images
 	 * @return type 
 	 */
-	function get_table($shortname, $suffix = '') {
-		
-		if(is_object($shortname))
+	function get_table($shortname, $suffix = '')
+	{
+
+		if (is_object($shortname))
 			$shortname = $shortname->shortname;
-		
-		if(get_setting('fs_fuuka_boards_db'))
+
+		if (get_setting('fs_fuuka_boards_db'))
 		{
-			return '`' .get_setting('fs_fuuka_boards_db') . '`.`' . $shortname . $suffix .'`';
+			return '`' . get_setting('fs_fuuka_boards_db') . '`.`' . $shortname . $suffix . '`';
 		}
 		else
 		{
-			return $this->db->protect_identifiers($shortname . $suffix, TRUE);
+			return $this->db->protect_identifiers('board_' . $shortname . $suffix, TRUE);
 		}
 	}
-	
+
+
 	/**
 	 * Set a radix for execution (example: chan.php)
 	 * Always returns object, array can be returned by get_selected_radix_array()

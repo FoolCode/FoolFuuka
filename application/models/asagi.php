@@ -127,14 +127,14 @@ class Asagi extends CI_Model
 	
 	function run()
 	{
-		if(!is_running())
+		if(!$this->is_running())
 			exec('screen -dmS "asagi" sh -c "cd ' .  FCPATH . 'content/asagi/; while true; do java -jar asagi.jar --settings-exec php ' . FCPATH . 'index.php cli asagi_get_settings; done"');		
 	}
 	
 	
 	function kill()
 	{
-		exec('screen -X -S asagi kill');
+		exec('screen -S asagi -X quit');
 	}
 	
 }

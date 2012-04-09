@@ -233,17 +233,13 @@ class Migration_Install extends CI_Migration
 				");
 		}
 		
-		if (!$this->db->table_exists($this->db->dbprefix('plugins')))
+		if (!$this->db->table_exists($this->db->dbprefix('banned_md5')))
 		{
 			$this->db->query("
-					CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('plugins') . "` (
-						`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-						`slug` varchar(64) NOT NULL,
-						`enabled` smallint(2) unsigned NOT NULL,
-						`revision` int(10) unsigned DEFAULT NULL,
-						PRIMARY KEY (`id`),
-						UNIQUE KEY `slug` (`slug`)
-					) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+					CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('banned_md5') . "` (
+						`md5` varchar(64) NOT NULL,
+						PRIMARY KEY (`md5`)
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 				");
 		}
 	}

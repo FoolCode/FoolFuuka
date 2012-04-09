@@ -452,7 +452,7 @@ class Chan extends Public_Controller
 	public function gallery($type = 'by_thread', $page = 1)
 	{
 		// Disable GALLERY when thumbnails is disabled for normal users.
-		if (!get_selected_radix()->thumbnails && !$this->tank_auth->is_allowed())
+		if (get_selected_radix()->hide_thumbnails && !$this->tank_auth->is_allowed())
 			show_404();
 
 		// Fetch the last X created threads to generate the GALLERY.

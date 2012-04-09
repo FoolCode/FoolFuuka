@@ -512,13 +512,13 @@ function java_enabled()
 {
 	if(exec_enabled())
 	{
-		$output = array();
-		exec(get_setting('fs_serv_java_path', FOOL_PREF_SERV_JAVA_PATH) . ' -version', $output);
-		
-		if(isset($output[0]) && strpos($output[0], 'java') === 0)
+		$res = popen('java -version 2>&1', 'r');
+		$read = fread($res, 128);
+		if(strpos($read, 'java') === 0)
 		{
 			return TRUE;
 		}
+		pclose($res);
 	}
 	return FALSE;
 }

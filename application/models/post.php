@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
@@ -76,8 +75,7 @@ class Post extends CI_Model
 			LEFT JOIN
 			(
 				SELECT md5 as media_banned
-				FROM ' . $this->db->protect_identifiers('banned_md5',
-			TRUE) .'
+				FROM ' . $this->db->protect_identifiers('banned_md5', TRUE) .'
 			) as m
 			ON
 			' . $this->get_table($board) . '.`media_hash`
@@ -97,8 +95,7 @@ class Post extends CI_Model
 			LEFT JOIN
 			(
 				SELECT md5 as media_banned
-				FROM ' . $this->db->protect_identifiers('banned_md5',
-				TRUE) .'
+				FROM ' . $this->db->protect_identifiers('banned_md5', TRUE) .'
 			) as m
 			ON
 			g.`media_hash`
@@ -247,7 +244,7 @@ class Post extends CI_Model
 	function get_gallery($board, $page = 1, $options = array())
 	{
 		// defaults
-		$per_page = 200;
+		$per_page = 100;
 		$type = 'by_thread';
 		$process = TRUE;
 		$clean = TRUE;

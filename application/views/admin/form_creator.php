@@ -51,13 +51,23 @@ if (!defined('BASEPATH'))
  */
 ?>
 
-<div class="well">
+<div class="well"<?php echo (isset($parent))?' data-form-parent="' . $parent . '"':'';
+	echo (isset($hide) && $hide?' style="display:none"':'');
+?>>
 
 	<?php
 	foreach ($form as $name => $item) :
 
 		// separate up the array so we can put the rest in the form function
-		$not_input = array('help', 'label', 'validation', 'validation_func', 'preferences', 'array');
+		$not_input = array(
+			'help', 
+			'label', 
+			'validation', 
+			'validation_func', 
+			'preferences', 
+			'array',
+			'sub'
+		);
 		$helpers = array();
 		foreach ($not_input as $not)
 		{
@@ -200,6 +210,7 @@ if (!defined('BASEPATH'))
 								{
 									$checked = FALSE;
 								}
+								
 								?>
 								<label class="radio">
 									<?php
@@ -234,14 +245,30 @@ if (!defined('BASEPATH'))
 						{
 							$checked = isset($object->$name) ? $object->$name : FALSE;
 						}
+						
+						$extra = '';
+						if(isset($helpers['sub']))
+						{
+							$extra = 'data-function="hasSubForm"';
+						}
 						?>
 						<label class="checkbox">
 							<?php
-							echo form_checkbox($name, $item['value'], $checked)
+							echo form_checkbox($name, $item['value'], $checked, $extra)
 							?>
 							<?php echo $helpers['help'] ?>
 						</label>
 						<?php
+						
+						if(isset($helpers['sub']))
+						{
+							$data = array('form' => $helpers['sub']);
+							if(!$checked)
+								$data['hide'] = TRUE;
+							$data['parent'] = $name;
+							$this->load->view('admin/form_creator', $data);
+						}
+						
 						break;
 
 

@@ -12,7 +12,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 	<?php if ($p->preview) : ?>
 	<div class="post_file">
 			<span class="post_file_controls">
-				<?php if ($selected_radix->thumbnails || $this->tank_auth->is_allowed()) : ?>
+				<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
 				<a href="<?php echo site_url($selected_radix->shortname . '/image/' . $p->safe_media_hash) ?>" class="btnr parent">View Same</a><a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumb_link ?>" target="_blank" class="btnr parent">Google</a><a href="http://iqdb.org/?url=<?php echo $p->thumb_link ?>" target="_blank" class="btnr parent">iqdb</a><a href="http://saucenao.com/search.php?url=<?php echo $p->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
 				<?php endif; ?>
 			</span>

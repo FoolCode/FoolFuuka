@@ -8,7 +8,7 @@
 |--------------------------------------------------------------------------
 */
 $config['website_name'] = site_url();
-$config['webmaster_email'] = 'no-reply@' . isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'localhost';
+$config['webmaster_email'] = 'no-reply@' . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'localhost');
 
 /*
 |--------------------------------------------------------------------------

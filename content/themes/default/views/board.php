@@ -22,7 +22,7 @@ if (!defined('BASEPATH'))
 				<?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media ?>
 			</div>
 			<div class="post_file_controls">
-				<?php if (get_selected_radix()->thumbnails || $this->tank_auth->is_allowed()) : ?>
+				<?php if (!get_selected_radix()->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
 				<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . $op->safe_media_hash) ?>"
 				   class="btnr parent">View Same</a><a
 					href="http://google.com/searchbyimage?image_url=<?php echo $op->thumb_link ?>" target="_blank"

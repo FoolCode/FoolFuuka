@@ -14,10 +14,22 @@ if (!function_exists('get_notices'))
 	function get_notices()
 	{
 		$CI = & get_instance();
-		$flash_notices = is_array($CI->session->flashdata('notices'))?$CI->session->flashdata('notices'):array();
+		
+		// sometimes is not available, like during installation
+		if(isset($CI->session))
+		{
+			$flash_notices = is_array($CI->session->flashdata('notices'))?$CI->session->flashdata('notices'):array();
+		}
+		else
+		{
+			$flash_notices = array();
+		}
 		$merge = array_merge($CI->notices, $CI->flash_notice_data, $flash_notices);
 		$CI->flash_notice_data = '';
-		$CI->session->set_flashdata('notices', array());
+		
+		if(isset($CI->session))
+			$CI->session->set_flashdata('notices', array());
+		
 		$echo = '';
 		foreach ($merge as $key => $value)
 		{

@@ -11,6 +11,10 @@ class MY_Controller extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
+		
+		// create an array for the set_notice system
+		$this->notices = array();
+		$this->flash_notice_data = array();
 
 		if (!file_exists(FCPATH . "config.php"))
 		{
@@ -34,10 +38,6 @@ class MY_Controller extends CI_Controller
 			// load the radixes (boards)
 			$this->load->model('radix');
 			$this->load->model('vote');
-
-			// create an array for the set_notice system
-			$this->notices = array();
-			$this->flash_notice_data = array();
 
 			// This is the first chance we get to load the right translation file
 			if (get_setting('fs_gen_lang'))
@@ -99,6 +99,7 @@ class MY_Controller extends CI_Controller
 			show_404();
 		}
 
+		/*
 		if ($this->plugins->is_controller_function($this->uri->segment_array()))
 		{
 			$plugin_controller = $this->plugins->get_controller_function($this->uri->segment_array());
@@ -106,6 +107,8 @@ class MY_Controller extends CI_Controller
 			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']),
 					array());
 		}
+		 * 
+		 */
 		
 		if (method_exists($this, $method))
 		{
@@ -126,6 +129,28 @@ class MY_Controller extends CI_Controller
 	{
 		$last_check = get_setting('fs_cron_stopforumspam');
 
+		// every 10 minutes
+		// only needed for asagi autorun
+		if(get_setting('fs_asagi_autorun_enabled') && time() - $last_check > 600)
+		{
+			$this->db->query('
+				INSERT
+				INTO ' . $this->db->protect_identifiers('preferences',
+					TRUE) . '
+				(name, value) VALUES (?, ?)
+				ON DUPLICATE KEY UPDATE
+				value = VALUES(value)
+			',
+				array('fs_cron_10m', time()));
+			
+			if('fs_asagi_autorun_enabled')
+			{
+				$this->load->model('asagi');
+				$this->asagi->run();
+			}
+			
+		}
+		
 		// every 13 hours
 		if (time() - $last_check > 86400)
 		{
@@ -137,7 +162,7 @@ class MY_Controller extends CI_Controller
 				ON DUPLICATE KEY UPDATE
 				value = VALUES(value)
 			',
-				array('fs_cron_stopforumspam', time()));
+				array('fs_cron_13h', time()));
 
 			$url = 'http://www.stopforumspam.com/downloads/listed_ip_90.zip';
 			if (function_exists('curl_init'))
@@ -154,7 +179,7 @@ class MY_Controller extends CI_Controller
 				log_message('error',
 					'MY_Controller cron(): impossible to get the update from stopforumspam');
 				$this->db->update('preferences', array('value' => time()),
-					array('name' => 'fs_cron_stopforumspam'));
+					array('name' => 'fs_cron_13h'));
 				return FALSE;
 			}
 

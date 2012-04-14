@@ -62,6 +62,8 @@ define('FOOL_PREF_SPHINX_DIR', '/usr/local/sphinx/var');
 define('FOOL_PREF_SPHINX_MIN_WORD', 3);
 define('FOOL_PREF_SPHINX_MEMORY', 2047);
 
+define('FOOL_PREF_SERV_JAVA_PATH', 'java');
+
 
 /*
 |--------------------------------------------------------------------------

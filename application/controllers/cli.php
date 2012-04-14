@@ -36,19 +36,13 @@ class Cli extends MY_Controller
 		$this->statistics->cron($board);
 	}
 
-
-	function live()
+	
+	
+	function asagi_get_settings()
 	{
-		$this->load->model('live');
-
-		$done = FALSE;
-
-		while (!$done)
-		{
-			$this->live->cron();
-			sleep(5);
-		}
+		$this->load->model('asagi');
+		
+		echo json_encode($this->asagi->get_settings()).PHP_EOL;
 	}
-
 
 }

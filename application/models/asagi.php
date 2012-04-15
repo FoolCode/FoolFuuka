@@ -27,10 +27,11 @@ class Asagi extends CI_Model
 			'settings' => array(
 				'default' => array(
 					'engine' => 'Mysql',
+					'host' => 'localhost',
 					'database' => get_setting('fs_fuuka_boards_db')?:$this->db->database,
 					'username' => $this->db->username,
 					'password' => $this->db->password,
-					'path' => FCPATH . 'content/boards/',
+					'path' => FCPATH . 'content/boards',
 					'webserverGroup'=> get_webserver_group()?:'_www',
 					'thumbThreads' => 5,
 					'mediaThreads' => 5,
@@ -47,7 +48,7 @@ class Asagi extends CI_Model
 		
 		foreach($archives as $archive)
 		{
-			$settings[$archive->shortname] = array(
+			$settings['settings'][$archive->shortname] = array(
 				'thumbThreads' => $archive->thumb_threads,
 				'mediaThreads' => $archive->media_threads,
 				'newThreadsThreads' => $archive->new_threads_threads,
@@ -56,11 +57,11 @@ class Asagi extends CI_Model
 			
 			if(!get_setting('fs_fuuka_boards_db'))
 			{
-				$settings[$archive->shortname]['table'] = $this->db->dbprefix('board_' . $archive->shortname);
+				$settings['settings'][$archive->shortname]['table'] = $this->db->dbprefix('board_' . $archive->shortname);
 			}
 			
 			if($archive->page_settings)
-				$settings[$archive->shortname]['pageSettings'] = @json_decode($archive->page_settings);
+				$settings['settings'][$archive->shortname]['pageSettings'] = @json_decode($archive->page_settings);
 		}
 		
 		return $settings;
@@ -128,7 +129,7 @@ class Asagi extends CI_Model
 	function run()
 	{
 		if(!$this->is_running())
-			exec('screen -dmS "asagi" sh -c "cd ' .  FCPATH . 'content/asagi/; while true; do java -jar asagi.jar --settings-exec php ' . FCPATH . 'index.php cli asagi_get_settings; done"');		
+			exec('screen -dmS "asagi" sh -c "cd ' .  FCPATH . 'content/asagi/; while true; do php ' . FCPATH . 'index.php cli asagi_get_settings | java -jar asagi.jar; done"');		
 	}
 	
 	

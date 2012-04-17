@@ -17,7 +17,7 @@ if (!function_exists('get_setting'))
 	{
 		$CI = & get_instance();
 		$array = $CI->fs_options;
-		if (isset($array[$option]))
+		if (isset($array[$option]) && $array[$option] != NULL)
 			return $array[$option];
 		if(!is_null($fallback))
 			return $fallback;
@@ -372,7 +372,7 @@ function compress_html()
  * @return string The IP address in decimal notation
  */
 function inet_ptod($ip_address)
-{	
+{
     // IPv4 address
     if (strpos($ip_address, ':') === false && strpos($ip_address, '.') !== false) {
         $ip_address = '::' . $ip_address;
@@ -469,7 +469,7 @@ function get_webserver_user()
 	// else, give a precise command for shell to enter
 	if (!$whoami)
 		return FALSE;
-	else 
+	else
 		return $whoami;
 }
 

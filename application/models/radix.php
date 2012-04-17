@@ -28,7 +28,7 @@ class Radix extends CI_Model
 	/**
 	 * The structure of the radix table to be used with validation and form creator
 	 *
-	 * @param Object $radix If available insert to customize the 
+	 * @param Object $radix If available insert to customize the
 	 */
 	function structure($radix = NULL)
 	{
@@ -279,38 +279,38 @@ class Radix extends CI_Model
 			$board = $this->get_by_shortname($data['shortname']);
 
 			$this->db->query("
-				CREATE TABLE IF NOT EXISTS " . $this->get_table($board) . " ( 
-					doc_id int unsigned NOT NULL auto_increment, 
-					media_id int unsigned NOT NULL DEFAULT '0', 
-					id decimal(39,0) unsigned NOT NULL DEFAULT '0', 
-					num int unsigned NOT NULL, 
-					subnum int unsigned NOT NULL, 
-					parent int unsigned NOT NULL DEFAULT '0', 
-					timestamp int unsigned NOT NULL, 
-					preview varchar(20), 
-					preview_w smallint unsigned NOT NULL DEFAULT '0', 
-					preview_h smallint unsigned NOT NULL DEFAULT '0', 
-					media text, 
-					media_w smallint unsigned NOT NULL DEFAULT '0', 
-					media_h smallint unsigned NOT NULL DEFAULT '0', 
-					media_size int unsigned NOT NULL DEFAULT '0', 
-					media_hash varchar(25), 
-					media_filename varchar(20), 
-					spoiler bool NOT NULL DEFAULT '0', 
-					deleted bool NOT NULL DEFAULT '0', 
-					capcode enum('N', 'M', 'A', 'G') NOT NULL DEFAULT 'N', 
-					email varchar(100), 
-					name varchar(100), 
-					trip varchar(25), 
-					title varchar(100), 
+				CREATE TABLE IF NOT EXISTS " . $this->get_table($board) . " (
+					doc_id int unsigned NOT NULL auto_increment,
+					media_id int unsigned NOT NULL DEFAULT '0',
+					id decimal(39,0) unsigned NOT NULL DEFAULT '0',
+					num int unsigned NOT NULL,
+					subnum int unsigned NOT NULL,
+					parent int unsigned NOT NULL DEFAULT '0',
+					timestamp int unsigned NOT NULL,
+					preview varchar(20),
+					preview_w smallint unsigned NOT NULL DEFAULT '0',
+					preview_h smallint unsigned NOT NULL DEFAULT '0',
+					media text,
+					media_w smallint unsigned NOT NULL DEFAULT '0',
+					media_h smallint unsigned NOT NULL DEFAULT '0',
+					media_size int unsigned NOT NULL DEFAULT '0',
+					media_hash varchar(25),
+					media_filename varchar(20),
+					spoiler bool NOT NULL DEFAULT '0',
+					deleted bool NOT NULL DEFAULT '0',
+					capcode enum('N', 'M', 'A', 'G') NOT NULL DEFAULT 'N',
+					email varchar(100),
+					name varchar(100),
+					trip varchar(25),
+					title varchar(100),
 					comment text,
-					delpass tinytext, 
-					sticky bool NOT NULL DEFAULT '0', 
+					delpass tinytext,
+					sticky bool NOT NULL DEFAULT '0',
 
-					PRIMARY KEY (doc_id), 
-					UNIQUE num_subnum_index (num, subnum), 
-					INDEX id_index(id), 
-					INDEX num_index(num), 
+					PRIMARY KEY (doc_id),
+					UNIQUE num_subnum_index (num, subnum),
+					INDEX id_index(id),
+					INDEX num_index(num),
 					INDEX subnum_index(subnum),
 					INDEX parent_index(parent),
 					INDEX timestamp_index(TIMESTAMP),
@@ -366,7 +366,7 @@ class Radix extends CI_Model
 					`preview_op` varchar(20),
 					`preview_reply` varchar(20),
 					`total` int(10) unsigned NOT NULL DEFAULT '0',
-					`banned` smallint unsigned NOT NULL DEFAULT '0', 
+					`banned` smallint unsigned NOT NULL DEFAULT '0',
 					PRIMARY KEY (`id`),
 					UNIQUE media_hash_index (`media_hash`),
 					INDEX total_index (total)
@@ -449,7 +449,7 @@ class Radix extends CI_Model
 			$this->db->query("
 				DROP PROCEDURE IF EXISTS `delete_thread_" . $board->shortname . "`;
 			");
-			
+
 			$this->db->query("
 				CREATE PROCEDURE `delete_thread_" . $board->shortname . "` (tnum INT)
 				BEGIN
@@ -469,12 +469,12 @@ class Radix extends CI_Model
 					IF n_parent = 0 THEN
 						INSERT INTO " . $this->get_table($board,
 					'_images') . " (media_hash, media_filename, preview_op, total)
-						VALUES (n_media_hash, n_media_filename, n_preview, 1) 
+						VALUES (n_media_hash, n_media_filename, n_preview, 1)
 						ON DUPLICATE KEY UPDATE total = (total + 1), preview_op = IFNULL(preview_op, VALUES(preview_op));
 					ELSE
 						INSERT INTO " . $this->get_table($board,
 					'_images') . " (media_hash, media_filename, preview_reply, total)
-						VALUES (n_media_hash, n_media_filename, n_preview, 1) 
+						VALUES (n_media_hash, n_media_filename, n_preview, 1)
 						ON DUPLICATE KEY UPDATE total = (total + 1), preview_reply = IFNULL(preview_reply, VALUES(preview_reply));
 					END IF;
 				END;
@@ -622,23 +622,23 @@ class Radix extends CI_Model
 	function remove($id)
 	{
 		$board = $this->get_by_id($id);
-		
+
 		$this->db->query("
 			DROP TABLE IF EXISTS " . $this->get_table($board) . "
 		");
-		
+
 		$this->db->query("
 			DROP TABLE IF EXISTS " . $this->get_table($board, '_images') . "
 		");
-		
+
 		$this->db->query("
 			DROP TABLE IF EXISTS " . $this->get_table($board, '_daily') . "
 		");
-		
+
 		$this->db->query("
 			DROP TABLE IF EXISTS " . $this->get_table($board, '_users') . "
 		");
-		
+
 		$this->db->query("
 			DROP TABLE IF EXISTS " . $this->get_table($board, '_threads') . "
 		");
@@ -650,7 +650,7 @@ class Radix extends CI_Model
 		$this->db->query("
 			DROP PROCEDURE IF EXISTS `create_thread_" . $board->shortname . "`;
 		");
-		
+
 		$this->db->query("
 			DROP PROCEDURE IF EXISTS `delete_thread_" . $board->shortname . "`;
 		");
@@ -678,7 +678,7 @@ class Radix extends CI_Model
 		$this->db->query("
 			DROP TRIGGER IF EXISTS `after_del_" . $board->shortname . "`;
 		");
-		
+
 		$this->db->where('id', $id)->delete('boards');
 
 
@@ -733,11 +733,10 @@ class Radix extends CI_Model
 	 *
 	 * @param string $shortname The shortname, or the whole board object
 	 * @param string $suffix board suffix like _images
-	 * @return type 
+	 * @return type
 	 */
 	function get_table($shortname, $suffix = '')
 	{
-
 		if (is_object($shortname))
 			$shortname = $shortname->shortname;
 

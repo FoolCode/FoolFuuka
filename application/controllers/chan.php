@@ -53,7 +53,6 @@ class Chan extends Public_Controller
 		{
 			array_push($url, get_selected_radix()->shortname);
 
-
 			// PAGE
 			if ($this->input->get('task') == 'page')
 			{
@@ -708,7 +707,7 @@ class Chan extends Public_Controller
 
 		// Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
 		$page = intval($page);
-		$result = $this->post->get_image(get_selected_radix(), $hash . '==', $page);
+		$result = $this->post->get_same_media(get_selected_radix(), $hash . '==', $page);
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .

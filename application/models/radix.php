@@ -318,15 +318,13 @@ class Radix extends CI_Model
 					INDEX email_index(email),
 					INDEX name_index(name),
 					INDEX trip_index(trip),
-					INDEX fullname_index(name,trip),
-					fulltext INDEX comment_index(COMMENT)
-				) engine=MyISAM CHARSET=utf8mb4;
+					INDEX fullname_index(name,trip)
+				) engine=InnoDB CHARSET=utf8mb4;
 			");
 
 			$this->db->query("
-				CREATE TABLE IF NOT EXISTS " . $this->get_table($board,
-					'_threads') . " (
-					`doc_id_p` int unsigned NOT NULL,
+				CREATE TABLE IF NOT EXISTS " .
+						$this->get_table($board, '_threads') . " (
 					`parent` int unsigned NOT NULL,
 					`time_op` int unsigned NOT NULL,
 					`time_last` int unsigned NOT NULL,
@@ -335,10 +333,11 @@ class Radix extends CI_Model
 					`time_ghost_bump` int unsigned DEFAULT NULL,
 					`nreplies` int unsigned NOT NULL DEFAULT '0',
 					`nimages` int unsigned NOT NULL DEFAULT '0',
-					PRIMARY KEY (`doc_id_p`),
+					PRIMARY KEY (`parent`),
 
-					UNIQUE parent_index (parent),
-					INDEX time_ghost_bump_index (time_ghost_bump)
+					INDEX time_op_index (time_op),
+					INDEX time_bump_index (time_bump),
+					INDEX time_ghost_bump_index (time_ghost_bump),
 				) ENGINE=InnoDB CHARSET=utf8mb4;
 			");
 
@@ -438,10 +437,10 @@ class Radix extends CI_Model
 			");
 
 			$this->db->query("
-				CREATE PROCEDURE `create_thread_" . $board->shortname . "` (doc_id INT, num INT, timestamp INT)
+				CREATE PROCEDURE `create_thread_" . $board->shortname . "` (num INT, timestamp INT)
 				BEGIN
 					INSERT IGNORE INTO " . $this->get_table($board,
-					'_threads') . " VALUES (doc_id, num, timestamp, timestamp,
+					'_threads') . " VALUES (num, timestamp, timestamp,
 						timestamp, NULL, NULL, 0, 0);
 				END;
 			");
@@ -464,18 +463,18 @@ class Radix extends CI_Model
 
 			$this->db->query("
 				CREATE PROCEDURE `insert_image_" . $board->shortname . "` (n_media_hash VARCHAR(25),
-					n_media_filename VARCHAR(20), n_preview VARCHAR(20), n_parent INT, n_doc_id INT)
+					n_media_filename VARCHAR(20), n_preview VARCHAR(20), n_parent INT)
 				BEGIN
 					IF n_parent = 0 THEN
 						INSERT INTO " . $this->get_table($board,
 					'_images') . " (media_hash, media_filename, preview_op, total)
 						VALUES (n_media_hash, n_media_filename, n_preview, 1)
-						ON DUPLICATE KEY UPDATE total = (total + 1), preview_op = IFNULL(preview_op, VALUES(preview_op));
+						ON DUPLICATE KEY UPDATE total = (total + 1), preview_op = COALESCE(preview_op, VALUES(preview_op));
 					ELSE
 						INSERT INTO " . $this->get_table($board,
 					'_images') . " (media_hash, media_filename, preview_reply, total)
 						VALUES (n_media_hash, n_media_filename, n_preview, 1)
-						ON DUPLICATE KEY UPDATE total = (total + 1), preview_reply = IFNULL(preview_reply, VALUES(preview_reply));
+						ON DUPLICATE KEY UPDATE total = (total + 1), preview_reply = COALESCE(preview_reply, VALUES(preview_reply));
 					END IF;
 				END;
 			");
@@ -578,21 +577,29 @@ class Radix extends CI_Model
 
 			$this->db->query("
 				CREATE TRIGGER `before_ins_" . $board->shortname . "` BEFORE INSERT ON " . $this->get_table($board) . "
-				FOR EACH ROW
-				BEGIN
-				SET @COUNT = (SELECT COUNT(*) FROM " . $this->get_table($board) . " WHERE num = NEW.num AND subnum = NEW.subnum);
-				IF @COUNT = 0 THEN
+					FOR EACH ROW
+					BEGIN
+					IF NEW.media_hash IS NOT NULL THEN
+						CALL insert_image_" . $board->shortname . "(NEW.media_hash, NEW.media_filename, NEW.preview, NEW.parent);
+						SET NEW.media_id = LAST_INSERT_ID();
+					END IF;
+				END;
+			");
+
+			$this->db->query("
+				DROP TRIGGER IF EXISTS `after_ins_" . $board->shortname . "`;
+			");
+
+			$this->db->query("
+				CREATE TRIGGER `after_ins_" . $board->shortname . "` AFTER INSERT ON " . $this->get_table($board) . "
+					FOR EACH ROW
+					BEGIN
 					IF NEW.parent = 0 THEN
-					CALL create_thread_" . $board->shortname . "(NEW.doc_id, NEW.num, NEW.timestamp);
+						CALL create_thread_" . $board->shortname . "(NEW.num, NEW.timestamp);
 					END IF;
 					CALL update_thread_" . $board->shortname . "(NEW.parent);
 					CALL insert_post_" . $board->shortname . "(NEW.timestamp, NEW.media_hash, NEW.email, NEW.name,
-					NEW.trip);
-					IF NEW.media_hash IS NOT NULL THEN
-					CALL insert_image_" . $board->shortname . "(NEW.media_hash, NEW.media_filename, NEW.preview, NEW.parent, NEW.doc_id);
-					SET NEW.media_id = LAST_INSERT_ID();
-					END IF;
-				END IF;
+						NEW.trip);
 				END;
 			");
 

@@ -13,27 +13,27 @@ class Chan extends API_Controller
 		header("Access-Control-Allow-Origin: https://boards.4chan.org", FALSE);
 		parent::__construct();
 	}
-	
+
 	function vote_post()
 	{
 		$this->check_board();
-		
+
 		if(!$this->post('doc_id') || !is_natural($this->post('doc_id')) ||
 			!$this->post('vote') || !in_array($this->post('vote'), array(-1, 1)))
 		{
 			$this->response(array('error' => _('Faulty value')), 404);
 		}
-		
+
 		$this->load->model('vote');
 		$vote = $this->vote->add(get_selected_radix(), $this->post('doc_id'), $this->post('vote'));
-		
+
 		if(isset($vote['error']))
 		{
 			$this->response($vote, 404);
 		}
-		
+
 		$count = $this->vote->count(get_selected_radix(), $this->post('doc_id'));
-		
+
 		$this->response(array('success' => $count), 200);
 	}
 
@@ -259,7 +259,7 @@ class Chan extends API_Controller
 			$this->response(array('error' => _('Faulty thread number')), 404);
 		}
 
-		$post = $this->post->get_by_num(get_selected_radix(), $this->get('num'));
+		$post = $this->post->get_post_by_num(get_selected_radix(), $this->get('num'));
 
 		if (!$post)
 		{
@@ -386,7 +386,7 @@ class Chan extends API_Controller
 		}
 
 
-		// action should be an array 
+		// action should be an array
 		// array('ban_md5', 'ban_user', 'remove_image', 'remove_post', 'remove_report');
 		$actions = $this->post('actions');
 		if (!is_array($actions))
@@ -408,7 +408,7 @@ class Chan extends API_Controller
 
 		if (in_array('ban_md5', $actions))
 		{
-			$this->post->ban_image_hash($post->media_hash);
+			$this->post->ban_media($post->media_hash);
 			$actions = array_diff($actions, array('remove_image'));
 		}
 
@@ -429,6 +429,7 @@ class Chan extends API_Controller
 		// if we banned md5 we already removed the image
 		if (in_array('remove_image', $actions))
 		{
+			/*
 			$this->post->delete(
 				$board,
 				array(
@@ -436,7 +437,8 @@ class Chan extends API_Controller
 				'password' => '',
 				'type' => 'image'
 				)
-			);
+			);*/
+			$this->post->delete_media($board, $post);
 		}
 
 		if (in_array('ban_user', $actions))

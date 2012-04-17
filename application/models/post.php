@@ -22,6 +22,11 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param null|string $join_on
+	 * @return string
+	 */
 	function sql_report_join($board, $join_on = NULL)
 	{
 		if (!$this->tank_auth->is_allowed())
@@ -44,37 +49,41 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param null|string $join_on
+	 * @return string
+	 */
 	function sql_media_join($board, $join_on = NULL)
 	{
 		return '
 			LEFT JOIN
-			(
-				SELECT
-					id AS media_id, media_filename AS media_image, preview_op AS media_thumb_op,
-					preview_reply AS media_thumb_re, banned AS media_banned
-				FROM ' . $this->radix->get_table($board, '_images') . '
-			) as q
+				(' . $this->radix->get_table($board, '_images') . ' AS `m`)
 			ON
 			' . ($join_on?$join_on:$this->radix->get_table($board)) . '.`media_id`
 			=
-			' . $this->db->protect_identifiers('q') . '.`media_id`
+			' . $this->db->protect_identifiers('m') . '.`media_id`
 		';
 	}
 
 
-	function populate_posts_arr($object)
+
+	/**
+	 * @param array|object $posts
+	 */
+	function populate_posts_arr($posts)
 	{
-		if (is_array($object))
+		if (is_array($posts))
 		{
-			foreach ($object as $post)
+			foreach ($posts as $post)
 			{
 				$this->populate_posts_arr($post);
 			}
 		}
 
-		if (is_object($object))
+		if (is_object($posts))
 		{
-			$post = $object;
+			$post = $posts;
 
 			if ($post->parent == 0)
 			{
@@ -91,48 +100,54 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param object $row
+	 * @param bool $thumbnail
+	 * @return bool|string
+	 */
 	function get_media_dir($board, $row, $thumbnail = FALSE)
 	{
-		if (!$row->preview)
+		if (!$row->media_hash)
 			return FALSE;
 
-		if ($board->archive)
+		if ($thumbnail === TRUE)
 		{
-			if ($row->parent > 0)
-				$number = $row->parent;
+			if (isset($row->parent))
+			{
+				if ($row->parent == 0)
+					$media = $row->preview_op;
+				else
+					$media = $row->preview_reply;
+			}
 			else
-				$number = $row->num;
-
-			preg_match('/(\d+?)(\d{2})\d{0,3}$/', $number, $matches);
-
-			if (!isset($matches[1]))
-				$matches[1] = '';
-
-			if (!isset($matches[2]))
-				$matches[2] = '';
-
-			$number = str_pad($matches[1], 4, "0", STR_PAD_LEFT) . str_pad($matches[2], 2, "0", STR_PAD_LEFT);
+			{
+				$media = $row->preview_reply ? $row->preview_reply : $row->preview_op;
+			}
 		}
 		else
 		{
-			$number = ($thumbnail) ? $row->preview : $row->media_filename;
-
-			if (!isset($row->media_filename))
-				$row->media_filename = $row->preview;
-
-			if (strpos($number, 's.') === FALSE)
-				$thumbnail = FALSE;
+			$media = $row->media_filename;
 		}
 
+		if ($media === NULL)
+			return FALSE;
+
 		return ((get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory') : FOOLFUUKA_BOARDS_DIRECTORY))
-			. '/' . $board->shortname . '/' . ($thumbnail?'thumb':'img') . '/' . substr($number, 0, 4) . '/'
-			. substr($number, 4, 2) . '/' . ($thumbnail?$row->preview:$row->media_filename);
+			. '/' . $board->shortname . '/' . ($thumbnail?'thumb':'img') . '/' . substr($media, 0, 4) . '/'
+			. substr($media, 4, 2) . '/' . $media;
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param object $row
+	 * @param bool $thumbnail
+	 * @return bool|string
+	 */
 	function get_media_link($board, $row, $thumbnail = FALSE)
 	{
-		if (!$row->preview)
+		if (!$row->media_hash)
 			return FALSE;
 
 		if (!$this->tank_auth->is_allowed())
@@ -155,47 +170,18 @@ class Post extends CI_Model
 					return FALSE;
 				}
 			}
+		}
 
-			$media_check = $this->db->get_where('banned_md5', array('md5' => $row->media_hash));
-			if ($media_check->num_rows() > 0)
+		if ($row->banned == 1)
+		{
+			if ($thumbnail)
 			{
-				if ($thumbnail)
-				{
-					$row->preview_h = 150;
-					$row->preview_w = 150;
-					return site_url() . 'content/themes/default/images/banned-image.png';
-				}
-
-				return FALSE;
+				$row->preview_h = 150;
+				$row->preview_w = 150;
+				return site_url() . 'content/themes/default/images/banned-image.png';
 			}
-		}
 
-		if ($board->archive)
-		{
-			if ($row->parent > 0)
-				$number = $row->parent;
-			else
-				$number = $row->num;
-
-			preg_match('/(\d+?)(\d{2})\d{0,3}$/', $number, $matches);
-
-			if (!isset($matches[1]))
-				$matches[1] = '';
-
-			if (!isset($matches[2]))
-				$matches[2] = '';
-
-			$number = str_pad($matches[1], 4, "0", STR_PAD_LEFT) . str_pad($matches[2], 2, "0", STR_PAD_LEFT);
-		}
-		else
-		{
-			$number = ($thumbnail) ? $row->preview : $row->media_filename;
-
-			if (!isset($row->media_filename))
-				$row->media_filename = $row->preview;
-
-			if (strpos($number, 's.') === FALSE)
-				$thumbnail = FALSE;
+			return FALSE;
 		}
 
 		if (file_exists($this->get_media_dir($board, $row, $thumbnail)) !== FALSE)
@@ -210,9 +196,28 @@ class Post extends CI_Model
 				}
 			}
 
+			if ($thumbnail === TRUE)
+			{
+				if (isset($row->parent))
+				{
+					if ($row->parent == 0)
+						$media = $row->preview_op;
+					else
+						$media = $row->preview_reply;
+				}
+				else
+				{
+					$media = $row->preview_reply ? $row->preview_reply : $row->preview_op;
+				}
+			}
+			else
+			{
+				$media = $row->media_filename;
+			}
+
 			return (get_setting('fs_fuuka_boards_url') ? get_setting('fs_fuuka_boards_url') : site_url() . FOOLFUUKA_BOARDS_DIRECTORY)
-				. '/' . $board->shortname . '/' . ($thumbnail?'thumb':'img') . '/' . substr($number, 0, 4) . '/'
-				. substr($number, 4, 2) . '/' . ($thumbnail?$row->preview:$row->media_filename);
+				. '/' . $board->shortname . '/' . ($thumbnail?'thumb':'img') . '/' . substr($media, 0, 4) . '/' . substr($media, 4, 2)
+				. '/' . $media;
 		}
 
 		if ($thumbnail)
@@ -226,9 +231,14 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param object $row
+	 * @return bool|string
+	 */
 	function get_remote_media_link($board, $row)
 	{
-		if (!$row->preview)
+		if (!$row->media_hash)
 			return FALSE;
 
 		if ($board->archive)
@@ -249,6 +259,11 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param mixed $input
+	 * @param bool $urlsafe
+	 * @return bool|string
+	 */
 	function get_media_hash($input, $urlsafe = FALSE)
 	{
 		if (is_object($input) || is_array($input))
@@ -273,6 +288,10 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param string $name
+	 * @return array
+	 */
 	function process_name($name)
 	{
 		// define variables
@@ -305,6 +324,10 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param string $plain
+	 * @return string
+	 */
 	function process_tripcode($plain)
 	{
 		if (trim($plain) == '')
@@ -320,12 +343,22 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param string $plain
+	 * @return string
+	 */
 	function process_secure_tripcode($plain)
 	{
 		return substr(base64_encode(sha1($plain . base64_decode(FOOLFUUKA_SECURE_TRIPCODE_SALT), TRUE)), 0, 11);
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param object $post
+	 * @param bool $clean
+	 * @param bool $build
+	 */
 	function process_post($board, $post, $clean = TRUE, $build = FALSE)
 	{
 		$this->current_p = $post;
@@ -362,39 +395,124 @@ class Post extends CI_Model
 	}
 
 
-	function process_media($board, $post, $media, $media_hash)
+	/**
+	 * @param object $board
+	 * @param object $post
+	 * @param array $media
+	 * @param string $media_hash
+	 * @return array|bool
+	 */
+	function process_media($board, $post, $media, $media_hash, $duplicate = NULL)
 	{
+		$media_exists = FALSE;
+		$thumb_exists = FALSE;
+
 		if (!$board->archive)
 		{
+			// it hasn't been determine if the media already exists
+			if ($duplicate === NULL)
+			{
+				// check if record of media_hash exists
+				$check = $this->db->query('
+					SELECT *
+					FROM ' . $this->radix->get_table($board, '_images') . '
+					WHERE media_hash = ?
+					LIMIT 0, 1
+				',
+					array($media_hash)
+				);
+
+				if ($check->num_rows() > 0)
+				{
+					// store check results to be used throughout process
+					$record = $check->row();
+
+					return $this->process_media($board, $post, $media, $media_hash, $record);
+				}
+			}
+
+			// proceed with usual process
 			$number = time();
 		}
 		else
 		{
+			// the archive does not allow posting images
 			return FALSE;
 		}
 
-		// generate unique filename with timestamp
-		$media_unixtime = time() . rand(1000, 9999);
+		// generate unique filename with timestamp, this will be stored with the post
+		$media_unixtime = $number . rand(1000, 9999);
 		$media_filename = $media_unixtime . strtolower($media['file_ext']);
 		$thumb_filename = $media_unixtime . 's' . strtolower($media['file_ext']);
 
 		// image directory structure
-		$directory = array(
-			'media' => (get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory')
-				: FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname . '/img/' . substr($number, 0, 4) .
-				'/' . substr($number, 4, 2) . '/',
+		$board_directory = (get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory')
+			: FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname . '/';
 
-			'thumb' => (get_setting('fs_fuuka_boards_directory') ? get_setting('fs_fuuka_boards_directory')
-				: FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname . '/thumb/' . substr($number, 0, 4) .
-				'/' . substr($number, 4, 2) . '/',
-		);
+		// set default locations of media directories
+		$media_filepath = $board_directory . 'img/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/';
+		$thumb_filepath = $board_directory . 'thumb/' . substr($number, 0, 4) . '/' . substr($number, 4, 2) . '/';
 
-		// if necessary, generate the full file path
-		generate_file_path($directory['media']);
-		generate_file_path($directory['thumb']);
+		// check for any type of duplicate records or information and override default locations
+		if ($duplicate !== NULL)
+		{
+			// handle full media
+			if ($duplicate->media_filename !== NULL)
+			{
+				$media_exists = TRUE;
+
+				$media_existing = $duplicate->media_filename;
+				$media_filepath = $board_directory . 'img/'
+					. substr($duplicate->media_filename, 0, 4) . '/' . substr($duplicate->media_filename, 4, 2) . '/';
+			}
+
+			// generate full file paths for missing files only
+			if ($duplicate->media_filename === NULL || file_exists($media_filepath . $duplicate->media_filename) === FALSE)
+				generate_file_path($media_filepath);
+
+			// handle thumbs
+			if ($post == 0)
+			{
+				// thumb op
+				if ($duplicate->preview_op !== NULL)
+				{
+					$thumb_exists = TRUE;
+
+					$thumb_existing = $duplicate->preview_op;
+					$thumb_filepath = $board_directory . 'thumb/'
+						. substr($duplicate->preview_op, 0, 4) . '/' . substr($duplicate->preview_op, 4, 2) . '/';
+				}
+
+				// generate full file paths for missing files only
+				if ($duplicate->preview_op === NULL || file_exists($media_filepath . $duplicate->preview_op) === FALSE)
+					generate_file_path($thumb_filepath);
+			}
+			else
+			{
+				// thumb re
+				if ($duplicate->preview_reply !== NULL)
+				{
+					$thumb_exists = TRUE;
+
+					$thumb_existing = $duplicate->preview_reply;
+					$thumb_filepath = $board_directory . 'thumb/'
+						. substr($duplicate->preview_reply, 0, 4) . '/' . substr($duplicate->preview_reply, 4, 2) . '/';
+				}
+
+				// generate full file paths for missing files only
+				if ($duplicate->preview_reply === NULL || file_exists($media_filepath . $duplicate->preview_reply) === FALSE)
+					generate_file_path($thumb_filepath);
+			}
+		}
+		else
+		{
+			// generate full file paths for everything
+			generate_file_path($media_filepath);
+			generate_file_path($thumb_filepath);
+		}
 
 		// relocate the media file to proper location
-		if (!copy($media['full_path'], $directory['media'] . $media_filename))
+		if (!copy($media['full_path'], $media_filepath . (($media_exists) ? $media_existing : $media_filename)))
 		{
 			log_message('error', 'post.php/process_media: failed to move media file');
 			return FALSE;
@@ -418,8 +536,8 @@ class Post extends CI_Model
 			$media_config = array(
 				'image_library' => (find_imagick()) ? 'ImageMagick' : 'GD2',
 				'library_path'  => (find_imagick()) ? get_setting('fs_serv_imagick_path', '/usr/bin') : '',
-				'source_image'  => $directory['media'] . $media_filename,
-				'new_image'     => $directory['thumb'] . $thumb_filename,
+				'source_image'  => $media_filepath . (($media_exists) ? $media_existing : $media_filename),
+				'new_image'     => $thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename),
 				'width'         => ($media['image_width'] > $default_dimensions) ? $default_dimensions : $media['image_width'],
 				'height'        => ($media['image_height'] > $default_dimensions) ? $default_dimensions : $media['image_height'],
 			);
@@ -435,7 +553,7 @@ class Post extends CI_Model
 			}
 
 			$CI->image_lib->clear();
-			$thumb_dimensions = @getimagesize($directory['thumb'] . $thumb_filename);
+			$thumb_dimensions = @getimagesize($thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename));
 		}
 		else
 		{
@@ -451,6 +569,11 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param object $row
+	 * @return string
+	 */
 	function process_comment($board, $row)
 	{
 		$CI = & get_instance();
@@ -538,6 +661,10 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param array $matches
+	 * @return string
+	 */
 	function process_internal_links($matches)
 	{
 		$num = $matches[2];
@@ -630,6 +757,10 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param array $matches
+	 * @return string
+	 */
 	function process_crossboard_links($matches)
 	{
 		$shortname = $matches[3];
@@ -679,6 +810,11 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param object $p
+	 * @return string
+	 */
 	function build_board_comment($board, $p)
 	{
 		// load the functions from the current theme, else load the default one
@@ -702,6 +838,11 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param int $num
+	 * @return array
+	 */
 	function check_thread($board, $num)
 	{
 		if ($num == 0)
@@ -776,6 +917,12 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param array $params
+	 * @param array $options
+	 * @return array
+	 */
 	function get_search($board, $params, $options = array())
 	{
 		// default variables
@@ -1048,6 +1195,12 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param int $page
+	 * @param array $options
+	 * @return array|bool
+	 */
 	function get_latest($board, $page = 1, $options = array())
 	{
 		// default variables
@@ -1078,6 +1231,7 @@ class Post extends CI_Model
 					) AS t
 					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
+					' . $this->sql_media_join($board, 'g') . '
 					' . $this->sql_report_join($board, 'g') . '
 				',
 					array(
@@ -1106,6 +1260,7 @@ class Post extends CI_Model
 					) AS t
 					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
+					' . $this->sql_media_join($board, 'g') . '
 					' . $this->sql_report_join($board, 'g') . '
 				',
 					array(
@@ -1135,6 +1290,7 @@ class Post extends CI_Model
 					) AS t
 					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
+					' . $this->sql_media_join($board, 'g') . '
 					' . $this->sql_report_join($board, 'g') . '
 				',
 					array(
@@ -1166,7 +1322,7 @@ class Post extends CI_Model
 
 		// set total pages found
 		$pages = $query_pages->row()->pages;
-		if ($pages)
+		if ($pages <= 1)
 			$pages = NULL;
 
 		// free up memory
@@ -1185,6 +1341,7 @@ class Post extends CI_Model
 				(
 					SELECT *
 					FROM ' . $this->radix->get_table($board) . '
+					' . $this->sql_media_join($board) . '
 					' . $this->sql_report_join($board) . '
 					WHERE parent = ' . $row->unq_parent . '
 					ORDER BY num DESC, subnum DESC
@@ -1238,6 +1395,12 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param int $num
+	 * @param array $options
+	 * @return array|bool
+	 */
 	function get_thread($board, $num, $options = array())
 	{
 		// default variables
@@ -1267,6 +1430,7 @@ class Post extends CI_Model
 				$query = $this->db->query('
 					SELECT *
 					FROM ' . $this->radix->get_table($board) . '
+					' . $this->sql_media_join($board) . '
 					' . $this->sql_report_join($board) . '
 					WHERE parent = ? AND doc_id > ?
 					ORDER BY num, subnum ASC
@@ -1281,6 +1445,7 @@ class Post extends CI_Model
 				$query = $this->db->query('
 					SELECT *
 					FROM ' . $this->radix->get_table($board) . '
+					' . $this->sql_media_join($board) . '
 					' . $this->sql_report_join($board) . '
 					WHERE parent = ? AND subnum <> 0
 					ORDER BY num, subnum ASC
@@ -1317,6 +1482,7 @@ class Post extends CI_Model
 							LIMIT ?
 						)
 					) AS x
+					' . $this->sql_media_join($board, 'x') . '
 					' . $this->sql_report_join($board, 'x') . '
 					ORDER BY num, subnum ASC
 				',
@@ -1333,6 +1499,7 @@ class Post extends CI_Model
 					(
 						SELECT *
 						FROM ' . $this->radix->get_table($board) . '
+						' . $this->sql_media_join($board) . '
 						' . $this->sql_report_join($board) . '
 						WHERE num = ?
 					)
@@ -1340,6 +1507,7 @@ class Post extends CI_Model
 					(
 						SELECT *
 						FROM ' . $this->radix->get_table($board) . '
+						' . $this->sql_media_join($board) . '
 						' . $this->sql_report_join($board) . '
 						WHERE parent = ?
 					)
@@ -1409,6 +1577,13 @@ class Post extends CI_Model
 		return $result;
 	}
 
+
+	/**
+	 * @param object $board
+	 * @param int $page
+	 * @param array $options
+	 * @return array|bool
+	 */
 	function get_gallery($board, $page = 1, $options = array())
 	{
 		// default variables
@@ -1431,6 +1606,7 @@ class Post extends CI_Model
 				$query = $this->db->query('
 					SELECT *
 					FROM ' . $this->radix->get_table($board) . '
+					' . $this->sql_media_join($board) . '
 					' . $this->sql_report_join($board) . '
 					WHERE media_filename IS NOT NULL
 					ORDER BY timestamp DESC
@@ -1463,6 +1639,7 @@ class Post extends CI_Model
 					) AS t
 					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
 						ON g.num = t.unq_parent AND g.subnum = 0
+					' . $this->sql_media_join($board, 'g') . '
 					' . $this->sql_report_join($board, 'g') . '
 				',
 					array(
@@ -1503,6 +1680,10 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param int $page
+	 * @return array|bool
+	 */
 	function get_reports($page = 1)
 	{
 		$this->load->model('report');
@@ -1522,6 +1703,11 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param array $multi_posts
+	 * @param null|string $order_by
+	 * @return array|bool
+	 */
 	function get_multi_posts($multi_posts = array(), $order_by = NULL)
 	{
 		// populate sql array
@@ -1537,6 +1723,7 @@ class Post extends CI_Model
 					(
 						SELECT *, CONCAT(' . $this->db->escape($posts['board_id']) . ') AS board_id
 						FROM ' . $this->radix->get_table($board) . ' AS g
+						' . $this->sql_media_join($board, 'g') . '
 						' . $this->sql_report_join($board, 'g') . '
 						WHERE g.`doc_id` = ' . implode(' OR g.`doc_id` = ', $posts['doc_id']) . '
 					)
@@ -1569,11 +1756,18 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param int $num
+	 * @param int $subnum
+	 * @return bool|object
+	 */
 	function get_post_thread($board, $num, $subnum = 0)
 	{
 		$query = $this->db->query('
 			SELECT num, parent, subnum
 			FROM ' . $this->radix->get_table($board) . '
+			' . $this->sql_media_join($board) . '
 			WHERE num = ? AND subnum = ?
 			LIMIT 0, 1
 		',
@@ -1587,6 +1781,12 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param int|string $num
+	 * @param int $subnum
+	 * @return bool|object
+	 */
 	function get_post_by_num($board, $num, $subnum = 0)
 	{
 		if (strpos($num, '_') !== FALSE && $subnum == 0)
@@ -1608,6 +1808,7 @@ class Post extends CI_Model
 		$query = $this->db->query('
 			SELECT num, parent, subnum
 			FROM ' . $this->radix->get_table($board) . '
+			' . $this->sql_media_join($board) . '
 			WHERE num = ? AND subnum = ?
 			LIMIT 0, 1
 		',
@@ -1625,11 +1826,17 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param int $doc_id
+	 * @return bool|object
+	 */
 	function get_post_by_doc_id($board, $doc_id)
 	{
 		$query = $this->db->query('
 			SELECT *
 			' . $this->radix->get_table($board) . '
+			' . $this->sql_media_join($board) . '
 			WHERE doc_id = ?
 			LIMIT 0, 1
 		',
@@ -1643,35 +1850,41 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param int $doc_id
+	 * @return bool|object
+	 */
 	function get_by_doc_id($board, $doc_id)
 	{
 		$query = $this->db->query('
-				SELECT * FROM ' . $this->radix->get_table($board) . '
-				' . $this->sql_report_join($board) . '
-				WHERE doc_id = ?
-				LIMIT 0, 1;
-			',
-			array($doc_id));
+			SELECT * FROM ' . $this->radix->get_table($board) . '
+			' . $this->sql_media_join($board) . '
+			' . $this->sql_report_join($board) . '
+			WHERE doc_id = ?
+			LIMIT 0, 1;
+		',
+			array($doc_id)
+		);
 
 		if ($query->num_rows() == 0)
-		{
 			return FALSE;
-		}
 
-		foreach ($query->result() as $post)
-		{
-			return $post;
-		}
-
-		return FALSE;
+		return $query->row();
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param string $media_filename
+	 * @return array
+	 */
 	function get_full_media($board, $media_filename)
 	{
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->radix->get_table($board) . '
+			' . $this->sql_media_join($board) . '
 			WHERE media_filename = ?
 			ORDER BY num DESC
 			LIMIT 0, 1
@@ -1695,6 +1908,13 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param string $hash
+	 * @param int $page
+	 * @param array $options
+	 * @return array
+	 */
 	function get_same_media($board, $hash, $page, $options = array())
 	{
 		// default variables
@@ -1709,8 +1929,8 @@ class Post extends CI_Model
 		}
 
 		// check for any same media
-		$total = $this->db->query('
-			SELECT total
+		$media = $this->db->query('
+			SELECT m_id, total
 			FROM ' . $this->radix->get_table($board, '_images') . '
 			WHERE media_hash = ?
 			LIMIT 0, 1
@@ -1719,20 +1939,23 @@ class Post extends CI_Model
 		);
 
 		// if no matches found, stop here...
-		if ($total->num_rows() == 0)
+		if ($media->num_rows() == 0)
 			return array('post' => array(), 'total_found' => 0);
+
+		$media = $media->row();
 
 		// query for same media
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->radix->get_table($board) . '
+			' . $this->sql_media_join($board) . '
 			' . $this->sql_report_join($board) . '
-			WHERE media_hash = ?
+			WHERE media_id = ?
 			ORDER BY num DESC
 			LIMIT ?, ?
 		',
 			array(
-				$this->get_media_hash($hash),
+				$media->media_id,
 				intval(($page * $per_page) - $per_page),
 				intval($per_page)
 			)
@@ -1753,10 +1976,16 @@ class Post extends CI_Model
 			$results[0]['posts'][] = $post;
 		}
 
-		return array('posts' => $results, 'total_found' => $total->row()->total);
+		return array('posts' => $results, 'total_found' => $media->total);
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param array $data
+	 * @param array $options
+	 * @return array
+	 */
 	function comment($board, $data, $options = array())
 	{
 		// default variables
@@ -1950,6 +2179,7 @@ class Post extends CI_Model
 			// generate media hash
 			$media_hash = base64_encode(pack("H*", md5(file_get_contents($media['full_path']))));
 
+
 			// check if media is banned
 			$check = $this->db->get_where('banned_md5', array('md5' => $media_hash));
 
@@ -1975,11 +2205,11 @@ class Post extends CI_Model
 			return array('error' => _('Your post had too many lines.'));
 
 		// phpass password for extra security, using the same tank_auth setting since it's cool
-		$gophpass = new PasswordHash(
+		$phpass = new PasswordHash(
 			$this->config->item('phpass_hash_strength', 'tank_auth'),
 			$this->config->item('phpass_hash_portable', 'tank_auth')
 		);
-		$password = $gophpass->HashPassword($password);
+		$password = $phpass->HashPassword($password);
 
 		// set missing variables
 		$num = $data['num'];
@@ -2115,12 +2345,18 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param array $post
+	 * @return array|bool
+	 */
 	function delete($board, $post)
 	{
 		// $post => [doc_id, password, type]
 		$query = $this->db->query('
 			SELECT *
 			FROM ' . $this->radix->get_table($board) . '
+			' . $this->sql_media_join($board) . '
 			WHERE doc_id = ?
 			LIMIT 0, 1
 		',
@@ -2142,14 +2378,14 @@ class Post extends CI_Model
 		);
 
 		// validate password
-		if ($phpass->CheckPassword($data['password'], $row->delpass) !== TRUE && !$this->tank_auth->is_allowed())
+		if ($phpass->CheckPassword($post['password'], $row->delpass) !== TRUE && !$this->tank_auth->is_allowed())
 		{
 			log_message('debug', 'post.php/delete: invalid password');
 			return array('error' => _('The password you inserted did not match the post\'s deletion password.'));
 		}
 
 		// delete media file for post
-		if (!$this->delete_image($board, $row))
+		if (!$this->delete_media($board, $row))
 		{
 			log_message('error', 'post.php/delete: unable to delete media from post');
 			return array('error' => _('Unable to delete thumbnail for post.'));
@@ -2180,6 +2416,7 @@ class Post extends CI_Model
 			$thread = $this->db->query('
 				SELECT *
 				FROM ' . $this->radix->get_table($board) . '
+				' . $this->sql_media_join($board) . '
 				WHERE parent = ?
 			',
 				array($row->num)
@@ -2191,7 +2428,7 @@ class Post extends CI_Model
 				// remove all media files
 				foreach ($thread->result() as $p)
 				{
-					if (!$this->delete_image($board, $t))
+					if (!$this->delete_media($board, $p))
 					{
 						log_message('error', 'post.php/delete: unable to delete media from thread op');
 						return array('error' => _('Unable to delete thumbnail for thread replies.'));
@@ -2216,33 +2453,44 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param object $row
+	 * @param bool $media
+	 * @param bool $thumb
+	 * @return bool
+	 */
 	function delete_media($board, $row, $media = TRUE, $thumb = TRUE)
 	{
-		if (!$row->preview)
+		if (!$row->media_hash)
 			return TRUE;
 
-		if ($media === TRUE)
+		// delete media file only if there is only one image OR user is admin
+		if ($this->tank_auth->is_allowed() || $row->total == 1)
 		{
-			$media_file = $this->get_media_dir($board, $row);
-			if (file_exists($media_file))
+			if ($media === TRUE)
 			{
-				if (!unlink($media_file))
+				$media_file = $this->get_media_dir($board, $row);
+				if (file_exists($media_file))
 				{
-					log_message('error', 'post.php/delete_media: unable to remove ' . $media_file);
-					return FALSE;
+					if (!unlink($media_file))
+					{
+						log_message('error', 'post.php/delete_media: unable to remove ' . $media_file);
+						return FALSE;
+					}
 				}
 			}
-		}
 
-		if ($thumb === TRUE)
-		{
-			$thumb_file = $this->get_media_dir($board, $row, TRUE);
-			if (file_exists($thumb_file))
+			if ($thumb === TRUE)
 			{
-				if (!unlink($thumb_file))
+				$thumb_file = $this->get_media_dir($board, $row, TRUE);
+				if (file_exists($thumb_file))
 				{
-					log_message('error', 'post.php/delete_media: unable to remove ' . $thumb_file);
-					return FALSE;
+					if (!unlink($thumb_file))
+					{
+						log_message('error', 'post.php/delete_media: unable to remove ' . $thumb_file);
+						return FALSE;
+					}
 				}
 			}
 		}
@@ -2251,12 +2499,35 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param string $hash
+	 * @param bool $delete
+	 * @return bool
+	 */
 	function ban_media($hash, $delete = FALSE)
 	{
 		// insert into global banned media hash
 		$this->db->query('
 			INSERT IGNORE INTO ' . $this->db->protect_identifiers('banned_md5', TRUE) . ' (md5) VALUES (?)
 		', array($hash));
+
+		// update all local _images table
+		foreach ($this->radix->get_all() as $board)
+		{
+			$this->db->query('
+				INSERT INTO ' . $this->radix->get_table($board, '_images') . '
+				(
+					media_hash, media_filename, preview_op, preview_reply, total, banned
+				)
+				VALUES
+				(
+					?, ?, ?, ?, ?, ?
+				)
+				ON DUPLICATE KEY UPDATE banned = 1
+			',
+				array($hash, NULL, NULL, NULL, 0, 1)
+			);
+		}
 
 		// delete media files if TRUE
 		if ($delete === TRUE)
@@ -2290,6 +2561,11 @@ class Post extends CI_Model
 	}
 
 
+	/**
+	 * @param object $board
+	 * @param int $doc_id
+	 * @return bool
+	 */
 	function mark_spam($board, $doc_id)
 	{
 		$query = $this->db->query('

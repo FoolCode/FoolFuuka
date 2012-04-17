@@ -59,8 +59,7 @@ class Chan extends Public_Controller
 				if ($this->input->get('page') != '' || $this->input->get('ghost') != '')
 				{
 					array_push($url, ($this->input->get('ghost') != '') ? 'ghost' : 'page');
-					array_push($url,
-						($this->input->get('page') != '') ? $this->input->get('page') : 1);
+					array_push($url, ($this->input->get('page') != '') ? $this->input->get('page') : 1);
 				}
 			}
 
@@ -72,11 +71,9 @@ class Chan extends Public_Controller
 				if ($this->input->get('search_text') != '')
 					array_push($url, sprintf('text/%s', $this->input->get('search_text')));
 				if ($this->input->get('search_username') != '')
-					array_push($url,
-						sprintf('username/%s', $this->input->get('search_username')));
+					array_push($url, sprintf('username/%s', $this->input->get('search_username')));
 				if ($this->input->get('search_tripcode') != '')
-					array_push($url,
-						sprintf('tripcode/%s', $this->input->get('search_tripcode')));
+					array_push($url, sprintf('tripcode/%s', $this->input->get('search_tripcode')));
 				if ($this->input->get('search_del') != '')
 					array_push($url,
 						sprintf('deleted/%s',
@@ -119,15 +116,18 @@ class Chan extends Public_Controller
 		switch ($action)
 		{
 			case 'delete':
+
 				$post = array(
-					'post' => $this->input->post('post'),
+					'doc_id'   => $this->input->post('post'),
 					'password' => $this->input->post('password')
 				);
 
 				$result = $this->post->delete(get_selected_radix(), $post);
+
 				break;
 
 			case 'report':
+
 				$this->load->model('report');
 				$post = array(
 					'board_id' => get_selected_radix()->id,
@@ -137,15 +137,6 @@ class Chan extends Public_Controller
 
 				$result = $this->report->add($post);
 
-				if (isset($result['error']))
-				{
-					$this->output
-						->set_output(json_encode(array('status' => 'failed', 'reason' => $result['error'])));
-					return FALSE;
-				}
-				$this->output
-					->set_output(json_encode(array('status' => 'success')));
-				return TRUE;
 				break;
 
 			default:
@@ -159,7 +150,7 @@ class Chan extends Public_Controller
 			return FALSE;
 		}
 
-		if (isset($result['success']) && $result['success'] == TRUE)
+		if ((isset($result['success']) && $result['success'] == TRUE) || $result === TRUE)
 		{
 			$this->output
 				->set_output(json_encode(array('status' => 'success')));
@@ -185,7 +176,6 @@ class Chan extends Public_Controller
 			// Determine if $board returns a valid response. If not, recheck the $method and $params.
 			if (!($board = $this->radix->set_selected_by_shortname($method)))
 				return parent::_remap($method, $params);
-
 
 			// Load some default settings for the board.
 			$this->load->model('post');
@@ -244,7 +234,7 @@ class Chan extends Public_Controller
 				'is_thread',
 				'is_last50',
 				'is_statistics',
-				'modifiers',
+				'@modifiers',
 				'order'
 			),
 			'partials' => array('post_thread', 'tools_post', 'tools_view'),
@@ -743,7 +733,7 @@ class Chan extends Public_Controller
 			show_404();
 
 		// Fetch the FULL IMAGE with the FILENAME specified.
-		$image = $this->post->get_full_image(get_selected_radix(), $filename);
+		$image = $this->post->get_full_media(get_selected_radix(), $filename);
 
 		if (isset($image['media_link']))
 			redirect($image['media_link'], 'location', 303);
@@ -1531,6 +1521,7 @@ class Chan extends Public_Controller
 			show_404();
 		}
 	}
+
 
 }
 

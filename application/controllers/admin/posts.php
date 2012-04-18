@@ -27,10 +27,20 @@ class Posts extends Admin_Controller
 
 	function reports($page = 1)
 	{
+		if(!is_natural($page) || $page == 0)
+		{
+			show_404();
+		}
+		
 		$this->viewdata["function_title"] = _('Reports');
+
+		// ['posts', 'total_found']
+		$data = $this->post->get_reports($page);
 		
-		
-		$data['posts'] = $this->post->get_reports($page);
+		// for pagination copied from default theme
+		$data['pagination']['total'] = $data['total_found']/25;
+		$data['pagination']['current_page'] = $page;
+		$data['pagination']['base_url'] = site_url(array('admin', 'posts', 'reports'));
 
 		$this->viewdata["main_content_view"] = $this->load->view("admin/reports/manage.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);

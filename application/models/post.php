@@ -1850,7 +1850,7 @@ class Post extends CI_Model
 			);
 		}
 
-		return $this->get_multi_posts($multi_posts);
+		return array('posts' => $this->get_multi_posts($multi_posts), 'total_found' => $this->report->get_count());
 	}
 
 

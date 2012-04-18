@@ -130,6 +130,10 @@ class Report extends CI_Model
 					return array('success' => TRUE);
 				}
 			),
+			'ip_reporter' => array(
+				'type' => 'hidden',
+				'database' => TRUE,
+			),
 			'reason' => array(
 				'type' => 'textarea',
 				'label' => _('Reason'),
@@ -162,9 +166,26 @@ class Report extends CI_Model
 		return $query->result();
 	}
 
+	function get_count()
+	{
+		$query = $this->db->select('COUNT(*) AS count')->get('reports');
+		
+		if($query->num_rows == 0)
+		{
+			return 0;
+		}
+		
+		$row = $query->row();
+		
+		return $row->count;
+	}
 
 	function add($data = array())
 	{
+		// if it's set we want to know the IP address of the reporter
+		if($this->input->ip_address())
+			$data['ip_reporter'] = inet_ptod($this->input->ip_address());
+		
 		$this->load->library('form_validation');
 		$result = $this->form_validation->form_validate($this->structure(), $data);
 

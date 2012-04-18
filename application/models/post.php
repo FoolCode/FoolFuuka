@@ -45,7 +45,7 @@ class Post extends CI_Model
 				WHERE `board_id` = ' . $board->id . '
 			) AS r
 			ON
-			' . ($join_on?$join_on:$this->radix->get_table($board)) . '.`doc_id`
+			' . ($join_on ? $join_on : $this->radix->get_table($board)) . '.`doc_id`
 			=
 			' . $this->db->protect_identifiers('r') . '.`report_doc_id`
 		';
@@ -63,7 +63,7 @@ class Post extends CI_Model
 			LEFT JOIN
 				(' . $this->radix->get_table($board, '_images') . ' AS `m`)
 			ON
-			' . ($join_on?$join_on:$this->radix->get_table($board)) . '.`media_id`
+			' . ($join_on ? $join_on : $this->radix->get_table($board)) . '.`media_id`
 			=
 			' . $this->db->protect_identifiers('m') . '.`media_id`
 		';
@@ -199,17 +199,6 @@ class Post extends CI_Model
 		// locate the image
 		if (file_exists($this->get_media_dir($board, $post, $thumbnail)) !== FALSE)
 		{
-			// output the url on another server
-			if (strlen(get_setting('fs_balancer_clients')) > 10)
-			{
-				preg_match('/([\d]+)/', $post->media_filename, $matches);
-
-				if (isset($matches[1]))
-				{
-					$balancer_servers = '';
-				}
-			}
-
 			if ($thumbnail === TRUE)
 			{
 				if (isset($post->parent))
@@ -224,6 +213,18 @@ class Post extends CI_Model
 			else
 			{
 				$image = $post->media_filename;
+			}
+
+			// output the url on another server
+			if (strlen(get_setting('fs_balancer_clients')) > 10)
+			{
+				preg_match('/([\d]+)/', $post->media_filename, $matches);
+
+				if (isset($matches[1]))
+				{
+					$balancer_servers = get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'
+						. ($thumbnail ? 'thumb' : 'img') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
+				}
 			}
 
 			return get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'
@@ -266,9 +267,13 @@ class Post extends CI_Model
 		else
 		{
 			if (file_exists($this->get_media_dir($board, $post)) !== FALSE)
+			{
 				return $this->get_media_link($board, $post);
+			}
 			else
+			{
 				return FALSE;
+			}
 		}
 	}
 
@@ -1031,7 +1036,9 @@ class Post extends CI_Model
 				{
 					// ignore boards that don't have sphinx enabled
 					if (!$radix->sphinx)
+					{
 						continue;
+					}
 
 					$indexes[] = $board->shortname . '_ancient';
 					$indexes[] = $board->shortname . '_main';
@@ -1190,99 +1197,82 @@ class Post extends CI_Model
 			{
 				$this->db->like('title', rawurldecode($args['subject']));
 			}
-
 			if ($args['username'])
 			{
 				$this->db->like('name', rawurldecode($args['username']));
 				$this->db->use_index('name_index');
 			}
-
 			if ($args['tripcode'])
 			{
 				$this->db->like('trip', rawurldecode($args['tripcode']));
 				$this->db->use_index('trip_index');
 			}
-
 			if ($args['email'])
 			{
 				$this->db->like('email', rawurldecode($args['email']));
 				$this->db->use_index('email_index');
 			}
-
 			if ($args['capcode'] == 'admin')
 			{
 				$this->db->where('capcode', 'A');
 			}
-
 			if ($args['capcode'] == 'mod')
 			{
 				$this->db->where('capcode', 'M');
 			}
-
 			if ($args['capcode'] == 'user')
 			{
 				$this->db->where('capcode !=', 'A');
 				$this->db->where('capcode !=', 'M');
 			}
-
 			if ($args['deleted'] == 'deleted')
 			{
 				$this->db->where('deleted', 1);
 			}
-
 			if ($args['deleted'] == 'not-deleted')
 			{
 				$this->db->where('deleted', 0);
 			}
-
 			if ($args['ghost'] == 'only')
 			{
 				$this->db->where('subnum <>', 0);
 				$this->db->use_index('subnum_index');
 			}
-
 			if ($args['ghost'] == 'none')
 			{
 				$this->db->where('subnum', 0);
 				$this->db->use_index('subnum_index');
 			}
-
 			if ($args['type'] == 'op')
 			{
 				$this->db->where('parent', 0);
 				$this->db->use_index('parent_index');
 			}
-
 			if ($args['type'] == 'posts')
 			{
 				$this->db->where('parent <>', 0);
 				$this->db->use_index('parent_index');
 			}
-
 			if ($args['filter'] == 'image')
 			{
 				$this->db->where('media_hash IS NOT NULL');
 				$this->db->use_index('media_hash_index');
 			}
-
 			if ($args['filter'] == 'text')
 			{
 				$this->db->where('media_hash IS NULL');
 				$this->db->use_index('media_hash_index');
 			}
-
 			if ($args['start'])
 			{
 				$this->db->where('timestamp >=', intval(strtotime($args['start'])));
 				$this->db->use_index('timestamp_index');
 			}
-
 			if ($args['end'])
 			{
 				$this->db->where('timestamp <=', intval(strtotime($args['end'])));
 				$this->db->use_index('timestamp_index');
 			}
-
 
 			// stop cache of entire sql statement, the main query is stored
 			$this->db->stop_cache();
@@ -1303,7 +1293,6 @@ class Post extends CI_Model
 				$this->db->order_by('timestamp', 'ASC');
 				$this->db->use_index('timestamp_index');
 			}
-
 			else
 			{
 				$this->db->order_by('timestamp', 'DESC');
@@ -1476,7 +1465,9 @@ class Post extends CI_Model
 		// set total pages found
 		$pages = $query_pages->row()->pages;
 		if ($pages <= 1)
+		{
 			$pages = NULL;
+		}
 
 		// free up memory
 		$query_pages->free_result();
@@ -1851,7 +1842,7 @@ class Post extends CI_Model
 		// populate multi_posts array to fetch
 		$multi_posts = array();
 
-		foreach ($this->report->get_posts($page) as $post)
+		foreach ($this->report->get_reports($page) as $post)
 		{
 			$multi_posts[] = array(
 				'board_id' => $post->board_id,
@@ -1891,12 +1882,17 @@ class Post extends CI_Model
 			}
 		}
 
+		if (empty($sql))
+		{
+			return array();
+		}
+
 		// order results properly with string argument
 		$query = $this->db->query(implode('UNION', $sql) . ($order_by ? $order_by : ''));
 
 		if ($query->num_rows() == 0)
 		{
-			return FALSE;
+			return array();
 		}
 
 		// populate results array
@@ -2168,7 +2164,9 @@ class Post extends CI_Model
 			if ($data['media'] !== FALSE || $data['media'] != '')
 			{
 				if (!unlink($data['media']['full_path']))
+				{
 					log_message('error', 'post.php/comment: failed to remove media file from cache');
+				}
 			}
 
 			return array('error' => _('Your IP has been identified as a spam proxy. Please try a different IP or remove the proxy to post.'));
@@ -2193,7 +2191,9 @@ class Post extends CI_Model
 				if ($data['media'] !== FALSE || $data['media'] != '')
 				{
 					if (!unlink($data['media']['full_path']))
+					{
 						log_message('error', 'post.php/comment: failed to remove media file from cache');
+					}
 				}
 
 				return array('error' => _('You are banned from posting'));
@@ -2216,10 +2216,15 @@ class Post extends CI_Model
 			$row = $check->row();
 
 			if ($data['comment'] != '' && $row->comment == $data['comment'] && !$this->tank_auth->is_allowed())
+			{
 				return array('error' => _('You\'re posting again the same comment as the last time!'));
+			}
 
 			if (time() - $row->timestamp < 10 && time() - $row->timestamp > 0 && !$this->tank_auth->is_allowed())
+			{
 				return array('error' => 'You must wait at least 10 seconds before posting again.');
+			}
+
 		}
 
 		// process comment name+trip
@@ -2247,7 +2252,9 @@ class Post extends CI_Model
 		{
 			// store email in cookie to repopulate forms
 			if ($data['email'] != 'sage')
+			{
 				$this->input->set_cookie('foolfuuka_post_email', $data['email'], 60 * 60 * 24 * 30);
+			}
 
 			$email = $data['email'];
 		}
@@ -2287,36 +2294,54 @@ class Post extends CI_Model
 
 		// process comment ghost+spoiler
 		if (isset($data['ghost']) && $data['ghost'] === TRUE)
+		{
 			$ghost = TRUE;
+		}
 		else
+		{
 			$ghost = FALSE;
+		}
+
 
 		if ($data['spoiler'] === FALSE || $data['spoiler'] == '')
+		{
 			$spoiler = 0;
+		}
 		else
+		{
 			$spoiler = $data['spoiler'];
+		}
+
 
 		// process comment media
 		if ($data['media'] === FALSE || $data['media'] == '')
 		{
 			// if no media is present, remove spoiler setting
 			if ($spoiler == 1)
+			{
 				$spoiler = 0;
+			}
 
 			// if no media is present and post is op, stop processing
 			if ($data['num'] == 0)
+			{
 				return array('error' => _('An image is required for creating threads.'));
+			}
 
 			// check other media errors
 			if (isset($data['media_error']))
 			{
 				// invalid file type
 				if (strlen($data['media_error']) == 64)
+				{
 					return array('error' => _('The filetype you are attempting to upload is not allowed.'));
+				}
 
 				// media file is too large
 				if (strlen($data['media_error']) == 79)
+				{
 					return array('error' =>  _('The image you are attempting to upload is larger than the permitted size.'));
+				}
 			}
 		}
 		else
@@ -2327,7 +2352,9 @@ class Post extends CI_Model
 			if ($media_allowed === FALSE)
 			{
 				if (!unlink($media['full_path']))
+				{
 					log_message('error', 'post.php/comment: failed to remove media file from cache');
+				}
 
 				return array('error' => _('Sorry, this thread has reached its maximum amount of image replies.'));
 			}
@@ -2336,7 +2363,9 @@ class Post extends CI_Model
 			if ($media['image_width'] == 0 || $media['image_height'] == 0)
 			{
 				if (!unlink($media['full_path']))
+				{
 					log_message('error', 'post.php/comment: failed to remove media file from cache');
+				}
 
 				return array('error' => _('Your image upload is not a valid image file.'));
 			}
@@ -2351,7 +2380,9 @@ class Post extends CI_Model
 			if ($check->num_rows() > 0)
 			{
 				if (!unlink($media['full_path']))
+				{
 					log_message('error', 'post.php/comment: failed to remove media file from cache');
+				}
 
 				return array('error' => _('Your image upload has been flagged as inappropriate.'));
 			}
@@ -2359,15 +2390,21 @@ class Post extends CI_Model
 
 		// check comment data for spam regex
 		if (check_commentdata($data))
+		{
 			return array('error' => _('Your post contains contents that is marked as spam.'));
+		}
 
 		// check entire length of comment
 		if (mb_strlen($comment) > 4096)
+		{
 			return array('error' => _('Your post was too long.'));
+		}
 
 		// check total numbers of lines in comment
 		if (count(explode("\n", $comment)) > 20)
+		{
 			return array('error' => _('Your post had too many lines.'));
+		}
 
 		// phpass password for extra security, using the same tank_auth setting since it's cool
 		$phpass = new PasswordHash(
@@ -2393,7 +2430,9 @@ class Post extends CI_Model
 		);
 
 		if ($check->num_rows() > 0)
+		{
 			return array('error' => _('This post is already being processed...'));
+		}
 
 		// being processing insert...
 		if ($ghost === TRUE)
@@ -2455,7 +2494,9 @@ class Post extends CI_Model
 			{
 				$media_file = $this->process_media($board, $num, $media, $media_hash);
 				if ($media_file === FALSE)
+				{
 					return array('error' => _('Your image was invalid.'));
+				}
 
 				// replace timestamp with timestamp generated by process_media
 				$default_post_arr[2] = end($media_file);
@@ -2615,7 +2656,7 @@ class Post extends CI_Model
 
 	/**
 	 * @param object $board
-	 * @param object $row
+	 * @param object $post
 	 * @param bool $media
 	 * @param bool $thumb
 	 * @return bool
@@ -2756,7 +2797,7 @@ class Post extends CI_Model
 		}
 
 		// store post information
-		$row = $query->row();
+		$post = $query->row();
 
 		// mark post as spam
 

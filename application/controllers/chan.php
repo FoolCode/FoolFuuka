@@ -347,7 +347,8 @@ class Chan extends Public_Controller
 			(!empty($options)) ?
 				$options :
 				array('per_page' => 24, 'type' =>
-				($this->input->cookie('foolfuuka_default_theme_by_thread') ? 'by_thread' : 'by_post')));
+				($this->input->cookie('foolfuuka_default_theme_by_thread' . 
+					(get_selected_radix()->archive?'_archive':'_board')) ? 'by_thread' : 'by_post')));
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
@@ -381,15 +382,20 @@ class Chan extends Public_Controller
 
 	public function by_thread()
 	{
-		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1',
-			60 * 60 * 24 * 30);
+		$this->input->set_cookie(
+			'foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'), 
+			'1',
+			60 * 60 * 24 * 30
+		);
 		redirect(get_selected_radix()->shortname);
 	}
 
 
 	public function by_post()
 	{
-		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1', '');
+		$this->input->set_cookie(
+			'foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'),
+			'1', '');
 		redirect(get_selected_radix()->shortname);
 	}
 

@@ -191,12 +191,12 @@ body.theme_default {
 
 .theme_default .search-dropdown div.search-dropdown-menu ul li {
     padding:0px 7px;
-    color: #999;
+    color: #777;
 }
 
 .theme_default .search-dropdown div.search-dropdown-menu ul li.input-prepend {
     padding:0px 7px 6px;
-    color: #999;
+    color: #777;
 }
 
 .theme_default .search-dropdown div.search-dropdown-menu ul li.divider {
@@ -214,8 +214,7 @@ body.theme_default {
 }
 
 
-.theme_default .search-dropdown div.search-dropdown-menu ul li .add-on
-{
+.theme_default .search-dropdown div.search-dropdown-menu ul li .add-on {
     width:25%;
     font-size:11px;
     height:16px;
@@ -252,7 +251,7 @@ body.theme_default {
 .theme_default .search-dropdown label{
     display:inline;
     margin-bottom:0;
-    color: #999;
+    color: #777;
     font-size:13px;
 }
 

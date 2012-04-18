@@ -102,6 +102,11 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 		<?php endif; ?>
 		</ul>
 	</div>
+	
+	<?php if(isset($p->report_reason) && !is_null($p->report_reason)) : ?>
+	<div class="report_reason"><?php echo '<strong>' . _('Report reason:') . '</strong> ' . $p->report_reason ?></div>
+	<?php endif; ?>
+	
 	<?php endif; ?>
 </article>
 <br/>

@@ -414,6 +414,19 @@ body.theme_default {
     display:none;
 }
 
+.theme_default article.thread .report_reason {
+	background: #CFDFFE;
+	border: 1px solid #00248E;
+	padding:2px 4px;
+	margin: 5px 10px 0 3px;
+	overflow:hidden;
+}
+
+.theme_default article.thread > .report_reason {
+	margin-bottom: 10px;
+	max-width:600px;
+}
+
 .theme_default article.thread > .text {
     padding:10px 10px 10px 30px;
     word-wrap: break-word;

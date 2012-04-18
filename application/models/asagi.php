@@ -91,8 +91,8 @@ class Asagi extends CI_Model
 		if (!is_dir('content/asagi'))
 			mkdir('content/asagi');
 		
-		/**
-		 * @todo Rather use a ZIP with complete GPLv3 contents, or maybe having it in admin panel is enough 
+		/*
+		 * @todo: Rather use a ZIP with complete GPLv3 contents, or maybe having it in admin panel is enough 
 		 */
 		write_file('content/asagi/asagi.jar', $zip);
 	}

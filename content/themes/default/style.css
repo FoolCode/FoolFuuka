@@ -422,6 +422,11 @@ body.theme_default {
 	overflow:hidden;
 }
 
+.theme_default article.thread .ip_reporter {
+	font-size: 85%;
+}
+
+
 .theme_default article.thread > .report_reason {
 	margin-bottom: 10px;
 	max-width:600px;

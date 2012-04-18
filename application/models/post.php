@@ -39,8 +39,8 @@ class Post extends CI_Model
 			LEFT JOIN
 			(
 				SELECT
-					id AS report_id, doc_id AS report_doc_id, reason AS report_reason, status AS report_status,
-					created AS report_created
+					id AS report_id, doc_id AS report_doc_id, reason AS report_reason, ip_reporter as report_ip_reporter,
+					status AS report_status, created AS report_created
 				FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
 				WHERE `board_id` = ' . $board->id . '
 			) AS r

@@ -2043,7 +2043,7 @@ class Post extends CI_Model
 		$query = $this->db->query('
 			SELECT * FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
-			WHERE media_filename = ?
+			WHERE orig_filename = ?
 			ORDER BY num DESC LIMIT 0, 1
 		',
 			array($media_filename)

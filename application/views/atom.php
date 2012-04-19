@@ -10,7 +10,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>' . "\n";
 	<link href="<?php echo $feed_url; ?>"/>
 	<updated><?php //echo date(DATE_W3C, strtotime($posts["chapters"][0]["created"])) ?></updated>
 	<author>
-		<name><?php echo get_home_team()->name ?></name>
+		<name>Archive</name>
 	</author>
 	<id><?php echo site_url() ?></id>
 	

@@ -1131,14 +1131,13 @@ class Chan extends Public_Controller
 		{
 			case 'gallery_50':
 				// returns last 200 threads with the thread number as key
-				$threads = array_slice($this->post->gallery(), 0, 50);
-
+				$threads = array_slice($this->post->get_gallery(get_selected_radix()), 0, 50);
 				if (count($threads) > 0)
 				{
 					// let's create a pretty array of chapters [comic][chapter][teams]
 					$result['threads'] = array();
 					$key = 0;
-					foreach ($threads as $num => $thread)
+					foreach ($threads['threads'] as $num => $thread)
 					{
 						$result['threads'][$key]['title'] = $thread->title_processed;
 						$result['threads'][$key]['thumb'] = $thread->thumb_link;

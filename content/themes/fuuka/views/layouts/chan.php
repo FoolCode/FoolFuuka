@@ -48,6 +48,19 @@ if (!defined('BASEPATH'))
 			}
 			?>
 			[ <a href="<?php echo site_url() ?>">index</a><?php if (get_selected_radix()) : ?> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a><?php endif; ?> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
+		
+			<?php if($top_articles = $this->plugins->FS_Articles->get_top()) : ?>
+			Articles [
+			<?php 
+			$top_articles_count = count($top_articles);
+			foreach($top_articles as $key => $article) : ?>
+			<a href="<?php echo site_url('articles/' . $article->slug) ?>"><?php echo fuuka_htmlescape($article->title) ?></a>
+			<?php 
+			if($top_articles_count - 1 > $key)
+				echo ' / ';
+			endforeach; ?>
+			]
+			<?php endif; ?>
 		</div>
 		<?php endif; ?>
 
@@ -129,6 +142,20 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 
 			<div style="float:right">
+				
+				<?php if($bottom_articles = $this->plugins->FS_Articles->get_bottom()) : ?>
+				Articles [
+				<?php 
+				$bottom_articles_count = count($bottom_articles);
+				foreach($bottom_articles as $key => $article) : ?>
+				<a href="<?php echo site_url('articles/' . $article->slug) ?>"><?php echo fuuka_htmlescape($article->title) ?></a>
+				<?php 
+				if($bottom_articles_count - 1 > $key)
+					echo ' / ';
+				endforeach; ?>
+				]
+				<?php endif; ?>
+				
 				Theme [ <a href="<?php echo site_url(array('functions', 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array('functions', 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> ]
 			</div>
 		</div>

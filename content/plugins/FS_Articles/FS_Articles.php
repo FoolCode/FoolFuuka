@@ -45,7 +45,7 @@ class FS_Articles extends Plugins
 					return array('success' => TRUE);
 				}
 			),
-			'name' => array(
+			'title' => array(
 				'type' => 'input',
 				'database' => TRUE,
 				'label' => 'Title',
@@ -81,7 +81,7 @@ class FS_Articles extends Plugins
 						}
 					}
 
-					// check that there isn't already a board with that name
+					// check that there isn't already an article with that name
 					$query = $CI->db->where('slug', $input['slug'])->get('plugin_fs-articles');
 					if ($query->num_rows() > 0)
 					{
@@ -110,11 +110,17 @@ class FS_Articles extends Plugins
 			'separator-1' => array(
 				'type' => 'separator'
 			),
-			'active' => array(
+			'top' => array(
 				'type' => 'checkbox',
 				'database' => TRUE,
-				'label' => _('Display the article'),
-				'help' => _('Display the article')
+				'label' => _('Display the article link on the top of the page'),
+				'help' => _('Display the article link on the top of the page')
+			),
+			'bottom' => array(
+				'type' => 'checkbox',
+				'database' => TRUE,
+				'label' => _('Display the article link on the bottom of the page'),
+				'help' => _('Display the article link on the bottom of the page')
 			),
 			'separator-2' => array(
 				'type' => 'separator-short'
@@ -173,7 +179,7 @@ class FS_Articles extends Plugins
 			<table class="table table-bordered table-striped table-condensed">
 				<thead>
 					<tr>
-						<th>Name</th>
+						<th>Title</th>
 						<th>Slug</th>
 						<th>Edit</th>
 						<th>Remove</th>
@@ -184,10 +190,10 @@ class FS_Articles extends Plugins
 					foreach($articles as $article) : ?>
 					<tr>
 						<td>
-							<?php echo htmlentities($article->name) ?>
+							<?php echo htmlentities($article->title) ?>
 						</td>
 						<td>
-							<?php echo $article->slug ?>
+							<a href="<?php echo site_url('articles/' . $article->slug) ?>" target="_blank"><?php echo $article->slug ?></a>
 						</td>
 						<td>
 							<a href="<?php echo site_url('admin/articles/edit/'.$article->slug) ?>" class="btn btn-mini btn-primary"><?php echo _('Edit') ?></a>
@@ -281,8 +287,8 @@ class FS_Articles extends Plugins
 		if($article->url)
 			redirect($article->url);
 		
-		$this->template->title(fuuka_htmlescape($article->name) . ' « ' . get_setting('fs_gen_site_title'));
-		$this->template->set('section_title', $article->name);
+		$this->template->title(fuuka_htmlescape($article->title) . ' « ' . get_setting('fs_gen_site_title'));
+		$this->template->set('section_title', $article->title);
 		$this->load->library('Markdown_Parser');
 
 		// unless you're making a huge view you can live with output buffers
@@ -334,7 +340,7 @@ class FS_Articles extends Plugins
 		}
 		
 		$this->viewdata["controller_title"] = _('Articles');
-		$this->viewdata["function_title"] = _('Removing article:') . ' ' . $article->name;
+		$this->viewdata["function_title"] = _('Removing article:') . ' ' . $article->title;
 		$data['alert_level'] = 'warning';
 		$data['message'] = _('Do you really want to remove the article?');
 
@@ -352,6 +358,7 @@ class FS_Articles extends Plugins
 		$query = $this->db->query('
 			SELECT *
 			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
+			' . (($this->tank_auth->is_allowed())?'':'WHERE top = 1 OR bottom = 1 ') . '
 		');
 
 		if($query->num_rows() == 0)
@@ -366,7 +373,7 @@ class FS_Articles extends Plugins
 		$query = $this->db->query('
 			SELECT *
 			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-			WHERE slug = ?
+			WHERE slug = ? ' . (($this->tank_auth->is_allowed())?'':'AND (top = 1 OR bottom = 1) ') . '
 		',
 			array($slug));
 		
@@ -382,7 +389,7 @@ class FS_Articles extends Plugins
 		$query = $this->db->query('
 			SELECT *
 			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-			WHERE id = ?
+			WHERE id = ? ' . (($this->tank_auth->is_allowed())?'':'AND (top = 1 OR bottom = 1) ') . '
 		',
 			array($id));
 		
@@ -393,7 +400,34 @@ class FS_Articles extends Plugins
 	}
 	
 	
+	function get_top()
+	{
+		$query = $this->db->query('
+			SELECT *
+			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
+			WHERE top = 1
+		');
+		
+		if($query->num_rows() == 0)
+			return array();
+
+		return $query->result();
+	}
 	
+	
+	function get_bottom()
+	{
+		$query = $this->db->query('
+			SELECT *
+			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
+			WHERE bottom = 1
+		');
+		
+		if($query->num_rows() == 0)
+			return array();
+
+		return $query->result();
+	}
 
 
 	function save($data)
@@ -419,11 +453,12 @@ class FS_Articles extends Plugins
 			CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('plugin_fs-articles') . "` (
 				`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 				`slug` varchar(128) NOT NULL,
-				`name` varchar(256) NOT NULL,
+				`title` varchar(256) NOT NULL,
 				`url` text,
 				`article` text,
 				`active` smallint(2),
-				`positions` text,
+				`top` smallint(2),
+				`bottom` smallint(2),
 				`edited` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 				PRIMARY KEY (`id`),
 				KEY `edited` (`edited`),

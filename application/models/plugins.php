@@ -206,7 +206,7 @@ class Plugins extends CI_Model
 
 	function remove($slug)
 	{
-		$this->disable($slug);
+		$this->disable_plugin($slug);
 
 		delete_files('content/plugins/' . $slug, TRUE);
 	}
@@ -232,7 +232,7 @@ class Plugins extends CI_Model
 		if (is_null($plugin->revision))
 		{
 
-			$class->install();
+			$class->plugin_install();
 
 			$query = $this->db->query('
 				UPDATE ' . $this->db->dbprefix('plugins') . '

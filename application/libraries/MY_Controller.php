@@ -99,16 +99,18 @@ class MY_Controller extends CI_Controller
 			show_404();
 		}
 
-		/*
+		
 		if ($this->plugins->is_controller_function($this->uri->segment_array()))
 		{
 			$plugin_controller = $this->plugins->get_controller_function($this->uri->segment_array());
+			$uri_array = $this->uri->segment_array();
+			array_shift($uri_array);
+			array_shift($uri_array);
+			array_shift($uri_array);
 
 			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']),
-					array());
+				$uri_array);
 		}
-		 * 
-		 */
 		
 		if (method_exists($this, $method))
 		{

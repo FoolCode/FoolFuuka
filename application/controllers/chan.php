@@ -172,10 +172,33 @@ class Chan extends Public_Controller
 		}
 		else if (!empty($params))
 		{
-
 			// Determine if $board returns a valid response. If not, recheck the $method and $params.
 			if (!($board = $this->radix->set_selected_by_shortname($method)))
+			{
+				//PLUGINS: If available, allow plugins to override default functions.
+				// at this point we still didn't chose a board, and the plugin must not assume that
+				if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
+				{
+					$uri_array = $this->uri->segment_array();
+					array_shift($uri_array);
+
+					$this->load->helper('cookie');
+					$this->load->helper('number');
+					$this->load->library('template');
+					$this->template->set_layout('chan');
+					$this->template->set_partial('tools_view', 'tools_view');
+					$this->template->set_partial('tools_post', 'tools_post');
+					$this->template->set('is_page', FALSE);
+					$this->template->set('disable_headers', FALSE);
+					$this->template->set('is_statistics', FALSE);
+					$this->template->set('enabled_tools_post', FALSE);	
+					$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
+					return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
+				}
+
+				// not a plugin and not a board, let's send it higher
 				return parent::_remap($method, $params);
+			}
 
 			// Load some default settings for the board.
 			$this->load->model('post');
@@ -193,13 +216,24 @@ class Chan extends Public_Controller
 		$this->template->set_layout('chan');
 
 		//PLUGINS: If available, allow plugins to override default functions.
-		/*
+		
 		  if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
 		  {
-		  $plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
-		  return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), array());
+				$uri_array = $this->uri->segment_array();
+				array_shift($uri_array);
+				array_shift($uri_array);
+
+				$this->template->set_partial('tools_view', 'tools_view');
+				$this->template->set_partial('tools_post', 'tools_post');
+				$this->template->set('is_page', FALSE);
+				$this->template->set('disable_headers', FALSE);
+				$this->template->set('is_statistics', FALSE);
+				$this->template->set('enabled_tools_post', FALSE);	
+
+				$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
+				return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
 		  }
-		 */
+		 
 
 		// FUNCTIONS: If available, load custom functions to override default functions.
 		if (method_exists($this->TC, $method))

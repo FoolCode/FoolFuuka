@@ -50,7 +50,7 @@ if (!defined('BASEPATH'))
 			[ <a href="<?php echo site_url() ?>">index</a><?php if (get_selected_radix()) : ?> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a><?php endif; ?> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
 		
 			<?php if($top_articles = $this->plugins->FS_Articles->get_top()) : ?>
-			Articles [
+			Articles: [
 			<?php 
 			$top_articles_count = count($top_articles);
 			foreach($top_articles as $key => $article) : ?>
@@ -144,7 +144,7 @@ if (!defined('BASEPATH'))
 			<div style="float:right">
 				
 				<?php if($bottom_articles = $this->plugins->FS_Articles->get_bottom()) : ?>
-				Articles [
+				Articles: [
 				<?php 
 				$bottom_articles_count = count($bottom_articles);
 				foreach($bottom_articles as $key => $article) : ?>

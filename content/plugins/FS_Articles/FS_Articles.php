@@ -263,7 +263,7 @@ class FS_Articles extends Plugins
 			$this->viewdata["function_title"] = _('New article') ;
 		}
 		
-		$this->viewdata["controller_title"] = _('Articles');
+		$this->viewdata["controller_title"] = '<a href="' . site_url('admin/articles') . '">' . _('Articles') . '</a>;
 		
 		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
@@ -339,7 +339,7 @@ class FS_Articles extends Plugins
 			redirect('admin/articles/manage');
 		}
 		
-		$this->viewdata["controller_title"] = _('Articles');
+		$this->viewdata["controller_title"] = '<a href="' . site_url('admin/articles') . '">' . _('Articles') . '</a>;
 		$this->viewdata["function_title"] = _('Removing article:') . ' ' . $article->title;
 		$data['alert_level'] = 'warning';
 		$data['message'] = _('Do you really want to remove the article?');

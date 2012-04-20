@@ -274,7 +274,7 @@ if (!defined('BASEPATH'))
 			
 			<div style="float:right">
 				<?php if($bottom_articles = $this->plugins->FS_Articles->get_bottom()) : ?>
-				Articles [
+				Articles: [
 				<?php 
 				$bottom_articles_count = count($bottom_articles);
 				foreach($bottom_articles as $key => $article) : ?>

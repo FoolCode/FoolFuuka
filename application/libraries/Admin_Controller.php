@@ -210,7 +210,7 @@ class Admin_Controller extends MY_Controller
 							: ''), "icon" => 'icon-refresh'),
 			)
 		);
-/*
+
 		$sidebar["plugins"] = array(
 			"name" => _("Plugins"),
 			"level" => "admin",
@@ -219,7 +219,7 @@ class Admin_Controller extends MY_Controller
 				"manage" => array("level" => "admin", "name" => _("Manage"), "icon" => 'icon-gift'),
 			)
 		);
-*/
+
 		$sidebar["meta"] = array(
 			"name" => "Meta", // no gettext because meta must be meta
 			"level" => "member",

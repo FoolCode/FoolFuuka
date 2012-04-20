@@ -39,8 +39,8 @@ class Post extends CI_Model
 			LEFT JOIN
 			(
 				SELECT
-					id AS report_id, doc_id AS report_doc_id, reason AS report_reason, status AS report_status,
-					created AS report_created
+					id AS report_id, doc_id AS report_doc_id, reason AS report_reason, ip_reporter as report_ip_reporter,
+					status AS report_status, created AS report_created
 				FROM ' . $this->db->protect_identifiers('reports', TRUE) . '
 				WHERE `board_id` = ' . $board->id . '
 			) AS r
@@ -1850,7 +1850,7 @@ class Post extends CI_Model
 			);
 		}
 
-		return $this->get_multi_posts($multi_posts);
+		return array('posts' => $this->get_multi_posts($multi_posts), 'total_found' => $this->report->get_count());
 	}
 
 
@@ -2043,7 +2043,7 @@ class Post extends CI_Model
 		$query = $this->db->query('
 			SELECT * FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
-			WHERE media_filename = ?
+			WHERE orig_filename = ?
 			ORDER BY num DESC LIMIT 0, 1
 		',
 			array($media_filename)

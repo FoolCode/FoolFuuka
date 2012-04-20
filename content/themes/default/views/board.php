@@ -96,6 +96,14 @@ if (!defined('BASEPATH'))
 	<div class="thread_tools_bottom">
 		<?php echo (isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' posts ' . ((isset($post['images_omitted']) && $post['images_omitted'] > 0) ? 'and ' . $post['images_omitted'] . ' images' : '') . ' omitted.</span>' : '' ?>
 	</div>
+	
+	<?php if(isset($op->report_reason) && !is_null($op->report_reason)) : ?>
+	<div class="report_reason"><?php echo '<strong>' . _('Report reason:') . '</strong> ' . $op->report_reason ?>
+		<br/>
+		<div class="ip_reporter"><?php echo inet_dtop($op->report_ip_reporter) ?></div>
+	</div>
+	<?php endif; ?>
+	
 	<?php endif; ?>
 
 	<aside class="posts">

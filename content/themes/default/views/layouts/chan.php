@@ -146,8 +146,22 @@ if (!defined('BASEPATH'))
 									<b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu" style="margin-left:-9px">
-									<li><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_post')) ?>"><?php echo _('By post') ?></a></li>
-									<li><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_thread')) ?>"><?php echo _('By thread') ?></a></li>
+									<li>
+										<a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_post')) ?>">
+											<?php echo _('By post') ?>
+											<?php if($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) != 1)
+												echo ' <i class="icon-ok"></i>';
+											?>
+										</a>
+									</li>
+									<li>
+										<a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_thread')) ?>">
+											<?php echo _('By thread') ?>
+											<?php if($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) == 1)
+												echo ' <i class="icon-ok"></i>';
+											?>
+										</a>
+									</li>
 								</ul>
 							</li>
 							<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo _('Ghost') ?></a>

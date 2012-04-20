@@ -1,74 +1,76 @@
-<?php 
-	/*
-	 * This view depends fully on the default theme
-	 */
-	echo link_tag('content/themes/default/style.css?v=' . FOOL_VERSION);
+<?php
+
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
+
+/*
+ * This view depends fully on the default theme
+ */
+echo link_tag('content/themes/default/style.css?v=' . FOOL_VERSION);
 ?>
 <script src="<?php echo site_url() ?>content/themes/default/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
 <script src="<?php echo site_url() ?>content/themes/default/board.js?v=<?php echo FOOL_VERSION ?>"></script>
 
 <div class="theme_default clearfix" style="padding-bottom: 15px">
-	<article class="thread">
-	<?php 
-	foreach($posts as $key => $p)
-	{
-		if ($p->parent == 0)
-			$p->parent  = $p->num;
-		
-		include('content/themes/default/views/board_comment.php');
-	}
-	
-	?>
-	</article>
-	
-
-
-	<?php /* if ($reports->paged->total_pages > 1) : ?>
-	<div class="pagination" style="margin-bottom: -5px">
-		<ul>
+	<article class="thread clearfix">
 		<?php
-			if ($reports->paged->has_previous)
-				echo '<li class="prev"><a href="' . site_url('admin/posts/reports/'.$reports->paged->previous_page) . '">&larr; ' . _('Prev') . '</a></li>';
-			else
-				echo '<li class="prev disabled"><a href="#">&larr; ' . _('Prev') . '</a></li>';
+		foreach ($posts as $key => $p)
+		{
+			if ($p->parent == 0)
+				$p->parent = $p->num;
 
-			if ($reports->paged->total_pages <= 15) :
-				for ($index = 1; $index <= $reports->paged->total_pages; $index++)
-				{
-					echo '<li' . (($reports->paged->current_page == $index) ? ' class="active"' : '') . '><a href="' . site_url('admin/posts/reports/' . $index) . '">' . $index . '</a></li>';
-				}
-			else :
-				if ($reports->paged->current_page < 15) :
-					for ($index = 1; $index <= 15; $index++)
-					{
-						echo '<li' . (($reports->paged->current_page == $index) ? ' class="active"' : '') . '><a href="' . site_url('admin/posts/reports/' . $index) . '">' . $index . '</a></li>';
-					}
-
-					echo '<li class="disabled"><span>...</span></li>';
-				else :
-					for ($index = 1; $index < 10; $index++)
-					{
-						echo '<li' . (($reports->paged->current_page == $index) ? ' class="active"' : '') . '><a href="' . site_url('admin/posts/reports/' . $index) . '">' . $index . '</a></li>';
-					}
-
-					echo '<li class="disabled"><span>...</span></li>';
-
-					for ($index = ((($reports->paged->current_page + 2) > $reports->paged->total_pages) ? ($reports->paged->current_page - 4) : ($reports->paged->current_page - 2)); $index <= ((($reports->paged->current_page + 2) > $reports->paged->total_pages) ? $reports->paged->total_pages : ($reports->paged->current_page + 2)); $index++)
-					{
-						echo '<li' . (($reports->paged->current_page == $index) ? ' class="active"' : '') . '><a href="' . site_url('admin/posts/reports/' . $index) . '">' . $index . '</a></li>';
-					}
-
-					if (($reports->paged->current_page + 2) < $reports->paged->total_pages)
-						echo '<li class="disabled"><span>...</span></li>';
-				endif;
-			endif;
-
-			if ($reports->paged->has_next)
-				echo '<li class="next"><a href="' . site_url('admin/posts/reports/'.$reports->paged->next_page) . '">' . _('Next') . ' &rarr;</a></li>';
-			else
-				echo '<li class="next disabled"><a href="#">' . _('Next') . ' &rarr;</a></li>';
+			include('content/themes/default/views/board_comment.php');
+		}
 		?>
-		</ul>
-	</div>
-	<?php endif; */?>
+	</article>
+
+
+
+	<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
+		<div class="paginate">
+			<ul>
+				<?php if ($pagination['current_page'] == 1) : ?>
+					<li class="prev disabled"><a href="#">&larr; Previous</a></li>
+				<?php else : ?>
+					<li class="prev"><a href="<?php echo $pagination['base_url'] . ($pagination['current_page'] - 1); ?>/">&larr; Previous</a></li>
+				<?php endif; ?>
+
+				<?php
+				if ($pagination['total'] <= 15) :
+					for ($index = 1; $index <= $pagination['total']; $index++)
+					{
+						echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+					}
+				else :
+					if ($pagination['current_page'] < 15) :
+						for ($index = 1; $index <= 15; $index++)
+						{
+							echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+						}
+						echo '<li class="disabled"><span>...</span></li>';
+					else :
+						for ($index = 1; $index < 10; $index++)
+						{
+							echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+						}
+						echo '<li class="disabled"><span>...</span></li>';
+						for ($index = ((($pagination['current_page'] + 2) > $pagination['total']) ? ($pagination['current_page'] - 4) : ($pagination['current_page'] - 2)); $index <= ((($pagination['current_page'] + 2) > $pagination['total'])
+									? $pagination['total'] : ($pagination['current_page'] + 2)); $index++)
+						{
+							echo '<li' . (($pagination['current_page'] == $index) ? ' class="active"' : '') . '><a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a></li>';
+						}
+						if (($pagination['current_page'] + 2) < $pagination['total'])
+							echo '<li class="disabled"><span>...</span></li>';
+					endif;
+				endif;
+				?>
+
+				<?php if ($pagination['total'] == $pagination['current_page']) : ?>
+					<li class="next disabled"><a href="#">Next &rarr;</a></li>
+				<?php else : ?>
+					<li class="next"><a href="<?php echo $pagination['base_url'] . ($pagination['current_page'] + 1); ?>/">Next &rarr;</a></li>
+				<?php endif; ?>
+			</ul>
+		</div>
+			<?php endif; ?>
 </div>

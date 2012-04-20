@@ -155,8 +155,9 @@ body.theme_default {
     z-index:100;
     display:none;
     position:absolute;
-    background:#000;
-    width:100%;
+    background:#FFF;
+	padding: 0 10px 10px;
+    width:160%;
     top:34px;
     right:0px;
     border-radius:5px;
@@ -173,39 +174,47 @@ body.theme_default {
     -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.251), inset 0px -1px 0px rgba(0, 0, 0, 0.102);
 }
 
-.theme_default .search-dropdown ul.search-dropdown-menu {
+.theme_default .search-dropdown div.search-dropdown-menu ul {
     list-style:none;
-    padding:0px 0px 8px;
+    padding:0px 0px 8px 0px;
+	margin: 0;
 }
 
-.theme_default .search-dropdown ul.search-dropdown-menu li {
+.theme_default .search-dropdown div.search-dropdown-menu ul.pull-left {
+	width:59%
+}
+.theme_default .search-dropdown div.search-dropdown-menu ul.pull-right {
+	width:39%;
+	padding-left:1%;
+	border-left: 1px solid #ddd;
+}
+
+.theme_default .search-dropdown div.search-dropdown-menu ul li {
     padding:0px 7px;
-    color: #999;
+    color: #777;
 }
 
-.theme_default .search-dropdown ul.search-dropdown-menu li.input-prepend {
+.theme_default .search-dropdown div.search-dropdown-menu ul li.input-prepend {
     padding:0px 7px 6px;
-    color: #999;
+    color: #777;
 }
 
-.theme_default .search-dropdown ul.search-dropdown-menu li.divider {
+.theme_default .search-dropdown div.search-dropdown-menu ul li.divider {
     padding:0;
-    height: 1px;
+    height: 0px;
     margin: 3px 1px;
     overflow: hidden;
-    background-color: #333;
-    border-bottom: 1px solid #555;
+    border-bottom: 1px solid #aaa;
     *width: 100%;
     *margin: -3px 0 3px;
 }
 
-.theme_default .search-dropdown ul.search-dropdown-menu li.input-prepend {
+.theme_default .search-dropdown div.search-dropdown-menu ul li.input-prepend {
     margin-bottom: 0;
 }
 
 
-.theme_default .search-dropdown ul.search-dropdown-menu li .add-on
-{
+.theme_default .search-dropdown div.search-dropdown-menu ul li .add-on {
     width:25%;
     font-size:11px;
     height:16px;
@@ -213,9 +222,9 @@ body.theme_default {
     line-height:16px;
 }
 
-.theme_default .search-dropdown ul.search-dropdown-menu input[type=text],
-.theme_default .search-dropdown ul.search-dropdown-menu input[type=file],
-.theme_default .search-dropdown ul.search-dropdown-menu input[type=date] {
+.theme_default .search-dropdown div.search-dropdown-menu ul input[type=text],
+.theme_default .search-dropdown div.search-dropdown-menu ul input[type=file],
+.theme_default .search-dropdown div.search-dropdown-menu ul input[type=date] {
     padding:2px;
     font-size:11px;
     height:16px;
@@ -223,14 +232,14 @@ body.theme_default {
     margin-bottom:0;
 }
 
-.theme_default .search-dropdown ul.search-dropdown-menu input[type=file]{
+.theme_default .search-dropdown div.search-dropdown-menu ul input[type=file]{
     padding:0 3px;
     height:22px;
     background:#fff;
     webkit-appearance: none;
 }
 
-.theme_default .search-dropdown ul.search-dropdown-menu input[type=file]::-webkit-file-upload-button {
+.theme_default .search-dropdown div.search-dropdown-menu ul input[type=file]::-webkit-file-upload-button {
     position:relative;
     bottom:3px;
 }
@@ -242,7 +251,7 @@ body.theme_default {
 .theme_default .search-dropdown label{
     display:inline;
     margin-bottom:0;
-    color: #999;
+    color: #777;
     font-size:13px;
 }
 
@@ -412,6 +421,24 @@ body.theme_default {
     font-size:11px;
     color:#888;
     display:none;
+}
+
+.theme_default article.thread .report_reason {
+	background: #CFDFFE;
+	border: 1px solid #00248E;
+	padding:2px 4px;
+	margin: 5px 10px 0 3px;
+	overflow:hidden;
+}
+
+.theme_default article.thread .ip_reporter {
+	font-size: 85%;
+}
+
+
+.theme_default article.thread > .report_reason {
+	margin-bottom: 10px;
+	max-width:600px;
 }
 
 .theme_default article.thread > .text {

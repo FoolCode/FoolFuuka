@@ -189,10 +189,31 @@ class Chan extends Public_Controller
 		}
 		else if (!empty($params))
 		{
-
 			// Determine if $board returns a valid response. If not, recheck the $method and $params.
 			if (!($board = $this->radix->set_selected_by_shortname($method)))
 			{
+				//PLUGINS: If available, allow plugins to override default functions.
+				// at this point we still didn't chose a board, and the plugin must not assume that
+				if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
+				{
+					$uri_array = $this->uri->segment_array();
+					array_shift($uri_array);
+
+					$this->load->helper('cookie');
+					$this->load->helper('number');
+					$this->load->library('template');
+					$this->template->set_layout('chan');
+					$this->template->set_partial('tools_view', 'tools_view');
+					$this->template->set_partial('tools_post', 'tools_post');
+					$this->template->set('is_page', FALSE);
+					$this->template->set('disable_headers', FALSE);
+					$this->template->set('is_statistics', FALSE);
+					$this->template->set('enabled_tools_post', FALSE);
+					$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
+					return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
+				}
+
+				// not a plugin and not a board, let's send it higher
 				return parent::_remap($method, $params);
 			}
 
@@ -211,13 +232,24 @@ class Chan extends Public_Controller
 		$this->template->set_layout('chan');
 
 		//PLUGINS: If available, allow plugins to override default functions.
-		/*
+
 		  if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
 		  {
-		  $plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
-		  return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), array());
+				$uri_array = $this->uri->segment_array();
+				array_shift($uri_array);
+				array_shift($uri_array);
+
+				$this->template->set_partial('tools_view', 'tools_view');
+				$this->template->set_partial('tools_post', 'tools_post');
+				$this->template->set('is_page', FALSE);
+				$this->template->set('disable_headers', FALSE);
+				$this->template->set('is_statistics', FALSE);
+				$this->template->set('enabled_tools_post', FALSE);
+
+				$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
+				return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
 		  }
-		 */
+
 
 		// FUNCTIONS: If available, load custom functions to override default functions.
 		if (method_exists($this->TC, $method))
@@ -388,7 +420,8 @@ class Chan extends Public_Controller
 		$options = (!empty($options)) ? $options :
 			array(
 				'per_page' => 24,
-				'type' => ($this->input->cookie('foolfuuka_default_theme_by_thread') ? 'by_thread' : 'by_post')
+				'type' => ($this->input->cookie('foolfuuka_default_theme_by_thread' .
+					(get_selected_radix()->archive?'_archive':'_board')) ? 'by_thread' : 'by_post')
 			);
 
 		$posts = $this->post->get_latest(get_selected_radix(), $page, $options);
@@ -422,14 +455,20 @@ class Chan extends Public_Controller
 
 	public function by_thread()
 	{
-		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1', 60 * 60 * 24 * 30);
+		$this->input->set_cookie(
+			'foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'),
+			'1',
+			60 * 60 * 24 * 30
+		);
 		redirect(get_selected_radix()->shortname);
 	}
 
 
 	public function by_post()
 	{
-		$this->input->set_cookie('foolfuuka_default_theme_by_thread', '1', '');
+		$this->input->set_cookie(
+			'foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'),
+			'1', '');
 		redirect(get_selected_radix()->shortname);
 	}
 
@@ -1191,14 +1230,13 @@ class Chan extends Public_Controller
 		{
 			case 'gallery_50':
 				// returns last 200 threads with the thread number as key
-				$threads = array_slice($this->post->gallery(), 0, 50);
-
+				$threads = array_slice($this->post->get_gallery(get_selected_radix()), 0, 50);
 				if (count($threads) > 0)
 				{
 					// let's create a pretty array of chapters [comic][chapter][teams]
 					$result['threads'] = array();
 					$key = 0;
-					foreach ($threads as $num => $thread)
+					foreach ($threads['threads'] as $num => $thread)
 					{
 						$result['threads'][$key]['title'] = $thread->title_processed;
 						$result['threads'][$key]['thumb'] = $thread->thumb_link;

@@ -3,206 +3,10 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-/**
- * Function to get single options from the preferences database
- *
- * @param string $option the code of the option
- * @author Woxxy
- * @return string the option
- */
-if (!function_exists('get_setting'))
-{
-
-	function get_setting($option, $fallback = NULL)
-	{
-		$CI = & get_instance();
-		$array = $CI->fs_options;
-		if (isset($array[$option]) && $array[$option] != NULL)
-			return $array[$option];
-		if(!is_null($fallback))
-			return $fallback;
-		return FALSE;
-	}
-
-
-}
 
 /**
- * Loads variables from database for get_setting()
- *
- * @author Woxxy
+ * These functions determine if the values are valid.
  */
-if (!function_exists('load_settings'))
-{
-
-	function load_settings()
-	{
-		$CI = & get_instance();
-		$array = $CI->db->get('preferences')->result_array();
-		$result = array();
-		foreach ($array as $item)
-		{
-			$result[$item['name']] = $item['value'];
-		}
-		$CI->fs_options = $result;
-	}
-
-
-}
-
-if (!function_exists('fuuka_htmlescape'))
-{
-	function fuuka_htmlescape($input)
-	{
-		$input = preg_replace('/[\x80]+/S', '', $input);
-		$result = remove_invisible_characters($input);
-		return htmlentities($input, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
-	}
-
-
-}
-
-
-if (!function_exists('urlsafe_b64encode'))
-{
-	function urlsafe_b64encode($string)
-	{
-		$result = base64_encode($string);
-		return str_replace(array('+', '/'), array('-', '_'), $result);
-	}
-}
-
-
-if (!function_exists('urlsafe_b64decode'))
-{
-	function urlsafe_b64decode($string)
-	{
-		$result = str_replace(array('-', '_'), array('+', '/'), $string);
-		return base64_decode($result);
-	}
-}
-
-
-/**
- * Return selected radix' shortname
- *
- * @author Woxxy
- */
-if (!function_exists('get_selected_radix'))
-{
-
-	function get_selected_radix()
-	{
-		$CI = & get_instance();
-		return $CI->radix->get_selected();
-	}
-
-
-}
-
-
-if (!function_exists('generate_file_path'))
-{
-	function generate_file_path($path)
-	{
-		$path = explode("/", $path);
-		$depth = 0;
-		$recursive = array();
-
-		while ($depth < count($path))
-		{
-			$recursive[] = $path[$depth];
-
-			if ($path[$depth] != "")
-			{
-				if (!file_exists(implode("/", $recursive)))
-				{
-					mkdir(implode("/", $recursive));
-				}
-			}
-			$depth++;
-		}
-	}
-
-
-}
-
-
-/**
- * Locate ImageMagick and determine if it has been installed or not.
- */
-function find_imagick()
-{
-	$CI = & get_instance();
-	if (isset($CI->fs_imagick->available))
-	{
-		return $CI->fs_imagick->available;
-	}
-
-	$CI->fs_imagick->exec = FALSE;
-	$CI->fs_imagick->found = FALSE;
-	$CI->fs_imagick->available = FALSE;
-	$ini_disabled = explode(',', ini_get('disable_functions'));
-	if (ini_get('safe_mode') || !in_array('exec', $ini_disabled))
-	{
-		$CI->fs_imagick->exec = TRUE;
-		$imagick_path = get_setting('fs_serv_imagick_path') ? get_setting('fs_serv_imagick_path') : '/usr/bin';
-
-		if (!preg_match("/convert$/i", $imagick_path))
-		{
-			$imagick_path = rtrim($imagick_path, '/') . '/';
-
-			$imagick_path .= 'convert';
-		}
-
-		if (@file_exists($imagick_path) || @file_exists($imagick_path . '.exe'))
-		{
-			$CI->fs_imagick->found = $imagick_path;
-		}
-		else
-		{
-			return FALSE;
-		}
-
-		exec($imagick_path . ' -version', $result);
-		if (preg_match('/ImageMagick/i', $result[0]))
-		{
-			$CI->fs_imagick->available = TRUE;
-			return TRUE;
-		}
-	}
-	return FALSE;
-}
-
-
-/**
- * Get either a Gravatar URL or complete image tag for a specified email address.
- *
- * @param string $email The email address
- * @param string $s Size in pixels, defaults to 80px [ 1 - 512 ]
- * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
- * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
- * @param boole $img True to return a complete IMG tag False for just the URL
- * @param array $atts Optional, additional key/value attributes to include in the IMG tag
- * @return String containing either just a URL or a complete image tag
- * @source http://gravatar.com/site/implement/images/php/
- */
-function get_gravatar($email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array())
-{
-	$url = 'http://www.gravatar.com/avatar/';
-	$url .= md5(strtolower(trim($email)));
-	$url .= "?s=$s&d=$d&r=$r";
-	if ($img)
-	{
-		$url = '<img src="' . $url . '"';
-		foreach ($atts as $key => $val)
-			$url .= ' ' . $key . '="' . $val . '"';
-		$url .= ' />';
-	}
-	return $url;
-}
-
-
 function is_natural($str)
 {
 	return (bool) preg_match('/^[0-9]+$/', $str);
@@ -215,47 +19,179 @@ function is_post_number($str)
 	{
 		return TRUE;
 	}
+
 	return (bool) preg_match('/^[0-9]+(,|_)[0-9]$/', $str);
 }
 
 
 /**
- * Parse BBCode
+ * This function is used to get values from the preferences table for
+ * the option specified.
+ *
+ * @param string $option name of the option
+ * @param mixed $fallback the fallback value for the option
+ * @return mixed the value of the option
  */
-function parse_bbcode($string, $archive = FALSE)
+if (!function_exists('get_setting'))
 {
-	$CI = & get_instance();
-	require_once(FCPATH . "assets/stringparser-bbcode/library/stringparser_bbcode.class.php");
-
-	$bbcode = new StringParser_BBCode();
-	$bbcode->addCode('code', 'simple_replace', NULL, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code', array('block', 'inline'), array());
-	$bbcode->addCode('spoiler', 'simple_replace', NULL, array('start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array('code'));
-	$bbcode->addCode('sub', 'simple_replace', NULL, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline', array('block', 'inline'), array('code'));
-	$bbcode->addCode('sup', 'simple_replace', NULL, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline', array('block', 'inline'), array('code'));
-	$bbcode->addCode('b', 'simple_replace', NULL, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline', array('block', 'inline'), array('code'));
-	$bbcode->addCode('i', 'simple_replace', NULL, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline', array('block', 'inline'), array('code'));
-	$bbcode->addCode('m', 'simple_replace', NULL, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'), 'inline', array('block', 'inline'), array('code'));
-	$bbcode->addCode('o', 'simple_replace', NULL, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array('code'));
-	$bbcode->addCode('s', 'simple_replace', NULL, array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array('code'));
-	$bbcode->addCode('u', 'simple_replace', NULL, array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array('code'));
-
-	if($archive)
+	function get_setting($option, $fallback = NULL)
 	{
-		if ($CI->fu_theme == 'fuuka' || $CI->fu_theme == 'yotsuba')
-		{
-			$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'), 'inline', array('block', 'inline'), array());
-		}
-		else
-		{
-			$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());
-		}
-	}
+		$CI = & get_instance();
+		$preferences = $CI->fs_options;
 
-	return $bbcode->parse($string);
+		if (isset($preferences[$option]) && $preferences[$option] != NULL)
+		{
+			return $preferences[$option];
+		}
+
+		if (!is_null($fallback))
+		{
+			return $fallback;
+		}
+
+		return FALSE;
+	}
 }
 
 
-if ( ! function_exists('auto_linkify'))
+/**
+ * This function loads all the options from the preferences table to
+ * be used with get_setting().
+ */
+if (!function_exists('load_settings'))
+{
+	function load_settings()
+	{
+		$CI = & get_instance();
+		$preferences = $CI->db->get('preferences')->result_array();
+
+		$settings = array();
+		foreach ($preferences as $item)
+		{
+			$settings[$item['name']] = $item['value'];
+		}
+
+		$CI->fs_options = $settings;
+	}
+}
+
+
+/**
+ * This function escapes all html entities for fuuka.
+ */
+if (!function_exists('fuuka_htmlescape'))
+{
+	function fuuka_htmlescape($input)
+	{
+		$input = preg_replace('/[\x80]+/S', '', $input);
+		$input = remove_invisible_characters($input);
+		return htmlentities($input, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
+	}
+}
+
+/**
+ * These functions preforms URLSAFE modifications to the base64
+ * encoding and decoding process.
+ */
+if (!function_exists('urlsafe_b64encode'))
+{
+	function urlsafe_b64encode($string)
+	{
+		$string = base64_encode($string);
+		return str_replace(array('+', '/'), array('-', '_'), $string);
+	}
+}
+
+
+if (!function_exists('urlsafe_b64decode'))
+{
+	function urlsafe_b64decode($string)
+	{
+		$string = str_replace(array('-', '_'), array('+', '/'), $string);
+		return base64_decode($string);
+	}
+}
+
+
+/**
+ * Return selected radix' shortname
+ *
+ * @author Woxxy
+ */
+
+/**
+ * This function returns the current selected radix board.
+ */
+if (!function_exists('get_selected_radix'))
+{
+	function get_selected_radix()
+	{
+		$CI = & get_instance();
+		return $CI->radix->get_selected();
+	}
+}
+
+
+/**
+ * Locate ImageMagick and determine if it has been installed or not.
+ */
+/**
+ * This function locates and determines if the ImageMagick
+ * @return bool
+ */
+function find_imagick()
+{
+	$CI = & get_instance();
+
+	if (isset($CI->fs_imagick->available))
+	{
+		return $CI->fs_imagick->available;
+	}
+
+	// set default values
+	$CI->fs_imagick->exec = FALSE;
+	$CI->fs_imagick->found = FALSE;
+	$CI->fs_imagick->available = FALSE;
+
+	// begin searching paths
+	if (ini_get('safe_mode') || !in_array('exec', explode(',', ini_get('disable_functions'))))
+	{
+		$CI->fs_imagick->exec = TRUE;
+
+		// set path of imagick binary
+		$path = get_setting('fs_serv_imagick_path', '/usr/bin');
+		if (!preg_match('/convert$/i', $path))
+		{
+			$path = rtrim($path, '/') . '/' . 'convert';
+		}
+
+		if (@file_exists($path) || @file_exists($path . '.exe'))
+		{
+			$CI->fs_imagick->found = $path;
+		}
+		else
+		{
+			return FALSE;
+		}
+
+		// determine if imagick works
+		exec($path . ' -version', $result);
+		if (preg_match('/ImageMagick/i', $result[0]))
+		{
+			$CI->fs_imagick->available = TRUE;
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+
+/**
+ * This function parses the input and generates valid clickable links.
+ * MODIFIED VERSION OF CODEIGNITER'S FUNCTION auto_link()
+ */
+if (!function_exists('auto_linkify'))
 {
 	function auto_linkify($str, $type = 'both', $popup = FALSE)
 	{
@@ -275,14 +211,14 @@ if ( ! function_exists('auto_linkify'))
 					}
 
 					$str = str_replace($matches['0'][$i],
-										$matches['1'][$i].'<a href="http'.
-										$matches['4'][$i].'://'.
-										$matches['5'][$i].
-										preg_replace('/[[\/\!]*?[^\[\]]*?]/si', '', $matches['6'][$i]).'"'.$pop.'>http'.
-										$matches['4'][$i].'://'.
-										$matches['5'][$i].
-										$matches['6'][$i].'</a>'.
-										$period, $str);
+						$matches['1'][$i].'<a href="http'.
+							$matches['4'][$i].'://'.
+							$matches['5'][$i].
+							preg_replace('/[[\/\!]*?[^\[\]]*?]/si', '', $matches['6'][$i]).'"'.$pop.'>http'.
+							$matches['4'][$i].'://'.
+							$matches['5'][$i].
+							$matches['6'][$i].'</a>'.
+							$period, $str);
 				}
 			}
 		}
@@ -306,6 +242,49 @@ if ( ! function_exists('auto_linkify'))
 		}
 
 		return $str;
+	}
+}
+
+
+/**
+ * This function parses the input and converts BBCODE tags to valid HTML output.
+ * It uses a class written by Christian Seiler.
+ */
+if (!function_exists('parse_bbcode'))
+{
+	function parse_bbcode($str, $special = FALSE)
+	{
+		require_once(FCPATH . "assets/stringparser-bbcode/library/stringparser_bbcode.class.php");
+		$CI = & get_instance();
+
+		$bbcode = new StringParser_BBCode();
+
+		// add list of bbcode for formatting
+		$bbcode->addCode('code', 'simple_replace', NULL, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code', array('block', 'inline'), array());
+		$bbcode->addCode('spoiler', 'simple_replace', NULL, array('start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array('code'));
+		$bbcode->addCode('sub', 'simple_replace', NULL, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline', array('block', 'inline'), array('code'));
+		$bbcode->addCode('sup', 'simple_replace', NULL, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline', array('block', 'inline'), array('code'));
+		$bbcode->addCode('b', 'simple_replace', NULL, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline', array('block', 'inline'), array('code'));
+		$bbcode->addCode('i', 'simple_replace', NULL, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline', array('block', 'inline'), array('code'));
+		$bbcode->addCode('m', 'simple_replace', NULL, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'), 'inline', array('block', 'inline'), array('code'));
+		$bbcode->addCode('o', 'simple_replace', NULL, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array('code'));
+		$bbcode->addCode('s', 'simple_replace', NULL, array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array('code'));
+		$bbcode->addCode('u', 'simple_replace', NULL, array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'), array('code'));
+
+		// if $special == TRUE, add special bbcode
+		if ($special === TRUE)
+		{
+			if ($CI->fu_theme == 'fuuka' || $CI->fu_theme == 'yotsuba')
+			{
+				$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'), 'inline', array('block', 'inline'), array());
+			}
+			else
+			{
+				$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline', array('block', 'inline'), array());
+			}
+		}
+
+		return $bbcode->parse($str);
 	}
 }
 

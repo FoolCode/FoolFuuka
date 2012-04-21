@@ -720,7 +720,23 @@ class Radix extends CI_Model
 			$result_object[$item->id] = $item;
 			$result_object[$item->id]->formatted_title = ($item->name) ?
 				'/' . $item->shortname . '/ - ' . $item->name : '/' . $item->shortname . '/';
-			$result_object[$item->id]->href = site_url(array($item->shortname));
+
+			if (defined('FOOL_SUBDOMAINS_ENABLE') && FOOL_SUBDOMAINS_ENABLE == TRUE)
+			{
+				if ($item->archive == 1)
+				{
+					$result_object[$item->id]->href = site_url(array('@archive', $item->shortname));
+				}
+				else
+				{
+					$result_object[$item->id]->href = site_url(array('@board', $item->shortname));
+				}
+			}
+			else
+			{
+				$result_object[$item->id]->href = site_url(array($item->shortname));
+			}
+
 		}
 
 		foreach ($array as $item)
@@ -728,7 +744,22 @@ class Radix extends CI_Model
 			$result_array[$item['id']] = $item;
 			$result_array[$item['id']]['formatted_title'] = ($item['name']) ?
 				'/' . $item['shortname'] . '/ - ' . $item['name'] : '/' . $item['shortname'] . '/';
-			$result_array[$item['id']]['href'] = site_url(array($item['shortname']));
+
+			if (defined('FOOL_SUBDOMAINS_ENABLE') && FOOL_SUBDOMAINS_ENABLE == TRUE)
+			{
+				if ($item['archive'] == 1)
+				{
+					$result_array[$item['id']]['href'] = site_url(array('@archive', $item['shortname']));
+				}
+				else
+				{
+					$result_array[$item['id']]['href'] = site_url(array('@board', $item['shortname']));
+				}
+			}
+			else
+			{
+				$result_array[$item['id']]['href'] = site_url(array($item['shortname']));
+			}
 		}
 
 		$this->preloaded_radixes = $result_object;

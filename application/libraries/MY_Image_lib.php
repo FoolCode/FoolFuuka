@@ -7,7 +7,7 @@ if (!defined('BASEPATH'))
 class MY_Image_lib extends CI_Image_lib
 {
 	
-	function __construct($id = NULL)
+	function __construct()
 	{
 		parent::__construct();
 	}

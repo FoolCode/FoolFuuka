@@ -50,7 +50,13 @@ function site_url($uri = '')
 					$hostname[0] = rtrim(FOOL_SUBDOMAINS_ARCHIVE, '.');
 				}
 				
+				if (strpos('@default', $uri[0]) !== FALSE)
+				{
+					$hostname[0] = rtrim(FOOL_SUBDOMAINS_DEFAULT, '.');
+				}
+				
 				// autodetection for board and archive
+				// don't use in radix itself
 				if(strpos(('@radix'), $uri[0]) !== FALSE)
 				{
 					if(isset($uri[1]) && isset($CI->radix))
@@ -86,10 +92,6 @@ function site_url($uri = '')
 					}
 				}
 				
-				if (strpos('@default', $uri[0]) !== FALSE)
-				{
-					$hostname[0] = rtrim(FOOL_SUBDOMAINS_DEFAULT, '.');
-				}
 			}
 
 			$base_url = str_replace($_SERVER['HTTP_HOST'], implode('.', $hostname), $base_url);

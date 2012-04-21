@@ -1057,7 +1057,7 @@ class Chan extends Public_Controller
 				sprintf(_('with the tripcode "%s"'),
 					trim(fuuka_htmlescape($search['tripcode']))));
 		if ($search['deleted'] == 'deleted')
-			array_push($title, _('that has been deleted'));
+			array_push($title, _('that have been deleted'));
 		if ($search['deleted'] == 'not-deleted')
 			array_push($title, _('that has not been deleted'));
 		if ($search['ghost'] == 'only')

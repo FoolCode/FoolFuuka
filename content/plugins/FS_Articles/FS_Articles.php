@@ -159,9 +159,13 @@ class FS_Articles extends Plugins
 			array(
 				"name" => _("Articles"),
 				"default" => "manage",
+				"position" => array(
+					"beforeafter" => "after",
+					"element" => "boards"
+				),
 				"level" => "admin",
 				"content" => array(
-					"manage" => array("level" => "admin", "name" => _("Articles"), "icon" => 'icon-gift'),
+					"manage" => array("level" => "admin", "name" => _("Articles"), "icon" => 'icon-font'),
 				)
 			)
 		);
@@ -202,7 +206,7 @@ class FS_Articles extends Plugins
 							<?php echo htmlentities($article->title) ?>
 						</td>
 						<td>
-							<a href="<?php echo site_url('articles/' . $article->slug) ?>" target="_blank"><?php echo $article->slug ?></a>
+							<a href="<?php echo site_url('@board/articles/' . $article->slug) ?>" target="_blank"><?php echo $article->slug ?></a>
 						</td>
 						<td>
 							<a href="<?php echo site_url('admin/articles/edit/'.$article->slug) ?>" class="btn btn-mini btn-primary"><?php echo _('Edit') ?></a>

@@ -19,6 +19,10 @@ function site_url($uri = '')
 
 	$base_url = $CI->config->slash_item('base_url');
 
+	if(!is_array($uri))
+	{
+		$uri = explode('/', $uri);
+	}
 
 	if (is_array($uri) && strpos($uri[0], '@') !== FALSE)
 	{
@@ -29,6 +33,49 @@ function site_url($uri = '')
 
 			if (count($hostname) > 2)
 			{
+				/*
+				// patch until all links are taken care of
+				foreach(array('admin', 'api', 'functions', 'plugin') as $location)
+				{
+					if(strpos($location, $uri[0]) !== FALSE)
+					{
+						$hostname[0] = rtrim(FOOL_SUBDOMAINS_SYSTEM, '.');
+					}
+				}
+				*/
+				
+				// inside the admin controller normal site_url will return SYSTEM subdomain unless otherwise specified
+				if ($CI instanceof Admin_Controller || $CI instanceof API_Controller)
+				{
+					$hostname[0] = rtrim(FOOL_SUBDOMAINS_SYSTEM, '.');
+				}
+				
+				// out of the admin controller normal site_url will return BOARD/ARCHIVE subdomain unless otherwise specified
+				else if ($CI instanceof Public_Controller)
+				{
+					// we might be smart enough to guess if it's an archive or not!
+					if(isset($uri[1]) && isset($CI->radix))
+					{
+						foreach($CI->radix->get_all() as $radix)
+						{
+							if($uri[1] == $radix)
+							{
+								if($radix->archive == 1)
+								{
+									$hostname[0] = rtrim(FOOL_SUBDOMAINS_BOARD, '.');
+								}
+								else 
+								{
+									$hostname[0] = rtrim(FOOL_SUBDOMAINS_ARCHIVE, '.');
+								}
+							}
+						}
+					}
+					$hostname[0] = rtrim(FOOL_SUBDOMAINS_DEFAULT, '.');
+				}
+				
+				// the following force 
+				
 				if (strpos('@'.FOOL_SUBDOMAINS_SYSTEM, $uri[0]) !== FALSE)
 				{
 					$hostname[0] = rtrim(FOOL_SUBDOMAINS_SYSTEM, '.');

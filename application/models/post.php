@@ -396,7 +396,20 @@ class Post extends CI_Model
 		$post->thumb_link = $this->get_media_link($board, $post, TRUE);
 		$post->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment($board, $post));
 		$post->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
-
+		
+		// gotta change the timestamp of the archives to GMT
+		if($board->archive)
+		{
+			$post->original_timestamp = $post->timestamp;
+			$date = new DateTime();
+			$date = $date->createFromFormat(
+				'Y-m-d H:i:s', 
+				date('Y-m-d H:i:s', $post->timestamp), 
+				new DateTimeZone('America/New_York')
+			);
+			$date->setTimezone(new DateTimeZone('UTC'));
+			$post->timestamp = $date->getTimestamp();
+		}
 
 		$elements = array('title', 'name', 'email', 'trip', 'media', 'preview', 'media_filename', 'media_hash');
 

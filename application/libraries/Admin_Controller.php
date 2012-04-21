@@ -260,100 +260,111 @@ class Admin_Controller extends MY_Controller
 	 */
 	public function merge_sidebars($array1, $array2)
 	{
-		foreach ($array2 as $key => $item)
+		// there's a numbered index on the outside!
+		foreach ($array2 as $key_top => $item_top)
 		{
-			// are we inserting in an already existing method?
-			if (isset($array1[$key]))
+			foreach($item_top as $key => $item)
 			{
-				// overriding the name
-				if (isset($item['name']))
+				// are we inserting in an already existing method?
+				if (isset($array1[$key]))
 				{
-					$array1[$key]['name'] = $item['name'];
-				}
-
-				// overriding the permission level
-				if (isset($item['level']))
-				{
-					$array1[$key]['level'] = $item['level'];
-				}
-
-				// overriding the default url to reach
-				if (isset($item['default']))
-				{
-					$array1[$key]['default'] = $item['default'];
-				}
-
-				// overriding the default url to reach
-				if (isset($item['icon']))
-				{
-					$array1[$key]['icon'] = $item['icon'];
-				}
-
-				// adding or overriding the inner elements
-				if (isset($item['content']))
-				{
-					if (isset($array1[$key]['content']))
+					// overriding the name
+					if (isset($item['name']))
 					{
-						$array1[$key]['content'] = $this->merge_sidebars($array1[$key]['content'],
-							$item['content']);
+						$array1[$key]['name'] = $item['name'];
 					}
-					else
-					{
-						$array1[$key]['content'] = $this->merge_sidebars(array(), $item['content']);
-					}
-				}
-			}
-			else
-			{
-				// the element doesn't exist at all yet
-				// let's trust the plugin creator in understanding the structure
-				// extra control: allow him to put the plugin after or before any function
-				if (isset($item['position']) && is_array($item['position']))
-				{
-					$before = $array2['position']['beforeafter'] == 'before' ? TRUE : FALSE;
-					$element = $array2['position']['element'];
 
-					$array_temp = $array1;
-					$array1 = array();
-					foreach ($array_temp as $subkey => $temp)
+					// overriding the permission level
+					if (isset($item['level']))
 					{
-						if ($subkey == $element)
+						$array1[$key]['level'] = $item['level'];
+					}
+
+					// overriding the default url to reach
+					if (isset($item['default']))
+					{
+						$array1[$key]['default'] = $item['default'];
+					}
+
+					// overriding the default url to reach
+					if (isset($item['icon']))
+					{
+						$array1[$key]['icon'] = $item['icon'];
+					}
+
+					// adding or overriding the inner elements
+					if (isset($item['content']))
+					{
+						if (isset($array1[$key]['content']))
 						{
-							if ($before)
-							{
-								$array1[$key] = $item;
-								$array1[$subkey] = $temp;
-							}
-							else
-							{
-								$array1[$subkey] = $temp;
-								$array1[$key] = $item;
-							}
-
-							unset($array_temp[$subkey]);
-
-							// flush the rest
-							foreach ($array_temp as $k => $t)
-							{
-								$array1[$k] = $t;
-							}
-
-							break;
+							$array1[$key]['content'] = $this->merge_sidebars($array1[$key]['content'],
+								$item['content']);
 						}
 						else
 						{
-							$array1[$subkey] = $temp;
-							unset($array_temp[$subkey]);
+							$array1[$key]['content'] = $this->merge_sidebars(array(), $item['content']);
 						}
 					}
 				}
 				else
 				{
-					$array1[$key] = $array2[$key];
+					// the element doesn't exist at all yet
+					// let's trust the plugin creator in understanding the structure
+					// extra control: allow him to put the plugin after or before any function
+					if (isset($item['position']) && is_array($item['position']))
+					{
+						$before = $item['position']['beforeafter'] == 'before' ? TRUE : FALSE;
+						$element = $item['position']['element'];
+
+						$array_temp = $array1;
+						$array1 = array();
+						foreach ($array_temp as $subkey => $temp)
+						{
+							if ($subkey == $element)
+							{
+								if ($before)
+								{
+									$array1[$key] = $item;
+									$array1[$subkey] = $temp;
+								}
+								else
+								{
+									$array1[$subkey] = $temp;
+									$array1[$key] = $item;
+								}
+
+								unset($array_temp[$subkey]);
+
+								// flush the rest
+								foreach ($array_temp as $k => $t)
+								{
+									$array1[$k] = $t;
+								}
+
+								break;
+							}
+							else
+							{
+								$array1[$subkey] = $temp;
+								unset($array_temp[$subkey]);
+							}
+						}
+					}
+					else
+					{
+						$array1[$key] = $item;
+					}
 				}
 			}
 		}
-
+		
+		/*
+		echo '<pre>';
+		print_r($array2);
+		print_r($array1);
+		echo '</pre>';
+		 * 
+		 */
 		return $array1;
 	}
 

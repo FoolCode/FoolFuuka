@@ -172,6 +172,24 @@ if (!defined('BASEPATH'))
 							</li>
 						</ul>
 						<?php endif; ?>
+						<?php if($top_articles = $this->plugins->FS_Articles->get_top()) : ?>
+						<ul class="nav">
+							<li class="dropdown">
+								<a href="<?php echo site_url() ?>" class="dropdown-toggle" data-toggle="dropdown">
+									<?php echo _('Articles') ?>
+									<b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<?php foreach($top_articles as $article) ?>
+									<li>
+										<a href="<?php echo site_url('articles/' . $article->slug) ?>">
+											<?php echo fuuka_htmlescape($article->title) ?>
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<?php endif; ?>
 					<?php echo $template['partials']['tools_view']; ?>
 					</div>
 				</div>
@@ -252,7 +270,22 @@ if (!defined('BASEPATH'))
 			<div id="push"></div>
 		</div>
 		<footer id="footer"><?php echo FOOL_NAME ?> - Version <?php echo FOOL_VERSION ?>, <a href="http://code.google.com/p/fuuka/" target="_blank">Fuuka Fetcher</a> - Version r140
+			
+			
 			<div style="float:right">
+				<?php if($bottom_articles = $this->plugins->FS_Articles->get_bottom()) : ?>
+				Articles: [
+				<?php 
+				$bottom_articles_count = count($bottom_articles);
+				foreach($bottom_articles as $key => $article) : ?>
+				<a href="<?php echo site_url('articles/' . $article->slug) ?>"><?php echo fuuka_htmlescape($article->title) ?></a>
+				<?php 
+				if($bottom_articles_count - 1 > $key)
+					echo ' / ';
+				endforeach; ?>
+				]
+				<?php endif; ?>
+				
 				Theme [ <a href="<?php echo site_url(array('functions', 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array('functions', 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> ]
 			</div>
 		</footer>

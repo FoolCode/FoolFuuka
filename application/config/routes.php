@@ -39,33 +39,55 @@
 */
 
 $route['default_controller'] = "chan";
-$route['install'] = "install";
-$route['api'] = "api";
-$route['cli'] = "cli";
-$route['search'] = "chan/search";
-$route['search/(.*?)'] = "chan/search/$1";
-$route['admin'] = "admin/preferences";
-$route['admin/members/members'] = 'admin/members/membersa';
-$route['admin/plugins/(.*?)'] = "admin/plugins_admin/$1";
 
-$route_admin_controllers = glob(APPPATH . 'controllers/admin/*.php');
-
-foreach($route_admin_controllers as $key => $item)
+// if we're using special subdomains or if we're under system stuff
+if(
+	!defined('FOOL_SUBDOMAINS_ENABLE') || 
+	strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_SYSTEM) !== FALSE
+)
 {
-	$item = str_replace(APPPATH . 'controllers/admin/', '', $item);
-	$route_admin_controllers[$key] = substr($item, 0, strlen($item) - 4);
+	$route['install'] = "install";
+	$route['api'] = "api";
+	$route['cli'] = "cli";
+	$route['search'] = "chan/search";
+	$route['search/(.*?)'] = "chan/search/$1";
+	$route['admin'] = "admin/preferences";
+	$route['admin/members/members'] = 'admin/members/membersa';
+	$route['admin/plugins/(.*?)'] = "admin/plugins_admin/$1";
+
+	$route_admin_controllers = glob(APPPATH . 'controllers/admin/*.php');
+
+	foreach($route_admin_controllers as $key => $item)
+	{
+		$item = str_replace(APPPATH . 'controllers/admin/', '', $item);
+		$route_admin_controllers[$key] = substr($item, 0, strlen($item) - 4);
+	}
+	$route_admin_controllers[] = 'plugins';
+
+	// routes to allow plugin.php to catch the files, could be automated...
+	$route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)'] = "admin/plugin/$2/";
+	$route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)/(.*?)'] = "admin/plugin/$2/$3";
 }
-$route_admin_controllers[] = 'plugins';
-
-
-// routes to allow plugin.php to catch the files, could be automated...
-$route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)'] = "admin/plugin/$2/";
-$route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)/(.*?)'] = "admin/plugin/$2/$3";
-
-$protected_radixes = implode('|', unserialize(FOOL_PROTECTED_RADIXES));
-$route['(?!(' . $protected_radixes . '))(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";
-$route['(?!(' . $protected_radixes . '))(\w+)/(.*?)'] = "chan/$2/$3";
-$route['(\w+)'] = "chan/$1/page";
+// if we're using special subdomains or if we're under boards/archives:
+if(
+	!defined('FOOL_SUBDOMAINS_ENABLE') || 
+	strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_BOARD) !== FALSE || 
+	strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== FALSE
+)
+{
+	if(!defined('FOOL_SUBDOMAINS_ENABLE'))
+	{
+		$protected_radixes = implode('|', unserialize(FOOL_PROTECTED_RADIXES));
+		$route['(?!(' . $protected_radixes . '))(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";
+		$route['(?!(' . $protected_radixes . '))(\w+)/(.*?)'] = "chan/$2/$3";
+	}
+	else
+	{
+		$route['(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";
+		$route['(\w+)/(.*?)'] = "chan/$2/$3";
+	}
+	$route['(\w+)'] = "chan/$1/page";
+}
 
 $route['404_override'] = 'plugin';
 

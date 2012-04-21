@@ -31,17 +31,17 @@ function site_url($uri = '')
 			{
 				if (strpos('@'.FOOL_SUBDOMAINS_SYSTEM, $uri[0]) !== FALSE)
 				{
-					$hostname[0] = FOOL_SUBDOMAINS_SYSTEM;
+					$hostname[0] = rtrim(FOOL_SUBDOMAINS_SYSTEM, '.');
 				}
 
 				if (strpos('@'.FOOL_SUBDOMAINS_BOARD, $uri[0]) !== FALSE)
 				{
-					$hostname[0] = FOOL_SUBDOMAINS_BOARD;
+					$hostname[0] = rtrim(FOOL_SUBDOMAINS_BOARD, '.');
 				}
 
 				if (strpos('@'.FOOL_SUBDOMAINS_ARCHIVE, $uri[0]) !== FALSE)
 				{
-					$hostname[0] = FOOL_SUBDOMAINS_ARCHIVE;
+					$hostname[0] = rtrim(FOOL_SUBDOMAINS_ARCHIVE, '.');
 				}
 			}
 

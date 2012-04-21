@@ -42,10 +42,11 @@ $route['default_controller'] = "chan";
 
 // if we're using special subdomains or if we're under system stuff
 if(
-	!defined('FOOL_SUBDOMAINS_ENABLE') || 
-	strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_SYSTEM) !== FALSE
+	!defined('FOOL_SUBDOMAINS_ENABLE')
+	|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_SYSTEM) !== FALSE
 )
 {
+	$route['default_controller'] = "admin/preferences";
 	$route['install'] = "install";
 	$route['api'] = "api";
 	$route['cli'] = "cli";
@@ -68,11 +69,12 @@ if(
 	$route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)'] = "admin/plugin/$2/";
 	$route['admin/(?!(' . implode('|', $route_admin_controllers) . '))(\w+)/(.*?)'] = "admin/plugin/$2/$3";
 }
+
 // if we're using special subdomains or if we're under boards/archives:
 if(
-	!defined('FOOL_SUBDOMAINS_ENABLE') || 
-	strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_BOARD) !== FALSE || 
-	strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== FALSE
+	!defined('FOOL_SUBDOMAINS_ENABLE')
+	|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_BOARD) !== FALSE
+	|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== FALSE
 )
 {
 	if(!defined('FOOL_SUBDOMAINS_ENABLE'))
@@ -83,8 +85,8 @@ if(
 	}
 	else
 	{
-		$route['(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";
-		$route['(\w+)/(.*?)'] = "chan/$2/$3";
+		$route['(\w+)/(.*?).xml'] = "chan/$1/feeds/$2";
+		$route['(\w+)/(.*?)'] = "chan/$1/$2";
 	}
 	$route['(\w+)'] = "chan/$1/page";
 }

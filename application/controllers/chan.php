@@ -217,6 +217,25 @@ class Chan extends Public_Controller
 				return parent::_remap($method, $params);
 			}
 
+			// converts the sub-domain correctly
+			if (defined('FOOL_SUBDOMAINS_ENABLE')
+				&& (strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_BOARD) !== FALSE
+				|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== FALSE)
+			)
+			{
+				if (strpos($board->href, $_SERVER['HTTP_HOST']) === FALSE)
+				{
+					if (count($params))
+					{
+						redirect($board->href . implode('/', $params) . '/', 301);
+					}
+					else
+					{
+						redirect($board->href, 301);
+					}
+				}
+			}
+
 			// Load some default settings for the board.
 			$this->load->model('post');
 			$this->template->set('board', $board);
@@ -519,7 +538,7 @@ class Chan extends Public_Controller
 	public function gallery($type = 'by_thread', $page = 1)
 	{
 		// Disable GALLERY when thumbnails is disabled for normal users.
-		if (get_selected_radix()->hide_thumbnails && !$this->tank_auth->is_allowed())
+		if (get_selected_radix()->hide_thumbnails == 1 && !$this->tank_auth->is_allowed())
 		{
 			show_404();
 		}

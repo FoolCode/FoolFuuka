@@ -155,7 +155,16 @@ class FS_Articles extends Plugins
 		$this->plugins->register_controller_function($this,
 			array('admin', 'articles', 'remove', '(:any)'), 'remove');
 
-		//$this->plugins->register_admin_sidebar_link('');
+		$this->plugins->register_admin_sidebar_element('articles',
+			array(
+				"name" => _("Articles"),
+				"default" => "manage",
+				"level" => "admin",
+				"content" => array(
+					"manage" => array("level" => "admin", "name" => _("Articles"), "icon" => 'icon-gift'),
+				)
+			)
+		);
 
 		$this->plugins->register_controller_function($this,
 			array('chan', 'articles'), 'article');

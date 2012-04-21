@@ -347,6 +347,10 @@ class Admin_Controller extends MY_Controller
 						}
 					}
 				}
+				else
+				{
+					$array1[$key] = $array2[$key];
+				}
 			}
 		}
 

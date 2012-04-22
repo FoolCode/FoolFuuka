@@ -174,8 +174,9 @@ class Radix extends CI_Model
 						'database' => TRUE,
 						'type' => 'input',
 						'label' => _('Image fetching workers'),
-						'help' => _('The number of workers that will fetch full images'),
+						'help' => _('The number of workers that will fetch full images. Set to zero not to fetch them.'),
 						'placeholder' => 5,
+						'value' => 0,
 						'class' => 'span1',
 						'validation' => 'trim|is_natural|less_than[32]'
 					),
@@ -185,6 +186,7 @@ class Radix extends CI_Model
 						'label' => _('Thumbnail fetching workers'),
 						'help' => _('The number of workers that will fetch thumbnails'),
 						'placeholder' => 5,
+						'value' => 5,
 						'class' => 'span1',
 						'validation' => 'trim|is_natural|less_than[32]'
 					),
@@ -192,8 +194,9 @@ class Radix extends CI_Model
 						'database' => TRUE,
 						'type' => 'input',
 						'label' => _('Thread fetching workers'),
-						'help' => _('The number of threads that will fetch thumbnails'),
+						'help' => _('The number of workers that fetch new threads'),
 						'placeholder' => 5,
+						'value' => 5,
 						'class' => 'span1',
 						'validation' => 'trim|is_natural|less_than[32]'
 					),
@@ -721,21 +724,23 @@ class Radix extends CI_Model
 			$result_object[$item->id]->formatted_title = ($item->name) ?
 				'/' . $item->shortname . '/ - ' . $item->name : '/' . $item->shortname . '/';
 
-			if (defined('FOOL_SUBDOMAINS_ENABLE') && FOOL_SUBDOMAINS_ENABLE == TRUE)
+			if ($item->archive == 1)
 			{
-				if ($item->archive == 1)
-				{
-					$result_object[$item->id]->href = site_url(array('@archive', $item->shortname));
-				}
-				else
-				{
-					$result_object[$item->id]->href = site_url(array('@board', $item->shortname));
-				}
+				$result_object[$item->id]->href = site_url(array('@archive', $item->shortname));
 			}
 			else
 			{
-				$result_object[$item->id]->href = site_url(array($item->shortname));
+				$result_object[$item->id]->href = site_url(array('@board', $item->shortname));
 			}
+			
+			if(!$item->board_url)
+				$item->board_url = 'http://boards.4chan.org/' . $item->shortname . '/';
+			
+			if(!$item->thumbs_url)
+				$item->thumbs_url = 'http://0.thumbs.4chan.org/' . $item->shortname . '/thumb/';
+			
+			if(!$item->images_url)
+				$item->images_url = 'http://images.4chan.org/' . $item->shortname . '/src/';
 
 		}
 
@@ -745,21 +750,23 @@ class Radix extends CI_Model
 			$result_array[$item['id']]['formatted_title'] = ($item['name']) ?
 				'/' . $item['shortname'] . '/ - ' . $item['name'] : '/' . $item['shortname'] . '/';
 
-			if (defined('FOOL_SUBDOMAINS_ENABLE') && FOOL_SUBDOMAINS_ENABLE == TRUE)
+			if ($item['archive'] == 1)
 			{
-				if ($item['archive'] == 1)
-				{
-					$result_array[$item['id']]['href'] = site_url(array('@archive', $item['shortname']));
-				}
-				else
-				{
-					$result_array[$item['id']]['href'] = site_url(array('@board', $item['shortname']));
-				}
+				$result_array[$item['id']]['href'] = site_url(array('@archive', $item['shortname']));
 			}
 			else
 			{
-				$result_array[$item['id']]['href'] = site_url(array($item['shortname']));
+				$result_array[$item['id']]['href'] = site_url(array('@board', $item['shortname']));
 			}
+			
+			if(!$item['board_url'])
+				$item['board_url'] = 'http://boards.4chan.org/' . $item['shortname'] . '/';
+			
+			if(!$item['thumbs_url'])
+				$item['thumbs_url'] = 'http://0.thumbs.4chan.org/' . $item['shortname'] . '/thumb/';
+			
+			if(!$item['images_url'])
+				$item['images_url'] = 'http://images.4chan.org/' . $item['shortname'] . '/src/';
 		}
 
 		$this->preloaded_radixes = $result_object;

@@ -24,7 +24,7 @@ if (!defined('BASEPATH'))
 				<?php if ($p->capcode == 'A') : ?>
 					<span class="post_level_administrator">## Admin</span>
 				<?php endif ?>
-				<span class="posttime"><?php echo date('m/d/y(D)H:i', $p->timestamp + 18000) ?></span>
+				<span class="posttime"><?php echo date('m/d/y(D)H:i', $p->original_timestamp) ?></span>
 
 				<?php if ($p->subnum > 0) : ?>
 					<span id="norep<?php echo $p->num . '_' . $p->subnum ?>">

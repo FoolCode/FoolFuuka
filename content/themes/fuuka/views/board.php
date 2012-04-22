@@ -35,7 +35,7 @@ foreach ($posts as $key => $post) : ?>
 			<?php if ($op->capcode == 'A') : ?>
 				<span class="postername admin">## Admin</span>
 			<?php endif ?>
-			<?php echo date('D M d H:i:s Y', $op->timestamp + 18000) ?>
+			<?php echo date('D M d H:i:s Y', $op->original_timestamp) ?>
 		</label>
 
 		<?php if(!isset($thread_id)) : ?>

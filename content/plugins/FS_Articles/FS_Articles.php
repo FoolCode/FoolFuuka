@@ -155,7 +155,20 @@ class FS_Articles extends Plugins
 		$this->plugins->register_controller_function($this,
 			array('admin', 'articles', 'remove', '(:any)'), 'remove');
 
-		//$this->plugins->register_admin_sidebar_link('');
+		$this->plugins->register_admin_sidebar_element('articles',
+			array(
+				"name" => _("Articles"),
+				"default" => "manage",
+				"position" => array(
+					"beforeafter" => "after",
+					"element" => "boards"
+				),
+				"level" => "admin",
+				"content" => array(
+					"manage" => array("level" => "admin", "name" => _("Articles"), "icon" => 'icon-font'),
+				)
+			)
+		);
 
 		$this->plugins->register_controller_function($this,
 			array('chan', 'articles'), 'article');
@@ -193,7 +206,7 @@ class FS_Articles extends Plugins
 							<?php echo htmlentities($article->title) ?>
 						</td>
 						<td>
-							<a href="<?php echo site_url('articles/' . $article->slug) ?>" target="_blank"><?php echo $article->slug ?></a>
+							<a href="<?php echo site_url('@board/articles/' . $article->slug) ?>" target="_blank"><?php echo $article->slug ?></a>
 						</td>
 						<td>
 							<a href="<?php echo site_url('admin/articles/edit/'.$article->slug) ?>" class="btn btn-mini btn-primary"><?php echo _('Edit') ?></a>

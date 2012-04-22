@@ -218,21 +218,16 @@ class Chan extends Public_Controller
 			}
 
 			// converts the sub-domain correctly
-			if (defined('FOOL_SUBDOMAINS_ENABLE')
-				&& (strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_BOARD) !== FALSE
-				|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== FALSE)
-			)
+			if (defined('FOOL_SUBDOMAINS_ENABLE'))
 			{
-				if (strpos($board->href, $_SERVER['HTTP_HOST']) === FALSE)
+				if($board->archive && strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== 0)
 				{
-					if (count($params))
-					{
-						redirect($board->href . implode('/', $params) . '/', 301);
-					}
-					else
-					{
-						redirect($board->href, 301);
-					}
+					redirect('@archive/' . implode('/', $params?:array()), 301);
+				}	
+					
+				if(!$board->archive && strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_BOARD) !== 0)
+				{
+					redirect('@board/' . implode('/', $params?:array()), 301);
 				}
 			}
 
@@ -1062,7 +1057,7 @@ class Chan extends Public_Controller
 				sprintf(_('with the tripcode "%s"'),
 					trim(fuuka_htmlescape($search['tripcode']))));
 		if ($search['deleted'] == 'deleted')
-			array_push($title, _('that has been deleted'));
+			array_push($title, _('that have been deleted'));
 		if ($search['deleted'] == 'not-deleted')
 			array_push($title, _('that has not been deleted'));
 		if ($search['ghost'] == 'only')

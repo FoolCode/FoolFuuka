@@ -25,7 +25,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 					<?php if ($p->capcode == 'A') : ?>
 						<span class="postername admin">## Admin</span>
 					<?php endif ?>
-					<?php echo date('D M d H:i:s Y', $p->timestamp + 18000) ?>
+					<?php echo date('D M d H:i:s Y', $p->original_timestamp) ?>
 				</label>
 				<?php if (isset($thread_id) && $thread_id == NULL) : ?>
 					<a class="js" href="<?php echo site_url(array($selected_radix->shortname, 'thread', $p->parent)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>

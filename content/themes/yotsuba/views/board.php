@@ -44,7 +44,7 @@ foreach ($posts as $key => $post) : ?>
 		<?php if ($op->capcode == 'A') : ?>
 			<span class="post_level_administrator">## Admin</span>
 		<?php endif ?>
-		<span class="posttime"><?php echo date('m/d/y(D)H:i', $op->timestamp + 18000) ?></span>
+		<span class="posttime"><?php echo date('m/d/y(D)H:i', $op->original_timestamp) ?></span>
 		<span id="nothread<?php echo $op->num ?>">
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo (!isset($thread_id)) ? site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num : 'javascript:quote(\'' . $op->num . '\')'?>" class="quotejs"><?php echo $op->num ?></a><?php if (!isset($thread_id)) : ?> &nbsp; [<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>">Reply</a>]<?php endif; ?>
 		</span>

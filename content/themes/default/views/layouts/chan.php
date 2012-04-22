@@ -172,7 +172,7 @@ if (!defined('BASEPATH'))
 							</li>
 						</ul>
 						<?php endif; ?>
-						<?php if($top_articles = $this->plugins->FS_Articles->get_top()) : ?>
+						<?php if(isset($this->plugins->FS_Articles) && $top_articles = $this->plugins->FS_Articles->get_top()) : ?>
 						<ul class="nav">
 							<li class="dropdown">
 								<a href="<?php echo site_url() ?>" class="dropdown-toggle" data-toggle="dropdown">
@@ -273,7 +273,7 @@ if (!defined('BASEPATH'))
 			
 			
 			<div style="float:right">
-				<?php if($bottom_articles = $this->plugins->FS_Articles->get_bottom()) : ?>
+				<?php if(isset($this->plugins->FS_Articles) && $bottom_articles = $this->plugins->FS_Articles->get_bottom()) : ?>
 				Articles: [
 				<?php 
 				$bottom_articles_count = count($bottom_articles);

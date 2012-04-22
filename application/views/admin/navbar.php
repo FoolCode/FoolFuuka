@@ -15,7 +15,7 @@ if (!defined('BASEPATH'))
 				</li>
 			</ul>
 			<ul class="nav pull-right">
-				<li><a href="<?php echo site_url() ?>"><?php echo _('Boards') ?></a></li>
+				<li><a href="<?php echo site_url('@default') ?>"><?php echo _('Boards') ?></a></li>
 				<li class="divider-vertical"></li>
 				<?php
 				if ((isset($this->tank_auth) &&
@@ -30,7 +30,7 @@ if (!defined('BASEPATH'))
 						</a>
 						<ul class="dropdown-menu">
 							<li>
-								<a href="<?php echo site_url('account'); ?>">
+								<a href="<?php echo site_url('admin/auth/change_email'); ?>">
 									<?php echo _("Your Profile") ?>
 								</a>
 							</li>

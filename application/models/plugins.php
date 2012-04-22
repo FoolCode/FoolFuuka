@@ -297,6 +297,7 @@ class Plugins extends CI_Model
 		  print_r($uri_array);
 		  print_r($this->_controller_uris);
 		  echo '</pre>'; */
+		//print_r($this->_controller_uris);
 		foreach ($this->_controller_uris as $item)
 		{
 			// it must be contained by the entire URI
@@ -330,6 +331,26 @@ class Plugins extends CI_Model
 	function register_controller_function(&$class, $uri_array, $method)
 	{
 		$this->_controller_uris[] = array('uri_array' => $uri_array, 'plugin' => $class, 'method' => $method);
+	}
+	
+	/**
+	 * 
+	 */
+	function register_admin_sidebar_element($section, $array = null)
+	{
+		// the user can also send an array with the index inseted in $section
+		if(!is_null($array))
+		{
+			$array2 = array();
+			$array2[$section] = $array;
+			$array = $array2;
+		}
+		
+		$CI = & get_instance();
+		if($CI instanceof Admin_Controller)
+		{
+			$CI->add_sidebar_element($array);
+		}
 	}
 
 }

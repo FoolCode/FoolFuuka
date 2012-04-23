@@ -1096,6 +1096,10 @@ class Post extends CI_Model
 			{
 				$this->db->sphinx_match('email', $args['email'], 'full', TRUE);
 			}
+			if ($args['filename'])
+			{
+				$this->db->sphinx_match('media', $args['filename'], 'full', TRUE);
+			}
 			if ($args['capcode'] == 'admin')
 			{
 				$this->db->where('cap', 3);
@@ -1224,6 +1228,13 @@ class Post extends CI_Model
 			{
 				$this->db->like('email', rawurldecode($args['email']));
 				$this->db->use_index('email_index');
+			}
+			
+			// @todo add index on media
+			if ($args['filename'])
+			{
+				$this->db->like('media', rawurldecode($args['media']));
+				$this->db->use_index('media_index');
 			}
 			if ($args['capcode'] == 'admin')
 			{

@@ -222,6 +222,12 @@ body.theme_default {
     line-height:16px;
 }
 
+.theme_default .search-dropdown div.search-dropdown-menu ul li label.add-on {
+	padding:2px;
+	width:25%;
+	display:inline-block;
+}
+
 .theme_default .search-dropdown div.search-dropdown-menu ul input[type=text],
 .theme_default .search-dropdown div.search-dropdown-menu ul input[type=file],
 .theme_default .search-dropdown div.search-dropdown-menu ul input[type=date] {

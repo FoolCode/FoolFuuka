@@ -985,7 +985,7 @@ class Chan extends Public_Controller
 
 		// Check all allowed search modifiers and apply them only.
 		$modifiers = array(
-			'subject', 'text', 'username', 'tripcode', 'email', 'capcode',
+			'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
 			'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
 
@@ -1056,6 +1056,10 @@ class Chan extends Public_Controller
 			array_push($title,
 				sprintf(_('with the tripcode "%s"'),
 					trim(fuuka_htmlescape($search['tripcode']))));
+		if ($search['filename'])
+			array_push($title,
+				sprintf(_('with the filename "%s"'),
+					trim(fuuka_htmlescape($search['filename']))));
 		if ($search['deleted'] == 'deleted')
 			array_push($title, _('that have been deleted'));
 		if ($search['deleted'] == 'not-deleted')

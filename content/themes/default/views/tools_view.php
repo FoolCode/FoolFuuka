@@ -73,19 +73,22 @@ if(isset($board)) :
 			</ul>
 			<ul class="pull-left">
 
-				<li class="input-prepend"><span class="add-on">Subject</span><?php echo form_input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"]))
+				<li class="input-prepend"><label for="subject" class="add-on">Subject</label><?php echo form_input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"]))
 								? rawurldecode($search["subject"]) : ''))
 					?></li>
-				<li class="input-prepend"><span class="add-on">Username</span><?php echo form_input(array('name' => 'username', 'id' => 'username', 'value' => (isset($search["username"]))
+				<li class="input-prepend"><label for="username" class="add-on">Username</label><?php echo form_input(array('name' => 'username', 'id' => 'username', 'value' => (isset($search["username"]))
 								? rawurldecode($search["username"]) : ''))
 					?></li>
-				<li class="input-prepend"><span class="add-on">Tripcode</span><?php echo form_input(array('name' => 'tripcode', 'id' => 'tripcode', 'value' => (isset($search["tripcode"]))
+				<li class="input-prepend"><label for="tripcode" class="add-on">Tripcode</label><?php echo form_input(array('name' => 'tripcode', 'id' => 'tripcode', 'value' => (isset($search["tripcode"]))
 								? rawurldecode($search["tripcode"]) : ''))
 					?></li>
-				<li class="input-prepend"><span class="add-on">E-mail</span><?php echo form_input(array('name' => 'email', 'id' => 'email', 'value' => (isset($search["email"]))
+				<li class="input-prepend"><label for="email" class="add-on">E-mail</label><?php echo form_input(array('name' => 'email', 'id' => 'email', 'value' => (isset($search["email"]))
 					? rawurldecode($search["email"]) : ''))
 					?></li>
-				<li class="input-prepend"><span class="add-on">Date start</span><?php
+				<li class="input-prepend"><label for="filename" class="add-on">Filename</label><?php echo form_input(array('name' => 'filename', 'id' => 'filename', 'value' => (isset($search["filename"]))
+					? rawurldecode($search["filename"]) : ''))
+					?></li>
+				<li class="input-prepend"><label for="date_start" class="add-on">Date start</label><?php
 					$date_array = array(
 							'placeholder' => 'yyyy-mm-dd',
 							'type' => 'date',
@@ -100,7 +103,7 @@ if(isset($board)) :
 					echo form_input($date_array);
 					?></li>
 
-				<li class="input-prepend"><span class="add-on">Date end</span><?php
+				<li class="input-prepend"><label for="date_end" class="add-on">Date end</label><?php
 					$date_array = array(
 							'placeholder' => 'yyyy-mm-dd',
 							'type' => 'date',
@@ -118,7 +121,7 @@ if(isset($board)) :
 				
 				<?php if($board->shortname) : ?>
 				<li class="divider" style="margin-bottom:8px"></li>
-				<li class="input-prepend"><span class="add-on">Image</span><input type="file" name="image" />
+				<li class="input-prepend"><label for="file_search" class="add-on">Image</label><input id="file_search" type="file" name="image" />
 					</li><li><?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',

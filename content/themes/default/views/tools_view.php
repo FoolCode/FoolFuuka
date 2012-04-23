@@ -14,10 +14,11 @@ if(isset($board)) :
 <ul class="nav pull-right">
 	<li class="search-dropdown">
 		<?php
-		echo form_open_multipart(
+		echo form_open(
 			$board->shortname . '/search',
 			array(
-			'class' => 'navbar-search pull-right',
+				'class' => 'navbar-search pull-right',
+				'method' => 'GET'
 			)
 		);
 		echo form_input(array(
@@ -71,69 +72,7 @@ if(isset($board)) :
 				<li class="divider"></li>
 
 			</ul>
-			<ul class="pull-left">
-
-				<li class="input-prepend"><label for="subject" class="add-on">Subject</label><?php echo form_input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"]))
-								? rawurldecode($search["subject"]) : ''))
-					?></li>
-				<li class="input-prepend"><label for="username" class="add-on">Username</label><?php echo form_input(array('name' => 'username', 'id' => 'username', 'value' => (isset($search["username"]))
-								? rawurldecode($search["username"]) : ''))
-					?></li>
-				<li class="input-prepend"><label for="tripcode" class="add-on">Tripcode</label><?php echo form_input(array('name' => 'tripcode', 'id' => 'tripcode', 'value' => (isset($search["tripcode"]))
-								? rawurldecode($search["tripcode"]) : ''))
-					?></li>
-				<li class="input-prepend"><label for="email" class="add-on">E-mail</label><?php echo form_input(array('name' => 'email', 'id' => 'email', 'value' => (isset($search["email"]))
-					? rawurldecode($search["email"]) : ''))
-					?></li>
-				<li class="input-prepend"><label for="filename" class="add-on">Filename</label><?php echo form_input(array('name' => 'filename', 'id' => 'filename', 'value' => (isset($search["filename"]))
-					? rawurldecode($search["filename"]) : ''))
-					?></li>
-				<li class="input-prepend"><label for="date_start" class="add-on">Date start</label><?php
-					$date_array = array(
-							'placeholder' => 'yyyy-mm-dd',
-							'type' => 'date',
-							'name' => 'start',
-							'id' => 'date_start'
-						);
-					if(isset($search["date_start"]))
-					{
-						$date_array['value'] = rawurldecode($search["date_start"]);
-					}
-
-					echo form_input($date_array);
-					?></li>
-
-				<li class="input-prepend"><label for="date_end" class="add-on">Date end</label><?php
-					$date_array = array(
-							'placeholder' => 'yyyy-mm-dd',
-							'type' => 'date',
-							'name' => 'end',
-							'id' => 'date_end',
-						);
-
-					if(isset($search["date_end"]))
-					{
-						$date_array['value'] = rawurldecode($search["date_end"]);
-					}
-					echo form_input($date_array);
-
-					?></li>
-				
-				<?php if($board->shortname) : ?>
-				<li class="divider" style="margin-bottom:8px"></li>
-				<li class="input-prepend"><label for="file_search" class="add-on">Image</label><input id="file_search" type="file" name="image" />
-					</li><li><?php
-					echo form_submit(array(
-						'class' => 'btn btn-success btn-mini',
-						'value' => _('Search image'),
-						'name' => 'submit_image',
-						'title' => _('On most browsers you can also drop the file on the search bar.'),
-						'style' => 'margin-top:0;'
-					))
-					?></li>
-				<?php endif; ?>
-
-			</ul>
+			
 			<ul class="pull-right">
 				<li><?php echo _('Filters:') ?></li>
 				<li>
@@ -300,9 +239,80 @@ if(isset($board)) :
 						<span>Old First</span>
 					</label>
 				</li>
+			</ul>
+			
+			<ul class="pull-left">
 
+				<li class="input-prepend"><label for="subject" class="add-on">Subject</label><?php echo form_input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"]))
+								? rawurldecode($search["subject"]) : ''))
+					?></li>
+				<li class="input-prepend"><label for="username" class="add-on">Username</label><?php echo form_input(array('name' => 'username', 'id' => 'username', 'value' => (isset($search["username"]))
+								? rawurldecode($search["username"]) : ''))
+					?></li>
+				<li class="input-prepend"><label for="tripcode" class="add-on">Tripcode</label><?php echo form_input(array('name' => 'tripcode', 'id' => 'tripcode', 'value' => (isset($search["tripcode"]))
+								? rawurldecode($search["tripcode"]) : ''))
+					?></li>
+				<li class="input-prepend"><label for="email" class="add-on">E-mail</label><?php echo form_input(array('name' => 'email', 'id' => 'email', 'value' => (isset($search["email"]))
+					? rawurldecode($search["email"]) : ''))
+					?></li>
+				<li class="input-prepend"><label for="filename" class="add-on">Filename</label><?php echo form_input(array('name' => 'filename', 'id' => 'filename', 'value' => (isset($search["filename"]))
+					? rawurldecode($search["filename"]) : ''))
+					?></li>
+				<li class="input-prepend"><label for="date_start" class="add-on">Date start</label><?php
+					$date_array = array(
+							'placeholder' => 'yyyy-mm-dd',
+							'type' => 'date',
+							'name' => 'start',
+							'id' => 'date_start'
+						);
+					if(isset($search["date_start"]))
+					{
+						$date_array['value'] = rawurldecode($search["date_start"]);
+					}
+
+					echo form_input($date_array);
+					?></li>
+
+				<li class="input-prepend"><label for="date_end" class="add-on">Date end</label><?php
+					$date_array = array(
+							'placeholder' => 'yyyy-mm-dd',
+							'type' => 'date',
+							'name' => 'end',
+							'id' => 'date_end',
+						);
+
+					if(isset($search["date_end"]))
+					{
+						$date_array['value'] = rawurldecode($search["date_end"]);
+					}
+					echo form_input($date_array);
+
+					?></li>
+				
+				<?php echo form_close(); ?>
+				<?php if($board->shortname) :
+					echo form_open_multipart(
+						$board->shortname . '/search'
+					);
+				?>
+				
+				<li class="divider" style="margin-bottom:8px"></li>
+				<li class="input-prepend"><label for="file_search" class="add-on">Image</label><input id="file_search" type="file" name="image" />
+					</li><li><?php
+					echo form_submit(array(
+						'class' => 'btn btn-success btn-mini',
+						'value' => _('Search image'),
+						'name' => 'submit_image',
+						'title' => _('On most browsers you can also drop the file on the search bar.'),
+						'style' => 'margin-top:0;'
+					))
+					?></li>
+				<?php 
+					echo form_close();
+					endif; 
+				?>
+			</ul>
 		</div>
-		<?php echo form_close(); ?>
 	</li>
 </ul>
 

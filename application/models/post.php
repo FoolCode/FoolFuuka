@@ -1030,7 +1030,7 @@ class Post extends CI_Model
 
 		// if global or board => use sphinx, else mysql for board only
 		// global search requires sphinx
-		if ($board->sphinx || ($board === FALSE && get_setting('fs_sphinx_global')))
+		if (($board === FALSE && get_setting('fs_sphinx_global')) || $board->sphinx)
 		{
 			$this->load->library('SphinxQL');
 
@@ -2123,7 +2123,7 @@ class Post extends CI_Model
 		// if no matches found, stop here...
 		if ($media->num_rows() == 0)
 		{
-			return array('post' => array(), 'total_found' => 0);
+			return array('posts' => array(), 'total_found' => 0);
 		}
 
 		$media = $media->row();

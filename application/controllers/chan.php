@@ -915,7 +915,7 @@ class Chan extends Public_Controller
 		$radix = get_selected_radix();
 
 		// just disable the radix to run a global search
-		if($this->input->post('submit_search_global'))
+		if($this->input->get_post('submit_search_global'))
 		{
 			$radix = FALSE;
 		}
@@ -964,19 +964,19 @@ class Chan extends Public_Controller
 		// submit_post forces into $this->post()
 		// if submit_undefined we check if it's a natural number or a
 		// local or 4chan board
-		if ($this->input->post('submit_post')
-			|| ($this->input->post('submit_undefined')
-				&& (is_post_number($this->input->post('text'))
-					|| strpos($this->input->post('text'), 'http://boards.4chan.org') !== FALSE
-					|| strpos($this->input->post('text'), site_url()) !== FALSE)))
+		if ($this->input->get_post('submit_post')
+			|| ($this->input->get_post('submit_undefined')
+				&& (is_post_number($this->input->get_post('text'))
+					|| strpos($this->input->get_post('text'), 'http://boards.4chan.org') !== FALSE
+					|| strpos($this->input->get_post('text'), site_url()) !== FALSE)))
 		{
-			if (is_post_number($this->input->post('text')))
+			if (is_post_number($this->input->get_post('text')))
 			{
-				$text = str_replace(',', '_', $this->input->post('text'));
+				$text = str_replace(',', '_', $this->input->get_post('text'));
 			}
 			else
 			{
-				$text = $this->input->post('text');
+				$text = $this->input->get_post('text');
 			}
 			// send it to post() that should take care of weird cases too
 			// just return instead of redirect because post() itself redirects
@@ -990,7 +990,7 @@ class Chan extends Public_Controller
 			'order', 'page');
 
 		// POST -> GET Redirection to provide URL presentable for sharing links.
-		if ($this->input->post())
+		if ($this->input->post() || $this->input->get())
 		{
 			if ($radix)
 			{
@@ -1003,10 +1003,10 @@ class Chan extends Public_Controller
 
 			foreach ($modifiers as $modifier)
 			{
-				if ($this->input->post($modifier))
+				if ($this->input->get_post($modifier))
 				{
 					array_push($redirect_url, $modifier);
-					array_push($redirect_url, rawurlencode($this->input->post($modifier)));
+					array_push($redirect_url, rawurlencode($this->input->get_post($modifier)));
 				}
 			}
 

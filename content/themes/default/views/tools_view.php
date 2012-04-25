@@ -15,7 +15,7 @@ if(isset($board)) :
 	<li class="search-dropdown">
 		<?php
 		echo form_open(
-			$board->shortname . '/search',
+			site_url(((!$board->shortname)?:'@radix/') . $board->shortname . '/search'),
 			array(
 				'class' => 'navbar-search pull-right',
 				'method' => 'GET'
@@ -292,7 +292,8 @@ if(isset($board)) :
 				<?php echo form_close(); ?>
 				<?php if($board->shortname) :
 					echo form_open_multipart(
-						$board->shortname . '/search'
+						site_url('@radix/' . $board->shortname . '/search'),
+						array('style' => 'margin-bottom:8px')
 					);
 				?>
 				
@@ -310,6 +311,55 @@ if(isset($board)) :
 				<?php 
 					echo form_close();
 					endif; 
+				?>
+					
+				<li class="divider"></li>
+				<li style="margin-top: 5px;"><?php echo _('Your latest searches:') ?>
+					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; color:#FFF; position:relative; top:-1px; padding:0px 3px;"><?php echo _('Clear') ?></a></div>
+				</li>
+				<?php 
+					if(isset($latest_searches) || $latest_searches = @json_decode($this->input->cookie('foolfuuka_search_latest_5'), TRUE))
+					{
+						// sanitization
+						foreach($latest_searches as $item)
+						{
+							// all subitems must be array, all must have 'board'
+							if(!is_array($item) || !isset($item['board']))
+							{
+								$latest_searches = array();
+								break;
+							}
+						}
+
+						foreach($latest_searches as $latest_search)
+						{
+							$uri = ($latest_search['board'] === FALSE ? '' : $latest_search['board'] . '/') . '/search/';
+							$text = !$latest_search['board'] === FALSE ? '<strong>global:</strong> ' : '/<strong>' . $latest_search['board'] . '</strong>/: ';
+							unset($latest_search['board']);
+							if(isset($latest_search['text']))
+							{
+								$uri .= 'text/' . $latest_search['text'] . '/';
+								$text .= urldecode($latest_search['text']) . ' ';
+								unset($latest_search['text']);
+							}
+							if(isset($latest_search['order']) && $latest_search['order'] == 'desc')
+							{
+								unset($latest_search['order']);
+							}
+							
+							$extra_text = '';
+							$extra_text_br = '';
+							foreach($latest_search as $k => $i)
+							{
+								$uri .= $k.'/'.$i.'/';
+								$extra_text .= '<span class="options">[' . $k . '] ' . urldecode($i) . ' </span>';
+								$extra_text_br .= '<br/><span class="options">[' . $k . '] ' . urldecode($i) . ' </span>';
+							}
+							
+							echo '<li title="' . form_prep($text . $extra_text_br) . '" class="latest_search"><a href="' . site_url($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
+						}
+					}
+					
 				?>
 			</ul>
 		</div>

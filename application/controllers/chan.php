@@ -311,6 +311,7 @@ class Chan extends Public_Controller
 			'backend_vars' => array(
 				'site_url'  => site_url(),
 				'api_url'   => site_url(),
+				'cookie_domain' => $this->input->get_cookie_domain(),
 				'csrf_hash' => $this->security->get_csrf_hash()
 			)
 		);
@@ -994,7 +995,7 @@ class Chan extends Public_Controller
 		{
 			if ($radix)
 			{
-				$redirect_url = array($radix->shortname, 'search');
+				$redirect_url = array('@radix', $radix->shortname, 'search');
 			}
 			else
 			{
@@ -1012,9 +1013,59 @@ class Chan extends Public_Controller
 
 			redirect(site_url($redirect_url), 'location', 303);
 		}
-
-		// Fetch the search results and display them.
+		
+		// put the search options in an associative array
 		$search = $this->uri->ruri_to_assoc($radix?2:1, $modifiers);
+
+		$json_error = '';
+		// get latest 5 searches for LATEST SEARCHES
+		$cookie = $this->input->cookie('foolfuuka_search_latest_5');
+
+		if(!is_array($cookie_array = @json_decode($cookie, TRUE)))
+		{
+			$cookie_array = array();
+		}
+		
+		// keep this sanitization in sync with the one in the search view!
+		// it's for safety, but avoids display errors if the user does silly things
+
+		// a bit of sanitization
+		foreach($cookie_array as $item)
+		{
+			// all subitems must be array, all must have 'board'
+			if(!is_array($item) || !isset($item['board']))
+			{
+				$json_error = 'sanitized';
+				$cookie_array = array();
+				break;
+			}
+		}
+		
+		// get rid of empty search terms
+		$search_opts = array_filter($this->uri->ruri_to_assoc($radix?4:3, $modifiers));
+		// global search support
+		$search_opts['board'] = !$radix?:$radix->shortname;
+		unset($search_opts['page']);
+
+		// if it's already in the latest searches, remove the previous entry
+		foreach($cookie_array as $key => $item)
+		{
+			if($item === $search_opts)
+			{
+				unset($cookie_array[$key]);
+				break;
+			}
+		}
+		
+		// we don't want more than 5 entries for latest searches
+		if(count($cookie_array) > 4)
+			array_pop($cookie_array);
+
+		array_unshift($cookie_array, $search_opts);
+		$cookie_array_json = json_encode($cookie_array);
+		$this->input->set_cookie('foolfuuka_search_latest_5', $cookie_array_json, 60 * 60 * 24 * 30, '', '/');
+		
+		// actual search
 		$result = $this->post->get_search($radix, $search);
 
 		// Stop! We have reached an error and shouldn't proceed any further!
@@ -1031,7 +1082,7 @@ class Chan extends Public_Controller
 				array(
 				'error' => $result['error']
 				), array(
-				'tools_view' => array('search' => $search)
+				'tools_view' => array('search' => $search, 'latest_searches' => $cookie_array, 'json_error' => $json_error)
 				)
 			);
 			$this->template->build('error');
@@ -1097,18 +1148,11 @@ class Chan extends Public_Controller
 		{
 			$title = _('Displaying all posts with no filters applied.');
 		}
-
+		
 		$page = (!$search['page'] || !intval($search['page'])) ? 1 : $search['page'];
 
 		// Generate URI for pagination.
 		$uri_array = $this->uri->ruri_to_assoc($radix?4:3, $modifiers);
-		foreach ($uri_array as $key => $param)
-		{
-			if (!$param)
-			{
-				unset($uri_array[$key]);
-			}
-		}
 
 		if (isset($uri_array['page']))
 		{
@@ -1121,6 +1165,7 @@ class Chan extends Public_Controller
 		// Set template variables required to build the HTML.
 		//	$this->template->title($radix->formatted_title .
 		//		' &raquo; ' . $title);
+		
 		$this->_set_parameters(
 			array(
 				'section_title' => $title,
@@ -1137,7 +1182,7 @@ class Chan extends Public_Controller
 			),
 			array(
 				'tools_post' => TRUE,
-				'tools_view' => array('search' => $search)
+				'tools_view' => array('search' => $search, 'latest_searches' => $cookie_array)
 			)
 		);
 
@@ -1148,8 +1193,8 @@ class Chan extends Public_Controller
 		else
 		{
 			$this->template->title(_('Global Search'));
-		}
-
+		}		
+		
 		$this->template->append_metadata('<meta name="robots" content=""noindex" />');
 		$this->template->build('board');
 	}

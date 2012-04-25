@@ -234,6 +234,14 @@ var bindFunctions = function()
                     el.parent().parent().addClass('active');
                     break;
 					
+				case 'clearLatestSearches':
+					setCookie('foolfuuka_search_latest_5', '', 0, '/', backend_vars.cookie_domain);
+					jQuery('li.latest_search').each(function(idx){
+						jQuery(this).remove();
+					});
+					return false;
+					break;
+					
                 default:
                     break;
             }
@@ -738,12 +746,19 @@ jQuery(document).ready(function() {
 	
 	// localize and add 4chan tooltip where title
     jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy').filter('[title]').tooltip({
-        placement: 'bottom',
-        delay: 200
+        placement: 'top',
+        delay: 300,
+		animation: false
     });
 	
     jQuery('input[title]').tooltip({
         placement: 'right',
-        delay: 200
+        delay: 200,
+		animation: false
+    });
+	
+	jQuery('li.latest_search').tooltip({
+        placement: 'left',
+		animation: false
     });
 });

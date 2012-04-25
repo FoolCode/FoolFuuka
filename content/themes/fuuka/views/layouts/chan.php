@@ -68,6 +68,7 @@ if (!defined('BASEPATH'))
 		<div style="min-height:30px;">
 			<h1><?php echo (get_selected_radix()) ? get_selected_radix()->formatted_title : '' ?></h1>
 			<?php if (isset($section_title)) : echo '<h2>' . $section_title . '</h2>'; endif ?>
+			<?php if (get_setting('fs_theme_header_text')): ?><div><?php echo get_setting('fs_theme_header_text') ?></div><?php endif; ?>
 			<hr />
 			<?php echo $template['partials']['tools_view']; ?>
 			<hr />
@@ -167,7 +168,12 @@ if (!defined('BASEPATH'))
 			</div>
 		</div>
 		<?php endif; ?>
-
+			
+		<?php 
+			if(get_setting('fs_theme_footer_text'))
+				echo '<div style="clear:both;">' . get_setting('fs_theme_footer_text') . '</div>';
+		?>
+		
 		<?php if (get_setting('fs_theme_google_analytics')) : ?>
 			<script>
 				var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us']['_trackPageview'],['_trackPageLoadTime']];

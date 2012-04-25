@@ -197,8 +197,8 @@ if (!defined('BASEPATH'))
 			<div role="main" id="main">
 				<?php if (isset($section_title)): ?>
 					<h3 class="section_title"><?php echo $section_title ?></h3>
-				<?php else : ?>
-
+				<?php elseif (get_setting('fs_theme_header_text')): ?>
+					<section class="section_title"><?php echo get_setting('fs_theme_header_text') ?></section>
 				<?php endif; ?>
 
 				<?php
@@ -269,7 +269,8 @@ if (!defined('BASEPATH'))
 
 			<div id="push"></div>
 		</div>
-		<footer id="footer"><?php echo FOOL_NAME ?> - Version <?php echo FOOL_VERSION ?>, <a href="http://code.google.com/p/fuuka/" target="_blank">Fuuka Fetcher</a> - Version r140
+		<footer id="footer">
+			<?php echo FOOL_NAME ?> - Version <?php echo FOOL_VERSION ?>, <a href="http://code.google.com/p/fuuka/" target="_blank">Fuuka Fetcher</a> - Version r140
 			
 			
 			<div style="float:right">
@@ -295,6 +296,11 @@ if (!defined('BASEPATH'))
 					echo implode(' / ', $theme_links);
 					?> ]
 			</div>
+			
+			<?php 
+				if(get_setting('fs_theme_footer_text'))
+					echo '<section class="footer_text">' . get_setting('fs_theme_footer_text') . '</section>';
+			?>
 		</footer>
 
 

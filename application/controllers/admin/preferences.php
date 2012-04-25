@@ -177,18 +177,10 @@ class Preferences extends Admin_Controller
 		$form['separator-3'] = array(
 			'type' => 'separator'
 		);
-		
-		$form['fs_theme_preheader_text'] = array(
-			'type' => 'textarea',
-			'label' => _('Pre-Header Text'),
-			'preferences' => TRUE,
-			'help' => _("This will insert HTML code above before the header navigation block."),
-			'class' => 'span5'
-		);
 
 		$form['fs_theme_header_text'] = array(
 			'type' => 'textarea',
-			'label' => _('Header Text'),
+			'label' => _('Header Text ("notices")'),
 			'preferences' => TRUE,
 			'help' => _("Inserts the text above in the header, below the nagivation links."),
 			'class' => 'span5'
@@ -198,11 +190,11 @@ class Preferences extends Admin_Controller
 			'type' => 'textarea',
 			'label' => _('Header Code'),
 			'preferences' => TRUE,
-			'help' => _("This will insert the HTML code above inside the &lt;HEAD&gt;."),
+			'help' => _("This will insert the HTML code inside the &lt;HEAD&gt;."),
 			'class' => 'span5'
 		);
 
-		$form['fs_gen_footer_text'] = array(
+		$form['fs_theme_footer_text'] = array(
 			'type' => 'textarea',
 			'label' => _('Footer Text'),
 			'preferences' => TRUE,

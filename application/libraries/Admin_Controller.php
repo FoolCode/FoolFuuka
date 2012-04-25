@@ -502,19 +502,17 @@ class Admin_Controller extends MY_Controller
 			if (time() - $last_check > 3600)
 			{
 				// update autoupgrade cron time
-				$this->db->update('preferences', array('value' => time()),
-					array('name' => 'fs_cron_autoupgrade'));
+				set_setting('fs_cron_autoupgrade', time());
 
 				// load model
 				$this->load->model('upgrade_model');
 				// check
 				$versions = $this->upgrade_model->check_latest(TRUE);
-
+				
 				// if a version is outputted, save the new version number in database
 				if ($versions[0])
 				{
-					$this->db->update('preferences', array('value' => $versions[0]->name),
-						array('name' => 'fs_cron_autoupgrade_version'));
+					set_setting('fs_cron_autoupgrade_version', $versions[0]->name);
 				}
 
 				// remove one week old logs

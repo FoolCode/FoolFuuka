@@ -37,7 +37,7 @@ class Upgrade_model extends CI_Model
 			return FALSE;
 		}
 		$data = json_decode($result);
-
+		
 		$new_versions = array();
 		foreach ($data as $new)
 		{

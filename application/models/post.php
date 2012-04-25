@@ -130,7 +130,7 @@ class Post extends CI_Model
 		}
 
 		return get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname . '/'
-			. ($thumbnail ? 'thumb' : 'img') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
+			. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 	}
 
 
@@ -223,12 +223,12 @@ class Post extends CI_Model
 				if (isset($matches[1]))
 				{
 					$balancer_servers = get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'
-						. ($thumbnail ? 'thumb' : 'img') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
+						. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 				}
 			}
 
 			return get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'
-				. ($thumbnail ? 'thumb' : 'img') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
+				. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 		}
 
 		if ($thumbnail === TRUE)
@@ -484,7 +484,7 @@ class Post extends CI_Model
 		// set default locations of media directories and image directory structure
 		$board_directory = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname . '/';
 		$thumb_filepath = $board_directory . 'thumb/' . substr($media_unixtime, 0, 4) . '/' . substr($media_unixtime, 4, 2) . '/';
-		$media_filepath = $board_directory . 'img/' . substr($media_unixtime, 0, 4) . '/' . substr($media_unixtime, 4, 2) . '/';
+		$media_filepath = $board_directory . 'image/' . substr($media_unixtime, 0, 4) . '/' . substr($media_unixtime, 4, 2) . '/';
 
 		// check for any type of duplicate records or information and override default locations
 		if ($duplicate !== NULL)
@@ -495,7 +495,7 @@ class Post extends CI_Model
 				$media_exists = TRUE;
 
 				$media_existing = $duplicate->media_filename;
-				$media_filepath = $board_directory . 'img/'
+				$media_filepath = $board_directory . 'image/'
 					. substr($duplicate->media_filename, 0, 4) . '/' . substr($duplicate->media_filename, 4, 2) . '/';
 			}
 

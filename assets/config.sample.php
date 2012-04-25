@@ -2,7 +2,7 @@
 
 /*
  * This is the base configuration file
- * Here we store the data necessary to start FoOlSlide at all
+ * Here we store the data necessary to start FoOlFuuka at all
  * 
  * You can edit this file manually
  * 

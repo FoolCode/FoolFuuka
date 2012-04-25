@@ -64,6 +64,9 @@ define('FOOL_PREF_SPHINX_MEMORY', 2047);
 
 define('FOOL_PREF_SERV_JAVA_PATH', 'java');
 
+define('FOOL_PREF_THEMES_THEME_DEFAULT_ENABLED', TRUE);
+define('FOOL_PREF_THEMES_THEME_FUUKA_ENABLED', TRUE);
+define('FOOL_PREF_THEMES_THEME_YOTSUBA_ENABLED', FALSE);
 
 /*
 |--------------------------------------------------------------------------

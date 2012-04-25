@@ -35,3 +35,7 @@ i.icon-white {
 	width:auto;
 	padding: 0 30px;
 }
+
+.well .well {
+	padding: 10px 13px 3px;
+}

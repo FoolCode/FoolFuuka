@@ -16,8 +16,8 @@ class MY_Form_validation extends CI_Form_validation
 	 * Checks the form for and returns either a compiled array of values or
 	 * the error
 	 * 
-	 * $form array 
-	 * $alternate array name/value pairs to use instead of the POST array 
+	 * @param $form array 
+	 * @param $alternate array name/value pairs to use instead of the POST array 
 	 */
 	public function form_validate($form, $alternate = NULL)
 	{
@@ -44,13 +44,26 @@ class MY_Form_validation extends CI_Form_validation
 				$form = array_merge($form, $item['sub']);
 			}
 			
+			if(isset($item['checkboxes']))
+			{
+				// flatten the form
+				$form_temp = array();
+				
+				foreach($item['checkboxes'] as $checkbox)
+				{
+					$form_temp[$name . '[' . $checkbox['array_key'] . ']'] = $checkbox;
+				}
+				
+				$form = array_merge($form, $form_temp);
+			}
+			
 			if (isset($item['validation']))
 			{
 				// set the rules and add [] to the name if array
 				$this->set_rules($name . ((isset($item['array']) && $item['array'])?'[]':''), $item['label'], $item['validation']);
 			}
 		}
-
+		//echo '<pre>'.print_r($form, TRUE).'</pre>';
 		// we need to run both validation and closures
 		$this->run();
 		$ci_validation_errors = $this->_error_array;
@@ -131,7 +144,7 @@ class MY_Form_validation extends CI_Form_validation
 			$result = array();
 
 			foreach ($form as $name => $item)
-			{
+			{	
 				// not interested in data that is not related to database
 				if ((!isset($item['database']) || $item['database'] !== TRUE) &&
 					(!isset($item['preferences']) || $item['preferences'] !== TRUE))
@@ -139,15 +152,37 @@ class MY_Form_validation extends CI_Form_validation
 					continue;
 				}
 
+				// create a version without array index
+				if(isset($item['array_key']) && substr($name, -1, 1) == ']' && substr($name, -2, 1) != '[')
+				{
+					$pos = strrpos($name, '[');
+					$name_no_index = substr($name, 0, $pos);
+				}
+				
 				if ($item['type'] == 'checkbox')
 				{
 					if ($CI->input->post($name) == 1)
 					{
-						$result[$name] = 1;
+						// support for multidimensional checkbox groups
+						if(isset($item['array_key']))
+						{
+							$result[$name_no_index][$item['array_key']] = 1;
+						}
+						else
+						{
+							$result[$name] = 1;
+						}
 					}
 					else
 					{
-						$result[$name] = 0;
+						if(isset($item['array_key']))
+						{
+							$result[$name_no_index][$item['array_key']] = 0;
+						}
+						else
+						{
+							$result[$name] = 1;
+						}
 					}
 				}
 				else
@@ -171,7 +206,7 @@ class MY_Form_validation extends CI_Form_validation
 				return array('success' => $result, 'warning' => implode(' ',
 						$validation_func_warnings));
 			}
-
+			
 			// returning a form with the new values
 			return array('success' => $result);
 		}

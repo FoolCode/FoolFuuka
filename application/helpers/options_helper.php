@@ -20,7 +20,7 @@ function is_post_number($str)
 		return TRUE;
 	}
 
-	return (bool) preg_match('/^[0-9]+(,|_)[0-9]$/', $str);
+	return (bool) preg_match('/^[0-9]+(,|_)[0-9]+$/', $str);
 }
 
 
@@ -38,6 +38,14 @@ if (!function_exists('get_setting'))
 	{
 		$CI = & get_instance();
 		$preferences = $CI->fs_options;
+		
+		if(substr($option, -1, 1) == ']' && substr($option, -2, 1) != '[')
+		{
+			// we have an associative array... get rid of it
+			$pos = strrpos($option, '[');
+			$key = substr($option, $pos+1, -1);
+			$option = substr($option, 0, $pos);
+		}
 
 		if (isset($preferences[$option]) && $preferences[$option] != NULL)
 		{

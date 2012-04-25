@@ -66,7 +66,10 @@ if (!defined('BASEPATH'))
 			'validation_func', 
 			'preferences', 
 			'array',
-			'sub'
+			'sub',
+			'checkboxes',
+			'checked',
+			'array_key'
 		);
 		$helpers = array();
 		foreach ($not_input as $not)
@@ -235,10 +238,27 @@ if (!defined('BASEPATH'))
 						if (isset($helpers['preferences']) && $helpers['preferences'])
 						{
 							$checked = get_setting($name);
-							if(isset($helpers['array']) && $helpers['array'])
+							
+							if(isset($helpers['array_key']))
 							{
-								$checked = unserialize($checked);
-								$checked = $checked[$i];
+								$checked = @unserialize($checked);
+								
+								if(isset($checked[$helpers['array_key']]))
+								{
+									$checked = $checked[$helpers['array_key']];
+								}
+								else
+								{
+									// do we have a fallback in the array?
+									if(isset($helpers['checked']) && $helpers['checked'] == TRUE)
+									{
+										$checked = TRUE;
+									}
+									else
+									{
+										$checked = FALSE;
+									}
+								}
 							}
 						}
 						else
@@ -270,6 +290,35 @@ if (!defined('BASEPATH'))
 						}
 						
 						break;
+					
+					case 'checkbox_array':
+						$data_form = array();
+						if (!isset($item['value']))
+						{
+							$item['value'] = array();
+						}
+
+						foreach($helpers['checkboxes'] as $checkbox)
+						{
+							$checked = FALSE;
+							if(isset($item['value'][$checkbox['array_key']]))
+							{
+								$checked = (bool)$item['value'][$checkbox['array_key']];
+							}
+							else if(isset($checkbox['checked']))
+							{
+								$checked = $checkbox['checked'];
+							}
+							
+							$data_form[$item['name'].'[' . $checkbox['array_key'] . ']'] = 
+								array_merge($checkbox, array(
+									'type' => 'checkbox', 'value' => 1, 'checked' => $checked
+								)
+							);
+						}
+						echo $helpers['help'];
+						$this->load->view('admin/form_creator', array('form' => $data_form));
+						break;	
 
 
 					// These are the standard CodeIgniter functions that accept array 

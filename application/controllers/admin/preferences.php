@@ -156,6 +156,37 @@ class Preferences extends Admin_Controller
 		$form['open'] = array(
 			'type' => 'open'
 		);
+		
+		$form['fs_theme_active_themes'] = array(
+			'type' => 'checkbox_array',
+			'help' => _('Choose the themes to make available to the users. Admins are able to access any of them.'),
+			'checkboxes' => array(
+				array(
+					'type' => 'checkbox',
+					'label' => 'Default theme',
+					'help' => _('Enable Default theme'),
+					'array_key' => 'default',
+					'preferences' => TRUE,
+					'checked' => FOOL_PREF_THEMES_THEME_DEFAULT_ENABLED
+				),
+				array(
+					'type' => 'checkbox',
+					'label' => 'Fuuka theme',
+					'help' => _('Enable Fuuka theme'),
+					'array_key' => 'fuuka',
+					'preferences' => TRUE,
+					'checked' => FOOL_PREF_THEMES_THEME_FUUKA_ENABLED
+				),
+				array(
+					'type' => 'checkbox',
+					'label' => 'Yotsuba theme',
+					'help' => _('Enable Yotsuba theme'),
+					'array_key' => 'yotsuba',
+					'preferences' => TRUE,
+					'checked' => FOOL_PREF_THEMES_THEME_YOTSUBA_ENABLED
+				)
+			)
+		);
 
 		$form['fs_theme_google_analytics'] = array(
 			'type' => 'input',

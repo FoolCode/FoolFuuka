@@ -76,7 +76,12 @@ class Admin_Controller extends MY_Controller
 			if(is_array($value))
 			{
 				// remove also empty values with array_filter
-				$value = serialize(array_filter($value));
+				// but we want to keep 0s
+				$value = serialize(array_filter($value, function($var){
+					if($var === 0)
+						return TRUE;
+					return $var == FALSE;
+				}));
 			}
 			
 			$this->db->where(array('name' => $name));

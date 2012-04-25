@@ -412,6 +412,25 @@ class Chan extends Public_Controller
 		);
 		$this->template->build('index');
 	}
+	
+	
+	public function rules()
+	{
+		if(!get_selected_radix()->rules)
+		{
+			show_404();
+		}
+		
+		$this->load->library('Markdown_Parser');
+		
+		$this->_set_parameters(
+			array(
+				'content' => get_selected_radix()->rules
+			)
+		);
+		
+		$this->template->build('markdown');
+	}
 
 
 	/**

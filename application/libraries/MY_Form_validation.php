@@ -35,7 +35,7 @@ class MY_Form_validation extends CI_Form_validation
 		// this gets a bit complex because we want to show all errors at the same
 		// time, which means we have to run both CI validation and custom, then
 		// merge the result.
-
+		
 		foreach ($form as $name => $item)
 		{
 			if(isset($item['sub']))
@@ -181,7 +181,7 @@ class MY_Form_validation extends CI_Form_validation
 						}
 						else
 						{
-							$result[$name] = 1;
+							$result[$name] = 0;
 						}
 					}
 				}
@@ -206,7 +206,7 @@ class MY_Form_validation extends CI_Form_validation
 				return array('success' => $result, 'warning' => implode(' ',
 						$validation_func_warnings));
 			}
-			
+
 			// returning a form with the new values
 			return array('success' => $result);
 		}

@@ -117,7 +117,7 @@ class Radix extends CI_Model
 				}
 			),
 			'rules' => array(
-				'databse' => TRUE,
+				'database' => TRUE,
 				'type' => 'textarea',
 				'label' => _('General rules'),
 				'help' => _('Full board rules displayed in a separate page, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
@@ -128,7 +128,7 @@ class Radix extends CI_Model
 				'type' => 'separator'
 			),
 			'posting_rules' => array(
-				'databse' => TRUE,
+				'database' => TRUE,
 				'type' => 'textarea',
 				'label' => _('Posting rules'),
 				'help' => _('Posting rules displayed in the posting area, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),

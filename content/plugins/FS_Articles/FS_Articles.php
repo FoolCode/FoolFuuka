@@ -331,7 +331,7 @@ class FS_Articles extends Plugins
 				
 			<div class="markdown">
 				<?php echo Markdown($article->article); ?>
-			</div	>
+			</div>
 		<?php
 		$this->template->set('content', ob_get_clean());
 

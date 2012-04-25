@@ -50,7 +50,7 @@ class Boards extends Admin_Controller
 				set_notice('warning', $result['error']);
 			}
 			else
-			{
+			{;
 				// it's actually fully checked, we just have to throw it in DB
 				$this->radix->save($result['success']);
 				if (is_null($shortname))

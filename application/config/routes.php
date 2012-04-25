@@ -46,7 +46,11 @@ if(
 	|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_SYSTEM) !== FALSE
 )
 {
-	$route['default_controller'] = "admin/preferences";
+	if(defined('FOOL_SUBDOMAINS_ENABLE'))
+	{
+		$route['default_controller'] = "admin/preferences";
+	}
+	
 	$route['install'] = "install";
 	$route['api'] = "api";
 	$route['cli'] = "cli";

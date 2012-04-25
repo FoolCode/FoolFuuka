@@ -124,9 +124,28 @@ class System extends Admin_Controller
 
 	function upgrade()
 	{
-		$this->viewdata["function_title"] = _("Upgrade FoOlSlide");
+		if($this->input->post('upgrade'))
+		{
+			// triggers the upgrade
+			if (!$this->upgrade_model->do_upgrade())
+			{
+				// clean the cache in case of failure
+				$this->upgrade_model->clean();
+				// show some kind of error
+				log_message('error', 'system.php do_upgrade(): failed upgrade');
+				flash_notice('error', _('Upgrade failed: check file permissions.'));
+			}
+			else
+			{
+				flash_notice('success', _('Upgrade successful'));
+			}
+			
+			redirect($this->uri->uri_string());
+		}
+		
+		$this->viewdata["function_title"] = _("Upgrade");
 
-		// get current version from database
+		// get current version from constant
 		$data["current_version"] = FOOL_VERSION;
 
 		// check if the user can upgrade by checking if files are writeable
@@ -148,35 +167,6 @@ class System extends Admin_Controller
 		$this->viewdata["main_content_view"] = $this->load->view("admin/system/upgrade",
 			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
-	}
-
-	/*
-	 * This just triggers the upgrade function in the upgrade model
-	 *
-	 * @author Woxxy
-	 */
-
-
-	function do_upgrade()
-	{
-
-		if (!$this->input->is_ajax_request())
-		{
-			return false;
-		}
-
-		// triggers the upgrade
-		if (!$this->upgrade_model->do_upgrade())
-		{
-			// clean the cache in case of failure
-			$this->upgrade_model->clean();
-			// show some kind of error
-			log_message('error', 'system.php do_upgrade(): failed upgrade');
-			flash_notice('error', _('Upgrade failed: check file permissions.'));
-		}
-
-		// return an url
-		$this->output->set_output(json_encode(array('href' => site_url('admin/system/upgrade'))));
 	}
 
 }

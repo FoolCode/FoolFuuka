@@ -102,7 +102,6 @@ class MY_Form_validation extends CI_Form_validation
 			}
 		}
 
-
 		// filter results, since the closures return ['success'] = TRUE on success
 		$validation_func_errors = array();
 		$validation_func_warnings = array();
@@ -193,7 +192,7 @@ class MY_Form_validation extends CI_Form_validation
 					}
 				}
 			}
-			
+
 			// restore post
 			if (is_array($alternate))
 			{

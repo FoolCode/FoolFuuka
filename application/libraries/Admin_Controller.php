@@ -80,7 +80,7 @@ class Admin_Controller extends MY_Controller
 				$value = serialize(array_filter($value, function($var){
 					if($var === 0)
 						return TRUE;
-					return $var == FALSE;
+					return $var;
 				}));
 			}
 			

@@ -46,10 +46,13 @@ class Public_Controller extends MY_Controller
 
 		$this->config->load('theme');
 
+		// @todo: check directory when we support extra themes
+		$all_themes = array('default', 'fuuka', 'yotsuba');
+		
 		if($this->tank_auth->is_allowed())
 		{
 			// admins get all the themes
-			$active_themes = array('default', 'fuuka', 'yotsuba');
+			$active_themes = $all_themes;
 		}
 		else
 		{

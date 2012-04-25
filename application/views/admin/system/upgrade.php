@@ -31,7 +31,7 @@ if ($new_versions)
 	echo '<h3>' . _('Changelog') . '</h3><div class="changelog">';
 	$changelog = Markdown($changelog);
 	$changelog = str_replace('{{ENHANCEMENT}}', '<span class="badge badge-warning">Enhancement</span>', $changelog);
-	$changelog = str_replace('{{BUGFIX}}', '<span class="badge badge-warning">Bugfix</span>', $changelog);
+	$changelog = str_replace('{{BUGFIX}}', '<span class="badge badge-info">Bugfix</span>', $changelog);
 	$changelog = str_replace('{{NEW}}', '<span class="badge badge-success">New</span>', $changelog);
 	$changelog = str_replace('{{ATTENTION}}', '<span class="badge badge-warning">Attention</span>', $changelog);
 	$changelog = str_replace('{{NEWS}}', '<span class="badge badge-inverse">News</span>', $changelog);

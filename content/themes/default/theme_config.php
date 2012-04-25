@@ -8,7 +8,7 @@ if (!defined('BASEPATH'))
 $config['theme_directory'] = 'default';
 $config['theme_name'] = 'Default';
 $config['theme_description'] = 'The default FoOlFuuka theme';
-$config['theme_tags'] = array('gray', 'sidebar');
+$config['theme_tags'] = array('green', 'sidebar');
 // for the default theme, this is the last FoOlSlide version there were changes to it
 $config['theme_version'] = '0.1.0';
 

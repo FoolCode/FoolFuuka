@@ -156,7 +156,14 @@ if (!defined('BASEPATH'))
 				]
 				<?php endif; ?>
 				
-				Theme [ <a href="<?php echo site_url(array('functions', 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> / <a href="<?php echo site_url(array('functions', 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> ]
+				Theme [ <?php
+					$theme_links = array();
+					foreach($this->fu_available_themes as $theme)
+					{
+						$theme_links[] = '<a href="' . site_url(array('@system', 'functions', 'theme', $theme['theme_directory'])) . '" onclick="changeTheme(\'' . $theme['theme_directory'] . '\'); return false;">' . $theme['theme_name'] . '</a>';
+					}
+					echo implode(' / ', $theme_links);
+				?> ]			
 			</div>
 		</div>
 		<?php endif; ?>

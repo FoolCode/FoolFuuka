@@ -85,34 +85,6 @@ class System extends Admin_Controller
 			'preferences' => 'fs_gen',
 			'help' => _('The location of your ImageMagick "convert" executable')
 		);
-
-		$form['fs_fuuka_boards_directory'] = array(
-			'type' => 'input',
-			'label' => _('Boards directory'),
-			'preferences' => TRUE,
-			'help' => _('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
-		);
-
-		$form['fs_fuuka_boards_url'] = array(
-			'type' => 'input',
-			'label' => _('Boards URL'),
-			'preferences' => TRUE,
-			'help' => _('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
-		);
-
-		$form['fs_fuuka_boards_db'] = array(
-			'type' => 'input',
-			'label' => _('Boards database'),
-			'preferences' => TRUE,
-			'help' => _('Overrides the default database, and is compatible with the Fuuka perl fetcher (beware: uses no database prefixes)')
-		);
-		
-		$form['fs_sys_subdomain'] = array(
-			'type' => 'input',
-			'label' => _('System Subdomain'),
-			'preferences' => TRUE,
-			'help' => _('Insert an alternative base URL to FoOlFuuka to separate the system functions from the boards.')
-		);
 		
 		$form['fs_sys_subdomain'] = array(
 			'type' => 'input',

@@ -320,14 +320,26 @@ if (!defined('BASEPATH'))
 						$this->load->view('admin/form_creator', array('form' => $data_form));
 						break;	
 
-
+					case 'dropdown':
+						?>
+						<label><?php echo $helpers['label'] ?></label>
+						<?php
+						echo form_dropdown($name, $item['options'], $item['selected']);
+						?>
+						<span class="help-inline">
+							<?php
+							echo isset($helpers['help']) ? $helpers['help'] : NULL;
+							?>
+						</span>
+						<?php
+						break;
+					
 					// These are the standard CodeIgniter functions that accept array 
 					// http://codeigniter.com/user_guide/helpers/form_helper.html
 					case 'input':
 					case 'password':
 					case 'upload':
 					case 'textarea':
-					case 'dropdown':
 					case 'multiselect':
 					case 'button':
 

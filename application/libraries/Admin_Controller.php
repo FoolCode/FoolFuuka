@@ -155,9 +155,10 @@ class Admin_Controller extends MY_Controller
 			"content" => array(
 				"manage" => array("alt_highlight" => array("board"),
 					"level" => "admin", "name" => _("Manage"), "icon" => 'icon-th-list'),
+				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 'icon-asterisk'),
 				"sphinx" => array("level" => "admin", "name" => _("Sphinx Search"), "icon" => 'icon-search'),
 				"asagi" => array("level" => "admin", "name" => _("Asagi Fetcher"), "icon" => 'icon-cogs'),
-				"add_new" => array("level" => "admin", "name" => _("Add board"), "icon" => 'icon-asterisk')
+				"preferences" => array("level" => "admin", "name" => _("Preferences"), "icon" => 'icon-check')
 			)
 		);
 
@@ -196,7 +197,6 @@ class Admin_Controller extends MY_Controller
 			"level" => "admin",
 			"default" => "general",
 			"content" => array(
-				"general" => array("level" => "admin", "name" => _("General"), "icon" => 'icon-cog'),
 				"theme" => array("level" => "admin", "name" => _("Theme"), "icon" => 'icon-picture'),
 				"registration" => array("level" => "admin", "name" => _("Registration"), "icon" => 'icon-book'),
 				"advertising" => array("level" => "admin", "name" => _("Advertising"), "icon" => 'icon-lock'),

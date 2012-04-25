@@ -162,6 +162,62 @@ class Boards extends Admin_Controller
 				break;
 		}
 	}
+	
+	
+	function preferences()
+	{
+		$this->viewdata["function_title"] = _("Preferences");
+
+		$form = array();
+		
+		$form['open'] = array(
+			'type' => 'open'
+		);
+
+		$form['fs_fuuka_boards_directory'] = array(
+			'type' => 'input',
+			'label' => _('Boards directory'),
+			'preferences' => TRUE,
+			'help' => _('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
+		);
+
+		$form['fs_fuuka_boards_url'] = array(
+			'type' => 'input',
+			'label' => _('Boards URL'),
+			'preferences' => TRUE,
+			'help' => _('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
+		);
+
+		$form['fs_fuuka_boards_db'] = array(
+			'type' => 'input',
+			'label' => _('Boards database'),
+			'preferences' => TRUE,
+			'help' => _('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
+		);
+
+		$form['separator-2'] = array(
+			'type' => 'separator'
+		);
+
+		$form['submit'] = array(
+			'type' => 'submit',
+			'value' => _('Submit'),
+			'class' => 'btn btn-primary'
+		);
+
+		$form['close'] = array(
+			'type' => 'close'
+		);
+
+		$this->submit_preferences_auto($form);
+
+		$data['form'] = $form;
+
+		// create a form
+		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator",
+			$data, TRUE);
+		$this->load->view("admin/default", $this->viewdata);
+	}
 
 	
 	function asagi()

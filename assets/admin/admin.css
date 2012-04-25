@@ -37,5 +37,19 @@ i.icon-white {
 }
 
 .well .well {
-	padding: 10px 13px 3px;
+	box-shadow:none;
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	border:none;
+	border-left: 4px solid #ddd;
+	padding: 8px 13px 3px;
+	margin-top:3px;
+	margin-left: 4px;
+	border-radius:0;
+	-webkit-border-radius:0;
+	-moz-border-radius:0;
+}
+
+.well label {
+	margin-top:5px;
 }

@@ -161,7 +161,7 @@ class FS_Articles extends Plugins
 				"default" => "manage",
 				"position" => array(
 					"beforeafter" => "after",
-					"element" => "boards"
+					"element" => "posts"
 				),
 				"level" => "admin",
 				"content" => array(

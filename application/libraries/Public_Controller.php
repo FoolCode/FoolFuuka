@@ -46,15 +46,57 @@ class Public_Controller extends MY_Controller
 
 		$this->config->load('theme');
 
+		if($this->tank_auth->is_allowed())
+		{
+			// admins get all the themes
+			$active_themes = array('default', 'fuuka', 'yotsuba');
+		}
+		else
+		{
+			$active_themes = get_setting('fs_theme_active_themes');
+			if(!$active_themes || !$active_themes = @unserialize($active_themes))
+			{
+				// default themes coming with FoOlFuuka
+				$active_themes = array('default', 'fuuka');
+			}
+			else
+			{
+				foreach($active_themes as $key => $enabled)
+				{
+					if(!$enabled)
+					{
+						unset($active_themes[$key]);
+					}
+				}
+				$active_themes = array_keys($active_themes);
+			}
+		}
 		
-		$this->fu_theme = (get_setting('fs_theme_dir') ? get_setting('fs_theme_dir') : 'default');
-		if($this->input->cookie('foolfuuka_theme') && in_array($this->input->cookie('foolfuuka_theme'), array('default', 'fuuka', 'yotsuba')))
+		// give an error if there's no active themes
+		if(empty($active_themes))
+		{
+			show_error(_('No themes enabled!'), 500);
+		}
+		
+		$this->fu_theme = get_setting('fs_theme_default', FOOL_THEME_DEFAULT);
+		if($this->input->cookie('foolfuuka_theme') && in_array($this->input->cookie('foolfuuka_theme'), $active_themes))
 		{
 			$this->fu_theme = $this->input->cookie('foolfuuka_theme');
 		}
 
 		$this->template->set_theme($this->fu_theme);
-
+		
+		// let's get extra info on each theme and prepare an useable array of data
+		$this->fu_available_themes = array();
+		foreach($active_themes as $theme)
+		{
+			if (file_exists('content/themes/' . $theme . '/theme_config.php'))
+			{
+				include('content/themes/' . $theme . '/theme_config.php');
+				$this->fu_available_themes[$theme] = $config; 
+			}
+		}
+		
 		// load the controller from the current theme, else load the default one
 		if (file_exists('content/themes/' . $this->fu_theme . '/theme_controller.php'))
 		{

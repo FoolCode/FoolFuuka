@@ -91,57 +91,6 @@ class Preferences extends Admin_Controller
 
 
 	/**
-	 * Generic info influcencing all of FoOlSlide
-	 * 
-	 * @author Woxxy
-	 */
-	function general()
-	{
-		$this->viewdata["function_title"] = _("General");
-
-		$form = array();
-
-		$form['open'] = array(
-			'type' => 'open'
-		);
-
-		// build the array for the form
-		$form['fs_gen_site_title'] = array(
-			'type' => 'input',
-			'label' => 'Title',
-			'class' => 'span3',
-			'placeholder' => 'FoOlFuuka',
-			'preferences' => TRUE,
-			'validate' => 'trim|max_length[32]',
-			'help' => _('Sets the title of your site.')
-		);
-
-		$form['separator'] = array(
-			'type' => 'separator'
-		);
-
-		$form['submit'] = array(
-			'type' => 'submit',
-			'value' => _('Submit'),
-			'class' => 'btn btn-primary'
-		);
-
-		$form['close'] = array(
-			'type' => 'close'
-		);
-
-		$this->submit_preferences_auto($form);
-
-		$data['form'] = $form;
-
-		// create a form
-		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator",
-			$data, TRUE);
-		$this->load->view("admin/default", $this->viewdata);
-	}
-
-
-	/**
 	 * Allows setting basic variables for theme.
 	 * Does not yet allow adding more variables from current theme.
 	 * 
@@ -157,9 +106,25 @@ class Preferences extends Admin_Controller
 			'type' => 'open'
 		);
 		
+		// build the array for the form
+		$form['fs_gen_site_title'] = array(
+			'type' => 'input',
+			'label' => 'Title',
+			'class' => 'span3',
+			'placeholder' => 'FoOlFuuka',
+			'preferences' => TRUE,
+			'validate' => 'trim|max_length[32]',
+			'help' => _('Sets the title of your site.')
+		);
+
+		$form['separator-2'] = array(
+			'type' => 'separator'
+		);
+		
 		$form['fs_theme_active_themes'] = array(
 			'type' => 'checkbox_array',
-			'help' => _('Choose the themes to make available to the users. Admins are able to access any of them.'),
+			'label' => _('Active themes'),
+			'help' => _('Choose the themes to make available to the users. Admins are able to access any of them even if disabled.'),
 			'checkboxes' => array(
 				array(
 					'type' => 'checkbox',
@@ -187,6 +152,18 @@ class Preferences extends Admin_Controller
 				)
 			)
 		);
+		
+		$form['fs_theme_default'] = array(
+			'type' => 'dropdown',
+			'label' => _('Default theme'),
+			'help' => _('The theme the users will see as they reach your site.'),
+			'options' => array(
+				'default' => 'Default',
+				'fuuka' => 'Fuuka',
+				'Yotsuba' => 'Yotsuba'
+			),
+			'selected' => 'default'
+		);
 
 		$form['fs_theme_google_analytics'] = array(
 			'type' => 'input',
@@ -197,6 +174,10 @@ class Preferences extends Admin_Controller
 			'class' => 'span2'
 		);
 
+		$form['separator-3'] = array(
+			'type' => 'separator'
+		);
+		
 		$form['fs_theme_preheader_text'] = array(
 			'type' => 'textarea',
 			'label' => _('Pre-Header Text'),
@@ -209,7 +190,7 @@ class Preferences extends Admin_Controller
 			'type' => 'textarea',
 			'label' => _('Header Text'),
 			'preferences' => TRUE,
-			'help' => _("Inserts the text above in the header where the nagivation linkes are located."),
+			'help' => _("Inserts the text above in the header, below the nagivation links."),
 			'class' => 'span5'
 		);
 

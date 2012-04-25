@@ -315,7 +315,7 @@ if(isset($board)) :
 					
 				<li class="divider"></li>
 				<li style="margin-top: 5px;"><?php echo _('Your latest searches:') ?>
-					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; color:#FFF; position:relative; top:-1px; padding:0px 3px;"><?php echo _('Clear') ?></a></div>
+					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; padding: 1px 3px; line-height:normal;color:#FFF; position:relative; top:-1px;"><?php echo _('Clear') ?></a></div>
 				</li>
 				<?php 
 					if(isset($latest_searches) || $latest_searches = @json_decode($this->input->cookie('foolfuuka_search_latest_5'), TRUE))

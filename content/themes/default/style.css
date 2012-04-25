@@ -103,16 +103,18 @@ body.theme_default {
     margin-left: -10px;
 }
 
-.theme_default .navbar .letters {
+.theme_default .letters {
+	background:#6A836F;
     color:#ddd;
     margin: 4px 0 -2px;
+	padding: 0 30px;
 }
 
-.theme_default .navbar .letters a {
+.theme_default .letters a {
     color:inherit;
 }
 
-.theme_default .navbar .letters a:hover {
+.theme_default .letters a:hover {
     color:#FFF;
     text-decoration:none;
 }
@@ -127,7 +129,10 @@ body.theme_default {
     background:#6A836F;
 }
 
-
+.theme_default .search-dropdown .btn {
+	padding:2px 4px;
+	margin: 4px 0 0 0;
+}
 .theme_default .search-dropdown.active {
     box-shadow: inset 0px 0px 10px #000;
     -webkit-box-shadow: inset 0px 0px 10px #000;

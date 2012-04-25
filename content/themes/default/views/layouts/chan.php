@@ -45,54 +45,48 @@ if (!defined('BASEPATH'))
 	</head>
 	<body class="theme_default">
 		<?php if (get_selected_radix()) : ?>
-			<div class="navbar navbar-fixed-top">
-				<div class="navbar-inner">
-					<div class="container">
-						<div class="letters" style="display:none">
-							<?php
-							$parenthesis_open = FALSE;
-							$board_urls = array();
-							foreach ($this->radix->get_archives() as $key => $item)
-							{
-								if (!$parenthesis_open)
-								{
-									echo 'Archives: [ ';
-									$parenthesis_open = TRUE;
-								}
+		<div class="letters" style="display:none">
+			<?php
+			$parenthesis_open = FALSE;
+			$board_urls = array();
+			foreach ($this->radix->get_archives() as $key => $item)
+			{
+				if (!$parenthesis_open)
+				{
+					echo 'Archives: [ ';
+					$parenthesis_open = TRUE;
+				}
 
-								$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
-							}
-							echo implode(' / ', $board_urls);
-							if ($parenthesis_open)
-							{
-								echo ' ]';
-								$parenthesis_open = FALSE;
-							}
-							?>
-							<?php
-							$parenthesis_open = FALSE;
-							$board_urls = array();
-							foreach ($this->radix->get_boards() as $key => $item)
-							{
-								if (!$parenthesis_open)
-								{
-									echo 'Boards: [ ';
-									$parenthesis_open = TRUE;
-								}
+				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
+			}
+			echo implode(' / ', $board_urls);
+			if ($parenthesis_open)
+			{
+				echo ' ]';
+				$parenthesis_open = FALSE;
+			}
+			?>
+			<?php
+			$parenthesis_open = FALSE;
+			$board_urls = array();
+			foreach ($this->radix->get_boards() as $key => $item)
+			{
+				if (!$parenthesis_open)
+				{
+					echo 'Boards: [ ';
+					$parenthesis_open = TRUE;
+				}
 
-								$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
-							}
-							echo implode(' / ', $board_urls);
-							if ($parenthesis_open)
-							{
-								echo ' ]';
-								$parenthesis_open = FALSE;
-							}
-							?>
-						</div>
-					</div>
-				</div>
-			</div>
+				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
+			}
+			echo implode(' / ', $board_urls);
+			if ($parenthesis_open)
+			{
+				echo ' ]';
+				$parenthesis_open = FALSE;
+			}
+			?>
+		</div>
 		<?php endif; ?>
 		<div class="container-fluid">
 			<div class="navbar navbar-fixed-top">

@@ -446,7 +446,7 @@ class Post extends CI_Model
 	 * @param string $media_hash
 	 * @return array|bool
 	 */
-	function process_media($board, $post_id, $file, $hash, $duplicate = NULL)
+	function process_media($board, $post_id, $file, $media_hash, $duplicate = NULL)
 	{
 		// only allow media on internal boards
 		if ($board->archive)
@@ -951,7 +951,7 @@ class Post extends CI_Model
 				$thread_last_bump = $post->timestamp;
 			}
 
-			if ($post->media_filename)
+			if ($post->orig_filename)
 			{
 				$counter['images']++;
 			}
@@ -2540,7 +2540,7 @@ class Post extends CI_Model
 				(
 					num, subnum, parent, timestamp, capcode,
 					email, name, trip, title, comment, delpass, spoiler, id,
-					preview, preview_w, preview_h, media, media_w, media_h, media_size, media_hash, media_filename
+					preview, preview_w, preview_h, media, media_w, media_h, media_size, media_hash, orig_filename
 				)
 				VALUES
 				(

@@ -310,7 +310,7 @@ class Chan extends Public_Controller
 			),
 			'backend_vars' => array(
 				'site_url'  => site_url(),
-				'api_url'   => site_url(),
+				'api_url'   => site_url('@system'),
 				'cookie_domain' => $this->input->get_cookie_domain(),
 				'csrf_hash' => $this->security->get_csrf_hash()
 			)

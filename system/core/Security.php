@@ -135,7 +135,8 @@ class CI_Security {
 		{
 			return $this->csrf_set_cookie();
 		}
-
+		log_message('error', print_r($_POST,true));
+		log_message('error', print_r($_COOKIE,true));
 		// Do the tokens exist in both the _POST and _COOKIE arrays?
 		if ( ! isset($_POST[$this->_csrf_token_name]) OR
 			 ! isset($_COOKIE[$this->_csrf_cookie_name]))

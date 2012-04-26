@@ -141,13 +141,17 @@ var bindFunctions = function()
                         dataType: 'json',
                         type: 'POST',
                         cache: false,
+						xhrFields: {
+							withCredentials: true
+						},
+						crossDomain: true,
                         data: {
                             board: el.data('board'),
                             doc_id: el.data('id'),
                             actions: [el.data('action')],
                             csrf_fool: backend_vars.csrf_hash
                         },
-                        success: function(data){
+                        success: function(data){alert();
                             if (typeof data.error !== "undefined")
                             {
                                 alert(data.error);
@@ -708,6 +712,9 @@ var isEventSupported = (function() {
 })();
 
 jQuery(document).ready(function() {
+
+	// settings
+	jQuery.support.cors = true;
 
     var lazyloaded = jQuery('img.lazyload');
     if(lazyloaded.length > 149)

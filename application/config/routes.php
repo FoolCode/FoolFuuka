@@ -45,18 +45,13 @@ if(
 	!defined('FOOL_SUBDOMAINS_ENABLE')
 	|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_SYSTEM) !== FALSE
 )
-{
-	if(defined('FOOL_SUBDOMAINS_ENABLE'))
-	{
-		$route['default_controller'] = "admin/preferences";
-	}
-	
+{	
 	$route['install'] = "install";
 	$route['api'] = "api";
 	$route['cli'] = "cli";
 	$route['search'] = "chan/search";
 	$route['search/(.*?)'] = "chan/search/$1";
-	$route['admin'] = "admin/preferences";
+	$route['admin'] = "admin/boards";
 	$route['admin/members/members'] = 'admin/members/membersa';
 	$route['admin/plugins/(.*?)'] = "admin/plugins_admin/$1";
 

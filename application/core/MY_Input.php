@@ -29,6 +29,12 @@ class MY_Input extends CI_Input
 		return parent::set_cookie($name, $value, $expire, ($domain)?:$this->get_cookie_domain(), $path, $prefix, $secure);
 	}
 	
+	/**
+	 * Returns the domain without the subdomains set
+	 * to be kept in sync with the function in config.php
+	 * 
+	 * @return string 
+	 */
 	function get_cookie_domain()
 	{
 		// if we enable subdomain control we need the cookies to be settable across domains

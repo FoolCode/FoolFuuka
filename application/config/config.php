@@ -184,7 +184,7 @@ $config['directory_trigger'] = 'd'; // experimental not currently in use
   | your log files will fill up very fast.
   |
  */
-$config['log_threshold'] = 1;
+$config['log_threshold'] = 4;
 
 /*
   |--------------------------------------------------------------------------
@@ -268,8 +268,41 @@ $config['sess_time_to_update'] = 300;
   | 'cookie_path'   =  Typically will be a forward slash
   |
  */
+
 $config['cookie_prefix'] = '';
-$config['cookie_domain'] = '';
+
+// a little function to calculate domain for us
+// to be kept in sync with /application/core/MY_Input.php get_cookie_domain()
+
+// load constants
+if (file_exists(FCPATH . "config.php"))
+	require(FCPATH . "config.php");
+
+if(defined('FOOL_SUBDOMAINS_ENABLE'))
+{
+	$pieces = explode('.', $_SERVER['HTTP_HOST']);
+
+	if(!FOOL_SUBDOMAINS_DEFAULT)
+	{
+		// we're on a top level domain, nice
+		$config['cookie_domain'] = '.' . $_SERVER['HTTP_HOST'];
+	}
+	else
+	{
+		$subdomain_levels = explode('.', trim(FOOL_SUBDOMAINS_DEFAULT,'.'));
+		foreach($subdomain_levels as $s)
+		{
+			array_shift($pieces);
+		}
+
+		$config['cookie_domain'] = '.' . implode('.', $pieces);
+	}
+}
+else
+{
+	$config['cookie_domain'] = '';
+}
+
 $config['cookie_path'] = '/';
 
 /*

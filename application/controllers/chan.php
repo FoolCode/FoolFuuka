@@ -222,12 +222,12 @@ class Chan extends Public_Controller
 			{
 				if($board->archive && strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== 0)
 				{
-					redirect('@archive/' . implode('/', $params?:array()), 301);
+					redirect('@archive/' . $board->shortname . '/' . implode('/', $params?:array()), 301);
 				}	
 					
 				if(!$board->archive && strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_BOARD) !== 0)
 				{
-					redirect('@board/' . implode('/', $params?:array()), 301);
+					redirect('@board/' . $board->shortname . '/' . implode('/', $params?:array()), 301);
 				}
 			}
 

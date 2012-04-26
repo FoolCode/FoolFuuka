@@ -120,12 +120,12 @@ function site_url($uri = '')
 				// site_url() is used also in radix, so until radix is constructed this section can't be used
 				// or horrible things will happen
 
-				if(isset($uri[1]) && isset($CI->radix))
+				if(isset($uri[0]) && isset($CI->radix))
 				{
 					$found = FALSE;
 					foreach($CI->radix->get_all() as $radix)
 					{
-						if($uri[1] == $radix->shortname)
+						if($uri[0] == $radix->shortname)
 						{
 							if($radix->archive == 1)
 							{

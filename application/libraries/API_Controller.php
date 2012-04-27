@@ -15,8 +15,10 @@ class API_Controller extends REST_Controller
 		{
 			$cors = explode(',', FOOL_SUBDOMAINS_CORS);
 			foreach($cors as $c)
+			{
 				header("Access-Control-Allow-Origin: http://". trim($c), FALSE);
 				header("Access-Control-Allow-Origin: https://". trim($c), FALSE);
+			}
 		}
 		
 		header('Access-Control-Allow-Credentials: true');	

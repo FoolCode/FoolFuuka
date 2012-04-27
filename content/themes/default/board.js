@@ -378,8 +378,8 @@ var currentlapse = 0;
 var realtimethread = function(){
     clearTimeout(currentlapse);
     jQuery.ajax({
-        url: backend_vars.site_url + 'api/chan/thread/',
-        dataType: 'json',
+        url: backend_vars.api_url + 'api/chan/thread/',
+        dataType: 'jsonp',
         type: 'GET',
         cache: false,
         data: {

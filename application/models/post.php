@@ -466,13 +466,13 @@ class Post extends CI_Model
 				SELECT * FROM ' . $this->radix->get_table($board, '_images') . '
 				WHERE media_hash = ? LIMIT 0, 1
 			',
-				array($hash)
+				array($media_hash)
 			);
 
 			// if exists, re-run process with duplicate set
 			if ($check->num_rows() > 0)
 			{
-				return $this->process_media($board, $post_id, $file, $hash, $check->row());
+				return $this->process_media($board, $post_id, $file, $media_hash, $check->row());
 			}
 		}
 
@@ -502,7 +502,8 @@ class Post extends CI_Model
 			// generate full file paths for missing files only
 			if ($duplicate->media_filename === NULL || file_exists($media_filepath . $duplicate->media_filename) === FALSE)
 			{
-				mkdir($media_filepath, 0700, TRUE);
+				if(!file_exists($media_filepath))
+					mkdir($media_filepath, FOOL_FILES_DIR_MODE, TRUE);
 			}
 
 			// handle thumbs
@@ -521,7 +522,8 @@ class Post extends CI_Model
 				// generate full file paths for missing files only
 				if ($duplicate->preview_op === NULL || file_exists($media_filepath . $duplicate->preview_op) === FALSE)
 				{
-					mkdir($thumb_filepath, 0700, TRUE);
+					if(!file_exists($thumb_filepath))
+						mkdir($thumb_filepath, FOOL_FILES_DIR_MODE, TRUE);
 				}
 			}
 			else
@@ -539,15 +541,18 @@ class Post extends CI_Model
 				// generate full file paths for missing files only
 				if ($duplicate->preview_reply === NULL || file_exists($media_filepath . $duplicate->preview_reply) === FALSE)
 				{
-					mkdir($thumb_filepath, 0700, TRUE);
+					if(!file_exists($thumb_filepath))
+						mkdir($thumb_filepath, FOOL_FILES_DIR_MODE, TRUE);
 				}
 			}
 		}
 		else
 		{
 			// generate full file paths for everything
-			mkdir($media_filepath, 0700, TRUE);
-			mkdir($thumb_filepath, 0700, TRUE);
+			if(!file_exists($media_filepath))
+				mkdir($media_filepath, FOOL_FILES_DIR_MODE, TRUE);
+			if(!file_exists($thumb_filepath))
+				mkdir($thumb_filepath, FOOL_FILES_DIR_MODE, TRUE);
 		}
 
 		// relocate the media file to proper location
@@ -2457,6 +2462,8 @@ class Post extends CI_Model
 		{
 			return array('error' => _('This post is already being processed...'));
 		}
+		
+		$this->db->trans_begin();
 
 		// being processing insert...
 		if ($ghost === TRUE)
@@ -2503,6 +2510,25 @@ class Post extends CI_Model
 					$password, inet_ptod($this->input->ip_address())
 				)
 			);
+			
+			// we can grab the ID only here
+			$insert_id = $this->db->insert_id();	
+			
+			// check that it wasn't posted multiple times
+			$check_duplicate = $this->db->query('
+				SELECT doc_id 
+				FROM ' . $this->radix->get_table($board) . '
+				WHERE id = ? AND comment = ? AND  timestamp >= ?
+			',
+			array(
+				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
+			));
+			
+			if($check_duplicate->num_rows() > 1)
+			{
+				$this->db->trans_rollback();
+				return array('error' => _('You already posted this.'));
+			}
 		}
 		else
 		{
@@ -2559,7 +2585,38 @@ class Post extends CI_Model
 			',
 				$default_post_arr
 			);
+			
+			// we can grab the ID only here
+			$insert_id = $this->db->insert_id();			
+			
+			// check that it wasn't posted multiple times
+			$check_duplicate = $this->db->query('
+				SELECT * 
+				FROM ' . $this->radix->get_table($board) . '
+				' . $this->sql_media_join($board) . ' 
+				WHERE id = ? AND comment = ? AND  timestamp >= ?
+				ORDER BY doc_id DESC
+			',
+			array(
+				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
+			));
+			
+			if($check_duplicate->num_rows() > 1)
+			{
+				$this->db->trans_rollback();
+				
+				$duplicate = $check_duplicate->row();
+				
+				if($duplicate->total == 1)
+				{
+					$this->delete_image($board, $duplicate);
+				}
+				// get rid of the extra media
+				return array('error' => _('You already posted this.'));
+			}
 		}
+		
+		$this->db->trans_commit();
 
 		// retreive num, subnum, parent for redirection
 		$post = $this->db->query('
@@ -2567,7 +2624,7 @@ class Post extends CI_Model
 			FROM ' . $this->radix->get_table($board) . '
 			WHERE doc_id = ? LIMIT 0, 1
 		',
-			array($this->db->insert_id())
+			array($insert_id)
 		);
 
 		return array('success' => TRUE, 'posted' => $post->row());
@@ -2612,7 +2669,7 @@ class Post extends CI_Model
 		}
 
 		// delete media file for post
-		if (!$this->delete_media($board, $row))
+		if ($row->total == 1 && !$this->delete_media($board, $row))
 		{
 			log_message('error', 'post.php/delete: unable to delete media from post');
 			return array('error' => _('Unable to delete thumbnail for post.'));

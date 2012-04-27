@@ -54,6 +54,9 @@ define('FOOL_REQUIREMENT_PHP', '5.3.0');
 define('FOOL_PLUGIN_DIR', 'content/plugins/');
 define('FOOL_PROTECTED_RADIXES', serialize(array('content', 'assets', 'admin', 'install', 'feeds', 'api', 'cli', 'functions', 'search')));
 
+// files
+define('FOOL_FILES_DIR_MODE', 0755);
+
 // preferences from get_setting('value', FOOL_PREF_ETC);
 define('FOOL_PREF_SYS_SUBDOMAIN', FALSE);
 define('FOOL_PREF_SPHINX_LISTEN', '127.0.0.1:9306');

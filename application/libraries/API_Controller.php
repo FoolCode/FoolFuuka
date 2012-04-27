@@ -26,7 +26,7 @@ class API_Controller extends REST_Controller
 		header('Access-Control-Max-Age: 604800');
 	}
 	
-	/*
+	/**
 	 * Commodity to check that the ID is not wrong and return a coherent error
 	 * 
 	 * @author Woxxy

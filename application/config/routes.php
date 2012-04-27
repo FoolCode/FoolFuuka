@@ -42,7 +42,7 @@ $route['default_controller'] = "chan";
 
 // if we're using special subdomains or if we're under system stuff
 if(
-	!defined('FOOL_SUBDOMAINS_ENABLE')
+	!defined('FOOL_SUBDOMAINS_ENABLED')
 	|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_SYSTEM) !== FALSE
 )
 {	
@@ -71,12 +71,12 @@ if(
 
 // if we're using special subdomains or if we're under boards/archives:
 if(
-	!defined('FOOL_SUBDOMAINS_ENABLE')
+	!defined('FOOL_SUBDOMAINS_ENABLED')
 	|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_BOARD) !== FALSE
 	|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== FALSE
 )
 {
-	if(!defined('FOOL_SUBDOMAINS_ENABLE'))
+	if(!defined('FOOL_SUBDOMAINS_ENABLED'))
 	{
 		$protected_radixes = implode('|', unserialize(FOOL_PROTECTED_RADIXES));
 		$route['(?!(' . $protected_radixes . '))(\w+)/(.*?).xml'] = "chan/$2/feeds/$3";

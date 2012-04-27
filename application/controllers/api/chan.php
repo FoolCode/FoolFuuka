@@ -10,24 +10,9 @@ class Chan extends API_Controller
 	function __construct()
 	{
 		parent::__construct();
-		/*
-		if(defined('FOOL_SUBDOMAINS_ENABLE'))
-		{/*
-			$this->load->helper('url');
-			header("Access-Control-Allow-Origin: ".site_url(), FALSE);
-			header("Access-Control-Allow-Origin: ".site_url('@default'), FALSE);
-			header("Access-Control-Allow-Origin: ".site_url('@archive'), FALSE);
-			header("Access-Control-Allow-Origin: ".site_url('@board'), FALSE);
-			header("Access-Control-Allow-Origin: ".site_url('@system'), FALSE);*
-			header("Access-Control-Allow-Origin: *");
-		}
-		else
-		{
-			header("Access-Control-Allow-Origin: http://boards.4chan.org", FALSE);
-			header("Access-Control-Allow-Origin: https://boards.4chan.org", FALSE);
-		}*/
 	}
 
+	/*
 	function vote_post()
 	{
 		$this->check_board();
@@ -50,7 +35,7 @@ class Chan extends API_Controller
 
 		$this->response(array('success' => $count), 200);
 	}
-
+	*/
 
 	/**
 	 * Returns the latest threads
@@ -431,7 +416,7 @@ class Chan extends API_Controller
 			$this->post->delete(
 				$board,
 				array(
-				'post' => $post->doc_id,
+				'doc_id' => $post->doc_id,
 				'password' => '',
 				'type' => 'post'
 				)

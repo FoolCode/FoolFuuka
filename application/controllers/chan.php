@@ -218,7 +218,7 @@ class Chan extends Public_Controller
 			}
 
 			// converts the sub-domain correctly
-			if (defined('FOOL_SUBDOMAINS_ENABLE'))
+			if (defined('FOOL_SUBDOMAINS_ENABLED'))
 			{
 				if($board->archive && strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== 0)
 				{

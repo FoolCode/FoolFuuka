@@ -278,7 +278,7 @@ $config['cookie_prefix'] = '';
 if (file_exists(FCPATH . "config.php"))
 	require(FCPATH . "config.php");
 
-if(defined('FOOL_SUBDOMAINS_ENABLE'))
+if(defined('FOOL_SUBDOMAINS_ENABLED'))
 {
 	$pieces = explode('.', $_SERVER['HTTP_HOST']);
 

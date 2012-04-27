@@ -2689,7 +2689,8 @@ class Post extends CI_Model
 	{
 		if (!$post->media_filename && !$post->media_hash)
 		{
-			return FALSE;
+			// if there's no media, it's all OK
+			return TRUE;
 		}
 
 		// delete media file only if there is only one image OR user is admin

@@ -27,7 +27,7 @@ function site_url($uri = '')
 	if (is_array($uri) && strpos($uri[0], '@') !== FALSE)
 	{
 		// checks used when sub-domain system is active
-		if (defined('FOOL_SUBDOMAINS_ENABLE') && FOOL_SUBDOMAINS_ENABLE == TRUE)
+		if (defined('FOOL_SUBDOMAINS_ENABLED') && FOOL_SUBDOMAINS_ENABLED == TRUE)
 		{
 			$hostname = explode('.', $_SERVER['HTTP_HOST']);
 
@@ -100,7 +100,7 @@ function site_url($uri = '')
 		// get rid of the @'d parts
 		array_shift($uri);
 	}
-	else if(defined('FOOL_SUBDOMAINS_ENABLE') && FOOL_SUBDOMAINS_ENABLE == TRUE)
+	else if(defined('FOOL_SUBDOMAINS_ENABLED') && FOOL_SUBDOMAINS_ENABLED == TRUE)
 	{
 		$hostname = explode('.', $_SERVER['HTTP_HOST']);
 		

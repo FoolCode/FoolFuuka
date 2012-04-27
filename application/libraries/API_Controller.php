@@ -8,7 +8,17 @@ class API_Controller extends REST_Controller
 	{
 		parent::__construct();
 		
-		header("Access-Control-Allow-Origin: http://board3.foolz.us");
+		header("Access-Control-Allow-Origin: http://boards.4chan.org", FALSE);
+		header("Access-Control-Allow-Origin: https://boards.4chan.org", FALSE);
+		
+		if(defined('FOOL_SUBDOMAINS_ENABLED'))
+		{
+			$cors = explode(',', FOOL_SUBDOMAINS_CORS);
+			foreach($cors as $c)
+				header("Access-Control-Allow-Origin: http://". trim($c), FALSE);
+				header("Access-Control-Allow-Origin: https://". trim($c), FALSE);
+		}
+		
 		header('Access-Control-Allow-Credentials: true');	
 		header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 		header('Access-Control-Max-Age: 604800');

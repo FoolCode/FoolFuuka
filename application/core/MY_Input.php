@@ -38,7 +38,7 @@ class MY_Input extends CI_Input
 	function get_cookie_domain()
 	{
 		// if we enable subdomain control we need the cookies to be settable across domains
-		if(defined('FOOL_SUBDOMAINS_ENABLE'))
+		if(defined('FOOL_SUBDOMAINS_ENABLED'))
 		{
 			$pieces = explode('.', $_SERVER['HTTP_HOST']);
 

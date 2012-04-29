@@ -505,9 +505,9 @@ class Admin_Controller extends MY_Controller
 				set_setting('fs_cron_autoupgrade', time());
 
 				// load model
-				$this->load->model('upgrade_model');
+				$this->load->model('upgrade_model', 'upgrade');
 				// check
-				$versions = $this->upgrade_model->check_latest(TRUE);
+				$versions = $this->upgrade->check_latest(TRUE);
 				
 				// if a version is outputted, save the new version number in database
 				if ($versions[0])

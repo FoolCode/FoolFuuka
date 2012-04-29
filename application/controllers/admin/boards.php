@@ -222,7 +222,7 @@ class Boards extends Admin_Controller
 	
 	function asagi()
 	{
-		$this->load->model('asagi');
+		$this->load->model('asagi_model', 'asagi');
 		
 		if($this->input->post('install') || $this->input->post('upgrade'))
 		{

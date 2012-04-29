@@ -35,7 +35,7 @@ class Members extends Admin_Controller
 	 */
 	function membersa()
 	{
-		$this->load->model('member');
+		$this->load->model('member_model', 'member');
 		$data['users'] = $this->member->get_all_with_profile();
 		$this->viewdata['function_title'] = _('Manage');
 		$this->viewdata["main_content_view"] = $this->load->view("admin/members/manage.php",
@@ -50,8 +50,8 @@ class Members extends Admin_Controller
 	 */
 	function member($id)
 	{
-		$this->load->model('member');
-		$this->load->model('profile');
+		$this->load->model('member_model', 'member');
+		$this->load->model('profile_model', 'profile');
 		$data['form'] = $this->profile->structure();
 		
 		if($this->input->post())

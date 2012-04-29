@@ -46,7 +46,7 @@ class API_Controller extends REST_Controller
 			$this->response(array('error' => _('The board you selected doesn\'t exist')), 404);
 		}
 
-		$this->load->model('post');
+		$this->load->model('post_model', 'post');
 	}
 	
 }

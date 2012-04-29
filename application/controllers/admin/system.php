@@ -16,7 +16,7 @@ class System extends Admin_Controller
 		$this->tank_auth->is_admin() or redirect('admin');
 
 		// we need the upgrade module's functions
-		$this->load->model('upgrade_model');
+		$this->load->model('upgrade_model', 'upgrade');
 
 		// page title
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/system") . '">' . _("System") . '</a>';
@@ -127,10 +127,10 @@ class System extends Admin_Controller
 		if($this->input->post('upgrade'))
 		{
 			// triggers the upgrade
-			if (!$this->upgrade_model->do_upgrade())
+			if (!$this->upgrade->do_upgrade())
 			{
 				// clean the cache in case of failure
-				$this->upgrade_model->clean();
+				$this->upgrade->clean();
 				// show some kind of error
 				log_message('error', 'system.php do_upgrade(): failed upgrade');
 				flash_notice('error', _('Upgrade failed: check file permissions.'));
@@ -149,19 +149,19 @@ class System extends Admin_Controller
 		$data["current_version"] = FOOL_VERSION;
 
 		// check if the user can upgrade by checking if files are writeable
-		$data["can_upgrade"] = $this->upgrade_model->check_files();
+		$data["can_upgrade"] = $this->upgrade->check_files();
 		if (!$data["can_upgrade"])
 		{
 			// if there are not writeable files, suggest the actions to take
-			$this->upgrade_model->permissions_suggest();
+			$this->upgrade->permissions_suggest();
 		}
 
 		// look for the latest version available
-		$data["new_versions"] = $this->upgrade_model->check_latest();
+		$data["new_versions"] = $this->upgrade->check_latest();
 
 		// we're going to use markdown here
 		$this->load->library('Markdown_Parser');
-		$data["changelog"] = $this->upgrade_model->get_changelog();
+		$data["changelog"] = $this->upgrade->get_changelog();
 
 		// print out
 		$this->viewdata["main_content_view"] = $this->load->view("admin/system/upgrade",

@@ -3,7 +3,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class FS_Articles extends Plugins
+class FS_Articles extends Plugins_model
 {
 	/*
 	 * This is a plugin that is in actual production, but that is also

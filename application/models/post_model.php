@@ -3,7 +3,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class Post extends CI_Model
+class Post_model extends CI_Model
 {
 	// store all relavent data regarding posts displayed
 	var $posts_arr = array();
@@ -1866,7 +1866,7 @@ class Post extends CI_Model
 	 */
 	function get_reports($page = 1)
 	{
-		$this->load->model('report');
+		$this->load->model('report_model', 'report');
 
 		// populate multi_posts array to fetch
 		$multi_posts = array();

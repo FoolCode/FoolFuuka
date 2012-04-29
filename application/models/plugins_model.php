@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Plugins extends CI_Model
+class Plugins_model extends CI_Model
 {
 
 	var $_controller_uris = array();

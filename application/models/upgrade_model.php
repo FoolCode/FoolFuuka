@@ -303,8 +303,8 @@ class Upgrade_model extends CI_Model
 
 		$this->upgrade_model->update_upgrade();
 
-		$this->load->model('upgrade2_model');
-		if (!$this->upgrade2_model->do_upgrade())
+		$this->load->model('upgrade2_model', 'upgrade2');
+		if (!$this->upgrade2->do_upgrade())
 		{
 			return FALSE;
 		}

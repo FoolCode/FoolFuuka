@@ -29,15 +29,15 @@ class MY_Controller extends CI_Controller
 			$this->load->library('tank_auth');
 
 			// plugin system as early we can without losing on security
-			$this->load->model('plugins');
+			$this->load->model('plugins_model', 'plugins');
 			$this->plugins->load_plugins();
 
 			// loads variables from database for get_setting()
 			load_settings();
 
 			// load the radixes (boards)
-			$this->load->model('radix');
-			$this->load->model('vote');
+			$this->load->model('radix_model', 'radix');
+			$this->load->model('vote_model', 'vote');
 
 			// This is the first chance we get to load the right translation file
 			if (get_setting('fs_gen_lang'))
@@ -139,7 +139,7 @@ class MY_Controller extends CI_Controller
 			
 			if('fs_asagi_autorun_enabled')
 			{
-				$this->load->model('asagi');
+				$this->load->model('asagi_model', 'asagi');
 				$this->asagi->run();
 			}
 			

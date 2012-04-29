@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class Profile extends CI_Model
+class Profile_model extends CI_Model
 {
 
 

@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class Statistics extends CI_Model
+class Statistics_model extends CI_Model
 {
 
 	var $stats = array();

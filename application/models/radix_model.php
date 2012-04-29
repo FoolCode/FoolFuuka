@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class Radix extends CI_Model
+class Radix_model extends CI_Model
 {
 
 	// caching results

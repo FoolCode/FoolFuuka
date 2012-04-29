@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class Member extends CI_Model
+class Member_model extends CI_Model
 {
 
 

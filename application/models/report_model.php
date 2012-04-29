@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class Report extends CI_Model
+class Report_model extends CI_Model
 {
 
 

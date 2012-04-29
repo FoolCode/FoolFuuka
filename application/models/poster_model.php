@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class Poster extends CI_Model
+class Poster_model extends CI_Model
 {
 
 

@@ -143,7 +143,7 @@ class Chan extends Public_Controller
 
 			case 'report':
 
-				$this->load->model('report');
+				$this->load->model('report_model', 'report');
 				$post = array(
 					'board_id' => get_selected_radix()->id,
 					'doc_id' => $this->input->post('post'),
@@ -185,7 +185,7 @@ class Chan extends Public_Controller
 	{
 		if ($method == 'search')
 		{
-			$this->load->model('post');
+			$this->load->model('post_model', 'post');
 		}
 		else if (!empty($params))
 		{
@@ -232,7 +232,7 @@ class Chan extends Public_Controller
 			}
 
 			// Load some default settings for the board.
-			$this->load->model('post');
+			$this->load->model('post_model', 'post');
 			$this->template->set('board', $board);
 
 			$method = $params[0];
@@ -1225,7 +1225,7 @@ class Chan extends Public_Controller
 	public function statistics($report = NULL)
 	{
 		// Load Statistics Model
-		$this->load->model('statistics');
+		$this->load->model('statistics_model', 'statistics');
 
 		if (is_null($report))
 		{

@@ -18,7 +18,7 @@ class Cli extends MY_Controller
 
 	function stats_cron()
 	{
-		$this->load->model('statistics');
+		$this->load->model('statistics_model', 'statistics');
 		$done = FALSE;
 
 		while (!$done)
@@ -31,7 +31,7 @@ class Cli extends MY_Controller
 
 	function statistics($board = NULL)
 	{
-		$this->load->model('statistics');
+		$this->load->model('statistics_model', 'statistics');
 
 		$this->statistics->cron($board);
 	}
@@ -40,7 +40,7 @@ class Cli extends MY_Controller
 	
 	function asagi_get_settings()
 	{
-		$this->load->model('asagi');
+		$this->load->model('asagi_model', 'asagi');
 		
 		echo json_encode($this->asagi->get_settings()).PHP_EOL;
 	}

@@ -23,7 +23,7 @@ class Chan extends API_Controller
 			$this->response(array('error' => _('Faulty value')), 404);
 		}
 
-		$this->load->model('vote');
+		$this->load->model('vote_model', 'vote');
 		$vote = $this->vote->add(get_selected_radix(), $this->post('doc_id'), $this->post('vote'));
 
 		if(isset($vote['error']))
@@ -396,7 +396,7 @@ class Chan extends API_Controller
 		$doc_id = $this->post('doc_id');
 		$board = $this->radix->get_by_shortname($this->post('board'));
 
-		$this->load->model('post');
+		$this->load->model('post_model', 'post');
 		$post = $this->post->get_by_doc_id($board, $doc_id);
 
 		if ($post === FALSE)
@@ -442,7 +442,7 @@ class Chan extends API_Controller
 
 		if (in_array('ban_user', $actions))
 		{
-			$this->load->model('poster');
+			$this->load->model('poster_model', 'poster');
 			$this->poster->ban(
 				$post->id, isset($data['length']) ? $data['length'] : NULL,
 				isset($data['reason']) ? $data['reason'] : NULL
@@ -451,7 +451,7 @@ class Chan extends API_Controller
 
 		if (in_array('remove_report', $actions))
 		{
-			$this->load->model('report');
+			$this->load->model('report_model', 'report');
 			$this->report->remove_by_doc_id($board, $doc_id);
 		}
 

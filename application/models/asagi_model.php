@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class Asagi extends CI_Model
+class Asagi_model extends CI_Model
 {
 	var $asagi_git_url = 'https://github.com/downloads/woxxy/asagi/asagi.jar';
 	

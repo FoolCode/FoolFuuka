@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
-class Vote extends CI_Model
+class Vote_model extends CI_Model
 {
 
 

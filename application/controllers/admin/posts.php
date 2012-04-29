@@ -12,7 +12,7 @@ class Posts extends Admin_Controller
 		if (!$this->tank_auth->is_allowed())
 			redirect('admin');
 
-		$this->load->model('post');
+		$this->load->model('post_model', 'post');
 		
 		// title on top
 		$this->viewdata['controller_title'] = '<a href="'.site_url("admin/posts").'">' . _("Posts") . '</a>';;

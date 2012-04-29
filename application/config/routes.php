@@ -48,6 +48,8 @@ if(
 {	
 	$route['install'] = "install";
 	$route['api'] = "api";
+	$route['api/chan'] = "api/chan_api";
+	$route['api/chan/(.*?)'] = "api/chan_api/$1";
 	$route['cli'] = "cli";
 	$route['search'] = "chan/search";
 	$route['search/(.*?)'] = "chan/search/$1";

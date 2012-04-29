@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Chan extends API_Controller
+class Chan_API extends API_Controller
 {
 
 

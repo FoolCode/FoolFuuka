@@ -1,56 +1,49 @@
 FoOlFuuka
 =========
 
-__Notice: FoOlFuuka is not yet ready to be installed__
+### Notice: FoOlFuuka is not yet ready to be installed. 
 
+The following is about the features that will be available when it reaches version 0.8, that by our plans will be the first version that can be used by the public.
 
-About
------
+### About
 
-FoOlFuuka is an imageboard written in PHP and based on the CodeIgniter framework.
+FoOlFuuka is an imageboard written in PHP, based on the CodeIgniter MVC framework.
 
-Unlike most imageboards, it is built like a CMS and looks modern.
+The project started as an alternative to the Fuuka interface, in order to be able to implement moderation features and few optimizations to be able to take on the traffic. Over time we noticed that it would've been a successful and complete imageboard script. Now it can work both as an archive interface through Asagi, and as a normal imageboard.
 
-FoOlFuuka also works as frontend for the original [Fuuka](http://code.google.com/p/fuuka/) that automatically archives the 4chan boards. All the features from Fuuka's interface have been reimplemented and the original interface has been cloned as a separate theme.
+This document will explain what's into FoOlFuuka. You will have to go to the wiki for installation instructions and other useful articles.
 
-Features
---------
+### Requirements
 
-* Support for both archives and regular imageboards
-* Modern "Default" theme and classic "Fuuka" theme
-* Real time threads, quick reply, on-hover backlinks
-* Sorting by latest posts, latest threads, gallery
-* Search with several filters (Sphinx-search compatible)
-* Find similar images internally, search with external services
-* Report buttons, report management system in admin panel
-* Transparent thumbnails and GIF mostly correctly handled
-* Statistics for posting rates, postcounts etc.
-* Admin panel to manage boards, check server status, manage staff etc.
-* APIs for connecting to external services
-* Cron
-* More nice things that you won't like because you don't like nice things
+* PHP 5.3, __PHP 5.3.11+ suggested__
+* MySQL 5.1, __MySQL 5.5+ suggested__
 
-Requirements
-------------
+#### The heart
 
-The requirements of FoOlFuuka are relatively high if you want the most out of it. This really means improved security rather than more features, which means you really should have the suggested versions.
+* Theme appeal 
 
-* PHP 5.3, __PHP 5.3.10+ suggested__
-* MySQL 5, __MySQL 5.5+ suggested__
+    You won't have to choose an imageboard script for its looks anymore, because FoOlFuuka can be any of them, with its powerful theme system, allowing you to fully customize the interface, from Yotsuba to Reddit (you know, for April Fools).
 
-FoOlFuuka is really light, and will run on any server meeting the requirements. Your first worry will be rather bandwidth and hard disk space.
+* Stress relieved
 
-Unlike other imageboards, FoOlFuuka keeps the threads stored forever, which means load will rise (extremely slowly) over time. This is mostly due to the MySQL fulltext search not having good performance.
+    We need FoOlFuuka to store over 100.000.000 posts without ever pruning any, while there's hundreds of people browsing them. This challenge brought us to build an optimized system that will feel light both on shared hosts and on sites as large... at least as large as ours.
 
-Optional
---------
+* Code sparkles
 
-* Sphinx-search: blazing fast search, but needs lots of extra resources (RAM and HD space). Suggested for imageboards with several millions of posts.
+    Web applications easily become huge, and one can't use improvisation when building one from scratch. That's why with PHP it's good practice to use battle-tested frameworks (like for any other language in case of webApps). CodeIgniter irons the "bad parts" of PHP, while we keep the code readable and extensible. It's coded by a team, so we care about this.
 
-Using with Fuuka Fetcher
-------------------------
+* Search unites
 
-FoOlFuuka can be used for the archival of 4chan imageboards.
+    Projects need connections, people need to look back to their own posts, oldfriends want to tell how times have changed. The search system keeps your old posts alive with its many options, so your community can keep track of the posts and kick butt.
 
-Just compile the needed fields in the admin panel to connect to the separate database tables and folders.
+* Discussions never end
 
+    Inherited like the search system from Fuuka, we've powered up the Ghost system to work also with normal boards. Because threads are never deleted, it would be annoying to see old threads necroed. That's how old threads become ghosts, and whoever posts in them will get the thread bumped only in the Ghost index. That pun was not intended.
+
+* Admin happy
+
+    Never touch the configuration files. The administration panel covers everything, from board creation to archive fetcher startup. From giving you server suggestions to adding MarkDown help pages. Migrations are handled, auto-upgrades too.
+
+* Easy to install
+
+    Have you ever installed Wordpress, or just any PHP application? FoOlFuuka is just as easy to install. Reach our wiki for details.

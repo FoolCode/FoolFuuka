@@ -5,20 +5,23 @@ FoOlFuuka
 
 The following is about the features that will be available when it reaches version 0.8, that by our plans will be the first version that can be used by the public.
 
-### About
+About
+-----
 
 FoOlFuuka is an imageboard written in PHP, based on the CodeIgniter MVC framework.
 
 The project started as an alternative to the Fuuka interface, in order to be able to implement moderation features and few optimizations to be able to take on the traffic. Over time we noticed that it would've been a successful and complete imageboard script. Now it can work both as an archive interface through Asagi, and as a normal imageboard.
 
-This document will explain what's into FoOlFuuka. You will have to go to the wiki for installation instructions and other useful articles.
+This document will explain what's cool about FoOlFuuka. You will have to go to the wiki for installation instructions and other useful articles.
 
-### Requirements
+Requirements
+------------
 
 * PHP 5.3, __PHP 5.3.11+ suggested__
 * MySQL 5.1, __MySQL 5.5+ suggested__
 
-#### The heart
+The heart
+---------
 
 * Theme appeal 
 
@@ -47,3 +50,17 @@ This document will explain what's into FoOlFuuka. You will have to go to the wik
 * Easy to install
 
     Have you ever installed Wordpress, or just any PHP application? FoOlFuuka is just as easy to install. Reach our wiki for details.
+
+The Team
+--------
+
+The members of the FoOlz team that contribute to this project:
+* Woxxy - http://twitter.com/woxxy
+* oohnoitz - http://twitter.com/oohnoitz
+* bennner - http://twitter.com/bennnner
+* MarieFairchild - http://twitter.com/siveruu
+* Darais - http://twitter.com/daraistenko
+
+Thanks to the rest of the team for putting up with us wasting time on this large project.
+
+Special thanks to Eksopl (Fuuka archive programmer) for his collaboration and advice.

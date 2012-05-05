@@ -9,13 +9,9 @@ class Radix_model extends CI_Model
 
 	// caching results
 	var $preloaded_radixes = null;
-	var $preloaded_radixes_array = null;
 	var $loaded_radixes_archive = null;
-	var $loaded_radixes_archive_array = null;
 	var $loaded_radixes_board = null;
-	var $loaded_radixes_board_array = null;
 	var $selected_radix = null; // readily available if set
-	var $selected_radix_array = null;
 
 
 	function __construct($id = NULL)
@@ -118,6 +114,7 @@ class Radix_model extends CI_Model
 			),
 			'rules' => array(
 				'database' => TRUE,
+				'boards_preferences' => TRUE,
 				'type' => 'textarea',
 				'label' => _('General rules'),
 				'help' => _('Full board rules displayed in a separate page, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
@@ -129,6 +126,7 @@ class Radix_model extends CI_Model
 			),
 			'posting_rules' => array(
 				'database' => TRUE,
+				'boards_preferences' => TRUE,
 				'type' => 'textarea',
 				'label' => _('Posting rules'),
 				'help' => _('Posting rules displayed in the posting area, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
@@ -145,6 +143,7 @@ class Radix_model extends CI_Model
 				'sub' => array(
 					'board_url' => array(
 						'database' => TRUE,
+						'boards_preferences' => TRUE,
 						'type' => 'input',
 						'label' => _('URL to the 4chan board (facultative)'),
 						'placeholder' => 'http://boards.4chan.org/' . (is_object($radix) ? $radix->shortname : 'shortname') . '/',
@@ -153,6 +152,7 @@ class Radix_model extends CI_Model
 					),
 					'thumbs_url' => array(
 						'database' => TRUE,
+						'boards_preferences' => TRUE,
 						'type' => 'input',
 						'label' => _('URL to the board thumbnails (facultative)'),
 						'placeholder' => 'http://0.thumbs.4chan.org/' . (is_object($radix) ? $radix->shortname : 'shortname') . '/',
@@ -161,6 +161,7 @@ class Radix_model extends CI_Model
 					),
 					'images_url' => array(
 						'database' => TRUE,
+						'boards_preferences' => TRUE,
 						'type' => 'input',
 						'label' => _('URL to the board images (facultative)'),
 						'placeholder' => 'http://images.4chan.org/' . (is_object($radix) ? $radix->shortname : 'shortname') . '/',
@@ -169,6 +170,7 @@ class Radix_model extends CI_Model
 					),
 					'media_threads' => array(
 						'database' => TRUE,
+						'boards_preferences' => TRUE,
 						'type' => 'input',
 						'label' => _('Image fetching workers'),
 						'help' => _('The number of workers that will fetch full images. Set to zero not to fetch them.'),
@@ -179,6 +181,7 @@ class Radix_model extends CI_Model
 					),
 					'thumb_threads' => array(
 						'database' => TRUE,
+						'boards_preferences' => TRUE,
 						'type' => 'input',
 						'label' => _('Thumbnail fetching workers'),
 						'help' => _('The number of workers that will fetch thumbnails'),
@@ -189,6 +192,7 @@ class Radix_model extends CI_Model
 					),
 					'new_threads_threads' => array(
 						'database' => TRUE,
+						'boards_preferences' => TRUE,
 						'type' => 'input',
 						'label' => _('Thread fetching workers'),
 						'help' => _('The number of workers that fetch new threads'),
@@ -199,6 +203,7 @@ class Radix_model extends CI_Model
 					),
 					'thread_refresh_rate' => array(
 						'database' => TRUE,
+						'boards_preferences' => TRUE,
 						'type' => 'hidden',
 						'value' => 3,
 						'label' => _('Minutes to refresh the thread'),
@@ -207,6 +212,7 @@ class Radix_model extends CI_Model
 					),
 					'page_settings' => array(
 						'database' => TRUE,
+						'boards_preferences' => TRUE,
 						'type' => 'textarea',
 						'label' => _('Thread refresh rate'),
 						'help' => _('Array of refresh rates  in seconds per page in JSON format'),
@@ -236,6 +242,7 @@ class Radix_model extends CI_Model
 			),
 			'delay_thumbnails' => array(
 				'database' => TRUE,
+				'boards_preferences' => TRUE,
 				'type' => 'checkbox',
 				'help' => _('Hide the thumbnails for 24 hours? (for moderation purposes)')
 			),
@@ -252,6 +259,41 @@ class Radix_model extends CI_Model
 			'separator-2' => array(
 				'type' => 'separator-short'
 			),
+			'thumbnail_op_width' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'label' => _('Opening post thumbnail maximum width'),
+				'type' => 'input',
+				'class' => 'span1',
+				'value' => FOOL_RADIX_THUMB_OP_WIDTH
+			),
+			'thumbnail_op_height' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'label' => _('Opening post thumbnail maximum height'),
+				'type' => 'input',
+				'class' => 'span1',
+				'value' => FOOL_RADIX_THUMB_OP_HEIGHT
+			),
+			'thumbnail_reply_width' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'label' => _('Reply thumbnail maximum width'),
+				'type' => 'input',
+				'class' => 'span1',
+				'value' => FOOL_RADIX_THUMB_REPLY_WIDTH
+			),
+			'thumbnail_reply_height' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'label' => _('Reply thumbnail maximum height'),
+				'type' => 'input',
+				'class' => 'span1',
+				'value' => FOOL_RADIX_THUMB_REPLY_HEIGHT
+			),
+			'separator-4' => array(
+				'type' => 'separator-short'
+			),
 			'submit' => array(
 				'type' => 'submit',
 				'class' => 'btn-primary',
@@ -266,15 +308,81 @@ class Radix_model extends CI_Model
 
 	function save($data)
 	{
+		// filter _boards data from _boards_preferences data
+		$structure = $this->structure();
+		$data_boards = array();
+		$data_boards_preferences = array();
+		
+		foreach($structure as $key => $item)
+		{
+			if(isset($item['sub']))
+			{
+				foreach($item['sub'] as $k => $i)
+				{
+					if(isset($i['boards_preferences']) && isset($data[$k]))
+					{
+						$data_boards_preferences[$k] = $data[$k];
+						unset($data[$k]);
+					}
+				}
+			}
+			
+			if(isset($item['boards_preferences']) && isset($data[$key]))
+			{
+				$data_boards_preferences[$key] = $data[$key];
+				unset($data[$key]);
+			}
+				
+		}
+		
 		// data must be already sanitized through the form array
 		if (isset($data['id']))
 		{
+			if(!$radix = $this->get_by_id($data['id']))
+			{
+				show_404();
+			}
+			
+			// save normal values
 			$this->db->where('id', $data['id'])->update('boards', $data);
+			
+			// save extra preferences
+			foreach($data_boards_preferences as $name => $value)
+			{
+				$query = $this->db->where('board_id', $data['id'])->where('name', $name)->get('boards_preferences');
+				if($query->num_rows())
+				{
+					$this->db->where('board_id', $data['id'])->where('name', $name)
+						->update('boards_preferences', array('value' => $value));
+				}
+				else
+				{
+					$this->db->insert('boards_preferences', array('board_id' => $data['id'], 'name' => $name, 'value' => $value));
+				}
+			}
+			
 			$this->radix->preload();
 		}
 		else
 		{
 			$this->db->insert('boards', $data);
+			$id = $this->db->insert_id();
+			
+			// save extra preferences
+			foreach($data_boards_preferences as $name => $value)
+			{
+				$query = $this->db->where('board_id', $id)->where('name', $name)->get('boards_preferences');
+				if($query->num_rows())
+				{
+					$this->db->where('board_id', $id)->where('name', $name)
+						->update('boards_preferences', array($name => $value));
+				}
+				else
+				{
+					$this->db->insert('boards_preferences', array('board_id' => $id, 'name' => $name, 'value' => $value));
+				}
+			}
+			
 			$this->radix->preload();
 			$board = $this->get_by_shortname($data['shortname']);
 
@@ -321,7 +429,7 @@ class Radix_model extends CI_Model
 	/**
 	 * Puts the table in readily available variables
 	 */
-	function preload()
+	function preload($preferences = FALSE)
 	{
 
 		if (!$this->tank_auth->is_allowed())
@@ -334,15 +442,15 @@ class Radix_model extends CI_Model
 		if ($query->num_rows() == 0)
 		{
 			$this->preloaded_radixes = array();
-			$this->preloaded_radixes_array = array();
 			return FALSE;
 		}
 
 		$object = $query->result();
-		$array = $query->result_array();
 
 		foreach ($object as $item)
 		{
+			$structure = $this->structure($item);
+			
 			$result_object[$item->id] = $item;
 			$result_object[$item->id]->formatted_title = ($item->name) ?
 				'/' . $item->shortname . '/ - ' . $item->name : '/' . $item->shortname . '/';
@@ -355,46 +463,92 @@ class Radix_model extends CI_Model
 			{
 				$result_object[$item->id]->href = site_url(array('@board', $item->shortname));
 			}
-
-			if (!$item->board_url)
-				$item->board_url = 'http://boards.4chan.org/' . $item->shortname . '/';
-
-			if (!$item->thumbs_url)
-				$item->thumbs_url = 'http://0.thumbs.4chan.org/' . $item->shortname . '/thumb/';
-
-			if (!$item->images_url)
-				$item->images_url = 'http://images.4chan.org/' . $item->shortname . '/src/';
-		}
-
-		foreach ($array as $item)
-		{
-			$result_array[$item['id']] = $item;
-			$result_array[$item['id']]['formatted_title'] = ($item['name']) ?
-				'/' . $item['shortname'] . '/ - ' . $item['name'] : '/' . $item['shortname'] . '/';
-
-			if ($item['archive'] == 1)
+			
+			foreach($structure as $key => $arr)
 			{
-				$result_array[$item['id']]['href'] = site_url(array('@archive', $item['shortname']));
+				if(!isset($result_object[$item->id]->$key) && isset($arr['boards_preferences']))
+				{
+					if(isset($arr['value']))
+						$result_object[$item->id]->$key = $arr['value'];
+					else
+						$result_object[$item->id]->$key = FALSE;
+				}
+				
+				if(isset($arr['sub']))
+				{
+					foreach($arr['sub'] as $k => $a)
+					{
+						if(!isset($result_object[$item->id]->$k) && isset($a['boards_preferences']))
+						{
+							if(isset($arr['value']))
+								$result_object[$item->id]->$k = $a['value'];
+							else
+								$result_object[$item->id]->$k = FALSE;
+						}
+					}
+				}
+				
 			}
-			else
-			{
-				$result_array[$item['id']]['href'] = site_url(array('@board', $item['shortname']));
-			}
+			
+			
+			if (!isset($item->board_url) || !$item->board_url)
+				$result_object[$item->id]->board_url = 'http://boards.4chan.org/' . $item->shortname . '/';
+		
+			if (!isset($item->thumbs_url) || !$item->thumbs_url)
+				$result_object[$item->id]->thumbs_url = 'http://0.thumbs.4chan.org/' . $item->shortname . '/thumb/';
 
-			if (!$item['board_url'])
-				$item['board_url'] = 'http://boards.4chan.org/' . $item['shortname'] . '/';
-
-			if (!$item['thumbs_url'])
-				$item['thumbs_url'] = 'http://0.thumbs.4chan.org/' . $item['shortname'] . '/thumb/';
-
-			if (!$item['images_url'])
-				$item['images_url'] = 'http://images.4chan.org/' . $item['shortname'] . '/src/';
+			if (!isset($item->images_url) || !$item->images_url)
+				$result_object[$item->id]->images_url = 'http://images.4chan.org/' . $item->shortname . '/src/';
+			
 		}
+		
+		//echo '<pre>'.print_r($result_object, true).'</pre>';
 
 		$this->preloaded_radixes = $result_object;
-		$this->preloaded_radixes_array = $result_array;
+		
+		if(TRUE || $preferences == TRUE)
+			$this->load_preferences();
 	}
 
+	/**
+	 * Loads preferences data for the board. 
+	 *
+	 * @param type $board null/array of IDs/ID/board object
+	 */
+	function load_preferences($board = NULL)
+	{
+		if(is_null($board))
+		{
+			$ids = array_keys($this->preloaded_radixes);
+		}
+		else if (is_array($board))
+		{
+			$ids = $board;
+		}
+		else if (is_object($board))
+		{
+			$ids = array($board->id);
+		}
+		else // it's an id
+		{
+			$ids = array($board);
+		}
+		
+		$selected = FALSE;
+		foreach($ids as $id)
+		{
+			$query = $this->db->where('board_id', $id)->get('boards_preferences');
+			foreach($query->result() as $value)
+			{
+				$this->preloaded_radixes[$id]->{$value->name} = $value->value;
+			}
+			
+			$selected = $this->preloaded_radixes[$id];
+		}
+
+		// useful if only one has been selected
+		return $selected;
+	}
 
 	/**
 	 *
@@ -420,7 +574,6 @@ class Radix_model extends CI_Model
 
 	/**
 	 * Set a radix for execution (example: chan.php)
-	 * Always returns object, array can be returned by get_selected_radix_array()
 	 *
 	 * @param type $shortname
 	 * @return type
@@ -430,13 +583,11 @@ class Radix_model extends CI_Model
 		if (FALSE != ($val = $this->get_by_shortname($shortname)))
 		{
 			$this->selected_radix = $val;
-			// clean up the array version
-			$this->selected_radix_array = null;
+			$val = $this->load_preferences($val);
 			return $val;
 		}
 
 		$this->selected_radix = FALSE;
-		$this->selected_radix_array = FALSE;
 
 		return FALSE;
 	}
@@ -453,17 +604,7 @@ class Radix_model extends CI_Model
 
 		return $this->selected_radix;
 	}
-
-
-	function get_selected_array()
-	{
-
-		if ($this->get_selected() === FALSE)
-			return FALSE;
-
-		return $this->selected_radix_array = $this->get_by_id_array($this->get_selected()->id);
-	}
-
+	
 
 	/**
 	 * Returns all the radixes as array of objects
@@ -477,25 +618,11 @@ class Radix_model extends CI_Model
 
 
 	/**
-	 * Returns all the radixes as array of arrays
-	 *
-	 * @return array
-	 */
-	function get_all_array()
-	{
-		return $this->preloaded_radixes_array;
-	}
-
-
-	/**
 	 * Returns the single radix
 	 */
-	function get_by_id($radix_id, $array = FALSE)
+	function get_by_id($radix_id)
 	{
-		if ($array)
-			$items = $this->get_all_array();
-		else
-			$items = $this->get_all();
+		$items = $this->get_all();
 
 		if (isset($items[$radix_id]))
 			return $items[$radix_id];
@@ -505,21 +632,11 @@ class Radix_model extends CI_Model
 
 
 	/**
-	 * Returns the single radix as array
-	 */
-	function get_by_id_array($radix_id)
-	{
-		return $this->get_by_id($radix_id, TRUE);
-	}
-
-
-	/**
 	 * Returns the single radix by type selected
 	 *
 	 * @param type $value
 	 * @param type $type
 	 * @param type $switch
-	 * @param type $array
 	 * @return type
 	 */
 	function get_by_type($value, $type, $switch = TRUE)
@@ -539,31 +656,6 @@ class Radix_model extends CI_Model
 
 
 	/**
-	 * Returns the single radix by type selected as array
-	 *
-	 * @param type $value
-	 * @param type $type
-	 * @param type $switch
-	 * @param type $array
-	 * @return type
-	 */
-	function get_by_type_array($value, $type, $switch = TRUE)
-	{
-		$items = $this->get_all();
-
-		foreach ($items as $item)
-		{
-			if ($switch === ($item[$type] === $value))
-			{
-				return $item;
-			}
-		}
-
-		return FALSE;
-	}
-
-
-	/**
 	 * Returns the single radix by shortname
 	 */
 	function get_by_shortname($shortname)
@@ -573,41 +665,20 @@ class Radix_model extends CI_Model
 
 
 	/**
-	 * Returns the single radix as array by shortname
-	 */
-	function get_by_shortname_array($shortname)
-	{
-		return $this->get_by_type_array($shortname, 'shortname');
-	}
-
-
-	/**
 	 * Returns only the type specified (exam)
 	 *
 	 * @param string $type 'archive'
 	 * @param boolean $switch 'archive'
-	 * @param type $array
 	 * @return type
 	 */
-	function filter_by_type($type, $switch, $array = FALSE)
+	function filter_by_type($type, $switch)
 	{
-		if ($array)
-			$items = $this->get_all_array();
-		else
-			$items = $this->get_all();
+		$items = $this->get_all();
 
 		foreach ($items as $key => $item)
 		{
-			if ($array)
-			{
-				if ($item[$type] != $switch)
-					unset($items[$key]);
-			}
-			else
-			{
-				if ($item->$type != $switch)
-					unset($items[$key]);
-			}
+			if ($item->$type != $switch)
+				unset($items[$key]);
 		}
 
 		return $items;
@@ -635,30 +706,6 @@ class Radix_model extends CI_Model
 			return $this->loaded_radixes_board;
 
 		return $this->loaded_radixes_board = $this->filter_by_type('archive', FALSE);
-	}
-
-
-	/**
-	 *  Returns an array of arrays that are archives
-	 */
-	function get_archives_array()
-	{
-		if (!is_null($this->loaded_radixes_archive_array))
-			return $this->loaded_radixes_archive_array;
-
-		return $this->loaded_radixes_archive_array = $this->filter_by_type('archive', TRUE, TRUE);
-	}
-
-
-	/**
-	 *  Returns an array of arrays that are boards (not archives)
-	 */
-	function get_boards_array()
-	{
-		if (!is_null($this->loaded_radixes_board_array))
-			return $this->loaded_radixes_board_array;
-
-		return $this->loaded_radixes_board_array = $this->filter_by_type('archive', FALSE, TRUE);
 	}
 
 

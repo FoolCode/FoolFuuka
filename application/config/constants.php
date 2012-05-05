@@ -72,6 +72,12 @@ define('FOOL_PREF_THEMES_THEME_DEFAULT_ENABLED', TRUE);
 define('FOOL_PREF_THEMES_THEME_FUUKA_ENABLED', TRUE);
 define('FOOL_PREF_THEMES_THEME_YOTSUBA_ENABLED', FALSE);
 
+define('FOOL_RADIX_THUMB_OP_WIDTH', 250);
+define('FOOL_RADIX_THUMB_OP_HEIGHT', 250);
+define('FOOL_RADIX_THUMB_REPLY_WIDTH', 125);
+define('FOOL_RADIX_THUMB_REPLY_HEIGHT', 125);
+
+
 /*
 |--------------------------------------------------------------------------
 | FoOlFuuka specific constants

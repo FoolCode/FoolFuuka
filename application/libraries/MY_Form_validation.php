@@ -146,7 +146,7 @@ class MY_Form_validation extends CI_Form_validation
 			{	
 				// not interested in data that is not related to database
 				if ((!isset($item['database']) || $item['database'] !== TRUE) &&
-					(!isset($item['preferences']) || $item['preferences'] !== TRUE))
+					(!isset($item['preferences']) || $item['preferences'] === FALSE))
 				{
 					continue;
 				}

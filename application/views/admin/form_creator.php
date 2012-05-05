@@ -69,7 +69,8 @@ if (!defined('BASEPATH'))
 			'sub',
 			'checkboxes',
 			'checked',
-			'array_key'
+			'array_key',
+			'boards_preferences',
 		);
 		$helpers = array();
 		foreach ($not_input as $not)
@@ -370,15 +371,19 @@ if (!defined('BASEPATH'))
 						}
 						
 						?>
-						<label><?php echo $helpers['label'] ?></label>
+						<?php 
+							// if help is not set, put the label in help-inline
+							if (isset($helpers['help'])) : ?><label><?php echo $helpers['label'] ?></label><?php endif; ?>
 						<?php
 						echo call_user_func('form_' . $item['type'], $item);
 						?>
 						<span class="help-inline">
 							<?php
-							echo isset($helpers['help']) ? $helpers['help'] : NULL
+							echo (isset($helpers['help']) ? $helpers['help'] : '');
+							echo (!isset($helpers['help']) ? $helpers['label'] : '');
 							?>
 						</span>
+						<br/>
 
 						<?php
 						break;

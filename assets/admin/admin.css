@@ -36,6 +36,10 @@ i.icon-white {
 	padding: 0 30px;
 }
 
+.row-fluid [class*="span"] {
+	display:inline-block;
+}
+
 .well .well {
 	box-shadow:none;
 	-webkit-box-shadow:none;

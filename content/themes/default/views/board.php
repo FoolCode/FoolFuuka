@@ -133,7 +133,7 @@ if (!defined('BASEPATH'))
 
 	<?php if (isset($thread_id)) : ?>
 	<div class="js_hook_realtimethread"></div>
-	<?php echo $template['partials']['post_thread']; ?>
+	<?php echo $template['partials']['tools_reply_box']; ?>
 	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
 	<?php endif; ?>
 </article>

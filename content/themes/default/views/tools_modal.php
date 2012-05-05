@@ -3,7 +3,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<?php if ($enabled_tools_post) : ?>
+<?php if ($enabled_tools_modal) : ?>
 <div id="post_tools_modal" class="modal hide fade">
 	<div class="modal-header">
 		<a href="#" class="close">&times;</a>

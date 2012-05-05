@@ -184,7 +184,7 @@ if (!defined('BASEPATH'))
 							</li>
 						</ul>
 						<?php endif; ?>
-					<?php echo $template['partials']['tools_view']; ?>
+					<?php echo $template['partials']['tools_search']; ?>
 					</div>
 				</div>
 			</div>
@@ -197,14 +197,14 @@ if (!defined('BASEPATH'))
 
 				<?php
 				if ($is_page)
-					echo $template['partials']['post_thread'];
+					echo $template['partials']['tools_reply_box'];
 				?>
 
 				<?php echo $template['body']; ?>
 
 				<?php
 				if ($disable_headers !== TRUE && !$is_statistics && get_selected_radix())
-					echo $template['partials']['tools_post'];
+					echo $template['partials']['tools_modal'];
 				?>
 
 				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>

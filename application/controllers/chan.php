@@ -203,12 +203,12 @@ class Chan extends Public_Controller
 					$this->load->helper('number');
 					$this->load->library('template');
 					$this->template->set_layout('chan');
-					$this->template->set_partial('tools_view', 'tools_view');
-					$this->template->set_partial('tools_post', 'tools_post');
+					$this->template->set_partial('tools_search', 'tools_search');
+					$this->template->set_partial('tools_modal', 'tools_modal');
 					$this->template->set('is_page', FALSE);
 					$this->template->set('disable_headers', FALSE);
 					$this->template->set('is_statistics', FALSE);
-					$this->template->set('enabled_tools_post', FALSE);
+					$this->template->set('enabled_tools_modal', FALSE);
 					$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
 					return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
 				}
@@ -253,12 +253,12 @@ class Chan extends Public_Controller
 				array_shift($uri_array);
 				array_shift($uri_array);
 
-				$this->template->set_partial('tools_view', 'tools_view');
-				$this->template->set_partial('tools_post', 'tools_post');
+				$this->template->set_partial('tools_search', 'tools_search');
+				$this->template->set_partial('tools_modal', 'tools_modal');
 				$this->template->set('is_page', FALSE);
 				$this->template->set('disable_headers', FALSE);
 				$this->template->set('is_statistics', FALSE);
-				$this->template->set('enabled_tools_post', FALSE);
+				$this->template->set('enabled_tools_modal', FALSE);
 
 				$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
 				return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
@@ -304,9 +304,9 @@ class Chan extends Public_Controller
 				'order'
 			),
 			'partials' => array(
-				'post_thread',
-				'tools_post',
-				'tools_view'
+				'tools_reply_box',
+				'tools_modal',
+				'tools_search'
 			),
 			'backend_vars' => array(
 				'site_url'  => site_url(),
@@ -478,9 +478,9 @@ class Chan extends Public_Controller
 				'order' => ($by_thread ? 'by_thread' : 'by_post')
 			),
 			array(
-				'post_thread' => TRUE,
-				'tools_post' => TRUE,
-				'tools_view' => array('page' => $page)
+				'tools_reply_box' => TRUE,
+				'tools_modal' => TRUE,
+				'tools_search' => array('page' => $page)
 			)
 		);
 		$this->template->build('board');
@@ -538,9 +538,9 @@ class Chan extends Public_Controller
 				)
 			),
 			array(
-				'post_thread' => TRUE,
-				'tools_post' => TRUE,
-				'tools_view' => array('page' => $page)
+				'tools_reply_box' => TRUE,
+				'tools_modal' => TRUE,
+				'tools_search' => array('page' => $page)
 			)
 		);
 		$this->template->build('board');
@@ -586,8 +586,8 @@ class Chan extends Public_Controller
 				)
 			),
 			array(
-				'tools_post' => TRUE,
-				'tools_view' => TRUE
+				'tools_modal' => TRUE,
+				'tools_search' => TRUE
 			),
 			array(
 				'threads_data' => $result['threads'],
@@ -654,9 +654,9 @@ class Chan extends Public_Controller
 				'is_thread' => TRUE
 			),
 			array(
-				'post_thread' => TRUE,
-				'tools_post' => TRUE,
-				'tools_view' => TRUE
+				'tools_reply_box' => TRUE,
+				'tools_modal' => TRUE,
+				'tools_search' => TRUE
 			),
 			array(
 				'thread_id' => $num,
@@ -721,9 +721,9 @@ class Chan extends Public_Controller
 				'posts' => $thread
 			),
 			array(
-				'post_thread' => TRUE,
-				'tools_post' => TRUE,
-				'tools_view' => TRUE
+				'tools_reply_box' => TRUE,
+				'tools_modal' => TRUE,
+				'tools_search' => TRUE
 			), array(
 				'thread_id' => $num,
 				'latest_doc_id' => $latest_doc_id
@@ -772,7 +772,7 @@ class Chan extends Public_Controller
 		// Fetch the THREAD specified and generate the THREAD with OP+LAST50.
 		$num = intval($num);
 		$subnum = intval($subnum);
-		$thread = $this->post->get_post_thread(get_selected_radix(), $num, $subnum);
+		$thread = $this->post->get_tools_reply_box(get_selected_radix(), $num, $subnum);
 
 		if ($thread === FALSE)
 		{
@@ -847,8 +847,8 @@ class Chan extends Public_Controller
 					'total' => ceil($result['total_found'] / 25)
 				)
 			), array(
-				'tools_post' => TRUE,
-				'tools_view' => TRUE
+				'tools_modal' => TRUE,
+				'tools_search' => TRUE
 			)
 		);
 		$this->template->build('board');
@@ -1101,7 +1101,7 @@ class Chan extends Public_Controller
 				array(
 				'error' => $result['error']
 				), array(
-				'tools_view' => array('search' => $search, 'latest_searches' => $cookie_array, 'json_error' => $json_error)
+				'tools_search' => array('search' => $search, 'latest_searches' => $cookie_array, 'json_error' => $json_error)
 				)
 			);
 			$this->template->build('error');
@@ -1200,8 +1200,8 @@ class Chan extends Public_Controller
 				)
 			),
 			array(
-				'tools_post' => TRUE,
-				'tools_view' => array('search' => $search, 'latest_searches' => $cookie_array)
+				'tools_modal' => TRUE,
+				'tools_search' => array('search' => $search, 'latest_searches' => $cookie_array)
 			)
 		);
 
@@ -1240,7 +1240,7 @@ class Chan extends Public_Controller
 					'is_statistics_list' => TRUE,
 					'info' => $stats
 				), array(
-					'tools_view' => TRUE
+					'tools_search' => TRUE
 				)
 			);
 			$this->template->build('statistics');
@@ -1279,7 +1279,7 @@ class Chan extends Public_Controller
 				),
 				array(
 					'stats_interface' => 'statistics/' . $stats['info']['interface'],
-					'tools_view' => TRUE
+					'tools_search' => TRUE
 				)
 			);
 			$this->template->build('statistics');
@@ -1430,8 +1430,8 @@ class Chan extends Public_Controller
 					array(
 						'error' => validation_errors()
 					), array(
-						'tools_post' => TRUE,
-						'tools_view' => TRUE
+						'tools_modal' => TRUE,
+						'tools_search' => TRUE
 					)
 				);
 				$this->template->build('error');
@@ -1480,8 +1480,8 @@ class Chan extends Public_Controller
 						array(
 							'error' => _('This thread does not exist.')
 						), array(
-							'tools_post' => TRUE,
-							'tools_view' => TRUE
+							'tools_modal' => TRUE,
+							'tools_search' => TRUE
 						)
 					);
 					$this->template->build('error');
@@ -1518,8 +1518,8 @@ class Chan extends Public_Controller
 								'error' => _('This thread does not exist.')
 							),
 							array(
-								'tools_post' => TRUE,
-								'tools_view' => TRUE
+								'tools_modal' => TRUE,
+								'tools_search' => TRUE
 							)
 						);
 						$this->template->build('error');
@@ -1550,8 +1550,8 @@ class Chan extends Public_Controller
 					array(
 						'error' => _('You are required to upload an image when posting a new thread.')
 					), array(
-						'tools_post' => TRUE,
-						'tools_view' => TRUE
+						'tools_modal' => TRUE,
+						'tools_search' => TRUE
 					)
 				);
 				$this->template->build('error');
@@ -1575,8 +1575,8 @@ class Chan extends Public_Controller
 					array(
 						'error' => _('You are required to write a comment when no image upload is present.')
 					), array(
-						'tools_post' => TRUE,
-						'tools_view' => TRUE
+						'tools_modal' => TRUE,
+						'tools_search' => TRUE
 					)
 				);
 				$this->template->build('error');
@@ -1600,8 +1600,8 @@ class Chan extends Public_Controller
 					array(
 					'error' => _('The posting of images has been disabled for this thread.')
 					), array(
-					'tools_post' => TRUE,
-					'tools_view' => TRUE
+					'tools_modal' => TRUE,
+					'tools_search' => TRUE
 					)
 				);
 				$this->template->build('error');
@@ -1640,8 +1640,8 @@ class Chan extends Public_Controller
 						array(
 							'error' => $this->upload->display_errors()
 						), array(
-							'tools_post' => TRUE,
-							'tools_view' => TRUE
+							'tools_modal' => TRUE,
+							'tools_search' => TRUE
 						)
 					);
 					$this->template->build('error');
@@ -1668,8 +1668,8 @@ class Chan extends Public_Controller
 					array(
 						'error' => $result['error']
 					), array(
-						'tools_post' => TRUE,
-						'tools_view' => TRUE
+						'tools_modal' => TRUE,
+						'tools_search' => TRUE
 					)
 				);
 				$this->template->build('error');

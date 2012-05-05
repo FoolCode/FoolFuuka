@@ -86,7 +86,7 @@ foreach ($posts as $key => $post) : ?>
 	?>
 	<?php
 	if (isset($thread_id)) :
-		echo $template['partials']['post_thread'];
+		echo $template['partials']['tools_reply_box'];
 	endif;
 	?>
 	<br class="newthr" />

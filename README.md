@@ -12,7 +12,7 @@ FoOlFuuka is an imageboard written in PHP, based on the CodeIgniter MVC framewor
 
 The project started as an alternative to the Fuuka interface, in order to be able to implement moderation features and few optimizations to be able to take on the traffic. Over time we noticed that it would've been a successful and complete imageboard script. Now it can work both as an archive interface through Asagi, and as a normal imageboard.
 
-This document will explain what's cool about FoOlFuuka. You will have to go to the wiki for installation instructions and other useful articles.
+This document will explain what's cool about FoOlFuuka. You will have to go to the [documentation site](http://foolrulez.github.com/FoOlFuuka/) for installation instructions and other useful articles.
 
 Requirements
 ------------
@@ -63,4 +63,4 @@ The members of the FoOlz team that contribute to this project:
 
 Thanks to the rest of the team for putting up with us wasting time on this large project.
 
-Special thanks to Eksopl (Fuuka archive programmer) for his collaboration and advice.
+Special thanks to Eksopl, coder of [Fuuka](http://github.com/eksopl/fuuka) and [Asagi](http://github.com/eksopl/asagi) archivers, for his collaboration and advice.

@@ -109,7 +109,7 @@ class Theme_Controller
 						'error'				=> validation_errors()
 					),
 					array(
-						'tools_view'		=> TRUE
+						'tools_search'		=> TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -157,7 +157,7 @@ class Theme_Controller
 							'error'				=> _('This thread does not exist.')
 						),
 						array(
-							'tools_view'		=> TRUE
+							'tools_search'		=> TRUE
 						)
 					);
 					$this->CI->template->build('error');
@@ -190,7 +190,7 @@ class Theme_Controller
 								'error'				=> _('This thread does not exist.')
 							),
 							array(
-								'tools_view'		=> TRUE
+								'tools_search'		=> TRUE
 							)
 						);
 						$this->CI->template->build('error');
@@ -216,7 +216,7 @@ class Theme_Controller
 						'error'				=> _('You are required to upload an image when posting a new thread.')
 					),
 					array(
-						'tools_view'		=> TRUE
+						'tools_search'		=> TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -235,7 +235,7 @@ class Theme_Controller
 						'error'				=> _('You are required to write a comment when no image upload is present.')
 					),
 					array(
-						'tools_view'		=> TRUE
+						'tools_search'		=> TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -254,7 +254,7 @@ class Theme_Controller
 						'error'				=> _('The posting of images has been disabled for this thread.')
 					),
 					array(
-						'tools_view'		=> TRUE
+						'tools_search'		=> TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -290,7 +290,7 @@ class Theme_Controller
 							'error'				=> $this->CI->upload->display_errors()
 						),
 						array(
-							'tools_view'		=> TRUE
+							'tools_search'		=> TRUE
 						)
 					);
 					$this->CI->template->build('error');
@@ -314,7 +314,7 @@ class Theme_Controller
 						'error'				=> $result['error']
 					),
 					array(
-						'tools_view'		=> TRUE
+						'tools_search'		=> TRUE
 					)
 				);
 				$this->CI->template->build('error');

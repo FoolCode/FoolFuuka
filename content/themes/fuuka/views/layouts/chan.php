@@ -70,9 +70,9 @@ if (!defined('BASEPATH'))
 			<?php if (isset($section_title)) : echo '<h2>' . $section_title . '</h2>'; endif ?>
 			<?php if (get_setting('fs_theme_header_text')): ?><div><?php echo get_setting('fs_theme_header_text') ?></div><?php endif; ?>
 			<hr />
-			<?php echo $template['partials']['tools_view']; ?>
+			<?php echo $template['partials']['tools_search']; ?>
 			<hr />
-			<?php if ($is_page) : echo $template['partials']['post_thread']; endif ?>
+			<?php if ($is_page) : echo $template['partials']['tools_reply_box']; endif ?>
 		<?php endif; ?>
 
 			<?php echo $template['body']; ?>

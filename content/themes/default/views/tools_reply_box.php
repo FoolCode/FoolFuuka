@@ -2,7 +2,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-if ((isset($enabled_post_thread) && $enabled_post_thread && !get_selected_radix()->archive) ||
+if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selected_radix()->archive) ||
 	(isset($thread_id))) :
 ?>
 

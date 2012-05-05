@@ -410,6 +410,10 @@ class Post_model extends CI_Model
 			$date->setTimezone(new DateTimeZone('UTC'));
 			$post->timestamp = $date->getTimestamp();
 		}
+		else
+		{
+			$post->original_timestamp = $post->timestamp;
+		}
 
 		$elements = array('title', 'name', 'email', 'trip', 'media', 'preview', 'media_filename', 'media_hash');
 

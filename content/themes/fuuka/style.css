@@ -97,19 +97,23 @@ ul{
     clear: left;
 }
 
-.warning,.info{
+.warning,.info {
     background: #dece7a;
     color: #654225;
     font-weight:bold;
 }
-.error{
+.error, .alert{
     background: #de887a;
     color: #652534;
     font-weight:bold;
 }
 
-.warning,.error{ padding: 0.675em 0.5em 1.325em 0.5em; }
-.info{ padding: 0.675em 0.5em 0.675em 0.5em; }
+.alert h4 {
+	margin-top :0;
+}
+
+.warning,.error { padding: 0.675em 0.5em 1.325em 0.5em; }
+.info, .alert{ padding: 0.675em 0.5em 0.675em 0.5em; }
 
 .container{
     -moz-border-radius: 0.75em;

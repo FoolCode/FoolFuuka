@@ -954,6 +954,7 @@ class Post_model extends CI_Model
 
 		// define variables
 		$thread_op_present = FALSE;
+		$ghost_post_present = FALSE;
 		$thread_last_bump = 0;
 		$counter = array('posts' => 0, 'images' => 0);
 
@@ -966,6 +967,11 @@ class Post_model extends CI_Model
 				$thread_op_present = TRUE;
 			}
 
+			if($post->subnum > 0)
+			{
+				$ghost_post_present = TRUE;
+			}
+			
 			if($post->subnum == 0 && $thread_last_bump < $post->timestamp)
 			{
 				$thread_last_bump = $post->timestamp;
@@ -989,7 +995,7 @@ class Post_model extends CI_Model
 		}
 
 		// time check
-		if(time() - $thread_last_bump > 432000)
+		if(time() - $thread_last_bump > 432000 || $ghost_post_present)
 		{
 			return array('thread_dead' => TRUE, 'disable_image_upload' => TRUE);
 		}

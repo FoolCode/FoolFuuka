@@ -19,7 +19,7 @@ if (!defined('BASEPATH'))
 			</a>
 
 			<div class="post_file" style="padding-left: 2px">
-				<?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media ?>
+				<?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename ?>
 			</div>
 			<div class="post_file_controls">
 				<?php if (!get_selected_radix()->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>

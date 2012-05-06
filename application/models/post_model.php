@@ -2571,8 +2571,8 @@ class Post_model extends CI_Model
 				(
 					num, subnum, thread_num, op, timestamp, capcode,
 					email, name, trip, title, comment, delpass, spoiler, poster_id,
-					preview_orig, preview_w, preview_h, media_orig, media_w, media_h, media_size, media_hash,
-					media_filename, exif
+					preview_orig, preview_w, preview_h, media_filename, media_w, media_h, media_size, media_hash,
+					media_orig, exif
 				)
 				VALUES
 				(

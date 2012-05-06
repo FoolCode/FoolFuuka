@@ -15,7 +15,7 @@ foreach ($posts as $key => $post) : ?>
 	?>
 	<div id="p<?php echo $op->num ?>">
 		<?php if ($op->preview_orig) : ?>
-		<span>File: <?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media; ?> <?php echo '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
+		<span>File: <?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename; ?> <?php echo '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
 		<?php if (!get_selected_radix()->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>[<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . substr(urlsafe_b64encode(urlsafe_b64decode($op->media_hash)), 0, -2)) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $op->thumb_link ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumb_link ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $op->thumb_link ?>">SauceNAO</a>]<?php endif; ?>
 		<br />
 		<a href="<?php echo ($op->media_link)?$op->media_link:$op->remote_media_link ?>" rel="noreferrer"><img class="thumb" src="<?php echo $op->thumb_link ?>" alt="<?php echo $op->num ?>" <?php if ($op->preview_w > 0 && $op->preview_h > 0) : ?> width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>"<?php endif; ?>/></a>

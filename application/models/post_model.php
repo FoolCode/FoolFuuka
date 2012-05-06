@@ -85,16 +85,16 @@ class Post_model extends CI_Model
 
 		if (is_object($post))
 		{
-			if ($post->parent == 0)
+			if ($post->op == 1)
 			{
 				$this->posts_arr[$post->num][] = $post->num;
 			}
 			else
 			{
 				if ($post->subnum == 0)
-					$this->posts_arr[$post->parent][] = $post->num;
+					$this->posts_arr[$post->thread_num][] = $post->num;
 				else
-					$this->posts_arr[$post->parent][] = $post->num . ',' . $post->subnum;
+					$this->posts_arr[$post->thread_num][] = $post->num . ',' . $post->subnum;
 			}
 		}
 	}
@@ -108,14 +108,14 @@ class Post_model extends CI_Model
 	 */
 	function get_media_dir($board, $post, $thumbnail = FALSE)
 	{
-		if (!$post->media_filename && !$post->media_hash)
+		if (!$post->media_orig && !$post->media_hash)
 		{
 			return FALSE;
 		}
 
 		if ($thumbnail === TRUE)
 		{
-			if (isset($post->parent))
+			if (isset($post->thread_num))
 			{
 				$image = $post->preview_op ? $post->preview_op : $post->preview_reply;
 			}
@@ -126,7 +126,7 @@ class Post_model extends CI_Model
 		}
 		else
 		{
-			$image = $post->media_filename;
+			$image = $post->media;
 		}
 
 		return get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname . '/'
@@ -142,7 +142,7 @@ class Post_model extends CI_Model
 	 */
 	function get_media_link($board, $post, $thumbnail = FALSE)
 	{
-		if (!$post->media_filename && !$post->media_hash)
+		if (!$post->media_orig && !$post->media_hash)
 		{
 			return FALSE;
 		}
@@ -201,24 +201,24 @@ class Post_model extends CI_Model
 		{
 			if ($thumbnail === TRUE)
 			{
-				if (isset($post->parent))
+				if (isset($post->thread_num))
 				{
-					$image = $post->preview_op ? $post->preview_op : $post->preview_reply;
+					$image = $post->preview_op ? : $post->preview_reply;
 				}
 				else
 				{
-					$image = $post->preview_reply ? $post->preview_reply : $post->preview_op;
+					$image = $post->preview_reply ? : $post->preview_op;
 				}
 			}
 			else
 			{
-				$image = $post->media_filename;
+				$image = $post->media;
 			}
 
 			// output the url on another server
 			if (strlen(get_setting('fs_balancer_clients')) > 10)
 			{
-				preg_match('/([\d]+)/', $post->media_filename, $matches);
+				preg_match('/([\d]+)/', $post->media, $matches);
 
 				if (isset($matches[1]))
 				{
@@ -249,7 +249,7 @@ class Post_model extends CI_Model
 	 */
 	function get_remote_media_link($board, $post)
 	{
-		if (!$post->media_filename && !$post->media_hash)
+		if (!$post->media_orig && !$post->media_hash)
 		{
 			return FALSE;
 		}
@@ -259,10 +259,10 @@ class Post_model extends CI_Model
 			// ignore webkit and opera user agents
 			if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
 			{
-				return $board->images_url . $post->media_filename;
+				return $board->images_url . $post->media_orig;
 			}
 
-			return site_url(array($board->shortname, 'redirect')) . $post->media_filename;
+			return site_url(array($board->shortname, 'redirect')) . $post->media_orig;
 		}
 		else
 		{
@@ -287,7 +287,7 @@ class Post_model extends CI_Model
 	{
 		if (is_object($media_hash) || is_array($media_hash))
 		{
-			if (!$media_hash->media_filename)
+			if (!$media_hash->media)
 			{
 				return FALSE;
 			}
@@ -415,7 +415,7 @@ class Post_model extends CI_Model
 			$post->original_timestamp = $post->timestamp;
 		}
 
-		$elements = array('title', 'name', 'email', 'trip', 'media', 'preview', 'media_filename', 'media_hash');
+		$elements = array('title', 'name', 'email', 'trip', 'media_orig', 'preview_orig', 'media_filename', 'media_hash');
 
 		foreach($elements as $element)
 		{
@@ -430,7 +430,7 @@ class Post_model extends CI_Model
 		{
 			if (!$this->tank_auth->is_allowed())
 			{
-				unset($post->id);
+				unset($post->poster_id);
 			}
 
 			unset($post->delpass);
@@ -494,17 +494,17 @@ class Post_model extends CI_Model
 		if ($duplicate !== NULL)
 		{
 			// handle full media
-			if ($duplicate->media_filename !== NULL)
+			if ($duplicate->media !== NULL)
 			{
 				$media_exists = TRUE;
 
-				$media_existing = $duplicate->media_filename;
+				$media_existing = $duplicate->media;
 				$media_filepath = $board_directory . 'image/'
-					. substr($duplicate->media_filename, 0, 4) . '/' . substr($duplicate->media_filename, 4, 2) . '/';
+					. substr($duplicate->media, 0, 4) . '/' . substr($duplicate->media, 4, 2) . '/';
 			}
 
 			// generate full file paths for missing files only
-			if ($duplicate->media_filename === NULL || file_exists($media_filepath . $duplicate->media_filename) === FALSE)
+			if ($duplicate->media === NULL || file_exists($media_filepath . $duplicate->media) === FALSE)
 			{
 				if(!file_exists($media_filepath))
 					mkdir($media_filepath, FOOL_FILES_DIR_MODE, TRUE);
@@ -767,7 +767,7 @@ class Post_model extends CI_Model
 
 		$this->backlinks[$num_id][$this->current_p->num] = $html['prefix']
 			. '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread',
-			($this->current_p->parent == 0) ? $this->current_p->num : $this->current_p->parent)) . $html['urltag']
+			($this->current_p->thread_num == 0) ? $this->current_p->num : $this->current_p->thread_num)) . $html['urltag']
 			. $this->current_p->num . (($this->current_p->subnum == 0) ? '' : '_' . $this->current_p->subnum)
 			. '"' . $html['option_backlink'] . '>&gt;&gt;'
 			. $this->current_p->num . (($this->current_p->subnum == 0) ? '' : ',' . $this->current_p->subnum)
@@ -922,15 +922,8 @@ class Post_model extends CI_Model
 
 		// grab the entire thread
 		$query = $this->db->query('
-			(
-				SELECT * FROM ' . $this->radix->get_table($board) . '
-				WHERE num = ?
-			)
-			UNION
-			(
-				SELECT * FROM ' . $this->radix->get_table($board) . '
-				WHERE parent = ?
-			)
+			SELECT * FROM ' . $this->radix->get_table($board) . '
+			WHERE thread_num = ?
 		',
 			array($num, $num)
 		);
@@ -950,7 +943,7 @@ class Post_model extends CI_Model
 		{
 			// we need to find if there's the OP in the list
 			// let's be strict, we want the $num to be the OP
-			if ($post->parent == 0 && $post->subnum == 0 && $post->num === $num)
+			if ($post->op == 1)
 			{
 				$thread_op_present = TRUE;
 			}
@@ -960,7 +953,7 @@ class Post_model extends CI_Model
 				$thread_last_bump = $post->timestamp;
 			}
 
-			if ($post->orig_filename)
+			if ($post->media_filename)
 			{
 				$counter['images']++;
 			}
@@ -1278,13 +1271,13 @@ class Post_model extends CI_Model
 			}
 			if ($args['type'] == 'op')
 			{
-				$this->db->where('parent', 0);
-				$this->db->use_index('parent_index');
+				$this->db->where('thread_num', 0);
+				$this->db->use_index('thread_num_index');
 			}
 			if ($args['type'] == 'posts')
 			{
-				$this->db->where('parent <>', 0);
-				$this->db->use_index('parent_index');
+				$this->db->where('thread_num <>', 0);
+				$this->db->use_index('thread_num_index');
 			}
 			if ($args['filter'] == 'image')
 			{
@@ -1399,17 +1392,9 @@ class Post_model extends CI_Model
 			case 'by_post':
 
 				$query = $this->db->query('
-					SELECT *
-					FROM
-					(
-						SELECT *, parent as unq_parent
-						FROM ' . $this->radix->get_table($board, '_threads') . '
-						ORDER BY time_bump DESC LIMIT ?, ?
-					) AS t
-					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
-						ON g.num = t.unq_parent AND g.subnum = 0
-					' . $this->sql_media_join($board, 'g') . '
-					' . $this->sql_report_join($board, 'g') . '
+					SELECT *, thread_num as unq_thread_num
+					FROM ' . $this->radix->get_table($board, '_threads') . '
+					ORDER BY time_bump DESC LIMIT ?, ?
 				',
 					array(
 						intval(($page * $per_page) - $per_page),
@@ -1418,7 +1403,7 @@ class Post_model extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(COUNT(parent)/' . intval($per_page) . ')+1 AS pages
+					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ')+1 AS pages
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 				');
 
@@ -1427,17 +1412,9 @@ class Post_model extends CI_Model
 			case 'by_thread':
 
 				$query = $this->db->query('
-					SELECT *
-					FROM
-					(
-						SELECT *, parent as unq_parent
-						FROM ' . $this->radix->get_table($board, '_threads') . '
-						ORDER BY parent DESC LIMIT ?, ?
-					) AS t
-					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
-						ON g.num = t.unq_parent AND g.subnum = 0
-					' . $this->sql_media_join($board, 'g') . '
-					' . $this->sql_report_join($board, 'g') . '
+					SELECT *, thread_num as unq_thread_num
+					FROM ' . $this->radix->get_table($board, '_threads') . '
+					ORDER BY thread_num DESC LIMIT ?, ?
 				',
 					array(
 						intval(($page * $per_page) - $per_page),
@@ -1446,7 +1423,7 @@ class Post_model extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(COUNT(parent)/' . intval($per_page) . ')+1 AS pages
+					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ')+1 AS pages
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 				');
 
@@ -1458,13 +1435,13 @@ class Post_model extends CI_Model
 					SELECT *
 					FROM
 					(
-						SELECT *, parent as unq_parent
+						SELECT *, thread_num as unq_thread_num
 						FROM ' . $this->radix->get_table($board, '_threads') . '
 						WHERE time_ghost_bump IS NOT NULL
 						ORDER BY time_ghost_bump DESC LIMIT ?, ?
 					) AS t
 					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
-						ON g.num = t.unq_parent AND g.subnum = 0
+						ON g.num = t.unq_thread_num AND g.subnum = 0
 					' . $this->sql_media_join($board, 'g') . '
 					' . $this->sql_report_join($board, 'g') . '
 				',
@@ -1475,7 +1452,7 @@ class Post_model extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(COUNT(parent)/' . intval($per_page) . ')+1 AS pages
+					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ')+1 AS pages
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 					WHERE time_ghost_bump IS NOT NULL;
 				');
@@ -1512,7 +1489,7 @@ class Post_model extends CI_Model
 
 		foreach ($query->result() as $thread)
 		{
-			$threads[$thread->unq_parent] = array('replies' => $thread->nreplies, 'images' => $thread->nimages);
+			$threads[$thread->unq_thread_num] = array('replies' => $thread->nreplies, 'images' => $thread->nimages);
 
 			$sql_arr[] = '
 				(
@@ -1520,23 +1497,22 @@ class Post_model extends CI_Model
 					FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
 					' . $this->sql_report_join($board) . '
-					WHERE parent = ' . $thread->unq_parent . '
-					ORDER BY num DESC, subnum DESC
-					LIMIT 0, 5
+					WHERE thread_num = ' . $thread->unq_thread_num . '
+					ORDER BY op DESC, num DESC, subnum DESC
+					LIMIT 0, 6
 				)
 			';
 		}
 
 		$query_posts = $this->db->query(implode('UNION', $sql_arr) . ' ORDER BY num DESC;');
-		$posts = array_merge($query->result(), array_reverse($query_posts->result()));
 
 		// populate posts_arr array
-		$this->populate_posts_arr($query->result());
+		$this->populate_posts_arr($query_posts->result());
 
 		// populate results array and order posts
-		foreach ($posts as $post)
+		foreach ($query_posts->result() as $post)
 		{
-			$post_num = ($post->parent > 0) ? $post->parent : $post->num;
+			$post_num = ($post->op == 0) ? $post->thread_num : $post->num;
 
 			if ($process === TRUE)
 			{
@@ -1545,9 +1521,9 @@ class Post_model extends CI_Model
 
 			if (!isset($results[$post_num]['omitted']))
 			{
-				foreach ($threads as $parent => $counter)
+				foreach ($threads as $thread_num => $counter)
 				{
-					if ($parent == $post_num)
+					if ($thread_num == $post_num)
 					{
 						$results[$post_num] = array(
 							'omitted' => ($counter['replies'] - 5),
@@ -1556,15 +1532,18 @@ class Post_model extends CI_Model
 					}
 				}
 			}
-
-			if ($post->parent > 0)
+			
+			if ($post->op == 0)
 			{
-				if ($post->preview)
+				if ($post->preview_orig)
 				{
-					$results[$post->parent]['images_omitted']--;
+					$results[$post->thread_num]['images_omitted']--;
 				}
-
-				$results[$post->parent]['posts'][] = $post;
+				
+				if(!isset($results[$post->thread_num]['posts']))
+					$results[$post->thread_num]['posts'] = array();
+				
+				array_unshift($results[$post->thread_num]['posts'], $post);
 			}
 			else
 			{
@@ -1613,7 +1592,7 @@ class Post_model extends CI_Model
 					FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
 					' . $this->sql_report_join($board) . '
-					WHERE parent = ? AND doc_id > ?
+					WHERE thread_num = ? AND doc_id > ?
 					ORDER BY num, subnum ASC
 				',
 					array($num, $type_extra['latest_doc_id'])
@@ -1628,7 +1607,7 @@ class Post_model extends CI_Model
 					FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
 					' . $this->sql_report_join($board) . '
-					WHERE parent = ? AND subnum <> 0
+					WHERE thread_num = ? AND subnum <> 0
 					ORDER BY num, subnum ASC
 				',
 					array($num)
@@ -1655,7 +1634,7 @@ class Post_model extends CI_Model
 						UNION
 						(
 							SELECT * FROM ' . $this->radix->get_table($board) . '
-							WHERE parent = ?
+							WHERE thread_num = ?
 							ORDER BY num DESC, subnum DESC LIMIT ?
 						)
 					) AS x
@@ -1684,7 +1663,7 @@ class Post_model extends CI_Model
 						SELECT * FROM ' . $this->radix->get_table($board) . '
 						' . $this->sql_media_join($board) . '
 						' . $this->sql_report_join($board) . '
-						WHERE parent = ?
+						WHERE thread_num = ?
 					)
 					ORDER BY num, subnum ASC
 				',
@@ -1721,7 +1700,7 @@ class Post_model extends CI_Model
 		{
 			if ($process === TRUE)
 			{
-				if ($post->parent != 0)
+				if ($post->op == 0)
 				{
 					$this->process_post($board, $post, $clean, $realtime);
 				}
@@ -1731,9 +1710,9 @@ class Post_model extends CI_Model
 				}
 			}
 
-			if ($post->parent > 0)
+			if ($post->op == 0)
 			{
-				$result[$post->parent]['posts'][$post->num . (($post->subnum == 0) ? '' : '_' . $post->subnum)] = $post;
+				$result[$post->thread_num]['posts'][$post->num . (($post->subnum == 0) ? '' : '_' . $post->subnum)] = $post;
 			}
 			else
 			{
@@ -1794,7 +1773,7 @@ class Post_model extends CI_Model
 					SELECT * FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
 					' . $this->sql_report_join($board) . '
-					WHERE media_filename IS NOT NULL
+					WHERE media IS NOT NULL
 					ORDER BY timestamp DESC LIMIT ?, ?
 				',
 					array(
@@ -1804,25 +1783,25 @@ class Post_model extends CI_Model
 				);
 
 				$query_total = $this->db->query('
-					SELECT COUNT(media_filename) AS count
+					SELECT COUNT(media_orig) AS count
 					FROM ' . $this->radix->get_table($board) . '
-					WHERE media_filename IS NOT NULL
+					WHERE media_orig IS NOT NULL
 				');
 
 				break;
 
 			case 'by_thread':
-
+				
 				$query = $this->db->query('
 					SELECT *
 					FROM
 					(
-						SELECT *, parent as unq_parent
+						SELECT *, thread_num as unq_thread_num
 						FROM ' . $this->radix->get_table($board, '_threads') . '
 						ORDER BY time_op DESC LIMIT ?, ?
 					) AS t
 					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
-						ON g.num = t.unq_parent AND g.subnum = 0
+						ON g.num = t.unq_thread_num AND g.subnum = 0
 					' . $this->sql_media_join($board, 'g') . '
 					' . $this->sql_report_join($board, 'g') . '
 				',
@@ -1833,14 +1812,14 @@ class Post_model extends CI_Model
 				);
 
 				$query_total = $this->db->query('
-					SELECT COUNT(parent) AS count
+					SELECT COUNT(thread_num) AS count
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 				');
 
 				break;
 
 			default:
-				log_message('error', 'post.php/get_latest: invalid or missing type argument');
+				log_message('error', 'post.php/get_gallery: invalid or missing type argument');
 				return FALSE;
 		}
 
@@ -1853,7 +1832,7 @@ class Post_model extends CI_Model
 
 		foreach ($query->result() as $key => $post)
 		{
-			if ($post->preview)
+			if ($post->preview_orig)
 			{
 				$this->process_post($board, $post, $clean, $process);
 				$results[$post->num] = $post;
@@ -1954,7 +1933,7 @@ class Post_model extends CI_Model
 	function get_post_thread($board, $num, $subnum = 0)
 	{
 		$query = $this->db->query('
-			SELECT num, parent, subnum
+			SELECT num, thread_num, subnum
 			FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
 			WHERE num = ? AND subnum = ? LIMIT 0, 1
@@ -1996,7 +1975,7 @@ class Post_model extends CI_Model
 		$subnum = intval($subnum);
 
 		$query = $this->db->query('
-			SELECT num, parent, subnum
+			SELECT num, thread_num, subnum
 			FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
 			WHERE num = ? AND subnum = ? LIMIT 0, 1
@@ -2076,7 +2055,7 @@ class Post_model extends CI_Model
 		$query = $this->db->query('
 			SELECT * FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
-			WHERE orig_filename = ?
+			WHERE media_orig = ?
 			ORDER BY num DESC LIMIT 0, 1
 		',
 			array($media_filename)
@@ -2237,7 +2216,7 @@ class Post_model extends CI_Model
 		$check = $this->db->query('
 			SELECT *
 			FROM ' . $this->radix->get_table($board) . '
-			WHERE id = ?
+			WHERE poster_id = ?
 			ORDER BY timestamp DESC
 			LIMIT 0,1
 		',
@@ -2455,7 +2434,7 @@ class Post_model extends CI_Model
 		$check = $this->db->query('
 				SELECT doc_id
 				FROM ' . $this->radix->get_table($board) . '
-				WHERE id = ? AND comment = ? AND timestamp >= ?
+				WHERE poster_id = ? AND comment = ? AND timestamp >= ?
 			',
 			array(
 				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
@@ -2476,8 +2455,8 @@ class Post_model extends CI_Model
 			$this->db->query('
 				INSERT INTO ' . $this->radix->get_table($board) . '
 				(
-					num, subnum, parent, timestamp, capcode,
-					email, name, trip, title, comment, delpass, id
+					num, subnum, thread_num, timestamp, capcode,
+					email, name, trip, title, comment, delpass, poster_id
 				)
 				VALUES
 				(
@@ -2487,7 +2466,7 @@ class Post_model extends CI_Model
 						(
 							SELECT num
 							FROM ' . $this->radix->get_table($board) . '
-							WHERE num = ? OR parent = ?
+							WHERE num = ? OR thread_num = ?
 						) AS x
 					),
 					(
@@ -2500,7 +2479,7 @@ class Post_model extends CI_Model
 								num = (
 									SELECT MAX(num)
 									FROM ' . $this->radix->get_table($board) . '
-									WHERE num = ? OR parent = ?
+									WHERE num = ? OR thread_num = ?
 								)
 						) AS x
 					),
@@ -2522,7 +2501,7 @@ class Post_model extends CI_Model
 			$check_duplicate = $this->db->query('
 				SELECT doc_id 
 				FROM ' . $this->radix->get_table($board) . '
-				WHERE id = ? AND comment = ? AND  timestamp >= ?
+				WHERE poster_id = ? AND comment = ? AND  timestamp >= ?
 			',
 			array(
 				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
@@ -2538,7 +2517,8 @@ class Post_model extends CI_Model
 		{
 			// define default values for post
 			$default_post_arr = array(
-				0, $num, $timestamp, $lvl,
+				0, ($num)?0:1, $num, ($num)?0:1,
+				$timestamp, $lvl,
 				($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL, ($subject)?$subject:NULL, ($comment)?$comment:NULL,
 				$password, $spoiler, inet_ptod($this->input->ip_address())
 			);
@@ -2553,7 +2533,8 @@ class Post_model extends CI_Model
 				}
 
 				// replace timestamp with timestamp generated by process_media
-				$default_post_arr[2] = end($media_file);
+				// process_media sends a timestamp with milliseconds which we want to get rid of
+				$default_post_arr[4] = substr(end($media_file),0,10);
 				array_pop($media_file);
 				$default_post_arr = array_merge($default_post_arr, $media_file);
 			}
@@ -2563,26 +2544,37 @@ class Post_model extends CI_Model
 				$media_file = array(NULL, 0, 0, NULL, 0, 0, 0, NULL, NULL);
 				$default_post_arr = array_merge($default_post_arr, $media_file);
 			}
-
+			
+			//print_r($default_post_arr); die();
+			
 			// insert post into board
 			$this->db->query('
 				INSERT INTO ' . $this->radix->get_table($board) . '
 				(
-					num, subnum, parent, timestamp, capcode,
-					email, name, trip, title, comment, delpass, spoiler, id,
-					preview, preview_w, preview_h, media, media_w, media_h, media_size, media_hash, orig_filename
+					num, subnum, thread_num, op, timestamp, capcode,
+					email, name, trip, title, comment, delpass, spoiler, poster_id,
+					preview_orig, preview_w, preview_h, media_orig, media_w, media_h, media_size, media_hash, media_filename
 				)
 				VALUES
 				(
 					(
-						SELECT COALESCE(MAX(num), 0)+1
+						SELECT COALESCE(MAX(num), 0)+1 AS num
 						FROM
 						(
 							SELECT num
 							FROM ' . $this->radix->get_table($board) . '
 						) AS x
 					),
-					?, ?, ?, ?,
+					?, 
+					IF(?, (
+						SELECT COALESCE(MAX(num), 0)+1 AS num
+						FROM
+						(
+							SELECT num
+							FROM ' . $this->radix->get_table($board) . '
+						) AS x
+					), ?),
+					?, ?, ?,
 					?, ?, ?, ?, ?, ?, ?, ?,
 					?, ?, ?, ?, ?, ?, ?, ?, ?
 				)
@@ -2598,7 +2590,7 @@ class Post_model extends CI_Model
 				SELECT * 
 				FROM ' . $this->radix->get_table($board) . '
 				' . $this->sql_media_join($board) . ' 
-				WHERE id = ? AND comment = ? AND  timestamp >= ?
+				WHERE poster_id = ? AND comment = ? AND  timestamp >= ?
 				ORDER BY doc_id DESC
 			',
 			array(
@@ -2622,9 +2614,9 @@ class Post_model extends CI_Model
 		
 		$this->db->trans_commit();
 
-		// retreive num, subnum, parent for redirection
+		// retreive num, subnum, thread_num for redirection
 		$post = $this->db->query('
-			SELECT num, subnum, parent
+			SELECT num, subnum, thread_num
 			FROM ' . $this->radix->get_table($board) . '
 			WHERE doc_id = ? LIMIT 0, 1
 		',
@@ -2698,13 +2690,13 @@ class Post_model extends CI_Model
 		// purge existing reports for post
 		$this->db->delete('reports', array('board_id' => $board->id, 'doc_id' => $row->doc_id));
 
-		// purge thread replies if parent post
-		if ($row->parent == 0) // delete: thread
+		// purge thread replies if thread_num post
+		if ($row->thread_num == 0) // delete: thread
 		{
 			$thread = $this->db->query('
 				SELECT * FROM ' . $this->radix->get_table($board) . '
 				' . $this->sql_media_join($board) . '
-				WHERE parent = ?
+				WHERE thread_num = ?
 			',
 				array($row->num)
 			);
@@ -2728,7 +2720,7 @@ class Post_model extends CI_Model
 				// remove all replies
 				$this->db->query('
 					DELETE FROM ' . $this->radix->get_table($board) . '
-					WHERE parent = ?
+					WHERE thread_num = ?
 				',
 					array($row->num)
 				);
@@ -2748,7 +2740,7 @@ class Post_model extends CI_Model
 	 */
 	function delete_media($board, $post, $media = TRUE, $thumb = TRUE)
 	{
-		if (!$post->media_filename && !$post->media_hash)
+		if (!$post->media_orig && !$post->media_hash)
 		{
 			// if there's no media, it's all OK
 			return TRUE;
@@ -2815,7 +2807,7 @@ class Post_model extends CI_Model
 			$this->db->query('
 				INSERT INTO ' . $this->radix->get_table($board, '_images') . '
 				(
-					media_hash, media_filename, preview_op, preview_reply, total, banned
+					media_hash, media, preview_op, preview_reply, total, banned
 				)
 				VALUES
 				(

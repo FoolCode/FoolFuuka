@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
 ?>
 <article<?php if (isset($op)) : ?> id="<?php echo $op->num ?>"<?php endif; ?> class="clearfix thread<?php if(isset($op)) : ?> doc_id_<?php echo $op->num ?> board_<?php echo $selected_radix->shortname ?><?php endif;?>">
 	<?php if (isset($op)) : ?>
-	<?php if ($op->preview) : ?>
+	<?php if ($op->preview_orig) : ?>
 		<div class="thread_image_box">
 			<a href="<?php echo ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 				<img src="<?php echo $op->thumb_link ?>" <?php echo ($op->preview_w > 0 && $op->preview_h > 0) ? 'width="' . $op->preview_w . '" height="' . $op->preview_h . '" ' : '' ?>class="thread_image<?php echo ($op->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?php echo $op->media_hash ?>" />
@@ -74,12 +74,12 @@ if (!defined('BASEPATH'))
 			<?php if($this->tank_auth->is_allowed()) : ?>
 			<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_post"><?php echo _('Remove') ?></button>
-				<?php if($op->preview) : ?>
+				<?php if($op->preview_orig) : ?>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_image"><?php echo _('Remove image') ?></button>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_md5"><?php echo _('Ban image') ?></button>
 				<?php endif; ?>
-				<?php if($op->id) : ?>
-				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_user"><?php echo _('Ban user:') . ' ' . inet_dtop($op->id) ?></button>
+				<?php if($op->poster_id) : ?>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_user"><?php echo _('Ban user:') . ' ' . inet_dtop($op->poster_id) ?></button>
 				<?php endif; ?>
 				<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_report"><?php echo _('Remove report') ?></button>
@@ -113,14 +113,14 @@ if (!defined('BASEPATH'))
 			$post_counter = 0;
 			foreach ($post['posts'] as $p)
 			{
-				if ($p->preview)
+				if ($p->preview_orig)
 					$post_counter++;
 
 				if ($post_counter == 150)
 					$modifiers['lazyload'] = TRUE;
 
-				if ($p->parent == 0)
-					$p->parent  = $p->num;
+				if ($p->thread_num == 0)
+					$p->thread_num  = $p->num;
 
 				if (file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
 					include('content/themes/' . $this->fu_theme . '/views/board_comment.php');

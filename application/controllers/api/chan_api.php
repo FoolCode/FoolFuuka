@@ -428,15 +428,6 @@ class Chan_API extends API_Controller
 		// if we banned md5 we already removed the image
 		if (in_array('remove_image', $actions))
 		{
-			/*
-			$this->post->delete(
-				$board,
-				array(
-				'post' => $post->doc_id,
-				'password' => '',
-				'type' => 'image'
-				)
-			);*/
 			$this->post->delete_media($board, $post);
 		}
 
@@ -455,8 +446,7 @@ class Chan_API extends API_Controller
 			$this->report->remove_by_doc_id($board, $doc_id);
 		}
 
-
-		$this->response(array('success' => TRUE), 200);
+		$this->response(array('success' => TRUE), 200); 
 	}
 
 }

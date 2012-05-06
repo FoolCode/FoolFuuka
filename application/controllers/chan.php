@@ -772,7 +772,7 @@ class Chan extends Public_Controller
 		// Fetch the THREAD specified and generate the THREAD with OP+LAST50.
 		$num = intval($num);
 		$subnum = intval($subnum);
-		$thread = $this->post->get_tools_reply_box(get_selected_radix(), $num, $subnum);
+		$thread = $this->post->get_post_thread(get_selected_radix(), $num, $subnum);
 
 		if ($thread === FALSE)
 		{
@@ -781,12 +781,12 @@ class Chan extends Public_Controller
 
 		if ($thread->subnum > 0)
 		{
-			$url = site_url(array(get_selected_radix()->shortname, 'thread', $thread->parent)) .
+			$url = site_url(array(get_selected_radix()->shortname, 'thread', $thread->thread_num)) .
 				'#' . $thread->num . '_' . $thread->subnum;
 		}
-		else if ($thread->parent > 0)
+		else if ($thread->thread_num > 0)
 		{
-			$url = site_url(array(get_selected_radix()->shortname, 'thread', $thread->parent)) .
+			$url = site_url(array(get_selected_radix()->shortname, 'thread', $thread->thread_num)) .
 				'#' . $thread->num;
 		}
 		else
@@ -1686,7 +1686,7 @@ class Chan extends Public_Controller
 				}
 
 				// Redirect back to the user's POST.
-				if ($result['posted']->parent == 0)
+				if ($result['posted']->thread_num == 0)
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
 						$result['posted']->num)) . '#' . $result['posted']->num;
@@ -1694,7 +1694,7 @@ class Chan extends Public_Controller
 				else
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
-						$result['posted']->parent)) . '#' . $result['posted']->num .
+						$result['posted']->thread_num)) . '#' . $result['posted']->num .
 						(($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 				}
 

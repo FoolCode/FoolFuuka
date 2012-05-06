@@ -14,7 +14,7 @@ foreach ($posts as $key => $post) : ?>
 		$selected_radix = isset($op->board)?$op->board:get_selected_radix();
 	?>
 	<div id="p<?php echo $op->num ?>">
-		<?php if ($op->preview) : ?>
+		<?php if ($op->preview_orig) : ?>
 		<span>File: <?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media; ?> <?php echo '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
 		<?php if (!get_selected_radix()->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>[<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . substr(urlsafe_b64encode(urlsafe_b64decode($op->media_hash)), 0, -2)) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $op->thumb_link ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumb_link ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $op->thumb_link ?>">SauceNAO</a>]<?php endif; ?>
 		<br />
@@ -71,8 +71,8 @@ foreach ($posts as $key => $post) : ?>
 		foreach ($post['posts'] as $p)
 		{
 
-			if ($p->parent == 0)
-				$p->parent = $p->num;
+			if ($p->thread_num == 0)
+				$p->thread_num = $p->num;
 
 			if(!isset($thread_id))
 				$thread_id = NULL;

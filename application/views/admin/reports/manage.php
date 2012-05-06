@@ -16,8 +16,8 @@ echo link_tag('content/themes/default/style.css?v=' . FOOL_VERSION);
 		<?php
 		foreach ($posts as $key => $p)
 		{
-			if ($p->parent == 0)
-				$p->parent = $p->num;
+			if ($p->thread_num == 0)
+				$p->thread_num = $p->num;
 
 			include('content/themes/default/views/board_comment.php');
 		}

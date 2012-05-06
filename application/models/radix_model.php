@@ -420,6 +420,7 @@ class Radix_model extends CI_Model
 
 
 		$this->db->where('id', $id)->delete('boards');
+		$this->db->where('board_id', $id)->delete('boards_preferences');
 
 
 		return TRUE;
@@ -464,6 +465,7 @@ class Radix_model extends CI_Model
 				$result_object[$item->id]->href = site_url(array('@board', $item->shortname));
 			}
 			
+			// load the basic value of the preferences
 			foreach($structure as $key => $arr)
 			{
 				if(!isset($result_object[$item->id]->$key) && isset($arr['boards_preferences']))
@@ -489,16 +491,6 @@ class Radix_model extends CI_Model
 				}
 				
 			}
-			
-			
-			if (!isset($item->board_url) || !$item->board_url)
-				$result_object[$item->id]->board_url = 'http://boards.4chan.org/' . $item->shortname . '/';
-		
-			if (!isset($item->thumbs_url) || !$item->thumbs_url)
-				$result_object[$item->id]->thumbs_url = 'http://0.thumbs.4chan.org/' . $item->shortname . '/thumb/';
-
-			if (!isset($item->images_url) || !$item->images_url)
-				$result_object[$item->id]->images_url = 'http://images.4chan.org/' . $item->shortname . '/src/';
 			
 		}
 		
@@ -714,27 +706,8 @@ class Radix_model extends CI_Model
 	 */
 	function mysql_check_multibyte()
 	{
-		$query = $this->db->select('VERSION() AS version')->get();
-		$mysql_version = $query->row()->version;
-		$query->free_result();
-
-		// automatically select the multibyte setting
-		// I seriously hope everyone is on 5+ at this point of time
-		if (intval(substr($mysql_version, 0, 1)) < 5)
-		{
-			return FALSE;
-		}
-
-		// if MySQL>5.5 || MySQL>6
-		if ((intval(substr($mysql_version, 0, 1)) == 5 && intval(substr($mysql_version, 2, 1)) >= 5)
-			|| intval(substr($mysql_version, 0, 1)) > 5)
-		{
-			return TRUE;
-		}
-		else
-		{
-			return FALSE;
-		}
+		$query = $this->db->query("SHOW CHARACTER SET WHERE Charset = 'utf8mb4';");
+		return (boolean) $query->num_rows();
 	}
 
 

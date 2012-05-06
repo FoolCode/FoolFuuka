@@ -71,8 +71,8 @@ foreach ($posts as $key => $post) : ?>
 		foreach ($post['posts'] as $p)
 		{
 
-			if ($p->parent == 0)
-				$p->parent = $p->num;
+			if ($p->thread_num == 0)
+				$p->thread_num = $p->num;
 
 			if(!isset($thread_id))
 				$thread_id = NULL;

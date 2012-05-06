@@ -297,7 +297,7 @@ class Theme_Controller
 			else if (isset($result['success']))
 			{
 				// Redirect back to the user's POST.
-				if ($result['posted']->parent == 0)
+				if ($result['posted']->thread_num == 0)
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
 						$result['posted']->num)) . '#' . $result['posted']->num;
@@ -305,7 +305,7 @@ class Theme_Controller
 				else
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
-						$result['posted']->parent)) . '#' . $result['posted']->num .
+						$result['posted']->thread_num)) . '#' . $result['posted']->num .
 						(($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 				}
 

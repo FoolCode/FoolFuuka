@@ -1707,6 +1707,87 @@ class Chan extends Public_Controller
 			show_404();
 		}
 	}
+	
+	
+	function mod_post_actions()
+	{
+		if (!$this->tank_auth->is_allowed())
+		{
+			$this->output->set_status_header(403);
+			$this->output->set_output(json_encode(array('error' => _('You\'re not allowed to perform this action'))));
+		}
+
+		if (!$this->input->post('actions') || !$this->input->post('doc_id'))
+		{
+			$this->output->set_status_header(404);
+			$this->output->set_output(json_encode(array('error' => _('Missing arguments'))));
+		}
+
+
+		// action should be an array
+		// array('ban_md5', 'ban_user', 'remove_image', 'remove_post', 'remove_report');
+		$actions = $this->input->post('actions');
+		if (!is_array($actions))
+		{
+			$this->output->set_status_header(404);
+			$this->output->set_output(json_encode(array('error' => _('Invalid action'))));
+		}
+
+		$doc_id = $this->input->post('doc_id');
+		$board = get_selected_radix();
+
+		$this->load->model('post_model', 'post');
+		$post = $this->post->get_by_doc_id($board, $doc_id);
+
+		if ($post === FALSE)
+		{
+			$this->output->set_status_header(404);
+			$this->output->set_output(json_encode(array('error' => _('Post not found'))));
+		}
+
+		if (in_array('ban_md5', $actions))
+		{
+			$this->post->ban_media($post->media_hash);
+			$actions = array_diff($actions, array('remove_image'));
+		}
+
+		if (in_array('remove_post', $actions))
+		{
+			$this->post->delete(
+				$board,
+				array(
+				'doc_id' => $post->doc_id,
+				'password' => '',
+				'type' => 'post'
+				)
+			);
+
+			$actions = array_diff($actions, array('remove_image', 'remove_report'));
+		}
+
+		// if we banned md5 we already removed the image
+		if (in_array('remove_image', $actions))
+		{
+			$this->post->delete_media($board, $post);
+		}
+
+		if (in_array('ban_user', $actions))
+		{
+			$this->load->model('poster_model', 'poster');
+			$this->poster->ban(
+				$post->id, isset($data['length']) ? $data['length'] : NULL,
+				isset($data['reason']) ? $data['reason'] : NULL
+			);
+		}
+
+		if (in_array('remove_report', $actions))
+		{
+			$this->load->model('report_model', 'report');
+			$this->report->remove_by_doc_id($board, $doc_id);
+		}
+
+		$this->output->set_output(json_encode(array('success' => TRUE)));
+	}
 
 
 }

@@ -137,7 +137,7 @@ var bindFunctions = function()
 
                 case 'mod':
                     jQuery.ajax({
-                        url: backend_vars.api_url + 'api/chan/mod_post_actions/',
+                        url: backend_vars.site_url + backend_vars.board_shortname + '/mod_post_actions/',
                         dataType: 'json',
                         type: 'POST',
                         cache: false,
@@ -151,7 +151,7 @@ var bindFunctions = function()
                             actions: [el.data('action')],
                             csrf_fool: backend_vars.csrf_hash
                         },
-                        success: function(data){alert();
+                        success: function(data){
                             if (typeof data.error !== "undefined")
                             {
                                 alert(data.error);

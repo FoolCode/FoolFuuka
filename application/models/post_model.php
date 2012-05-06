@@ -490,6 +490,23 @@ class Post_model extends CI_Model
 		$thumb_filepath = $board_directory . 'thumb/' . substr($media_unixtime, 0, 4) . '/' . substr($media_unixtime, 4, 2) . '/';
 		$media_filepath = $board_directory . 'image/' . substr($media_unixtime, 0, 4) . '/' . substr($media_unixtime, 4, 2) . '/';
 
+		// PHP must be compiled with --enable-exif
+		// exif can be grabbed only from jpg and tiff
+		if(function_exists('exif_read_data') 
+			&& in_array(strtolower(trim($file['file_ext'], '.')), array('jpg', 'jpeg', 'tiff')))
+		{	
+			$exif = exif_read_data($file['full_path']);
+			
+			if($exif === FALSE)
+			{
+				$exif = NULL;
+			}
+		}
+		else
+		{
+			$exif = NULL;
+		}
+		
 		// check for any type of duplicate records or information and override default locations
 		if ($duplicate !== NULL)
 		{
@@ -612,11 +629,12 @@ class Post_model extends CI_Model
 			$thumb_filename = $media_filename;
 			$thumb_dimensions = array($file['image_width'], $file['image_height']);
 		}
-
+		
 		return array(
 			$thumb_filename, $thumb_dimensions[0], $thumb_dimensions[1],
 			$file['file_name'], $file['image_width'], $file['image_height'],
-			floor($file['file_size'] * 1024), $media_hash, $media_filename, $media_unixtime
+			floor($file['file_size'] * 1024), $media_hash, $media_filename, 
+			!is_null($exif)?json_encode($exif):NULL, $media_unixtime,
 		);
 	}
 
@@ -1504,7 +1522,7 @@ class Post_model extends CI_Model
 			';
 		}
 
-		$query_posts = $this->db->query(implode('UNION', $sql_arr) . ' ORDER BY num DESC;');
+		$query_posts = $this->db->query(implode('UNION', $sql_arr));
 
 		// populate posts_arr array
 		$this->populate_posts_arr($query_posts->result());
@@ -2541,7 +2559,7 @@ class Post_model extends CI_Model
 			else
 			{
 				// populate with empty media values
-				$media_file = array(NULL, 0, 0, NULL, 0, 0, 0, NULL, NULL);
+				$media_file = array(NULL, 0, 0, NULL, 0, 0, 0, NULL, NULL, NULL);
 				$default_post_arr = array_merge($default_post_arr, $media_file);
 			}
 			
@@ -2553,7 +2571,8 @@ class Post_model extends CI_Model
 				(
 					num, subnum, thread_num, op, timestamp, capcode,
 					email, name, trip, title, comment, delpass, spoiler, poster_id,
-					preview_orig, preview_w, preview_h, media_orig, media_w, media_h, media_size, media_hash, media_filename
+					preview_orig, preview_w, preview_h, media_orig, media_w, media_h, media_size, media_hash,
+					media_filename, exif
 				)
 				VALUES
 				(
@@ -2576,7 +2595,7 @@ class Post_model extends CI_Model
 					), ?),
 					?, ?, ?,
 					?, ?, ?, ?, ?, ?, ?, ?,
-					?, ?, ?, ?, ?, ?, ?, ?, ?
+					?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 				)
 			',
 				$default_post_arr

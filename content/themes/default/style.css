@@ -372,7 +372,6 @@ body.theme_default {
     font-size:0.8em;
     line-height:150%;
     vertical-align:bottom;
-    max-width:260px;
 }
 
 .theme_default article.thread > .thread_image_box .thread_image.is_spoiler_image {
@@ -381,6 +380,11 @@ body.theme_default {
 
 .theme_default article.thread > .thread_image_box .thread_image.is_spoiler_image:hover {
     opacity: 1.0;
+}
+
+.theme_default article.thread > .thread_image_box > .post_file {
+	max-width:250px; 
+	margin: 0 auto;
 }
 
 .theme_default article.thread > .thread_image_box > .post_file_controls {

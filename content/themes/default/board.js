@@ -381,11 +381,11 @@ var realtimethread = function(){
         url: backend_vars.api_url + 'api/chan/thread/',
         dataType: 'jsonp',
         type: 'GET',
-        cache: false,
         data: {
             num : backend_vars.thread_id,
             board: backend_vars.board_shortname,
-            latest_doc_id: backend_vars.latest_doc_id
+            latest_doc_id: backend_vars.latest_doc_id,
+			format: 'jsonp'
         },
         success: function(data){
             var w_height = jQuery(document).height();
@@ -393,10 +393,10 @@ var realtimethread = function(){
             if(typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined") {
                 jQuery.each(data[backend_vars.thread_id].posts, function(idx, value){
                     found_posts = true;
-                    post = jQuery(value.formatted)
+                    var post = jQuery(value.formatted)
                     post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
                     post.find('[rel=tooltip]').tooltip({
-                        placement: 'bottom',
+                        placement: 'top',
                         delay: 200
                     });
                     post.find('[rel=tooltip_right]').tooltip({
@@ -404,7 +404,7 @@ var realtimethread = function(){
                         delay: 200
                     });
                     backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-                    jQuery('article.thread aside').append(post);
+                    jQuery('article.thread aside.posts').append(post);
                     if(backend_vars.latest_doc_id < value.doc_id)
                         backend_vars.latest_doc_id = value.doc_id;
                 });

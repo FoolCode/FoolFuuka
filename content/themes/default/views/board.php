@@ -18,7 +18,7 @@ if (!defined('BASEPATH'))
 				<img src="<?php echo $op->thumb_link ?>" <?php echo ($op->preview_w > 0 && $op->preview_h > 0) ? 'width="' . $op->preview_w . '" height="' . $op->preview_h . '" ' : '' ?>class="thread_image<?php echo ($op->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?php echo $op->media_hash ?>" />
 			</a>
 
-			<div class="post_file" style="padding-left: 2px">
+			<div class="post_file" style="padding-left: 2px;<?php if($op->preview_w > 250) : ?> max-width:<?php echo $op->preview_w .'px'; endif; ?>;">
 				<?php echo byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename ?>
 			</div>
 			<div class="post_file_controls">

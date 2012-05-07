@@ -438,7 +438,7 @@ class Post_model extends CI_Model
 
 		if ($build === TRUE)
 		{
-			$post->format = $this->build_board_comment($board, $post);
+			$post->formatted = $this->build_board_comment($board, $post);
 		}
 	}
 
@@ -467,12 +467,14 @@ class Post_model extends CI_Model
 		{
 			// check *_images table for media hash
 			$check = $this->db->query('
-				SELECT * FROM ' . $this->radix->get_table($board, '_images') . '
-				WHERE media_hash = ? LIMIT 0, 1
+				SELECT * 
+				FROM ' . $this->radix->get_table($board, '_images') . '
+				WHERE media_hash = ? 
+				LIMIT 0, 1
 			',
 				array($media_hash)
 			);
-
+			
 			// if exists, re-run process with duplicate set
 			if ($check->num_rows() > 0)
 			{
@@ -592,23 +594,25 @@ class Post_model extends CI_Model
 		// determine the correct thumbnail dimensions
 		if ($post_id == 0)
 		{
-			$thumb_ratio = 250;
+			$thumb_width = $board->thumbnail_op_width;
+			$thumb_height = $board->thumbnail_op_height;
 		}
 		else
 		{
-			$thumb_ratio = 125;
+			$thumb_width = $board->thumbnail_reply_width;
+			$thumb_height = $board->thumbnail_reply_height;
 		}
 
 		// generate thumbnail
-		if ($file['image_width'] > $thumb_ratio || $file['image_height'] > $thumb_ratio)
+		if ($file['image_width'] > $thumb_width || $file['image_height'] > $thumb_height)
 		{
 			$media_config = array(
 				'image_library' => (find_imagick()) ? 'ImageMagick' : 'GD2',
 				'library_path'  => (find_imagick()) ? get_setting('fs_serv_imagick_path', '/usr/bin') : '',
 				'source_image'  => $media_filepath . (($media_exists) ? $media_existing : $media_filename),
 				'new_image'     => $thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename),
-				'width'         => ($file['image_width'] > $thumb_ratio) ? $thumb_ratio : $file['image_width'],
-				'height'        => ($file['image_height'] > $thumb_ratio) ? $thumb_ratio : $file['image_height'],
+				'width'         => ($file['image_width'] > $thumb_width) ? $thumb_width : $file['image_width'],
+				'height'        => ($file['image_height'] > $thumb_height) ? $thumb_height : $file['image_height'],
 			);
 
 			$CI = & get_instance();

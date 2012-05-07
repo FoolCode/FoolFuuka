@@ -44,6 +44,12 @@ class MY_Form_validation extends CI_Form_validation
 				$form = array_merge($form, $item['sub']);
 			}
 			
+			if(isset($item['sub_inverse']))
+			{
+				// flatten the form
+				$form = array_merge($form, $item['sub_inverse']);
+			}
+			
 			if(isset($item['checkboxes']))
 			{
 				// flatten the form

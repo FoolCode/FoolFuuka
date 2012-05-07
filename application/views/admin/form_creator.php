@@ -67,6 +67,7 @@ if (!defined('BASEPATH'))
 			'preferences', 
 			'array',
 			'sub',
+			'sub_inverse',
 			'checkboxes',
 			'checked',
 			'array_key',
@@ -282,12 +283,22 @@ if (!defined('BASEPATH'))
 						</label>
 						<?php
 						
+						// sub and sub_inverse, respectively popup and appear by default
 						if(isset($helpers['sub']))
 						{
 							$data = array('form' => $helpers['sub']);
 							if(!$checked)
 								$data['hide'] = TRUE;
 							$data['parent'] = $name;
+							$this->load->view('admin/form_creator', $data);
+						}
+						
+						if(isset($helpers['sub_inverse']))
+						{
+							$data = array('form' => $helpers['sub_inverse']);
+							if(!$checked)
+								$data['hide'] = FALSE;
+							$data['parent'] = $name . '_inverse';
 							$this->load->view('admin/form_creator', $data);
 						}
 						

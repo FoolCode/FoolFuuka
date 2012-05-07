@@ -233,6 +233,44 @@ class Radix_model extends CI_Model
 							}
 						}
 					)
+				),
+				'sub_inverse' => array(
+					'thumbnail_op_width' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('Opening post thumbnail maximum width'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|is_natural|greater_than[25]',
+						'default_value' => FOOL_RADIX_THUMB_OP_WIDTH
+					),
+					'thumbnail_op_height' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('Opening post thumbnail maximum height'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|is_natural|greater_than[25]',
+						'default_value' => FOOL_RADIX_THUMB_OP_HEIGHT
+					),
+					'thumbnail_reply_width' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('Reply thumbnail maximum width'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|is_natural|greater_than[25]',
+						'default_value' => FOOL_RADIX_THUMB_REPLY_WIDTH
+					),
+					'thumbnail_reply_height' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('Reply thumbnail maximum height'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|is_natural|greater_than[25]',
+						'default_value' => FOOL_RADIX_THUMB_REPLY_HEIGHT
+					),
 				)
 			),
 			'hide_thumbnails' => array(
@@ -259,45 +297,6 @@ class Radix_model extends CI_Model
 			'separator-2' => array(
 				'type' => 'separator-short'
 			),
-			'thumbnail_op_width' => array(
-				'database' => TRUE,
-				'boards_preferences' => TRUE,
-				'label' => _('Opening post thumbnail maximum width'),
-				'type' => 'input',
-				'class' => 'span1',
-				'validation' => 'trim|required|is_natural|greater_than[25]',
-				'default_value' => FOOL_RADIX_THUMB_OP_WIDTH
-			),
-			'thumbnail_op_height' => array(
-				'database' => TRUE,
-				'boards_preferences' => TRUE,
-				'label' => _('Opening post thumbnail maximum height'),
-				'type' => 'input',
-				'class' => 'span1',
-				'validation' => 'trim|required|is_natural|greater_than[25]',
-				'default_value' => FOOL_RADIX_THUMB_OP_HEIGHT
-			),
-			'thumbnail_reply_width' => array(
-				'database' => TRUE,
-				'boards_preferences' => TRUE,
-				'label' => _('Reply thumbnail maximum width'),
-				'type' => 'input',
-				'class' => 'span1',
-				'validation' => 'trim|required|is_natural|greater_than[25]',
-				'default_value' => FOOL_RADIX_THUMB_REPLY_WIDTH
-			),
-			'thumbnail_reply_height' => array(
-				'database' => TRUE,
-				'boards_preferences' => TRUE,
-				'label' => _('Reply thumbnail maximum height'),
-				'type' => 'input',
-				'class' => 'span1',
-				'validation' => 'trim|required|is_natural|greater_than[25]',
-				'default_value' => FOOL_RADIX_THUMB_REPLY_HEIGHT
-			),
-			'separator-4' => array(
-				'type' => 'separator-short'
-			),
 			'submit' => array(
 				'type' => 'submit',
 				'class' => 'btn-primary',
@@ -319,8 +318,14 @@ class Radix_model extends CI_Model
 		
 		foreach($structure as $key => $item)
 		{
-			if(isset($item['sub']))
+			// mix the sub and sub_inverse and flatten the array
+			if(isset($item['sub_inverse']) && isset($item['sub']))
 			{
+				$item['sub'] = array_merge($item['sub'], $item['sub_inverse']);
+			}
+			
+			if(isset($item['sub']))
+			{	
 				foreach($item['sub'] as $k => $i)
 				{
 					if(isset($i['boards_preferences']) && isset($data[$k]))

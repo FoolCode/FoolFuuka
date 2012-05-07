@@ -146,7 +146,7 @@ class MY_Controller extends CI_Controller
 		}
 		
 		// every 13 hours
-		if (time() - $last_check > 86400)
+		if (false && time() - $last_check > 86400)
 		{
 			set_setting('fs_cron_13h', time());
 

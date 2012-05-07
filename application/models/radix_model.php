@@ -265,7 +265,8 @@ class Radix_model extends CI_Model
 				'label' => _('Opening post thumbnail maximum width'),
 				'type' => 'input',
 				'class' => 'span1',
-				'value' => FOOL_RADIX_THUMB_OP_WIDTH
+				'validation' => 'trim|required|is_natural|greater_than[25]',
+				'default_value' => FOOL_RADIX_THUMB_OP_WIDTH
 			),
 			'thumbnail_op_height' => array(
 				'database' => TRUE,
@@ -273,7 +274,8 @@ class Radix_model extends CI_Model
 				'label' => _('Opening post thumbnail maximum height'),
 				'type' => 'input',
 				'class' => 'span1',
-				'value' => FOOL_RADIX_THUMB_OP_HEIGHT
+				'validation' => 'trim|required|is_natural|greater_than[25]',
+				'default_value' => FOOL_RADIX_THUMB_OP_HEIGHT
 			),
 			'thumbnail_reply_width' => array(
 				'database' => TRUE,
@@ -281,7 +283,8 @@ class Radix_model extends CI_Model
 				'label' => _('Reply thumbnail maximum width'),
 				'type' => 'input',
 				'class' => 'span1',
-				'value' => FOOL_RADIX_THUMB_REPLY_WIDTH
+				'validation' => 'trim|required|is_natural|greater_than[25]',
+				'default_value' => FOOL_RADIX_THUMB_REPLY_WIDTH
 			),
 			'thumbnail_reply_height' => array(
 				'database' => TRUE,
@@ -289,7 +292,8 @@ class Radix_model extends CI_Model
 				'label' => _('Reply thumbnail maximum height'),
 				'type' => 'input',
 				'class' => 'span1',
-				'value' => FOOL_RADIX_THUMB_REPLY_HEIGHT
+				'validation' => 'trim|required|is_natural|greater_than[25]',
+				'default_value' => FOOL_RADIX_THUMB_REPLY_HEIGHT
 			),
 			'separator-4' => array(
 				'type' => 'separator-short'
@@ -470,8 +474,8 @@ class Radix_model extends CI_Model
 			{
 				if(!isset($result_object[$item->id]->$key) && isset($arr['boards_preferences']))
 				{
-					if(isset($arr['value']))
-						$result_object[$item->id]->$key = $arr['value'];
+					if(isset($arr['default_value']))
+						$result_object[$item->id]->$key = $arr['default_value'];
 					else
 						$result_object[$item->id]->$key = FALSE;
 				}
@@ -482,8 +486,8 @@ class Radix_model extends CI_Model
 					{
 						if(!isset($result_object[$item->id]->$k) && isset($a['boards_preferences']))
 						{
-							if(isset($arr['value']))
-								$result_object[$item->id]->$k = $a['value'];
+							if(isset($arr['default_value']))
+								$result_object[$item->id]->$k = $a['default_value'];
 							else
 								$result_object[$item->id]->$k = FALSE;
 						}
@@ -510,7 +514,7 @@ class Radix_model extends CI_Model
 	function load_preferences($board = NULL)
 	{
 		if(is_null($board))
-		{
+		{	
 			$ids = array_keys($this->preloaded_radixes);
 		}
 		else if (is_array($board))
@@ -531,7 +535,7 @@ class Radix_model extends CI_Model
 		{
 			$query = $this->db->where('board_id', $id)->get('boards_preferences');
 			foreach($query->result() as $value)
-			{
+			{;
 				$this->preloaded_radixes[$id]->{$value->name} = $value->value;
 			}
 			

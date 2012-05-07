@@ -71,6 +71,7 @@ if (!defined('BASEPATH'))
 			'checked',
 			'array_key',
 			'boards_preferences',
+			'default_value'
 		);
 		$helpers = array();
 		foreach ($not_input as $not)
@@ -364,9 +365,17 @@ if (!defined('BASEPATH'))
 									}
 								}
 							}
-							else
+							else if (isset($object->$name))
 							{
 								$item['value'] = isset($object->$name) ? $object->$name : '';
+							}
+							else if (isset($helpers['default_value']))
+							{
+								$item['value'] = $helpers['default_value'];
+							}
+							else
+							{
+								$item['value'] = '';
 							}
 						}
 						

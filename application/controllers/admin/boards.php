@@ -15,7 +15,6 @@ class Boards extends Admin_Controller
 
 		// title on top
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/boards") . '">' . _("Boards") . '</a>';
-		;
 	}
 
 

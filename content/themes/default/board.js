@@ -57,6 +57,10 @@ var bindFunctions = function()
                     break;
 
                 case 'comment':
+					// sending an image
+                    if(jQuery("#file_image").val())
+                        return true;
+					
 					var originalText = el.attr('value');
 					el.attr({'value': backend_vars.gettext['submit_state'], 'disabled': 'disabled'});
 					
@@ -66,9 +70,6 @@ var bindFunctions = function()
 						el.removeAttr('disabled');
 					}, 15000);
 					
-					// sending an image
-                    if(jQuery("#file_image").val())
-                        return true;
                     var reply_alert = jQuery('#reply_ajax_notices');
                     reply_alert.removeClass('error').removeClass('success');
                     jQuery.ajax({
@@ -426,7 +427,10 @@ var realtimethread = function(){
                         delay: 200
                     });
                     backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-                    jQuery('article.thread aside.posts').append(post);
+					
+					// avoid inserting twice
+					if(jQuery('.doc_id_' + value.doc_id).length == 0)
+						jQuery('article.thread aside.posts').append(post);
                     if(backend_vars.latest_doc_id < value.doc_id)
                         backend_vars.latest_doc_id = value.doc_id;
                 });

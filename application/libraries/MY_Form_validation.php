@@ -62,7 +62,10 @@ class MY_Form_validation extends CI_Form_validation
 				
 				$form = array_merge($form, $form_temp);
 			}
-			
+		}
+		
+		foreach ($form as $name => $item)
+		{
 			if (isset($item['validation']))
 			{
 				// set the rules and add [] to the name if array

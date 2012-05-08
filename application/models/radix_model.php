@@ -324,6 +324,15 @@ class Radix_model extends CI_Model
 						'validation' => 'trim|required|is_natural',
 						'default_value' => FOOL_RADIX_MAX_IMAGES_COUNT
 					),
+					'min_image_repost_hours' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('The minimum time in hours to repost the same image (0 means no limit, -1 means never allowing a repost)'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|integer|greater_than[-2]',
+						'default_value' => FOOL_RADIX_MIN_IMAGE_REPOST_HOURS
+					)
 				)
 			),
 						

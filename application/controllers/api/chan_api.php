@@ -227,7 +227,7 @@ class Chan_API extends API_Controller
 
 		if ($thread !== FALSE)
 		{
-			$this->response($thread, 200); // 200 being the HTTP response code
+			$this->response($thread['result'], 200); // 200 being the HTTP response code
 		}
 		else
 		{
@@ -290,6 +290,8 @@ class Chan_API extends API_Controller
 			get_selected_radix(), $num,
 			array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
 		);
+		
+		$thread = $thread['result'];
 
 		if ($thread !== FALSE)
 		{

@@ -60,14 +60,14 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		</div>
 
 
-		<?php if(!get_selected_radix()->archive) : ?>
+		<?php if(!isset($disable_image_upload) || !$disable_image_upload) : ?>
 				<div class="input-prepend">
 					<label class="add-on" for="reply_file"><?php echo _('File') ?></label><?php
 		echo form_upload(array(
 			'name' => 'file_image',
 			'id' => 'file_image',
 		));
-		echo form_hidden('MAX_FILE_SIZE', 3072);
+		echo form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes);
 		?>
 					</div>
 		<?php endif; ?>

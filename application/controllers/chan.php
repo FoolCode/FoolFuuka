@@ -700,6 +700,13 @@ class Chan extends Public_Controller
 		
 		// check if we can determine if posting is disabled
 		$tools_reply_box = TRUE;
+		$disable_image_upload = FALSE;
+		
+		// no image posting in archive, hide the file input
+		if(get_selected_radix()->archive)
+		{
+			$disable_image_upload = TRUE;
+		}
 		
 		// in the archive you can only ghostpost, so it's an easy check
 		if(get_selected_radix()->archive && get_selected_radix()->disable_ghost)
@@ -709,8 +716,11 @@ class Chan extends Public_Controller
 		else 
 		{
 			// we're only interested in knowing if we should display the reply box
-			if(isset($thread_check['ghost_disabled']))
+			if(isset($thread_check['ghost_disabled']) && $thread_check['ghost_disabled'] == TRUE)
 				$tools_reply_box = FALSE;
+			
+			if(isset($thread_check['disable_image_upload']) && $thread_check['disable_image_upload'] == TRUE)
+				$disable_image_upload = TRUE;
 		}
 		
 		// Set template variables required to build the HTML.
@@ -719,7 +729,8 @@ class Chan extends Public_Controller
 			array(
 				'thread_id' => $num,
 				'posts' => $thread,
-				'is_thread' => TRUE
+				'is_thread' => TRUE,
+				'disable_image_upload' => $disable_image_upload
 			),
 			array(
 				'tools_reply_box' => $tools_reply_box,
@@ -791,6 +802,13 @@ class Chan extends Public_Controller
 		
 		// check if we can determine if posting is disabled
 		$tools_reply_box = TRUE;
+		$disable_image_upload = FALSE;
+		
+		// no image posting in archive, hide the file input
+		if(get_selected_radix()->archive)
+		{
+			$disable_image_upload = TRUE;
+		}
 		
 		// in the archive you can only ghostpost, so it's an easy check
 		if(get_selected_radix()->archive && get_selected_radix()->disable_ghost)
@@ -800,8 +818,11 @@ class Chan extends Public_Controller
 		else 
 		{
 			// we're only interested in knowing if we should display the reply box
-			if(isset($thread_check['ghost_disabled']))
+			if(isset($thread_check['ghost_disabled']) && $thread_check['ghost_disabled'] == TRUE)
 				$tools_reply_box = FALSE;
+			
+			if(isset($thread_check['disable_image_upload']) && $thread_check['disable_image_upload'] == TRUE)
+				$disable_image_upload = TRUE;
 		}
 
 		// Set template variables required to build the HTML.
@@ -812,7 +833,8 @@ class Chan extends Public_Controller
 				'section_title' => _('Showing the last 50 posts for Thread No.') . $num,
 				'is_last50' => TRUE,
 				'thread_id' => $num,
-				'posts' => $thread
+				'posts' => $thread,
+				'disable_image_upload' => $disable_image_upload
 			),
 			array(
 				'tools_reply_box' => $tools_reply_box,

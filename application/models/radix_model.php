@@ -141,6 +141,10 @@ class Radix_model extends CI_Model
 				'type' => 'checkbox',
 				'help' => _('Is this a 4chan archiving board?'),
 				'sub' => array(
+					'paragraph' => array(
+						'type' => 'paragraph',
+						'help' => _('Options for archive boards')
+					),
 					'board_url' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
@@ -235,10 +239,14 @@ class Radix_model extends CI_Model
 					)
 				),
 				'sub_inverse' => array(
+					'paragraph' => array(
+						'type' => 'paragraph',
+						'help' => _('Options for normal boards')
+					),
 					'thumbnail_op_width' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Opening post thumbnail maximum width'),
+						'label' => _('Opening post thumbnail maximum width after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -247,7 +255,7 @@ class Radix_model extends CI_Model
 					'thumbnail_op_height' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Opening post thumbnail maximum height'),
+						'label' => _('Opening post thumbnail maximum height after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -256,7 +264,7 @@ class Radix_model extends CI_Model
 					'thumbnail_reply_width' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Reply thumbnail maximum width'),
+						'label' => _('Reply thumbnail maximum width after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -265,13 +273,65 @@ class Radix_model extends CI_Model
 					'thumbnail_reply_height' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Reply thumbnail maximum height'),
+						'label' => _('Reply thumbnail maximum height after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
 						'default_value' => FOOL_RADIX_THUMB_REPLY_HEIGHT
 					),
+					'max_image_size_kilobytes' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('Full image maximum size in kilobytes'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|is_natural|greater_than[25]',
+						'default_value' => FOOL_RADIX_MAX_IMAGE_SIZE_KILOBYTES
+					),
+					'max_image_size_width' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('Full image maximum width in pixels'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|is_natural|greater_than[25]',
+						'default_value' => FOOL_RADIX_MAX_IMAGE_SIZE_WIDTH
+					),
+					'max_image_size_height' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('Full image maximum height in pixels'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|is_natural|greater_than[25]',
+						'default_value' => FOOL_RADIX_MAX_IMAGE_SIZE_HEIGHT
+					),
+					'max_posts_count' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('The maximum amount of posts before a thread "dies"'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|is_natural',
+						'default_value' => FOOL_RADIX_MAX_POSTS_COUNT
+					),
+					'max_images_count' => array(
+						'database' => TRUE,
+						'boards_preferences' => TRUE,
+						'label' => _('The maximum amount of images in replies before posting more is prohibited'),
+						'type' => 'input',
+						'class' => 'span1',
+						'validation' => 'trim|required|is_natural',
+						'default_value' => FOOL_RADIX_MAX_IMAGES_COUNT
+					),
 				)
+			),
+						
+			'disable_ghost' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'help' => _('Don\'t allow ghost posting (disallows infinite replying)'),
+				'type' => 'checkbox',
 			),
 			'hide_thumbnails' => array(
 				'database' => TRUE,

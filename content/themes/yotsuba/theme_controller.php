@@ -248,10 +248,10 @@ class Theme_Controller
 			{
 				//Initialize the MEDIA CONFIG and load the UPLOAD library.
 				$media_config['upload_path']	= 'content/cache/';
-				$media_config['allowed_types']	= 'jpg|png|gif';
-				$media_config['max_size']		= 3072;
-				$media_config['max_width']		= 5000;
-				$media_config['max_height']		= 5000;
+				$media_config['allowed_types']	= 'jpg|jpeg|png|gif';
+				$media_config['max_size'] = get_selected_radix()->max_image_size_kilobytes;
+				$media_config['max_width'] = get_selected_radix()->max_image_size_width;
+				$media_config['max_height'] = get_selected_radix()->max_image_size_height;
 				$media_config['overwrite']		= TRUE;
 
 				$this->CI->load->library('upload', $media_config);

@@ -3,6 +3,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
+
 /**
  * READER CONTROLLER
  *
@@ -67,26 +68,19 @@ class Theme_Controller
 			 */
 			$this->CI->load->library('form_validation');
 
-			$this->CI->form_validation->set_rules('parent', 'Thread no.',
-				'required|is_natural|xss_clean');
-			$this->CI->form_validation->set_rules('NAMAE', 'Username',
-				'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('MERU', 'Email',
-				'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('subject', 'Subject',
-				'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('parent', 'Thread no.', 'required|is_natural|xss_clean');
+			$this->CI->form_validation->set_rules('NAMAE', 'Username', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('MERU', 'Email', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('subject', 'Subject', 'trim|xss_clean|max_length[64]');
 			if ($this->CI->input->post('parent') == 0)
 			{
-				$this->CI->form_validation->set_rules('KOMENTO', 'Comment',
-					'trim|xss_clean');
+				$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|xss_clean');
 			}
 			else
 			{
-				$this->CI->form_validation->set_rules('KOMENTO', 'Comment',
-					'trim|min_length[3]|max_length[4096]|xss_clean');
+				$this->CI->form_validation->set_rules('KOMENTO', 'Comment', 'trim|min_length[3]|max_length[4096]|xss_clean');
 			}
-			$this->CI->form_validation->set_rules('delpass', 'Password',
-				'required|min_length[3]|max_length[32]|xss_clean');
+			$this->CI->form_validation->set_rules('delpass', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 			if ($this->CI->tank_auth->is_allowed())
 			{
@@ -106,10 +100,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> validation_errors()
-					),
-					array(
-						'tools_search'		=> TRUE
+					'error' => validation_errors()
+					), array(
+					'tools_search' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -120,17 +113,16 @@ class Theme_Controller
 			 * Everything is GOOD! Continue with posting the content to the board.
 			 */
 			$data = array(
-				'num'		=> $this->CI->input->post('parent'),
-				'name'		=> $this->CI->input->post('NAMAE'),
-				'email'		=> $this->CI->input->post('MERU'),
-				'subject'	=> $this->CI->input->post('subject'),
-				'comment'	=> $this->CI->input->post('KOMENTO'),
-				'spoiler'	=> $this->CI->input->post('reply_spoiler'),
-				'password'	=> $this->CI->input->post('delpass'),
-				'postas'	=> (($this->CI->tank_auth->is_allowed()) ? $this->CI->input->post('reply_postas') : 'N'),
-
-				'media'		=> '',
-				'ghost'		=> FALSE
+				'num' => $this->CI->input->post('parent'),
+				'name' => $this->CI->input->post('NAMAE'),
+				'email' => $this->CI->input->post('MERU'),
+				'subject' => $this->CI->input->post('subject'),
+				'comment' => $this->CI->input->post('KOMENTO'),
+				'spoiler' => $this->CI->input->post('reply_spoiler'),
+				'password' => $this->CI->input->post('delpass'),
+				'postas' => (($this->CI->tank_auth->is_allowed()) ? $this->CI->input->post('reply_postas') : 'N'),
+				'media' => '',
+				'ghost' => FALSE
 			);
 
 			/**
@@ -154,10 +146,9 @@ class Theme_Controller
 					$this->CI->template->title(_('Error'));
 					$this->CI->_set_parameters(
 						array(
-							'error'				=> _('This thread does not exist.')
-						),
-						array(
-							'tools_search'		=> TRUE
+						'error' => _('This thread does not exist.')
+						), array(
+						'tools_search' => TRUE
 						)
 					);
 					$this->CI->template->build('error');
@@ -187,10 +178,9 @@ class Theme_Controller
 						$this->CI->template->title(_('Error'));
 						$this->CI->_set_parameters(
 							array(
-								'error'				=> _('This thread does not exist.')
-							),
-							array(
-								'tools_search'		=> TRUE
+							'error' => _('This thread does not exist.')
+							), array(
+							'tools_search' => TRUE
 							)
 						);
 						$this->CI->template->build('error');
@@ -213,10 +203,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> _('You are required to upload an image when posting a new thread.')
-					),
-					array(
-						'tools_search'		=> TRUE
+					'error' => _('You are required to upload an image when posting a new thread.')
+					), array(
+					'tools_search' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -232,10 +221,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> _('You are required to write a comment when no image upload is present.')
-					),
-					array(
-						'tools_search'		=> TRUE
+					'error' => _('You are required to write a comment when no image upload is present.')
+					), array(
+					'tools_search' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -251,10 +239,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> _('The posting of images has been disabled for this thread.')
-					),
-					array(
-						'tools_search'		=> TRUE
+					'error' => _('The posting of images has been disabled for this thread.')
+					), array(
+					'tools_search' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -269,12 +256,12 @@ class Theme_Controller
 				/**
 				 * Initialize the MEDIA CONFIG and load the UPLOAD library.
 				 */
-				$media_config['upload_path']	= 'content/cache/';
-				$media_config['allowed_types']	= 'jpg|png|gif';
-				$media_config['max_size']		= 3072;
-				$media_config['max_width']		= 5000;
-				$media_config['max_height']		= 5000;
-				$media_config['overwrite']		= TRUE;
+				$media_config['upload_path'] = 'content/cache/';
+				$media_config['allowed_types'] = 'jpg|jpeg|png|gif';
+				$media_config['max_size'] = get_selected_radix()->max_image_size_kilobytes;
+				$media_config['max_width'] = get_selected_radix()->max_image_size_width;
+				$media_config['max_height'] = get_selected_radix()->max_image_size_height;
+				$media_config['overwrite'] = TRUE;
 
 				$this->CI->load->library('upload', $media_config);
 
@@ -287,10 +274,9 @@ class Theme_Controller
 					$this->CI->template->title(_('Error'));
 					$this->CI->_set_parameters(
 						array(
-							'error'				=> $this->CI->upload->display_errors()
-						),
-						array(
-							'tools_search'		=> TRUE
+						'error' => $this->CI->upload->display_errors()
+						), array(
+						'tools_search' => TRUE
 						)
 					);
 					$this->CI->template->build('error');
@@ -311,10 +297,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> $result['error']
-					),
-					array(
-						'tools_search'		=> TRUE
+					'error' => $result['error']
+					), array(
+					'tools_search' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -328,12 +313,12 @@ class Theme_Controller
 				if ($result['posted']->thread_num == 0)
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
-						$result['posted']->num)) . '#' . $result['posted']->num;
+							$result['posted']->num)) . '#' . $result['posted']->num;
 				}
 				else
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
-						$result['posted']->thread_num)) . '#' . $result['posted']->num .
+							$result['posted']->thread_num)) . '#' . $result['posted']->num .
 						(($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 				}
 
@@ -359,8 +344,8 @@ class Theme_Controller
 			foreach ($this->CI->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
-					'post'		=> $doc_id,
-					'password'	=> $this->CI->input->post('delpass')
+					'post' => $doc_id,
+					'password' => $this->CI->input->post('delpass')
 				);
 
 				$this->CI->post->delete(get_selected_radix(), $post);
@@ -387,9 +372,9 @@ class Theme_Controller
 			foreach ($this->CI->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
-					'board'		=> get_selected_radix()->id,
-					'post'		=> $doc_id,
-					'reason'	=> $this->CI->intput->post('KOMENTO')
+					'board' => get_selected_radix()->id,
+					'post' => $doc_id,
+					'reason' => $this->CI->intput->post('KOMENTO')
 				);
 
 				$report->add($post);
@@ -411,6 +396,5 @@ class Theme_Controller
 		 */
 		show_404();
 	}
-
 
 }

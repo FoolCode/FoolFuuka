@@ -61,7 +61,7 @@ class Migration_Install extends CI_Migration
 						`last_ip` varchar(40) COLLATE utf8_bin NOT NULL,
 						`last_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 						PRIMARY KEY (`key_id`,`user_id`)
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;"
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 			);
 		}
 
@@ -74,7 +74,7 @@ class Migration_Install extends CI_Migration
 						`name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
 						`description` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
 						PRIMARY KEY (`id`)
-					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;"
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;"
 			);
 
 			$this->db->query(
@@ -107,7 +107,7 @@ class Migration_Install extends CI_Migration
 						PRIMARY KEY (`id`),
 						KEY `username` (`username`),
 						KEY `created` (`created`)
-					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;"
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;"
 			);
 		}
 
@@ -121,8 +121,10 @@ class Migration_Install extends CI_Migration
 						`display_name` varchar(32) COLLATE utf8_bin NOT NULL,
 						`twitter` varchar(32) COLLATE utf8_bin NOT NULL,
 						`bio` text COLLATE utf8_bin NOT NULL,
-						PRIMARY KEY (`id`)
-					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ;"
+						PRIMARY KEY (`id`),
+						KEY `user_id` (`user_id`),
+						KEY `group_id` (`group_id`)
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;"
 			);
 		}
 
@@ -134,30 +136,34 @@ class Migration_Install extends CI_Migration
 						`id` int(11) NOT NULL AUTO_INCREMENT,
 						`shortname` varchar(32) CHARACTER SET latin1 NOT NULL,
 						`name` varchar(256) CHARACTER SET latin1 NOT NULL,
-						`rules` text COLLATE utf8_bin NOT NULL,
-						`posting_rules` text COLLATE utf8_bin NOT NULL,
-						`board_url` varchar(256) CHARACTER SET latin1 NOT NULL,
-						`thumbs_url` varchar(256) COLLATE utf8_bin NOT NULL,
-						`images_url` varchar(256) COLLATE utf8_bin NOT NULL,
-						`posting_url` varchar(256) COLLATE utf8_bin NOT NULL,
 						`archive` int(11) NOT NULL,
-						`hide_thumbnails` int(11) NOT NULL,
-						`delay_thumbnails` int(11) NOT NULL,
 						`sphinx` int(11) NOT NULL,
 						`hidden` int(11) NOT NULL,
+						`hide_thumbnails` smallint(5) unsigned NOT NULL,
 						`directory` varchar(512) COLLATE utf8_bin NOT NULL,
-						`thumb_threads` smallint(6) NOT NULL,
-						`media_threads` smallint(6) NOT NULL,
-						`new_threads_threads` smallint(6) NOT NULL,
-						`thread_refresh_rate` smallint(6) NOT NULL,
-						`page_settings` varchar(256) COLLATE utf8_bin NOT NULL,
 						`max_ancient_id` int(11) NOT NULL,
 						`max_indexed_id` int(11) NOT NULL,
 						PRIMARY KEY (`id`),
-						UNIQUE KEY `shortname` (`shortname`)
-					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+						UNIQUE KEY `shortname` (`shortname`),
+						KEY `hide_thumbnails` (`hide_thumbnails`)
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 				");
 		}
+		
+		if (!$this->db->table_exists($this->db->dbprefix('boards_preferences')))
+		{
+			$this->db->query("
+					CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('boards_preferences') . "` (
+						`board_preference_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+						`board_id` int(11) unsigned NOT NULL,
+						`name` varchar(64) NOT NULL,
+						`value` text,
+						PRIMARY KEY (`board_preference_id`),
+						KEY `board_id_name_index` (`board_id`,`name`)
+						) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+				");
+		}
+				
 
 		
 		if (!$this->db->table_exists($this->db->dbprefix('stopforumspam')))
@@ -166,7 +172,7 @@ class Migration_Install extends CI_Migration
 					CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('stopforumspam') . "` (
 						`ip` int(10) unsigned NOT NULL,
 						UNIQUE KEY `ip` (`ip`)
-					) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 				");
 		}
 		
@@ -182,7 +188,7 @@ class Migration_Install extends CI_Migration
 						`data` longtext NOT NULL,
 						PRIMARY KEY (`id`),
 						UNIQUE KEY `board_id` (`board_id`,`name`)
-					) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 				");
 		}
 		
@@ -195,9 +201,13 @@ class Migration_Install extends CI_Migration
 						`board_id` int(11) NOT NULL,
 						`doc_id` int(11) NOT NULL,
 						`reason` text CHARACTER SET latin1 NOT NULL,
+						`ip_reporter` decimal(39,0) unsigned NOT NULL,
 						`status` int(11) NOT NULL,
-						`created` datetime NOT NULL,
-						PRIMARY KEY (`id`)
+						`created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+						PRIMARY KEY (`id`),
+						KEY `board_id` (`board_id`,`doc_id`),
+						KEY `status` (`status`),
+						KEY `created` (`created`)
 					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 				");
 		}
@@ -214,7 +224,7 @@ class Migration_Install extends CI_Migration
 						`banned_start` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
 						`banned_length` int(11) DEFAULT NULL,
 						PRIMARY KEY (`id`)
-					) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 				");
 		}
 		
@@ -229,7 +239,7 @@ class Migration_Install extends CI_Migration
 						`revision` int(10) unsigned DEFAULT NULL,
 						PRIMARY KEY (`id`),
 						UNIQUE KEY `slug` (`slug`)
-					) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 				");
 		}
 		
@@ -239,7 +249,7 @@ class Migration_Install extends CI_Migration
 					CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('banned_md5') . "` (
 						`md5` varchar(64) NOT NULL,
 						PRIMARY KEY (`md5`)
-					) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 				");
 		}
 	}

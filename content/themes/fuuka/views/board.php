@@ -26,6 +26,7 @@ foreach ($posts as $key => $post) : ?>
 			<span class="filetitle"><?php echo $op->title_processed ?></span>
 			<span class="postername<?php echo ($op->capcode == 'M' || $op->capcode == 'G') ? ' mod' : '' ?><?php echo ($op->capcode == 'A') ? ' admin' : '' ?>"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
 			<span class="postertrip<?php echo ($op->capcode == 'M' || $op->capcode == 'G') ? ' mod' : '' ?><?php echo ($op->capcode == 'A') ? ' admin' : '' ?>"><?php echo $op->trip_processed ?></span>
+			<span class="poster_hash"><?php if ($op->poster_hash_processed) : ?>ID:<?php echo $op->poster_hash_processed ?><?php endif; ?></span>
 			<?php if ($op->capcode == 'M') : ?>
 				<span class="postername mod">## Mod</span>
 			<?php endif ?>

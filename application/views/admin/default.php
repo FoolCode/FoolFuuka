@@ -79,14 +79,10 @@ if (!defined('BASEPATH'))
 			</div>
 		</div>
 		
+		<?php if(isset($backend_vars)) : ?>
 		<script>
-			
-		var backend_vars = <?php echo json_encode(array(
-			'site_url' => site_url(),
-			'api_url' => site_url(),
-			'csrf_hash' => $this->security->get_csrf_hash()
-		)) ?>
-		
+			var backend_vars = <?php echo json_encode($backend_vars) ?>;
 		</script>
+		<?php endif; ?>
 	</body>
 </html>

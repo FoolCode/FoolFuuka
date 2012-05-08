@@ -147,15 +147,12 @@ var bindFunctions = function()
                     break;
 
                 case 'mod':
+					el.attr({'disabled': 'disabled'});
                     jQuery.ajax({
-                        url: backend_vars.site_url + backend_vars.board_shortname + '/mod_post_actions/',
+                        url: backend_vars.mod_url,
                         dataType: 'json',
                         type: 'POST',
                         cache: false,
-						xhrFields: {
-							withCredentials: true
-						},
-						crossDomain: true,
                         data: {
                             board: el.data('board'),
                             doc_id: el.data('id'),
@@ -163,6 +160,7 @@ var bindFunctions = function()
                             csrf_fool: backend_vars.csrf_hash
                         },
                         success: function(data){
+							el.removeAttr('disabled');
                             if (typeof data.error !== "undefined")
                             {
                                 alert(data.error);
@@ -176,6 +174,12 @@ var bindFunctions = function()
                                     jQuery('.doc_id_' + el.data('id')).remove();
                                     break;
                                 case 'remove_image':
+									jQuery('.doc_id_' + el.data('id')).find('.thread_image_box:eq(0) img')
+										.attr('src', backend_vars.images['missing_image'])
+										.css({
+											width: backend_vars.images['missing_image_width'], 
+											height: backend_vars.images['missing_image_height']
+										});
                                     break;
                                 case 'remove_report':
                                     jQuery('.doc_id_' + el.data('id')).removeClass('reported')
@@ -184,6 +188,12 @@ var bindFunctions = function()
                                     jQuery('.doc_id_' + el.data('id')).find('[data-action=ban_user]').text('Banned');
                                     break;
                                 case 'ban_md5':
+									jQuery('.doc_id_' + el.data('id')).find('.thread_image_box:eq(0) img')
+										.attr('src', backend_vars.images['banned_image'])
+										.css({
+											width: backend_vars.images['banned_image_width'], 
+											height: backend_vars.images['banned_image_height']
+										});
                                     break;
                             }
                         },

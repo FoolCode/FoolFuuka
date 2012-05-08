@@ -93,16 +93,16 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 	</div>
 	<?php if($this->tank_auth->is_allowed()) : ?>
 	<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
-		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_post"><?php echo _('Remove') ?></button>
+		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_post"><?php echo _('Remove') ?></button>
 		<?php if($p->preview_orig) : ?>
-		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_image"><?php echo _('Remove image') ?></button>
-		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_md5"><?php echo _('Ban image') ?></button>
+		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_image"><?php echo _('Remove image') ?></button>
+		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_md5"><?php echo _('Ban image') ?></button>
 		<?php endif; ?>
 		<?php if($p->poster_id) : ?>
-		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_user"><?php echo _('Ban user:') . ' ' . inet_dtop($p->poster_id) ?></button>
+		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_user"><?php echo _('Ban user:') . ' ' . inet_dtop($p->poster_id) ?></button>
 		<?php endif; ?>
 		<?php if(isset($p->report_status) && !is_null($p->report_status)) : ?>
-		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_report"><?php echo _('Remove report') ?></button>
+		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_report"><?php echo _('Remove report') ?></button>
 		<?php endif; ?>
 		</ul>
 	</div>

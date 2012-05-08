@@ -235,7 +235,7 @@ class Post_model extends CI_Model
 		{
 			$post->preview_h = 150;
 			$post->preview_w = 150;
-			return site_url() . 'content/themes/default/images/image_missing.jpg';
+			return site_url() . 'content/themes/default/images/missing-image.jpg';
 		}
 
 		return FALSE;

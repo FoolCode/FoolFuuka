@@ -308,23 +308,16 @@ class Chan extends Public_Controller
 				'tools_modal',
 				'tools_search'
 			),
-			'backend_vars' => array( // variables to be sent to the JSON at the bottom of the page
-				'site_url'  => site_url(),
-				'api_url'   => site_url('@system'),
-				'cookie_domain' => config_item('cookie_domain'),
-				'csrf_hash' => $this->security->get_csrf_hash(),
-				'gettext' => array(
-					'submit_state' => _('Submitting'),
-					'thread_is_real_time' => _('This thread is being displayed in real time.'),
-					'update_now' => _('Update now')
-				)
-			)
+			'backend_vars' => $this->get_backend_vars() // for JSON on bottom of page, from MY_Controller
 		);
 
 		// include the board shortname in the backend_vars if it's set
 		if (get_selected_radix())
 		{
 			$default['backend_vars']['board_shortname'] = get_selected_radix()->shortname;
+			
+			if($this->tank_auth->is_allowed())
+				$default['backend_vars']['mod_url'] = get_selected_radix()->href . '/mod_post_actions/';
 		}
 
 		foreach ($default['variables'] as $k)
@@ -1716,82 +1709,8 @@ class Chan extends Public_Controller
 	
 	function mod_post_actions()
 	{
-		if (!$this->tank_auth->is_allowed())
-		{
-			$this->output->set_status_header(403);
-			$this->output->set_output(json_encode(array('error' => _('You\'re not allowed to perform this action'))));
-		}
-
-		if (!$this->input->post('actions') || !$this->input->post('doc_id'))
-		{
-			$this->output->set_status_header(404);
-			$this->output->set_output(json_encode(array('error' => _('Missing arguments'))));
-		}
-
-
-		// action should be an array
-		// array('ban_md5', 'ban_user', 'remove_image', 'remove_post', 'remove_report');
-		$actions = $this->input->post('actions');
-		if (!is_array($actions))
-		{
-			$this->output->set_status_header(404);
-			$this->output->set_output(json_encode(array('error' => _('Invalid action'))));
-		}
-
-		$doc_id = $this->input->post('doc_id');
-		$board = get_selected_radix();
-
-		$this->load->model('post_model', 'post');
-		$post = $this->post->get_by_doc_id($board, $doc_id);
-
-		if ($post === FALSE)
-		{
-			$this->output->set_status_header(404);
-			$this->output->set_output(json_encode(array('error' => _('Post not found'))));
-		}
-
-		if (in_array('ban_md5', $actions))
-		{
-			$this->post->ban_media($post->media_hash);
-			$actions = array_diff($actions, array('remove_image'));
-		}
-
-		if (in_array('remove_post', $actions))
-		{
-			$this->post->delete(
-				$board,
-				array(
-				'doc_id' => $post->doc_id,
-				'password' => '',
-				'type' => 'post'
-				)
-			);
-
-			$actions = array_diff($actions, array('remove_image', 'remove_report'));
-		}
-
-		// if we banned md5 we already removed the image
-		if (in_array('remove_image', $actions))
-		{
-			$this->post->delete_media($board, $post);
-		}
-
-		if (in_array('ban_user', $actions))
-		{
-			$this->load->model('poster_model', 'poster');
-			$this->poster->ban(
-				$post->id, isset($data['length']) ? $data['length'] : NULL,
-				isset($data['reason']) ? $data['reason'] : NULL
-			);
-		}
-
-		if (in_array('remove_report', $actions))
-		{
-			$this->load->model('report_model', 'report');
-			$this->report->remove_by_doc_id($board, $doc_id);
-		}
-
-		$this->output->set_output(json_encode(array('success' => TRUE)));
+		// redirect to the one on MY_Controller since it's a function shared with the admin panel
+		parent::mod_post_actions();
 	}
 
 

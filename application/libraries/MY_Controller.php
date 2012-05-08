@@ -118,7 +118,120 @@ class MY_Controller extends CI_Controller
 		}
 		show_404();
 	}
+	
+	/**
+	 * Returns the basic variables that are used by the public interface and the admin panel for dealing with posts
+	 * 
+	 * @return array the settings to be sent directly to JSON 
+	 */
+	public function get_backend_vars()
+	{
+		return array(
+				'site_url'  => site_url(),
+				'default_url'  => site_url('@default'),
+				'archive_url'  => site_url('@archive'),
+				'system_url'  => site_url('@system'),
+				'api_url'   => site_url('@system'),
+				'cookie_domain' => config_item('cookie_domain'),
+				'csrf_hash' => $this->security->get_csrf_hash(),
+				'images' => array(
+					'banned_image' => site_url() . 'content/themes/default/images/banned-image.png',
+					'banned_image_width' => 150,
+					'banned_image_height' => 150,
+					'missing_image' => site_url() . 'content/themes/default/images/missing-image.jpg',
+					'missing_image_width' => 150,
+					'missing_image_height' => 150,
+				),
+				'gettext' => array(
+					'submit_state' => _('Submitting'),
+					'thread_is_real_time' => _('This thread is being displayed in real time.'),
+					'update_now' => _('Update now')
+				)
+			);
+	}
 
+	/**
+	 * A function shared between admin panel and boards for admins to manage the posts
+	 */
+	public function mod_post_actions()
+	{
+		if (!$this->tank_auth->is_allowed())
+		{
+			$this->output->set_status_header(403);
+			$this->output->set_output(json_encode(array('error' => _('You\'re not allowed to perform this action'))));
+		}
+
+		if (!$this->input->post('actions') || !$this->input->post('doc_id') || !$this->input->post('board'))
+		{
+			$this->output->set_status_header(404);
+			$this->output->set_output(json_encode(array('error' => _('Missing arguments'))));
+		}
+
+
+		// action should be an array
+		// array('ban_md5', 'ban_user', 'remove_image', 'remove_post', 'remove_report');
+		$actions = $this->input->post('actions');
+		if (!is_array($actions))
+		{
+			$this->output->set_status_header(404);
+			$this->output->set_output(json_encode(array('error' => _('Invalid action'))));
+		}
+
+		$doc_id = $this->input->post('doc_id');
+		$board = $this->radix->get_by_shortname($this->input->post('board'));
+
+		$this->load->model('post_model', 'post');
+		$post = $this->post->get_by_doc_id($board, $doc_id);
+
+		if ($post === FALSE)
+		{
+			$this->output->set_status_header(404);
+			$this->output->set_output(json_encode(array('error' => _('Post not found'))));
+		}
+
+		if (in_array('ban_md5', $actions))
+		{
+			$this->post->ban_media($post->media_hash);
+			$actions = array_diff($actions, array('remove_image'));
+		}
+
+		if (in_array('remove_post', $actions))
+		{
+			$this->post->delete(
+				$board,
+				array(
+				'doc_id' => $post->doc_id,
+				'password' => '',
+				'type' => 'post'
+				)
+			);
+
+			$actions = array_diff($actions, array('remove_image', 'remove_report'));
+		}
+
+		// if we banned md5 we already removed the image
+		if (in_array('remove_image', $actions))
+		{
+			$this->post->delete_media($board, $post);
+		}
+
+		if (in_array('ban_user', $actions))
+		{
+			$this->load->model('poster_model', 'poster');
+			$this->poster->ban(
+				$post->id, isset($data['length']) ? $data['length'] : NULL,
+				isset($data['reason']) ? $data['reason'] : NULL
+			);
+		}
+
+		if (in_array('remove_report', $actions))
+		{
+			$this->load->model('report_model', 'report');
+			$this->report->remove_by_doc_id($board, $doc_id);
+		}
+
+		$this->output->set_output(json_encode(array('success' => TRUE)));
+	}
 	
 	/**
 	 * Controller for cron triggered by any visit

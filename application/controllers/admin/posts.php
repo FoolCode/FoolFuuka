@@ -41,9 +41,16 @@ class Posts extends Admin_Controller
 		$data['pagination']['total'] = $data['total_found']/25;
 		$data['pagination']['current_page'] = $page;
 		$data['pagination']['base_url'] = site_url(array('admin', 'posts', 'reports'));
-
+		$this->viewdata['backend_vars'] = $this->get_backend_vars();
+		$this->viewdata['backend_vars']['mod_url'] = site_url(array('admin', 'posts', 'mod_post_actions'));
 		$this->viewdata["main_content_view"] = $this->load->view("admin/reports/manage.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
+	}
+	
+	
+	function mod_post_actions()
+	{
+		parent::mod_post_actions();
 	}
 
 

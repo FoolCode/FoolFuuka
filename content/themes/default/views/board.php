@@ -10,7 +10,7 @@ if (!defined('BASEPATH'))
 		$selected_radix = isset($op->board)?$op->board:get_selected_radix();
 	}
 ?>
-<article<?php if (isset($op)) : ?> id="<?php echo $op->num ?>"<?php endif; ?> class="clearfix thread<?php if(isset($op)) : ?> doc_id_<?php echo $op->num ?> board_<?php echo $selected_radix->shortname ?><?php endif;?>">
+<article<?php if (isset($op)) : ?> id="<?php echo $op->num ?>"<?php endif; ?> class="clearfix thread<?php if(isset($op)) : ?> doc_id_<?php echo $op->doc_id ?> board_<?php echo $selected_radix->shortname ?><?php endif;?>">
 	<?php if (isset($op)) : ?>
 	<?php if ($op->preview_orig) : ?>
 		<div class="thread_image_box">

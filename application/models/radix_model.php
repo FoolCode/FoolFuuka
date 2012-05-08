@@ -335,6 +335,13 @@ class Radix_model extends CI_Model
 					)
 				)
 			),
+			'display_exif' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'help' => _('Show the EXIF data (EXIF data is saved in the database regardless)'),
+				'type' => 'checkbox',
+				'disabled' => 'disabled',
+			),
 			'enable_poster_hash' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,

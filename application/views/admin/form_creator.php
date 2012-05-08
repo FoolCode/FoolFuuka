@@ -272,7 +272,12 @@ if (!defined('BASEPATH'))
 						$extra = '';
 						if(isset($helpers['sub']))
 						{
-							$extra = 'data-function="hasSubForm"';
+							$extra .= 'data-function="hasSubForm"';
+						}
+						
+						if(isset($item['disabled']))
+						{
+							$extra .= ' disabled="disabled"';
 						}
 						?>
 						<label class="checkbox">

@@ -414,9 +414,7 @@ class Chan extends Public_Controller
 				// Set the Partials with information.
 				if (is_bool($params))
 				{
-					// only if the param is TRUE, since FALSE disables it
-					if($params !== FALSE)
-						$this->template->set_partial($view, $view);
+					$this->template->set_partial($view, $view);
 				}
 				else
 				{
@@ -728,6 +726,17 @@ class Chan extends Public_Controller
 		
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . _('Thread') . ' #' . $num);
+		
+		$second_array = array(
+			'tools_modal' => TRUE,
+			'tools_search' => TRUE
+		);
+		
+		if($tools_reply_box)
+		{
+			$second_array['tools_reply_box'] = TRUE; 
+		}
+		
 		$this->_set_parameters(
 			array(
 				'thread_id' => $num,
@@ -735,11 +744,7 @@ class Chan extends Public_Controller
 				'is_thread' => TRUE,
 				'disable_image_upload' => $disable_image_upload
 			),
-			array(
-				'tools_reply_box' => $tools_reply_box,
-				'tools_modal' => TRUE,
-				'tools_search' => TRUE
-			),
+			$second_array,
 			array(
 				'thread_id' => $num,
 				'latest_doc_id' => $latest_doc_id,
@@ -827,6 +832,16 @@ class Chan extends Public_Controller
 			if(isset($thread_check['disable_image_upload']) && $thread_check['disable_image_upload'] == TRUE)
 				$disable_image_upload = TRUE;
 		}
+		
+		$second_array = array(
+			'tools_modal' => TRUE,
+			'tools_search' => TRUE
+		);
+		
+		if($tools_reply_box)
+		{
+			$second_array['tools_reply_box'] = TRUE; 
+		}
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
@@ -839,11 +854,8 @@ class Chan extends Public_Controller
 				'posts' => $thread,
 				'disable_image_upload' => $disable_image_upload
 			),
+			$second_array, 
 			array(
-				'tools_reply_box' => $tools_reply_box,
-				'tools_modal' => TRUE,
-				'tools_search' => TRUE
-			), array(
 				'thread_id' => $num,
 				'latest_doc_id' => $latest_doc_id
 			)

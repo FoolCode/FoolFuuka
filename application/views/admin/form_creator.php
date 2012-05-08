@@ -52,7 +52,7 @@ if (!defined('BASEPATH'))
 ?>
 
 <div class="well"<?php echo (isset($parent))?' data-form-parent="' . $parent . '"':'';
-	echo (isset($hide) && $hide?' style="display:none"':'');
+	echo ((isset($hide) && $hide === TRUE)?' style="display:none"':'');
 ?>>
 
 	<?php
@@ -294,6 +294,8 @@ if (!defined('BASEPATH'))
 							$data = array('form' => $helpers['sub']);
 							if(!$checked)
 								$data['hide'] = TRUE;
+							else
+								$data['hide'] = FALSE;
 							$data['parent'] = $name;
 							$this->load->view('admin/form_creator', $data);
 						}
@@ -301,7 +303,9 @@ if (!defined('BASEPATH'))
 						if(isset($helpers['sub_inverse']))
 						{
 							$data = array('form' => $helpers['sub_inverse']);
-							if(!$checked)
+							if($checked)
+								$data['hide'] = TRUE;
+							else
 								$data['hide'] = FALSE;
 							$data['parent'] = $name . '_inverse';
 							$this->load->view('admin/form_creator', $data);

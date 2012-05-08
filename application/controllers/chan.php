@@ -120,12 +120,14 @@ class Chan extends Public_Controller
 	{
 		if (!$this->input->is_ajax_request())
 		{
-			show_404();
+			$this->show_404(); 
+			return FALSE;
 		}
 
 		if (!is_natural($num) || $num == 0)
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		switch ($action)
@@ -155,7 +157,8 @@ class Chan extends Public_Controller
 				break;
 
 			default:
-				show_404();
+				$this->show_404();
+				return FALSE;
 		}
 
 		if (isset($result['error']))
@@ -183,8 +186,17 @@ class Chan extends Public_Controller
 	 */
 	function _remap($method, $params = array())
 	{
+		// convert the subdomain of the index page to the default
+		if (defined('FOOL_SUBDOMAINS_ENABLED') 
+			&& empty($params) && strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_DEFAULT) !== 0)
+		{
+			redirect('@default');
+		}
+		
+		// we really can't make a board called "search" at the moment
 		if ($method == 'search')
 		{
+			// avoid loading it during this IF
 			$this->load->model('post_model', 'post');
 		}
 		else if (!empty($params))
@@ -214,7 +226,27 @@ class Chan extends Public_Controller
 				}
 
 				// not a plugin and not a board, let's send it higher
-				return parent::_remap($method, $params);
+				$remap = parent::_remap($method, $params);
+				
+				// we want to use the 404 in this class
+				if($remap === FALSE)
+				{
+					/* @todo get rid of these blocks of template set */
+					$this->load->helper('cookie');
+					$this->load->helper('number');
+					$this->load->library('template');
+					$this->template->set_layout('chan');
+					$this->template->set_partial('tools_search', 'tools_search');
+					$this->template->set_partial('tools_modal', 'tools_modal');
+					$this->template->set('is_page', FALSE);
+					$this->template->set('disable_headers', FALSE);
+					$this->template->set('is_statistics', FALSE);
+					$this->template->set('enabled_tools_modal', FALSE);
+					$this->show_404();
+				}
+				
+				// always return after the parent::_remap() is called
+				return FALSE;
 			}
 
 			// converts the sub-domain correctly
@@ -246,25 +278,23 @@ class Chan extends Public_Controller
 		$this->template->set_layout('chan');
 
 		//PLUGINS: If available, allow plugins to override default functions.
+		if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
+		{
+			$uri_array = $this->uri->segment_array();
+			array_shift($uri_array);
+			array_shift($uri_array);
 
-		  if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
-		  {
-				$uri_array = $this->uri->segment_array();
-				array_shift($uri_array);
-				array_shift($uri_array);
+			$this->template->set_partial('tools_search', 'tools_search');
+			$this->template->set_partial('tools_modal', 'tools_modal');
+			$this->template->set('is_page', FALSE);
+			$this->template->set('disable_headers', FALSE);
+			$this->template->set('is_statistics', FALSE);
+			$this->template->set('enabled_tools_modal', FALSE);
 
-				$this->template->set_partial('tools_search', 'tools_search');
-				$this->template->set_partial('tools_modal', 'tools_modal');
-				$this->template->set('is_page', FALSE);
-				$this->template->set('disable_headers', FALSE);
-				$this->template->set('is_statistics', FALSE);
-				$this->template->set('enabled_tools_modal', FALSE);
-
-				$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
-				return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
-		  }
-
-
+			$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
+			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
+		}
+		
 		// FUNCTIONS: If available, load custom functions to override default functions.
 		if (method_exists($this->TC, $method))
 		{
@@ -277,7 +307,8 @@ class Chan extends Public_Controller
 		}
 
 		// ERROR: We reached the end of the _remap and failed to return anything.
-		show_404();
+		$this->show_404();
+		return FALSE;
 	}
 
 
@@ -289,7 +320,8 @@ class Chan extends Public_Controller
 	{
 		if ((!is_array($variables) || !is_array($partials)) || (empty($variables) && empty($partials)))
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		// Initialize default values for valid
@@ -402,7 +434,7 @@ class Chan extends Public_Controller
 		/**
 		 * Set template variables required to build the HTML.
 		 */
-		$this->template->title('FoOlFuuka &raquo; 4chan Archiver');
+		$this->template->title(get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE));
 		$this->_set_parameters(
 			array(
 				'disable_headers' => TRUE
@@ -411,12 +443,28 @@ class Chan extends Public_Controller
 		$this->template->build('index');
 	}
 	
+	/**
+	 * Display the error page with some information and suggestion to use the search 
+	 */
+	function show_404()
+	{
+		$this->template->title(get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE));
+		$this->_set_parameters(
+			array(
+				'disable_headers' => TRUE,
+				'error' => _('Page not found. You can use the search if you were looking for something!')
+			)
+		);
+		$this->output->set_status_header(404);
+		$this->template->build('error');
+	}
 	
 	public function rules()
 	{
 		if(!get_selected_radix()->rules)
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 		
 		$this->load->library('Markdown_Parser');
@@ -553,7 +601,8 @@ class Chan extends Public_Controller
 		// Disable GALLERY when thumbnails is disabled for normal users.
 		if (get_selected_radix()->hide_thumbnails == 1 && !$this->tank_auth->is_allowed())
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		// Fetch the last X created threads to generate the GALLERY.
@@ -606,7 +655,8 @@ class Chan extends Public_Controller
 		$num = str_replace('S', '', $num);
 		if (!is_numeric($num) || !$num > 0)
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		// Fetch the THREAD specified and generate the THREAD.
@@ -615,7 +665,8 @@ class Chan extends Public_Controller
 
 		if (!is_array($thread))
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		if (!isset($thread[$num]['op']))
@@ -676,7 +727,8 @@ class Chan extends Public_Controller
 		$num = str_replace('S', '', $num);
 		if (!is_numeric($num) || !$num > 0)
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		// Fetch the THREAD specified and generate the THREAD.
@@ -686,7 +738,8 @@ class Chan extends Public_Controller
 
 		if (!is_array($thread))
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		if (!isset($thread[$num]['op']))
@@ -755,7 +808,8 @@ class Chan extends Public_Controller
 			$post = explode('_', $num);
 			if (count($post) != 2)
 			{
-				show_404();
+				$this->show_404();
+				return FALSE;
 			}
 
 			$num = $post[0];
@@ -764,7 +818,8 @@ class Chan extends Public_Controller
 
 		if ((!is_natural($num) || !$num > 0) && (!is_natural($subnum) || !$subnum > 0))
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		// Fetch the THREAD specified and generate the THREAD with OP+LAST50.
@@ -774,7 +829,8 @@ class Chan extends Public_Controller
 
 		if ($thread === FALSE)
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		if ($thread->subnum > 0)
@@ -809,7 +865,8 @@ class Chan extends Public_Controller
 		$imploded_uri = urldecode(implode('/', $uri));
 		if (mb_strlen($imploded_uri) < 22)
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
@@ -823,7 +880,8 @@ class Chan extends Public_Controller
 
 		if ($hash == '' || !is_natural($page))
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		// Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
@@ -861,7 +919,8 @@ class Chan extends Public_Controller
 		// Check if $filename is valid.
 		if (!in_array(substr($filename, -3), array('gif', 'jpg', 'png')) || !is_natural(substr($filename, 0, 13)))
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 
 		// Fetch the FULL IMAGE with the FILENAME specified.
@@ -904,7 +963,8 @@ class Chan extends Public_Controller
 		}
 
 		// we reached the end with nothing
-		show_404();
+		$this->show_404();
+		return FALSE;
 	}
 
 
@@ -1248,7 +1308,10 @@ class Chan extends Public_Controller
 			$stats = $this->statistics->check_available_stats($report, get_selected_radix());
 
 			if (!is_array($stats))
-				show_404();
+			{
+				$this->show_404();
+				return FALSE;
+			}
 
 			// Set template variables required to build the HTML.
 			$this->load->helper('date');
@@ -1329,7 +1392,8 @@ class Chan extends Public_Controller
 
 
 			default:
-				show_404();
+				$this->show_404();
+				return FALSE;
 		}
 
 		$data['encoding'] = 'utf-8';
@@ -1377,7 +1441,8 @@ class Chan extends Public_Controller
 			|| mb_strlen($this->input->post('reply')) > 0
 			|| mb_strlen($this->input->post('email')) > 0)
 		{
-			show_404();
+			$this->show_404(); 
+			return FALSE;
 		}
 
 		// The form has been submitted to be validated and processed.
@@ -1702,7 +1767,8 @@ class Chan extends Public_Controller
 		}
 		else
 		{
-			show_404();
+			$this->show_404();
+			return FALSE;
 		}
 	}
 	
@@ -1712,7 +1778,7 @@ class Chan extends Public_Controller
 		// redirect to the one on MY_Controller since it's a function shared with the admin panel
 		parent::mod_post_actions();
 	}
-
+	
 
 }
 

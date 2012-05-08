@@ -96,7 +96,7 @@ class MY_Controller extends CI_Controller
 		if ($method == 'plugin')
 		{
 			// don't let people go directly to the plugin system
-			show_404();
+			return FALSE;
 		}
 
 		
@@ -116,7 +116,8 @@ class MY_Controller extends CI_Controller
 		{
 			return call_user_func_array(array($this, $method), $params);
 		}
-		show_404();
+		
+		return FALSE;
 	}
 	
 	/**

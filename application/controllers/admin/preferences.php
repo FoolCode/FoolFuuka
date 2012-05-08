@@ -31,64 +31,6 @@ class Preferences extends Admin_Controller
 		redirect('/admin/preferences/general');
 	}
 
-	/*
-	 * _submit is a private function that submits to the "preferences" table.
-	 * entries that don't exist are created. the preferences table could get very large
-	 * but it's not really an issue as long as the variables are kept all different.
-	 * 
-	 * @author Woxxy
-	 */
-
-
-	function _submit($post, $form)
-	{
-		// Support Checkbox Listing
-		$former = array();
-		foreach ($form as $key => $item)
-		{
-			if (isset($item[1]['value']) && is_array($item[1]['value']))
-			{
-				foreach ($item[1]['value'] as $key => $item2)
-				{
-					$former[] = array('1', $item2);
-				}
-			}
-			else
-				$former[] = $form[$key];
-		}
-
-		foreach ($former as $key => $item)
-		{
-			if (isset($post[$item[1]['name']]))
-				$value = $post[$item[1]['name']];
-			else
-				$value = NULL;
-
-			$this->db->from('preferences');
-			$this->db->where(array('name' => $item[1]['name']));
-			if ($this->db->count_all_results() == 1)
-			{
-				$this->db->update('preferences', array('value' => $value),
-					array('name' => $item[1]['name']));
-			}
-			else
-			{
-				$this->db->insert('preferences',
-					array('name' => $item[1]['name'], 'value' => $value));
-			}
-		}
-
-		$CI = & get_instance();
-		$array = $CI->db->get('preferences')->result_array();
-		$result = array();
-		foreach ($array as $item)
-		{
-			$result[$item['name']] = $item['value'];
-		}
-		$CI->fs_options = $result;
-		flash_notice('notice', _('Updated settings.'));
-	}
-
 
 	/**
 	 * Allows setting basic variables for theme.

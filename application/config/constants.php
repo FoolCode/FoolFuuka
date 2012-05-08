@@ -58,6 +58,8 @@ define('FOOL_PROTECTED_RADIXES', serialize(array('content', 'assets', 'admin', '
 define('FOOL_FILES_DIR_MODE', 0755);
 
 // preferences from get_setting('value', FOOL_PREF_ETC);
+define('FOOL_PREF_GEN_WEBSITE_TITLE', 'FoOlFuuka');
+
 define('FOOL_PREF_SYS_SUBDOMAIN', FALSE);
 define('FOOL_PREF_SPHINX_LISTEN', '127.0.0.1:9306');
 define('FOOL_PREF_SPHINX_LISTEN_MYSQL', '127.0.0.1:9306');

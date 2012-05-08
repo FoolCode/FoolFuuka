@@ -92,7 +92,7 @@ if(
 	$route['(\w+)'] = "chan/$1/page";
 }
 
-$route['404_override'] = 'plugin';
+$route['404_override'] = 'chan/show_404';
 
 
 /* End of file routes.php */

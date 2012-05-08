@@ -1481,7 +1481,7 @@ class Post_model extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ') AS pages
+					SELECT COUNT(thread_num) AS threads
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 				');
 
@@ -1501,7 +1501,7 @@ class Post_model extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ') AS pages
+					SELECT COUNT(thread_num) AS threads
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 				');
 
@@ -1530,7 +1530,7 @@ class Post_model extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ') AS pages
+					SELECT COUNT(thread_num) AS threads
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 					WHERE time_ghost_bump IS NOT NULL;
 				');
@@ -1551,10 +1551,14 @@ class Post_model extends CI_Model
 		}
 
 		// set total pages found
-		$pages = $query_pages->row()->pages;
-		if ($pages <= 1)
+		$threads = $query_pages->row()->threads;
+		if ($threads <= $per_page)
 		{
 			$pages = NULL;
+		}
+		else
+		{
+			$pages = floor($threads/$per_page)+1;
 		}
 
 		// free up memory

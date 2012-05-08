@@ -502,7 +502,7 @@ class Chan extends Public_Controller
 
 		$options = (!empty($options)) ? $options :
 			array(
-				'per_page' => 15,
+				'per_page' => get_selected_radix()->threads_per_page,
 				'type' => ($this->input->cookie('foolfuuka_default_theme_by_thread' .
 					(get_selected_radix()->archive?'_archive':'_board')) ? 'by_thread' : 'by_post')
 			);
@@ -569,7 +569,8 @@ class Chan extends Public_Controller
 
 		//  Fetch the latest ghost posts.
 		$page = intval($page);
-		$posts = $this->post->get_latest(get_selected_radix(), $page, array('per_page' => 15, 'type' => 'ghost'));
+		$posts = $this->post->get_latest(get_selected_radix(), $page, 
+			array('per_page' => get_selected_radix()->threads_per_page, 'type' => 'ghost'));
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .

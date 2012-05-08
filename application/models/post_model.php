@@ -1481,7 +1481,7 @@ class Post_model extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ')+1 AS pages
+					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ') AS pages
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 				');
 
@@ -1501,7 +1501,7 @@ class Post_model extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ')+1 AS pages
+					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ') AS pages
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 				');
 
@@ -1530,7 +1530,7 @@ class Post_model extends CI_Model
 				);
 
 				$query_pages = $this->db->query('
-					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ')+1 AS pages
+					SELECT FLOOR(COUNT(thread_num)/' . intval($per_page) . ') AS pages
 					FROM ' . $this->radix->get_table($board, '_threads') . '
 					WHERE time_ghost_bump IS NOT NULL;
 				');

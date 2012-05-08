@@ -57,3 +57,7 @@ i.icon-white {
 .well label {
 	margin-top:5px;
 }
+
+.well .span1 {
+	text-align:right;
+}

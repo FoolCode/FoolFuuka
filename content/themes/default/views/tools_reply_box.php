@@ -124,20 +124,6 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		<div class="btn-group" style="margin-bottom:5px">
 
 			<?php
-			echo form_reset(array('class' => 'btn', 'name' => 'reset', 'value' => _('Reset')));
-
-			$submit_array = array(
-				'name' => 'reply_gattai_spoilered',
-				'value' => _('Submit spoilered'),
-				'class' => 'btn',
-			);
-
-			if (isset($thread_id) && $thread_id > 0)
-			{
-				$submit_array['data-function'] = 'comment';
-				$submit_array['data-post'] = $thread_id;
-			}
-			echo form_submit($submit_array);
 
 			$submit_array = array(
 				'name' => 'reply_gattai',
@@ -151,6 +137,21 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				$submit_array['data-post'] = $thread_id;
 			}
 			echo form_submit($submit_array);
+			
+			$submit_array = array(
+				'name' => 'reply_gattai_spoilered',
+				'value' => _('Submit spoilered'),
+				'class' => 'btn',
+			);
+
+			if (isset($thread_id) && $thread_id > 0)
+			{
+				$submit_array['data-function'] = 'comment';
+				$submit_array['data-post'] = $thread_id;
+			}
+			echo form_submit($submit_array);
+			
+			echo form_reset(array('class' => 'btn', 'name' => 'reset', 'value' => _('Reset')));
 
 			?>
 

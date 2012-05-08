@@ -136,6 +136,15 @@ class Radix_model extends CI_Model
 			'separator-1' => array(
 				'type' => 'separator'
 			),
+			'threads_per_page' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'label' => _('Maximum number of threads to display in the index pages'),
+				'type' => 'input',
+				'class' => 'span1',
+				'validation' => 'trim|required|is_natural',
+				'default_value' => FOOL_RADIX_THREADS_PER_PAGE
+			),
 			'archive' => array(
 				'database' => TRUE,
 				'type' => 'checkbox',

@@ -253,9 +253,7 @@ class Theme_Controller
 			 */
 			if (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4)
 			{
-				/**
-				 * Initialize the MEDIA CONFIG and load the UPLOAD library.
-				 */
+				// Initialize the MEDIA CONFIG and load the UPLOAD library.
 				$media_config['upload_path'] = 'content/cache/';
 				$media_config['allowed_types'] = 'jpg|jpeg|png|gif';
 				$media_config['max_size'] = get_selected_radix()->max_image_size_kilobytes;

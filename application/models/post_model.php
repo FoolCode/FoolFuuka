@@ -939,7 +939,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * @param object $board
-	 * @param int $num
+	 * @param mixed $num if you send a $query->result() of a thread it will avoid another query
 	 * @return array
 	 */
 	function check_thread($board, $num)
@@ -949,27 +949,40 @@ class Post_model extends CI_Model
 			return array('invalid_thread' => TRUE);
 		}
 
-		// grab the entire thread
-		$query = $this->db->query('
-			SELECT * FROM ' . $this->radix->get_table($board) . '
-			WHERE thread_num = ?
-		',
-			array($num, $num)
-		);
-
-		// thread was not found
-		if ($query->num_rows() == 0)
+		// of $num is an array it means we've sent a $query->result()
+		if (!is_array($num))
 		{
-			return array('invalid_thread' => TRUE);
-		}
+			// grab the entire thread
+			$query = $this->db->query('
+				SELECT * FROM ' . $this->radix->get_table($board) . '
+				WHERE thread_num = ?
+			',
+				array($num, $num)
+			);
 
+			// thread was not found
+			if ($query->num_rows() == 0)
+			{
+				return array('invalid_thread' => TRUE);
+			}
+			
+			$query_result = $query->result();
+			
+			// free up result
+			$query->free_result();
+		}
+		else
+		{
+			$query_result = $num;
+		}
+		
 		// define variables
 		$thread_op_present = FALSE;
 		$ghost_post_present = FALSE;
 		$thread_last_bump = 0;
 		$counter = array('posts' => 0, 'images' => 0);
 
-		foreach ($query->result() as $post)
+		foreach ($query_result as $post)
 		{
 			// we need to find if there's the OP in the list
 			// let's be strict, we want the $num to be the OP
@@ -996,9 +1009,6 @@ class Post_model extends CI_Model
 			$counter['posts']++;
 		}
 
-		// free up result
-		$query->free_result();
-
 		// we didn't point to the thread OP, this is not a thread
 		if (!$thread_op_present)
 		{
@@ -1008,18 +1018,18 @@ class Post_model extends CI_Model
 		// time check
 		if(time() - $thread_last_bump > 432000 || $ghost_post_present)
 		{
-			return array('thread_dead' => TRUE, 'disable_image_upload' => TRUE);
+			return array('thread_dead' => TRUE, 'disable_image_upload' => TRUE, 'ghost_disabled' => $board->disable_ghost);
 		}
 
 		if ($counter['posts'] > $board->max_posts_count)
 		{
 			if ($counter['images'] > $board->max_images_count)
 			{
-				return array('thread_dead' => TRUE, 'disable_image_upload' => TRUE);
+				return array('thread_dead' => TRUE, 'disable_image_upload' => TRUE, 'ghost_disabled' => $board->disable_ghost);
 			}
 			else
 			{
-				return array('thread_dead' => TRUE);
+				return array('thread_dead' => TRUE, 'ghost_disabled' => $board->disable_ghost);
 			}
 		}
 		else if ($counter['images'] > $board->max_images_count)
@@ -1658,6 +1668,7 @@ class Post_model extends CI_Model
 					return FALSE;
 				}
 
+				/* @todo reduce this query since thread_num catches all */
 				$query = $this->db->query('
 					SELECT *
 					FROM
@@ -1670,7 +1681,8 @@ class Post_model extends CI_Model
 						(
 							SELECT * FROM ' . $this->radix->get_table($board) . '
 							WHERE thread_num = ?
-							ORDER BY num DESC, subnum DESC LIMIT ?
+							ORDER BY num DESC, subnum DESC 
+							LIMIT ?
 						)
 					) AS x
 					' . $this->sql_media_join($board, 'x') . '
@@ -1687,19 +1699,10 @@ class Post_model extends CI_Model
 			case 'thread':
 
 				$query = $this->db->query('
-					(
-						SELECT * FROM ' . $this->radix->get_table($board) . '
-						' . $this->sql_media_join($board) . '
-						' . $this->sql_report_join($board) . '
-						WHERE num = ?
-					)
-					UNION
-					(
-						SELECT * FROM ' . $this->radix->get_table($board) . '
-						' . $this->sql_media_join($board) . '
-						' . $this->sql_report_join($board) . '
-						WHERE thread_num = ?
-					)
+					SELECT * FROM ' . $this->radix->get_table($board) . '
+					' . $this->sql_media_join($board) . '
+					' . $this->sql_report_join($board) . '
+					WHERE thread_num = ?
 					ORDER BY num, subnum ASC
 				',
 					array($num, $num)
@@ -1727,6 +1730,7 @@ class Post_model extends CI_Model
 
 		// populate posts_arr array
 		$this->populate_posts_arr($query->result());
+		$thread_check = $this->check_thread($board, $query->result());
 
 		// process entire thread and store in $result array
 		$result = array();
@@ -1775,7 +1779,7 @@ class Post_model extends CI_Model
 		$this->backlinks_hash_only_url = FALSE;
 		$this->realtime = FALSE;
 
-		return $result;
+		return array('result' => $result, 'thread_check' => $thread_check);
 	}
 
 

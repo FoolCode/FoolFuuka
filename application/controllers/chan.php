@@ -414,7 +414,9 @@ class Chan extends Public_Controller
 				// Set the Partials with information.
 				if (is_bool($params))
 				{
-					$this->template->set_partial($view, $view);
+					// only if the param is TRUE, since FALSE disables it
+					if($params !== FALSE)
+						$this->template->set_partial($view, $view);
 				}
 				else
 				{
@@ -661,8 +663,10 @@ class Chan extends Public_Controller
 
 		// Fetch the THREAD specified and generate the THREAD.
 		$num = intval($num);
-		$thread = $this->post->get_thread(get_selected_radix(), $num);
-
+		$thread_data = $this->post->get_thread(get_selected_radix(), $num);
+		$thread = $thread_data['result'];
+		$thread_check = $thread_data['thread_check'];
+		
 		if (!is_array($thread))
 		{
 			$this->show_404();
@@ -693,7 +697,22 @@ class Chan extends Public_Controller
 				}
 			}
 		}
-
+		
+		// check if we can determine if posting is disabled
+		$tools_reply_box = TRUE;
+		
+		// in the archive you can only ghostpost, so it's an easy check
+		if(get_selected_radix()->archive && get_selected_radix()->disable_ghost)
+		{
+			$tools_reply_box = FALSE;
+		}
+		else 
+		{
+			// we're only interested in knowing if we should display the reply box
+			if(isset($thread_check['ghost_disabled']))
+				$tools_reply_box = FALSE;
+		}
+		
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . _('Thread') . ' #' . $num);
 		$this->_set_parameters(
@@ -703,7 +722,7 @@ class Chan extends Public_Controller
 				'is_thread' => TRUE
 			),
 			array(
-				'tools_reply_box' => TRUE,
+				'tools_reply_box' => $tools_reply_box,
 				'tools_modal' => TRUE,
 				'tools_search' => TRUE
 			),
@@ -733,9 +752,12 @@ class Chan extends Public_Controller
 
 		// Fetch the THREAD specified and generate the THREAD.
 		$num = intval($num);
-		$thread = $this->post->get_thread(get_selected_radix(), $num,
+		$thread_data = $this->post->get_thread(get_selected_radix(), $num,
 			array('type' => 'last_x', 'type_extra' => array('last_limit' => 50)));
-
+		
+		$thread = $thread_data['result'];
+		$thread_check = $thread_data['thread_check'];
+		
 		if (!is_array($thread))
 		{
 			$this->show_404();
@@ -748,8 +770,9 @@ class Chan extends Public_Controller
 			return TRUE;
 		}
 
-		// get the latest doc_id
+		// get the latest doc_id and latest timestamp
 		$latest_doc_id = (isset($thread[$num]['op'])) ? $thread[$num]['op']->doc_id : 0;
+		$latest_timestamp = (isset($thread[$num]['op'])) ? $thread[$num]['op']->timestamp : 0;
 		if (isset($thread[$num]['posts']))
 		{
 			foreach ($thread[$num]['posts'] as $post)
@@ -758,7 +781,27 @@ class Chan extends Public_Controller
 				{
 					$latest_doc_id = $post->doc_id;
 				}
+
+				if ($latest_timestamp < $post->timestamp)
+				{
+					$latest_timestamp = $post->timestamp;
+				}
 			}
+		}
+		
+		// check if we can determine if posting is disabled
+		$tools_reply_box = TRUE;
+		
+		// in the archive you can only ghostpost, so it's an easy check
+		if(get_selected_radix()->archive && get_selected_radix()->disable_ghost)
+		{
+			$tools_reply_box = FALSE;
+		}
+		else 
+		{
+			// we're only interested in knowing if we should display the reply box
+			if(isset($thread_check['ghost_disabled']))
+				$tools_reply_box = FALSE;
 		}
 
 		// Set template variables required to build the HTML.
@@ -772,7 +815,7 @@ class Chan extends Public_Controller
 				'posts' => $thread
 			),
 			array(
-				'tools_reply_box' => TRUE,
+				'tools_reply_box' => $tools_reply_box,
 				'tools_modal' => TRUE,
 				'tools_search' => TRUE
 			), array(

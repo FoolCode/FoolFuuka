@@ -1480,11 +1480,6 @@ class Post_model extends CI_Model
 					)
 				);
 
-				$query_pages = $this->db->query('
-					SELECT COUNT(thread_num) AS threads
-					FROM ' . $this->radix->get_table($board, '_threads') . '
-				');
-
 				break;
 
 			case 'by_thread':
@@ -1499,11 +1494,6 @@ class Post_model extends CI_Model
 						intval($per_page)
 					)
 				);
-
-				$query_pages = $this->db->query('
-					SELECT COUNT(thread_num) AS threads
-					FROM ' . $this->radix->get_table($board, '_threads') . '
-				');
 
 				break;
 
@@ -1529,19 +1519,60 @@ class Post_model extends CI_Model
 					)
 				);
 
-				$query_pages = $this->db->query('
-					SELECT COUNT(thread_num) AS threads
-					FROM ' . $this->radix->get_table($board, '_threads') . '
-					WHERE time_ghost_bump IS NOT NULL;
-				');
-
 				break;
 
 			default:
 				log_message('error', 'post.php/get_latest: invalid or missing type argument');
 				return FALSE;
 		}
+		
+		// cache the count or get the cached count
+		$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
+		if($type == 'ghost')
+		{
+			$type_cache = 'ghost_num';
+		}
+		else
+		{
+			$type_cache = 'thread_num';
+		}		
+		
+		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_get_latest_threads_count_' . $type_cache))
+		{
+			switch ($type)
+			{
+				// these two are the same
+				case 'by_post':
+				case 'by_thread':
+					$query_threads = $this->db->query('
+						SELECT COUNT(thread_num) AS threads
+						FROM ' . $this->radix->get_table($board, '_threads') . '
+					');
+					break;
 
+				case 'ghost':
+					$query_threads = $this->db->query('
+						SELECT COUNT(thread_num) AS threads
+						FROM ' . $this->radix->get_table($board, '_threads') . '
+						WHERE time_ghost_bump IS NOT NULL;
+					');
+					break;
+			}
+			
+			$threads = $query_threads->row()->threads;
+			$query_threads->free_result();
+			
+			// start caching only over 300 threads so we can keep boards with little number of threads dynamic
+			if($threads > 300)
+			{
+				$this->cache->save(
+					'foolfuuka_' . config_item('encryption_key') . '_get_latest_threads_count_' . $type_cache, 
+					$threads,
+					180
+				);
+			}
+		}
+		
 		if ($query->num_rows() == 0)
 		{
 			return array(
@@ -1549,9 +1580,9 @@ class Post_model extends CI_Model
 				'pages' => NULL
 			);
 		}
+		
 
 		// set total pages found
-		$threads = $query_pages->row()->threads;
 		if ($threads <= $per_page)
 		{
 			$pages = NULL;
@@ -1560,9 +1591,6 @@ class Post_model extends CI_Model
 		{
 			$pages = floor($threads/$per_page)+1;
 		}
-
-		// free up memory
-		$query_pages->free_result();
 
 		// populate arrays with posts
 		$threads = array();

@@ -186,6 +186,20 @@ class Theme_Controller
 						$this->CI->template->build('error');
 						return FALSE;
 					}
+					
+					if (isset($check['ghost_disabled']) && $check['ghost_disabled'] == TRUE)
+					{
+						$this->CI->template->title(_('Error'));
+						$this->CI->_set_parameters(
+							array(
+							'error' => _('This thread is closed.')
+							), array(
+							'tools_search' => TRUE
+							)
+						);
+						$this->CI->template->build('error');
+						return FALSE;
+					}
 
 					if (isset($check['thread_dead']) && $check['thread_dead'] == TRUE)
 					{

@@ -3,12 +3,13 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
+
 /**
- * READER CONTROLLER
+ * THEME CONTROLLER
  *
- * This file allows you to override the standard FoOlSlide controller to make
+ * This file allows you to override the standard FoOlFuuka controller to make
  * your own URLs for your theme, and to make sure your theme keeps working
- * even if the FoOlSlide default theme gets modified.
+ * even if the FoOlFuuka default theme gets modified.
  *
  * For more information, refer to the support sites linked in your admin panel.
  */
@@ -16,7 +17,8 @@ class Theme_Controller
 {
 
 
-	function __construct() {
+	function __construct()
+	{
 		$this->CI = & get_instance();
 	}
 
@@ -45,7 +47,6 @@ class Theme_Controller
 	}
 
 
-
 	/**
 	 * Disable GALLERY for this theme by showing 404!
 	 */
@@ -61,31 +62,25 @@ class Theme_Controller
 	public function sending()
 	{
 		// The form has been submitted to be validated and processed.
-		if ($this->CI->input->post('com_submit') == 'Submit') {
+		if ($this->CI->input->post('com_submit') == 'Submit')
+		{
 
 			// Validate Form!
 			$this->CI->load->library('form_validation');
 
-			$this->CI->form_validation->set_rules('resto', 'Thread no.',
-				'required|is_natural|xss_clean');
-			$this->CI->form_validation->set_rules('name', 'Username',
-				'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('email', 'Email',
-				'trim|xss_clean|max_length[64]');
-			$this->CI->form_validation->set_rules('sub', 'Subject',
-				'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('resto', 'Thread no.', 'required|is_natural|xss_clean');
+			$this->CI->form_validation->set_rules('name', 'Username', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('email', 'Email', 'trim|xss_clean|max_length[64]');
+			$this->CI->form_validation->set_rules('sub', 'Subject', 'trim|xss_clean|max_length[64]');
 			if ($this->CI->input->post('resto') == 0)
 			{
-				$this->CI->form_validation->set_rules('com', 'Comment',
-					'trim|xss_clean');
+				$this->CI->form_validation->set_rules('com', 'Comment', 'trim|xss_clean');
 			}
 			else
 			{
-				$this->CI->form_validation->set_rules('com', 'Comment',
-					'trim|min_length[3]|max_length[4096]|xss_clean');
+				$this->CI->form_validation->set_rules('com', 'Comment', 'trim|min_length[3]|max_length[4096]|xss_clean');
 			}
-			$this->CI->form_validation->set_rules('pwd', 'Password',
-				'required|min_length[3]|max_length[32]|xss_clean');
+			$this->CI->form_validation->set_rules('pwd', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
 			// Verify if the user posting is a moderator or administrator and apply form validation.
 			if ($this->CI->tank_auth->is_allowed())
@@ -105,10 +100,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> validation_errors()
-					),
-					array(
-						'tools_view'		=> TRUE
+					'error' => validation_errors()
+					), array(
+					'tools_view' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -117,17 +111,16 @@ class Theme_Controller
 
 			// Everything is GOOD! Continue with posting the content to the board.
 			$data = array(
-				'num'		=> $this->CI->input->post('resto'),
-				'name'		=> $this->CI->input->post('name'),
-				'email'		=> $this->CI->input->post('email'),
-				'subject'	=> $this->CI->input->post('sub'),
-				'comment'	=> $this->CI->input->post('com'),
-				'spoiler'	=> $this->CI->input->post('spoiler'),
-				'password'	=> $this->CI->input->post('pwd'),
-				'postas'	=> (($this->CI->tank_auth->is_allowed()) ? $this->CI->input->post('reply_postas') : 'N'),
-
-				'media'		=> '',
-				'ghost'		=> FALSE
+				'num' => $this->CI->input->post('resto'),
+				'name' => $this->CI->input->post('name'),
+				'email' => $this->CI->input->post('email'),
+				'subject' => $this->CI->input->post('sub'),
+				'comment' => $this->CI->input->post('com'),
+				'spoiler' => $this->CI->input->post('spoiler'),
+				'password' => $this->CI->input->post('pwd'),
+				'postas' => (($this->CI->tank_auth->is_allowed()) ? $this->CI->input->post('reply_postas') : 'N'),
+				'media' => '',
+				'ghost' => FALSE
 			);
 
 
@@ -146,10 +139,9 @@ class Theme_Controller
 					$this->CI->template->title(_('Error'));
 					$this->CI->_set_parameters(
 						array(
-							'error'				=> _('This thread does not exist.')
-						),
-						array(
-							'tools_view'		=> TRUE
+						'error' => _('This thread does not exist.')
+						), array(
+						'tools_view' => TRUE
 						)
 					);
 					$this->CI->template->build('error');
@@ -175,10 +167,23 @@ class Theme_Controller
 						$this->CI->template->title(_('Error'));
 						$this->CI->_set_parameters(
 							array(
-								'error'				=> _('This thread does not exist.')
-							),
+							'error' => _('This thread does not exist.')
+							), array(
+							'tools_view' => TRUE
+							)
+						);
+						$this->CI->template->build('error');
+						return FALSE;
+					}
+
+					if (isset($check['ghost_disabled']) && $check['ghost_disabled'] == TRUE)
+					{
+						$this->CI->template->title(_('Error'));
+						$this->CI->_set_parameters(
 							array(
-								'tools_view'		=> TRUE
+							'error' => _('This thread is closed.')
+							), array(
+							'tools_view' => TRUE
 							)
 						);
 						$this->CI->template->build('error');
@@ -199,10 +204,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> _('You are required to upload an image when posting a new thread.')
-					),
-					array(
-						'tools_view'		=> TRUE
+					'error' => _('You are required to upload an image when posting a new thread.')
+					), array(
+					'tools_view' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -216,10 +220,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> _('You are required to write a comment when no image upload is present.')
-					),
-					array(
-						'tools_view'		=> TRUE
+					'error' => _('You are required to write a comment when no image upload is present.')
+					), array(
+					'tools_view' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -233,10 +236,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> _('The posting of images has been disabled for this thread.')
-					),
-					array(
-						'tools_view'		=> TRUE
+					'error' => _('The posting of images has been disabled for this thread.')
+					), array(
+					'tools_view' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -247,12 +249,12 @@ class Theme_Controller
 			if (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4)
 			{
 				//Initialize the MEDIA CONFIG and load the UPLOAD library.
-				$media_config['upload_path']	= 'content/cache/';
-				$media_config['allowed_types']	= 'jpg|jpeg|png|gif';
+				$media_config['upload_path'] = 'content/cache/';
+				$media_config['allowed_types'] = 'jpg|jpeg|png|gif';
 				$media_config['max_size'] = get_selected_radix()->max_image_size_kilobytes;
 				$media_config['max_width'] = get_selected_radix()->max_image_size_width;
 				$media_config['max_height'] = get_selected_radix()->max_image_size_height;
-				$media_config['overwrite']		= TRUE;
+				$media_config['overwrite'] = TRUE;
 
 				$this->CI->load->library('upload', $media_config);
 
@@ -265,10 +267,9 @@ class Theme_Controller
 					$this->CI->template->title(_('Error'));
 					$this->CI->_set_parameters(
 						array(
-							'error'				=> $this->CI->upload->display_errors()
-						),
-						array(
-							'tools_view'		=> TRUE
+						'error' => $this->CI->upload->display_errors()
+						), array(
+						'tools_view' => TRUE
 						)
 					);
 					$this->CI->template->build('error');
@@ -285,10 +286,9 @@ class Theme_Controller
 				$this->CI->template->title(_('Error'));
 				$this->CI->_set_parameters(
 					array(
-						'error'				=> $result['error']
-					),
-					array(
-						'tools_view'		=> TRUE
+					'error' => $result['error']
+					), array(
+					'tools_view' => TRUE
 					)
 				);
 				$this->CI->template->build('error');
@@ -300,12 +300,12 @@ class Theme_Controller
 				if ($result['posted']->thread_num == 0)
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
-						$result['posted']->num)) . '#' . $result['posted']->num;
+							$result['posted']->num)) . '#' . $result['posted']->num;
 				}
 				else
 				{
 					$callback = site_url(array(get_selected_radix()->shortname, 'thread',
-						$result['posted']->thread_num)) . '#' . $result['posted']->num .
+							$result['posted']->thread_num)) . '#' . $result['posted']->num .
 						(($result['posted']->subnum > 0) ? '_' . $result['posted']->subnum : '');
 				}
 
@@ -319,15 +319,16 @@ class Theme_Controller
 			foreach ($this->CI->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
-					'post'		=> $value,
-					'password'	=> $this->CI->input->post('pwd')
+					'post' => $value,
+					'password' => $this->CI->input->post('pwd')
 				);
 
 				$result = $this->CI->post->delete(get_selected_radix(), $post);
 			}
 
 			if ($this->CI->input->post('resto')) :
-				$this->CI->template->set('url', site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('resto')));
+				$this->CI->template->set('url',
+					site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('resto')));
 			else :
 				$this->CI->template->set('url', site_url(get_selected_radix()->shortname));
 			endif;
@@ -344,16 +345,17 @@ class Theme_Controller
 			foreach ($this->CI->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
-					'board'		=> get_selected_radix()->id,
-					'post'		=> $doc_id,
-					'reason'	=> ''
+					'board' => get_selected_radix()->id,
+					'post' => $doc_id,
+					'reason' => ''
 				);
 
 				$report->add($post);
 			}
 
 			if ($this->CI->input->post('resto')) :
-				$this->CI->template->set('url', site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('resto')));
+				$this->CI->template->set('url',
+					site_url(get_selected_radix()->shortname . '/thread/' . $this->CI->input->post('resto')));
 			else :
 				$this->CI->template->set('url', site_url(get_selected_radix()->shortname));
 			endif;
@@ -366,6 +368,5 @@ class Theme_Controller
 		 */
 		show_404();
 	}
-
 
 }

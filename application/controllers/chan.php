@@ -1608,7 +1608,7 @@ class Chan extends Public_Controller
 					// $num is actually the OP of the thread.
 					$check = $this->post->check_thread(get_selected_radix(), $data['num']);
 
-					if (isset($check['invalid_thread']) && $check['invalid_thread'] == TRUE)
+					if (isset($check['invalid_thread']) && $check['invalid_thread'] === TRUE)
 					{
 						if ($this->input->is_ajax_request())
 						{
@@ -1622,6 +1622,31 @@ class Chan extends Public_Controller
 						$this->_set_parameters(
 							array(
 								'error' => _('This thread does not exist.')
+							),
+							array(
+								'tools_modal' => TRUE,
+								'tools_search' => TRUE
+							)
+						);
+						$this->template->build('error');
+						return FALSE;
+					}
+					
+					// check if ghost posting is disabled
+					if (isset($check['ghost_disabled']) && $check['ghost_disabled'] == TRUE)
+					{
+						if ($this->input->is_ajax_request())
+						{
+							$this->output
+								->set_content_type('application/json')
+								->set_output(json_encode(array('error' => _('This thread is closed.'), 'success' => '')));
+							return FALSE;
+						}
+
+						$this->template->title(_('Error'));
+						$this->_set_parameters(
+							array(
+								'error' => _('This thread is closed.')
 							),
 							array(
 								'tools_modal' => TRUE,

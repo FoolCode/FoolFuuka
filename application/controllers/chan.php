@@ -455,6 +455,9 @@ class Chan extends Public_Controller
 			array(
 				'disable_headers' => TRUE,
 				'error' => _('Page not found. You can use the search if you were looking for something!')
+			),
+			array(
+				'tools_search' => TRUE
 			)
 		);
 		$this->output->set_status_header(404);

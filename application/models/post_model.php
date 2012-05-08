@@ -148,7 +148,7 @@ class Post_model extends CI_Model
 		}
 
 		// these features will only affect guest users
-		if (!$this->tank_auth->is_allowed())
+		if ($board->hide_thumbnails && !$this->tank_auth->is_allowed())
 		{
 			// hide all thumbnails for the board
 			if (!$board->hide_thumbnails)

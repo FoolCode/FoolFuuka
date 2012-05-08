@@ -66,6 +66,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		echo form_upload(array(
 			'name' => 'file_image',
 			'id' => 'file_image',
+			'size' => '16' // for firefox
 		));
 		echo form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes);
 		?>

@@ -298,14 +298,14 @@ if(isset($board)) :
 				?>
 				
 				<li class="divider" style="margin-bottom:8px"></li>
-				<li class="input-prepend"><label for="file_search" class="add-on">Image</label><input id="file_search" type="file" name="image" />
+				<li class="input-prepend"><label for="file_search" class="add-on">Image</label><input id="file_search" size="17" type="file" name="image" />
 					</li><li><?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
 						'value' => _('Search image'),
 						'name' => 'submit_image',
 						'title' => _('On most browsers you can also drop the file on the search bar.'),
-						'style' => 'margin-top:0;'
+						'style' => 'margin-top:0;',
 					))
 					?></li>
 				<?php 

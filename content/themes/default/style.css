@@ -371,7 +371,6 @@ body.theme_default {
     text-shadow: 0px 1px 0px #fff;
     font-size:0.8em;
     line-height:150%;
-    vertical-align:bottom;
 }
 
 .theme_default article.thread > .thread_image_box .thread_image.is_spoiler_image {
@@ -421,7 +420,7 @@ body.theme_default {
 }
 
 .theme_default article.thread .post_type img {
-    vertical-align:bottom
+    vertical-align:top
 }
 
 .theme_default article.thread .post_type_is_op,
@@ -554,7 +553,6 @@ body.theme_default {
 
 .theme_default .post header{
     padding-top:5px;
-    overflow:hidden;
     display:-moz-inline-stack;
     font-family: Verdana, Arial, sans-serif;
 }

@@ -415,7 +415,8 @@ class Post_model extends CI_Model
 			$post->original_timestamp = $post->timestamp;
 		}
 
-		$elements = array('title', 'name', 'email', 'trip', 'media_orig', 'preview_orig', 'media_filename', 'media_hash');
+		$elements = array('title', 'name', 'email', 'trip', 'media_orig', 
+			'preview_orig', 'media_filename', 'media_hash', 'poster_hash');
 
 		foreach($elements as $element)
 		{
@@ -2501,6 +2502,16 @@ class Post_model extends CI_Model
 		$lvl = $data['postas'];
 
 		$timestamp = time();
+		
+		// 2ch-style codes, only if enabled
+		if($board->enable_poster_hash)
+		{
+			$poster_hash = substr(substr(crypt(md5($this->input->ip_address().'id'.date("Ymd", $timestamp)),'id'),+3), 0, 8);
+		}
+		else
+		{
+			$poster_hash = NULL;
+		}
 
 		$check = $this->db->query('
 				SELECT doc_id
@@ -2527,7 +2538,8 @@ class Post_model extends CI_Model
 				INSERT INTO ' . $this->radix->get_table($board) . '
 				(
 					num, subnum, thread_num, timestamp, capcode,
-					email, name, trip, title, comment, delpass, poster_id
+					email, name, trip, title, comment, delpass, poster_id, 
+					poster_hash
 				)
 				VALUES
 				(
@@ -2555,14 +2567,14 @@ class Post_model extends CI_Model
 						) AS x
 					),
 					?, ?, ?,
-					?, ?, ?, ?, ?, ?, ?
+					?, ?, ?, ?, ?, ?, ?, ?
 				)
 			',
 				array(
 					$num, $num, $num, $num, $num, $timestamp, $lvl,
 					($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL, 
 					($subject)?$subject:NULL, ($comment)?$comment:NULL,
-					$password, inet_ptod($this->input->ip_address())
+					$password, inet_ptod($this->input->ip_address()), $poster_hash
 				)
 			);
 			
@@ -2593,7 +2605,8 @@ class Post_model extends CI_Model
 				$num, ($num)?0:1,
 				$timestamp, $lvl,
 				($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL, ($subject)?$subject:NULL, 
-				($comment)?$comment:NULL, $password, $spoiler, inet_ptod($this->input->ip_address())
+				($comment)?$comment:NULL, $password, $spoiler, inet_ptod($this->input->ip_address()),
+				$poster_hash
 			);
 
 			// process media
@@ -2642,7 +2655,7 @@ class Post_model extends CI_Model
 				INSERT INTO ' . $this->radix->get_table($board) . '
 				(
 					num, subnum, thread_num, op, timestamp, capcode,
-					email, name, trip, title, comment, delpass, spoiler, poster_id,
+					email, name, trip, title, comment, delpass, spoiler, poster_id, poster_hash,
 					preview_orig, preview_w, preview_h, media_filename, media_w, media_h, media_size, media_hash,
 					media_orig, exif
 				)
@@ -2666,7 +2679,7 @@ class Post_model extends CI_Model
 						) AS x
 					), ?),
 					?, ?, ?,
-					?, ?, ?, ?, ?, ?, ?, ?,
+					?, ?, ?, ?, ?, ?, ?, ?, ?,
 					?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 				)
 			',

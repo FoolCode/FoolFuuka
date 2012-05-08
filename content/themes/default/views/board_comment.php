@@ -31,8 +31,8 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 		endif;
 		?>
 		<span class="post_file_metadata">
-				<?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?>
-			</span>
+			<?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h ?>
+		</span>
 	</div>
 
 	<div class="thread_image_box">
@@ -56,6 +56,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 
 			<span class="post_author"><?php echo ($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed ?></span>
 			<?php echo ($p->trip_processed) ? '<span class="post_trip">'. $p->trip_processed . '</span>' : '' ?>
+			<?php if ($p->poster_hash_processed) : ?><span class="poster_hash">ID:<?php echo $p->poster_hash_processed ?></span><?php endif; ?>
 			<?php if ($p->capcode != 'N') : ?>
 			<?php if ($p->capcode == 'M') : ?>
 				<span class="post_level post_level_moderator">## Mod</span>

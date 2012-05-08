@@ -335,7 +335,12 @@ class Radix_model extends CI_Model
 					)
 				)
 			),
-						
+			'enable_poster_hash' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'help' => _('Enable poster hashes, an IP-based code to temporarily distinguish Anonymous users'),
+				'type' => 'checkbox',
+			),
 			'disable_ghost' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,

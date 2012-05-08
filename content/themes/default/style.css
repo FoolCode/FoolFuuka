@@ -453,6 +453,10 @@ body.theme_default {
     color: #117743;
 }
 
+.theme_default article.thread .poster_hash {
+    font-family: Courier New, Courier, monospace;
+}
+
 .theme_default article.thread .post_level {
     font-weight:bold;
 }

@@ -42,6 +42,7 @@ if (!defined('BASEPATH'))
 
 			<span class="post_author"><?php echo ($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed ?></span>
 			<?php echo ($op->trip_processed) ? '<span class="post_trip">'. $op->trip_processed . '</span>' : '' ?>
+			<?php if ($op->poster_hash_processed) : ?><span class="poster_hash">ID:<?php echo $op->poster_hash_processed ?></span><?php endif; ?>
 			<?php if ($op->capcode != 'N') : ?>
 			<?php if ($op->capcode == 'M') : ?>
 				<span class="post_level post_level_moderator">## Mod</span>

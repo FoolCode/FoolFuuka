@@ -2,14 +2,13 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
-
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta http-equiv="imagetoolbar" content="false" />
-		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 1.0">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 2.0">
 		<title><?php echo $template['title']; ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php
@@ -305,7 +304,7 @@ if (!defined('BASEPATH'))
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="<?php echo site_url() ?>assets/js/jquery.js"><\/script>')</script>
-		<script defer src="<?php echo site_url() ?>assets/bootstrap2/js/bootstrap.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<script defer src="<?php echo site_url() ?>assets/bootstrap2/js/bootstrap.min.js?v=<?php echo FOOL_VERSION ?>"></script>
 		<script defer src="<?php echo site_url() ?>content/themes/<?php
 				echo $this->fu_theme ? $this->fu_theme : 'default'
 				?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>

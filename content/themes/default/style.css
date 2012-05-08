@@ -741,6 +741,7 @@ body.theme_default {
     margin-top:10px;
     margin-left:20px;
     display:none;
+	clear:both;
 }
 
 .theme_default #reply_ajax_notices.error {
@@ -748,6 +749,7 @@ body.theme_default {
     border: 1px solid red;
     margin-left:10px;
     width:378px;
+	display:block;
 }
 
 .theme_default #reply_ajax_notices.success {
@@ -755,6 +757,7 @@ body.theme_default {
     border: 1px solid #61B84D;
     margin-left:10px;
     width:378px;
+	display:block;
 }
 
 .theme_default #thread_o_matic {

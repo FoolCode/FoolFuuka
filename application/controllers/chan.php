@@ -308,11 +308,16 @@ class Chan extends Public_Controller
 				'tools_modal',
 				'tools_search'
 			),
-			'backend_vars' => array(
+			'backend_vars' => array( // variables to be sent to the JSON at the bottom of the page
 				'site_url'  => site_url(),
 				'api_url'   => site_url('@system'),
-				'cookie_domain' => $this->input->get_cookie_domain(),
-				'csrf_hash' => $this->security->get_csrf_hash()
+				'cookie_domain' => config_item('cookie_domain'),
+				'csrf_hash' => $this->security->get_csrf_hash(),
+				'gettext' => array(
+					'submit_state' => _('Submitting'),
+					'thread_is_real_time' => _('This thread is being displayed in real time.'),
+					'update_now' => _('Update now')
+				)
 			)
 		);
 

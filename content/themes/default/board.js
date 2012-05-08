@@ -1,7 +1,7 @@
 var bindFunctions = function()
 {
+	// the following block of code deals with drag and drop of images for MD5 hashing
     var search_dropdown = jQuery('.search-dropdown');
-
     if(isEventSupported('dragstart') && isEventSupported('drop') && !!window.FileReader)
     {
         search_dropdown.on('dragover', function(e) {
@@ -25,14 +25,12 @@ var bindFunctions = function()
             }
         });
     }
-
     if(!!window.FileReader)
     {
         search_dropdown.find('input[name=image]').on('change', function(event) {
             findSameImageFromFile(event.originalEvent.target);
         });
     }
-	
 	jQuery("body").click(function(event){
 		var search_el = jQuery('.search-dropdown');
 		if(search_el.find(event.target).length != 1)
@@ -42,6 +40,7 @@ var bindFunctions = function()
 		}
 	});
 
+	// unite all the onclick functions in here
     jQuery("body").on("click",
         "a.[data-function], button.[data-function], input.[data-function]",
         function(event) {
@@ -58,6 +57,16 @@ var bindFunctions = function()
                     break;
 
                 case 'comment':
+					var originalText = el.attr('value');
+					el.attr({'value': backend_vars.gettext['submit_state'], 'disabled': 'disabled'});
+					
+					// to make sure nobody gets pissed off with a blocked button
+					var buttonTimeout = setTimeout(function(){
+						el.attr({'value': originalText});
+						el.removeAttr('disabled');
+					}, 15000);
+					
+					// sending an image
                     if(jQuery("#file_image").val())
                         return true;
                     var reply_alert = jQuery('#reply_ajax_notices');
@@ -79,16 +88,18 @@ var bindFunctions = function()
                             csrf_fool: backend_vars.csrf_hash
                         },
                         success: function(data){
+							// clear button's timeout, we can deal with the rest now
+							clearTimeout(buttonTimeout);
+							el.attr({'value': originalText});
+							el.removeAttr('disabled');
                             if (data.error != "")
                             {
                                 reply_alert.html(data.error);
-                                reply_alert.addClass('error');
-                                reply_alert.show();
+                                reply_alert.addClass('error'); // deals with showing the alert
                                 return false;
                             }
                             reply_alert.html(data.success);
-                            reply_alert.addClass('success');
-                            reply_alert.show();
+                            reply_alert.addClass('success'); // deals with showing the alert
                             jQuery("#reply_chennodiscursus").val("");
                             realtimethread();
                         },
@@ -262,6 +273,7 @@ var bindFunctions = function()
         return false;
     }
 
+	// hover functions go here
     jQuery("#main").on("mouseover mouseout", "article a.[data-backlink]", function(event) {
         if(event.type == "mouseover")
         {
@@ -540,15 +552,6 @@ var getPost = function(postForm)
     window.location = postForm.action + encodeURIComponent(((typeof post[1] != 'undefined') ? post[1] : '') + ((typeof post[2] != 'undefined') ? '_' + post[2] : '')) + '/';
 }
 
-var getPage = function(pageForm)
-{
-    if (pageForm.page.value == "") {
-        alert('Sorry, you must insert a valid page number.');
-        return false;
-    }
-    window.location = pageForm.action + encodeURIComponent(pageForm.page.value) + '/';
-}
-
 var getRadioValue = function(group)
 {
     if (typeof group == "undefined")
@@ -745,7 +748,7 @@ jQuery(document).ready(function() {
 
     if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 24 * 60 * 60))
     {
-        jQuery('.js_hook_realtimethread').html('This thread is being displayed in real time. <a class="btnr" href="#" onClick="realtimethread(); return false;">Update now</a>');
+        jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + '<a class="btnr" href="#" onClick="realtimethread(); return false;">' + backend_vars.gettext['update_now'] + '</a>');
         setTimeout(realtimethread, 10000);
     }
 

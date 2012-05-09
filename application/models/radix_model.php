@@ -398,7 +398,8 @@ class Radix_model extends CI_Model
 			'myisam_search' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,
-				'type' => 'internal'
+				'type' => 'internal',
+				'default_value' => FOOL_RADIX_MYISAM_SEARCH
 			)
 		);
 	}

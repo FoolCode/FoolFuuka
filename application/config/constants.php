@@ -61,14 +61,18 @@ define('FOOL_FILES_DIR_MODE', 0755);
 define('FOOL_PREF_GEN_WEBSITE_TITLE', 'FoOlFuuka');
 
 define('FOOL_PREF_SYS_SUBDOMAIN', FALSE);
+
+// sphinx search syste
 define('FOOL_PREF_SPHINX_LISTEN', '127.0.0.1:9306');
 define('FOOL_PREF_SPHINX_LISTEN_MYSQL', '127.0.0.1:9306');
 define('FOOL_PREF_SPHINX_DIR', '/usr/local/sphinx/var');
 define('FOOL_PREF_SPHINX_MIN_WORD', 3);
 define('FOOL_PREF_SPHINX_MEMORY', 2047);
 
+// application paths
 define('FOOL_PREF_SERV_JAVA_PATH', 'java');
 
+// theme
 define('FOOL_THEME_DEFAULT', 'default');
 define('FOOL_PREF_THEMES_THEME_DEFAULT_ENABLED', TRUE);
 define('FOOL_PREF_THEMES_THEME_FUUKA_ENABLED', TRUE);
@@ -85,15 +89,7 @@ define('FOOL_RADIX_MAX_IMAGE_SIZE_HEIGHT', 5000);
 define('FOOL_RADIX_MAX_POSTS_COUNT', 400);
 define('FOOL_RADIX_MAX_IMAGES_COUNT', 250);
 define('FOOL_RADIX_MIN_IMAGE_REPOST_HOURS', 0);
-
-
-/*
-|--------------------------------------------------------------------------
-| FoOlFuuka specific constants
-|--------------------------------------------------------------------------
-|
-|
-*/
+define('FOOL_RADIX_MYISAM_SEARCH', FALSE);
 
 define('FOOLFUUKA_BOARDS_DIRECTORY', 'content/boards');
 

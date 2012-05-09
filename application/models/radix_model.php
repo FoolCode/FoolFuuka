@@ -494,6 +494,12 @@ class Radix_model extends CI_Model
 			$this->mysql_remove_triggers($board);
 			$this->mysql_create_tables($board);
 			$this->mysql_create_triggers($board);
+			
+			// if the user didn't select sphinx for search, enable the table _search silently
+			if(!$board->sphinx)
+			{
+				$this->mysql_create_search($board);			
+			}
 		}
 	}
 
@@ -1234,6 +1240,9 @@ class Radix_model extends CI_Model
 		// get the minumum word length
 		$word_length = $this->mysql_get_min_word_length();
 		
+		// save in the database the fact that this is a MyISAM
+		$this->radix->save(array('id' => $board->id, 'myisam_search' => 1));
+		
 		// fill only where there's a point to
 		$this->db->query("
 			INSERT IGNORE INTO " . $this->get_table($board, '_search') . "
@@ -1246,8 +1255,7 @@ class Radix_model extends CI_Model
 			
 		", array($word_length, $word_length));
 		
-		// save in the database the fact that this is a MyISAM
-		$this->radix->save(array('id' => $board->id, 'myisam_search' => 1));
+		return TRUE;
 	}
 
 	/**
@@ -1273,6 +1281,8 @@ class Radix_model extends CI_Model
 		
 		// set in preferences that this is not a board with MyISAM search
 		$this->radix->save(array('id' => $board->id, 'myisam_search' => 0));
+		
+		return TRUE;
 	}
 
 }

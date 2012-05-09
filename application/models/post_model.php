@@ -1437,6 +1437,8 @@ class Post_model extends CI_Model
 				$doc_ids[] = intval($doc_id->doc_id); 
 			}
 
+			$this->db->flush_cache();
+
 			$query = $this->db->query('
 				SELECT * 
 				FROM ' . $this->radix->get_table($board) . '

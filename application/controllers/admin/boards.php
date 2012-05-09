@@ -81,6 +81,29 @@ class Boards extends Admin_Controller
 		$this->viewdata["function_title"] = _('Editing board:') . ' ' . $board->shortname;
 		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
 			$data, TRUE);
+		
+		if(!$board->sphinx && !$board->myisam_search)
+		{
+			$this->viewdata["main_content_view"] = '
+				<div class="alert">
+					<a class="btn btn-warning" href="' . site_url('admin/boards/search_table/create/' . $board->id) . '">
+						' . _('Create search table') . '
+					</a> '. _('This board doesn\'t have the search table. You can create it by follwing this button.') . '
+				</div>
+			' . $this->viewdata["main_content_view"];
+		}
+		
+		if($board->sphinx && $board->myisam_search)
+		{
+			$this->viewdata["main_content_view"] = '
+				<div class="alert">
+					<a class="btn btn-warning" href="' . site_url('admin/boards/search_table/remove/' . $board->id) . '">
+						' . _('Remove search table') . '
+					</a> '. _('You are using Sphinx Search for this board, so you can remove the search table.') . '
+				</div>
+			' . $this->viewdata["main_content_view"];
+		}
+		
 		$this->load->view('admin/default', $this->viewdata);
 	}
 
@@ -113,13 +136,90 @@ class Boards extends Admin_Controller
 		$this->viewdata["function_title"] = _('Creating a new board');
 		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
 			$data, TRUE);
+				
 		$this->load->view('admin/default', $this->viewdata);
 
 		return TRUE;
 	}
+	
 
+	function search_table($type = FALSE, $id = 0)
+	{
+		$board = $this->radix->get_by_id($id);
+		if ($board == FALSE)
+		{
+			show_404();
+		}
 
-	function delete($type, $id = 0)
+		if ($this->input->post())
+		{
+			switch ($type)
+			{
+				case("create"):
+					if (!$this->radix->create_search($board))
+					{
+						flash_notice('error', sprintf(_('Failed to create the search table for the board %s.'), $board->shortname));
+						log_message("error", "Controller: board.php/search_table: failed creating search table");
+					}
+					else
+					{
+						flash_notice('success',
+							sprintf(_('The search table for the board %s has been created.'), $board->shortname));
+					}
+					redirect('admin/boards/board/' . $board->shortname);
+					break;
+					
+				case("remove"):
+					if (!$this->radix->remove_search($board))
+					{
+						flash_notice('error', sprintf(_('Failed to remove the search table for the board %s.'), $board->shortname));
+						log_message("error", "Controller: board.php/search_table: failed creating search table");
+					}
+					else
+					{
+						flash_notice('success',
+							sprintf(_('The search table for the board %s has been removed.'), $board->shortname));
+					}
+					redirect('admin/boards/board/' . $board->shortname);
+					break;
+			}
+		}
+
+		switch ($type)
+		{
+			case('create'):
+				$this->viewdata["function_title"] = _('Creating search table for board:') . ' ' . $board->shortname;
+				$data['alert_level'] = 'warning';
+				$data['message'] = 
+					'<strong>' ._('Do you want to create the search table for this board?') . '</strong><br/>' .
+					_('Creating the search table can take time if you have a board with even just 100.000 entries.').
+					'<br/>' .
+					_('Normally, even if the page times out, the database will keep building it.') .
+					'<br/>' .
+					_('To make sure your search table is fully created, you can execute the following via the command line of your server.').
+					'<br/>'.
+					'<pre>$ cd '. FCPATH . '
+$ php index.php cli database create_search ' . $board->shortname . '</pre>' .
+					_('For very large boards, past a few millions of entries, this would could hours: you should use SphinxSearch instead, or anyway you should use the command line.');
+
+				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
+					$data, TRUE);
+				$this->load->view('admin/default', $this->viewdata);
+				break;
+			
+			case('remove'):
+				$this->viewdata["function_title"] = _('Removing search table for board:') . ' ' . $board->shortname;
+				$data['alert_level'] = 'warning';
+				$data['message'] =
+					'<strong>' ._('Do you want to remove the search table for this board?') . '</strong><br/>' .
+					_('The search table can be created at any time, though it can take a while to create if the board is large.');
+				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
+					$data, TRUE);
+				$this->load->view('admin/default', $this->viewdata);
+		}
+	}
+	
+	function delete($type = FALSE, $id = 0)
 	{
 		$board = $this->radix->get_by_id($id);
 		if ($board == FALSE)

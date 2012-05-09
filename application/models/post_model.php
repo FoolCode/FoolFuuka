@@ -2749,6 +2749,24 @@ class Post_model extends CI_Model
 		}
 		
 		$this->db->trans_commit();
+		
+		// success, now check if there's extra work to do
+		
+		// we might be using the local MyISAM search table which doesn't support transactions 
+		// so we must be really careful with the insertion
+		if($board->myisam_search)
+		{
+			// this is still fully MySQL so let's use a MySQL function for now
+			$word_length = $this->radix->mysql_get_min_word_length();
+			
+			$this->db->query("
+				INSERT IGNORE INTO " . $this->radix->get_table($board, '_search') . "
+				SELECT doc_id, num, subnum, thread_num, media_filename, comment
+				FROM " . $this->radix->get_table($board) . "
+				WHERE doc_id = ? AND
+					(CHAR_LENGTH(media_filename) > ? OR CHAR_LENGTH(comment) > ?)
+			", array($insert_id, $word_length, $word_length));
+		}
 
 		// retreive num, subnum, thread_num for redirection
 		$post = $this->db->query('
@@ -2815,6 +2833,16 @@ class Post_model extends CI_Model
 			',
 			array($row->doc_id)
 		);
+		
+		// get rid of the entry from the myisam _search table
+		if($board->myisam_search)
+		{
+			$this->db->query("
+				DELETE 
+				FROM " . $this->radix->get_table($board, '_search') . "
+				WHERE doc_id = ?
+			", array($row->doc_id));
+		}
 
 		// an error was encountered
 		if ($this->db->affected_rows() != 1)
@@ -2826,16 +2854,14 @@ class Post_model extends CI_Model
 		// purge existing reports for post
 		$this->db->delete('reports', array('board_id' => $board->id, 'doc_id' => $row->doc_id));
 
-		// purge thread replies if thread_num post
-		if ($row->thread_num == 0) // delete: thread
+		// purge thread replies if thread_num
+		if ($row->op == 1) // delete: thread
 		{
 			$thread = $this->db->query('
 				SELECT * FROM ' . $this->radix->get_table($board) . '
 				' . $this->sql_media_join($board) . '
 				WHERE thread_num = ?
-			',
-				array($row->num)
-			);
+			',array($row->num));
 
 			// thread replies found
 			if ($thread->num_rows() > 0)
@@ -2857,9 +2883,17 @@ class Post_model extends CI_Model
 				$this->db->query('
 					DELETE FROM ' . $this->radix->get_table($board) . '
 					WHERE thread_num = ?
-				',
-					array($row->num)
-				);
+				', array($row->num));
+				
+				// get rid of the replies from the myisam _search table
+				if($board->myisam_search)
+				{
+					$this->db->query("
+						DELETE 
+						FROM " . $this->radix->get_table($board, '_search') . "
+						WHERE thread_num = ?
+					", array($row->num));
+				}
 			}
 		}
 

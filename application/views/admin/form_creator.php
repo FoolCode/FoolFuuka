@@ -127,6 +127,10 @@ if (!defined('BASEPATH'))
 				
 				switch ($item['type']):
 
+					// internal variable that goes into database but is not public in any way
+					case 'internal':
+						break;
+					
 					case 'separator':
 						?>
 						<br/><br/>

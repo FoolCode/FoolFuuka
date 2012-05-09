@@ -395,6 +395,11 @@ class Radix_model extends CI_Model
 			'close' => array(
 				'type' => 'close'
 			),
+			'myisam_search' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'type' => 'internal'
+			)
 		);
 	}
 
@@ -782,25 +787,30 @@ class Radix_model extends CI_Model
 
 
 	/**
-	 * Tells us if the entire MySQL server is compatible with multibyte 
+	 * Tells us if the entire MySQL server is compatible with multibyte
+	 * 
+	 * @param bool $as_string if TRUE it returns the strong as in utf8 or utf8mb4
+	 * @return type 
 	 */
-	function mysql_check_multibyte()
+	function mysql_check_multibyte($as_string = FALSE)
 	{
 		$query = $this->db->query("SHOW CHARACTER SET WHERE Charset = 'utf8mb4';");
-		return (boolean) $query->num_rows();
+			
+	if(!$as_string)
+		{
+			return (boolean) $query->num_rows();
+		}
+		else
+		{
+			return $query->num_rows() > 0 ? 'utf8mb4' : 'utf8';
+		}
 	}
 
 
 	function mysql_create_tables($board)
 	{
-		if ($this->mysql_check_multibyte())
-		{
-			$charset = 'utf8mb4';
-		}
-		else
-		{
-			$charset = 'utf8';
-		}
+		// with true it gives the charset string directly
+		$charset = $this->mysql_check_multibyte(TRUE);
 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS " . $this->get_table($board) . " (
@@ -1131,7 +1141,8 @@ class Radix_model extends CI_Model
 			'_images',
 			'_threads',
 			'_users',
-			'_daily'
+			'_daily',
+			'_search'
 		);
 		
 		foreach($tables as $table)
@@ -1166,6 +1177,102 @@ class Radix_model extends CI_Model
 		
 		if(get_setting('fs_fuuka_boards_db'))
 			$this->db->query('USE ' . $this->db->database);
+	}
+	
+	/**
+	 * Finds out which is the shortest word that the fulltext can look for
+	 * 
+	 * @return int the fulltext min word length
+	 */
+	function mysql_get_min_word_length()
+	{
+		// get the length of the word so we can get rid of a lot of rows
+		$length_res = $this->db->query("SHOW VARIABLES WHERE Variable_name = 'ft_min_word_len'");
+		return $length_res->row()->Value;
+	}
+	
+	/**
+	 * Create the supplementary search table and fill it with the comments
+	 * Prefer this to the prefixed functions for future-proof database coverage
+	 * 
+	 * @param object $board board object
+	 */
+	function create_search($board)
+	{
+		return $this->mysql_create_search($board);
+	}
+	
+	/**
+	 * Create the supplementary search table and fill it with the comments
+	 * Does also a bit of magic not to store useless columns
+	 * 
+	 * @param object $board board object
+	 */
+	function mysql_create_search($board)
+	{
+		// with true it gives the charset string directly
+		$charset = $this->mysql_check_multibyte(TRUE);
+
+		$this->db->query("
+			CREATE TABLE IF NOT EXISTS " . $this->get_table($board, '_search') . " (
+				doc_id int unsigned NOT NULL auto_increment, 
+				num int unsigned NOT NULL, 
+				subnum int unsigned NOT NULL, 
+				thread_num int unsigned NOT NULL DEFAULT '0', 
+				media_filename text, 
+				comment text,
+				PRIMARY KEY (doc_id),
+				
+				INDEX num_index (num),
+				INDEX subnum_index (subnum),
+				INDEX thread_num_index (thread_num),
+				FULLTEXT media_filename_fulltext(media_filename),
+				FULLTEXT comment_fulltext(comment)
+			) engine=MyISAM CHARSET=" . $charset . ";
+		");
+		
+		// get the minumum word length
+		$word_length = $this->mysql_get_min_word_length();
+		
+		// fill only where there's a point to
+		$this->db->query("
+			INSERT IGNORE INTO " . $this->get_table($board, '_search') . "
+			SELECT doc_id, num, subnum, thread_num, media_filename, comment
+			FROM " . $this->get_table($board) . "
+			WHERE 
+				CHAR_LENGTH(media_filename) > ?
+				OR 
+				CHAR_LENGTH(comment) > ?
+			
+		", array($word_length, $word_length));
+		
+		// save in the database the fact that this is a MyISAM
+		$this->radix->save(array('id' => $board->id, 'myisam_search' => 1));
+	}
+
+	/**
+	 * Drop the _search table
+	 * Prefer this to the prefixed functions for future-proof database coverage
+	 * 
+	 * @param object $board board object
+	 */
+	function remove_search($board)
+	{
+		return $this->mysql_remove_search($board);
+	}
+	
+	/**
+	 * Drop the _search table
+	 * MySQL version
+	 * 
+	 * @param object $board board object
+	 */
+	function mysql_remove_search($board)
+	{
+		$this->db->query("DROP TABLE IF EXISTS " . $this->get_table($board, '_search'));
+		
+		// set in preferences that this is not a board with MyISAM search
+		$this->radix->save(array('id' => $board->id, 'myisam_search' => 0));
 	}
 
 }

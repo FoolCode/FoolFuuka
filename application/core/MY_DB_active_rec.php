@@ -116,7 +116,7 @@ class MY_DB_active_record extends CI_DB_active_record
 	 * @param	string	the type of join
 	 * @return	object
 	 */
-	public function join($table, $cond, $type = '', $exact_cond = TRUE)
+	public function join($table, $cond, $type = '', $exact_cond = TRUE, $prefix_table = TRUE)
 	{
 		if ($type != '')
 		{
@@ -146,7 +146,9 @@ class MY_DB_active_record extends CI_DB_active_record
 		}
 
 		// Assemble the JOIN statement
-		$join = $type.'JOIN '.$this->_protect_identifiers($table, TRUE, NULL, FALSE).' ON '.$cond;
+		if ($prefix_table)
+			$table = $this->_protect_identifiers($table, TRUE, NULL, FALSE);
+		$join = $type.'JOIN ' . $table . ' ON '.$cond;
 
 		$this->ar_join[] = $join;
 		if ($this->ar_caching === TRUE)
@@ -179,7 +181,7 @@ class MY_DB_active_record extends CI_DB_active_record
 	 * @param   null    $offset
 	 * @return  string
 	 */
-	public function statement($table = '', $limit = NULL, $offset = NULL)
+	public function statement($table = '', $limit = NULL, $offset = NULL, $select = FALSE)
 	{
 		if ($table != '')
 		{
@@ -192,7 +194,7 @@ class MY_DB_active_record extends CI_DB_active_record
 			$this->limit($limit, $offset);
 		}
 
-		$sql = $this->_compile_select();
+		$sql = $this->_compile_select($select);
 		$this->_reset_select();
 		return $sql;
 	}

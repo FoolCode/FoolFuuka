@@ -1276,20 +1276,56 @@ class Post_model extends CI_Model
 		{
 			// begin cache of entire sql statement
 			$this->db->start_cache();
-
-			// set db->from with board
-			$this->db->from($this->radix->get_table($board), FALSE);
-
+			
 			// begin filtering search params
-			if ($args['text'])
+			if ($args['text'] || $args['filename'])
 			{
 				if (mb_strlen($args['text']) < 1)
 				{
 					return array();
 				}
-
-				$this->db->like('comment', rawurldecode($args['text']));
+				
+				// we're using fulltext fields, we better start from this
+				$this->db->from($this->radix->get_table($board, '_search'), FALSE, FALSE);
+				
+				// select that we'll use for the final statement
+				$select = 'SELECT ' . $this->radix->get_table($board, '_search') . '.`doc_id`';
+				
+				if($args['text'])
+				{
+					$this->db->where(
+						'MATCH (' . $this->radix->get_table($board, '_search') . '.`comment`) AGAINST (' . $this->db->escape(rawurldecode($args['text'])) . ')',
+						NULL, 
+						FALSE
+					);
+				}
+				
+				if($args['filename'])
+				{
+					$this->db->where(
+						'MATCH (' . $this->radix->get_table($board, '_search') . '.`media_filename`) AGAINST (' . $this->db->escape(rawurldecode($args['filename'])) . ')',
+						NULL, 
+						FALSE
+					);
+				}
+				
+				$this->db->join(
+					$this->radix->get_table($board),
+					$this->radix->get_table($board, '_search') . '.`doc_id` = ' . $this->radix->get_table($board) . '.`doc_id`',
+					'',
+					FALSE,
+					FALSE
+				);
 			}
+			else
+			{
+				// no need for the fulltext fields
+				$this->db->from($this->radix->get_table($board), FALSE, FALSE);
+				
+				// select that we'll use for the final statement
+				$select = 'SELECT ' . $this->radix->get_table($board) . '.`doc_id`';
+			}
+			
 			if ($args['subject'])
 			{
 				$this->db->like('title', rawurldecode($args['subject']));
@@ -1308,13 +1344,6 @@ class Post_model extends CI_Model
 			{
 				$this->db->like('email', rawurldecode($args['email']));
 				$this->db->use_index('email_index');
-			}
-			
-			// @todo add index on media
-			if ($args['filename'])
-			{
-				$this->db->like('media', rawurldecode($args['media']));
-				$this->db->use_index('media_index');
 			}
 			if ($args['capcode'] == 'admin')
 			{
@@ -1349,12 +1378,12 @@ class Post_model extends CI_Model
 			}
 			if ($args['type'] == 'op')
 			{
-				$this->db->where('thread_num', 0);
+				$this->db->where('op', 1);
 				$this->db->use_index('thread_num_index');
 			}
 			if ($args['type'] == 'posts')
 			{
-				$this->db->where('thread_num <>', 0);
+				$this->db->where('op', 0);
 				$this->db->use_index('thread_num_index');
 			}
 			if ($args['filter'] == 'image')
@@ -1378,41 +1407,49 @@ class Post_model extends CI_Model
 				$this->db->use_index('timestamp_index');
 			}
 
-			// stop cache of entire sql statement, the main query is stored
 			$this->db->stop_cache();
-
+			
 			// fetch initial total first...
 			$this->db->limit(5000);
-
-			// check if we have any results
-			$check = $this->db->query($this->db->statement());
-			if ($check->num_rows() == 0)
+			
+			// get directly the count for speed
+			$count_res = $this->db->query($this->db->statement('', NULL, NULL, 'SELECT COUNT(*) AS count'));
+			$total = $count_res->row()->count;
+			
+			if (!$total)
 			{
 				return array('posts' => array(), 'total_found' => 0);
 			}
-
-			// modify cached query for additional params
-			if ($args['order'] == 'asc')
-			{
-				$this->db->order_by('timestamp', 'ASC');
-				$this->db->use_index('timestamp_index');
-			}
-			else
-			{
-				$this->db->order_by('timestamp', 'DESC');
-				$this->db->use_index('timestamp_index');
-			}
-
-
-			// set query options
+			
+			// now grab those results in order
 			$this->db->limit(25, ($args['page'] * 25) - 25);
+			
+			$this->db->order_by('timestamp', ($args['order'] == 'asc'?'ASC':'DESC'));
+
+			// get doc_ids, last parameter is the select
+			$doc_ids_res = $this->db->query($this->db->statement('', NULL, NULL, $select));
+			
+			$doc_ids = array();
+			$doc_ids_res_arr = $doc_ids_res->result();
+			foreach($doc_ids_res_arr as $doc_id)
+			{
+				// juuust to be extra sure, make force it to be an int
+				$doc_ids[] = intval($doc_id->doc_id); 
+			}
+
+			$query = $this->db->query('
+				SELECT * 
+				FROM ' . $this->radix->get_table($board) . '
+				' . $this->sql_media_join($board) . '
+				' . $this->sql_report_join($board) . '
+				WHERE doc_id IN (' . implode(', ', $doc_ids) . ')
+				ORDER BY timestamp ' . ($args['order'] == 'asc'?'ASC':'DESC') . ' 
+				LIMIT ?, ?
+			', array(($args['page'] * 25) - 25, 25));
 
 			// query mysql for full records
-			$query = $this->db->query($this->db->statement());
-			$total = $check->num_rows();
-
-			// flush cache to avoid issues with regular queries
-			$this->db->flush_cache();
+			//$query = $this->db->query($this->db->statement());
+			$total = $doc_ids_res->num_rows();
 		}
 
 		// process all results to be displayed
@@ -2764,7 +2801,7 @@ class Post_model extends CI_Model
 				SELECT doc_id, num, subnum, thread_num, media_filename, comment
 				FROM " . $this->radix->get_table($board) . "
 				WHERE doc_id = ? AND
-					(CHAR_LENGTH(media_filename) > ? OR CHAR_LENGTH(comment) > ?)
+					(CHAR_LENGTH(media_filename) >= ? OR CHAR_LENGTH(comment) >= ?)
 			", array($insert_id, $word_length, $word_length));
 		}
 

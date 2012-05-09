@@ -9,10 +9,10 @@ if (!defined('BASEPATH'))
 	<p><?php echo form_open();
 		echo form_submit(array(
 			'name' => 'confirm', 
-			'value' => _('Confirm'), 
+			'value' => __('Confirm'), 
 			'class' => 'btn btn-danger',
 			'style' => 'margin-right:6px;'));
-		echo '<input type="button" onClick="history.back()" class="btn" value="'. _('Go back') . '" />';
+		echo '<input type="button" onClick="history.back()" class="btn" value="'. __('Go back') . '" />';
 		echo form_close();
 	?></p>
 </div>

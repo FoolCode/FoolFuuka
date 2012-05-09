@@ -491,7 +491,7 @@ class Post_model extends CI_Model
 				{
 					// don't allow reposting, ever
 					return array('error' => 
-						_('This image has already been posted once. This board doesn\'t allow image reposting'));
+						__('This image has already been posted once. This board doesn\'t allow image reposting'));
 				}
 				else
 				{
@@ -505,7 +505,7 @@ class Post_model extends CI_Model
 					if($constraint->num_rows() > 0)
 					{
 						return array('error' => sprintf(
-							_('You must wait up to %s hours to repost this image.'), 
+							__('You must wait up to %s hours to repost this image.'), 
 							$board->min_image_repost_hours)
 						);
 					}
@@ -1118,7 +1118,7 @@ class Post_model extends CI_Model
 			$sphinx_server = explode(':', get_setting('fu_sphinx_listen', FOOL_PREF_SPHINX_LISTEN));
 
 			if (!$this->sphinxql->set_server($sphinx_server[0], $sphinx_server[1]))
-				return array('error' => _('The search backend is currently not online. Try later or contact us in case it\'s offline for too long.'));
+				return array('error' => __('The search backend is currently not online. Try later or contact us in case it\'s offline for too long.'));
 
 			// determine if all boards will be used for search or not
 			if ($board === FALSE)
@@ -2324,7 +2324,7 @@ class Post_model extends CI_Model
 				}
 			}
 
-			return array('error' => _('Your IP has been identified as a spam proxy. Please try a different IP or remove the proxy to post.'));
+			return array('error' => __('Your IP has been identified as a spam proxy. Please try a different IP or remove the proxy to post.'));
 		}
 
 		// check: if passed stopforumspam, check if banned internally
@@ -2351,7 +2351,7 @@ class Post_model extends CI_Model
 					}
 				}
 
-				return array('error' => _('You are banned from posting'));
+				return array('error' => __('You are banned from posting'));
 			}
 		}
 
@@ -2372,7 +2372,7 @@ class Post_model extends CI_Model
 
 			if ($data['comment'] != '' && $row->comment == $data['comment'] && !$this->tank_auth->is_allowed())
 			{
-				return array('error' => _('You\'re posting again the same comment as the last time!'));
+				return array('error' => __('You\'re posting again the same comment as the last time!'));
 			}
 
 			if (time() - $row->timestamp < 10 && time() - $row->timestamp > 0 && !$this->tank_auth->is_allowed())
@@ -2480,7 +2480,7 @@ class Post_model extends CI_Model
 			// if no media is present and post is op, stop processing
 			if ($data['num'] == 0)
 			{
-				return array('error' => _('An image is required for creating threads.'));
+				return array('error' => __('An image is required for creating threads.'));
 			}
 
 			// check other media errors
@@ -2489,13 +2489,13 @@ class Post_model extends CI_Model
 				// invalid file type
 				if (strlen($data['media_error']) == 64)
 				{
-					return array('error' => _('The filetype you are attempting to upload is not allowed.'));
+					return array('error' => __('The filetype you are attempting to upload is not allowed.'));
 				}
 
 				// media file is too large
 				if (strlen($data['media_error']) == 79)
 				{
-					return array('error' =>  _('The image you are attempting to upload is larger than the permitted size.'));
+					return array('error' =>  __('The image you are attempting to upload is larger than the permitted size.'));
 				}
 			}
 		}
@@ -2511,7 +2511,7 @@ class Post_model extends CI_Model
 					log_message('error', 'post.php/comment: failed to remove media file from cache');
 				}
 
-				return array('error' => _('Sorry, this thread has reached its maximum amount of image replies.'));
+				return array('error' => __('Sorry, this thread has reached its maximum amount of image replies.'));
 			}
 
 			// check for valid media dimensions
@@ -2522,7 +2522,7 @@ class Post_model extends CI_Model
 					log_message('error', 'post.php/comment: failed to remove media file from cache');
 				}
 
-				return array('error' => _('Your image upload is not a valid image file.'));
+				return array('error' => __('Your image upload is not a valid image file.'));
 			}
 
 			// generate media hash
@@ -2539,26 +2539,26 @@ class Post_model extends CI_Model
 					log_message('error', 'post.php/comment: failed to remove media file from cache');
 				}
 
-				return array('error' => _('Your image upload has been flagged as inappropriate.'));
+				return array('error' => __('Your image upload has been flagged as inappropriate.'));
 			}
 		}
 
 		// check comment data for spam regex
 		if (check_commentdata($data))
 		{
-			return array('error' => _('Your post contains contents that is marked as spam.'));
+			return array('error' => __('Your post contains contents that is marked as spam.'));
 		}
 
 		// check entire length of comment
 		if (mb_strlen($comment) > 4096)
 		{
-			return array('error' => _('Your post was too long.'));
+			return array('error' => __('Your post was too long.'));
 		}
 
 		// check total numbers of lines in comment
 		if (count(explode("\n", $comment)) > 20)
 		{
-			return array('error' => _('Your post had too many lines.'));
+			return array('error' => __('Your post had too many lines.'));
 		}
 
 		// phpass password for extra security, using the same tank_auth setting since it's cool
@@ -2596,7 +2596,7 @@ class Post_model extends CI_Model
 
 		if ($check->num_rows() > 0)
 		{
-			return array('error' => _('This post is already being processed...'));
+			return array('error' => __('This post is already being processed...'));
 		}
 		
 		$this->db->trans_begin();
@@ -2665,7 +2665,7 @@ class Post_model extends CI_Model
 			if($check_duplicate->num_rows() > 1)
 			{
 				$this->db->trans_rollback();
-				return array('error' => _('You already posted this.'));
+				return array('error' => __('You already posted this.'));
 			}
 		}
 		else
@@ -2686,7 +2686,7 @@ class Post_model extends CI_Model
 				$media_file = $this->process_media($board, $num, $media, $media_hash);
 				if ($media_file === FALSE)
 				{
-					return array('error' => _('Your image was invalid.'));
+					return array('error' => __('Your image was invalid.'));
 				}
 				
 				if (is_array($media_file) && isset($media_file['error']))
@@ -2783,7 +2783,7 @@ class Post_model extends CI_Model
 					$this->delete_image($board, $duplicate);
 				}
 				// get rid of the extra media
-				return array('error' => _('You already posted this.'));
+				return array('error' => __('You already posted this.'));
 			}
 		}
 		
@@ -2839,7 +2839,7 @@ class Post_model extends CI_Model
 		if ($query->num_rows() == 0)
 		{
 			log_message('debug', 'post.php/delete: invalid doc_id for post or thread');
-			return array('error' => _('There\'s no such a post to be deleted.'));
+			return array('error' => __('There\'s no such a post to be deleted.'));
 		}
 
 		// store query results
@@ -2854,14 +2854,14 @@ class Post_model extends CI_Model
 		if ($phpass->CheckPassword($post['password'], $row->delpass) !== TRUE && !$this->tank_auth->is_allowed())
 		{
 			log_message('debug', 'post.php/delete: invalid password');
-			return array('error' => _('The password you inserted did not match the post\'s deletion password.'));
+			return array('error' => __('The password you inserted did not match the post\'s deletion password.'));
 		}
 
 		// delete media file for post
 		if ($row->total == 1 && !$this->delete_media($board, $row))
 		{
 			log_message('error', 'post.php/delete: unable to delete media from post');
-			return array('error' => _('Unable to delete thumbnail for post.'));
+			return array('error' => __('Unable to delete thumbnail for post.'));
 		}
 
 		// remove the thread
@@ -2887,7 +2887,7 @@ class Post_model extends CI_Model
 		if ($this->db->affected_rows() != 1)
 		{
 			log_message('error', 'post.php/delete: unable to delete thread op');
-			return array('error', _('Unable to delete post.'));
+			return array('error', __('Unable to delete post.'));
 		}
 
 		// purge existing reports for post
@@ -2911,7 +2911,7 @@ class Post_model extends CI_Model
 					if (!$this->delete_media($board, $p))
 					{
 						log_message('error', 'post.php/delete: unable to delete media from thread op');
-						return array('error' => _('Unable to delete thumbnail for thread replies.'));
+						return array('error' => __('Unable to delete thumbnail for thread replies.'));
 					}
 
 					// purge associated reports

@@ -148,7 +148,7 @@ class CI_Migration {
 			$name = basename($f[0], '.php');
 
 			// Filename validations
-			if (preg_match('/^\d{3}_(\w+)$/', $name, $match))
+			if (preg_match('/^\d{3}__(\w+)$/', $name, $match))
 			{
 				$match[1] = strtolower($match[1]);
 
@@ -278,7 +278,7 @@ class CI_Migration {
 		{
 			// Mark wrongly formatted files as false for later filtering
 			$name = basename($files[$i], '.php');
-			if ( ! preg_match('/^\d{3}_(\w+)$/', $name))
+			if ( ! preg_match('/^\d{3}__(\w+)$/', $name))
 			{
 				$files[$i] = FALSE;
 			}

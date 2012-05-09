@@ -78,7 +78,7 @@ class Public_Controller extends MY_Controller
 		// give an error if there's no active themes
 		if(empty($active_themes))
 		{
-			show_error(_('No themes enabled!'), 500);
+			show_error(__('No themes enabled!'), 500);
 		}
 		
 		$this->fu_theme = get_setting('fs_theme_default', FOOL_THEME_DEFAULT);

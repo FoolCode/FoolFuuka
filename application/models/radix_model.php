@@ -44,7 +44,7 @@ class Radix_model extends CI_Model
 					{
 						return array(
 							'error_code' => 'ID_NOT_FOUND',
-							'error' => _('Couldn\'t find the board with the submitted ID.'),
+							'error' => __('Couldn\'t find the board with the submitted ID.'),
 							'critical' => TRUE
 						);
 					}
@@ -55,18 +55,18 @@ class Radix_model extends CI_Model
 			'name' => array(
 				'database' => TRUE,
 				'type' => 'input',
-				'label' => _('Name'),
-				'help' => _('Insert the name of the board normally shown as title.'),
-				'placeholder' => _('Required'),
+				'label' => __('Name'),
+				'help' => __('Insert the name of the board normally shown as title.'),
+				'placeholder' => __('Required'),
 				'class' => 'span3',
 				'validation' => 'required|max_length[128]'
 			),
 			'shortname' => array(
 				'database' => TRUE,
 				'type' => 'input',
-				'label' => _('Shortname'),
-				'help' => _('Insert the shorter name of the board. Reserved: "api", "cli", "admin".'),
-				'placeholder' => _('Req.'),
+				'label' => __('Shortname'),
+				'help' => __('Insert the shorter name of the board. Reserved: "api", "cli", "admin".'),
+				'placeholder' => __('Req.'),
 				'class' => 'span1',
 				'validation' => 'required|max_length[5]|alpha_dash',
 				'validation_func' => function($input, $form_internal)
@@ -81,7 +81,7 @@ class Radix_model extends CI_Model
 						{
 							return array(
 								'error_code' => 'PROTECTED_RADIX',
-								'error' => _('You can\'t use the protected shortnames unless you activate the system subdomain feature. The protected shortnames are:') . ' "' . implode(", ",
+								'error' => __('You can\'t use the protected shortnames unless you activate the system subdomain feature. The protected shortnames are:') . ' "' . implode(", ",
 									unserialize(FOOL_PROTECTED_RADIXES)) . '".'
 							);
 						}
@@ -107,7 +107,7 @@ class Radix_model extends CI_Model
 					{
 						return array(
 							'error_code' => 'ALREADY_EXISTS',
-							'error' => _('The shortname is already used for another board.')
+							'error' => __('The shortname is already used for another board.')
 						);
 					}
 				}
@@ -116,10 +116,10 @@ class Radix_model extends CI_Model
 				'database' => TRUE,
 				'boards_preferences' => TRUE,
 				'type' => 'textarea',
-				'label' => _('General rules'),
-				'help' => _('Full board rules displayed in a separate page, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
+				'label' => __('General rules'),
+				'help' => __('Full board rules displayed in a separate page, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
 				'class' => 'span6',
-				'placeholder' => _('MarkDown goes here')
+				'placeholder' => __('MarkDown goes here')
 			),
 			'separator-3' => array(
 				'type' => 'separator'
@@ -128,10 +128,10 @@ class Radix_model extends CI_Model
 				'database' => TRUE,
 				'boards_preferences' => TRUE,
 				'type' => 'textarea',
-				'label' => _('Posting rules'),
-				'help' => _('Posting rules displayed in the posting area, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
+				'label' => __('Posting rules'),
+				'help' => __('Posting rules displayed in the posting area, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
 				'class' => 'span6',
-				'placeholder' => _('MarkDown goes here')
+				'placeholder' => __('MarkDown goes here')
 			),
 			'separator-1' => array(
 				'type' => 'separator'
@@ -139,7 +139,7 @@ class Radix_model extends CI_Model
 			'threads_per_page' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,
-				'label' => _('Maximum number of threads to display in the index pages'),
+				'label' => __('Maximum number of threads to display in the index pages'),
 				'type' => 'input',
 				'class' => 'span1',
 				'validation' => 'trim|required|is_natural',
@@ -148,17 +148,17 @@ class Radix_model extends CI_Model
 			'archive' => array(
 				'database' => TRUE,
 				'type' => 'checkbox',
-				'help' => _('Is this a 4chan archiving board?'),
+				'help' => __('Is this a 4chan archiving board?'),
 				'sub' => array(
 					'paragraph' => array(
 						'type' => 'paragraph',
-						'help' => _('Options for archive boards')
+						'help' => __('Options for archive boards')
 					),
 					'board_url' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
 						'type' => 'input',
-						'label' => _('URL to the 4chan board (facultative)'),
+						'label' => __('URL to the 4chan board (facultative)'),
 						'placeholder' => 'http://boards.4chan.org/' . (is_object($radix) ? $radix->shortname : 'shortname') . '/',
 						'class' => 'span4',
 						'validation' => 'trim|max_length[256]'
@@ -167,7 +167,7 @@ class Radix_model extends CI_Model
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
 						'type' => 'input',
-						'label' => _('URL to the board thumbnails (facultative)'),
+						'label' => __('URL to the board thumbnails (facultative)'),
 						'placeholder' => 'http://0.thumbs.4chan.org/' . (is_object($radix) ? $radix->shortname : 'shortname') . '/',
 						'class' => 'span4',
 						'validation' => 'trim|max_length[256]'
@@ -176,7 +176,7 @@ class Radix_model extends CI_Model
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
 						'type' => 'input',
-						'label' => _('URL to the board images (facultative)'),
+						'label' => __('URL to the board images (facultative)'),
 						'placeholder' => 'http://images.4chan.org/' . (is_object($radix) ? $radix->shortname : 'shortname') . '/',
 						'class' => 'span4',
 						'validation' => 'trim|max_length[256]'
@@ -185,8 +185,8 @@ class Radix_model extends CI_Model
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
 						'type' => 'input',
-						'label' => _('Image fetching workers'),
-						'help' => _('The number of workers that will fetch full images. Set to zero not to fetch them.'),
+						'label' => __('Image fetching workers'),
+						'help' => __('The number of workers that will fetch full images. Set to zero not to fetch them.'),
 						'placeholder' => 5,
 						'value' => 0,
 						'class' => 'span1',
@@ -196,8 +196,8 @@ class Radix_model extends CI_Model
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
 						'type' => 'input',
-						'label' => _('Thumbnail fetching workers'),
-						'help' => _('The number of workers that will fetch thumbnails'),
+						'label' => __('Thumbnail fetching workers'),
+						'help' => __('The number of workers that will fetch thumbnails'),
 						'placeholder' => 5,
 						'value' => 5,
 						'class' => 'span1',
@@ -207,8 +207,8 @@ class Radix_model extends CI_Model
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
 						'type' => 'input',
-						'label' => _('Thread fetching workers'),
-						'help' => _('The number of workers that fetch new threads'),
+						'label' => __('Thread fetching workers'),
+						'help' => __('The number of workers that fetch new threads'),
 						'placeholder' => 5,
 						'value' => 5,
 						'class' => 'span1',
@@ -219,7 +219,7 @@ class Radix_model extends CI_Model
 						'boards_preferences' => TRUE,
 						'type' => 'hidden',
 						'value' => 3,
-						'label' => _('Minutes to refresh the thread'),
+						'label' => __('Minutes to refresh the thread'),
 						'placeholder' => 3,
 						'validation' => 'trim|is_natural|less_than[32]'
 					),
@@ -227,8 +227,8 @@ class Radix_model extends CI_Model
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
 						'type' => 'textarea',
-						'label' => _('Thread refresh rate'),
-						'help' => _('Array of refresh rates  in seconds per page in JSON format'),
+						'label' => __('Thread refresh rate'),
+						'help' => __('Array of refresh rates  in seconds per page in JSON format'),
 						'placeholder' => form_prep('[{"delay": 30, "pages": [0, 1, 2]},
 {"delay": 120, "pages": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},
 {"delay": 30, "pages": [13, 14, 15]}]'),
@@ -241,7 +241,7 @@ class Radix_model extends CI_Model
 							{
 								return array(
 									'error_code' => 'NOT_JSON',
-									'error' => _('The JSON inputted is not valid.')
+									'error' => __('The JSON inputted is not valid.')
 								);
 							}
 						}
@@ -250,12 +250,12 @@ class Radix_model extends CI_Model
 				'sub_inverse' => array(
 					'paragraph' => array(
 						'type' => 'paragraph',
-						'help' => _('Options for normal boards')
+						'help' => __('Options for normal boards')
 					),
 					'thumbnail_op_width' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Opening post thumbnail maximum width after resizing'),
+						'label' => __('Opening post thumbnail maximum width after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -264,7 +264,7 @@ class Radix_model extends CI_Model
 					'thumbnail_op_height' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Opening post thumbnail maximum height after resizing'),
+						'label' => __('Opening post thumbnail maximum height after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -273,7 +273,7 @@ class Radix_model extends CI_Model
 					'thumbnail_reply_width' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Reply thumbnail maximum width after resizing'),
+						'label' => __('Reply thumbnail maximum width after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -282,7 +282,7 @@ class Radix_model extends CI_Model
 					'thumbnail_reply_height' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Reply thumbnail maximum height after resizing'),
+						'label' => __('Reply thumbnail maximum height after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -291,7 +291,7 @@ class Radix_model extends CI_Model
 					'max_image_size_kilobytes' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Full image maximum size in kilobytes'),
+						'label' => __('Full image maximum size in kilobytes'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -300,7 +300,7 @@ class Radix_model extends CI_Model
 					'max_image_size_width' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Full image maximum width in pixels'),
+						'label' => __('Full image maximum width in pixels'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -309,7 +309,7 @@ class Radix_model extends CI_Model
 					'max_image_size_height' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('Full image maximum height in pixels'),
+						'label' => __('Full image maximum height in pixels'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural|greater_than[25]',
@@ -318,7 +318,7 @@ class Radix_model extends CI_Model
 					'max_posts_count' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('The maximum amount of posts before a thread "dies"'),
+						'label' => __('The maximum amount of posts before a thread "dies"'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural',
@@ -327,7 +327,7 @@ class Radix_model extends CI_Model
 					'max_images_count' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('The maximum amount of images in replies before posting more is prohibited'),
+						'label' => __('The maximum amount of images in replies before posting more is prohibited'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|is_natural',
@@ -336,7 +336,7 @@ class Radix_model extends CI_Model
 					'min_image_repost_hours' => array(
 						'database' => TRUE,
 						'boards_preferences' => TRUE,
-						'label' => _('The minimum time in hours to repost the same image (0 means no limit, -1 means never allowing a repost)'),
+						'label' => __('The minimum time in hours to repost the same image (0 means no limit, -1 means never allowing a repost)'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|integer|greater_than[-2]',
@@ -347,42 +347,42 @@ class Radix_model extends CI_Model
 			'display_exif' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,
-				'help' => _('Show the EXIF data (EXIF data is saved in the database regardless)'),
+				'help' => __('Show the EXIF data (EXIF data is saved in the database regardless)'),
 				'type' => 'checkbox',
 				'disabled' => 'disabled',
 			),
 			'enable_poster_hash' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,
-				'help' => _('Enable poster hashes, an IP-based code to temporarily distinguish Anonymous users'),
+				'help' => __('Enable poster hashes, an IP-based code to temporarily distinguish Anonymous users'),
 				'type' => 'checkbox',
 			),
 			'disable_ghost' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,
-				'help' => _('Don\'t allow ghost posting (disallows infinite replying)'),
+				'help' => __('Don\'t allow ghost posting (disallows infinite replying)'),
 				'type' => 'checkbox',
 			),
 			'hide_thumbnails' => array(
 				'database' => TRUE,
 				'type' => 'checkbox',
-				'help' => _('Hide the thumbnails?')
+				'help' => __('Hide the thumbnails?')
 			),
 			'delay_thumbnails' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,
 				'type' => 'checkbox',
-				'help' => _('Hide the thumbnails for 24 hours? (for moderation purposes)')
+				'help' => __('Hide the thumbnails for 24 hours? (for moderation purposes)')
 			),
 			'sphinx' => array(
 				'database' => TRUE,
 				'type' => 'checkbox',
-				'help' => _('Use SphinxSearch as search engine?')
+				'help' => __('Use SphinxSearch as search engine?')
 			),
 			'hidden' => array(
 				'database' => TRUE,
 				'type' => 'checkbox',
-				'help' => _('Hide the board from public access? (only admins and mods will be able to browse it)')
+				'help' => __('Hide the board from public access? (only admins and mods will be able to browse it)')
 			),
 			'separator-2' => array(
 				'type' => 'separator-short'
@@ -390,7 +390,7 @@ class Radix_model extends CI_Model
 			'submit' => array(
 				'type' => 'submit',
 				'class' => 'btn-primary',
-				'value' => _('Submit')
+				'value' => __('Submit')
 			),
 			'close' => array(
 				'type' => 'close'

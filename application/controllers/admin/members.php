@@ -11,7 +11,7 @@ class Members extends Admin_Controller
 		// members are editable by mods!
 		// only admins can change levels though
 		$this->tank_auth->is_allowed() or redirect('admin');
-		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/members") . '">' . _("Members") . '</a>';
+		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/members") . '">' . __("Members") . '</a>';
 	}
 
 
@@ -37,7 +37,7 @@ class Members extends Admin_Controller
 	{
 		$this->load->model('member_model', 'member');
 		$data['users'] = $this->member->get_all_with_profile();
-		$this->viewdata['function_title'] = _('Manage');
+		$this->viewdata['function_title'] = __('Manage');
 		$this->viewdata["main_content_view"] = $this->load->view("admin/members/manage.php",
 			$data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
@@ -66,7 +66,7 @@ class Members extends Admin_Controller
 			{
 				// it's actually fully checked, we just have to throw it in DB
 				$this->profile->save($result['success']);
-				set_notice('success', _('User profile saved!'));
+				set_notice('success', __('User profile saved!'));
 			}
 
 		}
@@ -77,7 +77,7 @@ class Members extends Admin_Controller
 			show_404();
 		}
 
-		$this->viewdata['function_title'] = _('Editing user:') . ' ' . $data['object']->username;
+		$this->viewdata['function_title'] = __('Editing user:') . ' ' . $data['object']->username;
 
 		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator.php",
 			$data, TRUE);

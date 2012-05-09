@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 ?>
 
 <article style="padding:50px;">
-	<h1><?php echo _('Welcome on the 4chan Archiver "FoOlFuuka"'); ?></h1>
+	<h1><?php echo __('Welcome on the 4chan Archiver "FoOlFuuka"'); ?></h1>
 	<h2><?php
 				$board_urls = array();
 				$parenthesis_open = FALSE;

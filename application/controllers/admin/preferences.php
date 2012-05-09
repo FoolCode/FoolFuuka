@@ -16,7 +16,7 @@ class Preferences extends Admin_Controller
 		$this->tank_auth->is_admin() or redirect('admin');
 
 		// set controller title
-		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/preferences") . '">' . _("Preferences") . '</a>';
+		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/preferences") . '">' . __("Preferences") . '</a>';
 	}
 
 	/*
@@ -40,7 +40,7 @@ class Preferences extends Admin_Controller
 	 */
 	function theme()
 	{
-		$this->viewdata["function_title"] = _("Theme");
+		$this->viewdata["function_title"] = __("Theme");
 
 		$form = array();
 
@@ -56,7 +56,7 @@ class Preferences extends Admin_Controller
 			'placeholder' => 'FoOlFuuka',
 			'preferences' => TRUE,
 			'validate' => 'trim|max_length[32]',
-			'help' => _('Sets the title of your site.')
+			'help' => __('Sets the title of your site.')
 		);
 
 		$form['separator-2'] = array(
@@ -65,13 +65,13 @@ class Preferences extends Admin_Controller
 		
 		$form['fs_theme_active_themes'] = array(
 			'type' => 'checkbox_array',
-			'label' => _('Active themes'),
-			'help' => _('Choose the themes to make available to the users. Admins are able to access any of them even if disabled.'),
+			'label' => __('Active themes'),
+			'help' => __('Choose the themes to make available to the users. Admins are able to access any of them even if disabled.'),
 			'checkboxes' => array(
 				array(
 					'type' => 'checkbox',
 					'label' => 'Default theme',
-					'help' => _('Enable Default theme'),
+					'help' => __('Enable Default theme'),
 					'array_key' => 'default',
 					'preferences' => TRUE,
 					'checked' => FOOL_PREF_THEMES_THEME_DEFAULT_ENABLED
@@ -79,7 +79,7 @@ class Preferences extends Admin_Controller
 				array(
 					'type' => 'checkbox',
 					'label' => 'Fuuka theme',
-					'help' => _('Enable Fuuka theme'),
+					'help' => __('Enable Fuuka theme'),
 					'array_key' => 'fuuka',
 					'preferences' => TRUE,
 					'checked' => FOOL_PREF_THEMES_THEME_FUUKA_ENABLED
@@ -87,7 +87,7 @@ class Preferences extends Admin_Controller
 				array(
 					'type' => 'checkbox',
 					'label' => 'Yotsuba theme',
-					'help' => _('Enable Yotsuba theme'),
+					'help' => __('Enable Yotsuba theme'),
 					'array_key' => 'yotsuba',
 					'preferences' => TRUE,
 					'checked' => FOOL_PREF_THEMES_THEME_YOTSUBA_ENABLED
@@ -97,8 +97,8 @@ class Preferences extends Admin_Controller
 		
 		$form['fs_theme_default'] = array(
 			'type' => 'dropdown',
-			'label' => _('Default theme'),
-			'help' => _('The theme the users will see as they reach your site.'),
+			'label' => __('Default theme'),
+			'help' => __('The theme the users will see as they reach your site.'),
 			'options' => array(
 				'default' => 'Default',
 				'fuuka' => 'Fuuka',
@@ -109,10 +109,10 @@ class Preferences extends Admin_Controller
 
 		$form['fs_theme_google_analytics'] = array(
 			'type' => 'input',
-			'label' => _('Google Analytics code'),
+			'label' => __('Google Analytics code'),
 			'placeholder' => 'UX-XXXXXXX-X',
 			'preferences' => TRUE,
-			'help' => _("Insert your Google Analytics code to get statistics."),
+			'help' => __("Insert your Google Analytics code to get statistics."),
 			'class' => 'span2'
 		);
 
@@ -122,33 +122,33 @@ class Preferences extends Admin_Controller
 
 		$form['fs_theme_header_text'] = array(
 			'type' => 'textarea',
-			'label' => _('Header Text ("notices")'),
+			'label' => __('Header Text ("notices")'),
 			'preferences' => TRUE,
-			'help' => _("Inserts the text above in the header, below the nagivation links."),
+			'help' => __("Inserts the text above in the header, below the nagivation links."),
 			'class' => 'span5'
 		);
 
 		$form['fs_theme_header_code'] = array(
 			'type' => 'textarea',
-			'label' => _('Header Code'),
+			'label' => __('Header Code'),
 			'preferences' => TRUE,
-			'help' => _("This will insert the HTML code inside the &lt;HEAD&gt;."),
+			'help' => __("This will insert the HTML code inside the &lt;HEAD&gt;."),
 			'class' => 'span5'
 		);
 
 		$form['fs_theme_footer_text'] = array(
 			'type' => 'textarea',
-			'label' => _('Footer Text'),
+			'label' => __('Footer Text'),
 			'preferences' => TRUE,
-			'help' => _('Credits in the footer and similar.'),
+			'help' => __('Credits in the footer and similar.'),
 			'class' => 'span5'
 		);
 
 		$form['fs_theme_footer_code'] = array(
 			'type' => 'textarea',
-			'label' => _('Footer Code'),
+			'label' => __('Footer Code'),
 			'preferences' => TRUE,
-			'help' => _("This will insert the HTML code above after the &lt;BODY&gt;."),
+			'help' => __("This will insert the HTML code above after the &lt;BODY&gt;."),
 			'class' => 'span5'
 		);
 
@@ -158,7 +158,7 @@ class Preferences extends Admin_Controller
 
 		$form['submit'] = array(
 			'type' => 'submit',
-			'value' => _('Submit'),
+			'value' => __('Submit'),
 			'class' => 'btn btn-primary'
 		);
 
@@ -184,7 +184,7 @@ class Preferences extends Admin_Controller
 	 */
 	function advertising()
 	{
-		$this->viewdata["function_title"] = _("Advertising");
+		$this->viewdata["function_title"] = __("Advertising");
 
 		$form = array();
 
@@ -194,8 +194,8 @@ class Preferences extends Admin_Controller
 
 		$form['fs_ads_top_banner'] = array(
 			'type' => 'textarea',
-			'label' => _('Top banner'),
-			'help' => _('Insert the HTML code provided by your advertiser.'),
+			'label' => __('Top banner'),
+			'help' => __('Insert the HTML code provided by your advertiser.'),
 			'preferences' => TRUE,
 			'validation' => 'trim',
 			'class' => 'span5'
@@ -204,13 +204,13 @@ class Preferences extends Admin_Controller
 		$form['fs_ads_top_banner_active'] = array(
 			'type' => 'checkbox',
 			'preferences' => TRUE,
-			'help' => _('Enable top banner')
+			'help' => __('Enable top banner')
 		);
 
 		$form['fs_ads_bottom_banner'] = array(
 			'type' => 'textarea',
-			'label' => _('Bottom banner'),
-			'help' => _('Insert the HTML code provided by your advertiser.'),
+			'label' => __('Bottom banner'),
+			'help' => __('Insert the HTML code provided by your advertiser.'),
 			'preferences' => TRUE,
 			'validation' => 'trim',
 			'class' => 'span5'
@@ -219,7 +219,7 @@ class Preferences extends Admin_Controller
 		$form['fs_ads_bottom_banner_active'] = array(
 			'type' => 'checkbox',
 			'preferences' => TRUE,
-			'help' => _('Enable bottom banner')
+			'help' => __('Enable bottom banner')
 		);
 
 		$form['separator'] = array(
@@ -228,7 +228,7 @@ class Preferences extends Admin_Controller
 
 		$form['submit'] = array(
 			'type' => 'submit',
-			'value' => _('Submit'),
+			'value' => __('Submit'),
 			'class' => 'btn btn-primary'
 		);
 
@@ -249,7 +249,7 @@ class Preferences extends Admin_Controller
 
 	function registration()
 	{
-		$this->viewdata["function_title"] = _("Registration");
+		$this->viewdata["function_title"] = __("Registration");
 
 		$form = array();
 
@@ -260,12 +260,12 @@ class Preferences extends Admin_Controller
 		$form['fs_reg_disabled'] = array(
 			'type' => 'checkbox',
 			'preferences' => TRUE,
-			'help' => _('Disable New User Registrations')
+			'help' => __('Disable New User Registrations')
 		);
 		$form['fs_reg_email_disabled'] = array(
 			'type' => 'checkbox',
 			'preferences' => TRUE,
-			'help' => _('Disable Email Activation')
+			'help' => __('Disable Email Activation')
 		);
 
 		$form['separator'] = array(
@@ -274,23 +274,23 @@ class Preferences extends Admin_Controller
 
 		$form['paragraph'] = array(
 			'type' => 'paragraph',
-			'help' => _('In order to use reCAPTCHA&trade; you need to sign up for the service at <a href="http://www.google.com/recaptcha">reCAPTCHA&trade;</a>, which will provide you with a public and a private key.')
+			'help' => __('In order to use reCAPTCHA&trade; you need to sign up for the service at <a href="http://www.google.com/recaptcha">reCAPTCHA&trade;</a>, which will provide you with a public and a private key.')
 		);
 
 		$form['fs_reg_recaptcha_public'] = array(
 			'type' => 'input',
-			'label' => _('reCaptcha&trade; Public Key'),
+			'label' => __('reCaptcha&trade; Public Key'),
 			'preferences' => TRUE,
-			'help' => _('Insert the public key provided by reCAPTCHA&trade;.'),
+			'help' => __('Insert the public key provided by reCAPTCHA&trade;.'),
 			'validation' => 'trim',
 			'class' => 'span4'
 		);
 
 		$form['fs_reg_recaptcha_secret'] = array(
 			'type' => 'input',
-			'label' => _('reCaptcha&trade; Secret Key'),
+			'label' => __('reCaptcha&trade; Secret Key'),
 			'preferences' => TRUE,
-			'help' => _('Insert the private key provided by reCAPTCHA&trade;.'),
+			'help' => __('Insert the private key provided by reCAPTCHA&trade;.'),
 			'validation' => 'trim',
 			'class' => 'span4'
 		);
@@ -301,7 +301,7 @@ class Preferences extends Admin_Controller
 
 		$form['submit'] = array(
 			'type' => 'submit',
-			'value' => _('Submit'),
+			'value' => __('Submit'),
 			'class' => 'btn btn-primary'
 		);
 

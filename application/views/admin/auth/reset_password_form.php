@@ -15,11 +15,11 @@
 	?>
 	<?php echo form_open(); ?>
 	
-	<label><?php echo form_label(_('New Password'), $new_password['id']); ?></label>
+	<label><?php echo form_label(__('New Password'), $new_password['id']); ?></label>
 	<?php echo form_password($new_password); ?>
 	<span class="help-inline" style="color: red;"><?php echo form_error($new_password['name']); ?><?php echo isset($errors[$new_password['name']]) ? $errors[$new_password['name']] : ''; ?></span>
 	
-	<label><?php echo form_label(_('Confirm New Password'), $confirm_new_password['id']); ?></label>
+	<label><?php echo form_label(__('Confirm New Password'), $confirm_new_password['id']); ?></label>
 	<?php echo form_password($confirm_new_password); ?>
 	<span class="help-inline" style="color: red;"><?php echo form_error($confirm_new_password['name']); ?><?php echo isset($errors[$confirm_new_password['name']]) ? $errors[$confirm_new_password['name']] : ''; ?></span>
 	
@@ -28,7 +28,7 @@
 	<?php
 	echo form_submit(array(
 		'name' => 'change',
-		'value' => _('Change Password'),
+		'value' => __('Change Password'),
 		'class' => 'btn btn-primary')
 	);
 	?>

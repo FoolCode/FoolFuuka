@@ -125,7 +125,7 @@ class Migrations {
 		{
 			// Mark wrongly formatted files as FALSE for later filtering
 			$name = basename($files[$i], EXT);
-			if ( ! preg_match('/^\d{3}_(\w+)$/', $name))
+			if ( ! preg_match('/^\d{3}__(\w+)$/', $name))
 			{
 				$files[$i] = FALSE;
 			}
@@ -216,7 +216,7 @@ class Migrations {
 			$name = basename($f[0], EXT);
 
 			// Filename validations
-			if (preg_match('/^\d{3}_(\w+)$/', $name, $match))
+			if (preg_match('/^\d{3}__(\w+)$/', $name, $match))
 			{
 				$match[1] = strtolower($match[1]);
 

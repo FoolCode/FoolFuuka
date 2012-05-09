@@ -14,7 +14,7 @@ class Boards extends Admin_Controller
 		$this->tank_auth->is_admin() or redirect('admin');
 
 		// title on top
-		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/boards") . '">' . _("Boards") . '</a>';
+		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/boards") . '">' . __("Boards") . '</a>';
 	}
 
 
@@ -26,7 +26,7 @@ class Boards extends Admin_Controller
 
 	function manage()
 	{
-		$this->viewdata["function_title"] = _('Manage boards');
+		$this->viewdata["function_title"] = __('Manage boards');
 
 		$data["boards"] = $this->radix->get_all();
 
@@ -54,18 +54,18 @@ class Boards extends Admin_Controller
 				$this->radix->save($result['success']);
 				if (is_null($shortname))
 				{
-					flash_notice('success', _('New board created!'));
+					flash_notice('success', __('New board created!'));
 					redirect('admin/boards/board/' . $result['success']['shortname']);
 				}
 				else if ($shortname != $result['success']['shortname'])
 				{
 					// case in which letter was changed
-					flash_notice('success', _('Board information updated.'));
+					flash_notice('success', __('Board information updated.'));
 					redirect('admin/boards/board/' . $result['success']['shortname']);
 				}
 				else
 				{
-					set_notice('success', _('Board information updated.'));
+					set_notice('success', __('Board information updated.'));
 				}
 			}
 		}
@@ -78,7 +78,7 @@ class Boards extends Admin_Controller
 
 		$data['object'] = $board;
 
-		$this->viewdata["function_title"] = _('Editing board:') . ' ' . $board->shortname;
+		$this->viewdata["function_title"] = __('Editing board:') . ' ' . $board->shortname;
 		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
 			$data, TRUE);
 		
@@ -87,8 +87,8 @@ class Boards extends Admin_Controller
 			$this->viewdata["main_content_view"] = '
 				<div class="alert">
 					<a class="btn btn-warning" href="' . site_url('admin/boards/search_table/create/' . $board->id) . '">
-						' . _('Create search table') . '
-					</a> '. _('This board doesn\'t have the search table. You can create it by follwing this button.') . '
+						' . __('Create search table') . '
+					</a> '. __('This board doesn\'t have the search table. You can create it by follwing this button.') . '
 				</div>
 			' . $this->viewdata["main_content_view"];
 		}
@@ -98,8 +98,8 @@ class Boards extends Admin_Controller
 			$this->viewdata["main_content_view"] = '
 				<div class="alert">
 					<a class="btn btn-warning" href="' . site_url('admin/boards/search_table/remove/' . $board->id) . '">
-						' . _('Remove search table') . '
-					</a> '. _('You are using Sphinx Search for this board, so you can remove the search table.') . '
+						' . __('Remove search table') . '
+					</a> '. __('You are using Sphinx Search for this board, so you can remove the search table.') . '
 				</div>
 			' . $this->viewdata["main_content_view"];
 		}
@@ -124,7 +124,7 @@ class Boards extends Admin_Controller
 			{
 				// it's actually fully checked, we just have to throw it in DB
 				$this->radix->save($result['success']);
-				flash_notice('success', _('New board created!'));
+				flash_notice('success', __('New board created!'));
 				redirect('admin/boards/board/' . $result['success']['shortname']);
 			}
 		}
@@ -133,7 +133,7 @@ class Boards extends Admin_Controller
 		$data['form']['open']['action'] = site_url('admin/boards/add_new');
 
 		// panel for creating a new board
-		$this->viewdata["function_title"] = _('Creating a new board');
+		$this->viewdata["function_title"] = __('Creating a new board');
 		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
 			$data, TRUE);
 				
@@ -158,13 +158,13 @@ class Boards extends Admin_Controller
 				case("create"):
 					if (!$this->radix->create_search($board))
 					{
-						flash_notice('error', sprintf(_('Failed to create the search table for the board %s.'), $board->shortname));
+						flash_notice('error', sprintf(__('Failed to create the search table for the board %s.'), $board->shortname));
 						log_message("error", "Controller: board.php/search_table: failed creating search table");
 					}
 					else
 					{
 						flash_notice('success',
-							sprintf(_('The search table for the board %s has been created.'), $board->shortname));
+							sprintf(__('The search table for the board %s has been created.'), $board->shortname));
 					}
 					redirect('admin/boards/board/' . $board->shortname);
 					break;
@@ -172,13 +172,13 @@ class Boards extends Admin_Controller
 				case("remove"):
 					if (!$this->radix->remove_search($board))
 					{
-						flash_notice('error', sprintf(_('Failed to remove the search table for the board %s.'), $board->shortname));
+						flash_notice('error', sprintf(__('Failed to remove the search table for the board %s.'), $board->shortname));
 						log_message("error", "Controller: board.php/search_table: failed creating search table");
 					}
 					else
 					{
 						flash_notice('success',
-							sprintf(_('The search table for the board %s has been removed.'), $board->shortname));
+							sprintf(__('The search table for the board %s has been removed.'), $board->shortname));
 					}
 					redirect('admin/boards/board/' . $board->shortname);
 					break;
@@ -188,19 +188,19 @@ class Boards extends Admin_Controller
 		switch ($type)
 		{
 			case('create'):
-				$this->viewdata["function_title"] = _('Creating search table for board:') . ' ' . $board->shortname;
+				$this->viewdata["function_title"] = __('Creating search table for board:') . ' ' . $board->shortname;
 				$data['alert_level'] = 'warning';
 				$data['message'] = 
-					'<strong>' ._('Do you want to create the search table for this board?') . '</strong><br/>' .
-					_('Creating the search table can take time if you have a board with even just 100.000 entries.').
+					'<strong>' .__('Do you want to create the search table for this board?') . '</strong><br/>' .
+					__('Creating the search table can take time if you have a board with even just 100.000 entries.').
 					'<br/>' .
-					_('Normally, even if the page times out, the database will keep building it.') .
+					__('Normally, even if the page times out, the database will keep building it.') .
 					'<br/>' .
-					_('To make sure your search table is fully created, you can execute the following via the command line of your server.').
+					__('To make sure your search table is fully created, you can execute the following via the command line of your server.').
 					'<br/>'.
 					'<pre>$ cd '. FCPATH . '
 $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
-					_('For very large boards, past a few millions of entries, this would could hours: you should use SphinxSearch instead, or anyway you should use the command line.');
+					__('For very large boards, past a few millions of entries, this would could hours: you should use SphinxSearch instead, or anyway you should use the command line.');
 
 				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
 					$data, TRUE);
@@ -208,11 +208,11 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 				break;
 			
 			case('remove'):
-				$this->viewdata["function_title"] = _('Removing search table for board:') . ' ' . $board->shortname;
+				$this->viewdata["function_title"] = __('Removing search table for board:') . ' ' . $board->shortname;
 				$data['alert_level'] = 'warning';
 				$data['message'] =
-					'<strong>' ._('Do you want to remove the search table for this board?') . '</strong><br/>' .
-					_('The search table can be created at any time, though it can take a while to create if the board is large.');
+					'<strong>' .__('Do you want to remove the search table for this board?') . '</strong><br/>' .
+					__('The search table can be created at any time, though it can take a while to create if the board is large.');
 				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
 					$data, TRUE);
 				$this->load->view('admin/default', $this->viewdata);
@@ -235,12 +235,12 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 					if (!$this->radix->remove($id))
 					{
 						flash_notice('error',
-							sprintf(_('Failed to delete the board %s.'), $board->shortname));
+							sprintf(__('Failed to delete the board %s.'), $board->shortname));
 						log_message("error", "Controller: board.php/remove: failed board removal");
 						redirect('admin/boards/manage');
 					}
 					flash_notice('success',
-						sprintf(_('The board %s has been deleted.'), $board->shortname));
+						sprintf(__('The board %s has been deleted.'), $board->shortname));
 					redirect('admin/boards/manage');
 					break;
 			}
@@ -249,11 +249,11 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 		switch ($type)
 		{
 			case('board'):
-				$this->viewdata["function_title"] = _('Removing board:') . ' ' . $board->shortname;
+				$this->viewdata["function_title"] = __('Removing board:') . ' ' . $board->shortname;
 				$data['alert_level'] = 'warning';
-				$data['message'] = _('Do you really want to remove the board and all its data?') .
+				$data['message'] = __('Do you really want to remove the board and all its data?') .
 					'<br/>' .
-					_('Notice: due to its size, you will have to remove the image folder manually. The folder will have the "removed_" prefix.');
+					__('Notice: due to its size, you will have to remove the image folder manually. The folder will have the "removed_" prefix.');
 
 				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
 					$data, TRUE);
@@ -265,7 +265,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 	
 	function preferences()
 	{
-		$this->viewdata["function_title"] = _("Preferences");
+		$this->viewdata["function_title"] = __("Preferences");
 
 		$form = array();
 		
@@ -275,23 +275,23 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 
 		$form['fs_fuuka_boards_directory'] = array(
 			'type' => 'input',
-			'label' => _('Boards directory'),
+			'label' => __('Boards directory'),
 			'preferences' => TRUE,
-			'help' => _('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
+			'help' => __('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
 		);
 
 		$form['fs_fuuka_boards_url'] = array(
 			'type' => 'input',
-			'label' => _('Boards URL'),
+			'label' => __('Boards URL'),
 			'preferences' => TRUE,
-			'help' => _('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
+			'help' => __('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
 		);
 
 		$form['fs_fuuka_boards_db'] = array(
 			'type' => 'input',
-			'label' => _('Boards database'),
+			'label' => __('Boards database'),
 			'preferences' => TRUE,
-			'help' => _('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
+			'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
 		);
 
 		$form['separator-2'] = array(
@@ -300,7 +300,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 
 		$form['submit'] = array(
 			'type' => 'submit',
-			'value' => _('Submit'),
+			'value' => __('Submit'),
 			'class' => 'btn btn-primary'
 		);
 
@@ -326,48 +326,48 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 		if($this->input->post('install') || $this->input->post('upgrade'))
 		{
 			$this->asagi->install();
-			set_notice('success', _('Downloaded and installed the latest version of Asagi.'));
+			set_notice('success', __('Downloaded and installed the latest version of Asagi.'));
 		}
 		
 		if($this->asagi->is_installed() && $this->input->post('remove'))
 		{
 			$this->asagi->remove();
-			set_notice('success', _('Asagi has been removed.'));
+			set_notice('success', __('Asagi has been removed.'));
 		}
 		
 		if($this->asagi->is_installed() && $this->input->post('update_settings'))
 		{
 			$this->asagi->update_settings();
-			set_notice('success', _('Settings updated.'));
+			set_notice('success', __('Settings updated.'));
 		}
 		
 		if($this->asagi->is_installed() && $this->input->post('run'))
 		{
 			$this->asagi->run();
-			set_notice('success', _('Ran Asagi.'));
+			set_notice('success', __('Ran Asagi.'));
 		}
 		
 		if($this->asagi->is_installed() && $this->input->post('kill'))
 		{
 			$this->asagi->kill();
-			set_notice('success', _('Stopped Asagi.'));
+			set_notice('success', __('Stopped Asagi.'));
 		}
 		
 		if($this->asagi->is_installed() && $this->input->post('enable_autorun'))
 		{
 			$this->submit_preferences(array('fs_asagi_autorun_enabled' => 1));
-			set_notice('success', _('Enabled Asagi autorun.'));
+			set_notice('success', __('Enabled Asagi autorun.'));
 		}
 		
 		if($this->asagi->is_installed() && $this->input->post('disable_autorun'))
 		{
 			$this->submit_preferences(array('fs_asagi_autorun_enabled' => 0));
-			set_notice('success', _('Disabled Asagi autorun.'));
+			set_notice('success', __('Disabled Asagi autorun.'));
 		}
 		
 		if($this->asagi->is_installed())
 		{
-			$this->viewdata["function_title"] = _('Asagi');
+			$this->viewdata["function_title"] = __('Asagi');
 			$this->viewdata["main_content_view"] = $this->load->view('admin/boards/asagi',
 					NULL, TRUE);
 			$this->load->view('admin/default', $this->viewdata);
@@ -375,7 +375,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 		}
 		else
 		{
-			$this->viewdata["function_title"] = _('Asagi installation');
+			$this->viewdata["function_title"] = __('Asagi installation');
 			$this->viewdata["main_content_view"] = $this->load->view('admin/boards/asagi_install',
 					NULL, TRUE);
 			$this->load->view('admin/default', $this->viewdata);
@@ -398,7 +398,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'label' => 'Global SphinxSearch',
 			'placeholder' => 'FoOlFuuka',
 			'preferences' => TRUE,
-			'help' => _('Activate Sphinx globally (enables crossboard search)')
+			'help' => __('Activate Sphinx globally (enables crossboard search)')
 		);
 
 		$form['fu_sphinx_listen'] = array(
@@ -406,7 +406,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'label' => 'Listen (Sphinx)',
 			'placeholder' => FOOL_PREF_SPHINX_LISTEN,
 			'preferences' => TRUE,
-			'help' => _('Set the address and port to your Sphinx instance.'),
+			'help' => __('Set the address and port to your Sphinx instance.'),
 			'class' => 'span2',
 			'validation' => 'trim|max_length[48]',
 			'validation_func' => function($input, $form)
@@ -415,7 +415,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 				{
 					return array(
 						'error_code' => 'MISSING_COLON',
-						'error' => _('The Sphinx listening address and port aren\'t formatted correctly.')
+						'error' => __('The Sphinx listening address and port aren\'t formatted correctly.')
 					);
 				}
 
@@ -425,7 +425,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 				{
 					return array(
 						'error_code' => 'WRONG_COLON_NUMBER',
-						'error' => _('The Sphinx listening address and port aren\'t formatted correctly.')
+						'error' => __('The Sphinx listening address and port aren\'t formatted correctly.')
 					);
 				}
 
@@ -433,7 +433,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 				{
 					return array(
 						'error_code' => 'PORT_NOT_A_NUMBER',
-						'error' => _('The port specified isn\'t a valid number.')
+						'error' => __('The port specified isn\'t a valid number.')
 					);
 				}
 
@@ -446,7 +446,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 				{
 					return array(
 						'warning_code' => 'CONNECTION_NOT_ESTABLISHED',
-						'warning' => _('The Sphinx server couldn\'t be contacted at the specified address and port.')
+						'warning' => __('The Sphinx server couldn\'t be contacted at the specified address and port.')
 					);
 				}
 
@@ -460,7 +460,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'placeholder' => FOOL_PREF_SPHINX_LISTEN_MYSQL,
 			'preferences' => TRUE,
 			'validation' => 'trim|max_length[48]',
-			'help' => _('Set the address and port to your MySQL instance.'),
+			'help' => __('Set the address and port to your MySQL instance.'),
 			'class' => 'span2'
 		);
 
@@ -469,7 +469,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'label' => 'Working Directory',
 			'placeholder' => FOOL_PREF_SPHINX_DIR,
 			'preferences' => TRUE,
-			'help' => _('Set the working directory to your Sphinx working directory.'),
+			'help' => __('Set the working directory to your Sphinx working directory.'),
 			'class' => 'span3',
 			'validation' => 'trim',
 			'validation_func' => function($input, $form)
@@ -478,7 +478,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 				{
 					return array(
 						'error_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',
-						'error' => _('Couldn\'t find the Sphinx working directory.')
+						'error' => __('Couldn\'t find the Sphinx working directory.')
 					);
 				}
 
@@ -491,7 +491,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'label' => 'Minimum Word Length',
 			'placeholder' => FOOL_PREF_SPHINX_MIN_WORD,
 			'preferences' => TRUE,
-			'help' => _('Set the minimum word length indexed by Sphinx.'),
+			'help' => __('Set the minimum word length indexed by Sphinx.'),
 			'class' => 'span1',
 			'validation' => 'trim|is_natural_no_zero'
 		);
@@ -502,7 +502,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'placeholder' => FOOL_PREF_SPHINX_MEMORY,
 			'validation' => 'is_natural|greater_than[256]',
 			'preferences' => TRUE,
-			'help' => _('Set the memory limit for the Sphinx instance in MegaBytes.'),
+			'help' => __('Set the memory limit for the Sphinx instance in MegaBytes.'),
 			'class' => 'span1'
 		);
 
@@ -512,7 +512,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 
 		$form['submit'] = array(
 			'type' => 'submit',
-			'value' => _('Submit'),
+			'value' => __('Submit'),
 			'class' => 'btn btn-primary'
 		);
 

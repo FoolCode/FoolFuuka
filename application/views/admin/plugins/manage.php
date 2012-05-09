@@ -5,10 +5,10 @@ if (!defined('BASEPATH'))
 <table class="table table-bordered table-striped table-condensed">
 	<thead>
 		<tr>
-			<th><?php echo _('Plugin name') ?></th>
-			<th><?php echo _('Description') ?></th>
-			<th><?php echo _('Status') ?></th>
-			<th><?php echo _('Remove') ?></th>
+			<th><?php echo __('Plugin name') ?></th>
+			<th><?php echo __('Description') ?></th>
+			<th><?php echo __('Status') ?></th>
+			<th><?php echo __('Remove') ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -21,15 +21,15 @@ if (!defined('BASEPATH'))
 					echo form_open('admin/plugins/action/' . $plugin->info->slug, '',
 						array('action' => $plugin->enabled ? 'disable' : 'enable')
 					);
-					echo '<input type="submit" class="btn" value="' . ($plugin->enabled ? _('Disable')
-							: _('Enable')) . '" />';
+					echo '<input type="submit" class="btn" value="' . ($plugin->enabled ? __('Disable')
+							: __('Enable')) . '" />';
 					echo form_close();
 					?>
 				</td>
 				<td><?php
 					echo form_open('admin/plugins/action', '', array('action' => 'remove')
 					);
-					echo '<input type="submit" class="btn" value="' . _('Remove') . '" />';
+					echo '<input type="submit" class="btn" value="' . __('Remove') . '" />';
 					echo form_close();
 					?>
 				</td></td>

@@ -21,7 +21,7 @@ class Report_model extends CI_Model
 				'type' => 'open',
 			),
 			'board' => array(
-				'label' => _('Board shortname'),
+				'label' => __('Board shortname'),
 				'validation_func' => function($input, $form_internal)
 				{
 					// no need to check if isset, we wouldn't be here if
@@ -36,14 +36,14 @@ class Report_model extends CI_Model
 
 					return array(
 						'error_code' => 'BOARD_SHORTNAME_NOT_FOUND',
-						'error' => _('Couldn\'t find the board with the submitted shortname.'),
+						'error' => __('Couldn\'t find the board with the submitted shortname.'),
 						'critical' => TRUE
 					);
 				}
 			),
 			'board_id' => array(
 				'type' => 'hidden',
-				'label' => _('Board ID'),
+				'label' => __('Board ID'),
 				'database' => TRUE,
 				'validation' => 'is_int',
 				'validation_func' => function($input, $form_internal)
@@ -52,7 +52,7 @@ class Report_model extends CI_Model
 					{
 						return array(
 							'error_code' => 'BOARD_ID_NOT_SENT',
-							'error' => _('You didn\'t send a board ID.'),
+							'error' => __('You didn\'t send a board ID.'),
 							'critical' => TRUE
 						);
 					}
@@ -66,7 +66,7 @@ class Report_model extends CI_Model
 						{
 							return array(
 								'error_code' => 'BOARD_ID_NOT_FOUND',
-								'error' => _('Couldn\'t find the board with the submitted ID.'),
+								'error' => __('Couldn\'t find the board with the submitted ID.'),
 								'critical' => TRUE
 							);
 						}
@@ -78,7 +78,7 @@ class Report_model extends CI_Model
 			'post' => array(
 				'type' => 'hidden',
 				'validation' => 'trim',
-				'label' => _('Post number'),
+				'label' => __('Post number'),
 				'validation_func' => function($input, $form_internal)
 				{
 					// check that the doc_id of the post exists
@@ -90,7 +90,7 @@ class Report_model extends CI_Model
 					{
 						return array(
 							'error_code' => 'POST_NUM_NOT_FOUND',
-							'error' => _('Couldn\'t find the post with the submitted post number.'),
+							'error' => __('Couldn\'t find the post with the submitted post number.'),
 							'critical' => TRUE
 						);
 					}
@@ -100,7 +100,7 @@ class Report_model extends CI_Model
 			),
 			'doc_id' => array(
 				'type' => 'hidden',
-				'label' => _('Post ID'),
+				'label' => __('Post ID'),
 				'database' => TRUE,
 				'validation' => 'is_int',
 				'validation_func' => function($input, $form_internal)
@@ -109,7 +109,7 @@ class Report_model extends CI_Model
 					{
 						return array(
 							'error_code' => 'POST_ID_NOT_SENT',
-							'error' => _('You didn\'t send a post ID.'),
+							'error' => __('You didn\'t send a post ID.'),
 							'critical' => TRUE
 						);
 					}
@@ -122,7 +122,7 @@ class Report_model extends CI_Model
 					{
 						return array(
 							'error_code' => 'POST_DOC_ID_NOT_FOUND',
-							'error' => _('Couldn\'t find the post with the submitted doc_id.'),
+							'error' => __('Couldn\'t find the post with the submitted doc_id.'),
 							'critical' => TRUE
 						);
 					}
@@ -136,7 +136,7 @@ class Report_model extends CI_Model
 			),
 			'reason' => array(
 				'type' => 'textarea',
-				'label' => _('Reason'),
+				'label' => __('Reason'),
 				'database' => TRUE,
 				'validation' => 'trim|max_length[512]'
 			),
@@ -146,7 +146,7 @@ class Report_model extends CI_Model
 			'submit' => array(
 				'type' => 'submit',
 				'class' => 'btn-primary',
-				'value' => _('Submit')
+				'value' => __('Submit')
 			),
 			'close' => array(
 				'type' => 'close'

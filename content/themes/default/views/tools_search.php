@@ -26,7 +26,7 @@ if(isset($board)) :
 			'data-function' => 'searchShow',
 			'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : '',
 			'class' => 'span4 search-query',
-			'placeholder' => ($board->shortname)?_('Search or insert post no. or thread URL'):_('Global Search')
+			'placeholder' => ($board->shortname)?__('Search or insert post no. or thread URL'):__('Global Search')
 		));
 		?>
 		<div class="search-dropdown-menu">
@@ -35,7 +35,7 @@ if(isset($board)) :
 					<?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
-						'value' => _('Undefined'),
+						'value' => __('Undefined'),
 						'name' => 'submit_undefined',
 						'style' => 'display:none;'
 					))
@@ -44,7 +44,7 @@ if(isset($board)) :
 					<?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
-						'value' => _('Search'),
+						'value' => __('Search'),
 						'name' => 'submit_search'
 					))
 					?>
@@ -53,7 +53,7 @@ if(isset($board)) :
 					if($board->shortname) :
 						echo form_submit(array(
 							'class' => 'btn btn-success btn-mini',
-							'value' => _('Global Search'),
+							'value' => __('Global Search'),
 							'name' => 'submit_search_global'
 						));
 					?>
@@ -61,7 +61,7 @@ if(isset($board)) :
 					<?php
 						echo form_submit(array(
 							'class' => 'btn btn-success btn-mini',
-							'value' => _('Go to post'),
+							'value' => __('Go to post'),
 							'name' => 'submit_post'
 						));
 					endif;
@@ -74,7 +74,7 @@ if(isset($board)) :
 			</ul>
 			
 			<ul class="pull-right">
-				<li><?php echo _('Filters:') ?></li>
+				<li><?php echo __('Filters:') ?></li>
 				<li>
 					<label>
 						<?php echo form_radio(array('name' => 'deleted', 'value' => '', 'checked' => (empty($search["deleted"]))
@@ -302,9 +302,9 @@ if(isset($board)) :
 					</li><li><?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini',
-						'value' => _('Search image'),
+						'value' => __('Search image'),
 						'name' => 'submit_image',
-						'title' => _('On most browsers you can also drop the file on the search bar.'),
+						'title' => __('On most browsers you can also drop the file on the search bar.'),
 						'style' => 'margin-top:0;',
 					))
 					?></li>
@@ -314,8 +314,8 @@ if(isset($board)) :
 				?>
 					
 				<li class="divider"></li>
-				<li style="margin-top: 5px;"><?php echo _('Your latest searches:') ?>
-					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; padding: 1px 3px; line-height:normal;color:#FFF; position:relative; top:-1px;"><?php echo _('Clear') ?></a></div>
+				<li style="margin-top: 5px;"><?php echo __('Your latest searches:') ?>
+					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; padding: 1px 3px; line-height:normal;color:#FFF; position:relative; top:-1px;"><?php echo __('Clear') ?></a></div>
 				</li>
 				<?php 
 					if(isset($latest_searches) || $latest_searches = @json_decode($this->input->cookie('foolfuuka_search_latest_5'), TRUE))

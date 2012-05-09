@@ -15,7 +15,7 @@ class Install extends Install_Controller
 		// make sure people don't get here if FoOlSlide is already installed
 		if (file_exists("config.php"))
 			redirect('admin');
-		$this->viewdata["controller_title"] = _("FoOlFuuka Installation");
+		$this->viewdata["controller_title"] = __("FoOlFuuka Installation");
 	}
 
 	/**
@@ -41,53 +41,53 @@ class Install extends Install_Controller
 		);
 		
 		$form['db_type'] = array(
-			'label' => _('Database type'),
+			'label' => __('Database type'),
 			'type' => 'input',
 			'values' => array('mysql' => 'MySQL'),
 			'value' => 'mysql',
 			'disabled' => 'disabled',
-			'help' => _('The type of database you\'re going to use. There\'s only one option currently.')
+			'help' => __('The type of database you\'re going to use. There\'s only one option currently.')
 		);
 
 		$form['db_hostname'] = array(
-			'label' => _('Database hostname'),
+			'label' => __('Database hostname'),
 			'type' => 'input',
 			'placeholder' => 'required',
 			'required' => 'required',
 			'value' => 'localhost',
-			'help' => _('The hostname of the server hosting the database. 99.8% of times is localhost')
+			'help' => __('The hostname of the server hosting the database. 99.8% of times is localhost')
 		);
 
 		$form['db_name'] = array(
-			'label' => _('Database name'),
+			'label' => __('Database name'),
 			'type' => 'input',
 			'placeholder' => 'required',
 			'required' => 'required',
-			'help' => _('The name of the database')
+			'help' => __('The name of the database')
 		);
 
 		$form['db_username'] = array(
-			'label' => _('Database username'),
+			'label' => __('Database username'),
 			'type' => 'input',
 			'id' => 'db_username',
 			'required' => 'required',
 			'placeholder' => 'required',
-			'help' => _('The username of the user with permissions to the database')
+			'help' => __('The username of the user with permissions to the database')
 		);
 
 		$form['db_password'] = array(
-			'label' => _('Database password'),
+			'label' => __('Database password'),
 			'type' => 'password',
 			'required' => 'required',
 			'placeholder' => 'required',
-			'help' => _('The password of the user with permissions to the database')
+			'help' => __('The password of the user with permissions to the database')
 		);
 
 		$form['db_prefix'] = array(
-			'label' => _('Database prefix'),
+			'label' => __('Database prefix'),
 			'type' => 'input',
 			'value' => 'fu_',
-			'help' => _('Add a  database prefix to avoid collisions, in example if you have other ' . FOOL_NAME)
+			'help' => __('Add a  database prefix to avoid collisions, in example if you have other ' . FOOL_NAME)
 		);
 
 		$form['spacer'] = array(
@@ -95,27 +95,27 @@ class Install extends Install_Controller
 		);
 
 		$form['username'] = array(
-			'label' => _('Administrator username'),
+			'label' => __('Administrator username'),
 			'type' => 'input',
 			'required' => 'required',
 			'placeholder' => 'required',
-			'help' => _('The username of the administrator\'s account')
+			'help' => __('The username of the administrator\'s account')
 		);
 
 		$form['password'] = array(
-			'label' => _('Administrator password'),
+			'label' => __('Administrator password'),
 			'type' => 'password',
 			'placeholder' => 'required',
 			'required' => 'required',
-			'help' => _('The password of the administrator\'s account')
+			'help' => __('The password of the administrator\'s account')
 		);
 
 		$form['email'] = array(
-			'label' => _('Administrator email'),
+			'label' => __('Administrator email'),
 			'type' => 'input',
 			'placeholder' => 'required',
 			'required' => 'required',
-			'help' => _('The email of the administrator\'s account')
+			'help' => __('The email of the administrator\'s account')
 		);
 		
 		$form['spacer2'] = array(
@@ -160,17 +160,17 @@ class Install extends Install_Controller
 
 		// validate the inputted data with the validation class
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('db_type', _('Database type'), '');
-		$this->form_validation->set_rules('db_hostname', _('Database hostname'), '');
-		$this->form_validation->set_rules('db_name', _('Database name'), '');
-		$this->form_validation->set_rules('db_username', _('Database username'), '');
-		$this->form_validation->set_rules('db_password', _('Database password'), '');
-		$this->form_validation->set_rules('db_prefix', _('Database prefix'), '');
-		$this->form_validation->set_rules('username', _('Administrator username'),
+		$this->form_validation->set_rules('db_type', __('Database type'), '');
+		$this->form_validation->set_rules('db_hostname', __('Database hostname'), '');
+		$this->form_validation->set_rules('db_name', __('Database name'), '');
+		$this->form_validation->set_rules('db_username', __('Database username'), '');
+		$this->form_validation->set_rules('db_password', __('Database password'), '');
+		$this->form_validation->set_rules('db_prefix', __('Database prefix'), '');
+		$this->form_validation->set_rules('username', __('Administrator username'),
 			'required|min_length[4]|max_length[20]');
-		$this->form_validation->set_rules('password', _('Administrator password'),
+		$this->form_validation->set_rules('password', __('Administrator password'),
 			'required|min_length[5]|max_length[20]');
-		$this->form_validation->set_rules('email', _('Administrator email'),
+		$this->form_validation->set_rules('email', __('Administrator email'),
 			'required|valid_email');
 
 		if ($this->form_validation->run() == FALSE)
@@ -199,7 +199,7 @@ class Install extends Install_Controller
 		{
 			// unable to connect
 			set_notice('error',
-				_('Connection with database not enstabilished: check the database fields.'));
+				__('Connection with database not enstabilished: check the database fields.'));
 			return false;
 		}
 
@@ -279,7 +279,7 @@ class Install extends Install_Controller
 
 		// a nice notice to tell that FoOlSlide install was a success
 		flash_notice('notice',
-			_(FOOL_NAME . ' has installed successfully. Check the preferences and make sure you create a team for your own chapters.'));
+			__(FOOL_NAME . ' has installed successfully. Check the preferences and make sure you create a team for your own chapters.'));
 		redirect('/admin/');
 	}
 
@@ -296,7 +296,7 @@ class Install extends Install_Controller
 		if (version_compare(phpversion(), FOOL_REQUIREMENT_PHP) < 0)
 		{
 			set_notice('error',
-				_('You need at least PHP version ' . FOOL_REQUIREMENT_PHP . ' to run ' . FOOL_NAME . '. This means you have a many years old version. It is suggested to upgrade to a more recent version of PHP to avoid security issues with your server in general.'));
+				__('You need at least PHP version ' . FOOL_REQUIREMENT_PHP . ' to run ' . FOOL_NAME . '. This means you have a many years old version. It is suggested to upgrade to a more recent version of PHP to avoid security issues with your server in general.'));
 			$prob = TRUE;
 			return FALSE;
 		}
@@ -304,7 +304,7 @@ class Install extends Install_Controller
 		if (!file_exists('assets/config.sample.php'))
 		{
 			set_notice('error',
-				sprintf(_('The file %s was removed. The installation can\'t continue without that file. You can find it in the ' . FOOL_NAME . ' download.'),
+				sprintf(__('The file %s was removed. The installation can\'t continue without that file. You can find it in the ' . FOOL_NAME . ' download.'),
 					FCPATH . 'config.sample.php'));
 			$prob = TRUE;
 			return FALSE;
@@ -313,7 +313,7 @@ class Install extends Install_Controller
 		if (!is_writable('content'))
 		{
 			set_notice('error',
-				sprintf(_('The %s directory needs to be writable. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOL_NAME . ' without this.'),
+				sprintf(__('The %s directory needs to be writable. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOL_NAME . ' without this.'),
 					FCPATH . 'content/',
 					'<br/><b><code>chmod -R 777 ' . FCPATH . 'content/</code></b><br/>'));
 			$prob = TRUE;
@@ -323,7 +323,7 @@ class Install extends Install_Controller
 		if (!is_writable('content/themes'))
 		{
 			set_notice('error',
-				sprintf(_('The %s directory needs to be writable as well. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOL_NAME . ' without this.'),
+				sprintf(__('The %s directory needs to be writable as well. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOL_NAME . ' without this.'),
 					FCPATH . 'content/themes',
 					'<br/><b><code>chmod -R 777 ' . FCPATH . 'content/</code></b><br/>'));
 			$prob = TRUE;
@@ -352,14 +352,14 @@ class Install extends Install_Controller
 			// else, give a precise command for shell to enter
 			if ($whoami != "")
 				set_notice('warn',
-					sprintf(_('The %s directory would be better if writable, in order to deliver automatic updates. Use this command in your shell if possible: %s'),
+					sprintf(__('The %s directory would be better if writable, in order to deliver automatic updates. Use this command in your shell if possible: %s'),
 						FCPATH, '<br/><b><code>chown -R ' . $whoami . ' ' . FCPATH . '</code></b>'));
 			else
 				set_notice('warn',
-					sprintf(_('The %s directory would be better if writable, in order to deliver automatic updates.<br/>It was impossible to determine the user running PHP. Use this command in your shell if possible: %s where www-data is an example (usually it\'s www-data or Apache)'),
+					sprintf(__('The %s directory would be better if writable, in order to deliver automatic updates.<br/>It was impossible to determine the user running PHP. Use this command in your shell if possible: %s where www-data is an example (usually it\'s www-data or Apache)'),
 						FCPATH, '<br/><b><code>chown -R www-data ' . FCPATH . '</code></b><br/>'));
 			set_notice('warn',
-				sprintf(_('If you can\'t do the above, after the installation you will be given a textfile to paste in config.php. More info after submitting.')));
+				sprintf(__('If you can\'t do the above, after the installation you will be given a textfile to paste in config.php. More info after submitting.')));
 			$prob = TRUE;
 		}
 
@@ -367,7 +367,7 @@ class Install extends Install_Controller
 		if ($prob)
 		{
 			set_notice('notice',
-				_('If you made any changes, just refresh this page to recheck the directory permissions.'));
+				__('If you made any changes, just refresh this page to recheck the directory permissions.'));
 		}
 
 		// all good

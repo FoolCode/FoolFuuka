@@ -7,7 +7,7 @@ if (!defined('BASEPATH'))
 	<div class="navbar-inner">
 		<div class="container">
 			<a class="brand" href="<?php echo site_url('admin') ?>">
-				<?php echo get_setting('fs_gen_site_title'); ?> - <?php echo _('Control Panel'); ?>
+				<?php echo get_setting('fs_gen_site_title'); ?> - <?php echo __('Control Panel'); ?>
 			</a>
 			<ul class="nav">
 				<li class="active">
@@ -15,7 +15,7 @@ if (!defined('BASEPATH'))
 				</li>
 			</ul>
 			<ul class="nav pull-right">
-				<li><a href="<?php echo site_url('@default') ?>"><?php echo _('Boards') ?></a></li>
+				<li><a href="<?php echo site_url('@default') ?>"><?php echo __('Boards') ?></a></li>
 				<li class="divider-vertical"></li>
 				<?php
 				if ((isset($this->tank_auth) &&
@@ -31,18 +31,18 @@ if (!defined('BASEPATH'))
 						<ul class="dropdown-menu">
 							<li>
 								<a href="<?php echo site_url('admin/auth/change_email'); ?>">
-									<?php echo _("Your Profile") ?>
+									<?php echo __("Your Profile") ?>
 								</a>
 							</li>
 							<li>
 								<a href="<?php echo site_url('/admin/auth/logout'); ?>">
-									<?php echo _("Logout") ?>
+									<?php echo __("Logout") ?>
 								</a>
 							</li>
 						</ul>
 					</li>
 				<?php else : ?>
-					<li><a href="<?php echo site_url('admin/auth/login') ?>"><?php echo _('Login') ?></a></li>
+					<li><a href="<?php echo site_url('admin/auth/login') ?>"><?php echo __('Login') ?></a></li>
 				<?php endif; ?>
 			</ul>
 		</div>

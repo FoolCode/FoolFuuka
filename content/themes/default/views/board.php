@@ -56,7 +56,7 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if(get_selected_radix()->archive) : ?> title="<?php echo _('4chan time') . ': ' .date('D M d H:i:s Y', $op->original_timestamp) ?>"<?php endif; ?>><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
+				<time datetime="<?php echo date(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if(get_selected_radix()->archive) : ?> title="<?php echo __('4chan time') . ': ' .date('D M d H:i:s Y', $op->original_timestamp) ?>"<?php endif; ?>><?php echo date('D M d H:i:s Y', $op->timestamp) ?></time>
 			</span>
 
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#'  . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="highlight">No.</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="quote"><?php echo $op->num ?></a>
@@ -69,21 +69,21 @@ if (!defined('BASEPATH'))
 			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
 
 			<div class="backlink_list"<?php echo (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
-				<?php echo _('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
+				<?php echo __('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
 			</div>
 
 			<?php if($this->tank_auth->is_allowed()) : ?>
 			<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
-				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_post"><?php echo _('Remove') ?></button>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_post"><?php echo __('Remove') ?></button>
 				<?php if($op->preview_orig) : ?>
-				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_image"><?php echo _('Remove image') ?></button>
-				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_md5"><?php echo _('Ban image') ?></button>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_image"><?php echo __('Remove image') ?></button>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_md5"><?php echo __('Ban image') ?></button>
 				<?php endif; ?>
 				<?php if($op->poster_id) : ?>
-				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_user"><?php echo _('Ban user:') . ' ' . inet_dtop($op->poster_id) ?></button>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_user"><?php echo __('Ban user:') . ' ' . inet_dtop($op->poster_id) ?></button>
 				<?php endif; ?>
 				<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>
-				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_report"><?php echo _('Remove report') ?></button>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_report"><?php echo __('Remove report') ?></button>
 				<?php endif; ?>
 			</div>
 			<?php endif; ?>
@@ -99,7 +99,7 @@ if (!defined('BASEPATH'))
 	</div>
 	
 	<?php if(isset($op->report_reason) && !is_null($op->report_reason)) : ?>
-	<div class="report_reason"><?php echo '<strong>' . _('Report reason:') . '</strong> ' . $op->report_reason ?>
+	<div class="report_reason"><?php echo '<strong>' . __('Report reason:') . '</strong> ' . $op->report_reason ?>
 		<br/>
 		<div class="ip_reporter"><?php echo inet_dtop($op->report_ip_reporter) ?></div>
 	</div>

@@ -452,7 +452,7 @@ class Chan extends Public_Controller
 		$this->_set_parameters(
 			array(
 				'disable_headers' => TRUE,
-				'error' => _('Page not found. You can use the search if you were looking for something!')
+				'error' => __('Page not found. You can use the search if you were looking for something!')
 			),
 			array(
 				'tools_search' => TRUE
@@ -511,11 +511,11 @@ class Chan extends Public_Controller
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
-			(($page > 1 ) ? ' &raquo; ' . _('Page') . ' ' . $page : ''));
+			(($page > 1 ) ? ' &raquo; ' . __('Page') . ' ' . $page : ''));
 		$this->_set_parameters(
 			array(
 				'section_title' => (($page > 1) ?
-					(($by_thread ? _('Latest by Thread') . ' - ' : '') . _('Page') . ' ' . $page) : NULL),
+					(($by_thread ? __('Latest by Thread') . ' - ' : '') . __('Page') . ' ' . $page) : NULL),
 				'is_page' => TRUE,
 				'posts' => $posts['result'],
 				'posts_per_thread' => 5,
@@ -574,10 +574,10 @@ class Chan extends Public_Controller
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
-			(($page > 1 ) ? ' &raquo; ' . _('Ghost Page') . ' ' . $page : ''));
+			(($page > 1 ) ? ' &raquo; ' . __('Ghost Page') . ' ' . $page : ''));
 		$this->_set_parameters(
 			array(
-				'section_title' => (($page > 1) ? _('Ghost Page') . ' ' . $page : NULL),
+				'section_title' => (($page > 1) ? __('Ghost Page') . ' ' . $page : NULL),
 				'is_page' => TRUE,
 				'posts' => $posts['result'],
 				'posts_per_thread' => 5,
@@ -613,16 +613,16 @@ class Chan extends Public_Controller
 		$result = $this->post->get_gallery(get_selected_radix(), $page, array('type' => $type));
 
 		// Set template variables required to build the HTML.
-		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . _('Gallery'));
+		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Gallery'));
 
 		if ($type == 'by_image')
 		{
-			$title = _('Gallery: Showing Latest Submitted Images') . ' - ' .
+			$title = __('Gallery: Showing Latest Submitted Images') . ' - ' .
 				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_thread')) . '">By Thread</a>';
 		}
 		else
 		{
-			$title = _('Gallery: Showing Latest Created Threads') . ' - ' .
+			$title = __('Gallery: Showing Latest Created Threads') . ' - ' .
 				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_image')) . '">By Image</a>';
 		}
 
@@ -726,7 +726,7 @@ class Chan extends Public_Controller
 		}
 		
 		// Set template variables required to build the HTML.
-		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . _('Thread') . ' #' . $num);
+		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Thread') . ' #' . $num);
 		
 		$second_array = array(
 			'tools_modal' => TRUE,
@@ -846,10 +846,10 @@ class Chan extends Public_Controller
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title .
-			' &raquo; ' . _('Thread') . ' #' . $num);
+			' &raquo; ' . __('Thread') . ' #' . $num);
 		$this->_set_parameters(
 			array(
-				'section_title' => _('Showing the last 50 posts for Thread No.') . $num,
+				'section_title' => __('Showing the last 50 posts for Thread No.') . $num,
 				'is_last50' => TRUE,
 				'thread_id' => $num,
 				'posts' => $thread,
@@ -971,10 +971,10 @@ class Chan extends Public_Controller
 
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' .
-			_('Image Hash') . ': ' . base64_encode(urlsafe_b64decode($hash)));
+			__('Image Hash') . ': ' . base64_encode(urlsafe_b64decode($hash)));
 		$this->_set_parameters(
 			array(
-				'section_title' => _('Search for image posts with the image hash: ') .
+				'section_title' => __('Search for image posts with the image hash: ') .
 					base64_encode(urlsafe_b64decode($hash)),
 				'modifiers' => array('post_show_view_button' => TRUE),
 				'posts' => $result['posts'],
@@ -1018,10 +1018,10 @@ class Chan extends Public_Controller
 			if ($image['error_type'] == 'no_record')
 			{
 				$this->output->set_status_header('404');
-				$this->template->title(_('Error'));
+				$this->template->title(__('Error'));
 				$this->_set_parameters(
 					array(
-						'error' => _('There is no record of the specified image in our database.')
+						'error' => __('There is no record of the specified image in our database.')
 					)
 				);
 				$this->template->build('error');
@@ -1031,10 +1031,10 @@ class Chan extends Public_Controller
 			if ($image['error_type'] == 'not_on_server')
 			{
 				$this->output->set_status_header('404');
-				$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . _('Image Pruned'));
+				$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Image Pruned'));
 				$this->_set_parameters(
 					array(
-						'section_title' => _('Error 404: The image has been pruned from the server.'),
+						'section_title' => __('Error 404: The image has been pruned from the server.'),
 						'modifiers' => array('post_show_single_post' => TRUE, 'post_show_view_button' => TRUE),
 						'posts' => array('posts' => array('posts' => array($image['result'])))
 					)
@@ -1085,12 +1085,12 @@ class Chan extends Public_Controller
 			{
 				if (false && $_FILES["image"]["size"] > 8000000)
 				{
-					$this->template->title(_('Error'));
+					$this->template->title(__('Error'));
 					$this->template->title($radix->formatted_title);
 					$this->template->append_metadata('<meta name="robots" content=""noindex" />');
 					$this->_set_parameters(
 						array(
-							'error' => _('You uploaded a too big file. The maximum file size is 8 MegaBytes.')
+							'error' => __('You uploaded a too big file. The maximum file size is 8 MegaBytes.')
 						)
 					);
 					$this->template->build('error');
@@ -1103,12 +1103,12 @@ class Chan extends Public_Controller
 			}
 			else
 			{
-				$this->template->title(_('Error'));
+				$this->template->title(__('Error'));
 				$this->template->title($radix->formatted_title);
 				$this->template->append_metadata('<meta name="robots" content=""noindex" />');
 				$this->_set_parameters(
 					array(
-						'error' => _('You seem not to have uploaded a valid file.')
+						'error' => __('You seem not to have uploaded a valid file.')
 					)
 				);
 				$this->template->build('error');
@@ -1117,7 +1117,7 @@ class Chan extends Public_Controller
 		}
 
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('text', _('Searched text'), 'trim');
+		$this->form_validation->set_rules('text', __('Searched text'), 'trim');
 		$this->form_validation->run();
 
 		// submit_post forces into $this->post()
@@ -1229,7 +1229,7 @@ class Chan extends Public_Controller
 		// Stop! We have reached an error and shouldn't proceed any further!
 		if (isset($result['error']))
 		{
-			$this->template->title(_('Error'));
+			$this->template->title(__('Error'));
 
 			if ($radix)
 			{
@@ -1252,59 +1252,59 @@ class Chan extends Public_Controller
 
 		if ($search['text'])
 			array_push($title,
-				sprintf(_('that contain "%s"'), trim(fuuka_htmlescape($search['text']))));
+				sprintf(__('that contain "%s"'), trim(fuuka_htmlescape($search['text']))));
 		if ($search['subject'])
 			array_push($title,
-				sprintf(_('with the subject "%s"'),
+				sprintf(__('with the subject "%s"'),
 					trim(fuuka_htmlescape($search['subject']))));
 		if ($search['username'])
 			array_push($title,
-				sprintf(_('with the username "%s"'),
+				sprintf(__('with the username "%s"'),
 					trim(fuuka_htmlescape($search['username']))));
 		if ($search['tripcode'])
 			array_push($title,
-				sprintf(_('with the tripcode "%s"'),
+				sprintf(__('with the tripcode "%s"'),
 					trim(fuuka_htmlescape($search['tripcode']))));
 		if ($search['filename'])
 			array_push($title,
-				sprintf(_('with the filename "%s"'),
+				sprintf(__('with the filename "%s"'),
 					trim(fuuka_htmlescape($search['filename']))));
 		if ($search['deleted'] == 'deleted')
-			array_push($title, _('that have been deleted'));
+			array_push($title, __('that have been deleted'));
 		if ($search['deleted'] == 'not-deleted')
-			array_push($title, _('that has not been deleted'));
+			array_push($title, __('that has not been deleted'));
 		if ($search['ghost'] == 'only')
-			array_push($title, _('that are by ghosts'));
+			array_push($title, __('that are by ghosts'));
 		if ($search['ghost'] == 'none')
-			array_push($title, _('that are not by ghosts'));
+			array_push($title, __('that are not by ghosts'));
 		if ($search['type'] == 'op')
-			array_push($title, _('that are only OP posts'));
+			array_push($title, __('that are only OP posts'));
 		if ($search['type'] == 'posts')
-			array_push($title, _('that are only non-OP posts'));
+			array_push($title, __('that are only non-OP posts'));
 		if ($search['filter'] == 'image')
-			array_push($title, _('that do not contain images'));
+			array_push($title, __('that do not contain images'));
 		if ($search['filter'] == 'text')
-			array_push($title, _('that only contain images'));
+			array_push($title, __('that only contain images'));
 		if ($search['capcode'] == 'user')
-			array_push($title, _('that were made by users'));
+			array_push($title, __('that were made by users'));
 		if ($search['capcode'] == 'mod')
-			array_push($title, _('that were made by mods'));
+			array_push($title, __('that were made by mods'));
 		if ($search['capcode'] == 'admin')
-			array_push($title, _('that were made by admins'));
+			array_push($title, __('that were made by admins'));
 		if ($search['start'])
-			array_push($title, sprintf(_('posts after %s'), $search['start']));
+			array_push($title, sprintf(__('posts after %s'), $search['start']));
 		if ($search['end'])
-			array_push($title, sprintf(_('posts before %s'), $search['end']));
+			array_push($title, sprintf(__('posts before %s'), $search['end']));
 		if ($search['order'] == 'asc')
-			array_push($title, _('in ascending order'));
+			array_push($title, __('in ascending order'));
 		if (!empty($title))
 		{
-			$title = sprintf(_('Searching for posts %s.'),
-				urldecode(implode(' ' . _('and') . ' ', $title)));
+			$title = sprintf(__('Searching for posts %s.'),
+				urldecode(implode(' ' . __('and') . ' ', $title)));
 		}
 		else
 		{
-			$title = _('Displaying all posts with no filters applied.');
+			$title = __('Displaying all posts with no filters applied.');
 		}
 		
 		$page = (!$search['page'] || !intval($search['page'])) ? 1 : $search['page'];
@@ -1350,7 +1350,7 @@ class Chan extends Public_Controller
 		}
 		else
 		{
-			$this->template->title(_('Global Search'));
+			$this->template->title(__('Global Search'));
 		}		
 		
 		$this->template->append_metadata('<meta name="robots" content=""noindex" />');
@@ -1371,10 +1371,10 @@ class Chan extends Public_Controller
 			$stats = $this->statistics->get_available_stats();
 
 			// Set template variables required to build the HTML.
-			$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . _('Statistics'));
+			$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Statistics'));
 			$this->_set_parameters(
 				array(
-					'section_title' => _('Statistics'),
+					'section_title' => __('Statistics'),
 					'is_statistics' => TRUE,
 					'is_statistics_list' => TRUE,
 					'info' => $stats
@@ -1397,18 +1397,18 @@ class Chan extends Public_Controller
 			// Set template variables required to build the HTML.
 			$this->load->helper('date');
 			$this->template->title(get_selected_radix()->formatted_title . ' &raquo; '
-				. _('Statistics') . ': ' . $stats['info']['name']);
+				. __('Statistics') . ': ' . $stats['info']['name']);
 
 			if (isset($stats['info']['frequency']))
 			{
-				$section_title = sprintf(_('Statistics: %s (Next Update in %s)'),
+				$section_title = sprintf(__('Statistics: %s (Next Update in %s)'),
 					$stats['info']['name'],
 					timespan($stats['info']['frequency'] + strtotime($stats['timestamp']))
 				);
 			}
 			else
 			{
-				$section_title = sprintf(_('Statistics: %s'), $stats['info']['name']);
+				$section_title = sprintf(__('Statistics: %s'), $stats['info']['name']);
 			}
 
 			$this->_set_parameters(
@@ -1569,7 +1569,7 @@ class Chan extends Public_Controller
 				}
 
 				// Display a default/standard output for NON-AJAX REQUESTS.
-				$this->template->title(_('Error'));
+				$this->template->title(__('Error'));
 				$this->_set_parameters(
 					array(
 						'error' => validation_errors()
@@ -1613,16 +1613,16 @@ class Chan extends Public_Controller
 						$this->output
 							->set_content_type('application/json')
 							->set_output(json_encode(array(
-									'error' => _('This thread does not exist.'),
+									'error' => __('This thread does not exist.'),
 									'success' => '')
 								));
 						return FALSE;
 					}
 
-					$this->template->title(_('Error'));
+					$this->template->title(__('Error'));
 					$this->_set_parameters(
 						array(
-							'error' => _('This thread does not exist.')
+							'error' => __('This thread does not exist.')
 						), array(
 							'tools_modal' => TRUE,
 							'tools_search' => TRUE
@@ -1652,14 +1652,14 @@ class Chan extends Public_Controller
 						{
 							$this->output
 								->set_content_type('application/json')
-								->set_output(json_encode(array('error' => _('This thread does not exist.'), 'success' => '')));
+								->set_output(json_encode(array('error' => __('This thread does not exist.'), 'success' => '')));
 							return FALSE;
 						}
 
-						$this->template->title(_('Error'));
+						$this->template->title(__('Error'));
 						$this->_set_parameters(
 							array(
-								'error' => _('This thread does not exist.')
+								'error' => __('This thread does not exist.')
 							),
 							array(
 								'tools_modal' => TRUE,
@@ -1677,14 +1677,14 @@ class Chan extends Public_Controller
 						{
 							$this->output
 								->set_content_type('application/json')
-								->set_output(json_encode(array('error' => _('This thread is closed.'), 'success' => '')));
+								->set_output(json_encode(array('error' => __('This thread is closed.'), 'success' => '')));
 							return FALSE;
 						}
 
-						$this->template->title(_('Error'));
+						$this->template->title(__('Error'));
 						$this->_set_parameters(
 							array(
-								'error' => _('This thread is closed.')
+								'error' => __('This thread is closed.')
 							),
 							array(
 								'tools_modal' => TRUE,
@@ -1710,14 +1710,14 @@ class Chan extends Public_Controller
 				{
 					$this->output
 						->set_content_type('application/json')
-						->set_output(json_encode(array('error' => _('You are required to upload an image when posting a new thread.'), 'success' => '')));
+						->set_output(json_encode(array('error' => __('You are required to upload an image when posting a new thread.'), 'success' => '')));
 					return FALSE;
 				}
 
-				$this->template->title(_('Error'));
+				$this->template->title(__('Error'));
 				$this->_set_parameters(
 					array(
-						'error' => _('You are required to upload an image when posting a new thread.')
+						'error' => __('You are required to upload an image when posting a new thread.')
 					), array(
 						'tools_modal' => TRUE,
 						'tools_search' => TRUE
@@ -1735,14 +1735,14 @@ class Chan extends Public_Controller
 				{
 					$this->output
 						->set_content_type('application/json')
-						->set_output(json_encode(array('error' => _('You are required to write a comment when no image upload is present.'), 'success' => '')));
+						->set_output(json_encode(array('error' => __('You are required to write a comment when no image upload is present.'), 'success' => '')));
 					return FALSE;
 				}
 
-				$this->template->title(_('Error'));
+				$this->template->title(__('Error'));
 				$this->_set_parameters(
 					array(
-						'error' => _('You are required to write a comment when no image upload is present.')
+						'error' => __('You are required to write a comment when no image upload is present.')
 					), array(
 						'tools_modal' => TRUE,
 						'tools_search' => TRUE
@@ -1760,14 +1760,14 @@ class Chan extends Public_Controller
 				{
 					$this->output
 						->set_content_type('application/json')
-						->set_output(json_encode(array('error' => _('The posting of images has been disabled for this thread.'), 'success' => '')));
+						->set_output(json_encode(array('error' => __('The posting of images has been disabled for this thread.'), 'success' => '')));
 					return FALSE;
 				}
 
-				$this->template->title(_('Error'));
+				$this->template->title(__('Error'));
 				$this->_set_parameters(
 					array(
-					'error' => _('The posting of images has been disabled for this thread.')
+					'error' => __('The posting of images has been disabled for this thread.')
 					), array(
 					'tools_modal' => TRUE,
 					'tools_search' => TRUE
@@ -1804,7 +1804,7 @@ class Chan extends Public_Controller
 						return FALSE;
 					}
 
-					$this->template->title(_('Error'));
+					$this->template->title(__('Error'));
 					$this->_set_parameters(
 						array(
 							'error' => $this->upload->display_errors()
@@ -1832,7 +1832,7 @@ class Chan extends Public_Controller
 					return FALSE;
 				}
 
-				$this->template->title(_('Error'));
+				$this->template->title(__('Error'));
 				$this->_set_parameters(
 					array(
 						'error' => $result['error']

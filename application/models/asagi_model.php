@@ -85,7 +85,7 @@ class Asagi_model extends CI_Model
 		
 		if(!$zip)
 		{
-			return array('error' => _('The Asagi ZIP file couldn\'t be downloaded.'));
+			return array('error' => __('The Asagi ZIP file couldn\'t be downloaded.'));
 		}
 		
 		if (!is_dir('content/asagi'))

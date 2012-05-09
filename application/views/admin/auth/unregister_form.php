@@ -4,7 +4,7 @@
 		'name' => 'password',
 		'id' => 'password',
 		'size' => 30,
-		'placeholder' => _('Required')
+		'placeholder' => __('Required')
 	);
 	?>
 	<?php echo form_open(); ?>
@@ -18,7 +18,7 @@
 	<?php
 	echo form_submit(array(
 		'name' => 'cancel',
-		'value' => _('Delete account'),
+		'value' => __('Delete account'),
 		'class' => 'btn btn-primary')
 	);
 	?>

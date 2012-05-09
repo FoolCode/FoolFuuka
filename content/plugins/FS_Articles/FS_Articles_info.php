@@ -12,7 +12,7 @@ $info['slug'] = 'FS_Articles';
 // name under which to display your plugin
 $info['name'] = 'Articles';
 // short description about what the plugin does
-$info['description'] = _('Enable support for custom pages in MarkDown and custom links.');
+$info['description'] = __('Enable support for custom pages in MarkDown and custom links.');
 
 // version in x.x.x format, important for plugin core files upgrade
 $info['version'] = '0.6.0';

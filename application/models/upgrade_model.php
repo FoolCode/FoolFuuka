@@ -33,7 +33,7 @@ class Upgrade_model extends CI_Model
 		if (!$result)
 		{
 			set_notice('error',
-				_('FoOlPod server could not be contacted: impossible to check for new versions.'));
+				__('FoOlPod server could not be contacted: impossible to check for new versions.'));
 			return FALSE;
 		}
 		$data = json_decode($result);
@@ -169,7 +169,7 @@ class Upgrade_model extends CI_Model
 			log_message('error',
 				'upgrade_model get_file(): impossible to get the update from FoOlPod');
 			flash_notice('error',
-				_('Can\'t get the update file from FoOlPod. It might be a momentary problem, or a problem with your server security configuration. Browse <a href="http://foolrulez.com/pod/human">http://foolrulez.com/pod/human</a> to check if it\'s a known issue.'));
+				__('Can\'t get the update file from FoOlPod. It might be a momentary problem, or a problem with your server security configuration. Browse <a href="http://foolrulez.com/pod/human">http://foolrulez.com/pod/human</a> to check if it\'s a known issue.'));
 			return FALSE;
 		}
 
@@ -226,14 +226,14 @@ class Upgrade_model extends CI_Model
 			}
 			if ($whoami != "")
 				set_notice('warn',
-					sprintf(_('The %s directory would be better if writable, in order to deliver automatic updates. Use this command in your shell if possible: %s'),
+					sprintf(__('The %s directory would be better if writable, in order to deliver automatic updates. Use this command in your shell if possible: %s'),
 						FCPATH, '<br/><b><code>chown -R ' . $whoami . ' ' . FCPATH . '</code></b>'));
 			else
 				set_notice('warn',
-					sprintf(_('The %s directory would be better if writable, in order to deliver automatic updates.<br/>It was impossible to determine the user running PHP. Use this command in your shell if possible: %s where www-data is an example (usually it\'s www-data or Apache)'),
+					sprintf(__('The %s directory would be better if writable, in order to deliver automatic updates.<br/>It was impossible to determine the user running PHP. Use this command in your shell if possible: %s where www-data is an example (usually it\'s www-data or Apache)'),
 						FCPATH, '<br/><b><code>chown -R www-data ' . FCPATH . '</code></b><br/>'));
 			set_notice('warn',
-				sprintf(_('If you can\'t do the above, you can follow the manual upgrade instructons at %sthis link%s.'),
+				sprintf(__('If you can\'t do the above, you can follow the manual upgrade instructons at %sthis link%s.'),
 					'<a href="http://trac.foolrulez.com/foolslide/wiki/installation_guide#Manualupgradeorifautomaticupgradebrokeeverything">',
 					'</a>'));
 			$prob = TRUE;

@@ -4,5 +4,5 @@ if (!defined('BASEPATH'))
 ?>
 
 <div class="alert" style="margin:15%;">
-	<?php echo '<h4 class="alert-heading">'._('Error!') . '</h4> ' . $error ?>
+	<?php echo '<h4 class="alert-heading">'.__('Error!') . '</h4> ' . $error ?>
 </div>

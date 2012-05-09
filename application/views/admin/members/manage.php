@@ -3,12 +3,12 @@
 <table class="table table-bordered table-striped table-condensed">
 	<thead>
 		<tr>
-			<th><?php echo _('ID') ?></th>
-			<th><?php echo _('Username') ?></th>
-			<th><?php echo _('Display name') ?></th>
-			<th><?php echo _('Twitter') ?></th>
-			<th><?php echo _('Email') ?></th>
-			<th><?php echo _('Last seen') ?></th>
+			<th><?php echo __('ID') ?></th>
+			<th><?php echo __('Username') ?></th>
+			<th><?php echo __('Display name') ?></th>
+			<th><?php echo __('Twitter') ?></th>
+			<th><?php echo __('Email') ?></th>
+			<th><?php echo __('Last seen') ?></th>
 		</tr>
 	</thead>
 	<tbody>

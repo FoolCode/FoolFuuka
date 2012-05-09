@@ -4,8 +4,8 @@ if (!defined('BASEPATH'))
 ?>
 
 <div id="content">
-	<h1><?php echo _('Welcome on the 4chan Archiver "FoOlFuuka"'); ?></h1>
-	<h2><?php echo _('Choose a 4chan board:'); ?></h2>
+	<h1><?php echo __('Welcome on the 4chan Archiver "FoOlFuuka"'); ?></h1>
+	<h2><?php echo __('Choose a 4chan board:'); ?></h2>
 	<p>
 		<?php
 		$board_urls = array();

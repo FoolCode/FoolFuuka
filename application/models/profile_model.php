@@ -23,8 +23,8 @@ class Profile_model extends CI_Model
 			'user_id' => array(
 				'type' => 'hidden',
 				'database' => TRUE,
-				'label' => _('User ID'),
-				'help' => _('The ID of the user'),
+				'label' => __('User ID'),
+				'help' => __('The ID of the user'),
 				'validation' => 'required|trim',
 				'validation_func' => function($input, $form_internal)
 				{
@@ -36,7 +36,7 @@ class Profile_model extends CI_Model
 					{
 						return array(
 							'error_code' => 'NOT_OWN_USER_ID',
-							'error' => _('Non-admin user can\'t to change the data of another user.'),
+							'error' => __('Non-admin user can\'t to change the data of another user.'),
 							'critical' => TRUE
 						);
 					}
@@ -47,7 +47,7 @@ class Profile_model extends CI_Model
 					{
 						return array(
 							'error_code' => 'USER_ID_NOT_FOUND',
-							'error' => _('Couldn\'t find the user with the submitted ID.'),
+							'error' => __('Couldn\'t find the user with the submitted ID.'),
 							'critical' => TRUE
 						);
 					}
@@ -64,12 +64,12 @@ class Profile_model extends CI_Model
 			$arr['group_id'] = array(
 				'type' => 'radio',
 				'database' => TRUE,
-				'label' => _('Group'),
-				'help' => _('Choose the permission level of the member'),
+				'label' => __('Group'),
+				'help' => __('Choose the permission level of the member'),
 				'radio_values' => array(
-					'1' => _('Administrator'),
-					'3' => _('Moderator'),
-					'2' => _('Member'),
+					'1' => __('Administrator'),
+					'3' => __('Moderator'),
+					'2' => __('Member'),
 				),
 				'validation' => 'trim|greater_than[0]|less_than[4]'
 			);
@@ -78,8 +78,8 @@ class Profile_model extends CI_Model
 		$arr['display_name'] = array(
 			'type' => 'input',
 			'database' => TRUE,
-			'label' => _('Display Name'),
-			'help' => _('A name that is publicly shown beside the username'),
+			'label' => __('Display Name'),
+			'help' => __('A name that is publicly shown beside the username'),
 			'validation' => 'min_length[3]|max_length[32]|alpha_dash',
 			'class' => 'span3'
 		);
@@ -88,8 +88,8 @@ class Profile_model extends CI_Model
 		$arr['twitter'] = array(
 			'type' => 'input',
 			'database' => TRUE,
-			'label' => _('Twitter'),
-			'help' => _('The twitter nickname'),
+			'label' => __('Twitter'),
+			'help' => __('The twitter nickname'),
 			'validation' => 'min_length[3]|max_length[32]|alpha_dash',
 			'class' => 'span3'
 		);
@@ -98,8 +98,8 @@ class Profile_model extends CI_Model
 		$arr['bio'] = array(
 			'type' => 'textarea',
 			'database' => TRUE,
-			'label' => _('Bio'),
-			'help' => _('A short description of the user'),
+			'label' => __('Bio'),
+			'help' => __('A short description of the user'),
 			'validation' => 'min_length[3]|max_length[140]',
 			'class' => 'span5'
 		);
@@ -111,7 +111,7 @@ class Profile_model extends CI_Model
 		$arr['submit'] = array(
 			'type' => 'submit',
 			'class' => 'btn-primary',
-			'value' => _('Submit')
+			'value' => __('Submit')
 		);
 		$arr['close'] = array(
 			'type' => 'close'

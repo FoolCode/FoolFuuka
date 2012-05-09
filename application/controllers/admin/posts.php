@@ -15,7 +15,7 @@ class Posts extends Admin_Controller
 		$this->load->model('post_model', 'post');
 		
 		// title on top
-		$this->viewdata['controller_title'] = '<a href="'.site_url("admin/posts").'">' . _("Posts") . '</a>';;
+		$this->viewdata['controller_title'] = '<a href="'.site_url("admin/posts").'">' . __("Posts") . '</a>';;
 	}
 
 
@@ -32,7 +32,7 @@ class Posts extends Admin_Controller
 			show_404();
 		}
 		
-		$this->viewdata["function_title"] = _('Reports');
+		$this->viewdata["function_title"] = __('Reports');
 
 		// ['posts', 'total_found']
 		$data = $this->post->get_reports($page);
@@ -58,7 +58,7 @@ class Posts extends Admin_Controller
 	{
 		if (!$this->input->is_ajax_request())
 		{
-			$this->output->set_output(_('Access to reports outside the administrative panel is denied.'));
+			$this->output->set_output(__('Access to reports outside the administrative panel is denied.'));
 			log_message('error', 'Controller: reports.php/action: access denied');
 			return FALSE;
 		}
@@ -148,12 +148,12 @@ class Posts extends Admin_Controller
 				$report = new Report($report_id);
 				if (!$report->remove_report_db())
 				{
-					flash_notice('error', _('Failed to remove the report from the database.'));
+					flash_notice('error', __('Failed to remove the report from the database.'));
 					log_message('error', 'Controller: reports.php/remove: failed to remove the report');
 					$this->output->set_output(json_encode(array('href' => $redirect)));
 					return FALSE;
 				}
-				flash_notice('notice', _('The report has been removed from the database.'));
+				flash_notice('notice', __('The report has been removed from the database.'));
 				$this->output->set_output(json_encode(array('href' => $redirect)));
 
 				break;

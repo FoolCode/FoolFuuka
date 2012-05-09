@@ -5,6 +5,18 @@ if (!defined('BASEPATH'))
 
 
 /**
+ * Replaces the gettext function to possible alternatives
+ * 
+ * @param type $text
+ * @return type 
+ */
+function __($text)
+{
+	$CI = & get_instance();
+	return $text;
+}
+
+/**
  * These functions determine if the values are valid.
  */
 function is_natural($str)

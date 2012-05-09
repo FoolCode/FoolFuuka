@@ -106,7 +106,7 @@ if (!defined('BASEPATH'))
 								</a>
 								<ul class="dropdown-menu">
 									<?php if ($this->radix->get_archives()) : ?>
-										<li class="nav-header"><?php echo _('Archives') ?></li>
+										<li class="nav-header"><?php echo __('Archives') ?></li>
 										<?php
 										foreach ($this->radix->get_archives() as $key => $item)
 										{
@@ -118,7 +118,7 @@ if (!defined('BASEPATH'))
 										<?php if ($this->radix->get_archives()) : ?>
 										<li class="divider"></li>
 										<?php endif; ?>
-										<li class="nav-header"><?php echo _('Boards') ?></li>
+										<li class="nav-header"><?php echo __('Boards') ?></li>
 									<?php
 										foreach ($this->radix->get_boards() as $key => $item)
 										{
@@ -132,7 +132,7 @@ if (!defined('BASEPATH'))
 						<?php if (get_selected_radix()) : ?>
 						<ul class="nav">
 							<li style="padding-right:0px;">
-								<a href="<?php echo site_url(array($board->shortname)) ?>" style="padding-right:4px;"><?php echo _('Index') ?></a>
+								<a href="<?php echo site_url(array($board->shortname)) ?>" style="padding-right:4px;"><?php echo __('Index') ?></a>
 							</li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:2px; padding-right:4px;">
@@ -141,7 +141,7 @@ if (!defined('BASEPATH'))
 								<ul class="dropdown-menu" style="margin-left:-9px">
 									<li>
 										<a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_post')) ?>">
-											<?php echo _('By post') ?>
+											<?php echo __('By post') ?>
 											<?php if($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) != 1)
 												echo ' <i class="icon-ok"></i>';
 											?>
@@ -149,7 +149,7 @@ if (!defined('BASEPATH'))
 									</li>
 									<li>
 										<a href="<?php echo site_url(array(get_selected_radix()->shortname, 'by_thread')) ?>">
-											<?php echo _('By thread') ?>
+											<?php echo __('By thread') ?>
 											<?php if($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) == 1)
 												echo ' <i class="icon-ok"></i>';
 											?>
@@ -157,11 +157,11 @@ if (!defined('BASEPATH'))
 									</li>
 								</ul>
 							</li>
-							<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo _('Ghost') ?></a>
+							<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo __('Ghost') ?></a>
 							</li>
-							<li><a href="<?php echo site_url(array($board->shortname, 'gallery')) ?>"><?php echo _('Gallery') ?></a>
+							<li><a href="<?php echo site_url(array($board->shortname, 'gallery')) ?>"><?php echo __('Gallery') ?></a>
 							</li>
-							<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo _('Stats') ?></a>
+							<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo __('Stats') ?></a>
 							</li>
 						</ul>
 						<?php endif; ?>
@@ -169,7 +169,7 @@ if (!defined('BASEPATH'))
 						<ul class="nav">
 							<li class="dropdown">
 								<a href="<?php echo site_url() ?>" class="dropdown-toggle" data-toggle="dropdown">
-									<?php echo _('Articles') ?>
+									<?php echo __('Articles') ?>
 									<b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">

@@ -5,16 +5,16 @@ if (!defined('BASEPATH'))
 
 <div class="btn-group">
 	<a class="btn btn-success btn-mini" href="<?php echo site_url('/admin/boards/add_new/') ?>">
-		<?php echo _('Add board') ?>
+		<?php echo __('Add board') ?>
 	</a>
 </div>
 <br/>
 <table class="table table-bordered table-striped table-condensed">
 	<thead>
 			<tr>
-				<th><?php echo _('Board') ?></th>
-				<th><?php echo _('Shortname') ?></th>
-				<th><?php echo _('Quick functions') ?></th>
+				<th><?php echo __('Board') ?></th>
+				<th><?php echo __('Shortname') ?></th>
+				<th><?php echo __('Quick functions') ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -31,7 +31,7 @@ if (!defined('BASEPATH'))
 				<td>
 					<div class="btn-group">
 					<a class="btn btn-mini btn-primary" href="<?php echo site_url('admin/boards/board/'.$board->shortname) ?>">
-						<?php echo _('Edit') ?>
+						<?php echo __('Edit') ?>
 					</a>
 					<a class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
 						<span class="caret"></span>
@@ -39,13 +39,13 @@ if (!defined('BASEPATH'))
 					<ul class="dropdown-menu">
 						<li>
 							<a href="<?php echo site_url('admin/boards/board/'.$board->shortname) ?>">
-								<?php echo _('Edit') ?>
+								<?php echo __('Edit') ?>
 							</a>
 						</li>
 						<li class="divider"></li>
 						<li>
 							<a href="<?php echo site_url('admin/boards/delete/board/'.$board->id) ?>">
-								<?php echo _('Delete') ?>
+								<?php echo __('Delete') ?>
 							</a>
 						</li>
 					</ul>

@@ -20,7 +20,7 @@ class Vote_model extends CI_Model
 		
 		if(!$post)
 		{
-			return array('error' => _('Post not found.'));
+			return array('error' => __('Post not found.'));
 		}
 		
 		$query = $this->db->where('ip', inet_ptod($this->input->ip_address()))

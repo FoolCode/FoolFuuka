@@ -37,16 +37,16 @@ class Statistics_model extends CI_Model
 		$this->stats = array(
 			'availability' => array(
 				'location' => 'availability',
-				'name' => _('Availability'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Availability'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequency' => 60 * 60 * 5,
 				'interface' => 'availability'
 			),
 			'daily_activity' => array(
 				'location' => 'daily_activity',
-				'name' => _('Daily Activity'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Daily Activity'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequency' => 60 * 60 * 6, // every 6 hours
 				'interface' => 'graph',
@@ -69,8 +69,8 @@ class Statistics_model extends CI_Model
 			),
 			'daily_activity_archive' => array(
 				'location' => 'daily_activity_archive',
-				'name' => _('Daily Activity "Archive"'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Daily Activity "Archive"'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequency' => 60 * 60, // every hour
 				'interface' => 'graph',
@@ -93,8 +93,8 @@ class Statistics_model extends CI_Model
 			),
 			'daily_activity_hourly' => array(
 				'location' => 'daily_activity_hourly',
-				'name' => _('Daily Activity "Hourly"'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Daily Activity "Hourly"'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequency' => 60 * 60, // every 6 hours
 				'interface' => 'graph',
@@ -118,15 +118,15 @@ class Statistics_model extends CI_Model
 			),
 			'image_reposts' => array(
 				'location' => 'image_reposts',
-				'name' => _('Image Reposts'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Image Reposts'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'interface' => 'image_reposts'
 			),
 			'karma' => array(
 				'location' => 'karma',
-				'name' => _('Karma'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Karma'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequency' => 60 * 60 * 24 * 7, // every 7 days
 				'interface' => 'graph',
@@ -149,15 +149,15 @@ class Statistics_model extends CI_Model
 			),
 			'new_users' => array(
 				'location' => 'new_users',
-				'name' => _('New Users'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('New Users'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'interface' => 'new_users'
 			),
 			'population' => array(
 				'location' => 'population',
-				'name' => _('Population'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Population'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'frequency' => 60 * 60 * 24, // every day
 				'interface' => 'graph',
@@ -180,36 +180,36 @@ class Statistics_model extends CI_Model
 			),
 			'post_count' => array(
 				'location' => 'post_count',
-				'name' => _('Post Count'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Post Count'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'interface' => 'post_count'
 			),
 			'post_rate' => array(
 				'location' => 'post_rate',
-				'name' => _('Post Rate'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Post Rate'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'interface' => 'post_rate'
 			),
 			'post_rate_archive' => array(
 				'location' => 'post_rate_archive',
-				'name' => _('Post Rate "Archive"'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Post Rate "Archive"'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'interface' => 'post_rate'
 			),
 			'users_online' => array(
 				'location' => 'users_online',
-				'name' => _('Users Online'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Users Online'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'interface' => 'users_online'
 			),
 			'users_online_internal' => array(
 				'location' => 'users_online_internal',
-				'name' => _('Users Posting in Archive'),
-				'description' => _('Posts in last month by name and availability by time of day.'),
+				'name' => __('Users Posting in Archive'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
 				'enabled' => TRUE,
 				'interface' => 'users_online'
 			)

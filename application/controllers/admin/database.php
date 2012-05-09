@@ -17,7 +17,7 @@ class Database extends Admin_Controller
 		$this->config->load('migration');
 
 		// title on top
-		$this->viewdata['controller_title'] = _("Database");
+		$this->viewdata['controller_title'] = __("Database");
 	}
 
 
@@ -45,7 +45,7 @@ class Database extends Admin_Controller
 		}
 
 		// subtitle on top
-		$this->viewdata['function_title'] = _('Upgrade');
+		$this->viewdata['function_title'] = __('Upgrade');
 
 		// variable for suggesting command via command line
 		$data["CLI_code"] = 'php ' . FCPATH . 'index.php admin database do_upgrade';
@@ -71,7 +71,7 @@ class Database extends Admin_Controller
 
 		// give the correct kind of output, be it JSON via javascript or CLI request
 		if ($this->input->is_cli_request())
-			$this->output->set_output(_('Successfully updated the database.') . PHP_EOL);
+			$this->output->set_output(__('Successfully updated the database.') . PHP_EOL);
 		else
 			$this->output->set_output(json_encode(array('href' => site_url('admin/')))); // give the url to go back to
 		return TRUE;

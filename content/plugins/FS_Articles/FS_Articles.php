@@ -37,7 +37,7 @@ class FS_Articles extends Plugins_model
 					{
 						return array(
 							'error_code' => 'ID_NOT_FOUND',
-							'error' => _('Couldn\'t find the article with the submitted ID.'),
+							'error' => __('Couldn\'t find the article with the submitted ID.'),
 							'critical' => TRUE
 						);
 					}
@@ -49,17 +49,17 @@ class FS_Articles extends Plugins_model
 				'type' => 'input',
 				'database' => TRUE,
 				'label' => 'Title',
-				'help' => _('The title of your article'),
+				'help' => __('The title of your article'),
 				'class' => 'span4',
-				'placeholder' => _('Required'),
+				'placeholder' => __('Required'),
 				'validation' => 'trim|required'
 			),
 			'slug' => array(
 				'database' => TRUE,
 				'type' => 'input',
-				'label' => _('Slug'),
-				'help' => _('Insert the short name of the article to use in the url. Only alphanumeric and dashes.'),
-				'placeholder' => _('Required'),
+				'label' => __('Slug'),
+				'help' => __('Insert the short name of the article to use in the url. Only alphanumeric and dashes.'),
+				'placeholder' => __('Required'),
 				'class' => 'span4',
 				'validation' => 'required|alpha_dash',
 				'validation_func' => function($input, $form_internal)
@@ -87,7 +87,7 @@ class FS_Articles extends Plugins_model
 					{
 						return array(
 							'error_code' => 'ALREADY_EXISTS',
-							'error' => _('The slug is already used for another board.')
+							'error' => __('The slug is already used for another board.')
 						);
 					}
 				}
@@ -97,15 +97,15 @@ class FS_Articles extends Plugins_model
 				'database' => TRUE,
 				'class' => 'span4',
 				'label' => 'URL',
-				'help' => _('If you set this, the article link will actually be an outlink.'),
+				'help' => __('If you set this, the article link will actually be an outlink.'),
 				'validation' => 'trim'
 			),
 			'article' => array(
 				'type' => 'textarea',
 				'database' => TRUE,
 				'style' => 'height:350px; width: 90%',
-				'label' => _('Article'),
-				'help' => _('The content of your article, in MarkDown')
+				'label' => __('Article'),
+				'help' => __('The content of your article, in MarkDown')
 			),
 			'separator-1' => array(
 				'type' => 'separator'
@@ -113,14 +113,14 @@ class FS_Articles extends Plugins_model
 			'top' => array(
 				'type' => 'checkbox',
 				'database' => TRUE,
-				'label' => _('Display the article link on the top of the page'),
-				'help' => _('Display the article link on the top of the page')
+				'label' => __('Display the article link on the top of the page'),
+				'help' => __('Display the article link on the top of the page')
 			),
 			'bottom' => array(
 				'type' => 'checkbox',
 				'database' => TRUE,
-				'label' => _('Display the article link on the bottom of the page'),
-				'help' => _('Display the article link on the bottom of the page')
+				'label' => __('Display the article link on the bottom of the page'),
+				'help' => __('Display the article link on the bottom of the page')
 			),
 			'separator-2' => array(
 				'type' => 'separator-short'
@@ -128,7 +128,7 @@ class FS_Articles extends Plugins_model
 			'submit' => array(
 				'type' => 'submit',
 				'class' => 'btn-primary',
-				'value' => _('Submit')
+				'value' => __('Submit')
 			),
 			'close' => array(
 				'type' => 'close'
@@ -157,7 +157,7 @@ class FS_Articles extends Plugins_model
 
 		$this->plugins->register_admin_sidebar_element('articles',
 			array(
-				"name" => _("Articles"),
+				"name" => __("Articles"),
 				"default" => "manage",
 				"position" => array(
 					"beforeafter" => "after",
@@ -165,7 +165,7 @@ class FS_Articles extends Plugins_model
 				),
 				"level" => "admin",
 				"content" => array(
-					"manage" => array("level" => "admin", "name" => _("Articles"), "icon" => 'icon-font'),
+					"manage" => array("level" => "admin", "name" => __("Articles"), "icon" => 'icon-font'),
 				)
 			)
 		);
@@ -179,15 +179,15 @@ class FS_Articles extends Plugins_model
 
 	function manage()
 	{
-		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/articles/manage") . '">' . _("Articles") . '</a>';
-		$this->viewdata['function_title'] = _('Manage');
+		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/articles/manage") . '">' . __("Articles") . '</a>';
+		$this->viewdata['function_title'] = __('Manage');
 
 		$articles = $this->get_all();
 		
 		ob_start();
 		?>
 
-			<a href="<?php echo site_url('admin/articles/edit') ?>" class="btn" style="float:right; margin:5px"><?php echo _('New article') ?></a>
+			<a href="<?php echo site_url('admin/articles/edit') ?>" class="btn" style="float:right; margin:5px"><?php echo __('New article') ?></a>
 
 			<table class="table table-bordered table-striped table-condensed">
 				<thead>
@@ -209,10 +209,10 @@ class FS_Articles extends Plugins_model
 							<a href="<?php echo site_url('@board/articles/' . $article->slug) ?>" target="_blank"><?php echo $article->slug ?></a>
 						</td>
 						<td>
-							<a href="<?php echo site_url('admin/articles/edit/'.$article->slug) ?>" class="btn btn-mini btn-primary"><?php echo _('Edit') ?></a>
+							<a href="<?php echo site_url('admin/articles/edit/'.$article->slug) ?>" class="btn btn-mini btn-primary"><?php echo __('Edit') ?></a>
 						</td>
 						<td>
-							<a href="<?php echo site_url('admin/articles/remove/'.$article->id) ?>" class="btn btn-mini btn-danger"><?php echo _('Remove') ?></a>
+							<a href="<?php echo site_url('admin/articles/remove/'.$article->id) ?>" class="btn btn-mini btn-danger"><?php echo __('Remove') ?></a>
 						</td>
 					</tr>
 					<?php endforeach; ?>
@@ -245,18 +245,18 @@ class FS_Articles extends Plugins_model
 				$this->save($result['success']);
 				if (is_null($slug))
 				{
-					flash_notice('success', _('New article created!'));
+					flash_notice('success', __('New article created!'));
 					redirect('admin/articles/edit/' . $result['success']['slug']);
 				}
 				else if ($slug != $result['success']['slug'])
 				{
 					// case in which letter was changed
-					flash_notice('success', _('Article information updated.'));
+					flash_notice('success', __('Article information updated.'));
 					redirect('admin/article/edit/' . $result['success']['slug']);
 				}
 				else
 				{
-					set_notice('success', _('Article information updated.'));
+					set_notice('success', __('Article information updated.'));
 				}
 			}
 		}
@@ -269,14 +269,14 @@ class FS_Articles extends Plugins_model
 				show_404();
 			}	
 			
-			$this->viewdata["function_title"] = _('Article') . ': ' . $data['object']->slug;
+			$this->viewdata["function_title"] = __('Article') . ': ' . $data['object']->slug;
 		}
 		else 
 		{
-			$this->viewdata["function_title"] = _('New article') ;
+			$this->viewdata["function_title"] = __('New article') ;
 		}
 		
-		$this->viewdata["controller_title"] = '<a href="' . site_url('admin/articles') . '">' . _('Articles') . '</a>';
+		$this->viewdata["controller_title"] = '<a href="' . site_url('admin/articles') . '">' . __('Articles') . '</a>';
 		
 		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator.php", $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);
@@ -348,14 +348,14 @@ class FS_Articles extends Plugins_model
 		if($this->input->post())
 		{
 			$this->db->where('id', $id)->delete('plugin_fs-articles');
-			flash_notice('success', _('The article was removed'));
+			flash_notice('success', __('The article was removed'));
 			redirect('admin/articles/manage');
 		}
 		
-		$this->viewdata["controller_title"] = '<a href="' . site_url('admin/articles') . '">' . _('Articles') . '</a>';
-		$this->viewdata["function_title"] = _('Removing article:') . ' ' . $article->title;
+		$this->viewdata["controller_title"] = '<a href="' . site_url('admin/articles') . '">' . __('Articles') . '</a>';
+		$this->viewdata["function_title"] = __('Removing article:') . ' ' . $article->title;
 		$data['alert_level'] = 'warning';
-		$data['message'] = _('Do you really want to remove the article?');
+		$data['message'] = __('Do you really want to remove the article?');
 
 		$this->viewdata["main_content_view"] = $this->load->view('admin/confirm', $data, TRUE);
 		$this->load->view('admin/default', $this->viewdata);

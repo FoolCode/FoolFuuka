@@ -32,13 +32,13 @@ class Cli extends MY_Controller
 		switch($error)
 		{
 			case '_parameter_missing':
-				$this->_println(_("Your request is missing parameters."));
+				$this->_println(__("Your request is missing parameters."));
 				break;
 			case '_parameter_board':
-				$this->_println(_("Your request is missing parameters: add the board shortname."));
+				$this->_println(__("Your request is missing parameters: add the board shortname."));
 				break;
 			case '_parameter_board_exist':
-				$this->_println(_("The board you selected doesn't exist."));
+				$this->_println(__("The board you selected doesn't exist."));
 				break;
 			default:
 				$this->_println($error);
@@ -94,7 +94,7 @@ class Cli extends MY_Controller
 		}
 		else
 		{
-			$this->_println(_('Done.'));
+			$this->_println(__('Done.'));
 		}
 	}
 

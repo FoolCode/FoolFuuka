@@ -23,14 +23,14 @@ class Auth extends Admin_Controller
 		$this->load->library('security');
 		$this->load->library('tank_auth');
 		$this->lang->load('tank_auth');
-		$this->viewdata['controller_title'] = _("Authorization");
+		$this->viewdata['controller_title'] = __("Authorization");
 	}
 
 	function index()
 	{
 		if ($message = $this->session->flashdata('message')) {
 			
-			$this->viewdata["function_title"] = _("Message");
+			$this->viewdata["function_title"] = __("Message");
 			$this->viewdata["main_content_view"] = $this->load->view('admin/auth/general_message', array('message' => $message), TRUE);
 			$this->load->view("admin/default.php", $this->viewdata);
 		} else {
@@ -109,7 +109,7 @@ class Auth extends Admin_Controller
 				}
 			}
 			
-			$this->viewdata["function_title"] = _("Login");
+			$this->viewdata["function_title"] = __("Login");
 			$this->viewdata["main_content_view"] = $this->load->view('admin/auth/login_form', $data, TRUE);
 			$this->load->view("admin/default.php", $this->viewdata);
 		}
@@ -208,7 +208,7 @@ class Auth extends Admin_Controller
 			$data['captcha_registration'] = $captcha_registration;
 			$data['use_recaptcha'] = $use_recaptcha;
 			
-			$this->viewdata["function_title"] = _("Register");
+			$this->viewdata["function_title"] = __("Register");
 			$this->viewdata["main_content_view"] = $this->load->view('admin/auth/register_form', $data, TRUE);
 			$this->load->view("admin/default.php", $this->viewdata);
 		}
@@ -246,7 +246,7 @@ class Auth extends Admin_Controller
 				}
 			}
 			
-			$this->viewdata["function_title"] = _("Resend activation email");
+			$this->viewdata["function_title"] = __("Resend activation email");
 			$this->viewdata["main_content_view"] = $this->load->view('admin/auth/send_again_form', $data, TRUE);
 			$this->load->view("admin/default.php", $this->viewdata);
 		}
@@ -308,7 +308,7 @@ class Auth extends Admin_Controller
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			$this->viewdata["function_title"] = _("Forgot password");
+			$this->viewdata["function_title"] = __("Forgot password");
 			$this->viewdata["main_content_view"] = $this->load->view('admin/auth/forgot_password_form', $data, TRUE);
 			$this->load->view("admin/default.php", $this->viewdata);	
 		}
@@ -356,7 +356,7 @@ class Auth extends Admin_Controller
 				$this->_show_message($this->lang->line('auth_message_new_password_failed'));
 			}
 		}
-		$this->viewdata["function_title"] = _("Reset password");
+		$this->viewdata["function_title"] = __("Reset password");
 		$this->viewdata["main_content_view"] = $this->load->view('admin/auth/reset_password_form', $data, TRUE);
 		$this->load->view("admin/default.php", $this->viewdata);	
 	}
@@ -389,7 +389,7 @@ class Auth extends Admin_Controller
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			$this->viewdata["function_title"] = _("Change password");
+			$this->viewdata["function_title"] = __("Change password");
 			$this->viewdata["main_content_view"] = $this->load->view('admin/auth/change_password_form', $data, TRUE);
 			$this->load->view("admin/default.php", $this->viewdata);	
 		}
@@ -428,7 +428,7 @@ class Auth extends Admin_Controller
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			$this->viewdata["function_title"] = _("Change email");
+			$this->viewdata["function_title"] = __("Change email");
 			$this->viewdata["main_content_view"] = $this->load->view('admin/auth/change_email_form', $data, TRUE);
 			$this->load->view("admin/default.php", $this->viewdata);	
 		}
@@ -481,7 +481,7 @@ class Auth extends Admin_Controller
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			$this->viewdata["function_title"] = _("Unregister");
+			$this->viewdata["function_title"] = __("Unregister");
 			$this->viewdata["main_content_view"] = $this->load->view('admin/auth/unregister_form', $data, TRUE);
 			$this->load->view("admin/default.php", $this->viewdata);
 			

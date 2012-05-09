@@ -3,7 +3,6 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-
 class MY_Controller extends CI_Controller
 {
 
@@ -144,9 +143,9 @@ class MY_Controller extends CI_Controller
 					'missing_image_height' => 150,
 				),
 				'gettext' => array(
-					'submit_state' => _('Submitting'),
-					'thread_is_real_time' => _('This thread is being displayed in real time.'),
-					'update_now' => _('Update now')
+					'submit_state' => __('Submitting'),
+					'thread_is_real_time' => __('This thread is being displayed in real time.'),
+					'update_now' => __('Update now')
 				)
 			);
 	}
@@ -159,13 +158,13 @@ class MY_Controller extends CI_Controller
 		if (!$this->tank_auth->is_allowed())
 		{
 			$this->output->set_status_header(403);
-			$this->output->set_output(json_encode(array('error' => _('You\'re not allowed to perform this action'))));
+			$this->output->set_output(json_encode(array('error' => __('You\'re not allowed to perform this action'))));
 		}
 
 		if (!$this->input->post('actions') || !$this->input->post('doc_id') || !$this->input->post('board'))
 		{
 			$this->output->set_status_header(404);
-			$this->output->set_output(json_encode(array('error' => _('Missing arguments'))));
+			$this->output->set_output(json_encode(array('error' => __('Missing arguments'))));
 		}
 
 
@@ -175,7 +174,7 @@ class MY_Controller extends CI_Controller
 		if (!is_array($actions))
 		{
 			$this->output->set_status_header(404);
-			$this->output->set_output(json_encode(array('error' => _('Invalid action'))));
+			$this->output->set_output(json_encode(array('error' => __('Invalid action'))));
 		}
 
 		$doc_id = $this->input->post('doc_id');
@@ -187,7 +186,7 @@ class MY_Controller extends CI_Controller
 		if ($post === FALSE)
 		{
 			$this->output->set_status_header(404);
-			$this->output->set_output(json_encode(array('error' => _('Post not found'))));
+			$this->output->set_output(json_encode(array('error' => __('Post not found'))));
 		}
 
 		if (in_array('ban_md5', $actions))

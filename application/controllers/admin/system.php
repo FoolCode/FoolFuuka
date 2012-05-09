@@ -19,7 +19,7 @@ class System extends Admin_Controller
 		$this->load->model('upgrade_model', 'upgrade');
 
 		// page title
-		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/system") . '">' . _("System") . '</a>';
+		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/system") . '">' . __("System") . '</a>';
 	}
 
 	/*
@@ -37,11 +37,11 @@ class System extends Admin_Controller
 
 	function information()
 	{
-		$this->viewdata["function_title"] = _("Information");
+		$this->viewdata["function_title"] = __("Information");
 
 		// get current version from database
 		$data["current_version"] = FOOL_VERSION;
-		$data["form_title"] = _("Information");
+		$data["form_title"] = __("Information");
 
 		$this->viewdata["main_content_view"] = $this->load->view("admin/system/information",
 			$data, TRUE);
@@ -51,26 +51,26 @@ class System extends Admin_Controller
 
 	function preferences()
 	{
-		$this->viewdata["function_title"] = _("Preferences");
+		$this->viewdata["function_title"] = __("Preferences");
 
 		$form = array();
 
 		if (find_imagick())
 		{
-			$imagick_status = '<span class="label label-success">' . _('Found and Working') . '</span>';
+			$imagick_status = '<span class="label label-success">' . __('Found and Working') . '</span>';
 		}
 		else
 		{
 			// @todo update the imagick statuses to match bootstrap 2.0
 			if (!$this->fs_imagick->exec)
-				$imagick_status = '<span class="label label-important">' . _('Not Available') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must have Safe Mode turned off and the exec() function enabled to allow ImageMagick to process your images. Please check the information panel for more details.')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
+				$imagick_status = '<span class="label label-important">' . __('Not Available') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(__('You must have Safe Mode turned off and the exec() function enabled to allow ImageMagick to process your images. Please check the information panel for more details.')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><img src="' . icons(388,
 						16) . '" class="icon icon-small"></a>';
 			else if (!$this->fs_imagick->found)
-				$imagick_status = '<span class="label label-important">' . _('Not Found') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(_('You must provide the correct path to the "convert" binary on your system. This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
+				$imagick_status = '<span class="label label-important">' . __('Not Found') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(__('You must provide the correct path to the "convert" binary on your system. This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><img src="' . icons(388,
 						16) . '" class="icon icon-small"></a>';
 			else if (!$this->fs_imagick->available)
-				$imagick_status = '<span class="label label-important">' . _('Not Working') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(sprintf(_('There has been an error encountered when testing your ImageMagick installation. To manually check for errors, access your server via shell or command line and type: %s'),
-							'<br/><code>' . $this->fs_imagick->found . ' -version</code>')) . '" data-original-title="' . htmlspecialchars(_('Disabled Functions')) . '"><img src="' . icons(388,
+				$imagick_status = '<span class="label label-important">' . __('Not Working') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(sprintf(__('There has been an error encountered when testing your ImageMagick installation. To manually check for errors, access your server via shell or command line and type: %s'),
+							'<br/><code>' . $this->fs_imagick->found . ' -version</code>')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><img src="' . icons(388,
 						16) . '" class="icon icon-small"></a>';
 		}
 
@@ -80,18 +80,18 @@ class System extends Admin_Controller
 
 		$form['fs_serv_imagick_path'] = array(
 			'type' => 'input',
-			'label' => _('Path to ImageMagick') . ' ' . $imagick_status,
+			'label' => __('Path to ImageMagick') . ' ' . $imagick_status,
 			'placeholder' => '/usr/bin',
 			'preferences' => 'fs_gen',
-			'help' => _('The location of your ImageMagick "convert" executable')
+			'help' => __('The location of your ImageMagick "convert" executable')
 		);
 		
 		$form['fs_sys_subdomain'] = array(
 			'type' => 'input',
 			'array' => TRUE,
-			'label' => _('CDN subdomains'),
+			'label' => __('CDN subdomains'),
 			'preferences' => TRUE,
-			'help' => _('Insert an alternative base URL to FoOlFuuka to separate the system functions from the boards.')
+			'help' => __('Insert an alternative base URL to FoOlFuuka to separate the system functions from the boards.')
 		);
 
 		$form['separator-2'] = array(
@@ -100,7 +100,7 @@ class System extends Admin_Controller
 
 		$form['submit'] = array(
 			'type' => 'submit',
-			'value' => _('Submit'),
+			'value' => __('Submit'),
 			'class' => 'btn btn-primary'
 		);
 
@@ -108,7 +108,7 @@ class System extends Admin_Controller
 			'type' => 'close'
 		);
 
-		$data["form_title"] = _("Preferences");
+		$data["form_title"] = __("Preferences");
 
 		$this->submit_preferences_auto($form);
 
@@ -133,17 +133,17 @@ class System extends Admin_Controller
 				$this->upgrade->clean();
 				// show some kind of error
 				log_message('error', 'system.php do_upgrade(): failed upgrade');
-				flash_notice('error', _('Upgrade failed: check file permissions.'));
+				flash_notice('error', __('Upgrade failed: check file permissions.'));
 			}
 			else
 			{
-				flash_notice('success', _('Upgrade successful'));
+				flash_notice('success', __('Upgrade successful'));
 			}
 			
 			redirect($this->uri->uri_string());
 		}
 		
-		$this->viewdata["function_title"] = _("Upgrade");
+		$this->viewdata["function_title"] = __("Upgrade");
 
 		// get current version from constant
 		$data["current_version"] = FOOL_VERSION;

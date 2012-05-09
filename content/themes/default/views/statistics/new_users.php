@@ -15,9 +15,9 @@ if (!defined('BASEPATH'))
 <table class="bordered-table" style="width:600px; margin: 10px auto;">
 	<thead>
 	<tr>
-		<th><?php echo _('Poster') ?></th>
-		<th><?php echo _('First Seen') ?></th>
-		<th><?php echo _('Total Posts') ?></th>
+		<th><?php echo __('Poster') ?></th>
+		<th><?php echo __('First Seen') ?></th>
+		<th><?php echo __('Total Posts') ?></th>
 	</tr>
 	</thead>
 	<tbody>

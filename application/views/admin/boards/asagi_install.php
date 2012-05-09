@@ -2,7 +2,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-echo nl2br(_("
+echo nl2br(__("
 Asagi is the Open Source (GPLv3) 4chan data fetcher coded by Eksopl. It can dump the threads, images and thumbnails from the Yotsuba boards in 4chan into your server for easy consumption.
 
 If you're interested in using FoOlFuuka as a 4chan archive, you need to download, setup and run Asagi.
@@ -16,7 +16,7 @@ Requirements: Java installed on your server.
 <?php
 
 echo form_open();
-echo form_submit(array('name' => 'install', 'value' => _('Install'), 'class' => 'btn btn-success btn-large'));
+echo form_submit(array('name' => 'install', 'value' => __('Install'), 'class' => 'btn btn-success btn-large'));
 echo ' <a href="https://github.com/eksopl/asagi" target="_blank" class="btn btn-large">Go to the Asagi project page to know more.</a>';
 echo form_close();
 ?>

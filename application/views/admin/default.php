@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 ?><!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo get_setting('fs_gen_site_title'); ?> <?php echo _('Control Panel') ?></title>
+		<title><?php echo get_setting('fs_gen_site_title'); ?> <?php echo __('Control Panel') ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
@@ -70,7 +70,7 @@ if (!defined('BASEPATH'))
 					{
 						echo FOOL_VERSION;
 						if ($this->tank_auth->is_admin() && (FOOL_VERSION != get_setting('fs_cron_autoupgrade_version') && (get_setting('fs_cron_autoupgrade_version'))))
-							echo ' – <a href="' . site_url('admin/system/upgrade/') . '">' . _('New upgrade available:') . ' ' . get_setting('fs_cron_autoupgrade_version') . '</a>';
+							echo ' – <a href="' . site_url('admin/system/upgrade/') . '">' . __('New upgrade available:') . ' ' . get_setting('fs_cron_autoupgrade_version') . '</a>';
 					}
 					?></p>
 					</footer>

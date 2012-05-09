@@ -7,9 +7,9 @@ if (!defined('BASEPATH'))
 <table class="bordered-table table-striped" style="width:600px; margin: 10px auto;">
 	<thead>
 	<tr>
-		<th><?php echo _('Poster') ?></th>
-		<th><?php echo _('Last Seen') ?></th>
-		<th><?php echo _('Latest post') ?></th>
+		<th><?php echo __('Poster') ?></th>
+		<th><?php echo __('Last Seen') ?></th>
+		<th><?php echo __('Latest post') ?></th>
 	</tr>
 	</thead>
 	<tbody>

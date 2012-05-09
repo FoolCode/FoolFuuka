@@ -97,7 +97,7 @@ class Theme_Controller
 				/**
 				 * Display a default/standard output for NON-AJAX REQUESTS.
 				 */
-				$this->CI->template->title(_('Error'));
+				$this->CI->template->title(__('Error'));
 				$this->CI->_set_parameters(
 					array(
 					'error' => validation_errors()
@@ -143,10 +143,10 @@ class Theme_Controller
 
 				if (isset($check['invalid_thread']) && $check['invalid_thread'] == TRUE)
 				{
-					$this->CI->template->title(_('Error'));
+					$this->CI->template->title(__('Error'));
 					$this->CI->_set_parameters(
 						array(
-						'error' => _('This thread does not exist.')
+						'error' => __('This thread does not exist.')
 						), array(
 						'tools_search' => TRUE
 						)
@@ -175,10 +175,10 @@ class Theme_Controller
 
 					if (isset($check['invalid_thread']) && $check['invalid_thread'] == TRUE)
 					{
-						$this->CI->template->title(_('Error'));
+						$this->CI->template->title(__('Error'));
 						$this->CI->_set_parameters(
 							array(
-							'error' => _('This thread does not exist.')
+							'error' => __('This thread does not exist.')
 							), array(
 							'tools_search' => TRUE
 							)
@@ -189,10 +189,10 @@ class Theme_Controller
 					
 					if (isset($check['ghost_disabled']) && $check['ghost_disabled'] == TRUE)
 					{
-						$this->CI->template->title(_('Error'));
+						$this->CI->template->title(__('Error'));
 						$this->CI->_set_parameters(
 							array(
-							'error' => _('This thread is closed.')
+							'error' => __('This thread is closed.')
 							), array(
 							'tools_search' => TRUE
 							)
@@ -214,10 +214,10 @@ class Theme_Controller
 			if ($data['num'] == 0
 				&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] == 4))
 			{
-				$this->CI->template->title(_('Error'));
+				$this->CI->template->title(__('Error'));
 				$this->CI->_set_parameters(
 					array(
-					'error' => _('You are required to upload an image when posting a new thread.')
+					'error' => __('You are required to upload an image when posting a new thread.')
 					), array(
 					'tools_search' => TRUE
 					)
@@ -232,10 +232,10 @@ class Theme_Controller
 			if (mb_strlen($data['comment']) < 3
 				&& (!isset($_FILES['file_image']) || $_FILES['file_image']['error'] == 4))
 			{
-				$this->CI->template->title(_('Error'));
+				$this->CI->template->title(__('Error'));
 				$this->CI->_set_parameters(
 					array(
-					'error' => _('You are required to write a comment when no image upload is present.')
+					'error' => __('You are required to write a comment when no image upload is present.')
 					), array(
 					'tools_search' => TRUE
 					)
@@ -250,10 +250,10 @@ class Theme_Controller
 			if ((isset($check['disable_image_upload']) || $data['ghost'])
 				&& (isset($_FILES['file_image']) && $_FILES['file_image']['error'] != 4))
 			{
-				$this->CI->template->title(_('Error'));
+				$this->CI->template->title(__('Error'));
 				$this->CI->_set_parameters(
 					array(
-					'error' => _('The posting of images has been disabled for this thread.')
+					'error' => __('The posting of images has been disabled for this thread.')
 					), array(
 					'tools_search' => TRUE
 					)
@@ -283,7 +283,7 @@ class Theme_Controller
 				}
 				else
 				{
-					$this->CI->template->title(_('Error'));
+					$this->CI->template->title(__('Error'));
 					$this->CI->_set_parameters(
 						array(
 						'error' => $this->CI->upload->display_errors()
@@ -306,7 +306,7 @@ class Theme_Controller
 			 */
 			if (isset($result['error']))
 			{
-				$this->CI->template->title(_('Error'));
+				$this->CI->template->title(__('Error'));
 				$this->CI->_set_parameters(
 					array(
 					'error' => $result['error']
@@ -335,7 +335,7 @@ class Theme_Controller
 				}
 
 				$this->CI->template->set_layout('redirect');
-				$this->CI->template->title(_('Redirecting...'));
+				$this->CI->template->title(__('Redirecting...'));
 				$this->CI->_set_parameters(
 					array(
 						'title' => fuuka_title(0),
@@ -364,7 +364,7 @@ class Theme_Controller
 			}
 
 			$this->CI->template->set_layout('redirect');
-			$this->CI->template->title(_('Redirecting...'));
+			$this->CI->template->title(__('Redirecting...'));
 			$this->CI->_set_parameters(
 				array(
 					'title' => fuuka_title(0),
@@ -393,7 +393,7 @@ class Theme_Controller
 			}
 
 			$this->CI->template->set_layout('redirect');
-			$this->CI->template->title(_('Redirecting...'));
+			$this->CI->template->title(__('Redirecting...'));
 			$this->CI->_set_parameters(
 				array(
 					'title' => fuuka_title(0),

@@ -20,9 +20,9 @@ if (!defined('BASEPATH'))
  * 			)
  * 			'name' => array(
  * 				'type' => 'input',
- * 				'label' => _('Name'),
- * 				'help' => _('Insert the name of your mom.'),
- * 				'placeholder' => _('Required'),
+ * 				'label' => __('Name'),
+ * 				'help' => __('Insert the name of your mom.'),
+ * 				'placeholder' => __('Required'),
  * 				'class' => 'span3',
  * 				'validation' => 'required'
  * 			),
@@ -33,7 +33,7 @@ if (!defined('BASEPATH'))
  * 				'type' => 'checkbox',
  * 				'checked' => TRUE
  * 				'value' => 1 // defaults to 1 if not inserted
- * 				'help' => _('A checkbox example')
+ * 				'help' => __('A checkbox example')
  * 			),
  * ...
  * 		);

@@ -35,7 +35,7 @@ class API_Controller extends REST_Controller
 	{
 		if (!$this->get('board') && !$this->post('board'))
 		{
-			$this->response(array('error' => _('You didn\'t select a board')), 404);
+			$this->response(array('error' => __('You didn\'t select a board')), 404);
 		}
 			
 		$board = ($this->get('board'))?$this->get('board'):$this->post('board');
@@ -43,7 +43,7 @@ class API_Controller extends REST_Controller
 			
 		if(!$this->radix->set_selected_by_shortname($board))
 		{
-			$this->response(array('error' => _('The board you selected doesn\'t exist')), 404);
+			$this->response(array('error' => __('The board you selected doesn\'t exist')), 404);
 		}
 
 		$this->load->model('post_model', 'post');

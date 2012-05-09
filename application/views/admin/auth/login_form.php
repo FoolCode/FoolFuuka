@@ -6,25 +6,25 @@
 		'value' => set_value('login'),
 		'maxlength' => 80,
 		'size' => 30,
-		'placeholder' => _('Required')
+		'placeholder' => __('Required')
 	);
 	if ($login_by_username && $login_by_email)
 	{
-		$login_label = _('Email or username');
+		$login_label = __('Email or username');
 	}
 	else if ($login_by_username)
 	{
-		$login_label = _('Login');
+		$login_label = __('Login');
 	}
 	else
 	{
-		$login_label = _('Email');
+		$login_label = __('Email');
 	}
 	$password = array(
 		'name' => 'password',
 		'id' => 'password',
 		'size' => 30,
-		'placeholder' => _('Required')
+		'placeholder' => __('Required')
 	);
 	$remember = array(
 		'name' => 'remember',
@@ -68,13 +68,13 @@
 			?>
 			<div id="recaptcha" class="clearfix" style="margin-bottom:5px">
 				<div id="recaptcha_image" style="margin-bottom: 3px; border: 1px solid #999;"></div>
-				<a href="javascript:Recaptcha.reload()" class="btn btn-mini"><?php echo _('Get another CAPTCHA') ?></a>
-				<a href="javascript:Recaptcha.switch_type('audio')" class="recaptcha_only_if_image btn btn-mini"><?php echo _('Get an audio CAPTCHA') ?></a>
-				<a href="javascript:Recaptcha.switch_type('image')" class="recaptcha_only_if_audio btn btn-mini"><?php echo _('Get an image CAPTCHA') ?></a>
+				<a href="javascript:Recaptcha.reload()" class="btn btn-mini"><?php echo __('Get another CAPTCHA') ?></a>
+				<a href="javascript:Recaptcha.switch_type('audio')" class="recaptcha_only_if_image btn btn-mini"><?php echo __('Get an audio CAPTCHA') ?></a>
+				<a href="javascript:Recaptcha.switch_type('image')" class="recaptcha_only_if_audio btn btn-mini"><?php echo __('Get an image CAPTCHA') ?></a>
 			</div>
 
-			<label><div class="recaptcha_only_if_image"><?php echo _('Enter the words above') ?></div>
-				<div class="recaptcha_only_if_audio"><?php echo _('Enter the numbers you hear') ?></div></label>
+			<label><div class="recaptcha_only_if_image"><?php echo __('Enter the words above') ?></div>
+				<div class="recaptcha_only_if_audio"><?php echo __('Enter the numbers you hear') ?></div></label>
 			<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
 			<span class="help-inline" style="color: red;">
 				<?php echo form_error('recaptcha_response_field'); ?>
@@ -89,7 +89,7 @@
 			<br/>
 			<?php echo $captcha_html; ?>
 			
-		<label><?php echo form_label(_('Enter the letters above'), $captcha['id']); ?></label>
+		<label><?php echo form_label(__('Enter the letters above'), $captcha['id']); ?></label>
 		<?php echo form_input($captcha); ?>
 		<span class="help-inline" style="color: red;"><?php echo form_error($captcha['name']); ?></span>
 		<?php
@@ -100,17 +100,17 @@
 <label class="checkbox">
 	<?php echo form_checkbox($remember); ?>
 	<?php
-	echo form_label(_('Remember me'), $remember['id']);
+	echo form_label(__('Remember me'), $remember['id']);
 	?>
 </label>		
 
-<?php echo form_submit(array('name' => 'submit', 'value' => _('Login'), 'class' => 'btn btn-primary')); ?>
+<?php echo form_submit(array('name' => 'submit', 'value' => __('Login'), 'class' => 'btn btn-primary')); ?>
 		
-<input type="button" onClick="window.location.href='<?php echo site_url('/admin/auth/forgot_password/') ?>'" class="btn" value="<?php echo form_prep(_("Forgot password")) ?>" />
+<input type="button" onClick="window.location.href='<?php echo site_url('/admin/auth/forgot_password/') ?>'" class="btn" value="<?php echo form_prep(__("Forgot password")) ?>" />
 <?php
 if ($this->config->item('allow_registration', 'tank_auth')) :
 	?>
-	<input type="button" onClick="window.location.href='<?php echo site_url('/admin/auth/register/') ?>'" class="btn" value="<?php echo form_prep(_("Register")) ?>" />
+	<input type="button" onClick="window.location.href='<?php echo site_url('/admin/auth/register/') ?>'" class="btn" value="<?php echo form_prep(__("Register")) ?>" />
 <?php endif; ?>
 
 <?php echo form_close(); ?>

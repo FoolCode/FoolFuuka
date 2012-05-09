@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
  */
 function __($text)
 {
-	$CI = & get_instance();
+	//config_item();
 	return $text;
 }
 

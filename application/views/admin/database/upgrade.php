@@ -7,7 +7,7 @@ echo '<div class="table"><h3>' . __('Update database') . '</h3>';
 
 echo __("There's a newer version of the database available. Just update it by clicking on the update button.");
 echo '<br/>';
-echo sprintf(__("In case you're using a very large installation of FoOlSlide, to avoid timeouts while updating the database, you can use the command line, and enter this: %s"), '<br/><b><code>' . $CLI_code . '</code></b>');
+echo sprintf(__("In case you're using a very large installation of FoOlFuuka, to avoid timeouts while updating the database, you can use the command line, and enter this: %s"), '<br/><b><code>' . $CLI_code . '</code></b>');
 
 echo '<br/><br/>';
 echo buttoner(array(

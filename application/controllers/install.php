@@ -87,7 +87,7 @@ class Install extends Install_Controller
 			'label' => __('Database prefix'),
 			'type' => 'input',
 			'value' => 'fu_',
-			'help' => __('Add a  database prefix to avoid collisions, in example if you have other ' . FOOL_NAME)
+			'help' => __('Add a database prefix to avoid collisions, in example if you have other software using the same database')
 		);
 
 		$form['spacer'] = array(

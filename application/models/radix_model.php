@@ -1285,5 +1285,60 @@ class Radix_model extends CI_Model
 		
 		return TRUE;
 	}
-
+	
+	/**
+	 * Figures out if the table is already utf8mb4 or not
+	 * 
+	 * @param object $board
+	 * @param string $suffix the table suffix like _threads
+	 * @return boolean true if the table is NOT utf8mb4 
+	 */
+	function mysql_check_charset($board, $suffix)
+	{
+		// rather than using information_schema, for ease let's just check the output of the create table
+		$this->db->query('SHOW CREATE TABLE ' . $this->get_table($board, $suffix));
+		
+		$row = $this->row_array();
+		
+		$create_table = $row['Create Table'];
+		
+		return strpos($create_table, 'CHARSET=utf8mb4') === FALSE;
+	}
+	
+	
+	/**
+	 * Convert to utf8mb4 if possible 
+	 * 
+	 * @param object $board board object
+	 */
+	function mysql_change_charset($board)
+	{
+		// if utf8mb4 is not supported, stop the machines
+		if(!$this->mysql_check_multibyte())
+		{
+			cli_notice('error', __('Your MySQL installation doesn\'t support multibyte characters. Update MySQL to version 5.5 or higher.'));
+			return FALSE;
+		}
+		
+		// these take ages
+		$tables = array('', '_threads', '_users');
+		
+		// also _search needs utf8mb4, but we need to add it separately not to create db errors
+		if($board->myisam_search)
+		{
+			$tables[] = '_search';
+		}
+		
+		foreach($tables as $table)
+		{
+			if($this->mysql_check_charset($board, $table))
+			{
+				cli_notice('notice', sprintf(__('Converting %s to utfmb4'), $this->get_table($board, $table)));
+				$this->db->query("ALTER TABLE " . $this->get_table($board, $table) . " CONVERT TO CHARACTER SET utf8mb4");
+			}
+		}
+		
+		cli_notice('notice', __('The tables have all been converted to utf8mb4'));
+		return TRUE;
+	}
 }

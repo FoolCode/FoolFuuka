@@ -8,8 +8,6 @@ if (!function_exists('get_notices'))
 	/**
 	 * Returns the notices with the Twitter Bootstrap notices formatting, and unsets
 	 * the array lines from the flash
-	 * 
-	 * @author Woxxy
 	 */
 	function get_notices()
 	{
@@ -45,8 +43,6 @@ if (!function_exists('clear_notices'))
 {
 	/**
 	 * Flushes flashdata and standard notices
-	 * 
-	 * @author Woxxy
 	 */
 	function clear_notices()
 	{
@@ -63,8 +59,6 @@ if (!function_exists('set_notice'))
 	/**
 	 * Sets a notice in the currently loading page. Can be used for multiple notices
 	 * Notice types: error, warn, notice
-	 * 
-	 * @author Woxxy
 	 */
 	function set_notice($type, $message, $data = FALSE)
 	{
@@ -90,8 +84,6 @@ if (!function_exists('flash_notice'))
 	/**
 	 * Sets a notice in the next loaded page. Can be used for multiple notices
 	 * Notice types: error, warn, notice
-	 * 
-	 * @author Woxxy
 	 */
 	function flash_notice($type, $message)
 	{
@@ -106,4 +98,45 @@ if (!function_exists('flash_notice'))
 	}
 
 
+}
+
+
+if(!function_exists('cli_notice'))
+{
+	/**
+	 * Sends a message to the command line if the user is running in command line mode
+	 * 
+	 * @param string $type can be notice/success, error, dberror
+	 * @param string $message  the message to be printed
+	 * @param boolean $newline if true a new line won't be created
+	 * @return boolean false if not cli, true if sent
+	 */
+	function cli_notice($type, $message, $newline = TRUE)
+	{
+		$CI = & get_instance();
+		
+		if(!$CI->input->is_cli_request())
+		{
+			return FALSE;
+		}
+
+		if($type == 'error')
+		{
+			echo '[error] ';
+		}
+		
+		if($type == 'dberror')
+		{
+			echo '[database error] ';
+		}
+		
+		echo $message;
+		
+		if($newline)
+		{
+			echo PHP_EOL;
+		}
+		
+		return TRUE;
+	}
 }

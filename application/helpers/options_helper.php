@@ -17,14 +17,22 @@ function __($text)
 }
 
 /**
- * These functions determine if the values are valid.
+ * Check if the string is formed by numbers only
+ * 
+ * @param string $str the string to check
+ * @return boolean
  */
 function is_natural($str)
 {
 	return (bool) preg_match('/^[0-9]+$/', $str);
 }
 
-
+/**
+ * Check that this is a post number with possible subnumber and , or _ divisor
+ * 
+ * @param type $str
+ * @return boolean 
+ */
 function is_post_number($str)
 {
 	if(is_natural($str))

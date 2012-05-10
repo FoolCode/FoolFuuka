@@ -11,6 +11,10 @@ class Chan extends Public_Controller
 	function __construct()
 	{
 		parent::__construct();
+		
+		// set these headers here instead of in HTML so w3validator won't ever bother us
+		header('X-UA-Compatible: IE=edge,chrome=1');
+		header('imagetoolbar: false');
 	}
 
 

@@ -62,12 +62,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 
 		<?php if(!isset($disable_image_upload) || !$disable_image_upload) : ?>
 				<div class="input-prepend">
-					<label class="add-on" for="reply_file"><?php echo __('File') ?></label><?php
-		echo form_upload(array(
-			'name' => 'file_image',
-			'id' => 'file_image',
-			'size' => '16' // for firefox
-		));
+					<label class="add-on" for="file_image"><?php echo __('File') ?></label><input type="file" name="file_image" id="file_image"  /><?php
 		echo form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes);
 		?>
 					</div>
@@ -97,9 +92,6 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		<?php endif; ?>
 
 	</div>
-
-
-
 
 
 	<div class="input-append pull-left">

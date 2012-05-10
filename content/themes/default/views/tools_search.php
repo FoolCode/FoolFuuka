@@ -261,7 +261,6 @@ if(isset($board)) :
 				<li class="input-prepend"><label for="date_start" class="add-on">Date start</label><?php
 					$date_array = array(
 							'placeholder' => 'yyyy-mm-dd',
-							'type' => 'date',
 							'name' => 'start',
 							'id' => 'date_start'
 						);
@@ -276,7 +275,6 @@ if(isset($board)) :
 				<li class="input-prepend"><label for="date_end" class="add-on">Date end</label><?php
 					$date_array = array(
 							'placeholder' => 'yyyy-mm-dd',
-							'type' => 'date',
 							'name' => 'end',
 							'id' => 'date_end',
 						);
@@ -288,15 +286,6 @@ if(isset($board)) :
 					echo form_input($date_array);
 
 					?></li>
-				
-				<?php echo form_close(); ?>
-				<?php if($board->shortname) :
-					echo form_open_multipart(
-						site_url('@radix/' . $board->shortname . '/search'),
-						array('style' => 'margin-bottom:8px')
-					);
-				?>
-				
 				<li class="divider" style="margin-bottom:8px"></li>
 				<li class="input-prepend"><label for="file_search" class="add-on">Image</label><input id="file_search" size="17" type="file" name="image" />
 					</li><li><?php
@@ -305,14 +294,10 @@ if(isset($board)) :
 						'value' => __('Search image'),
 						'name' => 'submit_image',
 						'title' => __('On most browsers you can also drop the file on the search bar.'),
-						'style' => 'margin-top:0;',
+						'style' => 'margin-top:0; margin-bottom:2px',
 					))
-					?></li>
-				<?php 
-					echo form_close();
-					endif; 
-				?>
-					
+					?>
+				</li>
 				<li class="divider"></li>
 				<li style="margin-top: 5px;"><?php echo __('Your latest searches:') ?>
 					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; padding: 1px 3px; line-height:normal;color:#FFF; position:relative; top:-1px;"><?php echo __('Clear') ?></a></div>
@@ -334,12 +319,12 @@ if(isset($board)) :
 						foreach($latest_searches as $latest_search)
 						{
 							$uri = ($latest_search['board'] === FALSE ? '' : $latest_search['board'] . '/') . '/search/';
-							$text = !$latest_search['board'] === FALSE ? '<strong>global:</strong> ' : '/<strong>' . $latest_search['board'] . '</strong>/: ';
+							$text = !$latest_search['board'] === FALSE ? '<strong>global:</strong> ' : '/<strong>' . fuuka_htmlescape($latest_search['board']) . '</strong>/: ';
 							unset($latest_search['board']);
 							if(isset($latest_search['text']))
 							{
 								$uri .= 'text/' . $latest_search['text'] . '/';
-								$text .= urldecode($latest_search['text']) . ' ';
+								$text .= fuuka_htmlescape(urldecode($latest_search['text'])) . ' ';
 								unset($latest_search['text']);
 							}
 							if(isset($latest_search['order']) && $latest_search['order'] == 'desc')
@@ -352,8 +337,8 @@ if(isset($board)) :
 							foreach($latest_search as $k => $i)
 							{
 								$uri .= $k.'/'.$i.'/';
-								$extra_text .= '<span class="options">[' . $k . '] ' . urldecode($i) . ' </span>';
-								$extra_text_br .= '<br/><span class="options">[' . $k . '] ' . urldecode($i) . ' </span>';
+								$extra_text .= '<span class="options">[' . fuuka_htmlescape($k) . '] ' . fuuka_htmlescape(urldecode($i)) . ' </span>';
+								$extra_text_br .= '<br/><span class="options">[' . fuuka_htmlescape($k) . '] ' . fuuka_htmlescape(urldecode($i)) . ' </span>';
 							}
 							
 							echo '<li title="' . form_prep($text . $extra_text_br) . '" class="latest_search"><a href="' . site_url($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
@@ -361,8 +346,31 @@ if(isset($board)) :
 					}
 					
 				?>
+				</ul>
+		</div>
+				<?php echo form_close(); ?>
+		
+		
+		<?php /*
+		<div><ul>
+				<?php if($board->shortname) :
+					echo form_open_multipart(
+						site_url('@radix/' . $board->shortname . '/search'),
+						array('style' => 'margin-bottom:8px')
+					);
+				?>
+				
+				
+				<?php 
+					echo form_close();
+					endif; 
+				?>
+					
+				
 			</ul>
 		</div>
+		 * 
+		 */ ?>
 	</li>
 </ul>
 

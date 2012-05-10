@@ -742,6 +742,19 @@ jQuery(document).ready(function() {
         });
     }
 
+	// check if input[date] is supported, so we can use by default input[text] with placeholder without breaking w3
+	var i = jQuery('<input>');
+	jQuery(i).attr({type: 'date'});
+	if(jQuery(i).attr('type') !== "text")
+	{
+		jQuery('#date_end').replaceWith(jQuery('<input>').attr({id: 'date_end', name: 'date_end', type: 'date'}));
+		jQuery('#date_start').replaceWith(jQuery('<input>').attr({id: 'date_start', name: 'date_start', type: 'date'}));
+	}
+	
+	// firefox sucks at styling input, so we need to add size="", that guess what? It's not w3 compliant!
+	jQuery('#file_search').attr({size: '17'});
+	jQuery('#file_image').attr({size: '16'});
+
     // spin it fast
     var brand = jQuery('.brand:eq(0)');
     jQuery('.letters').show();

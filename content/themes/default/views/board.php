@@ -98,7 +98,7 @@ if (!defined('BASEPATH'))
 		<?php echo (isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' posts ' . ((isset($post['images_omitted']) && $post['images_omitted'] > 0) ? 'and ' . $post['images_omitted'] . ' images' : '') . ' omitted.</span>' : '' ?>
 	</div>
 	
-	<?php if(isset($op->report_reason_processed) && !is_null($op->report_reason_processed)) : ?>
+	<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>
 	<div class="report_reason"><?php echo '<strong>' . __('Report reason:') . '</strong> ' . $op->report_reason_processed ?>
 		<br/>
 		<div class="ip_reporter"><?php echo inet_dtop($op->report_ip_reporter) ?></div>

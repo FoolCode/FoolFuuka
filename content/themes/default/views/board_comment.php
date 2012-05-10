@@ -108,7 +108,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 		</ul>
 	</div>
 	
-	<?php if(isset($p->report_reason_processed) && !is_null($p->report_reason_processed)) : ?>
+	<?php if(isset($p->report_status) && !is_null($p->report_status)) : ?>
 	<div class="report_reason"><?php echo '<strong>' . __('Report reason:') . '</strong> ' . $p->report_reason_processed ?>
 		<br/>
 		<div class="ip_reporter"><?php echo inet_dtop($p->report_ip_reporter) ?></div>

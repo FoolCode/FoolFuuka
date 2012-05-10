@@ -9,7 +9,7 @@ if (!defined('BASEPATH'))
 	foreach ($threads as $k => $op) :
 	$count++;
 	?>
-	<article id="<?php echo $op->num ?>" class="thread doc_id_<?php echo $op->doc_id ?>" class="thread">
+	<article id="<?php echo $op->num ?>" class="thread doc_id_<?php echo $op->doc_id ?>">
 		<header>
 			<div class="post_data">
 				<h2 class="post_title"><?php echo $op->title_processed ?></h2>

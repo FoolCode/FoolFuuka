@@ -6,9 +6,7 @@ if (!defined('BASEPATH'))
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<meta http-equiv="imagetoolbar" content="false" />
-		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale = 2.0">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
 		<title><?php echo $template['title']; ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php

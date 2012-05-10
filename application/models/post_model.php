@@ -416,7 +416,7 @@ class Post_model extends CI_Model
 		}
 
 		$elements = array('title', 'name', 'email', 'trip', 'media_orig', 
-			'preview_orig', 'media_filename', 'media_hash', 'poster_hash');
+			'preview_orig', 'media_filename', 'media_hash', 'poster_hash', 'report_reason');
 
 		foreach($elements as $element)
 		{

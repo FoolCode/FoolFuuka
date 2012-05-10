@@ -428,7 +428,7 @@ body.theme_default {
 }
 
 .theme_default article.thread .post_type img {
-    vertical-align:top
+    vertical-align:middle
 }
 
 .theme_default article.thread .post_type_is_op,

@@ -8,9 +8,7 @@ class Plugins_model extends CI_Model
 
 	var $_controller_uris = array();
 
-
-	//var $viewdata = array();
-
+	
 	function __construct()
 	{
 		parent::__construct();
@@ -28,8 +26,7 @@ class Plugins_model extends CI_Model
 	 */
 	function &__get($key)
 	{
-		$CI = & get_instance();
-		return $CI->$key;
+		return get_instance()->$key;
 	}
 
 
@@ -293,11 +290,8 @@ class Plugins_model extends CI_Model
 		// codeigniter $this->uri->rsegment_uri sends weird indexes in the array with 1+ start
 		// this reindexes the array
 		$uri_array = array_values($uri_array);
-		/* echo '<pre>';
-		  print_r($uri_array);
-		  print_r($this->_controller_uris);
-		  echo '</pre>'; */
-		//print_r($this->_controller_uris);
+		
+	
 		foreach ($this->_controller_uris as $item)
 		{
 			// it must be contained by the entire URI

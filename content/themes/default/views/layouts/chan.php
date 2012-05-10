@@ -303,11 +303,9 @@ if (!defined('BASEPATH'))
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="<?php echo site_url() ?>assets/js/jquery.js"><\/script>')</script>
 		<script defer src="<?php echo site_url() ?>assets/bootstrap2/js/bootstrap.min.js?v=<?php echo FOOL_VERSION ?>"></script>
-		<script defer src="<?php echo site_url() ?>content/themes/<?php
-				echo $this->fu_theme ? $this->fu_theme : 'default'
+		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default'
 				?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
-		<script defer src="<?php echo site_url() ?>content/themes/<?php
-				echo $this->fu_theme ? $this->fu_theme : 'default'
+		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default'
 				?>/board.js?v=<?php echo FOOL_VERSION ?>"></script>
 				<?php if (get_setting('fs_theme_google_analytics')) : ?>
 			<script>

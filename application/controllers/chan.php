@@ -1292,9 +1292,9 @@ class Chan extends Public_Controller
 		if ($search['capcode'] == 'admin')
 			array_push($title, __('that were made by admins'));
 		if ($search['start'])
-			array_push($title, sprintf(__('posts after %s'), $search['start']));
+			array_push($title, sprintf(__('posts after %s'), trim(fuuka_htmlescape($search['start']))));
 		if ($search['end'])
-			array_push($title, sprintf(__('posts before %s'), $search['end']));
+			array_push($title, sprintf(__('posts before %s'), trim(fuuka_htmlescape($search['end']))));
 		if ($search['order'] == 'asc')
 			array_push($title, __('in ascending order'));
 		if (!empty($title))

@@ -754,8 +754,14 @@ jQuery(document).ready(function() {
 	// firefox sucks at styling input, so we need to add size="", that guess what? It's not w3 compliant!
 	jQuery('#file_search').attr({size: '17'});
 	jQuery('#file_image').attr({size: '16'});
+	
+	// destroy the file search box if the browser doesn't support file API
+	if(!window.FileReader)
+	{
+		jQuery('.file_search_remove').remove();
+	}
 
-    // spin it fast
+    // keep it scrolled down while we add the uglier top header
     var brand = jQuery('.brand:eq(0)');
     jQuery('.letters').show();
     var brand_offset = brand.offset().top;

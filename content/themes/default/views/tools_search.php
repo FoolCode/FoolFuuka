@@ -286,16 +286,16 @@ if(isset($board)) :
 					echo form_input($date_array);
 
 					?></li>
-				<li class="divider" style="margin-bottom:8px"></li>
-				<li class="input-prepend"><label for="file_search" class="add-on">Image</label><input id="file_search" size="17" type="file" name="image" />
-					</li><li><?php
+				<li class="divider file_search_remove" style="margin-bottom:8px"></li>
+				<li class="input-prepend file_search_remove"><label for="file_search" class="add-on">Image</label><input id="file_search" size="17" type="file" name="image" />
+					</li><li class="file_search_remove"><?php
 					echo form_submit(array(
-						'class' => 'btn btn-success btn-mini',
+						'class' => 'btn btn-success btn-mini file_search_remove',
 						'value' => __('Search image'),
-						'name' => 'submit_image',
+			 			'name' => 'submit_image',
 						'title' => __('On most browsers you can also drop the file on the search bar.'),
 						'style' => 'margin-top:0; margin-bottom:2px',
-					))
+					));
 					?>
 				</li>
 				<li class="divider"></li>

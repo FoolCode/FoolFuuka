@@ -257,6 +257,14 @@ body.theme_default {
     margin-bottom:0;
 }
 
+/* Opera hack */
+@media not screen and (1)
+{
+	.theme_default .search-dropdown div.search-dropdown-menu ul input[type=file] {
+		width: 72%;
+	}
+}
+
 .theme_default .search-dropdown div.search-dropdown-menu ul input[type=file]{
     padding:0 3px;
     height:22px;

@@ -111,10 +111,14 @@ class MY_Controller extends CI_Controller
 				$uri_array);
 		}
 		
+		/*
+		 * @todo figure out if this was necessary: it currently goes running functions 
+		 * from routes that sent here because the function didn't exist in first place
 		if (method_exists($this, $method))
 		{
 			return call_user_func_array(array($this, $method), $params);
 		}
+		*/
 		
 		return FALSE;
 	}

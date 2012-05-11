@@ -79,8 +79,8 @@ if (!defined('BASEPATH'))
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_image"><?php echo __('Remove image') ?></button>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_md5"><?php echo __('Ban image') ?></button>
 				<?php endif; ?>
-				<?php if($op->poster_id) : ?>
-				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_user"><?php echo __('Ban user:') . ' ' . inet_dtop($op->poster_id) ?></button>
+				<?php if($op->poster_ip) : ?>
+				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_user"><?php echo __('Ban user:') . ' ' . inet_dtop($op->poster_ip) ?></button>
 				<?php endif; ?>
 				<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_report"><?php echo __('Remove report') ?></button>

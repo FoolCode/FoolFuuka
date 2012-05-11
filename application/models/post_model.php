@@ -431,7 +431,7 @@ class Post_model extends CI_Model
 		{
 			if (!$this->tank_auth->is_allowed())
 			{
-				unset($post->poster_id);
+				unset($post->poster_ip);
 			}
 
 			unset($post->delpass);
@@ -2359,7 +2359,7 @@ class Post_model extends CI_Model
 		$check = $this->db->query('
 			SELECT *
 			FROM ' . $this->radix->get_table($board) . '
-			WHERE poster_id = ?
+			WHERE poster_ip = ?
 			ORDER BY timestamp DESC
 			LIMIT 0,1
 		',
@@ -2587,7 +2587,7 @@ class Post_model extends CI_Model
 		$check = $this->db->query('
 				SELECT doc_id
 				FROM ' . $this->radix->get_table($board) . '
-				WHERE poster_id = ? AND comment = ? AND timestamp >= ?
+				WHERE poster_ip = ? AND comment = ? AND timestamp >= ?
 			',
 			array(
 				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
@@ -2609,7 +2609,7 @@ class Post_model extends CI_Model
 				INSERT INTO ' . $this->radix->get_table($board) . '
 				(
 					num, subnum, thread_num, timestamp, capcode,
-					email, name, trip, title, comment, delpass, poster_id, 
+					email, name, trip, title, comment, delpass, poster_ip, 
 					poster_hash
 				)
 				VALUES
@@ -2656,7 +2656,7 @@ class Post_model extends CI_Model
 			$check_duplicate = $this->db->query('
 				SELECT doc_id 
 				FROM ' . $this->radix->get_table($board) . '
-				WHERE poster_id = ? AND comment = ? AND  timestamp >= ?
+				WHERE poster_ip = ? AND comment = ? AND  timestamp >= ?
 			',
 			array(
 				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
@@ -2726,7 +2726,7 @@ class Post_model extends CI_Model
 				INSERT INTO ' . $this->radix->get_table($board) . '
 				(
 					num, subnum, thread_num, op, timestamp, capcode,
-					email, name, trip, title, comment, delpass, spoiler, poster_id, poster_hash,
+					email, name, trip, title, comment, delpass, spoiler, poster_ip, poster_hash,
 					preview_orig, preview_w, preview_h, media_filename, media_w, media_h, media_size, media_hash,
 					media_orig, exif
 				)
@@ -2765,7 +2765,7 @@ class Post_model extends CI_Model
 				SELECT * 
 				FROM ' . $this->radix->get_table($board) . '
 				' . $this->sql_media_join($board) . ' 
-				WHERE poster_id = ? AND comment = ? AND  timestamp >= ?
+				WHERE poster_ip = ? AND comment = ? AND  timestamp >= ?
 				ORDER BY doc_id DESC
 			',
 			array(

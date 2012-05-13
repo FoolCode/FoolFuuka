@@ -29,6 +29,7 @@ class Post_model extends CI_Model
 	 */
 	function sql_report_join($board, $join_on = NULL)
 	{
+	return '';
 		// only show report notifications to certain users
 		if (!$this->tank_auth->is_allowed())
 		{
@@ -61,11 +62,11 @@ class Post_model extends CI_Model
 	{
 		return '
 			LEFT JOIN
-				(' . $this->radix->get_table($board, '_images') . ' AS `m`)
+				' . $this->radix->get_table($board, '_images') . ' AS `mg`
 			ON
 			' . ($join_on ? $join_on : $this->radix->get_table($board)) . '.`media_id`
 			=
-			' . $this->db->protect_identifiers('m') . '.`media_id`
+			' . $this->db->protect_identifiers('mg') . '.`media_id`
 		';
 	}
 
@@ -201,7 +202,7 @@ class Post_model extends CI_Model
 		{
 			if ($thumbnail === TRUE)
 			{
-				if (isset($post->thread_num))
+				if (isset($post->op) && $post->op == 1)
 				{
 					$image = $post->preview_op ? : $post->preview_reply;
 				}
@@ -209,12 +210,26 @@ class Post_model extends CI_Model
 				{
 					$image = $post->preview_reply ? : $post->preview_op;
 				}
+				
+				if(is_null($image) || $image == '')
+				{
+					$image = $post->media;
+					$thumbnail = FALSE;
+				}
 			}
 			else
 			{
 				$image = $post->media;
 			}
-
+		}
+		else if($thumbnail === TRUE && file_exists($this->get_media_dir($board, $post, FALSE)))
+		{
+			$image = $post->media;
+			$thumbnail = FALSE;
+		}
+		
+		if(isset($image))
+		{
 			// output the url on another server
 			if (strlen(get_setting('fs_balancer_clients')) > 10)
 			{
@@ -1128,7 +1143,7 @@ class Post_model extends CI_Model
 				foreach ($this->radix->get_all() as $board)
 				{
 					// ignore boards that don't have sphinx enabled
-					if (!$radix->sphinx)
+					if (!$board->sphinx)
 					{
 						continue;
 					}
@@ -1234,17 +1249,20 @@ class Post_model extends CI_Model
 			}
 			if ($args['order'] == 'asc')
 			{
-				$this->db->where('timestamp', 'ASC');
+				$this->db->order_by('timestamp', 'ASC');
 			}
 			else
 			{
-				$this->db->where('timestamp', 'DESC');
+				$this->db->order_by('timestamp', 'DESC');
 			}
 
 			// set sphinx options
 			$this->db->limit(25, ($args['page'] * 25) - 25)
 				->sphinx_option('max_matches', 5000)
 				->sphinx_option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
+
+			//if($this->tank_auth->is_allowed())
+			//	echo $this->db->statement();
 
 			// send sphinxql to searchd
 			$search = $this->sphinxql->query($this->db->statement());
@@ -1263,6 +1281,8 @@ class Post_model extends CI_Model
 					(
 						SELECT *, ' . $result['board'] . ' AS board
 						FROM ' . $this->radix->get_table($this->radix->get_by_id($result['board'])) . '
+						' . $this->sql_media_join($this->radix->get_by_id($result['board'])) . '
+						' . $this->sql_report_join($this->radix->get_by_id($result['board'])) . '
 						WHERE num = ' . $result['num'] . ' AND subnum = ' . $result['subnum'] . '
 					)
 				';

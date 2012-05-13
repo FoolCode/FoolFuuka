@@ -2624,6 +2624,20 @@ class Post_model extends CI_Model
 		// being processing insert...
 		if ($ghost === TRUE)
 		{
+			if($board->archive)
+			{
+				// archives are in new york time
+				$post->original_timestamp = $post->timestamp;
+				$date = new DateTime();
+				$date = $date->createFromFormat(
+					'Y-m-d H:i:s', 
+					date('Y-m-d H:i:s', $post->timestamp), 
+					new DateTimeZone('UTC')
+				);
+				$date->setTimezone(new DateTimeZone('America/New_York'));
+				$post->timestamp = $date->getTimestamp();
+			}
+			
 			// ghost reply to existing thread
 			$this->db->query('
 				INSERT INTO ' . $this->radix->get_table($board) . '

@@ -370,7 +370,7 @@ class Chan extends Public_Controller
 				}
 			}
 		}
-
+		
 		foreach ($default['partials'] as $k)
 		{
 			if (!isset($partials[$k]))
@@ -384,6 +384,11 @@ class Chan extends Public_Controller
 					$partials[substr($k, 1)] = array();
 				}
 			}
+		}
+		
+		if(isset($variables['@modifiers']))
+		{
+			$this->template->set('modifiers', $variables['@modifiers']);
 		}
 
 		// merge variables to hold all the JavaScript footer data
@@ -1277,6 +1282,14 @@ class Chan extends Public_Controller
 		// Generate URI for pagination.
 		$uri_array = $this->uri->ruri_to_assoc($radix?4:3, $modifiers);
 
+                foreach ($uri_array as $key => $value)
+                {
+                        if ($uri_array[$key] == "")
+                        {
+                                unset($uri_array[$key]);
+                        }
+                }
+
 		if (isset($uri_array['page']))
 		{
 			unset($uri_array['page']);
@@ -1292,7 +1305,7 @@ class Chan extends Public_Controller
 		$this->_set_parameters(
 			array(
 				'section_title' => $title,
-				'modifiers' => array(
+				'@modifiers' => array(
 					'post_show_view_button' => TRUE,
 					'post_show_board_name' => !$radix
 				),

@@ -1173,6 +1173,7 @@ class Radix_model extends CI_Model
 		
 		$prefixes_trigger = array(
 			'before_ins_',
+			'after_ins_',
 			'after_del_'
 		);
 		

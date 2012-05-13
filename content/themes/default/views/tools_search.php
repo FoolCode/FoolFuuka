@@ -318,8 +318,8 @@ if(isset($board)) :
 
 						foreach($latest_searches as $latest_search)
 						{
-							$uri = ($latest_search['board'] === FALSE ? '' : $latest_search['board'] . '/') . '/search/';
-							$text = !$latest_search['board'] === FALSE ? '<strong>global:</strong> ' : '/<strong>' . fuuka_htmlescape($latest_search['board']) . '</strong>/: ';
+							$uri = ($latest_search['board'] === FALSE ? '' : $latest_search['board']) . '/search/';
+							$text = $latest_search['board'] === FALSE ? '<strong>global:</strong> ' : '/<strong>' . fuuka_htmlescape($latest_search['board']) . '</strong>/: ';
 							unset($latest_search['board']);
 							if(isset($latest_search['text']))
 							{
@@ -348,29 +348,7 @@ if(isset($board)) :
 				?>
 				</ul>
 		</div>
-				<?php echo form_close(); ?>
-		
-		
-		<?php /*
-		<div><ul>
-				<?php if($board->shortname) :
-					echo form_open_multipart(
-						site_url('@radix/' . $board->shortname . '/search'),
-						array('style' => 'margin-bottom:8px')
-					);
-				?>
-				
-				
-				<?php 
-					echo form_close();
-					endif; 
-				?>
-					
-				
-			</ul>
-		</div>
-		 * 
-		 */ ?>
+		<?php echo form_close(); ?>
 	</li>
 </ul>
 

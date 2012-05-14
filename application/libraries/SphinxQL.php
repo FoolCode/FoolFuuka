@@ -120,10 +120,10 @@ source main
 	sql_query_pre = SET NAMES utf8
 	sql_range_step = 10000
 	sql_query = \ 
-		SELECT doc_id, 1 AS board, num, subnum, name, trip, email, media, (CASE parent WHEN 0 THEN num ELSE parent END) AS tnum,        \
-		CAST(capcode AS UNSIGNED) AS cap, (media != \'\' AND media IS NOT NULL) AS has_image, (subnum != 0) AS is_internal,   \
-		spoiler AS is_spoiler, deleted AS is_deleted, sticky as is_sticky, (parent = 0) AS is_op, timestamp, title, comment \
-		FROM a LIMIT 1
+		SELECT doc_id, 3 AS board, num, subnum, name, trip, email, media_filename, thread_num AS tnum, \
+        CAST(capcode AS UNSIGNED) AS cap, (media_filename != \'\' AND media_filename IS NOT NULL) AS has_image, (subnum != 0) AS is_internal,        \
+        spoiler AS is_spoiler, deleted AS is_deleted, sticky as is_sticky, op AS is_op, timestamp, title, comment      \
+        FROM a LIMIT 1
 
 	sql_attr_uint = num
 	sql_attr_uint = subnum

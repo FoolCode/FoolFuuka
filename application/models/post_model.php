@@ -29,7 +29,6 @@ class Post_model extends CI_Model
 	 */
 	function sql_report_join($board, $join_on = NULL)
 	{
-	return '';
 		// only show report notifications to certain users
 		if (!$this->tank_auth->is_allowed())
 		{
@@ -109,14 +108,14 @@ class Post_model extends CI_Model
 	 */
 	function get_media_dir($board, $post, $thumbnail = FALSE)
 	{
-		if (!$post->media_orig && !$post->media_hash)
+		if (!$post->media_hash)
 		{
 			return FALSE;
 		}
 
 		if ($thumbnail === TRUE)
 		{
-			if (isset($post->thread_num))
+			if (isset($post->op) && $post->op == 1)
 			{
 				$image = $post->preview_op ? $post->preview_op : $post->preview_reply;
 			}
@@ -143,7 +142,7 @@ class Post_model extends CI_Model
 	 */
 	function get_media_link($board, $post, $thumbnail = FALSE)
 	{
-		if (!$post->media_orig && !$post->media_hash)
+		if (!$post->media_hash)
 		{
 			return FALSE;
 		}
@@ -186,15 +185,10 @@ class Post_model extends CI_Model
 		// this post contain's a banned media, do not display
 		if ($post->banned == 1)
 		{
-			if ($thumbnail === TRUE)
-			{
-				// we need to define the size of the image
-				$post->preview_h = 150;
-				$post->preview_w = 150;
-				return site_url() . 'content/themes/default/images/banned-image.png';
-			}
-
-			return FALSE;
+			// we need to define the size of the image
+			$post->preview_h = 150;
+			$post->preview_w = 150;
+			return site_url() . 'content/themes/default/images/banned-image.png';
 		}
 
 		// locate the image
@@ -210,7 +204,8 @@ class Post_model extends CI_Model
 				{
 					$image = $post->preview_reply ? : $post->preview_op;
 				}
-				
+
+
 				if(is_null($image) || $image == '')
 				{
 					$image = $post->media;
@@ -227,7 +222,7 @@ class Post_model extends CI_Model
 			$image = $post->media;
 			$thumbnail = FALSE;
 		}
-		
+
 		if(isset($image))
 		{
 			// output the url on another server
@@ -264,7 +259,7 @@ class Post_model extends CI_Model
 	 */
 	function get_remote_media_link($board, $post)
 	{
-		if (!$post->media_orig && !$post->media_hash)
+		if (!$post->media_hash)
 		{
 			return FALSE;
 		}
@@ -274,7 +269,7 @@ class Post_model extends CI_Model
 			// ignore webkit and opera user agents
 			if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
 			{
-				return $board->images_url . $post->media_orig;
+				return ($board->images_url?$board->images_url:'http://images.4chan.org/'.$board->shortname.'/src/') . $post->media_orig;
 			}
 
 			return site_url(array($board->shortname, 'redirect')) . $post->media_orig;
@@ -411,19 +406,19 @@ class Post_model extends CI_Model
 		$post->thumb_link = $this->get_media_link($board, $post, TRUE);
 		$post->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment($board, $post));
 		$post->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
-		
+
 		// gotta change the timestamp of the archives to GMT
 		if($board->archive)
 		{
 			$post->original_timestamp = $post->timestamp;
 			$date = new DateTime();
-			$date = $date->createFromFormat(
+			$date_formatted = $date->createFromFormat(
 				'Y-m-d H:i:s', 
 				date('Y-m-d H:i:s', $post->timestamp), 
 				new DateTimeZone('America/New_York')
 			);
-			$date->setTimezone(new DateTimeZone('UTC'));
-			$post->timestamp = $date->getTimestamp();
+			$date_formatted->setTimezone(new DateTimeZone('UTC'));
+			$post->timestamp = $date_formatted->getTimestamp();
 		}
 		else
 		{
@@ -431,7 +426,12 @@ class Post_model extends CI_Model
 		}
 
 		$elements = array('title', 'name', 'email', 'trip', 'media_orig', 
-			'preview_orig', 'media_filename', 'media_hash', 'poster_hash', 'report_reason');
+			'preview_orig', 'media_filename', 'media_hash', 'poster_hash');
+
+		if ($this->tank_auth->is_allowed())
+		{
+			array_push($elements, 'report_reason');
+		}
 
 		foreach($elements as $element)
 		{
@@ -770,7 +770,7 @@ class Post_model extends CI_Model
 		$comment = parse_bbcode($comment, ($board->archive && $post->subnum) ? TRUE : FALSE);
 
 		// additional formatting
-		if ($board->archive && $post->subnum)
+		if ($board->archive && !$post->subnum)
 		{
 			// admin bbcode
 			$admin_find = "'\[banned\](.*?)\[/banned\]'i";
@@ -1233,11 +1233,11 @@ class Post_model extends CI_Model
 			}
 			if ($args['filter'] == 'image')
 			{
-				$this->db->where('has_image', 0);
+				$this->db->where('has_image', 1);
 			}
 			if ($args['filter'] == 'text')
 			{
-				$this->db->where('has_image', 1);
+				$this->db->where('has_image', 0);
 			}
 			if ($args['start'])
 			{
@@ -2627,15 +2627,14 @@ class Post_model extends CI_Model
 			if($board->archive)
 			{
 				// archives are in new york time
-				$post->original_timestamp = $post->timestamp;
 				$date = new DateTime();
 				$date = $date->createFromFormat(
 					'Y-m-d H:i:s', 
-					date('Y-m-d H:i:s', $post->timestamp), 
+					date('Y-m-d H:i:s', $timestamp), 
 					new DateTimeZone('UTC')
 				);
 				$date->setTimezone(new DateTimeZone('America/New_York'));
-				$post->timestamp = $date->getTimestamp();
+				$timestamp = $date->getTimestamp();
 			}
 			
 			// ghost reply to existing thread
@@ -2814,7 +2813,7 @@ class Post_model extends CI_Model
 				
 				if($duplicate->total == 1)
 				{
-					$this->delete_image($board, $duplicate);
+					$this->delete_media($board, $duplicate);
 				}
 				// get rid of the extra media
 				return array('error' => __('You already posted this.'));
@@ -2983,7 +2982,7 @@ class Post_model extends CI_Model
 	 */
 	function delete_media($board, $post, $media = TRUE, $thumb = TRUE)
 	{
-		if (!$post->media_orig && !$post->media_hash)
+		if (!$post->media_hash)
 		{
 			// if there's no media, it's all OK
 			return TRUE;

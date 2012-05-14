@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
 /*
  * This file appears also in the admin panel, so use @radix to specify that it's a board link
  */
-
+ 
 $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 ?>
 

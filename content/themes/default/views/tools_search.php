@@ -15,7 +15,7 @@ if(isset($board)) :
 	<li class="search-dropdown">
 		<?php
 		echo form_open(
-			site_url(((!$board->shortname)?:'@radix/') . $board->shortname . '/search'),
+			site_url(((!$board->shortname)?'':'@radix/' . $board->shortname) . '/search'),
 			array(
 				'class' => 'navbar-search pull-right',
 				'method' => 'GET'
@@ -287,7 +287,7 @@ if(isset($board)) :
 
 					?></li>
 				<li class="divider file_search_remove" style="margin-bottom:8px"></li>
-				<li class="input-prepend file_search_remove"><label for="file_search" class="add-on">Image</label><input id="file_search" size="17" type="file" name="image" />
+				<li class="input-prepend file_search_remove"><label for="file_search" class="add-on">Image</label><input id="file_search" type="file" name="image" />
 					</li><li class="file_search_remove"><?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini file_search_remove',
@@ -319,7 +319,7 @@ if(isset($board)) :
 						foreach($latest_searches as $latest_search)
 						{
 							$uri = ($latest_search['board'] === FALSE ? '' : $latest_search['board']) . '/search/';
-							$text = $latest_search['board'] === FALSE ? '<strong>global:</strong> ' : '/<strong>' . fuuka_htmlescape($latest_search['board']) . '</strong>/: ';
+							$text = ($latest_search['board'] === FALSE) ? '<strong>global:</strong> ' : '/<strong>' . fuuka_htmlescape($latest_search['board']) . '</strong>/: ';
 							unset($latest_search['board']);
 							if(isset($latest_search['text']))
 							{

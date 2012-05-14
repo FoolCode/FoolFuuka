@@ -2271,6 +2271,9 @@ class Post_model extends CI_Model
 	 */
 	function get_same_media($board, $hash, $page, $options = array())
 	{
+		if($this->tank_auth->is_allowed())
+			$this->output->enable_profiler(TRUE);
+	
 		// default variables
 		$per_page = 25;
 		$process = TRUE;
@@ -2301,28 +2304,36 @@ class Post_model extends CI_Model
 
 		// query for same media
 		$query = $this->db->query('
-			SELECT * FROM ' . $this->radix->get_table($board) . '
-			' . $this->sql_media_join($board) . '
-			' . $this->sql_report_join($board) . '
+			SELECT doc_id FROM ' . $this->radix->get_table($board) . '
 			WHERE
 				' . $this->radix->get_table($board) . '.`media_id` = ?
-			ORDER BY num DESC LIMIT ?, ?
+			ORDER BY timestamp DESC LIMIT ?, ?
 		',
 			array(
-				$media->media_id,
+				intval($media->media_id),
 				intval(($page * $per_page) - $per_page),
 				intval($per_page)
 			)
 		);
+		
+		
+		$multi = array();
+		foreach($query->result() as $item)
+		{
+			$multi[] = $item->doc_id;
+		}
+		$multi_posts = array(array('board_id' => $board->id, 'doc_id' => $multi));
+
+		$results_pre = $this->get_multi_posts($multi_posts);
 
 		// populate posts_arr array
-		$this->populate_posts_arr($query->result());
+		$this->populate_posts_arr($results_pre);
 
 		// populate results array
 
 		$results = array();
 
-		foreach ($query->result() as $post)
+		foreach ($results_pre as $post)
 		{
 			if ($process === TRUE)
 			{

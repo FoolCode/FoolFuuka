@@ -1944,13 +1944,6 @@ class Post_model extends CI_Model
 						intval($per_page)
 					)
 				);
-
-				$query_total = $this->db->query('
-					SELECT COUNT(media_orig) AS count
-					FROM ' . $this->radix->get_table($board) . '
-					WHERE media_orig IS NOT NULL
-				');
-
 				break;
 
 			case 'by_thread':
@@ -1973,22 +1966,49 @@ class Post_model extends CI_Model
 						intval($per_page)
 					)
 				);
-
-				$query_total = $this->db->query('
-					SELECT COUNT(thread_num) AS count
-					FROM ' . $this->radix->get_table($board, '_threads') . '
-				');
-
 				break;
 
 			default:
 				log_message('error', 'post.php/get_gallery: invalid or missing type argument');
 				return FALSE;
 		}
-
-		// set total images found
-		$total = $query_total->row()->count;
-		$query_total->free_result();
+		
+		
+		
+		// cache the count or get the cached count
+		$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
+		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_get_gallery_threads_count_' . $type))
+		{
+			switch ($type)
+			{
+				case 'by_image':
+					$query_threads = $this->db->query('
+						SELECT SUM(total) AS threads
+						FROM ' . $this->radix->get_table($board, '_images') . '
+					');
+					break;
+				
+				case 'by_thread':
+					$query_threads = $this->db->query('
+						SELECT COUNT(thread_num) AS threads
+						FROM ' . $this->radix->get_table($board, '_threads') . '
+					');
+					break;
+			}
+			
+			$threads = $query_threads->row()->threads;
+			$query_threads->free_result();
+			
+			// start caching only over 300 threads so we can keep boards with little number of threads dynamic
+			if($threads > 300)
+			{
+				$this->cache->save(
+					'foolfuuka_' . config_item('encryption_key') . '_get_gallery_threads_count_' . $type, 
+					$threads,
+					180
+				);
+			}
+		}
 
 		// populate result array
 		$results = array();
@@ -2002,7 +2022,7 @@ class Post_model extends CI_Model
 			}
 		}
 
-		return array('threads' => $results, 'total_found' => $total);
+		return array('threads' => $results, 'total_found' => $threads);
 	}
 
 

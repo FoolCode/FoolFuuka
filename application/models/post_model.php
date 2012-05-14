@@ -2659,12 +2659,12 @@ class Post_model extends CI_Model
 			{
 				// archives are in new york time
 				$date = new DateTime();
+				$date->setTimezone(new DateTimeZone('America/New_York'));
 				$date = $date->createFromFormat(
 					'Y-m-d H:i:s', 
-					date('Y-m-d H:i:s', $timestamp), 
+					$date->format('Y-m-d H:i:s'), 
 					new DateTimeZone('UTC')
 				);
-				$date->setTimezone(new DateTimeZone('America/New_York'));
 				$timestamp = $date->getTimestamp();
 			}
 			

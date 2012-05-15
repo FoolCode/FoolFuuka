@@ -7,6 +7,7 @@ class Plugins_model extends CI_Model
 {
 
 	var $_controller_uris = array();
+	var $_hooks = array();
 
 	
 	function __construct()
@@ -247,8 +248,7 @@ class Plugins_model extends CI_Model
 
 			if ($plugin->revision < $plugin->info->revision)
 			{
-				$update_method = 'upgrade_' . str_pad($plugin->revision + 1, 3, '0',
-						STR_PAD_LEFT);
+				$update_method = 'upgrade_' . str_pad($plugin->revision + 1, 3, '0', STR_PAD_LEFT);
 				if (method_exists($class, $update_method))
 				{
 					$class->$update_method();
@@ -328,7 +328,10 @@ class Plugins_model extends CI_Model
 	}
 	
 	/**
+	 * Adds a sidebar element when admin controller is accessed.
 	 * 
+	 * @param string $section under which controller/section of the sidebar must this sidebar element appear
+	 * @param array $array the overriding array, comprehending only the additions and modifications to the sidebar
 	 */
 	function register_admin_sidebar_element($section, $array = null)
 	{
@@ -345,6 +348,34 @@ class Plugins_model extends CI_Model
 		{
 			$CI->add_sidebar_element($array);
 		}
+	}
+	
+	
+	function run_hook($target, $parameters = array())
+	{
+		if(!isset($this->_hooks[$target]))
+			return FALSE;
+		
+		$hook_array = $this->_hooks[$target];
+		
+		usort($hook_array, function($a, $b){
+			return $a['priority'] - $b['priority'];
+		});
+		
+		$return = array();
+		
+		foreach($hook_array as $hook)
+		{
+			$return[] = call_user_func_array(array($hook['plugin'], $hook['method']), $parameters);
+		}
+		
+		return $return;
+	}
+	
+	
+	function register_hook(&$class, $target, $priority, $method)
+	{
+		$this->_hooks[$target][] = array('plugin' => $class, 'priority' => $priority, 'method' => $method);
 	}
 
 }

@@ -353,7 +353,7 @@ class Chan extends Public_Controller
 			$default['backend_vars']['board_shortname'] = get_selected_radix()->shortname;
 			
 			if($this->tank_auth->is_allowed())
-				$default['backend_vars']['mod_url'] = get_selected_radix()->href . '/mod_post_actions/';
+				$default['backend_vars']['mod_url'] = get_selected_radix()->href . 'mod_post_actions/';
 		}
 
 		foreach ($default['variables'] as $k)

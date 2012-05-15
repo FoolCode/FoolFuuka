@@ -81,14 +81,15 @@ if (!function_exists('get_setting'))
 	}
 }
 
-/**
- * Update preferences' table value one by one
- *
- * @param string $name name of the option
- * @param mixed $value value to set
- */
+
 if (!function_exists('set_setting'))
 {
+	/**
+	* Update preferences' table value one by one
+	*
+	* @param string $name name of the option
+	* @param mixed $value value to set
+	*/
 	function set_setting($name, $value)
 	{
 		if(is_array($value))
@@ -98,8 +99,10 @@ if (!function_exists('set_setting'))
 		
 		// get_settings() won't tell us if the value exists
 		$CI = & get_instance();
-		$query = $CI->db->get_where('preferences', array('name' => $name));
-		if($query->num_rows())
+		
+		$query = $CI->db->where('name', $name)->get('preferences');
+
+		if($query->num_rows() == 1)
 		{
 			$CI->db->update(
 				'preferences', 

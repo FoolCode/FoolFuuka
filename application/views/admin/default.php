@@ -21,12 +21,12 @@ if (!defined('BASEPATH'))
 
 		<div class="container-fluid">
 			<div class="row-fluid">
-				<div class="span2">
+				<div style="width:16%" class="pull-left">
 					<?php echo $sidebar ?>
 				</div>
 
 
-				<div class="span10">
+				<div style="width:82%" class="pull-right">
 					<ul class="breadcrumb">
 						<?php
 						echo '<li>' . $controller_title . '</li>';

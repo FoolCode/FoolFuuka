@@ -138,9 +138,10 @@ class Post_model extends CI_Model
 	 * @param object $board
 	 * @param object $row
 	 * @param bool $thumbnail
-	 * @return bool|string
+	 * @param bool $no_site_url
+	 * @return bool|string 
 	 */
-	function get_media_link($board, $post, $thumbnail = FALSE)
+	function get_media_link($board, $post, $thumbnail = FALSE, $no_site_url = FALSE)
 	{
 		if (!$post->media_hash)
 		{
@@ -158,7 +159,7 @@ class Post_model extends CI_Model
 					// we need to define the size of the image
 					$post->preview_h = 150;
 					$post->preview_w = 150;
-					return site_url() . 'content/themes/default/images/null-image.png';
+					return (($no_site_url)?'':site_url()) . 'content/themes/default/images/null-image.png';
 				}
 
 				return FALSE;
@@ -174,7 +175,7 @@ class Post_model extends CI_Model
 						// we need to define the size of the image
 						$post->preview_h = 150;
 						$post->preview_w = 150;
-						return site_url() . 'content/themes/default/images/null-image.png';
+						return (($no_site_url)?'':site_url()) . 'content/themes/default/images/null-image.png';
 					}
 
 					return FALSE;
@@ -188,7 +189,7 @@ class Post_model extends CI_Model
 			// we need to define the size of the image
 			$post->preview_h = 150;
 			$post->preview_w = 150;
-			return site_url() . 'content/themes/default/images/banned-image.png';
+			return (($no_site_url)?'':site_url()) . 'content/themes/default/images/banned-image.png';
 		}
 
 		// locate the image
@@ -232,12 +233,12 @@ class Post_model extends CI_Model
 
 				if (isset($matches[1]))
 				{
-					$balancer_servers = get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'
+					$balancer_servers = (($no_site_url)?'':get_setting('fs_fuuka_boards_url', site_url())) . '/' . $board->shortname . '/'
 						. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 				}
 			}
 
-			return get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'
+			return (($no_site_url)?'':get_setting('fs_fuuka_boards_url', site_url())) . '/' . $board->shortname . '/'
 				. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 		}
 
@@ -245,7 +246,7 @@ class Post_model extends CI_Model
 		{
 			$post->preview_h = 150;
 			$post->preview_w = 150;
-			return site_url() . 'content/themes/default/images/missing-image.jpg';
+			return (($no_site_url)?'':site_url()) . 'content/themes/default/images/missing-image.jpg';
 		}
 
 		return FALSE;
@@ -2324,7 +2325,7 @@ class Post_model extends CI_Model
 		}
 		$multi_posts = array(array('board_id' => $board->id, 'doc_id' => $multi));
 
-		$results_pre = $this->get_multi_posts($multi_posts);
+		$results_pre = $this->get_multi_posts($multi_posts, 'ORDER BY num DESC');
 
 		// populate posts_arr array
 		$this->populate_posts_arr($results_pre);
@@ -3019,8 +3020,10 @@ class Post_model extends CI_Model
 			return TRUE;
 		}
 
-		// delete media file only if there is only one image OR user is admin
-		if ($this->tank_auth->is_allowed() || $post->total == 1)
+		$this->plugins->run_hook('fu_post_model_before_delete_media', array($board, $post, $media, $thumb));
+
+		// delete media file only if there is only one image OR the image is banned
+		if ($post->total == 1 || $post->banned == 1)
 		{
 			if ($media === TRUE)
 			{
@@ -3048,6 +3051,8 @@ class Post_model extends CI_Model
 				}
 			}
 		}
+
+		$this->plugins->run_hook('fu_post_model_after_delete_media', array($board, $post, $media, $thumb));
 
 		return TRUE;
 	}

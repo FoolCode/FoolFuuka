@@ -302,12 +302,11 @@ class Admin_Controller extends MY_Controller
 					{
 						if (isset($array1[$key]['content']))
 						{
-							$array1[$key]['content'] = $this->merge_sidebars($array1[$key]['content'],
-								$item['content']);
+							$array1[$key]['content'] = $this->merge_sidebars($array1[$key]['content'], $item);
 						}
 						else
 						{
-							$array1[$key]['content'] = $this->merge_sidebars(array(), $item['content']);
+							$array1[$key]['content'] = $this->merge_sidebars(array(), $item);
 						}
 					}
 				}

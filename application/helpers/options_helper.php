@@ -144,6 +144,54 @@ if (!function_exists('load_settings'))
 }
 
 
+if(!function_exists('enable_maintenance'))
+{
+	/**
+	 * Enables maintenance mode via file or via database
+	 * 
+	 * @param string $message The message to show to users during the maintenance period
+	 * @param bool $full_lock use a file in root to lock access. Remove MAINTENANCE.html manually if necessary
+	 */
+	function enable_maintenance($message = FALSE, $full_lock = FALSE)
+	{
+		if($full_lock)
+		{
+			$message = ($message)?:__('The system is under maintenance. Be back later.');
+			$file = file_get_contents('assets/maintenance.sample.html');
+			$file = str_replace(array('%%MESSAGE%%', '%%SITE_URL%%'), array($message, site_url('@default')), $file);
+			file_put_contents('MAINTENANCE.html', $file);
+		}
+		else 
+		{
+			set_setting('fs_maintenance_enabled', ($message)?:__('The system is under maintenance. Be back later.'));
+		}
+	}
+}
+
+
+if(!function_exists('disable_maintenance'))
+{
+	/**
+	 * Disables maintenance mode, via file or via database
+	 * 
+	 * @param string $message The message to show to users during the maintenance period
+	 * @param bool $full_lock use a file in root to lock access. Remove MAINTENANCE.html manually if necessary
+	 */
+	function disable_maintenance($full_lock = FALSE)
+	{
+		if($full_lock)
+		{
+			if(file_exists('MAINTENANCE.html'))
+				unlink('MAINTENANCE.html');
+		}
+		else 
+		{
+			set_setting('fs_maintenance_enabled', '');
+		}
+	}
+}
+
+
 /**
  * This function escapes all html entities for fuuka.
  */

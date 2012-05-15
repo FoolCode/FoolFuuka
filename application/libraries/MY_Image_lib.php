@@ -43,7 +43,7 @@ class MY_Image_lib extends CI_Image_lib
 		$retval = 1;
 		
 		// coalesce first
-		@exec($cmd . ' "' . $this->full_src_path . '" -coalesce -layers OptimizePlus "'. $coalesce .'"', $output, $retval);
+		@exec($cmd . ' "' . $this->full_src_path . '" -coalesce "'. $coalesce .'"', $output, $retval);
 
 		//	Did it work?
 		if ($retval > 0)

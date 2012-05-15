@@ -19,7 +19,6 @@
  *
  */
 	define('ENVIRONMENT', 'development');
-	date_default_timezone_set('UTC');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -123,10 +122,6 @@ if (defined('ENVIRONMENT'))
  */
 	// $assign_to_config['name_of_config_item'] = 'value of config item';
 
-if (!function_exists("gettext")) {
-	include('assets/php-gettext/gettext.inc');
-}
-
 // --------------------------------------------------------------------
 // END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
 // --------------------------------------------------------------------
@@ -193,6 +188,19 @@ if (!function_exists("gettext")) {
 
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
+	
+/*
+ *---------------------------------------------------------------
+ * Custom FoOlFuuka
+ *---------------------------------------------------------------
+ */
+	// die if there is a MAINTENANCE.html file, and include it
+	if(file_exists('MAINTENANCE.html') && !defined('STDIN'))
+	{
+		die(file_get_contents('MAINTENANCE.html'));
+	}
+	
+	date_default_timezone_set('UTC');
 
 /*
  * --------------------------------------------------------------------

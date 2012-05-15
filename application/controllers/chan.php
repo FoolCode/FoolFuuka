@@ -124,14 +124,12 @@ class Chan extends Public_Controller
 	{
 		if (!$this->input->is_ajax_request())
 		{
-			$this->show_404(); 
-			return FALSE;
+			return $this->show_404(); 
 		}
 
 		if (!is_natural($num) || $num == 0)
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		switch ($action)
@@ -161,8 +159,7 @@ class Chan extends Public_Controller
 				break;
 
 			default:
-				$this->show_404();
-				return FALSE;
+				return $this->show_404();
 		}
 
 		if (isset($result['error']))
@@ -311,8 +308,7 @@ class Chan extends Public_Controller
 		}
 
 		// ERROR: We reached the end of the _remap and failed to return anything.
-		$this->show_404();
-		return FALSE;
+		return $this->show_404();
 	}
 
 
@@ -324,8 +320,7 @@ class Chan extends Public_Controller
 	{
 		if ((!is_array($variables) || !is_array($partials)) || (empty($variables) && empty($partials)))
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		// Initialize default values for valid
@@ -475,8 +470,7 @@ class Chan extends Public_Controller
 	{
 		if(!get_selected_radix()->rules)
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 		
 		$this->load->library('Markdown_Parser');
@@ -614,8 +608,7 @@ class Chan extends Public_Controller
 		// Disable GALLERY when thumbnails is disabled for normal users.
 		if (get_selected_radix()->hide_thumbnails == 1 && !$this->tank_auth->is_allowed())
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		// Fetch the last X created threads to generate the GALLERY.
@@ -668,8 +661,7 @@ class Chan extends Public_Controller
 		$num = str_replace('S', '', $num);
 		if (!is_numeric($num) || !$num > 0)
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		// Fetch the THREAD specified and generate the THREAD.
@@ -680,8 +672,7 @@ class Chan extends Public_Controller
 		
 		if (!is_array($thread))
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		if (!isset($thread[$num]['op']))
@@ -775,8 +766,7 @@ class Chan extends Public_Controller
 		$num = str_replace('S', '', $num);
 		if (!is_numeric($num) || !$num > 0)
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		// Fetch the THREAD specified and generate the THREAD.
@@ -789,8 +779,7 @@ class Chan extends Public_Controller
 		
 		if (!is_array($thread))
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		if (!isset($thread[$num]['op']))
@@ -898,8 +887,7 @@ class Chan extends Public_Controller
 			$post = explode('_', $num);
 			if (count($post) != 2)
 			{
-				$this->show_404();
-				return FALSE;
+				return $this->show_404();
 			}
 
 			$num = $post[0];
@@ -908,8 +896,7 @@ class Chan extends Public_Controller
 
 		if ((!is_natural($num) || !$num > 0) && (!is_natural($subnum) || !$subnum > 0))
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		// Fetch the THREAD specified and generate the THREAD with OP+LAST50.
@@ -919,8 +906,7 @@ class Chan extends Public_Controller
 
 		if ($thread === FALSE)
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		if ($thread->subnum > 0)
@@ -955,8 +941,7 @@ class Chan extends Public_Controller
 		$imploded_uri = urldecode(implode('/', $uri));
 		if (mb_strlen($imploded_uri) < 22)
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
@@ -970,8 +955,7 @@ class Chan extends Public_Controller
 
 		if ($hash == '' || !is_natural($page))
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		// Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
@@ -1009,8 +993,7 @@ class Chan extends Public_Controller
 		// Check if $filename is valid.
 		if (!in_array(substr($filename, -3), array('gif', 'jpg', 'png')) || !is_natural(substr($filename, 0, 13)))
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 
 		// Fetch the FULL IMAGE with the FILENAME specified.
@@ -1034,6 +1017,7 @@ class Chan extends Public_Controller
 					)
 				);
 				$this->template->build('error');
+				return FALSE;
 			}
 
 			// NOT AVAILABLE ON SERVER
@@ -1049,12 +1033,12 @@ class Chan extends Public_Controller
 					)
 				);
 				$this->template->build('board');
+				return FALSE;
 			}
 		}
 
 		// we reached the end with nothing
-		$this->show_404();
-		return FALSE;
+		return $this->show_404();
 	}
 
 
@@ -1368,8 +1352,7 @@ class Chan extends Public_Controller
 
 			if (!is_array($stats))
 			{
-				$this->show_404();
-				return FALSE;
+				return $this->show_404();
 			}
 
 			// Set template variables required to build the HTML.
@@ -1451,8 +1434,7 @@ class Chan extends Public_Controller
 
 
 			default:
-				$this->show_404();
-				return FALSE;
+				return $this->show_404();
 		}
 
 		$data['encoding'] = 'utf-8';
@@ -1500,8 +1482,7 @@ class Chan extends Public_Controller
 			|| mb_strlen($this->input->post('reply')) > 0
 			|| mb_strlen($this->input->post('email')) > 0)
 		{
-			$this->show_404(); 
-			return FALSE;
+			return $this->show_404(); 
 		}
 
 		// The form has been submitted to be validated and processed.
@@ -1851,8 +1832,7 @@ class Chan extends Public_Controller
 		}
 		else
 		{
-			$this->show_404();
-			return FALSE;
+			return $this->show_404();
 		}
 	}
 	

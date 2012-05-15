@@ -230,8 +230,8 @@ class Plugins_model extends CI_Model
 		// NULL revision means that the plugin isn't installed
 		if (is_null($plugin->revision))
 		{
-
-			$class->plugin_install();
+			if(method_exists($class, 'plugin_install'))
+				$class->plugin_install();
 
 			$query = $this->db->query('
 				UPDATE ' . $this->db->dbprefix('plugins') . '

@@ -141,7 +141,7 @@ class Post_model extends CI_Model
 	 * @param bool $no_site_url
 	 * @return bool|string 
 	 */
-	function get_media_link($board, $post, $thumbnail = FALSE, $no_site_url = FALSE)
+	function get_media_link($board, $post, $thumbnail = FALSE)
 	{
 		if (!$post->media_hash)
 		{
@@ -159,7 +159,7 @@ class Post_model extends CI_Model
 					// we need to define the size of the image
 					$post->preview_h = 150;
 					$post->preview_w = 150;
-					return (($no_site_url)?'':site_url()) . 'content/themes/default/images/null-image.png';
+					return site_url() . 'content/themes/default/images/null-image.png';
 				}
 
 				return FALSE;
@@ -175,7 +175,7 @@ class Post_model extends CI_Model
 						// we need to define the size of the image
 						$post->preview_h = 150;
 						$post->preview_w = 150;
-						return (($no_site_url)?'':site_url()) . 'content/themes/default/images/null-image.png';
+						return site_url() . 'content/themes/default/images/null-image.png';
 					}
 
 					return FALSE;
@@ -189,7 +189,7 @@ class Post_model extends CI_Model
 			// we need to define the size of the image
 			$post->preview_h = 150;
 			$post->preview_w = 150;
-			return (($no_site_url)?'':site_url()) . 'content/themes/default/images/banned-image.png';
+			return site_url() . 'content/themes/default/images/banned-image.png';
 		}
 
 		// locate the image
@@ -233,12 +233,12 @@ class Post_model extends CI_Model
 
 				if (isset($matches[1]))
 				{
-					$balancer_servers = (($no_site_url)?'':get_setting('fs_fuuka_boards_url', site_url())) . '/' . $board->shortname . '/'
+					$balancer_servers = get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'
 						. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 				}
 			}
 
-			return (($no_site_url)?'':get_setting('fs_fuuka_boards_url', site_url())) . '/' . $board->shortname . '/'
+			return get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'
 				. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 		}
 
@@ -246,7 +246,7 @@ class Post_model extends CI_Model
 		{
 			$post->preview_h = 150;
 			$post->preview_w = 150;
-			return (($no_site_url)?'':site_url()) . 'content/themes/default/images/missing-image.jpg';
+			return site_url() . 'content/themes/default/images/missing-image.jpg';
 		}
 
 		return FALSE;
@@ -1597,7 +1597,7 @@ class Post_model extends CI_Model
 			$type_cache = 'thread_num';
 		}		
 		
-		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_get_latest_threads_count_' . $type_cache))
+		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache))
 		{
 			switch ($type)
 			{
@@ -1626,7 +1626,7 @@ class Post_model extends CI_Model
 			if($threads > 300)
 			{
 				$this->cache->save(
-					'foolfuuka_' . config_item('encryption_key') . '_get_latest_threads_count_' . $type_cache, 
+					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache, 
 					$threads,
 					180
 				);
@@ -1978,7 +1978,7 @@ class Post_model extends CI_Model
 		
 		// cache the count or get the cached count
 		$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
-		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_get_gallery_threads_count_' . $type))
+		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type))
 		{
 			switch ($type)
 			{
@@ -2004,7 +2004,7 @@ class Post_model extends CI_Model
 			if($threads > 300)
 			{
 				$this->cache->save(
-					'foolfuuka_' . config_item('encryption_key') . '_get_gallery_threads_count_' . $type, 
+					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type, 
 					$threads,
 					180
 				);

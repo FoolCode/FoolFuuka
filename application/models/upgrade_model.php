@@ -99,14 +99,14 @@ class Upgrade_model extends CI_Model
 
 		if ($maybemax->version > $maybemin->version
 			|| ($maybemax->version == $maybemin->version
-			&& $maybemax->subversion > $maybemin->subversion)
+				&& $maybemax->subversion > $maybemin->subversion)
 			|| ($maybemax->version == $maybemin->version
-			&& $maybemax->subversion == $maybemin->subversion
-			&& $maybemax->subsubversion > $maybemin->subsubversion)
+				&& $maybemax->subversion == $maybemin->subversion
+				&& $maybemax->subsubversion > $maybemin->subsubversion)
 			|| ($maybemax->version == $maybemin->version
-			&& $maybemax->subversion == $maybemin->subversion
-			&& $maybemax->subsubversion == $maybemin->subsubversion
-			&& (($maybemax->devversion == 0)
+				&& $maybemax->subversion == $maybemin->subversion
+				&& $maybemax->subsubversion == $maybemin->subsubversion
+				&& (($maybemax->devversion == 0)
 			|| $maybemax->devversion > $maybemax->devversion)
 			)
 		)
@@ -292,16 +292,16 @@ class Upgrade_model extends CI_Model
 			return false;
 		}
 
-		$new_versions = $this->upgrade_model->check_latest(TRUE);
+		$new_versions = $this->upgrade->check_latest(TRUE);
 		if ($new_versions === FALSE)
 			return FALSE;
 
 		// Pick the newest version
-		$latest = $new_versions[0];
+		$latest = end($new_versions);
 
-		$this->upgrade_model->get_file($latest->zipball_url);
+		$this->upgrade->get_file($latest->zipball_url);
 
-		$this->upgrade_model->update_upgrade();
+		$this->upgrade->update_upgrade();
 
 		$this->load->model('upgrade2_model', 'upgrade2');
 		if (!$this->upgrade2->do_upgrade())
@@ -309,7 +309,7 @@ class Upgrade_model extends CI_Model
 			return FALSE;
 		}
 
-		$this->upgrade_model->clean();
+		$this->upgrade->clean();
 
 		return TRUE;
 	}

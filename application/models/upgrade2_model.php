@@ -119,11 +119,10 @@ class Upgrade2_model extends CI_Model {
 		rename('content/cache/upgrade/' . $folder . '/content/themes/default', 'content/themes/default');
 		delete_files('content/themes/fuuka/', TRUE);
 		rename('content/cache/upgrade/' . $folder . '/content/themes/fuuka', 'content/themes/fuuka');
-		
-		// delete the mobile folder for a while... 05/09/2011
-		//if (file_exists('content/themes/mobile')) {
-		//	delete_files('content/themes/mobile/', TRUE);
-		//}
+		delete_files('content/plugins/FS_Articles/', TRUE);
+		rename('content/cache/upgrade/' . $folder . '/content/plugins/FS_Articles', 'content/plugins/FS_Articles');
+		delete_files('content/plugins/FU_Nginx_Cache_Purge/', TRUE);
+		rename('content/cache/upgrade/' . $folder . '/content/plugins/FU_Nginx_Cache_Purge', 'content/plugins/FU_Nginx_Cache_Purge');
 		
 		return TRUE;
 	}

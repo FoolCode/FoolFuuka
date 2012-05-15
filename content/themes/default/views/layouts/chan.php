@@ -261,7 +261,7 @@ if (!defined('BASEPATH'))
 			<div id="push"></div>
 		</div>
 		<footer id="footer">
-			<?php echo FOOL_NAME ?> - Version <?php echo FOOL_VERSION ?>, <a href="http://code.google.com/p/fuuka/" target="_blank">Fuuka Fetcher</a> - Version r140
+			<?php echo FOOL_NAME ?> - Version <?php echo FOOL_VERSION ?>, <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a> - Version 000
 			
 			
 			<div style="float:right">

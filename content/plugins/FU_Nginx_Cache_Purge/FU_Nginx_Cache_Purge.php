@@ -57,7 +57,7 @@ http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
 			)
 		);
 		
-		$this->plugins->register_hook($this, 'fu_post_model_after_delete_media', 5, 'after_delete_media');
+		$this->plugins->register_hook($this, 'fu_post_model_before_delete_media', 5, 'before_delete_media');
 	}
 
 
@@ -78,17 +78,17 @@ http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
 	}
 	
 	
-	function after_delete_media($board, $post, $media, $thumb)
+	function before_delete_media($board, $post, $media, $thumb)
 	{
 		$dir = array();
 		if($media)
 		{
-			$dir['full'] = $this->post->get_media_link($board, $post, FALSE, TRUE);
+			$dir['full'] = $this->post->get_media_link($board, $post, FALSE);
 		}
 		
 		if($thumb)
 		{
-			$dir['thumb'] = $this->post->get_media_link($board, $post, TRUE, TRUE);
+			$dir['thumb'] = $this->post->get_media_link($board, $post, TRUE);
 		}
 		
 		$url_user_password = $this->parse_urls();
@@ -100,7 +100,7 @@ http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
 		{
 			foreach($dir as $d)
 			{
-				$this->curl->create($item['url'] . $d);
+				$this->curl->create($item['url'] . parse_url($d, PHP_URL_PATH));
 				if(isset($item['password']))
 					$this->curl->http_login($item['username'], $item['password']);
 				$this->curl->execute();
@@ -132,7 +132,7 @@ http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
 			}
 			
 			if(count($explode) > 1)
-				$lines_exploded[$key]['url'] = rtrim(array_shift($explode) . array_shift($explode), '/');
+				$lines_exploded[$key]['url'] = rtrim(array_shift($explode) . ':' . array_shift($explode), '/');
 			
 			if(count($explode) > 1)
 			{

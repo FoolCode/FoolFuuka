@@ -29,11 +29,11 @@ class Migration_Install extends CI_Migration
 		{
 			$this->db->query(
 				"CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('preferences') . "` (
-						`name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-						`value` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+						`name` varchar(64) NOT NULL,
+						`value` text NOT NULL,
 						`group` int(11) NOT NULL,
 						PRIMARY KEY (`name`)
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
+					) ENGINE=InnoDB CHARSET=utf8;"
 			);
 		}
 

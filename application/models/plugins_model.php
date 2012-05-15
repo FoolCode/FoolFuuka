@@ -204,7 +204,8 @@ class Plugins_model extends CI_Model
 
 	function remove($slug)
 	{
-		$this->disable_plugin($slug);
+		if(method_exists($this, 'disable_plugin'))
+			$this->disable_plugin($slug);
 
 		delete_files('content/plugins/' . $slug, TRUE);
 	}

@@ -78,7 +78,7 @@ http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
 	}
 	
 	
-	function before_delete_media($board, $post, $media, $thumb)
+	function before_delete_media($board, $post, $media = TRUE, $thumb = TRUE)
 	{
 		$dir = array();
 		if($media)
@@ -106,6 +106,8 @@ http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
 				$this->curl->execute();
 			}
 		}
+		
+		return NULL;
 	}
 	
 	

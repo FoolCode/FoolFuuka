@@ -1156,7 +1156,7 @@ class Chan extends Public_Controller
 		// get rid of empty search terms
 		$search_opts = array_filter($this->uri->ruri_to_assoc($radix?4:3, $modifiers));
 		// global search support
-		$search_opts['board'] = !$radix?:$radix->shortname;
+		$search_opts['board'] = !$radix?FALSE:$radix->shortname;
 		unset($search_opts['page']);
 
 		// if it's already in the latest searches, remove the previous entry

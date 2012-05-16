@@ -352,22 +352,56 @@ class Plugins_model extends CI_Model
 	}
 	
 	
+	/**
+	 * Runs functions stored in the hook
+	 * 
+	 * @param string $target the name of the hook
+	 * @param array $parameters parameters to pass to the hook
+	 * @param bool|string $type if FALSE it's a simple hook, 'before'/'after' if before or after a method
+	 * @return null 
+	 */
 	function run_hook($target, $parameters = array())
 	{
 		if(!isset($this->_hooks[$target]))
-			return FALSE;
+			return NULL;;
 		
 		$hook_array = $this->_hooks[$target];
 		
-		usort($hook_array, function($a, $b){
-			return $a['priority'] - $b['priority'];
-		});
+		usort($hook_array, function($a, $b){ return $a['priority'] - $b['priority']; });
 		
-		$return = array();
+		// default return if nothing happens
+		$return = array('parameters' => $parameters, 'return' => NULL);
 		
 		foreach($hook_array as $hook)
 		{
-			$return[] = call_user_func_array(array($hook['plugin'], $hook['method']), $parameters);
+			// if this is 'after', we might already have an extra parameter in the array that is the previous result
+			$return_temp = call_user_func_array(array($hook['plugin'], $hook['method']), $parameters);
+			
+			if(is_null($return_temp))
+			{
+				// if NULL, the plugin creator didn't want to send a message outside
+				continue;
+			}
+			else if(!is_array($return_temp))
+			{
+				// if not an array, it's a plain result to stack in
+				// the plugin creator can't do this if the result set is an array, and must use the complex solution
+				$return['return'] = $return_temp;
+				// but the return as last parameter
+				array_push($parameters, $return['return']);
+			}
+			
+			// in the most complex situation, we have array('parameters'=>array(...), 'return'=>'value')
+			if(isset($return_temp['parameters']))
+			{
+				$parameters = $return['parameters'];
+			}
+			if(isset($return_temp['return']))
+			{
+				$return['return'] = $return_temp['return'];
+				// but the return as last parameter
+				array_push($parameters, $return['return']);
+			}
 		}
 		
 		return $return;

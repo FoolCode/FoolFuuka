@@ -20,6 +20,37 @@ class Post_model extends CI_Model
 	{
 		parent::__construct();
 	}
+	
+	/**
+	 * The functions with an underscore prefix will respond to plugins before and after
+	 * 
+	 * @param string $name
+	 * @param array $parameters 
+	 */
+	function __call($name, $parameters)
+	{
+		$before = $this->plugins->run_hook('fu_post_model_before_' . $name, $parameters);
+		
+		if (is_array($before))
+		{
+			// if the value returned is an Array, a plugin was active
+			$parameters = $before['parameters'];
+		}
+			
+		$return = call_user_func_array(array($this, '_' . $name), $parameters); 
+		
+		// in the after, the last parameter passed will be the result
+		array_push($parameters, $return);
+		$after = $this->plugins->run_hook('fu_post_model_after_' . $name, $parameters);
+		
+		if (is_array($after))
+		{
+			// all the other results will be the hook
+			return $after['return'];
+		}
+		
+		return $return;
+	}
 
 
 	/**
@@ -704,7 +735,7 @@ class Post_model extends CI_Model
 	 * @param object $row
 	 * @return string
 	 */
-	function process_comment($board, $post)
+	function _process_comment($board, $post)
 	{
 		$CI = & get_instance();
 
@@ -3012,15 +3043,13 @@ class Post_model extends CI_Model
 	 * @param bool $thumb
 	 * @return bool
 	 */
-	function delete_media($board, $post, $media = TRUE, $thumb = TRUE)
+	function _delete_media($board, $post, $media = TRUE, $thumb = TRUE)
 	{
 		if (!$post->media_hash)
 		{
 			// if there's no media, it's all OK
 			return TRUE;
 		}
-
-		$this->plugins->run_hook('fu_post_model_before_delete_media', array($board, $post, $media, $thumb));
 
 		// delete media file only if there is only one image OR the image is banned
 		if ($post->total == 1 || $post->banned == 1)
@@ -3051,8 +3080,6 @@ class Post_model extends CI_Model
 				}
 			}
 		}
-
-		$this->plugins->run_hook('fu_post_model_after_delete_media', array($board, $post, $media, $thumb));
 
 		return TRUE;
 	}

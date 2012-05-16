@@ -1706,8 +1706,8 @@ class Post_model extends CI_Model
 					if ($thread_num == $post_num)
 					{
 						$results[$post_num] = array(
-							'omitted' => ($counter['replies'] - 5),
-							'images_omitted' => $counter['images']
+							'omitted' => ($counter['replies'] - 6),
+							'images_omitted' => ($counter['images'] - 1)
 						);
 					}
 				}

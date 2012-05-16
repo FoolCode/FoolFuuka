@@ -106,8 +106,7 @@ class Upgrade_model extends CI_Model
 			|| ($maybemax->version == $maybemin->version
 				&& $maybemax->subversion == $maybemin->subversion
 				&& $maybemax->subsubversion == $maybemin->subsubversion
-				&& (($maybemax->devversion == 0)
-			|| $maybemax->devversion > $maybemax->devversion)
+				&& ($maybemax->devversion == 0 || $maybemax->devversion > $maybemin->devversion)
 			)
 		)
 		{

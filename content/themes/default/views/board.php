@@ -137,7 +137,7 @@ if (!defined('BASEPATH'))
 	<?php 
 	if($enabled_tools_reply_box)
 		echo $template['partials']['tools_reply_box']; ?>
-	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
 	<?php endif; ?>
+	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
 </article>
 <?php endforeach; ?>

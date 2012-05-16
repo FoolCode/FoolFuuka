@@ -45,7 +45,6 @@ class Post_model extends CI_Model
 		
 		if (is_array($after))
 		{
-			// all the other results will be the hook
 			return $after['return'];
 		}
 		
@@ -846,7 +845,7 @@ class Post_model extends CI_Model
 					'prefix' => '<font class="unkfunc">',
 					'suffix' => '</font>',
 					'urltag' => '#',
-					'option' => ' class="quotelink" onclick=replyhl(\'' . $num_id . '\');"',
+					'option' => ' class="quotelink" onclick="replyhl(\'' . $num_id . '\');"',
 					'option_op' => '',
 					'option_backlink' => '',
 				);
@@ -890,14 +889,14 @@ class Post_model extends CI_Model
 		}
 
 		// what is $key?
-		if ($this->realtime === TRUE)
-		{
+		//if (true || $this->realtime === TRUE)
+		//{
 			return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', $key))
 				. $html['urltag'] . $num_id . '"' . $html['option'] . '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
-		}
+		//}
 
-		return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'post', $num_id))
-			. '">&gt;&gt;' . $num . '</a>' . $html['suffix'];
+		//return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'post', $num_id))
+		//	. '">&gt;&gt;' . $num . '</a>' . $html['suffix'];
 
 		// return un-altered
 		return $matches[0];
@@ -2151,7 +2150,7 @@ class Post_model extends CI_Model
 	 * @param int $subnum
 	 * @return bool|object
 	 */
-	function get_post_by_num($board, $num, $subnum = 0)
+	function get_post_by_num($board, $num, $subnum = 0, $build = FALSE)
 	{
 		if (strpos($num, '_') !== FALSE && $subnum == 0)
 		{
@@ -2170,7 +2169,7 @@ class Post_model extends CI_Model
 		$subnum = intval($subnum);
 
 		$query = $this->db->query('
-			SELECT num, thread_num, subnum
+			SELECT *
 			FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
 			WHERE num = ? AND subnum = ? LIMIT 0, 1
@@ -2185,7 +2184,7 @@ class Post_model extends CI_Model
 
 		// process results
 		$post = $query->row();
-		$this->process_post($board, $post, TRUE);
+		$this->process_post($board, $post, TRUE, $build);
 
 		return $post;
 	}

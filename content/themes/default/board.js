@@ -311,7 +311,7 @@ var bindFunctions = function()
                 backlink.css('display', 'block');
                 backlink.html(quote.formatted);
             }
-            else
+            else if(jQuery('#' + that.data('post')).length > 0)
             {
                 // normal posts
                 var toClone = jQuery('#' + that.data('post'));
@@ -320,43 +320,78 @@ var bindFunctions = function()
                 backlink.css('display', 'block');
                 backlink.html(toClone.clone());
             }
+			else if (typeof backend_vars.loaded_posts[that.data('post')] !== 'undefined')
+			{
+				var data = backend_vars.loaded_posts[that.data('post')];
+				backlink.html(data.formatted);
+				backlink.css('display', 'block');			}
+			else
+			{
+				jQuery.ajax({
+					url: backend_vars.api_url + 'api/chan/post/' ,
+					dataType: 'jsonp',
+					type: 'GET',
+					cache: false,
+					data: {
+						board: backend_vars.board_shortname,
+						num: that.data('post'),
+						format: 'jsonp'
+					},
+					success: function(data){
+						backend_vars.loaded_posts[that.data('post')] = data;
+						backlink.html(data.formatted);
+						backlink.css('display', 'block');
+						showBacklink(backlink, pos, height, width);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+					},
+					complete: function() {
+					}
+				});
+				return;
+			}
 
-            if(jQuery(window).width()/2 < pos.left + width/2)
-            {
-                backlink.css({
-                    right: (jQuery(window).width() - pos.left -	 width) + 'px',
-                    top: (pos.top + height + 3) + 'px',
-                    left: 'auto'
-                });
-            }
-            else
-            {
-                backlink.css({
-                    left: (pos.left) + 'px',
-                    top: (pos.top + height + 3) + 'px',
-                    right: 'auto'
-                });
-            }
-
-            backlink.find("article").removeAttr("id").find(".post_controls").remove();
-            backlink.find(".post_file_controls").remove();
-			
-			// remove the image from the backlink box if it's a gallery
-            if(typeof page_function !== 'undefined' && backend_vars.page_function == "gallery")
-            {
-                backlink.find(".thread_image_box").remove();
-            }
-            var swap_image = backlink.find('[data-original]');
-            if(swap_image.length > 0)
-            {
-                swap_image.attr('src', swap_image.attr('data-original'));
-            }
+           showBacklink(backlink, pos, height, width);
         }
         else
         {
             jQuery("#backlink").css('display', 'none').html('');
         }
     });
+}
+
+var showBacklink = function(backlink, pos, height, width)
+{
+	 if(jQuery(window).width()/2 < pos.left + width/2)
+	{
+		backlink.css({
+			right: (jQuery(window).width() - pos.left -	 width) + 'px',
+			top: (pos.top + height + 3) + 'px',
+			left: 'auto'
+		});
+	}
+	else
+	{
+		backlink.css({
+			left: (pos.left) + 'px',
+			top: (pos.top + height + 3) + 'px',
+			right: 'auto'
+		});
+	}
+
+	backlink.find("article").removeAttr("id").find(".post_controls").remove();
+	backlink.find(".post_file_controls").remove();
+
+	// remove the image from the backlink box if it's a gallery
+	if(typeof page_function !== 'undefined' && backend_vars.page_function == "gallery")
+	{
+		backlink.find(".thread_image_box").remove();
+	}
+	var swap_image = backlink.find('[data-original]');
+	if(swap_image.length > 0)
+	{
+		swap_image.attr('src', swap_image.attr('data-original'));
+	}
 }
 
 var backlinkify = function(elem, post_id, subnum)
@@ -732,6 +767,7 @@ jQuery(document).ready(function() {
 
 	// settings
 	jQuery.support.cors = true;
+	backend_vars.loaded_posts = [];
 
     var lazyloaded = jQuery('img.lazyload');
     if(lazyloaded.length > 149)

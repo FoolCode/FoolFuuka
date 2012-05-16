@@ -768,7 +768,7 @@ class MY_DB_active_record extends CI_DB_active_record
 	 * @param   bool    $decode
 	 * @return  object
 	 */
-	public function sphinx_match($field, $match = '', $escape = NULL, $decode = FALSE)
+	public function sphinx_match($field, $match = '', $escape = NULL, $decode = FALSE, $exact = FALSE)
 	{
 		if ( ! is_array($field))
 		{
@@ -792,6 +792,11 @@ class MY_DB_active_record extends CI_DB_active_record
 			else
 			{
 				$v = $v;
+			}
+
+			if ($exact === TRUE)
+			{
+				$v = '"' . $v . '"';
 			}
 
 			$this->ar_sphinx_match[] = $prefix."$k $v";

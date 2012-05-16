@@ -256,16 +256,16 @@ class Post_model extends CI_Model
 
 		if(isset($image))
 		{
-			// output the url on another server
-			if (strlen(get_setting('fs_balancer_clients')) > 10)
+			$media_cdn = array();
+			if($balancers = get_setting('fs_fuuka_boards_media_balancers'))
+			{ 
+				$media_cdn = array_filter(preg_split('/\r\n|\r|\n/', $balancers));
+			}
+			
+			if(!empty($media_cdn) && $post->media_id > 0)
 			{
-				preg_match('/([\d]+)/', $post->media, $matches);
-
-				if (isset($matches[1]))
-				{
-					$balancer_servers = get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'
-						. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
-				}
+				return $media_cdn[($post->media_id % 2)] . '/' . $board->shortname . '/'
+					. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 			}
 
 			return get_setting('fs_fuuka_boards_url', site_url()) . '/' . $board->shortname . '/'

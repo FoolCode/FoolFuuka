@@ -293,6 +293,21 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'preferences' => TRUE,
 			'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
 		);
+		
+		$form['fs_fuuka_boards_db'] = array(
+			'type' => 'input',
+			'label' => __('Boards database'),
+			'preferences' => TRUE,
+			'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
+		);
+		
+		$form['fs_fuuka_boards_media_balancers'] = array(
+			'type' => 'textarea',
+			'label' => __('Media load balancers'),
+			'preferences' => TRUE,
+			'help' => __('Facultative. One per line the URLs where your images are reachable.'),
+			'class' => 'span6'
+		);
 
 		$form['separator-2'] = array(
 			'type' => 'separator'

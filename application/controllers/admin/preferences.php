@@ -19,13 +19,9 @@ class Preferences extends Admin_Controller
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/preferences") . '">' . __("Preferences") . '</a>';
 	}
 
-	/*
+	/**
 	 * Just redirects to general
-	 * 
-	 * @author Woxxy
 	 */
-
-
 	function index()
 	{
 		redirect('/admin/preferences/general');

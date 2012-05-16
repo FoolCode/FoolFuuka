@@ -16,12 +16,35 @@ if (!defined('BASEPATH'))
 class Theme_Controller
 {
 
-
+	var $CI = null;
+	
 	function __construct()
 	{
 		$this->CI = & get_instance();
+		
+		// use hooks for manipulating comments
+		$this->CI->plugins->register_hook($this, 'fu_post_model_process_comment_greentext_result', 8, '_greentext');
+		$this->CI->plugins->register_hook($this, 'fu_post_model_process_internal_links_html_result', 8, 
+			'_process_internal_links_html');
+	}
+	
+	
+	function _greentext()
+	{
+		return '\\1<span class="greentext">\\2</span>\\3';
 	}
 
+	function _process_internal_links_html()
+	{
+		return array('return' => array(
+			'prefix' => '<span class="unkfunc">',
+			'suffix' => '</span>',
+			'urltag' => '#',
+			'option' => ' onclick="replyhighlight(\'p' . $num_id . '\');"',
+			'option_op' => '',
+			'option_backlink' => '',
+		));
+	}
 
 	/**
 	 * @param int $page

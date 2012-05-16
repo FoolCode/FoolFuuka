@@ -37,7 +37,7 @@ class Post_model extends CI_Model
 			$parameters = $before['parameters'];
 		}
 			
-		$return = call_user_func_array(array($this, '_' . $name), $parameters); 
+		$return = call_user_func_array(array($this, 'p_' . $name), $parameters); 
 		
 		// in the after, the last parameter passed will be the result
 		array_push($parameters, $return);
@@ -735,7 +735,7 @@ class Post_model extends CI_Model
 	 * @param object $row
 	 * @return string
 	 */
-	function _process_comment($board, $post)
+	function p_process_comment($board, $post)
 	{
 		$CI = & get_instance();
 
@@ -743,18 +743,7 @@ class Post_model extends CI_Model
 		$find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
 		$html = '\\1<span class="greentext">\\2</span>\\3';
 
-		if ($this->features === FALSE)
-		{
-			if ($this->fu_theme == 'fuuka')
-			{
-				$html = '\\1<span class="greentext">\\2</span>\\3';
-			}
-
-			if ($this->fu_theme == 'yotsuba')
-			{
-				$html = '\\1<font class="unkfunc">\\2</font>\\3';
-			}
-		}
+		$html = $this->plugins->run_hook('fu_post_model_process_comment_greentext_result', array($html), 'simple');
 
 		$comment = $post->comment;
 
@@ -846,21 +835,11 @@ class Post_model extends CI_Model
 			'option_backlink' => ' class="backlink" data-function="highlight" data-backlink="true" data-post="'
 				. $this->current_p->num . (($this->current_p->subnum == 0) ? '' : '_' . $this->current_p->subnum) . '"',
 		);
-
+		
+		$html = $this->plugins->run_hook('fu_post_model_process_internal_links_html_result', array($html), 'simple');
+		/*
 		if ($this->features === FALSE)
 		{
-			if ($this->fu_theme == 'fuuka')
-			{
-				$html = array(
-					'prefix' => '<span class="unkfunc">',
-					'suffix' => '</span>',
-					'urltag' => '#',
-					'option' => ' onclick=replyhighlight(\'p' . $num_id . '\');"',
-					'option_op' => '',
-					'option_backlink' => '',
-				);
-			}
-
 			if ($this->fu_theme == 'yotsuba')
 			{
 				$html = array(
@@ -873,7 +852,8 @@ class Post_model extends CI_Model
 				);
 			}
 		}
-
+		*/
+		
 		$this->backlinks[$num_id][$this->current_p->num] = $html['prefix']
 			. '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread',
 			($this->current_p->thread_num == 0) ? $this->current_p->num : $this->current_p->thread_num)) . $html['urltag']
@@ -3043,7 +3023,7 @@ class Post_model extends CI_Model
 	 * @param bool $thumb
 	 * @return bool
 	 */
-	function _delete_media($board, $post, $media = TRUE, $thumb = TRUE)
+	function p_delete_media($board, $post, $media = TRUE, $thumb = TRUE)
 	{
 		if (!$post->media_hash)
 		{

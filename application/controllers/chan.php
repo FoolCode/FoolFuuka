@@ -296,6 +296,12 @@ class Chan extends Public_Controller
 			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
 		}
 		
+		// trying to access an internal method, should never reach here, but safety is never enough
+		if(substr($method, 0, 1) == '_')
+		{
+			return $this->show_404();
+		}
+		
 		// FUNCTIONS: If available, load custom functions to override default functions.
 		if (method_exists($this->TC, $method))
 		{

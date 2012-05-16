@@ -360,10 +360,13 @@ class Plugins_model extends CI_Model
 	 * @param bool|string $type if FALSE it's a simple hook, 'before'/'after' if before or after a method
 	 * @return null 
 	 */
-	function run_hook($target, $parameters = array())
+	function run_hook($target, $parameters = array(), $modifier = '')
 	{
+		if(!isset($this->_hooks[$target]) && $modifier == 'simple')
+			return end($parameters);
+		
 		if(!isset($this->_hooks[$target]))
-			return NULL;;
+			return NULL;
 		
 		$hook_array = $this->_hooks[$target];
 		
@@ -389,6 +392,7 @@ class Plugins_model extends CI_Model
 				$return['return'] = $return_temp;
 				// but the return as last parameter
 				array_push($parameters, $return['return']);
+				continue;
 			}
 			
 			// in the most complex situation, we have array('parameters'=>array(...), 'return'=>'value')
@@ -403,6 +407,9 @@ class Plugins_model extends CI_Model
 				array_push($parameters, $return['return']);
 			}
 		}
+		
+		if($modifier == 'simple')
+			return $return['return'];
 		
 		return $return;
 	}

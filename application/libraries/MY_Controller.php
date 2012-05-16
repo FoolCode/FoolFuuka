@@ -110,6 +110,13 @@ class MY_Controller extends CI_Controller
 			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']),
 				$uri_array);
 		}
+		
+		// trying to access an internal method, should never reach here, but safety is never enough
+		if(substr($method, 0, 1) == '_')
+		{
+			return FALSE;
+		}
+		
 		// we don't want to send back to Chan controller, but everywhere else it's good to go
 		if (method_exists($this, $method) && get_class($this) != 'Chan')
 		{

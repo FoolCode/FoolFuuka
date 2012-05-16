@@ -52,7 +52,10 @@ class Upgrade_model extends CI_Model
 		}
 
 		if (!empty($new_versions))
+		{
+			usort($new_versions, array($this, 'is_bigger_version'));
 			return $new_versions;
+		}
 
 		if ($force)
 		{
@@ -92,27 +95,40 @@ class Upgrade_model extends CI_Model
 	 */
 	function is_bigger_version($maybemin, $maybemax)
 	{
+		if(is_object($maybemin) && !isset($maybemin->version))
+			$maybemin = $maybemin->name;
+		if(is_object($maybemax) && !isset($maybemax->version))
+			$maybemax = $maybemax->name;
+	
 		if (is_string($maybemin))
 			$maybemin = $this->version_to_object($maybemin);
 		if (is_string($maybemax))
 			$maybemax = $this->version_to_object($maybemax);
 
-		if ($maybemax->version > $maybemin->version
-			|| ($maybemax->version == $maybemin->version
-				&& $maybemax->subversion > $maybemin->subversion)
-			|| ($maybemax->version == $maybemin->version
+		if (
+			$maybemax->version > $maybemin->version
+			|| (
+				$maybemax->version == $maybemin->version
+				&& $maybemax->subversion > $maybemin->subversion
+			)
+			|| (
+				$maybemax->version == $maybemin->version
 				&& $maybemax->subversion == $maybemin->subversion
-				&& $maybemax->subsubversion > $maybemin->subsubversion)
-			|| ($maybemax->version == $maybemin->version
+				&& $maybemax->subsubversion > $maybemin->subsubversion
+			)
+			|| (
+				$maybemax->version == $maybemin->version
 				&& $maybemax->subversion == $maybemin->subversion
 				&& $maybemax->subsubversion == $maybemin->subsubversion
-				&& ($maybemax->devversion == 0 || $maybemax->devversion > $maybemin->devversion)
+				&& (
+					$maybemax->devversion == 0 || $maybemax->devversion > $maybemin->devversion
+				)
 			)
 		)
 		{
-			return TRUE;
+			return -1;
 		}
-		return FALSE;
+		return 1;
 	}
 
 

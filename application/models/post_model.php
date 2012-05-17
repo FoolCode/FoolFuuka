@@ -2443,7 +2443,7 @@ class Post_model extends CI_Model
 			}
 
 		}
-
+		
 		// process comment name+trip
 		if ($data['name'] === FALSE || $data['name'] == '')
 		{
@@ -2506,17 +2506,18 @@ class Post_model extends CI_Model
 		}
 		else
 		{
-			// detect spam in content
-			$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents('assets/anti-spam/databases')));
-			foreach($spam as $s)
-			{
-				if(strpos($data['comment'], $s) !== FALSE)
-				{
-					return array('error' => __('Your comment has contains words that aren\'t allowed.'));
-				}
-			}
-			
 			$comment = $data['comment'];
+		}
+		
+		// load the spam list and check comment, name, subject and email
+		$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents('assets/anti-spam/databases')));
+		foreach($spam as $s)
+		{
+			if(strpos($comment, $s) !== FALSE || strpos($name, $s) !== FALSE 
+				|| strpos($subject, $s) !== FALSE || strpos($email, $s) !== FALSE)
+			{
+				return array('error' => __('Your comment has contains words that aren\'t allowed.'));
+			}
 		}
 
 		// process comment ghost+spoiler

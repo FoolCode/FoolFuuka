@@ -1134,7 +1134,8 @@ class Post_model extends CI_Model
 			$args['page'] = 1;
 		}
 		
-		if ($args['image'] && !is_natural($args['image']))
+		// if board is set and the image is not media_id, get media_id
+		if ($board !== FALSE && $args['image'] && !is_natural($args['image']))
 		{
 			if(substr($args['image'], 0, -2) != '==')
 			{
@@ -1230,7 +1231,14 @@ class Post_model extends CI_Model
 			}
 			if ($args['image'])
 			{
-				$this->db->where('mid', $args['image']);
+				if($board !== FALSE)
+				{
+					$this->db->where('mid', $args['image']);
+				}
+				else
+				{
+					$this->db->sphinx_match('media_hash', $args['image'], 'full', TRUE);
+				}
 			}
 			if ($args['capcode'] == 'admin')
 			{

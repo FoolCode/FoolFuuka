@@ -676,15 +676,16 @@ class Chan extends Public_Controller
 		$thread = $thread_data['result'];
 		$thread_check = $thread_data['thread_check'];
 		
+		// don't throw 404, try looking for such a post
 		if (!is_array($thread))
 		{
-			return $this->show_404();
+			return $this->post($num);
 		}
 
+		// the post references wasn't op but it's a thread for sure
 		if (!isset($thread[$num]['op']))
 		{
-			$this->post($num);
-			return TRUE;
+			return $this->post($num);
 		}
 
 		// get the latest doc_id and latest timestamp

@@ -568,20 +568,22 @@ class Radix_model extends CI_Model
 						$result_object[$item->id]->$key = FALSE;
 				}
 				
-				if(isset($arr['sub']))
+				foreach(array('sub', 'sub_inverse') as $sub)
 				{
-					foreach($arr['sub'] as $k => $a)
+					if(isset($arr[$sub]))
 					{
-						if(!isset($result_object[$item->id]->$k) && isset($a['boards_preferences']))
+						foreach($arr[$sub] as $k => $a)
 						{
-							if(isset($arr['default_value']))
-								$result_object[$item->id]->$k = $a['default_value'];
-							else
-								$result_object[$item->id]->$k = FALSE;
+							if(!isset($result_object[$item->id]->$k) && isset($a['boards_preferences']))
+							{
+								if(isset($arr['default_value']))
+									$result_object[$item->id]->$k = $a['default_value'];
+								else
+									$result_object[$item->id]->$k = FALSE;
+							}
 						}
 					}
 				}
-				
 			}
 			
 		}

@@ -84,6 +84,7 @@ if (!defined('BASEPATH'))
 			}
 		}
 				
+		// support for HTML form arrays
 		if(isset($helpers['array']) && $helpers['array'])
 		{
 			$item['name'] = $name . '[]';
@@ -118,6 +119,7 @@ if (!defined('BASEPATH'))
 		}
 		
 
+		// loop all the array to generate the html
 		if (isset($item['type'])) :
 			for($i = 0; $i < $count; $i++) :
 				if(isset($item['value_array']))

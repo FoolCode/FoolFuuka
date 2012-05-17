@@ -20,34 +20,34 @@ class Post_model extends CI_Model
 	{
 		parent::__construct();
 	}
-	
+
 	/**
 	 * The functions with an underscore prefix will respond to plugins before and after
-	 * 
+	 *
 	 * @param string $name
-	 * @param array $parameters 
+	 * @param array $parameters
 	 */
 	function __call($name, $parameters)
 	{
 		$before = $this->plugins->run_hook('fu_post_model_before_' . $name, $parameters);
-		
+
 		if (is_array($before))
 		{
 			// if the value returned is an Array, a plugin was active
 			$parameters = $before['parameters'];
 		}
-			
-		$return = call_user_func_array(array($this, 'p_' . $name), $parameters); 
-		
+
+		$return = call_user_func_array(array($this, 'p_' . $name), $parameters);
+
 		// in the after, the last parameter passed will be the result
 		array_push($parameters, $return);
 		$after = $this->plugins->run_hook('fu_post_model_after_' . $name, $parameters);
-		
+
 		if (is_array($after))
 		{
 			return $after['return'];
 		}
-		
+
 		return $return;
 	}
 
@@ -169,7 +169,7 @@ class Post_model extends CI_Model
 	 * @param object $row
 	 * @param bool $thumbnail
 	 * @param bool $no_site_url
-	 * @return bool|string 
+	 * @return bool|string
 	 */
 	function get_media_link($board, $post, $thumbnail = FALSE)
 	{
@@ -258,10 +258,10 @@ class Post_model extends CI_Model
 		{
 			$media_cdn = array();
 			if($balancers = get_setting('fs_fuuka_boards_media_balancers'))
-			{ 
+			{
 				$media_cdn = array_filter(preg_split('/\r\n|\r|\n/', $balancers));
 			}
-			
+
 			if(!empty($media_cdn) && $post->media_id > 0)
 			{
 				return $media_cdn[($post->media_id % 2)] . '/' . $board->shortname . '/'
@@ -444,8 +444,8 @@ class Post_model extends CI_Model
 			$post->original_timestamp = $post->timestamp;
 			$date = new DateTime();
 			$date_formatted = $date->createFromFormat(
-				'Y-m-d H:i:s', 
-				date('Y-m-d H:i:s', $post->timestamp), 
+				'Y-m-d H:i:s',
+				date('Y-m-d H:i:s', $post->timestamp),
 				new DateTimeZone('America/New_York')
 			);
 			$date_formatted->setTimezone(new DateTimeZone('UTC'));
@@ -456,7 +456,7 @@ class Post_model extends CI_Model
 			$post->original_timestamp = $post->timestamp;
 		}
 
-		$elements = array('title', 'name', 'email', 'trip', 'media_orig', 
+		$elements = array('title', 'name', 'email', 'trip', 'media_orig',
 			'preview_orig', 'media_filename', 'media_hash', 'poster_hash');
 
 		if ($this->tank_auth->is_allowed())
@@ -514,19 +514,19 @@ class Post_model extends CI_Model
 		{
 			// check *_images table for media hash
 			$check = $this->db->query('
-				SELECT * 
+				SELECT *
 				FROM ' . $this->radix->get_table($board, '_images') . '
-				WHERE media_hash = ? 
+				WHERE media_hash = ?
 				LIMIT 0, 1
 			',
 				array($media_hash)
 			);
-			
+
 			// if exists, re-run process with duplicate set
 			if ($check->num_rows() > 0)
 			{
 				$check_row = $check->row();
-				
+
 				// do we have some image reposting constraint?
 				if($board->min_image_repost_hours == 0 || $this->tank_auth->is_allowed())
 				{
@@ -536,7 +536,7 @@ class Post_model extends CI_Model
 				else if($board->min_image_repost_hours == -1)
 				{
 					// don't allow reposting, ever
-					return array('error' => 
+					return array('error' =>
 						__('This image has already been posted once. This board doesn\'t allow image reposting'));
 				}
 				else
@@ -547,16 +547,16 @@ class Post_model extends CI_Model
 						FROM ' . $this->radix->get_table($board) . '
 						WHERE media_id = ? AND timestamp > ?
 					', array($check_row->media_id, time() - $board->min_image_repost_hours * 60 * 60));
-					
+
 					if($constraint->num_rows() > 0)
 					{
 						return array('error' => sprintf(
-							__('You must wait up to %s hours to repost this image.'), 
+							__('You must wait up to %s hours to repost this image.'),
 							$board->min_image_repost_hours)
 						);
 					}
 				}
-				
+
 				return $this->process_media($board, $post_id, $file, $media_hash, $check_row);
 			}
 		}
@@ -573,11 +573,11 @@ class Post_model extends CI_Model
 
 		// PHP must be compiled with --enable-exif
 		// exif can be grabbed only from jpg and tiff
-		if(function_exists('exif_read_data') 
+		if(function_exists('exif_read_data')
 			&& in_array(strtolower(trim($file['file_ext'], '.')), array('jpg', 'jpeg', 'tiff')))
-		{	
+		{
 			$exif = exif_read_data($file['full_path']);
-			
+
 			if($exif === FALSE)
 			{
 				$exif = NULL;
@@ -587,7 +587,7 @@ class Post_model extends CI_Model
 		{
 			$exif = NULL;
 		}
-		
+
 		// check for any type of duplicate records or information and override default locations
 		if ($duplicate !== NULL)
 		{
@@ -712,17 +712,17 @@ class Post_model extends CI_Model
 			$thumb_filename = $media_filename;
 			$thumb_dimensions = array($file['image_width'], $file['image_height']);
 		}
-		
+
 		return array(
-			'preview_orig' => $thumb_filename, 
-			'thumb_width' => $thumb_dimensions[0], 
+			'preview_orig' => $thumb_filename,
+			'thumb_width' => $thumb_dimensions[0],
 			'thumb_height'=> $thumb_dimensions[1],
-			'media_filename' => $file['file_name'], 
-			'width' => $file['image_width'], 
+			'media_filename' => $file['file_name'],
+			'width' => $file['image_width'],
 			'height'=> $file['image_height'],
-			'size' => floor($file['file_size'] * 1024), 
-			'media_hash' => $media_hash, 
-			'media_orig' => $media_filename, 
+			'size' => floor($file['file_size'] * 1024),
+			'media_hash' => $media_hash,
+			'media_orig' => $media_filename,
 			'exif' => !is_null($exif)?json_encode($exif):NULL,
 			'unixtime' => $media_unixtime,
 		);
@@ -834,7 +834,7 @@ class Post_model extends CI_Model
 			'option_backlink' => ' class="backlink" data-function="highlight" data-backlink="true" data-post="'
 				. $this->current_p->num . (($this->current_p->subnum == 0) ? '' : '_' . $this->current_p->subnum) . '"',
 		);
-		
+
 		$html = $this->plugins->run_hook('fu_post_model_process_internal_links_html_result', array($html), 'simple');
 		/*
 		if ($this->features === FALSE)
@@ -852,7 +852,7 @@ class Post_model extends CI_Model
 			}
 		}
 		*/
-		
+
 		$this->backlinks[$num_id][$this->current_p->num] = $html['prefix']
 			. '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread',
 			($this->current_p->thread_num == 0) ? $this->current_p->num : $this->current_p->thread_num)) . $html['urltag']
@@ -1024,9 +1024,9 @@ class Post_model extends CI_Model
 			{
 				return array('invalid_thread' => TRUE);
 			}
-			
+
 			$query_result = $query->result();
-			
+
 			// free up result
 			$query->free_result();
 		}
@@ -1034,7 +1034,7 @@ class Post_model extends CI_Model
 		{
 			$query_result = $num;
 		}
-		
+
 		// define variables
 		$thread_op_present = FALSE;
 		$ghost_post_present = FALSE;
@@ -1054,7 +1054,7 @@ class Post_model extends CI_Model
 			{
 				$ghost_post_present = TRUE;
 			}
-			
+
 			if($post->subnum == 0 && $thread_last_bump < $post->timestamp)
 			{
 				$thread_last_bump = $post->timestamp;
@@ -1133,27 +1133,37 @@ class Post_model extends CI_Model
 		{
 			$args['page'] = 1;
 		}
-		
+
 		// if board is set and the image is not media_id, get media_id
 		if ($board !== FALSE && $args['image'] && !is_natural($args['image']))
 		{
-			if(substr($args['image'], 0, -2) != '==')
+			// this is urlsafe, let's convert it else decode it
+			if (mb_strlen($args['image']) < 23)
+			{
+				$args['image'] = $this->get_media_hash($args['image']);
+			}
+			else
+			{
+				$args['image'] = rawurldecode($args['image']);
+			}
+
+			if(substr($args['image'], -2) != '==')
 			{
 				$args['image'] .= '==';
 			}
-			
+
 			$image_query = $this->db->query('
-				SELECT media_id 
+				SELECT media_id
 				FROM ' . $this->radix->get_table($board, '_images') . '
 				WHERE media_hash = ?
 			', array($args['image']));
-			
+
 			// if there's no images matching, the result is certainly empty
 			if($image_query->num_rows() == 0)
 			{
 				return array('posts' => array(), 'total_found' => 0);
 			}
-			
+
 			$args['image'] = $image_query->row()->media_id;
 		}
 
@@ -1237,7 +1247,7 @@ class Post_model extends CI_Model
 				}
 				else
 				{
-					$this->db->sphinx_match('media_hash', $args['image'], 'full', TRUE);
+					$this->db->sphinx_match('media_hash', $args['image'], 'full', TRUE, TRUE);
 				}
 			}
 			if ($args['capcode'] == 'admin')
@@ -1338,7 +1348,7 @@ class Post_model extends CI_Model
 		{
 			// begin cache of entire sql statement
 			$this->db->start_cache();
-			
+
 			// begin filtering search params
 			if ($args['text'] || $args['filename'])
 			{
@@ -1346,31 +1356,31 @@ class Post_model extends CI_Model
 				{
 					return array();
 				}
-				
+
 				// we're using fulltext fields, we better start from this
 				$this->db->from($this->radix->get_table($board, '_search'), FALSE, FALSE);
-				
+
 				// select that we'll use for the final statement
 				$select = 'SELECT ' . $this->radix->get_table($board, '_search') . '.`doc_id`';
-				
+
 				if($args['text'])
 				{
 					$this->db->where(
 						'MATCH (' . $this->radix->get_table($board, '_search') . '.`comment`) AGAINST (' . $this->db->escape(rawurldecode($args['text'])) . ')',
-						NULL, 
+						NULL,
 						FALSE
 					);
 				}
-				
+
 				if($args['filename'])
 				{
 					$this->db->where(
 						'MATCH (' . $this->radix->get_table($board, '_search') . '.`media_filename`) AGAINST (' . $this->db->escape(rawurldecode($args['filename'])) . ')',
-						NULL, 
+						NULL,
 						FALSE
 					);
 				}
-				
+
 				$this->db->join(
 					$this->radix->get_table($board),
 					$this->radix->get_table($board, '_search') . '.`doc_id` = ' . $this->radix->get_table($board) . '.`doc_id`',
@@ -1383,11 +1393,11 @@ class Post_model extends CI_Model
 			{
 				// no need for the fulltext fields
 				$this->db->from($this->radix->get_table($board), FALSE, FALSE);
-				
+
 				// select that we'll use for the final statement
 				$select = 'SELECT ' . $this->radix->get_table($board) . '.`doc_id`';
 			}
-			
+
 			if ($args['subject'])
 			{
 				$this->db->like('title', rawurldecode($args['subject']));
@@ -1475,44 +1485,44 @@ class Post_model extends CI_Model
 			}
 
 			$this->db->stop_cache();
-			
+
 			// fetch initial total first...
 			$this->db->limit(5000);
-			
+
 			// get directly the count for speed
 			$count_res = $this->db->query($this->db->statement('', NULL, NULL, 'SELECT COUNT(*) AS count'));
 			$total = $count_res->row()->count;
-			
+
 			if (!$total)
 			{
 				return array('posts' => array(), 'total_found' => 0);
 			}
-			
+
 			// now grab those results in order
 			$this->db->limit(25, ($args['page'] * 25) - 25);
-			
+
 			$this->db->order_by('timestamp', ($args['order'] == 'asc'?'ASC':'DESC'));
 
 			// get doc_ids, last parameter is the select
 			$doc_ids_res = $this->db->query($this->db->statement('', NULL, NULL, $select));
-			
+
 			$doc_ids = array();
 			$doc_ids_res_arr = $doc_ids_res->result();
 			foreach($doc_ids_res_arr as $doc_id)
 			{
 				// juuust to be extra sure, make force it to be an int
-				$doc_ids[] = intval($doc_id->doc_id); 
+				$doc_ids[] = intval($doc_id->doc_id);
 			}
 
 			$this->db->flush_cache();
 
 			$query = $this->db->query('
-				SELECT * 
+				SELECT *
 				FROM ' . $this->radix->get_table($board) . '
 				' . $this->sql_media_join($board) . '
 				' . $this->sql_report_join($board) . '
 				WHERE doc_id IN (' . implode(', ', $doc_ids) . ')
-				ORDER BY timestamp ' . ($args['order'] == 'asc'?'ASC':'DESC') . ' 
+				ORDER BY timestamp ' . ($args['order'] == 'asc'?'ASC':'DESC') . '
 				LIMIT ?, ?
 			', array(($args['page'] * 25) - 25, 25));
 
@@ -1631,7 +1641,7 @@ class Post_model extends CI_Model
 				log_message('error', 'post.php/get_latest: invalid or missing type argument');
 				return FALSE;
 		}
-		
+
 		// cache the count or get the cached count
 		$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
 		if($type == 'ghost')
@@ -1641,8 +1651,8 @@ class Post_model extends CI_Model
 		else
 		{
 			$type_cache = 'thread_num';
-		}		
-		
+		}
+
 		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache))
 		{
 			switch ($type)
@@ -1664,21 +1674,21 @@ class Post_model extends CI_Model
 					');
 					break;
 			}
-			
+
 			$threads = $query_threads->row()->threads;
 			$query_threads->free_result();
-			
+
 			// start caching only over 300 threads so we can keep boards with little number of threads dynamic
 			if($threads > 300)
 			{
 				$this->cache->save(
-					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache, 
+					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache,
 					$threads,
 					180
 				);
 			}
 		}
-		
+
 		if ($query->num_rows() == 0)
 		{
 			return array(
@@ -1686,7 +1696,7 @@ class Post_model extends CI_Model
 				'pages' => NULL
 			);
 		}
-		
+
 
 		// set total pages found
 		if ($threads <= $per_page)
@@ -1748,17 +1758,17 @@ class Post_model extends CI_Model
 					}
 				}
 			}
-			
+
 			if ($post->op == 0)
 			{
 				if ($post->preview_orig)
 				{
 					$results[$post->thread_num]['images_omitted']--;
 				}
-				
+
 				if(!isset($results[$post->thread_num]['posts']))
 					$results[$post->thread_num]['posts'] = array();
-				
+
 				array_unshift($results[$post->thread_num]['posts'], $post);
 			}
 			else
@@ -1852,7 +1862,7 @@ class Post_model extends CI_Model
 						(
 							SELECT * FROM ' . $this->radix->get_table($board) . '
 							WHERE thread_num = ?
-							ORDER BY num DESC, subnum DESC 
+							ORDER BY num DESC, subnum DESC
 							LIMIT ?
 						)
 					) AS x
@@ -1994,7 +2004,7 @@ class Post_model extends CI_Model
 				break;
 
 			case 'by_thread':
-				
+
 				$query = $this->db->query('
 					SELECT *
 					FROM
@@ -2019,9 +2029,9 @@ class Post_model extends CI_Model
 				log_message('error', 'post.php/get_gallery: invalid or missing type argument');
 				return FALSE;
 		}
-		
-		
-		
+
+
+
 		// cache the count or get the cached count
 		$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
 		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type))
@@ -2034,7 +2044,7 @@ class Post_model extends CI_Model
 						FROM ' . $this->radix->get_table($board, '_images') . '
 					');
 					break;
-				
+
 				case 'by_thread':
 					$query_threads = $this->db->query('
 						SELECT COUNT(thread_num) AS threads
@@ -2042,15 +2052,15 @@ class Post_model extends CI_Model
 					');
 					break;
 			}
-			
+
 			$threads = $query_threads->row()->threads;
 			$query_threads->free_result();
-			
+
 			// start caching only over 300 threads so we can keep boards with little number of threads dynamic
 			if($threads > 300)
 			{
 				$this->cache->save(
-					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type, 
+					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type,
 					$threads,
 					180
 				);
@@ -2394,7 +2404,7 @@ class Post_model extends CI_Model
 			}
 
 		}
-		
+
 		// process comment name+trip
 		if ($data['name'] === FALSE || $data['name'] == '')
 		{
@@ -2459,12 +2469,12 @@ class Post_model extends CI_Model
 		{
 			$comment = $data['comment'];
 		}
-		
+
 		// load the spam list and check comment, name, subject and email
 		$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents('assets/anti-spam/databases')));
 		foreach($spam as $s)
 		{
-			if(strpos($comment, $s) !== FALSE || strpos($name, $s) !== FALSE 
+			if(strpos($comment, $s) !== FALSE || strpos($name, $s) !== FALSE
 				|| strpos($subject, $s) !== FALSE || strpos($email, $s) !== FALSE)
 			{
 				return array('error' => __('Your comment has contains words that aren\'t allowed.'));
@@ -2597,7 +2607,7 @@ class Post_model extends CI_Model
 		$lvl = $data['postas'];
 
 		$timestamp = time();
-		
+
 		// 2ch-style codes, only if enabled
 		if($board->enable_poster_hash)
 		{
@@ -2622,7 +2632,7 @@ class Post_model extends CI_Model
 		{
 			return array('error' => __('This post is already being processed...'));
 		}
-		
+
 		$this->db->trans_begin();
 
 		// being processing insert...
@@ -2634,19 +2644,19 @@ class Post_model extends CI_Model
 				$date = new DateTime();
 				$date->setTimezone(new DateTimeZone('America/New_York'));
 				$date = $date->createFromFormat(
-					'Y-m-d H:i:s', 
-					$date->format('Y-m-d H:i:s'), 
+					'Y-m-d H:i:s',
+					$date->format('Y-m-d H:i:s'),
 					new DateTimeZone('UTC')
 				);
 				$timestamp = $date->getTimestamp();
 			}
-			
+
 			// ghost reply to existing thread
 			$this->db->query('
 				INSERT INTO ' . $this->radix->get_table($board) . '
 				(
 					num, subnum, thread_num, timestamp, capcode,
-					email, name, trip, title, comment, delpass, poster_ip, 
+					email, name, trip, title, comment, delpass, poster_ip,
 					poster_hash
 				)
 				VALUES
@@ -2680,25 +2690,25 @@ class Post_model extends CI_Model
 			',
 				array(
 					$num, $num, $num, $num, $num, $timestamp, $lvl,
-					($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL, 
+					($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL,
 					($subject)?$subject:NULL, ($comment)?$comment:NULL,
 					$password, inet_ptod($this->input->ip_address()), $poster_hash
 				)
 			);
-			
+
 			// we can grab the ID only here
-			$insert_id = $this->db->insert_id();	
-			
+			$insert_id = $this->db->insert_id();
+
 			// check that it wasn't posted multiple times
 			$check_duplicate = $this->db->query('
-				SELECT doc_id 
+				SELECT doc_id
 				FROM ' . $this->radix->get_table($board) . '
 				WHERE poster_ip = ? AND comment = ? AND  timestamp >= ?
 			',
 			array(
 				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
 			));
-			
+
 			if($check_duplicate->num_rows() > 1)
 			{
 				$this->db->trans_rollback();
@@ -2709,10 +2719,10 @@ class Post_model extends CI_Model
 		{
 			// define default values for post
 			$default_post_arr = array(
-				0, ($num)?0:1, 
+				0, ($num)?0:1,
 				$num, ($num)?0:1,
 				$timestamp, $lvl,
-				($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL, ($subject)?$subject:NULL, 
+				($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL, ($subject)?$subject:NULL,
 				($comment)?$comment:NULL, $password, $spoiler, inet_ptod($this->input->ip_address()),
 				$poster_hash
 			);
@@ -2725,7 +2735,7 @@ class Post_model extends CI_Model
 				{
 					return array('error' => __('Your image was invalid.'));
 				}
-				
+
 				if (is_array($media_file) && isset($media_file['error']))
 				{
 					return $media_file;
@@ -2741,23 +2751,23 @@ class Post_model extends CI_Model
 			{
 				// populate with empty media values
 				$media_file =  array(
-					'preview_orig' => NULL, 
-					'thumb_width' => 0, 
+					'preview_orig' => NULL,
+					'thumb_width' => 0,
 					'thumb_height'=> 0,
-					'media_filename' => NULL, 
-					'width' => 0, 
+					'media_filename' => NULL,
+					'width' => 0,
 					'height'=> 0,
-					'size' => 0, 
-					'media_hash' => NULL, 
-					'media_orig' => NULL, 
+					'size' => 0,
+					'media_hash' => NULL,
+					'media_orig' => NULL,
 					'exif' => NULL,
 				);
-				
+
 				array(NULL, 0, 0, NULL, 0, 0, 0, NULL, NULL, NULL);
 				$default_post_arr = array_merge($default_post_arr, array_values($media_file));
 			}
 			//print_r($default_post_arr); die();
-			
+
 			// insert post into board
 			$this->db->query('
 				INSERT INTO ' . $this->radix->get_table($board) . '
@@ -2777,7 +2787,7 @@ class Post_model extends CI_Model
 							FROM ' . $this->radix->get_table($board) . '
 						) AS x
 					),
-					?, 
+					?,
 					IF(?, (
 						SELECT COALESCE(MAX(num), 0)+1 AS num
 						FROM
@@ -2793,28 +2803,28 @@ class Post_model extends CI_Model
 			',
 				$default_post_arr
 			);
-			
+
 			// we can grab the ID only here
-			$insert_id = $this->db->insert_id();			
-			
+			$insert_id = $this->db->insert_id();
+
 			// check that it wasn't posted multiple times
 			$check_duplicate = $this->db->query('
-				SELECT * 
+				SELECT *
 				FROM ' . $this->radix->get_table($board) . '
-				' . $this->sql_media_join($board) . ' 
+				' . $this->sql_media_join($board) . '
 				WHERE poster_ip = ? AND comment = ? AND  timestamp >= ?
 				ORDER BY doc_id DESC
 			',
 			array(
 				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
 			));
-			
+
 			if($check_duplicate->num_rows() > 1)
 			{
 				$this->db->trans_rollback();
-				
+
 				$duplicate = $check_duplicate->row();
-				
+
 				if($duplicate->total == 1)
 				{
 					$this->delete_media($board, $duplicate);
@@ -2823,18 +2833,18 @@ class Post_model extends CI_Model
 				return array('error' => __('You already posted this.'));
 			}
 		}
-		
+
 		$this->db->trans_commit();
-		
+
 		// success, now check if there's extra work to do
-		
-		// we might be using the local MyISAM search table which doesn't support transactions 
+
+		// we might be using the local MyISAM search table which doesn't support transactions
 		// so we must be really careful with the insertion
 		if($board->myisam_search)
 		{
 			// this is still fully MySQL so let's use a MySQL function for now
 			$word_length = $this->radix->mysql_get_min_word_length();
-			
+
 			$this->db->query("
 				INSERT IGNORE INTO " . $this->radix->get_table($board, '_search') . "
 				SELECT doc_id, num, subnum, thread_num, media_filename, comment
@@ -2909,12 +2919,12 @@ class Post_model extends CI_Model
 			',
 			array($row->doc_id)
 		);
-		
+
 		// get rid of the entry from the myisam _search table
 		if($board->myisam_search)
 		{
 			$this->db->query("
-				DELETE 
+				DELETE
 				FROM " . $this->radix->get_table($board, '_search') . "
 				WHERE doc_id = ?
 			", array($row->doc_id));
@@ -2960,12 +2970,12 @@ class Post_model extends CI_Model
 					DELETE FROM ' . $this->radix->get_table($board) . '
 					WHERE thread_num = ?
 				', array($row->num));
-				
+
 				// get rid of the replies from the myisam _search table
 				if($board->myisam_search)
 				{
 					$this->db->query("
-						DELETE 
+						DELETE
 						FROM " . $this->radix->get_table($board, '_search') . "
 						WHERE thread_num = ?
 					", array($row->num));

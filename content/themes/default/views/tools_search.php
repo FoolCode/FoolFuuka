@@ -72,7 +72,7 @@ if(isset($board)) :
 				<li class="divider"></li>
 
 			</ul>
-			
+
 			<ul class="pull-right">
 				<li><?php echo __('Filters:') ?></li>
 				<li>
@@ -240,7 +240,7 @@ if(isset($board)) :
 					</label>
 				</li>
 			</ul>
-			
+
 			<ul class="pull-left">
 
 				<li class="input-prepend"><label for="subject" class="add-on">Subject</label><?php echo form_input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"]))
@@ -290,7 +290,7 @@ if(isset($board)) :
 					? rawurldecode($search["image"]) : ''))
 					?></li>
 				<li class="divider file_search_remove" style="margin-bottom:8px"></li>
-				<li class="input-prepend file_search_remove"><label for="file_search" class="add-on">Image</label><input style="width:115px" id="file_search" type="file" name="image" />
+				<li class="input-prepend file_search_remove"><label for="file_search" class="add-on">Image</label><input style="width:115px" id="file_search" type="file" name="image_file" />
 					<?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini file_search_remove',
@@ -305,7 +305,7 @@ if(isset($board)) :
 				<li style="margin-top: 5px;"><?php echo __('Your latest searches:') ?>
 					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; padding: 1px 3px; line-height:normal;color:#FFF; position:relative; top:-1px;"><?php echo __('Clear') ?></a></div>
 				</li>
-				<?php 
+				<?php
 					if(isset($latest_searches) || $latest_searches = @json_decode($this->input->cookie('foolfuuka_search_latest_5'), TRUE))
 					{
 						// sanitization
@@ -334,7 +334,7 @@ if(isset($board)) :
 							{
 								unset($latest_search['order']);
 							}
-							
+
 							$extra_text = '';
 							$extra_text_br = '';
 							foreach($latest_search as $k => $i)
@@ -343,11 +343,11 @@ if(isset($board)) :
 								$extra_text .= '<span class="options">[' . fuuka_htmlescape($k) . '] ' . fuuka_htmlescape(urldecode($i)) . ' </span>';
 								$extra_text_br .= '<br/><span class="options">[' . fuuka_htmlescape($k) . '] ' . fuuka_htmlescape(urldecode($i)) . ' </span>';
 							}
-							
+
 							echo '<li title="' . form_prep($text . $extra_text_br) . '" class="latest_search"><a href="' . site_url($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
 						}
 					}
-					
+
 				?>
 				</ul>
 		</div>

@@ -286,15 +286,18 @@ if(isset($board)) :
 					echo form_input($date_array);
 
 					?></li>
+				<li class="input-prepend"><label for="image" class="add-on">Image hash</label><?php echo form_input(array('name' => 'image', 'id' => 'image', 'value' => (isset($search["image"]))
+					? rawurldecode($search["image"]) : ''))
+					?></li>
 				<li class="divider file_search_remove" style="margin-bottom:8px"></li>
-				<li class="input-prepend file_search_remove"><label for="file_search" class="add-on">Image</label><input id="file_search" type="file" name="image" />
-					</li><li class="file_search_remove"><?php
+				<li class="input-prepend file_search_remove"><label for="file_search" class="add-on">Image</label><input style="width:115px" id="file_search" type="file" name="image" />
+					<?php
 					echo form_submit(array(
 						'class' => 'btn btn-success btn-mini file_search_remove',
 						'value' => __('Search image'),
 			 			'name' => 'submit_image',
 						'title' => __('On most browsers you can also drop the file on the search bar.'),
-						'style' => 'margin-top:0; margin-bottom:2px',
+						'style' => 'margin-top:2px; margin-bottom:0px; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px;',
 					));
 					?>
 				</li>

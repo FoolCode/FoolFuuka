@@ -1133,6 +1133,28 @@ class Post_model extends CI_Model
 		{
 			$args['page'] = 1;
 		}
+		
+		if ($args['image'] && !is_natural($args['image']))
+		{
+			if(substr($args['image'], 0, -2) != '==')
+			{
+				$args['image'] .= '==';
+			}
+			
+			$image_query = $this->db->query('
+				SELECT media_id 
+				FROM ' . $this->radix->get_table($board, '_images') . '
+				WHERE media_hash = ?
+			', array($args['image']));
+			
+			// if there's no images matching, the result is certainly empty
+			if($image_query->num_rows() == 0)
+			{
+				return array('posts' => array(), 'total_found' => 0);
+			}
+			
+			$args['image'] = $image_query->row()->media_id;
+		}
 
 		// if global or board => use sphinx, else mysql for board only
 		// global search requires sphinx
@@ -1206,6 +1228,10 @@ class Post_model extends CI_Model
 			{
 				$this->db->sphinx_match('media', $args['filename'], 'full', TRUE);
 			}
+			if ($args['image'])
+			{
+				$this->db->where('mid', $args['image']);
+			}
 			if ($args['capcode'] == 'admin')
 			{
 				$this->db->where('cap', 3);
@@ -1271,9 +1297,6 @@ class Post_model extends CI_Model
 			$this->db->limit(25, ($args['page'] * 25) - 25)
 				->sphinx_option('max_matches', 5000)
 				->sphinx_option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
-
-			//if($this->tank_auth->is_allowed())
-			//	echo $this->db->statement();
 
 			// send sphinxql to searchd
 			$search = $this->sphinxql->query($this->db->statement());
@@ -1375,6 +1398,11 @@ class Post_model extends CI_Model
 			{
 				$this->db->like('email', rawurldecode($args['email']));
 				$this->db->use_index('email_index');
+			}
+			if ($args['image'])
+			{
+				$this->db->where('media_id', $args['image']);
+				$this->db->use_index('media_id_index');
 			}
 			if ($args['capcode'] == 'admin')
 			{
@@ -2270,102 +2298,6 @@ class Post_model extends CI_Model
 		}
 
 		return array('media_link' => $media_link);
-	}
-
-
-	/**
-	 * @param object $board
-	 * @param string $hash
-	 * @param int $page
-	 * @param array $options
-	 * @return array
-	 */
-	function get_same_media($board, $hash, $page, $options = array())
-	{
-		if($this->tank_auth->is_allowed())
-			$this->output->enable_profiler(TRUE);
-	
-		// default variables
-		$per_page = 25;
-		$process = TRUE;
-		$clean = TRUE;
-
-		// override defaults
-		foreach ($options as $key => $option)
-		{
-			$$key = $option;
-		}
-
-		// check for any same media
-		$media = $this->db->query('
-			SELECT media_id, total
-			FROM ' . $this->radix->get_table($board, '_images') . '
-			WHERE media_hash = ? LIMIT 0, 1
-		',
-			array($this->get_media_hash($hash))
-		);
-
-		// if no matches found, stop here...
-		if ($media->num_rows() == 0)
-		{
-			return array('posts' => array(), 'total_found' => 0);
-		}
-
-		$media = $media->row();
-		
-		// if no matches found, stop here...
-		if ($media->total == 0)
-		{
-			return array('posts' => array(), 'total_found' => 0);
-		}
-
-
-		// query for same media
-		$query = $this->db->query('
-			SELECT doc_id FROM ' . $this->radix->get_table($board) . '
-			WHERE
-				' . $this->radix->get_table($board) . '.`media_id` = ?
-			ORDER BY timestamp DESC LIMIT ?, ?
-		',
-			array(
-				intval($media->media_id),
-				intval(($page * $per_page) - $per_page),
-				intval($per_page)
-			)
-		);
-		
-		if($query->num_rows() == 0)
-		{
-			return array('posts' => array(), 'total_found' => 0);
-		}
-		
-		$multi = array();
-		foreach($query->result() as $item)
-		{
-			$multi[] = $item->doc_id;
-		}
-		$multi_posts = array(array('board_id' => $board->id, 'doc_id' => $multi));
-
-		$results_pre = $this->get_multi_posts($multi_posts, 'ORDER BY num DESC');
-
-		// populate posts_arr array
-		$this->populate_posts_arr($results_pre);
-
-		// populate results array
-
-		$results = array();
-
-		foreach ($results_pre as $post)
-		{
-			if ($process === TRUE)
-			{
-				$this->process_post($board, $post, $clean);
-			}
-
-			$results[0]['posts'][] = $post;
-		}
-
-		return array('posts' => $results, 'total_found' => $media->total);
 	}
 
 

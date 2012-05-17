@@ -937,58 +937,11 @@ class Chan extends Public_Controller
 
 	/**
 	 * Display all of the posts that contain the MEDIA HASH provided.
+	 * This redirects to the normal search since 17/05/2012
 	 */
-	public function image()
+	public function image($hash)
 	{
-		// Obtain the HASH from URI.
-		$uri = $this->uri->segment_array();
-		array_shift($uri);
-		array_shift($uri);
-
-		$imploded_uri = urldecode(implode('/', $uri));
-		if (mb_strlen($imploded_uri) < 22)
-		{
-			return $this->show_404();
-		}
-
-		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
-
-		// Obtain the PAGE from URI.
-		$page = 1;
-		if (mb_strlen($imploded_uri) > 23)
-		{
-			$page = substr($imploded_uri, 23);
-		}
-
-		if ($hash == '' || !is_natural($page))
-		{
-			return $this->show_404();
-		}
-
-		// Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
-		$page = intval($page);
-		$result = $this->post->get_same_media(get_selected_radix(), $hash . '==', $page);
-
-		// Set template variables required to build the HTML.
-		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' .
-			__('Image Hash') . ': ' . base64_encode(urlsafe_b64decode($hash)));
-		$this->_set_parameters(
-			array(
-				'section_title' => __('Search for image posts with the image hash: ') .
-					base64_encode(urlsafe_b64decode($hash)),
-				'modifiers' => array('post_show_view_button' => TRUE),
-				'posts' => $result['posts'],
-				'pagination' => array(
-					'base_url' => site_url(array(get_selected_radix()->shortname, 'image', $hash)),
-					'current_page' => $page,
-					'total' => ceil($result['total_found'] / 25)
-				)
-			), array(
-				'tools_modal' => TRUE,
-				'tools_search' => TRUE
-			)
-		);
-		$this->template->build('board');
+		redirect(site_url(array(get_selected_radix()->shortname, 'search', 'image', $hash)), 'location', 301);
 	}
 
 
@@ -1108,7 +1061,7 @@ class Chan extends Public_Controller
 		// Check all allowed search modifiers and apply them only.
 		$modifiers = array(
 			'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
-			'deleted', 'ghost', 'type', 'filter', 'start', 'end',
+			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
 
 		// POST -> GET Redirection to provide URL presentable for sharing links.
@@ -1230,6 +1183,10 @@ class Chan extends Public_Controller
 			array_push($title,
 				sprintf(__('with the filename "%s"'),
 					trim(fuuka_htmlescape($search['filename']))));
+		if ($search['image'])
+			array_push($title,
+				sprintf(__('with the image hash "%s"'),
+					trim(fuuka_htmlescape($search['image']))));
 		if ($search['deleted'] == 'deleted')
 			array_push($title, __('that have been deleted'));
 		if ($search['deleted'] == 'not-deleted')

@@ -788,7 +788,7 @@ jQuery(document).ready(function() {
 	}
 	
 	// firefox sucks at styling input, so we need to add size="", that guess what? It's not w3 compliant!
-	jQuery('#file_search').attr({size: '17'});
+	jQuery('#file_search').attr({size: '4'});
 	jQuery('#file_image').attr({size: '16'});
 	
 	// destroy the file search box if the browser doesn't support file API

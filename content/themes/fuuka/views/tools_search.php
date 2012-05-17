@@ -72,6 +72,12 @@ if (!isset($board) && get_setting('fs_sphinx_global'))
 					</td>
 				</tr>
 				<tr>
+					<td class="postblock">Image Hash</td>
+					<td>
+						<?php echo form_input(array('name' => 'image', 'size' => '32', 'id' => 'image', 'value' => (isset($search["image"])) ? rawurldecode($search["image"]) : '')); ?>
+					</td>
+				</tr>
+				<tr>
 					<td class="postblock">From Date <a class="tooltip" href="#">[?]<span>Enter what date to start searching from.<br/>Format is YYYY-MM-DD</span></a></td>
 					<td>
 						<?php

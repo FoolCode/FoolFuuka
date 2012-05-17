@@ -787,7 +787,7 @@ class Post_model extends CI_Model
 
 		$comment = auto_linkify($comment, 'url', TRUE);
 		$comment = preg_replace($find, $html, $comment);
-		$comment = parse_bbcode($comment, ($board->archive && $post->subnum) ? TRUE : FALSE);
+		$comment = parse_bbcode($comment, ($board->archive && !$post->subnum) ? TRUE : FALSE);
 
 		// additional formatting
 		if ($board->archive && !$post->subnum)

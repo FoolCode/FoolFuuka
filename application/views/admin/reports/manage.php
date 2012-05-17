@@ -14,6 +14,9 @@ echo link_tag('content/themes/default/style.css?v=' . FOOL_VERSION);
 <div class="theme_default clearfix" style="padding-bottom: 15px">
 	<article class="thread clearfix">
 		<?php
+		
+		$modifiers['post_show_board_name'] = TRUE;
+		
 		foreach ($posts as $key => $p)
 		{
 			if ($p->thread_num == 0)

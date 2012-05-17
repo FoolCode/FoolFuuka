@@ -33,6 +33,9 @@ class Posts extends Admin_Controller
 		}
 		
 		$this->viewdata["function_title"] = __('Reports');
+		
+		// for safety, load all boards' preferences and not just the main table's
+		$this->radix->load_preferences();
 
 		// ['posts', 'total_found']
 		$data = $this->post->get_reports($page);

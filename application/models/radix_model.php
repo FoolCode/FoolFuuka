@@ -466,7 +466,7 @@ class Radix_model extends CI_Model
 				}
 			}
 			
-			$this->radix->preload();
+			$this->radix->preload(TRUE);
 		}
 		else
 		{
@@ -488,7 +488,7 @@ class Radix_model extends CI_Model
 				}
 			}
 			
-			$this->radix->preload();
+			$this->radix->preload(TRUE);
 			$board = $this->get_by_shortname($data['shortname']);
 
 			// remove the triggers just to be safe
@@ -590,7 +590,7 @@ class Radix_model extends CI_Model
 
 		$this->preloaded_radixes = $result_object;
 		
-		if(TRUE || $preferences == TRUE)
+		if($preferences == TRUE)
 			$this->load_preferences();
 	}
 

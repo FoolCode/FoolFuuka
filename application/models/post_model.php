@@ -2312,6 +2312,13 @@ class Post_model extends CI_Model
 		}
 
 		$media = $media->row();
+		
+		// if no matches found, stop here...
+		if ($media->total == 0)
+		{
+			return array('posts' => array(), 'total_found' => 0);
+		}
+
 
 		// query for same media
 		$query = $this->db->query('
@@ -2327,6 +2334,10 @@ class Post_model extends CI_Model
 			)
 		);
 		
+		if($query->num_rows() == 0)
+		{
+			return array('posts' => array(), 'total_found' => 0);
+		}
 		
 		$multi = array();
 		foreach($query->result() as $item)

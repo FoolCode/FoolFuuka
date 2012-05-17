@@ -129,6 +129,11 @@ if (!defined('BASEPATH'))
 						</ul>
 						<?php if (get_selected_radix()) : ?>
 						<ul class="nav">
+							<?php if (get_selected_radix()->archive) : ?>
+							<li>
+								<a href="http://boards.4chan.org/<?php echo get_selected_radix()->shortname ?>" style="padding-right:4px;">4chan <i class="icon-share icon-white"></i></a>
+							</li>
+							<?php endif; ?>
 							<li style="padding-right:0px;">
 								<a href="<?php echo site_url(array($board->shortname)) ?>" style="padding-right:4px;"><?php echo __('Index') ?></a>
 							</li>

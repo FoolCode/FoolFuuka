@@ -1947,7 +1947,7 @@ class Post_model extends CI_Model
 					SELECT * FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
 					' . $this->sql_report_join($board) . '
-					WHERE media IS NOT NULL
+					WHERE ' . $this->radix->get_table($board) . '.`media_id` <> 0
 					ORDER BY timestamp DESC LIMIT ?, ?
 				',
 					array(
@@ -2506,6 +2506,16 @@ class Post_model extends CI_Model
 		}
 		else
 		{
+			// detect spam in content
+			$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents('assets/anti-spam/databases')));
+			foreach($spam as $s)
+			{
+				if(strpos($data['comment'], $s) !== FALSE)
+				{
+					return array('error' => __('Your comment has contains words that aren\'t allowed.'));
+				}
+			}
+			
 			$comment = $data['comment'];
 		}
 

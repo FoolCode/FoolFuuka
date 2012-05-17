@@ -311,7 +311,7 @@ var bindFunctions = function()
                 backlink.css('display', 'block');
                 backlink.html(quote.formatted);
             }
-            else if(jQuery('#' + that.data('post')).length > 0)
+            else if(jQuery('#' + that.data('post') + '.post').length > 0)
             {
                 // normal posts
                 var toClone = jQuery('#' + that.data('post'));

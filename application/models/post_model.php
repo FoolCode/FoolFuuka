@@ -403,9 +403,10 @@ class Post_model extends CI_Model
 		$trip = mb_convert_encoding($plain, 'SJIS', 'UTF-8');
 		$trip = str_replace(array('&', '"', "'", '<', '>'), array('&amp;', '&quot;', '&#39;', '&lt;', '&gt;'), $trip);
 
-		$salt = substr($pass . 'H.', 1, 2);
+		$salt = substr($trip . 'H.', 1, 2);
 		$salt = preg_replace('/[^.-z]/', '.', $salt);
-
+		$salt = strtr($salt, ':;<=>?@[\]^_`', 'ABCDEFGabcdef');
+		
 		return substr(crypt($trip, $salt), -10);
 	}
 

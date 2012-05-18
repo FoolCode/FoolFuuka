@@ -59,6 +59,7 @@ define('FOOL_FILES_DIR_MODE', 0755);
 
 // preferences from get_setting('value', FOOL_PREF_ETC);
 define('FOOL_PREF_GEN_WEBSITE_TITLE', 'FoOlFuuka');
+define('FOOL_PREF_GEN_INDEX_TITLE', 'FoOlFuuka');
 
 define('FOOL_PREF_SYS_SUBDOMAIN', FALSE);
 

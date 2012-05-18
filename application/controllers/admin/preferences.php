@@ -49,10 +49,21 @@ class Preferences extends Admin_Controller
 			'type' => 'input',
 			'label' => 'Title',
 			'class' => 'span3',
-			'placeholder' => 'FoOlFuuka',
+			'placeholder' => FOOL_PREF_GEN_WEBSITE_TITLE,
 			'preferences' => TRUE,
 			'validate' => 'trim|max_length[32]',
 			'help' => __('Sets the title of your site.')
+		);
+		
+		// build the array for the form
+		$form['fs_gen_index_title'] = array(
+			'type' => 'input',
+			'label' => 'Index title',
+			'class' => 'span3',
+			'placeholder' => FOOL_PREF_GEN_INDEX_TITLE,
+			'preferences' => TRUE,
+			'validate' => 'trim|max_length[32]',
+			'help' => __('Sets the title displayed in the index page.')
 		);
 
 		$form['separator-2'] = array(

@@ -406,7 +406,7 @@ class Post_model extends CI_Model
 		$salt = substr($trip . 'H.', 1, 2);
 		$salt = preg_replace('/[^.-z]/', '.', $salt);
 		$salt = strtr($salt, ':;<=>?@[\]^_`', 'ABCDEFGabcdef');
-		
+
 		return substr(crypt($trip, $salt), -10);
 	}
 
@@ -889,15 +889,14 @@ class Post_model extends CI_Model
 			}
 		}
 
-		// what is $key?
-		//if (true || $this->realtime === TRUE)
-		//{
+		if ($this->realtime === TRUE)
+		{
 			return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', $key))
 				. $html['urltag'] . $num_id . '"' . $html['option'] . '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
-		//}
-
-		//return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'post', $num_id))
-		//	. '">&gt;&gt;' . $num . '</a>' . $html['suffix'];
+		}
+		
+		return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'post', $num_id))
+			. '">&gt;&gt;' . $num . '</a>' . $html['suffix'];
 
 		// return un-altered
 		return $matches[0];
@@ -1135,8 +1134,8 @@ class Post_model extends CI_Model
 			$args['page'] = 1;
 		}
 
-		// if board is set and the image is not media_id, get media_id
-		if ($board !== FALSE && $args['image'] && !is_natural($args['image']))
+		// if image is set, get either media_hash or media_id
+		if ($args['image'] && !is_natural($args['image']))
 		{
 			// this is urlsafe, let's convert it else decode it
 			if (mb_strlen($args['image']) < 23)
@@ -1153,19 +1152,23 @@ class Post_model extends CI_Model
 				$args['image'] .= '==';
 			}
 
-			$image_query = $this->db->query('
-				SELECT media_id
-				FROM ' . $this->radix->get_table($board, '_images') . '
-				WHERE media_hash = ?
-			', array($args['image']));
-
-			// if there's no images matching, the result is certainly empty
-			if($image_query->num_rows() == 0)
+			// if board set, grab media_id
+			if ($board !== FALSE)
 			{
-				return array('posts' => array(), 'total_found' => 0);
-			}
+				$image_query = $this->db->query('
+					SELECT media_id
+					FROM ' . $this->radix->get_table($board, '_images') . '
+					WHERE media_hash = ?
+				', array($args['image']));
 
-			$args['image'] = $image_query->row()->media_id;
+				// if there's no images matching, the result is certainly empty
+				if($image_query->num_rows() == 0)
+				{
+					return array('posts' => array(), 'total_found' => 0);
+				}
+
+				$args['image'] = $image_query->row()->media_id;
+			}
 		}
 
 		// if global or board => use sphinx, else mysql for board only
@@ -1238,13 +1241,13 @@ class Post_model extends CI_Model
 			}
 			if ($args['filename'])
 			{
-				$this->db->sphinx_match('media', $args['filename'], 'full', TRUE);
+				$this->db->sphinx_match('media_filename', $args['filename'], 'full', TRUE);
 			}
 			if ($args['image'])
 			{
 				if($board !== FALSE)
 				{
-					$this->db->where('mid', $args['image']);
+					$this->db->where('mid', (int) $args['image']);
 				}
 				else
 				{

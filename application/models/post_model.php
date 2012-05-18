@@ -2415,7 +2415,7 @@ class Post_model extends CI_Model
 		else
 		{
 			// store name in cookie to repopulate forms
-			$this->input->set_cookie('foolfuuka_post_name', $data['name'], 60 * 60 * 24 * 30);
+			$this->input->set_cookie('foolfuuka_reply_name', $data['name'], 60 * 60 * 24 * 30);
 
 			$name_trip = $this->process_name($data['name']);
 			$name = $name_trip[0];
@@ -2432,7 +2432,7 @@ class Post_model extends CI_Model
 			// store email in cookie to repopulate forms
 			if ($data['email'] != 'sage')
 			{
-				$this->input->set_cookie('foolfuuka_post_email', $data['email'], 60 * 60 * 24 * 30);
+				$this->input->set_cookie('foolfuuka_reply_email', $data['email'], 60 * 60 * 24 * 30);
 			}
 
 			$email = $data['email'];
@@ -2456,7 +2456,7 @@ class Post_model extends CI_Model
 		else
 		{
 			// store password in cookie to repopulate forms
-			$this->input->set_cookie('foolfuuka_post_password', $data['password'], 60 * 60 * 24 * 30);
+			$this->input->set_cookie('foolfuuka_reply_password', $data['password'], 60 * 60 * 24 * 30);
 
 			$password = $data['password'];
 		}

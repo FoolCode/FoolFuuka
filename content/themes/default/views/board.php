@@ -23,7 +23,7 @@ if (!defined('BASEPATH'))
 			</div>
 			<div class="post_file_controls">
 				<?php if (!get_selected_radix()->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
-				<a href="<?php echo site_url(get_selected_radix()->shortname . '/image/' . $op->safe_media_hash) ?>"
+				<a href="<?php echo site_url(get_selected_radix()->shortname . '/search/image/' . $op->safe_media_hash) ?>"
 				   class="btnr parent">View Same</a><a
 					href="http://google.com/searchbyimage?image_url=<?php echo $op->thumb_link ?>" target="_blank"
 					class="btnr parent">Google</a><a

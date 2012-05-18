@@ -257,9 +257,8 @@ if (!defined('BASEPATH'))
 			<div id="push"></div>
 		</div>
 		<footer id="footer">
-			<div class="btn-group pull-left">
-				<a class="btn btn-inverse btn-mini" href="http://github.com/FoOlRulez/FoOlFuuka"><?php echo FOOL_NAME ?> Imageboard <?php echo FOOL_VERSION ?></a><a class="btn btn-inverse btn-mini" href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
-			</div>
+			<a href="http://github.com/FoOlRulez/FoOlFuuka"><?php echo FOOL_NAME ?> Imageboard <?php echo FOOL_VERSION ?></a>
+			- <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
 			
 			<div style="float:right">
 				<div class="btn-group dropup pull-right">
@@ -281,9 +280,10 @@ if (!defined('BASEPATH'))
 			$bottom_nav = $this->plugins->run_hook('fu_themes_default_bottom_nav_buttons', array($bottom_nav), 'simple');
 
 			if(!empty($bottom_nav)) : ?>
-				<div class="btn-group dropup pull-right">
-					<?php foreach($bottom_nav as $t) : ?>
-						<a class="btn btn-inverse btn-mini" href="<?php echo $t['href'] ?>"><?php echo $t['text'] ?></a>
+				<div class="pull-right" style="margin-right:15px;">
+					<?php foreach($bottom_nav as $k => $t) : ?>
+						<a href="<?php echo $t['href'] ?>"><?php echo $t['text'] ?></a>
+						<?php if($k < count($bottom_nav) - 1) echo ' - ' ?>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>

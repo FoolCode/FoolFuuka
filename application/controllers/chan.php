@@ -1199,23 +1199,24 @@ class Chan extends Public_Controller
 
 		if ($search['text'])
 			array_push($title,
-				sprintf(__('that contain "%s"'), trim(fuuka_htmlescape($search['text']))));
+				sprintf(__('that contain "%s"'), 
+					trim(fuuka_htmlescape(urldecode($search['text'])))));
 		if ($search['subject'])
 			array_push($title,
 				sprintf(__('with the subject "%s"'),
-					trim(fuuka_htmlescape($search['subject']))));
+					trim(fuuka_htmlescape(urldecode($search['subject'])))));
 		if ($search['username'])
 			array_push($title,
 				sprintf(__('with the username "%s"'),
-					trim(fuuka_htmlescape($search['username']))));
+					trim(fuuka_htmlescape(urldecode($search['username'])))));
 		if ($search['tripcode'])
 			array_push($title,
 				sprintf(__('with the tripcode "%s"'),
-					trim(fuuka_htmlescape($search['tripcode']))));
+					trim(fuuka_htmlescape(urldecode($search['tripcode'])))));
 		if ($search['filename'])
 			array_push($title,
 				sprintf(__('with the filename "%s"'),
-					trim(fuuka_htmlescape($search['filename']))));
+					trim(fuuka_htmlescape(urldecode($search['filename'])))));
 		if ($search['image'])
 		{
 			// non-urlsafe else urlsafe

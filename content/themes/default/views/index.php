@@ -18,7 +18,7 @@ if (!defined('BASEPATH'))
 		{
 			$index_nav['archives']['elements'][] = array(
 				'href' => $item->href, 
-				'text' => '/' . $item->shortname . '/ - <span class="help">' . $item->name . '</span>'
+				'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
 			);
 		}
 		
@@ -31,7 +31,7 @@ if (!defined('BASEPATH'))
 		{
 			$index_nav['boards']['elements'][] = array(
 				'href' => $item->href, 
-				'text' => '/' . $item->shortname . '/ - <span class="help">' . $item->name . '</span>'
+				'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
 			);
 		}
 		

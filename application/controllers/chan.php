@@ -11,7 +11,7 @@ class Chan extends Public_Controller
 	function __construct()
 	{
 		parent::__construct();
-		
+
 		// set these headers here instead of in HTML so w3validator won't ever bother us
 		header('X-UA-Compatible: IE=edge,chrome=1');
 		header('imagetoolbar: false');
@@ -124,7 +124,7 @@ class Chan extends Public_Controller
 	{
 		if (!$this->input->is_ajax_request())
 		{
-			return $this->show_404(); 
+			return $this->show_404();
 		}
 
 		if (!is_natural($num) || $num == 0)
@@ -188,12 +188,12 @@ class Chan extends Public_Controller
 	function _remap($method, $params = array())
 	{
 		// convert the subdomain of the index page to the default
-		if (defined('FOOL_SUBDOMAINS_ENABLED') 
+		if (defined('FOOL_SUBDOMAINS_ENABLED')
 			&& empty($params) && strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_DEFAULT) !== 0)
 		{
 			redirect('@default');
 		}
-		
+
 		// we really can't make a board called "search" at the moment
 		if ($method == 'search')
 		{
@@ -228,7 +228,7 @@ class Chan extends Public_Controller
 
 				// not a plugin and not a board, let's send it higher
 				$remap = parent::_remap($method, $params);
-				
+
 				// we want to use the 404 in this class
 				if($remap === FALSE)
 				{
@@ -245,7 +245,7 @@ class Chan extends Public_Controller
 					$this->template->set('enabled_tools_modal', FALSE);
 					$this->show_404();
 				}
-				
+
 				// always return after the parent::_remap() is called
 				return FALSE;
 			}
@@ -256,8 +256,8 @@ class Chan extends Public_Controller
 				if($board->archive && strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_ARCHIVE) !== 0)
 				{
 					redirect('@archive/' . $board->shortname . '/' . implode('/', $params?:array()), 301);
-				}	
-					
+				}
+
 				if(!$board->archive && strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_BOARD) !== 0)
 				{
 					redirect('@board/' . $board->shortname . '/' . implode('/', $params?:array()), 301);
@@ -295,13 +295,13 @@ class Chan extends Public_Controller
 			$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
 			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
 		}
-		
+
 		// trying to access an internal method, should never reach here, but safety is never enough
 		if(substr($method, 0, 1) == '_')
 		{
 			return $this->show_404();
 		}
-		
+
 		// FUNCTIONS: If available, load custom functions to override default functions.
 		if (method_exists($this->TC, $method))
 		{
@@ -352,7 +352,7 @@ class Chan extends Public_Controller
 		if (get_selected_radix())
 		{
 			$default['backend_vars']['board_shortname'] = get_selected_radix()->shortname;
-			
+
 			if($this->tank_auth->is_allowed())
 				$default['backend_vars']['mod_url'] = get_selected_radix()->href . 'mod_post_actions/';
 		}
@@ -371,7 +371,7 @@ class Chan extends Public_Controller
 				}
 			}
 		}
-		
+
 		foreach ($default['partials'] as $k)
 		{
 			if (!isset($partials[$k]))
@@ -386,7 +386,7 @@ class Chan extends Public_Controller
 				}
 			}
 		}
-		
+
 		if(isset($variables['@modifiers']))
 		{
 			$this->template->set('modifiers', $variables['@modifiers']);
@@ -452,9 +452,9 @@ class Chan extends Public_Controller
 		);
 		$this->template->build('index');
 	}
-	
+
 	/**
-	 * Display the error page with some information and suggestion to use the search 
+	 * Display the error page with some information and suggestion to use the search
 	 */
 	function show_404()
 	{
@@ -471,22 +471,22 @@ class Chan extends Public_Controller
 		$this->output->set_status_header(404);
 		$this->template->build('error');
 	}
-	
+
 	public function rules()
 	{
 		if(!get_selected_radix()->rules)
 		{
 			return $this->show_404();
 		}
-		
+
 		$this->load->library('Markdown_Parser');
-		
+
 		$this->_set_parameters(
 			array(
 				'content' => get_selected_radix()->rules
 			)
 		);
-		
+
 		$this->template->build('markdown');
 	}
 
@@ -578,7 +578,7 @@ class Chan extends Public_Controller
 
 		//  Fetch the latest ghost posts.
 		$page = intval($page);
-		$posts = $this->post->get_latest(get_selected_radix(), $page, 
+		$posts = $this->post->get_latest(get_selected_radix(), $page,
 			array('per_page' => get_selected_radix()->threads_per_page, 'type' => 'ghost'));
 
 		// Set template variables required to build the HTML.
@@ -675,7 +675,7 @@ class Chan extends Public_Controller
 		$thread_data = $this->post->get_thread(get_selected_radix(), $num);
 		$thread = $thread_data['result'];
 		$thread_check = $thread_data['thread_check'];
-		
+
 		// don't throw 404, try looking for such a post
 		if (!is_array($thread))
 		{
@@ -706,45 +706,45 @@ class Chan extends Public_Controller
 				}
 			}
 		}
-		
+
 		// check if we can determine if posting is disabled
 		$tools_reply_box = TRUE;
 		$disable_image_upload = FALSE;
-		
+
 		// no image posting in archive, hide the file input
 		if(get_selected_radix()->archive)
 		{
 			$disable_image_upload = TRUE;
 		}
-		
+
 		// in the archive you can only ghostpost, so it's an easy check
 		if(get_selected_radix()->archive && get_selected_radix()->disable_ghost)
 		{
 			$tools_reply_box = FALSE;
 		}
-		else 
+		else
 		{
 			// we're only interested in knowing if we should display the reply box
 			if(isset($thread_check['ghost_disabled']) && $thread_check['ghost_disabled'] == TRUE)
 				$tools_reply_box = FALSE;
-			
+
 			if(isset($thread_check['disable_image_upload']) && $thread_check['disable_image_upload'] == TRUE)
 				$disable_image_upload = TRUE;
 		}
-		
+
 		// Set template variables required to build the HTML.
 		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Thread') . ' #' . $num);
-		
+
 		$second_array = array(
 			'tools_modal' => TRUE,
 			'tools_search' => TRUE
 		);
-		
+
 		if($tools_reply_box)
 		{
-			$second_array['tools_reply_box'] = TRUE; 
+			$second_array['tools_reply_box'] = TRUE;
 		}
-		
+
 		$this->_set_parameters(
 			array(
 				'thread_id' => $num,
@@ -780,10 +780,10 @@ class Chan extends Public_Controller
 		$num = intval($num);
 		$thread_data = $this->post->get_thread(get_selected_radix(), $num,
 			array('type' => 'last_x', 'type_extra' => array('last_limit' => 50)));
-		
+
 		$thread = $thread_data['result'];
 		$thread_check = $thread_data['thread_check'];
-		
+
 		if (!is_array($thread))
 		{
 			return $this->show_404();
@@ -813,40 +813,40 @@ class Chan extends Public_Controller
 				}
 			}
 		}
-		
+
 		// check if we can determine if posting is disabled
 		$tools_reply_box = TRUE;
 		$disable_image_upload = FALSE;
-		
+
 		// no image posting in archive, hide the file input
 		if(get_selected_radix()->archive)
 		{
 			$disable_image_upload = TRUE;
 		}
-		
+
 		// in the archive you can only ghostpost, so it's an easy check
 		if(get_selected_radix()->archive && get_selected_radix()->disable_ghost)
 		{
 			$tools_reply_box = FALSE;
 		}
-		else 
+		else
 		{
 			// we're only interested in knowing if we should display the reply box
 			if(isset($thread_check['ghost_disabled']) && $thread_check['ghost_disabled'] == TRUE)
 				$tools_reply_box = FALSE;
-			
+
 			if(isset($thread_check['disable_image_upload']) && $thread_check['disable_image_upload'] == TRUE)
 				$disable_image_upload = TRUE;
 		}
-		
+
 		$second_array = array(
 			'tools_modal' => TRUE,
 			'tools_search' => TRUE
 		);
-		
+
 		if($tools_reply_box)
 		{
-			$second_array['tools_reply_box'] = TRUE; 
+			$second_array['tools_reply_box'] = TRUE;
 		}
 
 		// Set template variables required to build the HTML.
@@ -860,7 +860,7 @@ class Chan extends Public_Controller
 				'posts' => $thread,
 				'disable_image_upload' => $disable_image_upload
 			),
-			$second_array, 
+			$second_array,
 			array(
 				'thread_id' => $num,
 				'latest_doc_id' => $latest_doc_id
@@ -937,11 +937,35 @@ class Chan extends Public_Controller
 
 	/**
 	 * Display all of the posts that contain the MEDIA HASH provided.
-	 * This redirects to the normal search since 17/05/2012
+	 * As of 2012-05-17, fetching of posts with same media hash is done via search system.
+	 * Due to backwards compatibility, this function will still be used for non-urlsafe and urlsafe hashes.
 	 */
-	public function image($hash)
+	public function image()
 	{
-		redirect(site_url(array(get_selected_radix()->shortname, 'search', 'image', $hash)), 'location', 301);
+		// support non-urlsafe hash
+		$uri = $this->uri->segment_array();
+		array_shift($uri);
+		array_shift($uri);
+
+		$imploded_uri = urldecode(implode('/', $uri));
+		if (mb_strlen($imploded_uri) < 22)
+		{
+			return $this->show_404();
+		}
+
+		// obtain actual media hash (non-urlsafe)
+		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
+
+		// Obtain the PAGE from URI.
+		$page = 1;
+		if (mb_strlen($imploded_uri) > 28)
+		{
+			$page = substr($imploded_uri, 28);
+		}
+
+		// Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
+		$page = intval($page);
+		redirect(site_url(array(get_selected_radix()->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page)), 'location', 301);
 	}
 
 
@@ -1061,7 +1085,7 @@ class Chan extends Public_Controller
 		// Check all allowed search modifiers and apply them only.
 		$modifiers = array(
 			'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
-			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
+			'image', 'image_file', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
 
 		// POST -> GET Redirection to provide URL presentable for sharing links.
@@ -1080,14 +1104,23 @@ class Chan extends Public_Controller
 			{
 				if ($this->input->get_post($modifier))
 				{
-					array_push($redirect_url, $modifier);
+					// catch special case
+					if ($modifier == 'image_file')
+					{
+						array_push($redirect_url, 'image');
+					}
+					else
+					{
+						array_push($redirect_url, $modifier);
+					}
+
 					array_push($redirect_url, rawurlencode($this->input->get_post($modifier)));
 				}
 			}
 
 			redirect(site_url($redirect_url), 'location', 303);
 		}
-		
+
 		// put the search options in an associative array
 		$search = $this->uri->ruri_to_assoc($radix?2:1, $modifiers);
 
@@ -1098,7 +1131,7 @@ class Chan extends Public_Controller
 		{
 			$cookie_array = array();
 		}
-		
+
 		// keep this sanitization in sync with the one in the search view!
 		// it's for safety, but avoids display errors if the user does silly things
 
@@ -1112,7 +1145,7 @@ class Chan extends Public_Controller
 				break;
 			}
 		}
-		
+
 		// get rid of empty search terms
 		$search_opts = array_filter($this->uri->ruri_to_assoc($radix?4:3, $modifiers));
 		// global search support
@@ -1128,7 +1161,7 @@ class Chan extends Public_Controller
 				break;
 			}
 		}
-		
+
 		// we don't want more than 5 entries for latest searches
 		if(count($cookie_array) > 4)
 			array_pop($cookie_array);
@@ -1136,7 +1169,7 @@ class Chan extends Public_Controller
 		array_unshift($cookie_array, $search_opts);
 		$cookie_array_json = json_encode($cookie_array);
 		$this->input->set_cookie('foolfuuka_search_latest_5', $cookie_array_json, 60 * 60 * 24 * 30, '', '/');
-		
+
 		// actual search
 		$result = $this->post->get_search($radix, $search);
 
@@ -1184,9 +1217,22 @@ class Chan extends Public_Controller
 				sprintf(__('with the filename "%s"'),
 					trim(fuuka_htmlescape($search['filename']))));
 		if ($search['image'])
-			array_push($title,
-				sprintf(__('with the image hash "%s"'),
-					trim(fuuka_htmlescape($search['image']))));
+		{
+			// non-urlsafe else urlsafe
+			if (mb_strlen(urldecode($search['image'])) > 22)
+			{
+				array_push($title,
+					sprintf(__('with the image hash "%s"'),
+						trim(rawurldecode($search['image']))));
+			}
+			else
+			{
+				$search['image'] = $this->post->get_media_hash($search['image']);
+				array_push($title,
+					sprintf(__('with the image hash "%s"'),
+						trim($search['image'])));
+			}
+		}
 		if ($search['deleted'] == 'deleted')
 			array_push($title, __('that have been deleted'));
 		if ($search['deleted'] == 'not-deleted')
@@ -1218,13 +1264,13 @@ class Chan extends Public_Controller
 		if (!empty($title))
 		{
 			$title = sprintf(__('Searching for posts %s.'),
-				urldecode(implode(' ' . __('and') . ' ', $title)));
+				implode(' ' . __('and') . ' ', $title));
 		}
 		else
 		{
 			$title = __('Displaying all posts with no filters applied.');
 		}
-		
+
 		$page = (!$search['page'] || !intval($search['page'])) ? 1 : $search['page'];
 
 		// Generate URI for pagination.
@@ -1249,7 +1295,7 @@ class Chan extends Public_Controller
 		// Set template variables required to build the HTML.
 		//	$this->template->title($radix->formatted_title .
 		//		' &raquo; ' . $title);
-		
+
 		$this->_set_parameters(
 			array(
 				'section_title' => $title,
@@ -1277,8 +1323,8 @@ class Chan extends Public_Controller
 		else
 		{
 			$this->template->title(__('Global Search'));
-		}		
-		
+		}
+
 		$this->template->append_metadata('<meta name="robots" content=""noindex" />');
 		$this->template->build('board');
 	}
@@ -1446,7 +1492,7 @@ class Chan extends Public_Controller
 			|| mb_strlen($this->input->post('reply')) > 0
 			|| mb_strlen($this->input->post('email')) > 0)
 		{
-			return $this->show_404(); 
+			return $this->show_404();
 		}
 
 		// The form has been submitted to be validated and processed.
@@ -1592,7 +1638,7 @@ class Chan extends Public_Controller
 						$this->template->build('error');
 						return FALSE;
 					}
-					
+
 					// check if ghost posting is disabled
 					if (isset($check['ghost_disabled']) && $check['ghost_disabled'] == TRUE)
 					{
@@ -1799,14 +1845,14 @@ class Chan extends Public_Controller
 			return $this->show_404();
 		}
 	}
-	
-	
+
+
 	function mod_post_actions()
 	{
 		// redirect to the one on MY_Controller since it's a function shared with the admin panel
 		parent::mod_post_actions();
 	}
-	
+
 
 }
 

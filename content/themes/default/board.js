@@ -27,7 +27,7 @@ var bindFunctions = function()
     }
     if(!!window.FileReader)
     {
-        search_dropdown.find('input[name=image]').on('change', function(event) {
+        search_dropdown.find('input[name=image_file]').on('change', function(event) {
             findSameImageFromFile(event.originalEvent.target);
         });
     }
@@ -60,16 +60,16 @@ var bindFunctions = function()
 					// sending an image
                     if(jQuery("#file_image").val())
                         return true;
-					
+
 					var originalText = el.attr('value');
 					el.attr({'value': backend_vars.gettext['submit_state'], 'disabled': 'disabled'});
-					
+
 					// to make sure nobody gets pissed off with a blocked button
 					var buttonTimeout = setTimeout(function(){
 						el.attr({'value': originalText});
 						el.removeAttr('disabled');
 					}, 15000);
-					
+
                     var reply_alert = jQuery('#reply_ajax_notices');
                     reply_alert.removeClass('error').removeClass('success');
                     jQuery.ajax({
@@ -178,7 +178,7 @@ var bindFunctions = function()
 									jQuery('.doc_id_' + el.data('id')).find('.thread_image_box:eq(0) img')
 										.attr('src', backend_vars.images['missing_image'])
 										.css({
-											width: backend_vars.images['missing_image_width'], 
+											width: backend_vars.images['missing_image_width'],
 											height: backend_vars.images['missing_image_height']
 										});
                                     break;
@@ -192,7 +192,7 @@ var bindFunctions = function()
 									jQuery('.doc_id_' + el.data('id')).find('.thread_image_box:eq(0) img')
 										.attr('src', backend_vars.images['banned_image'])
 										.css({
-											width: backend_vars.images['banned_image_width'], 
+											width: backend_vars.images['banned_image_width'],
 											height: backend_vars.images['banned_image_height']
 										});
                                     break;
@@ -259,7 +259,7 @@ var bindFunctions = function()
                     el.parent().find('.search-dropdown-menu').show();
                     el.parent().parent().addClass('active');
                     break;
-					
+
 				case 'clearLatestSearches':
 					setCookie('foolfuuka_search_latest_5', '', 0, '/', backend_vars.cookie_domain);
 					jQuery('li.latest_search').each(function(idx){
@@ -267,7 +267,7 @@ var bindFunctions = function()
 					});
 					return false;
 					break;
-					
+
                 default:
                     break;
             }
@@ -311,7 +311,7 @@ var bindFunctions = function()
                 backlink.css('display', 'block');
                 backlink.html(quote.formatted);
             }
-            else if(jQuery('#' + that.data('post') + '.post').length > 0)
+            else
             {
                 // normal posts
                 var toClone = jQuery('#' + that.data('post'));
@@ -320,78 +320,43 @@ var bindFunctions = function()
                 backlink.css('display', 'block');
                 backlink.html(toClone.clone());
             }
-			else if (typeof backend_vars.loaded_posts[that.data('post')] !== 'undefined')
-			{
-				var data = backend_vars.loaded_posts[that.data('post')];
-				backlink.html(data.formatted);
-				backlink.css('display', 'block');			}
-			else
-			{
-				jQuery.ajax({
-					url: backend_vars.api_url + 'api/chan/post/' ,
-					dataType: 'jsonp',
-					type: 'GET',
-					cache: false,
-					data: {
-						board: backend_vars.board_shortname,
-						num: that.data('post'),
-						format: 'jsonp'
-					},
-					success: function(data){
-						backend_vars.loaded_posts[that.data('post')] = data;
-						backlink.html(data.formatted);
-						backlink.css('display', 'block');
-						showBacklink(backlink, pos, height, width);
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-					},
-					complete: function() {
-					}
-				});
-				return;
-			}
 
-           showBacklink(backlink, pos, height, width);
+            if(jQuery(window).width()/2 < pos.left + width/2)
+            {
+                backlink.css({
+                    right: (jQuery(window).width() - pos.left -	 width) + 'px',
+                    top: (pos.top + height + 3) + 'px',
+                    left: 'auto'
+                });
+            }
+            else
+            {
+                backlink.css({
+                    left: (pos.left) + 'px',
+                    top: (pos.top + height + 3) + 'px',
+                    right: 'auto'
+                });
+            }
+
+            backlink.find("article").removeAttr("id").find(".post_controls").remove();
+            backlink.find(".post_file_controls").remove();
+
+			// remove the image from the backlink box if it's a gallery
+            if(typeof page_function !== 'undefined' && backend_vars.page_function == "gallery")
+            {
+                backlink.find(".thread_image_box").remove();
+            }
+            var swap_image = backlink.find('[data-original]');
+            if(swap_image.length > 0)
+            {
+                swap_image.attr('src', swap_image.attr('data-original'));
+            }
         }
         else
         {
             jQuery("#backlink").css('display', 'none').html('');
         }
     });
-}
-
-var showBacklink = function(backlink, pos, height, width)
-{
-	 if(jQuery(window).width()/2 < pos.left + width/2)
-	{
-		backlink.css({
-			right: (jQuery(window).width() - pos.left -	 width) + 'px',
-			top: (pos.top + height + 3) + 'px',
-			left: 'auto'
-		});
-	}
-	else
-	{
-		backlink.css({
-			left: (pos.left) + 'px',
-			top: (pos.top + height + 3) + 'px',
-			right: 'auto'
-		});
-	}
-
-	backlink.find("article").removeAttr("id").find(".post_controls").remove();
-	backlink.find(".post_file_controls").remove();
-
-	// remove the image from the backlink box if it's a gallery
-	if(typeof page_function !== 'undefined' && backend_vars.page_function == "gallery")
-	{
-		backlink.find(".thread_image_box").remove();
-	}
-	var swap_image = backlink.find('[data-original]');
-	if(swap_image.length > 0)
-	{
-		swap_image.attr('src', swap_image.attr('data-original'));
-	}
 }
 
 var backlinkify = function(elem, post_id, subnum)
@@ -462,7 +427,7 @@ var realtimethread = function(){
                         delay: 200
                     });
                     backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-					
+
 					// avoid inserting twice
 					if(jQuery('.doc_id_' + value.doc_id).length == 0)
 						jQuery('article.thread aside.posts').append(post);
@@ -544,6 +509,9 @@ var getSearch = function(type, searchForm)
 
         if (getRadioValue(searchForm.capcode) != "")
             location += 'capcode/' + getRadioValue(searchForm.capcode) + '/';
+
+        if (searchForm.image.value != "")
+            location += 'image/' + encodeURIComponent(searchForm.image.value) + '/';
 
         if (getRadioValue(searchForm.deleted) != "")
             location += 'deleted/' + getRadioValue(searchForm.deleted) + '/';
@@ -767,7 +735,6 @@ jQuery(document).ready(function() {
 
 	// settings
 	jQuery.support.cors = true;
-	backend_vars.loaded_posts = [];
 
     var lazyloaded = jQuery('img.lazyload');
     if(lazyloaded.length > 149)
@@ -786,11 +753,11 @@ jQuery(document).ready(function() {
 		jQuery('#date_end').replaceWith(jQuery('<input>').attr({id: 'date_end', name: 'date_end', type: 'date'}));
 		jQuery('#date_start').replaceWith(jQuery('<input>').attr({id: 'date_start', name: 'date_start', type: 'date'}));
 	}
-	
+
 	// firefox sucks at styling input, so we need to add size="", that guess what? It's not w3 compliant!
-	jQuery('#file_search').attr({size: '4'});
+	jQuery('#file_search').attr({size: '17'});
 	jQuery('#file_image').attr({size: '16'});
-	
+
 	// destroy the file search box if the browser doesn't support file API
 	if(!window.FileReader)
 	{
@@ -822,20 +789,20 @@ jQuery(document).ready(function() {
     }
 
     bindFunctions();
-	
+
 	// localize and add 4chan tooltip where title
     jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy').filter('[title]').tooltip({
         placement: 'top',
         delay: 300,
 		animation: false
     });
-	
+
     jQuery('input[title]').tooltip({
         placement: 'right',
         delay: 200,
 		animation: false
     });
-	
+
 	jQuery('li.latest_search').tooltip({
         placement: 'left',
 		animation: false

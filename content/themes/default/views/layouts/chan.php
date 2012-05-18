@@ -257,8 +257,9 @@ if (!defined('BASEPATH'))
 			<div id="push"></div>
 		</div>
 		<footer id="footer">
-			<?php echo FOOL_NAME ?> - Version <?php echo FOOL_VERSION ?>, <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a> - Version 000
-			
+			<div class="btn-group pull-left">
+				<a class="btn btn-inverse btn-mini" href="http://github.com/FoOlRulez/FoOlFuuka"><?php echo FOOL_NAME ?> Imageboard <?php echo FOOL_VERSION ?></a><a class="btn btn-inverse btn-mini" href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
+			</div>
 			
 			<div style="float:right">
 				<div class="btn-group dropup pull-right">

@@ -830,9 +830,9 @@ class Post_model extends CI_Model
 			'prefix' => '',
 			'suffix' => '',
 			'urltag' => '#',
-			'option' => ' class="backlink" data-function="highlight" data-backlink="true" data-post="' . $num_id . '"',
-			'option_op' => ' class="backlink op" data-function="highlight" data-backlink="true" data-post="' . $num_id . '"',
-			'option_backlink' => ' class="backlink" data-function="highlight" data-backlink="true" data-post="'
+			'option' => ' class="backlink" data-function="highlight" data-backlink="true" data-board="' . $this->current_board_for_prc->shortname . '" data-post="' . $num_id . '"',
+			'option_op' => ' class="backlink op" data-function="highlight" data-backlink="true" data-board="' . $this->current_board_for_prc->shortname . '" data-post="' . $num_id . '"',
+			'option_backlink' => ' class="backlink" data-function="highlight" data-backlink="true" data-board="' . $this->current_board_for_prc->shortname . '" data-post="'
 				. $this->current_p->num . (($this->current_p->subnum == 0) ? '' : '_' . $this->current_p->subnum) . '"',
 		);
 

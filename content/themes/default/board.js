@@ -333,7 +333,7 @@ var bindFunctions = function()
 					type: 'GET',
 					cache: false,
 					data: {
-						board: backend_vars.board_shortname,
+						board: that.data('board'),
 						num: that.data('post'),
 						format: 'jsonp'
 					},

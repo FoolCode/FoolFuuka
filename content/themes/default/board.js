@@ -652,7 +652,7 @@ function replyHighlight(id)
 
 var changeTheme = function(theme)
 {
-    setCookie('foolfuuka_theme', theme, 30, '/');
+    setCookie('foolfuuka_theme', theme, 30, '/', backend_vars.cookie_domain);
     window.location.reload();
 }
 

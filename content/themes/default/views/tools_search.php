@@ -34,7 +34,7 @@ if(isset($board)) :
 				<li>
 					<?php
 					echo form_submit(array(
-						'class' => 'btn btn-success btn-mini',
+						'class' => 'btn btn-inverse btn-mini',
 						'value' => __('Undefined'),
 						'name' => 'submit_undefined',
 						'style' => 'display:none;'
@@ -43,7 +43,7 @@ if(isset($board)) :
 
 					<?php
 					echo form_submit(array(
-						'class' => 'btn btn-success btn-mini',
+						'class' => 'btn btn-inverse btn-mini',
 						'value' => __('Search'),
 						'name' => 'submit_search'
 					))
@@ -52,7 +52,7 @@ if(isset($board)) :
 					<?php
 					if($board->shortname) :
 						echo form_submit(array(
-							'class' => 'btn btn-success btn-mini',
+							'class' => 'btn btn-inverse btn-mini',
 							'value' => __('Global Search'),
 							'name' => 'submit_search_global'
 						));
@@ -60,7 +60,7 @@ if(isset($board)) :
 
 					<?php
 						echo form_submit(array(
-							'class' => 'btn btn-success btn-mini',
+							'class' => 'btn btn-inverse btn-mini',
 							'value' => __('Go to post'),
 							'name' => 'submit_post'
 						));
@@ -293,7 +293,7 @@ if(isset($board)) :
 				<li class="input-prepend file_search_remove"><label for="file_search" class="add-on">Image</label><input style="width:115px" id="file_search" type="file" name="image" />
 					<?php
 					echo form_submit(array(
-						'class' => 'btn btn-success btn-mini file_search_remove',
+						'class' => 'btn btn-inverse btn-mini file_search_remove',
 						'value' => __('Search image'),
 			 			'name' => 'submit_image',
 						'title' => __('On most browsers you can also drop the file on the search bar.'),

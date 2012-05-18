@@ -42,6 +42,16 @@ body.theme_default {
     margin: 0 auto -40px;
 }
 
+.theme_default .btn-inverse {
+	background: #77947D;
+	color:#FFF;
+}
+
+.theme_default .btn-inverse:hover {
+	background: #57645D;
+	color:#FFF;
+}
+
 .theme_default #footer {
     background:#6A836F;
     color:#f5f5f5;
@@ -62,6 +72,21 @@ body.theme_default {
     margin:0;
     padding:12px 15px 0;
     border: none;
+}
+
+
+.theme_default #footer .btn-group {
+	margin: -2px 5px 0;
+}
+
+.theme_default #footer .dropdown-menu {
+	right:0; 
+	left:inherit; 
+	color: #333;
+}
+
+.theme_default #footer .dropdown-menu a:hover {
+	color: #FFF;
 }
 
 

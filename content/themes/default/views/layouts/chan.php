@@ -127,8 +127,8 @@ if (!defined('BASEPATH'))
 								</ul>
 							</li>
 						</ul>
-						<?php if (get_selected_radix()) : ?>
 						<ul class="nav">
+						<?php if (get_selected_radix()) : ?>
 							<?php if (get_selected_radix()->archive) : ?>
 							<li>
 								<a href="http://boards.4chan.org/<?php echo get_selected_radix()->shortname ?>" style="padding-right:4px;">4chan <i class="icon-share icon-white"></i></a>
@@ -160,32 +160,23 @@ if (!defined('BASEPATH'))
 									</li>
 								</ul>
 							</li>
-							<li><a href="<?php echo site_url(array($board->shortname, 'ghost')) ?>"><?php echo __('Ghost') ?></a>
-							</li>
-							<li><a href="<?php echo site_url(array($board->shortname, 'gallery')) ?>"><?php echo __('Gallery') ?></a>
-							</li>
-							<li><a href="<?php echo site_url(array($board->shortname, 'statistics')) ?>"><?php echo __('Stats') ?></a>
-							</li>
-						</ul>
 						<?php endif; ?>
-						<?php if(isset($this->plugins->FS_Articles) && $top_articles = $this->plugins->FS_Articles->get_top()) : ?>
-						<ul class="nav">
-							<li class="dropdown">
-								<a href="<?php echo site_url() ?>" class="dropdown-toggle" data-toggle="dropdown">
-									<?php echo __('Articles') ?>
-									<b class="caret"></b>
-								</a>
-								<ul class="dropdown-menu">
-									<?php foreach($top_articles as $article) ?>
-									<li>
-										<a href="<?php echo site_url('articles/' . $article->slug) ?>">
-											<?php echo fuuka_htmlescape($article->title) ?>
-										</a>
-									</li>
-								</ul>
-							</li>
+						<?php
+							$top_nav = array();
+							if(get_selected_radix())	
+							{
+								$top_nav[] = array('href' => site_url(array($board->shortname, 'ghost')), 'text' => __('Ghost'));
+								$top_nav[] = array('href' => site_url(array($board->shortname, 'gallery')), 'text' => __('Gallery'));
+								$top_nav[] = array('href' => site_url(array($board->shortname, 'statistics')), 'text' => __('Stats'));
+							}
+							$top_nav = $this->plugins->run_hook('fu_themes_generic_top_nav_buttons', array($top_nav), 'simple');
+							$top_nav = $this->plugins->run_hook('fu_themes_default_top_nav_buttons', array($top_nav), 'simple');
+
+							foreach($top_nav as $t) : ?>
+							<li><a href="<?php echo $t['href'] ?>"><?php echo $t['text'] ?></a></li>
+							<?php endforeach; 
+						?>
 						</ul>
-						<?php endif; ?>
 					<?php echo $template['partials']['tools_search']; ?>
 					</div>
 				</div>
@@ -270,28 +261,31 @@ if (!defined('BASEPATH'))
 			
 			
 			<div style="float:right">
-				<?php if(isset($this->plugins->FS_Articles) && $bottom_articles = $this->plugins->FS_Articles->get_bottom()) : ?>
-				Articles: [
-				<?php 
-				$bottom_articles_count = count($bottom_articles);
-				foreach($bottom_articles as $key => $article) : ?>
-				<a href="<?php echo site_url('articles/' . $article->slug) ?>"><?php echo fuuka_htmlescape($article->title) ?></a>
-				<?php 
-				if($bottom_articles_count - 1 > $key)
-					echo ' / ';
-				endforeach; ?>
-				]
-				<?php endif; ?>
-				
-				Theme [ <?php
-					$theme_links = array();
-					foreach($this->fu_available_themes as $theme)
-					{
-						$theme_links[] = '<a href="' . site_url(array('@system', 'functions', 'theme', $theme['theme_directory'])) . '" onclick="changeTheme(\'' . $theme['theme_directory'] . '\'); return false;">' . $theme['theme_name'] . '</a>';
-					}
-					echo implode(' / ', $theme_links);
-					?> ]
+				<div class="btn-group dropup pull-right">
+					<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
+						<?php echo __('Change theme') ?>
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+					<?php foreach($this->fu_available_themes as $theme) : ?>
+						 <li><a href="<?php echo site_url(array('@system', 'functions', 'theme', $theme['theme_directory'])) ?>" onclick="changeTheme('<?php echo $theme['theme_directory'] ?>'); return false;"><?php echo $theme['theme_name'] ?><?php echo ($theme['theme_directory'] == $this->fu_theme)?' <i class="icon-ok"></i>':'' ?></a></li>
+					<?php endforeach; ?>
+					</ul>
+				</div>
 			</div>
+			
+			<?php 
+			$bottom_nav = array();
+			$bottom_nav = $this->plugins->run_hook('fu_themes_generic_bottom_nav_buttons', array($bottom_nav), 'simple');
+			$bottom_nav = $this->plugins->run_hook('fu_themes_default_bottom_nav_buttons', array($bottom_nav), 'simple');
+
+			if(!empty($bottom_nav)) : ?>
+				<div class="btn-group dropup pull-right">
+					<?php foreach($bottom_nav as $t) : ?>
+						<a class="btn btn-inverse btn-mini" href="<?php echo $t['href'] ?>"><?php echo $t['text'] ?></a>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
 			
 			<?php 
 				if(get_setting('fs_theme_footer_text'))

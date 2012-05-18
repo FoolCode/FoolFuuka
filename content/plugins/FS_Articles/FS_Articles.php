@@ -174,6 +174,9 @@ class FS_Articles extends Plugins_model
 			array('chan', 'articles'), 'article');
 		$this->plugins->register_controller_function($this,
 			array('chan', 'articles', '(:any)'), 'article');
+		
+		$this->plugins->register_hook($this, 'fu_themes_generic_top_nav_buttons', 3, 'get_top');
+		$this->plugins->register_hook($this, 'fu_themes_generic_bottom_nav_buttons', 3, 'get_bottom');
 	}
 
 
@@ -413,33 +416,34 @@ class FS_Articles extends Plugins_model
 	}
 	
 	
-	function get_top()
+	function get_top($nav)
 	{
-		$query = $this->db->query('
-			SELECT *
-			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-			WHERE top = 1
-		');
-		
-		if($query->num_rows() == 0)
-			return array();
-
-		return $query->result();
+		return $this->get_nav('top', $nav);
+	}
+	
+	function get_bottom($nav)
+	{
+		return $this->get_nav('bottom', $nav);
 	}
 	
 	
-	function get_bottom()
+	function get_nav($where, $nav)
 	{
 		$query = $this->db->query('
 			SELECT *
 			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-			WHERE bottom = 1
+			WHERE ' . ($where=='top'?'top':'bottom') . ' = 1
 		');
 		
 		if($query->num_rows() == 0)
-			return array();
+			return array('return' => $nav);
 
-		return $query->result();
+		foreach($query->result() as $article)
+		{
+			$nav[] = array('href' => site_url('articles/' . $article->slug), 'text' => fuuka_htmlescape($article->title));
+		}
+		
+		return array('return' => $nav);
 	}
 
 

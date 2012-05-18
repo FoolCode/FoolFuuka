@@ -49,18 +49,17 @@ if (!defined('BASEPATH'))
 			?>
 			[ <a href="<?php echo site_url() ?>">index</a><?php if (get_selected_radix()) : ?> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a><?php endif; ?> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
 		
-			<?php if(isset($this->plugins->FS_Articles) && $top_articles = $this->plugins->FS_Articles->get_top()) : ?>
-			Articles: [
-			<?php 
-			$top_articles_count = count($top_articles);
-			foreach($top_articles as $key => $article) : ?>
-			<a href="<?php echo site_url('articles/' . $article->slug) ?>"><?php echo fuuka_htmlescape($article->title) ?></a>
-			<?php 
-			if($top_articles_count - 1 > $key)
-				echo ' / ';
-			endforeach; ?>
-			]
-			<?php endif; ?>
+			<?php
+				$top_nav = array();
+				$top_nav = $this->plugins->run_hook('fu_themes_generic_top_nav_buttons', array($top_nav), 'simple');
+				$top_nav = $this->plugins->run_hook('fu_themes_fuuka_top_nav_buttons', array($top_nav), 'simple');
+				
+				if(!empty($top_nav)) echo '[ ';
+				foreach($top_nav as $t) :?>
+					<a href="<?php echo $t['href'] ?>"><?php echo $t['text'] ?></a>
+				<?php endforeach;
+					if(!empty($top_nav)) echo ' ]';
+			?>
 		</div>
 		<?php endif; ?>
 
@@ -144,18 +143,17 @@ if (!defined('BASEPATH'))
 
 			<div style="float:right">
 				
-				<?php if(isset($this->plugins->FS_Articles) && $this->plugins->FS_Articles && $bottom_articles = $this->plugins->FS_Articles->get_bottom()) : ?>
-				Articles: [
-				<?php 
-				$bottom_articles_count = count($bottom_articles);
-				foreach($bottom_articles as $key => $article) : ?>
-				<a href="<?php echo site_url('articles/' . $article->slug) ?>"><?php echo fuuka_htmlescape($article->title) ?></a>
-				<?php 
-				if($bottom_articles_count - 1 > $key)
-					echo ' / ';
-				endforeach; ?>
-				]
-				<?php endif; ?>
+				<?php
+					$bottom_nav = array();
+					$bottom_nav = $this->plugins->run_hook('fu_themes_generic_bottom_nav_buttons', array($bottom_nav), 'simple');
+					$bottom_nav = $this->plugins->run_hook('fu_themes_fuuka_bottom_nav_buttons', array($bottom_nav), 'simple');
+
+					if(!empty($bottom_nav)) echo '[ ';
+					foreach($bottom_nav as $t) :?>
+						<a href="<?php echo $t['href'] ?>"><?php echo $t['text'] ?></a>
+					<?php endforeach;
+						if(!empty($bottom_nav)) echo ' ]';
+				?>
 				
 				Theme [ <?php
 					$theme_links = array();

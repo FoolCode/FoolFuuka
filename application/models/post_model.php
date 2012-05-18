@@ -915,7 +915,8 @@ class Post_model extends CI_Model
 
 		$html = array(
 			'prefix' => '',
-			'suffix' => ''
+			'suffix' => '',
+			'urltag' => '#'
 		);
 
 		if ($this->features === FALSE)
@@ -950,7 +951,8 @@ class Post_model extends CI_Model
 
 		if ($num)
 		{
-			return $html['prefix'] . '<a href="' . site_url(array($board->shortname, 'post', $num)) . '">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
+			return $html['prefix'] . '<a href="' . site_url(array($board->shortname, 'post', $num))
+				. '" class="backlink" data-function="highlight" data-backlink="true" data-board="' . $board->shortname . '" data-post="' . $num . '">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
 		}
 
 		return $html['prefix'] . '<a href="' . site_url($board->shortname) . '">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];

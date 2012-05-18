@@ -1199,23 +1199,23 @@ class Chan extends Public_Controller
 
 		if ($search['text'])
 			array_push($title,
-				sprintf(__('that contain "%s"'), 
+				sprintf(__('that contain &lsquo;%s&rsquo;'), 
 					trim(fuuka_htmlescape(urldecode($search['text'])))));
 		if ($search['subject'])
 			array_push($title,
-				sprintf(__('with the subject "%s"'),
+				sprintf(__('with the subject &lsquo;%s&rsquo;'),
 					trim(fuuka_htmlescape(urldecode($search['subject'])))));
 		if ($search['username'])
 			array_push($title,
-				sprintf(__('with the username "%s"'),
+				sprintf(__('with the username &lsquo;%s&rsquo;'),
 					trim(fuuka_htmlescape(urldecode($search['username'])))));
 		if ($search['tripcode'])
 			array_push($title,
-				sprintf(__('with the tripcode "%s"'),
+				sprintf(__('with the tripcode &lsquo;%s&rsquo;'),
 					trim(fuuka_htmlescape(urldecode($search['tripcode'])))));
 		if ($search['filename'])
 			array_push($title,
-				sprintf(__('with the filename "%s"'),
+				sprintf(__('with the filename &lsquo;%s&rsquo;'),
 					trim(fuuka_htmlescape(urldecode($search['filename'])))));
 		if ($search['image'])
 		{
@@ -1223,14 +1223,14 @@ class Chan extends Public_Controller
 			if (mb_strlen(urldecode($search['image'])) > 22)
 			{
 				array_push($title,
-					sprintf(__('with the image hash "%s"'),
+					sprintf(__('with the image hash &lsquo;%s&rsquo;'),
 						trim(rawurldecode($search['image']))));
 			}
 			else
 			{
 				$search['image'] = $this->post->get_media_hash($search['image']);
 				array_push($title,
-					sprintf(__('with the image hash "%s"'),
+					sprintf(__('with the image hash &lsquo;%s&rsquo;'),
 						trim($search['image'])));
 			}
 		}

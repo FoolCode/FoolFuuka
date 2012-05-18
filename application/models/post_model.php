@@ -894,9 +894,9 @@ class Post_model extends CI_Model
 			return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', $key))
 				. $html['urltag'] . $num_id . '"' . $html['option'] . '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
 		}
-		
+
 		return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'post', $num_id))
-			. '">&gt;&gt;' . $num . '</a>' . $html['suffix'];
+			. '"' . $html['option'] . '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
 
 		// return un-altered
 		return $matches[0];

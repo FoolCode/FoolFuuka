@@ -202,6 +202,10 @@ var bindFunctions = function()
 					return false;
 					break;
 
+				case 'activateModeration': 
+					jQuery('.post_mod_controls').show();
+					jQuery('button[data-function=activateModeration]').parent().hide();
+					break;
 				case 'closeModal':
 					el.closest(".modal").modal('hide');
 					return false;

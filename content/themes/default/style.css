@@ -597,6 +597,10 @@ body.theme_default {
     line-height:0px;
 }
 
+.theme_default article .post_mod_controls {
+	display:none;
+}
+
 .theme_default .post {
     margin:2px 20px;
     margin-right:0px;

@@ -94,6 +94,9 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 	</div>
 	<?php if($this->tank_auth->is_allowed()) : ?>
 	<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
+		<button class="btn btn-mini" data-function="activateModeration"><?php echo __('Mod') ?><?php if($p->poster_ip) echo ' ' .inet_dtop($p->poster_ip) ?></button>
+	</div>
+	<div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">
 		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_post"><?php echo __('Remove') ?></button>
 		<?php if($p->preview_orig) : ?>
 		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_image"><?php echo __('Remove image') ?></button>

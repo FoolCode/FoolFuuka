@@ -74,6 +74,9 @@ if (!defined('BASEPATH'))
 
 			<?php if($this->tank_auth->is_allowed()) : ?>
 			<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
+				<button class="btn btn-mini" data-function="activateModeration"><?php echo __('Mod') ?><?php if($op->poster_ip) echo ' ' .inet_dtop($op->poster_ip) ?></button>
+			</div>
+			<div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_post"><?php echo __('Remove') ?></button>
 				<?php if($op->preview_orig) : ?>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_image"><?php echo __('Remove image') ?></button>

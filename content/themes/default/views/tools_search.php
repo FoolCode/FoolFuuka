@@ -288,21 +288,11 @@ if(isset($board)) :
 					?></li>
 				<li class="input-prepend"><label for="image" class="add-on">Image hash</label><?php echo form_input(array('name' => 'image', 'id' => 'image', 'value' => (isset($search["image"]))
 					? rawurldecode($search["image"]) : ''))
-					?></li>
-				<li class="divider file_search_remove" style="margin-bottom:8px"></li>
-				<li class="input-prepend file_search_remove"><label for="file_search" class="add-on">Image</label><input style="width:115px" id="file_search" type="file" name="image_file" />
-					<?php
-					echo form_submit(array(
-						'class' => 'btn btn-inverse btn-mini file_search_remove',
-						'value' => __('Search image'),
-			 			'name' => 'submit_image',
-						'title' => __('On most browsers you can also drop the file on the search bar.'),
-						'style' => 'margin-top:2px; margin-bottom:0px; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px;',
-					));
 					?>
+				<div class="help"><?php echo __('You can drag and drop an image on the field above') ?></div>
 				</li>
 				<li class="divider"></li>
-				<li style="margin-top: 5px;"><?php echo __('Your latest searches:') ?>
+				<li><?php echo __('Your latest searches:') ?>
 					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; padding: 1px 3px; line-height:normal;color:#FFF; position:relative; top:-1px;"><?php echo __('Clear') ?></a></div>
 				</li>
 				<?php

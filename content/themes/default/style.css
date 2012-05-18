@@ -311,7 +311,15 @@ body.theme_default {
     bottom:3px;
 }
 
-.theme_default .search-dropdown label input, .search-dropdown label textarea, .search-dropdown label date {
+.theme_default .search-dropdown div.search-dropdown-menu ul .help {
+	text-align:center;
+	font-size:10px;
+	line-height:14px;
+}
+
+.theme_default .search-dropdown label input, 
+.theme_default .search-dropdown label textarea, 
+.theme_default .search-dropdown label date {
     display:inline;
 }
 

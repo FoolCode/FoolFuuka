@@ -1,7 +1,7 @@
 var bindFunctions = function()
 {
 	// the following block of code deals with drag and drop of images for MD5 hashing
-	var search_dropdown = jQuery('.search-dropdown');
+	var search_dropdown = jQuery('#image');
 	if(isEventSupported('dragstart') && isEventSupported('drop') && !!window.FileReader)
 	{
 		search_dropdown.on('dragover', function(e) {
@@ -25,12 +25,7 @@ var bindFunctions = function()
 			}
 		});
 	}
-	if(!!window.FileReader)
-	{
-		search_dropdown.find('input[name=image_file]').on('change', function(event) {
-			findSameImageFromFile(event.originalEvent.target);
-		});
-	}
+	
 	jQuery("body").click(function(event){
 		var search_el = jQuery('.search-dropdown');
 		if(search_el.find(event.target).length != 1)

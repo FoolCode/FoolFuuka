@@ -326,6 +326,11 @@ var bindFunctions = function()
 			}
 			else if (typeof backend_vars.loaded_posts[that.data('post')] !== 'undefined')
 			{
+				if(backend_vars.loaded_posts[that.data('post')] === false)
+				{
+					shakeBacklink(that);
+					return false;
+				}
 				var data = backend_vars.loaded_posts[that.data('post')];
 				backlink.html(data.formatted);
 				backlink.css('display', 'block');			
@@ -346,17 +351,19 @@ var bindFunctions = function()
 					},
 					success: function(data){
 						backlink_spin.spin(false);
+						if (typeof data.error !== "undefined")
+						{
+							backend_vars.loaded_posts[that.data('post')] = false;
+							shakeBacklink(that);
+							return false;
+						}
 						backend_vars.loaded_posts[that.data('post')] = data;
 						backlink.html(data.formatted);
 						backlink.css('display', 'block');
 						showBacklink(backlink, pos, height, width);
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-					},
-					complete: function() {
 					}
 				});
-				return;
+				return false;
 			}
 			showBacklink(backlink, pos, height, width);
 		}
@@ -371,6 +378,19 @@ var bindFunctions = function()
 			jQuery("#backlink").css('display', 'none').html('');
 		}
 	});
+}
+
+var shakeBacklink = function(el)
+{
+	el.css({position:'relative'});
+	el.animate({left: '-5px'},100)
+		.animate({left: '+5px'}, 100)
+		.animate({left: '-5px'}, 100)
+		.animate({left: '+5px'}, 100)
+		.animate({left: '+0px'}, 100, 'linear', function(){ 
+			el.css({position:'static'});
+		});
+		
 }
 
 var showBacklink = function(backlink, pos, height, width)

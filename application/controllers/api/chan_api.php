@@ -262,7 +262,15 @@ class Chan_API extends API_Controller
 
 		if (!$post)
 		{
-			$this->response(array('error' => __('Post could not be found')), 404);
+			// jsonp doesn't allow callbacks on error or on 404, so we must return 200
+			if($this->get('format') == 'jsonp')
+			{
+				$this->response(array('error' => __('Post could not be found')), 200);
+			}
+			else
+			{
+				$this->response(array('error' => __('Post could not be found')), 404);			
+			}
 		}
 
 		$this->response($post, 200);

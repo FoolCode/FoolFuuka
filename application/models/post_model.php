@@ -1190,17 +1190,17 @@ class Post_model extends CI_Model
 			{
 				$indexes = array();
 
-				foreach ($this->radix->get_all() as $board)
+				foreach ($this->radix->get_all() as $radix)
 				{
 					// ignore boards that don't have sphinx enabled
-					if (!$board->sphinx)
+					if (!$radix->sphinx)
 					{
 						continue;
 					}
 
-					$indexes[] = $board->shortname . '_ancient';
-					$indexes[] = $board->shortname . '_main';
-					$indexes[] = $board->shortname . '_delta';
+					$indexes[] = $radix->shortname . '_ancient';
+					$indexes[] = $radix->shortname . '_main';
+					$indexes[] = $radix->shortname . '_delta';
 				}
 			}
 			else

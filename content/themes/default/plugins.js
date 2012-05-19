@@ -34,7 +34,7 @@ $("#el").spin(false); // Kills the spinner.
 	$.fn.spin = function(opts, color) {
 		var presets = {
 			"tiny": { lines: 8, length: 2, width: 2, radius: 3 },
-			"small": { lines: 8, length: 4, width: 3, radius: 5 },
+			"small": { lines: 8, length: 2, width: 2, radius: 2, left: -13, top: 2 },
 			"large": { lines: 10, length: 8, width: 4, radius: 8 }
 		};
 		if (Spinner) {

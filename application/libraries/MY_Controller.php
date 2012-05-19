@@ -226,7 +226,7 @@ class MY_Controller extends CI_Controller
 		{
 			$this->load->model('poster_model', 'poster');
 			$this->poster->ban(
-				$post->id, isset($data['length']) ? $data['length'] : NULL,
+				inet_ptod($post->poster_ip), isset($data['length']) ? $data['length'] : NULL,
 				isset($data['reason']) ? $data['reason'] : NULL
 			);
 		}

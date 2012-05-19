@@ -237,7 +237,7 @@ class Chan_API extends API_Controller
 				$response[$num['num']] = array('posts' => array());
 				$this->response($response, 200);
 			}
-			// no comics
+
 			$this->response(array('error' => __('Thread could not be found')), 200);
 		}
 	}

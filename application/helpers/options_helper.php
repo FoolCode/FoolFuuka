@@ -474,7 +474,7 @@ function inet_ptod($ip_address)
     }
 
     // IPv6 address
-    if (strpos($ip_address, ':') !== false) {
+    if (function_exists('bcmul') && strpos($ip_address, ':') !== false) {
         $network = inet_pton($ip_address);
         $parts = unpack('N*', $network);
 

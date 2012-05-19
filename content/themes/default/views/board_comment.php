@@ -22,7 +22,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 			</span>
 
 		<?php
-		if (mb_strlen($p->media) > 38) : ?>
+		if (mb_strlen($p->media_filename) > 38) : ?>
 			<span class="post_file_filename" rel="tooltip" title="<?php echo form_prep($p->media_filename) ?>">
 					<?php echo mb_substr($p->media_filename, 0, 32) . ' (...)' . mb_substr($p->media_filename, mb_strrpos($p->media_filename, '.')) . ', '; ?>
 					</span>

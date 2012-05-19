@@ -158,6 +158,12 @@ class Post_model extends CI_Model
 		{
 			$image = $post->media;
 		}
+		
+		// if we don't check, the return will return a valid folder that will evaluate file_exists() as TRUE
+		if(is_null($image))
+		{
+			return FALSE;
+		}
 
 		return get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname . '/'
 			. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;

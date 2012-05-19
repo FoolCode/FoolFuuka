@@ -283,6 +283,10 @@ var bindFunctions = function()
 		return false;
 	}
 
+	
+	// variable for ajax backlinks that we can clear them if the mouse hovered out 
+	var backlink_jqxhr;
+	
 	// hover functions go here
 	jQuery("#main").on("mouseover mouseout", "article a.[data-backlink]", function(event) {
 		if(event.type == "mouseover")
@@ -310,7 +314,7 @@ var bindFunctions = function()
 				backlink.css('display', 'block');
 				backlink.html(quote.formatted);
 			}
-			else if(jQuery('#' + that.data('post') + '.post').length > 0)
+			else if(jQuery('#' + that.data('post')).hasClass('post'))
 			{
 				// normal posts
 				var toClone = jQuery('#' + that.data('post'));
@@ -323,10 +327,11 @@ var bindFunctions = function()
 			{
 				var data = backend_vars.loaded_posts[that.data('post')];
 				backlink.html(data.formatted);
-				backlink.css('display', 'block');			}
+				backlink.css('display', 'block');			
+			}
 			else
 			{
-				jQuery.ajax({
+				backlink_jqxhr = jQuery.ajax({
 					url: backend_vars.api_url + 'api/chan/post/' ,
 					dataType: 'jsonp',
 					type: 'GET',
@@ -349,11 +354,15 @@ var bindFunctions = function()
 				});
 				return;
 			}
-
 			showBacklink(backlink, pos, height, width);
 		}
 		else
 		{
+			// kill the ajax call so the backlink doesn't appear
+			if(typeof backlink_jqxhr === 'object')
+			{
+				backlink_jqxhr.abort()
+			}
 			jQuery("#backlink").css('display', 'none').html('');
 		}
 	});

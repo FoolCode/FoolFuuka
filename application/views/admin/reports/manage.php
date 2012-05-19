@@ -10,7 +10,15 @@ echo link_tag('content/themes/default/style.css?v=' . FOOL_VERSION);
 ?>
 <script src="<?php echo site_url() ?>content/themes/default/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
 <script src="<?php echo site_url() ?>content/themes/default/board.js?v=<?php echo FOOL_VERSION ?>"></script>
-
+<style>
+	[data-function=activateModeration] {
+		display:none !important;
+	}
+	
+	.post_mod_controls {
+		display:block !important;
+	}
+</style>
 <div class="theme_default clearfix" style="padding-bottom: 15px">
 	<article class="thread clearfix">
 		<?php

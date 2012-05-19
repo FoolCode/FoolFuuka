@@ -203,8 +203,12 @@ var bindFunctions = function()
 					break;
 
 				case 'activateModeration': 
-					jQuery('.post_mod_controls').show();
 					jQuery('button[data-function=activateModeration]').parent().hide();
+					jQuery('.post_mod_controls button[data-function]').attr({'disabled': 'disabled'});
+					setTimeout(function(){
+						jQuery('.post_mod_controls button[data-function]').removeAttr('disabled');
+					}, 700);
+					jQuery('.post_mod_controls').show();
 					break;
 				case 'closeModal':
 					el.closest(".modal").modal('hide');

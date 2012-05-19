@@ -947,14 +947,19 @@ class Chan extends Public_Controller
 		array_shift($uri);
 		array_shift($uri);
 
-		$imploded_uri = urldecode(implode('/', $uri));
+		$imploded_uri = rawurldecode(implode('/', $uri));
 		if (mb_strlen($imploded_uri) < 22)
 		{
 			return $this->show_404();
 		}
 
 		// obtain actual media hash (non-urlsafe)
-		$hash = str_replace(' ', '+', mb_substr($imploded_uri, 0, 22));
+		$hash = mb_substr($imploded_uri, 0, 22);
+		if (strpos($hash, '/') !== FALSE || strpos($hash, '+') !== FALSE)
+		{
+			$hash = $this->post->get_media_hash($hash, TRUE);
+		}
+
 
 		// Obtain the PAGE from URI.
 		$page = 1;

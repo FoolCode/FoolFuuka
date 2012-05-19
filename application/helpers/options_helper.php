@@ -468,13 +468,17 @@ function compress_html()
  */
 function inet_ptod($ip_address)
 {
+	// fallback since BC Math is something to add at compile time
+	if(!function_exists('bcmul'))
+		return ip2long($ip_address);
+	
     // IPv4 address
     if (strpos($ip_address, ':') === false && strpos($ip_address, '.') !== false) {
         $ip_address = '::' . $ip_address;
     }
 
     // IPv6 address
-    if (function_exists('bcmul') && strpos($ip_address, ':') !== false) {
+    if (strpos($ip_address, ':') !== false) {
         $network = inet_pton($ip_address);
         $parts = unpack('N*', $network);
 
@@ -508,6 +512,10 @@ function inet_ptod($ip_address)
  */
 function inet_dtop($decimal)
 {
+	// fallback since BC Math is something to add at compile time
+	if(!function_exists('bcmul'))
+		return long2ip($decimal);
+	
     // IPv4 or IPv6 format
     if (strpos($decimal, ':') !== false || strpos($decimal, '.') !== false) {
         return $decimal;

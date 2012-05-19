@@ -576,7 +576,7 @@ class Radix_model extends CI_Model
 						{
 							if(!isset($result_object[$item->id]->$k) && isset($a['boards_preferences']))
 							{
-								if(isset($arr['default_value']))
+								if(isset($a['default_value']))
 									$result_object[$item->id]->$k = $a['default_value'];
 								else
 									$result_object[$item->id]->$k = FALSE;

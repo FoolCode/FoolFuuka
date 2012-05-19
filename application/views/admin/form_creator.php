@@ -54,7 +54,7 @@ if (!defined('BASEPATH'))
 <div class="well"<?php echo (isset($parent))?' data-form-parent="' . $parent . '"':'';
 	echo ((isset($hide) && $hide === TRUE)?' style="display:none"':'');
 ?>>
-
+<?php print_r($object);?>
 	<?php
 	foreach ($form as $name => $item) :
 

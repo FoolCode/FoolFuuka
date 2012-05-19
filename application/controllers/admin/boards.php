@@ -12,6 +12,9 @@ class Boards extends Admin_Controller
 	{
 		parent::__construct();
 		$this->tank_auth->is_admin() or redirect('admin');
+		
+		// for safety let's load all boards all the time
+		$this->radix->preload(TRUE);
 
 		// title on top
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/boards") . '">' . __("Boards") . '</a>';

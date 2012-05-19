@@ -29,13 +29,19 @@ class Theme_Controller
 	}
 	
 	
-	function _greentext()
+	function _greentext($html)
 	{
 		return '\\1<span class="greentext">\\2</span>\\3';
 	}
 
-	function _process_internal_links_html()
+	function _process_internal_links_html($num_id, $html, $previous_result = NULL)
 	{
+		// a plugin with higher priority modified this
+		if(!is_null($previous_result))
+		{
+			return array('return' => $previous_result);
+		}
+		
 		return array('return' => array(
 			'prefix' => '<span class="unkfunc">',
 			'suffix' => '</span>',

@@ -836,7 +836,7 @@ class Post_model extends CI_Model
 				. $this->current_p->num . (($this->current_p->subnum == 0) ? '' : '_' . $this->current_p->subnum) . '"',
 		);
 
-		$html = $this->plugins->run_hook('fu_post_model_process_internal_links_html_result', array($html), 'simple');
+		$html = $this->plugins->run_hook('fu_post_model_process_internal_links_html_result', array($num_id, $html), 'simple');
 		/*
 		if ($this->features === FALSE)
 		{

@@ -286,6 +286,7 @@ var bindFunctions = function()
 	
 	// variable for ajax backlinks that we can clear them if the mouse hovered out 
 	var backlink_jqxhr;
+	var backlink_spin;
 	
 	// hover functions go here
 	jQuery("#main").on("mouseover mouseout", "article a.[data-backlink]", function(event) {
@@ -331,6 +332,8 @@ var bindFunctions = function()
 			}
 			else
 			{
+				backlink_spin = that;
+				backlink_spin.spin('small');
 				backlink_jqxhr = jQuery.ajax({
 					url: backend_vars.api_url + 'api/chan/post/' ,
 					dataType: 'jsonp',
@@ -342,6 +345,7 @@ var bindFunctions = function()
 						format: 'jsonp'
 					},
 					success: function(data){
+						backlink_spin.spin(false);
 						backend_vars.loaded_posts[that.data('post')] = data;
 						backlink.html(data.formatted);
 						backlink.css('display', 'block');
@@ -361,6 +365,7 @@ var bindFunctions = function()
 			// kill the ajax call so the backlink doesn't appear
 			if(typeof backlink_jqxhr === 'object')
 			{
+				backlink_spin.spin(false);
 				backlink_jqxhr.abort()
 			}
 			jQuery("#backlink").css('display', 'none').html('');

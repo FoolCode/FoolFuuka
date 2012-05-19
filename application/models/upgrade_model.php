@@ -316,13 +316,16 @@ class Upgrade_model extends CI_Model
 
 		$this->upgrade->get_file($latest->zipball_url);
 
+		enable_maintenance(TRUE);
 		$this->upgrade->update_upgrade();
 
 		$this->load->model('upgrade2_model', 'upgrade2');
 		if (!$this->upgrade2->do_upgrade())
 		{
+			disable_maintenance(TRUE);
 			return FALSE;
 		}
+		disable_maintenance(TRUE);
 
 		$this->upgrade->clean();
 

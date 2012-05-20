@@ -648,6 +648,7 @@ body.theme_default {
 }
 
 .theme_default .post header{
+	overflow:hidden;
     padding-top:5px;
     display:-moz-inline-stack;
     font-family: Verdana, Arial, sans-serif;
@@ -689,11 +690,14 @@ body.theme_default {
     background: #eedbea;
 }
 
+.theme_default .backlink {
+	display:inline-block;
+}
+
 .theme_default #backlink {
     box-shadow: 0px 0px 3px #333;
     -moz-box-shadow: 0px 0px 3px #333;
     -webkit-box-shadow: 0px 0px 3px #333;
-    overflow:hidden;
     background:#EEF8F0;
 }
 

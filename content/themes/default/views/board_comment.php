@@ -93,7 +93,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 		<?php echo $p->comment_processed ?>
 	</div>
 	<?php if($this->tank_auth->is_allowed()) : ?>
-	<div class="btn-group" style="clear:both; padding:5px 0 0 5px;">
+	<div class="btn-group" style="clear:both; padding:5px 0 0 0;">
 		<button class="btn btn-mini" data-function="activateModeration"><?php echo __('Mod') ?><?php if($p->poster_ip) echo ' ' .inet_dtop($p->poster_ip) ?></button>
 	</div>
 	<div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">

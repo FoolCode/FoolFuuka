@@ -325,8 +325,51 @@ if (!function_exists('auto_linkify'))
 						$period = '.';
 						$matches['6'][$i] = substr($matches['6'][$i], 0, -1);
 					}
-
-					$str = str_replace($matches['0'][$i],
+					
+					$internal = (strpos($matches['6'][$i], $_SERVER['HTTP_HOST']) === 0);
+						
+					if(!$internal && defined('FOOL_SUBDOMAINS_ENABLED') && FOOL_SUBDOMAINS_ENABLED == TRUE)
+					{
+						$subdomains = array(
+							FOOL_SUBDOMAINS_SYSTEM, 
+							FOOL_SUBDOMAINS_BOARD,
+							FOOL_SUBDOMAINS_ARCHIVE, 
+							FOOL_SUBDOMAINS_DEFAULT
+						);
+						
+						foreach($subdomains as $subdomain)
+						{
+							if (strpos($matches['6'][$i], rtrim($subdomain, '.')) === 0)
+							{
+								$host_array = explode('.', $_SERVER['HTTP_HOST']);
+								array_shift($host_array);
+								array_unshift($host_array, $subdomain);
+								$host = implode('.', $host_array);
+								if(strpos($matches['6'][$i], $host) === 0)
+								{
+									$internal = TRUE;
+									break;
+								}
+							}
+						}
+						
+						
+					}
+						
+					if($internal)
+					{
+						$str = str_replace($matches['0'][$i],
+						$matches['1'][$i].'<a href="//'.
+							$matches['5'][$i].
+							preg_replace('/[[\/\!]*?[^\[\]]*?]/si', '', $matches['6'][$i]).'"'.$pop.'>http'.
+							$matches['4'][$i].'://'.
+							$matches['5'][$i].
+							$matches['6'][$i].'</a>'.
+							$period, $str);
+					}
+					else
+					{
+						$str = str_replace($matches['0'][$i],
 						$matches['1'][$i].'<a href="http'.
 							$matches['4'][$i].'://'.
 							$matches['5'][$i].
@@ -335,6 +378,7 @@ if (!function_exists('auto_linkify'))
 							$matches['5'][$i].
 							$matches['6'][$i].'</a>'.
 							$period, $str);
+					}
 				}
 			}
 		}

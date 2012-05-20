@@ -263,7 +263,17 @@ class Post_model extends CI_Model
 		if(isset($image))
 		{
 			$media_cdn = array();
-			if($balancers = get_setting('fs_fuuka_boards_media_balancers'))
+			if($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off' && get_setting('fs_fuuka_boards_media_balancers_https'))
+			{
+				$balancers = get_setting('fs_fuuka_boards_media_balancers_https');
+			} 
+
+			if (!isset($balancers) && get_setting('fs_fuuka_boards_media_balancers'))
+			{
+				$balancers = get_setting('fs_fuuka_boards_media_balancers');
+			}
+			
+			if(isset($balancers))
 			{
 				$media_cdn = array_filter(preg_split('/\r\n|\r|\n/', $balancers));
 			}

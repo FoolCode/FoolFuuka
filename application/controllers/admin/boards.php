@@ -311,6 +311,14 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'help' => __('Facultative. One per line the URLs where your images are reachable.'),
 			'class' => 'span6'
 		);
+		
+		$form['fs_fuuka_boards_media_balancers_https'] = array(
+			'type' => 'textarea',
+			'label' => __('HTTPS media load balancers'),
+			'preferences' => TRUE,
+			'help' => __('Facultative. One per line the URLs where your images are reachable. This is used when the site is loaded via HTTPS protocol, and if empty it will fall back to HTTP media load balancers.'),
+			'class' => 'span6'
+		);
 
 		$form['separator-2'] = array(
 			'type' => 'separator'

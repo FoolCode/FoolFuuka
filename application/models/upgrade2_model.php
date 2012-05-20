@@ -71,7 +71,7 @@ class Upgrade2_model extends CI_Model {
 		}
 
 		// Put FoOlSlide in maintenance
-		$this->db->update('preferences', array('value' => 'fs_priv_maintenance'), array('name' => __("We're currently upgrading FoOlFuuka. This process usually takes few seconds or a couple minutes, check back soon!")));
+		$this->db->update('preferences', array('value' => 'fs_priv_maintenance'), array('name' => __("We're currently upgrading {{FOOL_NAME}}. This process usually takes few seconds or a couple minutes, check back soon!")));
 		
 		$this->load->helper('directory');
 		$filenames = directory_map('content/cache/upgrade/', 1);

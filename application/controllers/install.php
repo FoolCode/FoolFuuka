@@ -15,7 +15,7 @@ class Install extends Install_Controller
 		// make sure people don't get here if FoOlSlide is already installed
 		if (file_exists("config.php"))
 			redirect('admin');
-		$this->viewdata["controller_title"] = __("FoOlFuuka Installation");
+		$this->viewdata["controller_title"] = __("{{FOOL_NAME}} Installation");
 	}
 
 	/**
@@ -199,7 +199,7 @@ class Install extends Install_Controller
 		{
 			// unable to connect
 			set_notice('error',
-				__('Connection with database not enstabilished: check the database fields.'));
+				__('Connection with database not established: check the database fields.'));
 			return false;
 		}
 
@@ -279,7 +279,7 @@ class Install extends Install_Controller
 
 		// a nice notice to tell that FoOlSlide install was a success
 		flash_notice('notice',
-			__(FOOL_NAME . ' has installed successfully. Check the preferences and make sure you create a team for your own chapters.'));
+			__('{{FOOL_NAME}} has installed successfully. You can proceed logging in.'));
 		redirect('/admin/');
 	}
 
@@ -296,7 +296,7 @@ class Install extends Install_Controller
 		if (version_compare(phpversion(), FOOL_REQUIREMENT_PHP) < 0)
 		{
 			set_notice('error',
-				__('You need at least PHP version ' . FOOL_REQUIREMENT_PHP . ' to run ' . FOOL_NAME . '. This means you have a many years old version. It is suggested to upgrade to a more recent version of PHP to avoid security issues with your server in general.'));
+				__('You need at least PHP version {{FOOL_REQUIREMENT_PHP}} to run {{FOOL_NAME}}. This means you have a many years old version. It is suggested to upgrade to a more recent version of PHP to avoid security issues with your server in general.'));
 			$prob = TRUE;
 			return FALSE;
 		}
@@ -304,7 +304,7 @@ class Install extends Install_Controller
 		if (!file_exists('assets/config.sample.php'))
 		{
 			set_notice('error',
-				sprintf(__('The file %s was removed. The installation can\'t continue without that file. You can find it in the ' . FOOL_NAME . ' download.'),
+				sprintf(__('The file %s was removed. The installation can\'t continue without that file. You can find it in the {{FOOL_NAME}} download.'),
 					FCPATH . 'config.sample.php'));
 			$prob = TRUE;
 			return FALSE;
@@ -313,7 +313,7 @@ class Install extends Install_Controller
 		if (!is_writable('content'))
 		{
 			set_notice('error',
-				sprintf(__('The %s directory needs to be writable. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOL_NAME . ' without this.'),
+				sprintf(__('The %s directory needs to be writable. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run {{FOOL_NAME}} without this.'),
 					FCPATH . 'content/',
 					'<br/><b><code>chmod -R 777 ' . FCPATH . 'content/</code></b><br/>'));
 			$prob = TRUE;
@@ -323,7 +323,7 @@ class Install extends Install_Controller
 		if (!is_writable('content/themes'))
 		{
 			set_notice('error',
-				sprintf(__('The %s directory needs to be writable as well. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run ' . FOOL_NAME . ' without this.'),
+				sprintf(__('The %s directory needs to be writable as well. Use this command in your shell if possible: %s or change its permissions recursively to 777 with your own FTP software. You won\'t be able to install or run {{FOOL_NAME}} without this.'),
 					FCPATH . 'content/themes',
 					'<br/><b><code>chmod -R 777 ' . FCPATH . 'content/</code></b><br/>'));
 			$prob = TRUE;

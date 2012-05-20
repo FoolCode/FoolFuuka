@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 ?><!DOCTYPE html>
 <html>
 	<head>
-		<title>Installing FoOlFuuka</title>
+		<title>Installing <?php echo __('{{FOOL_NAME}}') ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />

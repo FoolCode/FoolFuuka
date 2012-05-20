@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
 
 <?php
 echo __('Current Version') . ': ' . $current_version . '<br/>';
-echo ($new_versions ? __('Latest Version Available') . ': ' . (end($new_versions)->name) : __('You have the latest version of FoOlFuuka.')) . '<br/><br/>';
+echo ($new_versions ? __('Latest Version Available') . ': ' . (end($new_versions)->name) : __('You have the latest version of {{FOOL_NAME}}.')) . '<br/><br/>';
 ?>
 
 <?php

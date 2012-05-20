@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-echo sprintf(__("The installation was unable to automatically create the config.php file. You'll have to create %s and paste all the following inside the file. When done, just press on the button on the bottom to be redirected to your FoOlFuuka installation."), FCPATH.'config.php');
+echo sprintf(__("The installation was unable to automatically create the config.php file. You'll have to create %s and paste all the following inside the file. When done, just press on the button on the bottom to be redirected to your {{FOOL_NAME}} installation."), FCPATH.'config.php');
 ?>
 <br/><br/>
 <?php 

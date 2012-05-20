@@ -14,7 +14,7 @@ class Cli extends MY_Controller
 			return FALSE;
 		}
 		
-		cli_notice('notice', sprintf(__('Welcome to FoOlFuuka version %s'), FOOL_VERSION));
+		cli_notice('notice', sprintf(__('Welcome to {{FOOL_NAME}} version %s'), FOOL_VERSION));
 		cli_notice('notice', __('Write "php index.php cli help" to display all the available command line functions.'));
 	}
 	

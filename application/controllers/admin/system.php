@@ -91,7 +91,7 @@ class System extends Admin_Controller
 			'array' => TRUE,
 			'label' => __('CDN subdomains'),
 			'preferences' => TRUE,
-			'help' => __('Insert an alternative base URL to FoOlFuuka to separate the system functions from the boards.')
+			'help' => __('Insert an alternative base URL to {{FOOL_NAME}} to separate the system functions from the boards.')
 		);
 
 		$form['separator-2'] = array(

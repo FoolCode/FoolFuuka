@@ -378,8 +378,14 @@ class Plugins_model extends CI_Model
 		foreach($hook_array as $hook)
 		{
 			// if this is 'after', we might already have an extra parameter in the array that is the previous result
-			$return_temp = call_user_func_array(array($hook['plugin'], $hook['method']), $parameters);
-			
+			if($hook['method'] instanceof Closure)
+			{
+				$return_temp = call_user_func_array($hook['method'], $parameters);
+			}
+			else
+			{
+				$return_temp = call_user_func_array(array($hook['plugin'], $hook['method']), $parameters);
+			}
 			if(is_null($return_temp))
 			{
 				// if NULL, the plugin creator didn't want to send a message outside

@@ -89,7 +89,8 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 		<?php echo __('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $p->num ?>"><?php echo (isset($p->backlinks)) ? implode(' ', $p->backlinks) : '' ?></span>
 	</div>
 
-	<div class="text">
+	<div class="text<?php if (preg_match('/[\x{30A0}-\x{30FF}]/u', $p->comment_processed)) echo ' shift-jis'; ?>">
+		
 		<?php echo $p->comment_processed ?>
 	</div>
 	<?php if($this->tank_auth->is_allowed()) : ?>

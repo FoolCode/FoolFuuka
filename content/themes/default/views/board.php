@@ -94,7 +94,7 @@ if (!defined('BASEPATH'))
 
 	</header>
 
-	<div class="text">
+	<div class="text<?php if (preg_match('/[\x{30A0}-\x{30FF}]/u', $p->comment_processed)) echo ' shift-jis'; ?>">
 		<?php echo $op->comment_processed ?>
 	</div>
 	<div class="thread_tools_bottom">

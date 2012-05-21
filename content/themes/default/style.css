@@ -10,6 +10,21 @@
     color: #34345c;
 }
 
+@font-face {
+    font-family: 'Mona';
+    src: url('fonts/mona.eot');
+    src: url('fonts/mona.eot?#iefix') format('embedded-opentype'),
+         url('fonts/mona.woff') format('woff'),
+         url('fonts/mona.ttf') format('truetype'),
+         url('fonts/mona.svg#mona') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.theme_default .shift-jis {
+	font-family:'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, sans-serif;
+}
+
 .theme_default a:hover {
     color: #dd0000;
 }

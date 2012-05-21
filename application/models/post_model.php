@@ -710,18 +710,31 @@ class Post_model extends CI_Model
 				'width'         => ($file['image_width'] > $thumb_width) ? $thumb_width : $file['image_width'],
 				'height'        => ($file['image_height'] > $thumb_height) ? $thumb_height : $file['image_height'],
 			);
-
-			$CI = & get_instance();
-			$CI->load->library('image_lib');
-
-			$CI->image_lib->initialize($media_config);
-			if (!$CI->image_lib->resize())
+			
+			// leave this NULL so it processes normally
+			$switch = $this->plugins->run_hook('fu_post_model_process_media_switch_resize', array($media_config), 'simple');
+			
+			// if plugin returns false, error
+			if($switch === FALSE)
 			{
 				log_message('error', 'post.php/process_media: failed to generate thumbnail');
 				return FALSE;
 			}
 
-			$CI->image_lib->clear();
+			if(is_null($switch))
+			{
+				$this->load->library('image_lib');
+
+				$this->image_lib->initialize($media_config);
+				if (!$this->image_lib->resize())
+				{
+					log_message('error', 'post.php/process_media: failed to generate thumbnail');
+					return FALSE;
+				}
+
+				$this->image_lib->clear();
+			}
+			
 			$thumb_dimensions = @getimagesize($thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename));
 		}
 		else

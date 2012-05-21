@@ -11,7 +11,8 @@
 }
 
 .theme_default .shift-jis {
-	font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, sans-serif;
+	font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, sans-serif !important;
+	font-size: 16px !important;
 }
 
 .theme_default a:hover {

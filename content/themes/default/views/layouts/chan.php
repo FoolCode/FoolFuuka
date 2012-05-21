@@ -9,6 +9,7 @@ if (!defined('BASEPATH'))
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
 		<title><?php echo $template['title']; ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/font-awesome/css/font-awesome.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php
 		if ($this->config->item('theme_extends') != ''
 			&& $this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme

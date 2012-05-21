@@ -18,7 +18,7 @@ class MY_Controller extends CI_Controller
 		if (!file_exists(FCPATH . "config.php"))
 		{
 			if ($this->uri->segment(1) != "install")
-				show_error("If you are here, and have no clue why " . FOOL_NAME . " is not working, start by reading the <a href='" . FOOL_MANUAL_INSTALL_URL . "'>installation manual</a>.");
+				show_error("If you are here, and have no clue why {{FOOL_NAME}} is not working, start by reading the <a href='{{FOOL_MANUAL_INSTALL_URL}}'>installation manual</a>.");
 		}
 		else
 		{
@@ -33,6 +33,8 @@ class MY_Controller extends CI_Controller
 
 			// loads variables from database for get_setting()
 			load_settings();
+			
+			$this->plugins->run_hook('ff_my_controller_after_load_settings');
 
 			// load the radixes (boards)
 			$this->load->model('radix_model', 'radix');

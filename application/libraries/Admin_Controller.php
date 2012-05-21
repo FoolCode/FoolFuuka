@@ -47,6 +47,8 @@ class Admin_Controller extends MY_Controller
 
 		$this->viewdata['topbar'] = $this->load->view('admin/navbar', '', TRUE);
 
+		// load the preferences model since the admin panel is full of submit buttons
+		$this->load->model('preferences_model', 'preferences');
 
 		// Check if the database is upgraded to the the latest available
 		if ($this->tank_auth->is_admin() && $this->uri->uri_string() != 'admin/database/upgrade' && $this->uri->uri_string() != 'admin/database/do_upgrade')
@@ -59,79 +61,6 @@ class Admin_Controller extends MY_Controller
 				redirect('/admin/database/upgrade/');
 			}
 			$this->cron();
-		}
-	}
-
-
-	/**
-	 * Save in the preferences table the name/value pairs
-	 * 
-	 * @param array $data name => value
-	 */
-	function submit_preferences($data)
-	{
-		foreach ($data as $name => $value)
-		{
-			// in case it's an array of values from name="thename[]"
-			if(is_array($value))
-			{
-				// remove also empty values with array_filter
-				// but we want to keep 0s
-				$value = serialize(array_filter($value, function($var){
-					if($var === 0)
-						return TRUE;
-					return $var;
-				}));
-			}
-			
-			$this->db->where(array('name' => $name));
-			// we can update only if it already exists
-			if ($this->db->count_all_results('preferences') == 1)
-			{
-				$this->db->update('preferences', array('value' => $value),
-					array('name' => $name));
-			}
-			else
-			{
-				$this->db->insert('preferences', array('name' => $name, 'value' => $value));
-			}
-		}
-
-		// reload those preferences
-		load_settings();
-	}
-
-
-	/**
-	 * A lazy way to submit the preference panel input, saves some code in controller
-	 * 
-	 * This function runs the custom validation function that uses the $form array
-	 * to first run the original CodeIgniter validation and then the anonymous
-	 * functions included in the $form array. It sets a proper notice for the 
-	 * admin interface on conclusion.
-	 * 
-	 * @param array $form 
-	 */
-	function submit_preferences_auto($form)
-	{
-		if ($this->input->post())
-		{
-			$this->load->library('form_validation');
-			$result = $this->form_validation->form_validate($form);
-			if (isset($result['error']))
-			{
-				set_notice('warning', $result['error']);
-			}
-			else
-			{
-				if (isset($result['warning']))
-				{
-					set_notice('warning', $result['warning']);
-				}
-				
-				set_notice('success', __('Preferences updated.'));
-				$this->submit_preferences($result['success']);
-			}
 		}
 	}
 

@@ -22,7 +22,7 @@ class FU_Nginx_Cache_Purge extends Plugins_model
 			'fu_plugins_nginx_cache_purge_urls' => array(
 				'type' => 'textarea',
 				'preferences' => TRUE,
-				'label' => 'Cache cleaning URLs',
+				'label' => __('Cache cleaning URLs'),
 				'help' => __('Insert the URLs that Nginx Cache Purge will have to contact and their eventual Basic Auth passwords. Make sure you "allow" only the IP from this server on the Nginx Cache Purge configuration block. The following is the format:') . 
 				'<pre style="margin-top:8px">http://0-cdn-archive.yourdomain.org/purge/:username1:yourpass
 http://1-cdn-archive.yourdomain.org/purge/

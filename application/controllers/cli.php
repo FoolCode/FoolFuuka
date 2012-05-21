@@ -11,12 +11,13 @@ class Cli extends MY_Controller
 
 		if (!$this->input->is_cli_request())
 		{
-			return FALSE;
+			show_404();
 		}
 		
 		cli_notice('notice', sprintf(__('Welcome to {{FOOL_NAME}} version %s'), FOOL_VERSION));
 		cli_notice('notice', __('Write "php index.php cli help" to display all the available command line functions.'));
 	}
+	
 	
 	function _error($error)
 	{
@@ -55,8 +56,10 @@ class Cli extends MY_Controller
 		cli_notice('notice', '    database [help]      Display the database functions available');
 		cli_notice('notice', '    asagi [help]         Display the functions related to the Asagi fetcher');
 		cli_notice('notice', '    cron [help]          Display the long-running functions available');
-		cli_notice('notice', '    ping                 Pong');
 
+		$this->plugins->run_hook('fu_cli_controller_after_help', array(), 'simple');
+
+		cli_notice('notice', '    ping                 Pong');
 	}
 	
 	/**

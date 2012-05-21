@@ -334,7 +334,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'type' => 'close'
 		);
 
-		$this->submit_preferences_auto($form);
+		$this->preferences->submit_auto($form);
 
 		$data['form'] = $form;
 
@@ -381,13 +381,13 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 		
 		if($this->asagi->is_installed() && $this->input->post('enable_autorun'))
 		{
-			$this->submit_preferences(array('fs_asagi_autorun_enabled' => 1));
+			$this->submit(array('fs_asagi_autorun_enabled' => 1));
 			set_notice('success', __('Enabled Asagi autorun.'));
 		}
 		
 		if($this->asagi->is_installed() && $this->input->post('disable_autorun'))
 		{
-			$this->submit_preferences(array('fs_asagi_autorun_enabled' => 0));
+			$this->submit(array('fs_asagi_autorun_enabled' => 0));
 			set_notice('success', __('Disabled Asagi autorun.'));
 		}
 		
@@ -546,7 +546,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'type' => 'close'
 		);
 
-		$this->submit_preferences_auto($form);
+		$this->preferences->submit_auto($form);
 
 		// create the form
 		$data['form'] = $form;

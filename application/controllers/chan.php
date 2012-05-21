@@ -344,8 +344,8 @@ class Chan extends Public_Controller
 				'tools_reply_box',
 				'tools_modal',
 				'tools_search'
-			),
-			'backend_vars' => $this->get_backend_vars() // for JSON on bottom of page, from MY_Controller
+			),				// use MY_Controller to make the plugin system easier to use
+			'backend_vars' => MY_Controller::get_backend_vars() // for JSON on bottom of page, from MY_Controller
 		);
 
 		// include the board shortname in the backend_vars if it's set
@@ -459,7 +459,8 @@ class Chan extends Public_Controller
 	function show_404()
 	{
 		$this->template->title(get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE));
-		$this->_set_parameters(
+		// call it as a static method to make it easier for plugins to call 404
+		Chan::_set_parameters(
 			array(
 				'disable_headers' => TRUE,
 				'error' => __('Page not found. You can use the search if you were looking for something!')
@@ -1333,76 +1334,6 @@ class Chan extends Public_Controller
 
 		$this->template->append_metadata('<meta name="robots" content=""noindex" />');
 		$this->template->build('board');
-	}
-
-
-	/**
-	 * @param null $report
-	 */
-	public function statistics($report = NULL)
-	{
-		// Load Statistics Model
-		$this->load->model('statistics_model', 'statistics');
-
-		if (is_null($report))
-		{
-			$stats = $this->statistics->get_available_stats();
-
-			// Set template variables required to build the HTML.
-			$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Statistics'));
-			$this->_set_parameters(
-				array(
-					'section_title' => __('Statistics'),
-					'is_statistics' => TRUE,
-					'is_statistics_list' => TRUE,
-					'info' => $stats
-				), array(
-					'tools_search' => TRUE
-				)
-			);
-			$this->template->build('statistics');
-		}
-		else
-		{
-			$stats = $this->statistics->check_available_stats($report, get_selected_radix());
-
-			if (!is_array($stats))
-			{
-				return $this->show_404();
-			}
-
-			// Set template variables required to build the HTML.
-			$this->load->helper('date');
-			$this->template->title(get_selected_radix()->formatted_title . ' &raquo; '
-				. __('Statistics') . ': ' . $stats['info']['name']);
-
-			if (isset($stats['info']['frequency']))
-			{
-				$section_title = sprintf(__('Statistics: %s (Next Update in %s)'),
-					$stats['info']['name'],
-					timespan(time(), strtotime($stats['timestamp']) + $stats['info']['frequency'])
-				);
-			}
-			else
-			{
-				$section_title = sprintf(__('Statistics: %s'), $stats['info']['name']);
-			}
-
-			$this->_set_parameters(
-				array(
-					'section_title' => $section_title,
-					'is_statistics' => TRUE,
-					'is_statistics_list' => FALSE,
-					'info' => $stats['info'],
-					'data' => $stats['data']
-				),
-				array(
-					'stats_interface' => 'statistics/' . $stats['info']['interface'],
-					'tools_search' => TRUE
-				)
-			);
-			$this->template->build('statistics');
-		}
 	}
 
 

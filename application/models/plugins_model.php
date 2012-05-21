@@ -148,19 +148,26 @@ class Plugins_model extends CI_Model
 	}
 
 
-	function load_plugins()
+	/**
+	 *
+	 * @param null|string $select the slug of the plugin if you want to choose one
+	 */
+	function load_plugins($select = NULL, $initialize = TRUE)
 	{
 		$plugins = $this->get_enabled();
 
 		foreach ($plugins as $plugin)
 		{
+			if(!is_null($select) && $plugin->slug != $select)
+				continue;
+			
 			$slug = $plugin->slug;
 			if (file_exists('content/plugins/' . $slug . '/' . $slug . '.php'))
 			{
 				require_once 'content/plugins/' . $slug . '/' . $slug . '.php';
 				$this->$slug = new $slug();
 
-				if (method_exists($this->$slug, 'initialize_plugin'))
+				if ($initialize && method_exists($this->$slug, 'initialize_plugin'))
 				{
 					$this->$slug->initialize_plugin();
 				}
@@ -184,6 +191,11 @@ class Plugins_model extends CI_Model
 			array($slug));
 
 		$this->upgrade($slug);
+		
+		$this->load_plugins($slug);
+		
+		if(method_exists($this->$slug, 'plugin_enable'))
+			$this->$slug->plugin_enable();
 
 		return $this->get_by_slug($slug);
 	}
@@ -198,14 +210,17 @@ class Plugins_model extends CI_Model
 		',
 			array($slug));
 
+		if(method_exists($this->$slug, 'plugin_disable'))
+			$this->$slug->plugin_disable();
+		
 		return $this->get_by_slug($slug);
 	}
 
 
 	function remove($slug)
 	{
-		if(method_exists($this, 'disable_plugin'))
-			$this->disable_plugin($slug);
+		if(method_exists($this->$slug, 'plugin_remove'))
+			$this->$slug->plugin_remove();
 
 		delete_files('content/plugins/' . $slug, TRUE);
 	}

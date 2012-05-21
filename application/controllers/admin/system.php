@@ -110,7 +110,7 @@ class System extends Admin_Controller
 
 		$data["form_title"] = __("Preferences");
 
-		$this->submit_preferences_auto($form);
+		$this->preferences->submit_auto($form);
 
 		$data['form'] = $form;
 

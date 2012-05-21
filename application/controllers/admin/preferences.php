@@ -173,7 +173,7 @@ class Preferences extends Admin_Controller
 			'type' => 'close'
 		);
 
-		$this->submit_preferences_auto($form);
+		$this->preferences->submit_auto($form);
 
 		$data['form'] = $form;
 
@@ -243,7 +243,7 @@ class Preferences extends Admin_Controller
 			'type' => 'close'
 		);
 
-		$this->submit_preferences_auto($form);
+		$this->preferences->submit_auto($form);
 
 		$data['form'] = $form;
 
@@ -316,7 +316,7 @@ class Preferences extends Admin_Controller
 			'type' => 'close'
 		);
 
-		$this->submit_preferences_auto($form);
+		$this->preferences->submit_auto($form);
 
 		$data['form'] = $form;
 

@@ -527,7 +527,7 @@ class FS_Articles extends Plugins_model
 	function plugin_remove()
 	{
 		$this->db->query('
-			DROP TABLE `fu_plugin_fs-articles`
+			DROP TABLE `' . $this->db->dbprefix('plugin_fu-board-statistics') . '`
 	    ');
 	}
 

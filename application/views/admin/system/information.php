@@ -24,7 +24,7 @@
 					'alert' => array(
 						'type' => 'important',
 						'title' => __('Old PHP version'),
-						'text' => __('To run FoOlFuuka, you need at least PHP  version 5.2.0.') . '<p class="vartext">' . __('Suggested') . ': 5.3.0+</p>',
+						'text' => __('To run {{FOOL_NAME}}, you need at least PHP  version 5.2.0.') . '<p class="vartext">' . __('Suggested') . ': 5.3.0+</p>',
 						'if' => version_compare(phpversion(), '5.2.0') < 0
 					)
 				)
@@ -47,14 +47,14 @@
 			'data' => array(
 				array(
 					'name' => 'FoOlFuuka Version',
-					'title' => __('FoOlFuuka Version'),
+					'title' => __('{{FOOL_NAME}} Version'),
 					'value' => FOOL_VERSION,
-					'text' => __('The version of FoOlFuuka that you are currently running on your server.'),
+					'text' => __('The version of {{FOOL_NAME}} that you are currently running on your server.'),
 					'alert' => array(
 						'type' => 'success',
 						'type_text' => __('New Version Available'),
 						'title' => __('New Version Available'),
-						'text' => __('Upgrading FoOlFuuka ensures that you have the most secure, stable and feature enhanced release.') . '<p class="vartext">' . __('Suggested') . ': ' . get_setting('fs_cron_autoupgrade_version') . '</p>',
+						'text' => __('Upgrading {{FOOL_NAME}} ensures that you have the most secure, stable and feature enhanced release.') . '<p class="vartext">' . __('Suggested') . ': ' . get_setting('fs_cron_autoupgrade_version') . '</p>',
 						'if' => get_setting('fs_cron_autoupgrade_version') && version_compare(FOOL_VERSION, get_setting('fs_cron_autoupgrade_version')) < 0
 					)
 				),
@@ -62,7 +62,7 @@
 					'name' => 'Environment',
 					'title' => __('Environment'),
 					'value' => ucfirst(ENVIRONMENT),
-					'text' => __('The environment FoOlFuuka is currently running as on the server.'),
+					'text' => __('The environment {{FOOL_NAME}} is currently running as on the server.'),
 				)
 			)
 		);
@@ -86,7 +86,7 @@
 					'alert' => array(
 						'type' => 'important',
 						'title' => __('Safe Mode'),
-						'text' => __('Safe Mode has been enabled on your PHP installation. This setting has nothing to do with security, and it\'s used by shared server hosts to limit your actions. This variable should be turned off for FoOlFuuka to function correctly.') . '<p class="vartext">' . __('Suggested') . ': Off</p>',
+						'text' => __('Safe Mode has been enabled on your PHP installation. This setting has nothing to do with security, and it\'s used by shared server hosts to limit your actions. This variable should be turned off for {{FOOL_NAME}} to function correctly.') . '<p class="vartext">' . __('Suggested') . ': Off</p>',
 						'if' => ini_get('safe_mode')
 					)
 				),
@@ -98,7 +98,7 @@
 					'alert' => array(
 						'type' => 'important',
 						'title' => __('Disabled'),
-						'text' => __('Your PHP configuration currently has URL-aware fopen wrappers disabled. This affects FoOlFuuka functions that require accessing remote files in case cURL is not installed on the system. If it is possible, this variable should be enabled with cURL installed as well.') . '<p class="vartext">' . __('Suggested') . ': On</p>',
+						'text' => __('Your PHP configuration currently has URL-aware fopen wrappers disabled. This affects {{FOOL_NAME}} functions that require accessing remote files in case cURL is not installed on the system. If it is possible, this variable should be enabled with cURL installed as well.') . '<p class="vartext">' . __('Suggested') . ': On</p>',
 						'if' => !ini_get('allow_url_fopen')
 					)
 				),
@@ -122,7 +122,7 @@
 					'alert' => array(
 						'type' => 'important',
 						'title' => __('Disabled'),
-						'text' => __('Your PHP configuration currently has file uploads disabled. This variable must be enabled or FoOlFuuka will not operate correctly.') . '<p class="vartext">' . __('Suggested') . ': On</p>',
+						'text' => __('Your PHP configuration currently has file uploads disabled. This variable must be enabled or {{FOOL_NAME}} will not operate correctly.') . '<p class="vartext">' . __('Suggested') . ': On</p>',
 						'if' => !ini_get('file_uploads')
 					)
 				),

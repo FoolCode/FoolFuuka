@@ -40,6 +40,12 @@ class FU_Board_Statistics extends Plugins_model
 			)
 		);
 		
+		$this->plugins->register_hook($this, 'fu_themes_generic_top_nav_buttons', 3, function($top_nav){
+				$top_nav[] = array('href' => site_url(array(get_selected_radix()->shortname, 'statistics')), 'text' => __('Stats'));
+				return array('return' => $top_nav);
+		});
+
+		
 		$this->plugins->register_hook($this, 'fu_cli_controller_after_help', 5, function(){ 
 			cli_notice('notice', '    board_stats [help]   Run processes relative to the creation of statistics');
 			return NULL;

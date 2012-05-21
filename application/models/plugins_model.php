@@ -417,7 +417,12 @@ class Plugins_model extends CI_Model
 			}
 			
 			// in the most complex situation, we have array('parameters'=>array(...), 'return'=>'value')
-			if(isset($return_temp['parameters']))
+			if($modifier == 'simple' && !is_null($return_temp['return']))
+			{
+				// if simple we just stack the single parameter over and over
+				$parameters = array($return_temp['return']);
+			}
+			else if(isset($return_temp['parameters']))
 			{
 				$parameters = $return['parameters'];
 			}

@@ -167,7 +167,6 @@ if (!defined('BASEPATH'))
 							{
 								$top_nav[] = array('href' => site_url(array($board->shortname, 'ghost')), 'text' => __('Ghost'));
 								$top_nav[] = array('href' => site_url(array($board->shortname, 'gallery')), 'text' => __('Gallery'));
-								$top_nav[] = array('href' => site_url(array($board->shortname, 'statistics')), 'text' => __('Stats'));
 							}
 							$top_nav = $this->plugins->run_hook('fu_themes_generic_top_nav_buttons', array($top_nav), 'simple');
 							$top_nav = $this->plugins->run_hook('fu_themes_default_top_nav_buttons', array($top_nav), 'simple');

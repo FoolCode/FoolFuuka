@@ -9,7 +9,7 @@ if (!defined('BASEPATH'))
 	<tr>
 		<th><?php echo __('Poster') ?></th>
 		<th><?php echo __('Last Seen') ?></th>
-		<th><?php echo __('Latest post') ?></th>
+		<th><?php echo __('Latest Post') ?></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -31,7 +31,9 @@ if (!defined('BASEPATH'))
 			</a>
 		</td>
 		<td style="width:350px; text-align:center;"><?php echo date('d-M-Y H:i:s', $d->{'MAX(timestamp)'}) ?></td>
-		<td><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : ''))) ?>">&gt;&gt;<?php echo $d->num . ($d->subnum ? ',' . $d->subnum : '') ?></a></td>
+		<td><a href="<?php echo site_url(array(get_selected_radix()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : ''))) ?>">
+			&gt;&gt;<?php echo $d->num . ($d->subnum ? ',' . $d->subnum : '') ?>
+		</a></td>
 	</tr>
 		<?php endforeach; ?>
 	</tbody>

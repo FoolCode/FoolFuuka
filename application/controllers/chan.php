@@ -1204,7 +1204,7 @@ class Chan extends Public_Controller
 
 		if ($search['text'])
 			array_push($title,
-				sprintf(__('that contain &lsquo;%s&rsquo;'), 
+				sprintf(__('that contain &lsquo;%s&rsquo;'),
 					trim(fuuka_htmlescape(urldecode($search['text'])))));
 		if ($search['subject'])
 			array_push($title,
@@ -1380,7 +1380,7 @@ class Chan extends Public_Controller
 			{
 				$section_title = sprintf(__('Statistics: %s (Next Update in %s)'),
 					$stats['info']['name'],
-					timespan($stats['info']['frequency'] + strtotime($stats['timestamp']))
+					timespan(time(), strtotime($stats['timestamp']) + $stats['info']['frequency'])
 				);
 			}
 			else

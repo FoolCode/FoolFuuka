@@ -467,10 +467,11 @@ class Statistics_model extends CI_Model
 				SELECT
 					name, trip, COUNT(num) AS posts,
 					AVG(timestamp%86400) AS avg1,
-					STD(timestamp%86400) AS std1,
+					STDDEV_POP(timestamp%86400) AS std1,
 					(AVG((timestamp+43200)%86400)+43200)%86400 avg2,
-					STD((timestamp+43200)%86400) AS std2
+					STDDEV_POP((timestamp+43200)%86400) AS std2
 				FROM ' . $this->get_table($board) . '
+				FORCE INDEX(fullname_index)
 				WHERE timestamp > ?
 				GROUP BY name, trip
 				HAVING count(*) > 4
@@ -488,7 +489,7 @@ class Statistics_model extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT
-				(FLOOR(timestamp/300)%288)*300 AS time, COUNT(*), COUNT(media_hash),
+				(FLOOR(timestamp/300)%288)*300 AS time, COUNT(timestamp), COUNT(media_id),
 				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM ' . $this->get_table($board) . '
 			USE INDEX(timestamp_index)
@@ -508,7 +509,7 @@ class Statistics_model extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT
-				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(*),
+				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(timestamp),
 				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM ' . $this->get_table($board) . '
 			USE INDEX(timestamp_index)
@@ -528,7 +529,7 @@ class Statistics_model extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT
-				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(*), COUNT(media_hash),
+				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(timestamp), COUNT(media_id),
 				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM ' . $this->get_table($board) . '
 			USE INDEX(timestamp_index)
@@ -564,8 +565,7 @@ class Statistics_model extends CI_Model
 		$query = $this->db->query('
 			SELECT
 				day AS time, posts, images, sage
-			FROM ' . $this->get_table($board,
-				'daily') . '
+			FROM ' . $this->get_table($board, 'daily') . '
 			WHERE day > floor((?-31536000)/86400)*86400
 			GROUP BY day
 			ORDER BY day
@@ -583,8 +583,7 @@ class Statistics_model extends CI_Model
 		$query = $this->db->query('
 			SELECT
 				name, trip, firstseen, postcount
-			FROM ' . $this->get_table($board,
-			'users') . '
+			FROM ' . $this->get_table($board, 'users') . '
 			WHERE postcount > 30
 			ORDER BY firstseen DESC;
 		');
@@ -600,8 +599,7 @@ class Statistics_model extends CI_Model
 		$query = $this->db->query('
 			SELECT
 				day AS time, trips, names, anons
-			FROM ' . $this->get_table($board,
-				'daily') . '
+			FROM ' . $this->get_table($board, 'daily') . '
 			WHERE day > floor((?-31536000)/86400)*86400
 			GROUP BY day
 			ORDER BY day
@@ -620,8 +618,7 @@ class Statistics_model extends CI_Model
 		$query = $this->db->query('
 			SELECT
 				name, trip, postcount
-			FROM ' . $this->get_table($board,
-			'users') . '
+			FROM ' . $this->get_table($board, 'users') . '
 			ORDER BY postcount DESC
 			LIMIT 512
 		');
@@ -636,7 +633,7 @@ class Statistics_model extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT
-				COUNT(*), COUNT(*)/60
+				COUNT(timestamp), COUNT(timestamp)/60
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ?
 		',
@@ -652,7 +649,7 @@ class Statistics_model extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT
-				COUNT(*), COUNT(*)/60
+				COUNT(timestamp), COUNT(timestamp)/60
 			FROM ' . $this->get_table($board) . '
 			WHERE timestamp > ? AND subnum != 0
 		',
@@ -685,10 +682,10 @@ class Statistics_model extends CI_Model
 	{
 		$query = $this->db->query('
 			SELECT
-				GROUP_CONCAT(DISTINCT CONCAT(name) SEPARATOR \', \'), MAX(timestamp), num, subnum
+				name, trip, MAX(timestamp), num, subnum
 			FROM ' . $this->get_table($board) . '
-			WHERE id != 0 AND timestamp > ?
-			GROUP BY id
+			WHERE poster_ip <> 0 AND timestamp > ?
+			GROUP BY name, trip
 			ORDER BY MAX(timestamp) DESC
 		',
 			array(time() - 3600));

@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
 	</tr>
 	</thead>
 	<tbody style="text-align:center;">
-	<td><?php echo $data_array[0]['COUNT(*)']; ?></td>
-	<td><?php echo $data_array[0]['COUNT(*)/60']; ?></td>
+	<td><?php echo $data_array[0]['COUNT(timestamp)']; ?></td>
+	<td><?php echo $data_array[0]['COUNT(timestamp)/60']; ?></td>
 	</tbody>
 </table>

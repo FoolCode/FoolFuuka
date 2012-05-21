@@ -158,7 +158,7 @@ class Post_model extends CI_Model
 		{
 			$image = $post->media;
 		}
-		
+
 		// if we don't check, the return will return a valid folder that will evaluate file_exists() as TRUE
 		if(is_null($image))
 		{
@@ -266,13 +266,13 @@ class Post_model extends CI_Model
 			if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' && get_setting('fs_fuuka_boards_media_balancers_https'))
 			{
 				$balancers = get_setting('fs_fuuka_boards_media_balancers_https');
-			} 
+			}
 
 			if (!isset($balancers) && get_setting('fs_fuuka_boards_media_balancers'))
 			{
 				$balancers = get_setting('fs_fuuka_boards_media_balancers');
 			}
-			
+
 			if(isset($balancers))
 			{
 				$media_cdn = array_filter(preg_split('/\r\n|\r|\n/', $balancers));
@@ -311,12 +311,12 @@ class Post_model extends CI_Model
 			return FALSE;
 		}
 
-		if ($board->archive)
+		if ($board->archive && $board->images_url != "")
 		{
 			// ignore webkit and opera user agents
 			if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
 			{
-				return ($board->images_url?$board->images_url:'http://images.4chan.org/'.$board->shortname.'/src/') . $post->media_orig;
+				return $board->images_url . $post->media_orig;
 			}
 
 			return site_url(array($board->shortname, 'redirect')) . $post->media_orig;
@@ -959,10 +959,10 @@ class Post_model extends CI_Model
 		{
 			if ($num)
 			{
-				return $html['prefix'] . '<a href="http://boards.4chan.org/' . $shortname . '/res/' . $num . '">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
+				return $html['prefix'] . '<a href="//boards.4chan.org/' . $shortname . '/res/' . $num . '">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
 			}
 
-			return $html['prefix'] . '<a href="http://boards.4chan.org/' . $shortname . '/">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
+			return $html['prefix'] . '<a href="//boards.4chan.org/' . $shortname . '/">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
 		}
 
 		if ($num)

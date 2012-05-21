@@ -129,9 +129,9 @@ if (!defined('BASEPATH'))
 						</ul>
 						<ul class="nav">
 						<?php if (get_selected_radix()) : ?>
-							<?php if (get_selected_radix()->archive) : ?>
+							<?php if (get_selected_radix()->archive && get_selected_radix()->board_url != "") : ?>
 							<li>
-								<a href="//boards.4chan.org/<?php echo get_selected_radix()->shortname ?>" style="padding-right:4px;">4chan <i class="icon-share icon-white"></i></a>
+								<a href="<?php echo get_selected_radix()->board_url ?>" style="padding-right:4px;">4chan <i class="icon-share icon-white"></i></a>
 							</li>
 							<?php endif; ?>
 							<li style="padding-right:0px;">
@@ -163,7 +163,7 @@ if (!defined('BASEPATH'))
 						<?php endif; ?>
 						<?php
 							$top_nav = array();
-							if(get_selected_radix())	
+							if(get_selected_radix())
 							{
 								$top_nav[] = array('href' => site_url(array($board->shortname, 'ghost')), 'text' => __('Ghost'));
 								$top_nav[] = array('href' => site_url(array($board->shortname, 'gallery')), 'text' => __('Gallery'));
@@ -174,7 +174,7 @@ if (!defined('BASEPATH'))
 
 							foreach($top_nav as $t) : ?>
 							<li><a href="<?php echo $t['href'] ?>"><?php echo $t['text'] ?></a></li>
-							<?php endforeach; 
+							<?php endforeach;
 						?>
 						</ul>
 					<?php echo $template['partials']['tools_search']; ?>
@@ -259,7 +259,7 @@ if (!defined('BASEPATH'))
 		<footer id="footer">
 			<a href="http://github.com/FoOlRulez/FoOlFuuka"><?php echo FOOL_NAME ?> Imageboard <?php echo FOOL_VERSION ?></a>
 			- <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
-			
+
 			<div style="float:right">
 				<div class="btn-group dropup pull-right">
 					<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
@@ -273,8 +273,8 @@ if (!defined('BASEPATH'))
 					</ul>
 				</div>
 			</div>
-			
-			<?php 
+
+			<?php
 			$bottom_nav = array();
 			$bottom_nav = $this->plugins->run_hook('fu_themes_generic_bottom_nav_buttons', array($bottom_nav), 'simple');
 			$bottom_nav = $this->plugins->run_hook('fu_themes_default_bottom_nav_buttons', array($bottom_nav), 'simple');
@@ -287,8 +287,8 @@ if (!defined('BASEPATH'))
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
-			
-			<?php 
+
+			<?php
 				if(get_setting('fs_theme_footer_text'))
 					echo '<section class="footer_text">' . get_setting('fs_theme_footer_text') . '</section>';
 			?>

@@ -2379,7 +2379,7 @@ class Post_model extends CI_Model
 			WHERE ip = ?
 			LIMIT 0, 1
 		',
-			array(inet_ptod($this->input->ip_address()))
+			array($this->input->ip_address())
 		);
 
 		if ($check->num_rows() > 0)
@@ -2408,7 +2408,7 @@ class Post_model extends CI_Model
 			ORDER BY timestamp DESC
 			LIMIT 0,1
 		',
-			array(inet_ptod($this->input->ip_address()))
+			array($this->input->ip_address())
 		);
 
 		if ($check->num_rows() > 0)
@@ -2646,7 +2646,7 @@ class Post_model extends CI_Model
 				WHERE poster_ip = ? AND comment = ? AND timestamp >= ?
 			',
 			array(
-				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
+				$this->input->ip_address(), ($comment)?$comment:NULL, ($timestamp - 10)
 			)
 		);
 
@@ -2714,7 +2714,7 @@ class Post_model extends CI_Model
 					$num, $num, $num, $num, $num, $timestamp, $lvl,
 					($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL,
 					($subject)?$subject:NULL, ($comment)?$comment:NULL,
-					$password, inet_ptod($this->input->ip_address()), $poster_hash
+					$password, $this->input->ip_address(), $poster_hash
 				)
 			);
 
@@ -2728,7 +2728,7 @@ class Post_model extends CI_Model
 				WHERE poster_ip = ? AND comment = ? AND  timestamp >= ?
 			',
 			array(
-				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
+				$this->input->ip_address(), ($comment)?$comment:NULL, ($timestamp - 10)
 			));
 
 			if($check_duplicate->num_rows() > 1)
@@ -2745,7 +2745,7 @@ class Post_model extends CI_Model
 				$num, ($num)?0:1,
 				$timestamp, $lvl,
 				($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL, ($subject)?$subject:NULL,
-				($comment)?$comment:NULL, $password, $spoiler, inet_ptod($this->input->ip_address()),
+				($comment)?$comment:NULL, $password, $spoiler, $this->input->ip_address(),
 				$poster_hash
 			);
 
@@ -2838,7 +2838,7 @@ class Post_model extends CI_Model
 				ORDER BY doc_id DESC
 			',
 			array(
-				inet_ptod($this->input->ip_address()), ($comment)?$comment:NULL, ($timestamp - 10)
+				$this->input->ip_address(), ($comment)?$comment:NULL, ($timestamp - 10)
 			));
 
 			if($check_duplicate->num_rows() > 1)

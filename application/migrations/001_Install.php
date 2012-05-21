@@ -15,7 +15,7 @@ class Migration_Install extends CI_Migration
 			$this->db->query(
 				"CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('ci_sessions') . "` (
 						`session_id` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '0',
-						`ip_address` varchar(16) COLLATE utf8_bin NOT NULL DEFAULT '0',
+						`ip_address` decimal(39,0) unsigned NOT NULL,
 						`user_agent` varchar(120) COLLATE utf8_bin DEFAULT NULL,
 						`last_activity` int(10) unsigned NOT NULL DEFAULT '0',
 						`user_data` text COLLATE utf8_bin NOT NULL,

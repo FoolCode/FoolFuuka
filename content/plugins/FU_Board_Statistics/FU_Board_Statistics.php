@@ -41,6 +41,7 @@ class FU_Board_Statistics extends Plugins_model
 		);
 		
 		$this->plugins->register_hook($this, 'fu_themes_generic_top_nav_buttons', 3, function($top_nav){
+			if(get_selected_radix())
 				$top_nav[] = array('href' => site_url(array(get_selected_radix()->shortname, 'statistics')), 'text' => __('Stats'));
 				return array('return' => $top_nav);
 		});

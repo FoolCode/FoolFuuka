@@ -712,7 +712,7 @@ class Post_model extends CI_Model
 			);
 			
 			// leave this NULL so it processes normally
-			$switch = $this->plugins->run_hook('fu_post_model_process_media_switch_resize', array($media_config), 'simple');
+			$switch = $this->plugins->run_hook('fu_post_model_process_media_switch_resize', array($media_config));
 			
 			// if plugin returns false, error
 			if($switch === FALSE)
@@ -722,7 +722,7 @@ class Post_model extends CI_Model
 			}
 
 			if(is_null($switch))
-			{
+			{ die('failure');
 				$this->load->library('image_lib');
 
 				$this->image_lib->initialize($media_config);
@@ -3038,7 +3038,7 @@ class Post_model extends CI_Model
 		}
 
 		// delete media file only if there is only one image OR the image is banned
-		if ($post->total == 1 || $post->banned == 1)
+		//if ($post->total == 1 || $post->banned == 1)
 		{
 			if ($media === TRUE)
 			{

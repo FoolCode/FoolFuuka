@@ -722,7 +722,7 @@ class Post_model extends CI_Model
 			}
 
 			if(is_null($switch))
-			{ die('failure');
+			{
 				$this->load->library('image_lib');
 
 				$this->image_lib->initialize($media_config);
@@ -3038,7 +3038,7 @@ class Post_model extends CI_Model
 		}
 
 		// delete media file only if there is only one image OR the image is banned
-		//if ($post->total == 1 || $post->banned == 1)
+		if ($post->total == 1 || $post->banned == 1)
 		{
 			if ($media === TRUE)
 			{

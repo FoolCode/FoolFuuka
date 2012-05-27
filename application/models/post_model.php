@@ -36,8 +36,25 @@ class Post_model extends CI_Model
 			// if the value returned is an Array, a plugin was active
 			$parameters = $before['parameters'];
 		}
-
-		$return = call_user_func_array(array($this, 'p_' . $name), $parameters);
+		
+		switch (count($parameters)) {
+			case 0:
+				$return = $this->{'p_' . $name}();
+			case 1:
+				$return = $this->{'p_' . $name}($parameters[0]);
+			case 2:
+				$return = $this->{'p_' . $name}($parameters[0], $parameters[1]);
+			case 3:
+				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2]);
+			case 4:
+				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3]);
+			case 5:
+				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
+			default:
+				$return = call_user_func_array(array(&$this, 'p_' . $name), $parameters);
+			break;
+		}
+		
 
 		// in the after, the last parameter passed will be the result
 		array_push($parameters, $return);
@@ -229,19 +246,78 @@ class Post_model extends CI_Model
 		}
 
 		// locate the image
-		if (file_exists($this->get_media_dir($board, $post, $thumbnail)) !== FALSE)
+		if (file_exists($this->get_media_dir($board, $post, $thumbnail)) !== FALSE
+			|| file_exists($this->get_media_dir($board, $post, FALSE)) !== FALSE)
 		{
 			if ($thumbnail === TRUE)
 			{
+				$try_rebuild = FALSE;
+				
 				if (isset($post->op) && $post->op == 1)
 				{
-					$image = $post->preview_op ? : $post->preview_reply;
+					if ($post->preview_op)
+					{
+						$image = $post->preview_op;
+					}
+					else
+					{
+						$try_rebuild = TRUE;
+					}
+					
 				}
 				else
 				{
-					$image = $post->preview_reply ? : $post->preview_op;
+					if($post->preview_reply)
+					{
+						$image = $post->preview_reply;
+					}
+					else
+					{
+						$try_rebuild = TRUE;
+					}
 				}
 
+				/*if ($try_rebuild)
+				{
+					if (!is_null($post->media) 
+						&& file_exists($this->get_media_dir($board, $post, FALSE)) !== FALSE
+						&& find_imagick())
+					{	
+						if($post->op)
+							$post_r->preview_op = $post->preview_orig;
+						else
+							$post_r->preview_reply = $post->preview_orig;
+						
+						$media_config = array(
+							'image_library' => 'ImageMagick',
+							'library_path'  => get_setting('fs_serv_imagick_path', '/usr/bin'),
+							'source_image'  => $this->get_media_dir($board, $post, FALSE),
+							'new_image'     => $this->get_media_dir($board, $post, TRUE),
+							'width'         => $post->preview_w,
+							'height'        => $post->preview_h,
+							'quality'		=> '70%'
+						);
+						
+						$this->load->library('image_lib');
+
+						$this->image_lib->initialize($media_config);
+						if (!$this->image_lib->resize())
+						{
+							log_message('error', 'post.php/get_media_link: failed to regenerate thumbnail');
+							return FALSE;
+						}
+
+						$this->image_lib->clear();
+
+						$this->db->query('
+							UPDATE ' . $this->radix->get_table($board, '_images') . '
+							SET preview_' . ($post->op?'op':'reply') . ' = ?
+							WHERE media_id = ?
+						', array($post->preview_orig, $post->media_id));
+					
+						return $this->get_media_link($board, $post, $thumbnail);
+					}
+				}*/
 
 				if(is_null($image) || $image == '')
 				{

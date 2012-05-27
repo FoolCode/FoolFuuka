@@ -12,7 +12,8 @@ if (!defined('BASEPATH'))
  */
 function __($text)
 {
-	//config_item();
+	$text = _($text);
+	$text = str_replace('{{FOOL_NAME}}', FOOL_NAME, $text);
 	return $text;
 }
 

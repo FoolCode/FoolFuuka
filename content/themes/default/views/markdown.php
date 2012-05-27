@@ -23,6 +23,7 @@ if (!defined('BASEPATH'))
 	.markdown code { font-weight: normal; color: #555; }
 	.markdown pre { font-weight: normal; color: #555; max-width: 100%; word-wrap: break-word; }
 	.markdown pre code { font-weight: normal; color: #555; width: 100%; }
+	.markdown a { color: #0480be !important }
 </style>
 
 <div class="markdown">

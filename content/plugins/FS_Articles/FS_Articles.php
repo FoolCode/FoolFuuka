@@ -331,6 +331,7 @@ class FS_Articles extends Plugins_model
 				.markdown code { font-weight: normal; color: #555; }
 				.markdown pre { font-weight: normal; color: #555; max-width: 100%; word-wrap: break-word; }
 				.markdown pre code { font-weight: normal; color: #555; width: 100%; }
+				.markdown a { color: #c00000 !important }
 			</style>
 				
 			<div class="markdown">

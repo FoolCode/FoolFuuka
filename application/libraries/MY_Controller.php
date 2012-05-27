@@ -44,33 +44,31 @@ class MY_Controller extends CI_Controller
 			$this->load->model('vote_model', 'vote');
 
 			// This is the first chance we get to load the right translation file
-			
-			if($lang = $this->input->cookie('language'))
+			$available_langs = config_item('ff_available_languages');
+			$lang = $this->input->cookie('foolfuuka_language');
+			if(!$lang || !array_key_exists($lang, $available_langs))
 			{
-				$available_langs = config_item('ff_available_languages');
-
-				if (array_key_exists($lang, $available_langs))
-				{
-					$locale = $lang . '.utf8';
-					putenv('LANG=' . $locale);
-					if ($locale != "tr_TR.utf8")
-					{
-						setlocale(LC_ALL, $locale);
-					}
-					else // workaround to make turkish work
-					{
-						setlocale(LC_COLLATE, $locale);
-						setlocale(LC_MONETARY, $locale);
-						setlocale(LC_NUMERIC, $locale);
-						setlocale(LC_TIME, $locale);
-						setlocale(LC_MESSAGES, $locale);
-						setlocale(LC_CTYPE, "sk_SK.utf8");
-					}
-
-					bindtextdomain($lang, FCPATH . "assets/locale");
-					textdomain($lang);
-				}
+				$lang = 'en_EN';
 			}
+			
+			$locale = $lang . '.utf8';
+			putenv('LANG=' . $locale);
+			if ($locale != "tr_TR.utf8")
+			{
+				setlocale(LC_ALL, $locale);
+			}
+			else // workaround to make turkish work
+			{
+				setlocale(LC_COLLATE, $locale);
+				setlocale(LC_MONETARY, $locale);
+				setlocale(LC_NUMERIC, $locale);
+				setlocale(LC_TIME, $locale);
+				setlocale(LC_MESSAGES, $locale);
+				setlocale(LC_CTYPE, "sk_SK.utf8");
+			}
+
+			bindtextdomain($lang, FCPATH . "assets/locale");
+			textdomain($lang);
 			
 			// a good time to change some of the defauly settings dynamically
 			$this->config->config['tank_auth']['allow_registration'] = !get_setting('fs_reg_disabled');

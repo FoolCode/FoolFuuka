@@ -7,7 +7,7 @@ if (!defined('BASEPATH'))
 $config = array();
 
 $config['ff_available_languages'] = array(
-	'' => 'English',
+	'en_EN' => 'English',
 	'fr_FR' => 'French'
 );
 

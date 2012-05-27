@@ -440,7 +440,7 @@ class Admin_Controller extends MY_Controller
 				// if a version is outputted, save the new version number in database
 				if ($versions[0])
 				{
-					set_setting('fs_cron_autoupgrade_version', $versions[0]->name);
+					set_setting('fs_cron_autoupgrade_version', end($versions)->name);
 				}
 
 				// remove one week old logs

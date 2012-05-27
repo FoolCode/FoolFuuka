@@ -24,7 +24,7 @@ if (!defined('BASEPATH'))
 			<div class="post_file_controls">
 				<?php if (!get_selected_radix()->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
 				<a href="<?php echo site_url(get_selected_radix()->shortname . '/search/image/' . $op->safe_media_hash) ?>"
-				   class="btnr parent">View Same</a><a
+				   class="btnr parent"><?php echo __('View Same') ?></a><a
 					href="http://google.com/searchbyimage?image_url=<?php echo $op->thumb_link ?>" target="_blank"
 					class="btnr parent">Google</a><a
 					href="http://iqdb.org/?url=<?php echo $op->thumb_link ?>" target="_blank"
@@ -45,13 +45,13 @@ if (!defined('BASEPATH'))
 			<?php if ($op->poster_hash_processed) : ?><span class="poster_hash">ID:<?php echo $op->poster_hash_processed ?></span><?php endif; ?>
 			<?php if ($op->capcode != 'N') : ?>
 			<?php if ($op->capcode == 'M') : ?>
-				<span class="post_level post_level_moderator">## Mod</span>
+				<span class="post_level post_level_moderator">## <?php echo __('Mod') ?></span>
 				<?php endif ?>
 			<?php if ($op->capcode == 'G') : ?>
-				<span class="post_level post_level_global_moderator">## Global Mod</span>
+				<span class="post_level post_level_global_moderator">## <?php echo __('Global Mod') ?></span>
 				<?php endif ?>
 			<?php if ($op->capcode == 'A') : ?>
-				<span class="post_level post_level_administrator">## Admin</span>
+				<span class="post_level post_level_administrator">## <?php echo __('Admin') ?></span>
 				<?php endif ?>
 			<?php endif; ?>
 
@@ -62,11 +62,11 @@ if (!defined('BASEPATH'))
 			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#'  . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="highlight">No.</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num ?>" data-post="<?php echo $op->num ?>" data-function="quote"><?php echo $op->num ?></a>
 
 			<span class="post_controls">
-				<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>" class="btnr parent">View</a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#reply' ?>" class="btnr parent">Reply</a><?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url(get_selected_radix()->shortname . '/last50/' . $op->num) . '" class="btnr parent">Last 50</a>' : '' ?><?php echo (get_selected_radix()->archive) ? '<a href="http://boards.4chan.org/' . get_selected_radix()->shortname . '/res/' . $op->num . '" class="btnr parent">Original</a>' : '' ?><a href="<?php echo site_url(get_selected_radix()->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report">Report</a><?php if($this->tank_auth->is_allowed() || !get_selected_radix()->archive) : ?><a href="<?php echo site_url(get_selected_radix()->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete">Delete</a><?php endif; ?>
+				<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>" class="btnr parent"><?php echo __('View') ?></a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#reply' ?>" class="btnr parent"><?php echo __('Reply') ?></a><?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url(get_selected_radix()->shortname . '/last50/' . $op->num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?php echo (get_selected_radix()->archive) ? '<a href="http://boards.4chan.org/' . get_selected_radix()->shortname . '/res/' . $op->num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?php echo site_url(get_selected_radix()->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?php echo __('Report') ?></a><?php if($this->tank_auth->is_allowed() || !get_selected_radix()->archive) : ?><a href="<?php echo site_url(get_selected_radix()->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?php echo __('Delete') ?></a><?php endif; ?>
 			</span>
 
-			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="This post was deleted from 4chan manually."/></span><?php endif ?>
-			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="This post contains a spoiler image."/></span><?php endif ?>
+			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="<?php echo form_prep(__('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
+			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="<?php echo form_prep(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>
 
 			<div class="backlink_list"<?php echo (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
 				<?php echo __('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
@@ -98,7 +98,7 @@ if (!defined('BASEPATH'))
 		<?php echo $op->comment_processed ?>
 	</div>
 	<div class="thread_tools_bottom">
-		<?php echo (isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' posts ' . ((isset($post['images_omitted']) && $post['images_omitted'] > 0) ? 'and ' . $post['images_omitted'] . ' images' : '') . ' omitted.</span>' : '' ?>
+		<?php echo (isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' ' . __('posts')  . ((isset($post['images_omitted']) && $post['images_omitted'] > 0) ? ' and ' . $post['images_omitted'] . ' images' : '') . ' ' . __('omitted') . '</span>' : '' ?>
 	</div>
 	
 	<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>

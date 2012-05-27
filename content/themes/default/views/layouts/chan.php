@@ -104,6 +104,9 @@ if (!defined('BASEPATH'))
 									<b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
+									<?php echo '<li><a href="' . site_url('@default') . '">Index</a></li>'; ?>
+									<?php if($this->tank_auth->is_allowed()) echo '<li><a href="' . site_url('@system/admin') . '">Control panel</a></li>'; ?>
+									<li class="divider"></li>
 									<?php if ($this->radix->get_archives()) : ?>
 										<li class="nav-header"><?php echo __('Archives') ?></li>
 										<?php
@@ -270,6 +273,22 @@ if (!defined('BASEPATH'))
 					<?php foreach($this->fu_available_themes as $theme) : ?>
 						 <li><a href="<?php echo site_url(array('@system', 'functions', 'theme', $theme['theme_directory'])) ?>" onclick="changeTheme('<?php echo $theme['theme_directory'] ?>'); return false;"><?php echo $theme['theme_name'] ?><?php echo ($theme['theme_directory'] == $this->fu_theme)?' <i class="icon-ok"></i>':'' ?></a></li>
 					<?php endforeach; ?>
+					</ul>
+				</div>
+			</div>
+			
+			<div style="float:right">
+				<div class="btn-group dropup pull-right">
+					<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
+						<?php echo __('Change language [alpha]') ?>
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+					<?php foreach(config_item('ff_available_languages') as $key => $lang) : ?>
+						 <li><a href="<?php echo site_url(array('@system', 'functions', 'language', $key)) ?>" onclick="changeLanguage('<?php echo $key ?>'); return false;"><?php echo $lang ?><?php echo ((!$this->input->cookie('foolfuuka_language') && $key == 'en_EN') || $key == $this->input->cookie('foolfuuka_language'))?' <i class="icon-ok"></i>':'' ?></a></li>
+					<?php endforeach; ?>
+						 <li class="divider"></li>
+						 <li><a href="http://archive.foolz.us/article/translate/"><?php echo __('Add a translation') ?></a></li>
 					</ul>
 				</div>
 			</div>

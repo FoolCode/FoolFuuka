@@ -320,7 +320,7 @@ body.theme_default {
 .theme_default .search-dropdown div.search-dropdown-menu ul .help {
 	text-align:center;
 	font-size:10px;
-	line-height:14px;
+	line-height:10px;
 }
 
 .theme_default .search-dropdown label input, 
@@ -763,9 +763,9 @@ body.theme_default {
 
 .theme_default .thread_form .comment_label {
     position:absolute;
-    left:550px;
+    left:560px;
     top: 11px;
-    width:70px;
+    min-width:70px;
     background-color: #EEEEEE;
     border: 1px solid #CCCCCC;
     display: inline-block;
@@ -796,7 +796,7 @@ body.theme_default {
 
 
 .theme_default .thread_form label {
-    width:70px;
+    min-width:85px;
     color:#888;
 }
 
@@ -829,7 +829,6 @@ body.theme_default {
 
 .theme_default .thread_form .rules {
     font-size:11px;
-    max-width:300px;
     line-height:10px;
     padding: 0 10px;
 }

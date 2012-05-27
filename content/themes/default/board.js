@@ -696,6 +696,12 @@ var changeTheme = function(theme)
 	window.location.reload();
 }
 
+var changeLanguage = function(language)
+{
+	setCookie('foolfuuka_language', language, 30, '/');
+	window.location.reload();
+}
+
 
 function setCookie( name, value, expires, path, domain, secure )
 {

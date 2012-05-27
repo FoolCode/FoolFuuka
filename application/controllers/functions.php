@@ -26,5 +26,18 @@ class Functions extends Public_Controller
 		$this->template->set_layout('redirect');
 		$this->template->build('redirection');
 	}
+	
+	public function language($lang = 'en_EN')
+	{
+		$this->template->title(__('Changing Language'));
+		$this->input->set_cookie('foolfuuka_language', $lang, 31536000);
+		if ($this->input->server('HTTP_REFERER') && strpos($this->agent->referrer(), site_url()) === 0) :
+			$this->template->set('url', $this->input->server('HTTP_REFERER'));
+		else :
+			$this->template->set('url', site_url());
+		endif;
+		$this->template->set_layout('redirect');
+		$this->template->build('redirection');
+	}
 
 }

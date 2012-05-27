@@ -21,7 +21,7 @@ class Install extends Install_Controller
 	/**
 	 * This function shows and does everything on installation.
 	 * The rest are private functions.
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function index()
@@ -39,13 +39,12 @@ class Install extends Install_Controller
 		$form['open'] = array(
 			'type' => 'open'
 		);
-		
+
 		$form['db_type'] = array(
 			'label' => __('Database type'),
-			'type' => 'input',
-			'values' => array('mysql' => 'MySQL'),
-			'value' => 'mysql',
-			'disabled' => 'disabled',
+			'type' => 'dropdown',
+			'options' => array('mysql' => 'MySQL'),
+			'selected' => 'mysql',
 			'help' => __('The type of database you\'re going to use. There\'s only one option currently.')
 		);
 
@@ -117,17 +116,17 @@ class Install extends Install_Controller
 			'required' => 'required',
 			'help' => __('The email of the administrator\'s account')
 		);
-		
+
 		$form['spacer2'] = array(
 			'type' => 'separator',
 		);
-		
+
 		$form['submit'] = array(
 			'type' => 'submit',
 			'value' => 'Submit',
 			'class' => 'btn btn-primary'
 		);
-		
+
 		$form['close'] = array(
 			'type' => 'close'
 		);
@@ -152,7 +151,7 @@ class Install extends Install_Controller
 
 	/**
 	 * Does the actual installation once data is submitted
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function _submit($post)
@@ -203,7 +202,7 @@ class Install extends Install_Controller
 			return false;
 		}
 
-		// pick the sample config and replace entries so we can insert the database 
+		// pick the sample config and replace entries so we can insert the database
 		$config = read_file('assets/config.sample.php');
 		$config = str_replace("\$db['default']['dbdriver'] = ''",
 			"\$db['default']['dbdriver'] = '" . addslashes($post["db_type"]) . "'",
@@ -252,7 +251,7 @@ class Install extends Install_Controller
 
 		$user = $this->tank_auth->create_user($post["username"], $post["email"],
 			$post["password"], FALSE);
-		
+
 		if ($user !== FALSE)
 		{
 			$this->db->where('user_id', $user['user_id'])->update('profiles', array('group_id' => 1));
@@ -286,7 +285,7 @@ class Install extends Install_Controller
 	/**
 	 * Checks that the necessary directories are writable and prepares suggestions to
 	 * be able to deliver autoupgrades.
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function _check()
@@ -376,7 +375,7 @@ class Install extends Install_Controller
 
 	/**
 	 * checks if exex is enabled
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function _exec_enabled()

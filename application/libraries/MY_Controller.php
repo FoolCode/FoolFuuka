@@ -5,12 +5,12 @@ if (!defined('BASEPATH'))
 
 class MY_Controller extends CI_Controller
 {
-
+	var $_config = FALSE;
 
 	function __construct()
 	{
 		parent::__construct();
-		
+
 		// create an array for the set_notice system
 		$this->notices = array();
 		$this->flash_notice_data = array();
@@ -22,6 +22,9 @@ class MY_Controller extends CI_Controller
 		}
 		else
 		{
+			// we have found a config file.
+			$this->_config = TRUE;
+
 			//$this->output->enable_profiler(TRUE);
 			$this->load->database();
 			$this->load->library('session');
@@ -33,7 +36,7 @@ class MY_Controller extends CI_Controller
 
 			// loads variables from database for get_setting()
 			load_settings();
-			
+
 			$this->plugins->run_hook('ff_my_controller_after_load_settings');
 
 			// load the radixes (boards)
@@ -87,10 +90,10 @@ class MY_Controller extends CI_Controller
 
 	/**
 	 * Alternative remap function that works with the plugin system
-	 * 
+	 *
 	 * @param string $method
 	 * @param type $params
-	 * @return type 
+	 * @return type
 	 */
 	public function _remap($method, $params = array())
 	{
@@ -100,8 +103,8 @@ class MY_Controller extends CI_Controller
 			return FALSE;
 		}
 
-		
-		if ($this->plugins->is_controller_function($this->uri->segment_array()))
+		// access plugin system only if backend has been configured
+		if ($this->_config == TRUE && $this->plugins->is_controller_function($this->uri->segment_array()))
 		{
 			$plugin_controller = $this->plugins->get_controller_function($this->uri->segment_array());
 			$uri_array = $this->uri->segment_array();
@@ -112,26 +115,26 @@ class MY_Controller extends CI_Controller
 			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']),
 				$uri_array);
 		}
-		
+
 		// trying to access an internal method, should never reach here, but safety is never enough
 		if(substr($method, 0, 1) == '_')
 		{
 			return FALSE;
 		}
-		
+
 		// we don't want to send back to Chan controller, but everywhere else it's good to go
 		if (method_exists($this, $method) && get_class($this) != 'Chan')
 		{
 			return call_user_func_array(array($this, $method), $params);
 		}
-		
+
 		return FALSE;
 	}
-	
+
 	/**
 	 * Returns the basic variables that are used by the public interface and the admin panel for dealing with posts
-	 * 
-	 * @return array the settings to be sent directly to JSON 
+	 *
+	 * @return array the settings to be sent directly to JSON
 	 */
 	public function get_backend_vars()
 	{
@@ -241,7 +244,7 @@ class MY_Controller extends CI_Controller
 
 		$this->output->set_output(json_encode(array('success' => TRUE)));
 	}
-	
+
 	/**
 	 * Controller for cron triggered by any visit
 	 * Currently defaulted crons:
@@ -258,15 +261,15 @@ class MY_Controller extends CI_Controller
 		if(get_setting('fs_asagi_autorun_enabled') && time() - $last_check > 600)
 		{
 			set_setting('fs_cron_10m', time());
-			
+
 			if('fs_asagi_autorun_enabled')
 			{
 				$this->load->model('asagi_model', 'asagi');
 				$this->asagi->run();
 			}
-			
+
 		}
-		
+
 		// every 13 hours
 		if (false && time() - $last_check > 86400)
 		{

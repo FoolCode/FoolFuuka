@@ -48,7 +48,7 @@ if (!defined('BASEPATH'))
 					if (isset($function_title))
 						echo '<h3>' . $function_title . '</h3>';
 					?>
-					
+
 					<div class="alerts">
 						<?php
 						echo get_notices();
@@ -62,18 +62,18 @@ if (!defined('BASEPATH'))
 
 					<footer class="footer">
 						<p style="padding-left: 20px;"><?php echo FOOL_NAME ?> Version <?php
-					if (isset($this->tank_auth))
-					{
-						echo FOOL_VERSION;
-						if ($this->tank_auth->is_admin() && (FOOL_VERSION != get_setting('fs_cron_autoupgrade_version') && (get_setting('fs_cron_autoupgrade_version'))))
-							echo ' – <a href="' . site_url('admin/system/upgrade/') . '">' . __('New upgrade available:') . ' ' . get_setting('fs_cron_autoupgrade_version') . '</a>';
-					}
-					?></p>
+							echo FOOL_VERSION;
+							if (isset($this->tank_auth))
+							{
+								if ($this->tank_auth->is_admin() && (FOOL_VERSION != get_setting('fs_cron_autoupgrade_version') && (get_setting('fs_cron_autoupgrade_version'))))
+									echo ' – <a href="' . site_url('admin/system/upgrade/') . '">' . __('New upgrade available:') . ' ' . get_setting('fs_cron_autoupgrade_version') . '</a>';
+							}
+						?></p>
 					</footer>
 				</div>
 				<div style="clear:both"></div>
 			</div>
 		</div>
-		
+
 	</body>
 </html>

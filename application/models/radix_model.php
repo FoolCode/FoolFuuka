@@ -934,6 +934,16 @@ class Radix_model extends CI_Model
 				PRIMARY KEY (`day`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		");
+
+		// populate _images table with banned media from global table
+		$this->db->query('
+			INSERT INTO ' . $this->radix->get_table($board, '_images') . '
+			(
+				media_hash, media, preview_op, preview_reply, total, banned
+			)
+			SELECT md5, NULL, NULL, NULL, 0, 1
+			FROM ' . $this->db->protect_identifiers('banned_md5', TRUE) . '
+		');
 	}
 
 

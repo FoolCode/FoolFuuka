@@ -177,22 +177,6 @@ class Migration_Install extends CI_Migration
 		}
 		
 		
-		if (!$this->db->table_exists($this->db->dbprefix('statistics')))
-		{
-			$this->db->query("
-					CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('statistics') . "` (
-						`id` int(11) NOT NULL AUTO_INCREMENT,
-						`board_id` int(11) NOT NULL,
-						`name` varchar(32) NOT NULL,
-						`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-						`data` longtext NOT NULL,
-						PRIMARY KEY (`id`),
-						UNIQUE KEY `board_id` (`board_id`,`name`)
-					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-				");
-		}
-		
-		
 		if (!$this->db->table_exists($this->db->dbprefix('reports')))
 		{
 			$this->db->query("

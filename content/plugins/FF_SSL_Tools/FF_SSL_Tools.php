@@ -22,24 +22,26 @@ class FF_SSL_Tools extends Plugins_model
 		$this->plugins->register_hook($this, 'ff_my_controller_after_load_settings', 2, function(){
 			$CI = & get_instance();
 			
-			if((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))
+			if(!isset($_SERVER['HTTPS']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'off'))
 			{
 				if(get_setting('ff_ssl_force_everyone')
 					|| (get_setting('ff_ssl_force_for_logged') && $CI->tank_auth->is_logged_in())
-					|| (get_setting('ff_ssl_sticky') && $this->input->cookie('sticky_ssl')))
+					|| (get_setting('ff_ssl_sticky') && $CI->input->cookie('ff_sticky_ssl')))
 				{
 					// redirect to itself
-					redirect('https' . substr(site_url($CI->uri->uri_string()), 4));
+					header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+					die();
 				}
 			}
 			else
 			{
-				if(get_setting('ff_ssl_sticky') && !$CI->input->cookie('sticky_ssl'))
+				if(get_setting('ff_ssl_sticky') && !$CI->input->cookie('ff_sticky_ssl'))
 				{
-					$CI->input->set_cookie('sticky_ssl', '1', 30);
+					$CI->input->set_cookie('ff_sticky_ssl', '1', 30);
 				}
 			}
 		});
+		
 		
 		
 		$this->plugins->register_controller_function($this, array('admin', 'plugins', 'ssl_tools'), 'manage');

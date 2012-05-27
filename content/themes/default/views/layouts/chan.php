@@ -288,7 +288,7 @@ if (!defined('BASEPATH'))
 						 <li><a href="<?php echo site_url(array('@system', 'functions', 'language', $key)) ?>" onclick="changeLanguage('<?php echo $key ?>'); return false;"><?php echo $lang ?><?php echo ((!$this->input->cookie('foolfuuka_language') && $key == 'en_EN') || $key == $this->input->cookie('foolfuuka_language'))?' <i class="icon-ok"></i>':'' ?></a></li>
 					<?php endforeach; ?>
 						 <li class="divider"></li>
-						 <li><a href="http://archive.foolz.us/article/translate/"><?php echo __('Add a translation') ?></a></li>
+						 <li><a href="http://archive.foolz.us/articles/translate/"><?php echo __('Add a translation') ?></a></li>
 					</ul>
 				</div>
 			</div>

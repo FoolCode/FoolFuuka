@@ -44,27 +44,34 @@ class MY_Controller extends CI_Controller
 			$this->load->model('vote_model', 'vote');
 
 			// This is the first chance we get to load the right translation file
-			if (get_setting('fs_gen_lang'))
+			
+			if($lang = $this->input->cookie('language'))
 			{
-				$locale = get_setting('fs_gen_lang');
-				putenv("LANG=$locale");
-				if ($locale != "tr_TR.utf8")
-				{
-					setlocale(LC_ALL, $locale);
-				}
-				else // workaround to make turkish work with FoOlSlide
-				{
-					setlocale(LC_COLLATE, $locale);
-					setlocale(LC_MONETARY, $locale);
-					setlocale(LC_NUMERIC, $locale);
-					setlocale(LC_TIME, $locale);
-					setlocale(LC_MESSAGES, $locale);
-					setlocale(LC_CTYPE, "sk_SK.utf8");
-				}
-				bindtextdomain("default", FCPATH . "assets/locale");
-				textdomain("default");
-			}
+				$available_langs = config_item('ff_available_languages');
 
+				if (array_key_exists($lang, $available_langs))
+				{
+					$locale = $lang . '.utf8';
+					putenv('LANG=' . $locale);
+					if ($locale != "tr_TR.utf8")
+					{
+						setlocale(LC_ALL, $locale);
+					}
+					else // workaround to make turkish work
+					{
+						setlocale(LC_COLLATE, $locale);
+						setlocale(LC_MONETARY, $locale);
+						setlocale(LC_NUMERIC, $locale);
+						setlocale(LC_TIME, $locale);
+						setlocale(LC_MESSAGES, $locale);
+						setlocale(LC_CTYPE, "sk_SK.utf8");
+					}
+
+					bindtextdomain($lang, FCPATH . "assets/locale");
+					textdomain($lang);
+				}
+			}
+			
 			// a good time to change some of the defauly settings dynamically
 			$this->config->config['tank_auth']['allow_registration'] = !get_setting('fs_reg_disabled');
 

@@ -1,10 +1,17 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
 
-// Array from http://techpatterns.com/downloads/php_language_detection.php
 
 $config = array();
 
+$config['ff_available_languages'] = array(
+	'' => 'English',
+	'fr_FR' => 'French'
+);
+
+// Array from http://techpatterns.com/downloads/php_language_detection.php
 $config['fs_languages'] = array(
 	'' => '',
 	'af' => 'Afrikaans',
@@ -158,4 +165,4 @@ $config['fs_languages'] = array(
 	'xh' => 'Xhosa',
 	'yi' => 'Yiddish',
 	'zu' => 'Zulu'
-		);
+);

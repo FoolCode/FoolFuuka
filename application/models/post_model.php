@@ -1427,7 +1427,7 @@ class Post_model extends CI_Model
 			if ($args['username'])
 			{
 				$this->db->like('name', rawurldecode($args['username']));
-				$this->db->use_index('name_index');
+				$this->db->use_index('name_trip_index');
 			}
 			if ($args['tripcode'])
 			{
@@ -1478,22 +1478,22 @@ class Post_model extends CI_Model
 			if ($args['type'] == 'op')
 			{
 				$this->db->where('op', 1);
-				$this->db->use_index('thread_num_index');
+				$this->db->use_index('op_index');
 			}
 			if ($args['type'] == 'posts')
 			{
 				$this->db->where('op', 0);
-				$this->db->use_index('thread_num_index');
+				$this->db->use_index('op_index');
 			}
 			if ($args['filter'] == 'image')
 			{
-				$this->db->where('media_hash IS NOT NULL');
-				$this->db->use_index('media_hash_index');
+				$this->db->where('media_id <>', 0);
+				$this->db->use_index('media_id_index');
 			}
 			if ($args['filter'] == 'text')
 			{
-				$this->db->where('media_hash IS NULL');
-				$this->db->use_index('media_hash_index');
+				$this->db->where('media_id', 0);
+				$this->db->use_index('media_id_index');
 			}
 			if ($args['start'])
 			{

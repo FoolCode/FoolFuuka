@@ -411,7 +411,7 @@ class Radix_model extends CI_Model
 		$structure = $this->structure();
 		$data_boards = array();
 		$data_boards_preferences = array();
-		
+
 		foreach($structure as $key => $item)
 		{
 			// mix the sub and sub_inverse and flatten the array
@@ -419,9 +419,9 @@ class Radix_model extends CI_Model
 			{
 				$item['sub'] = array_merge($item['sub'], $item['sub_inverse']);
 			}
-			
+
 			if(isset($item['sub']))
-			{	
+			{
 				foreach($item['sub'] as $k => $i)
 				{
 					if(isset($i['boards_preferences']) && isset($data[$k]))
@@ -431,15 +431,15 @@ class Radix_model extends CI_Model
 					}
 				}
 			}
-			
+
 			if(isset($item['boards_preferences']) && isset($data[$key]))
 			{
 				$data_boards_preferences[$key] = $data[$key];
 				unset($data[$key]);
 			}
-				
+
 		}
-		
+
 		// data must be already sanitized through the form array
 		if (isset($data['id']))
 		{
@@ -447,10 +447,10 @@ class Radix_model extends CI_Model
 			{
 				show_404();
 			}
-			
+
 			// save normal values
 			$this->db->where('id', $data['id'])->update('boards', $data);
-			
+
 			// save extra preferences
 			foreach($data_boards_preferences as $name => $value)
 			{
@@ -465,14 +465,14 @@ class Radix_model extends CI_Model
 					$this->db->insert('boards_preferences', array('board_id' => $data['id'], 'name' => $name, 'value' => $value));
 				}
 			}
-			
+
 			$this->radix->preload(TRUE);
 		}
 		else
 		{
 			$this->db->insert('boards', $data);
 			$id = $this->db->insert_id();
-			
+
 			// save extra preferences
 			foreach($data_boards_preferences as $name => $value)
 			{
@@ -487,7 +487,7 @@ class Radix_model extends CI_Model
 					$this->db->insert('boards_preferences', array('board_id' => $id, 'name' => $name, 'value' => $value));
 				}
 			}
-			
+
 			$this->radix->preload(TRUE);
 			$board = $this->get_by_shortname($data['shortname']);
 
@@ -495,11 +495,11 @@ class Radix_model extends CI_Model
 			$this->mysql_remove_triggers($board);
 			$this->mysql_create_tables($board);
 			$this->mysql_create_triggers($board);
-			
+
 			// if the user didn't select sphinx for search, enable the table _search silently
 			if(!$board->sphinx)
 			{
-				$this->mysql_create_search($board);			
+				$this->mysql_create_search($board);
 			}
 		}
 	}
@@ -543,7 +543,7 @@ class Radix_model extends CI_Model
 		foreach ($object as $item)
 		{
 			$structure = $this->structure($item);
-			
+
 			$result_object[$item->id] = $item;
 			$result_object[$item->id]->formatted_title = ($item->name) ?
 				'/' . $item->shortname . '/ - ' . $item->name : '/' . $item->shortname . '/';
@@ -556,7 +556,7 @@ class Radix_model extends CI_Model
 			{
 				$result_object[$item->id]->href = site_url(array('@board', $item->shortname));
 			}
-			
+
 			// load the basic value of the preferences
 			foreach($structure as $key => $arr)
 			{
@@ -567,7 +567,7 @@ class Radix_model extends CI_Model
 					else
 						$result_object[$item->id]->$key = FALSE;
 				}
-				
+
 				foreach(array('sub', 'sub_inverse') as $sub)
 				{
 					if(isset($arr[$sub]))
@@ -585,26 +585,26 @@ class Radix_model extends CI_Model
 					}
 				}
 			}
-			
+
 		}
-		
+
 		//echo '<pre>'.print_r($result_object, true).'</pre>';
 
 		$this->preloaded_radixes = $result_object;
-		
+
 		if($preferences == TRUE)
 			$this->load_preferences();
 	}
 
 	/**
-	 * Loads preferences data for the board. 
+	 * Loads preferences data for the board.
 	 *
 	 * @param type $board null/array of IDs/ID/board object
 	 */
 	function load_preferences($board = NULL)
 	{
 		if(is_null($board))
-		{	
+		{
 			$ids = array_keys($this->preloaded_radixes);
 		}
 		else if (is_array($board))
@@ -619,7 +619,7 @@ class Radix_model extends CI_Model
 		{
 			$ids = array($board);
 		}
-		
+
 		$selected = FALSE;
 		foreach($ids as $id)
 		{
@@ -628,7 +628,7 @@ class Radix_model extends CI_Model
 			{;
 				$this->preloaded_radixes[$id]->{$value->name} = $value->value;
 			}
-			
+
 			$selected = $this->preloaded_radixes[$id];
 		}
 
@@ -690,7 +690,7 @@ class Radix_model extends CI_Model
 
 		return $this->selected_radix;
 	}
-	
+
 
 	/**
 	 * Returns all the radixes as array of objects
@@ -797,14 +797,14 @@ class Radix_model extends CI_Model
 
 	/**
 	 * Tells us if the entire MySQL server is compatible with multibyte
-	 * 
+	 *
 	 * @param bool $as_string if TRUE it returns the strong as in utf8 or utf8mb4
-	 * @return type 
+	 * @return type
 	 */
 	function mysql_check_multibyte($as_string = FALSE)
 	{
 		$query = $this->db->query("SHOW CHARACTER SET WHERE Charset = 'utf8mb4';");
-			
+
 	if(!$as_string)
 		{
 			return (boolean) $query->num_rows();
@@ -823,53 +823,50 @@ class Radix_model extends CI_Model
 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS " . $this->get_table($board) . " (
-				doc_id int unsigned NOT NULL auto_increment, 
-				media_id int unsigned NOT NULL DEFAULT '0', 
-				poster_ip decimal(39,0) unsigned NOT NULL DEFAULT '0', 
-				num int unsigned NOT NULL, 
-				subnum int unsigned NOT NULL, 
-				thread_num int unsigned NOT NULL DEFAULT '0', 
-				op bool NOT NULL DEFAULT '0', 
-				timestamp int unsigned NOT NULL, 
-				timestamp_expired int unsigned NOT NULL, 
-				preview_orig varchar(20), 
-				preview_w smallint unsigned NOT NULL DEFAULT '0', 
-				preview_h smallint unsigned NOT NULL DEFAULT '0', 
-				media_filename text, 
-				media_w smallint unsigned NOT NULL DEFAULT '0', 
-				media_h smallint unsigned NOT NULL DEFAULT '0', 
-				media_size int unsigned NOT NULL DEFAULT '0', 
-				media_hash varchar(25), 
-				media_orig varchar(20), 
-				spoiler bool NOT NULL DEFAULT '0', 
-				deleted bool NOT NULL DEFAULT '0', 
-				capcode enum('N', 'M', 'A', 'G') NOT NULL DEFAULT 'N', 
-				email varchar(100), 
-				name varchar(100), 
-				trip varchar(25), 
-				title varchar(100), 
+				doc_id int unsigned NOT NULL auto_increment,
+				media_id int unsigned NOT NULL DEFAULT '0',
+				poster_ip decimal(39,0) unsigned NOT NULL DEFAULT '0',
+				num int unsigned NOT NULL,
+				subnum int unsigned NOT NULL,
+				thread_num int unsigned NOT NULL DEFAULT '0',
+				op bool NOT NULL DEFAULT '0',
+				timestamp int unsigned NOT NULL,
+				timestamp_expired int unsigned NOT NULL,
+				preview_orig varchar(20),
+				preview_w smallint unsigned NOT NULL DEFAULT '0',
+				preview_h smallint unsigned NOT NULL DEFAULT '0',
+				media_filename text,
+				media_w smallint unsigned NOT NULL DEFAULT '0',
+				media_h smallint unsigned NOT NULL DEFAULT '0',
+				media_size int unsigned NOT NULL DEFAULT '0',
+				media_hash varchar(25),
+				media_orig varchar(20),
+				spoiler bool NOT NULL DEFAULT '0',
+				deleted bool NOT NULL DEFAULT '0',
+				capcode enum('N', 'M', 'A', 'G') NOT NULL DEFAULT 'N',
+				email varchar(100),
+				name varchar(100),
+				trip varchar(25),
+				title varchar(100),
 				comment text,
-				delpass tinytext, 
-				sticky bool NOT NULL DEFAULT '0', 
-				poster_hash varchar(8), 
-				exif text, 
+				delpass tinytext,
+				sticky bool NOT NULL DEFAULT '0',
+				poster_hash varchar(8),
+				exif text,
 
-				PRIMARY KEY (doc_id), 
-				UNIQUE num_subnum_index (num, subnum), 
-				INDEX poster_ip_index(poster_ip), 
-				INDEX media_id_index(media_id),
-				INDEX num_index(num), 
-				INDEX subnum_index(subnum),
-				INDEX thread_num_index(thread_num),
-				INDEX op_index(op),
-				INDEX timestamp_index(timestamp),
-				INDEX timestamp_expired_index(timestamp),
-				INDEX media_hash_index(media_hash),
-				INDEX media_filename_index(media_filename(255)),
-				INDEX email_index(email),
-				INDEX name_index(name),
-				INDEX trip_index(trip),
-				INDEX fullname_index(name,trip)
+				PRIMARY KEY (`doc_id`),
+				UNIQUE num_subnum_index (`num`, `subnum`),
+				INDEX thread_num_subnum_index (`thread_num`, `num`, `subnum`),
+				INDEX subnum_index (`subnum`),
+				INDEX op_index (`op`),
+				INDEX media_id_index (`media_id`),
+				INDEX media_hash_index (`media_hash`),
+				INDEX media_orig_index (`media_orig`),
+				INDEX name_trip_index (`name`, `trip`),
+				INDEX trip_index (`trip`),
+				INDEX email_index (`email`),
+				INDEX poster_ip_index (`poster_ip`),
+				INDEX timestamp_index (`timestamp`)
 			) engine=InnoDB CHARSET=" . $charset . ";
 		");
 
@@ -883,11 +880,11 @@ class Radix_model extends CI_Model
 				`time_ghost_bump` int unsigned DEFAULT NULL,
 				`nreplies` int unsigned NOT NULL DEFAULT '0',
 				`nimages` int unsigned NOT NULL DEFAULT '0',
-				PRIMARY KEY (`thread_num`),
 
-				INDEX time_op_index (time_op),
-				INDEX time_bump_index (time_bump),					
-				INDEX time_ghost_bump_index (time_ghost_bump)
+				PRIMARY KEY (`thread_num`),
+				INDEX time_op_index (`time_op`),
+				INDEX time_bump_index (`time_bump`),
+				INDEX time_ghost_bump_index (`time_ghost_bump`)
 			) ENGINE=InnoDB CHARSET=" . $charset . ";
 		");
 
@@ -899,11 +896,11 @@ class Radix_model extends CI_Model
 				`trip` varchar(25) NOT NULL DEFAULT '',
 				`firstseen` int(11) NOT NULL,
 				`postcount` int(11) NOT NULL,
-				PRIMARY KEY (`user_id`),
 
+				PRIMARY KEY (`user_id`),
 				UNIQUE name_trip_index (`name`, `trip`),
-				INDEX firstseen_index (firstseen),
-				INDEX postcount_index (postcount)
+				INDEX firstseen_index (`firstseen`),
+				INDEX postcount_index (`postcount`)
 			) ENGINE=InnoDB DEFAULT CHARSET=" . $charset . ";
 		");
 
@@ -915,10 +912,12 @@ class Radix_model extends CI_Model
 				`preview_op` varchar(20),
 				`preview_reply` varchar(20),
 				`total` int(10) unsigned NOT NULL DEFAULT '0',
-				`banned` smallint unsigned NOT NULL DEFAULT '0', 
+				`banned` smallint unsigned NOT NULL DEFAULT '0',
+
 				PRIMARY KEY (`media_id`),
 				UNIQUE media_hash_index (`media_hash`),
-				INDEX total_index (total)
+				INDEX total_index (`total`),
+				INDEX banned_index (`banned`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		");
 
@@ -931,6 +930,7 @@ class Radix_model extends CI_Model
 				`anons` int(10) unsigned NOT NULL,
 				`trips` int(10) unsigned NOT NULL,
 				`names` int(10) unsigned NOT NULL,
+
 				PRIMARY KEY (`day`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		");
@@ -943,7 +943,7 @@ class Radix_model extends CI_Model
 		// the alternative would be adding a database prefix to the trigger name which would be messy
 		if(get_setting('fs_fuuka_boards_db'))
 			$this->db->query('USE ' . get_setting('fs_fuuka_boards_db'));
-		
+
 		$this->db->query("
 			CREATE PROCEDURE `update_thread_" . $board->shortname . "` (tnum INT)
 			BEGIN
@@ -953,34 +953,32 @@ class Radix_model extends CI_Model
 				op.time_last = (
 				COALESCE(GREATEST(
 					op.time_op,
-					(SELECT MAX(timestamp) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_index) WHERE
-					re.thread_num = tnum AND re.subnum = 0)
+					(SELECT MAX(timestamp) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_subnum_index)
+					WHERE re.thread_num = tnum AND re.subnum = 0)
 					), op.time_op)
 				),
 				op.time_bump = (
 					COALESCE(GREATEST(
 					op.time_op,
-					(SELECT MAX(timestamp) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_index) WHERE
-						re.thread_num = tnum AND (re.email <> 'sage' OR re.email IS NULL)
-						AND re.subnum = 0)
+					(SELECT MAX(timestamp) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_subnum_index)
+					WHERE re.thread_num = tnum AND (re.email <> 'sage' OR re.email IS NULL) AND re.subnum = 0)
 					), op.time_op)
 				),
 				op.time_ghost = (
-					SELECT MAX(timestamp) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_index) WHERE
-					re.thread_num = tnum AND re.subnum <> 0
+					SELECT MAX(timestamp) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_subnum_index)
+					WHERE re.thread_num = tnum AND re.subnum <> 0
 				),
 				op.time_ghost_bump = (
-					SELECT MAX(timestamp) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_index) WHERE
-					re.thread_num = tnum AND re.subnum <> 0 AND (re.email <> 'sage' OR
-						re.email IS NULL)
+					SELECT MAX(timestamp) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_subnum_index)
+					WHERE re.thread_num = tnum AND re.subnum <> 0 AND (re.email <> 'sage' OR re.email IS NULL)
 				),
 				op.nreplies = (
-					SELECT COUNT(*) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_index) WHERE
+					SELECT COUNT(*) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_subnum_index) WHERE
 					re.thread_num = tnum
 				),
 				op.nimages = (
-					SELECT COUNT(media_hash) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_index) WHERE
-					re.thread_num = tnum
+					SELECT COUNT(media_hash) FROM " . $this->get_table($board) . " re FORCE INDEX(thread_num_subnum_index)
+					WHERE re.thread_num = tnum
 				)
 				WHERE op.thread_num = tnum;
 			END;
@@ -989,15 +987,15 @@ class Radix_model extends CI_Model
 		$this->db->query("
 			CREATE PROCEDURE `create_thread_" . $board->shortname . "` (num INT, timestamp INT)
 			BEGIN
-			INSERT IGNORE INTO " . $this->get_table($board, '_threads') . " VALUES (num, timestamp, timestamp,
-				timestamp, NULL, NULL, 0, 0);
+				INSERT IGNORE INTO " . $this->get_table($board, '_threads') . " VALUES (num, timestamp, timestamp,
+					timestamp, NULL, NULL, 0, 0);
 			END;
 		");
 
 		$this->db->query("
 			CREATE PROCEDURE `delete_thread_" . $board->shortname . "` (tnum INT)
 			BEGIN
-			DELETE FROM " . $this->get_table($board, '_threads') . " WHERE thread_num = tnum;
+				DELETE FROM " . $this->get_table($board, '_threads') . " WHERE thread_num = tnum;
 			END;
 		");
 
@@ -1005,23 +1003,23 @@ class Radix_model extends CI_Model
 			CREATE PROCEDURE `insert_image_" . $board->shortname . "` (n_media_hash VARCHAR(25),
 			n_media VARCHAR(20), n_preview VARCHAR(20), n_op INT)
 			BEGIN
-			IF n_op = 1 THEN
-				INSERT INTO " . $this->get_table($board, '_images') . " (media_hash, media, preview_op, total)
-				VALUES (n_media_hash, n_media, n_preview, 1) 
-				ON DUPLICATE KEY UPDATE 
-				media_id = LAST_INSERT_ID(media_id),
-				total = (total + 1),
-				preview_op = COALESCE(preview_op, VALUES(preview_op)),
-				media = COALESCE(media, VALUES(media));
-			ELSE
-				INSERT INTO " . $this->get_table($board, '_images') . " (media_hash, media, preview_reply, total)
-				VALUES (n_media_hash, n_media, n_preview, 1) 
-				ON DUPLICATE KEY UPDATE 
-				media_id = LAST_INSERT_ID(media_id),
-				total = (total + 1), 
-				preview_reply = COALESCE(preview_reply, VALUES(preview_reply)),
-				media = COALESCE(media, VALUES(media));
-			END IF;
+				IF n_op = 1 THEN
+					INSERT INTO " . $this->get_table($board, '_images') . " (media_hash, media, preview_op, total)
+					VALUES (n_media_hash, n_media, n_preview, 1)
+					ON DUPLICATE KEY UPDATE
+					media_id = LAST_INSERT_ID(media_id),
+					total = (total + 1),
+					preview_op = COALESCE(preview_op, VALUES(preview_op)),
+					media = COALESCE(media, VALUES(media));
+				ELSE
+					INSERT INTO " . $this->get_table($board, '_images') . " (media_hash, media, preview_reply, total)
+					VALUES (n_media_hash, n_media, n_preview, 1)
+					ON DUPLICATE KEY UPDATE
+					media_id = LAST_INSERT_ID(media_id),
+					total = (total + 1),
+					preview_reply = COALESCE(preview_reply, VALUES(preview_reply)),
+					media = COALESCE(media, VALUES(media));
+				END IF;
 			END;
 		");
 
@@ -1036,68 +1034,68 @@ class Radix_model extends CI_Model
 			CREATE PROCEDURE `insert_post_" . $board->shortname . "` (p_timestamp INT, p_media_hash VARCHAR(25),
 			p_email VARCHAR(100), p_name VARCHAR(100), p_trip VARCHAR(25))
 			BEGIN
-			DECLARE d_day INT;
-			DECLARE d_image INT;
-			DECLARE d_sage INT;
-			DECLARE d_anon INT;
-			DECLARE d_trip INT;
-			DECLARE d_name INT;
+				DECLARE d_day INT;
+				DECLARE d_image INT;
+				DECLARE d_sage INT;
+				DECLARE d_anon INT;
+				DECLARE d_trip INT;
+				DECLARE d_name INT;
 
-			SET d_day = FLOOR(p_timestamp/86400)*86400;
-			SET d_image = p_media_hash IS NOT NULL;
-			SET d_sage = COALESCE(p_email = 'sage', 0);
-			SET d_anon = COALESCE(p_name = 'Anonymous' AND p_trip IS NULL, 0);
-			SET d_trip = p_trip IS NOT NULL;
-			SET d_name = COALESCE(p_name <> 'Anonymous' AND p_trip IS NULL, 1);
+				SET d_day = FLOOR(p_timestamp/86400)*86400;
+				SET d_image = p_media_hash IS NOT NULL;
+				SET d_sage = COALESCE(p_email = 'sage', 0);
+				SET d_anon = COALESCE(p_name = 'Anonymous' AND p_trip IS NULL, 0);
+				SET d_trip = p_trip IS NOT NULL;
+				SET d_name = COALESCE(p_name <> 'Anonymous' AND p_trip IS NULL, 1);
 
-			INSERT INTO " . $this->get_table($board, '_daily') . " VALUES(d_day, 1, d_image, d_sage, d_anon, d_trip,
-				d_name)
-				ON DUPLICATE KEY UPDATE posts=posts+1, images=images+d_image,
-				sage=sage+d_sage, anons=anons+d_anon, trips=trips+d_trip,
-				names=names+d_name;
+				INSERT INTO " . $this->get_table($board, '_daily') . " VALUES(d_day, 1, d_image, d_sage, d_anon, d_trip,
+					d_name)
+					ON DUPLICATE KEY UPDATE posts=posts+1, images=images+d_image,
+					sage=sage+d_sage, anons=anons+d_anon, trips=trips+d_trip,
+					names=names+d_name;
 
-			IF (SELECT trip FROM " . $this->get_table($board, '_users') . " WHERE trip = p_trip) IS NOT NULL THEN
-				UPDATE " . $this->get_table($board, '_users') . " SET postcount=postcount+1,
-					firstseen = LEAST(p_timestamp, firstseen),
-					name = COALESCE(p_name, '')
-				WHERE trip = p_trip;
-			ELSE
-				INSERT INTO " . $this->get_table($board, '_users') . " VALUES(
-				NULL, COALESCE(p_name,''), COALESCE(p_trip,''), p_timestamp, 1)
-				ON DUPLICATE KEY UPDATE postcount=postcount+1,
-				firstseen = LEAST(VALUES(firstseen), firstseen),
-				name = COALESCE(p_name, '');
-			END IF;
+				IF (SELECT trip FROM " . $this->get_table($board, '_users') . " WHERE trip = p_trip) IS NOT NULL THEN
+					UPDATE " . $this->get_table($board, '_users') . " SET postcount=postcount+1,
+						firstseen = LEAST(p_timestamp, firstseen),
+						name = COALESCE(p_name, '')
+					WHERE trip = p_trip;
+				ELSE
+					INSERT INTO " . $this->get_table($board, '_users') . " VALUES(
+						NULL, COALESCE(p_name,''), COALESCE(p_trip,''), p_timestamp, 1)
+					ON DUPLICATE KEY UPDATE postcount=postcount+1,
+						firstseen = LEAST(VALUES(firstseen), firstseen),
+						name = COALESCE(p_name, '');
+				END IF;
 			END;
 		");
 
 		$this->db->query("
 			CREATE PROCEDURE `delete_post_" . $board->shortname . "` (p_timestamp INT, p_media_hash VARCHAR(25), p_email VARCHAR(100), p_name VARCHAR(100), p_trip VARCHAR(25))
 			BEGIN
-			DECLARE d_day INT;
-			DECLARE d_image INT;
-			DECLARE d_sage INT;
-			DECLARE d_anon INT;
-			DECLARE d_trip INT;
-			DECLARE d_name INT;
+				DECLARE d_day INT;
+				DECLARE d_image INT;
+				DECLARE d_sage INT;
+				DECLARE d_anon INT;
+				DECLARE d_trip INT;
+				DECLARE d_name INT;
 
-			SET d_day = FLOOR(p_timestamp/86400)*86400;
-			SET d_image = p_media_hash IS NOT NULL;
-			SET d_sage = COALESCE(p_email = 'sage', 0);
-			SET d_anon = COALESCE(p_name = 'Anonymous' AND p_trip IS NULL, 0);
-			SET d_trip = p_trip IS NOT NULL;
-			SET d_name = COALESCE(p_name <> 'Anonymous' AND p_trip IS NULL, 1);
+				SET d_day = FLOOR(p_timestamp/86400)*86400;
+				SET d_image = p_media_hash IS NOT NULL;
+				SET d_sage = COALESCE(p_email = 'sage', 0);
+				SET d_anon = COALESCE(p_name = 'Anonymous' AND p_trip IS NULL, 0);
+				SET d_trip = p_trip IS NOT NULL;
+				SET d_name = COALESCE(p_name <> 'Anonymous' AND p_trip IS NULL, 1);
 
-			UPDATE " . $this->get_table($board, '_daily') . " SET posts=posts-1, images=images-d_image,
-				sage=sage-d_sage, anons=anons-d_anon, trips=trips-d_trip,
-				names=names-d_name WHERE day = d_day;
+				UPDATE " . $this->get_table($board, '_daily') . " SET posts=posts-1, images=images-d_image,
+					sage=sage-d_sage, anons=anons-d_anon, trips=trips-d_trip,
+					names=names-d_name WHERE day = d_day;
 
-			IF (SELECT trip FROM " . $this->get_table($board, '_users') . " WHERE trip = p_trip) IS NOT NULL THEN
-				UPDATE " . $this->get_table($board, '_users') . " SET postcount = postcount-1 WHERE trip = p_trip;
-			ELSE
-				UPDATE " . $this->get_table($board, '_users') . " SET postcount = postcount-1 WHERE
-				name = COALESCE(p_name, '') AND trip = COALESCE(p_trip, '');
-			END IF;
+				IF (SELECT trip FROM " . $this->get_table($board, '_users') . " WHERE trip = p_trip) IS NOT NULL THEN
+					UPDATE " . $this->get_table($board, '_users') . " SET postcount = postcount-1 WHERE trip = p_trip;
+				ELSE
+					UPDATE " . $this->get_table($board, '_users') . " SET postcount = postcount-1
+						WHERE name = COALESCE(p_name, '') AND trip = COALESCE(p_trip, '');
+				END IF;
 			END;
 		");
 
@@ -1105,10 +1103,10 @@ class Radix_model extends CI_Model
 			CREATE TRIGGER `before_ins_" . $board->shortname . "` BEFORE INSERT ON " . $this->get_table($board) . "
 			FOR EACH ROW
 			BEGIN
-			IF NEW.media_hash IS NOT NULL THEN
-				CALL insert_image_" . $board->shortname . "(NEW.media_hash, NEW.media_orig, NEW.preview_orig, NEW.op);
-				SET NEW.media_id = LAST_INSERT_ID();
-			END IF;
+				IF NEW.media_hash IS NOT NULL THEN
+					CALL insert_image_" . $board->shortname . "(NEW.media_hash, NEW.media_orig, NEW.preview_orig, NEW.op);
+					SET NEW.media_id = LAST_INSERT_ID();
+				END IF;
 			END;
 		");
 
@@ -1116,11 +1114,11 @@ class Radix_model extends CI_Model
 			CREATE TRIGGER `after_ins_" . $board->shortname . "` AFTER INSERT ON " . $this->get_table($board) . "
 			FOR EACH ROW
 			BEGIN
-			IF NEW.op = 1 THEN
-				CALL create_thread_" . $board->shortname . "(NEW.num, NEW.timestamp);
-			END IF;
-			CALL update_thread_" . $board->shortname . "(NEW.thread_num);
-			CALL insert_post_" . $board->shortname . "(NEW.timestamp, NEW.media_hash, NEW.email, NEW.name, NEW.trip);
+				IF NEW.op = 1 THEN
+					CALL create_thread_" . $board->shortname . "(NEW.num, NEW.timestamp);
+				END IF;
+				CALL update_thread_" . $board->shortname . "(NEW.thread_num);
+				CALL insert_post_" . $board->shortname . "(NEW.timestamp, NEW.media_hash, NEW.email, NEW.name, NEW.trip);
 			END;
 		");
 
@@ -1128,17 +1126,17 @@ class Radix_model extends CI_Model
 			CREATE TRIGGER `after_del_" . $board->shortname . "` AFTER DELETE ON " . $this->get_table($board) . "
 			FOR EACH ROW
 			BEGIN
-			CALL update_thread_" . $board->shortname . "(OLD.thread_num);
-			IF OLD.op = 1 THEN
-				CALL delete_thread_" . $board->shortname . "(OLD.num);
-			END IF;
-			CALL delete_post_" . $board->shortname . "(OLD.timestamp, OLD.media_hash, OLD.email, OLD.name, OLD.trip);
-			IF OLD.media_hash IS NOT NULL THEN
-				CALL delete_image_" . $board->shortname . "(OLD.media_id);
-			END IF;
+				CALL update_thread_" . $board->shortname . "(OLD.thread_num);
+				IF OLD.op = 1 THEN
+					CALL delete_thread_" . $board->shortname . "(OLD.num);
+				END IF;
+				CALL delete_post_" . $board->shortname . "(OLD.timestamp, OLD.media_hash, OLD.email, OLD.name, OLD.trip);
+				IF OLD.media_hash IS NOT NULL THEN
+					CALL delete_image_" . $board->shortname . "(OLD.media_id);
+				END IF;
 			END;
 		");
-		
+
 		if(get_setting('fs_fuuka_boards_db'))
 			$this->db->query('USE ' . $this->db->database);
 	}
@@ -1153,7 +1151,7 @@ class Radix_model extends CI_Model
 			'_daily',
 			'_search'
 		);
-		
+
 		foreach($tables as $table)
 			$this->db->query("DROP TABLE IF EXISTS " . $this->get_table($board, $table));
 	}
@@ -1162,7 +1160,7 @@ class Radix_model extends CI_Model
 	{
 		if(get_setting('fs_fuuka_boards_db'))
 			$this->db->query('USE ' . get_setting('fs_fuuka_boards_db'));
-		
+
 		$prefixes_procedure = array(
 			'update_thread_',
 			'create_thread_',
@@ -1172,26 +1170,26 @@ class Radix_model extends CI_Model
 			'insert_post_',
 			'delete_post_'
 		);
-		
+
 		$prefixes_trigger = array(
 			'before_ins_',
 			'after_ins_',
 			'after_del_'
 		);
-		
+
 		foreach($prefixes_procedure as $prefix)
 			$this->db->query("DROP PROCEDURE IF EXISTS `" . $prefix . $board->shortname . "`");
 
 		foreach($prefixes_trigger as $prefix)
 			$this->db->query("DROP TRIGGER IF EXISTS `" . $prefix . $board->shortname . "`");
-		
+
 		if(get_setting('fs_fuuka_boards_db'))
 			$this->db->query('USE ' . $this->db->database);
 	}
-	
+
 	/**
 	 * Finds out which is the shortest word that the fulltext can look for
-	 * 
+	 *
 	 * @return int the fulltext min word length
 	 */
 	function mysql_get_min_word_length()
@@ -1200,22 +1198,22 @@ class Radix_model extends CI_Model
 		$length_res = $this->db->query("SHOW VARIABLES WHERE Variable_name = 'ft_min_word_len'");
 		return $length_res->row()->Value;
 	}
-	
+
 	/**
 	 * Create the supplementary search table and fill it with the comments
 	 * Prefer this to the prefixed functions for future-proof database coverage
-	 * 
+	 *
 	 * @param object $board board object
 	 */
 	function create_search($board)
 	{
 		return $this->mysql_create_search($board);
 	}
-	
+
 	/**
 	 * Create the supplementary search table and fill it with the comments
 	 * Does also a bit of magic not to store useless columns
-	 * 
+	 *
 	 * @param object $board board object
 	 */
 	function mysql_create_search($board)
@@ -1225,93 +1223,93 @@ class Radix_model extends CI_Model
 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS " . $this->get_table($board, '_search') . " (
-				doc_id int unsigned NOT NULL auto_increment, 
-				num int unsigned NOT NULL, 
-				subnum int unsigned NOT NULL, 
-				thread_num int unsigned NOT NULL DEFAULT '0', 
-				media_filename text, 
+				doc_id int unsigned NOT NULL auto_increment,
+				num int unsigned NOT NULL,
+				subnum int unsigned NOT NULL,
+				thread_num int unsigned NOT NULL DEFAULT '0',
+				media_filename text,
 				comment text,
+
 				PRIMARY KEY (doc_id),
-				
-				INDEX num_index (num),
-				INDEX subnum_index (subnum),
-				INDEX thread_num_index (thread_num),
-				FULLTEXT media_filename_fulltext(media_filename),
-				FULLTEXT comment_fulltext(comment)
+				INDEX num_index (`num`),
+				INDEX subnum_index (`subnum`),
+				INDEX thread_num_subnum_index (`thread_num`),
+				FULLTEXT media_filename_fulltext(`media_filename`),
+				FULLTEXT comment_fulltext(`comment`)
 			) engine=MyISAM CHARSET=" . $charset . ";
 		");
-		
+
 		// get the minumum word length
 		$word_length = $this->mysql_get_min_word_length();
-		
+
 		// save in the database the fact that this is a MyISAM
 		$this->radix->save(array('id' => $board->id, 'myisam_search' => 1));
-		
+
 		// fill only where there's a point to
 		$this->db->query("
 			INSERT IGNORE INTO " . $this->get_table($board, '_search') . "
 			SELECT doc_id, num, subnum, thread_num, media_filename, comment
 			FROM " . $this->get_table($board) . "
-			WHERE 
+			WHERE
 				CHAR_LENGTH(media_filename) > ?
-				OR 
+					OR
 				CHAR_LENGTH(comment) > ?
-			
+
 		", array($word_length, $word_length));
-		
+
 		return TRUE;
 	}
 
 	/**
 	 * Drop the _search table
 	 * Prefer this to the prefixed functions for future-proof database coverage
-	 * 
+	 *
 	 * @param object $board board object
 	 */
 	function remove_search($board)
 	{
 		return $this->mysql_remove_search($board);
 	}
-	
+
 	/**
 	 * Drop the _search table
 	 * MySQL version
-	 * 
+	 *
 	 * @param object $board board object
 	 */
 	function mysql_remove_search($board)
 	{
 		$this->db->query("DROP TABLE IF EXISTS " . $this->get_table($board, '_search'));
-		
+
 		// set in preferences that this is not a board with MyISAM search
 		$this->radix->save(array('id' => $board->id, 'myisam_search' => 0));
-		
+
 		return TRUE;
 	}
-	
+
 	/**
 	 * Figures out if the table is already utf8mb4 or not
-	 * 
+	 *
 	 * @param object $board
 	 * @param string $suffix the table suffix like _threads
-	 * @return boolean true if the table is NOT utf8mb4 
+	 * @return boolean true if the table is NOT utf8mb4
 	 */
 	function mysql_check_charset($board, $suffix)
 	{
 		// rather than using information_schema, for ease let's just check the output of the create table
 		$this->db->query('SHOW CREATE TABLE ' . $this->get_table($board, $suffix));
-		
+
 		$row = $this->row_array();
-		
+
 		$create_table = $row['Create Table'];
-		
+
 		return strpos($create_table, 'CHARSET=utf8mb4') === FALSE;
 	}
-	
-	
+
+
 	/**
-	 * Convert to utf8mb4 if possible 
-	 * 
+	 * Convert to utf8mb4 if possible
+	 *
 	 * @param object $board board object
 	 */
 	function mysql_change_charset($board)
@@ -1322,16 +1320,16 @@ class Radix_model extends CI_Model
 			cli_notice('error', __('Your MySQL installation doesn\'t support multibyte characters. Update MySQL to version 5.5 or higher.'));
 			return FALSE;
 		}
-		
+
 		// these take ages
 		$tables = array('', '_threads', '_users');
-		
+
 		// also _search needs utf8mb4, but we need to add it separately not to create db errors
 		if($board->myisam_search)
 		{
 			$tables[] = '_search';
 		}
-		
+
 		foreach($tables as $table)
 		{
 			if($this->mysql_check_charset($board, $table))
@@ -1340,7 +1338,7 @@ class Radix_model extends CI_Model
 				$this->db->query("ALTER TABLE " . $this->get_table($board, $table) . " CONVERT TO CHARACTER SET utf8mb4");
 			}
 		}
-		
+
 		cli_notice('notice', __('The tables have all been converted to utf8mb4'));
 		return TRUE;
 	}

@@ -123,6 +123,13 @@ class Upgrade2_model extends CI_Model {
 		rename('content/cache/upgrade/' . $folder . '/content/plugins/FS_Articles', 'content/plugins/FS_Articles');
 		delete_files('content/plugins/FU_Nginx_Cache_Purge/', TRUE);
 		rename('content/cache/upgrade/' . $folder . '/content/plugins/FU_Nginx_Cache_Purge', 'content/plugins/FU_Nginx_Cache_Purge');
+		delete_files('content/plugins/FF_SSL_Tools/', TRUE);
+		rename('content/cache/upgrade/' . $folder . '/content/plugins/FF_SSL_Tools', 'content/plugins/FF_SSL_Tools');
+		delete_files('content/plugins/FU_Board_Statistcs/', TRUE);
+		rename('content/cache/upgrade/' . $folder . '/content/plugins/FU_Board_Statistcs', 'content/plugins/FU_Board_Statistcs');
+		delete_files('content/plugins/FU_Gifsicle/', TRUE);
+		rename('content/cache/upgrade/' . $folder . '/content/plugins/FU_Gifsicle', 'content/plugins/FU_Gifsicle');
+		
 		
 		return TRUE;
 	}

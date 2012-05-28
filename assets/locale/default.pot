@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FoOlFuuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-27 21:06+0100\n"
-"PO-Revision-Date: 2012-05-27 21:06+0100\n"
+"POT-Creation-Date: 2012-05-28 20:58+0100\n"
+"PO-Revision-Date: 2012-05-28 20:58+0100\n"
 "Last-Translator: Woxxy <woxxy@foolrulez.org>\n"
 "Language-Team: FoOlRulez <support@foolz.us>\n"
 "MIME-Version: 1.0\n"
@@ -1105,101 +1105,101 @@ msgstr ""
 msgid "The Asagi ZIP file couldn't be downloaded."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:633
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:639
 msgid "This image has already been posted once. This board doesn't allow image reposting"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:647
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:653
 #, php-format
 msgid "You must wait up to %s hours to repost this image."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:1291
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:1297
 msgid "The search backend is currently not online. Try later or contact us in case it's offline for too long."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2461
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2467
 msgid "Your IP has been identified as a spam proxy. Please try a different IP or remove the proxy to post."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2488
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2494
 msgid "You are banned from posting"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2509
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2515
 msgid "You're posting again the same comment as the last time!"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2591
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2597
 msgid "Your comment has contains words that aren't allowed."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2628
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2634
 msgid "An image is required for creating threads."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2637
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2643
 msgid "The filetype you are attempting to upload is not allowed."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2643
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2649
 msgid "The image you are attempting to upload is larger than the permitted size."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2659
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2665
 msgid "Sorry, this thread has reached its maximum amount of image replies."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2670
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2676
 msgid "Your image upload is not a valid image file."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2687
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2693
 msgid "Your image upload has been flagged as inappropriate."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2694
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2700
 msgid "Your post contains contents that is marked as spam."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2700
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2706
 msgid "Your post was too long."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2706
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2712
 msgid "Your post had too many lines."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2744
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2750
 msgid "This post is already being processed..."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2826
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2944
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2832
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2950
 msgid "You already posted this."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2847
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2853
 msgid "Your image was invalid."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3000
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3006
 msgid "There's no such a post to be deleted."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3015
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3021
 msgid "The password you inserted did not match the post's deletion password."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3022
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3028
 msgid "Unable to delete thumbnail for post."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3048
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3054
 msgid "Unable to delete post."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3072
+#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3078
 msgid "Unable to delete thumbnail for thread replies."
 msgstr ""
 
@@ -1461,16 +1461,16 @@ msgstr ""
 msgid "Hide the board from public access? (only admins and mods will be able to browse it)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:1320
+#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:1330
 msgid "Your MySQL installation doesn't support multibyte characters. Update MySQL to version 5.5 or higher."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:1337
+#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:1347
 #, php-format
 msgid "Converting %s to utfmb4"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:1342
+#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:1352
 msgid "The tables have all been converted to utf8mb4"
 msgstr ""
 
@@ -2107,37 +2107,37 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:50
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:56
 msgid "SSL Tools"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:59
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:68
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:77
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:65
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:74
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:83
 msgid "SSL"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:88
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:94
 msgid "Does the server have SSL available (does your site support https:// protocol)?"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:93
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:99
 msgid "Redirect the logged in users to the SSL version of the site"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:98
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:104
 msgid "Redirect every user to the SSL version of the site"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:103
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:109
 msgid "Set a cookie for users that browsed the site with https:// so they get redirected to the https:// version of the site"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:108
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:114
 msgid "Show a link to SSL in the header if the user is browsing in http://"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:113
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:119
 msgid "Show a link to SSL in the footer if the user is browsing in http://"
 msgstr ""
 
@@ -2192,8 +2192,8 @@ msgstr ""
 #: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:168
 #: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:186
 #: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:283
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:359
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:461
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:360
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:462
 msgid "Articles"
 msgstr ""
 
@@ -2211,15 +2211,15 @@ msgstr ""
 msgid "Article information updated."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:355
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:356
 msgid "The article was removed"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:360
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:361
 msgid "Removing article:"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:362
+#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:363
 msgid "Do you really want to remove the article?"
 msgstr ""
 
@@ -2512,6 +2512,7 @@ msgid "Archives"
 msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:18
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:246
 msgid "Subject"
 msgstr ""
 
@@ -2520,6 +2521,7 @@ msgid "Comment"
 msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:48
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:255
 msgid "E-mail"
 msgstr ""
 
@@ -2561,6 +2563,82 @@ msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:77
 msgid "Filters:"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:83
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:110
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:137
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:164
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:192
+msgid "All"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:91
+msgid "Only Deleted"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:99
+msgid "Only Non-Deleted"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:118
+msgid "Only Ghost"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:145
+msgid "Only with image"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:153
+msgid "Only without image"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:172
+msgid "Thread OPs Only"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:180
+msgid "Replies Only"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:201
+msgid "Only by Users"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:209
+msgid "Only by Mods"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:217
+msgid "Only by Admins"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:231
+msgid "New First"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:239
+msgid "Old First"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:252
+msgid "Tripcode"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:258
+msgid "Filename"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:261
+msgid "Date start"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:275
+msgid "Date end"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:289
+msgid "Image hash"
 msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:292

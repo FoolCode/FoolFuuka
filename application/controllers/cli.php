@@ -92,6 +92,7 @@ class Cli extends MY_Controller
 				cli_notice('notice', '    drop_search <board_shortname>               Drops the _search table, good idea if you don\'t need it anymore after implementing SphinxSearch');
 				cli_notice('notice', '    mysql_convert_utf8mb4 <board_shortname>     Converts the MySQL tables to support 4byte characters that otherwise get ignored.');
 				cli_notice('notice', '    recreate_triggers <board_shortname>         Recreate triggers for the selected board.');
+				cli_notice('notice', '    recheck_banned [<board_shortname>]          Try deleting banned images, if there\'s any left.');
 				break;
 				
 			// create the _search table for a specific board
@@ -127,8 +128,22 @@ class Cli extends MY_Controller
 				$board = $this->radix->get_by_shortname($parameters[1]);
 				if(!$board)
 					return $this->_error('_parameter_board_exist');
-				$this->mysql_remove_triggers($board);
-				$this->mysql_create_triggers($board);
+				$this->radix->mysql_remove_triggers($board);
+				$this->radix->mysql_create_triggers($board);
+				break;
+			case 'recheck_banned':
+				if(isset($parameters[1]))
+				{
+					$board = $this->radix->get_by_shortname($parameters[1]);
+					if(!$board)
+						return $this->_error('_parameter_board_exist');
+				}
+				else 
+				{
+					$board = FALSE;
+				}
+				$this->load->model('post_model', 'post');
+				$this->post->recheck_banned($board);
 				break;
 				
 		}
@@ -143,28 +158,6 @@ class Cli extends MY_Controller
 			cli_notice('notice', $result['success']);
 		}
 	}
-
-
-	function stats_cron()
-	{
-		$this->load->model('statistics_model', 'statistics');
-		$done = FALSE;
-
-		while (!$done)
-		{
-			$this->statistics->cron();
-			sleep(30);
-		}
-	}
-
-
-	function statistics($board = NULL)
-	{
-		$this->load->model('statistics_model', 'statistics');
-
-		$this->statistics->cron($board);
-	}
-
 	
 	
 	function asagi_get_settings()

@@ -40,16 +40,22 @@ class Post_model extends CI_Model
 		switch (count($parameters)) {
 			case 0:
 				$return = $this->{'p_' . $name}();
+				break;
 			case 1:
 				$return = $this->{'p_' . $name}($parameters[0]);
+				break;
 			case 2:
 				$return = $this->{'p_' . $name}($parameters[0], $parameters[1]);
+				break;
 			case 3:
 				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2]);
+				break;
 			case 4:
 				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3]);
+				break;
 			case 5:
 				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
+				break;
 			default:
 				$return = call_user_func_array(array(&$this, 'p_' . $name), $parameters);
 			break;
@@ -3219,6 +3225,77 @@ class Post_model extends CI_Model
 	}
 
 
+	/**
+	 * Recheck all banned images and remove eventual leftover images
+	 * 
+	 * @param object $board
+	 */
+	function recheck_banned($board = FALSE)
+	{
+		if($board === FALSE)
+		{
+			$boards = $this->radix->get_all();
+		}
+		else
+		{
+			$boards = array($board);
+			unset($board);
+		}
+		
+		foreach($boards as $board)
+		{
+			$query = $this->db->query('
+				SELECT *
+				FROM ' . $this->radix->get_table($board, '_images') . '
+				WHERE banned = 1
+			');
+			
+			foreach($query->result() as $i)
+			{
+				if(!is_null($i->preview_op))
+				{
+					$op = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . 
+						$board->shortname . '/thumb/' .
+						substr($i->preview_op, 0, 4) . '/' . substr($i->preview_op, 4, 2) . '/' .
+						$i->preview_op;
+						
+					if(file_exists($op))
+					{
+						unlink($op);
+					}
+				}
+				
+				if(!is_null($i->preview_reply))
+				{
+					$reply = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . 
+						$board->shortname . '/thumb/' .
+						substr($i->preview_reply, 0, 4) . '/' . substr($i->preview_reply, 4, 2) . '/' .
+						$i->preview_reply;
+					
+					if(file_exists($reply))
+					{
+						unlink($reply);
+					}
+				}
+				
+				if(!is_null($i->media))
+				{
+					$media = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . 
+						$board->shortname . '/image/' .
+						substr($i->media, 0, 4) . '/' . substr($i->media, 4, 2) . '/' .
+						$i->media;
+					
+					if(file_exists($media))
+					{
+						unlink($media);
+					}
+				}
+				
+			}
+			
+		}
+	}
+	
 	/**
 	 * @param object $board
 	 * @param int $doc_id

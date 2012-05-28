@@ -208,7 +208,7 @@ class MY_Controller extends CI_Controller
 
 		if (in_array('ban_md5', $actions))
 		{
-			$this->post->ban_media($post->media_hash);
+			$this->post->ban_media($post->media_hash, TRUE);
 			$actions = array_diff($actions, array('remove_image'));
 		}
 

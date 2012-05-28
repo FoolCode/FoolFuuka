@@ -18,6 +18,11 @@ class FF_SSL_Tools extends Plugins_model
 
 	function initialize_plugin()
 	{
+		if ($this->input->is_cli_request())
+		{
+			return TRUE;
+		}
+	 
 		// if we want to run some really early commands, we can run them here!
 		$this->plugins->register_hook($this, 'ff_my_controller_after_load_settings', 2, function(){
 			$CI = & get_instance();
@@ -40,9 +45,8 @@ class FF_SSL_Tools extends Plugins_model
 					$CI->input->set_cookie('ff_sticky_ssl', '1', 30);
 				}
 			}
+			
 		});
-		
-		
 		
 		$this->plugins->register_controller_function($this, array('admin', 'plugins', 'ssl_tools'), 'manage');
 

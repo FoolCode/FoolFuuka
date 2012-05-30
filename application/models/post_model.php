@@ -1483,7 +1483,7 @@ class Post_model extends CI_Model
 				if($args['text'])
 				{
 					$this->db->where(
-						'MATCH (' . $this->radix->get_table($board, '_search') . '.`comment`) AGAINST (' . $this->db->escape(rawurldecode($args['text'])) . ')',
+						'MATCH (' . $this->radix->get_table($board, '_search') . '.`comment`) AGAINST (' . $this->db->escape(rawurldecode($args['text'])) . ' IN BOOLEAN MODE)',
 						NULL,
 						FALSE
 					);
@@ -1492,7 +1492,7 @@ class Post_model extends CI_Model
 				if($args['filename'])
 				{
 					$this->db->where(
-						'MATCH (' . $this->radix->get_table($board, '_search') . '.`media_filename`) AGAINST (' . $this->db->escape(rawurldecode($args['filename'])) . ')',
+						'MATCH (' . $this->radix->get_table($board, '_search') . '.`media_filename`) AGAINST (' . $this->db->escape(rawurldecode($args['filename'])) . ' IN BOOLEAN MODE)',
 						NULL,
 						FALSE
 					);

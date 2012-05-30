@@ -235,16 +235,16 @@ abstract class REST_Controller extends Public_Controller
 		}
 
 		// Load DB if its enabled
+		$this->rest = new stdClass();
 		if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
 		{
-			$this->rest->db = new stdClass();
+
 			$this->rest->db = $this->load->database(config_item('rest_database_group'), TRUE);
 		}
 
 		// Use whatever database is in use (isset returns false)
 		elseif (@$this->db)
 		{
-			$this->rest->db = new stdClass();
 			$this->rest->db = $this->db;
 		}
 

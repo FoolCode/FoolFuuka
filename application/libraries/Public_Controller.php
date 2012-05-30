@@ -41,13 +41,8 @@ class Public_Controller extends MY_Controller
 			$this->fu_reply_name = '';
 		}
 
-		// We need to set some theme stuff, so let's load the template system
-		$this->load->library('template');
-
-		$this->config->load('theme');
-
-		// @todo: check directory when we support extra themes
-		$all_themes = array('default', 'fuuka', 'yotsuba');
+		$this->load->model('theme_model', 'theme');
+		$all_themes = array_keys($this->theme->get_all());
 		
 		if($this->tank_auth->is_allowed())
 		{
@@ -59,8 +54,8 @@ class Public_Controller extends MY_Controller
 			$active_themes = get_setting('fs_theme_active_themes');
 			if(!$active_themes || !$active_themes = @unserialize($active_themes))
 			{
-				// default themes coming with FoOlFuuka
-				$active_themes = array('default', 'fuuka');
+				// default WORKING themes coming with the application
+				$active_themes = array('default', 'tanline', 'fuuka');
 			}
 			else
 			{
@@ -81,46 +76,13 @@ class Public_Controller extends MY_Controller
 			show_error(__('No themes enabled!'), 500);
 		}
 		
-		$this->fu_theme = get_setting('fs_theme_default', FOOL_THEME_DEFAULT);
+		$selected_theme = get_setting('fs_theme_default', FOOL_THEME_DEFAULT);
 		if($this->input->cookie('foolfuuka_theme') && in_array($this->input->cookie('foolfuuka_theme'), $active_themes))
 		{
-			$this->fu_theme = $this->input->cookie('foolfuuka_theme');
+			$selected_theme = $this->input->cookie('foolfuuka_theme');
 		}
 
-		$this->template->set_theme($this->fu_theme);
-		
-		// let's get extra info on each theme and prepare an useable array of data
-		$this->fu_available_themes = array();
-		foreach($active_themes as $theme)
-		{
-			if (file_exists('content/themes/' . $theme . '/theme_config.php'))
-			{
-				include('content/themes/' . $theme . '/theme_config.php');
-				$this->fu_available_themes[$theme] = $config; 
-			}
-		}
-		
-		// load the controller from the current theme, else load the default one
-		if (file_exists('content/themes/' . $this->fu_theme . '/theme_controller.php'))
-		{
-			require_once('content/themes/' . $this->fu_theme . '/theme_controller.php');
-		}
-		else
-		{
-			require_once('content/themes/' . $this->config->item('theme_extends') . '/theme_controller.php');
-		}
-		$this->TC = new Theme_Controller();
-
-		// load the functions from the current theme, else load the default one
-		if (file_exists('content/themes/' . $this->fu_theme . '/theme_functions.php'))
-		{
-			require_once('content/themes/' . $this->fu_theme . '/theme_functions.php');
-		}
-		else
-		{
-			require_once('content/themes/' . $this->config->item('theme_extends') . '/theme_functions.php');
-		}
+		$this->theme->set_theme($selected_theme);
 	}
-
 
 }

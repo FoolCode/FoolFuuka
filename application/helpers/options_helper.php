@@ -292,6 +292,7 @@ function find_imagick()
 	}
 
 	// set default values
+	$CI->fs_imagick = new stdClass();
 	$CI->fs_imagick->exec = FALSE;
 	$CI->fs_imagick->found = FALSE;
 	$CI->fs_imagick->available = FALSE;

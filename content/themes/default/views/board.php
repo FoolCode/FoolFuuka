@@ -65,8 +65,8 @@ if (!defined('BASEPATH'))
 				<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>" class="btnr parent"><?php echo __('View') ?></a><a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#reply' ?>" class="btnr parent"><?php echo __('Reply') ?></a><?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url(get_selected_radix()->shortname . '/last50/' . $op->num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?php echo (get_selected_radix()->archive) ? '<a href="http://boards.4chan.org/' . get_selected_radix()->shortname . '/res/' . $op->num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?php echo site_url(get_selected_radix()->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?php echo __('Report') ?></a><?php if($this->tank_auth->is_allowed() || !get_selected_radix()->archive) : ?><a href="<?php echo site_url(get_selected_radix()->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?php echo $op->doc_id ?>" data-post-id="<?php echo $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?php echo __('Delete') ?></a><?php endif; ?>
 			</span>
 
-			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="<?php echo form_prep(__('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
-			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->fu_theme) ? $this->fu_theme : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="<?php echo form_prep(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>
+			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default').'/images/icons/file-delete-icon.png'; ?>" width="16" height="16" title="<?php echo form_prep(__('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
+			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?php echo site_url().'content/themes/'.(($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default').'/images/icons/spoiler-icon.png'; ?>" width="16" height="16" title="<?php echo form_prep(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>
 
 			<div class="backlink_list"<?php echo (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
 				<?php echo __('Quoted by:') ?> <span class="post_backlink" data-post="<?php echo $op->num ?>"><?php echo (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
@@ -126,10 +126,10 @@ if (!defined('BASEPATH'))
 				if ($p->thread_num == 0)
 					$p->thread_num  = $p->num;
 
-				if (file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
-					include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
+				if (file_exists('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php'))
+					include('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php');
 				else
-					include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
+					include('content/themes/' . $this->theme->get_config('theme_extends') . '/views/board_comment.php');
 			}
 		}
 		?>

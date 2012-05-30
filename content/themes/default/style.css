@@ -19,7 +19,7 @@
     color: #dd0000;
 }
 
-html.theme_default {
+html{ 
     height:100%;
     background:#6A836F;
     margin:0;

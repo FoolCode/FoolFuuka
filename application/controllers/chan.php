@@ -214,14 +214,14 @@ class Chan extends Public_Controller
 
 					$this->load->helper('cookie');
 					$this->load->helper('number');
-					$this->load->library('template');
-					$this->template->set_layout('chan');
-					$this->template->set_partial('tools_search', 'tools_search');
-					$this->template->set_partial('tools_modal', 'tools_modal');
-					$this->template->set('is_page', FALSE);
-					$this->template->set('disable_headers', FALSE);
-					$this->template->set('is_statistics', FALSE);
-					$this->template->set('enabled_tools_modal', FALSE);
+					$this->load->model('theme_model', 'theme');
+					$this->theme->set_layout('chan');
+					$this->theme->set_partial('tools_search', 'tools_search');
+					$this->theme->set_partial('tools_modal', 'tools_modal');
+					$this->theme->bind('is_page', FALSE);
+					$this->theme->bind('disable_headers', FALSE);
+					$this->theme->bind('is_statistics', FALSE);
+					$this->theme->bind('enabled_tools_modal', FALSE);
 					$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
 					return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
 				}
@@ -232,17 +232,17 @@ class Chan extends Public_Controller
 				// we want to use the 404 in this class
 				if($remap === FALSE)
 				{
-					/* @todo get rid of these blocks of template set */
+					/* @todo get rid of these blocks of theme set */
 					$this->load->helper('cookie');
 					$this->load->helper('number');
-					$this->load->library('template');
-					$this->template->set_layout('chan');
-					$this->template->set_partial('tools_search', 'tools_search');
-					$this->template->set_partial('tools_modal', 'tools_modal');
-					$this->template->set('is_page', FALSE);
-					$this->template->set('disable_headers', FALSE);
-					$this->template->set('is_statistics', FALSE);
-					$this->template->set('enabled_tools_modal', FALSE);
+					$this->load->model('theme_model', 'theme');
+					$this->theme->set_layout('chan');
+					$this->theme->set_partial('tools_search', 'tools_search');
+					$this->theme->set_partial('tools_modal', 'tools_modal');
+					$this->theme->bind('is_page', FALSE);
+					$this->theme->bind('disable_headers', FALSE);
+					$this->theme->bind('is_statistics', FALSE);
+					$this->theme->bind('enabled_tools_modal', FALSE);
 					$this->show_404();
 				}
 
@@ -266,7 +266,7 @@ class Chan extends Public_Controller
 
 			// Load some default settings for the board.
 			$this->load->model('post_model', 'post');
-			$this->template->set('board', $board);
+			$this->theme->bind('board', $board);
 
 			$method = $params[0];
 			array_shift($params);
@@ -275,8 +275,8 @@ class Chan extends Public_Controller
 		// Load helpers and libraries and initialize public controller.
 		$this->load->helper('cookie');
 		$this->load->helper('number');
-		$this->load->library('template');
-		$this->template->set_layout('chan');
+		$this->load->model('theme_model', 'theme');
+		$this->theme->set_layout('chan');
 
 		//PLUGINS: If available, allow plugins to override default functions.
 		if ($this->plugins->is_controller_function($this->uri->rsegment_array()))
@@ -285,12 +285,12 @@ class Chan extends Public_Controller
 			array_shift($uri_array);
 			array_shift($uri_array);
 
-			$this->template->set_partial('tools_search', 'tools_search');
-			$this->template->set_partial('tools_modal', 'tools_modal');
-			$this->template->set('is_page', FALSE);
-			$this->template->set('disable_headers', FALSE);
-			$this->template->set('is_statistics', FALSE);
-			$this->template->set('enabled_tools_modal', FALSE);
+			$this->theme->set_partial('tools_search', 'tools_search');
+			$this->theme->set_partial('tools_modal', 'tools_modal');
+			$this->theme->bind('is_page', FALSE);
+			$this->theme->bind('disable_headers', FALSE);
+			$this->theme->bind('is_statistics', FALSE);
+			$this->theme->bind('enabled_tools_modal', FALSE);
 
 			$plugin_controller = $this->plugins->get_controller_function($this->uri->rsegment_array());
 			return call_user_func_array(array($plugin_controller['plugin'], $plugin_controller['method']), $uri_array);
@@ -300,12 +300,6 @@ class Chan extends Public_Controller
 		if(substr($method, 0, 1) == '_')
 		{
 			return $this->show_404();
-		}
-
-		// FUNCTIONS: If available, load custom functions to override default functions.
-		if (method_exists($this->TC, $method))
-		{
-			return call_user_func_array(array($this->TC, $method), $params);
 		}
 
 		if (method_exists($this, $method))
@@ -389,46 +383,46 @@ class Chan extends Public_Controller
 
 		if(isset($variables['@modifiers']))
 		{
-			$this->template->set('modifiers', $variables['@modifiers']);
+			$this->theme->bind('modifiers', $variables['@modifiers']);
 		}
 
 		// merge variables to hold all the JavaScript footer data
 		$backend_vars = array_merge($default['backend_vars'], $backend_vars);
-		$this->template->set('backend_vars', $backend_vars);
+		$this->theme->bind('backend_vars', $backend_vars);
 
-		// Set all of the variables and partials into the template.
+		// Set all of the variables and partials into the theme.
 		foreach ($variables as $name => $value)
 		{
-			$this->template->set($name, $value);
+			$this->theme->bind($name, $value);
 		}
 
 		foreach ($partials as $view => $params)
 		{
 			if (is_array($params) || is_object($params))
 			{
-				$this->template->set('enabled_' . $view, TRUE);
-				$this->template->set_partial($view, $view, $params);
+				$this->theme->bind('enabled_' . $view, TRUE);
+				$this->theme->set_partial($view, $view, $params);
 			}
 			else
 			{
 				// Enable/Disable Partials
 				if ($params == FALSE)
 				{
-					$this->template->set('enabled_' . $view, FALSE);
+					$this->theme->bind('enabled_' . $view, FALSE);
 				}
 				else
 				{
-					$this->template->set('enabled_' . $view, TRUE);
+					$this->theme->bind('enabled_' . $view, TRUE);
 				}
 
 				// Set the Partials with information.
 				if (is_bool($params))
 				{
-					$this->template->set_partial($view, $view);
+					$this->theme->set_partial($view, $view);
 				}
 				else
 				{
-					$this->template->set_partial($view, $params);
+					$this->theme->set_partial($view, $params);
 				}
 			}
 		}
@@ -442,15 +436,15 @@ class Chan extends Public_Controller
 	public function index()
 	{
 		/**
-		 * Set template variables required to build the HTML.
+		 * Set theme variables required to build the HTML.
 		 */
-		$this->template->title(get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE));
+		$this->theme->set_title(get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE));
 		$this->_set_parameters(
 			array(
 				'disable_headers' => TRUE
 			)
 		);
-		$this->template->build('index');
+		$this->theme->build('index');
 	}
 
 	/**
@@ -458,7 +452,7 @@ class Chan extends Public_Controller
 	 */
 	function show_404()
 	{
-		$this->template->title(get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE));
+		$this->theme->set_title(get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE));
 		// call it as a static method to make it easier for plugins to call 404
 		Chan::_set_parameters(
 			array(
@@ -470,7 +464,7 @@ class Chan extends Public_Controller
 			)
 		);
 		$this->output->set_status_header(404);
-		$this->template->build('error');
+		$this->theme->build('error');
 	}
 
 	public function rules()
@@ -488,7 +482,7 @@ class Chan extends Public_Controller
 			)
 		);
 
-		$this->template->build('markdown');
+		$this->theme->build('markdown');
 	}
 
 
@@ -519,8 +513,8 @@ class Chan extends Public_Controller
 
 		$posts = $this->post->get_latest(get_selected_radix(), $page, $options);
 
-		// Set template variables required to build the HTML.
-		$this->template->title(get_selected_radix()->formatted_title .
+		// Set theme variables required to build the HTML.
+		$this->theme->set_title(get_selected_radix()->formatted_title .
 			(($page > 1 ) ? ' &raquo; ' . __('Page') . ' ' . $page : ''));
 		$this->_set_parameters(
 			array(
@@ -542,7 +536,7 @@ class Chan extends Public_Controller
 				'tools_search' => array('page' => $page)
 			)
 		);
-		$this->template->build('board');
+		$this->theme->build('board');
 	}
 
 
@@ -582,8 +576,8 @@ class Chan extends Public_Controller
 		$posts = $this->post->get_latest(get_selected_radix(), $page,
 			array('per_page' => get_selected_radix()->threads_per_page, 'type' => 'ghost'));
 
-		// Set template variables required to build the HTML.
-		$this->template->title(get_selected_radix()->formatted_title .
+		// Set theme variables required to build the HTML.
+		$this->theme->set_title(get_selected_radix()->formatted_title .
 			(($page > 1 ) ? ' &raquo; ' . __('Ghost Page') . ' ' . $page : ''));
 		$this->_set_parameters(
 			array(
@@ -603,7 +597,7 @@ class Chan extends Public_Controller
 				'tools_search' => array('page' => $page)
 			)
 		);
-		$this->template->build('board');
+		$this->theme->build('board');
 	}
 
 
@@ -621,8 +615,8 @@ class Chan extends Public_Controller
 		// Fetch the last X created threads to generate the GALLERY.
 		$result = $this->post->get_gallery(get_selected_radix(), $page, array('type' => $type));
 
-		// Set template variables required to build the HTML.
-		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Gallery'));
+		// Set theme variables required to build the HTML.
+		$this->theme->set_title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Gallery'));
 
 		if ($type == 'by_image')
 		{
@@ -656,7 +650,7 @@ class Chan extends Public_Controller
 				'page_function' => 'gallery'
 			)
 		);
-		$this->template->build('gallery');
+		$this->theme->build('gallery');
 	}
 
 
@@ -735,8 +729,8 @@ class Chan extends Public_Controller
 				$disable_image_upload = TRUE;
 		}
 
-		// Set template variables required to build the HTML.
-		$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Thread') . ' #' . $num);
+		// Set theme variables required to build the HTML.
+		$this->theme->set_title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Thread') . ' #' . $num);
 
 		$second_array = array(
 			'tools_modal' => TRUE,
@@ -763,7 +757,7 @@ class Chan extends Public_Controller
 				'thread_op_data' => $thread[$num]['op']
 			)
 		);
-		$this->template->build('board');
+		$this->theme->build('board');
 	}
 
 
@@ -852,8 +846,8 @@ class Chan extends Public_Controller
 			$second_array['tools_reply_box'] = TRUE;
 		}
 
-		// Set template variables required to build the HTML.
-		$this->template->title(get_selected_radix()->formatted_title .
+		// Set theme variables required to build the HTML.
+		$this->theme->set_title(get_selected_radix()->formatted_title .
 			' &raquo; ' . __('Thread') . ' #' . $num);
 		$this->_set_parameters(
 			array(
@@ -869,7 +863,7 @@ class Chan extends Public_Controller
 				'latest_doc_id' => $latest_doc_id
 			)
 		);
-		$this->template->build('board');
+		$this->theme->build('board');
 	}
 
 
@@ -1002,13 +996,13 @@ class Chan extends Public_Controller
 			if ($image['error_type'] == 'no_record')
 			{
 				$this->output->set_status_header('404');
-				$this->template->title(__('Error'));
+				$this->theme->set_title(__('Error'));
 				$this->_set_parameters(
 					array(
 						'error' => __('There is no record of the specified image in our database.')
 					)
 				);
-				$this->template->build('error');
+				$this->theme->build('error');
 				return FALSE;
 			}
 
@@ -1016,7 +1010,7 @@ class Chan extends Public_Controller
 			if ($image['error_type'] == 'not_on_server')
 			{
 				$this->output->set_status_header('404');
-				$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Image Pruned'));
+				$this->theme->set_title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Image Pruned'));
 				$this->_set_parameters(
 					array(
 						'section_title' => __('Error 404: The image has been pruned from the server.'),
@@ -1024,7 +1018,7 @@ class Chan extends Public_Controller
 						'posts' => array('posts' => array('posts' => array($image['result'])))
 					)
 				);
-				$this->template->build('board');
+				$this->theme->build('board');
 				return FALSE;
 			}
 		}
@@ -1039,13 +1033,13 @@ class Chan extends Public_Controller
 	 */
 	public function redirect($image = NULL)
 	{
-		$this->template->set_layout('redirect');
+		$this->theme->set_layout('redirect');
 		$this->_set_parameters(
 			array(
 				'url' => get_selected_radix()->images_url . $image
 			)
 		);
-		$this->template->build('redirection');
+		$this->theme->build('redirection');
 	}
 
 
@@ -1184,11 +1178,11 @@ class Chan extends Public_Controller
 		// Stop! We have reached an error and shouldn't proceed any further!
 		if (isset($result['error']))
 		{
-			$this->template->title(__('Error'));
+			$this->theme->set_title(__('Error'));
 
 			if ($radix)
 			{
-				$this->template->title($radix->formatted_title);
+				$this->theme->set_title($radix->formatted_title);
 			}
 
 			$this->_set_parameters(
@@ -1198,7 +1192,7 @@ class Chan extends Public_Controller
 				'tools_search' => array('search' => $search, 'latest_searches' => $cookie_array)
 				)
 			);
-			$this->template->build('error');
+			$this->theme->build('error');
 			return FALSE;
 		}
 
@@ -1301,8 +1295,8 @@ class Chan extends Public_Controller
 		// we need to add the shortname and the search
 		$prepend_uri = (($radix) ? $radix->shortname : '') . '/search';
 
-		// Set template variables required to build the HTML.
-		//	$this->template->title($radix->formatted_title .
+		// Set theme variables required to build the HTML.
+		//	$this->theme->set_title($radix->formatted_title .
 		//		' &raquo; ' . $title);
 
 		$this->_set_parameters(
@@ -1327,15 +1321,15 @@ class Chan extends Public_Controller
 
 		if ($radix)
 		{
-			$this->template->title($radix->formatted_title);
+			$this->theme->set_title($radix->formatted_title);
 		}
 		else
 		{
-			$this->template->title(__('Global Search'));
+			$this->theme->set_title(__('Global Search'));
 		}
 
-		$this->template->append_metadata('<meta name="robots" content=""noindex" />');
-		$this->template->build('board');
+		$this->theme->append_metadata('<meta name="robots" content=""noindex" />');
+		$this->theme->build('board');
 	}
 
 
@@ -1477,7 +1471,7 @@ class Chan extends Public_Controller
 				}
 
 				// Display a default/standard output for NON-AJAX REQUESTS.
-				$this->template->title(__('Error'));
+				$this->theme->set_title(__('Error'));
 				$this->_set_parameters(
 					array(
 						'error' => validation_errors()
@@ -1486,7 +1480,7 @@ class Chan extends Public_Controller
 						'tools_search' => TRUE
 					)
 				);
-				$this->template->build('error');
+				$this->theme->build('error');
 				return FALSE;
 			}
 
@@ -1527,7 +1521,7 @@ class Chan extends Public_Controller
 						return FALSE;
 					}
 
-					$this->template->title(__('Error'));
+					$this->theme->set_title(__('Error'));
 					$this->_set_parameters(
 						array(
 							'error' => __('This thread does not exist.')
@@ -1536,7 +1530,7 @@ class Chan extends Public_Controller
 							'tools_search' => TRUE
 						)
 					);
-					$this->template->build('error');
+					$this->theme->build('error');
 					return FALSE;
 				}
 			}
@@ -1564,7 +1558,7 @@ class Chan extends Public_Controller
 							return FALSE;
 						}
 
-						$this->template->title(__('Error'));
+						$this->theme->set_title(__('Error'));
 						$this->_set_parameters(
 							array(
 								'error' => __('This thread does not exist.')
@@ -1574,7 +1568,7 @@ class Chan extends Public_Controller
 								'tools_search' => TRUE
 							)
 						);
-						$this->template->build('error');
+						$this->theme->build('error');
 						return FALSE;
 					}
 
@@ -1589,7 +1583,7 @@ class Chan extends Public_Controller
 							return FALSE;
 						}
 
-						$this->template->title(__('Error'));
+						$this->theme->set_title(__('Error'));
 						$this->_set_parameters(
 							array(
 								'error' => __('This thread is closed.')
@@ -1599,7 +1593,7 @@ class Chan extends Public_Controller
 								'tools_search' => TRUE
 							)
 						);
-						$this->template->build('error');
+						$this->theme->build('error');
 						return FALSE;
 					}
 
@@ -1622,7 +1616,7 @@ class Chan extends Public_Controller
 					return FALSE;
 				}
 
-				$this->template->title(__('Error'));
+				$this->theme->set_title(__('Error'));
 				$this->_set_parameters(
 					array(
 						'error' => __('You are required to upload an image when posting a new thread.')
@@ -1631,7 +1625,7 @@ class Chan extends Public_Controller
 						'tools_search' => TRUE
 					)
 				);
-				$this->template->build('error');
+				$this->theme->build('error');
 				return FALSE;
 			}
 
@@ -1647,7 +1641,7 @@ class Chan extends Public_Controller
 					return FALSE;
 				}
 
-				$this->template->title(__('Error'));
+				$this->theme->set_title(__('Error'));
 				$this->_set_parameters(
 					array(
 						'error' => __('You are required to write a comment when no image upload is present.')
@@ -1656,7 +1650,7 @@ class Chan extends Public_Controller
 						'tools_search' => TRUE
 					)
 				);
-				$this->template->build('error');
+				$this->theme->build('error');
 				return FALSE;
 			}
 
@@ -1672,7 +1666,7 @@ class Chan extends Public_Controller
 					return FALSE;
 				}
 
-				$this->template->title(__('Error'));
+				$this->theme->set_title(__('Error'));
 				$this->_set_parameters(
 					array(
 					'error' => __('The posting of images has been disabled for this thread.')
@@ -1681,7 +1675,7 @@ class Chan extends Public_Controller
 					'tools_search' => TRUE
 					)
 				);
-				$this->template->build('error');
+				$this->theme->build('error');
 				return FALSE;
 			}
 
@@ -1712,7 +1706,7 @@ class Chan extends Public_Controller
 						return FALSE;
 					}
 
-					$this->template->title(__('Error'));
+					$this->theme->set_title(__('Error'));
 					$this->_set_parameters(
 						array(
 							'error' => $this->upload->display_errors()
@@ -1721,7 +1715,7 @@ class Chan extends Public_Controller
 							'tools_search' => TRUE
 						)
 					);
-					$this->template->build('error');
+					$this->theme->build('error');
 					return FALSE;
 				}
 			}
@@ -1740,7 +1734,7 @@ class Chan extends Public_Controller
 					return FALSE;
 				}
 
-				$this->template->title(__('Error'));
+				$this->theme->set_title(__('Error'));
 				$this->_set_parameters(
 					array(
 						'error' => $result['error']
@@ -1749,7 +1743,7 @@ class Chan extends Public_Controller
 						'tools_search' => TRUE
 					)
 				);
-				$this->template->build('error');
+				$this->theme->build('error');
 				return FALSE;
 			}
 			else if (isset($result['success']))

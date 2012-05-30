@@ -951,7 +951,7 @@ class Post_model extends CI_Model
 		/*
 		if ($this->features === FALSE)
 		{
-			if ($this->fu_theme == 'yotsuba')
+			if ($this->theme->get_selected_theme() == 'yotsuba')
 			{
 				$html = array(
 					'prefix' => '<font class="unkfunc">',
@@ -1032,7 +1032,7 @@ class Post_model extends CI_Model
 
 		if ($this->features === FALSE)
 		{
-			if ($this->fu_theme == 'fuuka')
+			if ($this->theme->get_selected_theme() == 'fuuka')
 			{
 				$html = array(
 					'prefix' => '<span class="unkfunc">',
@@ -1040,7 +1040,7 @@ class Post_model extends CI_Model
 				);
 			}
 
-			if ($this->fu_theme == 'yotsuba')
+			if ($this->theme->get_selected_theme() == 'yotsuba')
 			{
 				$html = array(
 					'prefix' => '<font class="unkfunc">',
@@ -1081,25 +1081,25 @@ class Post_model extends CI_Model
 	function build_board_comment($board, $p)
 	{
 		// load the functions from the current theme, else load the default one
-		if (file_exists('content/themes/' . $this->fu_theme . '/theme_functions.php'))
+		if (file_exists('content/themes/' . $this->theme->get_selected_theme() . '/theme_functions.php'))
 		{
-			require_once('content/themes/' . $this->fu_theme . '/theme_functions.php');
+			require_once('content/themes/' . $this->theme->get_selected_theme() . '/theme_functions.php');
 		}
 		else
 		{
-			require_once('content/themes/' . $this->config->item('theme_extends') . '/theme_functions.php');
+			require_once('content/themes/' . $this->theme->get_config('theme_extends') . '/theme_functions.php');
 		}
 
 		//require_once
 		ob_start();
 
-		if (file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
+		if (file_exists('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php'))
 		{
-			include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
+			include('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php');
 		}
 		else
 		{
-			include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
+			include('content/themes/' . $this->theme->get_config('theme_extends') . '/views/board_comment.php');
 		}
 
 		$string = ob_get_contents();

@@ -45,7 +45,7 @@ if(
 	!defined('FOOL_SUBDOMAINS_ENABLED')
 	|| strpos($_SERVER['HTTP_HOST'], FOOL_SUBDOMAINS_SYSTEM) !== FALSE
 )
-{	
+{
 	$route['install'] = "install";
 	$route['api'] = "api";
 	$route['api/chan'] = "api/chan_api";

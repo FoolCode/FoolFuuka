@@ -77,10 +77,10 @@ foreach ($posts as $key => $post) : ?>
 			if(!isset($thread_id))
 				$thread_id = NULL;
 
-			if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
-				include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
+			if(file_exists('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php'))
+				include('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php');
 			else
-				include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
+				include('content/themes/' . $this->theme->get_config('theme_extends') . '/views/board_comment.php');
 		}
 	}
 	?>

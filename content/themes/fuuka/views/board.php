@@ -45,8 +45,8 @@ foreach ($posts as $key => $post) : ?>
 		<a class="js" href="<?php echo site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $op->num ?>\n')"><?php echo $op->num ?></a>
 		<?php endif; ?>
 
-		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="This post was deleted before its lifetime has expired."/><?php endif ?>
-		<?php if ($op->spoiler == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="The image in this post is marked as spoiler."/><?php endif ?>
+		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="This post was deleted before its lifetime has expired."/><?php endif ?>
+		<?php if ($op->spoiler == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="The image in this post is marked as spoiler."/><?php endif ?>
 
 		[<a href="<?php echo site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">Reply</a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($selected_radix->shortname . '/last50/' . $op->num) . '">Last 50</a>]' : '' ?><?php if ($selected_radix->archive) : ?> [<a href="http://boards.4chan.org/<?php echo $selected_radix->shortname . '/res/' . $op->num ?>">Original</a>]<?php endif; ?>
 
@@ -78,10 +78,10 @@ foreach ($posts as $key => $post) : ?>
 			if(!isset($thread_id))
 				$thread_id = NULL;
 
-			if(file_exists('content/themes/' . $this->fu_theme . '/views/board_comment.php'))
-				include('content/themes/' . $this->fu_theme . '/views/board_comment.php');
+			if(file_exists('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php'))
+				include('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php');
 			else
-				include('content/themes/' . $this->config->item('theme_extends') . '/views/board_comment.php');
+				include('content/themes/' . $this->theme->get_config('theme_extends') . '/views/board_comment.php');
 		}
 	}
 	?>

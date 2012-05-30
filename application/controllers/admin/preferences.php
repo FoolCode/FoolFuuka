@@ -70,47 +70,42 @@ class Preferences extends Admin_Controller
 			'type' => 'separator'
 		);
 		
+		$themes = array();
+		
+		$this->load->model('themes_model', 'themes');
+		
+		foreach($this->themes->get_all() as $name => $theme)
+		{
+			$themes[] = array(
+				'type' => 'checkbox',
+				'label' => $theme['theme_name'] . ' theme',
+				'help' => sprintf(__('Enable %s theme'), $theme['theme_name']),
+				'array_key' => $name,
+				'preferences' => TRUE,
+				'checked' => defined('FOOL_PREF_THEMES_THEME_' . strtoupper($name) . '_ENABLED') ?
+					constant('FOOL_PREF_THEMES_THEME_' . strtoupper($name) . '_ENABLED'):0
+			);
+		}
+		
 		$form['fs_theme_active_themes'] = array(
 			'type' => 'checkbox_array',
 			'label' => __('Active themes'),
 			'help' => __('Choose the themes to make available to the users. Admins are able to access any of them even if disabled.'),
-			'checkboxes' => array(
-				array(
-					'type' => 'checkbox',
-					'label' => 'Default theme',
-					'help' => __('Enable Default theme'),
-					'array_key' => 'default',
-					'preferences' => TRUE,
-					'checked' => FOOL_PREF_THEMES_THEME_DEFAULT_ENABLED
-				),
-				array(
-					'type' => 'checkbox',
-					'label' => 'Fuuka theme',
-					'help' => __('Enable Fuuka theme'),
-					'array_key' => 'fuuka',
-					'preferences' => TRUE,
-					'checked' => FOOL_PREF_THEMES_THEME_FUUKA_ENABLED
-				),
-				array(
-					'type' => 'checkbox',
-					'label' => 'Yotsuba theme',
-					'help' => __('Enable Yotsuba theme'),
-					'array_key' => 'yotsuba',
-					'preferences' => TRUE,
-					'checked' => FOOL_PREF_THEMES_THEME_YOTSUBA_ENABLED
-				)
-			)
+			'checkboxes' => $themes
 		);
+		
+		$themes_default = array();
+		
+		foreach($this->themes->get_all() as $name => $theme)
+		{
+			$themes_default[$name] = $theme['theme_name'];
+		}
 		
 		$form['fs_theme_default'] = array(
 			'type' => 'dropdown',
 			'label' => __('Default theme'),
 			'help' => __('The theme the users will see as they reach your site.'),
-			'options' => array(
-				'default' => 'Default',
-				'fuuka' => 'Fuuka',
-				'Yotsuba' => 'Yotsuba'
-			),
+			'options' => $themes_default,
 			'selected' => 'default'
 		);
 

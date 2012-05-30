@@ -12,16 +12,16 @@ if (!defined('BASEPATH'))
 		<?php
 		if ($disable_headers !== TRUE)
 		{
-			if (file_exists('content/themes/' . $this->fu_theme . '/style.css'))
-				echo link_tag('content/themes/' . $this->fu_theme . '/style.css?v=' . FOOL_VERSION);
+			if (file_exists('content/themes/' . $this->theme->get_selected_theme() . '/style.css'))
+				echo link_tag('content/themes/' . $this->theme->get_selected_theme() . '/style.css?v=' . FOOL_VERSION);
 		}
 		else
 		{
-			if (file_exists('content/themes/' . $this->fu_theme . '/intro.css'))
-				echo link_tag('content/themes/' . $this->fu_theme . '/intro.css?v=' . FOOL_VERSION);
+			if (file_exists('content/themes/' . $this->theme->get_selected_theme() . '/intro.css'))
+				echo link_tag('content/themes/' . $this->theme->get_selected_theme() . '/intro.css?v=' . FOOL_VERSION);
 		}
 		?>
-		<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body>

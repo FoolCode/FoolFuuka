@@ -4,22 +4,21 @@ if (!defined('BASEPATH'))
 ?>
 <!DOCTYPE html>
 <html>
-	<head>
+	<head class="theme_default">
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
 		<title><?php echo $template['title']; ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/font-awesome/css/font-awesome.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php
-		if ($this->config->item('theme_extends') != ''
-			&& $this->config->item('theme_extends') != (($this->fu_theme) ? $this->fu_theme
-					: 'default')
-			&& $this->config->item('theme_extends_css') === TRUE
-			&& file_exists('content/themes/' . $this->config->item('theme_extends') . '/style.css'))
-			echo link_tag('content/themes/' . $this->config->item('theme_extends') . '/style.css?v=' . FOOL_VERSION);
+		if ($this->theme->get_config('theme_extends') != ''
+			&& $this->theme->get_config('theme_extends') != (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default')
+			&& $this->theme->get_config('theme_extends_css') === TRUE
+			&& file_exists('content/themes/' . $this->theme->get_config('theme_extends') . '/style.css'))
+			echo link_tag('content/themes/' . $this->theme->get_config('theme_extends') . '/style.css?v=' . FOOL_VERSION);
 
-		if (file_exists('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css'))
-			echo link_tag('content/themes/' . (($this->fu_theme) ? $this->fu_theme : 'default') . '/style.css?v=' . FOOL_VERSION);
+		if (file_exists('content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/style.css'))
+			echo link_tag('content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/style.css?v=' . FOOL_VERSION);
 		?>
 
 		<!--[if lt IE 9]>
@@ -32,14 +31,6 @@ if (!defined('BASEPATH'))
 		<link rel='index' title='<?php echo get_setting('fs_gen_site_title') ?>' href='<?php echo site_url() ?>' />
 		<meta name="generator" content="<?php echo FOOL_NAME ?> <?php echo FOOL_VERSION ?>" />
 		<?php echo get_setting('fs_theme_header_code'); ?>
-		<style>
-			html {
-				height:100%;
-				background:#6A836F;
-				margin:0;
-				padding:0;
-			}
-		</style>
 	</head>
 	<body class="theme_default">
 		<?php if (get_selected_radix()) : ?>
@@ -271,7 +262,7 @@ if (!defined('BASEPATH'))
 					</a>
 					<ul class="dropdown-menu">
 					<?php foreach($this->fu_available_themes as $theme) : ?>
-						 <li><a href="<?php echo site_url(array('@system', 'functions', 'theme', $theme['theme_directory'])) ?>" onclick="changeTheme('<?php echo $theme['theme_directory'] ?>'); return false;"><?php echo $theme['theme_name'] ?><?php echo ($theme['theme_directory'] == $this->fu_theme)?' <i class="icon-ok"></i>':'' ?></a></li>
+						 <li><a href="<?php echo site_url(array('@system', 'functions', 'theme', $theme['theme_directory'])) ?>" onclick="changeTheme('<?php echo $theme['theme_directory'] ?>'); return false;"><?php echo $theme['theme_name'] ?><?php echo ($theme['theme_directory'] == $this->theme->get_selected_theme())?' <i class="icon-ok"></i>':'' ?></a></li>
 					<?php endforeach; ?>
 					</ul>
 				</div>
@@ -322,11 +313,15 @@ if (!defined('BASEPATH'))
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="<?php echo site_url() ?>assets/js/jquery.js"><\/script>')</script>
 		<script defer src="<?php echo site_url() ?>assets/bootstrap2/js/bootstrap.min.js?v=<?php echo FOOL_VERSION ?>"></script>
-		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default'
-				?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
-		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->fu_theme ? $this->fu_theme : 'default'
-				?>/board.js?v=<?php echo FOOL_VERSION ?>"></script>
-				<?php if (get_setting('fs_theme_google_analytics')) : ?>
+		
+		<?php if(file_exists('content/themes/' . ($this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default') . '/plugins.js')) : ?>
+			<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<?php else : if($this->theme->get_config('theme_extends') != $this->theme->get_selected_theme()) : ?>
+			<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<?php endif; endif; ?>
+			
+		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/board.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<?php if (get_setting('fs_theme_google_analytics')) : ?>
 			<script>
 				var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us'],['_trackPageview'],['_trackPageLoadTime']];
 				(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

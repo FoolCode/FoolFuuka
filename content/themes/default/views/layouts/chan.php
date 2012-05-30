@@ -280,7 +280,7 @@ if (!defined('BASEPATH'))
 			<div style="float:right">
 				<div class="btn-group dropup pull-right">
 					<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
-						<?php echo __('Change language [alpha]') ?>
+						<?php echo __('Change language') ?>
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FoOlFuuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-28 20:58+0100\n"
-"PO-Revision-Date: 2012-05-28 19:00+0000\n"
+"POT-Creation-Date: 2012-05-29 12:48+0100\n"
+"PO-Revision-Date: 2012-05-29 11:12+0000\n"
 "Last-Translator: Enzo Woxxy <woxxy@foolrulez.org>\n"
 "Language-Team: FoOlRulez <support@foolz.us>\n"
 "MIME-Version: 1.0\n"
@@ -47,179 +47,187 @@ msgstr "Galleri"
 msgid "Gallery: Showing Latest Submitted Images"
 msgstr "Galleri: Visar Senaste Upplagda Bilder"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:634
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:631
+msgid "By Thread"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:635
 msgid "Gallery: Showing Latest Created Threads"
 msgstr "Galleri: Visar Senaste Skapade Trådar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:737
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:855
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:637
+msgid "By Image"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:739
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:857
 msgid "Thread"
 msgstr "Tråd"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:858
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:860
 msgid "Showing the last 50 posts for Thread No."
 msgstr "Visar de 50 sista uppläggen i Tråd."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1003
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1185
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1478
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1528
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1565
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1590
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1623
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1648
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1673
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1713
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1741
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1005
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1187
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1480
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1530
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1567
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1592
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1625
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1650
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1675
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1715
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1743
 msgid "Error"
 msgstr "Fel"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1006
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1008
 msgid "There is no record of the specified image in our database."
 msgstr "Det finns inga spår av den specificerade bilden i våran databas."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1017
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1019
 msgid "Image Pruned"
 msgstr "Bild borttagen"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1020
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1022
 msgid "Error 404: The image has been pruned from the server."
 msgstr "Fel 404: Bilden har blivit borttagen från servern."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1066
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1068
 msgid "Searched text"
 msgstr "Sökt text"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1208
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1210
 #, php-format
 msgid "that contain &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1212
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1214
 #, php-format
 msgid "with the subject &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1216
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1218
 #, php-format
 msgid "with the username &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1220
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1222
 #, php-format
 msgid "with the tripcode &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1224
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1226
 #, php-format
 msgid "with the filename &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1232
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1239
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1234
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1241
 #, php-format
 msgid "with the image hash &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1244
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1246
 msgid "that have been deleted"
 msgstr "Det har blivit borttaget"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1246
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1248
 msgid "that has not been deleted"
 msgstr "Det har inte blivit borttaget"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1248
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1250
 msgid "that are by ghosts"
 msgstr "De är skapta av spöken"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1250
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1252
 msgid "that are not by ghosts"
 msgstr "De är inte skapta av spöken"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1252
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1254
 msgid "that are only OP posts"
 msgstr "Det är bara OP upplägg"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1254
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1256
 msgid "that are only non-OP posts"
 msgstr "Det är bara icke-OP upplägg"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1256
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1258
 msgid "that do not contain images"
 msgstr "Det innehåller inga bilder"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1258
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1260
 msgid "that only contain images"
 msgstr "Det innehåller endast bilder"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1260
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1262
 msgid "that were made by users"
 msgstr "Det var skapat av användare"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1262
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1264
 msgid "that were made by mods"
 msgstr "Det var skapat av moderatorer"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1264
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1266
 msgid "that were made by admins"
 msgstr "Det var skapat av administratörer"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1266
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1268
 #, php-format
 msgid "posts after %s"
 msgstr "upplägg efter %s"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1268
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1270
 #, php-format
 msgid "posts before %s"
 msgstr "upplägg före %s"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1270
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1272
 msgid "in ascending order"
 msgstr "i fallande ordning"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1273
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1275
 #, php-format
 msgid "Searching for posts %s."
 msgstr "Söker efter upplägg %s."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1274
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1276
 msgid "and"
 msgstr "och"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1278
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1280
 msgid "Displaying all posts with no filters applied."
 msgstr "Visar alla upplägg utan några filter."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1332
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1334
 msgid "Global Search"
 msgstr "Global Sökning"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1522
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1531
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1561
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1568
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1524
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1533
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1563
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1570
 msgid "This thread does not exist."
 msgstr "Denna sida existerar inte."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1586
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1593
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1588
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1595
 msgid "This thread is closed."
 msgstr "Denna tråd är stängd."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1619
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1626
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1621
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1628
 msgid "You are required to upload an image when posting a new thread."
 msgstr "Du är tvungen att du laddar upp en bild när du skapar en ny tråd."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1644
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1651
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1646
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1653
 msgid "You are required to write a comment when no image upload is present."
 msgstr "Du är tvungen att skriva en kommentar när ingen bild är uppladdad."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1669
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1676
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1671
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1678
 msgid "The posting of images has been disabled for this thread."
 msgstr "Bilduppladdning har blivit handikappad för denna tråd."
 

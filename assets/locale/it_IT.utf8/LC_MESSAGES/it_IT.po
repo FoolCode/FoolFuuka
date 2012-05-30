@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FoOlFuuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-28 20:58+0100\n"
-"PO-Revision-Date: 2012-05-28 19:00+0000\n"
+"POT-Creation-Date: 2012-05-29 12:48+0100\n"
+"PO-Revision-Date: 2012-05-30 08:56+0000\n"
 "Last-Translator: Enzo Woxxy <woxxy@foolrulez.org>\n"
 "Language-Team: FoOlRulez <support@foolz.us>\n"
 "MIME-Version: 1.0\n"
@@ -46,179 +46,187 @@ msgstr "Galleria"
 msgid "Gallery: Showing Latest Submitted Images"
 msgstr "Galleria: le ultime immagini sottomesse"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:634
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:631
+msgid "By Thread"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:635
 msgid "Gallery: Showing Latest Created Threads"
 msgstr "Galleria: gli ultimi thread sottomessi"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:737
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:855
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:637
+msgid "By Image"
+msgstr ""
+
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:739
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:857
 msgid "Thread"
 msgstr "Thread"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:858
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:860
 msgid "Showing the last 50 posts for Thread No."
 msgstr "Mostrando gli ultimi 50 messaggi per il thread numero"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1003
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1185
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1478
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1528
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1565
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1590
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1623
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1648
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1673
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1713
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1741
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1005
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1187
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1480
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1530
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1567
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1592
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1625
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1650
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1675
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1715
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1743
 msgid "Error"
 msgstr "Errore"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1006
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1008
 msgid "There is no record of the specified image in our database."
 msgstr "Non c'è traccia dell'immagine cercata nel nostro database."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1017
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1019
 msgid "Image Pruned"
 msgstr "Immagine rimossa"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1020
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1022
 msgid "Error 404: The image has been pruned from the server."
 msgstr "Errore 404: L'immagine è stata rimossa dal server."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1066
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1068
 msgid "Searched text"
 msgstr "Testo ricercato"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1208
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1210
 #, php-format
 msgid "that contain &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1212
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1214
 #, php-format
 msgid "with the subject &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1216
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1218
 #, php-format
 msgid "with the username &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1220
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1222
 #, php-format
 msgid "with the tripcode &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1224
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1226
 #, php-format
 msgid "with the filename &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1232
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1239
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1234
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1241
 #, php-format
 msgid "with the image hash &lsquo;%s&rsquo;"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1244
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1246
 msgid "that have been deleted"
 msgstr "che sono stati cancellati"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1246
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1248
 msgid "that has not been deleted"
 msgstr "che non sono stati cancellati"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1248
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1250
 msgid "that are by ghosts"
 msgstr "da parte degli spettri"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1250
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1252
 msgid "that are not by ghosts"
 msgstr "non da parte degli spettri"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1252
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1254
 msgid "that are only OP posts"
 msgstr "che sono solo OP"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1254
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1256
 msgid "that are only non-OP posts"
 msgstr "che non sono OP"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1256
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1258
 msgid "that do not contain images"
 msgstr "che non contengono immagini"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1258
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1260
 msgid "that only contain images"
 msgstr "che contengono immagini"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1260
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1262
 msgid "that were made by users"
 msgstr "che sono stati scritti da utenti"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1262
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1264
 msgid "that were made by mods"
 msgstr "che sono stati scritti da mods"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1264
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1266
 msgid "that were made by admins"
 msgstr "che sono stati scritti da admins"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1266
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1268
 #, php-format
 msgid "posts after %s"
 msgstr "messaggi dopo il %s"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1268
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1270
 #, php-format
 msgid "posts before %s"
 msgstr "messaggi dopo il %s"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1270
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1272
 msgid "in ascending order"
 msgstr "in ordine crescente"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1273
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1275
 #, php-format
 msgid "Searching for posts %s."
 msgstr "Cercando per messaggi %s."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1274
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1276
 msgid "and"
 msgstr "e"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1278
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1280
 msgid "Displaying all posts with no filters applied."
 msgstr "Mostro tutti i messaggi senza applicare filtri."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1332
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1334
 msgid "Global Search"
 msgstr "Ricerca globale"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1522
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1531
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1561
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1568
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1524
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1533
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1563
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1570
 msgid "This thread does not exist."
 msgstr "Questo thread non esiste."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1586
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1593
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1588
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1595
 msgid "This thread is closed."
 msgstr "Questo thread è chiuso."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1619
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1626
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1621
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1628
 msgid "You are required to upload an image when posting a new thread."
 msgstr "Devi inviare un'immagine quando crei un nuovo thread."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1644
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1651
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1646
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1653
 msgid "You are required to write a comment when no image upload is present."
 msgstr "Devi scrivere un commento quando non è possibile uploadare un'immagine."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1669
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1676
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1671
+#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1678
 msgid "The posting of images has been disabled for this thread."
 msgstr "L'invio delle immagini è stato disabilitato per questo thread."
 
@@ -754,7 +762,7 @@ msgstr "Membri"
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/members.php:40
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/plugins_admin.php:25
 msgid "Manage"
-msgstr ""
+msgstr "Gestisci"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/members.php:69
 msgid "User profile saved!"
@@ -802,19 +810,19 @@ msgstr "Messaggi"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/posts.php:35
 msgid "Reports"
-msgstr ""
+msgstr "Segnalazioni"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/posts.php:64
 msgid "Access to reports outside the administrative panel is denied."
-msgstr ""
+msgstr "Non è possibile accedere alle segnalazioni dall'esterno del pannello di amministrazione."
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/posts.php:154
 msgid "Failed to remove the report from the database."
-msgstr ""
+msgstr "Non è stato possibile rimuovere la segnalazione dal database."
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/posts.php:159
 msgid "The report has been removed from the database."
-msgstr ""
+msgstr "La segnalazione è stata rimossa dal database."
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:39
 msgid "Theme"
@@ -872,7 +880,7 @@ msgstr "Testo nel header (annunci)"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:134
 msgid "Inserts the text above in the header, below the nagivation links."
-msgstr ""
+msgstr "Inserisce il testo nel header, sotto i link di navigazione."
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:140
 msgid "Header Code"
@@ -880,7 +888,7 @@ msgstr "Codice nel header"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:142
 msgid "This will insert the HTML code inside the &lt;HEAD&gt;."
-msgstr ""
+msgstr "Questo inserirà il codice HTML nella porzione &lt;HEAD&gt;."
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:148
 msgid "Footer Text"
@@ -896,7 +904,7 @@ msgstr "Codice nel footer"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:158
 msgid "This will insert the HTML code above after the &lt;BODY&gt;."
-msgstr ""
+msgstr "Questo inserirà il codice HTML nella porzione &lt;BODY&gt;."
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:194
 msgid "Advertising"
@@ -944,36 +952,36 @@ msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:289
 msgid "reCaptcha&trade; Public Key"
-msgstr ""
+msgstr "Chiave Pubblica reCaptcha&trade;"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:291
 msgid "Insert the public key provided by reCAPTCHA&trade;."
-msgstr ""
+msgstr "Inserisci la chiave pubblica fornita da reCaptcha&trade;"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:298
 msgid "reCaptcha&trade; Secret Key"
-msgstr ""
+msgstr "Chiave Segreta reCaptcha&trade;"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:300
 msgid "Insert the private key provided by reCAPTCHA&trade;."
-msgstr ""
+msgstr "Inserisci la chiave privata fornita da reCaptcha&trade;"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:22
 msgid "System"
-msgstr ""
+msgstr "Sistema"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:40
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:44
 msgid "Information"
-msgstr ""
+msgstr "Informazioni"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:60
 msgid "Found and Working"
-msgstr ""
+msgstr "Trovato e Funzionante"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:66
 msgid "Not Available"
-msgstr ""
+msgstr "Non disponibile"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:66
 msgid ""
@@ -986,11 +994,11 @@ msgstr ""
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:69
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:73
 msgid "Disabled Functions"
-msgstr ""
+msgstr "Funzioni Disabilitate"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:69
 msgid "Not Found"
-msgstr ""
+msgstr "Non Trovato"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:69
 msgid ""
@@ -1001,7 +1009,7 @@ msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:72
 msgid "Not Working"
-msgstr ""
+msgstr "Non Funzionante"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:72
 #, php-format
@@ -1013,15 +1021,15 @@ msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:83
 msgid "Path to ImageMagick"
-msgstr ""
+msgstr "Directory di ImageMagick"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:86
 msgid "The location of your ImageMagick \"convert\" executable"
-msgstr ""
+msgstr "La directory dell'eseguibile \"convert\" di ImageMagick"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:92
 msgid "CDN subdomains"
-msgstr ""
+msgstr "Sottodomini CDN"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:94
 msgid ""
@@ -1031,11 +1039,11 @@ msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:136
 msgid "Upgrade failed: check file permissions."
-msgstr ""
+msgstr "Aggiornamento fallito: controlla i permessi dei file"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:140
 msgid "Upgrade successful"
-msgstr ""
+msgstr "Aggiornamento completato"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:55
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:124
@@ -1047,7 +1055,7 @@ msgstr ""
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:128
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:334
 msgid "Can't go over page 500"
-msgstr ""
+msgstr "Non puoi andare oltre pagina 500"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:76
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:145
@@ -1089,15 +1097,15 @@ msgstr ""
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:268
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:272
 msgid "Post could not be found"
-msgstr ""
+msgstr "Il messaggio non è stato trovato"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:355
 msgid "Can't return more than 3000 ghost posts"
-msgstr ""
+msgstr "Non è possibile restituire più di 3000 messaggi fantasma"
 
 #: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:378
 msgid "Ghost posts could not be found"
-msgstr ""
+msgstr "Non è stato possibile trovare messaggi fantasma"
 
 #: /Users/woxxy/github/FoOlFuuka/application/helpers/options_helper.php:169
 #: /Users/woxxy/github/FoOlFuuka/application/helpers/options_helper.php:176
@@ -1106,15 +1114,15 @@ msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:87
 msgid "Add board"
-msgstr ""
+msgstr "Aggiungi board"
 
 #: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:88
 msgid "Sphinx Search"
-msgstr ""
+msgstr "Sphinx Search"
 
 #: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:89
 msgid "Asagi Fetcher"
-msgstr ""
+msgstr "Asagi Fetcher"
 
 #: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:104
 msgid "Account"
@@ -1291,7 +1299,7 @@ msgstr "Non è stato possibile cancellare le immagini per le risposte al thread.
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/preferences_model.php:81
 msgid "Preferences updated."
-msgstr ""
+msgstr "Preferenze aggiornate"
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:26
 msgid "User ID"
@@ -1475,7 +1483,7 @@ msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:230
 msgid "Thread refresh rate"
-msgstr ""
+msgstr "Rato di aggiornamento thread"
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:231
 msgid "Array of refresh rates  in seconds per page in JSON format"
@@ -1483,27 +1491,27 @@ msgstr ""
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:244
 msgid "The JSON inputted is not valid."
-msgstr ""
+msgstr "Il JSON inserito non è valido."
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:253
 msgid "Options for normal boards"
-msgstr ""
+msgstr "Opzioni per board classiche"
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:258
 msgid "Opening post thumbnail maximum width after resizing"
-msgstr ""
+msgstr "Massima larghezza del thumbnail del primo messaggio dopo la riduzione"
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:267
 msgid "Opening post thumbnail maximum height after resizing"
-msgstr ""
+msgstr "Massima altezza del thumbnail del primo messaggio dopo la riduzione"
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:276
 msgid "Reply thumbnail maximum width after resizing"
-msgstr ""
+msgstr "Massima larghezza del thumbnail di una risposta dopo la riduzione"
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:285
 msgid "Reply thumbnail maximum height after resizing"
-msgstr ""
+msgstr "Massima altezza del thumbnail di una risposta dopo la riduzione"
 
 #: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:294
 msgid "Full image maximum size in kilobytes"
@@ -1737,7 +1745,7 @@ msgstr ""
 #: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:76
 #: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:85
 msgid "Enter the words above"
-msgstr ""
+msgstr "Asagi Fetcher"
 
 #: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:77
 #: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:86

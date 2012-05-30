@@ -627,12 +627,14 @@ class Chan extends Public_Controller
 		if ($type == 'by_image')
 		{
 			$title = __('Gallery: Showing Latest Submitted Images') . ' - ' .
-				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_thread')) . '">By Thread</a>';
+				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_thread')) . '">' . 
+				__('By Thread') . '</a>';
 		}
 		else
 		{
 			$title = __('Gallery: Showing Latest Created Threads') . ' - ' .
-				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_image')) . '">By Image</a>';
+				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_image')) . '">' . 
+				__('By Image') . '</a>';
 		}
 
 		$this->_set_parameters(

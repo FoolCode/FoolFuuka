@@ -14,7 +14,7 @@ class Radix_model extends CI_Model
 	var $selected_radix = null; // readily available if set
 
 
-	function __construct($id = NULL)
+	function __construct()
 	{
 		parent::__construct();
 		$this->preload();
@@ -228,10 +228,10 @@ class Radix_model extends CI_Model
 						'boards_preferences' => TRUE,
 						'type' => 'textarea',
 						'label' => __('Thread refresh rate'),
-						'help' => __('Array of refresh rates  in seconds per page in JSON format'),
-						'placeholder' => form_prep('[{"delay": 30, "pages": [0, 1, 2]},
-{"delay": 120, "pages": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},
-{"delay": 30, "pages": [13, 14, 15]}]'),
+						'help' => __('Array of refresh rates in seconds per page in JSON format'),
+						'placeholder' => form_prep('[{"delay": 30, "pages": [0, 1, 2]},' .
+							'{"delay": 120, "pages": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},' .
+							'{"delay": 30, "pages": [13, 14, 15]}]'),
 						'class' => 'span4',
 						'style' => 'height:70px;',
 						'validation_func' => function($input, $form_internal)

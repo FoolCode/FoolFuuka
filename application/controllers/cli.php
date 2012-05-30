@@ -64,10 +64,6 @@ class Cli extends MY_Controller
 	
 	/**
 	 * Collection of tools that run heavy modifications of database
-	 * 
-	 * - create _search table
-	 * - drop _search table 
-	 * - convert to utf8mb4
 	 */
 	function database()
 	{

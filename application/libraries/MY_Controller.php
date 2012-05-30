@@ -18,7 +18,7 @@ class MY_Controller extends CI_Controller
 		if (!file_exists(FCPATH . "config.php"))
 		{
 			if ($this->uri->segment(1) != "install")
-				show_error("If you are here, and have no clue why {{FOOL_NAME}} is not working, start by reading the <a href='{{FOOL_MANUAL_INSTALL_URL}}'>installation manual</a>.");
+				return show_error("If you are here, and have no clue why {{FOOL_NAME}} is not working, start by reading the <a href='{{FOOL_MANUAL_INSTALL_URL}}'>installation manual</a>.");
 		}
 		else
 		{

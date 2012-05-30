@@ -6,38 +6,44 @@ if (!defined('BASEPATH'))
 	<nav class="index_nav clearfix">
 	<h1><?php echo get_setting('fs_gen_index_title', FOOL_PREF_GEN_INDEX_TITLE); ?></h1>
 	<?php
-	
+
 		$index_nav = array();
-		
-		$index_nav['archives'] = array(
-			'title' => __('Archives'), 
-			'elements' => array()
-		);
-		
-		foreach ($this->radix->get_archives() as $key => $item)
+
+		if ($this->radix->get_archives())
 		{
-			$index_nav['archives']['elements'][] = array(
-				'href' => $item->href, 
-				'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
+			$index_nav['archives'] = array(
+				'title' => __('Archives'),
+				'elements' => array()
 			);
+
+			foreach ($this->radix->get_archives() as $key => $item)
+			{
+				$index_nav['archives']['elements'][] = array(
+					'href' => $item->href,
+					'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
+				);
+			}
 		}
-		
-		$index_nav['boards'] = array(
-			'title' => __('Boards'), 
-			'elements' => array()
-		);
-		
-		foreach ($this->radix->get_boards() as $key => $item)
+
+		if ($this->radix->get_boards())
 		{
-			$index_nav['boards']['elements'][] = array(
-				'href' => $item->href, 
-				'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
+			$index_nav['boards'] = array(
+				'title' => __('Boards'),
+				'elements' => array()
 			);
+
+			foreach ($this->radix->get_boards() as $key => $item)
+			{
+				$index_nav['boards']['elements'][] = array(
+					'href' => $item->href,
+					'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
+				);
+			}
 		}
-		
+
 		$index_nav = $this->plugins->run_hook('fu_themes_generic_index_nav_elements', array($index_nav), 'simple');
 		$index_nav = $this->plugins->run_hook('fu_themes_default_index_nav_elements', array($index_nav), 'simple');
-		
+
 		foreach($index_nav as $item) : ?>
 			<ul class="pull-left clearfix">
 				<li><h2><?php echo $item['title'] ?></h2></li>

@@ -17,7 +17,7 @@ class Upgrade_model extends CI_Model
 
 	/**
 	 * Connects to GitHub to retrieve which is the latest tag from the API
-	 * 
+	 *
 	 * @param type $force forces returning the download even if FoOlSlide is up to date
 	 * @return type FALSE or the download URL
 	 */
@@ -37,7 +37,7 @@ class Upgrade_model extends CI_Model
 			return FALSE;
 		}
 		$data = json_decode($result);
-		
+
 		$new_versions = array();
 		foreach ($data as $new)
 		{
@@ -65,11 +65,11 @@ class Upgrade_model extends CI_Model
 				// if it's not a development system don't consider development versions
 				if (ENVIRONMENT != 'development' && strpos($new->name, '-dev-') !== FALSE)
 					continue;
-				
+
 				// if this is an older version (string match means that same version is OK)
 				if (!$this->is_bigger_version(FOOL_VERSION, $new->name) && $new->name != FOOL_VERSION)
 					continue;
-				
+
 				$latest_version = $new;
 			}
 
@@ -88,10 +88,10 @@ class Upgrade_model extends CI_Model
 
 	/**
 	 * Compares two versions and returns TRUE if second parameter is bigger than first, else FALSE
-	 * 
+	 *
 	 * @param type $maybemin
 	 * @param type $maybemax
-	 * @return bool 
+	 * @return bool
 	 */
 	function is_bigger_version($maybemin, $maybemax)
 	{
@@ -99,7 +99,7 @@ class Upgrade_model extends CI_Model
 			$maybemin = $maybemin->name;
 		if(is_object($maybemax) && !isset($maybemax->version))
 			$maybemax = $maybemax->name;
-	
+
 		if (is_string($maybemin))
 			$maybemin = $this->version_to_object($maybemin);
 		if (is_string($maybemax))
@@ -134,16 +134,18 @@ class Upgrade_model extends CI_Model
 
 	/**
 	 * Converts the version from string separated by dots to object
-	 * 
+	 *
 	 * @author Woxxy
 	 * @param type $string
-	 * @return object 
+	 * @return object
 	 */
 	function version_to_object($string)
 	{
 		if (substr($string, 0, 1) == 'v')
 			$string = substr($string, 1);
 		$version = explode('.', $string);
+
+		$current = new stdClass();
 		$current->version = $version[0];
 		$current->subversion = $version[1];
 		$current->subsubversion = $version[2];
@@ -165,7 +167,7 @@ class Upgrade_model extends CI_Model
 	 *
 	 * @author Woxxy
 	 * @param string $url
-	 * @return bool 
+	 * @return bool
 	 */
 	function get_file($url)
 	{
@@ -199,9 +201,9 @@ class Upgrade_model extends CI_Model
 
 	/**
 	 * Checks files permissions before upgrading
-	 * 
+	 *
 	 * @author Woxxy
-	 * @return bool 
+	 * @return bool
 	 */
 	function check_files()
 	{
@@ -272,9 +274,9 @@ class Upgrade_model extends CI_Model
 	/**
 	 * Hi, I herd you liek upgrading, so I put an update for your upgrade, so you
 	 * can update the upgrade before upgrading.
-	 * 
+	 *
 	 * @author Woxxy
-	 * @return bool 
+	 * @return bool
 	 */
 	function update_upgrade()
 	{
@@ -297,7 +299,7 @@ class Upgrade_model extends CI_Model
 	 * from FoOlPod, and cleans up.
 	 *
 	 * @author Woxxy
-	 * @return bool 
+	 * @return bool
 	 */
 	function do_upgrade()
 	{
@@ -335,7 +337,7 @@ class Upgrade_model extends CI_Model
 
 	/**
 	 * Cleans up the upgrade folder
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	function clean()

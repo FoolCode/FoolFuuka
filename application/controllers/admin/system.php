@@ -63,15 +63,12 @@ class System extends Admin_Controller
 		{
 			// @todo update the imagick statuses to match bootstrap 2.0
 			if (!$this->fs_imagick->exec)
-				$imagick_status = '<span class="label label-important">' . __('Not Available') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(__('You must have Safe Mode turned off and the exec() function enabled to allow ImageMagick to process your images. Please check the information panel for more details.')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><img src="' . icons(388,
-						16) . '" class="icon icon-small"></a>';
+				$imagick_status = '<span class="label label-important">' . __('Not Available') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(__('You must have Safe Mode turned off and the exec() function enabled to allow ImageMagick to process your images. Please check the information panel for more details.')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><i class="icon icon-info-sign"></i></a>';
 			else if (!$this->fs_imagick->found)
-				$imagick_status = '<span class="label label-important">' . __('Not Found') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(__('You must provide the correct path to the "convert" binary on your system. This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><img src="' . icons(388,
-						16) . '" class="icon icon-small"></a>';
+				$imagick_status = '<span class="label label-important">' . __('Not Found') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(__('You must provide the correct path to the "convert" binary on your system. This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><i class="icon icon-info-sign"></i></a>';
 			else if (!$this->fs_imagick->available)
 				$imagick_status = '<span class="label label-important">' . __('Not Working') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(sprintf(__('There has been an error encountered when testing your ImageMagick installation. To manually check for errors, access your server via shell or command line and type: %s'),
-							'<br/><code>' . $this->fs_imagick->found . ' -version</code>')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><img src="' . icons(388,
-						16) . '" class="icon icon-small"></a>';
+							'<br/><code>' . $this->fs_imagick->found . ' -version</code>')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><i class="icon icon-info-sign"></i></a>';
 		}
 
 		$form['open'] = array(
@@ -84,14 +81,6 @@ class System extends Admin_Controller
 			'placeholder' => '/usr/bin',
 			'preferences' => 'fs_gen',
 			'help' => __('The location of your ImageMagick "convert" executable')
-		);
-		
-		$form['fs_sys_subdomain'] = array(
-			'type' => 'input',
-			'array' => TRUE,
-			'label' => __('CDN subdomains'),
-			'preferences' => TRUE,
-			'help' => __('Insert an alternative base URL to {{FOOL_NAME}} to separate the system functions from the boards.')
 		);
 
 		$form['separator-2'] = array(
@@ -139,10 +128,10 @@ class System extends Admin_Controller
 			{
 				flash_notice('success', __('Upgrade successful'));
 			}
-			
+
 			redirect($this->uri->uri_string());
 		}
-		
+
 		$this->viewdata["function_title"] = __("Upgrade");
 
 		// get current version from constant

@@ -36,7 +36,7 @@ class Post_model extends CI_Model
 			// if the value returned is an Array, a plugin was active
 			$parameters = $before['parameters'];
 		}
-		
+
 		switch (count($parameters)) {
 			case 0:
 				$return = $this->{'p_' . $name}();
@@ -60,7 +60,7 @@ class Post_model extends CI_Model
 				$return = call_user_func_array(array(&$this, 'p_' . $name), $parameters);
 			break;
 		}
-		
+
 
 		// in the after, the last parameter passed will be the result
 		array_push($parameters, $return);
@@ -258,7 +258,7 @@ class Post_model extends CI_Model
 			if ($thumbnail === TRUE)
 			{
 				$try_rebuild = FALSE;
-				
+
 				if (isset($post->op) && $post->op == 1)
 				{
 					if ($post->preview_op)
@@ -269,7 +269,7 @@ class Post_model extends CI_Model
 					{
 						$try_rebuild = TRUE;
 					}
-					
+
 				}
 				else
 				{
@@ -285,15 +285,15 @@ class Post_model extends CI_Model
 
 				/*if ($try_rebuild)
 				{
-					if (!is_null($post->media) 
+					if (!is_null($post->media)
 						&& file_exists($this->get_media_dir($board, $post, FALSE)) !== FALSE
 						&& find_imagick())
-					{	
+					{
 						if($post->op)
 							$post_r->preview_op = $post->preview_orig;
 						else
 							$post_r->preview_reply = $post->preview_orig;
-						
+
 						$media_config = array(
 							'image_library' => 'ImageMagick',
 							'library_path'  => get_setting('fs_serv_imagick_path', '/usr/bin'),
@@ -303,7 +303,7 @@ class Post_model extends CI_Model
 							'height'        => $post->preview_h,
 							'quality'		=> '70%'
 						);
-						
+
 						$this->load->library('image_lib');
 
 						$this->image_lib->initialize($media_config);
@@ -320,7 +320,7 @@ class Post_model extends CI_Model
 							SET preview_' . ($post->op?'op':'reply') . ' = ?
 							WHERE media_id = ?
 						', array($post->preview_orig, $post->media_id));
-					
+
 						return $this->get_media_link($board, $post, $thumbnail);
 					}
 				}*/
@@ -418,24 +418,24 @@ class Post_model extends CI_Model
 
 
 	/**
-	 * @param mixed $media_hash
+	 * @param mixed $media
 	 * @param bool $urlsafe
 	 * @return bool|string
 	 */
-	function get_media_hash($media_hash, $urlsafe = FALSE)
+	function get_media_hash($media, $urlsafe = FALSE)
 	{
-		if (is_object($media_hash) || is_array($media_hash))
+		if (is_object($media) || is_array($media))
 		{
-			if (!$media_hash->media)
+			if (!$media->media_hash)
 			{
 				return FALSE;
 			}
 
-			$media_hash = $media_hash->media_hash;
+			$media = $media->media_hash;
 		}
 		else
 		{
-			if (strlen(trim($media_hash)) == 0)
+			if (strlen(trim($media)) == 0)
 			{
 				return FALSE;
 			}
@@ -444,11 +444,11 @@ class Post_model extends CI_Model
 		// return a safely escaped media hash for urls or un-altered media hash
 		if ($urlsafe === TRUE)
 		{
-			return substr(urlsafe_b64encode(urlsafe_b64decode($media_hash)), 0, -2);
+			return substr(urlsafe_b64encode(urlsafe_b64decode($media)), 0, -2);
 		}
 		else
 		{
-			return base64_encode(urlsafe_b64decode($media_hash));
+			return base64_encode(urlsafe_b64decode($media));
 		}
 	}
 
@@ -792,10 +792,10 @@ class Post_model extends CI_Model
 				'width'         => ($file['image_width'] > $thumb_width) ? $thumb_width : $file['image_width'],
 				'height'        => ($file['image_height'] > $thumb_height) ? $thumb_height : $file['image_height'],
 			);
-			
+
 			// leave this NULL so it processes normally
 			$switch = $this->plugins->run_hook('fu_post_model_process_media_switch_resize', array($media_config));
-			
+
 			// if plugin returns false, error
 			if($switch === FALSE)
 			{
@@ -816,7 +816,7 @@ class Post_model extends CI_Model
 
 				$this->image_lib->clear();
 			}
-			
+
 			$thumb_dimensions = @getimagesize($thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename));
 		}
 		else
@@ -3227,7 +3227,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Recheck all banned images and remove eventual leftover images
-	 * 
+	 *
 	 * @param object $board
 	 */
 	function recheck_banned($board = FALSE)
@@ -3241,7 +3241,7 @@ class Post_model extends CI_Model
 			$boards = array($board);
 			unset($board);
 		}
-		
+
 		foreach($boards as $board)
 		{
 			$query = $this->db->query('
@@ -3249,53 +3249,53 @@ class Post_model extends CI_Model
 				FROM ' . $this->radix->get_table($board, '_images') . '
 				WHERE banned = 1
 			');
-			
+
 			foreach($query->result() as $i)
 			{
 				if(!is_null($i->preview_op))
 				{
-					$op = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . 
+					$op = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' .
 						$board->shortname . '/thumb/' .
 						substr($i->preview_op, 0, 4) . '/' . substr($i->preview_op, 4, 2) . '/' .
 						$i->preview_op;
-						
+
 					if(file_exists($op))
 					{
 						unlink($op);
 					}
 				}
-				
+
 				if(!is_null($i->preview_reply))
 				{
-					$reply = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . 
+					$reply = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' .
 						$board->shortname . '/thumb/' .
 						substr($i->preview_reply, 0, 4) . '/' . substr($i->preview_reply, 4, 2) . '/' .
 						$i->preview_reply;
-					
+
 					if(file_exists($reply))
 					{
 						unlink($reply);
 					}
 				}
-				
+
 				if(!is_null($i->media))
 				{
-					$media = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . 
+					$media = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' .
 						$board->shortname . '/image/' .
 						substr($i->media, 0, 4) . '/' . substr($i->media, 4, 2) . '/' .
 						$i->media;
-					
+
 					if(file_exists($media))
 					{
 						unlink($media);
 					}
 				}
-				
+
 			}
-			
+
 		}
 	}
-	
+
 	/**
 	 * @param object $board
 	 * @param int $doc_id

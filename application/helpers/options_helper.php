@@ -6,21 +6,32 @@ if (!defined('BASEPATH'))
 
 /**
  * Replaces the gettext function to possible alternatives
- * 
+ *
  * @param type $text
- * @return type 
+ * @return type
  */
-function __($text)
+if (function_exists('_'))
 {
-	$text = _($text);
-	$text = str_replace('{{FOOL_NAME}}', FOOL_NAME, $text);
-	return $text;
+	function __($text)
+	{
+		$text = _($text);
+		$text = str_replace('{{FOOL_NAME}}', FOOL_NAME, $text);
+		return $text;
+	}
+}
+else
+{
+	function __($text)
+	{
+		$text = str_replace('{{FOOL_NAME}}', FOOL_NAME, $text);
+		return $text;
+	}
 }
 
 
 /**
  * Check if the string is formed by numbers only
- * 
+ *
  * @param string $str the string to check
  * @return boolean
  */
@@ -32,9 +43,9 @@ function is_natural($str)
 
 /**
  * Check that this is a post number with possible subnumber and , or _ divisor
- * 
+ *
  * @param type $str
- * @return boolean 
+ * @return boolean
  */
 function is_post_number($str)
 {
@@ -158,7 +169,7 @@ if (!function_exists('enable_maintenance'))
 
 	/**
 	 * Enables maintenance mode via file or via database
-	 * 
+	 *
 	 * @param string $message The message to show to users during the maintenance period
 	 * @param bool $full_lock use a file in root to lock access. Remove MAINTENANCE.html manually if necessary
 	 */
@@ -186,7 +197,7 @@ if (!function_exists('disable_maintenance'))
 
 	/**
 	 * Disables maintenance mode, via file or via database
-	 * 
+	 *
 	 * @param string $message The message to show to users during the maintenance period
 	 * @param bool $full_lock use a file in root to lock access. Remove MAINTENANCE.html manually if necessary
 	 */
@@ -286,7 +297,11 @@ function find_imagick()
 {
 	$CI = & get_instance();
 
-	if (isset($CI->fs_imagick->available))
+	if (!isset($CI->fs_imagick))
+	{
+		$CI->fs_imagick = new stdClass();
+	}
+	elseif (isset($CI->fs_imagick->available))
 	{
 		return $CI->fs_imagick->available;
 	}
@@ -655,7 +670,7 @@ function inet_dtop($decimal)
 	// fallback since BC Math is something to add at compile time
 	$fallback = FALSE;
 
-	if (!function_exists('bcadd'))
+	if (!extension_loaded('bcmath'))
 	{
 		$fallback = TRUE;
 		$CI = & get_instance();

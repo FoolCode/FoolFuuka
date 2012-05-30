@@ -3,7 +3,7 @@ Welcome to <?php echo $site_name; ?>,
 Thanks for joining <?php echo $site_name; ?>. We listed your sign in details below. Make sure you keep them safe.
 Follow this link to login on the site:
 
-<?php echo site_url('/account/auth/login/'); ?>
+<?php echo site_url('/admin/auth/login/'); ?>
 
 <?php if (strlen($username) > 0) { ?>
 

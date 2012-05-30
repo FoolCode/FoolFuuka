@@ -83,14 +83,6 @@ class System extends Admin_Controller
 			'help' => __('The location of your ImageMagick "convert" executable')
 		);
 
-		$form['fs_sys_subdomain'] = array(
-			'type' => 'input',
-			'array' => TRUE,
-			'label' => __('CDN subdomains'),
-			'preferences' => TRUE,
-			'help' => __('Insert an alternative base URL to {{FOOL_NAME}} to separate the system functions from the boards.')
-		);
-
 		$form['separator-2'] = array(
 			'type' => 'separator'
 		);

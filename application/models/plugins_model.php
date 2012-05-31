@@ -178,6 +178,31 @@ class Plugins_model extends CI_Model
 			}
 		}
 	}
+	
+	
+	/**
+	 * Allows inserting a plugin by class name, and also include its file
+	 * 
+	 * @param type $slug the slug
+	 * @param type $class_name the name of the class of the plugin
+	 * @param type $initialize if the initialize_plugin() function should be run
+	 * @param type $file 
+	 */
+	function inject_plugin($slug, $class_name, $initialize = TRUE, $file = NULL)
+	{
+		if(is_string($file))
+		{
+			// produce a fatal error if the file doesn't exist to help the plugin maker to debug
+			require_once $file;
+		}
+		
+		$this->$slug = new $class_name();
+		
+		if ($initialize && method_exists($this->$slug, 'initialize_plugin'))
+		{
+			$this->$slug->initialize_plugin();
+		}
+	}
 
 
 	function enable($slug)
@@ -424,7 +449,8 @@ class Plugins_model extends CI_Model
 			}
 			else if(isset($return_temp['parameters']))
 			{
-				$parameters = $return['parameters'];
+				$parameters = $return_temp['parameters'];
+				$return['parameters'] = $return_temp['parameters'];
 			}
 			if(isset($return_temp['return']))
 			{
@@ -436,7 +462,7 @@ class Plugins_model extends CI_Model
 		
 		if($modifier == 'simple')
 			return $return['return'];
-		
+
 		return $return;
 	}
 	

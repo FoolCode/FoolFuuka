@@ -42,42 +42,15 @@ class Public_Controller extends MY_Controller
 		}
 
 		$this->load->model('theme_model', 'theme');
-		$all_themes = array_keys($this->theme->get_all());
-		
-		if($this->tank_auth->is_allowed())
-		{
-			// admins get all the themes
-			$active_themes = $all_themes;
-		}
-		else
-		{
-			$active_themes = get_setting('fs_theme_active_themes');
-			if(!$active_themes || !$active_themes = @unserialize($active_themes))
-			{
-				// default WORKING themes coming with the application
-				$active_themes = array('default', 'tanline', 'fuuka');
-			}
-			else
-			{
-				foreach($active_themes as $key => $enabled)
-				{
-					if(!$enabled)
-					{
-						unset($active_themes[$key]);
-					}
-				}
-				$active_themes = array_keys($active_themes);
-			}
-		}
 		
 		// give an error if there's no active themes
-		if(empty($active_themes))
+		if(count($this->theme->get_available_themes()) == 0)
 		{
 			show_error(__('No themes enabled!'), 500);
 		}
 		
 		$selected_theme = get_setting('fs_theme_default', FOOL_THEME_DEFAULT);
-		if($this->input->cookie('foolfuuka_theme') && in_array($this->input->cookie('foolfuuka_theme'), $active_themes))
+		if($this->input->cookie('foolfuuka_theme'))
 		{
 			$selected_theme = $this->input->cookie('foolfuuka_theme');
 		}

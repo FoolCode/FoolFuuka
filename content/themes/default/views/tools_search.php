@@ -123,7 +123,7 @@ if(isset($board)) :
 						<?php echo form_radio(array('name' => 'ghost', 'value' => 'none', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'none')
 									? TRUE : FALSE));
 						?>
-						<span>Only Original</span>
+						<span><?php echo __('Only Original') ?></span>
 					</label>
 				</li>
 

@@ -11,11 +11,11 @@ if (!defined('BASEPATH'))
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/font-awesome/css/font-awesome.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php
-		if ($this->theme->get_config('theme_extends') != ''
-			&& $this->theme->get_config('theme_extends') != (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default')
-			&& $this->theme->get_config('theme_extends_css') === TRUE
-			&& file_exists('content/themes/' . $this->theme->get_config('theme_extends') . '/style.css'))
-			echo link_tag('content/themes/' . $this->theme->get_config('theme_extends') . '/style.css?v=' . FOOL_VERSION);
+		if ($this->theme->get_config('extends') != ''
+			&& $this->theme->get_config('extends') != (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default')
+			&& $this->theme->get_config('extends_css') === TRUE
+			&& file_exists('content/themes/' . $this->theme->get_config('extends') . '/style.css'))
+			echo link_tag('content/themes/' . $this->theme->get_config('extends') . '/style.css?v=' . FOOL_VERSION);
 
 		if (file_exists('content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/style.css'))
 			echo link_tag('content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/style.css?v=' . FOOL_VERSION);
@@ -261,8 +261,10 @@ if (!defined('BASEPATH'))
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-					<?php foreach($this->fu_available_themes as $theme) : ?>
-						 <li><a href="<?php echo site_url(array('@system', 'functions', 'theme', $theme['theme_directory'])) ?>" onclick="changeTheme('<?php echo $theme['theme_directory'] ?>'); return false;"><?php echo $theme['theme_name'] ?><?php echo ($theme['theme_directory'] == $this->theme->get_selected_theme())?' <i class="icon-ok"></i>':'' ?></a></li>
+					<?php foreach($this->theme->get_available_themes() as $theme) : 
+						$theme = $this->theme->get_by_name($theme);
+					?>
+						 <li><a href="<?php echo site_url(array('@system', 'functions', 'theme', $theme['directory'])) ?>" onclick="changeTheme('<?php echo $theme['directory'] ?>'); return false;"><?php echo $theme['name'] ?><?php echo ($theme['directory'] == $this->theme->get_selected_theme())?' <i class="icon-ok"></i>':'' ?></a></li>
 					<?php endforeach; ?>
 					</ul>
 				</div>
@@ -316,7 +318,7 @@ if (!defined('BASEPATH'))
 		
 		<?php if(file_exists('content/themes/' . ($this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default') . '/plugins.js')) : ?>
 			<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
-		<?php else : if($this->theme->get_config('theme_extends') != $this->theme->get_selected_theme()) : ?>
+		<?php else : if($this->theme->get_config('extends') != $this->theme->get_selected_theme()) : ?>
 			<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
 		<?php endif; endif; ?>
 			

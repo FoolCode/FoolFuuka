@@ -19,9 +19,9 @@ class Functions extends Public_Controller
 		$this->theme->set_title(__('Changing Theme'));
 		$this->input->set_cookie('foolfuuka_theme', $theme, 31536000);
 		if ($this->input->server('HTTP_REFERER') && strpos($this->agent->referrer(), site_url()) === 0) :
-			$this->theme->set('url', $this->input->server('HTTP_REFERER'));
+			$this->theme->bind('url', $this->input->server('HTTP_REFERER'));
 		else :
-			$this->theme->set('url', site_url());
+			$this->theme->bind('url', site_url());
 		endif;
 		$this->theme->set_layout('redirect');
 		$this->theme->build('redirection');
@@ -32,9 +32,9 @@ class Functions extends Public_Controller
 		$this->theme->set_title(__('Changing Language'));
 		$this->input->set_cookie('foolfuuka_language', $lang, 31536000);
 		if ($this->input->server('HTTP_REFERER') && strpos($this->agent->referrer(), site_url()) === 0) :
-			$this->theme->set('url', $this->input->server('HTTP_REFERER'));
+			$this->theme->bind('url', $this->input->server('HTTP_REFERER'));
 		else :
-			$this->theme->set('url', site_url());
+			$this->theme->bind('url', site_url());
 		endif;
 		$this->theme->set_layout('redirect');
 		$this->theme->build('redirection');

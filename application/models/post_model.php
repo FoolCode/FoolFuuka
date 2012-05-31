@@ -797,13 +797,13 @@ class Post_model extends CI_Model
 			$switch = $this->plugins->run_hook('fu_post_model_process_media_switch_resize', array($media_config));
 
 			// if plugin returns false, error
-			if($switch === FALSE)
+			if(isset($switch['return']) && $switch['return'] === FALSE)
 			{
 				log_message('error', 'post.php/process_media: failed to generate thumbnail');
 				return FALSE;
 			}
 
-			if(is_null($switch))
+			if(is_null($switch) || is_null($switch['return']))
 			{
 				$this->load->library('image_lib');
 
@@ -1087,7 +1087,7 @@ class Post_model extends CI_Model
 		}
 		else
 		{
-			require_once('content/themes/' . $this->theme->get_config('theme_extends') . '/theme_functions.php');
+			require_once('content/themes/' . $this->theme->get_config('extends') . '/theme_functions.php');
 		}
 
 		//require_once
@@ -1099,7 +1099,7 @@ class Post_model extends CI_Model
 		}
 		else
 		{
-			include('content/themes/' . $this->theme->get_config('theme_extends') . '/views/board_comment.php');
+			include('content/themes/' . $this->theme->get_config('extends') . '/views/board_comment.php');
 		}
 
 		$string = ob_get_contents();

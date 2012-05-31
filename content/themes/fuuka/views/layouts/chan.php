@@ -157,9 +157,10 @@ if (!defined('BASEPATH'))
 				
 				Theme [ <?php
 					$theme_links = array();
-					foreach($this->fu_available_themes as $theme)
+					foreach($this->theme->get_available_themes() as $theme)
 					{
-						$theme_links[] = '<a href="' . site_url(array('@system', 'functions', 'theme', $theme['theme_directory'])) . '" onclick="changeTheme(\'' . $theme['theme_directory'] . '\'); return false;">' . $theme['theme_name'] . '</a>';
+						$theme = $this->theme->get_by_name($theme);
+						$theme_links[] = '<a href="' . site_url(array('@system', 'functions', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
 					}
 					echo implode(' / ', $theme_links);
 				?> ]			

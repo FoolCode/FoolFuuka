@@ -136,7 +136,7 @@ class FU_Board_Statistics extends Plugins_model
 			$stats = $this->get_available_stats();
 
 			// Set template variables required to build the HTML.
-			$this->template->title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Statistics'));
+			$this->theme->set_title(get_selected_radix()->formatted_title . ' &raquo; ' . __('Statistics'));
 			Chan::_set_parameters(
 				array(
 					'section_title' => __('Statistics'),
@@ -165,7 +165,7 @@ class FU_Board_Statistics extends Plugins_model
 
 			<?php
 			$string = ob_get_clean();
-			$this->template->build('plugin', array('content' => $string));
+			$this->theme->build('plugin', array('content' => $string));
 		}
 		else
 		{
@@ -178,7 +178,7 @@ class FU_Board_Statistics extends Plugins_model
 
 			// Set template variables required to build the HTML.
 			$this->load->helper('date');
-			$this->template->title(get_selected_radix()->formatted_title . ' &raquo; '
+			$this->theme->set_title(get_selected_radix()->formatted_title . ' &raquo; '
 				. __('Statistics') . ': ' . $stats['info']['name']);
 
 			if (isset($stats['info']['frequency']))
@@ -215,7 +215,7 @@ class FU_Board_Statistics extends Plugins_model
 			</div> 
 			<?php
 			$string = ob_get_clean();
-			$this->template->build('plugin', array('content' => $string));
+			$this->theme->build('plugin', array('content' => $string));
 		}
 	}
 	

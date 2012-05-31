@@ -304,8 +304,8 @@ class FS_Articles extends Plugins_model
 		if($article->url)
 			redirect($article->url);
 		
-		$this->template->title(fuuka_htmlescape($article->title) . ' « ' . get_setting('fs_gen_site_title'));
-		$this->template->set('section_title', $article->title);
+		$this->theme->set_title(fuuka_htmlescape($article->title) . ' « ' . get_setting('fs_gen_site_title'));
+		$this->theme->bind('section_title', $article->title);
 		$this->load->library('Markdown_Parser');
 
 		// unless you're making a huge view you can live with output buffers
@@ -338,9 +338,9 @@ class FS_Articles extends Plugins_model
 				<?php echo Markdown($article->article); ?>
 			</div>
 		<?php
-		$this->template->set('content', ob_get_clean());
+		$this->theme->bind('content', ob_get_clean());
 
-		$this->template->build('plugin');
+		$this->theme->build('plugin');
 	}
 	
 	function remove($id)

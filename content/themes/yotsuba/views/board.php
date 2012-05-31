@@ -80,7 +80,7 @@ foreach ($posts as $key => $post) : ?>
 			if(file_exists('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php'))
 				include('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php');
 			else
-				include('content/themes/' . $this->theme->get_config('theme_extends') . '/views/board_comment.php');
+				include('content/themes/' . $this->theme->get_config('extends') . '/views/board_comment.php');
 		}
 	}
 	?>

@@ -17,6 +17,64 @@ class Chan extends Public_Controller
 		header('imagetoolbar: false');
 	}
 
+	
+	/**
+	 * The functions with an underscore prefix will respond to plugins before and after
+	 *
+	 * @param string $name
+	 * @param array $parameters
+	 */
+	function __call($name, $parameters)
+	{
+		$before = $this->plugins->run_hook('fu_chan_controller_before_' . $name, $parameters);
+
+		if (is_array($before))
+		{
+			// stop the call if the value returned is FALSE
+			if($before['return'] === FALSE)
+				return FALSE;
+			
+			// if the value returned is an Array, a plugin was active
+			$parameters = $before['parameters'];
+		}
+
+		switch (count($parameters)) {
+			case 0:
+				$return = $this->{'p_' . $name}();
+				break;
+			case 1:
+				$return = $this->{'p_' . $name}($parameters[0]);
+				break;
+			case 2:
+				$return = $this->{'p_' . $name}($parameters[0], $parameters[1]);
+				break;
+			case 3:
+				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2]);
+				break;
+			case 4:
+				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3]);
+				break;
+			case 5:
+				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
+				break;
+			default:
+				$return = call_user_func_array(array(&$this, 'p_' . $name), $parameters);
+			break;
+		}
+
+
+		// in the after, the last parameter passed will be the result
+		array_push($parameters, $return);
+		$after = $this->plugins->run_hook('fu_chan_controller_after_' . $name, $parameters);
+
+		if (is_array($after))
+		{
+			return $after['return'];
+		}
+
+		return $return;
+	}
+	
 
 	/**
 	 * @param string $level
@@ -302,7 +360,7 @@ class Chan extends Public_Controller
 			return $this->show_404();
 		}
 
-		if (method_exists($this, $method))
+		if (method_exists($this, 'p_' . $method))
 		{
 			return call_user_func_array(array($this, $method), $params);
 		}
@@ -433,7 +491,7 @@ class Chan extends Public_Controller
 	 * Display a simple index page listing all of the boards, the latest posts, the most popular
 	 * threads and site statistics.
 	 */
-	public function index()
+	public function p_index()
 	{
 		/**
 		 * Set theme variables required to build the HTML.
@@ -450,7 +508,7 @@ class Chan extends Public_Controller
 	/**
 	 * Display the error page with some information and suggestion to use the search
 	 */
-	function show_404()
+	function p_show_404()
 	{
 		$this->theme->set_title(get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE));
 		// call it as a static method to make it easier for plugins to call 404
@@ -467,7 +525,7 @@ class Chan extends Public_Controller
 		$this->theme->build('error');
 	}
 
-	public function rules()
+	public function p_rules()
 	{
 		if(!get_selected_radix()->rules)
 		{
@@ -491,7 +549,7 @@ class Chan extends Public_Controller
 	 * @param bool  $by_thread
 	 * @param array $options
 	 */
-	public function page($page = 1, $by_thread = FALSE, $options = array())
+	public function p_page($page = 1, $by_thread = FALSE, $options = array())
 	{
 		// POST -> GET Redirection to provide URL presentable for sharing links.
 		$this->_map_query();
@@ -540,7 +598,7 @@ class Chan extends Public_Controller
 	}
 
 
-	public function by_thread()
+	public function p_by_thread()
 	{
 		$this->input->set_cookie(
 			'foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'),
@@ -551,7 +609,7 @@ class Chan extends Public_Controller
 	}
 
 
-	public function by_post()
+	public function p_by_post()
 	{
 		$this->input->set_cookie(
 			'foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'),
@@ -563,7 +621,7 @@ class Chan extends Public_Controller
 	/**
 	 * @param int $page
 	 */
-	public function ghost($page = 1)
+	public function p_ghost($page = 1)
 	{
 		// POST -> GET Redirection to provide URL presentable for sharing links.
 		if ($this->input->post())
@@ -604,7 +662,7 @@ class Chan extends Public_Controller
 	/**
 	 * Display the last X created threads in a gallery view.
 	 */
-	public function gallery($type = 'by_thread', $page = 1)
+	public function p_gallery($type = 'by_thread', $page = 1)
 	{
 		// Disable GALLERY when thumbnails is disabled for normal users.
 		if (get_selected_radix()->hide_thumbnails == 1 && !$this->tank_auth->is_allowed())
@@ -658,7 +716,7 @@ class Chan extends Public_Controller
 	 * @param int $num
 	 * @param int $limit
 	 */
-	public function thread($num = 0, $limit = 0)
+	public function p_thread($num = 0, $limit = 0)
 	{
 		// Check if the $num is a valid integer.
 		$num = str_replace('S', '', $num);
@@ -764,7 +822,7 @@ class Chan extends Public_Controller
 	/**
 	 * @param int $num
 	 */
-	public function last50($num = 0)
+	public function p_last50($num = 0)
 	{
 		// Check if the $num is a valid integer.
 		$num = str_replace('S', '', $num);
@@ -870,7 +928,7 @@ class Chan extends Public_Controller
 	/**
 	 * @param int $num
 	 */
-	public function post($num = 0)
+	public function p_post($num = 0)
 	{
 		// POST -> GET Redirection to provide URL presentable for sharing links.
 		if ($this->input->post('post') || !is_post_number($num))
@@ -937,7 +995,7 @@ class Chan extends Public_Controller
 	 * As of 2012-05-17, fetching of posts with same media hash is done via search system.
 	 * Due to backwards compatibility, this function will still be used for non-urlsafe and urlsafe hashes.
 	 */
-	public function image()
+	public function p_image()
 	{
 		// support non-urlsafe hash
 		$uri = $this->uri->segment_array();
@@ -974,7 +1032,7 @@ class Chan extends Public_Controller
 	/**
 	 * @param $filename
 	 */
-	public function full_image($filename)
+	public function p_full_image($filename)
 	{
 		// Check if $filename is valid.
 		if (!in_array(substr($filename, -3), array('gif', 'jpg', 'png')) || !is_natural(substr($filename, 0, 13)))
@@ -1031,7 +1089,7 @@ class Chan extends Public_Controller
 	/**
 	 * @param null $image
 	 */
-	public function redirect($image = NULL)
+	public function p_redirect($image = NULL)
 	{
 		$this->theme->set_layout('redirect');
 		$this->_set_parameters(
@@ -1048,7 +1106,7 @@ class Chan extends Public_Controller
 	 *
 	 * @return bool
 	 */
-	public function search()
+	public function p_search()
 	{
 		$radix = get_selected_radix();
 
@@ -1065,11 +1123,11 @@ class Chan extends Public_Controller
 		// submit_post forces into $this->post()
 		// if submit_undefined we check if it's a natural number or a
 		// local or 4chan board
-		if ($this->input->get_post('submit_post')
+		if ($radix && ($this->input->get_post('submit_post')
 			|| ($this->input->get_post('submit_undefined')
 				&& (is_post_number($this->input->get_post('text'))
 					|| strpos($this->input->get_post('text'), 'http://boards.4chan.org') !== FALSE
-					|| strpos($this->input->get_post('text'), site_url()) !== FALSE)))
+					|| strpos($this->input->get_post('text'), site_url()) !== FALSE))))
 		{
 			if (is_post_number($this->input->get_post('text')))
 			{
@@ -1337,7 +1395,7 @@ class Chan extends Public_Controller
 	 * @param string $mode
 	 * @return bool
 	 */
-	function feeds($mode = 'rss_gallery_50')
+	function p_feeds($mode = 'rss_gallery_50')
 	{
 		//if (is_null($format))
 		//	redirect('reader/feeds/rss');
@@ -1400,7 +1458,7 @@ class Chan extends Public_Controller
 	/**
 	 * @param int $num
 	 */
-	public function delete($num = 0)
+	public function p_delete($num = 0)
 	{
 		$this->_map_tools('delete', $num);
 	}
@@ -1409,7 +1467,7 @@ class Chan extends Public_Controller
 	/**
 	 * @param int $num
 	 */
-	public function report($num = 0)
+	public function p_report($num = 0)
 	{
 		$this->_map_tools('report', $num);
 	}
@@ -1418,7 +1476,7 @@ class Chan extends Public_Controller
 	/**
 	 * @return bool
 	 */
-	public function submit()
+	public function p_submit()
 	{
 		// Determine if the invalid post fields are populated by bots.
 		if (mb_strlen($this->input->post('name')) > 0
@@ -1780,7 +1838,7 @@ class Chan extends Public_Controller
 	}
 
 
-	function mod_post_actions()
+	function p_mod_post_actions()
 	{
 		// redirect to the one on MY_Controller since it's a function shared with the admin panel
 		parent::mod_post_actions();

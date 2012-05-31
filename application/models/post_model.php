@@ -1287,7 +1287,11 @@ class Post_model extends CI_Model
 
 		// if global or board => use sphinx, else mysql for board only
 		// global search requires sphinx
-		if (($board === FALSE && get_setting('fs_sphinx_global')) || $board->sphinx)
+		if (($board === FALSE && get_setting('fs_sphinx_global', 0) == 0))
+		{
+			return array('error' => __('Sorry, global search requires SphinxSearch.'));
+		}
+		elseif (($board === FALSE && get_setting('fs_sphinx_global', 0)) || (is_object($board) && $board->sphinx))
 		{
 			$this->load->library('SphinxQL');
 
@@ -1464,9 +1468,6 @@ class Post_model extends CI_Model
 		}
 		else /* use mysql as fallback for non-sphinx indexed boards */
 		{
-			// begin cache of entire sql statement
-
-
 			// begin filtering search params
 			if ($args['text'] || $args['filename'])
 			{
@@ -2535,6 +2536,7 @@ class Post_model extends CI_Model
 		// process comment name+trip
 		if ($data['name'] === FALSE || $data['name'] == '')
 		{
+			$this->input->delete_cookie('foolfuuka_reply_name');
 			$name = 'Anonymous';
 			$trip = '';
 		}
@@ -2551,6 +2553,7 @@ class Post_model extends CI_Model
 		// process comment email
 		if ($data['email'] === FALSE || $data['email'] == '')
 		{
+			$this->input->delete_cookie('foolfuuka_reply_email');
 			$email = '';
 		}
 		else

@@ -50,7 +50,7 @@ if(isset($board)) :
 					?>
 
 					<?php
-					if($board->shortname) :
+					if(get_setting('fs_sphinx_global')) :
 						echo form_submit(array(
 							'class' => 'btn btn-inverse btn-mini',
 							'value' => __('Global Search'),

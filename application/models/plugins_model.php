@@ -2,17 +2,45 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
+/**
+ * FoOlFrame Plugins Model
+ *
+ * The Plugins Model allows running code wherever there are hooks,
+ * change parameters passed to functions manipulate returns, and create
+ * (ficticious) controllers, and controller functions.
+ *
+ * @package        	FoOlFrame
+ * @subpackage    	Models
+ * @category    	Models
+ * @author        	Woxxy
+ * @license         http://www.apache.org/licenses/LICENSE-2.0.html
+ */
 class Plugins_model extends CI_Model
 {
 
-	var $_controller_uris = array();
-	var $_hooks = array();
+	/**
+	 * List of routes and callbacks
+	 *
+	 * @var array 
+	 */
+	private $_controller_uris = array();
+	
+	/**
+	 * List of hooks with their associated classes, priority and callback
+	 * 
+	 * @var array 
+	 */
+	private $_hooks = array();
 
 	
-	function __construct()
+	/**
+	 * Find all the available plugins on load
+	 */
+	public function __construct()
 	{
 		parent::__construct();
+		
+		$this->lookup_plugins();
 	}
 
 
@@ -25,7 +53,7 @@ class Plugins_model extends CI_Model
 	 * 
 	 * @param string $key
 	 */
-	function &__get($key)
+	public function &__get($key)
 	{
 		return get_instance()->$key;
 	}
@@ -33,8 +61,10 @@ class Plugins_model extends CI_Model
 
 	/**
 	 * The plugin slugs are the folder names 
+	 * 
+	 * @return array The directory names
 	 */
-	function lookup_plugins()
+	private function lookup_plugins()
 	{
 		$this->load->helper('directory');
 		$slugs = directory_map(FOOL_PLUGIN_DIR, 1);
@@ -43,7 +73,13 @@ class Plugins_model extends CI_Model
 	}
 
 
-	function get_info_by_slug($slug)
+	/**
+	 * Grabs the info from the plugin _info.php file and returns it as object
+	 * 
+	 * @param string $slug the directory of the plugin
+	 * @return object the config
+	 */
+	private function get_info_by_slug($slug)
 	{
 		include(FOOL_PLUGIN_DIR . $slug . '/' . $slug . '_info.php');
 		return (object) $info;
@@ -52,8 +88,10 @@ class Plugins_model extends CI_Model
 
 	/**
 	 * Retrieve all the available plugins and their status 
+	 * 
+	 * @return array Array of objects where $this[$x]->info contains the plugin info
 	 */
-	function get_all()
+	public function get_all()
 	{
 		$slugs = $this->lookup_plugins();
 
@@ -107,20 +145,11 @@ class Plugins_model extends CI_Model
 
 
 	/**
-	 * Refreshes the list of plugins in database 
+	 * Gets the enabled plugins from the database
+	 * 
+	 * @return array Array of objects, the rows or the active plugins 
 	 */
-	function refresh_plugins()
-	{
-		$slugs = $this->lookup_plugins();
-
-		$query = $this->db->query('
-			SELECT *
-			FROM ' . $this->db->dbprefix('plugins') . '
-		');
-	}
-
-
-	function get_enabled()
+	private function get_enabled()
 	{
 		$query = $this->db->query('
 			SELECT *
@@ -131,8 +160,14 @@ class Plugins_model extends CI_Model
 		return $query->result();
 	}
 
-
-	function get_by_slug($slug)
+	
+	/**
+	 * Gets the data of the plugin by slug
+	 * 
+	 * @param string $slug the directory name of the plugin
+	 * @return object The database row of the plugin with extra ->info
+	 */
+	public function get_by_slug($slug)
 	{
 		$query = $this->db->query('
 			SELECT *
@@ -149,8 +184,10 @@ class Plugins_model extends CI_Model
 
 
 	/**
+	 * Loads and eventually initializes (runs) the plugins
 	 *
 	 * @param null|string $select the slug of the plugin if you want to choose one
+	 * @param bool $initialize choose if just load the file or effectively run the plugin
 	 */
 	function load_plugins($select = NULL, $initialize = TRUE)
 	{
@@ -186,9 +223,9 @@ class Plugins_model extends CI_Model
 	 * @param type $slug the slug
 	 * @param type $class_name the name of the class of the plugin
 	 * @param type $initialize if the initialize_plugin() function should be run
-	 * @param type $file 
+	 * @param type $file eventual file to require_once
 	 */
-	function inject_plugin($slug, $class_name, $initialize = TRUE, $file = NULL)
+	public function inject_plugin($slug, $class_name, $initialize = TRUE, $file = NULL)
 	{
 		if(is_string($file))
 		{
@@ -205,7 +242,13 @@ class Plugins_model extends CI_Model
 	}
 
 
-	function enable($slug)
+	/**
+	 * Enables the plugin after running the upgrade function
+	 * 
+	 * @param string $slug the directory name of the plugin
+	 * @return object The database row of the plugin with extra ->info
+	 */
+	public function enable($slug)
 	{
 		$this->db->query('
 			INSERT INTO ' . $this->db->dbprefix('plugins') . '
@@ -226,7 +269,13 @@ class Plugins_model extends CI_Model
 	}
 
 
-	function disable($slug)
+	/**
+	 * Disables plugin and runs plugin_disable()
+	 * 
+	 * @param string $slug the directory name of the plugin
+	 * @return object database row for the plugin with extra ->info 
+	 */
+	public function disable($slug)
 	{
 		$query = $this->db->query('
 			UPDATE ' . $this->db->dbprefix('plugins') . '
@@ -242,7 +291,12 @@ class Plugins_model extends CI_Model
 	}
 
 
-	function remove($slug)
+	/**
+	 * Deletes the plugin directory after running plugin_remove()
+	 * 
+	 * @param string $slug the directory name of the plugin
+	 */
+	public function remove($slug)
 	{
 		if(method_exists($this->$slug, 'plugin_remove'))
 			$this->$slug->plugin_remove();
@@ -251,6 +305,13 @@ class Plugins_model extends CI_Model
 	}
 
 
+	/**
+	 * Reads revision in the info files, uses the upgrade_xxx functions to upgrade files/db
+	 * then updates the revision in the database
+	 *
+	 * @param string $slug the directory name of the plugin
+	 * @return boolean TRUE on success, FALSE on failure
+	 */
 	function upgrade($slug)
 	{
 		$plugin = $this->get_by_slug($slug);
@@ -320,12 +381,26 @@ class Plugins_model extends CI_Model
 	}
 
 
+	/**
+	 * Alias for is_controller_function
+	 * 
+	 * @param array $uri the uri_array, basically $this->uri->segment_array()
+	 * @return bool|array FALSE if not found, else the item from $this->_controller_uris
+	 */
 	function get_controller_function($uri)
 	{
 		return $this->is_controller_function($uri);
 	}
 
 
+	/**
+	 * Checks if there is a match with the segment_array() and eventually returns the data
+	 * necessary to run the controller function:
+	 * array('uri_array' => $uri_array, 'plugin' => $class, 'method' => $method)
+	 * 
+	 * @param array $uri the uri_array, basically $this->uri->segment_array()
+	 * @return bool|array FALSE if not found, else the item from $this->_controller_uris
+	 */
 	function is_controller_function($uri_array)
 	{
 		// codeigniter $this->uri->rsegment_uri sends weird indexes in the array with 1+ start
@@ -467,9 +542,20 @@ class Plugins_model extends CI_Model
 	}
 	
 	
+	/**
+	 * Registers a function to the hook targeted
+	 *
+	 * @param object $class the class in which the method to run is located
+	 * @param string $target the name of the hook
+	 * @param int $priority the lowest, the highest the priority. negatives ALLOWED
+	 * @param string|Closure $method name of the method or the closure to run
+	 */
 	function register_hook(&$class, $target, $priority, $method)
 	{
 		$this->_hooks[$target][] = array('plugin' => $class, 'priority' => $priority, 'method' => $method);
 	}
 
 }
+
+/* End of file plugins_model.php */
+/* Location: ./application/models/plugins_model.php */

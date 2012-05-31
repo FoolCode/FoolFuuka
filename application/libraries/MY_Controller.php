@@ -32,7 +32,6 @@ class MY_Controller extends CI_Controller
 
 			// plugin system as early we can without losing on security
 			$this->load->model('plugins_model', 'plugins');
-			$this->plugins->load_plugins();
 
 			// loads variables from database for get_setting()
 			load_settings();

@@ -359,7 +359,7 @@ class Theme_model extends CI_Model
 	 * @param bool $return TRUE to return the HTML as string
 	 * @return string the HTML
 	 */
-	public function build($view, $data = array(), $return = FALSE)
+	public function build($view, $data = array(), $return = FALSE, $without_layout = FALSE)
 	{
 		foreach ($data as $key => $item)
 		{
@@ -385,7 +385,7 @@ class Theme_model extends CI_Model
 		);
 		
 		// if there's no selected layout output or return this
-		if($this->_selected_layout === FALSE)
+		if($without_layout || $this->_selected_layout === FALSE)
 		{
 			if($return)
 				return $content;

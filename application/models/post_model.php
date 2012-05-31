@@ -1081,7 +1081,7 @@ class Post_model extends CI_Model
 	 */
 	function build_board_comment($board, $p)
 	{
-		return $this->theme->build('board_comment', array('p' => $p), TRUE);
+		return $this->theme->build('board_comment', array('p' => $p), TRUE, TRUE);
 	}
 
 

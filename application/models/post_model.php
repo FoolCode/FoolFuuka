@@ -1406,11 +1406,11 @@ class Post_model extends CI_Model
 			}
 			if ($args['filter'] == 'image')
 			{
-				$this->db->where('has_image', 1);
+				$this->db->where('has_image', 0);
 			}
 			if ($args['filter'] == 'text')
 			{
-				$this->db->where('has_image', 0);
+				$this->db->where('has_image', 1);
 			}
 			if ($args['start'])
 			{

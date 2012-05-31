@@ -50,9 +50,10 @@ class MY_Controller extends CI_Controller
 			{
 				$lang = 'en_EN';
 			}
-			
+
 			$locale = $lang . '.utf8';
 			putenv('LANG=' . $locale);
+			putenv('LANGUAGE=' . $locale);
 			if ($locale != "tr_TR.utf8")
 			{
 				setlocale(LC_ALL, $locale);
@@ -68,8 +69,9 @@ class MY_Controller extends CI_Controller
 			}
 
 			bindtextdomain($lang, FCPATH . "assets/locale");
+			bind_textdomain_codeset($lang, 'UTF-8');
 			textdomain($lang);
-			
+
 			// a good time to change some of the defauly settings dynamically
 			$this->config->config['tank_auth']['allow_registration'] = !get_setting('fs_reg_disabled');
 

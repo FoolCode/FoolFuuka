@@ -784,9 +784,10 @@ class Post_model extends CI_Model
 		// generate thumbnail
 		if ($file['image_width'] > $thumb_width || $file['image_height'] > $thumb_height)
 		{
+			$imagemagick = locate_imagemagick();
 			$media_config = array(
-				'image_library' => (find_imagick()) ? 'ImageMagick' : 'GD2',
-				'library_path'  => (find_imagick()) ? get_setting('fs_serv_imagick_path', '/usr/bin') : '',
+				'image_library' => ($imagemagick) ? 'ImageMagick' : 'GD2',
+				'library_path'  => ($imagemagick) ? $this->ff_imagemagick->path : '',
 				'source_image'  => $media_filepath . (($media_exists) ? $media_existing : $media_filename),
 				'new_image'     => $thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename),
 				'width'         => ($file['image_width'] > $thumb_width) ? $thumb_width : $file['image_width'],
@@ -1286,7 +1287,11 @@ class Post_model extends CI_Model
 
 		// if global or board => use sphinx, else mysql for board only
 		// global search requires sphinx
-		if (($board === FALSE && get_setting('fs_sphinx_global')) || $board->sphinx)
+		if (($board === FALSE && get_setting('fs_sphinx_global', 0) == 0))
+		{
+			return array('error' => __('Sorry, global search requires SphinxSearch.'));
+		}
+		elseif (($board === FALSE && get_setting('fs_sphinx_global', 0)) || (is_object($board) && $board->sphinx))
 		{
 			$this->load->library('SphinxQL');
 
@@ -1405,11 +1410,11 @@ class Post_model extends CI_Model
 			}
 			if ($args['filter'] == 'image')
 			{
-				$this->db->where('has_image', 1);
+				$this->db->where('has_image', 0);
 			}
 			if ($args['filter'] == 'text')
 			{
-				$this->db->where('has_image', 0);
+				$this->db->where('has_image', 1);
 			}
 			if ($args['start'])
 			{
@@ -1463,9 +1468,6 @@ class Post_model extends CI_Model
 		}
 		else /* use mysql as fallback for non-sphinx indexed boards */
 		{
-			// begin cache of entire sql statement
-			$this->db->start_cache();
-
 			// begin filtering search params
 			if ($args['text'] || $args['filename'])
 			{
@@ -1483,7 +1485,7 @@ class Post_model extends CI_Model
 				if($args['text'])
 				{
 					$this->db->where(
-						'MATCH (' . $this->radix->get_table($board, '_search') . '.`comment`) AGAINST (' . $this->db->escape(rawurldecode($args['text'])) . ')',
+						'MATCH (' . $this->radix->get_table($board, '_search') . '.`comment`) AGAINST (' . $this->db->escape(rawurldecode($args['text'])) . ' IN BOOLEAN MODE)',
 						NULL,
 						FALSE
 					);
@@ -1492,27 +1494,36 @@ class Post_model extends CI_Model
 				if($args['filename'])
 				{
 					$this->db->where(
-						'MATCH (' . $this->radix->get_table($board, '_search') . '.`media_filename`) AGAINST (' . $this->db->escape(rawurldecode($args['filename'])) . ')',
+						'MATCH (' . $this->radix->get_table($board, '_search') . '.`media_filename`) AGAINST (' . $this->db->escape(rawurldecode($args['filename'])) . ' IN BOOLEAN MODE)',
 						NULL,
 						FALSE
 					);
 				}
 
-				$this->db->join(
-					$this->radix->get_table($board),
-					$this->radix->get_table($board, '_search') . '.`doc_id` = ' . $this->radix->get_table($board) . '.`doc_id`',
-					'',
-					FALSE,
-					FALSE
-				);
-			}
-			else
-			{
-				// no need for the fulltext fields
-				$this->db->from($this->radix->get_table($board), FALSE, FALSE);
+				$query = $this->db->query($this->db->statement('', NULL, NULL, 'SELECT doc_id'));
+				if ($query->num_rows == 0)
+				{
+					return array('posts' => array(), 'total_found' => 0);
+				}
 
-				// select that we'll use for the final statement
-				$select = 'SELECT ' . $this->radix->get_table($board) . '.`doc_id`';
+				$docs = array();
+				foreach ($query->result() as $rec)
+				{
+					$docs[] = $rec->doc_id;
+				}
+			}
+
+			$this->db->start_cache();
+
+			// no need for the fulltext fields
+			$this->db->from($this->radix->get_table($board), FALSE, FALSE);
+
+			// select that we'll use for the final statement
+			$select = 'SELECT ' . $this->radix->get_table($board) . '.`doc_id`';
+
+			if (isset($docs))
+			{
+				$this->db->where_in('doc_id', $docs);
 			}
 
 			if ($args['subject'])
@@ -1582,12 +1593,12 @@ class Post_model extends CI_Model
 			}
 			if ($args['filter'] == 'image')
 			{
-				$this->db->where('media_id <>', 0);
+				$this->db->where('media_id', 0);
 				$this->db->use_index('media_id_index');
 			}
 			if ($args['filter'] == 'text')
 			{
-				$this->db->where('media_id', 0);
+				$this->db->where('media_id <>', 0);
 				$this->db->use_index('media_id_index');
 			}
 			if ($args['start'])
@@ -2525,6 +2536,7 @@ class Post_model extends CI_Model
 		// process comment name+trip
 		if ($data['name'] === FALSE || $data['name'] == '')
 		{
+			$this->input->delete_cookie('foolfuuka_reply_name');
 			$name = 'Anonymous';
 			$trip = '';
 		}
@@ -2541,6 +2553,7 @@ class Post_model extends CI_Model
 		// process comment email
 		if ($data['email'] === FALSE || $data['email'] == '')
 		{
+			$this->input->delete_cookie('foolfuuka_reply_email');
 			$email = '';
 		}
 		else

@@ -293,52 +293,53 @@ if (!function_exists('get_selected_radix'))
  * This function locates and determines if the ImageMagick
  * @return bool
  */
-function find_imagick()
+function locate_imagemagick()
 {
 	$CI = & get_instance();
 
-	if (!isset($CI->fs_imagick))
+	// initialize ff_imagemagick or return available value
+	if (!isset($CI->ff_imagemagick))
 	{
-		$CI->fs_imagick = new stdClass();
+		$CI->ff_imagemagick = new stdClass();
 	}
-	elseif (isset($CI->fs_imagick->available))
+	elseif (isset($CI->ff_imagemagick->available))
 	{
-		return $CI->fs_imagick->available;
+		return $CI->ff_imagemagick->available;
 	}
 
 	// set default values
-	$CI->fs_imagick = new stdClass();
-	$CI->fs_imagick->exec = FALSE;
-	$CI->fs_imagick->found = FALSE;
-	$CI->fs_imagick->available = FALSE;
+	$CI->ff_imagemagick->path = '';
+	$CI->ff_imagemagick->exec = FALSE;
+	$CI->ff_imagemagick->available = FALSE;
 
-	// begin searching paths
-	if (ini_get('safe_mode') || !in_array('exec', explode(',', ini_get('disable_functions'))))
+	// begin locating paths
+	if (ini_get('safe_mode') || !in_array('exec', explode(',', ini_get('disabled_functions'))))
 	{
-		$CI->fs_imagick->exec = TRUE;
+		$CI->ff_imagemagick->exec = TRUE;
 
-		// set path of imagick binary
-		$path = get_setting('fs_serv_imagick_path', '/usr/bin');
-		if (!preg_match('/convert$/i', $path))
+		$paths = array(get_setting('ff_path_imagemagick_bin', '/usr/bin'), '/usr/local/bin');
+		foreach ($paths as $path)
 		{
-			$path = rtrim($path, '/') . '/' . 'convert';
+			if (!preg_match('/convert$/i', $path))
+			{
+				$binary = rtrim($path, '/') . '/' . 'convert';
+			}
+
+			if (@file_exists($binary) || @file_exists($binary . '.exe'))
+			{
+				$CI->ff_imagemagick->path = rtrim($path, '/');
+				break;
+			}
 		}
 
-		if (@file_exists($path) || @file_exists($path . '.exe'))
+		if ($CI->ff_imagemagick->path !== '')
 		{
-			$CI->fs_imagick->found = $path;
-		}
-		else
-		{
-			return FALSE;
-		}
-
-		// determine if imagick works
-		exec($path . ' -version', $result);
-		if (preg_match('/ImageMagick/i', $result[0]))
-		{
-			$CI->fs_imagick->available = TRUE;
-			return TRUE;
+			exec($CI->ff_imagemagick->path . '/' . 'convert' . ' -version', $res);
+			if (preg_match('/ImageMagick/i', $res[0]))
+			{
+				$CI->ff_imagemagick->available = TRUE;
+				return TRUE;
+			}
 		}
 	}
 

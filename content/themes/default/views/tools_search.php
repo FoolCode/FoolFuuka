@@ -50,7 +50,7 @@ if(isset($board)) :
 					?>
 
 					<?php
-					if($board->shortname) :
+					if(get_setting('fs_sphinx_global')) :
 						echo form_submit(array(
 							'class' => 'btn btn-inverse btn-mini',
 							'value' => __('Global Search'),
@@ -139,7 +139,7 @@ if(isset($board)) :
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text')
+						<?php echo form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text')
 									? TRUE : FALSE));
 						?>
 						<span><?php echo __('Only with image') ?></span>
@@ -147,7 +147,7 @@ if(isset($board)) :
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'image')
+						<?php echo form_radio(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'image')
 									? TRUE : FALSE));
 						?>
 						<span><?php echo __('Only without image') ?></span>

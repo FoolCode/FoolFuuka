@@ -41,7 +41,6 @@ class MY_Controller extends CI_Controller
 
 			// load the radixes (boards)
 			$this->load->model('radix_model', 'radix');
-			$this->load->model('vote_model', 'vote');
 
 			// This is the first chance we get to load the right translation file
 			$available_langs = config_item('ff_available_languages');

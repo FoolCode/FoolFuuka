@@ -383,6 +383,15 @@ class Theme_model extends CI_Model
 			'content', 
 			array_merge($this->_view_variables, array('template' => array('partials' => $partials)))
 		);
+		
+		// if there's no selected layout output or return this
+		if($this->_selected_layout === FALSE)
+		{
+			if($return)
+				return $content;
+			
+			return $this->output->append_output($content);
+		}
 
 		// build the layout
 		$html = $this->_build(
@@ -403,7 +412,7 @@ class Theme_model extends CI_Model
 		if($return)
 			return $html;
 		
-		$this->output->append_output($html);
+		return $this->output->append_output($html);
 	}
 
 

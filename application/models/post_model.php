@@ -1081,32 +1081,7 @@ class Post_model extends CI_Model
 	 */
 	function build_board_comment($board, $p)
 	{
-		// load the functions from the current theme, else load the default one
-		if (file_exists('content/themes/' . $this->theme->get_selected_theme() . '/theme_functions.php'))
-		{
-			require_once('content/themes/' . $this->theme->get_selected_theme() . '/theme_functions.php');
-		}
-		else
-		{
-			require_once('content/themes/' . $this->theme->get_config('extends') . '/theme_functions.php');
-		}
-
-		//require_once
-		ob_start();
-
-		if (file_exists('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php'))
-		{
-			include('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php');
-		}
-		else
-		{
-			include('content/themes/' . $this->theme->get_config('extends') . '/views/board_comment.php');
-		}
-
-		$string = ob_get_contents();
-		ob_end_clean();
-
-		return $string;
+		return $this->theme->build('board_comment', array('p' => $p), TRUE);
 	}
 
 
@@ -2536,7 +2511,7 @@ class Post_model extends CI_Model
 		// process comment name+trip
 		if ($data['name'] === FALSE || $data['name'] == '')
 		{
-			$this->input->delete_cookie('foolfuuka_reply_name');
+			$this->input->set_cookie('foolfuuka_reply_name', '', 0);
 			$name = 'Anonymous';
 			$trip = '';
 		}
@@ -2553,7 +2528,7 @@ class Post_model extends CI_Model
 		// process comment email
 		if ($data['email'] === FALSE || $data['email'] == '')
 		{
-			$this->input->delete_cookie('foolfuuka_reply_email');
+			$this->input->set_cookie('foolfuuka_reply_email', '', 0);
 			$email = '';
 		}
 		else

@@ -3,14 +3,26 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-
+/**
+ * FoOlFrame Theme Model
+ *
+ * The Theme Model puts together the public interface. It allows fallback
+ * a-la-wordpress child themes. It also allows using the Plugin Model to
+ * fully costumize controller and models for each theme.
+ *
+ * @package        	FoOlFrame
+ * @subpackage    	Models
+ * @category    	Models
+ * @author        	Woxxy
+ * @license         http://www.apache.org/licenses/LICENSE-2.0.html
+ */
 class Theme_model extends CI_Model
 {
 
 	/**
 	 * The theme configurations that are loaded
 	 * 
-	 * @var array 
+	 * @var array associative array('theme_dir' => array('item' => 'value'));
 	 */
 	private $_loaded = array();
 
@@ -448,6 +460,7 @@ class Theme_model extends CI_Model
 				break;
 		}
 
+		// get rid of interfering variables 
 		unset($_type, $_file);
 
 		extract($_data);
@@ -459,3 +472,6 @@ class Theme_model extends CI_Model
 	}
 
 }
+
+/* End of file theme_model.php */
+/* Location: ./application/models/theme_model.php */

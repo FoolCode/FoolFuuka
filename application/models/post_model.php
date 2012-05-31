@@ -1465,7 +1465,7 @@ class Post_model extends CI_Model
 		else /* use mysql as fallback for non-sphinx indexed boards */
 		{
 			// begin cache of entire sql statement
-			$this->db->start_cache();
+
 
 			// begin filtering search params
 			if ($args['text'] || $args['filename'])
@@ -1499,21 +1499,30 @@ class Post_model extends CI_Model
 					);
 				}
 
-				$this->db->join(
-					$this->radix->get_table($board),
-					$this->radix->get_table($board, '_search') . '.`doc_id` = ' . $this->radix->get_table($board) . '.`doc_id`',
-					'',
-					FALSE,
-					FALSE
-				);
-			}
-			else
-			{
-				// no need for the fulltext fields
-				$this->db->from($this->radix->get_table($board), FALSE, FALSE);
+				$query = $this->db->query($this->db->statement('', NULL, NULL, 'SELECT doc_id'));
+				if ($query->num_rows == 0)
+				{
+					return array('posts' => array(), 'total_found' => 0);
+				}
 
-				// select that we'll use for the final statement
-				$select = 'SELECT ' . $this->radix->get_table($board) . '.`doc_id`';
+				$docs = array();
+				foreach ($query->result() as $rec)
+				{
+					$docs[] = $rec->doc_id;
+				}
+			}
+
+			$this->db->start_cache();
+
+			// no need for the fulltext fields
+			$this->db->from($this->radix->get_table($board), FALSE, FALSE);
+
+			// select that we'll use for the final statement
+			$select = 'SELECT ' . $this->radix->get_table($board) . '.`doc_id`';
+
+			if (isset($docs))
+			{
+				$this->db->where_in('doc_id', $docs);
 			}
 
 			if ($args['subject'])

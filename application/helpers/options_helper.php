@@ -337,7 +337,7 @@ function locate_imagemagick()
 			exec($CI->ff_imagemagick->path . '/' . 'convert' . ' -version', $res);
 			if (preg_match('/ImageMagick/i', $res[0]))
 			{
-				$CI->fs_imagemagick->available = TRUE;
+				$CI->ff_imagemagick->available = TRUE;
 				return TRUE;
 			}
 		}

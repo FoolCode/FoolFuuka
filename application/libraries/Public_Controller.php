@@ -42,7 +42,7 @@ class Public_Controller extends MY_Controller
 		}
 
 		$this->load->model('theme_model', 'theme');
-		
+
 		// give an error if there's no active themes
 		if(count($this->theme->get_available_themes()) == 0)
 		{

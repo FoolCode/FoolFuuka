@@ -72,14 +72,14 @@ class Preferences extends Admin_Controller
 		
 		$themes = array();
 		
-		$this->load->model('themes_model', 'themes');
+		$this->load->model('theme_model', 'theme');
 		
-		foreach($this->themes->get_all() as $name => $theme)
+		foreach($this->theme->get_all() as $name => $theme)
 		{
 			$themes[] = array(
 				'type' => 'checkbox',
-				'label' => $theme['theme_name'] . ' theme',
-				'help' => sprintf(__('Enable %s theme'), $theme['theme_name']),
+				'label' => $theme['name'] . ' theme',
+				'help' => sprintf(__('Enable %s theme'), $theme['name']),
 				'array_key' => $name,
 				'preferences' => TRUE,
 				'checked' => defined('FOOL_PREF_THEMES_THEME_' . strtoupper($name) . '_ENABLED') ?
@@ -96,9 +96,9 @@ class Preferences extends Admin_Controller
 		
 		$themes_default = array();
 		
-		foreach($this->themes->get_all() as $name => $theme)
+		foreach($this->theme->get_all() as $name => $theme)
 		{
-			$themes_default[$name] = $theme['theme_name'];
+			$themes_default[$name] = $theme['name'];
 		}
 		
 		$form['fs_theme_default'] = array(

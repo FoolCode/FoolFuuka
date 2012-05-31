@@ -153,7 +153,7 @@ class Theme_model extends CI_Model
 					}
 				}
 				
-				$active_themes = array_keys($active_themes);
+				return $active_themes = array_keys($active_themes);
 			}
 		}
 	}

@@ -55,27 +55,27 @@ class System extends Admin_Controller
 
 		$form = array();
 
-		if (find_imagick())
+		if (locate_imagemagick())
 		{
 			$imagick_status = '<span class="label label-success">' . __('Found and Working') . '</span>';
 		}
 		else
 		{
 			// @todo update the imagick statuses to match bootstrap 2.0
-			if (!$this->fs_imagick->exec)
+			if (!$this->ff_imagemagick->exec)
 				$imagick_status = '<span class="label label-important">' . __('Not Available') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(__('You must have Safe Mode turned off and the exec() function enabled to allow ImageMagick to process your images. Please check the information panel for more details.')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><i class="icon icon-info-sign"></i></a>';
-			else if (!$this->fs_imagick->found)
+			else if ($this->ff_imagemagick->path !== '')
 				$imagick_status = '<span class="label label-important">' . __('Not Found') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(__('You must provide the correct path to the "convert" binary on your system. This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) or the installation directory (Windows).')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><i class="icon icon-info-sign"></i></a>';
-			else if (!$this->fs_imagick->available)
+			else if (!$this->ff_imagemagick->available)
 				$imagick_status = '<span class="label label-important">' . __('Not Working') . '</span><a rel="popover-right" href="#" data-content="' . htmlspecialchars(sprintf(__('There has been an error encountered when testing your ImageMagick installation. To manually check for errors, access your server via shell or command line and type: %s'),
-							'<br/><code>' . $this->fs_imagick->found . ' -version</code>')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><i class="icon icon-info-sign"></i></a>';
+							'<br/><code>' . $this->ff_imagemagick->path . ' -version</code>')) . '" data-original-title="' . htmlspecialchars(__('Disabled Functions')) . '"><i class="icon icon-info-sign"></i></a>';
 		}
 
 		$form['open'] = array(
 			'type' => 'open'
 		);
 
-		$form['fs_serv_imagick_path'] = array(
+		$form['ff_path_imagemagick_bin'] = array(
 			'type' => 'input',
 			'label' => __('Path to ImageMagick') . ' ' . $imagick_status,
 			'placeholder' => '/usr/bin',

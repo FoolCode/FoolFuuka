@@ -184,7 +184,7 @@
 				array(
 					'name' => 'ImageMagick',
 					'title' => 'ImageMagick',
-					'value' => (find_imagick()) ? __('Installed') : __('Not Installed'),
+					'value' => (locate_imagemagick()) ? __('Installed') : __('Not Installed'),
 					'text' => __('This is a library used to dynamically create, edit, compose or convert images.') . '<p class="vartext">' . __('Optional') . '</p>'
 				)
 			)

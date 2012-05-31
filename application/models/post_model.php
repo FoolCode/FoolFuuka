@@ -784,9 +784,10 @@ class Post_model extends CI_Model
 		// generate thumbnail
 		if ($file['image_width'] > $thumb_width || $file['image_height'] > $thumb_height)
 		{
+			$imagemagick = locate_imagemagick();
 			$media_config = array(
-				'image_library' => (find_imagick()) ? 'ImageMagick' : 'GD2',
-				'library_path'  => (find_imagick()) ? get_setting('fs_serv_imagick_path', '/usr/bin') : '',
+				'image_library' => ($imagemagick) ? 'ImageMagick' : 'GD2',
+				'library_path'  => ($imagemagick) ? $this->ff_imagemagick->path : '',
 				'source_image'  => $media_filepath . (($media_exists) ? $media_existing : $media_filename),
 				'new_image'     => $thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename),
 				'width'         => ($file['image_width'] > $thumb_width) ? $thumb_width : $file['image_width'],

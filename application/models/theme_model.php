@@ -69,6 +69,13 @@ class Theme_model extends CI_Model
 	 * @var array 
 	 */
 	private $_title = array();
+	
+	/**
+	 * The lines of metadata to print
+	 * 
+	 * @var array 
+	 */
+	private $_metadata = array();
 
 
 	/**
@@ -315,6 +322,7 @@ class Theme_model extends CI_Model
 	 * Adds breadcrumbs to the title
 	 * 
 	 * @param string|array if array it will set the title array from scratch
+	 * @return array the title array
 	 */
 	public function set_title($title)
 	{
@@ -324,6 +332,22 @@ class Theme_model extends CI_Model
 			$this->_title[] = $title;
 		
 		return $this->_title;
+	}
+	
+	/**
+	 * Adds metadata to header
+	 * 
+	 * @param string|array if array it will set the metadata array from scratch
+	 * @return array the metadata array
+	 */
+	public function set_metadata($metadata)
+	{
+		if(is_array($metadata))
+			$this->_metadata = $metadata;
+		else
+			$this->_metadata[] = $metadata;
+		
+		return $this->_metadata;
 	}
 	
 
@@ -369,7 +393,9 @@ class Theme_model extends CI_Model
 				array('template' => array(
 						'body' => $content, 
 						'title' => implode($this->_title_separator, $this->_title), 
-						'partials' => $partials)
+						'partials' => $partials,
+						'metadata' => implode("\n", $this->_metadata)
+					)
 				)
 			)
 		);

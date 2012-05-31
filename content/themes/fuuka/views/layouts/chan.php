@@ -22,6 +22,7 @@ if (!defined('BASEPATH'))
 		}
 		?>
 		<script type="text/javascript" src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<?php echo $template['metadata'] ?>
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body>

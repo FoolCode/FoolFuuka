@@ -1386,7 +1386,7 @@ class Chan extends Public_Controller
 			$this->theme->set_title(__('Global Search'));
 		}
 
-		$this->theme->append_metadata('<meta name="robots" content=""noindex" />');
+		$this->theme->set_metadata('<meta name="robots" content=""noindex" />');
 		$this->theme->build('board');
 	}
 

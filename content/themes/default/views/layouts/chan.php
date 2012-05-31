@@ -30,6 +30,7 @@ if (!defined('BASEPATH'))
 		<?php endif; ?>
 		<link rel='index' title='<?php echo get_setting('fs_gen_site_title') ?>' href='<?php echo site_url() ?>' />
 		<meta name="generator" content="<?php echo FOOL_NAME ?> <?php echo FOOL_VERSION ?>" />
+		<?php echo $template['metadata'] ?>
 		<?php echo get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body class="theme_default">

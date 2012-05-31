@@ -50,26 +50,26 @@ class MY_Controller extends CI_Controller
 			{
 				$lang = 'en_EN';
 			}
-			
-			$locale = $lang . '.utf8';
+
+			$locale = $lang;
 			putenv('LANG=' . $locale);
 			if ($locale != "tr_TR.utf8")
 			{
-				setlocale(LC_ALL, $locale);
+				setlocale(LC_ALL, array($locale . '.utf8', $locale . '.UTF-8'));
 			}
 			else // workaround to make turkish work
 			{
-				setlocale(LC_COLLATE, $locale);
-				setlocale(LC_MONETARY, $locale);
-				setlocale(LC_NUMERIC, $locale);
-				setlocale(LC_TIME, $locale);
-				setlocale(LC_MESSAGES, $locale);
-				setlocale(LC_CTYPE, "sk_SK.utf8");
+				setlocale(LC_COLLATE, array($locale . '.utf8', $locale . '.UTF-8'));
+				setlocale(LC_MONETARY, array($locale . '.utf8', $locale . '.UTF-8'));
+				setlocale(LC_NUMERIC, array($locale . '.utf8', $locale . '.UTF-8'));
+				setlocale(LC_TIME, array($locale . '.utf8', $locale . '.UTF-8'));
+				setlocale(LC_MESSAGES, array($locale . '.utf8', $locale . '.UTF-8'));
+				setlocale(LC_CTYPE, array("sk_SK.utf8", "sk_SK.UTF-8"));
 			}
 
 			bindtextdomain($lang, FCPATH . "assets/locale");
 			textdomain($lang);
-			
+
 			// a good time to change some of the defauly settings dynamically
 			$this->config->config['tank_auth']['allow_registration'] = !get_setting('fs_reg_disabled');
 

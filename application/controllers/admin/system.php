@@ -55,7 +55,8 @@ class System extends Admin_Controller
 
 		$form = array();
 
-		if (locate_imagemagick())
+		$imagemagick = locate_imagemagick();
+		if ($imagemagick)
 		{
 			$imagick_status = '<span class="label label-success">' . __('Found and Working') . '</span>';
 		}
@@ -78,7 +79,7 @@ class System extends Admin_Controller
 		$form['ff_path_imagemagick_bin'] = array(
 			'type' => 'input',
 			'label' => __('Path to ImageMagick') . ' ' . $imagick_status,
-			'placeholder' => '/usr/bin',
+			'placeholder' => ($imagemagick) ? $this->ff_imagemagick->path : '/usr/bin',
 			'preferences' => 'fs_gen',
 			'help' => __('The location of your ImageMagick "convert" executable')
 		);

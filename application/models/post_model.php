@@ -1592,12 +1592,12 @@ class Post_model extends CI_Model
 			}
 			if ($args['filter'] == 'image')
 			{
-				$this->db->where('media_id <>', 0);
+				$this->db->where('media_id', 0);
 				$this->db->use_index('media_id_index');
 			}
 			if ($args['filter'] == 'text')
 			{
-				$this->db->where('media_id', 0);
+				$this->db->where('media_id <>', 0);
 				$this->db->use_index('media_id_index');
 			}
 			if ($args['start'])

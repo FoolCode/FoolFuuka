@@ -1206,6 +1206,7 @@ class Post_model extends CI_Model
 			// determine if all boards will be used for search or not
 			if ($board === FALSE)
 			{
+				$this->radix->preload(TRUE);
 				$indexes = array();
 
 				foreach ($this->radix->get_all() as $radix)

@@ -28,7 +28,7 @@ class Radix_model extends CI_Model
 	 */
 	function structure($radix = NULL)
 	{
-		return array(
+		$structure = array(
 			'open' => array(
 				'type' => 'open',
 			),
@@ -384,6 +384,17 @@ class Radix_model extends CI_Model
 				'type' => 'checkbox',
 				'help' => __('Hide the board from public access? (only admins and mods will be able to browse it)')
 			),
+			'myisam_search' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'type' => 'internal',
+				'default_value' => FOOL_RADIX_MYISAM_SEARCH
+			),
+		);
+					
+		$structure = $this->plugins->run_hook('fu_radix_model_structure_alter', array($structure), 'simple');
+		
+		$structure = array_merge($structure, array(
 			'separator-2' => array(
 				'type' => 'separator-short'
 			),
@@ -394,14 +405,8 @@ class Radix_model extends CI_Model
 			),
 			'close' => array(
 				'type' => 'close'
-			),
-			'myisam_search' => array(
-				'database' => TRUE,
-				'boards_preferences' => TRUE,
-				'type' => 'internal',
-				'default_value' => FOOL_RADIX_MYISAM_SEARCH
-			)
-		);
+			)));
+		return $structure;
 	}
 
 

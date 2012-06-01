@@ -17,11 +17,26 @@ class FU_Dice_Roll extends Plugins_model
 
 	function initialize_plugin()
 	{
-		$this->plugins->register_hook($this, 'fu_post_model_alter_comment_input', 4, 'roll');
+		$this->plugins->register_hook($this, 'fu_post_model_comment_alter_input', 4, 'roll');
+		$this->plugins->register_hook($this, 'fu_radix_model_structure_alter', 4, function($structure){
+			$structure['plugin_dice_roll_enable'] = array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'type' => 'checkbox',
+				'help' => __('Enable dice roll?')
+			);
+			
+			return array('return' => $structure);
+		});
 	}
 
-	function roll($data)
+	function roll($board, $data)
 	{
+		if($board->plugin_dice_roll_enable == 0)
+		{
+			return array('return' => $data);
+		}
+		
 		if ($data['email'] !== FALSE || $data['email'] != '')
 		{
 			if (preg_match('/dice[ +](\d+)[ d+](\d+)(([ +-]+?)(-?\d+))?/', $data['email'], $result))

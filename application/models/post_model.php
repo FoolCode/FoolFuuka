@@ -2436,7 +2436,7 @@ class Post_model extends CI_Model
 		}
 
 		// hook entire comment data to alter in plugin
-		$data = $this->plugins->run_hook('fu_post_model_alter_comment_input', array($data), 'simple');
+		$data = $this->plugins->run_hook('fu_post_model_comment_alter_input', array($board, $data), 'simple');
 
 		// process comment name+trip
 		if ($data['name'] === FALSE || $data['name'] == '')

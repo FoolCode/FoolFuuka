@@ -494,7 +494,7 @@ if (!function_exists('parse_bbcode'))
 		// if $special == TRUE, add special bbcode
 		if ($special === TRUE)
 		{
-			if ($CI->fu_theme == 'fuuka' || $CI->fu_theme == 'yotsuba')
+			if ($CI->theme->get_selected_theme() == 'fuuka' || $CI->theme->get_selected_theme() == 'yotsuba')
 			{
 				$bbcode->addCode('moot', 'simple_replace', NULL,
 					array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'),

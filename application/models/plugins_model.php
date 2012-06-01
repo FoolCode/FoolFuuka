@@ -39,8 +39,6 @@ class Plugins_model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
-		
-		$this->lookup_plugins();
 	}
 
 
@@ -190,7 +188,7 @@ class Plugins_model extends CI_Model
 	 * @param null|string $select the slug of the plugin if you want to choose one
 	 * @param bool $initialize choose if just load the file or effectively run the plugin
 	 */
-	function load_plugins($select = NULL, $initialize = TRUE)
+	public function load_plugins($select = NULL, $initialize = TRUE)
 	{
 		$plugins = $this->get_enabled();
 

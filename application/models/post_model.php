@@ -730,49 +730,41 @@ class Post_model extends CI_Model
 		}
 
 		// generate thumbnail
-		if ($file['image_width'] > $thumb_width || $file['image_height'] > $thumb_height)
+		$imagemagick = locate_imagemagick();
+		$media_config = array(
+			'image_library' => ($imagemagick) ? 'ImageMagick' : 'GD2',
+			'library_path'  => ($imagemagick) ? $this->ff_imagemagick->path : '',
+			'source_image'  => $media_filepath . (($media_exists) ? $media_existing : $media_filename),
+			'new_image'     => $thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename),
+			'width'         => ($file['image_width'] > $thumb_width) ? $thumb_width : $file['image_width'],
+			'height'        => ($file['image_height'] > $thumb_height) ? $thumb_height : $file['image_height'],
+		);
+
+		// leave this NULL so it processes normally
+		$switch = $this->plugins->run_hook('fu_post_model_process_media_switch_resize', array($media_config));
+
+		// if plugin returns false, error
+		if(isset($switch['return']) && $switch['return'] === FALSE)
 		{
-			$imagemagick = locate_imagemagick();
-			$media_config = array(
-				'image_library' => ($imagemagick) ? 'ImageMagick' : 'GD2',
-				'library_path'  => ($imagemagick) ? $this->ff_imagemagick->path : '',
-				'source_image'  => $media_filepath . (($media_exists) ? $media_existing : $media_filename),
-				'new_image'     => $thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename),
-				'width'         => ($file['image_width'] > $thumb_width) ? $thumb_width : $file['image_width'],
-				'height'        => ($file['image_height'] > $thumb_height) ? $thumb_height : $file['image_height'],
-			);
+			log_message('error', 'post.php/process_media: failed to generate thumbnail');
+			return FALSE;
+		}
 
-			// leave this NULL so it processes normally
-			$switch = $this->plugins->run_hook('fu_post_model_process_media_switch_resize', array($media_config));
+		if(is_null($switch) || is_null($switch['return']))
+		{
+			$this->load->library('image_lib');
 
-			// if plugin returns false, error
-			if(isset($switch['return']) && $switch['return'] === FALSE)
+			$this->image_lib->initialize($media_config);
+			if (!$this->image_lib->resize())
 			{
 				log_message('error', 'post.php/process_media: failed to generate thumbnail');
 				return FALSE;
 			}
 
-			if(is_null($switch) || is_null($switch['return']))
-			{
-				$this->load->library('image_lib');
-
-				$this->image_lib->initialize($media_config);
-				if (!$this->image_lib->resize())
-				{
-					log_message('error', 'post.php/process_media: failed to generate thumbnail');
-					return FALSE;
-				}
-
-				$this->image_lib->clear();
-			}
-
-			$thumb_dimensions = @getimagesize($thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename));
+			$this->image_lib->clear();
 		}
-		else
-		{
-			$thumb_filename = $media_filename;
-			$thumb_dimensions = array($file['image_width'], $file['image_height']);
-		}
+
+		$thumb_dimensions = @getimagesize($thumb_filepath . (($thumb_exists) ? $thumb_existing : $thumb_filename));
 
 		return array(
 			'preview_orig' => $thumb_filename,

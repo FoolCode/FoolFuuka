@@ -43,7 +43,7 @@ class Migration_Install extends CI_Migration
 			$this->db->query(
 				"CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('login_attempts') . "` (
 						`id` int(11) NOT NULL AUTO_INCREMENT,
-						`ip_address` varchar(40) COLLATE utf8_bin NOT NULL,
+						`ip_address` decimal(39,0) unsigned NOT NULL,
 						`login` varchar(50) COLLATE utf8_bin NOT NULL,
 						`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 						PRIMARY KEY (`id`)
@@ -57,8 +57,8 @@ class Migration_Install extends CI_Migration
 				"CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('user_autologin') . "` (
 						`key_id` char(32) COLLATE utf8_bin NOT NULL,
 						`user_id` int(11) NOT NULL DEFAULT '0',
-						`user_agent` varchar(150) COLLATE utf8_bin NOT NULL,
-						`last_ip` varchar(40) COLLATE utf8_bin NOT NULL,
+						`user_agent` varchar(150) NOT NULL,
+						`last_ip` decimal(39,0) unsigned NOT NULL,
 						`last_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 						PRIMARY KEY (`key_id`,`user_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
@@ -100,7 +100,7 @@ class Migration_Install extends CI_Migration
 						`new_password_requested` datetime DEFAULT NULL,
 						`new_email` varchar(100) COLLATE utf8_bin DEFAULT NULL,
 						`new_email_key` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-						`last_ip` varchar(40) COLLATE utf8_bin NOT NULL,
+						`last_ip` decimal(39,0) unsigned NOT NULL,
 						`last_login` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 						`created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 						`modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

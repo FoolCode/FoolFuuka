@@ -257,32 +257,15 @@ class Post_model extends CI_Model
 		{
 			if ($thumbnail === TRUE)
 			{
-				$try_rebuild = FALSE;
-
 				if (isset($post->op) && $post->op == 1)
 				{
-					if ($post->preview_op)
-					{
-						$image = $post->preview_op;
-					}
-					else
-					{
-						$try_rebuild = TRUE;
-					}
-
+					$image = $post->preview_op ? : $post->preview_reply;
 				}
 				else
 				{
-					if($post->preview_reply)
-					{
-						$image = $post->preview_reply;
-					}
-					else
-					{
-						$try_rebuild = TRUE;
-					}
+					$image = $post->preview_reply ? : $post->preview_op;
 				}
-
+				
 				if(is_null($image) || $image == '')
 				{
 					$image = $post->media;

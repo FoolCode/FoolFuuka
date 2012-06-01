@@ -131,7 +131,8 @@ class Plugins_model extends CI_Model
 					$done = TRUE;
 				}
 			}
-
+			
+			if($done === FALSE) $slugs_with_data[$slug] = new stdClass();
 			$slugs_with_data[$slug]->info = $this->get_info_by_slug($slug);
 
 			if (!$done)

@@ -892,22 +892,6 @@ class Post_model extends CI_Model
 		);
 
 		$html = $this->plugins->run_hook('fu_post_model_process_internal_links_html_result', array($num_id, $html), 'simple');
-		/*
-		if ($this->features === FALSE)
-		{
-			if ($this->theme->get_selected_theme() == 'yotsuba')
-			{
-				$html = array(
-					'prefix' => '<font class="unkfunc">',
-					'suffix' => '</font>',
-					'urltag' => '#',
-					'option' => ' class="quotelink" onclick="replyhl(\'' . $num_id . '\');"',
-					'option_op' => '',
-					'option_backlink' => '',
-				);
-			}
-		}
-		*/
 
 		$this->backlinks[$num_id][$this->current_p->num] = $html['prefix']
 			. '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread',

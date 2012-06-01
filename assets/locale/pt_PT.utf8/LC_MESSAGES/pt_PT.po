@@ -6,367 +6,367 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FoOlFuuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-29 12:48+0100\n"
-"PO-Revision-Date: 2012-05-31 16:39+0000\n"
-"Last-Translator: Eksopl <eksopl@gmail.com>\n"
+"POT-Creation-Date: 2012-06-01 14:57+0100\n"
+"PO-Revision-Date: 2012-06-01 13:22+0000\n"
+"Last-Translator: Enzo Woxxy <woxxy@foolrulez.org>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.net/projects/p/foolfuuka/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_PT\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Poedit-Basepath: /Users/woxxy/github/FoOlFuuka\n"
+"X-Poedit-Basepath: .\n"
 "X-Poedit-KeywordsList: __;gettext;gettext_noop\n"
-"X-Poedit-SearchPath-0: /Users/woxxy/github/FoOlFuuka\n"
+"X-Poedit-SearchPath-0: ../..\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:466
+#: ../../application/controllers/chan.php:518
 msgid ""
 "Page not found. You can use the search if you were looking for something!"
 msgstr "Página não encontrada. Pode utilizar a pesquisa se estava à procura de algo!"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:524
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:528
+#: ../../application/controllers/chan.php:576
+#: ../../application/controllers/chan.php:580
 msgid "Page"
 msgstr "Página"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:528
+#: ../../application/controllers/chan.php:580
 msgid "Latest by Thread"
 msgstr "Últimos por tópico"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:587
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:590
+#: ../../application/controllers/chan.php:639
+#: ../../application/controllers/chan.php:642
 msgid "Ghost Page"
 msgstr "Página do além"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:625
+#: ../../application/controllers/chan.php:677
 msgid "Gallery"
 msgstr "Galeria"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:629
+#: ../../application/controllers/chan.php:681
 msgid "Gallery: Showing Latest Submitted Images"
 msgstr "Galeria: Últimas imagens submetidas"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:631
+#: ../../application/controllers/chan.php:683
 msgid "By Thread"
 msgstr "Por tópico"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:635
+#: ../../application/controllers/chan.php:687
 msgid "Gallery: Showing Latest Created Threads"
 msgstr "Galeria: Últimos tópicos criados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:637
+#: ../../application/controllers/chan.php:689
 msgid "By Image"
 msgstr "Por imagem"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:739
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:857
+#: ../../application/controllers/chan.php:791
+#: ../../application/controllers/chan.php:909
 msgid "Thread"
 msgstr "Tópico"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:860
+#: ../../application/controllers/chan.php:912
 msgid "Showing the last 50 posts for Thread No."
 msgstr "Últimos 50 posts por nº de tópico"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1005
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1187
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1480
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1530
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1567
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1592
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1625
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1650
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1675
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1715
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1743
+#: ../../application/controllers/chan.php:1057
+#: ../../application/controllers/chan.php:1239
+#: ../../application/controllers/chan.php:1532
+#: ../../application/controllers/chan.php:1582
+#: ../../application/controllers/chan.php:1619
+#: ../../application/controllers/chan.php:1644
+#: ../../application/controllers/chan.php:1677
+#: ../../application/controllers/chan.php:1702
+#: ../../application/controllers/chan.php:1727
+#: ../../application/controllers/chan.php:1767
+#: ../../application/controllers/chan.php:1795
 msgid "Error"
 msgstr "Erro"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1008
+#: ../../application/controllers/chan.php:1060
 msgid "There is no record of the specified image in our database."
 msgstr "Não existe registo na imagem especificada na base de dados."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1019
+#: ../../application/controllers/chan.php:1071
 msgid "Image Pruned"
 msgstr "Imagem removida"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1022
+#: ../../application/controllers/chan.php:1074
 msgid "Error 404: The image has been pruned from the server."
 msgstr "Erro 404: A imagem foi removida do servidor."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1068
+#: ../../application/controllers/chan.php:1120
 msgid "Searched text"
 msgstr "Texto pesquisado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1210
+#: ../../application/controllers/chan.php:1262
 #, php-format
 msgid "that contain &lsquo;%s&rsquo;"
 msgstr "que contenham &lsquo;%s&rsquo;"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1214
+#: ../../application/controllers/chan.php:1266
 #, php-format
 msgid "with the subject &lsquo;%s&rsquo;"
 msgstr "com o assunto &lsquo;%s&rsquo;"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1218
+#: ../../application/controllers/chan.php:1270
 #, php-format
 msgid "with the username &lsquo;%s&rsquo;"
 msgstr "com o username &lsquo;%s&rsquo;"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1222
+#: ../../application/controllers/chan.php:1274
 #, php-format
 msgid "with the tripcode &lsquo;%s&rsquo;"
 msgstr "com o tripcode &lsquo;%s&rsquo;"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1226
+#: ../../application/controllers/chan.php:1278
 #, php-format
 msgid "with the filename &lsquo;%s&rsquo;"
 msgstr "com o nome de ficheiro &lsquo;%s&rsquo;"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1234
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1241
+#: ../../application/controllers/chan.php:1286
+#: ../../application/controllers/chan.php:1293
 #, php-format
 msgid "with the image hash &lsquo;%s&rsquo;"
 msgstr "com a hash de imagem &lsquo;%s&rsquo;"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1246
+#: ../../application/controllers/chan.php:1298
 msgid "that have been deleted"
 msgstr "que foram apagados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1248
+#: ../../application/controllers/chan.php:1300
 msgid "that has not been deleted"
 msgstr "que não foram apagados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1250
+#: ../../application/controllers/chan.php:1302
 msgid "that are by ghosts"
 msgstr "que foram feitos por fantasmas"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1252
+#: ../../application/controllers/chan.php:1304
 msgid "that are not by ghosts"
 msgstr "que não foram feitos por fantasmas"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1254
+#: ../../application/controllers/chan.php:1306
 msgid "that are only OP posts"
 msgstr "somente posts de OP"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1256
+#: ../../application/controllers/chan.php:1308
 msgid "that are only non-OP posts"
 msgstr "somente posts não OP"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1258
+#: ../../application/controllers/chan.php:1310
 msgid "that do not contain images"
 msgstr "que não contenham imagens"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1260
+#: ../../application/controllers/chan.php:1312
 msgid "that only contain images"
 msgstr "que contenham imagens"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1262
+#: ../../application/controllers/chan.php:1314
 msgid "that were made by users"
 msgstr "feitos por utilizadores"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1264
+#: ../../application/controllers/chan.php:1316
 msgid "that were made by mods"
 msgstr "feitos por moderadores"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1266
+#: ../../application/controllers/chan.php:1318
 msgid "that were made by admins"
 msgstr "feitos por admins"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1268
+#: ../../application/controllers/chan.php:1320
 #, php-format
 msgid "posts after %s"
 msgstr "posts depois de %s"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1270
+#: ../../application/controllers/chan.php:1322
 #, php-format
 msgid "posts before %s"
 msgstr "posts antes de %s"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1272
+#: ../../application/controllers/chan.php:1324
 msgid "in ascending order"
 msgstr "em ordem ascendente"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1275
+#: ../../application/controllers/chan.php:1327
 #, php-format
 msgid "Searching for posts %s."
 msgstr "A pesquisar por posts %s."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1276
+#: ../../application/controllers/chan.php:1328
 msgid "and"
 msgstr "e"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1280
+#: ../../application/controllers/chan.php:1332
 msgid "Displaying all posts with no filters applied."
 msgstr "A mostrar todos os posts sem filtros aplicados."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1334
+#: ../../application/controllers/chan.php:1386
 msgid "Global Search"
 msgstr "Pesquisa global"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1524
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1533
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1563
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1570
+#: ../../application/controllers/chan.php:1576
+#: ../../application/controllers/chan.php:1585
+#: ../../application/controllers/chan.php:1615
+#: ../../application/controllers/chan.php:1622
 msgid "This thread does not exist."
 msgstr "Este tópico não existe."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1588
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1595
+#: ../../application/controllers/chan.php:1640
+#: ../../application/controllers/chan.php:1647
 msgid "This thread is closed."
 msgstr "Este tópico está trancado."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1621
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1628
+#: ../../application/controllers/chan.php:1673
+#: ../../application/controllers/chan.php:1680
 msgid "You are required to upload an image when posting a new thread."
 msgstr "É obrigatório fazer upload duma imagem para começar um tópico novo."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1646
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1653
+#: ../../application/controllers/chan.php:1698
+#: ../../application/controllers/chan.php:1705
 msgid "You are required to write a comment when no image upload is present."
 msgstr "É obrigatório escrever um comentário quando não há imagem presente."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1671
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/chan.php:1678
+#: ../../application/controllers/chan.php:1723
+#: ../../application/controllers/chan.php:1730
 msgid "The posting of images has been disabled for this thread."
 msgstr "Novas imagens foram desactivadas para este tópico."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/cli.php:17
+#: ../../application/controllers/cli.php:17
 #, php-format
 msgid "Welcome to {{FOOL_NAME}} version %s"
 msgstr "Bem-vindo a {{FOOL_NAME}} versão %s"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/cli.php:18
+#: ../../application/controllers/cli.php:18
 msgid ""
 "Write \"php index.php cli help\" to display all the available command line "
 "functions."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/cli.php:27
+#: ../../application/controllers/cli.php:27
 msgid "Your request is missing parameters."
 msgstr "Parâmetros em falta no pedido."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/cli.php:30
+#: ../../application/controllers/cli.php:30
 msgid "Your request is missing parameters: add the board shortname."
 msgstr "Parâmetros em falta no pedido: adicione o shortname da board."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/cli.php:33
+#: ../../application/controllers/cli.php:33
 msgid "The board you selected doesn't exist."
 msgstr "A board que seleccionou não existe."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/cli.php:74
+#: ../../application/controllers/cli.php:70
 msgid ""
 "Write \"php index.php cli database help\" for displaying the available "
 "commands for database manipulation."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/functions.php:19
+#: ../../application/controllers/functions.php:19
 msgid "Changing Theme"
 msgstr "A mudar o tema"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/functions.php:32
+#: ../../application/controllers/functions.php:32
 msgid "Changing Language"
 msgstr "A mudar o idioma"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:18
+#: ../../application/controllers/install.php:18
 msgid "{{FOOL_NAME}} Installation"
 msgstr "{{FOOL_NAME}}: Instalação"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:44
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:162
+#: ../../application/controllers/install.php:44
+#: ../../application/controllers/install.php:162
 msgid "Database type"
 msgstr "Tipo de base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:48
+#: ../../application/controllers/install.php:48
 msgid ""
 "The type of database you're going to use. There's only one option currently."
 msgstr "O tipo de base de dados a ser utilizado. Só há uma opção de momento."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:52
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:163
+#: ../../application/controllers/install.php:52
+#: ../../application/controllers/install.php:163
 msgid "Database hostname"
 msgstr "Hostname da base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:57
+#: ../../application/controllers/install.php:57
 #, php-format
 msgid ""
 "The hostname of the server hosting the database. 99.8% of times is localhost"
 msgstr "O hostname do servidor que contém a base de dados. 99.8% das vezes é localhost"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:61
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:164
+#: ../../application/controllers/install.php:61
+#: ../../application/controllers/install.php:164
 msgid "Database name"
 msgstr "Nome da base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:65
+#: ../../application/controllers/install.php:65
 msgid "The name of the database"
 msgstr "O nome da base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:69
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:165
+#: ../../application/controllers/install.php:69
+#: ../../application/controllers/install.php:165
 msgid "Database username"
 msgstr "Username da base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:74
+#: ../../application/controllers/install.php:74
 msgid "The username of the user with permissions to the database"
 msgstr "O username do utilizador com permissões para a base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:78
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:166
+#: ../../application/controllers/install.php:78
+#: ../../application/controllers/install.php:166
 msgid "Database password"
 msgstr "Senha da base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:82
+#: ../../application/controllers/install.php:82
 msgid "The password of the user with permissions to the database"
 msgstr "A senha do utilizador com permissão para a base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:86
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:167
+#: ../../application/controllers/install.php:86
+#: ../../application/controllers/install.php:167
 msgid "Database prefix"
 msgstr "Prefixo da base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:89
+#: ../../application/controllers/install.php:89
 msgid ""
 "Add a database prefix to avoid collisions, in example if you have other "
 "software using the same database"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:97
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:168
+#: ../../application/controllers/install.php:97
+#: ../../application/controllers/install.php:168
 msgid "Administrator username"
 msgstr "Username do administrador"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:101
+#: ../../application/controllers/install.php:101
 msgid "The username of the administrator's account"
 msgstr "O username da conta de administrador"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:105
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:170
+#: ../../application/controllers/install.php:105
+#: ../../application/controllers/install.php:170
 msgid "Administrator password"
 msgstr "Senha do administrador"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:109
+#: ../../application/controllers/install.php:109
 msgid "The password of the administrator's account"
 msgstr "A senha da conta de administrador"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:113
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:172
+#: ../../application/controllers/install.php:113
+#: ../../application/controllers/install.php:172
 msgid "Administrator email"
 msgstr "Email do administrador"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:117
+#: ../../application/controllers/install.php:117
 msgid "The email of the administrator's account"
 msgstr "O endereço de email da conta de administrador"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:201
+#: ../../application/controllers/install.php:201
 msgid "Connection with database not established: check the database fields."
 msgstr "Ligação à base de dados não estabelecida com sucesso: verifique os campos da base de dados."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:281
+#: ../../application/controllers/install.php:281
 msgid "{{FOOL_NAME}} has installed successfully. You can proceed logging in."
 msgstr "{{FOOL_NAME}} foi instalado com sucesso. Pode proceder ao login."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:298
+#: ../../application/controllers/install.php:298
 msgid ""
 "You need at least PHP version {{FOOL_REQUIREMENT_PHP}} to run {{FOOL_NAME}}."
 " This means you have a many years old version. It is suggested to upgrade to"
@@ -374,14 +374,14 @@ msgid ""
 "general."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:306
+#: ../../application/controllers/install.php:306
 #, php-format
 msgid ""
 "The file %s was removed. The installation can't continue without that file. "
 "You can find it in the {{FOOL_NAME}} download."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:315
+#: ../../application/controllers/install.php:315
 #, php-format
 msgid ""
 "The %s directory needs to be writable. Use this command in your shell if "
@@ -389,7 +389,7 @@ msgid ""
 "software. You won't be able to install or run {{FOOL_NAME}} without this."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:325
+#: ../../application/controllers/install.php:325
 #, php-format
 msgid ""
 "The %s directory needs to be writable as well. Use this command in your "
@@ -398,14 +398,14 @@ msgid ""
 " this."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:354
+#: ../../application/controllers/install.php:354
 #, php-format
 msgid ""
 "The %s directory would be better if writable, in order to deliver automatic "
 "updates. Use this command in your shell if possible: %s"
 msgstr "Para ser possível executar actualizações automáticas, a pasta %s tem de ser acessível para escrita. Use este comando na shell se possível: %s"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:358
+#: ../../application/controllers/install.php:358
 #, php-format
 msgid ""
 "The %s directory would be better if writable, in order to deliver automatic "
@@ -414,605 +414,610 @@ msgid ""
 "it's www-data or Apache)"
 msgstr "Para ser possível executar actualizações automáticas, a pasta %s tem de ser acessível para escrita.<br/>Não foi possível determinar o utilizador que está a correr o PHP. Use este comando na shell se possível: %s onde www-data é um exemplo (normalmente é www-data ou Apache)"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:361
+#: ../../application/controllers/install.php:361
 msgid ""
 "If you can't do the above, after the installation you will be given a "
 "textfile to paste in config.php. More info after submitting."
 msgstr "Se não puder fazer o que está descrito acima, irá receber um ficheiro de texto após a instalação para inserir no ficheiro config.php. Mas informação após a submissão."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/install.php:369
+#: ../../application/controllers/install.php:369
 msgid ""
 "If you made any changes, just refresh this page to recheck the directory "
 "permissions."
 msgstr "Se efectuou algumas mudanças, actualize esta página para voltar a verificar as permissões das pastas."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:26
+#: ../../application/controllers/admin/auth.php:26
 msgid "Authorization"
 msgstr "Autorização"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:33
+#: ../../application/controllers/admin/auth.php:33
 msgid "Message"
 msgstr "Mensagem"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:112
+#: ../../application/controllers/admin/auth.php:112
 msgid "Login"
 msgstr "Login"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:211
+#: ../../application/controllers/admin/auth.php:211
 msgid "Register"
 msgstr "Registo"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:249
+#: ../../application/controllers/admin/auth.php:249
 msgid "Resend activation email"
 msgstr "Reenviar email de activação"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:311
+#: ../../application/controllers/admin/auth.php:311
 msgid "Forgot password"
 msgstr "Esqueci-me da senha"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:359
+#: ../../application/controllers/admin/auth.php:359
 msgid "Reset password"
 msgstr "Repor senha"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:392
+#: ../../application/controllers/admin/auth.php:392
 msgid "Change password"
 msgstr "Mudar senha"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:431
+#: ../../application/controllers/admin/auth.php:431
 msgid "Change email"
 msgstr "Mudar email"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/auth.php:484
+#: ../../application/controllers/admin/auth.php:484
 msgid "Unregister"
 msgstr "Anular registo"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:20
+#: ../../application/controllers/admin/boards.php:20
 msgid "Boards"
 msgstr "Boards"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:32
+#: ../../application/controllers/admin/boards.php:32
 msgid "Manage boards"
 msgstr "Gerir boards"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:60
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:130
+#: ../../application/controllers/admin/boards.php:60
+#: ../../application/controllers/admin/boards.php:130
 msgid "New board created!"
 msgstr "Nova board criada!"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:66
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:71
+#: ../../application/controllers/admin/boards.php:66
+#: ../../application/controllers/admin/boards.php:71
 msgid "Board information updated."
 msgstr "Informação da board actualizada."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:84
+#: ../../application/controllers/admin/boards.php:84
 msgid "Editing board:"
 msgstr "A editar board:"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:93
+#: ../../application/controllers/admin/boards.php:93
 msgid "Create search table"
 msgstr "Criar tabela de pesquisa"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:94
+#: ../../application/controllers/admin/boards.php:94
 msgid ""
 "This board doesn't have the search table. You can create it by follwing this"
 " button."
 msgstr "Esta board não tem a tabela de pesquisa. Pode criá-la utilizando este botão."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:104
+#: ../../application/controllers/admin/boards.php:104
 msgid "Remove search table"
 msgstr "Remover tabela de pesquisa"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:105
+#: ../../application/controllers/admin/boards.php:105
 msgid ""
 "You are using Sphinx Search for this board, so you can remove the search "
 "table."
 msgstr "Está a utilizar Sphinx Search para esta board, por isso pode remover a tabela de pesquisa."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:139
+#: ../../application/controllers/admin/boards.php:139
 msgid "Creating a new board"
 msgstr "A criar uma nova board"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:164
+#: ../../application/controllers/admin/boards.php:164
 #, php-format
 msgid "Failed to create the search table for the board %s."
 msgstr "Falha ao criar a tabela de pesquisa para a board %s."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:170
+#: ../../application/controllers/admin/boards.php:170
 #, php-format
 msgid "The search table for the board %s has been created."
 msgstr "A tabela de pesquisa para a board %s foi criada."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:178
+#: ../../application/controllers/admin/boards.php:178
 #, php-format
 msgid "Failed to remove the search table for the board %s."
 msgstr "Falha ao remover a tabela de pesquisa para a board %s."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:184
+#: ../../application/controllers/admin/boards.php:184
 #, php-format
 msgid "The search table for the board %s has been removed."
 msgstr "A tabela de pesquisa para a board %s foi removida."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:194
+#: ../../application/controllers/admin/boards.php:194
 msgid "Creating search table for board:"
 msgstr "A criar a tabela de pesquisa para a board:"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:197
+#: ../../application/controllers/admin/boards.php:197
 msgid "Do you want to create the search table for this board?"
 msgstr "Deseja criar a tabela de pesquisa para esta board?"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:198
+#: ../../application/controllers/admin/boards.php:198
 msgid ""
 "Creating the search table can take time if you have a board with even just "
 "100.000 entries."
 msgstr "Criar a tabela de pesquisa pode demorar bastante tempo, mesmo numa board com 100000 entradas."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:200
+#: ../../application/controllers/admin/boards.php:200
 msgid ""
 "Normally, even if the page times out, the database will keep building it."
 msgstr "Normalmente, mesmo se a página expirar, a base de dados irá continuar a construí-la."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:202
+#: ../../application/controllers/admin/boards.php:202
 msgid ""
 "To make sure your search table is fully created, you can execute the "
 "following via the command line of your server."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:206
+#: ../../application/controllers/admin/boards.php:206
 msgid ""
 "For very large boards, past a few millions of entries, this would could "
 "hours: you should use SphinxSearch instead, or anyway you should use the "
 "command line."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:214
+#: ../../application/controllers/admin/boards.php:214
 msgid "Removing search table for board:"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:217
+#: ../../application/controllers/admin/boards.php:217
 msgid "Do you want to remove the search table for this board?"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:218
+#: ../../application/controllers/admin/boards.php:218
 msgid ""
 "The search table can be created at any time, though it can take a while to "
 "create if the board is large."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:241
+#: ../../application/controllers/admin/boards.php:241
 #, php-format
 msgid "Failed to delete the board %s."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:246
+#: ../../application/controllers/admin/boards.php:246
 #, php-format
 msgid "The board %s has been deleted."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:255
+#: ../../application/controllers/admin/boards.php:255
 msgid "Removing board:"
 msgstr "A remover a board:"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:257
+#: ../../application/controllers/admin/boards.php:257
 msgid "Do you really want to remove the board and all its data?"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:259
+#: ../../application/controllers/admin/boards.php:259
 msgid ""
 "Notice: due to its size, you will have to remove the image folder manually. "
 "The folder will have the \"removed_\" prefix."
 msgstr "Nota: devido ao seu tamanho, terá que remover a pasta das imagens manualmente. A pasta terá o prefixo \"removed_\"."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:271
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:19
+#: ../../application/controllers/admin/boards.php:271
+#: ../../application/controllers/admin/preferences.php:19
+#: ../../application/controllers/admin/system.php:54
+#: ../../application/controllers/admin/system.php:101
 msgid "Preferences"
 msgstr "Preferências"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:281
+#: ../../application/controllers/admin/boards.php:281
 msgid "Boards directory"
 msgstr "Pasta das boards"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:283
+#: ../../application/controllers/admin/boards.php:283
 msgid ""
 "Overrides the default path to the boards directory (Example: "
 "/var/www/foolfuuka/boards)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:288
+#: ../../application/controllers/admin/boards.php:288
 msgid "Boards URL"
 msgstr "URL das boards"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:290
+#: ../../application/controllers/admin/boards.php:290
 msgid ""
 "Overrides the default url to the boards folder (Example: "
 "http://foolfuuka.site.com/there/boards)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:295
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:302
+#: ../../application/controllers/admin/boards.php:295
+#: ../../application/controllers/admin/boards.php:302
 msgid "Boards database"
 msgstr "Base de dados das boards"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:297
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:304
+#: ../../application/controllers/admin/boards.php:297
+#: ../../application/controllers/admin/boards.php:304
 msgid ""
 "Overrides the default database. You should point it to your Asagi database "
 "if you have a separate one."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:309
+#: ../../application/controllers/admin/boards.php:309
 msgid "Media load balancers"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:311
+#: ../../application/controllers/admin/boards.php:311
 msgid "Facultative. One per line the URLs where your images are reachable."
 msgstr "omitido"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:317
+#: ../../application/controllers/admin/boards.php:317
 msgid "HTTPS media load balancers"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:319
+#: ../../application/controllers/admin/boards.php:319
 msgid ""
 "Facultative. One per line the URLs where your images are reachable. This is "
 "used when the site is loaded via HTTPS protocol, and if empty it will fall "
 "back to HTTP media load balancers."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:329
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:541
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:168
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:238
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:311
+#: ../../application/controllers/admin/boards.php:329
+#: ../../application/controllers/admin/boards.php:541
+#: ../../application/controllers/admin/preferences.php:173
+#: ../../application/controllers/admin/preferences.php:243
+#: ../../application/controllers/admin/preferences.php:316
+#: ../../application/controllers/admin/system.php:93
 msgid "Submit"
 msgstr "Submeter"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:355
+#: ../../application/controllers/admin/boards.php:355
 msgid "Downloaded and installed the latest version of Asagi."
 msgstr "Transferida e instalada a versão mais recente de Asagi."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:361
+#: ../../application/controllers/admin/boards.php:361
 msgid "Asagi has been removed."
 msgstr "Asagi foi removida."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:367
+#: ../../application/controllers/admin/boards.php:367
 msgid "Settings updated."
 msgstr "Configurações actualizadas."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:373
+#: ../../application/controllers/admin/boards.php:373
 msgid "Ran Asagi."
 msgstr "Asagi activada."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:379
+#: ../../application/controllers/admin/boards.php:379
 msgid "Stopped Asagi."
 msgstr "Asagi parada."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:385
+#: ../../application/controllers/admin/boards.php:385
 msgid "Enabled Asagi autorun."
 msgstr "Início automático de Asagi activado."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:391
+#: ../../application/controllers/admin/boards.php:391
 msgid "Disabled Asagi autorun."
 msgstr "Início automático de Asagi desactivado."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:396
+#: ../../application/controllers/admin/boards.php:396
 msgid "Asagi"
 msgstr "Asagi"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:404
+#: ../../application/controllers/admin/boards.php:404
 msgid "Asagi installation"
 msgstr "Asagi: Instalação"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:427
+#: ../../application/controllers/admin/boards.php:427
 msgid "Activate Sphinx globally (enables crossboard search)"
 msgstr "Activar Sphinx globalmente (activa pesquisa entre boards)"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:435
+#: ../../application/controllers/admin/boards.php:435
 msgid "Set the address and port to your Sphinx instance."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:444
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:454
+#: ../../application/controllers/admin/boards.php:444
+#: ../../application/controllers/admin/boards.php:454
 msgid "The Sphinx listening address and port aren't formatted correctly."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:462
+#: ../../application/controllers/admin/boards.php:462
 msgid "The port specified isn't a valid number."
 msgstr "O porto especificado não é válida."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:475
+#: ../../application/controllers/admin/boards.php:475
 msgid ""
 "The Sphinx server couldn't be contacted at the specified address and port."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:489
+#: ../../application/controllers/admin/boards.php:489
 msgid "Set the address and port to your MySQL instance."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:498
+#: ../../application/controllers/admin/boards.php:498
 msgid "Set the working directory to your Sphinx working directory."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:507
+#: ../../application/controllers/admin/boards.php:507
 msgid "Couldn't find the Sphinx working directory."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:520
+#: ../../application/controllers/admin/boards.php:520
 msgid "Set the minimum word length indexed by Sphinx."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/boards.php:531
+#: ../../application/controllers/admin/boards.php:531
 msgid "Set the memory limit for the Sphinx instance in MegaBytes."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/database.php:20
+#: ../../application/controllers/admin/database.php:20
 msgid "Database"
 msgstr "Base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/database.php:48
+#: ../../application/controllers/admin/database.php:48
+#: ../../application/controllers/admin/system.php:136
 msgid "Upgrade"
 msgstr "Actualizar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/database.php:74
+#: ../../application/controllers/admin/database.php:74
 msgid "Successfully updated the database."
 msgstr "Base de dados actualizada com sucesso."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/members.php:14
+#: ../../application/controllers/admin/members.php:14
 msgid "Members"
 msgstr "Membros"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/members.php:40
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/plugins_admin.php:25
+#: ../../application/controllers/admin/members.php:40
+#: ../../application/controllers/admin/plugins_admin.php:25
 msgid "Manage"
 msgstr "Gerir"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/members.php:69
+#: ../../application/controllers/admin/members.php:69
 msgid "User profile saved!"
 msgstr "Perfil de utilizador gravado!"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/members.php:80
+#: ../../application/controllers/admin/members.php:80
 msgid "Editing user:"
 msgstr "A editar utilizador:"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/plugins_admin.php:17
+#: ../../application/controllers/admin/plugins_admin.php:17
 msgid "Plugins"
 msgstr "Plugins"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/plugins_admin.php:49
+#: ../../application/controllers/admin/plugins_admin.php:49
 msgid "The plugin couldn't be enabled."
 msgstr "O plugin não pôde ser activado."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/plugins_admin.php:54
+#: ../../application/controllers/admin/plugins_admin.php:54
 #, php-format
 msgid "The %s plugin is now enabled."
 msgstr "O plugin %s foi activado."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/plugins_admin.php:63
+#: ../../application/controllers/admin/plugins_admin.php:63
 msgid "The plugin couldn't be disabled."
 msgstr "O plugin não pôde ser desactivado."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/plugins_admin.php:68
+#: ../../application/controllers/admin/plugins_admin.php:68
 #, php-format
 msgid "The %s plugin is now disabled."
 msgstr "O plugin %s foi desactivado."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/plugins_admin.php:79
+#: ../../application/controllers/admin/plugins_admin.php:79
 #, php-format
 msgid "The %splugin couldn't be removed."
 msgstr "O plugin %s não pôde ser removido."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/plugins_admin.php:84
+#: ../../application/controllers/admin/plugins_admin.php:84
 #, php-format
 msgid "The %s plugin was removed."
 msgstr "O plugin %s foi removido."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/posts.php:18
+#: ../../application/controllers/admin/posts.php:18
 msgid "Posts"
 msgstr "Posts"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/posts.php:35
+#: ../../application/controllers/admin/posts.php:35
 msgid "Reports"
 msgstr "Denúncias"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/posts.php:64
+#: ../../application/controllers/admin/posts.php:64
 msgid "Access to reports outside the administrative panel is denied."
 msgstr "Acesso negado às denúncias fora do painel de administração."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/posts.php:154
+#: ../../application/controllers/admin/posts.php:154
 msgid "Failed to remove the report from the database."
 msgstr "Falha ao remover a denúncia da base de dados."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/posts.php:159
+#: ../../application/controllers/admin/posts.php:159
 msgid "The report has been removed from the database."
 msgstr "A denúncia foi removida da base de dados."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:39
+#: ../../application/controllers/admin/preferences.php:39
 msgid "Theme"
 msgstr "Tema"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:55
+#: ../../application/controllers/admin/preferences.php:55
 msgid "Sets the title of your site."
 msgstr "O título do site."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:66
+#: ../../application/controllers/admin/preferences.php:66
 msgid "Sets the title displayed in the index page."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:75
+#: ../../application/controllers/admin/preferences.php:71
+msgid "Default language"
+msgstr ""
+
+#: ../../application/controllers/admin/preferences.php:72
+msgid "The language the users will see as they reach your site."
+msgstr ""
+
+#: ../../application/controllers/admin/preferences.php:91
+#, php-format
+msgid "Enable %s theme"
+msgstr ""
+
+#: ../../application/controllers/admin/preferences.php:101
 msgid "Active themes"
 msgstr "Temas activos"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:76
+#: ../../application/controllers/admin/preferences.php:102
 msgid ""
 "Choose the themes to make available to the users. Admins are able to access "
 "any of them even if disabled."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:81
-msgid "Enable Default theme"
-msgstr "Activar tema Default"
-
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:89
-msgid "Enable Fuuka theme"
-msgstr "Activar tema Fuuka"
-
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:97
-msgid "Enable Yotsuba theme"
-msgstr "Activar tema Yotsuba"
-
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:107
+#: ../../application/controllers/admin/preferences.php:115
 msgid "Default theme"
 msgstr "Tema predefinido"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:108
+#: ../../application/controllers/admin/preferences.php:116
 msgid "The theme the users will see as they reach your site."
 msgstr "O tema que os utilizadores vêem ao chegar ao site."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:119
+#: ../../application/controllers/admin/preferences.php:124
 msgid "Google Analytics code"
 msgstr "Código do Google Analytics"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:122
+#: ../../application/controllers/admin/preferences.php:127
 msgid "Insert your Google Analytics code to get statistics."
 msgstr "Inserir o código do Google Analytics para obter estatísticas."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:132
+#: ../../application/controllers/admin/preferences.php:137
 msgid "Header Text (\"notices\")"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:134
+#: ../../application/controllers/admin/preferences.php:139
 msgid "Inserts the text above in the header, below the nagivation links."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:140
+#: ../../application/controllers/admin/preferences.php:145
 msgid "Header Code"
 msgstr "Código de cabeçalho"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:142
+#: ../../application/controllers/admin/preferences.php:147
 msgid "This will insert the HTML code inside the &lt;HEAD&gt;."
 msgstr "Isto vai inserir o código HTML dentro do &amp;lt;HEAD&amp;gt;."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:148
+#: ../../application/controllers/admin/preferences.php:153
 msgid "Footer Text"
 msgstr "Texto de rodapé"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:150
+#: ../../application/controllers/admin/preferences.php:155
 msgid "Credits in the footer and similar."
 msgstr "Créditos e semelhantes no rodapé."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:156
+#: ../../application/controllers/admin/preferences.php:161
 msgid "Footer Code"
 msgstr "Código de rodapé"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:158
+#: ../../application/controllers/admin/preferences.php:163
 msgid "This will insert the HTML code above after the &lt;BODY&gt;."
 msgstr "Isto irá inserir o código HTML por cima do &lt;BODY&gt;."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:194
+#: ../../application/controllers/admin/preferences.php:199
 msgid "Advertising"
 msgstr "Publicidade"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:204
+#: ../../application/controllers/admin/preferences.php:209
 msgid "Top banner"
 msgstr "Banner de topo"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:205
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:220
+#: ../../application/controllers/admin/preferences.php:210
+#: ../../application/controllers/admin/preferences.php:225
 msgid "Insert the HTML code provided by your advertiser."
 msgstr "Insira o código HTML dado pelo anunciante."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:214
+#: ../../application/controllers/admin/preferences.php:219
 msgid "Enable top banner"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:219
+#: ../../application/controllers/admin/preferences.php:224
 msgid "Bottom banner"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:229
+#: ../../application/controllers/admin/preferences.php:234
 msgid "Enable bottom banner"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:259
+#: ../../application/controllers/admin/preferences.php:264
 msgid "Registration"
 msgstr "Registo"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:270
+#: ../../application/controllers/admin/preferences.php:275
 msgid "Disable New User Registrations"
 msgstr "Desactivar o registo de novos utilizadores"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:275
+#: ../../application/controllers/admin/preferences.php:280
 msgid "Disable Email Activation"
 msgstr "Desactivar a activação por email"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:284
+#: ../../application/controllers/admin/preferences.php:289
 msgid ""
 "In order to use reCAPTCHA&trade; you need to sign up for the service at <a "
 "href=\"http://www.google.com/recaptcha\">reCAPTCHA&trade;</a>, which will "
 "provide you with a public and a private key."
 msgstr "Para que possa usar o serviço reCAPTCHA&trade;, tem de se registar em <a href=\"http://www.google.com/recaptcha\">reCAPTCHA&trade;</a>, que lhe irá fornecer uma chave pública e outra privada."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:289
+#: ../../application/controllers/admin/preferences.php:294
 msgid "reCaptcha&trade; Public Key"
 msgstr "Chave pública reCaptcha&trade;"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:291
+#: ../../application/controllers/admin/preferences.php:296
 msgid "Insert the public key provided by reCAPTCHA&trade;."
 msgstr "Insira a chave pública (public key) fornecida pelo reCAPTCHA&trade;."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:298
+#: ../../application/controllers/admin/preferences.php:303
 msgid "reCaptcha&trade; Secret Key"
 msgstr "Chave privada reCaptcha&trade;"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/preferences.php:300
+#: ../../application/controllers/admin/preferences.php:305
 msgid "Insert the private key provided by reCAPTCHA&trade;."
 msgstr "Insira a chave privada fornecida pelo reCAPTCHA&trade;."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:22
+#: ../../application/controllers/admin/system.php:22
 msgid "System"
 msgstr "Sistema"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:40
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:44
+#: ../../application/controllers/admin/system.php:40
+#: ../../application/controllers/admin/system.php:44
 msgid "Information"
 msgstr "Informação"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:60
+#: ../../application/controllers/admin/system.php:61
 msgid "Found and Working"
 msgstr "Encontrado e OK"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:66
+#: ../../application/controllers/admin/system.php:67
 msgid "Not Available"
 msgstr "Não disponível"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:66
+#: ../../application/controllers/admin/system.php:67
 msgid ""
 "You must have Safe Mode turned off and the exec() function enabled to allow "
 "ImageMagick to process your images. Please check the information panel for "
 "more details."
 msgstr "Deve ter o Safe Mode desligado e a função exec() activada para permitir o processamento de imagens pelo ImageMagick. Por favor verifique o painel de informações para mais detalhes."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:66
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:69
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:73
+#: ../../application/controllers/admin/system.php:67
+#: ../../application/controllers/admin/system.php:69
+#: ../../application/controllers/admin/system.php:72
 msgid "Disabled Functions"
 msgstr "Funcionalidades desactivadas"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:69
+#: ../../application/controllers/admin/system.php:69
 msgid "Not Found"
 msgstr "Não encontrado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:69
+#: ../../application/controllers/admin/system.php:69
 msgid ""
 "You must provide the correct path to the \"convert\" binary on your system. "
 "This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) "
 "or the installation directory (Windows)."
 msgstr "Deve fornecer o caminho correcto para o executável \"convert\" no seu sistema. Está normalmente localizado em /usr/bin (Linux), /opt/local/bin (Mac OS X) ou na sua pasta de instalação (Windows)."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:72
+#: ../../application/controllers/admin/system.php:71
 msgid "Not Working"
 msgstr "Não funcional"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:72
+#: ../../application/controllers/admin/system.php:71
 #, php-format
 msgid ""
 "There has been an error encountered when testing your ImageMagick "
@@ -1020,626 +1025,628 @@ msgid ""
 "command line and type: %s"
 msgstr "Foi encontrado um erro no teste de instalação do ImageMagick. Para verificar manualmente por erros, aceda ao servidor via shell ou linha de comando e digite: %s"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:83
+#: ../../application/controllers/admin/system.php:81
 msgid "Path to ImageMagick"
 msgstr "Caminho para o ImageMagick"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:86
+#: ../../application/controllers/admin/system.php:84
 msgid "The location of your ImageMagick \"convert\" executable"
 msgstr "Localização do executável \"convert\" do ImageMagick"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:92
-msgid "CDN subdomains"
-msgstr ""
-
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:94
-msgid ""
-"Insert an alternative base URL to {{FOOL_NAME}} to separate the system "
-"functions from the boards."
-msgstr "Insira um URL base alternativo a {{FOOL_NAME}} para separar as funções de sistema das boards."
-
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:136
+#: ../../application/controllers/admin/system.php:126
 msgid "Upgrade failed: check file permissions."
 msgstr "Falha na actualização: verifique as permissões dos ficheiros."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/admin/system.php:140
+#: ../../application/controllers/admin/system.php:130
 msgid "Upgrade successful"
 msgstr "Actualização feita com sucesso"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:55
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:124
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:330
+#: ../../application/controllers/api/chan_api.php:31
+#: ../../application/controllers/api/chan_api.php:100
+#: ../../application/controllers/api/chan_api.php:306
 msgid "Faulty page value"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:59
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:128
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:334
+#: ../../application/controllers/api/chan_api.php:35
+#: ../../application/controllers/api/chan_api.php:104
+#: ../../application/controllers/api/chan_api.php:310
 msgid "Can't go over page 500"
 msgstr "A denúncia foi removida da base de dados."
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:76
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:145
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:351
+#: ../../application/controllers/api/chan_api.php:52
+#: ../../application/controllers/api/chan_api.php:121
+#: ../../application/controllers/api/chan_api.php:327
 msgid "Faulty per_page value"
 msgstr "Tema"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:80
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:149
+#: ../../application/controllers/api/chan_api.php:56
+#: ../../application/controllers/api/chan_api.php:125
 msgid "Can't return more than 50 threads"
 msgstr "Não é possível retornar mais que 50 tópicos"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:104
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:174
+#: ../../application/controllers/api/chan_api.php:80
+#: ../../application/controllers/api/chan_api.php:150
 msgid "Threads could not be found"
 msgstr "Tópicos não encontrados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:192
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:252
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:286
+#: ../../application/controllers/api/chan_api.php:168
+#: ../../application/controllers/api/chan_api.php:228
+#: ../../application/controllers/api/chan_api.php:262
 msgid "You have to select a thread number"
 msgstr "Tem de seleccionar um número de tópico"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:198
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:258
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:292
+#: ../../application/controllers/api/chan_api.php:174
+#: ../../application/controllers/api/chan_api.php:234
+#: ../../application/controllers/api/chan_api.php:268
 msgid "Faulty thread number"
 msgstr "Número de tópico inválido"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:210
+#: ../../application/controllers/api/chan_api.php:186
 msgid "Your latest_doc_id is malformed"
 msgstr "O latest_doc_id está malformado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:241
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:317
+#: ../../application/controllers/api/chan_api.php:217
+#: ../../application/controllers/api/chan_api.php:293
 msgid "Thread could not be found"
 msgstr "Tópico não encontrado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:268
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:272
+#: ../../application/controllers/api/chan_api.php:244
+#: ../../application/controllers/api/chan_api.php:248
 msgid "Post could not be found"
 msgstr "Post não encontrado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:355
+#: ../../application/controllers/api/chan_api.php:331
 msgid "Can't return more than 3000 ghost posts"
 msgstr "Impossível retornar mais do que 3000 posts fantasmas"
 
-#: /Users/woxxy/github/FoOlFuuka/application/controllers/api/chan_api.php:378
+#: ../../application/controllers/api/chan_api.php:354
 msgid "Ghost posts could not be found"
 msgstr "Post fantasma não encontrado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/helpers/options_helper.php:169
-#: /Users/woxxy/github/FoOlFuuka/application/helpers/options_helper.php:176
+#: ../../application/helpers/options_helper.php:180
+#: ../../application/helpers/options_helper.php:187
 msgid "The system is under maintenance. Be back later."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:87
+#: ../../application/libraries/Admin_Controller.php:87
 msgid "Add board"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:88
+#: ../../application/libraries/Admin_Controller.php:88
 msgid "Sphinx Search"
 msgstr "Sphinx Search"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:89
+#: ../../application/libraries/Admin_Controller.php:89
 msgid "Asagi Fetcher"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:104
+#: ../../application/libraries/Admin_Controller.php:104
 msgid "Account"
 msgstr "Conta"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:108
+#: ../../application/libraries/Admin_Controller.php:108
 msgid "Change Email"
 msgstr "Mudar email"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:109
+#: ../../application/libraries/Admin_Controller.php:109
 msgid "Change Password"
 msgstr "Mudar senha"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:120
+#: ../../application/libraries/Admin_Controller.php:120
 msgid "Member List"
 msgstr "Lista de membros"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:143
+#: ../../application/libraries/Admin_Controller.php:143
 msgid "New"
 msgstr "Novo"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Admin_Controller.php:162
+#: ../../application/libraries/Admin_Controller.php:162
 msgid "Bug tracker"
 msgstr "Submeter bug"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/API_Controller.php:38
+#: ../../application/libraries/API_Controller.php:38
 msgid "You didn't select a board"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/API_Controller.php:46
+#: ../../application/libraries/API_Controller.php:46
 msgid "The board you selected doesn't exist"
 msgstr "A board seleccionada não existe."
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/MY_Controller.php:163
+#: ../../application/libraries/MY_Controller.php:163
 msgid "Submitting"
 msgstr "A submeter"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/MY_Controller.php:164
+#: ../../application/libraries/MY_Controller.php:164
 msgid "This thread is being displayed in real time."
 msgstr "Este tópico está a ser apresentado em tempo real."
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/MY_Controller.php:165
+#: ../../application/libraries/MY_Controller.php:165
 msgid "Update now"
 msgstr "Actualizar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/MY_Controller.php:178
+#: ../../application/libraries/MY_Controller.php:178
 msgid "You're not allowed to perform this action"
 msgstr "Não está autorizado a efectuar esta acção"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/MY_Controller.php:184
+#: ../../application/libraries/MY_Controller.php:184
 msgid "Missing arguments"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/MY_Controller.php:194
+#: ../../application/libraries/MY_Controller.php:194
 msgid "Invalid action"
 msgstr "Acção inválida"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/MY_Controller.php:206
+#: ../../application/libraries/MY_Controller.php:206
 msgid "Post not found"
 msgstr "Post não encontrado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/libraries/Public_Controller.php:81
+#: ../../application/libraries/Public_Controller.php:49
 msgid "No themes enabled!"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/asagi_model.php:88
+#: ../../application/models/asagi_model.php:88
 msgid "The Asagi ZIP file couldn't be downloaded."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:639
+#: ../../application/models/post_model.php:548
+msgid "The file you submitted doesn't seem to be an image."
+msgstr ""
+
+#: ../../application/models/post_model.php:554
+msgid "The image you submitted is too small."
+msgstr ""
+
+#: ../../application/models/post_model.php:590
 msgid ""
 "This image has already been posted once. This board doesn't allow image "
 "reposting"
 msgstr "Esta imagem já foi postada. Esta board não permite reposts de imagens."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:653
+#: ../../application/models/post_model.php:604
 #, php-format
 msgid "You must wait up to %s hours to repost this image."
 msgstr "Tem de esperar até %s horas para repostar esta imagem."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:1297
+#: ../../application/models/post_model.php:1210
+msgid "Sorry, global search requires SphinxSearch."
+msgstr ""
+
+#: ../../application/models/post_model.php:1220
 msgid ""
 "The search backend is currently not online. Try later or contact us in case "
 "it's offline for too long."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2467
+#: ../../application/models/post_model.php:2396
 msgid ""
 "Your IP has been identified as a spam proxy. Please try a different IP or "
 "remove the proxy to post."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2494
+#: ../../application/models/post_model.php:2423
 msgid "You are banned from posting"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2515
+#: ../../application/models/post_model.php:2444
 msgid "You're posting again the same comment as the last time!"
 msgstr "Está a submeter o mesmo comentário do que da última vez!"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2597
+#: ../../application/models/post_model.php:2528
 msgid "Your comment has contains words that aren't allowed."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2634
+#: ../../application/models/post_model.php:2565
 msgid "An image is required for creating threads."
 msgstr "É necessária uma imagem para criar tópicos."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2643
+#: ../../application/models/post_model.php:2574
 msgid "The filetype you are attempting to upload is not allowed."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2649
+#: ../../application/models/post_model.php:2580
 msgid ""
 "The image you are attempting to upload is larger than the permitted size."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2665
+#: ../../application/models/post_model.php:2596
 msgid "Sorry, this thread has reached its maximum amount of image replies."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2676
+#: ../../application/models/post_model.php:2607
 msgid "Your image upload is not a valid image file."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2693
+#: ../../application/models/post_model.php:2624
 msgid "Your image upload has been flagged as inappropriate."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2700
+#: ../../application/models/post_model.php:2631
 msgid "Your post contains contents that is marked as spam."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2706
+#: ../../application/models/post_model.php:2637
 msgid "Your post was too long."
 msgstr "Post demasiado longo."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2712
+#: ../../application/models/post_model.php:2643
 msgid "Your post had too many lines."
 msgstr "O post tinha demasiadas linhas."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2750
+#: ../../application/models/post_model.php:2681
 msgid "This post is already being processed..."
 msgstr "Este post já está a ser processado..."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2832
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2950
+#: ../../application/models/post_model.php:2759
+#: ../../application/models/post_model.php:2877
 msgid "You already posted this."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:2853
+#: ../../application/models/post_model.php:2780
 msgid "Your image was invalid."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3006
+#: ../../application/models/post_model.php:2933
 msgid "There's no such a post to be deleted."
 msgstr "O post a ser apagado não existe."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3021
+#: ../../application/models/post_model.php:2948
 msgid "The password you inserted did not match the post's deletion password."
 msgstr "A senha inserida não corresponde à senha de eliminação do post."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3028
+#: ../../application/models/post_model.php:2955
 msgid "Unable to delete thumbnail for post."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3054
+#: ../../application/models/post_model.php:2981
 msgid "Unable to delete post."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/post_model.php:3078
+#: ../../application/models/post_model.php:3005
 msgid "Unable to delete thumbnail for thread replies."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/preferences_model.php:81
+#: ../../application/models/preferences_model.php:81
 msgid "Preferences updated."
 msgstr "Preferências actualizadas."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:26
+#: ../../application/models/profile_model.php:26
 msgid "User ID"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:27
+#: ../../application/models/profile_model.php:27
 msgid "The ID of the user"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:39
+#: ../../application/models/profile_model.php:39
 msgid "Non-admin user can't to change the data of another user."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:50
+#: ../../application/models/profile_model.php:50
 msgid "Couldn't find the user with the submitted ID."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:67
+#: ../../application/models/profile_model.php:67
 msgid "Group"
 msgstr "Grupo"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:68
+#: ../../application/models/profile_model.php:68
 msgid "Choose the permission level of the member"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:70
+#: ../../application/models/profile_model.php:70
 msgid "Administrator"
 msgstr "Administrador"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:71
+#: ../../application/models/profile_model.php:71
 msgid "Moderator"
 msgstr "Moderador"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:72
+#: ../../application/models/profile_model.php:72
 msgid "Member"
 msgstr "Membro"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:81
+#: ../../application/models/profile_model.php:81
 msgid "Display Name"
 msgstr "Nome de apresentação"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:82
+#: ../../application/models/profile_model.php:82
 msgid "A name that is publicly shown beside the username"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:91
+#: ../../application/models/profile_model.php:91
 msgid "Twitter"
 msgstr "Twitter"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:92
+#: ../../application/models/profile_model.php:92
 msgid "The twitter nickname"
 msgstr "Nick do Twitter"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:101
+#: ../../application/models/profile_model.php:101
 msgid "Bio"
 msgstr "Bio"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/profile_model.php:102
+#: ../../application/models/profile_model.php:102
 msgid "A short description of the user"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:47
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:69
+#: ../../application/models/radix_model.php:47
+#: ../../application/models/report_model.php:69
 msgid "Couldn't find the board with the submitted ID."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:58
+#: ../../application/models/radix_model.php:58
 msgid "Name"
 msgstr "Nome"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:59
+#: ../../application/models/radix_model.php:59
 msgid "Insert the name of the board normally shown as title."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:60
+#: ../../application/models/radix_model.php:60
 msgid "Required"
 msgstr "Obrigatório"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:67
+#: ../../application/models/radix_model.php:67
 msgid "Shortname"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:68
+#: ../../application/models/radix_model.php:68
 msgid "Insert the shorter name of the board. Reserved: \"api\", \"cli\", \"admin\"."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:69
+#: ../../application/models/radix_model.php:69
 msgid "Req."
 msgstr "Req."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:84
+#: ../../application/models/radix_model.php:84
 msgid ""
 "You can't use the protected shortnames unless you activate the system "
 "subdomain feature. The protected shortnames are:"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:110
+#: ../../application/models/radix_model.php:110
 msgid "The shortname is already used for another board."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:119
+#: ../../application/models/radix_model.php:119
 msgid "General rules"
 msgstr "Regras gerais"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:120
+#: ../../application/models/radix_model.php:120
 msgid ""
 "Full board rules displayed in a separate page, in <a "
 "href=\"http://daringfireball.net/projects/markdown/basics\" "
 "target=\"_blank\">MarkDown</a> syntax. Will not display if left empty."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:122
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:134
+#: ../../application/models/radix_model.php:122
+#: ../../application/models/radix_model.php:134
 msgid "MarkDown goes here"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:131
+#: ../../application/models/radix_model.php:131
 msgid "Posting rules"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:132
+#: ../../application/models/radix_model.php:132
 msgid ""
 "Posting rules displayed in the posting area, in <a "
 "href=\"http://daringfireball.net/projects/markdown/basics\" "
 "target=\"_blank\">MarkDown</a> syntax. Will not display if left empty."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:142
+#: ../../application/models/radix_model.php:142
 msgid "Maximum number of threads to display in the index pages"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:151
+#: ../../application/models/radix_model.php:151
 msgid "Is this a 4chan archiving board?"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:155
+#: ../../application/models/radix_model.php:155
 msgid "Options for archive boards"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:161
+#: ../../application/models/radix_model.php:161
 msgid "URL to the 4chan board (facultative)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:170
+#: ../../application/models/radix_model.php:170
 msgid "URL to the board thumbnails (facultative)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:179
+#: ../../application/models/radix_model.php:179
 msgid "URL to the board images (facultative)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:188
+#: ../../application/models/radix_model.php:188
 msgid "Image fetching workers"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:189
+#: ../../application/models/radix_model.php:189
 msgid ""
 "The number of workers that will fetch full images. Set to zero not to fetch "
 "them."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:199
+#: ../../application/models/radix_model.php:199
 msgid "Thumbnail fetching workers"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:200
+#: ../../application/models/radix_model.php:200
 msgid "The number of workers that will fetch thumbnails"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:210
+#: ../../application/models/radix_model.php:210
 msgid "Thread fetching workers"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:211
+#: ../../application/models/radix_model.php:211
 msgid "The number of workers that fetch new threads"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:222
+#: ../../application/models/radix_model.php:222
 msgid "Minutes to refresh the thread"
 msgstr "Minutos para actualizar o tópico"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:230
+#: ../../application/models/radix_model.php:230
 msgid "Thread refresh rate"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:231
-msgid "Array of refresh rates  in seconds per page in JSON format"
+#: ../../application/models/radix_model.php:231
+msgid "Array of refresh rates in seconds per page in JSON format"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:244
+#: ../../application/models/radix_model.php:244
 msgid "The JSON inputted is not valid."
 msgstr "O JSON inserido não é válido."
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:253
+#: ../../application/models/radix_model.php:253
 msgid "Options for normal boards"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:258
+#: ../../application/models/radix_model.php:258
 msgid "Opening post thumbnail maximum width after resizing"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:267
+#: ../../application/models/radix_model.php:267
 msgid "Opening post thumbnail maximum height after resizing"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:276
+#: ../../application/models/radix_model.php:276
 msgid "Reply thumbnail maximum width after resizing"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:285
+#: ../../application/models/radix_model.php:285
 msgid "Reply thumbnail maximum height after resizing"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:294
+#: ../../application/models/radix_model.php:294
 msgid "Full image maximum size in kilobytes"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:303
+#: ../../application/models/radix_model.php:303
 msgid "Full image maximum width in pixels"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:312
+#: ../../application/models/radix_model.php:312
 msgid "Full image maximum height in pixels"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:321
+#: ../../application/models/radix_model.php:321
 msgid "The maximum amount of posts before a thread \"dies\""
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:330
+#: ../../application/models/radix_model.php:330
 msgid ""
 "The maximum amount of images in replies before posting more is prohibited"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:339
+#: ../../application/models/radix_model.php:339
 msgid ""
 "The minimum time in hours to repost the same image (0 means no limit, -1 "
 "means never allowing a repost)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:350
+#: ../../application/models/radix_model.php:350
 msgid "Show the EXIF data (EXIF data is saved in the database regardless)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:357
+#: ../../application/models/radix_model.php:357
 msgid ""
 "Enable poster hashes, an IP-based code to temporarily distinguish Anonymous "
 "users"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:363
+#: ../../application/models/radix_model.php:363
 msgid "Don't allow ghost posting (disallows infinite replying)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:369
+#: ../../application/models/radix_model.php:369
 msgid "Hide the thumbnails?"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:375
+#: ../../application/models/radix_model.php:375
 msgid "Hide the thumbnails for 24 hours? (for moderation purposes)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:380
+#: ../../application/models/radix_model.php:380
 msgid "Use SphinxSearch as search engine?"
 msgstr "Utilizar Sphinx Search como motor de busca?"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:385
+#: ../../application/models/radix_model.php:385
 msgid ""
 "Hide the board from public access? (only admins and mods will be able to "
 "browse it)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:1330
+#: ../../application/models/radix_model.php:1330
 msgid ""
 "Your MySQL installation doesn't support multibyte characters. Update MySQL "
 "to version 5.5 or higher."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:1347
+#: ../../application/models/radix_model.php:1347
 #, php-format
 msgid "Converting %s to utfmb4"
 msgstr "A converter %s para utf8mb4"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/radix_model.php:1352
+#: ../../application/models/radix_model.php:1352
 msgid "The tables have all been converted to utf8mb4"
 msgstr "Todas as tabelas foram convertidas para utf8mb4"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:24
+#: ../../application/models/report_model.php:24
 msgid "Board shortname"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:39
+#: ../../application/models/report_model.php:39
 msgid "Couldn't find the board with the submitted shortname."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:46
+#: ../../application/models/report_model.php:46
 msgid "Board ID"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:55
+#: ../../application/models/report_model.php:55
 msgid "You didn't send a board ID."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:81
+#: ../../application/models/report_model.php:81
 msgid "Post number"
 msgstr "Número post"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:93
+#: ../../application/models/report_model.php:93
 msgid "Couldn't find the post with the submitted post number."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:103
+#: ../../application/models/report_model.php:103
 msgid "Post ID"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:112
+#: ../../application/models/report_model.php:112
 msgid "You didn't send a post ID."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:125
+#: ../../application/models/report_model.php:125
 msgid "Couldn't find the post with the submitted doc_id."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/report_model.php:139
+#: ../../application/models/report_model.php:139
 msgid "Reason"
 msgstr "Razão"
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/upgrade2_model.php:74
+#: ../../application/models/upgrade2_model.php:74
 msgid ""
 "We're currently upgrading {{FOOL_NAME}}. This process usually takes few "
 "seconds or a couple minutes, check back soon!"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/upgrade_model.php:36
+#: ../../application/models/upgrade_model.php:36
 msgid ""
 "FoOlPod server could not be contacted: impossible to check for new versions."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/upgrade_model.php:187
+#: ../../application/models/upgrade_model.php:189
 msgid ""
 "Can't get the update file from FoOlPod. It might be a momentary problem, or "
 "a problem with your server security configuration. Browse <a "
@@ -1647,221 +1654,216 @@ msgid ""
 "to check if it's a known issue."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/upgrade_model.php:251
+#: ../../application/models/upgrade_model.php:253
 #, php-format
 msgid ""
 "If you can't do the above, you can follow the manual upgrade instructons at "
 "%sthis link%s."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/models/vote_model.php:23
-msgid "Post not found."
-msgstr "Post não encontrado."
-
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/confirm.php:12
+#: ../../application/views/admin/confirm.php:12
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/confirm.php:15
+#: ../../application/views/admin/confirm.php:15
 msgid "Go back"
 msgstr "Voltar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/default.php:7
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/navbar.php:10
+#: ../../application/views/admin/default.php:7
+#: ../../application/views/admin/navbar.php:10
 msgid "Control Panel"
 msgstr "Painel de controlo"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/default.php:73
+#: ../../application/views/admin/default.php:73
 msgid "New upgrade available:"
 msgstr "Nova actualização disponível:"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/navbar.php:34
+#: ../../application/views/admin/navbar.php:34
 msgid "Your Profile"
 msgstr "O seu perfil"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/navbar.php:39
+#: ../../application/views/admin/navbar.php:39
 msgid "Logout"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/change_email_form.php:19
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:61
+#: ../../application/views/admin/auth/change_email_form.php:19
 msgid "Password"
 msgstr "Senha"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/change_email_form.php:25
+#: ../../application/views/admin/auth/change_email_form.php:25
 msgid "New email address"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/change_email_form.php:34
+#: ../../application/views/admin/auth/change_email_form.php:34
 msgid "Send confirmation email"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/change_password_form.php:27
+#: ../../application/views/admin/auth/change_password_form.php:27
 msgid "Old Password"
 msgstr "Senha antiga"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/change_password_form.php:31
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/reset_password_form.php:18
+#: ../../application/views/admin/auth/change_password_form.php:31
+#: ../../application/views/admin/auth/reset_password_form.php:18
 msgid "New Password"
 msgstr "Nova senha"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/change_password_form.php:35
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/reset_password_form.php:22
+#: ../../application/views/admin/auth/change_password_form.php:35
+#: ../../application/views/admin/auth/reset_password_form.php:22
 msgid "Confirm New Password"
 msgstr "Confirmar nova senha"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/forgot_password_form.php:13
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:13
+#: ../../application/views/admin/auth/forgot_password_form.php:13
+#: ../../application/views/admin/auth/login_form.php:13
 msgid "Email or username"
 msgstr "Email ou username"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/forgot_password_form.php:36
+#: ../../application/views/admin/auth/forgot_password_form.php:36
 msgid "Get a new password"
 msgstr "Obter nova senha"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/forgot_password_form.php:41
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:115
+#: ../../application/views/admin/auth/forgot_password_form.php:41
+#: ../../application/views/admin/auth/register_form.php:115
 msgid "Back to login"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:21
+#: ../../application/views/admin/auth/login_form.php:21
 msgid "Email"
 msgstr "Email"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:71
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:80
+#: ../../application/views/admin/auth/login_form.php:71
+#: ../../application/views/admin/auth/register_form.php:80
 msgid "Get another CAPTCHA"
 msgstr "Obter outra CAPTCHA"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:72
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:81
+#: ../../application/views/admin/auth/login_form.php:72
+#: ../../application/views/admin/auth/register_form.php:81
 msgid "Get an audio CAPTCHA"
 msgstr "Obter uma CAPTCHA áudio"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:73
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:82
+#: ../../application/views/admin/auth/login_form.php:73
+#: ../../application/views/admin/auth/register_form.php:82
 msgid "Get an image CAPTCHA"
 msgstr "Obter uma imagem CAPTCHA"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:76
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:85
+#: ../../application/views/admin/auth/login_form.php:76
+#: ../../application/views/admin/auth/register_form.php:85
 msgid "Enter the words above"
 msgstr "Insira as palavras acima"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:77
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:86
+#: ../../application/views/admin/auth/login_form.php:77
+#: ../../application/views/admin/auth/register_form.php:86
 msgid "Enter the numbers you hear"
 msgstr "Insira os números que ouve"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:92
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:101
+#: ../../application/views/admin/auth/login_form.php:92
+#: ../../application/views/admin/auth/register_form.php:101
 msgid "Enter the letters above"
 msgstr "Insira as letras acima"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/login_form.php:103
+#: ../../application/views/admin/auth/login_form.php:103
 msgid "Remember me"
 msgstr "Lembrar-me"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:12
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:21
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:29
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:37
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:43
+#: ../../application/views/admin/auth/register_form.php:12
+#: ../../application/views/admin/auth/register_form.php:21
+#: ../../application/views/admin/auth/register_form.php:29
+#: ../../application/views/admin/auth/register_form.php:37
+#: ../../application/views/admin/auth/register_form.php:43
 msgid "required"
 msgstr "obrigatório"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:48
+#: ../../application/views/admin/auth/register_form.php:48
 msgid "Username"
 msgstr "Username"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:55
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/send_again_form.php:13
+#: ../../application/views/admin/auth/register_form.php:55
+#: ../../application/views/admin/auth/send_again_form.php:13
 msgid "Email Address"
 msgstr "Endereço de email"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/register_form.php:67
+#: ../../application/views/admin/auth/register_form.php:67
 msgid "Confirm Password"
 msgstr "Confirmar senha"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/send_again_form.php:24
+#: ../../application/views/admin/auth/send_again_form.php:24
 msgid "Send"
 msgstr "Enviar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/send_again_form.php:29
+#: ../../application/views/admin/auth/send_again_form.php:29
 msgid "Back to login (you must be activated)"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/auth/unregister_form.php:21
+#: ../../application/views/admin/auth/unregister_form.php:21
 msgid "Delete account"
 msgstr "Apagar conta"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:9
+#: ../../application/views/admin/boards/asagi.php:9
 msgid "Run"
 msgstr "Correr"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:10
+#: ../../application/views/admin/boards/asagi.php:10
 msgid "Kill"
 msgstr "Terminar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:12
+#: ../../application/views/admin/boards/asagi.php:12
 msgid "Enable autorun"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:14
+#: ../../application/views/admin/boards/asagi.php:14
 msgid "Disable autorun"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:16
+#: ../../application/views/admin/boards/asagi.php:16
 msgid "Upgrade/Reinstall"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:17
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/plugins/manage.php:11
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/plugins/manage.php:32
+#: ../../application/views/admin/boards/asagi.php:17
+#: ../../application/views/admin/plugins/manage.php:11
+#: ../../application/views/admin/plugins/manage.php:32
 msgid "Remove"
 msgstr "Remover"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:22
+#: ../../application/views/admin/boards/asagi.php:22
 msgid "Running Asagi manually"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:23
+#: ../../application/views/admin/boards/asagi.php:23
 msgid "You can run it on your server by typing in your command line:"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:25
+#: ../../application/views/admin/boards/asagi.php:25
 msgid ""
 "But this would run it only once and would stop once you close the terminal. "
 "Use it to test if it's working fine."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:29
+#: ../../application/views/admin/boards/asagi.php:29
 msgid ""
 "If you're on Linux, to have Asagi running as daemon (without your terminal needing to be open), you can use GNU Screen that creates a virtual terminal that will stay alive even if you close the window. \n"
 "You can usually install this on Debian/Ubuntu by typing <code>apt-get install screen</code> in your terminal. \n"
 "You can then type the following string in your terminal to have Asagi running under GNU Screen:"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:35
+#: ../../application/views/admin/boards/asagi.php:35
 msgid ""
 "Then press CTRL+A and then CTRL+D to detach the screen. You can go back to "
 "it by writing:"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:38
+#: ../../application/views/admin/boards/asagi.php:38
 msgid "License"
 msgstr "Licença"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:39
+#: ../../application/views/admin/boards/asagi.php:39
 msgid ""
 "Asagi is released under the GNU General Public License, version 2, or later."
 msgstr "Asagi está disponível nos termos da GNU General Public License, versão 2, ou posterior."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi.php:39
+#: ../../application/views/admin/boards/asagi.php:39
 msgid "Click here to read the full license."
 msgstr "Clique aqui para ler a licença integral."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi_install.php:5
+#: ../../application/views/admin/boards/asagi_install.php:5
 msgid ""
 "\n"
 "Asagi is the Open Source (GPLv3) 4chan data fetcher coded by Eksopl. It can dump the threads, images and thumbnails from the Yotsuba boards in 4chan into your server for easy consumption.\n"
@@ -1873,38 +1875,38 @@ msgid ""
 "Requirements: Java installed on your server.\n"
 msgstr "\nAsagi é um fetcher de dados do 4chan Open Source (GPLv3) criado por Eksopl. É capaz de arquivar os tópicos, imagens e miniaturas das boards baseadas no software Yotsuba do 4chan para dentro do seu servidor, para consumo fácil.\n\nSe está interessado em usar FoOlFuuka como um arquivo do 4chan, é necessário transferir, configurar e correr Asagi.\n\nNós podemos fazer a transferência e a configuração. Após isso, tudo o que resta é correr-lo, dado que não podemos corrê-lo de forma fiável a partir da interface web. FoOlFuuka mantém as definições de Asagi actualizados por si, pelo que pode gerir os arquivos através da gestão de boards.\n\nRequisitos: Java instalado no servidor.\n"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/asagi_install.php:19
+#: ../../application/views/admin/boards/asagi_install.php:19
 msgid "Install"
 msgstr "Instalar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/manage.php:15
+#: ../../application/views/admin/boards/manage.php:15
 msgid "Board"
 msgstr "Board"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/manage.php:17
+#: ../../application/views/admin/boards/manage.php:17
 msgid "Quick functions"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/manage.php:34
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/manage.php:42
+#: ../../application/views/admin/boards/manage.php:34
+#: ../../application/views/admin/boards/manage.php:42
 msgid "Edit"
 msgstr "Editar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/boards/manage.php:48
+#: ../../application/views/admin/boards/manage.php:48
 msgid "Delete"
 msgstr "Remover"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/database/upgrade.php:6
+#: ../../application/views/admin/database/upgrade.php:6
 msgid "Update database"
 msgstr "Actualizar base de dados"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/database/upgrade.php:8
+#: ../../application/views/admin/database/upgrade.php:8
 msgid ""
 "There's a newer version of the database available. Just update it by "
 "clicking on the update button."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/database/upgrade.php:10
+#: ../../application/views/admin/database/upgrade.php:10
 #, php-format
 msgid ""
 "In case you're using a very large installation of {{FOOL_NAME}}, to avoid "
@@ -1912,173 +1914,173 @@ msgid ""
 "enter this: %s"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/database/upgrade.php:16
+#: ../../application/views/admin/database/upgrade.php:16
 msgid "Do you really want to upgrade your database?"
 msgstr "Tem a certeza que quer actualizar a base de dados?"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/members/manage.php:6
+#: ../../application/views/admin/members/manage.php:6
 msgid "ID"
 msgstr "ID"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/members/manage.php:8
+#: ../../application/views/admin/members/manage.php:8
 msgid "Display name"
 msgstr "Nome de apresentação"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/members/manage.php:11
+#: ../../application/views/admin/members/manage.php:11
 msgid "Last seen"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/plugins/manage.php:8
+#: ../../application/views/admin/plugins/manage.php:8
 msgid "Plugin name"
 msgstr "Nome do plugin"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/plugins/manage.php:9
+#: ../../application/views/admin/plugins/manage.php:9
 msgid "Description"
 msgstr "Descrição"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/plugins/manage.php:10
+#: ../../application/views/admin/plugins/manage.php:10
 msgid "Status"
 msgstr "Estado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/plugins/manage.php:24
+#: ../../application/views/admin/plugins/manage.php:24
 msgid "Disable"
 msgstr "Desactivar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/plugins/manage.php:25
+#: ../../application/views/admin/plugins/manage.php:25
 msgid "Enable"
 msgstr "Activar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:11
+#: ../../application/views/admin/system/information.php:11
 msgid "Server Information"
 msgstr "Informação do servidor"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:15
+#: ../../application/views/admin/system/information.php:15
 msgid "Web Server Software"
 msgstr "Software do servidor web"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:17
+#: ../../application/views/admin/system/information.php:17
 msgid "The web server that is currently running to serve your content."
 msgstr "O servidor web que está actualmente a funcionar para servir os seus conteúdos."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:21
+#: ../../application/views/admin/system/information.php:21
 msgid "PHP Version"
 msgstr "Versão PHP"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:23
+#: ../../application/views/admin/system/information.php:23
 msgid "The version of the currently running PHP parser."
 msgstr "A versão actual do parser PHP."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:26
+#: ../../application/views/admin/system/information.php:26
 msgid "Old PHP version"
 msgstr "Versão PHP antiga"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:27
+#: ../../application/views/admin/system/information.php:27
 msgid "To run {{FOOL_NAME}}, you need at least PHP  version 5.2.0."
 msgstr "Para correr {{FOOL_NAME}}, necessita da versão do PHP de pelo menos 5.2.0."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:27
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:57
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:89
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:101
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:113
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:125
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:137
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:149
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:161
+#: ../../application/views/admin/system/information.php:27
+#: ../../application/views/admin/system/information.php:57
+#: ../../application/views/admin/system/information.php:89
+#: ../../application/views/admin/system/information.php:101
+#: ../../application/views/admin/system/information.php:113
+#: ../../application/views/admin/system/information.php:125
+#: ../../application/views/admin/system/information.php:137
+#: ../../application/views/admin/system/information.php:149
+#: ../../application/views/admin/system/information.php:161
 msgid "Suggested"
 msgstr "Sugerido"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:38
+#: ../../application/views/admin/system/information.php:38
 msgid "Nginx Upload Size"
 msgstr "Tamanho de upload Nginx"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:39
+#: ../../application/views/admin/system/information.php:39
 msgid "This value cannot be checked via PHP."
 msgstr "Este valor não pode ser verificado via PHP."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:40
+#: ../../application/views/admin/system/information.php:40
 msgid ""
 "The Nginx web server has its own internal upload limit variable. If you are "
 "receiving upload errors, and your PHP configuration looks fine, check this "
 "variable in your Nginx configuration file."
 msgstr "O servidor web Nginx tem o seu próprio limite de upload interno. Se estiver a receber erros de upload, e sua configuração do PHP parecer estar correcta, verifique esta variável no ficheiro de configuração do Nginx."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:40
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:85
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:97
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:109
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:121
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:133
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:145
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:157
+#: ../../application/views/admin/system/information.php:40
+#: ../../application/views/admin/system/information.php:85
+#: ../../application/views/admin/system/information.php:97
+#: ../../application/views/admin/system/information.php:109
+#: ../../application/views/admin/system/information.php:121
+#: ../../application/views/admin/system/information.php:133
+#: ../../application/views/admin/system/information.php:145
+#: ../../application/views/admin/system/information.php:157
 msgid "Variable"
 msgstr "Variável"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:46
+#: ../../application/views/admin/system/information.php:46
 msgid "Software Information"
 msgstr "Informação do software"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:50
+#: ../../application/views/admin/system/information.php:50
 msgid "{{FOOL_NAME}} Version"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:52
+#: ../../application/views/admin/system/information.php:52
 msgid ""
 "The version of {{FOOL_NAME}} that you are currently running on your server."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:55
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:56
+#: ../../application/views/admin/system/information.php:55
+#: ../../application/views/admin/system/information.php:56
 msgid "New Version Available"
 msgstr "Nova versão disponível"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:57
+#: ../../application/views/admin/system/information.php:57
 msgid ""
 "Upgrading {{FOOL_NAME}} ensures that you have the most secure, stable and "
 "feature enhanced release."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:63
+#: ../../application/views/admin/system/information.php:63
 msgid "Environment"
 msgstr "Ambiente"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:65
+#: ../../application/views/admin/system/information.php:65
 msgid "The environment {{FOOL_NAME}} is currently running as on the server."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:72
+#: ../../application/views/admin/system/information.php:72
 msgid "PHP Configuration"
 msgstr "Configuração de PHP"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:73
+#: ../../application/views/admin/system/information.php:73
 msgid "PHP settings can be easily changed by editing your php.ini file."
 msgstr "As configurações PHP podem ser facilmente modificadas editando o seu ficheiro php.ini."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:77
+#: ../../application/views/admin/system/information.php:77
 msgid "php.ini Location"
 msgstr "Localização do php.ini"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:79
+#: ../../application/views/admin/system/information.php:79
 msgid ""
 "This is the location of the file to edit to change the following variables."
 msgstr "Isto é a localização do ficheiro a editar para modificar as seguintes variáveis."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:83
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:88
+#: ../../application/views/admin/system/information.php:83
+#: ../../application/views/admin/system/information.php:88
 msgid "Safe Mode"
 msgstr "Safe Mode"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:84
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:96
+#: ../../application/views/admin/system/information.php:84
+#: ../../application/views/admin/system/information.php:96
 msgid "On"
 msgstr "Ligado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:84
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:96
+#: ../../application/views/admin/system/information.php:84
+#: ../../application/views/admin/system/information.php:96
 msgid "Off"
 msgstr "Desligado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:85
+#: ../../application/views/admin/system/information.php:85
 msgid ""
 "The PHP safe mode is an attempt to solve the shared-server security problems"
 " and disables many important PHP functions. This is mainly used by shared "
@@ -2086,7 +2088,7 @@ msgid ""
 "server environments."
 msgstr "O Safe Mode do PHP é uma tentativa de resolver problemas comuns de segurança de servidores partilhados e desactiva muitas funções PHP importantes. Isto é usado principalmente por serviços de hospedagem compartilhados para evitar a necessidade de ter de efectuar as correcções de segurança correctas para esses ambientes."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:89
+#: ../../application/views/admin/system/information.php:89
 msgid ""
 "Safe Mode has been enabled on your PHP installation. This setting has "
 "nothing to do with security, and it's used by shared server hosts to limit "
@@ -2094,23 +2096,23 @@ msgid ""
 "function correctly."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:95
+#: ../../application/views/admin/system/information.php:95
 msgid "Allow URL fopen"
 msgstr "URL fopen autorizado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:97
+#: ../../application/views/admin/system/information.php:97
 msgid ""
 "This function allows PHP to use URL-aware fopen wrappers to access remote "
 "files via FTP or HTTP protocol."
 msgstr "Esta função permite que o PHP possa usar fopen wrappers URL-aware para aceder a arquivos remotos via FTP ou protocolo HTTP."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:100
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:120
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:124
+#: ../../application/views/admin/system/information.php:100
+#: ../../application/views/admin/system/information.php:120
+#: ../../application/views/admin/system/information.php:124
 msgid "Disabled"
 msgstr "Desactivado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:101
+#: ../../application/views/admin/system/information.php:101
 msgid ""
 "Your PHP configuration currently has URL-aware fopen wrappers disabled. This"
 " affects {{FOOL_NAME}} functions that require accessing remote files in case"
@@ -2118,24 +2120,24 @@ msgid ""
 "should be enabled with cURL installed as well."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:107
+#: ../../application/views/admin/system/information.php:107
 msgid "Max Execution Time"
 msgstr "Tempo máximo de execução"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:109
+#: ../../application/views/admin/system/information.php:109
 msgid ""
 "This is the maximum time in seconds a script is allowed to run before it is "
 "terminated by the parser."
 msgstr "Isto é o tempo máximo em segundos que um script é autorizado a executar antes que seja terminado pelo parser."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:112
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:136
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:148
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:160
+#: ../../application/views/admin/system/information.php:112
+#: ../../application/views/admin/system/information.php:136
+#: ../../application/views/admin/system/information.php:148
+#: ../../application/views/admin/system/information.php:160
 msgid "Low Value"
 msgstr "Valor baixo"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:113
+#: ../../application/views/admin/system/information.php:113
 msgid ""
 "Your current value for max execution time is low. This option affects "
 "functions that require large amounts of processing time, such as processing "
@@ -2144,140 +2146,140 @@ msgid ""
 "total processing time taken to complete the function."
 msgstr "O seu valor actual para tempo máximo de execução é baixa. Esta opção afecta as funções que exigem grandes quantidades de tempo de processamento, tais como processamento de imagens. Se o teu servidor não tem um processador poderoso ou se estiveres processando grandes quantidades de imagens, este valor deve ser definido tão alto quanto o tempo de processamento total necessário para concluir a função."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:119
+#: ../../application/views/admin/system/information.php:119
 msgid "File Uploads"
 msgstr "Upload de ficheiros"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:120
+#: ../../application/views/admin/system/information.php:120
 msgid "Enabled"
 msgstr "Activado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:121
+#: ../../application/views/admin/system/information.php:121
 msgid "This states whether or not to allow HTTP file uploads."
 msgstr "Permitir ou não o upload de ficheiros por HTTP."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:125
+#: ../../application/views/admin/system/information.php:125
 msgid ""
 "Your PHP configuration currently has file uploads disabled. This variable "
 "must be enabled or {{FOOL_NAME}} will not operate correctly."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:131
+#: ../../application/views/admin/system/information.php:131
 msgid "Max POST Size"
 msgstr "Tamanho POST máx."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:133
+#: ../../application/views/admin/system/information.php:133
 msgid "This is max size of post data allowed."
 msgstr "O tamanho máximo permitido no envio de dados POST."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:137
+#: ../../application/views/admin/system/information.php:137
 msgid ""
 "Your current value for POST size is low. This variable should generally be "
 "set at a higher value to accomodate and ensure that all of your chapters "
 "will be uploaded."
 msgstr "O valor actual do tamanho POST max. é baixo. Normalmente, esta variável deve ser ajustada para valor mais alto, de maneira a acomodar e garantir que todos os seus capítulos serão carregados."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:143
+#: ../../application/views/admin/system/information.php:143
 msgid "Max Upload Size"
 msgstr "Tamanho de upload max"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:145
+#: ../../application/views/admin/system/information.php:145
 msgid "This is the maximum size allowed for an uploaded file."
 msgstr "O tamanho máximo permitido para um ficheiro carregado."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:149
+#: ../../application/views/admin/system/information.php:149
 msgid ""
 "Your current value for max upload size is low. This variable should "
 "generally be set at a higher value to accommodate and allow your largest "
 "chapter to be uploaded."
 msgstr "O valor actual do tamanho de upload máximo é baixo. Normalmente, esta variável deve ser ajustada para valor mais alto, de maneira a acomodar e garantir o upload do maior capítulo que tenha."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:155
+#: ../../application/views/admin/system/information.php:155
 msgid "Max File Uploads"
 msgstr "Upload de ficheiros máximo"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:157
+#: ../../application/views/admin/system/information.php:157
 msgid ""
 "This is the maximum number of files allowed to be uploaded simultaneously."
 msgstr "Número máximo de ficheiros cujo upload pode ser feito simultaneamente."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:161
+#: ../../application/views/admin/system/information.php:161
 msgid ""
 "Your current value for max file uploads is low. This variable should "
 "generally be set at a higher value than the number of pages your chapters "
 "may have."
 msgstr "O valor actual para o número máximo de upload de ficheiros é baixo. Em geral, esta variável deve conter um valor maior do que o número de páginas que qualquer capítulo possa ter."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:171
+#: ../../application/views/admin/system/information.php:171
 msgid "Extensions"
 msgstr "Extensões"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:176
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:181
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:187
+#: ../../application/views/admin/system/information.php:176
+#: ../../application/views/admin/system/information.php:181
+#: ../../application/views/admin/system/information.php:187
 msgid "Installed"
 msgstr "Instalado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:176
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:187
+#: ../../application/views/admin/system/information.php:176
+#: ../../application/views/admin/system/information.php:187
 msgid "Not Installed"
 msgstr "Não instalado"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:177
+#: ../../application/views/admin/system/information.php:177
 msgid ""
 "This is a library used to communicate with different types of servers with "
 "many types of protocols."
 msgstr "Biblioteca utilizada para comunicar com diferentes tipos de servidores com muitos tipos de protocolos."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:181
+#: ../../application/views/admin/system/information.php:181
 msgid "Missing"
 msgstr "Em falta"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:182
+#: ../../application/views/admin/system/information.php:182
 msgid "This is a library used to dynamically create images and thumbnails."
 msgstr "Biblioteca utilizada para a criação de imagens e thumbnails dinamicamente."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:188
+#: ../../application/views/admin/system/information.php:188
 msgid ""
 "This is a library used to dynamically create, edit, compose or convert "
 "images."
 msgstr "Biblioteca utilizada para a criação, edição e conversão de imagens dinamicamente."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/information.php:188
+#: ../../application/views/admin/system/information.php:188
 msgid "Optional"
 msgstr "Opcional"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/upgrade.php:7
+#: ../../application/views/admin/system/upgrade.php:7
 msgid "Current Version"
 msgstr "Versão actual"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/upgrade.php:8
+#: ../../application/views/admin/system/upgrade.php:8
 msgid "Latest Version Available"
 msgstr "Versão mais recente disponível"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/upgrade.php:8
+#: ../../application/views/admin/system/upgrade.php:8
 msgid "You have the latest version of {{FOOL_NAME}}."
 msgstr "Tem a versão mais recente de {{FOOL_NAME}}."
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/upgrade.php:16
+#: ../../application/views/admin/system/upgrade.php:16
 msgid "Upgrade or reinstall"
 msgstr "Actualizar ou reinstalar"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/admin/system/upgrade.php:29
+#: ../../application/views/admin/system/upgrade.php:29
 msgid "Changelog"
 msgstr "Changelog"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/install/default.php:7
+#: ../../application/views/install/default.php:7
 msgid "{{FOOL_NAME}}"
 msgstr "{{FOOL_NAME}}"
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/install/index.php:5
+#: ../../application/views/install/index.php:5
 msgid ""
 "This is all the needed information to install and run {{FOOL_NAME}}. Don't "
 "worry: you can change this information later in case you need it changed."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/install/manual_config.php:6
+#: ../../application/views/install/manual_config.php:6
 #, php-format
 msgid ""
 "The installation was unable to automatically create the config.php file. "
@@ -2286,289 +2288,290 @@ msgid ""
 "{{FOOL_NAME}} installation."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/application/views/install/manual_config.php:28
+#: ../../application/views/install/manual_config.php:28
 msgid "Done"
 msgstr "Efectuado"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:56
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:56
 msgid "SSL Tools"
 msgstr "Ferramentas SSL"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:65
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:74
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:83
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:65
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:74
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:83
 msgid "SSL"
 msgstr "SSL"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:94
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:94
 msgid ""
 "Does the server have SSL available (does your site support https:// "
 "protocol)?"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:99
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:99
 msgid "Redirect the logged in users to the SSL version of the site"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:104
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:104
 msgid "Redirect every user to the SSL version of the site"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:109
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:109
 msgid ""
 "Set a cookie for users that browsed the site with https:// so they get "
 "redirected to the https:// version of the site"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:114
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:114
 msgid "Show a link to SSL in the header if the user is browsing in http://"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:119
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:119
 msgid "Show a link to SSL in the footer if the user is browsing in http://"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FF_SSL_Tools/FF_SSL_Tools_info.php:15
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools_info.php:15
 msgid "Adds a panel to control useful tools if you have SSL available"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:40
+#: ../../content/plugins/FS_Articles/FS_Articles.php:40
 msgid "Couldn't find the article with the submitted ID."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:52
+#: ../../content/plugins/FS_Articles/FS_Articles.php:52
 msgid "The title of your article"
 msgstr "Título do artigo"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:60
+#: ../../content/plugins/FS_Articles/FS_Articles.php:60
 msgid "Slug"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:61
+#: ../../content/plugins/FS_Articles/FS_Articles.php:61
 msgid ""
 "Insert the short name of the article to use in the url. Only alphanumeric "
 "and dashes."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:90
+#: ../../content/plugins/FS_Articles/FS_Articles.php:90
 msgid "The slug is already used for another board."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:100
+#: ../../content/plugins/FS_Articles/FS_Articles.php:100
 msgid "If you set this, the article link will actually be an outlink."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:107
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:276
+#: ../../content/plugins/FS_Articles/FS_Articles.php:107
+#: ../../content/plugins/FS_Articles/FS_Articles.php:276
 msgid "Article"
 msgstr "Artigo"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:108
+#: ../../content/plugins/FS_Articles/FS_Articles.php:108
 msgid "The content of your article, in MarkDown"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:116
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:117
+#: ../../content/plugins/FS_Articles/FS_Articles.php:116
+#: ../../content/plugins/FS_Articles/FS_Articles.php:117
 msgid "Display the article link on the top of the page"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:122
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:123
+#: ../../content/plugins/FS_Articles/FS_Articles.php:122
+#: ../../content/plugins/FS_Articles/FS_Articles.php:123
 msgid "Display the article link on the bottom of the page"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:160
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:168
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:186
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:283
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:360
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:462
+#: ../../content/plugins/FS_Articles/FS_Articles.php:160
+#: ../../content/plugins/FS_Articles/FS_Articles.php:168
+#: ../../content/plugins/FS_Articles/FS_Articles.php:186
+#: ../../content/plugins/FS_Articles/FS_Articles.php:283
+#: ../../content/plugins/FS_Articles/FS_Articles.php:360
+#: ../../content/plugins/FS_Articles/FS_Articles.php:462
 msgid "Articles"
 msgstr "Artigos"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:194
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:280
+#: ../../content/plugins/FS_Articles/FS_Articles.php:194
+#: ../../content/plugins/FS_Articles/FS_Articles.php:280
 msgid "New article"
 msgstr "Novo artigo"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:252
+#: ../../content/plugins/FS_Articles/FS_Articles.php:252
 msgid "New article created!"
 msgstr "Novo artigo criado!"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:258
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:263
+#: ../../content/plugins/FS_Articles/FS_Articles.php:258
+#: ../../content/plugins/FS_Articles/FS_Articles.php:263
 msgid "Article information updated."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:356
+#: ../../content/plugins/FS_Articles/FS_Articles.php:356
 msgid "The article was removed"
 msgstr "O artigo foi removido"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:361
+#: ../../content/plugins/FS_Articles/FS_Articles.php:361
 msgid "Removing article:"
 msgstr "A remover o artigo:"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles.php:363
+#: ../../content/plugins/FS_Articles/FS_Articles.php:363
 msgid "Do you really want to remove the article?"
 msgstr "Deseja realmente remover o artigo?"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FS_Articles/FS_Articles_info.php:15
+#: ../../content/plugins/FS_Articles/FS_Articles_info.php:15
 msgid "Enable support for custom pages in MarkDown and custom links."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:38
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:139
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:142
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:182
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:38
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:139
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:142
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:182
 msgid "Statistics"
 msgstr "Estatísticas"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:45
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:45
 msgid "Stats"
 msgstr "Estatísticas"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:78
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:78
 msgid ""
 "Select the statistics to enable. Some might be too slow to process, so you "
 "should disable them. Some statistics don't use extra processing power so "
 "they are enabled by default."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:99
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:99
 #, php-format
 msgid "Enable %s statistics"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:111
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:111
 msgid "Board Statistics"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:186
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:186
 #, php-format
 msgid "Statistics: %s (Next Update in %s)"
 msgstr "Estatísticas: %s (Próxima actualização em %s)"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:193
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:193
 #, php-format
 msgid "Statistics: %s"
 msgstr "Estatísticas: %s"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:228
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/availability.php:11
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:228
+#: ../../content/plugins/FU_Board_Statistics/views/availability.php:11
 msgid "Availability"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:229
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:236
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:259
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:282
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:306
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:312
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:335
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:341
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:364
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:370
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:376
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:382
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:388
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:229
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:236
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:259
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:282
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:306
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:312
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:335
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:341
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:364
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:370
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:376
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:382
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:388
 msgid "Posts in last month by name and availability by time of day."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:235
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:235
 msgid "Daily Activity"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:258
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:258
 msgid "Daily Activity \"Archive\""
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:281
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:281
 msgid "Daily Activity \"Hourly\""
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:305
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:305
 msgid "Image Reposts"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:311
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:311
 msgid "Karma"
 msgstr "Karma"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:334
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:334
 msgid "New Users"
 msgstr "Novos utilizadores"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:340
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:340
 msgid "Population"
 msgstr "População"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:363
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:363
 msgid "Post Count"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:369
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:369
 msgid "Post Rate"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:375
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:375
 msgid "Post Rate \"Archive\""
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:381
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:381
 msgid "Users Online"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:387
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:387
 msgid "Users Posting in Archive"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/FU_Board_Statistics_info.php:15
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics_info.php:15
 msgid "Statistics for the boards, to keep live with a php daemon."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/availability.php:9
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/new_users.php:18
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/post_count.php:9
+#: ../../content/plugins/FU_Board_Statistics/views/availability.php:9
+#: ../../content/plugins/FU_Board_Statistics/views/new_users.php:18
+#: ../../content/plugins/FU_Board_Statistics/views/post_count.php:9
+#: ../../content/plugins/FU_Board_Statistics/views/users_online.php:10
 msgid "Poster"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/availability.php:10
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/new_users.php:20
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/post_count.php:10
+#: ../../content/plugins/FU_Board_Statistics/views/availability.php:10
+#: ../../content/plugins/FU_Board_Statistics/views/new_users.php:20
+#: ../../content/plugins/FU_Board_Statistics/views/post_count.php:10
 msgid "Total Posts"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/new_users.php:19
+#: ../../content/plugins/FU_Board_Statistics/views/new_users.php:19
 msgid "First Seen"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/post_rate.php:10
+#: ../../content/plugins/FU_Board_Statistics/views/post_rate.php:10
 msgid "Posts within Last Hour"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/post_rate.php:11
+#: ../../content/plugins/FU_Board_Statistics/views/post_rate.php:11
 msgid "Posts per Minute"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/users_online.php:11
+#: ../../content/plugins/FU_Board_Statistics/views/users_online.php:11
 msgid "Last Seen"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Board_Statistics/views/users_online.php:12
+#: ../../content/plugins/FU_Board_Statistics/views/users_online.php:12
 msgid "Latest Post"
 msgstr "Post mais recente"
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Gifsicle/FU_Gifsicle_info.php:15
+#: ../../content/plugins/FU_Gifsicle/FU_Gifsicle_info.php:15
 msgid ""
 "Adds support for gifsicle for creating better optimized animated GIF "
 "thumbnails"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:25
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:25
 msgid "Cache cleaning URLs"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:26
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:26
 msgid ""
 "Insert the URLs that Nginx Cache Purge will have to contact and their "
 "eventual Basic Auth passwords. Make sure you \"allow\" only the IP from this"
@@ -2576,325 +2579,329 @@ msgid ""
 "format:"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:55
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:66
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:55
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:66
 msgid "Nginx Cache Purge"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge_info.php:16
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge_info.php:16
 #, php-format
 msgid ""
 "Remove deleted images from the Nginx proxy cache when deleted locally. "
 "Requires Nginx compiled with %s to work."
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:27
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:20
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:36
+#: ../../content/themes/default/views/board.php:27
+#: ../../content/themes/default/views/board_comment.php:20
+#: ../../content/themes/default/views/gallery.php:36
 msgid "View Same"
 msgstr "Ver iguais"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:48
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:77
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:62
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:98
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:19
+#: ../../content/themes/default/views/board.php:48
+#: ../../content/themes/default/views/board.php:77
+#: ../../content/themes/default/views/board_comment.php:62
+#: ../../content/themes/default/views/board_comment.php:98
+#: ../../content/themes/default/views/gallery.php:19
 msgid "Mod"
 msgstr "Mod"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:51
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:65
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:22
+#: ../../content/themes/default/views/board.php:51
+#: ../../content/themes/default/views/board_comment.php:65
+#: ../../content/themes/default/views/gallery.php:22
 msgid "Global Mod"
 msgstr "Mod global"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:54
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:68
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:25
+#: ../../content/themes/default/views/board.php:54
+#: ../../content/themes/default/views/board_comment.php:68
+#: ../../content/themes/default/views/gallery.php:25
 msgid "Admin"
 msgstr "Admin"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:59
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:73
+#: ../../content/themes/default/views/board.php:59
+#: ../../content/themes/default/views/board_comment.php:73
 msgid "4chan time"
 msgstr "Hora do 4chan"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:65
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:79
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/board_comment.php:79
+#: ../../content/themes/default/views/gallery.php:29
 msgid "View"
 msgstr "Ver"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:65
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/gallery.php:29
 msgid "Reply"
 msgstr "Responder"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:65
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/gallery.php:29
 msgid "Last 50"
 msgstr "Últimos 50"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:65
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/gallery.php:29
 msgid "Original"
 msgstr "Original"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:65
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:79
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/board_comment.php:79
+#: ../../content/themes/default/views/gallery.php:29
 msgid "Report"
 msgstr "Denunciar"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:68
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:43
+#: ../../content/themes/default/views/board.php:68
+#: ../../content/themes/default/views/gallery.php:43
 msgid "This post was deleted from 4chan manually"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:69
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:83
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/gallery.php:44
+#: ../../content/themes/default/views/board.php:69
+#: ../../content/themes/default/views/board_comment.php:83
+#: ../../content/themes/default/views/gallery.php:44
 msgid "This post contains a spoiler image"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:72
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:89
+#: ../../content/themes/default/views/board.php:72
+#: ../../content/themes/default/views/board_comment.php:89
 msgid "Quoted by:"
 msgstr "Citado por:"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:82
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:103
+#: ../../content/themes/default/views/board.php:82
+#: ../../content/themes/default/views/board_comment.php:103
 msgid "Remove image"
 msgstr "Remover imagem"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:83
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:104
+#: ../../content/themes/default/views/board.php:83
+#: ../../content/themes/default/views/board_comment.php:104
 msgid "Ban image"
 msgstr "Ban. imag."
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:86
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:107
+#: ../../content/themes/default/views/board.php:86
+#: ../../content/themes/default/views/board_comment.php:107
 msgid "Ban user:"
 msgstr "Ban. util.:"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:89
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:110
+#: ../../content/themes/default/views/board.php:89
+#: ../../content/themes/default/views/board_comment.php:110
 msgid "Remove report"
 msgstr "Remover denúncia"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:101
+#: ../../content/themes/default/views/board.php:101
 msgid "posts"
 msgstr "posts"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:101
+#: ../../content/themes/default/views/board.php:101
 msgid "omitted"
 msgstr "omitido"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board.php:105
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:116
+#: ../../content/themes/default/views/board.php:105
+#: ../../content/themes/default/views/board_comment.php:116
 msgid "Report reason:"
 msgstr "Razão da denúncia"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:82
+#: ../../content/themes/default/views/board_comment.php:82
 msgid "This post was deleted from 4chan"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/board_comment.php:84
+#: ../../content/themes/default/views/board_comment.php:84
 msgid "This post was made in the archive"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/error.php:7
+#: ../../content/themes/default/views/error.php:7
 msgid "Error!"
 msgstr "Erro!"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/index.php:13
+#: ../../content/themes/default/views/index.php:15
 msgid "Archives"
 msgstr "Arquivos"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:18
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:246
+#: ../../content/themes/default/views/tools_reply_box.php:18
+#: ../../content/themes/default/views/tools_search.php:246
 msgid "Subject"
 msgstr "Assunto"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:27
+#: ../../content/themes/default/views/tools_reply_box.php:27
 msgid "Comment"
 msgstr "Comentário"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:48
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:255
+#: ../../content/themes/default/views/tools_reply_box.php:48
+#: ../../content/themes/default/views/tools_search.php:255
 msgid "E-mail"
 msgstr "E-mail"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:65
+#: ../../content/themes/default/views/tools_reply_box.php:65
 msgid "File"
 msgstr "Ficheiro"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:83
+#: ../../content/themes/default/views/tools_reply_box.php:83
 msgid "Post as"
 msgstr "Postar como"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:84
+#: ../../content/themes/default/views/tools_reply_box.php:84
 msgid "User"
 msgstr "Utilizador"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:135
+#: ../../content/themes/default/views/tools_reply_box.php:135
 msgid "Submit spoilered"
 msgstr "Submeter spoilerizado"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_reply_box.php:146
+#: ../../content/themes/default/views/tools_reply_box.php:146
 msgid "Reset"
 msgstr "Reset"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:29
+#: ../../content/themes/default/views/tools_search.php:29
 msgid "Search or insert post no. or thread URL"
 msgstr "Pesquisar ou inserir nº post / URL tópico"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:38
+#: ../../content/themes/default/views/tools_search.php:38
 msgid "Undefined"
 msgstr "Indefinido"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:47
+#: ../../content/themes/default/views/tools_search.php:47
 msgid "Search"
 msgstr "Pesquisar"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:64
+#: ../../content/themes/default/views/tools_search.php:64
 msgid "Go to post"
 msgstr "Ir para post"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:77
+#: ../../content/themes/default/views/tools_search.php:77
 msgid "Filters:"
 msgstr "Filtros:"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:83
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:110
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:137
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:164
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:192
+#: ../../content/themes/default/views/tools_search.php:83
+#: ../../content/themes/default/views/tools_search.php:110
+#: ../../content/themes/default/views/tools_search.php:137
+#: ../../content/themes/default/views/tools_search.php:164
+#: ../../content/themes/default/views/tools_search.php:192
 msgid "All"
 msgstr "Tudo"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:91
+#: ../../content/themes/default/views/tools_search.php:91
 msgid "Only Deleted"
 msgstr "Só apagados"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:99
+#: ../../content/themes/default/views/tools_search.php:99
 msgid "Only Non-Deleted"
 msgstr "Apenas não-apagados"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:118
+#: ../../content/themes/default/views/tools_search.php:118
 msgid "Only Ghost"
 msgstr "Só Fantasmas"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:145
+#: ../../content/themes/default/views/tools_search.php:126
+msgid "Only Original"
+msgstr ""
+
+#: ../../content/themes/default/views/tools_search.php:145
 msgid "Only with image"
 msgstr "Só com imagens"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:153
+#: ../../content/themes/default/views/tools_search.php:153
 msgid "Only without image"
 msgstr "Só sem imagens"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:172
+#: ../../content/themes/default/views/tools_search.php:172
 msgid "Thread OPs Only"
 msgstr "Só OPs de tópicos"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:180
+#: ../../content/themes/default/views/tools_search.php:180
 msgid "Replies Only"
 msgstr "Só respostas"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:201
+#: ../../content/themes/default/views/tools_search.php:201
 msgid "Only by Users"
 msgstr "Só por utilizadores"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:209
+#: ../../content/themes/default/views/tools_search.php:209
 msgid "Only by Mods"
 msgstr "Só por mods"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:217
+#: ../../content/themes/default/views/tools_search.php:217
 msgid "Only by Admins"
 msgstr "Só por admins"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:231
+#: ../../content/themes/default/views/tools_search.php:231
 msgid "New First"
 msgstr "Mais recentes primeiro"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:239
+#: ../../content/themes/default/views/tools_search.php:239
 msgid "Old First"
 msgstr "Mais antigos primeiro"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:252
+#: ../../content/themes/default/views/tools_search.php:252
 msgid "Tripcode"
 msgstr "Tripcode"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:258
+#: ../../content/themes/default/views/tools_search.php:258
 msgid "Filename"
 msgstr "Nome ficheiro"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:261
+#: ../../content/themes/default/views/tools_search.php:261
 msgid "Date start"
 msgstr "Data início"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:275
+#: ../../content/themes/default/views/tools_search.php:275
 msgid "Date end"
 msgstr "Data fim"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:289
+#: ../../content/themes/default/views/tools_search.php:289
 msgid "Image hash"
 msgstr "Hash imagem"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:292
+#: ../../content/themes/default/views/tools_search.php:292
 msgid "You can drag and drop an image on the field above"
 msgstr "Pode arrastar uma imagem para o campo acima"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:295
+#: ../../content/themes/default/views/tools_search.php:295
 msgid "Your latest searches:"
 msgstr "Últimas pesquisas (suas):"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/tools_search.php:296
+#: ../../content/themes/default/views/tools_search.php:296
 msgid "Clear"
 msgstr "Apagar"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/layouts/chan.php:142
+#: ../../content/themes/default/views/layouts/chan.php:134
 msgid "Index"
 msgstr "Índice"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/layouts/chan.php:151
+#: ../../content/themes/default/views/layouts/chan.php:143
 msgid "By post"
 msgstr "Por post"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/layouts/chan.php:159
+#: ../../content/themes/default/views/layouts/chan.php:151
 msgid "By thread"
 msgstr "Por tópico"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/layouts/chan.php:172
+#: ../../content/themes/default/views/layouts/chan.php:164
 msgid "Ghost"
 msgstr "Fantasma"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/layouts/chan.php:269
+#: ../../content/themes/default/views/layouts/chan.php:261
 msgid "Change theme"
 msgstr "Mudar tema"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/layouts/chan.php:283
-msgid "Change language [alpha]"
-msgstr "Mudar idioma [alpha]"
+#: ../../content/themes/default/views/layouts/chan.php:277
+msgid "Change language"
+msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/default/views/layouts/chan.php:291
+#: ../../content/themes/default/views/layouts/chan.php:285
 msgid "Add a translation"
 msgstr "Adicionar uma tradução"
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/fuuka/theme_controller.php:367
-#: /Users/woxxy/github/FoOlFuuka/content/themes/fuuka/theme_controller.php:396
-#: /Users/woxxy/github/FoOlFuuka/content/themes/fuuka/theme_controller.php:425
+#: ../../content/themes/fuuka/theme_plugin.php:355
+#: ../../content/themes/fuuka/theme_plugin.php:384
+#: ../../content/themes/fuuka/theme_plugin.php:413
 msgid "Redirecting..."
 msgstr "A redireccionar..."
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/fuuka/views/index.php:7
+#: ../../content/themes/fuuka/views/index.php:7
 msgid "Welcome on the 4chan Archiver \"FoOlFuuka\""
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/fuuka/views/index.php:8
+#: ../../content/themes/fuuka/views/index.php:8
 msgid "Choose a 4chan board:"
 msgstr ""
 
-#: /Users/woxxy/github/FoOlFuuka/content/themes/yotsuba/views/index.php:8
+#: ../../content/themes/yotsuba/views/index.php:8
 msgid "We are hosting these boards:"
 msgstr ""

@@ -541,14 +541,10 @@ class Post_model extends CI_Model
 		if($board->archive)
 		{
 			$post->original_timestamp = $post->timestamp;
-			$date = new DateTime();
-			$date_formatted = $date->createFromFormat(
-				'Y-m-d H:i:s',
-				date('Y-m-d H:i:s', $post->timestamp),
-				new DateTimeZone('America/New_York')
-			);
-			$date_formatted->setTimezone(new DateTimeZone('UTC'));
-			$post->timestamp = $date_formatted->getTimestamp();
+			$newyork = new DateTime(date('Y-m-d H:i:s', $post->timestamp), new DateTimeZone('America/New_York'));
+			$utc = new DateTime(date('Y-m-d H:i:s', $post->timestamp), new DateTimeZone('UTC'));
+			$diff = $newyork->diff($utc)->h;
+			$post->timestamp = $post->timestamp + ($diff * 60 * 60);
 		}
 		else
 		{
@@ -2746,14 +2742,10 @@ class Post_model extends CI_Model
 			if($board->archive)
 			{
 				// archives are in new york time
-				$date = new DateTime();
-				$date->setTimezone(new DateTimeZone('America/New_York'));
-				$date = $date->createFromFormat(
-					'Y-m-d H:i:s',
-					$date->format('Y-m-d H:i:s'),
-					new DateTimeZone('UTC')
-				);
-				$timestamp = $date->getTimestamp();
+				$newyork = new DateTime(date('Y-m-d H:i:s', time()), new DateTimeZone('America/New_York'));
+				$utc = new DateTime(date('Y-m-d H:i:s', time()), new DateTimeZone('UTC'));
+				$diff = $newyork->diff($utc)->h;
+				$timestamp = time() - ($diff * 60 * 60);
 			}
 
 			// ghost reply to existing thread

@@ -199,8 +199,6 @@ if (defined('ENVIRONMENT'))
 	{
 		die(file_get_contents('MAINTENANCE.html'));
 	}
-	
-	date_default_timezone_set('UTC');
 
 /*
  * --------------------------------------------------------------------

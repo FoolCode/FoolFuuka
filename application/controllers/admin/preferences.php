@@ -65,6 +65,15 @@ class Preferences extends Admin_Controller
 			'validate' => 'trim|max_length[32]',
 			'help' => __('Sets the title displayed in the index page.')
 		);
+		
+		$form['ff_lang_default'] = array(
+			'type' => 'dropdown',
+			'label' => __('Default language'),
+			'help' => __('The language the users will see as they reach your site.'),
+			'options' => config_item('ff_available_languages'),
+			'default_value' => FOOL_LANG_DEFAULT,
+			'preferences' => TRUE,
+		);
 
 		$form['separator-2'] = array(
 			'type' => 'separator'
@@ -106,7 +115,8 @@ class Preferences extends Admin_Controller
 			'label' => __('Default theme'),
 			'help' => __('The theme the users will see as they reach your site.'),
 			'options' => $themes_default,
-			'selected' => 'default'
+			'default_value' => FOOL_THEME_DEFAULT,
+			'preferences' => TRUE,
 		);
 
 		$form['fs_theme_google_analytics'] = array(

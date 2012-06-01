@@ -352,6 +352,23 @@ if (!defined('BASEPATH'))
 						?>
 						<label><?php echo $helpers['label'] ?></label>
 						<?php
+						if (isset($helpers['preferences']) && $helpers['preferences'])
+						{
+							$item['selected'] = get_setting($name);;
+						}
+						else if (isset($item['value']))
+						{
+							$item['selected'] = $item['value'];
+						}
+						else if (isset($object->$name))
+						{
+							$item['selected'] = $object->$name;
+						}
+						else if (isset($helpers['default_value']))
+						{
+							$item['selected'] = $helpers['default_value'];
+						}
+						
 						echo form_dropdown($name, $item['options'], $item['selected']);
 						?>
 						<span class="help-inline">
@@ -393,7 +410,7 @@ if (!defined('BASEPATH'))
 							}
 							else if (isset($object->$name))
 							{
-								$item['value'] = isset($object->$name) ? $object->$name : '';
+								$item['value'] = $object->$name;
 							}
 							else if (isset($helpers['default_value']))
 							{

@@ -1,6 +1,5 @@
 [main]
 host = https://www.transifex.net
-type = PHP_ARRAY
 
 [foolfuuka.default-file]
 file_filter = <lang>.utf8/LC_MESSAGES/<lang>.po

@@ -8,7 +8,8 @@ $config = array();
 
 $config['ff_available_languages'] = array(
 	'en_EN' => 'English',
-	'fr_FR' => 'French'
+	'fr_FR' => 'French',
+	'pt_PT' => 'Portuguese'
 );
 
 // Array from http://techpatterns.com/downloads/php_language_detection.php

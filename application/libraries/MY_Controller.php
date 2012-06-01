@@ -46,7 +46,7 @@ class MY_Controller extends CI_Controller
 			$lang = $this->input->cookie('foolfuuka_language');
 			if(!$lang || !array_key_exists($lang, $available_langs))
 			{
-				$lang = 'en_EN';
+				$lang = get_setting('ff_lang_default', FOOL_LANG_DEFAULT);
 			}
 
 			$locale = $lang . '.utf8';

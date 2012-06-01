@@ -73,6 +73,9 @@ define('FOOL_PREF_SPHINX_MEMORY', 2047);
 // application paths
 define('FOOL_PREF_SERV_JAVA_PATH', 'java');
 
+// languages
+define('FOOL_LANG_DEFAULT', 'en_EN');
+
 // theme
 define('FOOL_THEME_DEFAULT', 'default');
 define('FOOL_PREF_THEMES_THEME_DEFAULT_ENABLED', TRUE);

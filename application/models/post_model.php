@@ -257,17 +257,11 @@ class Post_model extends CI_Model
 		{
 			if ($thumbnail === TRUE)
 			{
-				$try_rebuild = FALSE;
-
 				if (isset($post->op) && $post->op == 1)
 				{
 					if ($post->preview_op)
 					{
 						$image = $post->preview_op;
-					}
-					else
-					{
-						$try_rebuild = TRUE;
 					}
 
 				}
@@ -277,53 +271,7 @@ class Post_model extends CI_Model
 					{
 						$image = $post->preview_reply;
 					}
-					else
-					{
-						$try_rebuild = TRUE;
-					}
 				}
-
-				/*if ($try_rebuild)
-				{
-					if (!is_null($post->media)
-						&& file_exists($this->get_media_dir($board, $post, FALSE)) !== FALSE
-						&& find_imagick())
-					{
-						if($post->op)
-							$post_r->preview_op = $post->preview_orig;
-						else
-							$post_r->preview_reply = $post->preview_orig;
-
-						$media_config = array(
-							'image_library' => 'ImageMagick',
-							'library_path'  => get_setting('fs_serv_imagick_path', '/usr/bin'),
-							'source_image'  => $this->get_media_dir($board, $post, FALSE),
-							'new_image'     => $this->get_media_dir($board, $post, TRUE),
-							'width'         => $post->preview_w,
-							'height'        => $post->preview_h,
-							'quality'		=> '70%'
-						);
-
-						$this->load->library('image_lib');
-
-						$this->image_lib->initialize($media_config);
-						if (!$this->image_lib->resize())
-						{
-							log_message('error', 'post.php/get_media_link: failed to regenerate thumbnail');
-							return FALSE;
-						}
-
-						$this->image_lib->clear();
-
-						$this->db->query('
-							UPDATE ' . $this->radix->get_table($board, '_images') . '
-							SET preview_' . ($post->op?'op':'reply') . ' = ?
-							WHERE media_id = ?
-						', array($post->preview_orig, $post->media_id));
-
-						return $this->get_media_link($board, $post, $thumbnail);
-					}
-				}*/
 
 				if(is_null($image) || $image == '')
 				{

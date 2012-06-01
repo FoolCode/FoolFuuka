@@ -265,7 +265,7 @@ class Post_model extends CI_Model
 				{
 					$image = $post->preview_reply ? : $post->preview_op;
 				}
-	
+
 				if(is_null($image) || $image == '')
 				{
 					$image = $post->media;
@@ -540,20 +540,20 @@ class Post_model extends CI_Model
 		{
 			return FALSE;
 		}
-		
+
 		$preliminary_check = @getimagesize($file['full_path']);
-		
+
 		if(!$preliminary_check)
 		{
 			return array('error' => __('The file you submitted doesn\'t seem to be an image.'));
 		}
-		
+
 		// if width and height are lower than 25 reject the image
 		if($preliminary_check[0] < 25 || $preliminary_check[1] < 25)
 		{
 			return array('error' => __('The image you submitted is too small.'));
 		}
-		
+
 
 		// default variables
 		$media_exists = FALSE;
@@ -2434,6 +2434,9 @@ class Post_model extends CI_Model
 			}
 
 		}
+
+		// hook entire comment data to alter in plugin
+		$data = $this->plugins->run_hook('fu_post_model_alter_comment_input', array($data), 'simple');
 
 		// process comment name+trip
 		if ($data['name'] === FALSE || $data['name'] == '')

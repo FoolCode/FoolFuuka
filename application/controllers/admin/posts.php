@@ -32,6 +32,9 @@ class Posts extends Admin_Controller
 			show_404();
 		}
 		
+		$this->load->model('theme_model', 'theme');
+		$this->theme->set_theme('default');
+		
 		$this->viewdata["function_title"] = __('Reports');
 		
 		// for safety, load all boards' preferences and not just the main table's

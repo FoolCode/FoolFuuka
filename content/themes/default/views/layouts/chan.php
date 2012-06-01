@@ -11,14 +11,10 @@ if (!defined('BASEPATH'))
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap2/css/bootstrap.min.css?v=<?php echo FOOL_VERSION ?>" />
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/font-awesome/css/font-awesome.css?v=<?php echo FOOL_VERSION ?>" />
 		<?php
-		if ($this->theme->get_config('extends') != ''
-			&& $this->theme->get_config('extends') != (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default')
-			&& $this->theme->get_config('extends_css') === TRUE
-			&& file_exists('content/themes/' . $this->theme->get_config('extends') . '/style.css'))
-			echo link_tag('content/themes/' . $this->theme->get_config('extends') . '/style.css?v=' . FOOL_VERSION);
-
-		if (file_exists('content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/style.css'))
-			echo link_tag('content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/style.css?v=' . FOOL_VERSION);
+			foreach($this->theme->fallback_override('style.css', $this->theme->get_config('extends_css')) as $css)
+			{
+				echo link_tag($css);
+			}
 		?>
 
 		<!--[if lt IE 9]>
@@ -317,16 +313,11 @@ if (!defined('BASEPATH'))
 		<script>window.jQuery || document.write('<script src="<?php echo site_url() ?>assets/js/jquery.js"><\/script>')</script>
 		<script defer src="<?php echo site_url() ?>assets/bootstrap2/js/bootstrap.min.js?v=<?php echo FOOL_VERSION ?>"></script>
 		
-		<?php if(file_exists('content/themes/' . ($this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default') . '/plugins.js')) : ?>
-			<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
-		<?php else : if($this->theme->get_config('extends') != $this->theme->get_selected_theme()) : ?>
-			<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/plugins.js?v=<?php echo FOOL_VERSION ?>"></script>
-		<?php endif; endif; ?>
-			
-		<script defer src="<?php echo site_url() ?>content/themes/<?php echo $this->theme->get_selected_theme() ? $this->theme->get_selected_theme() : 'default' ?>/board.js?v=<?php echo FOOL_VERSION ?>"></script>
+		<script defer src="<?php echo site_url() . $this->theme->fallback_asset('plugins.js') ?>"></script>
+		<script defer src="<?php echo site_url() . $this->theme->fallback_asset('board.js') ?>"></script>
 		<?php if (get_setting('fs_theme_google_analytics')) : ?>
 			<script>
-				var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us'],['_trackPageview'],['_trackPageLoadTime']];
+				var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
 				(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 					g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 					s.parentNode.insertBefore(g,s)}(document,'script'));

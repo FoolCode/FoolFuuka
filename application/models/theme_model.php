@@ -362,6 +362,46 @@ class Theme_model extends CI_Model
 		return $this->_metadata;
 	}
 	
+	
+	/**
+	 * Provides the path to the asset and in case its fallback.
+	 * 
+	 * @param type $asset the location of the asset with theme folder as root
+	 * @return string The location of the asset in the theme folder
+	 */
+	public function fallback_asset($asset)
+	{
+		$asset = ltrim($asset, '/');
+		if (file_exists('content/themes/' . $this->_selected_theme . '/' . $asset ))
+		{
+			return 'content/themes/' . $this->_selected_theme . '/' . $asset . '?v=' . FOOL_VERSION;
+		}
+		else
+		{
+			return 'content/themes/' . $this->get_config('extends') . '/' . $asset . '?v=' . FOOL_VERSION;
+		}
+	}
+	
+	/**
+	 *
+	 * @param type $asset
+	 * @return type 
+	 */
+	public function fallback_override($asset, $double = FALSE)
+	{
+		// if we aren't going to have stuff like two CSS overrides, return the theme's file
+		if(!$double || $this->get_config('extends') == $this->_selected_theme)
+		{
+			return array($this->fallback_asset($asset));
+		}
+		
+		// we want first extended theme and then the override
+		return array(
+			'content/themes/' . $this->get_config('extends') . '/' . $asset . '?v=' . FOOL_VERSION,
+			'content/themes/' . $this->_selected_theme . '/' . $asset . '?v=' . FOOL_VERSION
+		);
+	}
+	
 
 	/**
 	 * Wraps up all the choices and returns or outputs the HTML

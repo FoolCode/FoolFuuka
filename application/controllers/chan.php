@@ -1145,7 +1145,7 @@ class Chan extends Public_Controller
 		// Check all allowed search modifiers and apply them only.
 		$modifiers = array(
 			'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
-			'image', 'image_file', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
+			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
 
 		// POST -> GET Redirection to provide URL presentable for sharing links.
@@ -1165,16 +1165,17 @@ class Chan extends Public_Controller
 				if ($this->input->get_post($modifier))
 				{
 					// catch special case
-					if ($modifier == 'image_file')
+					
+					array_push($redirect_url, $modifier);
+
+					if($modifier == 'image')
 					{
-						array_push($redirect_url, 'image');
+						array_push($redirect_url, rawurlencode(urlsafe_b64encode($this->input->get_post($modifier))));
 					}
 					else
 					{
-						array_push($redirect_url, $modifier);
+						array_push($redirect_url, rawurlencode($this->input->get_post($modifier)));
 					}
-
-					array_push($redirect_url, rawurlencode($this->input->get_post($modifier)));
 				}
 			}
 

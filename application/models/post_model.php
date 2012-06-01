@@ -540,6 +540,20 @@ class Post_model extends CI_Model
 		{
 			return FALSE;
 		}
+		
+		$preliminary_check = @getimagesize($file['full_path']);
+		
+		if(!$preliminary_check)
+		{
+			return array('error' => __('The file you submitted doesn\'t seem to be an image.'));
+		}
+		
+		// if width and height are lower than 25 reject the image
+		if($preliminary_check[0] < 25 || $preliminary_check[1] < 25)
+		{
+			return array('error' => __('The image you submitted is too small.'));
+		}
+		
 
 		// default variables
 		$media_exists = FALSE;

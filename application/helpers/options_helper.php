@@ -84,12 +84,12 @@ if (!function_exists('get_setting'))
 
 		if (isset($preferences[$option]) && $preferences[$option] != NULL)
 		{
-			return $preferences[$option];
+			return trim($preferences[$option]);
 		}
 
 		if (!is_null($fallback))
 		{
-			return $fallback;
+			return trim($fallback);
 		}
 
 		return FALSE;

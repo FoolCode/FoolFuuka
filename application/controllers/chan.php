@@ -1170,7 +1170,7 @@ class Chan extends Public_Controller
 
 					if($modifier == 'image')
 					{
-						array_push($redirect_url, rawurlencode($this->post->get_media_hash($this->input->get_post($modifier), TRUE)))));
+						array_push($redirect_url, rawurlencode($this->post->get_media_hash($this->input->get_post($modifier), TRUE)));
 					}
 					else
 					{

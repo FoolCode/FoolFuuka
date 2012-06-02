@@ -385,7 +385,7 @@ class Post_model extends CI_Model
 		// return a safely escaped media hash for urls or un-altered media hash
 		if ($urlsafe === TRUE)
 		{
-			return substr(urlsafe_b64encode(urlsafe_b64decode($media)), 0, -2);
+			return urlsafe_b64encode(urlsafe_b64decode($media));
 		}
 		else
 		{
@@ -1206,6 +1206,7 @@ class Post_model extends CI_Model
 			// determine if all boards will be used for search or not
 			if ($board === FALSE)
 			{
+				$this->radix->preload(TRUE);
 				$indexes = array();
 
 				foreach ($this->radix->get_all() as $radix)

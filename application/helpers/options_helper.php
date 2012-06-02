@@ -244,7 +244,7 @@ if (!function_exists('urlsafe_b64encode'))
 	function urlsafe_b64encode($string)
 	{
 		$string = base64_encode($string);
-		return str_replace(array('+', '/'), array('-', '_'), $string);
+		return str_replace(array('+', '/', '='), array('-', '_', ''), $string);
 	}
 
 }

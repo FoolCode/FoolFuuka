@@ -519,9 +519,86 @@ class Radix_model extends CI_Model
 		$this->mysql_remove_tables($board);
 		$this->db->where('id', $id)->delete('boards');
 		$this->db->where('board_id', $id)->delete('boards_preferences');
+		
+		// rename the directory and prevent directory collision
+		$this->load->helper('string');
+		
+		$base = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname;
+		if(file_exists($base . '_removed'))
+		{
+			$incremented = increment_string('_removed');
+			while(file_exists($base . $incremented))
+			{
+				$incremented = increment_string($incremented);
+			}
+			
+			$rename_to = $base . $incremented;
+		}
+		else
+		{
+			$rename_to = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname . '_removed';
+		}
+		
+		rename($base, $rename_to);
 
 		return TRUE;
 	}
+	
+	
+	function remove_leftover_dirs($echo = FALSE)
+	{
+		$all = $this->get_all();
+		
+		$array = array();
+		
+		// get all directories
+		if ($handle = opendir(get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY)))
+		{
+			while (false !== ($file = readdir($handle)))
+			{
+				if (in_array($file, array('..', '.')))
+					continue;
+
+				if (is_dir(get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $file))
+				{
+					$array[] = $file;
+				}
+			}
+			closedir($handle);
+		}
+		else
+		{
+			return FALSE;
+		}
+
+		// make sure it's a removed folder
+		foreach($array as $key => $dir)
+		{
+			if(strpos($dir, '_removed') === FALSE)
+			{
+				unset($array[$key]);
+			}
+			
+			foreach($all as $a)
+			{
+				if($a->shortname === $dir)
+				{
+					unset($array[$key]);
+				}
+			}
+		}
+		
+		// exec the deletion
+		foreach($array as $dir)
+		{
+			$cmd = 'rm -Rv ' . get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $dir;
+			echo $cmd . PHP_EOL;
+			echo exec($cmd) . PHP_EOL;
+		}
+		
+		return TRUE;
+	}
+	
 
 
 	/**

@@ -256,7 +256,8 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 				$data['alert_level'] = 'warning';
 				$data['message'] = __('Do you really want to remove the board and all its data?') .
 					'<br/>' .
-					__('Notice: due to its size, you will have to remove the image folder manually. The folder will have the "removed_" prefix.');
+					__('Notice: due to its size, you will have to remove the image directory manually. The directory will have the "_removed" suffix. You can remove all the leftover "_removed" directories with the following command:').
+					' <code>php index.php cli boards remove_leftover_dirs</code>';
 
 				$this->viewdata["main_content_view"] = $this->load->view('admin/confirm',
 					$data, TRUE);

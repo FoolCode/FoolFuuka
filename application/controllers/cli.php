@@ -54,6 +54,7 @@ class Cli extends MY_Controller
 		cli_notice('notice', 'Available sections:');
 		cli_notice('notice', 'php index.php cli ...');
 		cli_notice('notice', '    database [help]      Display the database functions available');
+		cli_notice('notice', '    boards [help]         Display the functions related to the boards');
 		cli_notice('notice', '    asagi [help]         Display the functions related to the Asagi fetcher');
 		cli_notice('notice', '    cron [help]          Display the long-running functions available');
 
@@ -100,6 +101,7 @@ class Cli extends MY_Controller
 					return $this->_error('_parameter_board_exist');
 				$result = $this->radix->create_search($board);
 				break;
+				
 			// drop the search table for a specific board
 			case 'drop_search':
 				if(!isset($parameters[1]))
@@ -109,6 +111,7 @@ class Cli extends MY_Controller
 					return $this->_error('_parameter_board_exist');
 				$result = $this->radix->remove_search($board);
 				break;
+				
 			// convert a specific board to utf8mb4
 			case 'mysql_convert_utf8mb4':
 				if(!isset($parameters[1]))
@@ -118,6 +121,7 @@ class Cli extends MY_Controller
 					return $this->_error('_parameter_board_exist');
 				$result = $this->radix->mysql_change_charset($board);
 				break;
+				
 			case 'recreate_triggers':
 				if(!isset($parameters[1]))
 					return $this->_error('_parameter_board');
@@ -127,6 +131,7 @@ class Cli extends MY_Controller
 				$this->radix->mysql_remove_triggers($board);
 				$this->radix->mysql_create_triggers($board);
 				break;
+				
 			case 'recheck_banned':
 				if(isset($parameters[1]))
 				{
@@ -142,6 +147,46 @@ class Cli extends MY_Controller
 				$this->post->recheck_banned($board);
 				break;
 				
+		}
+		
+		// always give a response
+		if (isset($result['error']))
+		{
+			cli_notice('error', $result['error']);
+		}
+		else if (isset($result['success']))
+		{
+			cli_notice('notice', $result['success']);
+		}
+	}
+	
+	
+	function boards()
+	{
+		cli_notice('notice', __('Write "php index.php cli boards help" for displaying the available commands for board manipulation.'));
+		
+		// get the segments
+		$parameters = func_get_args();
+
+		// redirect to help if there's no parameters
+		if(!isset($parameters[0]))
+		{
+			$parameters[0] = 'help';
+		}
+		
+		switch($parameters[0])
+		{
+			case 'help':
+				cli_notice('notice', '');
+				cli_notice('notice', 'Command list:');
+				cli_notice('notice', 'php index.php cli database ...');
+				cli_notice('notice', '    remove_leftover_dirs           Removes the _removed directories');
+				break;
+			
+			case 'remove_leftover_dirs':
+				// TRUE echoes the removed files
+				$this->radix->remove_leftover_dirs(TRUE);
+				break;
 		}
 		
 		// always give a response

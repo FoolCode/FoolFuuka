@@ -98,7 +98,7 @@ if (!defined('BASEPATH'))
 		<?php echo $op->comment_processed ?>
 	</div>
 	<div class="thread_tools_bottom">
-		<?php echo (isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' ' . __('posts')  . ((isset($post['images_omitted']) && $post['images_omitted'] > 0) ? ' and ' . $post['images_omitted'] . ' images' : '') . ' ' . __('omitted') . '</span>' : '' ?>
+		<?php echo (isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' ' . __('posts')  . ((isset($post['images_omitted']) && $post['images_omitted'] > 0) ? ' and ' . $post['images_omitted'] . ' images' : '') . ' ' . _ngettext('omitted', 'omitted', $post['images_omitted'] + $post['omitted']) . '</span>' : '' ?>
 	</div>
 	
 	<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>

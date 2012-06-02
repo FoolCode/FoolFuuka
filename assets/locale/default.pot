@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FoOlFuuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-01 14:57+0100\n"
-"PO-Revision-Date: 2012-06-01 14:57+0100\n"
+"POT-Creation-Date: 2012-06-02 20:29+0100\n"
+"PO-Revision-Date: 2012-06-02 20:30+0100\n"
 "Last-Translator: Woxxy <woxxy@foolrulez.org>\n"
 "Language-Team: FoOlRulez <support@foolz.us>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-KeywordsList: __;gettext;gettext_noop\n"
+"X-Poedit-KeywordsList: __;_ngettext;gettext;gettext_noop\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-SearchPath-0: ../..\n"
@@ -62,16 +62,16 @@ msgid "Showing the last 50 posts for Thread No."
 msgstr ""
 
 #: ../../application/controllers/chan.php:1057
-#: ../../application/controllers/chan.php:1239
-#: ../../application/controllers/chan.php:1532
-#: ../../application/controllers/chan.php:1582
-#: ../../application/controllers/chan.php:1619
-#: ../../application/controllers/chan.php:1644
-#: ../../application/controllers/chan.php:1677
-#: ../../application/controllers/chan.php:1702
-#: ../../application/controllers/chan.php:1727
-#: ../../application/controllers/chan.php:1767
-#: ../../application/controllers/chan.php:1795
+#: ../../application/controllers/chan.php:1240
+#: ../../application/controllers/chan.php:1533
+#: ../../application/controllers/chan.php:1583
+#: ../../application/controllers/chan.php:1620
+#: ../../application/controllers/chan.php:1645
+#: ../../application/controllers/chan.php:1678
+#: ../../application/controllers/chan.php:1703
+#: ../../application/controllers/chan.php:1728
+#: ../../application/controllers/chan.php:1768
+#: ../../application/controllers/chan.php:1796
 msgid "Error"
 msgstr ""
 
@@ -91,136 +91,136 @@ msgstr ""
 msgid "Searched text"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1262
+#: ../../application/controllers/chan.php:1263
 #, php-format
 msgid "that contain &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1266
+#: ../../application/controllers/chan.php:1267
 #, php-format
 msgid "with the subject &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1270
+#: ../../application/controllers/chan.php:1271
 #, php-format
 msgid "with the username &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1274
+#: ../../application/controllers/chan.php:1275
 #, php-format
 msgid "with the tripcode &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1278
+#: ../../application/controllers/chan.php:1279
 #, php-format
 msgid "with the filename &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1286
-#: ../../application/controllers/chan.php:1293
+#: ../../application/controllers/chan.php:1287
+#: ../../application/controllers/chan.php:1294
 #, php-format
 msgid "with the image hash &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1298
+#: ../../application/controllers/chan.php:1299
 msgid "that have been deleted"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1300
+#: ../../application/controllers/chan.php:1301
 msgid "that has not been deleted"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1302
+#: ../../application/controllers/chan.php:1303
 msgid "that are by ghosts"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1304
+#: ../../application/controllers/chan.php:1305
 msgid "that are not by ghosts"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1306
+#: ../../application/controllers/chan.php:1307
 msgid "that are only OP posts"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1308
+#: ../../application/controllers/chan.php:1309
 msgid "that are only non-OP posts"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1310
+#: ../../application/controllers/chan.php:1311
 msgid "that do not contain images"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1312
+#: ../../application/controllers/chan.php:1313
 msgid "that only contain images"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1314
+#: ../../application/controllers/chan.php:1315
 msgid "that were made by users"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1316
+#: ../../application/controllers/chan.php:1317
 msgid "that were made by mods"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1318
+#: ../../application/controllers/chan.php:1319
 msgid "that were made by admins"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1320
+#: ../../application/controllers/chan.php:1321
 #, php-format
 msgid "posts after %s"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1322
+#: ../../application/controllers/chan.php:1323
 #, php-format
 msgid "posts before %s"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1324
+#: ../../application/controllers/chan.php:1325
 msgid "in ascending order"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1327
+#: ../../application/controllers/chan.php:1328
 #, php-format
 msgid "Searching for posts %s."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1328
+#: ../../application/controllers/chan.php:1329
 msgid "and"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1332
+#: ../../application/controllers/chan.php:1333
 msgid "Displaying all posts with no filters applied."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1386
+#: ../../application/controllers/chan.php:1387
 msgid "Global Search"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1576
-#: ../../application/controllers/chan.php:1585
-#: ../../application/controllers/chan.php:1615
-#: ../../application/controllers/chan.php:1622
+#: ../../application/controllers/chan.php:1577
+#: ../../application/controllers/chan.php:1586
+#: ../../application/controllers/chan.php:1616
+#: ../../application/controllers/chan.php:1623
 msgid "This thread does not exist."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1640
-#: ../../application/controllers/chan.php:1647
+#: ../../application/controllers/chan.php:1641
+#: ../../application/controllers/chan.php:1648
 msgid "This thread is closed."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1673
-#: ../../application/controllers/chan.php:1680
+#: ../../application/controllers/chan.php:1674
+#: ../../application/controllers/chan.php:1681
 msgid "You are required to upload an image when posting a new thread."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1698
-#: ../../application/controllers/chan.php:1705
+#: ../../application/controllers/chan.php:1699
+#: ../../application/controllers/chan.php:1706
 msgid "You are required to write a comment when no image upload is present."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1723
-#: ../../application/controllers/chan.php:1730
+#: ../../application/controllers/chan.php:1724
+#: ../../application/controllers/chan.php:1731
 msgid "The posting of images has been disabled for this thread."
 msgstr ""
 
@@ -245,8 +245,12 @@ msgstr ""
 msgid "The board you selected doesn't exist."
 msgstr ""
 
-#: ../../application/controllers/cli.php:70
+#: ../../application/controllers/cli.php:71
 msgid "Write \"php index.php cli database help\" for displaying the available commands for database manipulation."
+msgstr ""
+
+#: ../../application/controllers/cli.php:166
+msgid "Write \"php index.php cli boards help\" for displaying the available commands for board manipulation."
 msgstr ""
 
 #: ../../application/controllers/functions.php:19
@@ -545,60 +549,60 @@ msgid "Do you really want to remove the board and all its data?"
 msgstr ""
 
 #: ../../application/controllers/admin/boards.php:259
-msgid "Notice: due to its size, you will have to remove the image folder manually. The folder will have the \"removed_\" prefix."
+msgid "Notice: due to its size, you will have to remove the image directory manually. The directory will have the \"_removed\" suffix. You can remove all the leftover \"_removed\" directories with the following command:"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:271
+#: ../../application/controllers/admin/boards.php:272
 #: ../../application/controllers/admin/preferences.php:19
 #: ../../application/controllers/admin/system.php:54
 #: ../../application/controllers/admin/system.php:101
 msgid "Preferences"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:281
+#: ../../application/controllers/admin/boards.php:282
 msgid "Boards directory"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:283
+#: ../../application/controllers/admin/boards.php:284
 msgid "Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:288
+#: ../../application/controllers/admin/boards.php:289
 msgid "Boards URL"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:290
+#: ../../application/controllers/admin/boards.php:291
 msgid "Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:295
-#: ../../application/controllers/admin/boards.php:302
+#: ../../application/controllers/admin/boards.php:296
+#: ../../application/controllers/admin/boards.php:303
 msgid "Boards database"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:297
-#: ../../application/controllers/admin/boards.php:304
+#: ../../application/controllers/admin/boards.php:298
+#: ../../application/controllers/admin/boards.php:305
 msgid "Overrides the default database. You should point it to your Asagi database if you have a separate one."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:309
+#: ../../application/controllers/admin/boards.php:310
 msgid "Media load balancers"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:311
+#: ../../application/controllers/admin/boards.php:312
 msgid "Facultative. One per line the URLs where your images are reachable."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:317
+#: ../../application/controllers/admin/boards.php:318
 msgid "HTTPS media load balancers"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:319
+#: ../../application/controllers/admin/boards.php:320
 msgid "Facultative. One per line the URLs where your images are reachable. This is used when the site is loaded via HTTPS protocol, and if empty it will fall back to HTTP media load balancers."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:329
-#: ../../application/controllers/admin/boards.php:541
+#: ../../application/controllers/admin/boards.php:330
+#: ../../application/controllers/admin/boards.php:542
 #: ../../application/controllers/admin/preferences.php:173
 #: ../../application/controllers/admin/preferences.php:243
 #: ../../application/controllers/admin/preferences.php:316
@@ -606,80 +610,80 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:355
+#: ../../application/controllers/admin/boards.php:356
 msgid "Downloaded and installed the latest version of Asagi."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:361
+#: ../../application/controllers/admin/boards.php:362
 msgid "Asagi has been removed."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:367
+#: ../../application/controllers/admin/boards.php:368
 msgid "Settings updated."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:373
+#: ../../application/controllers/admin/boards.php:374
 msgid "Ran Asagi."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:379
+#: ../../application/controllers/admin/boards.php:380
 msgid "Stopped Asagi."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:385
+#: ../../application/controllers/admin/boards.php:386
 msgid "Enabled Asagi autorun."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:391
+#: ../../application/controllers/admin/boards.php:392
 msgid "Disabled Asagi autorun."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:396
+#: ../../application/controllers/admin/boards.php:397
 msgid "Asagi"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:404
+#: ../../application/controllers/admin/boards.php:405
 msgid "Asagi installation"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:427
+#: ../../application/controllers/admin/boards.php:428
 msgid "Activate Sphinx globally (enables crossboard search)"
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:435
+#: ../../application/controllers/admin/boards.php:436
 msgid "Set the address and port to your Sphinx instance."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:444
-#: ../../application/controllers/admin/boards.php:454
+#: ../../application/controllers/admin/boards.php:445
+#: ../../application/controllers/admin/boards.php:455
 msgid "The Sphinx listening address and port aren't formatted correctly."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:462
+#: ../../application/controllers/admin/boards.php:463
 msgid "The port specified isn't a valid number."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:475
+#: ../../application/controllers/admin/boards.php:476
 msgid "The Sphinx server couldn't be contacted at the specified address and port."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:489
+#: ../../application/controllers/admin/boards.php:490
 msgid "Set the address and port to your MySQL instance."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:498
+#: ../../application/controllers/admin/boards.php:499
 msgid "Set the working directory to your Sphinx working directory."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:507
+#: ../../application/controllers/admin/boards.php:508
 msgid "Couldn't find the Sphinx working directory."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:520
+#: ../../application/controllers/admin/boards.php:521
 msgid "Set the minimum word length indexed by Sphinx."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:531
+#: ../../application/controllers/admin/boards.php:532
 msgid "Set the memory limit for the Sphinx instance in MegaBytes."
 msgstr ""
 
@@ -749,19 +753,19 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: ../../application/controllers/admin/posts.php:35
+#: ../../application/controllers/admin/posts.php:38
 msgid "Reports"
 msgstr ""
 
-#: ../../application/controllers/admin/posts.php:64
+#: ../../application/controllers/admin/posts.php:67
 msgid "Access to reports outside the administrative panel is denied."
 msgstr ""
 
-#: ../../application/controllers/admin/posts.php:154
+#: ../../application/controllers/admin/posts.php:157
 msgid "Failed to remove the report from the database."
 msgstr ""
 
-#: ../../application/controllers/admin/posts.php:159
+#: ../../application/controllers/admin/posts.php:162
 msgid "The report has been removed from the database."
 msgstr ""
 
@@ -1025,8 +1029,8 @@ msgstr ""
 msgid "Ghost posts could not be found"
 msgstr ""
 
-#: ../../application/helpers/options_helper.php:180
-#: ../../application/helpers/options_helper.php:187
+#: ../../application/helpers/options_helper.php:190
+#: ../../application/helpers/options_helper.php:197
 msgid "The system is under maintenance. Be back later."
 msgstr ""
 
@@ -1074,31 +1078,31 @@ msgstr ""
 msgid "The board you selected doesn't exist"
 msgstr ""
 
-#: ../../application/libraries/MY_Controller.php:163
+#: ../../application/libraries/MY_Controller.php:164
 msgid "Submitting"
 msgstr ""
 
-#: ../../application/libraries/MY_Controller.php:164
+#: ../../application/libraries/MY_Controller.php:165
 msgid "This thread is being displayed in real time."
 msgstr ""
 
-#: ../../application/libraries/MY_Controller.php:165
+#: ../../application/libraries/MY_Controller.php:166
 msgid "Update now"
 msgstr ""
 
-#: ../../application/libraries/MY_Controller.php:178
+#: ../../application/libraries/MY_Controller.php:179
 msgid "You're not allowed to perform this action"
 msgstr ""
 
-#: ../../application/libraries/MY_Controller.php:184
+#: ../../application/libraries/MY_Controller.php:185
 msgid "Missing arguments"
 msgstr ""
 
-#: ../../application/libraries/MY_Controller.php:194
+#: ../../application/libraries/MY_Controller.php:195
 msgid "Invalid action"
 msgstr ""
 
-#: ../../application/libraries/MY_Controller.php:206
+#: ../../application/libraries/MY_Controller.php:207
 msgid "Post not found"
 msgstr ""
 
@@ -1110,113 +1114,117 @@ msgstr ""
 msgid "The Asagi ZIP file couldn't be downloaded."
 msgstr ""
 
-#: ../../application/models/post_model.php:548
+#: ../../application/models/post_model.php:558
 msgid "The file you submitted doesn't seem to be an image."
 msgstr ""
 
-#: ../../application/models/post_model.php:554
+#: ../../application/models/post_model.php:564
 msgid "The image you submitted is too small."
 msgstr ""
 
-#: ../../application/models/post_model.php:590
+#: ../../application/models/post_model.php:600
 msgid "This image has already been posted once. This board doesn't allow image reposting"
 msgstr ""
 
-#: ../../application/models/post_model.php:604
+#: ../../application/models/post_model.php:614
 #, php-format
 msgid "You must wait up to %s hours to repost this image."
 msgstr ""
 
-#: ../../application/models/post_model.php:1210
+#: ../../application/models/post_model.php:1204
 msgid "Sorry, global search requires SphinxSearch."
 msgstr ""
 
-#: ../../application/models/post_model.php:1220
+#: ../../application/models/post_model.php:1214
 msgid "The search backend is currently not online. Try later or contact us in case it's offline for too long."
 msgstr ""
 
-#: ../../application/models/post_model.php:2396
+#: ../../application/models/post_model.php:2391
 msgid "Your IP has been identified as a spam proxy. Please try a different IP or remove the proxy to post."
 msgstr ""
 
-#: ../../application/models/post_model.php:2423
+#: ../../application/models/post_model.php:2418
 msgid "You are banned from posting"
 msgstr ""
 
-#: ../../application/models/post_model.php:2444
+#: ../../application/models/post_model.php:2438
+msgid "You must wait more time to make new threads!"
+msgstr ""
+
+#: ../../application/models/post_model.php:2460
 msgid "You're posting again the same comment as the last time!"
 msgstr ""
 
-#: ../../application/models/post_model.php:2528
+#: ../../application/models/post_model.php:2547
 msgid "Your comment has contains words that aren't allowed."
 msgstr ""
 
-#: ../../application/models/post_model.php:2565
+#: ../../application/models/post_model.php:2584
 msgid "An image is required for creating threads."
 msgstr ""
 
-#: ../../application/models/post_model.php:2574
+#: ../../application/models/post_model.php:2593
 msgid "The filetype you are attempting to upload is not allowed."
 msgstr ""
 
-#: ../../application/models/post_model.php:2580
+#: ../../application/models/post_model.php:2599
 msgid "The image you are attempting to upload is larger than the permitted size."
 msgstr ""
 
-#: ../../application/models/post_model.php:2596
+#: ../../application/models/post_model.php:2615
 msgid "Sorry, this thread has reached its maximum amount of image replies."
 msgstr ""
 
-#: ../../application/models/post_model.php:2607
+#: ../../application/models/post_model.php:2626
 msgid "Your image upload is not a valid image file."
 msgstr ""
 
-#: ../../application/models/post_model.php:2624
+#: ../../application/models/post_model.php:2643
 msgid "Your image upload has been flagged as inappropriate."
 msgstr ""
 
-#: ../../application/models/post_model.php:2631
+#: ../../application/models/post_model.php:2650
 msgid "Your post contains contents that is marked as spam."
 msgstr ""
 
-#: ../../application/models/post_model.php:2637
+#: ../../application/models/post_model.php:2656
 msgid "Your post was too long."
 msgstr ""
 
-#: ../../application/models/post_model.php:2643
+#: ../../application/models/post_model.php:2662
 msgid "Your post had too many lines."
 msgstr ""
 
-#: ../../application/models/post_model.php:2681
+#: ../../application/models/post_model.php:2700
 msgid "This post is already being processed..."
 msgstr ""
 
-#: ../../application/models/post_model.php:2759
-#: ../../application/models/post_model.php:2877
+#: ../../application/models/post_model.php:2778
+#: ../../application/models/post_model.php:2896
 msgid "You already posted this."
 msgstr ""
 
-#: ../../application/models/post_model.php:2780
+#: ../../application/models/post_model.php:2799
 msgid "Your image was invalid."
 msgstr ""
 
-#: ../../application/models/post_model.php:2933
+#: ../../application/models/post_model.php:2952
 msgid "There's no such a post to be deleted."
 msgstr ""
 
-#: ../../application/models/post_model.php:2948
+#: ../../application/models/post_model.php:2967
 msgid "The password you inserted did not match the post's deletion password."
 msgstr ""
 
-#: ../../application/models/post_model.php:2955
+#: ../../application/models/post_model.php:2974
 msgid "Unable to delete thumbnail for post."
 msgstr ""
 
-#: ../../application/models/post_model.php:2981
+#: ../../application/models/post_model.php:3000
 msgid "Unable to delete post."
 msgstr ""
 
-#: ../../application/models/post_model.php:3005
+#: ../../application/models/post_model.php:3024
 msgid "Unable to delete thumbnail for thread replies."
 msgstr ""
 
@@ -1478,16 +1486,16 @@ msgstr ""
 msgid "Hide the board from public access? (only admins and mods will be able to browse it)"
 msgstr ""
 
-#: ../../application/models/radix_model.php:1330
+#: ../../application/models/radix_model.php:1412
 msgid "Your MySQL installation doesn't support multibyte characters. Update MySQL to version 5.5 or higher."
 msgstr ""
 
-#: ../../application/models/radix_model.php:1347
+#: ../../application/models/radix_model.php:1429
 #, php-format
 msgid "Converting %s to utfmb4"
 msgstr ""
 
-#: ../../application/models/radix_model.php:1352
+#: ../../application/models/radix_model.php:1434
 msgid "The tables have all been converted to utf8mb4"
 msgstr ""
 
@@ -2119,6 +2127,73 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:26
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:158
+msgid "GeoIP Region Lock"
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:45
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:55
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:178
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:189
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:200
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:211
+msgid "Comma separated list of GeoIP 2-letter nation codes."
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:91
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:106
+msgid "Your nation has been blocked from posting."
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:168
+msgid "You can add board-specific locks by browsing the board preferences."
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:172
+msgid "Countries allowed to post"
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:178
+msgid "If you allow a nation, all other nations won't be able to comment."
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:183
+msgid "Countries disallowed to post"
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:189
+msgid "Disallowed nations won't be able to comment."
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:194
+msgid "Countries allowed to view the site"
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:200
+msgid "If you allow a nation, all other nations won't be able to reach the interface."
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:205
+msgid "Countries disallowed to view the site."
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:211
+msgid "Disallowed nations won't be able to reach the interface."
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:220
+msgid "Allow logged in users to post regardless."
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:223
+msgid "Allow all logged in users to post regardless of region lock? (Mods and Admins are always allowed to post)"
+msgstr ""
+
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock_info.php:15
+msgid "Allow or disallow nations to reach the board or post comments. Requires the GeoIP PECL module."
+msgstr ""
+
 #: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:56
 msgid "SSL Tools"
 msgstr ""
@@ -2349,7 +2424,6 @@ msgstr ""
 #: ../../content/plugins/FU_Board_Statistics/views/availability.php:9
 #: ../../content/plugins/FU_Board_Statistics/views/new_users.php:18
 #: ../../content/plugins/FU_Board_Statistics/views/post_count.php:9
-#: ../../content/plugins/FU_Board_Statistics/views/users_online.php:10
 msgid "Poster"
 msgstr ""
 
@@ -2377,6 +2451,14 @@ msgstr ""
 
 #: ../../content/plugins/FU_Board_Statistics/views/users_online.php:12
 msgid "Latest Post"
+msgstr ""
+
+#: ../../content/plugins/FU_Dice_Roll/FU_Dice_Roll.php:26
+msgid "Enable dice roll?"
+msgstr ""
+
+#: ../../content/plugins/FU_Dice_Roll/FU_Dice_Roll_info.php:15
+msgid "This adds support for dice rolling on certain boards."
 msgstr ""
 
 #: ../../content/plugins/FU_Gifsicle/FU_Gifsicle_info.php:15
@@ -2670,31 +2752,31 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:134
+#: ../../content/themes/default/views/layouts/chan.php:130
 msgid "Index"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:143
+#: ../../content/themes/default/views/layouts/chan.php:139
 msgid "By post"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:151
+#: ../../content/themes/default/views/layouts/chan.php:147
 msgid "By thread"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:164
+#: ../../content/themes/default/views/layouts/chan.php:160
 msgid "Ghost"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:261
+#: ../../content/themes/default/views/layouts/chan.php:257
 msgid "Change theme"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:277
+#: ../../content/themes/default/views/layouts/chan.php:273
 msgid "Change language"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:285
+#: ../../content/themes/default/views/layouts/chan.php:281
 msgid "Add a translation"
 msgstr ""
 

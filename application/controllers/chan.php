@@ -17,7 +17,7 @@ class Chan extends Public_Controller
 		header('imagetoolbar: false');
 	}
 
-	
+
 	/**
 	 * The functions with an underscore prefix will respond to plugins before and after
 	 *
@@ -33,7 +33,7 @@ class Chan extends Public_Controller
 			// stop the call if the value returned is FALSE
 			if($before['return'] === FALSE)
 				return FALSE;
-			
+
 			// if the value returned is an Array, a plugin was active
 			$parameters = $before['parameters'];
 		}
@@ -74,7 +74,7 @@ class Chan extends Public_Controller
 
 		return $return;
 	}
-	
+
 
 	/**
 	 * @param string $level
@@ -679,13 +679,13 @@ class Chan extends Public_Controller
 		if ($type == 'by_image')
 		{
 			$title = __('Gallery: Showing Latest Submitted Images') . ' - ' .
-				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_thread')) . '">' . 
+				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_thread')) . '">' .
 				__('By Thread') . '</a>';
 		}
 		else
 		{
 			$title = __('Gallery: Showing Latest Created Threads') . ' - ' .
-				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_image')) . '">' . 
+				'<a href="' . site_url(array(get_selected_radix()->shortname, 'gallery', 'by_image')) . '">' .
 				__('By Image') . '</a>';
 		}
 
@@ -1165,12 +1165,12 @@ class Chan extends Public_Controller
 				if ($this->input->get_post($modifier))
 				{
 					// catch special case
-					
+
 					array_push($redirect_url, $modifier);
 
 					if($modifier == 'image')
 					{
-						array_push($redirect_url, rawurlencode(urlsafe_b64encode($this->input->get_post($modifier))));
+						array_push($redirect_url, rawurlencode($this->post->get_media_hash($this->input->get_post($modifier), TRUE)))));
 					}
 					else
 					{

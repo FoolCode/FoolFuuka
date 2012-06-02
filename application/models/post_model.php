@@ -385,7 +385,7 @@ class Post_model extends CI_Model
 		// return a safely escaped media hash for urls or un-altered media hash
 		if ($urlsafe === TRUE)
 		{
-			return substr(urlsafe_b64encode(urlsafe_b64decode($media)), 0, -2);
+			return urlsafe_b64encode(urlsafe_b64decode($media));
 		}
 		else
 		{

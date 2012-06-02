@@ -9,7 +9,7 @@ if (!defined('BASEPATH'))
 		<div class="image_reposts_number">
 			<strong>#<?php echo $key+1 ?></strong> - Reposts: <?php echo $item->total ?>
 		</div>
-		<a href="<?php echo site_url(array(get_selected_radix()->shortname, 'image', substr(urlsafe_b64encode(urlsafe_b64decode($item->media_hash)), 0, -2))) ?>">
+		<a href="<?php echo site_url(array(get_selected_radix()->shortname, 'search', 'image', $this->post->get_media_hash($item->media_hash, TRUE))) ?>">
 			<img src="<?php echo $this->post->get_media_link(get_selected_radix(), $item, TRUE) ?>" />
 		</a>
 	</div>

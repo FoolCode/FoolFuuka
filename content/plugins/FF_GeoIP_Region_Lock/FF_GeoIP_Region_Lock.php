@@ -89,7 +89,7 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 			
 			return array('return' => array(
 					'error' => __('Your nation has been blocked from posting.') . 
-						'<br/>This product includes GeoLite data created by MaxMind,<br/>available from http://www.maxmind.com/'
+						'<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
 				)
 			);
 		}
@@ -104,7 +104,7 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 				{
 					return array('return' => array(
 							'error' => __('Your nation has been blocked from posting.') . 
-								'<br/>This product includes GeoLite data created by MaxMind,<br/>available from http://www.maxmind.com/'
+								'<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
 						)
 					);
 				}

@@ -2418,6 +2418,26 @@ class Post_model extends CI_Model
 				return array('error' => __('You are banned from posting'));
 			}
 		}
+		
+		if($data['num'] == 0 && !$this->tank_auth->is_allowed())
+		{
+			// check: validate some information
+			$check_op = $this->db->query('
+				SELECT 1
+				FROM ' . $this->radix->get_table($board) . '
+				WHERE poster_ip = ?
+				AND timestamp > ?
+				AND op = 1
+				LIMIT 0,1
+			',
+				array($this->input->ip_address(), time() - 300)
+			);
+			
+			if($check_op->num_rows() > 0)
+			{
+				return array('error' => __('You must wait more time to make new threads!'));
+			}
+		}
 
 		// check: validate some information
 		$check = $this->db->query('
@@ -2429,7 +2449,8 @@ class Post_model extends CI_Model
 		',
 			array($this->input->ip_address())
 		);
-
+		
+		
 		if ($check->num_rows() > 0)
 		{
 			$row = $check->row();

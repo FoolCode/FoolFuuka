@@ -28,8 +28,12 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 			)
 		);
 		
-		$this->plugins->register_hook($this, 'ff_my_controller_after_load_settings', 1, 'block_country_view');
-		$this->plugins->register_hook($this, 'fu_post_model_replace_comment', 5, 'block_country_comment');
+		if (!(get_setting('ff_plugins_geoip_region_lock_allow_logged_in') && $this->tank_auth->is_logged_in()) 
+			|| !$this->tank_auth->is_allowed())
+		{
+			$this->plugins->register_hook($this, 'ff_my_controller_after_load_settings', 1, 'block_country_view');
+			$this->plugins->register_hook($this, 'fu_post_model_replace_comment', 5, 'block_country_comment');
+		}
 	}
 	
 	function block_country_comment()
@@ -161,6 +165,18 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 			'class' => 'span6',
 			'style' => 'height:60px',
 			'help' => __('Comma separated list of GeoIP 2-letter nation codes.') . ' ' . __('Disallowed nations won\'t be able to reach the interface.'),
+			
+		);
+		
+		$form['separator-1'] = array(
+			'type' => 'separator'
+		);
+		
+		$form['ff_plugins_geoip_region_lock_allow_logged_in'] = array(
+			'label' => _('Allow logged in users to post regardless.'),
+			'type' => 'checkbox',
+			'preferences' => TRUE,
+			'help' => __('Allow all logged in users to post regardless of region lock? (Mods and Admins are always allowed to post)'),
 			
 		);
 

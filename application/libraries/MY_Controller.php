@@ -29,13 +29,13 @@ class MY_Controller extends CI_Controller
 			$this->load->database();
 			$this->load->library('session');
 			$this->load->library('tank_auth');
+			
+			// loads variables from database for get_setting()
+			load_settings();
 
 			// plugin system as early we can without losing on security
 			$this->load->model('plugins_model', 'plugins');
 			$this->plugins->load_plugins();
-			
-			// loads variables from database for get_setting()
-			load_settings();
 
 			$this->plugins->run_hook('ff_my_controller_after_load_settings');
 

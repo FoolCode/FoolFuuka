@@ -66,11 +66,8 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 		$allow = get_setting('ff_plugins_geoip_region_lock_allow_comment');
 		$disallow = get_setting('ff_plugins_geoip_region_lock_disallow_comment');
 
-		$board_allow = trim($board->plugin_geo_ip_region_lock_allow_comment, ',');
-		$board_disallow = trim($board->plugin_geo_ip_region_lock_disallow_comment, ',');
-
-		$allow = trim($allow . ',' . $board_allow, ',');
-		$disallow = trim($disallow . ',' . $board_disallow, ',');
+		$board_allow = trim($board->plugin_geo_ip_region_lock_allow_comment, " ,");
+		$board_disallow = trim($board->plugin_geo_ip_region_lock_disallow_comment, " ,");
 
 		// allow board settings to override global
 		if ($board_allow || $board_disallow)

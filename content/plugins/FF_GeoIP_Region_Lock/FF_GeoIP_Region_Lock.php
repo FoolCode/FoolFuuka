@@ -34,16 +34,48 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 			$this->plugins->register_hook($this, 'ff_my_controller_after_load_settings', 1, 'block_country_view');
 			$this->plugins->register_hook($this, 'fu_post_model_replace_comment', 5, 'block_country_comment');
 		}
+		
+		$this->plugins->register_hook($this, 'fu_radix_model_structure_alter', 8, function($structure){
+			$structure['plugin_geo_ip_region_lock_allow_comment'] = array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'type' => 'input',
+				'class' => 'span3',
+				'label' => 'Nations allowed to post comments',
+				'help' => __('Comma separated list of GeoIP 2-letter nation codes.'),
+				'default_value' => FALSE
+			);
+
+			$structure['plugin_geo_ip_region_lock_disallow_comment'] = array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'type' => 'input',
+				'class' => 'span3',
+				'label' => 'Nations disallowed to post comments',
+				'help' => __('Comma separated list of GeoIP 2-letter nation codes.'),
+				'default_value' => FALSE
+			);
+			
+			return array('return' => $structure);
+		});
 	}
 	
-	function block_country_comment()
+	function block_country_comment($board)
 	{
+		// globally allowed and disallowed
 		$allow = get_setting('ff_plugins_geoip_region_lock_allow_comment');
 		$disallow = get_setting('ff_plugins_geoip_region_lock_disallow_comment');
 		
+		$board_allow = $board->plugin_geo_ip_region_lock_allow_comment;
+		$board_disallow = $board->plugin_geo_ip_region_lock_disallow_comment;
+		
+		$allow .= $board_allow;
+		$disallow .= $board_disallow;
+		
 		if($allow || $disallow)
 		{
-			$country = strtolower(geoip_country_code_by_name(inet_dtop($this->input->ip_address())));
+			//$country = strtolower(geoip_country_code_by_name(inet_dtop($this->input->ip_address())));
+			$country = 'it';
 		}
 		
 		if($allow)
@@ -122,6 +154,11 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 
 		$form['open'] = array(
 			'type' => 'open'
+		);
+		
+		$form['paragraph'] = array(
+			'type' => 'paragraph',
+			'help' => __('You can add board-specific locks by browsing the board preferences.')
 		);
 
 		$form['ff_plugins_geoip_region_lock_allow_comment'] = array(

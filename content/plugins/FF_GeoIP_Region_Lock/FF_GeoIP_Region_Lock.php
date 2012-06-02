@@ -74,8 +74,7 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 		
 		if($allow || $disallow)
 		{
-			//$country = strtolower(geoip_country_code_by_name(inet_dtop($this->input->ip_address())));
-			$country = 'it';
+			$country = strtolower(geoip_country_code_by_name(inet_dtop($this->input->ip_address())));
 		}
 		
 		if($allow)

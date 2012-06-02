@@ -2356,7 +2356,7 @@ class Post_model extends CI_Model
 	 * @param array $options
 	 * @return array
 	 */
-	function comment($board, $data, $options = array())
+	function p_comment($board, $data, $options = array())
 	{
 		// default variables
 		$media_allowed = TRUE;

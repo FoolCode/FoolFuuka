@@ -34,7 +34,10 @@ else
 	
 	function _ngettext($msgid1, $msgid2, $n)
 	{
-		return __($msgid1);
+		if($n != 1)
+			return __($msgid2);
+		
+		return __($msgid2);
 	}
 }
 

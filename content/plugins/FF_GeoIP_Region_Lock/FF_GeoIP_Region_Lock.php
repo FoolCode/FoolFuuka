@@ -69,8 +69,8 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 		$board_allow = $board->plugin_geo_ip_region_lock_allow_comment;
 		$board_disallow = $board->plugin_geo_ip_region_lock_disallow_comment;
 		
-		$allow .= $board_allow;
-		$disallow .= $board_disallow;
+		$allow .= ',' . $board_allow;
+		$disallow .= ',' . $board_disallow;
 		
 		if($allow || $disallow)
 		{
@@ -79,7 +79,7 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 		
 		if($allow)
 		{
-			$allow = explode(',', $allow);
+			$allow = array_filter(explode(',', $allow));
 			
 			foreach($allow as $al)
 			{
@@ -96,7 +96,7 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 		
 		if($disallow)
 		{
-			$disallow = explode(',', $disallow);
+			$disallow = array_filter(explode(',', $disallow));
 			
 			foreach($disallow as $disal)
 			{

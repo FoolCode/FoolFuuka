@@ -217,7 +217,7 @@ class Cli extends MY_Controller
 	{
 		$this->load->model('asagi_model', 'asagi');
 		
-		echo json_encode($this->asagi->get_settings()).PHP_EOL;
+		echo json_encode($this->asagi->get_settings()) . PHP_EOL;
 	}
 
 }

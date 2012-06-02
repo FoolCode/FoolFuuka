@@ -37,30 +37,40 @@ class Post_model extends CI_Model
 			$parameters = $before['parameters'];
 		}
 
-		switch (count($parameters)) {
-			case 0:
-				$return = $this->{'p_' . $name}();
-				break;
-			case 1:
-				$return = $this->{'p_' . $name}($parameters[0]);
-				break;
-			case 2:
-				$return = $this->{'p_' . $name}($parameters[0], $parameters[1]);
-				break;
-			case 3:
-				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2]);
-				break;
-			case 4:
-				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3]);
-				break;
-			case 5:
-				$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
-				break;
-			default:
-				$return = call_user_func_array(array(&$this, 'p_' . $name), $parameters);
-			break;
+		// if the replace is anything else than NULL for all the functions ran here, the 
+		// replaced function wont' be run
+		$replace = $this->plugins->run_hook('fu_post_model_replace_' . $name, $parameters);
+		
+		if($replace['result'] !== NULL)
+		{
+			return $replace['result'];
 		}
-
+		else
+		{
+			switch (count($parameters)) {
+				case 0:
+					$return = $this->{'p_' . $name}();
+					break;
+				case 1:
+					$return = $this->{'p_' . $name}($parameters[0]);
+					break;
+				case 2:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1]);
+					break;
+				case 3:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2]);
+					break;
+				case 4:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3]);
+					break;
+				case 5:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
+					break;
+				default:
+					$return = call_user_func_array(array(&$this, 'p_' . $name), $parameters);
+				break;
+			}
+		}
 
 		// in the after, the last parameter passed will be the result
 		array_push($parameters, $return);

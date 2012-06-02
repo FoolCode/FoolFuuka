@@ -18,6 +18,11 @@ if (function_exists('_'))
 		$text = str_replace('{{FOOL_NAME}}', FOOL_NAME, $text);
 		return $text;
 	}
+	
+	function _ngettext($msgid1, $msgid2, $n)
+	{
+		return ngettext($msgid1, $msgid2, $n);
+	}
 }
 else
 {
@@ -25,6 +30,11 @@ else
 	{
 		$text = str_replace('{{FOOL_NAME}}', FOOL_NAME, $text);
 		return $text;
+	}
+	
+	function _ngettext($msgid1, $msgid2, $n)
+	{
+		return __($msgid1);
 	}
 }
 

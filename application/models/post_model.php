@@ -39,11 +39,11 @@ class Post_model extends CI_Model
 
 		// if the replace is anything else than NULL for all the functions ran here, the 
 		// replaced function wont' be run
-		$replace = $this->plugins->run_hook('fu_post_model_replace_' . $name, $parameters);
-		
-		if($replace['result'] !== NULL)
+		$replace = $this->plugins->run_hook('fu_post_model_replace_' . $name, $parameters, array($parameters));
+
+		if($replace['return'] !== NULL)
 		{
-			return $replace['result'];
+			$return = $replace['return'];
 		}
 		else
 		{

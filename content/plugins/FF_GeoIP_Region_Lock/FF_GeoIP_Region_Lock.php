@@ -29,7 +29,7 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 		);
 		
 		$this->plugins->register_hook($this, 'ff_my_controller_after_load_settings', 1, 'block_country_view');
-		$this->plugins->register_hook($this, 'fu_post_model_before_comment', 5, 'block_country_comment');
+		$this->plugins->register_hook($this, 'fu_post_model_replace_comment', 5, 'block_country_comment');
 	}
 	
 	function block_country_comment()
@@ -39,7 +39,8 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 		
 		if($allow || $disallow)
 		{
-			$country = strtolower(geoip_country_code_by_name(inet_dtop($this->input->ip_address())));
+			//$country = strtolower(geoip_country_code_by_name(inet_dtop($this->input->ip_address())));
+			$country = strtolower('IT');
 		}
 		
 		if($allow)
@@ -61,8 +62,10 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 			{
 				if(strtolower(trim($disal)) == $country)
 				{
-					return array('return' => array('error' => __('Your nation has been blocked from posting.') . 
-						' This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/')
+					return array('return' => array(
+							'error' => __('Your nation has been blocked from posting.') . 
+								' This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
+						)
 					);
 				}
 			}

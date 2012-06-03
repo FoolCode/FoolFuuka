@@ -216,3 +216,6 @@ class Profile_model extends CI_Model
 	}
 
 }
+
+/* End of file profile_model.php */
+/* Location: ./application/models/profile_model.php */

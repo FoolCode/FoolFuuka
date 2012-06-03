@@ -3,7 +3,14 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<?php if ($enabled_tools_modal) : ?>
+<?php
+if ($enabled_tools_modal) :
+	if (!($board = get_selected_radix()))
+	{
+		$board = new stdClass();
+		$board->shortname = '';
+	}
+?>
 <div id="post_tools_modal" class="modal hide fade">
 	<div class="modal-header">
 		<a href="#" class="close">&times;</a>
@@ -16,7 +23,7 @@ if (!defined('BASEPATH'))
 	</div>
 	<div class="modal-footer">
 		<a href="#" class="btn secondary closeModal" data-function="closeModal">Cancel</a>
-		<a href="#" class="btn btn-primary submitModal" data-function="submitModal" data-report="<?php echo site_url(get_selected_radix()->shortname . '/report/') ?>" data-delete="<?php echo site_url(get_selected_radix()->shortname . '/delete/') ?>">Submit</a>
+		<a href="#" class="btn btn-primary submitModal" data-function="submitModal" data-report="<?php echo site_url($board->shortname . '/report/') ?>" data-delete="<?php echo site_url($board->shortname . '/delete/') ?>">Submit</a>
 	</div>
 </div>
 <?php endif; ?>

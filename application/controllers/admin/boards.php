@@ -12,7 +12,7 @@ class Boards extends Admin_Controller
 	{
 		parent::__construct();
 		$this->tank_auth->is_admin() or redirect('admin');
-		
+
 		// for safety let's load all boards all the time
 		$this->radix->preload(TRUE);
 
@@ -84,7 +84,7 @@ class Boards extends Admin_Controller
 		$this->viewdata["function_title"] = __('Editing board:') . ' ' . $board->shortname;
 		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
 			$data, TRUE);
-		
+
 		if(!$board->sphinx && !$board->myisam_search)
 		{
 			$this->viewdata["main_content_view"] = '
@@ -95,7 +95,7 @@ class Boards extends Admin_Controller
 				</div>
 			' . $this->viewdata["main_content_view"];
 		}
-		
+
 		if($board->sphinx && $board->myisam_search)
 		{
 			$this->viewdata["main_content_view"] = '
@@ -106,7 +106,7 @@ class Boards extends Admin_Controller
 				</div>
 			' . $this->viewdata["main_content_view"];
 		}
-		
+
 		$this->load->view('admin/default', $this->viewdata);
 	}
 
@@ -131,7 +131,7 @@ class Boards extends Admin_Controller
 				redirect('admin/boards/board/' . $result['success']['shortname']);
 			}
 		}
-		
+
 		// the actual POST is in the board() function
 		$data['form']['open']['action'] = site_url('admin/boards/add_new');
 
@@ -139,12 +139,12 @@ class Boards extends Admin_Controller
 		$this->viewdata["function_title"] = __('Creating a new board');
 		$this->viewdata["main_content_view"] = $this->load->view('admin/form_creator',
 			$data, TRUE);
-				
+
 		$this->load->view('admin/default', $this->viewdata);
 
 		return TRUE;
 	}
-	
+
 
 	function search_table($type = FALSE, $id = 0)
 	{
@@ -171,7 +171,7 @@ class Boards extends Admin_Controller
 					}
 					redirect('admin/boards/board/' . $board->shortname);
 					break;
-					
+
 				case("remove"):
 					if (!$this->radix->remove_search($board))
 					{
@@ -193,7 +193,7 @@ class Boards extends Admin_Controller
 			case('create'):
 				$this->viewdata["function_title"] = __('Creating search table for board:') . ' ' . $board->shortname;
 				$data['alert_level'] = 'warning';
-				$data['message'] = 
+				$data['message'] =
 					'<strong>' .__('Do you want to create the search table for this board?') . '</strong><br/>' .
 					__('Creating the search table can take time if you have a board with even just 100.000 entries.').
 					'<br/>' .
@@ -209,7 +209,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 					$data, TRUE);
 				$this->load->view('admin/default', $this->viewdata);
 				break;
-			
+
 			case('remove'):
 				$this->viewdata["function_title"] = __('Removing search table for board:') . ' ' . $board->shortname;
 				$data['alert_level'] = 'warning';
@@ -221,7 +221,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 				$this->load->view('admin/default', $this->viewdata);
 		}
 	}
-	
+
 	function delete($type = FALSE, $id = 0)
 	{
 		$board = $this->radix->get_by_id($id);
@@ -265,14 +265,14 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 				break;
 		}
 	}
-	
-	
+
+
 	function preferences()
 	{
 		$this->viewdata["function_title"] = __("Preferences");
 
 		$form = array();
-		
+
 		$form['open'] = array(
 			'type' => 'open'
 		);
@@ -297,14 +297,14 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'preferences' => TRUE,
 			'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
 		);
-		
+
 		$form['fs_fuuka_boards_db'] = array(
 			'type' => 'input',
 			'label' => __('Boards database'),
 			'preferences' => TRUE,
 			'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
 		);
-		
+
 		$form['fs_fuuka_boards_media_balancers'] = array(
 			'type' => 'textarea',
 			'label' => __('Media load balancers'),
@@ -312,7 +312,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'help' => __('Facultative. One per line the URLs where your images are reachable.'),
 			'class' => 'span6'
 		);
-		
+
 		$form['fs_fuuka_boards_media_balancers_https'] = array(
 			'type' => 'textarea',
 			'label' => __('HTTPS media load balancers'),
@@ -345,53 +345,53 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 		$this->load->view("admin/default", $this->viewdata);
 	}
 
-	
+
 	function asagi()
 	{
 		$this->load->model('asagi_model', 'asagi');
-		
+
 		if($this->input->post('install') || $this->input->post('upgrade'))
 		{
 			$this->asagi->install();
 			set_notice('success', __('Downloaded and installed the latest version of Asagi.'));
 		}
-		
+
 		if($this->asagi->is_installed() && $this->input->post('remove'))
 		{
 			$this->asagi->remove();
 			set_notice('success', __('Asagi has been removed.'));
 		}
-		
+
 		if($this->asagi->is_installed() && $this->input->post('update_settings'))
 		{
 			$this->asagi->update_settings();
 			set_notice('success', __('Settings updated.'));
 		}
-		
+
 		if($this->asagi->is_installed() && $this->input->post('run'))
 		{
 			$this->asagi->run();
 			set_notice('success', __('Ran Asagi.'));
 		}
-		
+
 		if($this->asagi->is_installed() && $this->input->post('kill'))
 		{
 			$this->asagi->kill();
 			set_notice('success', __('Stopped Asagi.'));
 		}
-		
+
 		if($this->asagi->is_installed() && $this->input->post('enable_autorun'))
 		{
 			$this->submit(array('fs_asagi_autorun_enabled' => 1));
 			set_notice('success', __('Enabled Asagi autorun.'));
 		}
-		
+
 		if($this->asagi->is_installed() && $this->input->post('disable_autorun'))
 		{
 			$this->submit(array('fs_asagi_autorun_enabled' => 0));
 			set_notice('success', __('Disabled Asagi autorun.'));
 		}
-		
+
 		if($this->asagi->is_installed())
 		{
 			$this->viewdata["function_title"] = __('Asagi');
@@ -413,13 +413,13 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 	{
 		$this->viewdata["function_title"] = 'Sphinx';
 		$this->load->library('SphinxQL');
-		
+
 		$form = array();
 
 		$form['open'] = array(
 			'type' => 'open'
 		);
-		
+
 		$form['fs_sphinx_global'] = array(
 			'type' => 'checkbox',
 			'label' => 'Global SphinxSearch',
@@ -491,6 +491,16 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'class' => 'span2'
 		);
 
+		$form['fu_sphinx_connection_flags'] = array(
+			'type' => 'input',
+			'label' => 'Connection Flags (MySQL)',
+			'placeholder' => 0,
+			'preferences' => TRUE,
+			'validation' => 'trim|is_natural',
+			'help' => __('Set the MySQL client connection flags to enable compression, SSL, or secure connection.'),
+			'class' => 'span2'
+		);
+
 		$form['fu_sphinx_dir'] = array(
 			'type' => 'input',
 			'label' => 'Working Directory',
@@ -530,6 +540,16 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'validation' => 'is_natural|greater_than[256]',
 			'preferences' => TRUE,
 			'help' => __('Set the memory limit for the Sphinx instance in MegaBytes.'),
+			'class' => 'span1'
+		);
+
+		$form['fu_sphinx_max_children'] = array(
+			'type' => 'input',
+			'label' => 'Max Children',
+			'placeholder' => 0,
+			'validation' => 'trim|is_natural',
+			'preferences' => TRUE,
+			'help' => __('Set the maximum number of children to fork for searchd.'),
 			'class' => 'span1'
 		);
 

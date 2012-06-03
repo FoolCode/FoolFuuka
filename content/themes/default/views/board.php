@@ -3,7 +3,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
 
-<?php foreach ($posts as $key => $post) : 
+<?php foreach ($posts as $key => $post) :
 	if (isset($post['op']))
 	{
 		$op = $post['op'];
@@ -98,16 +98,16 @@ if (!defined('BASEPATH'))
 		<?php echo $op->comment_processed ?>
 	</div>
 	<div class="thread_tools_bottom">
-		<?php echo (isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' ' . __('posts')  . ((isset($post['images_omitted']) && $post['images_omitted'] > 0) ? ' and ' . $post['images_omitted'] . ' images' : '') . ' ' . _ngettext('omitted', 'omitted', $post['images_omitted'] + $post['omitted']) . '</span>' : '' ?>
+		<?php echo (isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omitted">' . $post['omitted'] . ' ' . __('posts')  . ((isset($post['images_omitted']) && $post['images_omitted'] > 0) ? ' ' .__('and') . ' ' . $post['images_omitted'] . ' images' : '') . ' ' . _ngettext('omitted', 'omitted', $post['images_omitted'] + $post['omitted']) . '</span>' : '' ?>
 	</div>
-	
+
 	<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>
 	<div class="report_reason"><?php echo '<strong>' . __('Report reason:') . '</strong> ' . $op->report_reason_processed ?>
 		<br/>
 		<div class="ip_reporter"><?php echo inet_dtop($op->report_ip_reporter) ?></div>
 	</div>
 	<?php endif; ?>
-	
+
 	<?php endif; ?>
 
 	<aside class="posts">
@@ -137,7 +137,7 @@ if (!defined('BASEPATH'))
 
 	<?php if (isset($thread_id)) : ?>
 	<div class="js_hook_realtimethread"></div>
-	<?php 
+	<?php
 	if($enabled_tools_reply_box)
 		echo $template['partials']['tools_reply_box']; ?>
 	<?php endif; ?>

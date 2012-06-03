@@ -89,7 +89,7 @@ class SphinxQL
 	function generate_sphinx_config($boards)
 	{
 		$CI = & get_instance();
-		
+
 		$config = '
 ########################################################
 ## Sphinx Configuration for FoOlFuuka
@@ -98,6 +98,9 @@ class SphinxQL
 # Remember to set the password manually
 # Add also the port if you\'re not using the default MySQL 3306
 		';
+
+		// obtain only one board for initial connection
+		$test_board = end($boards);
 
 		$config .= '
 ########################################################
@@ -111,25 +114,29 @@ source main
 	type = mysql
 
 	# SQL source information
-	sql_host = ' . $CI->db->hostname . ' 
-	sql_user = ' . $CI->db->username . ' 
-	sql_pass = 
-	sql_db = ' . $CI->db->database . ' 
-	sql_port = 
+	sql_host = ' . $CI->db->hostname . '
+	sql_user = ' . $CI->db->username . '
+	sql_pass =
+	sql_db = ' . $CI->db->database . '
+	sql_port = 3306
+
+	mysql_connect_flags = ' . get_setting('fu_sphinx_connection_flags', 0) . '
 
 	sql_query_pre = SET NAMES utf8
 	sql_range_step = 10000
-	sql_query = \ 
-		SELECT doc_id, 3 AS board, num, subnum, name, trip, email, media_filename, thread_num AS tnum, \
-        CAST(capcode AS UNSIGNED) AS cap, (media_filename != \'\' AND media_filename IS NOT NULL) AS has_image, (subnum != 0) AS is_internal,        \
-        spoiler AS is_spoiler, deleted AS is_deleted, sticky as is_sticky, op AS is_op, timestamp, title, comment      \
-        FROM a LIMIT 1
+	sql_query = \
+		SELECT doc_id, ' . $test_board->id . ' AS board, num, subnum, name, trip, email, media_filename, media_id AS mid, media_hash, \
+		thread_num AS tnum, CAST(capcode AS UNSIGNED) AS cap, (media_filename != \'\' AND media_filename IS NOT NULL) AS has_image, \
+		(subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
+		timestamp, title, comment \
+		FROM ' . $test_board->shortname . ' LIMIT 1
 
 	sql_attr_uint = num
 	sql_attr_uint = subnum
 	sql_attr_uint = tnum
 	sql_attr_uint = cap
 	sql_attr_uint = board
+	sql_attr_uint = mid
 	sql_attr_bool = has_image
 	sql_attr_bool = is_internal
 	sql_attr_bool = is_spoiler
@@ -163,8 +170,7 @@ index main
 	docinfo = extern
 	mlock = 0
 	morphology = none
-	min_word_len = ' . get_setting('fu_sphinx_mem_limit',
-				FOOL_PREF_SPHINX_MEMORY) . 'M
+	min_word_len = ' . get_setting('fu_sphinx_min_word_len', 3) . '
 	charset_type = utf-8
 
 	charset_table=0..9, A..Z->a..z, _, a..z, _,   \
@@ -239,8 +245,7 @@ index main
 
 indexer
 {
-	mem_limit = ' . ((get_setting('fu_sphinx_mem_limit'))
-					? get_setting('fu_sphinx_mem_limit') : '2047M') . '
+	mem_limit = ' . get_setting('fu_sphinx_mem_limit', '2047M') . '
 	max_xmlpipe2_field = 4M
 	write_buffer = 5M
 	max_file_field_buffer = 32M
@@ -254,19 +259,14 @@ indexer
 
 searchd
 {
-	listen = ' . ((get_setting('fu_sphinx_listen'))
-					? get_setting('fu_sphinx_listen') . ':sphinx' : '127.0.0.1:9312:sphinx') . '
-	listen = ' . ((get_setting('fu_sphinx_listen_mysql'))
-					? get_setting('fu_sphinx_listen_mysql') . ':mysql41' : '127.0.0.1:9312:mysql41') . '
-	log = ' . ((get_setting('fu_sphinx_dir'))
-					? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/log/searchd.log
-	query_log = ' . ((get_setting('fu_sphinx_dir'))
-					? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/log/query.log
+	listen = ' . get_setting('fu_sphinx_listen', '127.0.0.1:9312') . ':sphinx
+	listen = ' . get_setting('fu_sphinx_listen_mysql', '127.0.0.1:9312') . ':mysql41
+	log = ' . get_setting('fu_sphinx_dir', '/usr/local/sphinx/var') . '/log/searchd.log
+	query_log = ' . get_setting('fu_sphinx_dir', '/usr/local/sphinx/var') . '/log/query.log
 	read_timeout = 5
 	client_timeout = 300
-	max_children = 10
-	pid_file = ' . ((get_setting('fu_sphinx_dir'))
-					? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/searchd.pid
+	max_children = ' . get_setting('fu_sphinx_max_children', 10) . '
+	pid_file = ' . get_setting('fu_sphinx_dir', '/usr/local/sphinx/var') . '/searchd.pid
 	max_matches = 5000
 	seamless_rotate = 1
 	preopen_indexes = 1
@@ -277,8 +277,7 @@ searchd
 	max_filter_values = 4096
 	max_batch_queries = 32
 	workers = threads
-	binlog_path = ' . ((get_setting('fu_sphinx_dir'))
-					? get_setting('fu_sphinx_dir') : '/usr/local/sphinx/var' ) . '/data
+	binlog_path = ' . get_setting('fu_sphinx_dir', '/usr/local/sphinx/var') . '/data
 	collation_server = utf8_general_ci
 	collation_libc_locale = en_US.UTF-8
 	compat_sphinxsql_magics = 0
@@ -296,33 +295,38 @@ searchd
 	function _generate_sphinx_definition_source($board)
 	{
 		$CI = & get_instance();
-		
-		return "
-# /" . $board->shortname . "/
-source " . $board->shortname . "_main : main
+
+		return '
+# /' . $board->shortname . '/
+source ' . $board->shortname . '_main : main
 {
-	sql_query = SELECT doc_id, " . $board->id . " AS board, num, subnum, name, trip, (ascii(capcode)) as int_capcode, (subnnum != 0) as is_internal, deleted as is_deleted, timestamp, title, comment FROM " . $CI->radix->get_table($board) . " WHERE doc_id >= \$start AND doc_id <= \$end
-	sql_query_info = SELECT * FROM " . $CI->radix->get_table($board) . " WHERE doc_id = \$id
-	sql_query_range = SELECT (SELECT max_ancient_id FROM `" . $CI->db->database . "`." . $CI->db->protect_identifiers('boards',
-				TRUE) . " WHERE id = " . $board->id . "), (SELECT MAX(doc_id) FROM " . $CI->radix->get_table($board) . ")
-	sql_query_post_index = UPDATE `" . $CI->db->database . "`." . $CI->db->protect_identifiers('boards',
-				TRUE) . " SET max_indexed_id = \$maxid WHERE id = " . $board->id . "
+	sql_query = \
+		SELECT doc_id, ' . $board->id . ' AS board, num, subnum, name, trip, email, media_filename, media_id AS mid, media_hash, \
+		thread_num AS tnum, CAST(capcode AS UNSIGNED) AS cap, (media_filename != \'\' AND media_filename IS NOT NULL) AS has_image, \
+		(subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
+		timestamp, title, comment FROM ' . $CI->radix->get_table($board) . ' WHERE doc_id >= $start AND doc_id <= $end
+	sql_query_info = SELECT * FROM ' . $CI->radix->get_table($board) . ' WHERE doc_id = $id
+
+	sql_query_range = SELECT (SELECT max_ancient_id FROM `' . $CI->db->database . '`.' . $CI->db->protect_identifiers('boards',
+			TRUE) . ' WHERE id = ' . $board->id . '), (SELECT MAX(doc_id) FROM ' . $CI->radix->get_table($board) . ')
+	sql_query_post_index = UPDATE `' . $CI->db->database . '`.' . $CI->db->protect_identifiers('boards',
+			TRUE) . ' SET max_indexed_id = $maxid WHERE id = ' . $board->id . '
 }
 
-source " . $board->shortname . "_ancient : " . $board->shortname . "_main
+source ' . $board->shortname . '_ancient : ' . $board->shortname . '_main
 {
-	sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM " . $CI->radix->get_table($board) . "
-	sql_query_post_index = UPDATE `" . $CI->db->database . "`." . $CI->db->protect_identifiers('boards',
-				TRUE) . " SET max_ancient_id =  \$maxid WHERE id = " . $board->id . "
+	sql_query_range = SELECT MIN(doc_id), MAX(doc_id) FROM ' . $CI->radix->get_table($board) . '
+	sql_query_post_index = UPDATE `' . $CI->db->database . '`.' . $CI->db->protect_identifiers('boards',
+			TRUE) . ' SET max_ancient_id = $maxid WHERE id = ' . $board->id . '
 }
 
-source " . $board->shortname . "_delta : " . $board->shortname . "_main
+source ' . $board->shortname . '_delta : ' . $board->shortname . '_main
 {
-	sql_query_range = SELECT (SELECT max_ancient_id FROM `" . $CI->db->database . "`." . $CI->db->protect_identifiers('boards',
-				TRUE) . " WHERE id = " . $board->id . "), (SELECT MAX(doc_id) FROM " . $CI->radix->get_table($board) . ")
+	sql_query_range = SELECT (SELECT max_ancient_id FROM `' . $CI->db->database . '`.' . $CI->db->protect_identifiers('boards',
+			TRUE) . ' WHERE id = ' . $board->id . '), (SELECT MAX(doc_id) FROM ' . $CI->radix->get_table($board) . ')
 	sql_query_post_index =
 }
-		";
+		';
 	}
 
 

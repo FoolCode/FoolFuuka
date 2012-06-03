@@ -2,7 +2,6 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
@@ -49,12 +48,12 @@ if (!defined('BASEPATH'))
 			}
 			?>
 			[ <a href="<?php echo site_url() ?>">index</a><?php if (get_selected_radix()) : ?> / <a href="<?php echo site_url(get_selected_radix()->shortname) ?>">top</a> / <a href="<?php echo site_url(array(get_selected_radix()->shortname, 'statistics')) ?>">statistics</a><?php endif; ?> / <a href="http://github.com/FoOlRulez/FoOlFuuka/issues">report a bug</a> ]
-		
+
 			<?php
 				$top_nav = array();
 				$top_nav = $this->plugins->run_hook('fu_themes_generic_top_nav_buttons', array($top_nav), 'simple');
 				$top_nav = $this->plugins->run_hook('fu_themes_fuuka_top_nav_buttons', array($top_nav), 'simple');
-				
+
 				if(!empty($top_nav)) echo '[ ';
 				foreach($top_nav as $t) :?>
 					<a href="<?php echo $t['href'] ?>"><?php echo $t['text'] ?></a>
@@ -143,7 +142,7 @@ if (!defined('BASEPATH'))
 			<?php endif; ?>
 
 			<div style="float:right">
-				
+
 				<?php
 					$bottom_nav = array();
 					$bottom_nav = $this->plugins->run_hook('fu_themes_generic_bottom_nav_buttons', array($bottom_nav), 'simple');
@@ -155,7 +154,7 @@ if (!defined('BASEPATH'))
 					<?php endforeach;
 						if(!empty($bottom_nav)) echo ' ]';
 				?>
-				
+
 				Theme [ <?php
 					$theme_links = array();
 					foreach($this->theme->get_available_themes() as $theme)
@@ -164,16 +163,16 @@ if (!defined('BASEPATH'))
 						$theme_links[] = '<a href="' . site_url(array('@system', 'functions', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
 					}
 					echo implode(' / ', $theme_links);
-				?> ]			
+				?> ]
 			</div>
 		</div>
 		<?php endif; ?>
-			
-		<?php 
+
+		<?php
 			if(get_setting('fs_theme_footer_text'))
 				echo '<div style="clear:both;">' . get_setting('fs_theme_footer_text') . '</div>';
 		?>
-		
+
 		<?php if (get_setting('fs_theme_google_analytics')) : ?>
 			<script>
 				var _gaq=[['_setAccount','<?php echo get_setting('fs_theme_google_analytics') ?>'],['_setDomainName', 'foolz.us']['_trackPageview'],['_trackPageLoadTime']];

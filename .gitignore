@@ -6,5 +6,4 @@ nbproject
 Desktop.ini
 CI_phpStorm.php
 Thumbs.db
-/content/themes/another
-!/content/themes/another/
+assets/locale/default.mo

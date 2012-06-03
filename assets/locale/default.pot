@@ -2,16 +2,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FoOlFuuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-02 20:29+0100\n"
-"PO-Revision-Date: 2012-06-02 20:30+0100\n"
-"Last-Translator: Woxxy <woxxy@foolrulez.org>\n"
-"Language-Team: FoOlRulez <support@foolz.us>\n"
+"POT-Creation-Date: 2012-06-02 22:41-0600\n"
+"PO-Revision-Date: 2012-06-02 22:41-0600\n"
+"Last-Translator: \n"
+"Language-Team:  <support@foolz.us>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-KeywordsList: __;_ngettext;gettext;gettext_noop\n"
+"X-Poedit-KeywordsList: __;_ngettext:1,2;gettext;gettext_noop\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: utf-8\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: English\n"
 "X-Poedit-SearchPath-0: ../..\n"
 
 #: ../../application/controllers/chan.php:518
@@ -602,7 +604,7 @@ msgid "Facultative. One per line the URLs where your images are reachable. This 
 msgstr ""
 
 #: ../../application/controllers/admin/boards.php:330
-#: ../../application/controllers/admin/boards.php:542
+#: ../../application/controllers/admin/boards.php:562
 #: ../../application/controllers/admin/preferences.php:173
 #: ../../application/controllers/admin/preferences.php:243
 #: ../../application/controllers/admin/preferences.php:316
@@ -671,20 +673,28 @@ msgstr ""
 msgid "Set the address and port to your MySQL instance."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:499
+#: ../../application/controllers/admin/boards.php:500
+msgid "Set the MySQL client connection flags to enable compression, SSL, or secure connection."
+msgstr ""
+
+#: ../../application/controllers/admin/boards.php:509
 msgid "Set the working directory to your Sphinx working directory."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:508
+#: ../../application/controllers/admin/boards.php:518
 msgid "Couldn't find the Sphinx working directory."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:521
+#: ../../application/controllers/admin/boards.php:531
 msgid "Set the minimum word length indexed by Sphinx."
 msgstr ""
 
-#: ../../application/controllers/admin/boards.php:532
+#: ../../application/controllers/admin/boards.php:542
 msgid "Set the memory limit for the Sphinx instance in MegaBytes."
+msgstr ""
+
+#: ../../application/controllers/admin/boards.php:552
+msgid "Set the maximum number of children to fork for searchd."
 msgstr ""
 
 #: ../../application/controllers/admin/database.php:20
@@ -1029,8 +1039,8 @@ msgstr ""
 msgid "Ghost posts could not be found"
 msgstr ""
 
-#: ../../application/helpers/options_helper.php:190
-#: ../../application/helpers/options_helper.php:197
+#: ../../application/helpers/options_helper.php:193
+#: ../../application/helpers/options_helper.php:200
 msgid "The system is under maintenance. Be back later."
 msgstr ""
 
@@ -2128,65 +2138,65 @@ msgid "Done"
 msgstr ""
 
 #: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:26
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:158
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:162
 msgid "GeoIP Region Lock"
 msgstr ""
 
 #: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:45
 #: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:55
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:178
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:189
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:200
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:211
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:182
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:193
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:204
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:215
 msgid "Comma separated list of GeoIP 2-letter nation codes."
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:91
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:106
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:94
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:109
 msgid "Your nation has been blocked from posting."
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:168
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:172
 msgid "You can add board-specific locks by browsing the board preferences."
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:172
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:176
 msgid "Countries allowed to post"
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:178
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:182
 msgid "If you allow a nation, all other nations won't be able to comment."
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:183
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:187
 msgid "Countries disallowed to post"
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:189
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:193
 msgid "Disallowed nations won't be able to comment."
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:194
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:198
 msgid "Countries allowed to view the site"
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:200
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:204
 msgid "If you allow a nation, all other nations won't be able to reach the interface."
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:205
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:209
 msgid "Countries disallowed to view the site."
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:211
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:215
 msgid "Disallowed nations won't be able to reach the interface."
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:220
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:224
 msgid "Allow logged in users to post regardless."
 msgstr ""
 
-#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:223
+#: ../../content/plugins/FF_GeoIP_Region_Lock/FF_GeoIP_Region_Lock.php:227
 msgid "Allow all logged in users to post regardless of region lock? (Mods and Admins are always allowed to post)"
 msgstr ""
 
@@ -2583,7 +2593,9 @@ msgstr ""
 
 #: ../../content/themes/default/views/board.php:101
 msgid "omitted"
-msgstr ""
+msgid_plural "omitted"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../content/themes/default/views/board.php:105
 #: ../../content/themes/default/views/board_comment.php:116
@@ -2607,20 +2619,30 @@ msgid "Archives"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_reply_box.php:18
-#: ../../content/themes/default/views/tools_search.php:246
+#: ../../content/themes/default/views/tools_search.php:247
+#: ../../content/themes/fuuka/views/tools_reply_box.php:29
+#: ../../content/themes/fuuka/views/tools_reply_box.php:108
+#: ../../content/themes/fuuka/views/tools_search.php:52
 msgid "Subject"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_reply_box.php:27
+#: ../../content/themes/fuuka/views/tools_reply_box.php:33
+#: ../../content/themes/fuuka/views/tools_reply_box.php:112
 msgid "Comment"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_reply_box.php:48
-#: ../../content/themes/default/views/tools_search.php:255
+#: ../../content/themes/default/views/tools_search.php:256
+#: ../../content/themes/fuuka/views/tools_reply_box.php:25
+#: ../../content/themes/fuuka/views/tools_reply_box.php:104
+#: ../../content/themes/fuuka/views/tools_search.php:70
 msgid "E-mail"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_reply_box.php:65
+#: ../../content/themes/fuuka/views/tools_reply_box.php:37
+#: ../../content/themes/fuuka/views/tools_reply_box.php:117
 msgid "File"
 msgstr ""
 
@@ -2629,6 +2651,8 @@ msgid "Post as"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_reply_box.php:84
+#: ../../content/themes/fuuka/views/tools_reply_box.php:53
+#: ../../content/themes/fuuka/views/tools_reply_box.php:134
 msgid "User"
 msgstr ""
 
@@ -2640,115 +2664,120 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:29
+#: ../../content/themes/default/views/tools_search.php:30
 msgid "Search or insert post no. or thread URL"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:38
+#: ../../content/themes/default/views/tools_search.php:39
 msgid "Undefined"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:47
+#: ../../content/themes/default/views/tools_search.php:48
 msgid "Search"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:64
+#: ../../content/themes/default/views/tools_search.php:66
 msgid "Go to post"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:77
+#: ../../content/themes/default/views/tools_search.php:78
 msgid "Filters:"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:83
-#: ../../content/themes/default/views/tools_search.php:110
-#: ../../content/themes/default/views/tools_search.php:137
-#: ../../content/themes/default/views/tools_search.php:164
-#: ../../content/themes/default/views/tools_search.php:192
+#: ../../content/themes/default/views/tools_search.php:84
+#: ../../content/themes/default/views/tools_search.php:111
+#: ../../content/themes/default/views/tools_search.php:138
+#: ../../content/themes/default/views/tools_search.php:165
+#: ../../content/themes/default/views/tools_search.php:193
+#: ../../content/themes/fuuka/views/tools_search.php:175
 msgid "All"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:91
+#: ../../content/themes/default/views/tools_search.php:92
 msgid "Only Deleted"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:99
+#: ../../content/themes/default/views/tools_search.php:100
 msgid "Only Non-Deleted"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:118
+#: ../../content/themes/default/views/tools_search.php:119
 msgid "Only Ghost"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:126
+#: ../../content/themes/default/views/tools_search.php:127
 msgid "Only Original"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:145
+#: ../../content/themes/default/views/tools_search.php:146
 msgid "Only with image"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:153
+#: ../../content/themes/default/views/tools_search.php:154
 msgid "Only without image"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:172
+#: ../../content/themes/default/views/tools_search.php:173
 msgid "Thread OPs Only"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:180
+#: ../../content/themes/default/views/tools_search.php:181
 msgid "Replies Only"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:201
+#: ../../content/themes/default/views/tools_search.php:202
+#: ../../content/themes/fuuka/views/tools_search.php:179
 msgid "Only by Users"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:209
+#: ../../content/themes/default/views/tools_search.php:210
+#: ../../content/themes/fuuka/views/tools_search.php:183
 msgid "Only by Mods"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:217
+#: ../../content/themes/default/views/tools_search.php:218
+#: ../../content/themes/fuuka/views/tools_search.php:187
 msgid "Only by Admins"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:231
+#: ../../content/themes/default/views/tools_search.php:232
 msgid "New First"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:239
+#: ../../content/themes/default/views/tools_search.php:240
 msgid "Old First"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:252
+#: ../../content/themes/default/views/tools_search.php:253
+#: ../../content/themes/fuuka/views/tools_search.php:64
 msgid "Tripcode"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:258
+#: ../../content/themes/default/views/tools_search.php:259
 msgid "Filename"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:261
+#: ../../content/themes/default/views/tools_search.php:262
 msgid "Date start"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:275
+#: ../../content/themes/default/views/tools_search.php:276
 msgid "Date end"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:289
+#: ../../content/themes/default/views/tools_search.php:290
 msgid "Image hash"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:292
+#: ../../content/themes/default/views/tools_search.php:293
 msgid "You can drag and drop an image on the field above"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:295
+#: ../../content/themes/default/views/tools_search.php:296
 msgid "Your latest searches:"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:296
+#: ../../content/themes/default/views/tools_search.php:297
 msgid "Clear"
 msgstr ""
 
@@ -2786,12 +2815,181 @@ msgstr ""
 msgid "Redirecting..."
 msgstr ""
 
+#: ../../content/themes/fuuka/views/board.php:17
+msgid "File:"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/board.php:47
+#: ../../content/themes/fuuka/views/board_comment.php:37
+msgid "This post was deleted before its lifetime has expired."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/board.php:48
+#: ../../content/themes/fuuka/views/board_comment.php:38
+msgid "The image in this post is marked as spoiler."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/board.php:53
+msgid "Click Reply to view."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/board_comment.php:39
+msgid "This post is not an archived reply."
+msgstr ""
+
 #: ../../content/themes/fuuka/views/index.php:7
 msgid "Welcome on the 4chan Archiver \"FoOlFuuka\""
 msgstr ""
 
 #: ../../content/themes/fuuka/views/index.php:8
 msgid "Choose a 4chan board:"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_reply_box.php:13
+msgid "Create New Thread"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_reply_box.php:41
+#: ../../content/themes/fuuka/views/tools_reply_box.php:121
+msgid "Spoiler"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_reply_box.php:45
+#: ../../content/themes/fuuka/views/tools_reply_box.php:126
+msgid "Password used for file deletion."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_reply_box.php:50
+#: ../../content/themes/fuuka/views/tools_reply_box.php:131
+msgid "Post As"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_reply_box.php:61
+#: ../../content/themes/fuuka/views/tools_reply_box.php:142
+#: ../../content/themes/fuuka/views/tools_search.php:192
+msgid "Action"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_reply_box.php:92
+msgid "Reply to Thread"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_reply_box.php:92
+msgid "Don't expect anything heroic. Your post will not be uploaded to the original board."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:33
+msgid "Advanced"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:43
+msgid "Advanced Search"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:46
+msgid "Text to Find"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:58
+msgid "Search for <b>exact</b> username. Leave empty for any username."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:64
+msgid "Search for <b>exact</b> tripcode. Leave empty for any tripcode."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:76
+msgid "Image Hash"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:82
+msgid "From Date"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:82
+msgid "Enter what date to start searching from."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:82
+#: ../../content/themes/fuuka/views/tools_search.php:96
+msgid "Format is YYYY-MM-DD"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:96
+msgid "To Date"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:96
+msgid "Enter what date to start searching until."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:111
+msgid "Deleted Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:115
+#: ../../content/themes/fuuka/views/tools_search.php:132
+msgid "Show All Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:119
+msgid "Show Only Deleted Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:123
+msgid "Show Only Non-Deleted Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:128
+msgid "Internal posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:136
+msgid "Show Only Internal Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:140
+msgid "Show Only Archived Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:145
+msgid "Order"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:149
+msgid "New Posts First"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:153
+msgid "Old Posts First"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:158
+msgid "Results"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:166
+msgid "Threads"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:171
+msgid "Capcode"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:207
+msgid "Simple"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:219
+msgid "View Post"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:241
+msgid "View Page"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:259
+msgid "In ghost mode, only threads with non-archived posts will be shown."
 msgstr ""
 
 #: ../../content/themes/yotsuba/views/index.php:8

@@ -8,8 +8,8 @@ if (!defined('BASEPATH'))
  * The Post Model deals with all the data in the board tables and
  * the media folders. It also processes the post for display.
  *
- * @package        	FoOlFuuka
- * @subpackage    	Models
+ * @package        	FoOlFrame
+ * @subpackage    	FoOlFuuka
  * @category    	Models
  * @author        	FoOlRulez
  * @license         http://www.apache.org/licenses/LICENSE-2.0.html

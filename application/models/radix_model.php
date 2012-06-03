@@ -4,16 +4,42 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 
+/**
+ * FoOlFuuka Radix Model
+ *
+ * The Radix Model deals with the specifications of the boards,
+ * their management, maintenance. It provides utility functions to
+ * get the correct table name and can preload all the boards.
+ * It uses the boards_preferences table to store extra board data,
+ * also useful for plugins.
+ *
+ * @package        	FoOlFrame
+ * @subpackage    	FoOlFuuka
+ * @category    	Models
+ * @author        	FoOlRulez
+ * @license         http://www.apache.org/licenses/LICENSE-2.0.html
+ */
 class Radix_model extends CI_Model
 {
 
-	// caching results
-	var $preloaded_radixes = null;
-	var $loaded_radixes_archive = null;
-	var $loaded_radixes_board = null;
-	var $selected_radix = null; // readily available if set
+	/**
+	 * An array of all the preloaded boards
+	 * 
+	 * @var null|array 
+	 */
+	private $preloaded_radixes = null;
+
+	/**
+	 * The currently selected radix to use with get_selected_radix()
+	 * 
+	 * @var object 
+	 */
+	private $selected_radix = null;
 
 
+	/**
+	 * Nothing special here 
+	 */
 	function __construct()
 	{
 		parent::__construct();
@@ -25,6 +51,7 @@ class Radix_model extends CI_Model
 	 * The structure of the radix table to be used with validation and form creator
 	 *
 	 * @param Object $radix If available insert to customize the
+	 * @return array the structure
 	 */
 	function structure($radix = NULL)
 	{
@@ -391,10 +418,11 @@ class Radix_model extends CI_Model
 				'default_value' => FOOL_RADIX_MYISAM_SEARCH
 			),
 		);
-					
+
 		$structure = $this->plugins->run_hook('fu_radix_model_structure_alter', array($structure), 'simple');
-		
-		$structure = array_merge($structure, array(
+
+		$structure = array_merge($structure,
+			array(
 			'separator-2' => array(
 				'type' => 'separator-short'
 			),
@@ -410,6 +438,12 @@ class Radix_model extends CI_Model
 	}
 
 
+	/**
+	 * Saves the data for a board. Plains the structure, runs the validation.
+	 * If 'id' is not set, it creates a new board.
+	 * 
+	 * @param type $data 
+	 */
 	function save($data)
 	{
 		// filter _boards data from _boards_preferences data
@@ -417,19 +451,19 @@ class Radix_model extends CI_Model
 		$data_boards = array();
 		$data_boards_preferences = array();
 
-		foreach($structure as $key => $item)
+		foreach ($structure as $key => $item)
 		{
 			// mix the sub and sub_inverse and flatten the array
-			if(isset($item['sub_inverse']) && isset($item['sub']))
+			if (isset($item['sub_inverse']) && isset($item['sub']))
 			{
 				$item['sub'] = array_merge($item['sub'], $item['sub_inverse']);
 			}
 
-			if(isset($item['sub']))
+			if (isset($item['sub']))
 			{
-				foreach($item['sub'] as $k => $i)
+				foreach ($item['sub'] as $k => $i)
 				{
-					if(isset($i['boards_preferences']) && isset($data[$k]))
+					if (isset($i['boards_preferences']) && isset($data[$k]))
 					{
 						$data_boards_preferences[$k] = $data[$k];
 						unset($data[$k]);
@@ -437,18 +471,17 @@ class Radix_model extends CI_Model
 				}
 			}
 
-			if(isset($item['boards_preferences']) && isset($data[$key]))
+			if (isset($item['boards_preferences']) && isset($data[$key]))
 			{
 				$data_boards_preferences[$key] = $data[$key];
 				unset($data[$key]);
 			}
-
 		}
 
 		// data must be already sanitized through the form array
 		if (isset($data['id']))
 		{
-			if(!$radix = $this->get_by_id($data['id']))
+			if (!$radix = $this->get_by_id($data['id']))
 			{
 				show_404();
 			}
@@ -457,10 +490,10 @@ class Radix_model extends CI_Model
 			$this->db->where('id', $data['id'])->update('boards', $data);
 
 			// save extra preferences
-			foreach($data_boards_preferences as $name => $value)
+			foreach ($data_boards_preferences as $name => $value)
 			{
 				$query = $this->db->where('board_id', $data['id'])->where('name', $name)->get('boards_preferences');
-				if($query->num_rows())
+				if ($query->num_rows())
 				{
 					$this->db->where('board_id', $data['id'])->where('name', $name)
 						->update('boards_preferences', array('value' => $value));
@@ -479,10 +512,10 @@ class Radix_model extends CI_Model
 			$id = $this->db->insert_id();
 
 			// save extra preferences
-			foreach($data_boards_preferences as $name => $value)
+			foreach ($data_boards_preferences as $name => $value)
 			{
 				$query = $this->db->where('board_id', $id)->where('name', $name)->get('boards_preferences');
-				if($query->num_rows())
+				if ($query->num_rows())
 				{
 					$this->db->where('board_id', $id)->where('name', $name)
 						->update('boards_preferences', array($name => $value));
@@ -502,7 +535,7 @@ class Radix_model extends CI_Model
 			$this->mysql_create_triggers($board);
 
 			// if the user didn't select sphinx for search, enable the table _search silently
-			if(!$board->sphinx)
+			if (!$board->sphinx)
 			{
 				$this->mysql_create_search($board);
 			}
@@ -510,47 +543,62 @@ class Radix_model extends CI_Model
 	}
 
 
+	/**
+	 * Removes the board and renames its dir with a _removed suffix and with a number
+	 * in case of collision
+	 * 
+	 * @param type $id the ID of the board
+	 * @return boolean TRUE on success, FALSE on failure
+	 */
 	function remove($id)
 	{
 		$board = $this->get_by_id($id);
 
 		// always remove the triggers first
 		$this->mysql_remove_triggers($board);
-		$this->mysql_remove_tables($board);
-		$this->db->where('id', $id)->delete('boards');
 		$this->db->where('board_id', $id)->delete('boards_preferences');
-		
+		$this->db->where('id', $id)->delete('boards');
+
 		// rename the directory and prevent directory collision
 		$this->load->helper('string');
-		
+
 		$base = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname;
-		if(file_exists($base . '_removed'))
+		if (file_exists($base . '_removed'))
 		{
 			$incremented = increment_string('_removed');
-			while(file_exists($base . $incremented))
+			while (file_exists($base . $incremented))
 			{
 				$incremented = increment_string($incremented);
 			}
-			
+
 			$rename_to = $base . $incremented;
 		}
 		else
 		{
 			$rename_to = get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $board->shortname . '_removed';
 		}
-		
+
 		rename($base, $rename_to);
+
+		// for huge boards, this may time out with PHP, while MySQL will keep going
+		$this->mysql_remove_tables($board);
 
 		return TRUE;
 	}
-	
-	
+
+
+	/**
+	 * Maintenance function to remove leftover _removed folders
+	 * 
+	 * @param type $echo echo CLI output
+	 * @return boolean TRUE on success, FALSE on failure
+	 */
 	function remove_leftover_dirs($echo = FALSE)
 	{
 		$all = $this->get_all();
-		
+
 		$array = array();
-		
+
 		// get all directories
 		if ($handle = opendir(get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY)))
 		{
@@ -572,37 +620,47 @@ class Radix_model extends CI_Model
 		}
 
 		// make sure it's a removed folder
-		foreach($array as $key => $dir)
+		foreach ($array as $key => $dir)
 		{
-			if(strpos($dir, '_removed') === FALSE)
+			if (strpos($dir, '_removed') === FALSE)
 			{
 				unset($array[$key]);
 			}
-			
-			foreach($all as $a)
+
+			foreach ($all as $a)
 			{
-				if($a->shortname === $dir)
+				if ($a->shortname === $dir)
 				{
 					unset($array[$key]);
 				}
 			}
 		}
-		
+
 		// exec the deletion
-		foreach($array as $dir)
+		foreach ($array as $dir)
 		{
 			$cmd = 'rm -Rv ' . get_setting('fs_fuuka_boards_directory', FOOLFUUKA_BOARDS_DIRECTORY) . '/' . $dir;
-			echo $cmd . PHP_EOL;
-			echo exec($cmd) . PHP_EOL;
+			if ($echo)
+			{
+				echo $cmd . PHP_EOL;
+				passthru($cmd);
+				echo PHP_EOL;
+			}
+			else
+			{
+				exec($cmd) . PHP_EOL;
+			}
 		}
-		
+
 		return TRUE;
 	}
-	
 
 
 	/**
 	 * Puts the table in readily available variables
+	 * 
+	 * @param bool $preferences if TRUE it loads all the extra preferences for all the boards
+	 * @return FALSE if there is no boards, TRUE otherwise
 	 */
 	function preload($preferences = FALSE)
 	{
@@ -640,25 +698,25 @@ class Radix_model extends CI_Model
 			}
 
 			// load the basic value of the preferences
-			foreach($structure as $key => $arr)
+			foreach ($structure as $key => $arr)
 			{
-				if(!isset($result_object[$item->id]->$key) && isset($arr['boards_preferences']))
+				if (!isset($result_object[$item->id]->$key) && isset($arr['boards_preferences']))
 				{
-					if(isset($arr['default_value']))
+					if (isset($arr['default_value']))
 						$result_object[$item->id]->$key = $arr['default_value'];
 					else
 						$result_object[$item->id]->$key = FALSE;
 				}
 
-				foreach(array('sub', 'sub_inverse') as $sub)
+				foreach (array('sub', 'sub_inverse') as $sub)
 				{
-					if(isset($arr[$sub]))
+					if (isset($arr[$sub]))
 					{
-						foreach($arr[$sub] as $k => $a)
+						foreach ($arr[$sub] as $k => $a)
 						{
-							if(!isset($result_object[$item->id]->$k) && isset($a['boards_preferences']))
+							if (!isset($result_object[$item->id]->$k) && isset($a['boards_preferences']))
 							{
-								if(isset($a['default_value']))
+								if (isset($a['default_value']))
 									$result_object[$item->id]->$k = $a['default_value'];
 								else
 									$result_object[$item->id]->$k = FALSE;
@@ -667,25 +725,28 @@ class Radix_model extends CI_Model
 					}
 				}
 			}
-
 		}
 
 		//echo '<pre>'.print_r($result_object, true).'</pre>';
 
 		$this->preloaded_radixes = $result_object;
 
-		if($preferences == TRUE)
+		if ($preferences == TRUE)
 			$this->load_preferences();
+		
+		return TRUE;
 	}
+
 
 	/**
 	 * Loads preferences data for the board.
 	 *
-	 * @param type $board null/array of IDs/ID/board object
+	 * @param null|int|array|object $board null/array of IDs/ID/board object
+	 * @return object the object of the board chosen
 	 */
 	function load_preferences($board = NULL)
 	{
-		if(is_null($board))
+		if (is_null($board))
 		{
 			$ids = array_keys($this->preloaded_radixes);
 		}
@@ -703,11 +764,11 @@ class Radix_model extends CI_Model
 		}
 
 		$selected = FALSE;
-		foreach($ids as $id)
+		foreach ($ids as $id)
 		{
 			$query = $this->db->where('board_id', $id)->get('boards_preferences');
-			foreach($query->result() as $value)
-			{;
+			foreach ($query->result() as $value)
+			{
 				$this->preloaded_radixes[$id]->{$value->name} = $value->value;
 			}
 
@@ -718,11 +779,13 @@ class Radix_model extends CI_Model
 		return $selected;
 	}
 
+
 	/**
+	 * Get the board table name with protexted identifiers
 	 *
 	 * @param string $shortname The shortname, or the whole board object
 	 * @param string $suffix board suffix like _images
-	 * @return type
+	 * @return string the table name with protected identifiers
 	 */
 	function get_table($shortname, $suffix = '')
 	{
@@ -741,17 +804,17 @@ class Radix_model extends CI_Model
 
 
 	/**
-	 * Set a radix for execution (example: chan.php)
+	 * Set a radix for contiguous use
 	 *
-	 * @param type $shortname
-	 * @return type
+	 * @param type $shortname the board shortname
+	 * @return bool|object FALSE on failure, else the board object
 	 */
 	function set_selected_by_shortname($shortname)
 	{
 		if (FALSE != ($val = $this->get_by_shortname($shortname)))
 		{
-			$this->selected_radix = $val;
 			$val = $this->load_preferences($val);
+			$this->selected_radix = $val;
 			return $val;
 		}
 
@@ -761,12 +824,15 @@ class Radix_model extends CI_Model
 	}
 
 
+	/**
+	 * Returns the object of the selected radix
+	 * 
+	 * @return bool|object FALSE if not set, else the board object
+	 */
 	function get_selected()
 	{
 		if (is_null($this->selected_radix))
 		{
-			// we are now using this even to check if any is selected
-			//log_message('error', 'radix.php get_selected_radix(): no radix selected');
 			return FALSE;
 		}
 
@@ -777,7 +843,7 @@ class Radix_model extends CI_Model
 	/**
 	 * Returns all the radixes as array of objects
 	 *
-	 * @return array
+	 * @return array the objects of the preloaded radixes
 	 */
 	function get_all()
 	{
@@ -787,6 +853,9 @@ class Radix_model extends CI_Model
 
 	/**
 	 * Returns the single radix
+	 * 
+	 * @param int $radix_id the ID of the board
+	 * @return object the board object
 	 */
 	function get_by_id($radix_id)
 	{
@@ -802,10 +871,10 @@ class Radix_model extends CI_Model
 	/**
 	 * Returns the single radix by type selected
 	 *
-	 * @param type $value
-	 * @param type $type
-	 * @param type $switch
-	 * @return type
+	 * @param string $value the value searched
+	 * @param string $type the variable name on which to match
+	 * @param bool $switch TRUE if it must be equal or FALSE if not equal
+	 * @return bool|object FALSE if not found or the board object
 	 */
 	function get_by_type($value, $type, $switch = TRUE)
 	{
@@ -825,6 +894,8 @@ class Radix_model extends CI_Model
 
 	/**
 	 * Returns the single radix by shortname
+	 * 
+	 * @return object the board with the shortname
 	 */
 	function get_by_shortname($shortname)
 	{
@@ -835,9 +906,9 @@ class Radix_model extends CI_Model
 	/**
 	 * Returns only the type specified (exam)
 	 *
-	 * @param string $type 'archive'
-	 * @param boolean $switch 'archive'
-	 * @return type
+	 * @param string $type the variable name
+	 * @param boolean $switch the value to match
+	 * @return array the board objects
 	 */
 	function filter_by_type($type, $switch)
 	{
@@ -854,26 +925,24 @@ class Radix_model extends CI_Model
 
 
 	/**
-	 *  Returns an array of objects that are archives
+	 * Returns an array of objects that are archives
+	 * 
+	 * @return array the board objects that are archives
 	 */
 	function get_archives()
 	{
-		if (!is_null($this->loaded_radixes_archive))
-			return $this->loaded_radixes_archive;
-
-		return $this->loaded_radixes_archive = $this->filter_by_type('archive', TRUE);
+		return $this->filter_by_type('archive', TRUE);
 	}
 
 
 	/**
-	 *  Returns an array of objects that are boards (not archives)
+	 * Returns an array of objects that are boards (not archives)
+	 * 
+	 * @return array the board objects that are boards
 	 */
 	function get_boards()
 	{
-		if (!is_null($this->loaded_radixes_board))
-			return $this->loaded_radixes_board;
-
-		return $this->loaded_radixes_board = $this->filter_by_type('archive', FALSE);
+		return $this->filter_by_type('archive', FALSE);
 	}
 
 
@@ -881,13 +950,13 @@ class Radix_model extends CI_Model
 	 * Tells us if the entire MySQL server is compatible with multibyte
 	 *
 	 * @param bool $as_string if TRUE it returns the strong as in utf8 or utf8mb4
-	 * @return type
+	 * @return bool|string TRUE or FALSE, or the compatibe charset depending on $as_string
 	 */
 	function mysql_check_multibyte($as_string = FALSE)
 	{
 		$query = $this->db->query("SHOW CHARACTER SET WHERE Charset = 'utf8mb4';");
 
-	if(!$as_string)
+		if (!$as_string)
 		{
 			return (boolean) $query->num_rows();
 		}
@@ -898,6 +967,11 @@ class Radix_model extends CI_Model
 	}
 
 
+	/**
+	 * Creates the tables for the board
+	 * 
+	 * @param object $board the board object
+	 */
 	function mysql_create_tables($board)
 	{
 		// with true it gives the charset string directly
@@ -1024,23 +1098,30 @@ class Radix_model extends CI_Model
 				media_hash, media, preview_op, preview_reply, total, banned
 			)
 			SELECT md5, NULL, NULL, NULL, 0, 1
-			FROM ' . $this->db->protect_identifiers('banned_md5', TRUE) . '
+			FROM ' . $this->db->protect_identifiers('banned_md5',
+				TRUE) . '
 		');
 	}
 
 
+	/**
+	 * Create the triggers for the board
+	 * 
+	 * @param object $board the board object
+	 */
 	function mysql_create_triggers($board)
 	{
 		// triggers fail if we try to send it from the other database, so switch it for a moment
 		// the alternative would be adding a database prefix to the trigger name which would be messy
-		if(get_setting('fs_fuuka_boards_db'))
+		if (get_setting('fs_fuuka_boards_db'))
 			$this->db->query('USE ' . get_setting('fs_fuuka_boards_db'));
 
 		$this->db->query("
 			CREATE PROCEDURE `update_thread_" . $board->shortname . "` (tnum INT)
 			BEGIN
 			UPDATE
-				" . $this->get_table($board, '_threads') . " op
+				" . $this->get_table($board,
+				'_threads') . " op
 			SET
 				op.time_last = (
 				COALESCE(GREATEST(
@@ -1079,7 +1160,8 @@ class Radix_model extends CI_Model
 		$this->db->query("
 			CREATE PROCEDURE `create_thread_" . $board->shortname . "` (num INT, timestamp INT)
 			BEGIN
-				INSERT IGNORE INTO " . $this->get_table($board, '_threads') . " VALUES (num, timestamp, timestamp,
+				INSERT IGNORE INTO " . $this->get_table($board,
+				'_threads') . " VALUES (num, timestamp, timestamp,
 					timestamp, NULL, NULL, 0, 0);
 			END;
 		");
@@ -1087,7 +1169,8 @@ class Radix_model extends CI_Model
 		$this->db->query("
 			CREATE PROCEDURE `delete_thread_" . $board->shortname . "` (tnum INT)
 			BEGIN
-				DELETE FROM " . $this->get_table($board, '_threads') . " WHERE thread_num = tnum;
+				DELETE FROM " . $this->get_table($board,
+				'_threads') . " WHERE thread_num = tnum;
 			END;
 		");
 
@@ -1096,7 +1179,8 @@ class Radix_model extends CI_Model
 			n_media VARCHAR(20), n_preview VARCHAR(20), n_op INT)
 			BEGIN
 				IF n_op = 1 THEN
-					INSERT INTO " . $this->get_table($board, '_images') . " (media_hash, media, preview_op, total)
+					INSERT INTO " . $this->get_table($board,
+				'_images') . " (media_hash, media, preview_op, total)
 					VALUES (n_media_hash, n_media, n_preview, 1)
 					ON DUPLICATE KEY UPDATE
 					media_id = LAST_INSERT_ID(media_id),
@@ -1104,7 +1188,8 @@ class Radix_model extends CI_Model
 					preview_op = COALESCE(preview_op, VALUES(preview_op)),
 					media = COALESCE(media, VALUES(media));
 				ELSE
-					INSERT INTO " . $this->get_table($board, '_images') . " (media_hash, media, preview_reply, total)
+					INSERT INTO " . $this->get_table($board,
+				'_images') . " (media_hash, media, preview_reply, total)
 					VALUES (n_media_hash, n_media, n_preview, 1)
 					ON DUPLICATE KEY UPDATE
 					media_id = LAST_INSERT_ID(media_id),
@@ -1118,7 +1203,8 @@ class Radix_model extends CI_Model
 		$this->db->query("
 			CREATE PROCEDURE `delete_image_" . $board->shortname . "` (n_media_id INT)
 			BEGIN
-			UPDATE " . $this->get_table($board, '_images') . " SET total = (total - 1) WHERE media_id = n_media_id;
+			UPDATE " . $this->get_table($board,
+				'_images') . " SET total = (total - 1) WHERE media_id = n_media_id;
 			END;
 		");
 
@@ -1140,19 +1226,22 @@ class Radix_model extends CI_Model
 				SET d_trip = p_trip IS NOT NULL;
 				SET d_name = COALESCE(p_name <> 'Anonymous' AND p_trip IS NULL, 1);
 
-				INSERT INTO " . $this->get_table($board, '_daily') . " VALUES(d_day, 1, d_image, d_sage, d_anon, d_trip,
+				INSERT INTO " . $this->get_table($board,
+				'_daily') . " VALUES(d_day, 1, d_image, d_sage, d_anon, d_trip,
 					d_name)
 					ON DUPLICATE KEY UPDATE posts=posts+1, images=images+d_image,
 					sage=sage+d_sage, anons=anons+d_anon, trips=trips+d_trip,
 					names=names+d_name;
 
-				IF (SELECT trip FROM " . $this->get_table($board, '_users') . " WHERE trip = p_trip) IS NOT NULL THEN
+				IF (SELECT trip FROM " . $this->get_table($board,
+				'_users') . " WHERE trip = p_trip) IS NOT NULL THEN
 					UPDATE " . $this->get_table($board, '_users') . " SET postcount=postcount+1,
 						firstseen = LEAST(p_timestamp, firstseen),
 						name = COALESCE(p_name, '')
 					WHERE trip = p_trip;
 				ELSE
-					INSERT INTO " . $this->get_table($board, '_users') . " VALUES(
+					INSERT INTO " . $this->get_table($board,
+				'_users') . " VALUES(
 						NULL, COALESCE(p_name,''), COALESCE(p_trip,''), p_timestamp, 1)
 					ON DUPLICATE KEY UPDATE postcount=postcount+1,
 						firstseen = LEAST(VALUES(firstseen), firstseen),
@@ -1178,14 +1267,17 @@ class Radix_model extends CI_Model
 				SET d_trip = p_trip IS NOT NULL;
 				SET d_name = COALESCE(p_name <> 'Anonymous' AND p_trip IS NULL, 1);
 
-				UPDATE " . $this->get_table($board, '_daily') . " SET posts=posts-1, images=images-d_image,
+				UPDATE " . $this->get_table($board,
+				'_daily') . " SET posts=posts-1, images=images-d_image,
 					sage=sage-d_sage, anons=anons-d_anon, trips=trips-d_trip,
 					names=names-d_name WHERE day = d_day;
 
-				IF (SELECT trip FROM " . $this->get_table($board, '_users') . " WHERE trip = p_trip) IS NOT NULL THEN
+				IF (SELECT trip FROM " . $this->get_table($board,
+				'_users') . " WHERE trip = p_trip) IS NOT NULL THEN
 					UPDATE " . $this->get_table($board, '_users') . " SET postcount = postcount-1 WHERE trip = p_trip;
 				ELSE
-					UPDATE " . $this->get_table($board, '_users') . " SET postcount = postcount-1
+					UPDATE " . $this->get_table($board,
+				'_users') . " SET postcount = postcount-1
 						WHERE name = COALESCE(p_name, '') AND trip = COALESCE(p_trip, '');
 				END IF;
 			END;
@@ -1229,10 +1321,16 @@ class Radix_model extends CI_Model
 			END;
 		");
 
-		if(get_setting('fs_fuuka_boards_db'))
+		if (get_setting('fs_fuuka_boards_db'))
 			$this->db->query('USE ' . $this->db->database);
 	}
 
+
+	/**
+	 * Remove the tables associated to the board
+	 * 
+	 * @param object $board the board object
+	 */
 	function mysql_remove_tables($board)
 	{
 		$tables = array(
@@ -1244,13 +1342,19 @@ class Radix_model extends CI_Model
 			'_search'
 		);
 
-		foreach($tables as $table)
+		foreach ($tables as $table)
 			$this->db->query("DROP TABLE IF EXISTS " . $this->get_table($board, $table));
 	}
 
+
+	/**
+	 * Remove the MySQL triggers for the boards
+	 * 
+	 * @param object $board the board object
+	 */
 	function mysql_remove_triggers($board)
 	{
-		if(get_setting('fs_fuuka_boards_db'))
+		if (get_setting('fs_fuuka_boards_db'))
 			$this->db->query('USE ' . get_setting('fs_fuuka_boards_db'));
 
 		$prefixes_procedure = array(
@@ -1269,15 +1373,16 @@ class Radix_model extends CI_Model
 			'after_del_'
 		);
 
-		foreach($prefixes_procedure as $prefix)
+		foreach ($prefixes_procedure as $prefix)
 			$this->db->query("DROP PROCEDURE IF EXISTS `" . $prefix . $board->shortname . "`");
 
-		foreach($prefixes_trigger as $prefix)
+		foreach ($prefixes_trigger as $prefix)
 			$this->db->query("DROP TRIGGER IF EXISTS `" . $prefix . $board->shortname . "`");
 
-		if(get_setting('fs_fuuka_boards_db'))
+		if (get_setting('fs_fuuka_boards_db'))
 			$this->db->query('USE ' . $this->db->database);
 	}
+
 
 	/**
 	 * Finds out which is the shortest word that the fulltext can look for
@@ -1291,6 +1396,7 @@ class Radix_model extends CI_Model
 		return $length_res->row()->Value;
 	}
 
+
 	/**
 	 * Create the supplementary search table and fill it with the comments
 	 * Prefer this to the prefixed functions for future-proof database coverage
@@ -1301,6 +1407,7 @@ class Radix_model extends CI_Model
 	{
 		return $this->mysql_create_search($board);
 	}
+
 
 	/**
 	 * Create the supplementary search table and fill it with the comments
@@ -1347,10 +1454,12 @@ class Radix_model extends CI_Model
 					OR
 				CHAR_LENGTH(comment) > ?
 
-		", array($word_length, $word_length));
+		",
+			array($word_length, $word_length));
 
 		return TRUE;
 	}
+
 
 	/**
 	 * Drop the _search table
@@ -1362,6 +1471,7 @@ class Radix_model extends CI_Model
 	{
 		return $this->mysql_remove_search($board);
 	}
+
 
 	/**
 	 * Drop the _search table
@@ -1378,6 +1488,7 @@ class Radix_model extends CI_Model
 
 		return TRUE;
 	}
+
 
 	/**
 	 * Figures out if the table is already utf8mb4 or not
@@ -1403,13 +1514,15 @@ class Radix_model extends CI_Model
 	 * Convert to utf8mb4 if possible
 	 *
 	 * @param object $board board object
+	 * @return bool TRUE on success, FALSE on failure (in case MySQL doesn't support multibyte)
 	 */
 	function mysql_change_charset($board)
 	{
 		// if utf8mb4 is not supported, stop the machines
-		if(!$this->mysql_check_multibyte())
+		if (!$this->mysql_check_multibyte())
 		{
-			cli_notice('error', __('Your MySQL installation doesn\'t support multibyte characters. Update MySQL to version 5.5 or higher.'));
+			cli_notice('error',
+				__('Your MySQL installation doesn\'t support multibyte characters. Update MySQL to version 5.5 or higher.'));
 			return FALSE;
 		}
 
@@ -1417,14 +1530,14 @@ class Radix_model extends CI_Model
 		$tables = array('', '_threads', '_users');
 
 		// also _search needs utf8mb4, but we need to add it separately not to create db errors
-		if($board->myisam_search)
+		if ($board->myisam_search)
 		{
 			$tables[] = '_search';
 		}
 
-		foreach($tables as $table)
+		foreach ($tables as $table)
 		{
-			if($this->mysql_check_charset($board, $table))
+			if ($this->mysql_check_charset($board, $table))
 			{
 				cli_notice('notice', sprintf(__('Converting %s to utfmb4'), $this->get_table($board, $table)));
 				$this->db->query("ALTER TABLE " . $this->get_table($board, $table) . " CONVERT TO CHARACTER SET utf8mb4");
@@ -1434,4 +1547,8 @@ class Radix_model extends CI_Model
 		cli_notice('notice', __('The tables have all been converted to utf8mb4'));
 		return TRUE;
 	}
+
 }
+
+/* End of file radix_model.php */
+/* Location: ./application/models/radix_model.php */

@@ -4,7 +4,8 @@ if (!defined('BASEPATH'))
 
 if (!isset($board) && get_setting('fs_sphinx_global'))
 {
-	// searh can work also without a board selected
+	// search can work also without a board selected
+	$board = new stdClass();
 	$board->shortname = '';
 }
 

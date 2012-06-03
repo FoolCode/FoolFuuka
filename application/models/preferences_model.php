@@ -2,10 +2,24 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-
+/**
+ * FoOlFrame Preferences Model
+ *
+ * The Preferences Model deals with the preferences table
+ * and uses the form validation extended by FoOlFrame.
+ *
+ * @package        	FoOlFrame
+ * @subpackage    	Models
+ * @category    	Models
+ * @author        	FoOlRulez
+ * @license         http://www.apache.org/licenses/LICENSE-2.0.html
+ */
 class Preferences_model extends CI_Model
 {
 
+	/**
+	 * Nothing special here 
+	 */
 	function __construct()
 	{
 		parent::__construct();
@@ -85,3 +99,7 @@ class Preferences_model extends CI_Model
 	}
 	
 }
+
+
+/* End of file preferences_model.php */
+/* Location: ./application/models/preferences_model.php */

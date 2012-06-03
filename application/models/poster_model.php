@@ -3,7 +3,18 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-
+/**
+ * FoOlFuuka Preferences Model
+ *
+ * The Preferences Model deals with the preferences table
+ * and uses the form validation extended by FoOlFrame.
+ *
+ * @package        	FoOlFrame
+ * @subpackage    	FoOlFuuka
+ * @category    	Models
+ * @author        	FoOlRulez
+ * @license         http://www.apache.org/licenses/LICENSE-2.0.html
+ */
 class Poster_model extends CI_Model
 {
 
@@ -84,3 +95,7 @@ class Poster_model extends CI_Model
 	}
 
 }
+
+
+/* End of file preferences_model.php */
+/* Location: ./application/models/preferences_model.php */

@@ -506,7 +506,17 @@ class Theme_model extends CI_Model
 		extract($_data);
 
 		ob_start();
-		include $_location;
+		
+		// rewrite short tags from CodeIgniter 2.1
+		if ((bool) @ini_get('short_open_tag') === FALSE && config_item('rewrite_short_tags') == TRUE)
+		{
+			echo eval('?>'.preg_replace("/;*\s*\?>/", "; ?>", str_replace('<?=', '<?php echo ', file_get_contents($_location))));
+		}
+		else
+		{
+			include $_location;
+		}
+		
 		$string = ob_get_clean();
 		return $string;
 	}

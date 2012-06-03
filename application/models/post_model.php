@@ -516,8 +516,7 @@ class Post_model extends CI_Model
 		}
 
 		$trip = mb_convert_encoding($plain, 'SJIS', 'UTF-8');
-		$trip = str_replace(array('&', '"', "'", '<', '>'), array('&amp;', '&quot;', '&#39;', '&lt;', '&gt;'), $trip);
-
+		
 		$salt = substr($trip . 'H.', 1, 2);
 		$salt = preg_replace('/[^.-z]/', '.', $salt);
 		$salt = strtr($salt, ':;<=>?@[\]^_`', 'ABCDEFGabcdef');
@@ -576,13 +575,14 @@ class Post_model extends CI_Model
 		$elements = array('title', 'name', 'email', 'trip', 'media_orig',
 			'preview_orig', 'media_filename', 'media_hash', 'poster_hash');
 
-		if ($this->tank_auth->is_allowed())
+		if ($this->tank_auth->is_allowed() && isset($post->report_reason))
 		{
 			array_push($elements, 'report_reason');
 		}
 
 		foreach($elements as $element)
 		{
+			
 			$element_processed = $element . '_processed';
 
 			$post->$element_processed = @iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));

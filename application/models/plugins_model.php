@@ -34,7 +34,7 @@ class Plugins_model extends CI_Model
 
 	
 	/**
-	 * Find all the available plugins on load
+	 * Nothing special here
 	 */
 	public function __construct()
 	{

@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 /**
- * FoOlFuuka Members Model
+ * FoOlFuuka Reports Model
  *
  * The Reports Model deals with the reports by the users on the
  * posts in the boards

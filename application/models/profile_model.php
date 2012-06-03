@@ -3,18 +3,101 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-
+/**
+ * FoOlFrame Profile Model
+ *
+ * The Profile Model deals with the Tank Auth profiles to give some
+ * extra profile data for the users and change the group of the user
+ *
+ * @package        	FoOlFrame
+ * @subpackage    	Models
+ * @category    	Models
+ * @author        	FoOlRulez
+ * @license         http://www.apache.org/licenses/LICENSE-2.0.html
+ */
 class Profile_model extends CI_Model
 {
 
 
-	function __construct($id = NULL)
+	/**
+	 * Nothing special here 
+	 */
+	function __construct()
 	{
 		parent::__construct();
 	}
 
+	
+	/**
+	 * The functions with 'p_' prefix will respond to plugins before and after
+	 *
+	 * @param string $name
+	 * @param array $parameters
+	 */
+	public function __call($name, $parameters)
+	{
+		$before = $this->plugins->run_hook('fu_profile_model_before_' . $name, $parameters);
 
-	function structure()
+		if (is_array($before))
+		{
+			// if the value returned is an Array, a plugin was active
+			$parameters = $before['parameters'];
+		}
+
+		// if the replace is anything else than NULL for all the functions ran here, the 
+		// replaced function wont' be run
+		$replace = $this->plugins->run_hook('fu_profile_model_replace_' . $name, $parameters, array($parameters));
+
+		if($replace['return'] !== NULL)
+		{
+			$return = $replace['return'];
+		}
+		else
+		{
+			switch (count($parameters)) {
+				case 0:
+					$return = $this->{'p_' . $name}();
+					break;
+				case 1:
+					$return = $this->{'p_' . $name}($parameters[0]);
+					break;
+				case 2:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1]);
+					break;
+				case 3:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2]);
+					break;
+				case 4:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3]);
+					break;
+				case 5:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
+					break;
+				default:
+					$return = call_user_func_array(array(&$this, 'p_' . $name), $parameters);
+				break;
+			}
+		}
+
+		// in the after, the last parameter passed will be the result
+		array_push($parameters, $return);
+		$after = $this->plugins->run_hook('fu_profile_model_after_' . $name, $parameters);
+
+		if (is_array($after))
+		{
+			return $after['return'];
+		}
+
+		return $return;
+	}
+	
+
+	/**
+	 * The structure of a profile
+	 * 
+	 * @return array the structure 
+	 */
+	private function p_structure()
 	{
 		$arr = array(
 			'open' => array(
@@ -121,7 +204,12 @@ class Profile_model extends CI_Model
 	}
 
 
-	function save($data)
+	/**
+	 * Update the profile in the database
+	 * 
+	 * @param array $data the columns to update for the user
+	 */
+	private function p_save($data)
 	{
 		// data must be already sanitized through the form array
 		$this->db->where('user_id', $data['user_id'])->update('profiles', $data);

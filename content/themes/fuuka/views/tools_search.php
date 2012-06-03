@@ -197,10 +197,12 @@ if (!isset($board))
 							'name' => 'submit_search'
 						));
 
+						if (get_setting('fs_sphinx_global')) :
 						echo form_submit(array(
 							'value' => 'Global Search',
 							'name' => 'submit_search_global'
 						));
+						endif;
 						?>
 						<a href="#" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ Simple ]</a>
 					</td>

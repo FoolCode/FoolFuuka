@@ -51,21 +51,21 @@ if(isset($board)) :
 					?>
 
 					<?php
-					if(get_setting('fs_sphinx_global')) :
+					if (get_setting('fs_sphinx_global')) :
 						echo form_submit(array(
 							'class' => 'btn btn-inverse btn-mini',
 							'value' => __('Global Search'),
 							'name' => 'submit_search_global'
 						));
+					endif;
 					?>
 
 					<?php
-						echo form_submit(array(
-							'class' => 'btn btn-inverse btn-mini',
-							'value' => __('Go to post'),
-							'name' => 'submit_post'
-						));
-					endif;
+					echo form_submit(array(
+						'class' => 'btn btn-inverse btn-mini',
+						'value' => __('Go to post'),
+						'name' => 'submit_post'
+					));
 					?>
 
 				</li>

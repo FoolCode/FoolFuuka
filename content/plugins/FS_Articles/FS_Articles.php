@@ -300,6 +300,8 @@ class FS_Articles extends Plugins_model
 		{
 			show_404();
 		}
+
+		Chan::_set_parameters();
 		
 		if($article->url)
 			redirect($article->url);

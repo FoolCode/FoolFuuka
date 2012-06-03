@@ -376,11 +376,6 @@ class Chan extends Public_Controller
 	 */
 	function _set_parameters($variables = array(), $partials = array(), $backend_vars = array())
 	{
-		if ((!is_array($variables) || !is_array($partials)) || (empty($variables) && empty($partials)))
-		{
-			return $this->show_404();
-		}
-
 		// Initialize default values for valid
 		$default = array(
 			'variables' => array(

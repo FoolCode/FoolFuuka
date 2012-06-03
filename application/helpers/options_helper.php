@@ -546,6 +546,7 @@ if (!function_exists('strip_unused_bbcode'))
 {
 	/**
 	 * Callback for parse_bbcode to filter out tags without content inside
+	 * It also changes <code> to <pre> in case there's multiple lines into it
 	 * 
 	 * @param type $action
 	 * @param type $attributes
@@ -558,6 +559,15 @@ if (!function_exists('strip_unused_bbcode'))
 	{
 		if($content === '' || $content === FALSE)
 			return '';
+		
+		// if <code> has multiple lines, wrap it in <pre> instead
+		if($params['start_tag'] == '<code>')
+		{
+			if(count(array_filter(preg_split('/\r\n|\r|\n/', $content))) > 1)
+			{
+				return '<pre>' . $content . '</pre>';
+			}
+		}
 
 		return $params['start_tag'] . $content . $params['end_tag'];
 	}

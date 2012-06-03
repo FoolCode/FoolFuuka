@@ -6,8 +6,7 @@ if (!defined('BASEPATH'))
 /**
  * FoOlFuuka Reports Model
  *
- * The Reports Model deals with the reports by the users on the
- * posts in the boards
+ * The Reports Model manages the reports linked to the board posts
  *
  * @package        	FoOlFrame
  * @subpackage    	FoOlFuuka

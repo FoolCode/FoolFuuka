@@ -4,10 +4,9 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 /**
- * FoOlFuuka Preferences Model
+ * FoOlFuuka Poster Model
  *
- * The Preferences Model deals with the preferences table
- * and uses the form validation extended by FoOlFrame.
+ * The Poster Model deals with user bans
  *
  * @package        	FoOlFrame
  * @subpackage    	FoOlFuuka
@@ -19,20 +18,84 @@ class Poster_model extends CI_Model
 {
 
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct(NULL);
 	}
 	
 	
 	/**
+	 * The functions with 'p_' prefix will respond to plugins before and after
+	 *
+	 * @param string $name
+	 * @param array $parameters
+	 */
+	public function __call($name, $parameters)
+	{
+		$before = $this->plugins->run_hook('fu_poster_model_before_' . $name, $parameters);
+
+		if (is_array($before))
+		{
+			// if the value returned is an Array, a plugin was active
+			$parameters = $before['parameters'];
+		}
+
+		// if the replace is anything else than NULL for all the functions ran here, the 
+		// replaced function wont' be run
+		$replace = $this->plugins->run_hook('fu_poster_model_replace_' . $name, $parameters, array($parameters));
+
+		if($replace['return'] !== NULL)
+		{
+			$return = $replace['return'];
+		}
+		else
+		{
+			switch (count($parameters)) {
+				case 0:
+					$return = $this->{'p_' . $name}();
+					break;
+				case 1:
+					$return = $this->{'p_' . $name}($parameters[0]);
+					break;
+				case 2:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1]);
+					break;
+				case 3:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2]);
+					break;
+				case 4:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3]);
+					break;
+				case 5:
+					$return = $this->{'p_' . $name}($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
+					break;
+				default:
+					$return = call_user_func_array(array(&$this, 'p_' . $name), $parameters);
+				break;
+			}
+		}
+
+		// in the after, the last parameter passed will be the result
+		array_push($parameters, $return);
+		$after = $this->plugins->run_hook('fu_poster_model_after_' . $name, $parameters);
+
+		if (is_array($after))
+		{
+			return $after['return'];
+		}
+
+		return $return;
+	}
+	
+	
+	/**
 	 * This bans people
 	 * 
-	 * @param int $decimal_ip
-	 * @param int $length_in_hours
-	 * @param String $reason 
+	 * @param int $decimal_ip the IP in decimal form
+	 * @param int $length_in_hours the length in hours of the ban
+	 * @param String $reason the reason of the ban
 	 */
-	function ban($decimal_ip, $length_in_hours = NULL, $reason = NULL)
+	private function p_ban($decimal_ip, $length_in_hours = NULL, $reason = NULL)
 	{
 		$query = $this->db->where('ip', $decimal_ip)->get('posters');
 		
@@ -57,7 +120,7 @@ class Poster_model extends CI_Model
 		}
 	}
 	
-	function unban($decimal_ip)
+	private function p_unban($decimal_ip)
 	{
 		$this->db->where('ip', $decimal_ip)->get('posters');
 		
@@ -72,10 +135,10 @@ class Poster_model extends CI_Model
 	/**
 	 * Checks if a person is banned. Returns the poster object if banned, else FALSE
 	 * 
-	 * @param type $decimal_ip
-	 * @return boolean 
+	 * @param type $decimal_ip the IP in decimal form
+	 * @return bool|object FALSE if not banned, the row if banned  
 	 */
-	function is_banned($decimal_ip)
+	private function p_is_banned($decimal_ip)
 	{
 		$query = $this->db->where('ip', $decimal_ip)->get('posters');
 		
@@ -97,5 +160,5 @@ class Poster_model extends CI_Model
 }
 
 
-/* End of file preferences_model.php */
-/* Location: ./application/models/preferences_model.php */
+/* End of file poster_model.php */
+/* Location: ./application/models/poster_model.php */

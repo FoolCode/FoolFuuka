@@ -13,7 +13,7 @@ if (!defined('BASEPATH'))
  * @package        	FoOlFrame
  * @subpackage    	Models
  * @category    	Models
- * @author        	Woxxy
+ * @author        	FoOlRulez
  * @license         http://www.apache.org/licenses/LICENSE-2.0.html
  */
 class Theme_model extends CI_Model

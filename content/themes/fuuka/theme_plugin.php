@@ -28,6 +28,9 @@ class Theme_Plugin_fuuka extends Plugins_model
 		$this->plugins->register_hook($this, 'fu_post_model_process_comment_greentext_result', 8, '_greentext');
 		$this->plugins->register_hook($this, 'fu_post_model_process_internal_links_html_result', 8, 
 			'_process_internal_links_html');
+		
+		$this->plugins->register_hook($this, 'fu_post_model_process_crossboard_links_html_result', 8, 
+			'_process_crossboard_links_html');
 
 		$this->plugins->register_hook($this, 'fu_chan_controller_before_page', 3, 'page'); 
 		$this->plugins->register_hook($this, 'fu_chan_controller_before_gallery', 3, function(){ show_404(); }); 
@@ -60,6 +63,20 @@ class Theme_Plugin_fuuka extends Plugins_model
 			'option_op' => '',
 			'option_backlink' => '',
 		));
+	}
+	
+	function _process_crossboard_links_html($html, $previous_result = NULL)
+	{
+		// a plugin with higher priority modified this
+		if(!is_null($previous_result))
+		{
+			return array('return' => $previous_result);
+		}
+		
+		return array('return' => array(
+				'prefix' => '<span class="unkfunc">',
+				'suffix' => '</span>'
+			));
 	}
 
 	/**

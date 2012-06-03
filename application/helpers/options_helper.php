@@ -464,46 +464,64 @@ if (!function_exists('auto_linkify'))
 }
 
 
-/**
- * This function parses the input and converts BBCODE tags to valid HTML output.
- * It uses a class written by Christian Seiler.
- */
 if (!function_exists('parse_bbcode'))
 {
 
-
-	function parse_bbcode($str, $special = FALSE)
+	/**
+	 * This function parses the input and converts BBCODE tags to valid HTML output.
+	 * It uses a class written by Christian Seiler.
+	 *
+	 * @param type $str
+	 * @param type $special
+	 * @param type $strip Strip tags without content inside
+	 * @return type 
+	 */
+	function parse_bbcode($str, $special = FALSE, $strip = TRUE)
 	{
 		require_once(FCPATH . "assets/stringparser-bbcode/library/stringparser_bbcode.class.php");
 		$CI = & get_instance();
 
 		$bbcode = new StringParser_BBCode();
 
+		$codes = array();
+		
 		// add list of bbcode for formatting
-		$bbcode->addCode('code', 'simple_replace', NULL, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
+		$codes[] = array('code', 'simple_replace', NULL, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
 			array('block', 'inline'), array());
-		$bbcode->addCode('spoiler', 'simple_replace', NULL,
+		$codes[] = array('spoiler', 'simple_replace', NULL,
 			array('start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
 			array('code'));
-		$bbcode->addCode('sub', 'simple_replace', NULL, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline',
+		$codes[] = array('sub', 'simple_replace', NULL, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline',
 			array('block', 'inline'), array('code'));
-		$bbcode->addCode('sup', 'simple_replace', NULL, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline',
+		$codes[] = array('sup', 'simple_replace', NULL, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline',
 			array('block', 'inline'), array('code'));
-		$bbcode->addCode('b', 'simple_replace', NULL, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline',
+		$codes[] = array('b', 'simple_replace', NULL, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline',
 			array('block', 'inline'), array('code'));
-		$bbcode->addCode('i', 'simple_replace', NULL, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline',
+		$codes[] = array('i', 'simple_replace', NULL, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline',
 			array('block', 'inline'), array('code'));
-		$bbcode->addCode('m', 'simple_replace', NULL, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'),
+		$codes[] = array('m', 'simple_replace', NULL, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'),
 			'inline', array('block', 'inline'), array('code'));
-		$bbcode->addCode('o', 'simple_replace', NULL, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'),
+		$codes[] = array('o', 'simple_replace', NULL, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'),
 			'inline', array('block', 'inline'), array('code'));
-		$bbcode->addCode('s', 'simple_replace', NULL,
+		$codes[] = array('s', 'simple_replace', NULL,
 			array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
 			array('code'));
-		$bbcode->addCode('u', 'simple_replace', NULL,
+		$codes[] = array('u', 'simple_replace', NULL,
 			array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
 			array('code'));
+		
+		foreach($codes as $code)
+		{
+			if($strip)
+			{
+				$code[1] = 'callback_replace';
+				$code[2] = 'strip_unused_bbcode';
+				//$code[4] = array('start_tag' => '', 'end_tag' => '');
+			}
 
+			$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6], $code[7]);
+		}
+			
 		// if $special == TRUE, add special bbcode
 		if ($special === TRUE)
 		{
@@ -523,6 +541,27 @@ if (!function_exists('parse_bbcode'))
 		return $bbcode->parse($str);
 	}
 
+}
+
+if (!function_exists('strip_unused_bbcode'))
+{
+	/**
+	 * Callback for parse_bbcode to filter out tags without content inside
+	 * 
+	 * @param type $action
+	 * @param type $attributes
+	 * @param type $content
+	 * @param type $params
+	 * @param type $node_object
+	 * @return string 
+	 */
+	function strip_unused_bbcode($action, $attributes, $content, $params, &$node_object) 
+	{
+		if($content === '' || $content === FALSE)
+			return '';
+
+		return $params['start_tag'] . $content . $params['end_tag'];
+	}
 }
 
 

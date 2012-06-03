@@ -2536,7 +2536,7 @@ class Post_model extends CI_Model
 		{
 			$comment = $data['comment'];
 		}
-
+		
 		// load the spam list and check comment, name, subject and email
 		$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents('assets/anti-spam/databases')));
 		foreach($spam as $s)
@@ -2558,6 +2558,20 @@ class Post_model extends CI_Model
 			$ghost = FALSE;
 		}
 
+		// we want to know if the comment will display empty, and in case we won't let it pass
+		if($comment !== '')
+		{
+			$comment_to_parse = new stdClass();
+			$comment_to_parse->comment = $comment;
+			$comment_to_parse->capcode = $data['postas'];
+			$comment_to_parse->subnum = $ghost?1:0;
+			$comment_parsed = $this->process_comment($board, $comment_to_parse);
+			if(!$comment_parsed)
+			{
+				return array('error' => __('Your comment would display as empty.'));
+			}
+			
+		}
 
 		if ($data['spoiler'] === FALSE || $data['spoiler'] == '')
 		{

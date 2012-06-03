@@ -516,10 +516,9 @@ if (!function_exists('parse_bbcode'))
 			{
 				$code[1] = 'callback_replace';
 				$code[2] = 'strip_unused_bbcode';
-				//$code[4] = array('start_tag' => '', 'end_tag' => '');
 			}
 
-			$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6], $code[7]);
+			$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
 		}
 			
 		// if $special == TRUE, add special bbcode

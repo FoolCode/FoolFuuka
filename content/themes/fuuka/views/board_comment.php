@@ -18,13 +18,13 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 					<span class="postertrip<?php echo ($p->capcode == 'M' || $p->capcode == 'G') ? ' mod' : '' ?><?php echo ($p->capcode == 'A') ? ' admin' : '' ?>"><?php echo $p->trip_processed ?></span>
 					<span class="poster_hash"><?php if ($p->poster_hash_processed) : ?>ID:<?php echo $p->poster_hash_processed ?><?php endif; ?></span>
 					<?php if ($p->capcode == 'M') : ?>
-						<span class="postername mod">## Mod</span>
+						<span class="postername mod">## <?php echo __('Mod') ?></span>
 					<?php endif ?>
 					<?php if ($p->capcode == 'G') : ?>
-						<span class="postername mod">## Global Mod</span>
+						<span class="postername mod">## <?php echo __('Global Mod') ?></span>
 					<?php endif ?>
 					<?php if ($p->capcode == 'A') : ?>
-						<span class="postername admin">## Admin</span>
+						<span class="postername admin">## <?php echo __('Admin') ?></span>
 					<?php endif ?>
 					<?php echo date('D M d H:i:s Y', $p->original_timestamp) ?>
 				</label>
@@ -34,9 +34,9 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 					<a class="js" href="<?php echo site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?php echo $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php endif; ?>
 
-				<?php if ($p->deleted == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="This post was deleted before its lifetime has expired."/><?php endif ?>
-				<?php if ($p->spoiler == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="The image in this post is marked as spoiler."/><?php endif ?>
-				<?php if ($p->subnum > 0) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/communicate-icon.png'; ?>" alt="[INTERNAL]" title="This post is not an archived reply."/><?php endif ?>
+				<?php if ($p->deleted == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="<?php echo __('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
+				<?php if ($p->spoiler == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="<?php echo __('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
+				<?php if ($p->subnum > 0) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/communicate-icon.png'; ?>" alt="[INTERNAL]" title="<?php echo __('This post is not an archived reply.') ?>"/><?php endif ?>
 
 				<?php if (isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?php echo site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) . '#p' . $p->num . (($p->subnum) ? '_' . $p->subnum : '') ?>">View</a>]<?php endif; ?>
 
@@ -46,7 +46,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 						File: <?php echo byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media_filename; ?>
 						<?php echo '<!-- ' . substr($p->media_hash, 0, -2) . '-->' ?>
 					</span>
-					<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>[<a href="<?php echo site_url($selected_radix->shortname . '/search/image/' . $p->safe_media_hash) ?>">View Same</a>] [<a href="http://iqdb.org/?url=<?php echo $p->thumb_link ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumb_link ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $p->thumb_link ?>">SauceNAO</a>]<?php endif; ?>
+					<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>[<a href="<?php echo site_url($selected_radix->shortname . '/search/image/' . $p->safe_media_hash) ?>"><?php echo __('View Same') ?></a>] [<a href="http://iqdb.org/?url=<?php echo $p->thumb_link ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $p->thumb_link ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $p->thumb_link ?>">SauceNAO</a>]<?php endif; ?>
 					<br>
 					<a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" rel="noreferrer">
 						<img class="thumb" src="<?php echo $p->thumb_link ?>" alt="<?php echo $p->num ?>" <?php if ($p->preview_w > 0 && $p->preview_h > 0) : ?>width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" <?php endif; ?> />

@@ -75,56 +75,29 @@ if(isset($board)) :
 			</ul>
 
 			<ul class="pull-right">
-				<li><?php echo __('Filters:') ?></li>
+				<li><?= __('Filters:') ?></li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'deleted', 'value' => '', 'checked' => (empty($search["deleted"]))
+						<?= form_radio(array('name' => 'deleted', 'value' => '', 'checked' => (empty($search["deleted"]))
 									? TRUE : FALSE));
 						?>
-						<?php echo __('All') ?>
+						<?= __('All') ?>
 					</label>
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'deleted', 'value' => 'deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'deleted')
+						<?= form_radio(array('name' => 'deleted', 'value' => 'deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'deleted')
 									? TRUE : FALSE));
 						?>
-						<?php echo __('Only Deleted') ?>
+						<?= __('Only Deleted') ?>
 					</label>
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'deleted', 'value' => 'not-deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'not-deleted')
+						<?= form_radio(array('name' => 'deleted', 'value' => 'not-deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'not-deleted')
 									? TRUE : FALSE));
 						?>
-						<?php echo __('Only Non-Deleted') ?>
-					</label>
-				</li>
-
-				<li class="divider"></li>
-
-				<li>
-					<label>
-						<?php echo form_radio(array('name' => 'ghost', 'value' => '', 'checked' => (empty($search["ghost"]))
-									? TRUE : FALSE));
-						?>
-						<span><?php echo __('All') ?></span>
-					</label>
-				</li>
-				<li>
-					<label>
-						<?php echo form_radio(array('name' => 'ghost', 'value' => 'only', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'only')
-									? TRUE : FALSE));
-						?>
-						<span><?php echo __('Only Ghost') ?></span>
-					</label>
-				</li>
-				<li>
-					<label>
-						<?php echo form_radio(array('name' => 'ghost', 'value' => 'none', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'none')
-									? TRUE : FALSE));
-						?>
-						<span><?php echo __('Only Original') ?></span>
+						<?= __('Only Non-Deleted') ?>
 					</label>
 				</li>
 
@@ -132,26 +105,26 @@ if(isset($board)) :
 
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'filter', 'value' => '', 'checked' => (empty($search["filter"]))
+						<?= form_radio(array('name' => 'ghost', 'value' => '', 'checked' => (empty($search["ghost"]))
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('All') ?></span>
+						<span><?= __('All') ?></span>
 					</label>
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text')
+						<?= form_radio(array('name' => 'ghost', 'value' => 'only', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'only')
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('Only with image') ?></span>
+						<span><?= __('Only Ghost') ?></span>
 					</label>
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'image')
+						<?= form_radio(array('name' => 'ghost', 'value' => 'none', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'none')
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('Only without image') ?></span>
+						<span><?= __('Only Original') ?></span>
 					</label>
 				</li>
 
@@ -159,26 +132,53 @@ if(isset($board)) :
 
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'type', 'value' => '', 'checked' => (empty($search["type"]))
+						<?= form_radio(array('name' => 'filter', 'value' => '', 'checked' => (empty($search["filter"]))
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('All') ?></span>
+						<span><?= __('All') ?></span>
 					</label>
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op')
+						<?= form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text')
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('Thread OPs Only') ?></span>
+						<span><?= __('Only with image') ?></span>
 					</label>
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (!empty($search["type"]) && $search["type"] == 'posts')
+						<?= form_radio(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'image')
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('Replies Only') ?></span>
+						<span><?= __('Only without image') ?></span>
+					</label>
+				</li>
+
+				<li class="divider"></li>
+
+				<li>
+					<label>
+						<?= form_radio(array('name' => 'type', 'value' => '', 'checked' => (empty($search["type"]))
+									? TRUE : FALSE));
+						?>
+						<span><?= __('All') ?></span>
+					</label>
+				</li>
+				<li>
+					<label>
+						<?= form_radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op')
+									? TRUE : FALSE));
+						?>
+						<span><?= __('Thread OPs Only') ?></span>
+					</label>
+				</li>
+				<li>
+					<label>
+						<?= form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (!empty($search["type"]) && $search["type"] == 'posts')
+									? TRUE : FALSE));
+						?>
+						<span><?= __('Replies Only') ?></span>
 					</label>
 				</li>
 
@@ -187,35 +187,35 @@ if(isset($board)) :
 
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"]))
+						<?= form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"]))
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('All') ?></span>
+						<span><?= __('All') ?></span>
 					</label>
 				</li>
 
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'capcode', 'value' => 'user', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'user')
+						<?= form_radio(array('name' => 'capcode', 'value' => 'user', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'user')
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('Only by Users') ?></span>
+						<span><?= __('Only by Users') ?></span>
 					</label>
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod')
+						<?= form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod')
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('Only by Mods') ?></span>
+						<span><?= __('Only by Mods') ?></span>
 					</label>
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin')
+						<?= form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin')
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('Only by Admins') ?></span>
+						<span><?= __('Only by Admins') ?></span>
 					</label>
 				</li>
 
@@ -226,40 +226,40 @@ if(isset($board)) :
 
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'order', 'value' => 'desc', 'checked' => (empty($search["order"]) || (!empty($search["order"]) && $search["order"] == 'desc'))
+						<?= form_radio(array('name' => 'order', 'value' => 'desc', 'checked' => (empty($search["order"]) || (!empty($search["order"]) && $search["order"] == 'desc'))
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('New First') ?></span>
+						<span><?= __('New First') ?></span>
 					</label>
 				</li>
 				<li>
 					<label>
-						<?php echo form_radio(array('name' => 'order', 'value' => 'asc', 'checked' => (!empty($search["order"]) && $search["order"] == 'asc')
+						<?= form_radio(array('name' => 'order', 'value' => 'asc', 'checked' => (!empty($search["order"]) && $search["order"] == 'asc')
 									? TRUE : FALSE));
 						?>
-						<span><?php echo __('Old First') ?></span>
+						<span><?= __('Old First') ?></span>
 					</label>
 				</li>
 			</ul>
 
 			<ul class="pull-left">
 
-				<li class="input-prepend"><label for="subject" class="add-on"><?php echo __('Subject') ?></label><?php echo form_input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"]))
+				<li class="input-prepend"><label for="subject" class="add-on"><?= __('Subject') ?></label><?= form_input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"]))
 								? rawurldecode($search["subject"]) : ''))
 					?></li>
-				<li class="input-prepend"><label for="username" class="add-on"><?php echo __('Username') ?></label><?php echo form_input(array('name' => 'username', 'id' => 'username', 'value' => (isset($search["username"]))
+				<li class="input-prepend"><label for="username" class="add-on"><?= __('Username') ?></label><?= form_input(array('name' => 'username', 'id' => 'username', 'value' => (isset($search["username"]))
 								? rawurldecode($search["username"]) : ''))
 					?></li>
-				<li class="input-prepend"><label for="tripcode" class="add-on"><?php echo __('Tripcode') ?></label><?php echo form_input(array('name' => 'tripcode', 'id' => 'tripcode', 'value' => (isset($search["tripcode"]))
+				<li class="input-prepend"><label for="tripcode" class="add-on"><?= __('Tripcode') ?></label><?= form_input(array('name' => 'tripcode', 'id' => 'tripcode', 'value' => (isset($search["tripcode"]))
 								? rawurldecode($search["tripcode"]) : ''))
 					?></li>
-				<li class="input-prepend"><label for="email" class="add-on"><?php echo __('E-mail') ?></label><?php echo form_input(array('name' => 'email', 'id' => 'email', 'value' => (isset($search["email"]))
+				<li class="input-prepend"><label for="email" class="add-on"><?= __('E-mail') ?></label><?= form_input(array('name' => 'email', 'id' => 'email', 'value' => (isset($search["email"]))
 					? rawurldecode($search["email"]) : ''))
 					?></li>
-				<li class="input-prepend"><label for="filename" class="add-on"><?php echo __('Filename') ?></label><?php echo form_input(array('name' => 'filename', 'id' => 'filename', 'value' => (isset($search["filename"]))
+				<li class="input-prepend"><label for="filename" class="add-on"><?= __('Filename') ?></label><?= form_input(array('name' => 'filename', 'id' => 'filename', 'value' => (isset($search["filename"]))
 					? rawurldecode($search["filename"]) : ''))
 					?></li>
-				<li class="input-prepend"><label for="date_start" class="add-on"><?php echo __('Date start') ?></label><?php
+				<li class="input-prepend"><label for="date_start" class="add-on"><?= __('Date start') ?></label><?php
 					$date_array = array(
 							'placeholder' => 'yyyy-mm-dd',
 							'name' => 'start',
@@ -273,7 +273,7 @@ if(isset($board)) :
 					echo form_input($date_array);
 					?></li>
 
-				<li class="input-prepend"><label for="date_end" class="add-on"><?php echo __('Date end') ?></label><?php
+				<li class="input-prepend"><label for="date_end" class="add-on"><?= __('Date end') ?></label><?php
 					$date_array = array(
 							'placeholder' => 'yyyy-mm-dd',
 							'name' => 'end',
@@ -287,14 +287,14 @@ if(isset($board)) :
 					echo form_input($date_array);
 
 					?></li>
-				<li class="input-prepend"><label for="image" class="add-on"><?php echo __('Image hash') ?></label><?php echo form_input(array('name' => 'image', 'id' => 'image', 'value' => (isset($search["image"]))
+				<li class="input-prepend"><label for="image" class="add-on"><?= __('Image hash') ?></label><?= form_input(array('name' => 'image', 'id' => 'image', 'value' => (isset($search["image"]))
 					? rawurldecode($search["image"]) : ''))
 					?>
-				<div class="help"><?php echo __('You can drag and drop an image on the field above') ?></div>
+				<div class="help"><?= __('You can drag and drop an image on the field above') ?></div>
 				</li>
 				<li class="divider"></li>
-				<li><?php echo __('Your latest searches:') ?>
-					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; padding: 1px 3px; line-height:normal;color:#FFF; position:relative; top:-1px;"><?php echo __('Clear') ?></a></div>
+				<li><?= __('Your latest searches:') ?>
+					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; padding: 1px 3px; line-height:normal;color:#FFF; position:relative; top:-1px;"><?= __('Clear') ?></a></div>
 				</li>
 				<?php
 					if(isset($latest_searches) || $latest_searches = @json_decode($this->input->cookie('foolfuuka_search_latest_5'), TRUE))
@@ -342,7 +342,7 @@ if(isset($board)) :
 				?>
 				</ul>
 		</div>
-		<?php echo form_close(); ?>
+		<?= form_close(); ?>
 	</li>
 </ul>
 

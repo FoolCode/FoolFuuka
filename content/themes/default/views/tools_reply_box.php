@@ -15,7 +15,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 <fieldset>
 
 	<div class="input-prepend">
-		<label class="add-on" for="reply_talkingde"><?php echo __('Subject') ?></label><?php
+		<label class="add-on" for="reply_talkingde"><?= __('Subject') ?></label><?php
 		echo form_input(array(
 			'name' => 'reply_talkingde',
 			'id' => 'reply_talkingde',
@@ -24,12 +24,12 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		?>
 	</div>
 
-	<label class="comment_label" for="reply_chennodiscursus"><?php echo __('Comment') ?></label>
+	<label class="comment_label" for="reply_chennodiscursus"><?= __('Comment') ?></label>
 
 	<div class="pull-left">
 
 		<div class="input-prepend">
-			<label class="add-on" for="reply_bokunonome"><?php echo __('Name') ?></label><?php
+			<label class="add-on" for="reply_bokunonome"><?= __('Name') ?></label><?php
 			echo form_input(array(
 				'name' => 'name',
 				'id' => 'reply_name_yep',
@@ -45,7 +45,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		</div>
 
 		<div class="input-prepend">
-			<label class="add-on" for="reply_elitterae"><?php echo __('E-mail') ?></label><?php
+			<label class="add-on" for="reply_elitterae"><?= __('E-mail') ?></label><?php
 			echo form_input(array(
 				'name' => 'email',
 				'id' => 'reply_email_yep',
@@ -62,14 +62,14 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 
 		<?php if(!isset($disable_image_upload) || !$disable_image_upload) : ?>
 				<div class="input-prepend">
-					<label class="add-on" for="file_image"><?php echo __('File') ?></label><input type="file" name="file_image" id="file_image"  /><?php
+					<label class="add-on" for="file_image"><?= __('File') ?></label><input type="file" name="file_image" id="file_image"  /><?php
 		echo form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes);
 		?>
 					</div>
 		<?php endif; ?>
 
 		<div class="input-prepend">
-			<label class="add-on" for="reply_nymphassword"><?php echo __('Password') ?></label><?php
+			<label class="add-on" for="reply_nymphassword"><?= __('Password') ?></label><?php
 			echo form_password(array(
 				'name' => 'reply_nymphassword',
 				'id' => 'reply_nymphassword',
@@ -80,7 +80,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		</div>
 		<?php if ($this->tank_auth->is_allowed()) : ?>
 		<div class="input-prepend">
-			<label class="add-on" for="reply_postas"><?php echo __('Post as') ?></label><?php
+			<label class="add-on" for="reply_postas"><?= __('Post as') ?></label><?php
 			$postas = array('user' => __('User'), 'mod' => __('Moderator'));
 			if ($this->tank_auth->is_admin())
 			{
@@ -129,7 +129,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				$submit_array['data-post'] = $thread_id;
 			}
 			echo form_submit($submit_array);
-			
+
 			$submit_array = array(
 				'name' => 'reply_gattai_spoilered',
 				'value' => __('Submit spoilered'),
@@ -142,13 +142,13 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				$submit_array['data-post'] = $thread_id;
 			}
 			echo form_submit($submit_array);
-			
+
 			echo form_reset(array('class' => 'btn', 'name' => 'reset', 'value' => __('Reset')));
 
 			?>
 
 		</div>
-		
+
 		<?php
 			if(get_selected_radix()->posting_rules)
 			{
@@ -156,16 +156,16 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				echo Markdown(get_selected_radix()->posting_rules);
 			}
 		?>
-		
+
 	</div>
 
 	<div id="reply_ajax_notices"></div>
 	<?php if(isset($reply_errors)) : ?>
-	<span style="color:red"><?php echo $reply_errors ?></span>
+	<span style="color:red"><?= $reply_errors ?></span>
 	<?php endif; ?>
 
 </fieldset>
-	<?php echo form_close() ?>
+	<?= form_close() ?>
 </section>
 </div>
 

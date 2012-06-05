@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 ?>
 
 	<nav class="index_nav clearfix">
-	<h1><?php echo get_setting('fs_gen_index_title', FOOL_PREF_GEN_INDEX_TITLE); ?></h1>
+	<h1><?= get_setting('fs_gen_index_title', FOOL_PREF_GEN_INDEX_TITLE); ?></h1>
 	<?php
 
 		$index_nav = array();
@@ -46,11 +46,11 @@ if (!defined('BASEPATH'))
 
 		foreach($index_nav as $item) : ?>
 			<ul class="pull-left clearfix">
-				<li><h2><?php echo $item['title'] ?></h2></li>
+				<li><h2><?= $item['title'] ?></h2></li>
 				<li>
 					<ul>
 						<?php foreach($item['elements'] as $i) : ?>
-							<li><h3><a href="<?php echo $i['href'] ?>"><?php echo $i['text'] ?></a></h3></li>
+							<li><h3><a href="<?= $i['href'] ?>"><?= $i['text'] ?></a></h3></li>
 						<?php endforeach; ?>
 					</ul>
 				</li>

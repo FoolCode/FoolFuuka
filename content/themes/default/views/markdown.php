@@ -4,12 +4,12 @@ if (!defined('BASEPATH'))
 ?>
 
 <style type="text/css">
-	.markdown { 
-		margin:30px auto; 
-		max-width:900px; 
-		background: #FFF; 
+	.markdown {
+		margin:30px auto;
+		max-width:900px;
+		background: #FFF;
 		color: #444;
-		padding: 10px 40px; 
+		padding: 10px 40px;
 		border: 2px solid #6A836F;
 		font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 		font-size:14px;
@@ -27,5 +27,5 @@ if (!defined('BASEPATH'))
 </style>
 
 <div class="markdown">
-	<?php echo Markdown($content); ?>
+	<?= Markdown($content); ?>
 </div>

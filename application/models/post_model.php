@@ -2798,7 +2798,7 @@ class Post_model extends CI_Model
 		// 2ch-style codes, only if enabled
 		if($board->enable_poster_hash)
 		{
-			$poster_hash = substr(substr(crypt(md5($this->input->ip_address().'id'.$num)),'id'),+3), 0, 8);
+			$poster_hash = substr(substr(crypt(md5($this->input->ip_address().'id'.$num),'id'),+3), 0, 8);
 		}
 		else
 		{

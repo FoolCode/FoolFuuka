@@ -180,8 +180,10 @@ class Cli extends MY_Controller
 				cli_notice('notice', '');
 				cli_notice('notice', 'Command list:');
 				cli_notice('notice', 'php index.php cli database ...');
-				cli_notice('notice', '    set <board> <name> <value>     Changes a setting for the board, no <value> means NULL (ATTN: no value validation)');
-				cli_notice('notice', '    remove_leftover_dirs           Removes the _removed directories');
+				cli_notice('notice', '    set <board> <name> <value>        Changes a setting for the board, no <value> means NULL (ATTN: no value validation)');
+				cli_notice('notice', '    mass_set <set> <name> <value>     Changes a setting for every board, no <value> means NULL (ATTN: no value validation)');
+				cli_notice('notice', '                                      <set> can be \'archives\', \'boards\' or \'all\'');
+				cli_notice('notice', '    remove_leftover_dirs              Removes the _removed directories');
 				break;
 			
 			case 'set':
@@ -191,10 +193,28 @@ class Cli extends MY_Controller
 				if(!$board)
 					return $this->_error('_parameter_board_exist');
 				if(!isset($parameters[2]))
-					return $this->_error('Your request is missing parameters: <set>');
+					return $this->_error('Your request is missing parameters: <name>');
 				$parameters[3] = isset($parameters[3])?$parameters[3]:NULL;
 				$this->radix->save(array('id' => $board->id, $parameters[2] => $parameters[3]));
-			
+				break;
+				
+			case 'mass_set':
+				if(!isset($parameters[1]) || !in_array($parameters[1], array('archives', 'boards', 'all')))
+					return $this->_error(__("You must choose between 'archives', 'boards' or 'all'."));
+				if($parameters[1] == 'all')
+					$board = $this->radix->get_all();
+				else if ($parameters[1] == 'boards')
+					$board = $this->radix->get_archives();
+				else if ($parameters[1] == 'archives')
+					$board = $this->radix->get_boards();
+				else return FALSE;
+				if(!isset($parameters[2]))
+					return $this->_error('Your request is missing parameters: <name>');
+				$parameters[3] = isset($parameters[3])?$parameters[3]:NULL;
+				foreach($board as $b)
+					$this->radix->save(array('id' => $b->id, $parameters[2] => $parameters[3]));
+				break;
+				
 			case 'remove_leftover_dirs':
 				// TRUE echoes the removed files
 				$this->radix->remove_leftover_dirs(TRUE);

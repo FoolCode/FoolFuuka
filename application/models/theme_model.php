@@ -395,11 +395,15 @@ class Theme_model extends CI_Model
 			return array($this->fallback_asset($asset));
 		}
 		
+		$result = array();
+		if(file_exists('content/themes/' . $this->get_config('extends') . '/' . $asset))
+			$result[] = 'content/themes/' . $this->get_config('extends') . '/' . $asset . '?v=' . FOOL_VERSION;
+		
+		if(file_exists('content/themes/' . $this->_selected_theme . '/' . $asset))
+			$result[] = 'content/themes/' . $this->_selected_theme . '/' . $asset . '?v=' . FOOL_VERSION;
+		
 		// we want first extended theme and then the override
-		return array(
-			'content/themes/' . $this->get_config('extends') . '/' . $asset . '?v=' . FOOL_VERSION,
-			'content/themes/' . $this->_selected_theme . '/' . $asset . '?v=' . FOOL_VERSION
-		);
+		return $result;
 	}
 	
 

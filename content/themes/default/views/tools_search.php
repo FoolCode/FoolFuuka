@@ -67,6 +67,16 @@ if(isset($board)) :
 						'name' => 'submit_post'
 					));
 					?>
+					
+					<?php
+					if($this->tank_auth->is_allowed()) : 
+						echo form_submit(array(
+							'class' => 'btn btn-danger btn-mini',
+							'value' => __('Deletion mode'),
+							'name' => 'deletion_mode'
+						));
+					endif;
+					?>
 
 				</li>
 

@@ -1142,9 +1142,15 @@ class Chan extends Public_Controller
 			'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
 			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
+		
+		if($this->tank_auth->is_allowed())
+		{
+			$modifiers[] = 'poster_ip';
+			$modifiers[] = 'deletion_mode';
+		}
 
 		// POST -> GET Redirection to provide URL presentable for sharing links.
-		if ($this->input->post() || $this->input->get())
+		if (!$this->input->post('deletion_mode_captcha') && ($this->input->post() || $this->input->get()))
 		{
 			if ($radix)
 			{
@@ -1226,9 +1232,113 @@ class Chan extends Public_Controller
 		$cookie_array_json = json_encode($cookie_array);
 		$this->input->set_cookie('foolfuuka_search_latest_5', $cookie_array_json, 60 * 60 * 24 * 30, '', '/');
 
-		// actual search
-		$result = $this->post->get_search($radix, $search);
+		// deletion mode only for mods and admins
+		if($this->tank_auth->is_allowed() && $search['deletion_mode'])
+		{
+			// get some interesting data
+			$result = $this->post->get_search($radix, $search);
+			if($result['total_found'] == 0)
+			{
+				$this->theme->set_title(__('Error'));
 
+				if ($radix)
+				{
+					$this->theme->set_title($radix->formatted_title);
+				}
+
+				$this->_set_parameters(
+					array(
+					'error' => __('No posts to be deleted found.')
+					), array(
+					'tools_search' => array('search' => $search, 'latest_searches' => $cookie_array)
+					)
+				);
+				$this->theme->build('error');
+				return FALSE;
+			}
+			
+			
+			$this->load->helper('captcha');
+			if($this->input->post('deletion_mode_captcha'))
+			{
+				$code = $this->input->post('deletion_mode_captcha');
+				$time = $this->session->flashdata('search_deletion_captcha_time');
+				$word = $this->session->flashdata('search_deletion_captcha_word');
+				
+				list($usec, $sec) = explode(" ", microtime());
+				$now = ((float)$usec + (float)$sec);
+
+				if ($now - $time > $this->config->item('captcha_expire', 'tank_auth')) {
+					$captcha_error = _('The captcha expired. Try again.');
+				} elseif (($this->config->item('captcha_case_sensitive', 'tank_auth') AND
+						$code != $word) OR
+						strtolower($code) != strtolower($word)) {
+					$captcha_error = _('The code inserted didn\'t match the captcha. Try again.');
+				}
+				
+				if(!isset($captcha_error))
+				{
+					$this->post->delete_by_search($radix, $search);
+					$this->theme->set_title(__('Posts removed'));
+
+					if ($radix)
+					{
+						$this->theme->set_title($radix->formatted_title);
+					}
+
+					$this->_set_parameters(
+						array(
+							'type' => __('Success!'),
+							'error' => __('The posts have been successfully removed')
+						), array(
+							'tools_search' => array('search' => $search, 'latest_searches' => $cookie_array)
+						)
+					);
+					$this->theme->build('error');
+					return FALSE;
+				}
+			}
+			
+			$cap = create_captcha(array(
+				'img_path'		=> './'.$this->config->item('captcha_path', 'tank_auth'),
+				'img_url'		=> base_url().$this->config->item('captcha_path', 'tank_auth'),
+				'font_path'		=> './'.$this->config->item('captcha_fonts_path', 'tank_auth'),
+				'font_size'		=> $this->config->item('captcha_font_size', 'tank_auth'),
+				'img_width'		=> $this->config->item('captcha_width', 'tank_auth'),
+				'img_height'	=> $this->config->item('captcha_height', 'tank_auth'),
+				'show_grid'		=> $this->config->item('captcha_grid', 'tank_auth'),
+				'expiration'	=> $this->config->item('captcha_expire', 'tank_auth'),
+			));
+
+			// Save captcha params in session
+			$this->session->set_flashdata(array(
+					'search_deletion_captcha_word' => $cap['word'],
+					'search_deletion_captcha_time' => $cap['time'],
+			));
+
+			$this->theme->set_title(__('Enter the captcha'));
+
+			$this->_set_parameters(
+				array(
+					'image' => $cap['image'],
+					'mode' => 'deletion_mode',
+					'error' => isset($captcha_error)?$captcha_error:'',
+					'message' => sprintf(__('%s posts to be deleted found'), $result['total_found']) . '<br/>' . __('(If the posts are OP, this will delete entire threads)')
+				), array(
+					'tools_search' => array('search' => $search, 'latest_searches' => $cookie_array)
+				)
+			);
+
+			$this->theme->build('captcha_confirm');
+
+			return FALSE;								
+
+		}
+		else // normal search
+		{
+			$result = $this->post->get_search($radix, $search);
+		}
+		
 		// Stop! We have reached an error and shouldn't proceed any further!
 		if (isset($result['error']))
 		{
@@ -1385,7 +1495,7 @@ class Chan extends Public_Controller
 		$this->theme->set_metadata('<meta name="robots" content=""noindex" />');
 		$this->theme->build('board');
 	}
-
+	
 
 	/**
 	 * @param string $mode

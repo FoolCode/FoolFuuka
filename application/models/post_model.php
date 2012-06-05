@@ -17,50 +17,50 @@ if (!defined('BASEPATH'))
 class Post_model extends CI_Model
 {
 	// store all relavent data regarding posts displayed
-	
+
 	/**
 	 * Array of post numbers found in the database
-	 * 
-	 * @var array 
+	 *
+	 * @var array
 	 */
 	private $posts_arr = array();
-	
+
 	/**
 	 * Array of backlinks found in the posts
-	 * 
-	 * @var type 
+	 *
+	 * @var type
 	 */
 	private $backlinks = array();
 
 	// global variables used for processing due to callbacks
-	
+
 	/**
 	 * If the backlinks must be full URLs or just the hash
 	 * Notice: this is global because it's used in a PHP callback
-	 * 
-	 * @var bool 
+	 *
+	 * @var bool
 	 */
 	private $backlinks_hash_only_url = FALSE;
-	
+
 	/**
 	 * The post being currently processed for output
 	 * Notice: this is global because it's used in a PHP callback
-	 * 
-	 * @var type 
+	 *
+	 * @var type
 	 */
 	private $current_p = NULL;
-	
+
 	/**
 	 * Sets the callbacks so they return URLs good for realtime updates
 	 * Notice: this is global because it's used in a PHP callback
-	 * 
-	 * @var type 
+	 *
+	 * @var type
 	 */
 	private $realtime = FALSE;
 
 
 	/**
-	 * Nothing special here 
+	 * Nothing special here
 	 */
 	public function __construct()
 	{
@@ -83,7 +83,7 @@ class Post_model extends CI_Model
 			$parameters = $before['parameters'];
 		}
 
-		// if the replace is anything else than NULL for all the functions ran here, the 
+		// if the replace is anything else than NULL for all the functions ran here, the
 		// replaced function wont' be run
 		$replace = $this->plugins->run_hook('fu_post_model_replace_' . $name, $parameters, array($parameters));
 
@@ -134,7 +134,7 @@ class Post_model extends CI_Model
 	/**
 	 * If the user is an admin, this will return SQL to add reports to the
 	 * query output
-	 * 
+	 *
 	 * @param object $board
 	 * @param bool|string $join_on alternative join table name
 	 * @return string SQL to append reports to the rows
@@ -165,9 +165,9 @@ class Post_model extends CI_Model
 
 
 	/**
-	 * Returns the SQL string to append to queries to be able to 
+	 * Returns the SQL string to append to queries to be able to
 	 * get the filenames required to create the path to media
-	 * 
+	 *
 	 * @param object $board
 	 * @param bool|string $join_on alternative join table name
 	 * @return string SQL to append to retrieve image filenames
@@ -188,8 +188,8 @@ class Post_model extends CI_Model
 	/**
 	 * Puts in the $posts_arr class variable the number of the posts that
 	 * we for sure know exist since we've fetched them once during processing
-	 * 
-	 * @param array|object $posts 
+	 *
+	 * @param array|object $posts
 	 */
 	private function p_populate_posts_arr($post)
 	{
@@ -220,7 +220,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get the path to the media
-	 * 
+	 *
 	 * @param object $board
 	 * @param object $post the database object for the post
 	 * @param bool $thumbnail if we're looking for a thumbnail
@@ -262,7 +262,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get the full URL to the media, and in case switch between multiple CDNs
-	 * 
+	 *
 	 * @param object $board
 	 * @param object $post the database row for the post
 	 * @param bool $thumbnail if it's a thumbnail we're looking for
@@ -371,7 +371,7 @@ class Post_model extends CI_Model
 
 			if(!empty($media_cdn) && $post->media_id > 0)
 			{
-				return $media_cdn[($post->media_id % 2)] . '/' . $board->shortname . '/'
+				return $media_cdn[($post->media_id % count($media_cdn))] . '/' . $board->shortname . '/'
 					. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 			}
 
@@ -392,7 +392,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get the remote link for media if it's not local
-	 * 
+	 *
 	 * @param object $board
 	 * @param object $post the database row for the post
 	 * @return bool|string FALSE if there's no media, local URL if it's not remote, or the remote URL
@@ -430,7 +430,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get the post's media hash
-	 * 
+	 *
 	 * @param mixed $media
 	 * @param bool $urlsafe if TRUE it will return a modified base64 compatible with URL
 	 * @return bool|string FALSE if media_hash not found, or the base64 string
@@ -468,7 +468,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Processes the name with unprocessed tripcode and returns name and processed tripcode
-	 * 
+	 *
 	 * @param string $name name and unprocessed tripcode and unprocessed secure tripcode
 	 * @return array name without tripcode and processed tripcode concatenated with processed secure tripcode
 	 */
@@ -504,7 +504,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Processes the tripcode
-	 * 
+	 *
 	 * @param string $plain the word to generate the tripcode from
 	 * @return string the processed tripcode
 	 */
@@ -516,7 +516,7 @@ class Post_model extends CI_Model
 		}
 
 		$trip = mb_convert_encoding($plain, 'SJIS', 'UTF-8');
-		
+
 		$salt = substr($trip . 'H.', 1, 2);
 		$salt = preg_replace('/[^.-z]/', '.', $salt);
 		$salt = strtr($salt, ':;<=>?@[\]^_`', 'ABCDEFGabcdef');
@@ -527,7 +527,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Process the secure tripcode
-	 * 
+	 *
 	 * @param string $plain the word to generate the secure tripcode from
 	 * @return string the processed secure tripcode
 	 */
@@ -540,7 +540,7 @@ class Post_model extends CI_Model
 	/**
 	 * Process the entirety of the post so it can be safely used in views.
 	 * New variables with _processed are created for all the data to be displayed.
-	 * 
+	 *
 	 * @param object $board
 	 * @param object $post object from the database
 	 * @param bool $clean remove sensible data from the $post object
@@ -582,7 +582,7 @@ class Post_model extends CI_Model
 
 		foreach($elements as $element)
 		{
-			
+
 			$element_processed = $element . '_processed';
 
 			$post->$element_processed = @iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));
@@ -611,7 +611,7 @@ class Post_model extends CI_Model
 	 * Manipulate the sent media and store it if there is no same media in the database
 	 * Notice: currently works only with images
 	 * Notice: this is not a view output function, this is a function to insert in database!
-	 * 
+	 *
 	 * @param object $board
 	 * @param object $post database row for the post
 	 * @param array $file the file array from the CodeIgniter upload class
@@ -874,7 +874,7 @@ class Post_model extends CI_Model
 	/**
 	 * Processes the comment, strips annoying data from moot, converts BBCode,
 	 * converts > to greentext, >> to internal link, and >>> to crossboard link
-	 * 
+	 *
 	 * @param object $board
 	 * @param object $post the database row for the post
 	 * @return string the processed comment
@@ -964,7 +964,7 @@ class Post_model extends CI_Model
 	/**
 	 * A callback function for preg_replace_callback for internal links (>>)
 	 * Notice: this function generates some class variables
-	 * 
+	 *
 	 * @param array $matches the matches sent by preg_replace_callback
 	 * @return string the complete anchor
 	 */
@@ -1037,7 +1037,7 @@ class Post_model extends CI_Model
 	/**
 	 * A callback function for preg_replace_callback for crossboard links (>>>//)
 	 * Notice: this function generates some class variables
-	 * 
+	 *
 	 * @param array $matches the matches sent by preg_replace_callback
 	 * @return string the complete anchor
 	 */
@@ -1052,7 +1052,7 @@ class Post_model extends CI_Model
 			'suffix' => '',
 			'urltag' => '#'
 		);
-		
+
 		$html = $this->plugins->run_hook('fu_post_model_process_crossboard_links_html_result', array($html), 'simple');
 
 		$board = $this->radix->get_by_shortname($shortname);
@@ -1081,7 +1081,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Returns the HTML for the post with the currently selected theme
-	 * 
+	 *
 	 * @param object $board
 	 * @param object $post database row for the post
 	 * @return string the post box HTML with the selected theme
@@ -1095,7 +1095,7 @@ class Post_model extends CI_Model
 	/**
 	 * Return the status of the thread to determine if it can be posted in, or if images can be posted
 	 * or if it's a ghost thread...
-	 * 
+	 *
 	 * @param object $board
 	 * @param mixed $num if you send a $query->result() of a thread it will avoid another query
 	 * @return array statuses of the thread
@@ -1201,7 +1201,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Query the selected search engine to get an array of matching posts
-	 * 
+	 *
 	 * @param object $board
 	 * @param array $args search arguments
 	 * @param array $options modifiers
@@ -1686,8 +1686,8 @@ class Post_model extends CI_Model
 
 
 	/**
-	 * Get the latest 
-	 * 
+	 * Get the latest
+	 *
 	 * @param object $board
 	 * @param int $page the page to determine the offset
 	 * @param array $options modifiers
@@ -1911,7 +1911,7 @@ class Post_model extends CI_Model
 	/**
 	 * Get the thread
 	 * Deals also with "last_x", and "from_doc_id" for realtime updates
-	 * 
+	 *
 	 * @param object $board
 	 * @param int $num thread number
 	 * @param array $options modifiers
@@ -2096,7 +2096,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get the gallery
-	 * 
+	 *
 	 * @param object $board
 	 * @param int $page page to determine offset
 	 * @param array $options modifiers
@@ -2217,7 +2217,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get reported posts
-	 * 
+	 *
 	 * @param int $page page to determine offset
 	 * @return array the reported posts
 	 */
@@ -2242,7 +2242,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get multiple posts from multiple boards
-	 * 
+	 *
 	 * @param array $multi_posts array of array('board_id'=> , 'doc_id' => )
 	 * @param null|string $order_by the entire "ORDER BY ***" string
 	 * @return array|bool
@@ -2302,7 +2302,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get the post to determine the thread number
-	 * 
+	 *
 	 * @param object $board
 	 * @param int $num the post number
 	 * @param int $subnum the post subnum
@@ -2330,7 +2330,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get a single post by num/subnum with _processed data
-	 * 
+	 *
 	 * @param object $board
 	 * @param int|string $num post number
 	 * @param int $subnum post subnumber
@@ -2403,7 +2403,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Get a post by doc_id
-	 * 
+	 *
 	 * @param object $board
 	 * @param int $doc_id the post do_id
 	 * @return bool|object FALSE if not found, the row if found
@@ -2430,7 +2430,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Returns an URL to the full media from the original filename
-	 * 
+	 *
 	 * @param object $board
 	 * @param string $media_filename the original filename
 	 * @return array the media link
@@ -2466,7 +2466,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Send the comment and attached media to database
-	 * 
+	 *
 	 * @param object $board
 	 * @param array $data the comment data
 	 * @param array $options modifiers
@@ -2524,7 +2524,7 @@ class Post_model extends CI_Model
 				return array('error' => __('You are banned from posting'));
 			}
 		}
-		
+
 		if($data['num'] == 0 && !$this->tank_auth->is_allowed())
 		{
 			// check: validate some information
@@ -2538,7 +2538,7 @@ class Post_model extends CI_Model
 			',
 				array($this->input->ip_address(), time() - 300)
 			);
-			
+
 			if($check_op->num_rows() > 0)
 			{
 				return array('error' => __('You must wait more time to make new threads!'));
@@ -2555,8 +2555,8 @@ class Post_model extends CI_Model
 		',
 			array($this->input->ip_address())
 		);
-		
-		
+
+
 		if ($check->num_rows() > 0)
 		{
 			$row = $check->row();
@@ -2642,7 +2642,7 @@ class Post_model extends CI_Model
 		{
 			$comment = $data['comment'];
 		}
-		
+
 		// load the spam list and check comment, name, subject and email
 		$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents('assets/anti-spam/databases')));
 		foreach($spam as $s)
@@ -2676,7 +2676,7 @@ class Post_model extends CI_Model
 			{
 				return array('error' => __('Your comment would display as empty.'));
 			}
-			
+
 		}
 
 		if ($data['spoiler'] === FALSE || $data['spoiler'] == '')
@@ -2798,7 +2798,7 @@ class Post_model extends CI_Model
 		// 2ch-style codes, only if enabled
 		if($board->enable_poster_hash)
 		{
-			$poster_hash = substr(substr(crypt(md5($this->input->ip_address().'id'.date("Ymd", $timestamp)),'id'),+3), 0, 8);
+			$poster_hash = substr(substr(crypt(md5($this->input->ip_address().'id'.$num)),'id'),+3), 0, 8);
 		}
 		else
 		{
@@ -3039,12 +3039,27 @@ class Post_model extends CI_Model
 
 		// retreive num, subnum, thread_num for redirection
 		$post = $this->db->query('
-			SELECT num, subnum, thread_num
+			SELECT num, subnum, thread_num, op
 			FROM ' . $this->radix->get_table($board) . '
 			WHERE doc_id = ? LIMIT 0, 1
 		',
 			array($insert_id)
 		);
+
+		// update poster_hash for non-ghost posts
+		if ($ghost === FALSE && $board->enable_poster_hash)
+		{
+			$this->db->query('
+				UPDATE ' . $this->radix->get_table($board) . '
+				SET poster_hash = ?
+				WHERE doc_id = ?
+			',
+				array(
+					substr(substr(crypt(md5($this->input->ip_address().'id'.$post->row()->thread_num),'id'),+3), 0, 8),
+					$insert_id
+				)
+			);
+		}
 
 		return array('success' => TRUE, 'posted' => $post->row());
 	}
@@ -3089,7 +3104,7 @@ class Post_model extends CI_Model
 	/**
 	 * Delete the post and eventually the entire thread if it's OP
 	 * Also deletes the images when it's the only post with that image
-	 * 
+	 *
 	 * @param object $board
 	 * @param array $post the post data necessary for deletion (password, doc_id)
 	 * @return array|bool
@@ -3211,7 +3226,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Delete media for the selected post
-	 * 
+	 *
 	 * @param object $board
 	 * @param object $post the post choosen
 	 * @param bool $media if full media should be deleted
@@ -3262,7 +3277,7 @@ class Post_model extends CI_Model
 
 	/**
 	 * Sets the media hash to banned through all boards
-	 * 
+	 *
 	 * @param string $hash the hash to ban
 	 * @param bool $delete if it should delete the media through all the boards
 	 * @return bool
@@ -3406,8 +3421,8 @@ class Post_model extends CI_Model
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @deprecated
 	 * @param object $board
 	 * @param int $doc_id

@@ -1112,7 +1112,7 @@ class Chan extends Public_Controller
 		}
 
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('text', __('Searched text'), 'trim');
+		$this->form_validation->set_rules('text', __('Searched Text'), 'trim');
 		$this->form_validation->run();
 
 		// submit_post forces into $this->post()
@@ -1142,7 +1142,7 @@ class Chan extends Public_Controller
 			'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
 			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
-		
+
 		if($this->tank_auth->is_allowed())
 		{
 			$modifiers[] = 'poster_ip';
@@ -1256,15 +1256,15 @@ class Chan extends Public_Controller
 				$this->theme->build('error');
 				return FALSE;
 			}
-			
-			
+
+
 			$this->load->helper('captcha');
 			if($this->input->post('deletion_mode_captcha'))
 			{
 				$code = $this->input->post('deletion_mode_captcha');
 				$time = $this->session->flashdata('search_deletion_captcha_time');
 				$word = $this->session->flashdata('search_deletion_captcha_word');
-				
+
 				list($usec, $sec) = explode(" ", microtime());
 				$now = ((float)$usec + (float)$sec);
 
@@ -1275,7 +1275,7 @@ class Chan extends Public_Controller
 						strtolower($code) != strtolower($word)) {
 					$captcha_error = _('The code inserted didn\'t match the captcha. Try again.');
 				}
-				
+
 				if(!isset($captcha_error))
 				{
 					$this->post->delete_by_search($radix, $search);
@@ -1298,7 +1298,7 @@ class Chan extends Public_Controller
 					return FALSE;
 				}
 			}
-			
+
 			$cap = create_captcha(array(
 				'img_path'		=> './'.$this->config->item('captcha_path', 'tank_auth'),
 				'img_url'		=> base_url().$this->config->item('captcha_path', 'tank_auth'),
@@ -1331,14 +1331,14 @@ class Chan extends Public_Controller
 
 			$this->theme->build('captcha_confirm');
 
-			return FALSE;								
+			return FALSE;
 
 		}
 		else // normal search
 		{
 			$result = $this->post->get_search($radix, $search);
 		}
-		
+
 		// Stop! We have reached an error and shouldn't proceed any further!
 		if (isset($result['error']))
 		{
@@ -1495,7 +1495,7 @@ class Chan extends Public_Controller
 		$this->theme->set_metadata('<meta name="robots" content=""noindex" />');
 		$this->theme->build('board');
 	}
-	
+
 
 	/**
 	 * @param string $mode

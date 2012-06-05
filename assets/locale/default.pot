@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FoOlFuuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-02 22:41-0600\n"
-"PO-Revision-Date: 2012-06-02 22:41-0600\n"
+"POT-Creation-Date: 2012-06-05 15:13-0600\n"
+"PO-Revision-Date: 2012-06-05 15:14-0600\n"
 "Last-Translator: \n"
 "Language-Team:  <support@foolz.us>\n"
 "MIME-Version: 1.0\n"
@@ -16,213 +16,251 @@ msgstr ""
 "X-Poedit-Language: English\n"
 "X-Poedit-SearchPath-0: ../..\n"
 
-#: ../../application/controllers/chan.php:518
+#: ../../application/controllers/chan.php:513
 msgid "Page not found. You can use the search if you were looking for something!"
 msgstr ""
 
-#: ../../application/controllers/chan.php:576
-#: ../../application/controllers/chan.php:580
+#: ../../application/controllers/chan.php:571
+#: ../../application/controllers/chan.php:575
 msgid "Page"
 msgstr ""
 
-#: ../../application/controllers/chan.php:580
+#: ../../application/controllers/chan.php:575
 msgid "Latest by Thread"
 msgstr ""
 
-#: ../../application/controllers/chan.php:639
-#: ../../application/controllers/chan.php:642
+#: ../../application/controllers/chan.php:634
+#: ../../application/controllers/chan.php:637
 msgid "Ghost Page"
 msgstr ""
 
-#: ../../application/controllers/chan.php:677
+#: ../../application/controllers/chan.php:672
 msgid "Gallery"
 msgstr ""
 
-#: ../../application/controllers/chan.php:681
+#: ../../application/controllers/chan.php:676
 msgid "Gallery: Showing Latest Submitted Images"
 msgstr ""
 
-#: ../../application/controllers/chan.php:683
+#: ../../application/controllers/chan.php:678
 msgid "By Thread"
 msgstr ""
 
-#: ../../application/controllers/chan.php:687
+#: ../../application/controllers/chan.php:682
 msgid "Gallery: Showing Latest Created Threads"
 msgstr ""
 
-#: ../../application/controllers/chan.php:689
+#: ../../application/controllers/chan.php:684
 msgid "By Image"
 msgstr ""
 
-#: ../../application/controllers/chan.php:791
-#: ../../application/controllers/chan.php:909
+#: ../../application/controllers/chan.php:786
+#: ../../application/controllers/chan.php:904
 msgid "Thread"
 msgstr ""
 
-#: ../../application/controllers/chan.php:912
+#: ../../application/controllers/chan.php:907
 msgid "Showing the last 50 posts for Thread No."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1057
-#: ../../application/controllers/chan.php:1240
-#: ../../application/controllers/chan.php:1533
-#: ../../application/controllers/chan.php:1583
-#: ../../application/controllers/chan.php:1620
-#: ../../application/controllers/chan.php:1645
-#: ../../application/controllers/chan.php:1678
-#: ../../application/controllers/chan.php:1703
-#: ../../application/controllers/chan.php:1728
-#: ../../application/controllers/chan.php:1768
-#: ../../application/controllers/chan.php:1796
+#: ../../application/controllers/chan.php:1052
+#: ../../application/controllers/chan.php:1242
+#: ../../application/controllers/chan.php:1345
+#: ../../application/controllers/chan.php:1638
+#: ../../application/controllers/chan.php:1688
+#: ../../application/controllers/chan.php:1725
+#: ../../application/controllers/chan.php:1750
+#: ../../application/controllers/chan.php:1783
+#: ../../application/controllers/chan.php:1808
+#: ../../application/controllers/chan.php:1833
+#: ../../application/controllers/chan.php:1873
+#: ../../application/controllers/chan.php:1901
 msgid "Error"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1060
+#: ../../application/controllers/chan.php:1055
 msgid "There is no record of the specified image in our database."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1071
+#: ../../application/controllers/chan.php:1066
 msgid "Image Pruned"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1074
+#: ../../application/controllers/chan.php:1069
 msgid "Error 404: The image has been pruned from the server."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1120
-msgid "Searched text"
+#: ../../application/controllers/chan.php:1115
+msgid "Searched Text"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1263
+#: ../../application/controllers/chan.php:1251
+msgid "No posts to be deleted found."
+msgstr ""
+
+#: ../../application/controllers/chan.php:1272
+msgid "The captcha expired. Try again."
+msgstr ""
+
+#: ../../application/controllers/chan.php:1276
+msgid "The code inserted didn't match the captcha. Try again."
+msgstr ""
+
+#: ../../application/controllers/chan.php:1282
+msgid "Posts removed"
+msgstr ""
+
+#: ../../application/controllers/chan.php:1291
+msgid "Success!"
+msgstr ""
+
+#: ../../application/controllers/chan.php:1292
+msgid "The posts have been successfully removed"
+msgstr ""
+
+#: ../../application/controllers/chan.php:1319
+msgid "Enter the captcha"
+msgstr ""
+
+#: ../../application/controllers/chan.php:1326
+#, php-format
+msgid "%s posts to be deleted found"
+msgstr ""
+
+#: ../../application/controllers/chan.php:1326
+msgid "(If the posts are OP, this will delete entire threads)"
+msgstr ""
+
+#: ../../application/controllers/chan.php:1368
 #, php-format
 msgid "that contain &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1267
+#: ../../application/controllers/chan.php:1372
 #, php-format
 msgid "with the subject &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1271
+#: ../../application/controllers/chan.php:1376
 #, php-format
 msgid "with the username &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1275
+#: ../../application/controllers/chan.php:1380
 #, php-format
 msgid "with the tripcode &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1279
+#: ../../application/controllers/chan.php:1384
 #, php-format
 msgid "with the filename &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1287
-#: ../../application/controllers/chan.php:1294
+#: ../../application/controllers/chan.php:1392
+#: ../../application/controllers/chan.php:1399
 #, php-format
 msgid "with the image hash &lsquo;%s&rsquo;"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1299
+#: ../../application/controllers/chan.php:1404
 msgid "that have been deleted"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1301
+#: ../../application/controllers/chan.php:1406
 msgid "that has not been deleted"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1303
+#: ../../application/controllers/chan.php:1408
 msgid "that are by ghosts"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1305
+#: ../../application/controllers/chan.php:1410
 msgid "that are not by ghosts"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1307
+#: ../../application/controllers/chan.php:1412
 msgid "that are only OP posts"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1309
+#: ../../application/controllers/chan.php:1414
 msgid "that are only non-OP posts"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1311
+#: ../../application/controllers/chan.php:1416
 msgid "that do not contain images"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1313
+#: ../../application/controllers/chan.php:1418
 msgid "that only contain images"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1315
+#: ../../application/controllers/chan.php:1420
 msgid "that were made by users"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1317
+#: ../../application/controllers/chan.php:1422
 msgid "that were made by mods"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1319
+#: ../../application/controllers/chan.php:1424
 msgid "that were made by admins"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1321
+#: ../../application/controllers/chan.php:1426
 #, php-format
 msgid "posts after %s"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1323
+#: ../../application/controllers/chan.php:1428
 #, php-format
 msgid "posts before %s"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1325
+#: ../../application/controllers/chan.php:1430
 msgid "in ascending order"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1328
+#: ../../application/controllers/chan.php:1433
 #, php-format
 msgid "Searching for posts %s."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1329
+#: ../../application/controllers/chan.php:1434
 msgid "and"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1333
+#: ../../application/controllers/chan.php:1438
 msgid "Displaying all posts with no filters applied."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1387
+#: ../../application/controllers/chan.php:1492
 msgid "Global Search"
 msgstr ""
 
-#: ../../application/controllers/chan.php:1577
-#: ../../application/controllers/chan.php:1586
-#: ../../application/controllers/chan.php:1616
-#: ../../application/controllers/chan.php:1623
+#: ../../application/controllers/chan.php:1682
+#: ../../application/controllers/chan.php:1691
+#: ../../application/controllers/chan.php:1721
+#: ../../application/controllers/chan.php:1728
 msgid "This thread does not exist."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1641
-#: ../../application/controllers/chan.php:1648
+#: ../../application/controllers/chan.php:1746
+#: ../../application/controllers/chan.php:1753
 msgid "This thread is closed."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1674
-#: ../../application/controllers/chan.php:1681
+#: ../../application/controllers/chan.php:1779
+#: ../../application/controllers/chan.php:1786
 msgid "You are required to upload an image when posting a new thread."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1699
-#: ../../application/controllers/chan.php:1706
+#: ../../application/controllers/chan.php:1804
+#: ../../application/controllers/chan.php:1811
 msgid "You are required to write a comment when no image upload is present."
 msgstr ""
 
-#: ../../application/controllers/chan.php:1724
-#: ../../application/controllers/chan.php:1731
+#: ../../application/controllers/chan.php:1829
+#: ../../application/controllers/chan.php:1836
 msgid "The posting of images has been disabled for this thread."
 msgstr ""
 
@@ -978,65 +1016,65 @@ msgid "Upgrade successful"
 msgstr ""
 
 #: ../../application/controllers/api/chan_api.php:31
-#: ../../application/controllers/api/chan_api.php:100
-#: ../../application/controllers/api/chan_api.php:306
-msgid "Faulty page value"
+#: ../../application/controllers/api/chan_api.php:98
+#: ../../application/controllers/api/chan_api.php:302
+msgid "Invalid value for 'page'."
 msgstr ""
 
 #: ../../application/controllers/api/chan_api.php:35
-#: ../../application/controllers/api/chan_api.php:104
-#: ../../application/controllers/api/chan_api.php:310
-msgid "Can't go over page 500"
+#: ../../application/controllers/api/chan_api.php:102
+#: ../../application/controllers/api/chan_api.php:306
+msgid "Unable to return more than 500 pages."
 msgstr ""
 
 #: ../../application/controllers/api/chan_api.php:52
-#: ../../application/controllers/api/chan_api.php:121
-#: ../../application/controllers/api/chan_api.php:327
-msgid "Faulty per_page value"
+#: ../../application/controllers/api/chan_api.php:119
+#: ../../application/controllers/api/chan_api.php:323
+msgid "Invalid value for 'per_page'."
 msgstr ""
 
 #: ../../application/controllers/api/chan_api.php:56
-#: ../../application/controllers/api/chan_api.php:125
-msgid "Can't return more than 50 threads"
+#: ../../application/controllers/api/chan_api.php:123
+msgid "Unable to return more than 50 threads per page."
 msgstr ""
 
-#: ../../application/controllers/api/chan_api.php:80
-#: ../../application/controllers/api/chan_api.php:150
-msgid "Threads could not be found"
+#: ../../application/controllers/api/chan_api.php:78
+#: ../../application/controllers/api/chan_api.php:147
+msgid "Unable to locate any threads."
 msgstr ""
 
-#: ../../application/controllers/api/chan_api.php:168
-#: ../../application/controllers/api/chan_api.php:228
-#: ../../application/controllers/api/chan_api.php:262
-msgid "You have to select a thread number"
+#: ../../application/controllers/api/chan_api.php:165
+#: ../../application/controllers/api/chan_api.php:224
+#: ../../application/controllers/api/chan_api.php:258
+msgid "You are missing the 'num' parameter."
 msgstr ""
 
-#: ../../application/controllers/api/chan_api.php:174
-#: ../../application/controllers/api/chan_api.php:234
-#: ../../application/controllers/api/chan_api.php:268
-msgid "Faulty thread number"
+#: ../../application/controllers/api/chan_api.php:170
+#: ../../application/controllers/api/chan_api.php:230
+#: ../../application/controllers/api/chan_api.php:264
+msgid "Invalid value for 'num'."
 msgstr ""
 
-#: ../../application/controllers/api/chan_api.php:186
-msgid "Your latest_doc_id is malformed"
+#: ../../application/controllers/api/chan_api.php:182
+msgid "The value for 'latest_doc_id' is malformed."
 msgstr ""
 
-#: ../../application/controllers/api/chan_api.php:217
-#: ../../application/controllers/api/chan_api.php:293
-msgid "Thread could not be found"
+#: ../../application/controllers/api/chan_api.php:213
+#: ../../application/controllers/api/chan_api.php:289
+msgid "Thread could not be found."
 msgstr ""
 
+#: ../../application/controllers/api/chan_api.php:240
 #: ../../application/controllers/api/chan_api.php:244
-#: ../../application/controllers/api/chan_api.php:248
-msgid "Post could not be found"
+msgid "Post could not be found."
 msgstr ""
 
-#: ../../application/controllers/api/chan_api.php:331
-msgid "Can't return more than 3000 ghost posts"
+#: ../../application/controllers/api/chan_api.php:327
+msgid "Can't return more than 50 ghosted threads per page."
 msgstr ""
 
-#: ../../application/controllers/api/chan_api.php:354
-msgid "Ghost posts could not be found"
+#: ../../application/controllers/api/chan_api.php:350
+msgid "Ghost Posts could not be found."
 msgstr ""
 
 #: ../../application/helpers/options_helper.php:193
@@ -1124,428 +1162,436 @@ msgstr ""
 msgid "The Asagi ZIP file couldn't be downloaded."
 msgstr ""
 
-#: ../../application/models/post_model.php:558
+#: ../../application/models/post_model.php:634
 msgid "The file you submitted doesn't seem to be an image."
 msgstr ""
 
-#: ../../application/models/post_model.php:564
+#: ../../application/models/post_model.php:640
 msgid "The image you submitted is too small."
 msgstr ""
 
-#: ../../application/models/post_model.php:600
+#: ../../application/models/post_model.php:676
 msgid "This image has already been posted once. This board doesn't allow image reposting"
 msgstr ""
 
-#: ../../application/models/post_model.php:614
+#: ../../application/models/post_model.php:690
 #, php-format
 msgid "You must wait up to %s hours to repost this image."
 msgstr ""
 
-#: ../../application/models/post_model.php:1204
+#: ../../application/models/post_model.php:1280
 msgid "Sorry, global search requires SphinxSearch."
 msgstr ""
 
-#: ../../application/models/post_model.php:1214
+#: ../../application/models/post_model.php:1290
 msgid "The search backend is currently not online. Try later or contact us in case it's offline for too long."
 msgstr ""
 
-#: ../../application/models/post_model.php:2391
+#: ../../application/models/post_model.php:2497
 msgid "Your IP has been identified as a spam proxy. Please try a different IP or remove the proxy to post."
 msgstr ""
 
-#: ../../application/models/post_model.php:2418
+#: ../../application/models/post_model.php:2524
 msgid "You are banned from posting"
 msgstr ""
 
-#: ../../application/models/post_model.php:2438
+#: ../../application/models/post_model.php:2544
 msgid "You must wait more time to make new threads!"
 msgstr ""
 
-#: ../../application/models/post_model.php:2460
+#: ../../application/models/post_model.php:2566
 msgid "You're posting again the same comment as the last time!"
 msgstr ""
 
-#: ../../application/models/post_model.php:2547
+#: ../../application/models/post_model.php:2653
 msgid "Your comment has contains words that aren't allowed."
 msgstr ""
 
-#: ../../application/models/post_model.php:2584
+#: ../../application/models/post_model.php:2677
+msgid "Your comment would display as empty."
+msgstr ""
+
+#: ../../application/models/post_model.php:2704
 msgid "An image is required for creating threads."
 msgstr ""
 
-#: ../../application/models/post_model.php:2593
+#: ../../application/models/post_model.php:2713
 msgid "The filetype you are attempting to upload is not allowed."
 msgstr ""
 
-#: ../../application/models/post_model.php:2599
+#: ../../application/models/post_model.php:2719
 msgid "The image you are attempting to upload is larger than the permitted size."
 msgstr ""
 
-#: ../../application/models/post_model.php:2615
+#: ../../application/models/post_model.php:2735
 msgid "Sorry, this thread has reached its maximum amount of image replies."
 msgstr ""
 
-#: ../../application/models/post_model.php:2626
+#: ../../application/models/post_model.php:2746
 msgid "Your image upload is not a valid image file."
 msgstr ""
 
-#: ../../application/models/post_model.php:2643
+#: ../../application/models/post_model.php:2763
 msgid "Your image upload has been flagged as inappropriate."
 msgstr ""
 
-#: ../../application/models/post_model.php:2650
+#: ../../application/models/post_model.php:2770
 msgid "Your post contains contents that is marked as spam."
 msgstr ""
 
-#: ../../application/models/post_model.php:2656
+#: ../../application/models/post_model.php:2776
 msgid "Your post was too long."
 msgstr ""
 
-#: ../../application/models/post_model.php:2662
+#: ../../application/models/post_model.php:2782
 msgid "Your post had too many lines."
 msgstr ""
 
-#: ../../application/models/post_model.php:2700
+#: ../../application/models/post_model.php:2820
 msgid "This post is already being processed..."
 msgstr ""
 
-#: ../../application/models/post_model.php:2778
-#: ../../application/models/post_model.php:2896
+#: ../../application/models/post_model.php:2898
+#: ../../application/models/post_model.php:3016
 msgid "You already posted this."
 msgstr ""
 
-#: ../../application/models/post_model.php:2799
+#: ../../application/models/post_model.php:2919
 msgid "Your image was invalid."
 msgstr ""
 
-#: ../../application/models/post_model.php:2952
+#: ../../application/models/post_model.php:3126
 msgid "There's no such a post to be deleted."
 msgstr ""
 
-#: ../../application/models/post_model.php:2967
+#: ../../application/models/post_model.php:3141
 msgid "The password you inserted did not match the post's deletion password."
 msgstr ""
 
-#: ../../application/models/post_model.php:2974
+#: ../../application/models/post_model.php:3148
 msgid "Unable to delete thumbnail for post."
 msgstr ""
 
-#: ../../application/models/post_model.php:3000
+#: ../../application/models/post_model.php:3174
 msgid "Unable to delete post."
 msgstr ""
 
-#: ../../application/models/post_model.php:3024
+#: ../../application/models/post_model.php:3198
 msgid "Unable to delete thumbnail for thread replies."
 msgstr ""
 
-#: ../../application/models/preferences_model.php:81
+#: ../../application/models/preferences_model.php:159
 msgid "Preferences updated."
 msgstr ""
 
-#: ../../application/models/profile_model.php:26
+#: ../../application/models/profile_model.php:109
 msgid "User ID"
 msgstr ""
 
-#: ../../application/models/profile_model.php:27
+#: ../../application/models/profile_model.php:110
 msgid "The ID of the user"
 msgstr ""
 
-#: ../../application/models/profile_model.php:39
+#: ../../application/models/profile_model.php:122
 msgid "Non-admin user can't to change the data of another user."
 msgstr ""
 
-#: ../../application/models/profile_model.php:50
+#: ../../application/models/profile_model.php:133
 msgid "Couldn't find the user with the submitted ID."
 msgstr ""
 
-#: ../../application/models/profile_model.php:67
+#: ../../application/models/profile_model.php:150
 msgid "Group"
 msgstr ""
 
-#: ../../application/models/profile_model.php:68
+#: ../../application/models/profile_model.php:151
 msgid "Choose the permission level of the member"
 msgstr ""
 
-#: ../../application/models/profile_model.php:70
+#: ../../application/models/profile_model.php:153
 msgid "Administrator"
 msgstr ""
 
-#: ../../application/models/profile_model.php:71
+#: ../../application/models/profile_model.php:154
 msgid "Moderator"
 msgstr ""
 
-#: ../../application/models/profile_model.php:72
+#: ../../application/models/profile_model.php:155
 msgid "Member"
 msgstr ""
 
-#: ../../application/models/profile_model.php:81
+#: ../../application/models/profile_model.php:164
 msgid "Display Name"
 msgstr ""
 
-#: ../../application/models/profile_model.php:82
+#: ../../application/models/profile_model.php:165
 msgid "A name that is publicly shown beside the username"
 msgstr ""
 
-#: ../../application/models/profile_model.php:91
+#: ../../application/models/profile_model.php:174
 msgid "Twitter"
 msgstr ""
 
-#: ../../application/models/profile_model.php:92
+#: ../../application/models/profile_model.php:175
 msgid "The twitter nickname"
 msgstr ""
 
-#: ../../application/models/profile_model.php:101
+#: ../../application/models/profile_model.php:184
 msgid "Bio"
 msgstr ""
 
-#: ../../application/models/profile_model.php:102
+#: ../../application/models/profile_model.php:185
 msgid "A short description of the user"
 msgstr ""
 
-#: ../../application/models/radix_model.php:47
-#: ../../application/models/report_model.php:69
+#: ../../application/models/radix_model.php:138
+#: ../../application/models/report_model.php:151
 msgid "Couldn't find the board with the submitted ID."
 msgstr ""
 
-#: ../../application/models/radix_model.php:58
+#: ../../application/models/radix_model.php:149
 msgid "Name"
 msgstr ""
 
-#: ../../application/models/radix_model.php:59
+#: ../../application/models/radix_model.php:150
 msgid "Insert the name of the board normally shown as title."
 msgstr ""
 
-#: ../../application/models/radix_model.php:60
+#: ../../application/models/radix_model.php:151
 msgid "Required"
 msgstr ""
 
-#: ../../application/models/radix_model.php:67
+#: ../../application/models/radix_model.php:158
 msgid "Shortname"
 msgstr ""
 
-#: ../../application/models/radix_model.php:68
+#: ../../application/models/radix_model.php:159
 msgid "Insert the shorter name of the board. Reserved: \"api\", \"cli\", \"admin\"."
 msgstr ""
 
-#: ../../application/models/radix_model.php:69
+#: ../../application/models/radix_model.php:160
 msgid "Req."
 msgstr ""
 
-#: ../../application/models/radix_model.php:84
+#: ../../application/models/radix_model.php:175
 msgid "You can't use the protected shortnames unless you activate the system subdomain feature. The protected shortnames are:"
 msgstr ""
 
-#: ../../application/models/radix_model.php:110
+#: ../../application/models/radix_model.php:201
 msgid "The shortname is already used for another board."
 msgstr ""
 
-#: ../../application/models/radix_model.php:119
+#: ../../application/models/radix_model.php:210
 msgid "General rules"
 msgstr ""
 
-#: ../../application/models/radix_model.php:120
+#: ../../application/models/radix_model.php:211
 msgid "Full board rules displayed in a separate page, in <a href=\"http://daringfireball.net/projects/markdown/basics\" target=\"_blank\">MarkDown</a> syntax. Will not display if left empty."
 msgstr ""
 
-#: ../../application/models/radix_model.php:122
-#: ../../application/models/radix_model.php:134
+#: ../../application/models/radix_model.php:213
+#: ../../application/models/radix_model.php:225
 msgid "MarkDown goes here"
 msgstr ""
 
-#: ../../application/models/radix_model.php:131
+#: ../../application/models/radix_model.php:222
 msgid "Posting rules"
 msgstr ""
 
-#: ../../application/models/radix_model.php:132
+#: ../../application/models/radix_model.php:223
 msgid "Posting rules displayed in the posting area, in <a href=\"http://daringfireball.net/projects/markdown/basics\" target=\"_blank\">MarkDown</a> syntax. Will not display if left empty."
 msgstr ""
 
-#: ../../application/models/radix_model.php:142
+#: ../../application/models/radix_model.php:233
 msgid "Maximum number of threads to display in the index pages"
 msgstr ""
 
-#: ../../application/models/radix_model.php:151
+#: ../../application/models/radix_model.php:242
 msgid "Is this a 4chan archiving board?"
 msgstr ""
 
-#: ../../application/models/radix_model.php:155
+#: ../../application/models/radix_model.php:246
 msgid "Options for archive boards"
 msgstr ""
 
-#: ../../application/models/radix_model.php:161
+#: ../../application/models/radix_model.php:252
 msgid "URL to the 4chan board (facultative)"
 msgstr ""
 
-#: ../../application/models/radix_model.php:170
+#: ../../application/models/radix_model.php:261
 msgid "URL to the board thumbnails (facultative)"
 msgstr ""
 
-#: ../../application/models/radix_model.php:179
+#: ../../application/models/radix_model.php:270
 msgid "URL to the board images (facultative)"
 msgstr ""
 
-#: ../../application/models/radix_model.php:188
+#: ../../application/models/radix_model.php:279
 msgid "Image fetching workers"
 msgstr ""
 
-#: ../../application/models/radix_model.php:189
+#: ../../application/models/radix_model.php:280
 msgid "The number of workers that will fetch full images. Set to zero not to fetch them."
 msgstr ""
 
-#: ../../application/models/radix_model.php:199
+#: ../../application/models/radix_model.php:290
 msgid "Thumbnail fetching workers"
 msgstr ""
 
-#: ../../application/models/radix_model.php:200
+#: ../../application/models/radix_model.php:291
 msgid "The number of workers that will fetch thumbnails"
 msgstr ""
 
-#: ../../application/models/radix_model.php:210
+#: ../../application/models/radix_model.php:301
 msgid "Thread fetching workers"
 msgstr ""
 
-#: ../../application/models/radix_model.php:211
+#: ../../application/models/radix_model.php:302
 msgid "The number of workers that fetch new threads"
 msgstr ""
 
-#: ../../application/models/radix_model.php:222
+#: ../../application/models/radix_model.php:313
 msgid "Minutes to refresh the thread"
 msgstr ""
 
-#: ../../application/models/radix_model.php:230
+#: ../../application/models/radix_model.php:321
 msgid "Thread refresh rate"
 msgstr ""
 
-#: ../../application/models/radix_model.php:231
+#: ../../application/models/radix_model.php:322
 msgid "Array of refresh rates in seconds per page in JSON format"
 msgstr ""
 
-#: ../../application/models/radix_model.php:244
+#: ../../application/models/radix_model.php:335
 msgid "The JSON inputted is not valid."
 msgstr ""
 
-#: ../../application/models/radix_model.php:253
+#: ../../application/models/radix_model.php:344
 msgid "Options for normal boards"
 msgstr ""
 
-#: ../../application/models/radix_model.php:258
+#: ../../application/models/radix_model.php:349
 msgid "Opening post thumbnail maximum width after resizing"
 msgstr ""
 
-#: ../../application/models/radix_model.php:267
+#: ../../application/models/radix_model.php:358
 msgid "Opening post thumbnail maximum height after resizing"
 msgstr ""
 
-#: ../../application/models/radix_model.php:276
+#: ../../application/models/radix_model.php:367
 msgid "Reply thumbnail maximum width after resizing"
 msgstr ""
 
-#: ../../application/models/radix_model.php:285
+#: ../../application/models/radix_model.php:376
 msgid "Reply thumbnail maximum height after resizing"
 msgstr ""
 
-#: ../../application/models/radix_model.php:294
+#: ../../application/models/radix_model.php:385
 msgid "Full image maximum size in kilobytes"
 msgstr ""
 
-#: ../../application/models/radix_model.php:303
+#: ../../application/models/radix_model.php:394
 msgid "Full image maximum width in pixels"
 msgstr ""
 
-#: ../../application/models/radix_model.php:312
+#: ../../application/models/radix_model.php:403
 msgid "Full image maximum height in pixels"
 msgstr ""
 
-#: ../../application/models/radix_model.php:321
+#: ../../application/models/radix_model.php:412
 msgid "The maximum amount of posts before a thread \"dies\""
 msgstr ""
 
-#: ../../application/models/radix_model.php:330
+#: ../../application/models/radix_model.php:421
 msgid "The maximum amount of images in replies before posting more is prohibited"
 msgstr ""
 
-#: ../../application/models/radix_model.php:339
+#: ../../application/models/radix_model.php:430
 msgid "The minimum time in hours to repost the same image (0 means no limit, -1 means never allowing a repost)"
 msgstr ""
 
-#: ../../application/models/radix_model.php:350
+#: ../../application/models/radix_model.php:441
+msgid "The default name when an user doesn't enter a name"
+msgstr ""
+
+#: ../../application/models/radix_model.php:450
 msgid "Show the EXIF data (EXIF data is saved in the database regardless)"
 msgstr ""
 
-#: ../../application/models/radix_model.php:357
+#: ../../application/models/radix_model.php:457
 msgid "Enable poster hashes, an IP-based code to temporarily distinguish Anonymous users"
 msgstr ""
 
-#: ../../application/models/radix_model.php:363
+#: ../../application/models/radix_model.php:463
 msgid "Don't allow ghost posting (disallows infinite replying)"
 msgstr ""
 
-#: ../../application/models/radix_model.php:369
+#: ../../application/models/radix_model.php:469
 msgid "Hide the thumbnails?"
 msgstr ""
 
-#: ../../application/models/radix_model.php:375
+#: ../../application/models/radix_model.php:475
 msgid "Hide the thumbnails for 24 hours? (for moderation purposes)"
 msgstr ""
 
-#: ../../application/models/radix_model.php:380
+#: ../../application/models/radix_model.php:480
 msgid "Use SphinxSearch as search engine?"
 msgstr ""
 
-#: ../../application/models/radix_model.php:385
+#: ../../application/models/radix_model.php:485
 msgid "Hide the board from public access? (only admins and mods will be able to browse it)"
 msgstr ""
 
-#: ../../application/models/radix_model.php:1412
+#: ../../application/models/radix_model.php:1599
 msgid "Your MySQL installation doesn't support multibyte characters. Update MySQL to version 5.5 or higher."
 msgstr ""
 
-#: ../../application/models/radix_model.php:1429
+#: ../../application/models/radix_model.php:1616
 #, php-format
 msgid "Converting %s to utfmb4"
 msgstr ""
 
-#: ../../application/models/radix_model.php:1434
+#: ../../application/models/radix_model.php:1621
 msgid "The tables have all been converted to utf8mb4"
 msgstr ""
 
-#: ../../application/models/report_model.php:24
+#: ../../application/models/report_model.php:106
 msgid "Board shortname"
 msgstr ""
 
-#: ../../application/models/report_model.php:39
+#: ../../application/models/report_model.php:121
 msgid "Couldn't find the board with the submitted shortname."
 msgstr ""
 
-#: ../../application/models/report_model.php:46
+#: ../../application/models/report_model.php:128
 msgid "Board ID"
 msgstr ""
 
-#: ../../application/models/report_model.php:55
+#: ../../application/models/report_model.php:137
 msgid "You didn't send a board ID."
 msgstr ""
 
-#: ../../application/models/report_model.php:81
+#: ../../application/models/report_model.php:163
 msgid "Post number"
 msgstr ""
 
-#: ../../application/models/report_model.php:93
+#: ../../application/models/report_model.php:175
 msgid "Couldn't find the post with the submitted post number."
 msgstr ""
 
-#: ../../application/models/report_model.php:103
+#: ../../application/models/report_model.php:185
 msgid "Post ID"
 msgstr ""
 
-#: ../../application/models/report_model.php:112
+#: ../../application/models/report_model.php:194
 msgid "You didn't send a post ID."
 msgstr ""
 
-#: ../../application/models/report_model.php:125
+#: ../../application/models/report_model.php:207
 msgid "Couldn't find the post with the submitted doc_id."
 msgstr ""
 
-#: ../../application/models/report_model.php:139
+#: ../../application/models/report_model.php:221
 msgid "Reason"
 msgstr ""
 
@@ -2289,8 +2335,8 @@ msgstr ""
 #: ../../content/plugins/FS_Articles/FS_Articles.php:168
 #: ../../content/plugins/FS_Articles/FS_Articles.php:186
 #: ../../content/plugins/FS_Articles/FS_Articles.php:283
-#: ../../content/plugins/FS_Articles/FS_Articles.php:360
-#: ../../content/plugins/FS_Articles/FS_Articles.php:462
+#: ../../content/plugins/FS_Articles/FS_Articles.php:362
+#: ../../content/plugins/FS_Articles/FS_Articles.php:464
 msgid "Articles"
 msgstr ""
 
@@ -2308,15 +2354,15 @@ msgstr ""
 msgid "Article information updated."
 msgstr ""
 
-#: ../../content/plugins/FS_Articles/FS_Articles.php:356
+#: ../../content/plugins/FS_Articles/FS_Articles.php:358
 msgid "The article was removed"
 msgstr ""
 
-#: ../../content/plugins/FS_Articles/FS_Articles.php:361
+#: ../../content/plugins/FS_Articles/FS_Articles.php:363
 msgid "Removing article:"
 msgstr ""
 
-#: ../../content/plugins/FS_Articles/FS_Articles.php:363
+#: ../../content/plugins/FS_Articles/FS_Articles.php:365
 msgid "Do you really want to remove the article?"
 msgstr ""
 
@@ -2493,179 +2539,223 @@ msgstr ""
 msgid "Remove deleted images from the Nginx proxy cache when deleted locally. Requires Nginx compiled with %s to work."
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:27
-#: ../../content/themes/default/views/board_comment.php:20
-#: ../../content/themes/default/views/gallery.php:36
+#: ../../content/themes/default/views/board.php:23
+#: ../../content/themes/default/views/board_comment.php:18
+#: ../../content/themes/default/views/gallery.php:37
 msgid "View Same"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:48
-#: ../../content/themes/default/views/board.php:77
-#: ../../content/themes/default/views/board_comment.php:62
-#: ../../content/themes/default/views/board_comment.php:98
-#: ../../content/themes/default/views/gallery.php:19
+#: ../../content/themes/default/views/board.php:43
+#: ../../content/themes/default/views/board.php:72
+#: ../../content/themes/default/views/board_comment.php:66
+#: ../../content/themes/default/views/board_comment.php:102
+#: ../../content/themes/default/views/gallery.php:20
 msgid "Mod"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:51
-#: ../../content/themes/default/views/board_comment.php:65
-#: ../../content/themes/default/views/gallery.php:22
+#: ../../content/themes/default/views/board.php:46
+#: ../../content/themes/default/views/board_comment.php:69
+#: ../../content/themes/default/views/gallery.php:23
 msgid "Global Mod"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:54
-#: ../../content/themes/default/views/board_comment.php:68
-#: ../../content/themes/default/views/gallery.php:25
+#: ../../content/themes/default/views/board.php:49
+#: ../../content/themes/default/views/board_comment.php:72
+#: ../../content/themes/default/views/gallery.php:26
 msgid "Admin"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:59
-#: ../../content/themes/default/views/board_comment.php:73
-msgid "4chan time"
+#: ../../content/themes/default/views/board.php:54
+#: ../../content/themes/default/views/board_comment.php:77
+msgid "4chan Time"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:65
-#: ../../content/themes/default/views/board_comment.php:79
-#: ../../content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:60
+#: ../../content/themes/default/views/board_comment.php:83
+#: ../../content/themes/default/views/gallery.php:30
 msgid "View"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:65
-#: ../../content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:60
+#: ../../content/themes/default/views/gallery.php:30
 msgid "Reply"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:65
-#: ../../content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:60
+#: ../../content/themes/default/views/gallery.php:30
 msgid "Last 50"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:65
-#: ../../content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:60
+#: ../../content/themes/default/views/gallery.php:30
 msgid "Original"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:65
-#: ../../content/themes/default/views/board_comment.php:79
-#: ../../content/themes/default/views/gallery.php:29
+#: ../../content/themes/default/views/board.php:60
+#: ../../content/themes/default/views/board_comment.php:83
+#: ../../content/themes/default/views/gallery.php:30
 msgid "Report"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:68
-#: ../../content/themes/default/views/gallery.php:43
-msgid "This post was deleted from 4chan manually"
+#: ../../content/themes/default/views/board.php:63
+#: ../../content/themes/default/views/board_comment.php:86
+msgid "This post was deleted from 4chan manually."
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:69
-#: ../../content/themes/default/views/board_comment.php:83
-#: ../../content/themes/default/views/gallery.php:44
-msgid "This post contains a spoiler image"
+#: ../../content/themes/default/views/board.php:64
+#: ../../content/themes/default/views/board_comment.php:87
+msgid "This post contains a spoiler image."
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:72
-#: ../../content/themes/default/views/board_comment.php:89
-msgid "Quoted by:"
+#: ../../content/themes/default/views/board.php:67
+#: ../../content/themes/default/views/board_comment.php:93
+msgid "Quoted By:"
+msgstr ""
+
+#: ../../content/themes/default/views/board.php:75
+#: ../../content/themes/default/views/board_comment.php:105
+msgid "Delete Post"
+msgstr ""
+
+#: ../../content/themes/default/views/board.php:77
+#: ../../content/themes/default/views/board_comment.php:107
+msgid "Delete Image"
+msgstr ""
+
+#: ../../content/themes/default/views/board.php:78
+#: ../../content/themes/default/views/board_comment.php:108
+msgid "Ban Image"
+msgstr ""
+
+#: ../../content/themes/default/views/board.php:81
+#: ../../content/themes/default/views/board_comment.php:111
+msgid "Ban IP:"
 msgstr ""
 
 #: ../../content/themes/default/views/board.php:82
-#: ../../content/themes/default/views/board_comment.php:103
-msgid "Remove image"
+#: ../../content/themes/default/views/board_comment.php:112
+msgid "Search IP"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:83
-#: ../../content/themes/default/views/board_comment.php:104
-msgid "Ban image"
+#: ../../content/themes/default/views/board.php:84
+#: ../../content/themes/default/views/board_comment.php:114
+msgid "Search IP Globally"
 msgstr ""
 
-#: ../../content/themes/default/views/board.php:86
-#: ../../content/themes/default/views/board_comment.php:107
-msgid "Ban user:"
-msgstr ""
-
-#: ../../content/themes/default/views/board.php:89
-#: ../../content/themes/default/views/board_comment.php:110
-msgid "Remove report"
+#: ../../content/themes/default/views/board.php:88
+#: ../../content/themes/default/views/board_comment.php:118
+msgid "Delete Report"
 msgstr ""
 
 #: ../../content/themes/default/views/board.php:101
-msgid "posts"
-msgstr ""
+msgid "post"
+msgid_plural "posts"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../../content/themes/default/views/board.php:101
+#: ../../content/themes/default/views/board.php:103
+msgid "image"
+msgid_plural "images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../content/themes/default/views/board.php:105
 msgid "omitted"
 msgid_plural "omitted"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../content/themes/default/views/board.php:105
-#: ../../content/themes/default/views/board_comment.php:116
-msgid "Report reason:"
+#: ../../content/themes/default/views/board.php:111
+#: ../../content/themes/default/views/board_comment.php:123
+msgid "Reported Reason:"
 msgstr ""
 
-#: ../../content/themes/default/views/board_comment.php:82
-msgid "This post was deleted from 4chan"
+#: ../../content/themes/default/views/board_comment.php:88
+msgid "This post was made in the archive."
 msgstr ""
 
-#: ../../content/themes/default/views/board_comment.php:84
-msgid "This post was made in the archive"
+#: ../../content/themes/default/views/captcha_confirm.php:7
+msgid "Enter the captcha to complete the action:"
 msgstr ""
 
 #: ../../content/themes/default/views/error.php:7
 msgid "Error!"
 msgstr ""
 
+#: ../../content/themes/default/views/gallery.php:42
+msgid "Replies"
+msgstr ""
+
+#: ../../content/themes/default/views/gallery.php:42
+msgid "Images"
+msgstr ""
+
+#: ../../content/themes/default/views/gallery.php:44
+msgid "This post was deleted from 4chan manually"
+msgstr ""
+
+#: ../../content/themes/default/views/gallery.php:45
+msgid "This post contains a spoiler image"
+msgstr ""
+
 #: ../../content/themes/default/views/index.php:15
 msgid "Archives"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_reply_box.php:18
-#: ../../content/themes/default/views/tools_search.php:247
-#: ../../content/themes/fuuka/views/tools_reply_box.php:29
+#: ../../content/themes/default/views/tools_modal.php:25
+msgid "Cancel"
+msgstr ""
+
+#: ../../content/themes/default/views/tools_reply_box.php:15
+#: ../../content/themes/default/views/tools_search.php:252
+#: ../../content/themes/fuuka/views/tools_reply_box.php:28
 #: ../../content/themes/fuuka/views/tools_reply_box.php:108
-#: ../../content/themes/fuuka/views/tools_search.php:52
+#: ../../content/themes/fuuka/views/tools_search.php:53
 msgid "Subject"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_reply_box.php:27
-#: ../../content/themes/fuuka/views/tools_reply_box.php:33
+#: ../../content/themes/default/views/tools_reply_box.php:24
+#: ../../content/themes/fuuka/views/tools_reply_box.php:32
 #: ../../content/themes/fuuka/views/tools_reply_box.php:112
 msgid "Comment"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_reply_box.php:48
-#: ../../content/themes/default/views/tools_search.php:256
-#: ../../content/themes/fuuka/views/tools_reply_box.php:25
+#: ../../content/themes/default/views/tools_reply_box.php:45
+#: ../../content/themes/default/views/tools_search.php:264
+#: ../../content/themes/fuuka/views/tools_reply_box.php:24
 #: ../../content/themes/fuuka/views/tools_reply_box.php:104
-#: ../../content/themes/fuuka/views/tools_search.php:70
+#: ../../content/themes/fuuka/views/tools_search.php:71
 msgid "E-mail"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_reply_box.php:65
-#: ../../content/themes/fuuka/views/tools_reply_box.php:37
+#: ../../content/themes/default/views/tools_reply_box.php:63
+#: ../../content/themes/fuuka/views/tools_reply_box.php:36
 #: ../../content/themes/fuuka/views/tools_reply_box.php:117
 msgid "File"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_reply_box.php:83
-msgid "Post as"
+#: ../../content/themes/default/views/tools_reply_box.php:80
+#: ../../content/themes/fuuka/views/tools_reply_box.php:49
+#: ../../content/themes/fuuka/views/tools_reply_box.php:131
+msgid "Post As"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_reply_box.php:84
-#: ../../content/themes/fuuka/views/tools_reply_box.php:53
+#: ../../content/themes/default/views/tools_reply_box.php:81
+#: ../../content/themes/fuuka/views/tools_reply_box.php:51
 #: ../../content/themes/fuuka/views/tools_reply_box.php:134
 msgid "User"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_reply_box.php:135
-msgid "Submit spoilered"
+#: ../../content/themes/default/views/tools_reply_box.php:129
+msgid "Submit Spoilered"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_reply_box.php:146
+#: ../../content/themes/default/views/tools_reply_box.php:140
 msgid "Reset"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_search.php:30
-msgid "Search or insert post no. or thread URL"
+msgid "Search or Insert Post No. or Thread URL"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_search.php:39
@@ -2677,160 +2767,201 @@ msgid "Search"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_search.php:66
-msgid "Go to post"
+msgid "Go to Post"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:78
+#: ../../content/themes/default/views/tools_search.php:75
+msgid "Deletion Mode"
+msgstr ""
+
+#: ../../content/themes/default/views/tools_search.php:87
 msgid "Filters:"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:84
-#: ../../content/themes/default/views/tools_search.php:111
-#: ../../content/themes/default/views/tools_search.php:138
-#: ../../content/themes/default/views/tools_search.php:165
-#: ../../content/themes/default/views/tools_search.php:193
-#: ../../content/themes/fuuka/views/tools_search.php:175
+#: ../../content/themes/default/views/tools_search.php:93
+#: ../../content/themes/default/views/tools_search.php:120
+#: ../../content/themes/default/views/tools_search.php:147
+#: ../../content/themes/default/views/tools_search.php:174
+#: ../../content/themes/default/views/tools_search.php:201
 msgid "All"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:92
-msgid "Only Deleted"
+#: ../../content/themes/default/views/tools_search.php:101
+#: ../../content/themes/fuuka/views/tools_search.php:147
+msgid "Only Deleted Posts"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:100
-msgid "Only Non-Deleted"
+#: ../../content/themes/default/views/tools_search.php:109
+#: ../../content/themes/fuuka/views/tools_search.php:151
+msgid "Only Non-Deleted Posts"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:119
-msgid "Only Ghost"
+#: ../../content/themes/default/views/tools_search.php:128
+#: ../../content/themes/fuuka/views/tools_search.php:164
+msgid "Only Ghost Posts"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:127
-msgid "Only Original"
+#: ../../content/themes/default/views/tools_search.php:136
+#: ../../content/themes/fuuka/views/tools_search.php:168
+msgid "Only Non-Ghost Posts"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:146
-msgid "Only with image"
+#: ../../content/themes/default/views/tools_search.php:155
+msgid "Only Containing Images"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:154
-msgid "Only without image"
+#: ../../content/themes/default/views/tools_search.php:163
+msgid "Only Containing Text"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:173
-msgid "Thread OPs Only"
+#: ../../content/themes/default/views/tools_search.php:182
+#: ../../content/themes/fuuka/views/tools_search.php:181
+msgid "Only OP Posts"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:181
-msgid "Replies Only"
-msgstr ""
-
-#: ../../content/themes/default/views/tools_search.php:202
-#: ../../content/themes/fuuka/views/tools_search.php:179
-msgid "Only by Users"
+#: ../../content/themes/default/views/tools_search.php:190
+#: ../../content/themes/fuuka/views/tools_search.php:177
+msgid "Only Reply Posts"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_search.php:210
-#: ../../content/themes/fuuka/views/tools_search.php:183
-msgid "Only by Mods"
+#: ../../content/themes/fuuka/views/tools_search.php:126
+msgid "Only by Users"
 msgstr ""
 
 #: ../../content/themes/default/views/tools_search.php:218
-#: ../../content/themes/fuuka/views/tools_search.php:187
+#: ../../content/themes/fuuka/views/tools_search.php:130
+msgid "Only by Mods"
+msgstr ""
+
+#: ../../content/themes/default/views/tools_search.php:226
+#: ../../content/themes/fuuka/views/tools_search.php:134
 msgid "Only by Admins"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:232
-msgid "New First"
+#: ../../content/themes/default/views/tools_search.php:237
+#: ../../content/themes/fuuka/views/tools_search.php:190
+msgid "New Posts First"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:240
-msgid "Old First"
+#: ../../content/themes/default/views/tools_search.php:245
+#: ../../content/themes/fuuka/views/tools_search.php:194
+msgid "Old Posts First"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:253
-#: ../../content/themes/fuuka/views/tools_search.php:64
+#: ../../content/themes/default/views/tools_search.php:260
+#: ../../content/themes/fuuka/views/tools_search.php:65
 msgid "Tripcode"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:259
+#: ../../content/themes/default/views/tools_search.php:268
+#: ../../content/themes/fuuka/views/tools_search.php:77
 msgid "Filename"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:262
-msgid "Date start"
+#: ../../content/themes/default/views/tools_search.php:272
+#: ../../content/themes/fuuka/views/tools_search.php:89
+msgid "From Date"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:276
-msgid "Date end"
+#: ../../content/themes/default/views/tools_search.php:287
+#: ../../content/themes/fuuka/views/tools_search.php:103
+msgid "To Date"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:290
-msgid "Image hash"
+#: ../../content/themes/default/views/tools_search.php:302
+msgid "IP Address"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:293
-msgid "You can drag and drop an image on the field above"
+#: ../../content/themes/default/views/tools_search.php:308
+#: ../../content/themes/fuuka/views/tools_search.php:83
+msgid "Image Hash"
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:296
-msgid "Your latest searches:"
+#: ../../content/themes/default/views/tools_search.php:312
+msgid "You can drag-and-drop an image onto the field above."
 msgstr ""
 
-#: ../../content/themes/default/views/tools_search.php:297
+#: ../../content/themes/default/views/tools_search.php:315
+msgid "Your 5 Latest Searches:"
+msgstr ""
+
+#: ../../content/themes/default/views/tools_search.php:316
 msgid "Clear"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:130
+#: ../../content/themes/default/views/layouts/chan.php:42
+#, php-format
+msgid "Archives: [ %s ]"
+msgstr ""
+
+#: ../../content/themes/default/views/layouts/chan.php:58
+#, php-format
+msgid "Boards: [ %s ]"
+msgstr ""
+
+#: ../../content/themes/default/views/layouts/chan.php:73
+#: ../../content/themes/default/views/layouts/chan.php:112
+#: ../../content/themes/fuuka/views/layouts/chan.php:38
 msgid "Index"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:139
-msgid "By post"
+#: ../../content/themes/default/views/layouts/chan.php:121
+msgid "By Post"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:147
-msgid "By thread"
-msgstr ""
-
-#: ../../content/themes/default/views/layouts/chan.php:160
+#: ../../content/themes/default/views/layouts/chan.php:138
 msgid "Ghost"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:257
-msgid "Change theme"
+#: ../../content/themes/default/views/layouts/chan.php:177
+#: ../../content/themes/default/views/layouts/chan.php:179
+msgid "Previous"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:273
-msgid "Change language"
+#: ../../content/themes/default/views/layouts/chan.php:220
+#: ../../content/themes/default/views/layouts/chan.php:222
+#: ../../content/themes/fuuka/views/layouts/chan.php:149
+#: ../../content/themes/fuuka/views/layouts/chan.php:151
+msgid "Next"
 msgstr ""
 
-#: ../../content/themes/default/views/layouts/chan.php:281
-msgid "Add a translation"
+#: ../../content/themes/default/views/layouts/chan.php:238
+msgid "Change Theme"
 msgstr ""
 
-#: ../../content/themes/fuuka/theme_plugin.php:355
-#: ../../content/themes/fuuka/theme_plugin.php:384
-#: ../../content/themes/fuuka/theme_plugin.php:413
+#: ../../content/themes/default/views/layouts/chan.php:253
+msgid "Change Language"
+msgstr ""
+
+#: ../../content/themes/default/views/layouts/chan.php:260
+msgid "Add a Translation"
+msgstr ""
+
+#: ../../content/themes/default/views/layouts/redirect.php:13
+#, php-format
+msgid "Attempting to redirect to %s."
+msgstr ""
+
+#: ../../content/themes/fuuka/theme_plugin.php:372
+#: ../../content/themes/fuuka/theme_plugin.php:401
+#: ../../content/themes/fuuka/theme_plugin.php:430
 msgid "Redirecting..."
 msgstr ""
 
-#: ../../content/themes/fuuka/views/board.php:17
+#: ../../content/themes/fuuka/views/board.php:20
+#: ../../content/themes/fuuka/views/board_comment.php:46
 msgid "File:"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/board.php:47
+#: ../../content/themes/fuuka/views/board.php:57
 #: ../../content/themes/fuuka/views/board_comment.php:37
 msgid "This post was deleted before its lifetime has expired."
 msgstr ""
 
-#: ../../content/themes/fuuka/views/board.php:48
+#: ../../content/themes/fuuka/views/board.php:58
 #: ../../content/themes/fuuka/views/board_comment.php:38
 msgid "The image in this post is marked as spoiler."
-msgstr ""
-
-#: ../../content/themes/fuuka/views/board.php:53
-msgid "Click Reply to view."
 msgstr ""
 
 #: ../../content/themes/fuuka/views/board_comment.php:39
@@ -2838,35 +2969,30 @@ msgid "This post is not an archived reply."
 msgstr ""
 
 #: ../../content/themes/fuuka/views/index.php:7
-msgid "Welcome on the 4chan Archiver \"FoOlFuuka\""
+msgid "Welcome to {{FOOL_NAME}}"
 msgstr ""
 
 #: ../../content/themes/fuuka/views/index.php:8
-msgid "Choose a 4chan board:"
+msgid "Choose a Board:"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_reply_box.php:13
+#: ../../content/themes/fuuka/views/tools_reply_box.php:12
 msgid "Create New Thread"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_reply_box.php:41
+#: ../../content/themes/fuuka/views/tools_reply_box.php:40
 #: ../../content/themes/fuuka/views/tools_reply_box.php:121
 msgid "Spoiler"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_reply_box.php:45
+#: ../../content/themes/fuuka/views/tools_reply_box.php:44
 #: ../../content/themes/fuuka/views/tools_reply_box.php:126
-msgid "Password used for file deletion."
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_reply_box.php:50
-#: ../../content/themes/fuuka/views/tools_reply_box.php:131
-msgid "Post As"
+msgid "This is used for file and post deletion."
 msgstr ""
 
 #: ../../content/themes/fuuka/views/tools_reply_box.php:61
-#: ../../content/themes/fuuka/views/tools_reply_box.php:142
-#: ../../content/themes/fuuka/views/tools_search.php:192
+#: ../../content/themes/fuuka/views/tools_reply_box.php:144
+#: ../../content/themes/fuuka/views/tools_search.php:199
 msgid "Action"
 msgstr ""
 
@@ -2875,121 +3001,108 @@ msgid "Reply to Thread"
 msgstr ""
 
 #: ../../content/themes/fuuka/views/tools_reply_box.php:92
-msgid "Don't expect anything heroic. Your post will not be uploaded to the original board."
+msgid "Don't expect anything heroic. This post will not be posted to any other board."
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:33
+#: ../../content/themes/fuuka/views/tools_search.php:17
+#: ../../content/themes/fuuka/views/tools_search.php:47
+msgid "Text Search"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:34
 msgid "Advanced"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:43
+#: ../../content/themes/fuuka/views/tools_search.php:44
 msgid "Advanced Search"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:46
-msgid "Text to Find"
+#: ../../content/themes/fuuka/views/tools_search.php:59
+msgid "Search for an <b>exact</b> username. Leave empty for any username."
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:58
-msgid "Search for <b>exact</b> username. Leave empty for any username."
+#: ../../content/themes/fuuka/views/tools_search.php:65
+msgid "Search for an <b>exact</b> tripcode. Leave empty for any tripcode."
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:64
-msgid "Search for <b>exact</b> tripcode. Leave empty for any tripcode."
+#: ../../content/themes/fuuka/views/tools_search.php:89
+msgid "Enter the starting date for your search."
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:76
-msgid "Image Hash"
+#: ../../content/themes/fuuka/views/tools_search.php:89
+#: ../../content/themes/fuuka/views/tools_search.php:103
+msgid "Format: YYYY-MM-DD"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:82
-msgid "From Date"
+#: ../../content/themes/fuuka/views/tools_search.php:103
+msgid "Enter the ending date for your search."
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:82
-msgid "Enter what date to start searching from."
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:82
-#: ../../content/themes/fuuka/views/tools_search.php:96
-msgid "Format is YYYY-MM-DD"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:96
-msgid "To Date"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:96
-msgid "Enter what date to start searching until."
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:111
-msgid "Deleted Posts"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:115
-#: ../../content/themes/fuuka/views/tools_search.php:132
-msgid "Show All Posts"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:119
-msgid "Show Only Deleted Posts"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:123
-msgid "Show Only Non-Deleted Posts"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:128
-msgid "Internal posts"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:136
-msgid "Show Only Internal Posts"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:140
-msgid "Show Only Archived Posts"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:145
-msgid "Order"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:149
-msgid "New Posts First"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:153
-msgid "Old Posts First"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:158
-msgid "Results"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:166
-msgid "Threads"
-msgstr ""
-
-#: ../../content/themes/fuuka/views/tools_search.php:171
+#: ../../content/themes/fuuka/views/tools_search.php:118
 msgid "Capcode"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:207
+#: ../../content/themes/fuuka/views/tools_search.php:122
+#: ../../content/themes/fuuka/views/tools_search.php:143
+#: ../../content/themes/fuuka/views/tools_search.php:160
+msgid "Show All Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:139
+msgid "Deleted Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:156
+msgid "Ghost Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:173
+msgid "Results"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:186
+msgid "Order"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/tools_search.php:214
 msgid "Simple"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:219
+#: ../../content/themes/fuuka/views/tools_search.php:226
 msgid "View Post"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:241
+#: ../../content/themes/fuuka/views/tools_search.php:248
 msgid "View Page"
 msgstr ""
 
-#: ../../content/themes/fuuka/views/tools_search.php:259
-msgid "In ghost mode, only threads with non-archived posts will be shown."
+#: ../../content/themes/fuuka/views/tools_search.php:266
+msgid "In Ghost Mode, only threads that contain ghost posts will be listed."
+msgstr ""
+
+#: ../../content/themes/fuuka/views/layouts/chan.php:41
+msgid "Top"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/layouts/chan.php:44
+msgid "Report Bug"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/layouts/chan.php:92
+msgid "Navigation"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/layouts/chan.php:95
+msgid "View Posts"
+msgstr ""
+
+#: ../../content/themes/fuuka/views/layouts/chan.php:98
+#: ../../content/themes/fuuka/views/layouts/chan.php:100
+msgid "Prev"
+msgstr ""
+
+#: ../../content/themes/yotsuba/views/index.php:7
+msgid "Welcome on the 4chan Archiver \"FoOlFuuka\""
 msgstr ""
 
 #: ../../content/themes/yotsuba/views/index.php:8

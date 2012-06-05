@@ -3,98 +3,102 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 if (isset($thread_id))
+{
 	echo form_open_multipart(get_selected_radix()->shortname .'/sending', array('id' => 'postform'));
+}
 ?>
 
 <div class="content">
-<?php foreach ($posts as $key => $post) :
+<?php
+foreach ($posts as $key => $post) :
 	if (isset($post['op'])) :
 		$op = $post['op'];
 		$selected_radix = isset($op->board)?$op->board:get_selected_radix();
 ?>
-	<div id="p<?php echo $op->num ?>">
-	<?php if ($op->preview_orig) : ?>
-		<span><?php echo __('File:') . ' ' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename; ?> <?php echo '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
-		<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>[<a href="<?php echo site_url(get_selected_radix()->shortname . '/search/image/' . $op->safe_media_hash) ?>"><?php echo __('View Same') ?></a>] [<a href="http://iqdb.org/?url=<?php echo $op->thumb_link ?>">iqdb</a>] [<a href="http://google.com/searchbyimage?image_url=<?php echo $op->thumb_link ?>">Google</a>] [<a href="http://saucenao.com/search.php?url=<?php echo $op->thumb_link ?>">SauceNAO</a>]<?php endif; ?>
-		<br />
-		<a href="<?php echo ($op->media_link)?$op->media_link:$op->remote_media_link ?>" rel="noreferrer"><img class="thumb" src="<?php echo $op->thumb_link ?>" alt="<?php echo $op->num ?>" <?php if ($op->preview_w > 0 && $op->preview_h > 0) : ?> width="<?php echo $op->preview_w ?>" height="<?php echo $op->preview_h ?>"<?php endif; ?>/></a>
-	<?php endif; ?>
-
-		<label id="<?php echo $op->num ?>">
-			<input type="checkbox" name="delete[]" value="<?php echo $op->doc_id ?>"/>
-			<span class="filetitle"><?php echo $op->title_processed ?></span>
-			<span class="postername<?php echo ($op->capcode == 'M' || $op->capcode == 'G') ? ' mod' : '' ?><?php echo ($op->capcode == 'A') ? ' admin' : '' ?>"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
-			<span class="postertrip<?php echo ($op->capcode == 'M' || $op->capcode == 'G') ? ' mod' : '' ?><?php echo ($op->capcode == 'A') ? ' admin' : '' ?>"><?php echo $op->trip_processed ?></span>
-			<span class="poster_hash"><?php if ($op->poster_hash_processed) : ?>ID:<?php echo $op->poster_hash_processed ?><?php endif; ?></span>
-			<?php if ($op->capcode == 'M') : ?>
-				<span class="postername mod">## <?php echo __('Mod') ?></span>
-			<?php endif ?>
-			<?php if ($op->capcode == 'G') : ?>
-				<span class="postername mod">## <?php echo __('Global Mod') ?></span>
-			<?php endif ?>
-			<?php if ($op->capcode == 'A') : ?>
-				<span class="postername admin">## <?php echo __('Admin') ?></span>
-			<?php endif ?>
-			<?php echo date('D M d H:i:s Y', $op->original_timestamp) ?>
-		</label>
-
-		<?php if(!isset($thread_id)) : ?>
-		<a class="js" href="<?php echo site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.<?php echo $op->num ?></a>
-		<?php else : ?>
-		<a class="js" href="<?php echo site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?php echo $op->num ?>\n')"><?php echo $op->num ?></a>
+	<div id="p<?= $op->num ?>">
+		<?php if ($op->preview_orig) : ?>
+			<span><?= __('File:') . ' ' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename ?> <?= '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
+			<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
+				[<a href="<?= site_url(get_selected_radix()->shortname . '/search/image/' . $op->safe_media_hash) ?>"><?= __('View Same') ?></a>]
+				[<a href="http://google.com/searchbyimage?image_url=<?= $op->thumb_link ?>">Google</a>]
+				[<a href="http://iqdb.org/?url=<?= $op->thumb_link ?>">iqdb</a>]
+				[<a href="http://saucenao.com/search.php?url=<?= $op->thumb_link ?>">SauceNAO</a>]
+			<?php endif; ?>
+			<br />
+			<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" rel="noreferrer">
+				<img src="<?= $op->thumb_link ?>" <?= ($op->preview_w > 0 && $op->preview_h > 0) ? 'width="' . $op->preview_w . '" height="' . $op->preview_h . '" ' : '' ?>class="thumb" alt="<?= $op->num ?>" />
+			</a>
 		<?php endif; ?>
 
-		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="<?php _('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
-		<?php if ($op->spoiler == 1) : ?><img class="inline" src="<?php echo site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="<?php _('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
+		<label>
+			<input type="checkbox" name="delete[]" value="<?= $op->doc_id ?>" />
+			<span class="filetitle"><?= $op->title_processed ?></span>
+			<span class="postername<?= ($op->capcode == 'M' || $op->capcode == 'G') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?>"><?= (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
+			<span class="postertrip<?= ($op->capcode == 'M' || $op->capcode == 'G') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?>"><?= $op->trip_processed ?></span>
+			<span class="poster_hash"><?php if ($op->poster_hash_processed) : ?>ID:<?= $op->poster_hash_processed ?><?php endif; ?></span>
+			<?php if ($op->capcode == 'M') : ?>
+				<span class="postername mod">## <?= __('Mod') ?></span>
+			<?php endif ?>
+			<?php if ($op->capcode == 'G') : ?>
+				<span class="postername mod">## <?= __('Global Mod') ?></span>
+			<?php endif ?>
+			<?php if ($op->capcode == 'A') : ?>
+				<span class="postername admin">## <?= __('Admin') ?></span>
+			<?php endif ?>
+			<?= date('D M d H:i:s Y', $op->original_timestamp) ?>
+		</label>
 
-		[<a href="<?php echo site_url($selected_radix->shortname . '/thread/' . $op->num) ?>"><?php echo __('Reply') ?></a>]<?php echo (isset($post['omitted']) && $post['omitted'] > 50) ? ' [<a href="' . site_url($selected_radix->shortname . '/last50/' . $op->num) . '">' . __('Last 50') . '</a>]' : '' ?><?php if ($selected_radix->archive) : ?> [<a href="http://boards.4chan.org/<?php echo $selected_radix->shortname . '/res/' . $op->num ?>"><?php echo __('Original') ?></a>]<?php endif; ?>
+		<?php if (!isset($thread_id)) : ?>
+			<a class="js" href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.<?= $op->num ?></a>
+		<?php else : ?>
+			<a class="js" href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?= $op->num ?>\n')"><?= $op->num ?></a>
+		<?php endif; ?>
 
-		<blockquote><p><?php echo $op->comment_processed ?></p></blockquote>
-		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omittedposts">' . $post['omitted'] . ' ' . __('posts') . ' ' . _ngettext('omitted', 'omitted', $post['images_omitted'] + $post['omitted']) . '.' . __('Click Reply to view.') . '</span>' : '') ?>
+		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?= site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="<?php _('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
+		<?php if ($op->spoiler == 1) : ?><img class="inline" src="<?= site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="<?php _('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
+
+		[<a href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) ?>"><?= __('Reply') ?></a>]
+		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= site_url($selected_radix->shortname . '/last50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>
+		<?php if ($selected_radix->archive) : ?> [<a href="http://boards.4chan.org/<?= $selected_radix->shortname . '/res/' . $op->num ?>"><?= __('Original') ?></a>]<?php endif; ?>
+
+		<blockquote><p><?= $op->comment_processed ?></p></blockquote>
+		<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
+		<span class="omitted">
+			<?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>
+			<?= $post['omitted'] + $post['images_omitted'] . ' ' . _ngettext('post', 'posts', $post['omitted'] + $post['images_omitted']) ?>
+			<?= ' ' . _ngettext('omitted', 'omitted', $post['omitted'] + $post['images_omitted']) ?>.
+			<?php else : ?>
+			<?= $post['omitted'] . ' ' . _ngettext('post', 'posts', $post['omitted']) ?>
+			<?= ' ' . _ngettext('omitted', 'omitted', $post['omitted'] + $post['images_omitted']) ?>.
+			<?php endif; ?>
+		</span>
+		<?php endif; ?>
 	</div>
 	<?php endif; ?>
 
 	<?php
-	if (isset($post['posts']))
-	{
-		if (isset($posts_per_thread))
+		if (isset($post['posts']))
 		{
-			$limit = count($post['posts']) - $posts_per_thread;
-			if ($limit < 0)
-				$limit = 0;
+			foreach ($post['posts'] as $p)
+			{
+				if(!isset($thread_id))
+					$thread_id = NULL;
+
+				if ($p->thread_num == 0)
+					$p->thread_num = $p->num;
+
+				echo $this->theme->build('board_comment', array('p' => $p, 'modifiers' => $modifiers), TRUE, TRUE);
+			}
 		}
-		else
-		{
-			$limit = 0;
-		}
-
-		foreach ($post['posts'] as $p)
-		{
-
-			if ($p->thread_num == 0)
-				$p->thread_num = $p->num;
-
-			if(!isset($thread_id))
-				$thread_id = NULL;
-
-			if(file_exists('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php'))
-				include('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php');
-			else
-				include('content/themes/' . $this->theme->get_config('extends') . '/views/board_comment.php');
-		}
-	}
 	?>
-	<?php
-	if (isset($thread_id)) :
-		echo $template['partials']['tools_reply_box'];
-	endif;
-	?>
+
+	<?php if (isset($thread_id)) : ?>
+	<?= ($enabled_tools_reply_box) ? $template['partials']['tools_reply_box'] : '' ?>
+	<?php endif; ?>
+
 	<br class="newthr" />
 	<hr />
 <?php endforeach; ?>
 </div>
 
-<?php
-if (isset($thread_id))
-	echo form_close();
-?>
+<?php if (isset($thread_id)) echo form_close(); ?>

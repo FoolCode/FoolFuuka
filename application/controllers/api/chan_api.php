@@ -11,7 +11,7 @@ class Chan_API extends API_Controller
 	{
 		parent::__construct();
 	}
-	
+
 
 	/**
 	 * Returns the latest threads
@@ -28,11 +28,11 @@ class Chan_API extends API_Controller
 		{
 			if (!is_natural($this->get('page')))
 			{
-				$this->response(array('error' => __('Faulty page value')), 404);
+				$this->response(array('error' => __("Invalid value for 'page'.")), 404);
 			}
-			else if ($this->get('page') > 100)
+			else if ($this->get('page') > 500)
 			{
-				$this->response(array('error' => __('Can\'t go over page 500')), 404);
+				$this->response(array('error' => __('Unable to return more than 500 pages.')), 404);
 			}
 			else
 			{
@@ -49,11 +49,11 @@ class Chan_API extends API_Controller
 		{
 			if (!is_natural($this->get('per_page')))
 			{
-				$this->response(array('error' => __('Faulty per_page value')), 404);
+				$this->response(array('error' => __("Invalid value for 'per_page'.")), 404);
 			}
 			else if ($this->get('per_page') > 50)
 			{
-				$this->response(array('error' => __('Can\'t return more than 50 threads')),
+				$this->response(array('error' => __('Unable to return more than 50 threads per page.')),
 					404);
 			}
 			else
@@ -68,16 +68,14 @@ class Chan_API extends API_Controller
 
 
 
-		$posts = $this->post->get_latest(get_selected_radix(), $page,
-			array('per_page' => $per_page));
-
+		$posts = $this->post->get_latest(get_selected_radix(), $page, array('per_page' => $per_page));
 		if (count($posts) > 0)
 		{
 			$this->response($posts, 200); // 200 being the HTTP response code
 		}
 		else
 		{
-			$this->response(array('error' => __('Threads could not be found')), 404);
+			$this->response(array('error' => __('Unable to locate any threads.')), 404);
 		}
 	}
 
@@ -97,11 +95,11 @@ class Chan_API extends API_Controller
 		{
 			if (!is_natural($this->get('page')))
 			{
-				$this->response(array('error' => __('Faulty page value')), 404);
+				$this->response(array('error' => __("Invalid value for 'page'.")), 404);
 			}
-			else if ($this->get('page') > 100)
+			else if ($this->get('page') > 500)
 			{
-				$this->response(array('error' => __('Can\'t go over page 500')), 404);
+				$this->response(array('error' => __('Unable to return more than 500 pages.')), 404);
 			}
 			else
 			{
@@ -118,11 +116,11 @@ class Chan_API extends API_Controller
 		{
 			if (!is_natural($this->get('per_page')))
 			{
-				$this->response(array('error' => __('Faulty per_page value')), 404);
+				$this->response(array('error' => __("Invalid value for 'per_page'.")), 404);
 			}
 			else if ($this->get('per_page') > 50)
 			{
-				$this->response(array('error' => __('Can\'t return more than 50 threads')),
+				$this->response(array('error' => __('Unable to return more than 50 threads per page.')),
 					404);
 			}
 			else
@@ -137,8 +135,7 @@ class Chan_API extends API_Controller
 
 		$page = intval($page);
 
-		$posts = $this->post->get_latest_ghost(get_selected_radix(), $page,
-			array('per_page' => $per_page));
+		$posts = $this->post->get_latest_ghost(get_selected_radix(), $page, array('per_page' => $per_page));
 
 		if (count($posts) > 0)
 		{
@@ -147,7 +144,7 @@ class Chan_API extends API_Controller
 		else
 		{
 			// no comics
-			$this->response(array('error' => __('Threads could not be found')), 404);
+			$this->response(array('error' => __('Unable to locate any threads.')), 404);
 		}
 	}
 
@@ -165,13 +162,12 @@ class Chan_API extends API_Controller
 
 		if (!$this->get('num'))
 		{
-			$this->response(array('error' => __('You have to select a thread number')),
-				404);
+			$this->response(array('error' => __("You are missing the 'num' parameter.")), 404);
 		}
 
 		if (!is_natural($this->get('num')))
 		{
-			$this->response(array('error' => __('Faulty thread number')), 404);
+			$this->response(array('error' => __("Invalid value for 'num'.")), 404);
 		}
 
 		$num = intval($this->get('num'));
@@ -183,7 +179,7 @@ class Chan_API extends API_Controller
 		{
 			if (!is_natural($this->get('latest_doc_id')) && $this->get('latest_doc_id') < 0)
 			{
-				$this->response(array('error' => __('Your latest_doc_id is malformed')), 404);
+				$this->response(array('error' => __("The value for 'latest_doc_id' is malformed.")), 404);
 			}
 
 			$latest_doc_id = intval($this->get('latest_doc_id'));
@@ -214,7 +210,7 @@ class Chan_API extends API_Controller
 				$this->response($response, 200);
 			}
 
-			$this->response(array('error' => __('Thread could not be found')), 200);
+			$this->response(array('error' => __('Thread could not be found.')), 200);
 		}
 	}
 
@@ -225,13 +221,13 @@ class Chan_API extends API_Controller
 
 		if (!$this->get('num'))
 		{
-			$this->response(array('error' => __('You have to select a thread number')),
+			$this->response(array('error' => __("You are missing the 'num' parameter.")),
 				404);
 		}
 
 		if (!is_post_number($this->get('num')))
 		{
-			$this->response(array('error' => __('Faulty thread number')), 404);
+			$this->response(array('error' => __("Invalid value for 'num'.")), 404);
 		}
 
 		$post = $this->post->get_post_by_num(get_selected_radix(), $this->get('num'), 0, TRUE);
@@ -241,11 +237,11 @@ class Chan_API extends API_Controller
 			// jsonp doesn't allow callbacks on error or on 404, so we must return 200
 			if($this->get('format') == 'jsonp')
 			{
-				$this->response(array('error' => __('Post could not be found')), 200);
+				$this->response(array('error' => __('Post could not be found.')), 200);
 			}
 			else
 			{
-				$this->response(array('error' => __('Post could not be found')), 404);			
+				$this->response(array('error' => __('Post could not be found.')), 404);
 			}
 		}
 
@@ -259,13 +255,13 @@ class Chan_API extends API_Controller
 
 		if (!$this->get('num'))
 		{
-			$this->response(array('error' => __('You have to select a thread number')),
+			$this->response(array('error' => __("You are missing the 'num' parameter.")),
 				404);
 		}
 
 		if (!is_natural($this->get('num')))
 		{
-			$this->response(array('error' => __('Faulty thread number')), 404);
+			$this->response(array('error' => __("Invalid value for 'num'.")), 404);
 		}
 
 		$num = intval($this->get('num'));
@@ -274,7 +270,7 @@ class Chan_API extends API_Controller
 			get_selected_radix(), $num,
 			array('realtime' => TRUE, 'type' => 'from_doc_id', 'type_extra' => array('latest_doc_id' => $latest_doc_id))
 		);
-		
+
 		$thread = $thread['result'];
 
 		if ($thread !== FALSE)
@@ -290,7 +286,7 @@ class Chan_API extends API_Controller
 				$this->response($response, 200);
 			}
 			// no comics
-			$this->response(array('error' => __('Thread could not be found')), 200);
+			$this->response(array('error' => __('Thread could not be found.')), 200);
 		}
 	}
 
@@ -303,11 +299,11 @@ class Chan_API extends API_Controller
 		{
 			if (!is_natural($this->get('page')))
 			{
-				$this->response(array('error' => __('Faulty page value')), 404);
+				$this->response(array('error' => __("Invalid value for 'page'.")), 404);
 			}
-			else if ($this->get('page') > 100)
+			else if ($this->get('page') > 500)
 			{
-				$this->response(array('error' => __('Can\'t go over page 500')), 404);
+				$this->response(array('error' => __('Unable to return more than 500 pages.')), 404);
 			}
 			else
 			{
@@ -324,11 +320,11 @@ class Chan_API extends API_Controller
 		{
 			if (!is_natural($this->get('per_page')))
 			{
-				$this->response(array('error' => __('Faulty per_page value')), 404);
+				$this->response(array('error' => __("Invalid value for 'per_page'.")), 404);
 			}
-			else if ($this->get('per_page') > 3000)
+			else if ($this->get('per_page') > 50)
 			{
-				$this->response(array('error' => __('Can\'t return more than 3000 ghost posts')),
+				$this->response(array('error' => __('Can\'t return more than 50 ghosted threads per page.')),
 					404);
 			}
 			else
@@ -351,7 +347,7 @@ class Chan_API extends API_Controller
 		else
 		{
 			// no comics
-			$this->response(array('error' => __('Ghost posts could not be found')), 404);
+			$this->response(array('error' => __('Ghost Posts could not be found.')), 404);
 		}
 	}
 }

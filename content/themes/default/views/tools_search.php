@@ -269,7 +269,7 @@ if (isset($board)) :
 					echo form_input(array('name' => 'filename', 'id' => 'filename', 'value' => (isset($search["filename"]))
 						? rawurldecode($search["filename"]) : ''))
 				?></li>
-				<li class="input-prepend"><label for="date_start" class="add-on"><?= __('Date Start') ?></label><?php
+				<li class="input-prepend"><label for="date_start" class="add-on"><?= __('From Date') ?></label><?php
 					$date_array = array(
 						'placeholder' => 'YYYY-MM-DD',
 						'name' => 'start',
@@ -284,7 +284,7 @@ if (isset($board)) :
 					echo form_input($date_array);
 				?></li>
 
-				<li class="input-prepend"><label for="date_end" class="add-on"><?= __('Date End') ?></label><?php
+				<li class="input-prepend"><label for="date_end" class="add-on"><?= __('To Date') ?></label><?php
 					$date_array = array(
 						'placeholder' => 'YYYY-MM-DD',
 						'name' => 'end',

@@ -3,15 +3,10 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 foreach ($posts as $key => $post) :
-
-	if (isset($post['op']))
-	{
+	if (isset($post['op'])) :
 		$op = $post['op'];
 		$selected_radix = isset($op->board)?$op->board:get_selected_radix();
-	}
 ?>
-
-<?php if (isset($op)) : ?>
 <article id="<?= $op->num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $selected_radix->shortname ?>">
 	<?php if ($op->preview_orig) : ?>
 		<div class="thread_image_box">

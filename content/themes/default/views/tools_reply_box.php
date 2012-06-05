@@ -126,7 +126,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 
 			$submit_array = array(
 				'name' => 'reply_gattai_spoilered',
-				'value' => __('Submit spoilered'),
+				'value' => __('Submit Spoilered'),
 				'class' => 'btn',
 			);
 

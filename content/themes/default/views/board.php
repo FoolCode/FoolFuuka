@@ -114,7 +114,7 @@ foreach ($posts as $key => $post) :
 	</div>
 	<?php endif; ?>
 <?php else: ?>
-<article id="<?= $op->num ?>" class="clearfix thread">
+<article class="clearfix thread">
 <?php endif; ?>
 
 	<aside class="posts">

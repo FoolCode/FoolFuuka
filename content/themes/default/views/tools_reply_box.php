@@ -2,16 +2,13 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selected_radix()->archive) ||
-	(isset($thread_id))) :
+if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selected_radix()->archive) || (isset($thread_id))) :
 ?>
 
 <div class="thread_form_wrap clearfix">
 <section class="thread_form clearfix">
-	<?php
-	echo form_open_multipart(get_selected_radix()->shortname . '/submit');
-	echo form_hidden('reply_numero', isset($thread_id)?$thread_id:0);
-	?>
+<?= form_open_multipart(get_selected_radix()->shortname . '/submit') ?>
+<?= form_hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
 <fieldset>
 
 	<div class="input-prepend">
@@ -51,6 +48,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				'id' => 'reply_email_yep',
 				'style' => 'display:none'
 			));
+
 			echo form_input(array(
 				'name' => 'reply_elitterae',
 				'id' => 'reply_elitterae',
@@ -60,12 +58,11 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		</div>
 
 
-		<?php if(!isset($disable_image_upload) || !$disable_image_upload) : ?>
-				<div class="input-prepend">
-					<label class="add-on" for="file_image"><?= __('File') ?></label><input type="file" name="file_image" id="file_image"  /><?php
-		echo form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes);
-		?>
-					</div>
+		<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
+		<div class="input-prepend">
+			<label class="add-on" for="file_image"><?= __('File') ?></label><input type="file" name="file_image" id="file_image" />
+			<?= form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes) ?>
+		</div>
 		<?php endif; ?>
 
 		<div class="input-prepend">
@@ -80,7 +77,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		</div>
 		<?php if ($this->tank_auth->is_allowed()) : ?>
 		<div class="input-prepend">
-			<label class="add-on" for="reply_postas"><?= __('Post as') ?></label><?php
+			<label class="add-on" for="reply_postas"><?= __('Post As') ?></label><?php
 			$postas = array('user' => __('User'), 'mod' => __('Moderator'));
 			if ($this->tank_auth->is_admin())
 			{
@@ -101,7 +98,6 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 			'id' => 'reply_comment_yep',
 			'style' => 'display:none'
 		));
-		?><?php
 		echo form_textarea(array(
 			'name' => 'reply_chennodiscursus',
 			'id' => 'reply_chennodiscursus',
@@ -114,9 +110,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 
 	<div class="rules pull-left">
 		<div class="btn-group" style="margin-bottom:5px">
-
 			<?php
-
 			$submit_array = array(
 				'name' => 'reply_gattai',
 				'value' => __('Submit'),
@@ -144,28 +138,24 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 			echo form_submit($submit_array);
 
 			echo form_reset(array('class' => 'btn', 'name' => 'reset', 'value' => __('Reset')));
-
 			?>
-
 		</div>
 
 		<?php
-			if(get_selected_radix()->posting_rules)
+			if (get_selected_radix()->posting_rules)
 			{
 				$this->load->library('Markdown_Parser');
 				echo Markdown(get_selected_radix()->posting_rules);
 			}
 		?>
-
 	</div>
 
 	<div id="reply_ajax_notices"></div>
-	<?php if(isset($reply_errors)) : ?>
+	<?php if (isset($reply_errors)) : ?>
 	<span style="color:red"><?= $reply_errors ?></span>
 	<?php endif; ?>
-
 </fieldset>
-	<?= form_close() ?>
+<?= form_close() ?>
 </section>
 </div>
 

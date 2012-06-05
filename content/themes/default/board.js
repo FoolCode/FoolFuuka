@@ -270,6 +270,17 @@ var bindFunctions = function()
 					});
 					return false;
 					break;
+					
+				case 'searchUser':
+					window.location.href = backend_vars.site_url + $(this).data('board') +
+						'/search/poster_ip/' + $(this).data('poster-ip');
+					//return false;
+					break;
+				
+				case 'searchUserGlobal':
+					window.location.href = backend_vars.site_url + 'search/poster_ip/' + $(this).data('poster-ip');
+					//return false;
+					break;
 
 				default:
 					break;

@@ -22,8 +22,8 @@ if ($enabled_tools_modal) :
 		<div class="modal-information"></div>
 	</div>
 	<div class="modal-footer">
-		<a href="#" class="btn secondary closeModal" data-function="closeModal">Cancel</a>
-		<a href="#" class="btn btn-primary submitModal" data-function="submitModal" data-report="<?= site_url($board->shortname . '/report/') ?>" data-delete="<?= site_url($board->shortname . '/delete/') ?>">Submit</a>
+		<a href="#" class="btn secondary closeModal" data-function="closeModal"><?= __('Cancel') ?></a>
+		<a href="#" class="btn btn-primary submitModal" data-function="submitModal" data-report="<?= site_url($board->shortname . '/report/') ?>" data-delete="<?= site_url($board->shortname . '/delete/') ?>"><?= __('Submit') ?></a>
 	</div>
 </div>
 <?php endif; ?>

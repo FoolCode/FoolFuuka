@@ -119,13 +119,13 @@
 									<li>
 										<a href="<?= site_url(array(get_selected_radix()->shortname, 'by_post')) ?>">
 											<?= __('By Post') ?>
-											<?php if($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) != 1) echo ' <i class="icon-ok"></i>'; ?>
+											<?php if ($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) != 1) echo ' <i class="icon-ok"></i>'; ?>
 										</a>
 									</li>
 									<li>
 										<a href="<?= site_url(array(get_selected_radix()->shortname, 'by_thread')) ?>">
 											<?= __('By Thread') ?>
-											<?php if($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) == 1) echo ' <i class="icon-ok"></i>'; ?>
+											<?php if ($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) == 1) echo ' <i class="icon-ok"></i>'; ?>
 										</a>
 									</li>
 								</ul>

@@ -435,6 +435,15 @@ class Radix_model extends CI_Model
 					)
 				)
 			),
+			'anonymous_default_name' => array (
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'label' => __('The default name when an user doesn\'t enter a name'),
+				'type' => 'input',
+				'class' => 'span3',
+				'validation' => 'trim|required',
+				'default_value' => FOOL_RADIX_ANONYMOUS_DEFAULT_NAME
+			),
 			'display_exif' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,

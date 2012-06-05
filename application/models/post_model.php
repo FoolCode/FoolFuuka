@@ -1212,6 +1212,7 @@ class Post_model extends CI_Model
 		// default variables
 		$process = TRUE;
 		$clean = TRUE;
+		$limit = 25;
 
 		// override defaults
 		foreach ($options as $key => $option)
@@ -1349,6 +1350,10 @@ class Post_model extends CI_Model
 			{
 				$this->db->sphinx_match('media_filename', $args['filename'], 'full', TRUE);
 			}
+			if ($args['poster_ip'] && $this->tank_auth->is_allowed())
+			{
+				$this->db->where('pip', (int) inet_ptod($args['poster_ip']));
+			}
 			if ($args['image'])
 			{
 				if($board !== FALSE)
@@ -1422,7 +1427,7 @@ class Post_model extends CI_Model
 			}
 
 			// set sphinx options
-			$this->db->limit(25, ($args['page'] * 25) - 25)
+			$this->db->limit($limit, ($args['page'] * $limit) - $limit)
 				->sphinx_option('max_matches', 5000)
 				->sphinx_option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
 
@@ -1538,6 +1543,10 @@ class Post_model extends CI_Model
 				$this->db->where('media_id', $args['image']);
 				$this->db->use_index('media_id_index');
 			}
+			if ($args['poster_ip'] && $this->tank_auth->is_allowed())
+			{
+				$this->db->where('poster_ip', (int) inet_ptod($args['poster_ip']));
+			}
 			if ($args['capcode'] == 'admin')
 			{
 				$this->db->where('capcode', 'A');
@@ -1615,7 +1624,7 @@ class Post_model extends CI_Model
 			}
 
 			// now grab those results in order
-			$this->db->limit(25, ($args['page'] * 25) - 25);
+			$this->db->limit($limit, ($args['page'] * $limit) - $limit);
 
 			$this->db->order_by('timestamp', ($args['order'] == 'asc'?'ASC':'DESC'));
 
@@ -1640,7 +1649,7 @@ class Post_model extends CI_Model
 				WHERE doc_id IN (' . implode(', ', $doc_ids) . ')
 				ORDER BY timestamp ' . ($args['order'] == 'asc'?'ASC':'DESC') . '
 				LIMIT ?, ?
-			', array(($args['page'] * 25) - 25, 25));
+			', array(($args['page'] * $limit) - $limit, $limit));
 
 			// query mysql for full records
 			//$query = $this->db->query($this->db->statement());
@@ -2571,7 +2580,7 @@ class Post_model extends CI_Model
 		if ($data['name'] === FALSE || $data['name'] == '')
 		{
 			$this->input->set_cookie('foolfuuka_reply_name', '', 0);
-			$name = 'Anonymous';
+			$name = $board->anonymous_default_name;
 			$trip = '';
 		}
 		else
@@ -2789,7 +2798,7 @@ class Post_model extends CI_Model
 		// 2ch-style codes, only if enabled
 		if($board->enable_poster_hash)
 		{
-			$poster_hash = substr(substr(crypt(md5($this->input->ip_address().'id'.$num)),'id'),+3), 0, 8);
+			$poster_hash = substr(substr(crypt(md5($this->input->ip_address().'id'.$num),'id'),+3), 0, 8);
 		}
 		else
 		{
@@ -3053,6 +3062,42 @@ class Post_model extends CI_Model
 		}
 
 		return array('success' => TRUE, 'posted' => $post->row());
+	}
+	
+	
+	/**
+	 * Use the search system to delete lots of messages at once
+	 * 
+	 * @param type $board
+	 * @param type $data the data otherwise sent to the search system
+	 * @param type $options modifiers
+	 */
+	function p_delete_by_search($board, $data, $options = array())
+	{
+		// for safety don't let deleting more than 1000 entries at once
+		if(!isset($options['limit']))
+			$options['limit'] = 1000;
+		
+		$result = $this->get_search($board, $data, $options);
+
+		// send back the error
+		if(isset($result['error']))
+			return $result;
+		
+		
+		if(isset($result['posts'][0]['posts']))
+		{
+			$results = $result['posts'][0]['posts'];
+		}
+		else
+		{
+			return FALSE;
+		}
+		
+		foreach($results as $post)
+		{
+			$this->delete(isset($post->board)?$post->board:$board, array('doc_id' => $post->doc_id, 'password' => ''));
+		}
 	}
 
 

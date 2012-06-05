@@ -2580,7 +2580,7 @@ class Post_model extends CI_Model
 		if ($data['name'] === FALSE || $data['name'] == '')
 		{
 			$this->input->set_cookie('foolfuuka_reply_name', '', 0);
-			$name = 'Anonymous';
+			$name = $board->anonymous_default_name;
 			$trip = '';
 		}
 		else

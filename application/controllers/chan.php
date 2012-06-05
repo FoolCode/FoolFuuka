@@ -503,7 +503,7 @@ class Chan extends Public_Controller
 	/**
 	 * Display the error page with some information and suggestion to use the search
 	 */
-	function p_show_404()
+	public function p_show_404()
 	{
 		$this->theme->set_title(get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE));
 		// call it as a static method to make it easier for plugins to call 404

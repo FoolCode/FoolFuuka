@@ -173,7 +173,7 @@ class FU_Board_Statistics extends Plugins_model
 
 			if (!is_array($stats))
 			{
-				return Chan::show_404();
+				return get_instance()->show_404();
 			}
 
 			// Set template variables required to build the HTML.

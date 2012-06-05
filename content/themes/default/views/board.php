@@ -113,14 +113,13 @@ foreach ($posts as $key => $post) :
 		<div class="ip_reporter"><?= inet_dtop($op->report_ip_reporter) ?></div>
 	</div>
 	<?php endif; ?>
-<?php else: ?>
+<?php elseif (isset($post['posts'])): ?>
 <article class="clearfix thread">
 <?php endif; ?>
 
+	<?php if (isset($post['posts'])) : ?>
 	<aside class="posts">
-	<?php
-		if (isset($post['posts']))
-		{
+		<?php
 			$post_counter = 0;
 			foreach ($post['posts'] as $p)
 			{
@@ -135,14 +134,16 @@ foreach ($posts as $key => $post) :
 
 				echo $this->theme->build('board_comment', array('p' => $p, 'modifiers' => $modifiers), TRUE, TRUE);
 			}
-		}
-	?>
+		?>
 	</aside>
+	<?php endif; ?>
 
 	<?php if (isset($thread_id)) : ?>
 	<div class="js_hook_realtimethread"></div>
 	<?= ($enabled_tools_reply_box) ? $template['partials']['tools_reply_box'] : '' ?>
 	<?php endif; ?>
+<?php if (isset($post['op']) || isset($post['posts'])) : ?>
 </article>
+<?php endif; ?>
 <?php endforeach; ?>
 <div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>

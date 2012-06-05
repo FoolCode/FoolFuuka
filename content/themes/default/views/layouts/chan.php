@@ -239,9 +239,14 @@
 					</a>
 					<ul class="dropdown-menu">
 					<?php foreach($this->theme->get_available_themes() as $theme) :
-						$theme = $this->theme->get_by_name($theme);
+						if (($theme = $this->theme->get_by_name($theme))) :
 					?>
-						 <li><a href="<?= site_url(array('@system', 'functions', 'theme', $theme['directory'])) ?>" onclick="changeTheme('<?= $theme['directory'] ?>'); return false;"><?= $theme['name'] ?><?= ($theme['directory'] == $this->theme->get_selected_theme())?' <i class="icon-ok"></i>':'' ?></a></li>
+						 <li>
+							 <a href="<?= site_url(array('@system', 'functions', 'theme', $theme['directory'])) ?>" onclick="changeTheme('<?= $theme['directory'] ?>'); return false;">
+								 <?= $theme['name'] ?><?= ($theme['directory'] == $this->theme->get_selected_theme())?' <i class="icon-ok"></i>':'' ?>
+							 </a>
+						 </li>
+					<?php endif; ?>
 					<?php endforeach; ?>
 					</ul>
 				</div>
@@ -254,7 +259,11 @@
 					</a>
 					<ul class="dropdown-menu">
 					<?php foreach(config_item('ff_available_languages') as $key => $lang) : ?>
-						 <li><a href="<?= site_url(array('@system', 'functions', 'language', $key)) ?>" onclick="changeLanguage('<?= $key ?>'); return false;"><?= $lang ?><?= ((!$this->input->cookie('foolfuuka_language') && $key == 'en_EN') || $key == $this->input->cookie('foolfuuka_language'))?' <i class="icon-ok"></i>':'' ?></a></li>
+						 <li>
+							 <a href="<?= site_url(array('@system', 'functions', 'language', $key)) ?>" onclick="changeLanguage('<?= $key ?>'); return false;">
+								 <?= $lang ?><?= ((!$this->input->cookie('foolfuuka_language') && $key == 'en_EN') || $key == $this->input->cookie('foolfuuka_language'))?' <i class="icon-ok"></i>':'' ?>
+							 </a>
+						 </li>
 					<?php endforeach; ?>
 						 <li class="divider"></li>
 						 <li><a href="http://archive.foolz.us/articles/translate/"><?= __('Add a Translation') ?></a></li>

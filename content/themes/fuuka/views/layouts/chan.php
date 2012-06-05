@@ -181,8 +181,10 @@
 					$theme_links = array();
 					foreach ($this->theme->get_available_themes() as $theme)
 					{
-						$theme = $this->theme->get_by_name($theme);
-						$theme_links[] = '<a href="' . site_url(array('@system', 'functions', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
+						if (($theme = $this->theme->get_by_name($theme)))
+						{
+							$theme_links[] = '<a href="' . site_url(array('@system', 'functions', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
+						}
 					}
 					echo 'Theme [ ' . implode(' / ', $theme_links) . ' ]';
 				?>

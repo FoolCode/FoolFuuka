@@ -3038,7 +3038,7 @@ class Post_model extends CI_Model
 		);
 
 		// update poster_hash for non-ghost posts
-		if ($ghost === FALSE)
+		if ($ghost === FALSE && $board->enable_poster_hash)
 		{
 			$this->db->query('
 				UPDATE ' . $this->radix->get_table($board) . '

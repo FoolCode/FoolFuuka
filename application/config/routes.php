@@ -55,6 +55,7 @@ if(
 	$route['search/(.*?)'] = "chan/search/$1";
 	$route['admin'] = "admin/boards";
 	$route['admin/members/members'] = 'admin/members/membersa';
+	$route['admin/plugins'] = "admin/plugins_admin/manage";
 	$route['admin/plugins/(.*?)'] = "admin/plugins_admin/$1";
 
 	$route_admin_controllers = glob(APPPATH . 'controllers/admin/*.php');

@@ -512,7 +512,7 @@ class Theme_model extends CI_Model
 		ob_start();
 		
 		// rewrite short tags from CodeIgniter 2.1
-		if ((bool) @ini_get('short_open_tag') === FALSE && config_item('rewrite_short_tags') == TRUE)
+		if (version_compare(phpversion(), '5.4.0') >= 0 || ((bool) @ini_get('short_open_tag') === FALSE && config_item('rewrite_short_tags') == TRUE))
 		{
 			echo eval('?>'.preg_replace("/;*\s*\?>/", "; ?>", str_replace('<?=', '<?php echo ', file_get_contents($_location))));
 		}

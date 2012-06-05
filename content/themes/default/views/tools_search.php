@@ -297,6 +297,12 @@ if(isset($board)) :
 					echo form_input($date_array);
 
 					?></li>
+				<?php
+				if($this->tank_auth->is_allowed()) : ?>
+					<li class="input-prepend"><label for="poster_ip" class="add-on"><?php echo __('IP address') ?></label><?php echo form_input(array('name' => 'poster_ip', 'id' => 'poster_ip', 'value' => (isset($search["poster_ip"]))
+						? rawurldecode($search["poster_ip"]) : ''))
+						?>
+				<?php endif; ?>
 				<li class="input-prepend"><label for="image" class="add-on"><?php echo __('Image hash') ?></label><?php echo form_input(array('name' => 'image', 'id' => 'image', 'value' => (isset($search["image"]))
 					? rawurldecode($search["image"]) : ''))
 					?>

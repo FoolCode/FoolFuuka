@@ -84,6 +84,9 @@ if (!defined('BASEPATH'))
 				<?php endif; ?>
 				<?php if($op->poster_ip) : ?>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="ban_user"><?php echo __('Ban user:') . ' ' . inet_dtop($op->poster_ip) ?></button>
+				<button class="btn btn-mini" data-function="searchUser" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $op->doc_id ?>" data-poster-ip="<?= inet_dtop($op->poster_ip) ?>"><?php echo __('Search IP') ?></button>
+				<?php if(get_setting('fs_sphinx_global')) : ?><button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $op->doc_id ?>" data-poster-ip="<?= inet_dtop($op->poster_ip) ?>"><?php echo __('Search IP globally') ?></button>
+				<?php endif; ?>	
 				<?php endif; ?>
 				<?php if(isset($op->report_status) && !is_null($op->report_status)) : ?>
 				<button class="btn btn-mini" data-function="mod" data-board="<?php echo get_selected_radix()->shortname ?>" data-id="<?php echo $op->doc_id ?>" data-action="remove_report"><?php echo __('Remove report') ?></button>
@@ -126,10 +129,7 @@ if (!defined('BASEPATH'))
 				if ($p->thread_num == 0)
 					$p->thread_num  = $p->num;
 
-				if (file_exists('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php'))
-					include('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php');
-				else
-					include('content/themes/' . $this->theme->get_config('extends') . '/views/board_comment.php');
+				echo $this->theme->build('board_comment', array('p' => $p, 'modifiers' => $modifiers), TRUE, TRUE);
 			}
 		}
 		?>
@@ -141,6 +141,6 @@ if (!defined('BASEPATH'))
 	if($enabled_tools_reply_box)
 		echo $template['partials']['tools_reply_box']; ?>
 	<?php endif; ?>
-	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
 </article>
 <?php endforeach; ?>
+<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>

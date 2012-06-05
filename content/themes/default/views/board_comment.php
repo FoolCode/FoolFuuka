@@ -104,10 +104,12 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_md5"><?php echo __('Ban image') ?></button>
 		<?php endif; ?>
 		<?php if($p->poster_ip) : ?>
-		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_user"><?php echo __('Ban user:') . ' ' . inet_dtop($p->poster_ip) ?></button>
+			<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="ban_user"><?php echo __('Ban user:') . ' ' . inet_dtop($p->poster_ip) ?></button>
+			<button class="btn btn-mini" data-function="searchUser" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-poster-ip="<?= inet_dtop($p->poster_ip) ?>"><?php echo __('Search IP') ?></button>
+			<?php if(get_setting('fs_sphinx_global')) : ?><button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-poster-ip="<?= inet_dtop($p->poster_ip) ?>"><?php echo __('Search IP globally') ?></button><?php endif; ?>
 		<?php endif; ?>
 		<?php if(isset($p->report_status) && !is_null($p->report_status)) : ?>
-		<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_report"><?php echo __('Remove report') ?></button>
+			<button class="btn btn-mini" data-function="mod" data-board="<?php echo $selected_radix->shortname ?>" data-board-url="<?php echo site_url(array('@radix', $selected_radix->shortname)) ?>" data-id="<?php echo $p->doc_id ?>" data-action="remove_report"><?php echo __('Remove report') ?></button>
 		<?php endif; ?>
 		</ul>
 	</div>

@@ -1352,7 +1352,7 @@ class Post_model extends CI_Model
 			}
 			if ($args['poster_ip'] && $this->tank_auth->is_allowed())
 			{
-				$this->db->where('pip', (int) $args['poster_ip']);
+				$this->db->where('pip', (int) inet_ptod($args['poster_ip']));
 			}
 			if ($args['image'])
 			{
@@ -1545,7 +1545,7 @@ class Post_model extends CI_Model
 			}
 			if ($args['poster_ip'] && $this->tank_auth->is_allowed())
 			{
-				$this->db->where('poster_ip', (int) $args['poster_ip']);
+				$this->db->where('poster_ip', (int) inet_ptod($args['poster_ip']));
 			}
 			if ($args['capcode'] == 'admin')
 			{

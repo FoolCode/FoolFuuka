@@ -973,6 +973,13 @@ class Post_model extends CI_Model
 	 */
 	private function p_process_internal_links($matches)
 	{
+		// this is a patch not to have the comment() check spouting errors
+		// since this is already a fairly bad (but unavoidable) solution, let's keep the dirt in this function
+		if(!isset($this->current_p))
+		{
+			return $matches[0];
+		}
+		
 		$num = $matches[2];
 		$num_id = str_replace(',', '_', $num);
 

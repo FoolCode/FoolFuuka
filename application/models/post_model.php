@@ -1350,7 +1350,7 @@ class Post_model extends CI_Model
 			{
 				$this->db->sphinx_match('media_filename', $args['filename'], 'full', TRUE);
 			}
-			if ($args['poster_ip'] && $this->tank_auth->is_allowed())
+			if ($this->tank_auth->is_allowed() && $args['poster_ip'])
 			{
 				$this->db->where('pip', (int) inet_ptod($args['poster_ip']));
 			}

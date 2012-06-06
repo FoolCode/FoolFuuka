@@ -128,7 +128,7 @@ source main
 		SELECT doc_id, ' . $test_board->id . ' AS board, num, subnum, name, trip, email, media_filename, media_id AS mid, media_hash, \
 		thread_num AS tnum, CAST(capcode AS UNSIGNED) AS cap, (media_filename != \'\' AND media_filename IS NOT NULL) AS has_image, \
 		(subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
-		timestamp, title, comment \
+		poster_ip AS pip, timestamp, title, comment \
 		FROM ' . $test_board->shortname . ' LIMIT 1
 
 	sql_attr_uint = num
@@ -137,6 +137,7 @@ source main
 	sql_attr_uint = cap
 	sql_attr_uint = board
 	sql_attr_uint = mid
+	sql_attr_uint = pip
 	sql_attr_bool = has_image
 	sql_attr_bool = is_internal
 	sql_attr_bool = is_spoiler
@@ -304,7 +305,7 @@ source ' . $board->shortname . '_main : main
 		SELECT doc_id, ' . $board->id . ' AS board, num, subnum, name, trip, email, media_filename, media_id AS mid, media_hash, \
 		thread_num AS tnum, CAST(capcode AS UNSIGNED) AS cap, (media_filename != \'\' AND media_filename IS NOT NULL) AS has_image, \
 		(subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
-		timestamp, title, comment FROM ' . $CI->radix->get_table($board) . ' WHERE doc_id >= $start AND doc_id <= $end
+		poster_ip AS pip, timestamp, title, comment FROM ' . $CI->radix->get_table($board) . ' WHERE doc_id >= $start AND doc_id <= $end
 	sql_query_info = SELECT * FROM ' . $CI->radix->get_table($board) . ' WHERE doc_id = $id
 
 	sql_query_range = SELECT (SELECT max_ancient_id FROM `' . $CI->db->database . '`.' . $CI->db->protect_identifiers('boards',

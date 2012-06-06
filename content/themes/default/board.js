@@ -89,7 +89,7 @@ var bindFunctions = function()
 							el.attr({'value': originalText});
 							el.removeAttr('disabled');
 							if (typeof data.error !== "undefined")
-							{alert();
+							{
 								reply_alert.html(data.error);
 								reply_alert.addClass('error'); // deals with showing the alert
 								return false;

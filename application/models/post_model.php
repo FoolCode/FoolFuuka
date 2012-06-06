@@ -1979,7 +1979,7 @@ class Post_model extends CI_Model
 					return FALSE;
 				}
 
-				/* @todo reduce this query since thread_num catches all */
+				// TODO reduce this query since thread_num catches all
 				$query = $this->db->query('
 					SELECT *
 					FROM

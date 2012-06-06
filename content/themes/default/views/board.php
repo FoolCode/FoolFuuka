@@ -117,9 +117,9 @@ foreach ($posts as $key => $post) :
 <article class="clearfix thread">
 <?php endif; ?>
 
-	<?php if (isset($post['posts'])) : ?>
 	<aside class="posts">
-		<?php
+		<?php 
+		if (isset($post['posts'])) :
 			$post_counter = 0;
 			foreach ($post['posts'] as $p)
 			{
@@ -134,9 +134,8 @@ foreach ($posts as $key => $post) :
 
 				echo $this->theme->build('board_comment', array('p' => $p, 'modifiers' => $modifiers), TRUE, TRUE);
 			}
-		?>
+		endif; ?>
 	</aside>
-	<?php endif; ?>
 
 	<?php if (isset($thread_id)) : ?>
 	<div class="js_hook_realtimethread"></div>

@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
 if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selected_radix()->archive) || (isset($thread_id))) :
 ?>
 
-<div class="thread_form_wrap clearfix">
+<div id="reply" class="thread_form_wrap clearfix">
 <section class="thread_form clearfix">
 <?= form_open_multipart(get_selected_radix()->shortname . '/submit') ?>
 <?= form_hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>

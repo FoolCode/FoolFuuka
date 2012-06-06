@@ -3242,7 +3242,7 @@ class Post_model extends CI_Model
 		}
 
 		// delete media file only if there is only one image OR the image is banned
-		if ($post->total == 1 || $post->banned == 1)
+		if ($post->total == 1 || $post->banned == 1 || $this->tank_auth->is_allowed())
 		{
 			if ($media === TRUE)
 			{

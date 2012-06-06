@@ -1543,7 +1543,7 @@ class Post_model extends CI_Model
 				$this->db->where('media_id', $args['image']);
 				$this->db->use_index('media_id_index');
 			}
-			if ($args['poster_ip'] && $this->tank_auth->is_allowed())
+			if ($this->tank_auth->is_allowed() && $args['poster_ip'])
 			{
 				$this->db->where('poster_ip', (int) inet_ptod($args['poster_ip']));
 			}
@@ -3063,11 +3063,11 @@ class Post_model extends CI_Model
 
 		return array('success' => TRUE, 'posted' => $post->row());
 	}
-	
-	
+
+
 	/**
 	 * Use the search system to delete lots of messages at once
-	 * 
+	 *
 	 * @param type $board
 	 * @param type $data the data otherwise sent to the search system
 	 * @param type $options modifiers
@@ -3077,14 +3077,14 @@ class Post_model extends CI_Model
 		// for safety don't let deleting more than 1000 entries at once
 		if(!isset($options['limit']))
 			$options['limit'] = 1000;
-		
+
 		$result = $this->get_search($board, $data, $options);
 
 		// send back the error
 		if(isset($result['error']))
 			return $result;
-		
-		
+
+
 		if(isset($result['posts'][0]['posts']))
 		{
 			$results = $result['posts'][0]['posts'];
@@ -3093,7 +3093,7 @@ class Post_model extends CI_Model
 		{
 			return FALSE;
 		}
-		
+
 		foreach($results as $post)
 		{
 			$this->delete(isset($post->board)?$post->board:$board, array('doc_id' => $post->doc_id, 'password' => ''));
@@ -3270,7 +3270,7 @@ class Post_model extends CI_Model
 						return FALSE;
 					}
 				}
-				
+
 				// remove reply thumbnail
 				$post->op = 0;
 				$thumb_file = $this->get_media_dir($board, $post, TRUE);

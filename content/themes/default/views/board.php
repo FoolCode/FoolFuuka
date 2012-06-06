@@ -146,4 +146,6 @@ foreach ($posts as $key => $post) :
 </article>
 <?php endif; ?>
 <?php endforeach; ?>
-<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
+<article class="clearfix thread">
+	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
+</article>

@@ -3259,6 +3259,20 @@ class Post_model extends CI_Model
 
 			if ($thumb === TRUE)
 			{
+				// remove OP thumbnail
+				$post->op = 1;
+				$thumb_file = $this->get_media_dir($board, $post, TRUE);
+				if (file_exists($thumb_file))
+				{
+					if (!unlink($thumb_file))
+					{
+						log_message('error', 'post.php/delete_media: unable to remove ' . $thumb_file);
+						return FALSE;
+					}
+				}
+				
+				// remove reply thumbnail
+				$post->op = 0;
 				$thumb_file = $this->get_media_dir($board, $post, TRUE);
 				if (file_exists($thumb_file))
 				{

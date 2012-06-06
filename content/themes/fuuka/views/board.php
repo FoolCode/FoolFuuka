@@ -17,7 +17,7 @@ foreach ($posts as $key => $post) :
 ?>
 	<div id="p<?= $op->num ?>">
 		<?php if ($op->preview_orig) : ?>
-			<span><?= __('File:') . ' ' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename ?> <?= '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
+			<span><?= __('File:') . ' ' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed ?> <?= '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
 			<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
 				[<a href="<?= site_url(get_selected_radix()->shortname . '/search/image/' . $op->safe_media_hash) ?>"><?= __('View Same') ?></a>]
 				[<a href="http://google.com/searchbyimage?image_url=<?= $op->thumb_link ?>">Google</a>]

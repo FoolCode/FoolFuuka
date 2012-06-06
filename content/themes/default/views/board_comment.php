@@ -21,13 +21,13 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 					href="http://saucenao.com/search.php?url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
 				<?php endif; ?>
 			</span>
-
-		<?php if (mb_strlen($p->media_filename) > 38) : ?>
+		
+		<?php if (mb_strlen($p->media_filename_processed) > 38) : ?>
 			<span class="post_file_filename" rel="tooltip" title="<?= form_prep($p->media_filename) ?>">
-					<?= mb_substr($p->media_filename, 0, 32) . ' (...)' . mb_substr($p->media_filename, mb_strrpos($p->media_filename, '.')) . ', ' ?>
+				<?= mb_substr($p->media_filename_processed, 0, 32) . ' (...)' . mb_substr($p->media_filename_processed, mb_strrpos($p->media_filename_processed, '.')) . ', ' ?>
 			</span>
 		<?php else: ?>
-			<?= $p->media_filename . ', ' ?>
+			<?= $p->media_filename_processed . ', ' ?>
 		<?php endif; ?>
 
 		<span class="post_file_metadata">
@@ -37,7 +37,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 
 	<div class="thread_image_box">
 		<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-			<?php if (isset($modifiers['lazyload']) && $medifires['lazyload'] == TRUE) : ?>
+			<?php if (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
 			<img src="<?= site_url('content/themes/default/images/transparent_pixel.png') ?>" data-original="<?= $p->thumb_link ?>" <?= ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media_hash ?>" />
 			<noscript>
 				<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">

@@ -571,6 +571,12 @@ class Post_model extends CI_Model
 		{
 			$post->original_timestamp = $post->timestamp;
 		}
+		
+		// Asagi currently inserts the media_filename in DB with 4chan escaping, we decode it and reencode in case
+		if($board->archive)
+		{
+			$post->media_filename = html_entity_decode($post->media_filename, ENT_QUOTES, 'UTF-8');
+		}
 
 		$elements = array('title', 'name', 'email', 'trip', 'media_orig',
 			'preview_orig', 'media_filename', 'media_hash', 'poster_hash');
@@ -579,13 +585,10 @@ class Post_model extends CI_Model
 		{
 			array_push($elements, 'report_reason');
 		}
-
+		
 		foreach($elements as $element)
 		{
-
-			$element_processed = $element . '_processed';
-
-			$post->$element_processed = @iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));
+			$post->{$element . '_processed'} = @iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));
 			$post->$element = @iconv('UTF-8', 'UTF-8//IGNORE', $post->$element);
 		}
 

@@ -14,14 +14,11 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 					<input type="checkbox" name="delete[]" value="<?= $p->doc_id ?>"/>
 					<?php if (isset($modifiers['post_show_board_name']) &&  $modifiers['post_show_board_name']): ?><span class="post_show_board">/<?= $selected_radix->shortname ?>/</span><?php endif; ?>
 					<span class="filetitle"><?= $p->title_processed ?></span>
-					<span class="postername<?= ($p->capcode == 'M' || $p->capcode == 'G') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?>"><?= (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
-					<span class="postertrip<?= ($p->capcode == 'M' || $p->capcode == 'G') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?>"><?= $p->trip_processed ?></span>
+					<span class="postername<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?>"><?= (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
+					<span class="postertrip<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?>"><?= $p->trip_processed ?></span>
 					<span class="poster_hash"><?php if ($p->poster_hash_processed) : ?>ID:<?= $p->poster_hash_processed ?><?php endif; ?></span>
 					<?php if ($p->capcode == 'M') : ?>
 						<span class="postername mod">## <?= __('Mod') ?></span>
-					<?php endif ?>
-					<?php if ($p->capcode == 'G') : ?>
-						<span class="postername mod">## <?= __('Global Mod') ?></span>
 					<?php endif ?>
 					<?php if ($p->capcode == 'A') : ?>
 						<span class="postername admin">## <?= __('Admin') ?></span>

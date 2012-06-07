@@ -566,10 +566,6 @@ body.theme_default {
     color:#800080;
 }
 
-.theme_default article.thread .post_level.post_level_global_moderator {
-    color:#800080;
-}
-
 .theme_default article.thread .post_level.post_level_administrator {
     color:#FF0000;
 }

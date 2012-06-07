@@ -67,9 +67,6 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 				<?php if ($p->capcode == 'M') : ?>
 					<span class="post_level post_level_moderator">## <?= __('Mod') ?></span>
 					<?php endif ?>
-				<?php if ($p->capcode == 'G') : ?>
-					<span class="post_level post_level_global_moderator">## <?= __('Global Mod') ?></span>
-					<?php endif ?>
 				<?php if ($p->capcode == 'A') : ?>
 					<span class="post_level post_level_administrator">## <?= __('Admin') ?></span>
 				<?php endif ?>

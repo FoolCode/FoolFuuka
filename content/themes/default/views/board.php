@@ -46,9 +46,6 @@ foreach ($posts as $key => $post) :
 				<?php if ($op->capcode == 'M') : ?>
 					<span class="post_level post_level_moderator">## <?= __('Mod') ?></span>
 					<?php endif ?>
-				<?php if ($op->capcode == 'G') : ?>
-					<span class="post_level post_level_global_moderator">## <?= __('Global Mod') ?></span>
-					<?php endif ?>
 				<?php if ($op->capcode == 'A') : ?>
 					<span class="post_level post_level_administrator">## <?= __('Admin') ?></span>
 				<?php endif ?>

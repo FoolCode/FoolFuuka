@@ -732,6 +732,39 @@ body.theme_default {
     border-bottom: 1px dotted #000;
 }
 
+.theme_default .thread_image_box .spoiler_box {
+	width: 150px;
+	height:150px;
+	background: #333;
+	overflow:hidden;
+	background-image:url(images/missing-image.jpg);
+	margin: 0 auto;
+}
+
+.theme_default .thread_image_box .spoiler_box .spoiler_box_text {
+	display:block;
+	color: #fff;
+	background: red;
+	padding: 8px 0;
+	font-size: 16px;
+	font-weight: bold;
+	margin-top:30%;
+	border-top: 2px solid #000;
+	border-bottom: 2px solid #000;
+	text-transform: uppercase;
+	text-shadow:none;
+}
+
+.theme_default .thread_image_box .spoiler_box .spoiler_box_text .spoiler_box_text_help {
+	display:block;
+	font-size:10px;
+	line-height:10px;
+}
+
+
+
+
+
 .theme_default .thread_form_wrap {
     background:#d6f0da;
     border-bottom:2px solid #364041;

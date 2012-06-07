@@ -444,6 +444,13 @@ class Radix_model extends CI_Model
 				'validation' => 'trim|required',
 				'default_value' => FOOL_RADIX_ANONYMOUS_DEFAULT_NAME
 			),
+			'transparent_spoiler' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'help' => __('Should the image spoilers be semi-transparent? (mods and admins have it always on for moderation)'),
+				'type' => 'checkbox',
+				'disabled' => 'disabled'
+			),
 			'display_exif' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,

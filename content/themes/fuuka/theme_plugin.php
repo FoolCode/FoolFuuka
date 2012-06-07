@@ -20,28 +20,28 @@ class Theme_Plugin_fuuka extends Plugins_model
 	{
 		parent::__construct();
 	}
-	
-	
+
+
 	function initialize_plugin()
 	{
 		// use hooks for manipulating comments
 		$this->plugins->register_hook($this, 'fu_post_model_process_comment_greentext_result', 8, '_greentext');
-		$this->plugins->register_hook($this, 'fu_post_model_process_internal_links_html_result', 8, 
+		$this->plugins->register_hook($this, 'fu_post_model_process_internal_links_html_result', 8,
 			'_process_internal_links_html');
-		
-		$this->plugins->register_hook($this, 'fu_post_model_process_crossboard_links_html_result', 8, 
+
+		$this->plugins->register_hook($this, 'fu_post_model_process_crossboard_links_html_result', 8,
 			'_process_crossboard_links_html');
 
-		$this->plugins->register_hook($this, 'fu_chan_controller_before_page', 3, 'page'); 
-		$this->plugins->register_hook($this, 'fu_chan_controller_before_gallery', 3, function(){ show_404(); }); 
+		$this->plugins->register_hook($this, 'fu_chan_controller_before_page', 3, 'page');
+		$this->plugins->register_hook($this, 'fu_chan_controller_before_gallery', 3, function(){ show_404(); });
 		// for safety, force 404
-		$this->plugins->register_hook($this, 'fu_chan_controller_before_submit', 3, function(){ show_404(); }); 
-		
+		$this->plugins->register_hook($this, 'fu_chan_controller_before_submit', 3, function(){ show_404(); });
+
 		// if we have to outright change the name of the function, we need to register a new controller function
 		$this->plugins->register_controller_function($this, array('chan', '(:any)', 'sending'), 'sending');
 	}
-	
-	
+
+
 	function _greentext($html)
 	{
 		return '\\1<span class="greentext">\\2</span>\\3';
@@ -54,7 +54,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 		{
 			return array('return' => $previous_result);
 		}
-		
+
 		return array('return' => array(
 			'prefix' => '<span class="unkfunc">',
 			'suffix' => '</span>',
@@ -64,7 +64,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 			'option_backlink' => '',
 		));
 	}
-	
+
 	function _process_crossboard_links_html($html, $previous_result = NULL)
 	{
 		// a plugin with higher priority modified this
@@ -72,7 +72,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 		{
 			return array('return' => $previous_result);
 		}
-		
+
 		return array('return' => array(
 				'prefix' => '<span class="unkfunc">',
 				'suffix' => '</span>'
@@ -220,7 +220,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 						$this->theme->build('error');
 						return FALSE;
 					}
-					
+
 					if (isset($check['ghost_disabled']) && $check['ghost_disabled'] == TRUE)
 					{
 						$this->theme->set_title(__('Error'));
@@ -390,7 +390,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 			foreach ($this->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
-					'post' => $doc_id,
+					'doc_id' => $doc_id,
 					'password' => $this->input->post('delpass')
 				);
 
@@ -402,10 +402,11 @@ class Theme_Plugin_fuuka extends Plugins_model
 			Chan::_set_parameters(
 				array(
 					'title' => fuuka_title(0),
-					'url' => site_url(get_selected_radix()->shortname . '/thread/' .
-						$this->input->post('parent'))
+					'url' => site_url(get_selected_radix()->shortname)
 				)
 			);
+			$this->theme->build('redirection');
+			return TRUE;
 		}
 
 
@@ -419,7 +420,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 			{
 				$post = array(
 					'board' => get_selected_radix()->id,
-					'post' => $doc_id,
+					'doc_id' => $doc_id,
 					'reason' => $this->intput->post('KOMENTO')
 				);
 
@@ -435,6 +436,8 @@ class Theme_Plugin_fuuka extends Plugins_model
 						$this->input->post('parent'))
 				)
 			);
+			$this->theme->build('redirection');
+			return TRUE;
 		}
 
 		/**

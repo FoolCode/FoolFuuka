@@ -402,10 +402,11 @@ class Theme_Plugin_fuuka extends Plugins_model
 			Chan::_set_parameters(
 				array(
 					'title' => fuuka_title(0),
-					'url' => site_url(get_selected_radix()->shortname . '/thread/' .
-						$this->input->post('parent'))
+					'url' => site_url(get_selected_radix()->shortname)
 				)
 			);
+			$this->theme->build('redirection');
+			return TRUE;
 		}
 
 
@@ -435,6 +436,8 @@ class Theme_Plugin_fuuka extends Plugins_model
 						$this->input->post('parent'))
 				)
 			);
+			$this->theme->build('redirection');
+			return TRUE;
 		}
 
 		/**

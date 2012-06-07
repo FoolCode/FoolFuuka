@@ -44,8 +44,8 @@ foreach ($threads as $k => $p) :
 			<?php if (isset($p->nreplies)) : ?>
 				<?= __('Replies') ?> : <?= $p->nreplies ?> | <?= __('Images') ?>: <?= $p->nimages ?>
 			<?php endif; ?>
-			<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/file-delete-icon.png'; ?>" title="<?= form_prep(__('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
-			<?php if ($p->spoiler == 1) : ?><span class="post_type"><img src="<?= site_url().'content/themes/'.get_setting('fs_theme_dir').'/images/icons/spoiler-icon.png'; ?>" title="<?= form_prep(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>
+			<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= site_url() . $this->theme->fallback_asset('images/icons/file-delete-icon.png'); ?>" title="<?= form_prep(__('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
+			<?php if ($p->spoiler == 1) : ?><span class="post_type"><img src="<?= site_url() . $this->theme->fallback_asset('images/icons/spoiler-icon.png'); ?>" title="<?= form_prep(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>
 		</div>
 	</article>
 <?php

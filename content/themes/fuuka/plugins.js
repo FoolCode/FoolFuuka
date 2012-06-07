@@ -1,90 +1,80 @@
 var selected_style;
 
 function replyhighlight(id) {
-  var tdtags = document.getElementsByTagName("td");
-  var new_selected_style = "reply";
-  for (i = 0; i < tdtags.length; i++) {
-    if (tdtags[i].className == "highlight") {
-      tdtags[i].className = selected_style;
-    }
-    if (tdtags[i].id == id) {
-      new_selected_style = tdtags[i].className;
-      tdtags[i].className = "highlight";
-    }
-  }
-  selected_style = new_selected_style;
+	var tdtags = document.getElementsByTagName("td");
+	var new_selected_style = "reply";
+	for (i = 0; i < tdtags.length; i++) {
+		if (tdtags[i].className == "highlight") {
+			tdtags[i].className = selected_style;
+		}
+		if (tdtags[i].id == id) {
+			new_selected_style = tdtags[i].className;
+			tdtags[i].className = "highlight";
+		}
+	}
+	selected_style = new_selected_style;
 }
 
 function insert(text) {
-  var textarea = document.forms.postform.KOMENTO;
-  if (!textarea) return;
+	var textarea = document.forms.postform.KOMENTO;
+	if (!textarea) return;
 
-  if (textarea.createTextRange && textarea.caretPos) {
-    var caretPos = textarea.caretPos;
-    caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == " " ? text + " " : text;
-  } else if (textarea.setSelectionRange) {
-    var start = textarea.selectionStart;
-    var end = textarea.selectionEnd;
-    textarea.value = textarea.value.substr(0, start) + text + textarea.value.substr(end);
-    textarea.setSelectionRange(start + text.length, start + text.length);
-  } else {
-    textarea.value += text + " ";
-  }
-  textarea.focus();
+	if (textarea.createTextRange && textarea.caretPos) {
+		var caretPos = textarea.caretPos;
+		caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == " " ? text + " " : text;
+	} else if (textarea.setSelectionRange) {
+		var start = textarea.selectionStart;
+		var end = textarea.selectionEnd;
+		textarea.value = textarea.value.substr(0, start) + text + textarea.value.substr(end);
+		textarea.setSelectionRange(start + text.length, start + text.length);
+	} else {
+		textarea.value += text + " ";
+	}
+	textarea.focus();
 }
 
 function get_cookie(name) {
-  with(document.cookie) {
-    var regexp = new RegExp("(^|;\\s+)" + name + "=(.*?)(;|$)");
-    var hit = regexp.exec(document.cookie);
-    if (hit && hit.length > 2) return decodeURIComponent(hit[2]);
-    else
-    return '';
-  }
+	with(document.cookie) {
+		var regexp = new RegExp("(^|;\\s+)" + name + "=(.*?)(;|$)");
+		var hit = regexp.exec(document.cookie);
+
+		if (hit && hit.length > 2)
+			return decodeURIComponent(hit[2]);
+		else
+			return '';
+	}
 };
 
 function toggle(id) {
-  var elem;
+	var elem;
 
-  if (!(elem = document.getElementById(id))) return;
-
-  elem.style.display = elem.style.display ? "" : "none";
+	if (!(elem = document.getElementById(id))) return;
+	elem.style.display = elem.style.display ? "" : "none";
 }
-
-window.onload = function() {
-  arr = location.href.split(/#/);
-  if (arr[1]) {
-    if (arr[1].charAt(0) != 'p')
-      replyhighlight('p' + arr[1]);
-    else
-      replyhighlight(arr[1]);
-  }
-}
-
 
 function setCookie( name, value, expires, path, domain, secure )
 {
-// set time, it's in milliseconds
-var today = new Date();
-today.setTime( today.getTime() );
+		// set time, it's in milliseconds
+		var today = new Date();
+		today.setTime( today.getTime() );
 
-/*
-if the expires variable is set, make the correct
-expires time, the current script below will set
-it for x number of days, to make it for hours,
-delete * 24, for minutes, delete * 60 * 24
-*/
-if ( expires )
-{
-expires = expires * 1000 * 60 * 60 * 24;
-}
-var expires_date = new Date( today.getTime() + (expires) );
+		/*
+		if the expires variable is set, make the correct
+		expires time, the current script below will set
+		it for x number of days, to make it for hours,
+		delete * 24, for minutes, delete * 60 * 24
+		*/
+		if ( expires )
+		{
+			expires = expires * 1000 * 60 * 60 * 24;
+		}
+		var expires_date = new Date( today.getTime() + (expires) );
 
-document.cookie = name + "=" +escape( value ) +
-( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
-( ( path ) ? ";path=" + path : "" ) +
-( ( domain ) ? ";domain=" + domain : "" ) +
-( ( secure ) ? ";secure" : "" );
+		document.cookie = name + "=" +escape( value ) +
+			( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+			( ( path ) ? ";path=" + path : "" ) +
+			( ( domain ) ? ";domain=" + domain : "" ) +
+			( ( secure ) ? ";secure" : "" );
 }
 
 function getCookie( check_name ) {
@@ -141,4 +131,14 @@ var changeTheme = function(theme)
 {
 	setCookie('foolfuuka_theme', theme, 30, '/');
 	window.location.reload();
+}
+
+window.onload = function() {
+		arr = location.href.split(/#/);
+		if (arr[1]) {
+				if (arr[1].charAt(0) != 'p')
+						replyhighlight('p' + arr[1]);
+				else
+						replyhighlight(arr[1]);
+		}
 }

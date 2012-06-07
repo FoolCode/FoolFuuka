@@ -43,7 +43,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 				<br/>
 				<?php if ($p->preview_orig) : ?>
 					<span>
-						<?= __('File:') . ' ' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media_filename; ?>
+						<?= __('File:') . ' ' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media_filename_processed; ?>
 						<?= '<!-- ' . substr($p->media_hash, 0, -2) . '-->' ?>
 					</span>
 					<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>

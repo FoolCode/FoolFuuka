@@ -15,7 +15,7 @@ foreach ($posts as $key => $post) :
 			</a>
 
 			<div class="post_file" style="padding-left: 2px;<?php if ($op->preview_w > 149) : ?> max-width:<?= $op->preview_w .'px'; endif; ?>;">
-				<?= byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename ?>
+				<?= byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed; ?>
 			</div>
 
 			<div class="post_file_controls">
@@ -117,9 +117,9 @@ foreach ($posts as $key => $post) :
 <article class="clearfix thread">
 <?php endif; ?>
 
-	<?php if (isset($post['posts'])) : ?>
 	<aside class="posts">
-		<?php
+		<?php 
+		if (isset($post['posts'])) :
 			$post_counter = 0;
 			foreach ($post['posts'] as $p)
 			{
@@ -134,9 +134,8 @@ foreach ($posts as $key => $post) :
 
 				echo $this->theme->build('board_comment', array('p' => $p, 'modifiers' => $modifiers), TRUE, TRUE);
 			}
-		?>
+		endif; ?>
 	</aside>
-	<?php endif; ?>
 
 	<?php if (isset($thread_id)) : ?>
 	<div class="js_hook_realtimethread"></div>

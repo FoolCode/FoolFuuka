@@ -571,6 +571,12 @@ class Post_model extends CI_Model
 		{
 			$post->original_timestamp = $post->timestamp;
 		}
+		
+		// Asagi currently inserts the media_filename in DB with 4chan escaping, we decode it and reencode in case
+		if($board->archive)
+		{
+			$post->media_filename = html_entity_decode($post->media_filename, ENT_QUOTES, 'UTF-8');
+		}
 
 		$elements = array('title', 'name', 'email', 'trip', 'media_orig',
 			'preview_orig', 'media_filename', 'media_hash', 'poster_hash');
@@ -579,13 +585,10 @@ class Post_model extends CI_Model
 		{
 			array_push($elements, 'report_reason');
 		}
-
+		
 		foreach($elements as $element)
 		{
-
-			$element_processed = $element . '_processed';
-
-			$post->$element_processed = @iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));
+			$post->{$element . '_processed'} = @iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));
 			$post->$element = @iconv('UTF-8', 'UTF-8//IGNORE', $post->$element);
 		}
 
@@ -970,6 +973,13 @@ class Post_model extends CI_Model
 	 */
 	private function p_process_internal_links($matches)
 	{
+		// this is a patch not to have the comment() check spouting errors
+		// since this is already a fairly bad (but unavoidable) solution, let's keep the dirt in this function
+		if(!isset($this->current_p))
+		{
+			return $matches[0];
+		}
+		
 		$num = $matches[2];
 		$num_id = str_replace(',', '_', $num);
 
@@ -1979,7 +1989,7 @@ class Post_model extends CI_Model
 					return FALSE;
 				}
 
-				/* @todo reduce this query since thread_num catches all */
+				// TODO reduce this query since thread_num catches all
 				$query = $this->db->query('
 					SELECT *
 					FROM

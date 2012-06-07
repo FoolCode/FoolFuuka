@@ -88,7 +88,7 @@ var bindFunctions = function()
 							clearTimeout(buttonTimeout);
 							el.attr({'value': originalText});
 							el.removeAttr('disabled');
-							if (data.error != "")
+							if (typeof data.error !== "undefined")
 							{
 								reply_alert.html(data.error);
 								reply_alert.addClass('error'); // deals with showing the alert

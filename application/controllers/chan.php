@@ -1866,7 +1866,7 @@ class Chan extends Public_Controller
 					{
 						$this->output
 							->set_content_type('application/json')
-							->set_output(json_encode(array('error' => $this->upload->display_errors(), 'success' => '')));
+							->set_output(json_encode(array('error' => $this->upload->display_errors())));
 						return FALSE;
 					}
 
@@ -1894,7 +1894,7 @@ class Chan extends Public_Controller
 				{
 					$this->output
 						->set_content_type('application/json')
-						->set_output(json_encode(array('error' => $result['error'], 'success' => '')));
+						->set_output(json_encode(array('error' => $result['error'])));
 					return FALSE;
 				}
 
@@ -1916,7 +1916,7 @@ class Chan extends Public_Controller
 				{
 					$this->output
 						->set_content_type('application/json')
-						->set_output(json_encode(array('error' => '', 'success' => __('Your comment has been posted.'))));
+						->set_output(json_encode(array('success' => __('Your comment has been posted.'))));
 					return TRUE;
 				}
 

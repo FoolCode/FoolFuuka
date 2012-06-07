@@ -15,6 +15,9 @@
 <?php endif; ?>
 		<link href="<?= base_url() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?= FOOL_VERSION ?>" rel="stylesheet" type="text/css" />
 		<link href="<?= base_url() ?>assets/font-awesome/css/font-awesome.css?v=<?= FOOL_VERSION ?>" rel="stylesheet" type="text/css" />
+		<!--[if lt IE 9]>
+			<link href="<?= base_url() ?>assets/font-awesome/css/font-awesome-ie7.css?v=<?= FOOL_VERSION ?>" rel="stylesheet" type="text/css" />
+		<![endif]-->
 		<?php
 			foreach($this->theme->fallback_override('style.css', $this->theme->get_config('extends_css')) as $css)
 			{

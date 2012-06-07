@@ -55,4 +55,4 @@ endforeach;
 ?>
 </div>
 
-<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
+<div id="backlink" class="thread_o_matic" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>

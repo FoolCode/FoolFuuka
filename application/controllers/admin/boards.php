@@ -511,7 +511,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'validation' => 'trim',
 			'validation_func' => function($input, $form)
 			{
-				if (!file_exists($input))
+				if (!file_exists($input['fu_sphinx_dir']))
 				{
 					return array(
 						'error_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',

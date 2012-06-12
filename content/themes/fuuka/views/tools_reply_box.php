@@ -94,6 +94,7 @@ if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?
 				<?php if (isset($reply_errors)) : ?>
 				<span style="color:red"><?= $reply_errors ?></span>
 				<?php endif; ?>
+				<span><?= (!get_selected_radix()->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '' ?></span>
 				<table>
 					<tbody>
 						<tr>

@@ -760,6 +760,7 @@ class Chan extends Public_Controller
 		// check if we can determine if posting is disabled
 		$tools_reply_box = TRUE;
 		$disable_image_upload = FALSE;
+		$thread_dead = FALSE;
 
 		// no image posting in archive, hide the file input
 		if(get_selected_radix()->archive)
@@ -780,6 +781,9 @@ class Chan extends Public_Controller
 
 			if(isset($thread_check['disable_image_upload']) && $thread_check['disable_image_upload'] == TRUE)
 				$disable_image_upload = TRUE;
+
+			if (isset($thread_check['thread_dead']) && $thread_check['thread_dead'] == TRUE)
+				$thread_dead = TRUE;
 		}
 
 		// Set theme variables required to build the HTML.
@@ -800,7 +804,8 @@ class Chan extends Public_Controller
 				'thread_id' => $num,
 				'posts' => $thread,
 				'is_thread' => TRUE,
-				'disable_image_upload' => $disable_image_upload
+				'disable_image_upload' => $disable_image_upload,
+				'thread_dead' => $thread_dead
 			),
 			$second_array,
 			array(

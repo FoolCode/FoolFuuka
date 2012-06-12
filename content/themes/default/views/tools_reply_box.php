@@ -101,6 +101,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		echo form_textarea(array(
 			'name' => 'reply_chennodiscursus',
 			'id' => 'reply_chennodiscursus',
+			'placeholder' => (!get_selected_radix()->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '',
 			'rows' => 3,
 			'style' => 'height:132px; width:320px;'
 		));

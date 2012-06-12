@@ -185,7 +185,7 @@ class Chan extends Public_Controller
 			return $this->show_404();
 		}
 
-		if (!is_natural($num) || $num == 0)
+		if (!is_natural($num) || $num < 1)
 		{
 			return $this->show_404();
 		}
@@ -553,6 +553,11 @@ class Chan extends Public_Controller
 			redirect(get_selected_radix()->shortname . ($by_thread? '/by_thread/' : '/page/') .
 				$this->input->post('page'), 'location', 303);
 		}
+		
+		if(!is_natural($page) || $page < 1)
+		{
+			return $this->show_404();
+		}
 
 		// Fetch the latest posts.
 		$page = intval($page);
@@ -623,6 +628,11 @@ class Chan extends Public_Controller
 		{
 			redirect(get_selected_radix()->shortname . '/ghost/' . $this->input->post('page'), 'location', 303);
 		}
+		
+		if(!is_natural($page) || $page < 1)
+		{
+			return $this->show_404();
+		}
 
 		//  Fetch the latest ghost posts.
 		$page = intval($page);
@@ -661,6 +671,16 @@ class Chan extends Public_Controller
 	{
 		// Disable GALLERY when thumbnails is disabled for normal users.
 		if (get_selected_radix()->hide_thumbnails == 1 && !$this->tank_auth->is_allowed())
+		{
+			return $this->show_404();
+		}
+		
+		if(!in_array($type, array('by_thread', 'by_image')))
+		{
+			return $this->show_404();
+		}
+		
+		if(!is_natural($page) || $page < 1)
 		{
 			return $this->show_404();
 		}
@@ -715,6 +735,7 @@ class Chan extends Public_Controller
 	{
 		// Check if the $num is a valid integer.
 		$num = str_replace('S', '', $num);
+		
 		if (!is_numeric($num) || !$num > 0)
 		{
 			return $this->show_404();
@@ -1443,7 +1464,8 @@ class Chan extends Public_Controller
 			$title = __('Displaying all posts with no filters applied.');
 		}
 
-		$page = (!$search['page'] || !intval($search['page'])) ? 1 : $search['page'];
+		$page = (!$search['page'] || !is_natural($search['page']) || !intval($search['page']) || $search['page'] < 1) ? 
+			1 : $search['page'];
 
 		// Generate URI for pagination.
 		$uri_array = $this->uri->ruri_to_assoc($radix?4:3, $modifiers);

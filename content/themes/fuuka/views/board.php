@@ -15,7 +15,7 @@ foreach ($posts as $key => $post) :
 		$op = $post['op'];
 		$selected_radix = isset($op->board)?$op->board:get_selected_radix();
 ?>
-	<div id="p<?= $op->num ?>">
+	<div id="<?= $op->num ?>">
 		<?php if ($op->preview_orig) : ?>
 			<span><?= __('File:') . ' ' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed ?> <?= '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
 			<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
@@ -48,7 +48,7 @@ foreach ($posts as $key => $post) :
 		<?php if (!isset($thread_id)) : ?>
 			<a class="js" href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.<?= $op->num ?></a>
 		<?php else : ?>
-			<a class="js" href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:insert('>><?= $op->num ?>\n')"><?= $op->num ?></a>
+			<a class="js" href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
 		<?php endif; ?>
 
 		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?= site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="<?php _('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
@@ -57,6 +57,10 @@ foreach ($posts as $key => $post) :
 		[<a href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) ?>"><?= __('Reply') ?></a>]
 		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= site_url($selected_radix->shortname . '/last50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>
 		<?php if ($selected_radix->archive) : ?> [<a href="http://boards.4chan.org/<?= $selected_radix->shortname . '/res/' . $op->num ?>"><?= __('Original') ?></a>]<?php endif; ?>
+
+		<div class="quoted-by" style="display: <?= (isset($p->backlinks)) ? 'block' : 'none' ?>">
+			<?= __('Quoted By:') ?> <?= (isset($p->backlinks)) ? implode(' ', $p->backlinks) : '' ?>
+		</div>
 
 		<blockquote><p><?= $op->comment_processed ?></p></blockquote>
 		<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>

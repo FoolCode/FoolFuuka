@@ -59,9 +59,9 @@ class Theme_Plugin_fuuka extends Plugins_model
 			'prefix' => '<span class="unkfunc">',
 			'suffix' => '</span>',
 			'urltag' => '#',
-			'option' => ' onclick="replyhighlight(\'p' . $num_id . '\');"',
-			'option_op' => '',
-			'option_backlink' => '',
+			'option' => ' class="backlink" onclick="replyHighlight(' . $num_id . ');"',
+			'option_op' => ' class="backlink"',
+			'option_backlink' => ' class="backlink"',
 		));
 	}
 

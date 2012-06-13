@@ -9,7 +9,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 	<tbody>
 		<tr>
 			<td class="doubledash">&gt;&gt;</td>
-			<td class="<?= ($p->subnum > 0) ? 'subreply' : 'reply' ?>" id="p<?= $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
+			<td class="<?= ($p->subnum > 0) ? 'subreply' : 'reply' ?>" id="<?= $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
 				<label>
 					<input type="checkbox" name="delete[]" value="<?= $p->doc_id ?>"/>
 					<?php if (isset($modifiers['post_show_board_name']) &&  $modifiers['post_show_board_name']): ?><span class="post_show_board">/<?= $selected_radix->shortname ?>/</span><?php endif; ?>
@@ -26,9 +26,9 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 					<?= date('D M d H:i:s Y', $p->original_timestamp) ?>
 				</label>
 				<?php if (isset($thread_id) && $thread_id == NULL) : ?>
-					<a class="js" href="<?= site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
+					<a class="js" href="<?= site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php else : ?>
-					<a class="js" href="<?= site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) . '#p' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:insert('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
+					<a class="js" href="<?= site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php endif; ?>
 
 				<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= site_url() . 'content/themes/' . (($this->theme->get_selected_theme()) ? $this->theme->get_selected_theme() : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="<?= __('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
@@ -54,7 +54,9 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 						<img src="<?= $p->thumb_link ?>" alt="<?= $p->num ?>" <?php if ($p->preview_w > 0 && $p->preview_h > 0) : ?>width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>"<?php endif; ?>class="thumb" />
 					</a>
 				<?php endif; ?>
-
+				<div class="quoted-by" style="display: <?= (isset($p->backlinks)) ? 'block' : 'none' ?>">
+					<?= __('Quoted By:') ?> <?= (isset($p->backlinks)) ? implode(' ', $p->backlinks) : '' ?>
+				</div>
 				<blockquote><p><?= $p->comment_processed ?></p></blockquote>
 			</td>
 		</tr>

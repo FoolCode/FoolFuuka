@@ -1,56 +1,29 @@
-<?php
-if (!defined('BASEPATH'))
-	exit('No direct script access allowed');
-?>
-
-<a name="<?php echo ($p->subnum > 0) ? $p->num . '_' . $p->subnum : $p->num ?>"></a>
-<table>
-	<tbody>
-		<tr>
-			<td class="doubledash" nowrap="">&gt;&gt;</td>
-			<td id="<?php echo ($p->subnum > 0) ? $p->num . '_' . $p->subnum : $p->num ?>" class="<?php echo ($p->subnum > 0) ? 'subreply' : 'reply' ?>">
-				<input type="checkbox" name="delete[]" value="<?php echo $p->doc_id ?>"/>
-				<span class="replytitle"><?php echo $p->title_processed ?></span>
-				<span class="commentpostername"><?php echo (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
-				<?php if ($p->trip_processed) : ?>
-					<span class="postertrip"><?php echo $p->trip_processed ?></span>
-				<?php endif; ?>
-				<?php if ($p->capcode == 'M') : ?>
-					<span class="post_level_moderator">## Mod</span>
-				<?php endif ?>
-				<?php if ($p->capcode == 'G') : ?>
-					<span class="post_level_global_moderator">## Global Mod</span>
-				<?php endif ?>
-				<?php if ($p->capcode == 'A') : ?>
-					<span class="post_level_administrator">## Admin</span>
-				<?php endif ?>
-				<span class="posttime"><?php echo date('m/d/y(D)H:i', $p->original_timestamp) ?></span>
-
-				<?php if ($p->subnum > 0) : ?>
-					<span id="norep<?php echo $p->num . '_' . $p->subnum ?>">
-						<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->thread_num) . '#' . $p->num . '_' . $p->subnum ?>" class="quotejs">No.</a><a href="<?php echo (!isset($thread_id)) ? site_url(get_selected_radix()->shortname . '/thread/' . $p->thread_num) . '#q' . $p->num . '_' . $p->subnum : 'javascript:quote(\'' . $p->num . ',' . $p->subnum . '\')' ?>" class="quotejs"><?php echo $p->num . ',' . $p->subnum ?></a>
-					</span>
-				<?php else : ?>
-					<span id="norep<?php echo $p->num ?>">
-						<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $p->thread_num) . '#' . $p->num ?>" class="quotejs">No.</a><a href="<?php echo (!isset($thread_id)) ? site_url(get_selected_radix()->shortname . '/thread/' . $p->thread_num) . '#q' . $p->num : 'javascript:quote(\'' . $p->num . '\')' ?>" class="quotejs"><?php echo $p->num ?></a>
-					</span>
-				<?php endif; ?>
-
-				<?php if ($p->preview) : ?>
-					<br>
-					<span class="filesize">
-						File: <a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank"><?php echo ($p->media_filename) ? $p->media_filename : $p->media ?></a><?php echo '-(' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ')' ?>
-					</span>
-					<br>
-					<a href="<?php echo ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank">
-						<img src="<?php echo $p->thumb_link ?>" border="0" align="left" <?php if ($p->preview_w > 0 && $p->preview_h > 0) : ?>width="<?php echo $p->preview_w ?>" height="<?php echo $p->preview_h ?>" <?php endif; ?> hspace="20" alt="<?php echo byte_format($p->media_size, 0) ?>" md5="<?php echo $p->media_hash ?>"/>
-					</a>
-				<?php endif; ?>
-
-				<blockquote>
-					<?php echo $p->comment_processed ?>
-				</blockquote>
-			</td>
-		</tr>
-	</tbody>
-</table>
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed'); ?>
+<div class="postContainer replyContainer" id="pc1440">
+		<div class="sideArrows" id="sa1440">&gt;&gt;</div>
+		<div id="p1440" class="post reply">
+			<div class="postInfo" id="pi1440">
+			<input type="checkbox" name="1440" value="delete"/>
+			<span class="userInfo">
+			<span class="subject">this is a subject</span>
+			<span class="nameBlock capcodeMod">
+			<a href="mailto:an@email.com" class="useremail"><span class="name">name</span> <span class="postertrip">!!xLSZx03dYcu</span> <strong class="capcode">## Mod</strong></a> <img src="//static.4chan.org/image/modicon.gif" alt="This user is a 4chan Moderator." title="This user is a 4chan Moderator." class="identityIcon">
+			</span>
+			<span class="postNum mobile">
+			<a href="res/1418#p1440" title="Highlight this post">No.</a><a href="res/1418#q1440" title="Quote this post">1440</a>
+			</span>
+			</span>
+			<span class="dateTime">04/27/12(Fri)23:15:13</span>
+			<span class="postNum desktop">
+			<a href="res/1418#p1440" title="Highlight this post">No.</a><a href="res/1418#q1440" title="Quote this post">1440</a>
+			</span>
+			</div>
+			<div class="file" id="f1440">
+			<div class="fileInfo">
+			<span class="fileText">File: <a href="//images.4chan.org/htmlnew/src/1335582913205.png" target="_blank">1335582913.png</a>-(10 KB, 870x582, <span title="10.png">10.png</span>)</span>
+			</div>
+			<a class="fileThumb" href="//images.4chan.org/htmlnew/src/1335582913205.png" target="_blank"><img src="//0.thumbs.4chan.org/htmlnew/thumb/1335582913205s.jpg" alt="10 KB" data-md5="sFlI3O2pIbvr95J1QP0X6Q==" style="height: 85px; width: 126px;"/></a>
+			</div>
+			<blockquote class="postMessage" id="m1440">Some comment<br/><span class="quote">&gt;some quote</span><br/><span class="quote"><a href="res/1418#p1431" class="quotelink">&gt;&gt;1431</a> some link</span><br/><span class="quote"><a href="res/1418#p1418" class="quotelink">&gt;&gt;1418</a> some op link</span><br/><span class="spoiler" onmouseover="this.style.color='#FFF';" onmouseout="this.style.color=this.style.backgroundColor='#000'" style="color:#000;background:#000">some spoiler</span><br/><span class="quote">&gt;&gt;1 some dead link</span></blockquote>
+		</div>
+	</div>

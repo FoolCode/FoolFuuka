@@ -1,150 +1,85 @@
-<?php
-if (!defined('BASEPATH'))
-	exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed'); ?>
 
-if (isset($thread_id))
-	echo $template['partials']['post_thread'];
-?>
-
-<iframe src="" style="height: 0px; width: 0px; visibility: hidden; border-top-style: none; border-right-style: none; border-bottom-style: none; border-left-style: none; border-width: initial; border-color: initial; border-image: initial;">
-	<html>
-		<head></head>
-		<body></body>
-	</html>
-</iframe>
-
-<?php
-echo form_open(get_selected_radix()->shortname .'/sending', array('name' => 'delform'));
-
-foreach ($posts as $key => $post) : ?>
-	<?php if(isset($post['op'])) :
-		$op = $post['op'];
-	?>
-		<?php if ($op->preview) : ?>
-		<span class="filesize">
-			File : <a target="_blank" href="<?php echo ($op->media_link) ? $op->media_link : $op->remote_media_link ?>"><?php echo ($op->media_filename) ? $op->media_filename : $op->media ?></a><?php echo '-(' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ')' ?>
-		</span>
-		<br>
-		<a target="_blank" href="<?php echo ($op->media_link) ? $op->media_link : $op->remote_media_link ?>">
-			<img border="0" align="left" <?php if ($op->preview_w > 0 && $op->preview_h > 0) : ?>width="<?php echo $op->preview_w ?>" hspace="20" height="<?php echo $op->preview_h ?>" <?php else : ?>hspace="20" <?php endif; ?> alt="<?php echo byte_format($op->media_size, 0) ?>" md5="<?php echo $op->media_hash ?>" src="<?php echo $op->thumb_link ?>"/>
-		</a>
-		<?php endif; ?>
-
-		<a name="0"></a>
-		<input type="checkbox" name="delete[]" value="<?php echo $op->doc_id ?>"/>
-		<span class="filetitle"><?php echo $op->title_processed ?></span>
-		<span class="postername"><?php echo (($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
-		<span class="postertrip"><?php echo $op->trip_processed ?></span>
-		<?php if ($op->capcode == 'M') : ?>
-			<span class="post_level_moderator">## Mod</span>
-		<?php endif ?>
-		<?php if ($op->capcode == 'G') : ?>
-			<span class="post_level_global_moderator">## Global Mod</span>
-		<?php endif ?>
-		<?php if ($op->capcode == 'A') : ?>
-			<span class="post_level_administrator">## Admin</span>
-		<?php endif ?>
-		<span class="posttime"><?php echo date('m/d/y(D)H:i', $op->original_timestamp) ?></span>
-		<span id="nothread<?php echo $op->num ?>">
-			<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#' . $op->num ?>" class="quotejs">No.</a><a href="<?php echo (!isset($thread_id)) ? site_url(get_selected_radix()->shortname . '/thread/' . $op->num) . '#q' . $op->num : 'javascript:quote(\'' . $op->num . '\')'?>" class="quotejs"><?php echo $op->num ?></a><?php if (!isset($thread_id)) : ?> &nbsp; [<a href="<?php echo site_url(get_selected_radix()->shortname . '/thread/' . $op->num) ?>">Reply</a>]<?php endif; ?>
-		</span>
-		<blockquote>
-			<?php echo $op->comment_processed ?>
-		</blockquote>
-		<?php echo ((isset($post['omitted']) && $post['omitted'] > 0) ? '<span class="omittedposts">' . $post['omitted'] . ' posts '.((isset($post['images_omitted']) && $post['images_omitted'] > 0)?' and '.$post['images_omitted'].' image replies ':'') . 'omitted. Click Reply to view.</span>' : '') ?>
-	<?php endif; ?>
+<div class="board">
 
 	<?php
-	if (isset($post['posts']))
-	{
-		if (isset($posts_per_thread))
-		{
-			$limit = count($post['posts']) - $posts_per_thread;
-			if ($limit < 0)
-				$limit = 0;
-		}
-		else
-		{
-			$limit = 0;
-		}
-
-		foreach ($post['posts'] as $p)
-		{
-
-			if ($p->thread_num == 0)
-				$p->thread_num = $p->num;
-
-			if(!isset($thread_id))
-				$thread_id = NULL;
-
-			if(file_exists('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php'))
-				include('content/themes/' . $this->theme->get_selected_theme() . '/views/board_comment.php');
-			else
-				include('content/themes/' . $this->theme->get_config('extends') . '/views/board_comment.php');
-		}
-	}
+	foreach ($posts as $key => $post) :
+		if (isset($post['op'])) :
+			$op = $post['op'];
+			$selected_radix = isset($op->board)?$op->board:get_selected_radix();
+			
+			$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
 	?>
-	<br clear="left">
-	<hr>
-<?php endforeach; ?>
 
-<div style="text-align: center; text-side:12px;">
-	<a href="http://pocky.jlist.com/click/3953/111" target="_blank" onmouseover="window.status='Hentai dating-sim games in English - click to see'; return true;" onmouseout="window.status=''; return true;" title="Hentai dating-sim games in English - click to see">
-	<img src="http://pocky.jlist.com/media/3953/111" width="728" height="90" alt="Hentai dating-sim games in English - click to see" border="0">
-	</a>
-</div>
-<hr>
-
-<?php if (isset($thread_id)) : ?>
-	<span style="left: 5px; position: absolute;">
-		[<a href="<?php echo site_url(get_selected_radix()->shortname) ?>">Return</a>] [<a href="#top">Top</a>]
-	</span>
-<br>
-<?php endif; ?>
-<table align="right">
-	<tbody>
-		<tr>
-			<td nowrap="" align="center" class="deletebuttons">
-				Delete Post Password <input class="inputtext" type="password" name="pwd" size="8" maxlength="8" value="">
-				<input type="submit" name="com_delete" value="Delete"/>
-				<input type="submit" name="com_report" value="Report"/>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">
-				Style [<a href="<?php echo site_url(array('functions', 'theme', 'default')) ?>" onclick="changeTheme('default'); return false;">Default</a> | <a href="<?php echo site_url(array('functions', 'theme', 'fuuka')) ?>" onclick="changeTheme('fuuka'); return false;">Fuuka</a> | <a href="<?php echo site_url(array('functions', 'theme', 'yotsuba')) ?>" onclick="changeTheme('yotsuba'); return false;">Yotsuba</a>]
-			</td>
-		</tr>
-	</tbody>
-</table>
-<?php if (!isset($thread_id)) : ?>
-<table class="pages" align="left" border="1">
-	<tbody>
-	<tr>
-		<?php if ($pagination['current_page'] == 1) : ?>
-		<td>Previous</td>
-		<?php else : ?>
-		<td><input type="submit" value="Previous" onclick="location.href='<?php echo $pagination['base_url'] . ($pagination['current_page'] - 1); ?>';return false;"></td>
-		<?php endif; ?>
-		<td>
-			<?php
-			for ($index = 1; $index <= (($pagination['total'] > 15) ? 15 : $pagination['total']); $index++)
+	<div class="thread" id="t1418">
+		<div class="postContainer opContainer" id="pc<?= $num ?>">
+			<div id="p1418" class="post op">
+				<div class="postInfoM mobile" id="pim<?= $num ?>">
+					<span class="postNum nameBlock<?= (($op->capcode == 'M') ? 'capcodeMod':'') . (($op->capcode == 'A') ? 'capcodeAdmin':'') ?>">
+					<span class="subject"><?= $op->title_processed ?></span> 
+					<span class="name"><?= $op->name_processed ?></span>
+					<?php if ($op->trip) : ?><span class="postertrip"><?= $op->trip ?></span><?php endif; ?>
+					<?php if (in_array($op->capcode, array('M', 'A'))) : ?>
+						<strong class="capcode">## <?= (($op->capcode == 'M') ? 'Mod':'') . (($op->capcode == 'A') ? 'Admin':'') ?>"></strong>
+						<?php if ($op->capcode == 'M') : ?><img src="//static.4chan.org/image/modicon.gif" alt="This user is a Moderator." title="This user is a Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+						<?php if ($op->capcode == 'A') : ?><img src="//static.4chan.org/image/adminicon.gif" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+					<?php endif; ?>
+					<br/>
+					<em><a href="res/1418#p1418" title="Highlight this post">No.</a><a href="res/1418#q1418" title="Quote this post">1418</a></em>
+					</span>
+					<span class="dateTime">04/27/12(Fri)22:49:38</span>
+				</div>
+				<div class="file" id="f<?= $num ?>">
+					<div class="fileInfo">
+					<span class="fileText">File: <a href="//images.4chan.org/htmlnew/src/1335581378629.jpg" target="_blank">1335581378.jpg</a>-(29 KB, 233x280, <span title="618c1207.jpg">618c1207.jpg</span>)</span>
+					</div>
+					<a class="fileThumb" href="//images.4chan.org/htmlnew/src/1335581378629.jpg" target="_blank"><img src="//1.thumbs.4chan.org/htmlnew/thumb/1335581378629s.jpg" alt="29 KB" data-md5="YYwSB0r/LTYjErW4ojBkAQ==" style="height: 251px; width: 210px;"/></a>
+				</div>
+				<div class="postInfo" id="pi<?= $num ?>">
+					<input type="checkbox" name="<?= $num ?>" value="delete"/>
+					<span class="subject"></span>
+					<span class="nameBlock capcodeMod">
+					<span class="name">Anonymous</span> <strong class="capcode">## Mod</strong> <img src="//static.4chan.org/image/modicon.gif" alt="This user is a 4chan Moderator." title="This user is a 4chan Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;">
+					</span>
+					<span class="dateTime">04/27/12(Fri)22:49:38</span>
+					<span class="postNum">
+					<a href="res/1418#p1418" title="Highlight this post">No.</a><a href="res/1418#q1418" title="Quote this post"><?= $num ?></a> <img src="//static.4chan.org/image/sticky.gif" alt="Sticky" title="Sticky"/> <img src="//static.4chan.org/image/closed.gif" alt="Closed" title="Closed"/> &nbsp; [<a href="res/1418" class="replylink">Reply</a>]
+					</span>
+				</div>
+				<blockquote class="postMessage" id="m<?= $num ?>">Hello extension developers. Use these pages to get you ready for the 4chan HTML refresh.<br/><br/>I've attempted to include everything I can think of that you should need to help with your development.</blockquote>
+			</div>
+			<div class="postLink mobile">
+				<span class="info">
+				<strong>9 posts omitted.</strong><br/><em>(9 have images)</em>
+				</span>
+				<a href="res/1418" class="quotelink button">View Thread</a>
+			</div>
+		</div>
+		<span class="summary desktop">9 posts and 9 image replies omitted. Click Reply to view.</span>
+	
+	<?php endif; ?>
+	
+	<?php
+		if (isset($post['posts']))
+		{
+			foreach ($post['posts'] as $p)
 			{
-				if ($pagination['current_page'] == $index)
-					echo '[<b>' . $index  . '</b>] ';
-				else
-					echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
-			}
-			?>
-		</td>
-		<?php if (15 == $pagination['current_page']) : ?>
-		<td>Next</td>
-		<?php else : ?>
-		<td><input type="submit" value="Next" onclick="location.href='<?php echo $pagination['base_url'] . ($pagination['current_page'] + 1); ?>';return false;"></td>
-		<?php endif; ?>
-	</tr>
-	</tbody>
-</table>
-<?php endif; ?>
+				if(!isset($thread_id))
+					$thread_id = NULL;
 
-<?php echo form_close() ?>
+				if ($p->thread_num == 0)
+					$p->thread_num = $p->num;
+
+				echo $this->theme->build('board_comment', array('p' => $p, 'modifiers' => $modifiers), TRUE, TRUE);
+			}
+		}
+	?>
+	
+	
+	</div>
+	<hr/>
+	
+	<?php endforeach; ?>
+
+
+</div>

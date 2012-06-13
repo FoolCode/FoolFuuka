@@ -14,6 +14,7 @@
 		}
 		?>
 
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="<?= site_url() . $this->theme->fallback_asset('plugins.js') ?>" type="text/javascript"></script>
 		<?= get_setting('fs_theme_header_code'); ?>
 	</head>

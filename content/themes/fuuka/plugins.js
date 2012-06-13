@@ -1,130 +1,20 @@
 var selected_style;
 
-function replyhighlight(id) {
-	var tdtags = document.getElementsByTagName("td");
-	var new_selected_style = "reply";
-	for (i = 0; i < tdtags.length; i++) {
-		if (tdtags[i].className == "highlight") {
-			tdtags[i].className = selected_style;
-		}
-		if (tdtags[i].id == id) {
-			new_selected_style = tdtags[i].className;
-			tdtags[i].className = "highlight";
-		}
-	}
-	selected_style = new_selected_style;
-}
-
-function insert(text) {
-	var textarea = document.forms.postform.KOMENTO;
-	if (!textarea) return;
-
-	if (textarea.createTextRange && textarea.caretPos) {
-		var caretPos = textarea.caretPos;
-		caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == " " ? text + " " : text;
-	} else if (textarea.setSelectionRange) {
-		var start = textarea.selectionStart;
-		var end = textarea.selectionEnd;
-		textarea.value = textarea.value.substr(0, start) + text + textarea.value.substr(end);
-		textarea.setSelectionRange(start + text.length, start + text.length);
-	} else {
-		textarea.value += text + " ";
-	}
-	textarea.focus();
-}
-
-function get_cookie(name) {
-	with(document.cookie) {
-		var regexp = new RegExp("(^|;\\s+)" + name + "=(.*?)(;|$)");
-		var hit = regexp.exec(document.cookie);
-
-		if (hit && hit.length > 2)
-			return decodeURIComponent(hit[2]);
-		else
-			return '';
-	}
-};
-
-function toggle(id) {
-	var elem;
-
-	if (!(elem = document.getElementById(id))) return;
-	elem.style.display = elem.style.display ? "" : "none";
-}
-
-function setCookie( name, value, expires, path, domain, secure )
+function setCookie(name, value, expires, path, domain, secure)
 {
-		// set time, it's in milliseconds
-		var today = new Date();
-		today.setTime( today.getTime() );
+	var today = new Date();
 
-		/*
-		if the expires variable is set, make the correct
-		expires time, the current script below will set
-		it for x number of days, to make it for hours,
-		delete * 24, for minutes, delete * 60 * 24
-		*/
-		if ( expires )
-		{
-			expires = expires * 1000 * 60 * 60 * 24;
-		}
-		var expires_date = new Date( today.getTime() + (expires) );
-
-		document.cookie = name + "=" +escape( value ) +
-			( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
-			( ( path ) ? ";path=" + path : "" ) +
-			( ( domain ) ? ";domain=" + domain : "" ) +
-			( ( secure ) ? ";secure" : "" );
-}
-
-function getCookie( check_name ) {
-	// first we'll split this cookie up into name/value pairs
-	// note: document.cookie only returns name=value, not the other components
-	var a_all_cookies = document.cookie.split( ';' );
-	var a_temp_cookie = '';
-	var cookie_name = '';
-	var cookie_value = '';
-	var b_cookie_found = false; // set boolean t/f default f
-
-	for ( i = 0; i < a_all_cookies.length; i++ )
+	if (expires)
 	{
-		// now we'll split apart each name=value pair
-		a_temp_cookie = a_all_cookies[i].split( '=' );
-
-
-		// and trim left/right whitespace while we're at it
-		cookie_name = a_temp_cookie[0].replace(/^\s+|\s+$/g, '');
-
-		// if the extracted name matches passed check_name
-		if ( cookie_name == check_name )
-		{
-			b_cookie_found = true;
-			// we need to handle case where cookie has no value but exists (no = sign, that is):
-			if ( a_temp_cookie.length > 1 )
-			{
-				cookie_value = unescape( a_temp_cookie[1].replace(/^\s+|\s+$/g, '') );
-			}
-			// note that in cases where cookie is initialized but no value, null is returned
-			return cookie_value;
-			break;
-		}
-		a_temp_cookie = null;
-		cookie_name = '';
+		expires = expires * 1000 * 60 * 60 * 24;
 	}
-	if ( !b_cookie_found )
-	{
-		return null;
-	}
-}
 
-var getPost = function(postForm)
-{
-	if (postForm.post.value == "") {
-		alert('Sorry, you must insert a valid post number.');
-		return false;
-	}
-	var post = postForm.post.value.match(/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/);
-	window.location = postForm.action + encodeURIComponent(((typeof post[1] != 'undefined') ? post[1] : '') + ((typeof post[2] != 'undefined') ? '_' + post[2] : '')) + '/';
+	var expires_date = new Date(today.getTime() + (expires));
+	document.cookie = name + "=" + escape(value) +
+		( expires ? ";expires=" + expires_date.toGMTString() : "" ) +
+		( path ? ";path=" + path : "" ) +
+		( domain ? ";domain=" + domain : "" ) +
+		( secure ? ";secure" : "" );
 }
 
 var changeTheme = function(theme)
@@ -133,12 +23,190 @@ var changeTheme = function(theme)
 	window.location.reload();
 }
 
-window.onload = function() {
-		arr = location.href.split(/#/);
-		if (arr[1]) {
-				if (arr[1].charAt(0) != 'p')
-						replyhighlight('p' + arr[1]);
-				else
-						replyhighlight(arr[1]);
+var toggle = function(element)
+{
+	var el;
+
+	if (!(el = document.getElementById(element))) return;
+	el.style.display = el.style.display ? "" : "none";
+}
+
+var replyHighlight = function(post)
+{
+	var new_selected_style = "reply";
+	var posts = document.getElementsByTagName("td");
+
+	for (p = 0; p < posts.length; p++)
+	{
+		if (posts[p].className == "highlight")
+		{
+			posts[p].className = selected_style;
 		}
+
+		if (posts[p].id == post)
+		{
+			new_selected_style = posts[p].className;
+			posts[p].className = "highlight";
+		}
+	}
+
+	selected_style = new_selected_style;
+	window.location.hash = '#' + post;
+}
+
+var replyQuote = function(text)
+{
+	var replybox = document.forms.postform.KOMENTO;
+	if (!replybox) return;
+
+	if (replybox.createTextRage && replybox.caretPos)
+	{
+		var caretPos = replybox.caretPos;
+		caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == " " ? text + " " : text;
+	}
+	else if (replybox.setSelectionRange)
+	{
+		var start = replybox.selectionStart;
+		var end = replybox.selectionEnd;
+
+		replybox.value = replybox.value.substr(0, start) + text + replybox.value.substr(end);
+		replybox.setSelectionRange(start + text.length, start + text.length);
+	}
+	else
+	{
+		replybox.value += text + " ";
+	}
+}
+
+var viewPost = function(postForm)
+{
+	if (postForm.post.value == "")
+	{
+		alert('Sorry, you must enter a valid post number.');
+		return;
+	}
+
+	var post = postForm.post.value.match(/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/);
+	window.location = postForm.action + encodeURIComponent(((typeof post[1] != 'undefined') ? post[1] : '') + ((typeof post[2] != 'undefined') ? '_' + post[2] : '')) + '/';
+}
+
+var backlinkify = function()
+{
+    var p, b, backlinks = document.forms.postform.getElementsByClassName('backlink');
+    for (p = 0, b = backlinks.length; p < b; ++p)
+    {
+        backlinks[p].addEventListener('mouseover', doBacklink, false);
+        backlinks[p].addEventListener('mouseout', rmBacklink, false);
+    }
+}
+
+var doBacklink = function(el)
+{
+    var parent, doc, clr, src, blk, x, y, w, maxWidth = 500;
+    el = el.target || window.event.srcElement;
+
+    blk = document.createElement('div');
+    blk.id = 'quote-preview';
+
+    if ((src = document.getElementById(el.getAttribute('href').split('#')[1])))
+    {
+        w = src.offsetWidth;
+        if (w > maxWidth)
+        {
+            w = maxWidth;
+        }
+
+        src = src.cloneNode(true);
+        src.id = 'quote-preview-s';
+        if (src.tagName == 'DIV')
+        {
+            src.setAttribute('class', 'quote-preview-op');
+            clr = document.createElement('div');
+            clr.setAttribute('class', 'newthr');
+            src.appendChild(clr);
+        }
+
+        x = 0;
+        y = el.offsetHeight + 1;
+        parent = el;
+        do {
+            x += parent.offsetLeft;
+            y += parent.offsetTop;
+        } while (parent = parent.offsetParent);
+
+        if ((doc = document.body.offsetWidth - x - w) < 0)
+        {
+            x += doc;
+        }
+
+        blk.setAttribute('style', 'left:' + x + 'px; top:' + y + 'px;');
+        blk.appendChild(src);
+        document.body.appendChild(blk);
+    }
+    else
+    {
+        var post = el.href.match(/\/(\w+)\/post\/(.*?)\/$/);
+        jQuery.ajax({
+            url: '//system4.foolz.us/api/chan/post/',
+            dataType: 'jsonp',
+            type: 'GET',
+            data: {
+                board: post[1],
+                num: post[2],
+                format: 'jsonp'
+            },
+            success: function(data) {
+                src = document.createElement('div');
+                src.innerHTML = data.formatted;
+
+                w = maxWidth;
+                x = 0;
+                y = el.offsetHeight + 1;
+                parent = el;
+                do {
+                    x += parent.offsetLeft;
+                    y += parent.offsetTop;
+                } while (parent = parent.offsetParent);
+
+                if ((doc = document.body.offsetWidth - x - w) < 0)
+                {
+                    x += doc;
+                }
+
+                blk.setAttribute('style', 'left:' + x + 'px; top:' + y + 'px;');
+                blk.appendChild(src);
+                document.body.appendChild(blk);
+            }
+        });
+    }
+}
+
+var rmBacklink = function(el)
+{
+    var blk;
+    if ((blk = document.getElementById('quote-preview')))
+    {
+        document.body.removeChild(blk);
+    }
+}
+
+var run = function()
+{
+	var post = location.href.split(/#/);
+
+	if (post[1])
+	{
+		replyHighlight(post[1]);
+	}
+
+    backlinkify();
+}
+
+if (window.addEventListener)
+{
+    window.addEventListener('DOMContentLoaded', run, false);
+}
+else
+{
+    window.onload = run;
 }

@@ -165,6 +165,25 @@ a.tooltip-red:hover{
     text-decoration: underline;
 }
 
+.quoted-by {
+    color: #707070;
+    font-size: 0.75em;
+    margin-left: 25px;
+    padding-top: 3px;
+    text-decoration: none;
+}
+.quote-preview-op {
+    background-color: #EEFFF2;
+}
+#quote-preview {
+    position: absolute;
+    color: #002200;
+}
+#quote-preview-s {
+    border: 1px solid #888;
+    padding: 3px;
+}
+
 code,.code { white-space: pre }
 a img { vertical-align: top; }
 

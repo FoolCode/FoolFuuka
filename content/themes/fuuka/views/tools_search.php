@@ -74,6 +74,37 @@ if (!isset($board))
 					</td>
 				</tr>
 				<tr>
+					<td class="postblock"><?= __('From Date') ?> <a class="tooltip" href="#">[?]<span><?= __('Enter the starting date for your search.') ?><br/><?= __('Format: YYYY-MM-DD') ?></span></a></td>
+					<td>
+						<?php
+						echo form_input(
+							array('type' => 'date',
+								'name' => 'start',
+								'placeholder' => 'YYYY-MM-DD',
+								'id' => 'date_start',
+								'value' => (isset($search["date_start"])) ? rawurldecode($search["date_start"]) : ''
+							)
+						);
+						?>
+					</td>
+				</tr>
+				<tr>
+					<td class="postblock"><?= __('To Date') ?> <a class="tooltip" href="#">[?]<span><?= __('Enter the ending date for your search.') ?><br/><?= __('Format: YYYY-MM-DD') ?></span></a></td>
+					<td>
+						<?php
+						echo form_input(
+							array(
+								'type' => 'date',
+								'name' => 'end',
+								'id' => 'date_end',
+								'placeholder' => 'YYYY-MM-DD',
+								'value' => (isset($search["date_start"])) ? rawurldecode($search["date_start"]) : ''
+							)
+						);
+						?>
+					</td>
+				</tr>
+				<tr>
 					<td class="postblock"><?= __('Filename') ?></td>
 					<td>
 						<?php echo form_input(array('name' => 'filename', 'size' => '32', 'id' => 'filename', 'value' => (isset($search["filename"])) ? rawurldecode($search["filename"]) : '')); ?>
@@ -83,56 +114,6 @@ if (!isset($board))
 					<td class="postblock"><?= __('Image Hash') ?></td>
 					<td>
 						<?php echo form_input(array('name' => 'image', 'size' => '32', 'id' => 'image', 'value' => (isset($search["image"])) ? rawurldecode($search["image"]) : '')); ?>
-					</td>
-				</tr>
-				<tr>
-					<td class="postblock"><?= __('From Date') ?> <a class="tooltip" href="#">[?]<span><?= __('Enter the starting date for your search.') ?><br/><?= __('Format: YYYY-MM-DD') ?></span></a></td>
-					<td>
-						<?php
-				echo form_input(
-					array('type' => 'date',
-						'name' => 'start',
-						'placeholder' => 'yyyy-mm-dd',
-						'id' => 'date_start',
-						'value' => (isset($search["date_start"])) ?
-							rawurldecode($search["date_start"]) : ''));
-				?>
-					</td>
-				</tr>
-				<tr>
-					<td class="postblock"><?= __('To Date') ?> <a class="tooltip" href="#">[?]<span><?= __('Enter the ending date for your search.') ?><br/><?= __('Format: YYYY-MM-DD') ?></span></a></td>
-					<td>
-						<?php
-				echo form_input(
-					array(
-						'type' => 'date',
-						'name' => 'end',
-						'id' => 'date_end',
-						'placeholder' => 'yyyy-mm-dd',
-						'value' => (isset($search["date_start"])) ?
-							rawurldecode($search["date_start"]) : ''));
-				?>
-					</td>
-				</tr>
-				<tr>
-					<td class="postblock"><?= __('Capcode') ?></td>
-					<td>
-						<label>
-							<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"])) ? TRUE : FALSE)); ?>
-							<span><?= __('Show All Posts') ?></span>
-						</label><br />
-						<label>
-							<?php echo form_radio(array('name' => 'capcode', 'value' => 'user', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'user') ? TRUE : FALSE)); ?>
-							<span><?= __('Only by Users') ?></span>
-						</label><br />
-						<label>
-							<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod') ? TRUE : FALSE)); ?>
-							<span><?= __('Only by Mods') ?></span>
-						</label><br />
-						<label>
-							<?php echo form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin') ? TRUE : FALSE)); ?>
-							<span><?= __('Only by Admins') ?></span>
-						</label>
 					</td>
 				</tr>
 				<tr>
@@ -170,8 +151,29 @@ if (!isset($board))
 					</td>
 				</tr>
 				<tr>
+					<td class="postblock"><?= __('Show Posts') ?></td>
+					<td>
+						<label>
+							<?php echo form_radio(array('name' => 'filter', 'value' => '', 'checked' => (empty($search["filter"])) ? TRUE : FALSE)); ?>
+							<span><?= __('Show All Posts') ?></span>
+						</label><br />
+						<label>
+							<?php echo form_radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text') ? TRUE : FALSE)); ?>
+							<span><?= __('Only Containing Images') ?></span>
+						</label><br />
+						<label>
+							<?php echo form_radio(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'image') ? TRUE : FALSE)); ?>
+							<span><?= __('Only Containing Text') ?></span>
+						</label>
+					</td>
+				</tr>
+				<tr>
 					<td class="postblock"><?= __('Results') ?></td>
 					<td>
+						<label>
+							<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (empty($search["type"])) ? TRUE : FALSE)); ?>
+							<span><?= __('All Posts') ?></span>
+						</label><br />
 						<label>
 							<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (empty($search["type"]) || (!empty($search["type"]) && $search["type"] == 'posts')) ? TRUE : FALSE)); ?>
 							<span><?= __('Only Reply Posts') ?></span>
@@ -179,6 +181,27 @@ if (!isset($board))
 						<label>
 							<?php echo form_radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op') ? TRUE : FALSE)); ?>
 							<span><?= __('Only OP Posts') ?></span>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="postblock"><?= __('Capcode') ?></td>
+					<td>
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"])) ? TRUE : FALSE)); ?>
+							<span><?= __('Show All Posts') ?></span>
+						</label><br />
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'user', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'user') ? TRUE : FALSE)); ?>
+							<span><?= __('Only by Users') ?></span>
+						</label><br />
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod') ? TRUE : FALSE)); ?>
+							<span><?= __('Only by Mods') ?></span>
+						</label><br />
+						<label>
+							<?php echo form_radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin') ? TRUE : FALSE)); ?>
+							<span><?= __('Only by Admins') ?></span>
 						</label>
 					</td>
 				</tr>

@@ -25,7 +25,7 @@ var bindFunctions = function()
 			}
 		});
 	}
-	
+
 	jQuery("body").click(function(event){
 		var search_el = jQuery('.search-dropdown');
 		if(search_el.find(event.target).length != 1)
@@ -202,7 +202,7 @@ var bindFunctions = function()
 					return false;
 					break;
 
-				case 'activateModeration': 
+				case 'activateModeration':
 					jQuery('button[data-function=activateModeration]').parent().hide();
 					jQuery('.post_mod_controls button[data-function]').attr({'disabled': 'disabled'});
 					setTimeout(function(){
@@ -270,13 +270,13 @@ var bindFunctions = function()
 					});
 					return false;
 					break;
-					
+
 				case 'searchUser':
 					window.location.href = backend_vars.site_url + $(this).data('board') +
 						'/search/poster_ip/' + $(this).data('poster-ip');
 					//return false;
 					break;
-				
+
 				case 'searchUserGlobal':
 					window.location.href = backend_vars.site_url + 'search/poster_ip/' + $(this).data('poster-ip');
 					//return false;
@@ -298,11 +298,11 @@ var bindFunctions = function()
 		return false;
 	}
 
-	
-	// variable for ajax backlinks that we can clear them if the mouse hovered out 
+
+	// variable for ajax backlinks that we can clear them if the mouse hovered out
 	var backlink_jqxhr;
 	var backlink_spin;
-	
+
 	// hover functions go here
 	jQuery("#main").on("mouseover mouseout", "article a.[data-backlink]", function(event) {
 		if(event.type == "mouseover")
@@ -348,7 +348,7 @@ var bindFunctions = function()
 				}
 				var data = backend_vars.loaded_posts[that.data('post')];
 				backlink.html(data.formatted);
-				backlink.css('display', 'block');			
+				backlink.css('display', 'block');
 			}
 			else
 			{
@@ -364,6 +364,9 @@ var bindFunctions = function()
 						num: that.data('post'),
 						format: 'jsonp'
 					},
+                    beforeSend: function(xhr) {
+                        xhr.withCredentials = true;
+                    },
 					success: function(data){
 						backlink_spin.spin(false);
 						if (typeof data.error !== "undefined")
@@ -402,10 +405,10 @@ var shakeBacklink = function(el)
 		.animate({left: '+5px'}, 100)
 		.animate({left: '-5px'}, 100)
 		.animate({left: '+5px'}, 100)
-		.animate({left: '+0px'}, 100, 'linear', function(){ 
+		.animate({left: '+0px'}, 100, 'linear', function(){
 			el.css({position:'static'});
 		});
-		
+
 }
 
 var showBacklink = function(backlink, pos, height, width)

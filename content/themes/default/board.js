@@ -81,6 +81,7 @@ var bindFunctions = function()
 							reply_nymphassword: jQuery("#reply_nymphassword").val(),
 							reply_postas: jQuery("#reply_postas").val(),
 							reply_gattai: 'Submit',
+							theme: backend_vars.selected_theme,
 							csrf_fool: backend_vars.csrf_hash
 						},
 						success: function(data){
@@ -153,6 +154,7 @@ var bindFunctions = function()
 							board: el.data('board'),
 							doc_id: el.data('id'),
 							actions: [el.data('action')],
+							theme: backend_vars.selected_theme,
 							csrf_fool: backend_vars.csrf_hash
 						},
 						success: function(data){
@@ -362,6 +364,7 @@ var bindFunctions = function()
 					data: {
 						board: that.data('board'),
 						num: that.data('post'),
+						theme: backend_vars.selected_theme,
 						format: 'jsonp'
 					},
                     beforeSend: function(xhr) {
@@ -494,6 +497,7 @@ var realtimethread = function(){
 			num : backend_vars.thread_id,
 			board: backend_vars.board_shortname,
 			latest_doc_id: backend_vars.latest_doc_id,
+			theme: backend_vars.selected_theme,
 			format: 'jsonp'
 		},
 		success: function(data){

@@ -603,7 +603,7 @@ class Post_model extends CI_Model
 			unset($post->delpass);
 		}
 
-		if ($build === TRUE)
+		if ($build === TRUE && $this->theme->get_selected_theme())
 		{
 			$post->formatted = $this->build_board_comment($board, $post);
 		}

@@ -258,6 +258,12 @@ class Theme_model extends CI_Model
 	 */
 	public function set_theme($theme)
 	{
+		// sending FALSE leaves the situation unchanged
+		if($theme === FALSE)
+		{
+			return FALSE;
+		}
+		
 		if(!in_array($theme, $this->get_available_themes()))
 		{
 			$theme = FOOL_THEME_DEFAULT;

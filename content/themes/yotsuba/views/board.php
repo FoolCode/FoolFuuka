@@ -7,58 +7,84 @@
 		if (isset($post['op'])) :
 			$op = $post['op'];
 			$selected_radix = isset($op->board)?$op->board:get_selected_radix();
-			
+
 			$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
+			$quote_mode = 'thread';
 	?>
 
-	<div class="thread" id="t1418">
+	<div class="thread" id="t<?= $op->thread_num ?>">
 		<div class="postContainer opContainer" id="pc<?= $num ?>">
-			<div id="p1418" class="post op">
+			<div id="p<?= $num ?>" class="post op">
 				<div class="postInfoM mobile" id="pim<?= $num ?>">
-					<span class="postNum nameBlock<?= (($op->capcode == 'M') ? 'capcodeMod':'') . (($op->capcode == 'A') ? 'capcodeAdmin':'') ?>">
-					<span class="subject"><?= $op->title_processed ?></span> 
-					<span class="name"><?= $op->name_processed ?></span>
-					<?php if ($op->trip) : ?><span class="postertrip"><?= $op->trip ?></span><?php endif; ?>
-					<?php if (in_array($op->capcode, array('M', 'A'))) : ?>
-						<strong class="capcode">## <?= (($op->capcode == 'M') ? 'Mod':'') . (($op->capcode == 'A') ? 'Admin':'') ?>"></strong>
-						<?php if ($op->capcode == 'M') : ?><img src="//static.4chan.org/image/modicon.gif" alt="This user is a Moderator." title="This user is a Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
-						<?php if ($op->capcode == 'A') : ?><img src="//static.4chan.org/image/adminicon.gif" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
-					<?php endif; ?>
-					<br/>
-					<em><a href="res/1418#p1418" title="Highlight this post">No.</a><a href="res/1418#q1418" title="Quote this post">1418</a></em>
+					<span class="postNum nameBlock<?= (($op->capcode == 'M') ? ' capcodeMod':'') . (($op->capcode == 'A') ? ' capcodeAdmin':'') ?>">
+						<span class="subject"><?= $op->title_processed ?></span>
+						<span class="name"><?= ($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed ?></span>
+						<?php if ($op->trip) : ?><span class="postertrip"><?= $op->trip ?></span><?php endif; ?>
+						<?php if (in_array($op->capcode, array('M', 'A'))) : ?>
+							<strong class="capcode">## <?= (($op->capcode == 'M') ? 'Mod':'') . (($op->capcode == 'A') ? 'Admin':'') ?>"></strong>
+							<?php if ($op->capcode == 'M') : ?><img src="//static.4chan.org/image/modicon.gif" alt="This user is a Moderator." title="This user is a Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+							<?php if ($op->capcode == 'A') : ?><img src="//static.4chan.org/image/adminicon.gif" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+						<?php endif; ?>
+						<br/>
+						<em><a href="" title="Highlight this post">No.</a><a href="res/1418#q1418" title="Quote this post">1418</a></em>
 					</span>
 					<span class="dateTime">04/27/12(Fri)22:49:38</span>
 				</div>
+
+				<?php if ($op->preview_orig) : ?>
 				<div class="file" id="f<?= $num ?>">
 					<div class="fileInfo">
-					<span class="fileText">File: <a href="//images.4chan.org/htmlnew/src/1335581378629.jpg" target="_blank">1335581378.jpg</a>-(29 KB, 233x280, <span title="618c1207.jpg">618c1207.jpg</span>)</span>
+						<span class="fileText">
+							<?= __('File:') ?>
+							<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank"><?= $op->media_filename_processed ?></a>-(<?= byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed ?>)
+						</span>
 					</div>
-					<a class="fileThumb" href="//images.4chan.org/htmlnew/src/1335581378629.jpg" target="_blank"><img src="//1.thumbs.4chan.org/htmlnew/thumb/1335581378629s.jpg" alt="29 KB" data-md5="YYwSB0r/LTYjErW4ojBkAQ==" style="height: 251px; width: 210px;"/></a>
+					<a class="fileThumb" href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank">
+						<img src="<?= $op->thumb_link ?>" alt="<?= byte_format($op->media_size, 0) ?>" data-md5="<?= $op->media_hash ?>"<?php if ($op->preview_w > 0 && $op->preview_h > 0) : ?> style="height: <?= $op->preview_h ?>px; width: <?= $op->preview_w ?>px;"<?php endif; ?>/>
+					</a>
 				</div>
+				<?php endif; ?>
+
 				<div class="postInfo" id="pi<?= $num ?>">
 					<input type="checkbox" name="<?= $num ?>" value="delete"/>
-					<span class="subject"></span>
+					<span class="subject"><?= $op->title_processed ?></span>
 					<span class="nameBlock capcodeMod">
-					<span class="name">Anonymous</span> <strong class="capcode">## Mod</strong> <img src="//static.4chan.org/image/modicon.gif" alt="This user is a 4chan Moderator." title="This user is a 4chan Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;">
+						<span class="name">Anonymous</span> <strong class="capcode">## Mod</strong> <img src="//static.4chan.org/image/modicon.gif" alt="This user is a 4chan Moderator." title="This user is a 4chan Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;">
 					</span>
-					<span class="dateTime">04/27/12(Fri)22:49:38</span>
+					<span class="dateTime"><?= date('D M d H:i:s Y', $op->original_timestamp) ?></span>
 					<span class="postNum">
-					<a href="res/1418#p1418" title="Highlight this post">No.</a><a href="res/1418#q1418" title="Quote this post"><?= $num ?></a> <img src="//static.4chan.org/image/sticky.gif" alt="Sticky" title="Sticky"/> <img src="//static.4chan.org/image/closed.gif" alt="Closed" title="Closed"/> &nbsp; [<a href="res/1418" class="replylink">Reply</a>]
+						<a href="<?= site_url(array($selected_radix->shortname, 'thread', $op->thread_num)) ?>#<?= $num ?>" title="Highlight this post">No.</a><a href="<?= site_url(array($selected_radix->shortname, $quote_mode, $op->thread_num)) ?>#q<?= $num ?>" title="Quote this post"><?= $num ?></a>
+
+						<img src="//static.4chan.org/image/sticky.gif" alt="Sticky" title="Sticky"/>
+						<img src="//static.4chan.org/image/closed.gif" alt="Closed" title="Closed"/>
+
+						[<a href="<?= site_url(array($selected_radix->shortname, 'thread', $op->thread_num)) ?>#reply" class="replylink">Reply</a>]
 					</span>
 				</div>
-				<blockquote class="postMessage" id="m<?= $num ?>">Hello extension developers. Use these pages to get you ready for the 4chan HTML refresh.<br/><br/>I've attempted to include everything I can think of that you should need to help with your development.</blockquote>
+				<blockquote class="postMessage" id="m<?= $num ?>"><?= $op->comment_processed ?></blockquote>
 			</div>
 			<div class="postLink mobile">
 				<span class="info">
-				<strong>9 posts omitted.</strong><br/><em>(9 have images)</em>
+					<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
+					<strong>9 posts omitted.</strong><br/><em>(9 have images)</em>
+					<?php endif; ?>
 				</span>
-				<a href="res/1418" class="quotelink button">View Thread</a>
+				<a href="<?= site_url(array($selected_radix->shortname, 'thread', $op->thread_num)) ?>" class="quotelink button">View Thread</a>
 			</div>
 		</div>
-		<span class="summary desktop">9 posts and 9 image replies omitted. Click Reply to view.</span>
-	
+		<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
+		<span class="summary desktop">
+			<?= $post['omitted'] . ' ' . _ngettext('post', 'posts', $post['omitted']) ?>
+			<?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>
+			<?= ' ' . __('and') . ' ' . $post['images_omitted'] . ' ' . _ngettext('image', 'images', $post['images_omitted']) ?>
+			<?php endif; ?>
+			<?= ' ' . _ngettext('omitted', 'omitted', $post['omitted'] + $post['images_omitted']) ?>.
+			<?= __('Click Reply to View.') ?>
+		</span>
+		<?php endif; ?>
+
 	<?php endif; ?>
-	
+
 	<?php
 		if (isset($post['posts']))
 		{
@@ -74,11 +100,11 @@
 			}
 		}
 	?>
-	
-	
+
+
 	</div>
 	<hr/>
-	
+
 	<?php endforeach; ?>
 
 

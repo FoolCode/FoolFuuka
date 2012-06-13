@@ -5,19 +5,7 @@ if (!defined('BASEPATH'))
 
 class FS_Articles extends Plugins_model
 {
-	/*
-	 * This is a plugin that is in actual production, but that is also
-	 * good for use as tutorial. It contains all the base functions that
-	 * you will have to edit to match
-	 */
-
-
-	function __construct()
-	{
-		// KEEP THIS EMPTY, use the initialize_plugin method instead
-
-		parent::__construct();
-	}
+	
 	
 	function structure()
 	{

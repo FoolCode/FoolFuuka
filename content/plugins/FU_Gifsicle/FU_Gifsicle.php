@@ -7,13 +7,6 @@ if (!defined('BASEPATH'))
 class FU_Gifsicle extends Plugins_model
 {
 
-
-	function __construct()
-	{
-		// KEEP THIS EMPTY, use the initialize_plugin method instead
-
-		parent::__construct();
-	}
 	
 	function initialize_plugin()
 	{

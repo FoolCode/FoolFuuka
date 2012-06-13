@@ -8,13 +8,6 @@ class FU_Dice_Roll extends Plugins_model
 {
 
 
-	function __construct()
-	{
-		// KEEP THIS EMPTY, use the initialize_plugin method instead
-
-		parent::__construct();
-	}
-
 	function initialize_plugin()
 	{
 		$this->plugins->register_hook($this, 'fu_post_model_comment_alter_input', 4, 'roll');

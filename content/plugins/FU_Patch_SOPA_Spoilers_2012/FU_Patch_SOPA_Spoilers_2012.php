@@ -16,12 +16,6 @@ if (!defined('BASEPATH'))
  */
 class FU_Patch_SOPA_Spoilers_2012 extends Plugins_model
 {
-	function __construct()
-	{
-		// KEEP THIS EMPTY, use the initialize_plugin method instead
-
-		parent::__construct();
-	}
 	
 	function initialize_plugin()
 	{

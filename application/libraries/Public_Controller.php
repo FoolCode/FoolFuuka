@@ -49,10 +49,34 @@ class Public_Controller extends MY_Controller
 			show_error(__('No themes enabled!'), 500);
 		}
 		
-		$selected_theme = get_setting('fs_theme_default', FOOL_THEME_DEFAULT);
-		if($this->input->cookie('foolfuuka_theme'))
+		
+		
+		if ($this instanceof REST_Controller)
 		{
-			$selected_theme = $this->input->cookie('foolfuuka_theme');
+			$selected_theme = FALSE;
+			
+			if ($this->input->get_post('theme'))
+			{
+				$selected_theme = $this->input->get_post('theme');
+			}
+			else
+			{
+				$assoc = $this->uri->uri_to_assoc(4);
+				
+				if(isset($assoc['theme']))
+				{
+					$selected_theme = $assoc['theme'];
+				}
+			}
+		}
+		else 
+		{
+			$selected_theme = get_setting('fs_theme_default', FOOL_THEME_DEFAULT);
+			
+			if($this->input->cookie('foolfuuka_theme'))
+			{
+				$selected_theme = $this->input->cookie('foolfuuka_theme');
+			}
 		}
 
 		$this->theme->set_theme($selected_theme);

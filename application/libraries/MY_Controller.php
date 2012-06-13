@@ -151,6 +151,7 @@ class MY_Controller extends CI_Controller
 				'system_url'  => site_url('@system'),
 				'api_url'   => site_url('@system'),
 				'cookie_domain' => config_item('cookie_domain'),
+				'selected_theme' => isset($this->theme)?$this->theme->get_selected_theme():'',
 				'csrf_hash' => $this->security->get_csrf_hash(),
 				'images' => array(
 					'banned_image' => site_url() . 'content/themes/default/images/banned-image.png',

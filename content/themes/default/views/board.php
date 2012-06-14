@@ -13,27 +13,39 @@ foreach ($posts as $key => $post) :
 <article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $selected_radix->shortname ?>">
 	<?php if ($op->preview_orig) : ?>
 		<div class="thread_image_box">
+			<?php if ($op->media_status != 'available') :?>
+				<?php if ($op->media_status == 'banned') : ?>
+					<img src="<?= site_url() . $this->theme->fallback_asset('images/banned-image.jpg')?>" width="150" height="150" />
+				<?php else : ?>
+					<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+						<img src="<?= site_url() . $this->theme->fallback_asset('images/missing-image.jpg')?>" width="150" height="150" />
+					</a>
+				<?php endif; ?>
+			<?php else: ?>
 			<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 				<?php if(!$this->tank_auth->is_allowed() && !$selected_radix->transparent_spoiler && $op->spoiler) :?>
 				<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 				<?php else : ?>
-				<img src="<?= $op->thumb_link ?>" <?= ($op->preview_w > 0 && $op->preview_h > 0) ? 'width="' . $op->preview_w . '" height="' . $op->preview_h . '" ' : '' ?>class="thread_image<?= ($op->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media_hash ?>" />
+				<img src="<?= $op->thumb_link ?>" width="<?= $op->preview_w ?>" height="<?= $op->preview_h ?>" class="thread_image<?= ($op->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media_hash ?>" />
 				<?php endif; ?>
 			</a>
+			<?php endif; ?>
 
 			<div class="post_file" style="padding-left: 2px;<?php if ($op->preview_w > 149) : ?> max-width:<?= $op->preview_w .'px'; endif; ?>;">
 				<?= byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed; ?>
 			</div>
 
 			<div class="post_file_controls">
-				<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
-				<a href="<?= site_url($selected_radix->shortname . '/search/image/' . $op->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><a
-					href="http://google.com/searchbyimage?image_url=<?= $op->thumb_link ?>" target="_blank"
-					class="btnr parent">Google</a><a
-					href="http://iqdb.org/?url=<?= $op->thumb_link ?>" target="_blank"
-					class="btnr parent">iqdb</a><a
-					href="http://saucenao.com/search.php?url=<?= $op->thumb_link ?>" target="_blank"
-					class="btnr parent">SauceNAO</a>
+				<?php if ($op->media_status != 'banned') : ?>
+					<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
+					<a href="<?= site_url($selected_radix->shortname . '/search/image/' . $op->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><a
+						href="http://google.com/searchbyimage?image_url=<?= $op->thumb_link ?>" target="_blank"
+						class="btnr parent">Google</a><a
+						href="http://iqdb.org/?url=<?= $op->thumb_link ?>" target="_blank"
+						class="btnr parent">iqdb</a><a
+						href="http://saucenao.com/search.php?url=<?= $op->thumb_link ?>" target="_blank"
+						class="btnr parent">SauceNAO</a>
+					<?php endif; ?>
 				<?php endif; ?>
 			</div>
 		</div>

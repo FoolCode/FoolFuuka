@@ -18,16 +18,28 @@ foreach ($posts as $key => $post) :
 	<div id="<?= $op->num ?>">
 		<?php if ($op->preview_orig) : ?>
 			<span><?= __('File:') . ' ' . byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed ?> <?= '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
-			<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
-				[<a href="<?= site_url(get_selected_radix()->shortname . '/search/image/' . $op->safe_media_hash) ?>"><?= __('View Same') ?></a>]
-				[<a href="http://google.com/searchbyimage?image_url=<?= $op->thumb_link ?>">Google</a>]
-				[<a href="http://iqdb.org/?url=<?= $op->thumb_link ?>">iqdb</a>]
-				[<a href="http://saucenao.com/search.php?url=<?= $op->thumb_link ?>">SauceNAO</a>]
+			<?php if ($op->media_status != 'banned') : ?>
+				<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
+					[<a href="<?= site_url(get_selected_radix()->shortname . '/search/image/' . $op->safe_media_hash) ?>"><?= __('View Same') ?></a>]
+					[<a href="http://google.com/searchbyimage?image_url=<?= $op->thumb_link ?>">Google</a>]
+					[<a href="http://iqdb.org/?url=<?= $op->thumb_link ?>">iqdb</a>]
+					[<a href="http://saucenao.com/search.php?url=<?= $op->thumb_link ?>">SauceNAO</a>]
+				<?php endif; ?>
 			<?php endif; ?>
 			<br />
+			<?php if ($op->media_status != 'available') :?>
+				<?php if ($op->media_status == 'banned') : ?>
+					<img src="<?= site_url() . $this->theme->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
+				<?php else : ?>
+					<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" rel="noreferrer">
+						<img src="<?= site_url() . $this->theme->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
+					</a>
+				<?php endif; ?>
+			<?php else: ?>
 			<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" rel="noreferrer">
-				<img src="<?= $op->thumb_link ?>" <?= ($op->preview_w > 0 && $op->preview_h > 0) ? 'width="' . $op->preview_w . '" height="' . $op->preview_h . '" ' : '' ?>class="thumb" alt="<?= $op->num ?>" />
+				<img src="<?= $op->thumb_link ?>" width="<?= $op->preview_w ?>" height="<?= $op->preview_h ?>" class="thumb" alt="<?= $op->num ?>" />
 			</a>
+			<?php endif; ?>
 		<?php endif; ?>
 
 		<label>

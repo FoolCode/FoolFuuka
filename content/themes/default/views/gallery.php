@@ -28,17 +28,30 @@ foreach ($threads as $k => $p) :
 			</div>
 		</header>
 		<div class="thread_image_box">
+			<?php if ($p->media_status != 'available') :?>
+				<?php if ($p->media_status == 'banned') : ?>
+					<img src="<?= site_url() . $this->theme->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
+				<?php else : ?>
+					<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+						<img src="<?= site_url() . $this->theme->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
+					</a>
+				<?php endif; ?>
+			<?php else: ?>
 			<a href="<?= site_url(get_selected_radix()->shortname . '/thread/' . $p->num) ?>" data-backlink="<?= $p->num ?>" rel="noreferrer" target="_blank" class="thread_image_link"<?= ($p->media_link)?' data-expand="true"':'' ?>>
 				<?php if(!$this->tank_auth->is_allowed() && !get_selected_radix()->transparent_spoiler && $p->spoiler) :?>
 				<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 				<?php else : ?>
-				<img src="<?= $p->thumb_link ?>" <?php if ($p->preview_w > 0 && $p->preview_h > 0) : ?>width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>"<?php endif; ?> data-width="<?= $p->media_w ?>" data-height="<?= $p->media_h ?>" data-md5="<?= $p->media_hash ?>" class="thread_image<?= ($p->spoiler)?' is_spoiler_image':'' ?>" />
+				<img src="<?= $p->thumb_link ?>" width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>" data-width="<?= $p->media_w ?>" data-height="<?= $p->media_h ?>" data-md5="<?= $p->media_hash ?>" class="thread_image<?= ($p->spoiler)?' is_spoiler_image':'' ?>" />
 				<?php endif; ?>
 			</a>
+			<?php endif; ?>
 			<div class="post_file" style="padding-left: 2px"><?= byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media_filename ?></div>
-			<div class="post_file_controls">
-				<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" class="btnr" target="_blank">Full</a><a href="<?= site_url(get_selected_radix()->shortname . '/search/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent"><?= __('View Same') ?></a><a target="_blank" href="http://iqdb.org/?url=<?= $p->thumb_link ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->thumb_link ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->thumb_link ?>" class="btnr parent">Google</a>
-			</div>
+			
+			<?php if ($p->media_status == 'banned') : ?>
+				<div class="post_file_controls">
+					<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" class="btnr" target="_blank">Full</a><a href="<?= site_url(get_selected_radix()->shortname . '/search/image/' . urlencode(substr($p->media_hash, 0, -2))) ?>" class="btnr parent"><?= __('View Same') ?></a><a target="_blank" href="http://iqdb.org/?url=<?= $p->thumb_link ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->thumb_link ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->thumb_link ?>" class="btnr parent">Google</a>
+				</div>
+			<?php endif; ?>
 		</div>
 		<div class="thread_tools_bottom">
 			<?php if (isset($p->nreplies)) : ?>
@@ -54,5 +67,6 @@ if ($separator%4 == 0)
 endforeach;
 ?>
 </div>
-
-<div id="backlink" class="thread_o_matic" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
+<article class="thread">
+	<div id="backlink" class="thread_o_matic" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
+</article>

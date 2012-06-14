@@ -268,55 +268,38 @@ class Post_model extends CI_Model
 	 * @param bool $thumbnail if it's a thumbnail we're looking for
 	 * @return bool|string FALSE on not found, a fallback image if not found for thumbnails, or the URL on success
 	 */
-	private function p_get_media_link($board, $post, $thumbnail = FALSE)
+	private function p_get_media_link($board, &$post, $thumbnail = FALSE)
 	{
 		if (!$post->media_hash)
 		{
 			return FALSE;
 		}
 
+		$post->media_status = 'available';
+		
 		// these features will only affect guest users
 		if ($board->hide_thumbnails && !$this->tank_auth->is_allowed())
 		{
 			// hide all thumbnails for the board
 			if (!$board->hide_thumbnails)
 			{
-				if ($thumbnail === TRUE)
-				{
-					// we need to define the size of the image
-					$post->preview_h = 150;
-					$post->preview_w = 150;
-					return site_url() . 'content/themes/default/images/null-image.png';
-				}
-
+				$post->media_status = 'forbidden';
 				return FALSE;
 			}
 
 			// add a delay of 1 day to all thumbnails
-			if ($board->delay_thumbnails)
+			if ($board->delay_thumbnails && isset($post->timestamp) && ($post->timestamp + 86400) > time())
 			{
-				if (isset($post->timestamp) && ($post->timestamp + 86400) > time())
-				{
-					if ($thumbnail === TRUE)
-					{
-						// we need to define the size of the image
-						$post->preview_h = 150;
-						$post->preview_w = 150;
-						return site_url() . 'content/themes/default/images/null-image.png';
-					}
-
-					return FALSE;
-				}
+				$post->media_status = 'forbidden-24h';
+				return FALSE;
 			}
 		}
 
 		// this post contain's a banned media, do not display
 		if ($post->banned == 1)
 		{
-			// we need to define the size of the image
-			$post->preview_h = 150;
-			$post->preview_w = 150;
-			return site_url() . 'content/themes/default/images/banned-image.png';
+			$post->media_status = 'banned';
+			return FALSE;
 		}
 
 		// locate the image
@@ -379,13 +362,7 @@ class Post_model extends CI_Model
 				. ($thumbnail ? 'thumb' : 'image') . '/' . substr($image, 0, 4) . '/' . substr($image, 4, 2) . '/' . $image;
 		}
 
-		if ($thumbnail === TRUE)
-		{
-			$post->preview_h = 150;
-			$post->preview_w = 150;
-			return site_url() . 'content/themes/default/images/missing-image.jpg';
-		}
-
+		$post->media_status = 'not-available';
 		return FALSE;
 	}
 
@@ -546,7 +523,7 @@ class Post_model extends CI_Model
 	 * @param bool $clean remove sensible data from the $post object
 	 * @param bool $build build the post box according to the selected theme
 	 */
-	private function p_process_post($board, $post, $clean = TRUE, $build = FALSE)
+	private function p_process_post($board, &$post, $clean = TRUE, $build = FALSE)
 	{
 		$this->load->helper('text');
 		$this->current_p = $post;
@@ -558,9 +535,26 @@ class Post_model extends CI_Model
 		$post->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment($board, $post));
 		$post->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $post->comment);
 
-		// gotta change the timestamp of the archives to GMT
-		if($board->archive)
+		// gotta change the timestamp of the archives to GMT and fix images
+		if ($board->archive)
 		{
+			// fallback if the preview size because spoiler thumbnails in archive may not have sizes
+			if ($post->spoiler && $post->preview_w == 0)
+			{
+				$max_preview_size = ($post->op)?252:127;
+				
+				if ($post->media_w > $post->media_h)
+				{
+					$post->preview_h = floor(($post->media_h * $max_preview_size) / $post->media_w);
+					$post->preview_w = $max_preview_size;
+				}
+				else
+				{
+					$post->preview_w = floor(($post->media_w * $max_preview_size) / $post->media_h);
+					$post->preview_h = $max_preview_size;
+				}
+			}
+			
 			$post->original_timestamp = $post->timestamp;
 			$newyork = new DateTime(date('Y-m-d H:i:s', $post->timestamp), new DateTimeZone('America/New_York'));
 			$utc = new DateTime(date('Y-m-d H:i:s', $post->timestamp), new DateTimeZone('UTC'));

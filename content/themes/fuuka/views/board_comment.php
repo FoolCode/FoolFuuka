@@ -43,16 +43,28 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 						<?= __('File:') . ' ' . byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media_filename_processed; ?>
 						<?= '<!-- ' . substr($p->media_hash, 0, -2) . '-->' ?>
 					</span>
-					<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
-						[<a href="<?= site_url($selected_radix->shortname . '/search/image/' . $p->safe_media_hash) ?>"><?= __('View Same') ?></a>]
-						[<a href="http://google.com/searchbyimage?image_url=<?= $p->thumb_link ?>">Google</a>]
-						[<a href="http://iqdb.org/?url=<?= $p->thumb_link ?>">iqdb</a>]
-						[<a href="http://saucenao.com/search.php?url=<?= $p->thumb_link ?>">SauceNAO</a>]
+					<?php if ($p->media_status != 'banned') : ?>
+						<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
+							[<a href="<?= site_url($selected_radix->shortname . '/search/image/' . $p->safe_media_hash) ?>"><?= __('View Same') ?></a>]
+							[<a href="http://google.com/searchbyimage?image_url=<?= $p->thumb_link ?>">Google</a>]
+							[<a href="http://iqdb.org/?url=<?= $p->thumb_link ?>">iqdb</a>]
+							[<a href="http://saucenao.com/search.php?url=<?= $p->thumb_link ?>">SauceNAO</a>]
+						<?php endif; ?>
 					<?php endif; ?>
 					<br />
+					<?php if ($p->media_status != 'available') :?>
+						<?php if ($p->media_status == 'banned') : ?>
+							<img src="<?= site_url() . $this->theme->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
+						<?php else : ?>
+							<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" rel="noreferrer">
+								<img src="<?= site_url() . $this->theme->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
+							</a>
+						<?php endif; ?>
+					<?php else: ?>
 					<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" rel="noreferrer">
-						<img src="<?= $p->thumb_link ?>" alt="<?= $p->num ?>" <?php if ($p->preview_w > 0 && $p->preview_h > 0) : ?>width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>"<?php endif; ?>class="thumb" />
+						<img src="<?= $p->thumb_link ?>" alt="<?= $p->num ?>" width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>" class="thumb" />
 					</a>
+					<?php endif; ?>
 				<?php endif; ?>
 				<div class="quoted-by" style="display: <?= (isset($p->backlinks)) ? 'block' : 'none' ?>">
 					<?= __('Quoted By:') ?> <?= (isset($p->backlinks)) ? implode(' ', $p->backlinks) : '' ?>

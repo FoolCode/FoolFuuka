@@ -16,14 +16,17 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 
 	<?php if ($p->preview_orig) : ?>
 	<div class="post_file">
-			<span class="post_file_controls">
+		
+		<span class="post_file_controls">
+		<?php if ($p->media_status != 'banned') : ?>
 			<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
-				<a href="<?= site_url('@radix/' . $selected_radix->shortname . '/search/image/' . $p->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><a
-					href="http://google.com/searchbyimage?image_url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">Google</a><a
-					href="http://iqdb.org/?url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">iqdb</a><a
-					href="http://saucenao.com/search.php?url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
-				<?php endif; ?>
-			</span>
+			<a href="<?= site_url('@radix/' . $selected_radix->shortname . '/search/image/' . $p->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><a
+				href="http://google.com/searchbyimage?image_url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">Google</a><a
+				href="http://iqdb.org/?url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">iqdb</a><a
+				href="http://saucenao.com/search.php?url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
+			<?php endif; ?>
+		<?php endif ?>
+		</span>
 
 		<?php if (mb_strlen($p->media_filename_processed) > 38) : ?>
 			<span class="post_file_filename" rel="tooltip" title="<?= form_prep($p->media_filename) ?>">
@@ -39,11 +42,20 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 	</div>
 
 	<div class="thread_image_box">
+		<?php if ($p->media_status != 'available') :?>
+			<?php if ($p->media_status == 'banned') : ?>
+				<img src="<?= site_url() . $this->theme->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
+			<?php else : ?>
+				<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+					<img src="<?= site_url() . $this->theme->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
+				</a>
+			<?php endif; ?>
+		<?php else: ?>
 		<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 			<?php if(!$this->tank_auth->is_allowed() && !$selected_radix->transparent_spoiler && $p->spoiler) :?>
 			<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 			<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
-			<img src="<?= site_url('content/themes/default/images/transparent_pixel.png') ?>" data-original="<?= $p->thumb_link ?>" <?= ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media_hash ?>" />
+			<img src="<?= site_url('content/themes/default/images/transparent_pixel.png') ?>" data-original="<?= $p->thumb_link ?>" width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>" class="lazyload post_image<?= ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media_hash ?>" />
 			<noscript>
 				<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 					<img src="<?= $p->thumb_link ?>" style="margin-left: -<?= $p->preview_w ?>px" <?= ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media_hash ?>" />
@@ -53,6 +65,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 			<img src="<?= $p->thumb_link ?>" <?= ($p->preview_w > 0 && $p->preview_h > 0) ? 'width="' . $p->preview_w . '" height="' . $p->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media_hash ?>" />
 			<?php endif; ?>
 		</a>
+		<?php endif; ?>
 	</div>
 	<?php endif; ?>
 

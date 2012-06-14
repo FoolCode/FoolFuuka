@@ -25,11 +25,6 @@ class Theme_Plugin_yotsuba extends Plugins_model
 
 		$this->plugins->register_hook($this, 'fu_chan_controller_before_page', 3, 'page');
 		$this->plugins->register_hook($this, 'fu_chan_controller_before_gallery', 3, function(){ show_404(); });
-		// for safety, force 404
-		$this->plugins->register_hook($this, 'fu_chan_controller_before_submit', 3, function(){ show_404(); });
-
-		// if we have to outright change the name of the function, we need to register a new controller function
-		$this->plugins->register_controller_function($this, array('chan', '(:any)', 'sending'), 'sending');
 	}
 
 

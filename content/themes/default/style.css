@@ -288,38 +288,12 @@ body.theme_default {
 }
 
 .theme_default .search-dropdown div.search-dropdown-menu ul input[type=text],
-.theme_default .search-dropdown div.search-dropdown-menu ul input[type=file],
 .theme_default .search-dropdown div.search-dropdown-menu ul input[type=date] {
     padding:2px;
     font-size:11px;
     height:16px;
     width: 70%;
     margin-bottom:0;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul input[type=file]{}
-
-/* Opera hack */
-@media not screen and (1)
-{
-	.theme_default .search-dropdown div.search-dropdown-menu ul input[type=file] {
-		width: 72%;
-	}
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul input[type=file]{
-    padding:0 3px;
-    height:22px;
-    background:#fff;
-    webkit-appearance: none;
-    border-top: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul input[type=file]::-webkit-file-upload-button {
-    position:relative;
-    bottom:3px;
 }
 
 .theme_default .search-dropdown div.search-dropdown-menu ul .help {
@@ -835,7 +809,7 @@ body.theme_default {
 }
 
 .theme_default .thread_form input[type=file],
-.theme_default .thread_form select{
+.theme_default .thread_form select {
     border:1px solid #cccccc;
     width:218px;
     height:26px;
@@ -848,17 +822,17 @@ body.theme_default {
 /* Opera hack */
 @media not screen and (1)
 {
-.theme_default .thread_form input[type=file],
-.theme_default .thread_form select{
-    height: 28px;
-    width: 220px;
-}
+	.theme_default .thread_form input[type=file],
+	.theme_default .thread_form select {
+		height: 28px;
+		width: 220px;
+	}
 
-.theme_default .thread_form input[type=submit],
-.theme_default .thread_form input[type=reset] {
-    height:28px;
+	.theme_default .thread_form input[type=submit],
+	.theme_default .thread_form input[type=reset] {
+		height:28px;
+	}
 }
-    }
 
 
 .theme_default .thread_form .rules {

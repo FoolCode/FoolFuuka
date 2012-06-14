@@ -106,7 +106,7 @@
 	<div class="boardTitle"><?= get_selected_radix()->formatted_title ?></div>
 	</div>
 
-	<?php if ($is_page) echo $template['partials']['tools_reply_box']; ?>
+	<?= $template['partials']['tools_reply_box']; ?>
 
 	<hr/>
 

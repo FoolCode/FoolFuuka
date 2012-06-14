@@ -1295,11 +1295,11 @@ class Chan extends Public_Controller
 				$now = ((float)$usec + (float)$sec);
 
 				if ($now - $time > $this->config->item('captcha_expire', 'tank_auth')) {
-					$captcha_error = _('The captcha expired. Try again.');
+					$captcha_error = __('The captcha expired. Try again.');
 				} elseif (($this->config->item('captcha_case_sensitive', 'tank_auth') AND
 						$code != $word) OR
 						strtolower($code) != strtolower($word)) {
-					$captcha_error = _('The code inserted didn\'t match the captcha. Try again.');
+					$captcha_error = __('The code inserted didn\'t match the captcha. Try again.');
 				}
 
 				if(!isset($captcha_error))

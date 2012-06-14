@@ -198,6 +198,10 @@
 				echo '<div style="clear: both;">' . get_setting('fs_theme_footer_text') . '</div>';
 			}
 		?>
+		
+		<script>
+			var backend_vars = <?= json_encode($backend_vars) ?>;
+		</script>
 
 		<?php if (get_setting('fs_theme_google_analytics')) : ?>
 			<script>

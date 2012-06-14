@@ -100,6 +100,9 @@ var backlinkify = function()
     }
 }
 
+var backlinkjqXHR = null;
+var backlinkFetched = {};
+
 var doBacklink = function(el)
 {
     var parent, doc, clr, src, blk, x, y, w, maxWidth = 500;
@@ -146,16 +149,45 @@ var doBacklink = function(el)
     else
     {
         var post = el.href.match(/\/(\w+)\/post\/(.*?)\/$/);
-        jQuery.ajax({
-            url: '//system4.foolz.us/api/chan/post/',
+		
+		if (typeof backlinkFetched[post[1] + '_' + post[2]] !== 'undefined')
+		{
+			src = document.createElement('div');
+			src.innerHTML = backlinkFetched[post[1] + '_' + post[2]].formatted;
+
+			w = maxWidth;
+			x = 0;
+			y = el.offsetHeight + 1;
+			parent = el;
+			do {
+				x += parent.offsetLeft;
+				y += parent.offsetTop;
+			} while (parent = parent.offsetParent);
+
+			if ((doc = document.body.offsetWidth - x - w) < 0)
+			{
+				x += doc;
+			}
+
+			blk.setAttribute('style', 'left:' + x + 'px; top:' + y + 'px;');
+			blk.appendChild(src);
+			document.body.appendChild(blk);
+			return false;
+		}
+		
+        backlinkjqXHR = jQuery.ajax({
+            url: backend_vars.api_url + 'api/chan/post/',
             dataType: 'jsonp',
             type: 'GET',
             data: {
                 board: post[1],
                 num: post[2],
+				theme: backend_vars.selected_theme,
                 format: 'jsonp'
             },
             success: function(data) {
+				backlinkFetched[post[1] + '_' + post[2]] = data;
+				backlinkjqXHR = null;
                 src = document.createElement('div');
                 src.innerHTML = data.formatted;
 
@@ -188,6 +220,11 @@ var rmBacklink = function(el)
     {
         document.body.removeChild(blk);
     }
+	
+	if (backlinkjqXHR !== null)
+	{
+		backlinkjqXHR.abort();
+	}
 }
 
 var run = function()

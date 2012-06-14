@@ -6,8 +6,11 @@ foreach ($posts as $key => $post) :
 	if (isset($post['op'])) :
 		$op = $post['op'];
 		$selected_radix = isset($op->board)?$op->board:get_selected_radix();
+
+		$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
+		$quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 ?>
-<article id="<?= $op->num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $selected_radix->shortname ?>">
+<article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $selected_radix->shortname ?>">
 	<?php if ($op->preview_orig) : ?>
 		<div class="thread_image_box">
 			<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
@@ -17,7 +20,7 @@ foreach ($posts as $key => $post) :
 				<img src="<?= $op->thumb_link ?>" <?= ($op->preview_w > 0 && $op->preview_h > 0) ? 'width="' . $op->preview_w . '" height="' . $op->preview_h . '" ' : '' ?>class="thread_image<?= ($op->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media_hash ?>" />
 				<?php endif; ?>
 			</a>
-			
+
 			<div class="post_file" style="padding-left: 2px;<?php if ($op->preview_w > 149) : ?> max-width:<?= $op->preview_w .'px'; endif; ?>;">
 				<?= byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed; ?>
 			</div>
@@ -55,17 +58,17 @@ foreach ($posts as $key => $post) :
 				<time datetime="<?= date(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($selected_radix->archive) : ?> title="<?= __('4chan Time') . ': ' .date('D M d H:i:s Y', $op->original_timestamp) ?>"<?php endif; ?>><?= date('D M d H:i:s Y', $op->timestamp) ?></time>
 			</span>
 
-			<a href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) . '#'  . $op->num ?>" data-post="<?= $op->num ?>" data-function="highlight">No.</a><a href="<?= site_url($selected_radix->shortname . ((isset($is_last50) && $is_last50) ? '/last50/' : '/thread/') . $op->num) . '#q' . $op->num ?>" data-post="<?= $op->num ?>" data-function="quote"><?= $op->num ?></a>
+			<a href="<?= site_url($selected_radix->shortname . '/thread/' . $op->thread_num) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= site_url(array($selected_radix->shortname, $quote_mode, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
 
 			<span class="post_controls">
-				<a href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= site_url($selected_radix->shortname . '/thread/' . $op->num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url($selected_radix->shortname . '/last50/' . $op->num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($selected_radix->archive) ? '<a href="http://boards.4chan.org/' . $selected_radix->shortname . '/res/' . $op->num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?= site_url($selected_radix->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($this->tank_auth->is_allowed() || !$selected_radix->archive) : ?><a href="<?= site_url($selected_radix->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $op->num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
+				<a href="<?= site_url($selected_radix->shortname . '/thread/' . $num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= site_url($selected_radix->shortname . '/thread/' . $num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url($selected_radix->shortname . '/last50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($selected_radix->archive) ? '<a href="http://boards.4chan.org/' . $selected_radix->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?= site_url($selected_radix->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($this->tank_auth->is_allowed() || !$selected_radix->archive) : ?><a href="<?= site_url($selected_radix->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 
 			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?= site_url() . $this->theme->fallback_asset('images/icons/file-delete-icon.png');; ?>" width="16" height="16" title="<?= form_prep(__('This post was deleted from 4chan manually.')) ?>"/></span><?php endif ?>
 			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?= site_url() . $this->theme->fallback_asset('images/icons/spoiler-icon.png'); ?>" width="16" height="16" title="<?= form_prep(__('This post contains a spoiler image.')) ?>"/></span><?php endif ?>
 
 			<div class="backlink_list"<?= (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
-				<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $op->num ?>"><?= (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
+				<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
 			</div>
 
 			<?php if ($this->tank_auth->is_allowed()) : ?>
@@ -119,7 +122,7 @@ foreach ($posts as $key => $post) :
 <?php endif; ?>
 
 	<aside class="posts">
-		<?php 
+		<?php
 		if (isset($post['posts'])) :
 			$post_counter = 0;
 			foreach ($post['posts'] as $p)

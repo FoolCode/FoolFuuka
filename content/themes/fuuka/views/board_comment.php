@@ -25,7 +25,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 					<?php endif ?>
 					<?= date('D M d H:i:s Y', $p->original_timestamp) ?>
 				</label>
-				<?php if (isset($thread_id) && $thread_id == NULL) : ?>
+				<?php if (!isset($thread_id)) : ?>
 					<a class="js" href="<?= site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php else : ?>
 					<a class="js" href="<?= site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>

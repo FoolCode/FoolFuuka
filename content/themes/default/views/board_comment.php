@@ -3,13 +3,16 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 $selected_radix = isset($p->board)?$p->board:get_selected_radix();
+
+$num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
+$quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 ?>
 
 <article class="post doc_id_<?= $p->doc_id ?>
 	<?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?>
 	<?php if ($p->thread_num == $p->num) : ?> post_is_op<?php endif; ?>
 	<?php if (isset($p->report_status) && !is_null($p->report_status)) : ?> reported<?php endif; ?>
-	<?php if ($p->media) : ?> has_image clearfix<?php endif; ?>" id="<?= $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">
+	<?php if ($p->media) : ?> has_image clearfix<?php endif; ?>" id="<?= $num ?>">
 
 	<?php if ($p->preview_orig) : ?>
 	<div class="post_file">
@@ -21,7 +24,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 					href="http://saucenao.com/search.php?url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
 				<?php endif; ?>
 			</span>
-		
+
 		<?php if (mb_strlen($p->media_filename_processed) > 38) : ?>
 			<span class="post_file_filename" rel="tooltip" title="<?= form_prep($p->media_filename) ?>">
 				<?= mb_substr($p->media_filename_processed, 0, 32) . ' (...)' . mb_substr($p->media_filename_processed, mb_strrpos($p->media_filename_processed, '.')) . ', ' ?>
@@ -76,10 +79,10 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 				<time datetime="<?= date(DATE_W3C, $p->timestamp) ?>" <?php if ($selected_radix->archive) : ?> title="<?= __('4chan Time') . ': ' . date('D M d H:i:s Y', $p->original_timestamp) ?>"<?php endif; ?>><?= date('D M d H:i:s Y', $p->timestamp) ?></time>
 			</span>
 
-			<a href="<?= site_url('@radix/' . $selected_radix->shortname . '/thread/' . $p->thread_num) . '#'  . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-post="<?= $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-function="highlight">No.</a><a href="<?= site_url('@radix/' . $selected_radix->shortname . ((isset($is_last50) && $is_last50) ? '/last50/' : '/thread/') . $p->thread_num) . '#q' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-post="<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>" data-function="quote"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
+			<a href="<?= site_url(array('@radix',  $selected_radix->shortname, 'thread', $p->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= site_url(array('@radix',  $selected_radix->shortname, $quote_mode, $p->thread_num)) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
 
 			<span class="post_controls">
-				<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/thread/' . $p->thread_num) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" class="btnr parent"><?= __('View') ?></a><?php endif; ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($p->subnum > 0 || $this->tank_auth->is_allowed() || !$selected_radix->archive) : ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
+				<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= __('View') ?></a><?php endif; ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($p->subnum > 0 || $this->tank_auth->is_allowed() || !$selected_radix->archive) : ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 
 			<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= site_url() . $this->theme->fallback_asset('images/icons/file-delete-icon.png'); ?>" width="16" height="16" title="<?= form_prep(__('This post was deleted from 4chan manually.')) ?>"/></span><?php endif ?>

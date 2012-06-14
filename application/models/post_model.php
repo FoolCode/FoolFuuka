@@ -3177,13 +3177,6 @@ class Post_model extends CI_Model
 			", array($row->doc_id));
 		}
 
-		// an error was encountered
-		if ($this->db->affected_rows() != 1)
-		{
-			log_message('error', 'post.php/delete: unable to delete thread op');
-			return array('error', __('Unable to delete post.'));
-		}
-
 		// purge existing reports for post
 		$this->db->delete('reports', array('board_id' => $board->id, 'doc_id' => $row->doc_id));
 

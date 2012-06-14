@@ -474,7 +474,7 @@ if (!function_exists('parse_bbcode'))
 	 * @param type $str
 	 * @param type $special
 	 * @param type $strip Strip tags without content inside
-	 * @return type 
+	 * @return type
 	 */
 	function parse_bbcode($str, $special = FALSE, $strip = TRUE)
 	{
@@ -484,7 +484,7 @@ if (!function_exists('parse_bbcode'))
 		$bbcode = new StringParser_BBCode();
 
 		$codes = array();
-		
+
 		// add list of bbcode for formatting
 		$codes[] = array('code', 'simple_replace', NULL, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
 			array('block', 'inline'), array());
@@ -509,7 +509,10 @@ if (!function_exists('parse_bbcode'))
 		$codes[] = array('u', 'simple_replace', NULL,
 			array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
 			array('code'));
-		
+		$codes[] = array('EXPERT', 'simple_replace', NULL,
+			array('start_tag' => '<span class="expert">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
+			array('code'));
+
 		foreach($codes as $code)
 		{
 			if($strip)
@@ -520,7 +523,7 @@ if (!function_exists('parse_bbcode'))
 
 			$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
 		}
-			
+
 		// if $special == TRUE, add special bbcode
 		if ($special === TRUE)
 		{
@@ -547,19 +550,19 @@ if (!function_exists('strip_unused_bbcode'))
 	/**
 	 * Callback for parse_bbcode to filter out tags without content inside
 	 * It also changes <code> to <pre> in case there's multiple lines into it
-	 * 
+	 *
 	 * @param type $action
 	 * @param type $attributes
 	 * @param type $content
 	 * @param type $params
 	 * @param type $node_object
-	 * @return string 
+	 * @return string
 	 */
-	function strip_unused_bbcode($action, $attributes, $content, $params, &$node_object) 
+	function strip_unused_bbcode($action, $attributes, $content, $params, &$node_object)
 	{
 		if($content === '' || $content === FALSE)
 			return '';
-		
+
 		// if <code> has multiple lines, wrap it in <pre> instead
 		if($params['start_tag'] == '<code>')
 		{

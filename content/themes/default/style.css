@@ -24,7 +24,7 @@
     color: #dd0000;
 }
 
-html{ 
+html{
     height:100%;
     background:#6A836F;
     margin:0;
@@ -91,8 +91,8 @@ body.theme_default {
 }
 
 .theme_default #footer .dropdown-menu {
-	right:0; 
-	left:inherit; 
+	right:0;
+	left:inherit;
 	color: #333;
 }
 
@@ -328,8 +328,8 @@ body.theme_default {
 	line-height:10px;
 }
 
-.theme_default .search-dropdown label input, 
-.theme_default .search-dropdown label textarea, 
+.theme_default .search-dropdown label input,
+.theme_default .search-dropdown label textarea,
 .theme_default .search-dropdown label date {
     display:inline;
 }
@@ -484,7 +484,7 @@ body.theme_default {
 }
 
 .theme_default article.thread > .thread_image_box > .post_file {
-	max-width:250px; 
+	max-width:250px;
 	margin: 0 auto;
 }
 
@@ -1021,6 +1021,10 @@ body.theme_default {
 
 .theme_default .underline {
     text-decoration:underline;
+}
+
+.theme_default .expert {
+    text-decoration: overline underline;
 }
 
 .theme_default .banned {

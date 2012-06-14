@@ -571,7 +571,7 @@ class Post_model extends CI_Model
 		{
 			$post->original_timestamp = $post->timestamp;
 		}
-		
+
 		// Asagi currently inserts the media_filename in DB with 4chan escaping, we decode it and reencode in case
 		if($board->archive)
 		{
@@ -585,7 +585,7 @@ class Post_model extends CI_Model
 		{
 			array_push($elements, 'report_reason');
 		}
-		
+
 		foreach($elements as $element)
 		{
 			$post->{$element . '_processed'} = @iconv('UTF-8', 'UTF-8//IGNORE', fuuka_htmlescape($post->$element));
@@ -979,40 +979,43 @@ class Post_model extends CI_Model
 		{
 			return $matches[0];
 		}
-		
-		$num = $matches[2];
-		$num_id = str_replace(',', '_', $num);
 
-		$html = array(
-			'prefix' => '',
-			'suffix' => '',
-			'urltag' => '#',
-			'option' => ' class="backlink" data-function="highlight" data-backlink="true" data-board="' . $this->current_board_for_prc->shortname . '" data-post="' . $num_id . '"',
-			'option_op' => ' class="backlink op" data-function="highlight" data-backlink="true" data-board="' . $this->current_board_for_prc->shortname . '" data-post="' . $num_id . '"',
-			'option_backlink' => ' class="backlink" data-function="highlight" data-backlink="true" data-board="' . $this->current_board_for_prc->shortname . '" data-post="'
-				. $this->current_p->num . (($this->current_p->subnum == 0) ? '' : '_' . $this->current_p->subnum) . '"',
+		$num = $matches[2];
+
+		// create link object with all relevant information
+		$data = new stdClass();
+		$data->num = str_replace(',', '_', $matches[2]);
+		$data->board = $this->current_board_for_prc;
+		$data->post = $this->current_p;
+
+		$current_p_num_c = $this->current_p->num . (($this->current_p->subnum > 0) ? ',' . $this->current_p->subnum : '');
+		$current_p_num_u = $this->current_p->num . (($this->current_p->subnum > 0) ? '_' . $this->current_p->subnum : '');
+
+		$build_url = array(
+			'tags' => array('', ''),
+			'hash' => '',
+			'attr' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $data->num . '"',
+			'attr_op' => 'class="backlink op" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $data->num . '"',
+			'attr_backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $current_p_num_u . '"',
 		);
 
-		$html = $this->plugins->run_hook('fu_post_model_process_internal_links_html_result', array($num_id, $html), 'simple');
+		$build_url = $this->plugins->run_hook('fu_post_model_process_internal_links_html_result', array($data, $build_url), 'simple');
 
-		$this->backlinks[$num_id][$this->current_p->num] = $html['prefix']
-			. '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread',
-			($this->current_p->thread_num == 0) ? $this->current_p->num : $this->current_p->thread_num)) . $html['urltag']
-			. $this->current_p->num . (($this->current_p->subnum == 0) ? '' : '_' . $this->current_p->subnum)
-			. '"' . $html['option_backlink'] . '>&gt;&gt;'
-			. $this->current_p->num . (($this->current_p->subnum == 0) ? '' : ',' . $this->current_p->subnum)
-			. '</a>' . $html['suffix'];
+		$this->backlinks[$data->num][$this->current_p->num] = implode(
+			'<a href="' . site_url(array($data->board->shortname, 'thread', $data->post->thread_num)) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
+			$build_url['attr_backlink'] . '>&gt;&gt;' . $current_p_num_c . '</a>'
+		, $build_url['tags']);
 
 		if (array_key_exists($num, $this->posts_arr))
 		{
 			if ($this->backlinks_hash_only_url)
 			{
-				return $html['prefix'] . '<a href="' . $html['urltag'] . $num_id . '"' . $html['option_op']
-					. '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
+				return implode('<a href="#' . $build_url['hash'] . $data->num . '" '
+					. $build_url['attr_op'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 			}
 
-			return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', $num))
-				. $html['urltag'] . $num_id . '"' . $html['option_op'] . '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
+			return implode('<a href="' . site_url(array($data->board->shortname, 'thread', $num)) . '#' . $data->num . '" '
+				. $build_url['attr_op'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 		}
 
 		foreach ($this->posts_arr as $key => $thread)
@@ -1021,23 +1024,23 @@ class Post_model extends CI_Model
 			{
 				if ($this->backlinks_hash_only_url)
 				{
-					return $html['prefix'] . '<a href="' . $html['urltag'] . $num_id . '"' . $html['option']
-						. '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
+					return implode('<a href="#' . $build_url['hash'] . $data->num . '" '
+						. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 				}
 
-				return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', $key))
-					. $html['urltag'] . $num_id . '"' . $html['option'] . '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
+				return implode('<a href="' . site_url(array($data->board->shortname, 'thread', $key)) . '#' . $build_url['hash'] . $data->num . '" '
+					. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 			}
 		}
 
 		if ($this->realtime === TRUE)
 		{
-			return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'thread', $key))
-				. $html['urltag'] . $num_id . '"' . $html['option'] . '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
+			return implode('<a href="' . site_url(array($data->board->shortname, 'thread', $key)) . '#' . $build_url['hash'] . $data->num . '" '
+				. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 		}
 
-		return $html['prefix'] . '<a href="' . site_url(array($this->current_board_for_prc->shortname, 'post', $num_id))
-			. '"' . $html['option'] . '>&gt;&gt;' . $num . '</a>' . $html['suffix'];
+		return implode('<a href="' . site_url(array($data->board->shortname, 'post', $data->num)) . '" '
+			. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 
 		// return un-altered
 		return $matches[0];
@@ -1053,36 +1056,36 @@ class Post_model extends CI_Model
 	 */
 	private function p_process_crossboard_links($matches)
 	{
-		$shortname = $matches[3];
-		$url = $matches[2];
-		$num = $matches[4];
+		// create link object with all relevant information
+		$data = new stdClass();
+		$data->url = $matches[2];
+		$data->num = $matches[4];
+		$data->shortname = $matches[3];
+		$data->board = $this->radix->get_by_shortname($data->shortname);
 
-		$html = array(
-			'prefix' => '',
-			'suffix' => '',
-			'urltag' => '#'
+		$build_url = array(
+			'tags' => array('', ''),
+			'backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $data->num . '"'
 		);
 
-		$html = $this->plugins->run_hook('fu_post_model_process_crossboard_links_html_result', array($html), 'simple');
+		$build_url = $this->plugins->run_hook('fu_post_model_process_crossboard_links_html_result', array($data, $build_url), 'simple');
 
-		$board = $this->radix->get_by_shortname($shortname);
-		if (!$board)
+		if (!$data->board)
 		{
-			if ($num)
+			if ($data->num)
 			{
-				return $html['prefix'] . '<a href="//boards.4chan.org/' . $shortname . '/res/' . $num . '">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
+				return implode('<a href="//boards.4chan.org/' . $data->shortname . '/res/' . $data->num . '">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
 			}
 
-			return $html['prefix'] . '<a href="//boards.4chan.org/' . $shortname . '/">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
+			return implode('<a href="//boards.4chan.org/' . $data->shortname . '/">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
 		}
 
-		if ($num)
+		if ($data->num)
 		{
-			return $html['prefix'] . '<a href="' . site_url(array($board->shortname, 'post', $num))
-				. '" class="backlink" data-function="highlight" data-backlink="true" data-board="' . $board->shortname . '" data-post="' . $num . '">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
+			return implode('<a href="' . site_url(array($data->board->shortname, 'post', $data->num)) . '" ' . $build_url['backlink'] . '>&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
 		}
 
-		return $html['prefix'] . '<a href="' . site_url($board->shortname) . '">&gt;&gt;&gt;' . $url . '</a>' . $html['suffix'];
+		return implode('<a href="' . site_url($data->board->shortname) . '">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
 
 		// return un-altered
 		return $matches[0];

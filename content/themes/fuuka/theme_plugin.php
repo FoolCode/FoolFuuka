@@ -47,7 +47,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 		return '\\1<span class="greentext">\\2</span>\\3';
 	}
 
-	function _process_internal_links_html($num_id, $html, $previous_result = NULL)
+	function _process_internal_links_html($data, $html, $previous_result = NULL)
 	{
 		// a plugin with higher priority modified this
 		if(!is_null($previous_result))
@@ -56,16 +56,15 @@ class Theme_Plugin_fuuka extends Plugins_model
 		}
 
 		return array('return' => array(
-			'prefix' => '<span class="unkfunc">',
-			'suffix' => '</span>',
-			'urltag' => '#',
-			'option' => ' class="backlink" onclick="replyHighlight(' . $num_id . ');"',
-			'option_op' => ' class="backlink"',
-			'option_backlink' => ' class="backlink"',
+			'tags' => array('<span class="unkfunc">', '</span>'),
+			'hash' => '',
+			'attr' => 'class="backlink" onclick="replyHighlight(' . $num_id . ');"',
+			'attr_op' => 'class="backlink"',
+			'attr_backlink' => 'class="backlink"',
 		));
 	}
 
-	function _process_crossboard_links_html($html, $previous_result = NULL)
+	function _process_crossboard_links_html($data, $html, $previous_result = NULL)
 	{
 		// a plugin with higher priority modified this
 		if(!is_null($previous_result))
@@ -74,9 +73,9 @@ class Theme_Plugin_fuuka extends Plugins_model
 		}
 
 		return array('return' => array(
-				'prefix' => '<span class="unkfunc">',
-				'suffix' => '</span>'
-			));
+			'tags' => array('<span class="unkfunc">', 'suffix' => '</span>'),
+			'backlink' => ''
+		));
 	}
 
 	/**

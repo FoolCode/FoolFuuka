@@ -543,7 +543,13 @@ class Post_model extends CI_Model
 			{
 				$max_preview_size = ($post->op)?252:127;
 				
-				if ($post->media_w > $post->media_h)
+				if(($post->media_w <= $max_preview_size && $post->media_h <= $max_preview_size)
+					||  strtolower(substr($post->media_orig, 0, -3)) == 'gif')
+				{
+					$post->preview_h = $post->media_h;
+					$post->preview_w = $post->media_w;
+				}
+				else if ($post->media_w > $post->media_h)
 				{
 					$post->preview_h = floor(($post->media_h * $max_preview_size) / $post->media_w);
 					$post->preview_w = $max_preview_size;

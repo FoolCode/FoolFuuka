@@ -14,7 +14,7 @@
 
 	<div class="thread" id="t<?= $op->thread_num ?>">
 		<div class="postContainer opContainer" id="pc<?= $num ?>">
-			<div id="p<?= $num ?>" class="post op">
+			<div id="<?= $num ?>" class="post op">
 				<div class="postInfoM mobile" id="pim<?= $num ?>">
 					<span class="postNum nameBlock<?= (($op->capcode == 'M') ? ' capcodeMod':'') . (($op->capcode == 'A') ? ' capcodeAdmin':'') ?>">
 						<span class="subject"><?= $op->title_processed ?></span>
@@ -48,17 +48,20 @@
 				<div class="postInfo" id="pi<?= $num ?>">
 					<input type="checkbox" name="<?= $num ?>" value="delete"/>
 					<span class="subject"><?= $op->title_processed ?></span>
-					<span class="nameBlock capcodeMod">
-						<span class="name">Anonymous</span> <strong class="capcode">## Mod</strong> <img src="//static.4chan.org/image/modicon.gif" alt="This user is a 4chan Moderator." title="This user is a 4chan Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;">
+					<span class="nameBlock<?= (($op->capcode == 'M') ? ' capcodeMod':'') . (($op->capcode == 'A') ? ' capcodeAdmin':'') ?>">
+						<span class="name"><?= ($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed ?></span>
+						<?php if ($op->trip) : ?><span class="postertrip"><?= $op->trip ?></span><?php endif; ?>
+						<?php if (in_array($op->capcode, array('M', 'A'))) : ?>
+							<strong class="capcode">## <?= (($op->capcode == 'M') ? 'Mod':'') . (($op->capcode == 'A') ? 'Admin':'') ?>"></strong>
+							<?php if ($op->capcode == 'M') : ?><img src="//static.4chan.org/image/modicon.gif" alt="This user is a Moderator." title="This user is a Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+							<?php if ($op->capcode == 'A') : ?><img src="//static.4chan.org/image/adminicon.gif" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+						<?php endif; ?>
 					</span>
 					<span class="dateTime"><?= date('D M d H:i:s Y', $op->original_timestamp) ?></span>
 					<span class="postNum">
 						<a href="<?= site_url(array($selected_radix->shortname, 'thread', $op->thread_num)) ?>#<?= $num ?>" title="Highlight this post">No.</a><a href="<?= site_url(array($selected_radix->shortname, $quote_mode, $op->thread_num)) ?>#q<?= $num ?>" title="Quote this post"><?= $num ?></a>
 
-						<img src="//static.4chan.org/image/sticky.gif" alt="Sticky" title="Sticky"/>
-						<img src="//static.4chan.org/image/closed.gif" alt="Closed" title="Closed"/>
-
-						[<a href="<?= site_url(array($selected_radix->shortname, 'thread', $op->thread_num)) ?>#reply" class="replylink">Reply</a>]
+						[<a href="<?= site_url(array($selected_radix->shortname, 'thread', $op->thread_num)) ?>" class="replylink">Reply</a>]
 					</span>
 				</div>
 				<blockquote class="postMessage" id="m<?= $num ?>"><?= $op->comment_processed ?></blockquote>

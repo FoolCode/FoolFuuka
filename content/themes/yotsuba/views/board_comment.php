@@ -9,7 +9,7 @@ $quote_mode = 'thread';
 
 <div class="postContainer replyContainer" id="pc<?= $num ?>">
 	<div class="sideArrows" id="sa<?= $num ?>">&gt;&gt;</div>
-		<div id="p<?= $num ?>" class="post reply">
+		<div id="<?= $num ?>" class="post reply">
 			<div class="postInfo" id="pi<?= $num ?>">
 				<input type="checkbox" name="<?= $num ?>" value="delete"/>
 				<span class="userInfo">

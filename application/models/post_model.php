@@ -566,6 +566,7 @@ class Post_model extends CI_Model
 			$utc = new DateTime(date('Y-m-d H:i:s', $post->timestamp), new DateTimeZone('UTC'));
 			$diff = $newyork->diff($utc)->h;
 			$post->timestamp = $post->timestamp + ($diff * 60 * 60);
+			$post->fourchan_date = gmdate('n/j/y(D)G:i', $post->original_timestamp);
 		}
 		else
 		{

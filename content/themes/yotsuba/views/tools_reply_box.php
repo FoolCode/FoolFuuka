@@ -36,7 +36,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 			?></td>
 		</tr>
 		<tr>
-			<td<?= __('>E-mail') ?></td>
+			<td><?= __('E-mail') ?></td>
 			<td><?php
 				echo form_input(array(
 					'name' => 'email',

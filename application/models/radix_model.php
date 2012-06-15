@@ -1177,9 +1177,11 @@ class Radix_model extends CI_Model
 			(
 				media_hash, media, preview_op, preview_reply, total, banned
 			)
-			SELECT md5, NULL, NULL, NULL, 0, 1
-			FROM ' . $this->db->protect_identifiers('banned_md5',
-				TRUE) . '
+			(
+				SELECT md5, NULL, NULL, NULL, 0, 1
+				FROM ' . $this->db->protect_identifiers('banned_md5',TRUE) . '
+			)
+			ON DUPLICATE KEY UPDATE banned = 1
 		');
 	}
 

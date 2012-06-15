@@ -541,23 +541,22 @@ class Post_model extends CI_Model
 			// fallback if the preview size because spoiler thumbnails in archive may not have sizes
 			if ($post->spoiler && $post->preview_w == 0)
 			{
-				$max_preview_size = ($post->op)?252:127;
+				$max_preview_width = ($post->op)?250:125;
+				$max_preview_height = ($post->op)?250:125;
 				
-				if($post->media_w <= $max_preview_size && $post->media_h <= $max_preview_size
+				if($post->media_w <= $max_preview_width && $post->media_h <= $max_preview_height
 					&& strtolower(substr($post->media_orig, 0, -3)) != 'gif')
 				{
 					$post->preview_h = $post->media_h;
 					$post->preview_w = $post->media_w;
 				}
-				else if ($post->media_w > $post->media_h)
-				{
-					$post->preview_h = floor(($post->media_h * $max_preview_size) / $post->media_w);
-					$post->preview_w = $max_preview_size;
-				}
 				else
 				{
-					$post->preview_w = floor(($post->media_w * $max_preview_size) / $post->media_h);
-					$post->preview_h = $max_preview_size;
+					$key_w = $max_preview_width / $post->media_w;
+					$key_h = $max_preview_height / $post->media_h;
+					$keys = ($key_w < $key_h) ? $key_w : $key_h;
+					$post->preview_h = ceil($post->media_h * $keys) + 1;
+					$post->preview_w = ceil($post->media_w * $keys) + 1;
 				}
 			}
 			

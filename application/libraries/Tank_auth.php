@@ -49,7 +49,7 @@ class Tank_auth
 	 * @param	bool
 	 * @return	bool
 	 */
-	function login($login, $password, $remember, $login_by_username, $login_by_email)
+	function login($login, $password, $remember, $login_by_username, $login_by_email, $no_headers = FALSE)
 	{
 		if ((strlen($login) > 0) AND (strlen($password) > 0))
 		{
@@ -82,11 +82,14 @@ class Tank_auth
 					}
 					else
 					{
-						$this->ci->session->set_userdata(array(
-							'user_id' => $user->id,
-							'username' => $user->username,
-							'status' => ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
-						));
+						if(!$no_headers)
+						{
+							$this->ci->session->set_userdata(array(
+								'user_id' => $user->id,
+								'username' => $user->username,
+								'status' => ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
+							));
+						}
 
 						if ($user->activated == 0)
 						{ // fail - not activated
@@ -157,7 +160,7 @@ class Tank_auth
 	{
 		if ($this->ci->input->is_cli_request())
 		{
-			return TRUE;
+			//return TRUE;
 		}
 
 		return $this->ci->session->userdata('status') === ($activated ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED);

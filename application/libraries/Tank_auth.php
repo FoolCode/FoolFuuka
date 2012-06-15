@@ -169,6 +169,11 @@ class Tank_auth
 	 */
 	function is_logged_in($activated = TRUE)
 	{
+		if ($this->ci->input->is_cli_request())
+		{
+			return TRUE;
+		}
+		
 		if (isset($this->no_headers_cache['status']))
 		{
 			return $this->no_headers_cache['status'] === ($activated ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED);
@@ -189,6 +194,15 @@ class Tank_auth
 	 */
 	function is_group($group_name)
 	{
+		// CLI requests are always admin
+		if ($this->ci->input->is_cli_request())
+		{
+			if ($group_name == 'admin')
+				return TRUE;
+			
+			return FALSE;
+		}
+		
 		if (!$this->is_logged_in())
 			return FALSE;
 		
@@ -241,7 +255,7 @@ class Tank_auth
 	 * @return bool TRUE if admin, FALSE otherwise 
 	 */
 	function is_admin()
-	{
+	{	
 		return $this->is_group('admin');
 	}
 	

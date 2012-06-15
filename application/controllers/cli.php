@@ -16,20 +16,6 @@ class Cli extends MY_Controller
 		
 		cli_notice('notice', sprintf(__('Welcome to {{FOOL_NAME}} version %s'), FOOL_VERSION));
 		cli_notice('notice', __('Write "php index.php cli help" to display all the available command line functions.'));
-		
-		// we need some security
-		cli_notice('notice', __('Enter your username or email: '), FALSE);
-		$username = rtrim(fgets(STDIN), "\n");
-		cli_notice('notice', __('Enter your password: '), FALSE);
-		$password = $this->_get_password();
-		echo PHP_EOL;
-		$is_logged = $this->auth->login($username, $password, FALSE, TRUE, TRUE, TRUE);
-		
-		if(!$is_logged)
-		{
-			cli_notice('error', __('Wrong credentials.'));
-			die();
-		}
 	}
 	
 	
@@ -81,13 +67,7 @@ class Cli extends MY_Controller
 	 * Collection of tools that run heavy modifications of database
 	 */
 	function database()
-	{
-		if(!$this->auth->is_admin())
-		{
-			cli_notice('error', __('Not allowed.'));
-			die();
-		}
-		
+	{	
 		cli_notice('notice', __('Write "php index.php cli database help" for displaying the available commands for database manipulation.'));
 		
 		// get the segments
@@ -182,13 +162,7 @@ class Cli extends MY_Controller
 	
 	
 	function boards()
-	{
-		if(!$this->auth->is_admin())
-		{
-			cli_notice('error', __('Not allowed.'));
-			die();
-		}
-		
+	{	
 		cli_notice('notice', __('Write "php index.php cli boards help" for displaying the available commands for board manipulation.'));
 		
 		// get the segments
@@ -260,39 +234,10 @@ class Cli extends MY_Controller
 	
 	
 	function asagi_get_settings()
-	{
-		if(!$this->auth->is_admin())
-		{
-			cli_notice('error', __('Not allowed.'));
-			die();
-		}
-		
+	{	
 		$this->load->model('asagi_model', 'asagi');
 		
 		echo json_encode($this->asagi->get_settings()) . PHP_EOL;
 	}
 	
-	/**
-	 * Get a password from the shell.
-	 *
-	 * This function works on *nix systems only and requires shell_exec and stty.
-	 *
-	 * @param  boolean $stars Wether or not to output stars for given characters
-	 * @return string
-	 */
-	function _get_password()
-	{
-		// Get current style
-		$oldStyle = shell_exec('stty -g');
-
-		shell_exec('stty -echo');
-		$password = rtrim(fgets(STDIN), "\n");
-
-		// Reset old style
-		shell_exec('stty ' . $oldStyle);
-
-		// Return the password
-		return $password;
-	}
-
 }

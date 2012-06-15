@@ -9,17 +9,33 @@ class FU_Board_Statistics extends Plugins_model
 	
 	function initialize_plugin()
 	{
-		$this->plugins->register_controller_function($this,
-			array('admin', 'plugins', 'board_statistics'), 'manage');
-		
-		$this->plugins->register_controller_function($this,
-			array('cli', 'board_stats', 'help'), 'cli_help');
-		
-		$this->plugins->register_controller_function($this,
-			array('cli', 'board_stats', 'cron'), 'cli_cron');
-		
-		$this->plugins->register_controller_function($this,
-			array('cli', 'board_stats', 'cron', '(:any)'), 'cli_cron');
+		// don't add the admin panels if the user is not an admin
+		if ($this->auth->is_admin())
+		{
+			$this->plugins->register_controller_function($this,
+				array('admin', 'plugins', 'board_statistics'), 'manage');
+
+			$this->plugins->register_admin_sidebar_element('plugins',
+				array(
+					"content" => array(
+						"board_statistics" => array(
+							"level" => "admin",
+							"name" => __("Statistics"),
+							"icon" => 'icon-bar-chart'
+						),
+					)
+				)
+			);
+
+			$this->plugins->register_controller_function($this,
+				array('cli', 'board_stats', 'help'), 'cli_help');
+
+			$this->plugins->register_controller_function($this,
+				array('cli', 'board_stats', 'cron'), 'cli_cron');
+
+			$this->plugins->register_controller_function($this,
+				array('cli', 'board_stats', 'cron', '(:any)'), 'cli_cron');
+		}
 
 		$this->plugins->register_controller_function($this,
 			array('chan', '(:any)', 'statistics'), 'chan_statistics');
@@ -27,13 +43,7 @@ class FU_Board_Statistics extends Plugins_model
 		$this->plugins->register_controller_function($this,
 			array('chan', '(:any)', 'statistics', '(:any)'), 'chan_statistics');
 
-		$this->plugins->register_admin_sidebar_element('plugins',
-			array(
-				"content" => array(
-					"board_statistics" => array("level" => "admin", "name" => __("Statistics"), "icon" => 'icon-bar-chart'),
-				)
-			)
-		);
+		
 		
 		$this->plugins->register_hook($this, 'fu_themes_generic_top_nav_buttons', 3, function($top_nav){
 			if(get_selected_radix())

@@ -10,16 +10,24 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 
 	function initialize_plugin()
 	{
-		$this->plugins->register_controller_function($this,
-			array('admin', 'plugins', 'geoip_region_lock'), 'manage');
+		// don't add the admin panels if the user is not an admin
+		if ($this->auth->is_admin())
+		{
+			$this->plugins->register_controller_function($this,
+				array('admin', 'plugins', 'geoip_region_lock'), 'manage');
 
-		$this->plugins->register_admin_sidebar_element('plugins',
-			array(
-				"content" => array(
-					"geoip_region_lock" => array("level" => "admin", "name" => __("GeoIP Region Lock"), "icon" => 'icon-flag'),
+			$this->plugins->register_admin_sidebar_element('plugins',
+				array(
+					"content" => array(
+						"geoip_region_lock" => array(
+							"level" => "admin", 
+							"name" => __("GeoIP Region Lock"), 
+							"icon" => 'icon-flag'
+						),
+					)
 				)
-			)
-		);
+			);
+		}
 
 		if (!(get_setting('ff_plugins_geoip_region_lock_allow_logged_in') && $this->auth->is_logged_in())
 			|| !$this->auth->is_mod_admin())

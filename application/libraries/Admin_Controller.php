@@ -16,20 +16,24 @@ class Admin_Controller extends MY_Controller
 		parent::__construct();
 
 		// auth controller can protect itself, other controllers not so sure,
-		// this is a good layer of security in case there's some bug down the stream
-		if (!$this->auth->is_logged_in() && $this->uri->segment(2) != 'auth')
+		if (!$this->auth->is_logged_in())
 		{
 			$this->session->set_userdata('login_redirect', $this->uri->uri_string());
-			redirect('admin/auth');
+			redirect('@system/admin/auth');
 		}
 		
-		if(!$this->auth->is_mod_admin() && $this->uri->segment(2) != 'auth')
+		// if user is a member, the default must go to the auth system
+		if($this->auth->is_member() && $this->uri->uri_string() == 'admin')
 		{
-			redirect('admin/auth/change_email');
+			redirect('@system/admin/auth/change_email');
 		}
 		
-		// a bit of looping to create the sidebar
-		// 
+		// if user is a member, the default must go to the reports system
+		if($this->auth->is_mod() && $this->uri->uri_string() == 'admin')
+		{
+			redirect('@system/admin/posts/reports');
+		}
+		
 		// returns the static sidebar array (can't use functions in )
 		$this->sidebar = $this->get_sidebar_values();
 
@@ -58,7 +62,7 @@ class Admin_Controller extends MY_Controller
 			$db_version = $this->db->get('migrations')->row()->version;
 			if ($db_version != $config_version)
 			{
-				redirect('/admin/database/upgrade/');
+				redirect('@system/admin/database/upgrade/');
 			}
 			$this->cron();
 		}
@@ -316,7 +320,10 @@ class Admin_Controller extends MY_Controller
 		$result = array();
 		foreach ($array as $key => $item)
 		{
-			if (($this->auth->is_admin() || $this->auth->is_group($item["level"])) && !empty($item))
+			if (($item["level"] == 'member' && $this->auth->is_logged_in() 
+					|| $item["level"] == 'mod' && $this->auth->is_mod_admin() 
+					|| $item["level"] == 'admin' && $this->auth->is_admin()) 
+				&& !empty($item))
 			{
 				$subresult = $item;
 
@@ -363,7 +370,10 @@ class Admin_Controller extends MY_Controller
 				{
 					$subsubresult = array();
 					$subsubresult = $subitem;
-					if (($this->auth->is_admin() || $this->auth->is_group($subitem['level'])))
+					if (($subitem["level"] == 'member' && $this->auth->is_logged_in() 
+						|| $subitem["level"] == 'mod' && $this->auth->is_mod_admin() 
+						|| $subitem["level"] == 'admin' && $this->auth->is_admin())
+						)
 					{
 						if ($subresult['active'] && ($this->uri->segment(3) == $subkey ||
 							(

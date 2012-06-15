@@ -132,31 +132,36 @@ class FS_Articles extends Plugins_model
 
 	function initialize_plugin()
 	{
-		$this->plugins->register_controller_function($this,
-			array('admin', 'articles'), 'manage');
-		$this->plugins->register_controller_function($this,
-			array('admin', 'articles', 'manage'), 'manage');
-		$this->plugins->register_controller_function($this,
-			array('admin', 'articles', 'edit'), 'edit');
-		$this->plugins->register_controller_function($this,
-			array('admin', 'articles', 'edit', '(:any)'), 'edit');
-		$this->plugins->register_controller_function($this,
-			array('admin', 'articles', 'remove', '(:any)'), 'remove');
+		// don't add the admin panels if the user is not an admin
+		if ($this->auth->is_admin())
+		{
+			
+			$this->plugins->register_controller_function($this,
+				array('admin', 'articles'), 'manage');
+			$this->plugins->register_controller_function($this,
+				array('admin', 'articles', 'manage'), 'manage');
+			$this->plugins->register_controller_function($this,
+				array('admin', 'articles', 'edit'), 'edit');
+			$this->plugins->register_controller_function($this,
+				array('admin', 'articles', 'edit', '(:any)'), 'edit');
+			$this->plugins->register_controller_function($this,
+				array('admin', 'articles', 'remove', '(:any)'), 'remove');
 
-		$this->plugins->register_admin_sidebar_element('articles',
-			array(
-				"name" => __("Articles"),
-				"default" => "manage",
-				"position" => array(
-					"beforeafter" => "after",
-					"element" => "posts"
-				),
-				"level" => "admin",
-				"content" => array(
-					"manage" => array("level" => "admin", "name" => __("Articles"), "icon" => 'icon-font'),
+			$this->plugins->register_admin_sidebar_element('articles',
+				array(
+					"name" => __("Articles"),
+					"default" => "manage",
+					"position" => array(
+						"beforeafter" => "after",
+						"element" => "posts"
+					),
+					"level" => "admin",
+					"content" => array(
+						"manage" => array("level" => "admin", "name" => __("Articles"), "icon" => 'icon-font'),
+					)
 				)
-			)
-		);
+			);
+		}
 
 		$this->plugins->register_controller_function($this,
 			array('chan', 'articles'), 'article');

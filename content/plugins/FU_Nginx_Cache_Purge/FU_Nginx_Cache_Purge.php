@@ -40,16 +40,24 @@ http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
 
 	function initialize_plugin()
 	{
-		$this->plugins->register_controller_function($this,
-			array('admin', 'plugins', 'nginx_cache_purge'), 'manage');
+		// don't add the admin panels if the user is not an admin
+		if ($this->auth->is_admin())
+		{
+			$this->plugins->register_controller_function($this,
+				array('admin', 'plugins', 'nginx_cache_purge'), 'manage');
 
-		$this->plugins->register_admin_sidebar_element('plugins',
-			array(
-				"content" => array(
-					"nginx_cache_purge" => array("level" => "admin", "name" => __("Nginx Cache Purge"), "icon" => 'icon-leaf'),
+			$this->plugins->register_admin_sidebar_element('plugins',
+				array(
+					"content" => array(
+						"nginx_cache_purge" => array(
+							"level" => "admin", 
+							"name" => __("Nginx Cache Purge"), 
+							"icon" => 'icon-leaf'
+						),
+					)
 				)
-			)
-		);
+			);
+		}
 		
 		$this->plugins->register_hook($this, 'fu_post_model_before_delete_media', 5, 'before_delete_media');
 	}

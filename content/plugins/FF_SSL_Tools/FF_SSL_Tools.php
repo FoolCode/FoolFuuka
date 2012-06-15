@@ -10,9 +10,24 @@ class FF_SSL_Tools extends Plugins_model
 
 	function initialize_plugin()
 	{
+		// this plugin works with indexes that are useless for CLI
 		if ($this->input->is_cli_request())
 		{
 			return TRUE;
+		}
+		
+		// don't add the admin panels if the user is not an admin
+		if ($this->auth->is_admin())
+		{
+			$this->plugins->register_controller_function($this, array('admin', 'plugins', 'ssl_tools'), 'manage');
+
+			$this->plugins->register_admin_sidebar_element('plugins',
+			array(
+				"content" => array(
+					"ssl_tools" => array("level" => "admin", "name" => __("SSL Tools"), "icon" => 'icon-lock'),
+					)
+				)
+			);
 		}
 	 
 		// if we want to run some really early commands, we can run them here!
@@ -39,16 +54,6 @@ class FF_SSL_Tools extends Plugins_model
 			}
 			
 		});
-		
-		$this->plugins->register_controller_function($this, array('admin', 'plugins', 'ssl_tools'), 'manage');
-
-		$this->plugins->register_admin_sidebar_element('plugins',
-		array(
-			"content" => array(
-				"ssl_tools" => array("level" => "admin", "name" => __("SSL Tools"), "icon" => 'icon-lock'),
-				)
-			)
-		);
 		
 		$this->plugins->register_hook($this, 'fu_themes_generic_top_nav_buttons', 4, function($top_nav){
 			if(get_setting('ff_ssl_enable_top_link') && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))

@@ -24,6 +24,7 @@ class Tank_auth
 
 	private $error = array();
 	private $cached = array();
+	private $no_headers_cache = array();
 
 	function __construct()
 	{
@@ -90,6 +91,14 @@ class Tank_auth
 								'status' => ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
 							));
 						}
+						else
+						{
+							$this->no_headers_cache = array(
+								'user_id' => $user->id,
+								'username' => $user->username,
+								'status' => ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
+							);
+						}
 
 						if ($user->activated == 0)
 						{ // fail - not activated
@@ -145,8 +154,10 @@ class Tank_auth
 
 		// See http://codeigniter.com/forums/viewreply/662369/ as the reason for the next line
 		$this->ci->session->set_userdata(array('user_id' => '', 'username' => '', 'status' => ''));
-
+		
 		$this->ci->session->sess_destroy();
+		
+		$this->no_headers_cache = array();
 	}
 
 
@@ -158,9 +169,9 @@ class Tank_auth
 	 */
 	function is_logged_in($activated = TRUE)
 	{
-		if ($this->ci->input->is_cli_request())
+		if (isset($this->no_headers_cache['status']))
 		{
-			//return TRUE;
+			return $this->no_headers_cache['status'] === ($activated ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED);
 		}
 
 		return $this->ci->session->userdata('status') === ($activated ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED);
@@ -253,6 +264,11 @@ class Tank_auth
 	 */
 	function get_user_id()
 	{
+		if (isset($this->no_headers_cache['status']))
+		{
+			return $this->no_headers_cache['user_id'];
+		}
+		
 		return $this->ci->session->userdata('user_id');
 	}
 
@@ -264,6 +280,11 @@ class Tank_auth
 	 */
 	function get_username()
 	{
+		if (isset($this->no_headers_cache['status']))
+		{
+			return $this->no_headers_cache['username'];
+		}
+		
 		return $this->ci->session->userdata('username');
 	}
 

@@ -22,7 +22,7 @@ class Cli extends MY_Controller
 		$username = rtrim(fgets(STDIN), "\n");
 		cli_notice('notice', __('Enter your password: '), FALSE);
 		$password = $this->_get_password();
-		
+		echo PHP_EOL;
 		$is_logged = $this->auth->login($username, $password, FALSE, TRUE, TRUE, TRUE);
 		
 		if(!$is_logged)
@@ -30,7 +30,6 @@ class Cli extends MY_Controller
 			cli_notice('error', __('Wrong credentials.'));
 			die();
 		}
-		
 	}
 	
 	
@@ -83,6 +82,12 @@ class Cli extends MY_Controller
 	 */
 	function database()
 	{
+		if(!$this->auth->is_admin())
+		{
+			cli_notice('error', __('Not allowed.'));
+			die();
+		}
+		
 		cli_notice('notice', __('Write "php index.php cli database help" for displaying the available commands for database manipulation.'));
 		
 		// get the segments
@@ -178,6 +183,12 @@ class Cli extends MY_Controller
 	
 	function boards()
 	{
+		if(!$this->auth->is_admin())
+		{
+			cli_notice('error', __('Not allowed.'));
+			die();
+		}
+		
 		cli_notice('notice', __('Write "php index.php cli boards help" for displaying the available commands for board manipulation.'));
 		
 		// get the segments
@@ -250,6 +261,12 @@ class Cli extends MY_Controller
 	
 	function asagi_get_settings()
 	{
+		if(!$this->auth->is_admin())
+		{
+			cli_notice('error', __('Not allowed.'));
+			die();
+		}
+		
 		$this->load->model('asagi_model', 'asagi');
 		
 		echo json_encode($this->asagi->get_settings()) . PHP_EOL;

@@ -89,7 +89,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?= date(DATE_W3C, $p->timestamp) ?>" <?php if ($selected_radix->archive) : ?> title="<?= __('4chan Time') . ': ' . date('D M d H:i:s Y', $p->original_timestamp) ?>"<?php endif; ?>><?= date('D M d H:i:s Y', $p->timestamp) ?></time>
+				<time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>" <?php if ($selected_radix->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $p->original_timestamp) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $p->timestamp) ?></time>
 			</span>
 
 			<a href="<?= site_url(array('@radix',  $selected_radix->shortname, 'thread', $p->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= site_url(array('@radix',  $selected_radix->shortname, $quote_mode, $p->thread_num)) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>

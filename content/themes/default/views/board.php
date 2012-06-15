@@ -67,7 +67,7 @@ foreach ($posts as $key => $post) :
 			<?php endif; ?>
 
 			<span class="time_wrap">
-				<time datetime="<?= date(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($selected_radix->archive) : ?> title="<?= __('4chan Time') . ': ' .date('D M d H:i:s Y', $op->original_timestamp) ?>"<?php endif; ?>><?= date('D M d H:i:s Y', $op->timestamp) ?></time>
+				<time datetime="<?= gmdate(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($selected_radix->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $op->original_timestamp) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $op->timestamp) ?></time>
 			</span>
 
 			<a href="<?= site_url($selected_radix->shortname . '/thread/' . $op->thread_num) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= site_url(array($selected_radix->shortname, $quote_mode, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>

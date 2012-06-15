@@ -27,7 +27,7 @@ $quote_mode = 'thread';
 						<a href="<?= site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) ?>#p<?= $num ?>" title="Highlight this post">No.</a><a href="<?= site_url(array($selected_radix->shortname, $quote_mode, $p->thread_num)) ?>#q<?= $num ?>" title="Quote this post"><?= str_replace('_', ',', $num) ?></a>
 					</span>
 				</span>
-				<span class="dateTime"><?= date('D M d H:i:s Y', $p->original_timestamp) ?></span>
+				<span class="dateTime"><?= gmdate('D M d H:i:s Y', $p->original_timestamp) ?></span>
 				<span class="postNum desktop">
 					<a href="<?= site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) ?>#p<?= $num ?>" title="Highlight this post">No.</a><a href="<?= site_url(array($selected_radix->shortname, $quote_mode, $p->thread_num)) ?>#q<?= $num ?>" title="Quote this post"><?= str_replace('_', ',', $num) ?></a>
 				</span>

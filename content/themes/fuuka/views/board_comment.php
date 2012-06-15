@@ -23,7 +23,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 					<?php if ($p->capcode == 'A') : ?>
 						<span class="postername admin">## <?= __('Admin') ?></span>
 					<?php endif ?>
-					<?= date('D M d H:i:s Y', $p->original_timestamp) ?>
+					<?= gmdate('D M d H:i:s Y', $p->original_timestamp) ?>
 				</label>
 				<?php if (!isset($thread_id)) : ?>
 					<a class="js" href="<?= site_url(array($selected_radix->shortname, 'thread', $p->thread_num)) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>

@@ -54,7 +54,7 @@ foreach ($posts as $key => $post) :
 			<?php if ($op->capcode == 'A') : ?>
 				<span class="postername admin">## <?= __('Admin') ?></span>
 			<?php endif ?>
-			<?= date('D M d H:i:s Y', $op->original_timestamp) ?>
+			<?= gmdate('D M d H:i:s Y', $op->original_timestamp) ?>
 		</label>
 
 		<?php if (!isset($thread_id)) : ?>

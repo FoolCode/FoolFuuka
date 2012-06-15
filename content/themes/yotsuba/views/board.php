@@ -57,7 +57,7 @@
 							<?php if ($op->capcode == 'A') : ?><img src="//static.4chan.org/image/adminicon.gif" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
 						<?php endif; ?>
 					</span>
-					<span class="dateTime"><?= date('D M d H:i:s Y', $op->original_timestamp) ?></span>
+					<span class="dateTime"><?= gmdate('D M d H:i:s Y', $op->original_timestamp) ?></span>
 					<span class="postNum">
 						<a href="<?= site_url(array($selected_radix->shortname, 'thread', $op->thread_num)) ?>#<?= $num ?>" title="Highlight this post">No.</a><a href="<?= site_url(array($selected_radix->shortname, $quote_mode, $op->thread_num)) ?>#q<?= $num ?>" title="Quote this post"><?= $num ?></a>
 

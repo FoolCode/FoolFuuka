@@ -33,7 +33,7 @@
  * @var string
  *
  */
-	define('CI_VERSION', '2.1.0');
+	define('CI_VERSION', '2.1.1');
 
 /**
  * CodeIgniter Branch (Core = TRUE, Reactor = FALSE)
@@ -303,7 +303,7 @@
  * ------------------------------------------------------
  */
 	// Mark a start point so we can benchmark the controller
-	$BM->mark('controller_execution_time__( '.$class.' / '.$method.' )_start');
+	$BM->mark('controller_execution_time_( '.$class.' / '.$method.' )_start');
 
 	$CI = new $class();
 
@@ -361,7 +361,7 @@
 
 
 	// Mark a benchmark end point
-	$BM->mark('controller_execution_time__( '.$class.' / '.$method.' )_end');
+	$BM->mark('controller_execution_time_( '.$class.' / '.$method.' )_end');
 
 /*
  * ------------------------------------------------------

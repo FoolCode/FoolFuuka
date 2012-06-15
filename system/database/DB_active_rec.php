@@ -177,7 +177,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 * @param	string	an alias
 	 * @return	object
 	 */
-	public function _max_min_avg_sum($select = '', $alias = '', $type = 'MAX')
+	protected function _max_min_avg_sum($select = '', $alias = '', $type = 'MAX')
 	{
 		if ( ! is_string($select) OR $select == '')
 		{
@@ -217,7 +217,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 * @param	string
 	 * @return	string
 	 */
-	public function _create_alias_from_table($item)
+	protected function _create_alias_from_table($item)
 	{
 		if (strpos($item, '.') !== FALSE)
 		{
@@ -255,7 +255,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 */
 	public function from($from)
 	{
-		foreach ((array)$from as $val)
+		foreach ((array) $from as $val)
 		{
 			if (strpos($val, ',') !== FALSE)
 			{
@@ -395,7 +395,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 * @param	string
 	 * @return	object
 	 */
-	public function _where($key, $value = NULL, $type = 'AND ', $escape = NULL)
+	protected function _where($key, $value = NULL, $type = 'AND ', $escape = NULL)
 	{
 		if ( ! is_array($key))
 		{
@@ -531,7 +531,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 * @param	string
 	 * @return	object
 	 */
-	public function _where_in($key = NULL, $values = NULL, $not = FALSE, $type = 'AND ')
+	protected function _where_in($key = NULL, $values = NULL, $not = FALSE, $type = 'AND ')
 	{
 		if ($key === NULL OR $values === NULL)
 		{
@@ -646,7 +646,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 * @param	string
 	 * @return	object
 	 */
-	public function _like($field, $match = '', $type = 'AND ', $side = 'both', $not = '')
+	protected function _like($field, $match = '', $type = 'AND ', $side = 'both', $not = '')
 	{
 		if ( ! is_array($field))
 		{
@@ -660,8 +660,12 @@ class CI_DB_active_record extends CI_DB_driver {
 			$prefix = (count($this->ar_like) == 0) ? '' : $type;
 
 			$v = $this->escape_like_str($v);
-
-			if ($side == 'before')
+			
+			if ($side == 'none')
+			{
+				$like_statement = $prefix." $k $not LIKE '{$v}'";
+			}
+			elseif ($side == 'before')
 			{
 				$like_statement = $prefix." $k $not LIKE '%{$v}'";
 			}
@@ -767,7 +771,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 * @param	string
 	 * @return	object
 	 */
-	public function _having($key, $value = '', $type = 'AND ', $escape = TRUE)
+	protected function _having($key, $value = '', $type = 'AND ', $escape = TRUE)
 	{
 		if ( ! is_array($key))
 		{
@@ -1621,7 +1625,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 * @param	string	The table to inspect
 	 * @return	string
 	 */
-	public function _track_aliases($table)
+	protected function _track_aliases($table)
 	{
 		if (is_array($table))
 		{
@@ -1643,7 +1647,7 @@ class CI_DB_active_record extends CI_DB_driver {
 		if (strpos($table, " ") !== FALSE)
 		{
 			// if the alias is written with the AS keyword, remove it
-			$table = preg_replace('/ AS /i', ' ', $table);
+			$table = preg_replace('/\s+AS\s+/i', ' ', $table);
 
 			// Grab the alias
 			$table = trim(strrchr($table, " "));
@@ -1666,7 +1670,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 *
 	 * @return	string
 	 */
-	public function _compile_select($select_override = FALSE)
+	protected function _compile_select($select_override = FALSE)
 	{
 		// Combine any cached components with the current statements
 		$this->_merge_cache();
@@ -1932,7 +1936,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 *
 	 * @return	void
 	 */
-	public function _merge_cache()
+	protected function _merge_cache()
 	{
 		if (count($this->ar_cache_exists) == 0)
 		{
@@ -1970,7 +1974,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 * @param	array	An array of fields to reset
 	 * @return	void
 	 */
-	public function _reset_run($ar_reset_items)
+	protected function _reset_run($ar_reset_items)
 	{
 		foreach ($ar_reset_items as $item => $default_value)
 		{
@@ -1988,7 +1992,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 *
 	 * @return	void
 	 */
-	public function _reset_select()
+	protected function _reset_select()
 	{
 		$ar_reset_items = array(
 			'ar_select'			=> array(),
@@ -2020,7 +2024,7 @@ class CI_DB_active_record extends CI_DB_driver {
 	 *
 	 * @return	void
 	 */
-	public function _reset_write()
+	protected function _reset_write()
 	{
 		$ar_reset_items = array(
 			'ar_set'		=> array(),

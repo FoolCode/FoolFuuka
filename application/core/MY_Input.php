@@ -37,11 +37,11 @@ class MY_Input extends CI_Input
 	
 	
 	/**
-	* Fetch the IP Address
-	*
-	* @access	public
-	* @return	string
-	*/
+	 * Fetch the IP Address, modified to output numeric (decimal) IP
+	 *
+	 * @access	public
+	 * @return	string
+	 */
 	function ip_address()
 	{
 		if ($this->ip_address !== FALSE)

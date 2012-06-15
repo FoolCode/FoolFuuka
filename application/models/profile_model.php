@@ -150,9 +150,9 @@ class Profile_model extends CI_Model
 				'label' => __('Group'),
 				'help' => __('Choose the permission level of the member'),
 				'radio_values' => array(
-					'1' => __('Administrator'),
-					'3' => __('Moderator'),
-					'2' => __('Member'),
+					FOOL_AUTH_GROUP_ID_ADMIN => __('Administrator'),
+					FOOL_AUTH_GROUP_ID_MOD => __('Moderator'),
+					FOOL_AUTH_GROUP_ID_MEMBER => __('Member'),
 				),
 				'validation' => 'trim|greater_than[0]|less_than[4]'
 			);

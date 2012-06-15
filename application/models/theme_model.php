@@ -145,7 +145,7 @@ class Theme_model extends CI_Model
 	 */
 	public function get_available_themes()
 	{
-		if($this->tank_auth->is_allowed())
+		if($this->auth->is_allowed())
 		{
 			// admins get all the themes
 			return array_keys($this->get_all());

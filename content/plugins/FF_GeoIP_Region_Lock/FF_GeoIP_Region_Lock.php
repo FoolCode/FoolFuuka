@@ -21,8 +21,8 @@ class FF_GeoIP_Region_Lock extends Plugins_model
 			)
 		);
 
-		if (!(get_setting('ff_plugins_geoip_region_lock_allow_logged_in') && $this->tank_auth->is_logged_in())
-			|| !$this->tank_auth->is_allowed())
+		if (!(get_setting('ff_plugins_geoip_region_lock_allow_logged_in') && $this->auth->is_logged_in())
+			|| !$this->auth->is_allowed())
 		{
 			$this->plugins->register_hook($this, 'ff_my_controller_after_load_settings', 1, 'block_country_view');
 			$this->plugins->register_hook($this, 'fu_post_model_replace_comment', 5, 'block_country_comment');

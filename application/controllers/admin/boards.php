@@ -11,7 +11,7 @@ class Boards extends Admin_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->tank_auth->is_admin() or redirect('admin');
+		$this->auth->is_admin() or redirect('admin');
 
 		// for safety let's load all boards all the time
 		$this->radix->preload(TRUE);

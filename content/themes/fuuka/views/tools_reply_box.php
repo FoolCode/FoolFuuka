@@ -44,12 +44,12 @@ if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
 							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)) ?></td>
 						</tr>
-						<?php if ($this->tank_auth->is_allowed()) : ?>
+						<?php if ($this->auth->is_allowed()) : ?>
 						<tr>
 							<td class="postblock"><?= __('Post As') ?></td>
 							<td><?php
 								$postas = array('user' => __('User'), 'mod' => __('Moderator'));
-								if ($this->tank_auth->is_admin())
+								if ($this->auth->is_admin())
 								{
 									$postas['admin'] = __('Administrator');
 								}
@@ -127,13 +127,13 @@ if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
 							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)); ?></td>
 						</tr>
-						<?php if ($this->tank_auth->is_allowed()) : ?>
+						<?php if ($this->auth->is_allowed()) : ?>
 						<tr>
 							<td class="postblock"><?= __('Post As') ?></td>
 							<td>
 								<?php
 								$postas = array('user' => __('User'), 'mod' => __('Moderator'));
-								if ($this->tank_auth->is_admin()) {
+								if ($this->auth->is_admin()) {
 									$postas['admin'] = __('Administrator');
 								}
 								echo form_dropdown('reply_postas', $postas,'id="reply_postas"');

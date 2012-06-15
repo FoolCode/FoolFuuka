@@ -106,13 +106,13 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				?> <span style="font-size: smaller;">(Password used for file deletion)</span>
 			</td>
 		</tr>
-		<?php if ($this->tank_auth->is_allowed()) : ?>
+		<?php if ($this->auth->is_allowed()) : ?>
 		<tr>
 			<td><?= __('Post as') ?></td>
 			<td>
 				<?php
 					$postas = array('user' => __('User'), 'mod' => __('Moderator'));
-					if ($this->tank_auth->is_admin())
+					if ($this->auth->is_admin())
 					{
 						$postas['admin'] = __('Administrator');
 					}

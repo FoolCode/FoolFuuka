@@ -17,13 +17,13 @@ class Admin_Controller extends MY_Controller
 
 		// auth controller can protect itself, other controllers not so sure,
 		// this is a good layer of security in case there's some bug down the stream
-		if (!$this->tank_auth->is_logged_in() && $this->uri->segment(2) != 'auth')
+		if (!$this->auth->is_logged_in() && $this->uri->segment(2) != 'auth')
 		{
 			$this->session->set_userdata('login_redirect', $this->uri->uri_string());
 			redirect('admin/auth');
 		}
 		
-		if(!$this->tank_auth->is_allowed() && $this->uri->segment(2) != 'auth')
+		if(!$this->auth->is_allowed() && $this->uri->segment(2) != 'auth')
 		{
 			redirect('admin/auth/change_email');
 		}
@@ -51,7 +51,7 @@ class Admin_Controller extends MY_Controller
 		$this->load->model('preferences_model', 'preferences');
 
 		// Check if the database is upgraded to the the latest available
-		if ($this->tank_auth->is_admin() && $this->uri->uri_string() != 'admin/database/upgrade' && $this->uri->uri_string() != 'admin/database/do_upgrade')
+		if ($this->auth->is_admin() && $this->uri->uri_string() != 'admin/database/upgrade' && $this->uri->uri_string() != 'admin/database/do_upgrade')
 		{
 			$this->config->load('migration');
 			$config_version = $this->config->item('migration_version');
@@ -310,13 +310,13 @@ class Admin_Controller extends MY_Controller
 	public function get_sidebar($array)
 	{
 		// not logged in users don't need the sidebar
-		if (!$this->tank_auth->is_logged_in())
+		if (!$this->auth->is_logged_in())
 			return array();
 
 		$result = array();
 		foreach ($array as $key => $item)
 		{
-			if (($this->tank_auth->is_admin() || $this->tank_auth->is_group($item["level"])) && !empty($item))
+			if (($this->auth->is_admin() || $this->auth->is_group($item["level"])) && !empty($item))
 			{
 				$subresult = $item;
 
@@ -363,7 +363,7 @@ class Admin_Controller extends MY_Controller
 				{
 					$subsubresult = array();
 					$subsubresult = $subitem;
-					if (($this->tank_auth->is_admin() || $this->tank_auth->is_group($subitem['level'])))
+					if (($this->auth->is_admin() || $this->auth->is_group($subitem['level'])))
 					{
 						if ($subresult['active'] && ($this->uri->segment(3) == $subkey ||
 							(
@@ -422,7 +422,7 @@ class Admin_Controller extends MY_Controller
 	 */
 	public function cron()
 	{
-		if ($this->tank_auth->is_admin())
+		if ($this->auth->is_admin())
 		{
 			$last_check = get_setting('fs_cron_autoupgrade');
 

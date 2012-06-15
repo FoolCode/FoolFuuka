@@ -142,7 +142,7 @@ class Post_model extends CI_Model
 	private function p_sql_report_join($board, $join_on = FALSE)
 	{
 		// only show report notifications to certain users
-		if (!$this->tank_auth->is_allowed())
+		if (!$this->auth->is_allowed())
 		{
 			return '';
 		}
@@ -278,7 +278,7 @@ class Post_model extends CI_Model
 		$post->media_status = 'available';
 		
 		// these features will only affect guest users
-		if ($board->hide_thumbnails && !$this->tank_auth->is_allowed())
+		if ($board->hide_thumbnails && !$this->auth->is_allowed())
 		{
 			// hide all thumbnails for the board
 			if (!$board->hide_thumbnails)
@@ -582,7 +582,7 @@ class Post_model extends CI_Model
 		$elements = array('title', 'name', 'email', 'trip', 'media_orig',
 			'preview_orig', 'media_filename', 'media_hash', 'poster_hash');
 
-		if ($this->tank_auth->is_allowed() && isset($post->report_reason))
+		if ($this->auth->is_allowed() && isset($post->report_reason))
 		{
 			array_push($elements, 'report_reason');
 		}
@@ -596,7 +596,7 @@ class Post_model extends CI_Model
 		// remove both ip and delpass from public view
 		if ($clean === TRUE)
 		{
-			if (!$this->tank_auth->is_allowed())
+			if (!$this->auth->is_allowed())
 			{
 				unset($post->poster_ip);
 			}
@@ -668,7 +668,7 @@ class Post_model extends CI_Model
 				$check_row = $check->row();
 
 				// do we have some image reposting constraint?
-				if($board->min_image_repost_hours == 0 || $this->tank_auth->is_allowed())
+				if($board->min_image_repost_hours == 0 || $this->auth->is_allowed())
 				{
 					// do nothing, 0 means that there's no time constraint
 					// also admins and mods can repost however mich they want
@@ -1364,7 +1364,7 @@ class Post_model extends CI_Model
 			{
 				$this->db->sphinx_match('media_filename', $args['filename'], 'full', TRUE);
 			}
-			if ($this->tank_auth->is_allowed() && $args['poster_ip'])
+			if ($this->auth->is_allowed() && $args['poster_ip'])
 			{
 				$this->db->where('pip', (int) inet_ptod($args['poster_ip']));
 			}
@@ -1557,7 +1557,7 @@ class Post_model extends CI_Model
 				$this->db->where('media_id', $args['image']);
 				$this->db->use_index('media_id_index');
 			}
-			if ($this->tank_auth->is_allowed() && $args['poster_ip'])
+			if ($this->auth->is_allowed() && $args['poster_ip'])
 			{
 				$this->db->where('poster_ip', (int) inet_ptod($args['poster_ip']));
 			}
@@ -2525,7 +2525,7 @@ class Post_model extends CI_Model
 		{
 			$row = $check->row();
 
-			if ($row->banned && !$this->tank_auth->is_allowed())
+			if ($row->banned && !$this->auth->is_allowed())
 			{
 				if ($data['media'] !== FALSE || $data['media'] != '')
 				{
@@ -2539,7 +2539,7 @@ class Post_model extends CI_Model
 			}
 		}
 
-		if($data['num'] == 0 && !$this->tank_auth->is_allowed())
+		if($data['num'] == 0 && !$this->auth->is_allowed())
 		{
 			// check: validate some information
 			$check_op = $this->db->query('
@@ -2575,12 +2575,12 @@ class Post_model extends CI_Model
 		{
 			$row = $check->row();
 
-			if ($data['comment'] != '' && $row->comment == $data['comment'] && !$this->tank_auth->is_allowed())
+			if ($data['comment'] != '' && $row->comment == $data['comment'] && !$this->auth->is_allowed())
 			{
 				return array('error' => __('You\'re posting again the same comment as the last time!'));
 			}
 
-			if (time() - $row->timestamp < 10 && time() - $row->timestamp > 0 && !$this->tank_auth->is_allowed())
+			if (time() - $row->timestamp < 10 && time() - $row->timestamp > 0 && !$this->auth->is_allowed())
 			{
 				return array('error' => 'You must wait at least 10 seconds before posting again.');
 			}
@@ -3149,7 +3149,7 @@ class Post_model extends CI_Model
 		);
 
 		// validate password
-		if ($phpass->CheckPassword($post['password'], $row->delpass) !== TRUE && !$this->tank_auth->is_allowed())
+		if ($phpass->CheckPassword($post['password'], $row->delpass) !== TRUE && !$this->auth->is_allowed())
 		{
 			log_message('debug', 'post.php/delete: invalid password');
 			return array('error' => __('The password you inserted did not match the post\'s deletion password.'));
@@ -3249,7 +3249,7 @@ class Post_model extends CI_Model
 		}
 
 		// delete media file only if there is only one image OR the image is banned
-		if ($post->total == 1 || $post->banned == 1 || $this->tank_auth->is_allowed())
+		if ($post->total == 1 || $post->banned == 1 || $this->auth->is_allowed())
 		{
 			if ($media === TRUE)
 			{

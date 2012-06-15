@@ -13,7 +13,7 @@ class Preferences extends Admin_Controller
 		parent::__construct();
 
 		// preferences are settable only by admins!
-		$this->tank_auth->is_admin() or redirect('admin');
+		$this->auth->is_admin() or redirect('admin');
 
 		// set controller title
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/preferences") . '">' . __("Preferences") . '</a>';

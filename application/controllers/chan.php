@@ -85,12 +85,12 @@ class Chan extends Public_Controller
 		switch ($level)
 		{
 			case 'admin':
-				if ($this->tank_auth->is_admin())
+				if ($this->auth->is_admin())
 					return 'A';
 				break;
 
 			case 'mod':
-				if ($this->tank_auth->is_allowed())
+				if ($this->auth->is_allowed())
 					return 'M';
 				break;
 
@@ -400,7 +400,7 @@ class Chan extends Public_Controller
 		{
 			$default['backend_vars']['board_shortname'] = get_selected_radix()->shortname;
 
-			if($this->tank_auth->is_allowed())
+			if($this->auth->is_allowed())
 				$default['backend_vars']['mod_url'] = get_selected_radix()->href . 'mod_post_actions/';
 		}
 
@@ -670,7 +670,7 @@ class Chan extends Public_Controller
 	public function p_gallery($type = 'by_thread', $page = 1)
 	{
 		// Disable GALLERY when thumbnails is disabled for normal users.
-		if (get_selected_radix()->hide_thumbnails == 1 && !$this->tank_auth->is_allowed())
+		if (get_selected_radix()->hide_thumbnails == 1 && !$this->auth->is_allowed())
 		{
 			return $this->show_404();
 		}
@@ -1169,7 +1169,7 @@ class Chan extends Public_Controller
 			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
 
-		if($this->tank_auth->is_allowed())
+		if($this->auth->is_allowed())
 		{
 			$modifiers[] = 'poster_ip';
 			$modifiers[] = 'deletion_mode';
@@ -1259,7 +1259,7 @@ class Chan extends Public_Controller
 		$this->input->set_cookie('foolfuuka_search_latest_5', $cookie_array_json, 60 * 60 * 24 * 30, '', '/');
 
 		// deletion mode only for mods and admins
-		if($this->tank_auth->is_allowed() && $search['deletion_mode'])
+		if($this->auth->is_allowed() && $search['deletion_mode'])
 		{
 			// get some interesting data
 			$result = $this->post->get_search($radix, $search);
@@ -1639,7 +1639,7 @@ class Chan extends Public_Controller
 				'required|min_length[3]|max_length[32]|xss_clean');
 
 			// Verify if the user posting is a moderator or administrator and apply form validation.
-			if ($this->tank_auth->is_allowed())
+			if ($this->auth->is_allowed())
 			{
 				$this->form_validation->set_rules('reply_postas', 'Post as',
 					'required|callback__is_valid_allowed_level|xss_clean');
@@ -1684,7 +1684,7 @@ class Chan extends Public_Controller
 				'comment' => $this->input->post('reply_chennodiscursus'),
 				'spoiler' => $this->input->post('reply_gattai_spoilered') ? 1 : $this->input->post('reply_spoiler'),
 				'password' => $this->input->post('reply_nymphassword'),
-				'postas' => (($this->tank_auth->is_allowed()) ? $this->input->post('reply_postas') : 'N'),
+				'postas' => (($this->auth->is_allowed()) ? $this->input->post('reply_postas') : 'N'),
 				'media' => '',
 				'ghost' => FALSE
 			);

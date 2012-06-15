@@ -249,7 +249,7 @@ class Install extends Install_Controller
 		// load the settings from the now filled database
 		load_settings();
 
-		$user = $this->tank_auth->create_user($post["username"], $post["email"],
+		$user = $this->auth->create_user($post["username"], $post["email"],
 			$post["password"], FALSE);
 
 		if ($user !== FALSE)

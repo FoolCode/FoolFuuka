@@ -28,8 +28,8 @@ class MY_Controller extends CI_Controller
 			//$this->output->enable_profiler(TRUE);
 			$this->load->database();
 			$this->load->library('session');
-			$this->load->library('tank_auth');
-			
+			$this->load->library('tank_auth', array(), 'auth');
+
 			// loads variables from database for get_setting()
 			load_settings();
 
@@ -174,7 +174,7 @@ class MY_Controller extends CI_Controller
 	 */
 	public function mod_post_actions()
 	{
-		if (!$this->tank_auth->is_allowed())
+		if (!$this->auth->is_allowed())
 		{
 			$this->output->set_status_header(403);
 			$this->output->set_output(json_encode(array('error' => __('You\'re not allowed to perform this action'))));

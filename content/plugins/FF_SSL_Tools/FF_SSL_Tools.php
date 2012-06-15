@@ -22,7 +22,7 @@ class FF_SSL_Tools extends Plugins_model
 			if(!isset($_SERVER['HTTPS']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'off'))
 			{
 				if(get_setting('ff_ssl_force_everyone')
-					|| (get_setting('ff_ssl_force_for_logged') && $CI->tank_auth->is_logged_in())
+					|| (get_setting('ff_ssl_force_for_logged') && $CI->auth->is_logged_in())
 					|| (get_setting('ff_ssl_sticky') && $CI->input->cookie('ff_sticky_ssl')))
 				{
 					// redirect to itself

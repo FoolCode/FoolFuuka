@@ -115,7 +115,7 @@ class Profile_model extends CI_Model
 					$CI = & get_instance();
 
 					// keep out who tries to edit others' profile without being mod or admin
-					if ($CI->tank_auth->get_user_id() !== $input['user_id'] && !$CI->tank_auth->is_allowed())
+					if ($CI->auth->get_user_id() !== $input['user_id'] && !$CI->auth->is_allowed())
 					{
 						return array(
 							'error_code' => 'NOT_OWN_USER_ID',
@@ -142,7 +142,7 @@ class Profile_model extends CI_Model
 
 
 		// only admins get to change the groups
-		if ($this->tank_auth->is_admin())
+		if ($this->auth->is_admin())
 		{
 			$arr['group_id'] = array(
 				'type' => 'radio',

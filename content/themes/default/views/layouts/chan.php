@@ -74,7 +74,7 @@
 								</a>
 								<ul class="dropdown-menu">
 									<?= '<li><a href="' . site_url('@default') . '">' . __('Index') . '</a></li>'; ?>
-									<?= ($this->tank_auth->is_allowed()) ? '<li><a href="' . site_url('@system/admin') . '">' . __('Control Panel') . '</a></li>' : '' ?>
+									<?= ($this->auth->is_allowed()) ? '<li><a href="' . site_url('@system/admin') . '">' . __('Control Panel') . '</a></li>' : '' ?>
 									<li class="divider"></li>
 									<?php
 										if ($this->radix->get_archives())

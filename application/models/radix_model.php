@@ -745,7 +745,7 @@ class Radix_model extends CI_Model
 	private function p_preload($preferences = FALSE)
 	{
 
-		if (!$this->tank_auth->is_allowed())
+		if (!$this->auth->is_allowed())
 		{
 			$this->db->where('hidden', 0);
 		}

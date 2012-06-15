@@ -10,7 +10,7 @@ class Database extends Admin_Controller
 		parent::__construct();
 		// don't redirect if it's coming from the command line
 		// that's because command line has no login skills...
-		$this->tank_auth->is_admin() or redirect('admin');
+		$this->auth->is_admin() or redirect('admin');
 
 		// power the migration library
 		$this->load->library('migration');
@@ -28,7 +28,7 @@ class Database extends Admin_Controller
 	 */
 	function upgrade()
 	{
-		if (!$this->tank_auth->is_admin())
+		if (!$this->auth->is_admin())
 		{
 			show_404();
 			return FALSE;

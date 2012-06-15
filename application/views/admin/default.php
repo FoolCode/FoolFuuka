@@ -69,10 +69,10 @@ if (!defined('BASEPATH'))
 
 					<footer class="footer">
 						<p style="padding-left: 20px;"><?php echo FOOL_NAME ?> Version <?php
-					if (isset($this->tank_auth))
+					if (isset($this->auth))
 					{
 						echo FOOL_VERSION;
-						if ($this->tank_auth->is_admin() && (FOOL_VERSION != get_setting('fs_cron_autoupgrade_version') && (get_setting('fs_cron_autoupgrade_version'))))
+						if ($this->auth->is_admin() && (FOOL_VERSION != get_setting('fs_cron_autoupgrade_version') && (get_setting('fs_cron_autoupgrade_version'))))
 							echo ' – <a href="' . site_url('admin/system/upgrade/') . '">' . __('New upgrade available:') . ' ' . get_setting('fs_cron_autoupgrade_version') . '</a>';
 					}
 					?></p>

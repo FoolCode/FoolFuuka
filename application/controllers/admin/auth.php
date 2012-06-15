@@ -45,10 +45,10 @@ class Auth extends Admin_Controller
 	 */
 	function login()
 	{
-		if ($this->tank_auth->is_logged_in()) {									// logged in
+		if ($this->auth->is_logged_in()) {									// logged in
 			redirect('/admin/');
 
-		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
+		} elseif ($this->auth->is_logged_in(FALSE)) {						// logged in, not activated
 			redirect('/admin/auth/send_again/');
 
 		} else {
@@ -69,7 +69,7 @@ class Auth extends Admin_Controller
 			}
 
 			$data['use_recaptcha'] = $this->config->item('use_recaptcha', 'tank_auth');
-			if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
+			if ($this->auth->is_max_login_attempts_exceeded($login)) {
 				if ($data['use_recaptcha'])
 					$this->form_validation->set_rules('recaptcha_response_field', 'Confirmation Code', 'trim|xss_clean|required|callback__check_recaptcha');
 				else
@@ -78,7 +78,7 @@ class Auth extends Admin_Controller
 			$data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if ($this->tank_auth->login(
+				if ($this->auth->login(
 						$this->form_validation->set_value('login'),
 						$this->form_validation->set_value('password'),
 						$this->form_validation->set_value('remember'),
@@ -87,7 +87,7 @@ class Auth extends Admin_Controller
 					redirect('/admin/');
 
 				} else {
-					$errors = $this->tank_auth->get_error_message();
+					$errors = $this->auth->get_error_message();
 					if (isset($errors['banned'])) {								// banned user
 						$this->_show_message($this->lang->line('auth_message_banned').' '.$errors['banned']);
 
@@ -100,7 +100,7 @@ class Auth extends Admin_Controller
 				}
 			}
 			$data['show_captcha'] = FALSE;
-			if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
+			if ($this->auth->is_max_login_attempts_exceeded($login)) {
 				$data['show_captcha'] = TRUE;
 				if ($data['use_recaptcha']) {
 					$data['recaptcha_html'] = $this->_create_recaptcha();
@@ -122,7 +122,7 @@ class Auth extends Admin_Controller
 	 */
 	function logout()
 	{
-		$this->tank_auth->logout();
+		$this->auth->logout();
 
 		$this->_show_message($this->lang->line('auth_message_logged_out'));
 	}
@@ -134,10 +134,10 @@ class Auth extends Admin_Controller
 	 */
 	function register()
 	{
-		if ($this->tank_auth->is_logged_in()) {									// logged in
+		if ($this->auth->is_logged_in()) {									// logged in
 			redirect('');
 
-		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
+		} elseif ($this->auth->is_logged_in(FALSE)) {						// logged in, not activated
 			redirect('/admin/auth/send_again/');
 
 		} elseif (!$this->config->item('allow_registration', 'tank_auth')) {	// registration is off
@@ -166,7 +166,7 @@ class Auth extends Admin_Controller
 			$email_activation = $this->config->item('email_activation', 'tank_auth');
 
 			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->create_user(
+				if (!is_null($data = $this->auth->create_user(
 						$use_username ? $this->form_validation->set_value('username') : '',
 						$this->form_validation->set_value('email'),
 						$this->form_validation->set_value('password'),
@@ -193,7 +193,7 @@ class Auth extends Admin_Controller
 						$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/admin/auth/login/', 'Login'));
 					}
 				} else {
-					$errors = $this->tank_auth->get_error_message();
+					$errors = $this->auth->get_error_message();
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
@@ -221,7 +221,7 @@ class Auth extends Admin_Controller
 	 */
 	function send_again()
 	{
-		if (!$this->tank_auth->is_logged_in(FALSE)) {							// not logged in or activated
+		if (!$this->auth->is_logged_in(FALSE)) {							// not logged in or activated
 			redirect('/admin/auth/login/');
 
 		} else {
@@ -230,7 +230,7 @@ class Auth extends Admin_Controller
 			$data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->change_email(
+				if (!is_null($data = $this->auth->change_email(
 						$this->form_validation->set_value('email')))) {			// success
 
 					$data['site_name']	= $this->config->item('website_name', 'tank_auth');
@@ -241,7 +241,7 @@ class Auth extends Admin_Controller
 					$this->_show_message(sprintf($this->lang->line('auth_message_activation_email_sent'), $data['email']));
 
 				} else {
-					$errors = $this->tank_auth->get_error_message();
+					$errors = $this->auth->get_error_message();
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
@@ -265,8 +265,8 @@ class Auth extends Admin_Controller
 		$new_email_key	= $this->uri->segment(5);
 
 		// Activate user
-		if ($this->tank_auth->activate_user($user_id, $new_email_key)) {		// success
-			$this->tank_auth->logout();
+		if ($this->auth->activate_user($user_id, $new_email_key)) {		// success
+			$this->auth->logout();
 			$this->_show_message($this->lang->line('auth_message_activation_completed').' '.anchor('/admin/auth/login/', 'Login'));
 
 		} else {																// fail
@@ -281,10 +281,10 @@ class Auth extends Admin_Controller
 	 */
 	function forgot_password()
 	{
-		if ($this->tank_auth->is_logged_in()) {									// logged in
+		if ($this->auth->is_logged_in()) {									// logged in
 			redirect('');
 
-		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
+		} elseif ($this->auth->is_logged_in(FALSE)) {						// logged in, not activated
 			redirect('/admin/auth/send_again/');
 
 		} else {
@@ -293,7 +293,7 @@ class Auth extends Admin_Controller
 			$data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->forgot_password(
+				if (!is_null($data = $this->auth->forgot_password(
 						$this->form_validation->set_value('login')))) {
 
 					$data['site_name'] = $this->config->item('website_name', 'tank_auth');
@@ -304,7 +304,7 @@ class Auth extends Admin_Controller
 					$this->_show_message($this->lang->line('auth_message_new_password_sent'));
 
 				} else {
-					$errors = $this->tank_auth->get_error_message();
+					$errors = $this->auth->get_error_message();
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
@@ -332,7 +332,7 @@ class Auth extends Admin_Controller
 		$data['errors'] = array();
 
 		if ($this->form_validation->run()) {								// validation ok
-			if (!is_null($data = $this->tank_auth->reset_password(
+			if (!is_null($data = $this->auth->reset_password(
 					$user_id, $new_pass_key,
 					$this->form_validation->set_value('new_password')))) {	// success
 
@@ -349,10 +349,10 @@ class Auth extends Admin_Controller
 		} else {
 			// Try to activate user by password key (if not activated yet)
 			if ($this->config->item('email_activation', 'tank_auth')) {
-				$this->tank_auth->activate_user($user_id, $new_pass_key, FALSE);
+				$this->auth->activate_user($user_id, $new_pass_key, FALSE);
 			}
 
-			if (!$this->tank_auth->can_reset_password($user_id, $new_pass_key)) {
+			if (!$this->auth->can_reset_password($user_id, $new_pass_key)) {
 				$this->_show_message($this->lang->line('auth_message_new_password_failed'));
 			}
 		}
@@ -368,7 +368,7 @@ class Auth extends Admin_Controller
 	 */
 	function change_password()
 	{
-		if (!$this->tank_auth->is_logged_in()) {								// not logged in or not activated
+		if (!$this->auth->is_logged_in()) {								// not logged in or not activated
 			redirect('/admin/auth/login/');
 
 		} else {
@@ -379,13 +379,13 @@ class Auth extends Admin_Controller
 			$data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if ($this->tank_auth->change_password(
+				if ($this->auth->change_password(
 						$this->form_validation->set_value('old_password'),
 						$this->form_validation->set_value('new_password'))) {	// success
 					$this->_show_message($this->lang->line('auth_message_password_changed'));
 
 				} else {														// fail
-					$errors = $this->tank_auth->get_error_message();
+					$errors = $this->auth->get_error_message();
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
@@ -402,7 +402,7 @@ class Auth extends Admin_Controller
 	 */
 	function change_email()
 	{
-		if (!$this->tank_auth->is_logged_in()) {								// not logged in or not activated
+		if (!$this->auth->is_logged_in()) {								// not logged in or not activated
 			redirect('/admin/auth/login/');
 
 		} else {
@@ -412,7 +412,7 @@ class Auth extends Admin_Controller
 			$data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->set_new_email(
+				if (!is_null($data = $this->auth->set_new_email(
 						$this->form_validation->set_value('email'),
 						$this->form_validation->set_value('password')))) {			// success
 
@@ -424,7 +424,7 @@ class Auth extends Admin_Controller
 					$this->_show_message(sprintf($this->lang->line('auth_message_new_email_sent'), $data['new_email']));
 
 				} else {
-					$errors = $this->tank_auth->get_error_message();
+					$errors = $this->auth->get_error_message();
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
@@ -447,8 +447,8 @@ class Auth extends Admin_Controller
 		$new_email_key	= $this->uri->segment(5);
 
 		// Reset email
-		if ($this->tank_auth->activate_new_email($user_id, $new_email_key)) {	// success
-			$this->tank_auth->logout();
+		if ($this->auth->activate_new_email($user_id, $new_email_key)) {	// success
+			$this->auth->logout();
 			$this->_show_message($this->lang->line('auth_message_new_email_activated').' '.anchor('/admin/auth/login/', 'Login'));
 
 		} else {																// fail
@@ -463,7 +463,7 @@ class Auth extends Admin_Controller
 	 */
 	function unregister()
 	{
-		if (!$this->tank_auth->is_logged_in()) {								// not logged in or not activated
+		if (!$this->auth->is_logged_in()) {								// not logged in or not activated
 			redirect('/admin/auth/login/');
 
 		} else {
@@ -472,12 +472,12 @@ class Auth extends Admin_Controller
 			$data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if ($this->tank_auth->delete_user(
+				if ($this->auth->delete_user(
 						$this->form_validation->set_value('password'))) {		// success
 					$this->_show_message($this->lang->line('auth_message_unregistered'));
 
 				} else {														// fail
-					$errors = $this->tank_auth->get_error_message();
+					$errors = $this->auth->get_error_message();
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}

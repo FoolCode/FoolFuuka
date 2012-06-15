@@ -18,14 +18,14 @@ if (!defined('BASEPATH'))
 				<li><a href="<?php echo site_url('@default') ?>"><?php echo __('Boards') ?></a></li>
 				<li class="divider-vertical"></li>
 				<?php
-				if ((isset($this->tank_auth) &&
-					$this->tank_auth->is_allowed()) ||
-					(isset($this->tank_auth) &&
-					$this->tank_auth->is_logged_in())) :
+				if ((isset($this->auth) &&
+					$this->auth->is_allowed()) ||
+					(isset($this->auth) &&
+					$this->auth->is_logged_in())) :
 					?>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<?php echo $this->tank_auth->get_username(); ?>
+							<?php echo $this->auth->get_username(); ?>
 							<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">

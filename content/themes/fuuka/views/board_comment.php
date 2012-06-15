@@ -44,7 +44,7 @@ $selected_radix = isset($p->board)?$p->board:get_selected_radix();
 						<?= '<!-- ' . substr($p->media_hash, 0, -2) . '-->' ?>
 					</span>
 					<?php if ($p->media_status != 'banned') : ?>
-						<?php if (!$selected_radix->hide_thumbnails || $this->tank_auth->is_allowed()) : ?>
+						<?php if (!$selected_radix->hide_thumbnails || $this->auth->is_allowed()) : ?>
 							[<a href="<?= site_url($selected_radix->shortname . '/search/image/' . $p->safe_media_hash) ?>"><?= __('View Same') ?></a>]
 							[<a href="http://google.com/searchbyimage?image_url=<?= $p->thumb_link ?>">Google</a>]
 							[<a href="http://iqdb.org/?url=<?= $p->thumb_link ?>">iqdb</a>]

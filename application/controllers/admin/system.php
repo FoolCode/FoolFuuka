@@ -13,7 +13,7 @@ class System extends Admin_Controller
 		parent::__construct();
 
 		// only admins should do this
-		$this->auth->is_admin() or redirect('admin');
+		$this->auth->is_admin() or redirect('@system/admin');
 
 		// we need the upgrade module's functions
 		$this->load->model('upgrade_model', 'upgrade');

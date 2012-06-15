@@ -11,6 +11,7 @@ class Plugins_Admin extends Admin_Controller
 	function __construct()
 	{
 		parent::__construct();
+		
 		$this->auth->is_admin() or redirect('admin');
 
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/plugins") . '">' .

@@ -8,9 +8,8 @@ class Database extends Admin_Controller
 	function __construct()
 	{
 		parent::__construct();
-		// don't redirect if it's coming from the command line
-		// that's because command line has no login skills...
-		$this->auth->is_admin() or redirect('admin');
+		
+		$this->auth->is_admin() or redirect('@system/admin');
 
 		// power the migration library
 		$this->load->library('migration');

@@ -106,7 +106,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				?> <span style="font-size: smaller;">(Password used for file deletion)</span>
 			</td>
 		</tr>
-		<?php if ($this->auth->is_allowed()) : ?>
+		<?php if ($this->auth->is_mod_admin()) : ?>
 		<tr>
 			<td><?= __('Post as') ?></td>
 			<td>

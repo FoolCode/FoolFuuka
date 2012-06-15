@@ -9,7 +9,7 @@ class Posts extends Admin_Controller
 	{
 		parent::__construct();
 
-		if (!$this->auth->is_allowed())
+		if (!$this->auth->is_mod_admin())
 			redirect('admin');
 
 		$this->load->model('post_model', 'post');

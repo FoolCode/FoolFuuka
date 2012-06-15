@@ -745,7 +745,7 @@ class Radix_model extends CI_Model
 	private function p_preload($preferences = FALSE)
 	{
 
-		if (!$this->auth->is_allowed())
+		if (!$this->auth->is_mod_admin())
 		{
 			$this->db->where('hidden', 0);
 		}

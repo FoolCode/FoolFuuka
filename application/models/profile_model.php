@@ -115,7 +115,7 @@ class Profile_model extends CI_Model
 					$CI = & get_instance();
 
 					// keep out who tries to edit others' profile without being mod or admin
-					if ($CI->auth->get_user_id() !== $input['user_id'] && !$CI->auth->is_allowed())
+					if ($CI->auth->get_user_id() !== $input['user_id'] && !$CI->auth->is_mod_admin())
 					{
 						return array(
 							'error_code' => 'NOT_OWN_USER_ID',

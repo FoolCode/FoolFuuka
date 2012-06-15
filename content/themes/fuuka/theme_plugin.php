@@ -115,7 +115,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 			}
 			$this->form_validation->set_rules('delpass', 'Password', 'required|min_length[3]|max_length[32]|xss_clean');
 
-			if ($this->auth->is_allowed())
+			if ($this->auth->is_mod_admin())
 			{
 				$this->form_validation->set_rules('reply_postas', 'Post as',
 					'required|callback__is_valid_allowed_level|xss_clean');
@@ -153,7 +153,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 				'comment' => $this->input->post('KOMENTO'),
 				'spoiler' => $this->input->post('reply_spoiler'),
 				'password' => $this->input->post('delpass'),
-				'postas' => (($this->auth->is_allowed()) ? $this->input->post('reply_postas') : 'N'),
+				'postas' => (($this->auth->is_mod_admin()) ? $this->input->post('reply_postas') : 'N'),
 				'media' => '',
 				'ghost' => FALSE
 			);

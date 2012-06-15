@@ -174,7 +174,7 @@ class MY_Controller extends CI_Controller
 	 */
 	public function mod_post_actions()
 	{
-		if (!$this->auth->is_allowed())
+		if (!$this->auth->is_mod_admin())
 		{
 			$this->output->set_status_header(403);
 			$this->output->set_output(json_encode(array('error' => __('You\'re not allowed to perform this action'))));

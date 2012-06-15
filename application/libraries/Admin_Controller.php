@@ -23,7 +23,7 @@ class Admin_Controller extends MY_Controller
 			redirect('admin/auth');
 		}
 		
-		if(!$this->auth->is_allowed() && $this->uri->segment(2) != 'auth')
+		if(!$this->auth->is_mod_admin() && $this->uri->segment(2) != 'auth')
 		{
 			redirect('admin/auth/change_email');
 		}

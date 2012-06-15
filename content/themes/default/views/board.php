@@ -23,7 +23,7 @@ foreach ($posts as $key => $post) :
 				<?php endif; ?>
 			<?php else: ?>
 			<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-				<?php if(!$this->auth->is_allowed() && !$selected_radix->transparent_spoiler && $op->spoiler) :?>
+				<?php if(!$this->auth->is_mod_admin() && !$selected_radix->transparent_spoiler && $op->spoiler) :?>
 				<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 				<?php else : ?>
 				<img src="<?= $op->thumb_link ?>" width="<?= $op->preview_w ?>" height="<?= $op->preview_h ?>" class="thread_image<?= ($op->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media_hash ?>" />
@@ -37,7 +37,7 @@ foreach ($posts as $key => $post) :
 
 			<div class="post_file_controls">
 				<?php if ($op->media_status != 'banned') : ?>
-					<?php if (!$selected_radix->hide_thumbnails || $this->auth->is_allowed()) : ?>
+					<?php if (!$selected_radix->hide_thumbnails || $this->auth->is_mod_admin()) : ?>
 					<a href="<?= site_url($selected_radix->shortname . '/search/image/' . $op->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><a
 						href="http://google.com/searchbyimage?image_url=<?= $op->thumb_link ?>" target="_blank"
 						class="btnr parent">Google</a><a
@@ -73,7 +73,7 @@ foreach ($posts as $key => $post) :
 			<a href="<?= site_url($selected_radix->shortname . '/thread/' . $op->thread_num) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= site_url(array($selected_radix->shortname, $quote_mode, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
 
 			<span class="post_controls">
-				<a href="<?= site_url($selected_radix->shortname . '/thread/' . $num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= site_url($selected_radix->shortname . '/thread/' . $num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url($selected_radix->shortname . '/last50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($selected_radix->archive) ? '<a href="http://boards.4chan.org/' . $selected_radix->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?= site_url($selected_radix->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($this->auth->is_allowed() || !$selected_radix->archive) : ?><a href="<?= site_url($selected_radix->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
+				<a href="<?= site_url($selected_radix->shortname . '/thread/' . $num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= site_url($selected_radix->shortname . '/thread/' . $num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url($selected_radix->shortname . '/last50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($selected_radix->archive) ? '<a href="http://boards.4chan.org/' . $selected_radix->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?= site_url($selected_radix->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($this->auth->is_mod_admin() || !$selected_radix->archive) : ?><a href="<?= site_url($selected_radix->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 
 			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?= site_url() . $this->theme->fallback_asset('images/icons/file-delete-icon.png');; ?>" width="16" height="16" title="<?= form_prep(__('This post was deleted from 4chan manually.')) ?>"/></span><?php endif ?>
@@ -83,7 +83,7 @@ foreach ($posts as $key => $post) :
 				<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
 			</div>
 
-			<?php if ($this->auth->is_allowed()) : ?>
+			<?php if ($this->auth->is_mod_admin()) : ?>
 				<div class="btn-group" style="clear:both; padding:5px 0 0 0;">
 					<button class="btn btn-mini" data-function="activateModeration"><?= __('Mod') ?><?php if ($op->poster_ip) echo ' ' .inet_dtop($op->poster_ip) ?></button>
 				</div>

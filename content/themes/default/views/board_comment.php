@@ -19,7 +19,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 		
 		<span class="post_file_controls">
 		<?php if ($p->media_status != 'banned') : ?>
-			<?php if (!$selected_radix->hide_thumbnails || $this->auth->is_allowed()) : ?>
+			<?php if (!$selected_radix->hide_thumbnails || $this->auth->is_mod_admin()) : ?>
 			<a href="<?= site_url('@radix/' . $selected_radix->shortname . '/search/image/' . $p->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><a
 				href="http://google.com/searchbyimage?image_url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">Google</a><a
 				href="http://iqdb.org/?url=<?= $p->thumb_link ?>" target="_blank" class="btnr parent">iqdb</a><a
@@ -52,7 +52,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 			<?php endif; ?>
 		<?php else: ?>
 		<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-			<?php if(!$this->auth->is_allowed() && !$selected_radix->transparent_spoiler && $p->spoiler) :?>
+			<?php if(!$this->auth->is_mod_admin() && !$selected_radix->transparent_spoiler && $p->spoiler) :?>
 			<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 			<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
 			<img src="<?= site_url('content/themes/default/images/transparent_pixel.png') ?>" data-original="<?= $p->thumb_link ?>" width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>" class="lazyload post_image<?= ($p->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media_hash ?>" />
@@ -95,7 +95,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 			<a href="<?= site_url(array('@radix',  $selected_radix->shortname, 'thread', $p->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= site_url(array('@radix',  $selected_radix->shortname, $quote_mode, $p->thread_num)) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
 
 			<span class="post_controls">
-				<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= __('View') ?></a><?php endif; ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($p->subnum > 0 || $this->auth->is_allowed() || !$selected_radix->archive) : ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
+				<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= __('View') ?></a><?php endif; ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($p->subnum > 0 || $this->auth->is_mod_admin() || !$selected_radix->archive) : ?><a href="<?= site_url('@radix/' . $selected_radix->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 
 			<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= site_url() . $this->theme->fallback_asset('images/icons/file-delete-icon.png'); ?>" width="16" height="16" title="<?= form_prep(__('This post was deleted from 4chan manually.')) ?>"/></span><?php endif ?>
@@ -112,7 +112,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 		<?= $p->comment_processed ?>
 	</div>
 
-	<?php if ($this->auth->is_allowed()) : ?>
+	<?php if ($this->auth->is_mod_admin()) : ?>
 	<div class="btn-group" style="clear:both; padding:5px 0 0 0;">
 		<button class="btn btn-mini" data-function="activateModeration"><?= __('Mod') ?><?php if ($p->poster_ip) echo ' ' .inet_dtop($p->poster_ip) ?></button>
 	</div>

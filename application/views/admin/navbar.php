@@ -19,7 +19,7 @@ if (!defined('BASEPATH'))
 				<li class="divider-vertical"></li>
 				<?php
 				if ((isset($this->auth) &&
-					$this->auth->is_allowed()) ||
+					$this->auth->is_mod_admin()) ||
 					(isset($this->auth) &&
 					$this->auth->is_logged_in())) :
 					?>

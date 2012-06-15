@@ -44,7 +44,7 @@ if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
 							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)) ?></td>
 						</tr>
-						<?php if ($this->auth->is_allowed()) : ?>
+						<?php if ($this->auth->is_mod_admin()) : ?>
 						<tr>
 							<td class="postblock"><?= __('Post As') ?></td>
 							<td><?php
@@ -127,7 +127,7 @@ if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
 							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)); ?></td>
 						</tr>
-						<?php if ($this->auth->is_allowed()) : ?>
+						<?php if ($this->auth->is_mod_admin()) : ?>
 						<tr>
 							<td class="postblock"><?= __('Post As') ?></td>
 							<td>

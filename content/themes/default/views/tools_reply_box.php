@@ -75,7 +75,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 			));
 			?>
 		</div>
-		<?php if ($this->auth->is_allowed()) : ?>
+		<?php if ($this->auth->is_mod_admin()) : ?>
 		<div class="input-prepend">
 			<label class="add-on" for="reply_postas"><?= __('Post As') ?></label><?php
 			$postas = array('user' => __('User'), 'mod' => __('Moderator'));

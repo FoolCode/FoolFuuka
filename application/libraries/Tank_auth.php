@@ -165,150 +165,81 @@ class Tank_auth
 
 
 	/**
-	 * Check if user is administrator
+	 * Check if the user is part of 'member', 'mod', or 'admin'.
+	 * This function returns FALSE if user is 'admin' but the group requested is 'mod' 
+	 * A 'mod' or an 'admin' isn't a 'member'
+	 * If the user is not logged in, it always returns FALSE
 	 * 
-	 * @author Woxxy
-	 * @param int $user_id
-	 * @return bool
+	 * @param type $group_name 'member', 'mod' or 'admin'
+	 * @return boolean TRUE if the current user is part of the group, FALSE otherwise
 	 */
-	function is_admin($user_id = NULL)
-	{
-		if ($this->ci->input->is_cli_request())
-		{
-			return TRUE;
-		}
-
-		// not logged users gonna login
-		if (!$this->is_logged_in() && is_null($user_id))
-			return FALSE;
-
-		// if no ID is set it means we're checking on ourselves
-		if (is_null($user_id))
-		{
-			$user_id = $this->ci->session->userdata('user_id');
-		}
-
-		if(isset($this->cached['is_admin']))
-		{
-			if($this->cached['is_admin'] === TRUE)
-			{
-				return TRUE;
-			}
-			else
-			{
-				return FALSE;
-			}
-		}
-		
-		// we're checking if another user is an admin
-		$query = $this->ci->db->where('user_id', $user_id)->limit(1)->get('profiles');
-		if ($query->num_rows() > 0)
-		{
-			$row = $query->row();
-			if ($row->group_id == 1)
-			{
-				$this->cached['is_admin'] = TRUE;
-				return TRUE;
-			}
-		}
-		
-		$this->cached['is_admin'] = FALSE;
-		return FALSE;
-	}
-
-
-	/**
-	 * Check if user is a moderator
-	 * 
-	 * @author Woxxy
-	 * @param int $user_id
-	 * @return bool
-	 */
-	function is_mod($user_id = NULL)
-	{
-		// not logged users gonna login
-		if (!$this->is_logged_in() && is_null($user_id))
-			return FALSE;
-
-		// if no ID is set it means we're checking on ourselves
-		if (is_null($user_id))
-		{
-			$user_id = $this->ci->session->userdata('user_id');
-		}
-
-		if(isset($this->cached['is_mod']))
-		{
-			if($this->cached['is_mod'] === TRUE)
-			{
-				return TRUE;
-			}
-			else
-			{
-				return FALSE;
-			}
-		}
-		
-		// we're checking if another user is an admin
-		$query = $this->ci->db->where('user_id', $user_id)->limit(1)->get('profiles');
-		if ($query->num_rows() > 0)
-		{
-			$row = $query->row();
-			if ($row->group_id == 3)
-			{
-				$this->cached['is_mod'] = TRUE;
-				return TRUE;
-			}
-		}
-		
-		$this->cached['is_mod'] = FALSE;
-		return FALSE;
-	}
-
-
-	/**
-	 * Check if user is allowed by being in the team, mod or administrator
-	 * 
-	 * @author Woxxy
-	 * @return bool
-	 */
-	function is_allowed()
-	{
-		if (!$this->is_logged_in())
-			return FALSE;
-		if ($this->is_mod() || $this->is_admin())
-			return TRUE;
-		return FALSE;
-	}
-
-
 	function is_group($group_name)
 	{
 		if (!$this->is_logged_in())
 			return FALSE;
-		if ($group_name == 'member')
-			return TRUE;
-
-		if (!isset($this->cached["group"][$group_name]))
-		{
-			$query = $this->ci->db->where('name', $group_name)->get('groups');
-			if ($query->num_rows() != 1)
-			{
-				log_message('error', 'tank_auth:is_group: using non-existent group name');
-				return FALSE;
-			}
-
-			$this->cached["group"][$group_name] = $query->row();
-		}
-
-		if (!isset($this->cached["profile"]))
+		
+		if (!isset($this->cached['group']))
 		{
 			$query = $this->ci->db->where('user_id', $this->get_user_id())->limit(1)->get('profiles');
-			$this->cached["profile"] = $query->row();
+			$this->cached['group'] = $query->row()->group_id;
 		}
-
-		if ($this->cached["group"][$group_name]->id == $this->cached["profile"]->group_id)
+		
+		$group = $this->cached['group'];
+		
+		if ($group_name == 'member' && $group == FOOL_AUTH_GROUP_ID_MEMBER)
 			return TRUE;
+		
+		if ($group_name == 'mod' && $group == FOOL_AUTH_GROUP_ID_MOD)
+			return TRUE;
+		
+		if ($group_name == 'admin' && $group == FOOL_AUTH_GROUP_ID_ADMIN)
+			return TRUE;
+		
 		return FALSE;
+	}
+	
+	
+	/**
+	 * Tells if the user is a member (logged in user without group assigned)
+	 * 
+	 * @return bool TRUE if mod, FALSE otherwise 
+	 */
+	function is_member()
+	{
+		return $this->is_group('member');
+	}
+	
+	
+	/**
+	 * Tells if the user is a moderator
+	 * 
+	 * @return bool TRUE if mod, FALSE otherwise 
+	 */
+	function is_mod()
+	{
+		return $this->is_group('mod');
+	}
+	
+	
+	/**
+	 * Tells if the user is a admin
+	 * 
+	 * @return bool TRUE if admin, FALSE otherwise 
+	 */
+	function is_admin()
+	{
+		return $this->is_group('admin');
+	}
+	
+	
+	/**
+	 * Tells if the user is a moderator or an admin
+	 * 
+	 * @return bool TRUE if mod or admin, FALSE otherwise 
+	 */
+	function is_mod_admin()
+	{
+		return $this->is_group('mod') || $this->is_group('admin');
 	}
 
 

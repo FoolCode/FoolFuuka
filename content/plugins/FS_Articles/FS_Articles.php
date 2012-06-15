@@ -366,7 +366,7 @@ class FS_Articles extends Plugins_model
 		$query = $this->db->query('
 			SELECT *
 			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-			' . (($this->auth->is_allowed())?'':'WHERE top = 1 OR bottom = 1 ') . '
+			' . (($this->auth->is_mod_admin())?'':'WHERE top = 1 OR bottom = 1 ') . '
 		');
 
 		if($query->num_rows() == 0)
@@ -381,7 +381,7 @@ class FS_Articles extends Plugins_model
 		$query = $this->db->query('
 			SELECT *
 			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-			WHERE slug = ? ' . (($this->auth->is_allowed())?'':'AND (top = 1 OR bottom = 1) ') . '
+			WHERE slug = ? ' . (($this->auth->is_mod_admin())?'':'AND (top = 1 OR bottom = 1) ') . '
 		',
 			array($slug));
 		
@@ -397,7 +397,7 @@ class FS_Articles extends Plugins_model
 		$query = $this->db->query('
 			SELECT *
 			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-			WHERE id = ? ' . (($this->auth->is_allowed())?'':'AND (top = 1 OR bottom = 1) ') . '
+			WHERE id = ? ' . (($this->auth->is_mod_admin())?'':'AND (top = 1 OR bottom = 1) ') . '
 		',
 			array($id));
 		

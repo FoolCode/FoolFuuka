@@ -10,7 +10,7 @@ class Members extends Admin_Controller
 		parent::__construct();
 		// members are editable by mods!
 		// only admins can change levels though
-		$this->auth->is_allowed() or redirect('admin');
+		$this->auth->is_mod_admin() or redirect('admin');
 		$this->viewdata['controller_title'] = '<a href="' . site_url("admin/members") . '">' . __("Members") . '</a>';
 	}
 

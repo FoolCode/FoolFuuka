@@ -1822,13 +1822,13 @@ class Post_model extends CI_Model
 			$threads = $query_threads->row()->threads;
 			$query_threads->free_result();
 
-			// start caching only over 300 threads so we can keep boards with little number of threads dynamic
-			if($threads > 300)
+			// start caching only over 2500 threads so we can keep boards with little number of threads dynamic
+			if($threads > 2500)
 			{
 				$this->cache->save(
 					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache,
 					$threads,
-					180
+					1800
 				);
 			}
 		}
@@ -2206,12 +2206,12 @@ class Post_model extends CI_Model
 			$query_threads->free_result();
 
 			// start caching only over 300 threads so we can keep boards with little number of threads dynamic
-			if($threads > 300)
+			if($threads > 2500)
 			{
 				$this->cache->save(
 					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type,
 					$threads,
-					180
+					1800
 				);
 			}
 		}

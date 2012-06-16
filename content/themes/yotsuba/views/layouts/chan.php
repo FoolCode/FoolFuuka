@@ -30,6 +30,9 @@
 			echo link_tag($css);
 		}
 	?>
+	<?php if (get_setting('fs_sphinx_global')) : ?>
+		<link rel="search" type="application/opensearchdescription+xml" title="<?= get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE); ?> " href="<?= site_url('@system/functions/opensearch') ?>" />
+	<?php endif; ?>
 </head>
 <body>
 	<div id="boardNavDesktop" class="desktop">

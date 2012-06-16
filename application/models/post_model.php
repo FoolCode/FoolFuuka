@@ -2205,7 +2205,7 @@ class Post_model extends CI_Model
 			$threads = $query_threads->row()->threads;
 			$query_threads->free_result();
 
-			// start caching only over 300 threads so we can keep boards with little number of threads dynamic
+			// start caching only over 2500 threads so we can keep boards with little number of threads dynamic
 			if($threads > 2500)
 			{
 				$this->cache->save(

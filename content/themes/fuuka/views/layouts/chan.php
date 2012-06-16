@@ -16,6 +16,9 @@
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="<?= site_url() . $this->theme->fallback_asset('plugins.js') ?>" type="text/javascript"></script>
+		<?php if (get_setting('fs_sphinx_global')) : ?>
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE); ?> " href="<?= site_url('@system/functions/opensearch') ?>" />
+		<?php endif; ?>
 		<?= get_setting('fs_theme_header_code'); ?>
 	</head>
 	<body>

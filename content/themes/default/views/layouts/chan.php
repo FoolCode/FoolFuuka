@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <!DOCTYPE html>
 <html>
-	<head class="theme_default">
+	<head>
 		<meta charset="utf-8">
 		<meta name="generator" content="<?= FOOL_NAME ?> <?= FOOL_VERSION ?>" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
@@ -28,6 +28,9 @@
 		<!--[if lt IE 9]>
 			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
+		<?php if (get_setting('fs_sphinx_global')) : ?>
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE); ?> " href="<?= site_url('@system/functions/opensearch') ?>" />
+		<?php endif; ?>
 		<?= get_setting('fs_theme_header_code'); ?>
 
 	</head>
@@ -70,7 +73,7 @@
 						<ul class="nav">
 							<li class="dropdown">
 								<a href="<?= site_url() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">
-									<?= (get_selected_radix()) ? '/' . $board->shortname . '/' . ' - ' . $board->name :  get_setting('fs_gen_site_title') ?> <b class="caret"></b>
+									<?= (get_selected_radix()) ? '/' . $board->shortname . '/' . ' - ' . $board->name :  get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE) ?> <b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
 									<?= '<li><a href="' . site_url('@default') . '">' . __('Index') . '</a></li>'; ?>

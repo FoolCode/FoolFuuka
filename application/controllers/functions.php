@@ -39,5 +39,11 @@ class Functions extends Public_Controller
 		$this->theme->set_layout('redirect');
 		$this->theme->build('redirection');
 	}
+	
+	public function opensearch()
+	{
+		header("Content-Type: text/xml");
+		$this->load->view('opensearch');
+	}
 
 }

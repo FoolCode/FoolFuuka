@@ -541,22 +541,26 @@ class Post_model extends CI_Model
 			// fallback if the preview size because spoiler thumbnails in archive may not have sizes
 			if ($post->spoiler && $post->preview_w == 0)
 			{
-				$max_preview_width = ($post->op)?250:125;
-				$max_preview_height = ($post->op)?250:125;
+				$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
 				
-				if($post->media_w <= $max_preview_width && $post->media_h <= $max_preview_height
-					&& strtolower(substr($post->media_orig, 0, -3)) != 'gif')
+				if(!$imgsize = $this->cache->get('foolfuuka_' . 
+					config_item('encryption_key') . '_board_' . 
+					$board->id . '_spoiler_size_' . $post->media_orig)
+				)
 				{
-					$post->preview_h = $post->media_h;
-					$post->preview_w = $post->media_w;
+					$imgdir = $this->get_media_dir($board, $post, TRUE);
+					$imgsize = FALSE;
+					if($imgdir !== FALSE)
+						$imgsize = @getimagesize($imgdir);
+					$this->cache->save('foolfuuka_' . 
+						config_item('encryption_key') . '_board_' . 
+						$board->id . '_spoiler_size_' . $post->media_orig, $imgsize, 86400);
 				}
-				else
+				
+				if($imgsize !== FALSE)
 				{
-					$key_w = $max_preview_width / $post->media_w;
-					$key_h = $max_preview_height / $post->media_h;
-					$keys = ($key_w < $key_h) ? $key_w : $key_h;
-					$post->preview_h = ceil($post->media_h * $keys) + 1;
-					$post->preview_w = ceil($post->media_w * $keys) + 1;
+					$post->preview_h = $imgsize[1];
+					$post->preview_w = $imgsize[0];
 				}
 			}
 			

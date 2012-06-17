@@ -33,6 +33,7 @@ class Theme_Plugin_yotsuba extends Plugins_model
 		return '\\1<span class="quote">\\2</span>\\3';
 	}
 
+
 	function _process_internal_links_html($data, $html, $previous_result = NULL)
 	{
 		// a plugin with higher priority modified this
@@ -50,6 +51,7 @@ class Theme_Plugin_yotsuba extends Plugins_model
 		));
 	}
 
+
 	function _process_crossboard_links_html($data, $html, $previous_result = NULL)
 	{
 		// a plugin with higher priority modified this
@@ -64,6 +66,7 @@ class Theme_Plugin_yotsuba extends Plugins_model
 		));
 	}
 
+
 	/**
 	 * @param int $page
 	 */
@@ -71,5 +74,6 @@ class Theme_Plugin_yotsuba extends Plugins_model
 	{
 		return array('parameters' => array($page, FALSE, array('per_page' => 24, 'type' => 'by_thread')));
 	}
+
 
 }

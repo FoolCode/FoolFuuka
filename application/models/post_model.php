@@ -276,7 +276,7 @@ class Post_model extends CI_Model
 		}
 
 		$post->media_status = 'available';
-		
+
 		// these features will only affect guest users
 		if ($board->hide_thumbnails && !$this->auth->is_mod_admin())
 		{
@@ -542,9 +542,9 @@ class Post_model extends CI_Model
 			if ($post->spoiler && $post->preview_w == 0)
 			{
 				$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
-				
-				if(!$imgsize = $this->cache->get('foolfuuka_' . 
-					config_item('encryption_key') . '_board_' . 
+
+				if(!$imgsize = $this->cache->get('foolfuuka_' .
+					config_item('encryption_key') . '_board_' .
 					$board->id . '_spoiler_size_' . $post->media_orig)
 				)
 				{
@@ -552,18 +552,18 @@ class Post_model extends CI_Model
 					$imgsize = FALSE;
 					if($imgdir !== FALSE)
 						$imgsize = @getimagesize($imgdir);
-					$this->cache->save('foolfuuka_' . 
-						config_item('encryption_key') . '_board_' . 
+					$this->cache->save('foolfuuka_' .
+						config_item('encryption_key') . '_board_' .
 						$board->id . '_spoiler_size_' . $post->media_orig, $imgsize, 86400);
 				}
-				
+
 				if($imgsize !== FALSE)
 				{
 					$post->preview_h = $imgsize[1];
 					$post->preview_w = $imgsize[0];
 				}
 			}
-			
+
 			$post->original_timestamp = $post->timestamp;
 			$newyork = new DateTime(date('Y-m-d H:i:s', $post->timestamp), new DateTimeZone('America/New_York'));
 			$utc = new DateTime(date('Y-m-d H:i:s', $post->timestamp), new DateTimeZone('UTC'));
@@ -1069,7 +1069,7 @@ class Post_model extends CI_Model
 
 		$build_url = array(
 			'tags' => array('', ''),
-			'backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $data->num . '"'
+			'backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . (($data->board) ? $data->board->shortname : $data->shortname) . '" data-post="' . $data->num . '"'
 		);
 
 		$build_url = $this->plugins->run_hook('fu_post_model_process_crossboard_links_html_result', array($data, $build_url), 'simple');

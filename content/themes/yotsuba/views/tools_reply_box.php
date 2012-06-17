@@ -1,4 +1,4 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selected_radix()->archive) || (isset($thread_id))) :
 ?>
@@ -59,7 +59,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 					'id' => 'reply_talkingde',
 				));
 
-			
+
 			?><?= form_submit(array(
 				'name' => 'reply_gattai',
 				'value' => __('Submit'),
@@ -85,7 +85,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		<tr>
 			<td><?= __('Verification') ?></td>
 			<td> <div>
-					
+
 				</div></td>
 		</tr>
 		 */ ?>
@@ -121,19 +121,18 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 			</td>
 		</tr>
 		<?php endif; ?>
+		<?php if (get_selected_radix()->posting_rules) : ?>
 		<tr class="rules">
 			<td colspan="2">
 				<ul class="rules">
 					<?php
-						if (get_selected_radix()->posting_rules)
-						{
-							$this->load->library('Markdown_Parser');
-							echo Markdown(get_selected_radix()->posting_rules);
-						}
+						$this->load->library('Markdown_Parser');
+						echo Markdown(get_selected_radix()->posting_rules);
 					?>
 				</ul>
 			</td>
 		</tr>
+		<?php endif; ?>
 	</tbody>
 </table>
 </form>

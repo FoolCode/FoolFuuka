@@ -58,7 +58,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 		return array('return' => array(
 			'tags' => array('<span class="unkfunc">', '</span>'),
 			'hash' => '',
-			'attr' => 'class="backlink" onclick="replyHighlight(' . $num_id . ');"',
+			'attr' => 'class="backlink" onclick="replyHighlight(' . $data->num . ');"',
 			'attr_op' => 'class="backlink"',
 			'attr_backlink' => 'class="backlink"',
 		));

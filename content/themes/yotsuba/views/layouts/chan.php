@@ -23,107 +23,102 @@
 	<link rel="alternate" title="RSS feed" href="/htmlnew/index.rss" type="application/rss+xml"/>
 	-->
 	<title><?= $template['title']; ?></title>
-	<!-- <link rel="next" href="1">  -->
+
 	<?php
-		foreach($this->theme->fallback_override('style.css', $this->theme->get_config('extends_css')) as $css)
-		{
-			echo link_tag($css);
-		}
+	foreach($this->theme->fallback_override('style.css', $this->theme->get_config('extends_css')) as $css)
+	{
+		echo link_tag($css);
+	}
 	?>
+
 	<?php if (get_setting('fs_sphinx_global')) : ?>
 		<link rel="search" type="application/opensearchdescription+xml" title="<?= get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE); ?> " href="<?= site_url('@system/functions/opensearch') ?>" />
 	<?php endif; ?>
 </head>
 <body>
-	<div id="boardNavDesktop" class="desktop">
 
 	<?php if ($disable_headers !== TRUE) : ?>
-		<?php
-			$board_urls = array();
-			foreach ($this->radix->get_all() as $key => $item)
-			{
-				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
-			}
-
-			if (!empty($board_urls))
-			{
-				echo '[ ' . implode(' / ', $board_urls) . ' ]';
-			}
-		?>
-
-		<?php
-			$board_urls = array();
-
-			$board_urls[] = '<a href="' . site_url() . '">' . strtolower(__('Index')) . '</a>';
-			if (get_selected_radix())
-			{
-				$board_urls[] = '<a href="' . site_url(get_selected_radix()->shortname) . '">' . strtolower(__('Top')) . '</a>';
-				$board_urls[] = '<a href="' . site_url(array(get_selected_radix()->shortname, 'statistics')) . '">' . strtolower(__('Statistics')) . '</a>';
-			}
-			$board_urls[] = '<a href="https://github.com/FoOlRulez/FoOlFuuka/issues">' . strtolower(__('Report Bug')) . '</a>';
-
-			echo '[ ' . implode(' / ', $board_urls) . ' ]';
-		?>
-
-		<?php
-			$top_nav = array();
-			$top_nav = $this->plugins->run_hook('fu_themes_generic_top_nav_buttons', array($top_nav), 'simple');
-			$top_nav = $this->plugins->run_hook('fu_themes_yotsuba_top_nav_buttons', array($top_nav), 'simple');
-
-			if (!empty($top_nav))
-			{
-				echo '[ ';
-				foreach ($top_nav as $key => $nav)
-				{
-					echo '<a href="' . $nav['href'] . '">' . strtolower($nav['text']) . '</a>';
-					if ($key < count($top_nav) - 1)
-					{
-						echo ' / ';
-					}
-				}
-				echo ' ]';
-			}
-		?>
-
-	<?php endif; ?>
-
-	</div>
-
-	<div id="boardNavMobile" class="mobile">
-		<div class="boardSelect">
-			<strong>Board:&nbsp;&nbsp;</strong>
-			<select id="boardSelectMobile">
+		<div id="boardNavDesktop" class="desktop">
 			<?php
-				foreach($this->radix->get_all() as $board)
+				$board_urls = array();
+				foreach ($this->radix->get_all() as $key => $item)
 				{
-					echo '<option value="' . $board->shortname . '"' .
-						(get_selected_radix() && $board->shortname == get_selected_radix()->shortname?' selected="selected"':'') . '></option>';
+					$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
+				}
+
+				if (!empty($board_urls))
+				{
+					echo '[ ' . implode(' / ', $board_urls) . ' ]';
 				}
 			?>
-			</select>
+
+			<?php
+				$board_urls = array();
+
+				$board_urls[] = '<a href="' . site_url() . '">' . strtolower(__('Index')) . '</a>';
+				if (get_selected_radix())
+				{
+					$board_urls[] = '<a href="' . site_url(get_selected_radix()->shortname) . '">' . strtolower(__('Top')) . '</a>';
+					$board_urls[] = '<a href="' . site_url(array(get_selected_radix()->shortname, 'statistics')) . '">' . strtolower(__('Statistics')) . '</a>';
+				}
+				$board_urls[] = '<a href="https://github.com/FoOlRulez/FoOlFuuka/issues">' . strtolower(__('Report Bug')) . '</a>';
+
+				echo '[ ' . implode(' / ', $board_urls) . ' ]';
+			?>
+
+			<?php
+				$top_nav = array();
+				$top_nav = $this->plugins->run_hook('fu_themes_generic_top_nav_buttons', array($top_nav), 'simple');
+				$top_nav = $this->plugins->run_hook('fu_themes_yotsuba_top_nav_buttons', array($top_nav), 'simple');
+
+				if (!empty($top_nav))
+				{
+					echo '[ ';
+					foreach ($top_nav as $key => $nav)
+					{
+						echo '<a href="' . $nav['href'] . '">' . strtolower($nav['text']) . '</a>';
+						if ($key < count($top_nav) - 1)
+						{
+							echo ' / ';
+						}
+					}
+					echo ' ]';
+				}
+			?>
 		</div>
-	</div>
 
-	<div class="boardBanner">
-	<img src="" class="title" alt=""/>
-	<div class="boardTitle"><?= get_selected_radix()->formatted_title ?></div>
-	</div>
+		<div id="boardNavMobile" class="mobile">
+			<div class="boardSelect">
+				<strong>Board:</strong>
+				<select id="boardSelectMobile">
+					<?php foreach($this->radix->get_all() as $board) : ?>
+						<option value="<?= $board->shortname ?>"<?= (get_selected_radix() && $board->shortname == get_selected_radix()->shortname ? ' selected="selected"' : '' ) ?>></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+		</div>
 
-	<?= $template['partials']['tools_reply_box']; ?>
+		<div class="boardBanner">
+			<img src="" class="title" alt=""/>
+			<div class="boardTitle"><?= get_selected_radix()->formatted_title ?></div>
+		</div>
 
-	<hr/>
+		<?= $template['partials']['tools_reply_box']; ?>
 
-	<!-- AD GOES HERE -->
+		<hr/>
 
-	<hr/>
+		<!-- AD GOES HERE -->
 
-	<div class="globalMessage">This is a global message!</div>
+		<hr/>
 
-	<hr/>
+		<div class="globalMessage">This is a global message!</div>
 
-	<form name="delform" id="delform" action="https://sys.4chan.org/htmlnew/imgboard.php" method="post">
+		<hr/>
+	<?php endif; ?>
 
-		<?= $template['body'] ?>
+	<?= $template['body'] ?>
+
+	<?php if ($disable_headers !== TRUE) : ?>
 
 		<!-- AD GOES HERE -->
 
@@ -147,89 +142,87 @@
 			</div>
 		</div>
 
-	</form>
-
-	<?php if ($disable_headers !== TRUE) : ?>
 		<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
-		<div class="pagelist desktop">
-			<div class="prev">
-				<span>
-					<?php if ($pagination['current_page'] == 1) : ?>
-						<?= __('Previous') ?>
-					<?php else : ?>
-						<a href="<?= $pagination['base_url'] . ($pagination['current_page'] - 1); ?>/"><?= __('Previous') ?></a>
-					<?php endif; ?>
-				</span>
-			</div>
+			<div class="pagelist desktop">
+				<div class="prev">
+					<span>
+						<?php if ($pagination['current_page'] == 1) : ?>
+							<?= __('Previous') ?>
+						<?php else : ?>
+							<a href="<?= $pagination['base_url'] . ($pagination['current_page'] - 1); ?>/"><?= __('Previous') ?></a>
+						<?php endif; ?>
+					</span>
+				</div>
 
-			<div class="pages">
-				<?php
-				if ($pagination['total'] <= 15) :
-					for ($index = 1; $index <= $pagination['total']; $index++)
-					{
-						if (($pagination['current_page'] == $index))
-							echo '[<strong>' . $index . '</strong>] ';
-						else
-							echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
-					}
-				else :
-					if ($pagination['current_page'] < 15) :
-						for ($index = 1; $index <= 15; $index++)
+				<div class="pages">
+					<?php
+					if ($pagination['total'] <= 15) :
+						for ($index = 1; $index <= $pagination['total']; $index++)
 						{
 							if (($pagination['current_page'] == $index))
 								echo '[<strong>' . $index . '</strong>] ';
 							else
 								echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
 						}
-						echo '[...] ';
 					else :
-						for ($index = 1; $index < 10; $index++)
-						{
-							if (($pagination['current_page'] == $index))
-								echo '[<strong>' . $index . '</strong>] ';
-							else
-								echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
-						}
-						echo '<li class="disabled"><span>...</span></li>';
-						for ($index = ((($pagination['current_page'] + 2) > $pagination['total'])
-							? ($pagination['current_page'] - 4) : ($pagination['current_page'] - 2)); $index <= ((($pagination['current_page'] + 2) > $pagination['total'])
-							? $pagination['total'] : ($pagination['current_page'] + 2)); $index++)
-						{
-							if (($pagination['current_page'] == $index))
-								echo '[<strong>' . $index . '</strong>] ';
-							else
-								echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
-						}
-						if (($pagination['current_page'] + 2) < $pagination['total'])
-						{
+						if ($pagination['current_page'] < 15) :
+							for ($index = 1; $index <= 15; $index++)
+							{
+								if (($pagination['current_page'] == $index))
+									echo '[<strong>' . $index . '</strong>] ';
+								else
+									echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
+							}
 							echo '[...] ';
-						}
+						else :
+							for ($index = 1; $index < 10; $index++)
+							{
+								if (($pagination['current_page'] == $index))
+									echo '[<strong>' . $index . '</strong>] ';
+								else
+									echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
+							}
+							echo '<li class="disabled"><span>...</span></li>';
+							for ($index = ((($pagination['current_page'] + 2) > $pagination['total'])
+								? ($pagination['current_page'] - 4) : ($pagination['current_page'] - 2)); $index <= ((($pagination['current_page'] + 2) > $pagination['total'])
+								? $pagination['total'] : ($pagination['current_page'] + 2)); $index++)
+							{
+								if (($pagination['current_page'] == $index))
+									echo '[<strong>' . $index . '</strong>] ';
+								else
+									echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>] ';
+							}
+							if (($pagination['current_page'] + 2) < $pagination['total'])
+							{
+								echo '[...] ';
+							}
+						endif;
 					endif;
-				endif;
-				?>
+					?>
+				</div>
+
+				<div class="next">
+					<span>
+						<?php if ($pagination['total'] == $pagination['current_page']) : ?>
+							<?= __('Next') ?>
+						<?php else : ?>
+							<a href="<?= $pagination['base_url'] . ($pagination['current_page'] + 1); ?>/"><?= __('Next') ?></a>
+						<?php endif; ?>
+					</span>
+				</div>
 			</div>
 
-			<div class="next">
-				<span>
-					<?php if ($pagination['total'] == $pagination['current_page']) : ?>
-						<?= __('Next') ?>
-					<?php else : ?>
-						<a href="<?= $pagination['base_url'] . ($pagination['current_page'] + 1); ?>/"><?= __('Next') ?></a>
-					<?php endif; ?>
-				</span>
+			<div class="mPagelist mobile">
+				<div class="pages">
+					<span><strong>0</strong></span>
+					<span><a href="1">1</a></span>
+					<span>2</span> <span>3</span> <span>4</span> <span>5</span> <span>6</span> <span>7</span> <span>8</span> <span>9</span> <span>10</span> <span>11</span> <span>12</span> <span>13</span> <span>14</span> <span>15</span>
+				</div>
+				<div class="prev">Previous</div>
+				<div class="next"><a href="1" class="button">Next</a></div>
 			</div>
-		</div>
-
-		<div class="mPagelist mobile">
-			<div class="pages">
-				<span><strong>0</strong></span>
-				<span><a href="1">1</a></span>
-				<span>2</span> <span>3</span> <span>4</span> <span>5</span> <span>6</span> <span>7</span> <span>8</span> <span>9</span> <span>10</span> <span>11</span> <span>12</span> <span>13</span> <span>14</span> <span>15</span>
-			</div>
-			<div class="prev">Previous</div>
-			<div class="next"><a href="1" class="button">Next</a></div>
-		</div>
 		<?php endif; ?>
+
 	<?php endif; ?>
 
 	<div id="boardNavDesktopFoot" class="desktop">

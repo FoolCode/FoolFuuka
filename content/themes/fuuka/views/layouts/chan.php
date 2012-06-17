@@ -6,7 +6,7 @@
 		<meta name="generator" content="<?= FOOL_NAME ?> <?= FOOL_VERSION ?>" />
 		<?= $template['metadata'] ?>
 
-		<title><?= $template['title']; ?></title>
+		<title><?= $template['title'] ?></title>
 		<?php
 		foreach($this->theme->fallback_override('style.css', $this->theme->get_config('extends_css')) as $css)
 		{
@@ -17,9 +17,9 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="<?= site_url() . $this->theme->fallback_asset('plugins.js') ?>" type="text/javascript"></script>
 		<?php if (get_setting('fs_sphinx_global')) : ?>
-			<link rel="search" type="application/opensearchdescription+xml" title="<?= get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE); ?> " href="<?= site_url('@system/functions/opensearch') ?>" />
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE) ?> " href="<?= site_url('@system/functions/opensearch') ?>" />
 		<?php endif; ?>
-		<?= get_setting('fs_theme_header_code'); ?>
+		<?= get_setting('fs_theme_header_code') ?>
 	</head>
 	<body>
 <?php if ($disable_headers !== TRUE) : ?>
@@ -101,7 +101,7 @@
 								<?php if ($pagination['current_page'] == 1) : ?>
 									[<?= __('Prev') ?>]
 								<?php else : ?>
-									[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] - 1); ?>/"><?= __('Prev') ?></a>]
+									[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] - 1) ?>/"><?= __('Prev') ?></a>]
 								<?php endif; ?>
 
 								<?php
@@ -152,7 +152,7 @@
 								<?php if ($pagination['total'] == $pagination['current_page']) : ?>
 									[<?= __('Next') ?>]
 								<?php else : ?>
-									[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] + 1); ?>/"><?= __('Next') ?></a>]
+									[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] + 1) ?>/"><?= __('Next') ?></a>]
 								<?php endif; ?>
 							</td>
 						</tr>
@@ -201,7 +201,7 @@
 				echo '<div style="clear: both;">' . get_setting('fs_theme_footer_text') . '</div>';
 			}
 		?>
-		
+
 		<script>
 			var backend_vars = <?= json_encode($backend_vars) ?>;
 		</script>

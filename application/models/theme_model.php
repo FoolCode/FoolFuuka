@@ -389,9 +389,11 @@ class Theme_model extends CI_Model
 	}
 	
 	/**
-	 *
-	 * @param type $asset
-	 * @return type 
+	 * This function is used in case of CSS files. A child theme may load both its
+	 * and the parent theme CSS.
+	 * 
+	 * @param string $asset the location of the asset with theme folder as root 
+	 * @return array the paths to each file in the overriding order 
 	 */
 	public function fallback_override($asset, $double = FALSE)
 	{

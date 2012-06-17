@@ -14,7 +14,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 <?= form_open_multipart(get_selected_radix()->shortname . '/submit') ?>
 <?= form_hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
 <?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
-	<?= form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes) ?>
+	<?= form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes * 1024) ?>
 <?php endif; ?>
 
 <table class="postForm hideMobile" id="postForm">

@@ -316,13 +316,13 @@ class Post_model extends CI_Model
 		}
 		
 		// full image
-		if (!$thumbnail && $this->get_media_dir($board, $post, FALSE))
+		if (!$thumbnail && file_exists($this->get_media_dir($board, $post, FALSE)))
 		{
 			$image = $post->media;
 		}
 		
 		// fallback if we have the full image but not the thumbnail
-		if ($thumbnail && !isset($image) && $this->get_media_dir($board, $post, FALSE))
+		if ($thumbnail && !isset($image) && file_exists($this->get_media_dir($board, $post, FALSE)))
 		{
 			$thumbnail = FALSE;
 			$image = $post->media;

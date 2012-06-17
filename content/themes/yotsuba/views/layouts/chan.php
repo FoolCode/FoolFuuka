@@ -100,7 +100,7 @@
 
 		<div class="boardBanner">
 			<img src="" class="title" alt=""/>
-			<div class="boardTitle"><?= get_selected_radix()->formatted_title ?></div>
+			<?php if (get_selected_radix()) : ?><div class="boardTitle"><?= get_selected_radix()->formatted_title ?></div><?php endif; ?>
 		</div>
 
 		<?= $template['partials']['tools_reply_box']; ?>

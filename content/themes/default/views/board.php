@@ -15,7 +15,7 @@ foreach ($posts as $key => $post) :
 		<div class="thread_image_box">
 			<?php if ($op->media_status != 'available') :?>
 				<?php if ($op->media_status == 'banned') : ?>
-					<img src="<?= site_url() . $this->theme->fallback_asset('images/banned-image.jpg')?>" width="150" height="150" />
+					<img src="<?= site_url() . $this->theme->fallback_asset('images/banned-image.png')?>" width="150" height="150" />
 				<?php else : ?>
 					<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 						<img src="<?= site_url() . $this->theme->fallback_asset('images/missing-image.jpg')?>" width="150" height="150" />

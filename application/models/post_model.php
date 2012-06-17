@@ -303,35 +303,29 @@ class Post_model extends CI_Model
 		}
 
 		// locate the image
-		if (file_exists($this->get_media_dir($board, $post, $thumbnail)) !== FALSE
-			|| file_exists($this->get_media_dir($board, $post, FALSE)) !== FALSE)
+		if ($thumbnail && file_exists($this->get_media_dir($board, $post, $thumbnail)) !== FALSE)
 		{
-			if ($thumbnail === TRUE)
+			if (isset($post->op) && $post->op == 1)
 			{
-				if (isset($post->op) && $post->op == 1)
-				{
-					$image = $post->preview_op ? : $post->preview_reply;
-				}
-				else
-				{
-					$image = $post->preview_reply ? : $post->preview_op;
-				}
-
-				if(is_null($image) || $image == '')
-				{
-					$image = $post->media;
-					$thumbnail = FALSE;
-				}
+				$image = $post->preview_op ? : $post->preview_reply;
 			}
 			else
 			{
-				$image = $post->media;
+				$image = $post->preview_reply ? : $post->preview_op;
 			}
 		}
-		else if($thumbnail === TRUE && file_exists($this->get_media_dir($board, $post, FALSE)))
+		
+		// full image
+		if (!$thumbnail && $this->get_media_dir($board, $post, FALSE))
 		{
 			$image = $post->media;
+		}
+		
+		// fallback if we have the full image but not the thumbnail
+		if ($thumbnail && !isset($image) && $this->get_media_dir($board, $post, FALSE))
+		{
 			$thumbnail = FALSE;
+			$image = $post->media;
 		}
 
 		if(isset($image))

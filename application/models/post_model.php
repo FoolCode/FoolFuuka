@@ -888,8 +888,6 @@ class Post_model extends CI_Model
 	 */
 	private function p_process_comment($board, $post)
 	{
-		$CI = & get_instance();
-
 		// default variables
 		$find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
 		$html = '\\1<span class="greentext">\\2</span>\\3';

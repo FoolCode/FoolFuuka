@@ -34,7 +34,7 @@
 		<?= get_setting('fs_theme_header_code'); ?>
 
 	</head>
-	<body class="theme_default">
+	<body class="<?= implode(' ', array_merge(array('theme_default'), $this->plugins->run_hook('fu_themes_default_body_classes', array(array()), 'simple'))) ?>">
 <?php if (get_selected_radix()) : ?>
 		<div class="letters" style="display:none"><?php
 			$board_urls = array();

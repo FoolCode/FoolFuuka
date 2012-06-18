@@ -98,34 +98,34 @@
 				</div>
 			</div>
 
-		<div class="boardBanner">
-			<img src="" class="title" alt=""/>
-			<?php if (get_selected_radix()) : ?><div class="boardTitle"><?= get_selected_radix()->formatted_title ?></div><?php endif; ?>
-		</div>
+			<div class="boardBanner">
+				<img src="" class="title" alt=""/>
+				<?php if (get_selected_radix()) : ?><div class="boardTitle"><?= get_selected_radix()->formatted_title ?></div><?php endif; ?>
+			</div>
 
 			<?= $template['partials']['tools_reply_box'] ?>
 
 			<hr/>
 
-			<!-- AD GOES HERE -->
+			<?php if (get_setting('fs_theme_header_text')) : ?>
+			<div class="globalMessage"><?= get_setting('fs_theme_header_text') ?></div>
 
 			<hr/>
+			<?php endif; ?>
 
-			<div class="globalMessage">This is a global message!</div>
-
-			<hr/>
+			<?= form_open_multipart(get_selected_radix()->shortname . '/board', array('name' => 'delform', 'id' => 'delform')) ?>
 		<?php endif; ?>
+
 
 		<?= $template['body'] ?>
 
 		<?php if ($disable_headers !== TRUE) : ?>
 
-			<!-- AD GOES HERE -->
-
-			<hr/>
-
 			<div style="float: right;">
-				<div class="deleteform desktop"><input type="hidden" name="mode" value="usrdel"/>Delete Post [<input type="checkbox" name="onlyimgdel" value="on"/>File Only] Password <input type="password" name="pwd"/> <input type="submit" value="Delete"/><input type="button" value="Report"/></div>
+				<div class="deleteform desktop" style="text-align: right">
+					<input type="hidden" name="mode" value="usrdel"/>Delete Post [<input type="checkbox" name="onlyimgdel" value="on"/>File Only] Password <input type="password" name="pwd" value="<?= $this->fu_reply_password ?>" /> <input type="submit" name="mode" value="Delete" /><br/>
+					Report Reason <input type="text" name="reason" /> <input type="submit" name="mode" value="Report" />
+				</div>
 				<div class="stylechanger desktop">
 					Style
 					<select onchange="setActiveStyleSheet(this.value); return false;">
@@ -141,6 +141,7 @@
 					</select>
 				</div>
 			</div>
+			<?= form_close() ?>
 
 			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<div class="pagelist desktop">

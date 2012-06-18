@@ -420,7 +420,7 @@ class Theme_Plugin_fuuka extends Plugins_model
 				$post = array(
 					'board' => get_selected_radix()->id,
 					'doc_id' => $doc_id,
-					'reason' => $this->intput->post('KOMENTO')
+					'reason' => $this->input->post('KOMENTO')
 				);
 
 				$report->add($post);

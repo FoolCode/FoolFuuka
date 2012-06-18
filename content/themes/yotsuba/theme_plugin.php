@@ -97,11 +97,10 @@ class Theme_Plugin_yotsuba extends Plugins_model
 					break;
 
 				case 'Report':
-					$report = new Report();
-
+					$this->load->model('report_model', 'report');
 					foreach ($this->input->post('post') as $idx => $doc_id)
 					{
-						$report->add(array(
+						$this->report->add(array(
 							'board' => get_selected_radix()->id,
 							'doc_id' => $doc_id,
 							'reason' => $this->input->post('reason')

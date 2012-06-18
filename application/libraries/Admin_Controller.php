@@ -16,7 +16,7 @@ class Admin_Controller extends MY_Controller
 		parent::__construct();
 
 		// auth controller can protect itself, other controllers not so sure,
-		if (!$this->auth->is_logged_in())
+		if (!$this->auth->is_logged_in() && $this->uri->segment(2) != 'auth')
 		{
 			$this->session->set_userdata('login_redirect', $this->uri->uri_string());
 			redirect('@system/admin/auth');

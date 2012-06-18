@@ -21,9 +21,9 @@
 						<span class="name"><?= ($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed ?></span>
 						<?php if ($op->trip) : ?><span class="postertrip"><?= $op->trip ?></span><?php endif; ?>
 						<?php if (in_array($op->capcode, array('M', 'A'))) : ?>
-							<strong class="capcode">## <?= (($op->capcode == 'M') ? 'Mod':'') . (($op->capcode == 'A') ? 'Admin':'') ?>"></strong>
-							<?php if ($op->capcode == 'M') : ?><img src="//static.4chan.org/image/modicon.gif" alt="This user is a Moderator." title="This user is a Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
-							<?php if ($op->capcode == 'A') : ?><img src="//static.4chan.org/image/adminicon.gif" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+							<strong class="capcode">## <?= (($op->capcode == 'M') ? 'Mod':'') . (($op->capcode == 'A') ? 'Admin':'') ?></strong>
+							<?php if ($op->capcode == 'M') : ?><img src="//static.4chan.org/image/modicon.gif" alt="This user is a Moderator." title="<?= __('This user is a Moderator.') ?>" class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+							<?php if ($op->capcode == 'A') : ?><img src="//static.4chan.org/image/adminicon.gif" alt="This user is an Administrator." title="<?= __('This user is an Administrator.') ?>" class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
 						<?php endif; ?>
 						<br/>
 						<em><a href="" title="Highlight this post">No.</a><a href="res/1418#q1418" title="Quote this post">1418</a></em>
@@ -36,7 +36,7 @@
 					<div class="fileInfo">
 						<span class="fileText">
 							<?= __('File:') ?>
-							<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank"><?= $op->media_filename_processed ?></a>-(<?= byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed ?>)
+							<a href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank"><?= $op->media ?></a>-(<?= byte_format($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed ?>)
 						</span>
 					</div>
 					<a class="fileThumb" href="<?= ($op->media_link) ? $op->media_link : $op->remote_media_link ?>" target="_blank">
@@ -46,15 +46,15 @@
 				<?php endif; ?>
 
 				<div class="postInfo" id="pi<?= $num ?>">
-					<input type="checkbox" name="<?= $num ?>" value="delete"/>
+					<input type="checkbox" name="post[]" value="<?= $op->doc_id ?>" />
 					<span class="subject"><?= $op->title_processed ?></span>
 					<span class="nameBlock<?= (($op->capcode == 'M') ? ' capcodeMod':'') . (($op->capcode == 'A') ? ' capcodeAdmin':'') ?>">
 						<span class="name"><?= ($op->email_processed && $op->email_processed != 'noko') ? '<a href="mailto:' . form_prep($op->email_processed) . '">' . $op->name_processed . '</a>' : $op->name_processed ?></span>
 						<?php if ($op->trip) : ?><span class="postertrip"><?= $op->trip ?></span><?php endif; ?>
 						<?php if (in_array($op->capcode, array('M', 'A'))) : ?>
 							<strong class="capcode">## <?= (($op->capcode == 'M') ? 'Mod':'') . (($op->capcode == 'A') ? 'Admin':'') ?>"></strong>
-							<?php if ($op->capcode == 'M') : ?><img src="//static.4chan.org/image/modicon.gif" alt="This user is a Moderator." title="This user is a Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
-							<?php if ($op->capcode == 'A') : ?><img src="//static.4chan.org/image/adminicon.gif" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+							<?php if ($op->capcode == 'M') : ?><img src="<?= site_url('content/themes/yotsuba/images/') . 'icon-mod.gif' ?>" alt="This user is a Moderator." title="This user is a Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+							<?php if ($op->capcode == 'A') : ?><img src="<?= site_url('content/themes/yotsuba/images/') . 'icon-admin.gif' ?>" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
 						<?php endif; ?>
 					</span>
 					<span class="dateTime"><?= gmdate('D M d H:i:s Y', $op->original_timestamp) ?></span>

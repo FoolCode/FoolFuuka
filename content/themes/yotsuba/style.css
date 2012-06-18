@@ -1,6 +1,6 @@
 body
 {
-	background: #FFE url(/image/fade.png) top center repeat-x;
+	background: #FFE url("./images/fade.png") top center repeat-x;
 	color: #800000;
 	font-family: arial,helvetica,sans-serif;
 	font-size: 10pt;

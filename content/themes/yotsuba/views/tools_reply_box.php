@@ -3,7 +3,6 @@
 if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selected_radix()->archive) || (isset($thread_id))) :
 ?>
 
-<hr class="abovePostForm"/>
 <hr/>
 
 <div class="mobilePostFormToggle mobile hidden" id="mpostform" onclick="toggleMobilePostForm();">
@@ -64,7 +63,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				'name' => 'reply_gattai',
 				'value' => __('Submit'),
 				'class' => 'btn btn-primary',
-			)); ?>[<label><?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)) ?>Spoiler Image?</label>]</td>
+			)); ?>[<label><?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)) ?><?= __('Spoiler Image?') ?></label>]</td>
 		</tr>
 		<tr>
 			<td><?= __('Comment') ?></td>
@@ -81,14 +80,6 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				));
 			?></td>
 		</tr>
-		<?php /*
-		<tr>
-			<td><?= __('Verification') ?></td>
-			<td> <div>
-
-				</div></td>
-		</tr>
-		 */ ?>
 		<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
 		<tr>
 			<td><?= __('File') ?></td>
@@ -103,12 +94,12 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 					'value' => $this->fu_reply_password,
 					'required' => 'required'
 				));
-				?> <span style="font-size: smaller;">(Password used for file deletion)</span>
+				?> <span style="font-size: smaller;">(<?= __('This is used for file and post deletion.') ?>)</span>
 			</td>
 		</tr>
 		<?php if ($this->auth->is_mod_admin()) : ?>
 		<tr>
-			<td><?= __('Post as') ?></td>
+			<td><?= __('Post As') ?></td>
 			<td>
 				<?php
 					$postas = array('user' => __('User'), 'mod' => __('Moderator'));
@@ -135,6 +126,6 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		<?php endif; ?>
 	</tbody>
 </table>
-</form>
+	<?= form_close() ?>
 
 <?php endif; ?>

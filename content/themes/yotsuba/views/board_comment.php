@@ -11,16 +11,16 @@ $quote_mode = 'thread';
 	<div class="sideArrows" id="sa<?= $num ?>">&gt;&gt;</div>
 		<div id="<?= $num ?>" class="post reply">
 			<div class="postInfo" id="pi<?= $num ?>">
-				<input type="checkbox" name="<?= $num ?>" value="delete"/>
+				<input type="checkbox" name="post[]" value="<?= $p->doc_id ?>" />
 				<span class="userInfo">
 					<span class="subject"><?= $p->title_processed ?></span>
 					<span class="nameBlock<?= (($p->capcode == 'M') ? ' capcodeMod':'') . (($p->capcode == 'A') ? ' capcodeAdmin':'') ?>">
 						<span class="name"><?= ($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . form_prep($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed ?></span>
 						<?php if ($p->trip) : ?><span class="postertrip"><?= $p->trip ?></span><?php endif; ?>
 						<?php if (in_array($p->capcode, array('M', 'A'))) : ?>
-							<strong class="capcode">## <?= (($p->capcode == 'M') ? 'Mod':'') . (($p->capcode == 'A') ? 'Admin':'') ?>"></strong>
-							<?php if ($p->capcode == 'M') : ?><img src="//static.4chan.org/image/modicon.gif" alt="This user is a Moderator." title="This user is a Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
-							<?php if ($p->capcode == 'A') : ?><img src="//static.4chan.org/image/adminicon.gif" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+							<strong class="capcode">## <?= (($p->capcode == 'M') ? 'Mod':'') . (($p->capcode == 'A') ? 'Admin':'') ?></strong>
+							<?php if ($p->capcode == 'M') : ?><img src="<?= site_url('content/themes/yotsuba/images/') . 'icon-mod.gif' ?>" alt="This user is a Moderator." title="This user is a Moderator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
+							<?php if ($p->capcode == 'A') : ?><img src="<?= site_url('content/themes/yotsuba/images/') . 'icon-admin.gif' ?>" alt="This user is an Administrator." title="This user is an Administrator." class="identityIcon" style="float: none!important; margin-left: 0px;"><?php endif; ?>
 						<?php endif; ?>
 					</span>
 					<span class="postNum mobile">
@@ -38,7 +38,7 @@ $quote_mode = 'thread';
 				<div class="fileInfo">
 						<span class="fileText">
 							<?= __('File:') ?>
-							<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank"><?= $p->media_filename_processed ?></a>-(<?= byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media_filename_processed ?>)
+							<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank"><?= $p->media ?></a>-(<?= byte_format($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media_filename_processed ?>)
 						</span>
 				</div>
 				<a class="fileThumb" href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank">

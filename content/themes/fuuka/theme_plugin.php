@@ -414,16 +414,16 @@ class Theme_Plugin_fuuka extends Plugins_model
 		 */
 		if ($this->input->post('reply_report') == 'Report Selected Posts')
 		{
-			$report = new Report();
+			$this->load->model('report_model', 'report');
 			foreach ($this->input->post('delete') as $idx => $doc_id)
 			{
 				$post = array(
 					'board' => get_selected_radix()->id,
 					'doc_id' => $doc_id,
-					'reason' => $this->intput->post('KOMENTO')
+					'reason' => $this->input->post('KOMENTO')
 				);
 
-				$report->add($post);
+				$this->report->add($post);
 			}
 
 			$this->theme->set_layout('redirect');

@@ -491,6 +491,10 @@ body.theme_default {
     top:1px;
 }
 
+.theme_default article.thread .post_controls {
+    margin-left:4px;
+}
+
 .theme_default article.thread .post_type {
     margin-left:4px;
 }
@@ -729,10 +733,6 @@ body.theme_default {
 	font-size:10px;
 	line-height:10px;
 }
-
-
-
-
 
 .theme_default .thread_form_wrap {
     background:#d6f0da;

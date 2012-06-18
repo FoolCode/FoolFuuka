@@ -6,8 +6,9 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 <?= form_open_multipart(get_selected_radix()->shortname . '/submit') ?>
 <?= form_hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
 <?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
-	<?= form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes * 1024) ?>
+<?= form_hidden('MAX_FILE_SIZE', get_selected_radix()->max_image_size_kilobytes * 1024) ?>
 <?php endif; ?>
+
 <table id="reply">
 	<tbody>
 		<tr>
@@ -44,18 +45,31 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 		</tr>
 		<tr>
 			<td><?= __('Subject') ?></td>
-			<td><?php
+			<td>
+				<?php
 				echo form_input(array(
 					'name' => 'reply_talkingde',
 					'id' => 'reply_talkingde',
 				));
+				?>
 
+				<?php
+				$submit_array = array(
+					'name' => 'reply_gattai',
+					'value' => __('Submit'),
+					'class' => 'btn'
+				);
 
-			?> <?= form_submit(array(
-				'name' => 'reply_gattai',
-				'value' => __('Submit'),
-				'class' => 'btn',
-			)); ?> [ <label><?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)) ?> Spoiler Image?</label> ]</td>
+				if (isset($thread_id) && $thread_id > 0)
+				{
+					$submit_array['data-function'] = 'comment';
+					$submit_array['data-post'] = $thread_id;
+				}
+				echo form_submit($submit_array);
+				?>
+
+				[ <label><?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)) ?> Spoiler Image?</label> ]
+			</td>
 		</tr>
 		<tr>
 			<td><?= __('Comment') ?></td>
@@ -122,8 +136,16 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				?>
 			</td>
 		</tr>
+		<tr class="rules">
+			<td colspan="2">
+			<div id="reply_ajax_notices"></div>
+			<?php if (isset($reply_errors)) : ?>
+			<span style="color:red"><?= $reply_errors ?></span>
+			<?php endif; ?>
+			</td>
+		</tr>
 		<?php endif; ?>
 	</tbody>
 </table>
-</form>
+<?= form_close() ?>
 <?php endif; ?>

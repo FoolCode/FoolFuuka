@@ -39,10 +39,10 @@ class Functions extends Public_Controller
 
 	public function language($lang = 'en_EN')
 	{
-		$this->theme->set_title(__('Changing Language'));
+		$this->theme->set_title(__('Changing Software Language'));
 		$this->input->set_cookie('foolfuuka_language', $lang, 31536000, NULL, '/');
-		if ($this->input->server('HTTP_REFERER') && strpos($this->agent->referrer(), site_url()) === 0) :
-			$this->theme->bind('url', $this->input->server('HTTP_REFERER'));
+		if ($this->agent->referrer()) :
+			$this->theme->bind('url', $this->agent->referrer());
 		else :
 			$this->theme->bind('url', site_url());
 		endif;

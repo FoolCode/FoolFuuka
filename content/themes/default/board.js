@@ -419,7 +419,7 @@ var showBacklink = function(backlink, pos, height, width)
 	if(jQuery(window).width()/2 < pos.left + width/2)
 	{
 		backlink.css({
-			right: (jQuery(window).width() - pos.left -	 width) + 'px',
+			right: (jQuery(window).width() - pos.left - width) + 'px',
 			top: (pos.top + height + 3) + 'px',
 			left: 'auto'
 		});

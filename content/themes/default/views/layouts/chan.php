@@ -34,7 +34,7 @@
 		<?= get_setting('fs_theme_header_code'); ?>
 
 	</head>
-	<body class="<?= implode(' ', array_merge(array('theme_default'), $this->plugins->run_hook('fu_themes_default_body_classes', array(array()), 'simple'))) ?>">
+	<body class="<?= $this->theme->get_selected_theme_class(array('theme_default')) ?>">
 <?php if (get_selected_radix()) : ?>
 		<div class="letters" style="display:none"><?php
 			$board_urls = array();
@@ -248,7 +248,7 @@
 						if (($theme = $this->theme->get_by_name($theme))) :
 					?>
 						 <li>
-							 <a href="<?= site_url(array('@system', 'functions', 'theme', $theme['directory'])) ?>" onclick="changeTheme('<?= $theme['directory'] ?>'); return false;">
+							 <a href="<?= site_url(array('@system', 'functions', 'theme', $theme['directory'])) ?>">
 								 <?= $theme['name'] ?><?= ($theme['directory'] == $this->theme->get_selected_theme())?' <i class="icon-ok"></i>':'' ?>
 							 </a>
 						 </li>
@@ -266,7 +266,7 @@
 					<ul class="dropdown-menu">
 					<?php foreach(config_item('ff_available_languages') as $key => $lang) : ?>
 						 <li>
-							 <a href="<?= site_url(array('@system', 'functions', 'language', $key)) ?>" onclick="changeLanguage('<?= $key ?>'); return false;">
+							 <a href="<?= site_url(array('@system', 'functions', 'language', $key)) ?>">
 								 <?= $lang ?><?= ((!$this->input->cookie('foolfuuka_language') && $key == 'en_EN') || $key == $this->input->cookie('foolfuuka_language'))?' <i class="icon-ok"></i>':'' ?>
 							 </a>
 						 </li>

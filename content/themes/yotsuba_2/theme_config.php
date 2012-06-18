@@ -32,3 +32,5 @@ $config['extends'] = 'default'; // it's ok to refer it to itself, it means there
 // theme's CSS.
 $config['extends_css'] = TRUE;
 
+$config['styles'] = array('yotsuba', 'yotsuba_b');
+

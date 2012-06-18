@@ -72,12 +72,12 @@ foreach ($posts as $key => $post) :
 
 			<a href="<?= site_url($selected_radix->shortname . '/thread/' . $op->thread_num) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= site_url(array($selected_radix->shortname, $quote_mode, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
 
+			<?php if ($op->spoiler == 1) : ?><span class="post_type"><i class="icon-eye-close" title="<?= form_prep(__('This post contains a spoiler image.')) ?>"></i></span><?php endif ?>
+			<?php if ($op->deleted == 1) : ?><span class="post_type"><i class="icon-trash" title="<?= form_prep(__('This post was deleted from 4chan manually.')) ?>"></i></span><?php endif ?>
+
 			<span class="post_controls">
 				<a href="<?= site_url($selected_radix->shortname . '/thread/' . $num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= site_url($selected_radix->shortname . '/thread/' . $num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . site_url($selected_radix->shortname . '/last50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($selected_radix->archive) ? '<a href="http://boards.4chan.org/' . $selected_radix->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?= site_url($selected_radix->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($this->auth->is_mod_admin() || !$selected_radix->archive) : ?><a href="<?= site_url($selected_radix->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
-
-			<?php if ($op->deleted == 1) : ?><span class="post_type"><img src="<?= site_url() . $this->theme->fallback_asset('images/icons/file-delete-icon.png');; ?>" width="16" height="16" title="<?= form_prep(__('This post was deleted from 4chan manually.')) ?>"/></span><?php endif ?>
-			<?php if ($op->spoiler == 1) : ?><span class="post_type"><img src="<?= site_url() . $this->theme->fallback_asset('images/icons/spoiler-icon.png'); ?>" width="16" height="16" title="<?= form_prep(__('This post contains a spoiler image.')) ?>"/></span><?php endif ?>
 
 			<div class="backlink_list"<?= (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
 				<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>

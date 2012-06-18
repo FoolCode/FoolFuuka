@@ -48,18 +48,26 @@ body.theme_default.yotsuba_b {
 	margin-left: 0;
 }
 
+.theme_default .btnr, .btnr:visited {
+    padding:0px 3px 1px;
+    background:transparent;
+    border:1px solid #ccc;
+    border: 1px solid rgba(0,0,0,0.1);
+    text-shadow:none;
+    margin: 0 2px;
+    color:#333;
+    font-size:11px;
+    line-height:11px;
+    position:relative;
+    top:-1px;
+}
+
 .theme_default .btnr:hover {
-	border:none;
-	color: #dd0000;
-	text-decoration:underline;
-}
-
-.theme_default .btnr:before {
-	content: "["
-}
-
-.theme_default .btnr:after {
-	content: "]"
+    border:1px solid #888;
+    border: 1px solid rgba(0,0,0,0.4);
+    color:#000;
+    text-decoration: none;
+    cursor:pointer;
 }
 
 .theme_default .btn-inverse {
@@ -195,7 +203,7 @@ body.theme_default.yotsuba_b {
 	padding: 0 5px;
 	font-size: 10pt;
 }
-	
+
 .theme_default.yotsuba_b table > tbody > tr > td:first-child {
 	background-color: #98E;
 	color: black;

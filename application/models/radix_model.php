@@ -515,6 +515,19 @@ class Radix_model extends CI_Model
 			)));
 		return $structure;
 	}
+	
+	
+	function p_clear_cache()
+	{
+		$all = $this->get_all();
+		
+		$this->cache->delete('foolfuuka/' . config_item('encryption_key') . '/models/radix/preload');
+		
+		foreach($all as $a)
+		{
+			$this->cache->delete('foolfuuka/' . config_item('encryption_key') . '/models/radix/load_preferences/' . $a->id);
+		}
+	}
 
 
 	/**
@@ -583,6 +596,7 @@ class Radix_model extends CI_Model
 				}
 			}
 
+			$this->clear_cache();
 			$this->radix->preload(TRUE);
 		}
 		else
@@ -605,6 +619,7 @@ class Radix_model extends CI_Model
 				}
 			}
 
+			$this->clear_cache();
 			$this->radix->preload(TRUE);
 			$board = $this->get_by_shortname($data['shortname']);
 
@@ -662,6 +677,8 @@ class Radix_model extends CI_Model
 		// for huge boards, this may time out with PHP, while MySQL will keep going
 		$this->mysql_remove_tables($board);
 
+		$this->clear_cache();
+		
 		return TRUE;
 	}
 
@@ -744,20 +761,25 @@ class Radix_model extends CI_Model
 	private function p_preload($preferences = FALSE)
 	{
 
-		if (!$this->auth->is_mod_admin())
+		if($this->auth->is_logged_in() || (!$object = $this->cache->get('foolfuuka/' . config_item('encryption_key') . '/models/radix/preload')))
 		{
-			$this->db->where('hidden', 0);
-		}
+			if (!$this->auth->is_mod_admin())
+			{
+				$this->db->where('hidden', 0);
+			}
 
-		$this->db->order_by('shortname', 'ASC');
-		$query = $this->db->get('boards');
-		if ($query->num_rows() == 0)
+			$this->db->order_by('shortname', 'ASC');
+			$query = $this->db->get('boards');
+			$object = $query->result();
+			
+			$this->cache->save('foolfuuka/' . config_item('encryption_key') . '/models/radix/preload', $object, 900);
+		}
+		
+		if (!is_array($object) || empty($object))
 		{
 			$this->preloaded_radixes = array();
 			return FALSE;
-		}
-
-		$object = $query->result();
+		}		
 
 		foreach ($object as $item)
 		{
@@ -845,8 +867,21 @@ class Radix_model extends CI_Model
 		$selected = FALSE;
 		foreach ($ids as $id)
 		{
-			$query = $this->db->where('board_id', $id)->get('boards_preferences');
-			foreach ($query->result() as $value)
+			if(!$result = $this->cache->get(
+					'foolfuuka/' . config_item('encryption_key') . '/models/radix/load_preferences/' . $id
+				)
+			)
+			{
+				$query = $this->db->where('board_id', $id)->get('boards_preferences');
+				$result = $query->result();
+				$this->cache->save(
+					'foolfuuka/' . config_item('encryption_key') . '/models/radix/load_preferences/' . $id,
+					$result,
+					900
+				);
+			}
+			
+			foreach ($result as $value)
 			{
 				$this->preloaded_radixes[$id]->{$value->name} = $value->value;
 			}

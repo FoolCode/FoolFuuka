@@ -161,6 +161,6 @@ foreach ($posts as $key => $post) :
 </article>
 <?php endif; ?>
 <?php endforeach; ?>
-<article class="clearfix thread">
+<article class="clearfix thread backlink_container">
 	<div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
 </article>

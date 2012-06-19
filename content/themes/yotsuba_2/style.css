@@ -218,3 +218,35 @@ body.theme_default.yotsuba_b {
 	border:none;
 	padding: none;
 }
+
+.theme_default article.backlink_container {
+    padding: 10px;
+}
+
+.theme_default .divider {
+    border-top: 1px solid #000;
+}
+
+.theme_default section.global_message {
+    border: 1px solid #ff8899;
+    width: 50%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    background: #c0feb9;
+    padding: 10px;
+}
+
+.theme_default .navbar.navbar-fixed-top {
+    border-bottom: 1px solid #000;
+}
+
+.theme_default .js_hook_realtimethread {
+    font-size: 12px;
+    font-weight:bold;
+    margin:10px 10px 10px 20px;
+    border-top: 0px;
+    padding:5px;
+    clear:both;
+}

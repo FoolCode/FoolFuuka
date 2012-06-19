@@ -434,8 +434,7 @@ class FS_Articles extends Plugins_model
 	
 	function get_nav($where, $nav)
 	{
-		if(!$query = $this->cache->get(
-			'foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/' . $where))
+		if(!$result = $this->cache->get('foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/' . $where))
 		{
 			$query = $this->db->query('
 				SELECT slug, title
@@ -443,17 +442,19 @@ class FS_Articles extends Plugins_model
 				WHERE ' . ($where=='top'?'top':'bottom') . ' = 1
 			');
 			
+			$result = $query->result();
+			
 			$this->cache->save(
 				'foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/' . $where,
-				$query,
+				$result,
 				300
 			);
 		}
 		
-		if($query->num_rows() == 0)
+		if(!is_array($result) || empty($result))
 			return array('return' => $nav);
 
-		foreach($query->result() as $article)
+		foreach($result as $article)
 		{
 			$nav[] = array('href' => site_url('articles/' . $article->slug), 'text' => fuuka_htmlescape($article->title));
 		}

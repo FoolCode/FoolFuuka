@@ -419,7 +419,7 @@ var showBacklink = function(backlink, pos, height, width)
 	if(jQuery(window).width()/2 < pos.left + width/2)
 	{
 		backlink.css({
-			right: (jQuery(window).width() - pos.left -	 width) + 'px',
+			right: (jQuery(window).width() - pos.left - width) + 'px',
 			top: (pos.top + height + 3) + 'px',
 			left: 'auto'
 		});
@@ -881,7 +881,7 @@ jQuery(document).ready(function() {
 
 	if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 24 * 60 * 60))
 	{
-		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + '<a class="btnr" href="#" onClick="realtimethread(); return false;">' + backend_vars.gettext['update_now'] + '</a>');
+		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + ' <a class="btnr" href="#" onClick="realtimethread(); return false;">' + backend_vars.gettext['update_now'] + '</a>');
 		setTimeout(realtimethread, 10000);
 	}
 

@@ -21,77 +21,77 @@ class Theme_model extends CI_Model
 
 	/**
 	 * The theme configurations that are loaded
-	 * 
+	 *
 	 * @var array associative array('theme_dir' => array('item' => 'value'));
 	 */
 	private $_loaded = array();
 
 	/**
 	 * If get_all() was used, this will be true and themes won't be checked again
-	 * 
-	 * @var array 
+	 *
+	 * @var array
 	 */
 	private $_is_all_loaded = FALSE;
 
 	/**
 	 * The name of the selected theme
-	 * 
-	 * @var string|bool the folder name of the theme or FALSE if not set 
+	 *
+	 * @var string|bool the folder name of the theme or FALSE if not set
 	 */
 	private $_selected_theme = FALSE;
 
 	/**
 	 * The reference to the theme controller
-	 * 
-	 * @var object|bool the object of the theme controller or FALSE if there's none 
+	 *
+	 * @var object|bool the object of the theme controller or FALSE if there's none
 	 */
 	private $_theme_controller = FALSE;
 
 	/**
 	 * The selected layout
-	 * 
-	 * @var string|bool FALSE when not choosen 
+	 *
+	 * @var string|bool FALSE when not choosen
 	 */
 	private $_selected_layout = FALSE;
-	
+
 	/**
 	 * The selected partials
-	 * 
+	 *
 	 * @var array keys as the name of the partial and the value an array of set variables
 	 */
 	private $_selected_partials = array();
 
 	/**
 	 * Variables available to all views
-	 * 
-	 * @var array 
+	 *
+	 * @var array
 	 */
 	private $_view_variables = array();
 
 	/**
 	 * The string separating pieces of the <title>
-	 * 
-	 * @var string 
+	 *
+	 * @var string
 	 */
 	private $_title_separator = '»';
 
 	/**
 	 * The breadcrumbs of which the title is composed
-	 * 
-	 * @var array 
+	 *
+	 * @var array
 	 */
 	private $_title = array();
-	
+
 	/**
 	 * The lines of metadata to print
-	 * 
-	 * @var array 
+	 *
+	 * @var array
 	 */
 	private $_metadata = array();
 
 
 	/**
-	 * No special functionality 
+	 * No special functionality
 	 */
 	public function __construct()
 	{
@@ -101,7 +101,7 @@ class Theme_model extends CI_Model
 
 	/**
 	 * Returns all the themes available and saves the array in a variable
-	 * 
+	 *
 	 * @return array array with the theme name as index, and their config as value
 	 */
 	public function get_all()
@@ -125,9 +125,9 @@ class Theme_model extends CI_Model
 
 	/**
 	 * Get the config array of a single theme
-	 * 
+	 *
 	 * @param type $name
-	 * @return type 
+	 * @return type
 	 */
 	public function get_by_name($name)
 	{
@@ -138,8 +138,8 @@ class Theme_model extends CI_Model
 
 		return $this->_loaded[$name];
 	}
-	
-	
+
+
 	/**
 	 * Returns an array of key => value of the available themes
 	 */
@@ -157,8 +157,8 @@ class Theme_model extends CI_Model
 			{
 				// default WORKING themes coming with the application
 				return array(
-					'default', 
-					'tanline', 
+					'default',
+					'tanline',
 					'fuuka'
 				);
 			}
@@ -171,16 +171,25 @@ class Theme_model extends CI_Model
 						unset($active_themes[$key]);
 					}
 				}
-				
+
 				return $active_themes = array_keys($active_themes);
 			}
 		}
 	}
 
+
+	public function get_available_styles($theme)
+	{
+		$theme = $this->get_by_name($theme);
+
+		return (isset($theme['styles'])) ? $theme['styles'] : array();
+	}
+
+
 	/**
 	 * Gets a config setting from the selected theme
-	 * 
-	 * @param type $name 
+	 *
+	 * @param type $name
 	 */
 	public function get_selected_theme()
 	{
@@ -188,21 +197,43 @@ class Theme_model extends CI_Model
 	}
 
 
+	public function get_selected_theme_class($class = array())
+	{
+		if (($theme_styles = $this->get_available_styles($this->_selected_theme)))
+		{
+			$style = $this->input->cookie('foolfuuka_theme_' . $this->_selected_theme . '_style');
+			if (in_array($style, $theme_styles))
+				$class[] = $style;
+			else
+				$class[] = current($theme_styles);
+		}
+
+		return implode(' ', $class);
+	}
+
+
 	/**
 	 * Gets a config setting from the selected theme
-	 * 
-	 * @param type $name 
+	 *
+	 * @param type $name
 	 */
 	public function get_config($name)
 	{
-		return $this->_loaded[$this->_selected_theme][$name];
+		if (isset($this->_loaded[$this->_selected_theme][$name]))
+		{
+			return $this->_loaded[$this->_selected_theme][$name];
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 
 
 	/**
 	 * Browses the theme directory and grabs all the folder names
-	 * 
-	 * @return type 
+	 *
+	 * @return type
 	 */
 	public function get_all_names()
 	{
@@ -229,7 +260,7 @@ class Theme_model extends CI_Model
 
 	/**
 	 * Opens theme_config and grabs the $config
-	 * 
+	 *
 	 * @param string $name the folder name of the theme
 	 * @return array the config array or FALSE if not found
 	 */
@@ -252,9 +283,9 @@ class Theme_model extends CI_Model
 
 	/**
 	 * Checks if the theme is available to the rules and loads it
-	 * 
+	 *
 	 * @param string $theme
-	 * @return array the theme config 
+	 * @return array the theme config
 	 */
 	public function set_theme($theme)
 	{
@@ -263,36 +294,36 @@ class Theme_model extends CI_Model
 		{
 			return FALSE;
 		}
-		
+
 		if(!in_array($theme, $this->get_available_themes()))
 		{
 			$theme = FOOL_THEME_DEFAULT;
 		}
-		
+
 		$result = $this->get_by_name($theme);
 		$this->_selected_theme = $theme;
-		
+
 		// load the theme functions if there is such a file
 		$theme_functions_file = 'content/themes/' . $theme . '/theme_functions.php';
 		if(file_exists($theme_functions_file))
 		{
 			require_once $theme_functions_file;
 		}
-		
+
 		// load the theme plugin file if present
 		$theme_plugin_file = 'content/themes/' . $theme . '/theme_plugin.php';
 		if(file_exists($theme_plugin_file))
 		{
 			$this->plugins->inject_plugin('theme', 'Theme_Plugin_' . $theme, TRUE, $theme_plugin_file);
 		}
-		
+
 		return $result;
 	}
 
 
 	/**
-	 * Selects the layout to use 
-	 * 
+	 * Selects the layout to use
+	 *
 	 * @param string $layout the filename without .php extension
 	 */
 	public function set_layout($layout)
@@ -303,9 +334,9 @@ class Theme_model extends CI_Model
 
 	/**
 	 * Sets a partial view
-	 * 
+	 *
 	 * @param type $partial
-	 * @param type $data 
+	 * @param type $data
 	 */
 	public function set_partial($name, $partial, $data = array())
 	{
@@ -315,9 +346,9 @@ class Theme_model extends CI_Model
 
 	/**
 	 * Sets a variable that is globally avariable through layout and partials
-	 * 
+	 *
 	 * @param type $name
-	 * @param type $value 
+	 * @param type $value
 	 */
 	public function bind($name, $value)
 	{
@@ -327,9 +358,9 @@ class Theme_model extends CI_Model
 
 	/**
 	 * Unsets a variable that is globally avariable through layout and partials
-	 * 
+	 *
 	 * @param string $name
-	 * @param any $value 
+	 * @param any $value
 	 */
 	public function unbind($name, $value)
 	{
@@ -338,7 +369,7 @@ class Theme_model extends CI_Model
 
 	/**
 	 * Adds breadcrumbs to the title
-	 * 
+	 *
 	 * @param string|array if array it will set the title array from scratch
 	 * @return array the title array
 	 */
@@ -348,13 +379,13 @@ class Theme_model extends CI_Model
 			$this->_title = $title;
 		else
 			$this->_title[] = $title;
-		
+
 		return $this->_title;
 	}
-	
+
 	/**
 	 * Adds metadata to header
-	 * 
+	 *
 	 * @param string|array if array it will set the metadata array from scratch
 	 * @return array the metadata array
 	 */
@@ -364,14 +395,14 @@ class Theme_model extends CI_Model
 			$this->_metadata = $metadata;
 		else
 			$this->_metadata[] = $metadata;
-		
+
 		return $this->_metadata;
 	}
-	
-	
+
+
 	/**
 	 * Provides the path to the asset and in case its fallback.
-	 * 
+	 *
 	 * @param type $asset the location of the asset with theme folder as root
 	 * @return string The location of the asset in the theme folder
 	 */
@@ -387,13 +418,13 @@ class Theme_model extends CI_Model
 			return 'content/themes/' . $this->get_config('extends') . '/' . $asset . '?v=' . FOOL_VERSION;
 		}
 	}
-	
+
 	/**
 	 * This function is used in case of CSS files. A child theme may load both its
 	 * and the parent theme CSS.
-	 * 
-	 * @param string $asset the location of the asset with theme folder as root 
-	 * @return array the paths to each file in the overriding order 
+	 *
+	 * @param string $asset the location of the asset with theme folder as root
+	 * @return array the paths to each file in the overriding order
 	 */
 	public function fallback_override($asset, $double = FALSE)
 	{
@@ -402,18 +433,18 @@ class Theme_model extends CI_Model
 		{
 			return array($this->fallback_asset($asset));
 		}
-		
+
 		$result = array();
 		if(file_exists('content/themes/' . $this->get_config('extends') . '/' . $asset))
 			$result[] = 'content/themes/' . $this->get_config('extends') . '/' . $asset . '?v=' . FOOL_VERSION;
-		
+
 		if(file_exists('content/themes/' . $this->_selected_theme . '/' . $asset))
 			$result[] = 'content/themes/' . $this->_selected_theme . '/' . $asset . '?v=' . FOOL_VERSION;
-		
+
 		// we want first extended theme and then the override
 		return $result;
 	}
-	
+
 
 	/**
 	 * Wraps up all the choices and returns or outputs the HTML
@@ -435,37 +466,37 @@ class Theme_model extends CI_Model
 		foreach ($this->_selected_partials as $name => $partial)
 		{
 			$partials[$name] = $this->_build(
-				$partial['partial'], 
-				'partial', 
+				$partial['partial'],
+				'partial',
 				array_merge($this->_view_variables, $partial['data'])
 			);
 		}
 
 		// build the content that goes in the middle
 		$content = $this->_build(
-			$view, 
-			'content', 
+			$view,
+			'content',
 			array_merge($this->_view_variables, array('template' => array('partials' => $partials)))
 		);
-		
+
 		// if there's no selected layout output or return this
 		if($without_layout || $this->_selected_layout === FALSE)
 		{
 			if($return)
 				return $content;
-			
+
 			return $this->output->append_output($content);
 		}
 
 		// build the layout
 		$html = $this->_build(
-			$this->_selected_layout, 
-			'layout', 
+			$this->_selected_layout,
+			'layout',
 			array_merge(
-				$this->_view_variables, 
+				$this->_view_variables,
 				array('template' => array(
-						'body' => $content, 
-						'title' => implode($this->_title_separator, $this->_title), 
+						'body' => $content,
+						'title' => implode($this->_title_separator, $this->_title),
 						'partials' => $partials,
 						'metadata' => implode("\n", $this->_metadata)
 					)
@@ -475,17 +506,17 @@ class Theme_model extends CI_Model
 
 		if($return)
 			return $html;
-		
+
 		return $this->output->append_output($html);
 	}
 
 
 	/**
 	 * Merges variables and view and returns the HTML as string
-	 * 
+	 *
 	 * @param string $file
 	 * @param string $type
-	 * @param array $data 
+	 * @param array $data
 	 * @return string
 	 */
 	private function _build($_file, $_type, $_data = array())
@@ -512,13 +543,13 @@ class Theme_model extends CI_Model
 				break;
 		}
 
-		// get rid of interfering variables 
+		// get rid of interfering variables
 		unset($_type, $_file);
 
 		extract($_data);
 
 		ob_start();
-		
+
 		// rewrite short tags from CodeIgniter 2.1
 		if (version_compare(phpversion(), '5.4.0') < 0 && (bool) @ini_get('short_open_tag') === FALSE && config_item('rewrite_short_tags') == TRUE)
 		{
@@ -528,7 +559,7 @@ class Theme_model extends CI_Model
 		{
 			include $_location;
 		}
-		
+
 		$string = ob_get_clean();
 		return $string;
 	}

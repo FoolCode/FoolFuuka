@@ -348,6 +348,7 @@ class FS_Articles extends Plugins_model
 		if($this->input->post())
 		{
 			$this->db->where('id', $id)->delete('plugin_fs-articles');
+			$this->clear_cache();
 			flash_notice('success', __('The article was removed'));
 			redirect('admin/articles/manage');
 		}
@@ -360,6 +361,13 @@ class FS_Articles extends Plugins_model
 		$this->viewdata["main_content_view"] = $this->load->view('admin/confirm', $data, TRUE);
 		$this->load->view('admin/default', $this->viewdata);
 		
+	}
+	
+	
+	function clear_cache()
+	{
+		$this->cache->delete('foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/top');	
+		$this->cache->delete('foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/bottom');	
 	}
 
 
@@ -426,11 +434,21 @@ class FS_Articles extends Plugins_model
 	
 	function get_nav($where, $nav)
 	{
-		$query = $this->db->query('
-			SELECT slug, title
-			FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
-			WHERE ' . ($where=='top'?'top':'bottom') . ' = 1
-		');
+		if(!$query = $this->cache->get(
+			'foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/' . $where))
+		{
+			$query = $this->db->query('
+				SELECT slug, title
+				FROM `' . $this->db->dbprefix('plugin_fs-articles') . '`
+				WHERE ' . ($where=='top'?'top':'bottom') . ' = 1
+			');
+			
+			$this->cache->save(
+				'foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/' . $where,
+				$query,
+				300
+			);
+		}
 		
 		if($query->num_rows() == 0)
 			return array('return' => $nav);
@@ -478,6 +496,8 @@ class FS_Articles extends Plugins_model
 		{
 			$this->db->insert('plugin_fs-articles', $data);
 		}
+		
+		$this->clear_cache();
 	}
 	
 	

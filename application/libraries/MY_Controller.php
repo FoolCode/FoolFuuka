@@ -27,6 +27,7 @@ class MY_Controller extends CI_Controller
 
 			//$this->output->enable_profiler(TRUE);
 			$this->load->database();
+			$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
 			$this->load->library('session');
 			$this->load->library('tank_auth', array(), 'auth');
 

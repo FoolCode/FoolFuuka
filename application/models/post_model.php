@@ -535,8 +535,6 @@ class Post_model extends CI_Model
 			// fallback if the preview size because spoiler thumbnails in archive may not have sizes
 			if ($post->spoiler && $post->preview_w == 0)
 			{
-				$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
-
 				if(!$imgsize = $this->cache->get('foolfuuka_' .
 					config_item('encryption_key') . '_board_' .
 					$board->id . '_spoiler_size_' . $post->media_orig)
@@ -1782,7 +1780,6 @@ class Post_model extends CI_Model
 		}
 
 		// cache the count or get the cached count
-		$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
 		if($type == 'ghost')
 		{
 			$type_cache = 'ghost_num';
@@ -2177,7 +2174,6 @@ class Post_model extends CI_Model
 
 
 		// cache the count or get the cached count
-		$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'dummy'));
 		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type))
 		{
 			switch ($type)

@@ -11,7 +11,7 @@ class Boards extends Admin_Controller
 	function __construct()
 	{
 		parent::__construct();
-		
+
 		$this->auth->is_admin() or redirect('@system/admin');
 
 		// for safety let's load all boards all the time
@@ -551,6 +551,16 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 			'validation' => 'trim|is_natural',
 			'preferences' => TRUE,
 			'help' => __('Set the maximum number of children to fork for searchd.'),
+			'class' => 'span1'
+		);
+
+		$form['fu_sphinx_max_matches'] = array(
+			'type' => 'input',
+			'label' => 'Max Matches',
+			'placeholder' => 0,
+			'validation' => 'trim|is_natural',
+			'preferences' => TRUE,
+			'help' => __('Set the maximum amount of matches the search daemon keeps in RAM for each index and results returned to the client.'),
 			'class' => 'span1'
 		);
 

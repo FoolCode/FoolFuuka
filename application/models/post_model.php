@@ -314,13 +314,13 @@ class Post_model extends CI_Model
 				$image = $post->preview_reply ? : $post->preview_op;
 			}
 		}
-		
+
 		// full image
 		if (!$thumbnail && file_exists($this->get_media_dir($board, $post, FALSE)))
 		{
 			$image = $post->media;
 		}
-		
+
 		// fallback if we have the full image but not the thumbnail
 		if ($thumbnail && !isset($image) && file_exists($this->get_media_dir($board, $post, FALSE)))
 		{
@@ -1435,7 +1435,7 @@ class Post_model extends CI_Model
 
 			// set sphinx options
 			$this->db->limit($limit, ($args['page'] * $limit) - $limit)
-				->sphinx_option('max_matches', 5000)
+				->sphinx_option('max_matches', get_setting('fu_sphinx_max_matches', 5000))
 				->sphinx_option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
 
 			// send sphinxql to searchd
@@ -1463,7 +1463,7 @@ class Post_model extends CI_Model
 			}
 
 			// query mysql for full records
-			$query = $this->db->query(implode('UNION', $sql) . ' 
+			$query = $this->db->query(implode('UNION', $sql) . '
 				ORDER BY timestamp ' . (($args['order'] == 'asc') ? 'ASC' : 'DESC') .',
 				num ' . (($args['order'] == 'asc') ? 'ASC' : 'DESC'));
 			$total = $search['total_found'];

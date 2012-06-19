@@ -942,6 +942,7 @@ class Chan extends Public_Controller
 				'latest_doc_id' => $latest_doc_id
 			)
 		);
+		$this->theme->set_metadata('<meta name="robots" content="noindex" />');
 		$this->theme->build('board');
 	}
 
@@ -1487,6 +1488,12 @@ class Chan extends Public_Controller
 		//	$this->theme->set_title($radix->formatted_title .
 		//		' &raquo; ' . $title);
 
+		$max_results = 5000;
+		if ($radix === FALSE || $radix->sphinx)
+		{
+			$max_results = get_setting('fu_sphinx_max_matches', 5000);
+		}
+
 		$this->_set_parameters(
 			array(
 				'section_title' => $title,
@@ -1498,7 +1505,7 @@ class Chan extends Public_Controller
 				'pagination' => array(
 					'base_url' => site_url($prepend_uri . '/' . $this->uri->assoc_to_uri($uri_array). '/page'),
 					'current_page' => $page,
-					'total' => ceil((($result['total_found'] > 5000) ? 5000 : $result['total_found']) / 25)
+					'total' => ceil((($result['total_found'] > $max_results) ? $max_results : $result['total_found']) / 25)
 				)
 			),
 			array(
@@ -1516,7 +1523,7 @@ class Chan extends Public_Controller
 			$this->theme->set_title(__('Global Search'));
 		}
 
-		$this->theme->set_metadata('<meta name="robots" content=""noindex" />');
+		$this->theme->set_metadata('<meta name="robots" content="noindex" />');
 		$this->theme->build('board');
 	}
 

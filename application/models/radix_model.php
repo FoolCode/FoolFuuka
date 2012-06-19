@@ -449,7 +449,6 @@ class Radix_model extends CI_Model
 				'boards_preferences' => TRUE,
 				'help' => __('Should the image spoilers be semi-transparent? (mods and admins have it always on for moderation)'),
 				'type' => 'checkbox',
-				'disabled' => 'disabled'
 			),
 			'display_exif' => array(
 				'database' => TRUE,

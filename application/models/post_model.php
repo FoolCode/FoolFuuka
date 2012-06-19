@@ -1465,7 +1465,9 @@ class Post_model extends CI_Model
 			}
 
 			// query mysql for full records
-			$query = $this->db->query(implode('UNION', $sql) . ' ORDER BY timestamp ' . (($args['order'] == 'asc') ? 'ASC' : 'DESC'));
+			$query = $this->db->query(implode('UNION', $sql) . ' 
+				ORDER BY timestamp ' . (($args['order'] == 'asc') ? 'ASC' : 'DESC') .',
+				num ' . (($args['order'] == 'asc') ? 'ASC' : 'DESC'));
 			$total = $search['total_found'];
 		}
 		else /* use mysql as fallback for non-sphinx indexed boards */
@@ -1656,7 +1658,8 @@ class Post_model extends CI_Model
 				' . $this->sql_media_join($board) . '
 				' . $this->sql_report_join($board) . '
 				WHERE doc_id IN (' . implode(', ', $doc_ids) . ')
-				ORDER BY timestamp ' . ($args['order'] == 'asc'?'ASC':'DESC') . '
+				ORDER BY timestamp ' . ($args['order'] == 'asc'?'ASC':'DESC') . ',
+					num ' . (($args['order'] == 'asc') ? 'ASC' : 'DESC') . '
 				LIMIT ?, ?
 			', array(($args['page'] * $limit) - $limit, $limit));
 

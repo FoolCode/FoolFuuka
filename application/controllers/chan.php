@@ -1291,10 +1291,7 @@ class Chan extends Public_Controller
 				$time = $this->session->flashdata('search_deletion_captcha_time');
 				$word = $this->session->flashdata('search_deletion_captcha_word');
 
-				list($usec, $sec) = explode(" ", microtime());
-				$now = ((float)$usec + (float)$sec);
-
-				if ($now - $time > $this->config->item('captcha_expire', 'tank_auth')) {
+				if (time() - $time > $this->config->item('captcha_expire', 'tank_auth')) {
 					$captcha_error = __('The captcha expired. Try again.');
 				} elseif (($this->config->item('captcha_case_sensitive', 'tank_auth') AND
 						$code != $word) OR

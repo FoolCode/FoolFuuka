@@ -434,7 +434,7 @@ class FS_Articles extends Plugins_model
 	
 	function get_nav($where, $nav)
 	{
-		if(!$result = $this->cache->get('foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/' . $where))
+		if(FALSE === ($result = $this->cache->get('foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/' . $where)))
 		{
 			$query = $this->db->query('
 				SELECT slug, title

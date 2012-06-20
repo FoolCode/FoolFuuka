@@ -2,7 +2,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?>
+if (!isset($thread_id) && isset($is_page) && get_selected_radix() && !get_selected_radix()->archive) : ?>
 <?= form_open_multipart(get_selected_radix()->shortname .'/sending', array('id' => 'postform')) ?>
 <table style="margin-left: auto; margin-right: auto">
 	<tbody>

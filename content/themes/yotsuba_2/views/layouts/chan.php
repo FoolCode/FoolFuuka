@@ -69,6 +69,7 @@
 			<div class="navbar navbar-fixed-top">
 				<div class="navbar-inner">
 					<div class="container">
+
 						<ul class="nav">
 							<li class="dropdown">
 								<a href="<?= site_url() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">

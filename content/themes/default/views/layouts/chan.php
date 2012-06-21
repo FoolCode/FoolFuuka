@@ -35,7 +35,7 @@
 
 	</head>
 	<body class="<?= $this->theme->get_selected_theme_class(array('theme_default')) ?>">
-<?php if (get_selected_radix()) : ?>
+<?php if ($disable_headers !== TRUE) : ?>
 		<div class="letters" style="display:none"><?php
 			$board_urls = array();
 			foreach ($this->radix->get_archives() as $key => $item)

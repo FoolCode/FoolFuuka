@@ -557,7 +557,7 @@ $ php index.php cli database create_search ' . $board->shortname . '</pre>' .
 		$form['fu_sphinx_max_matches'] = array(
 			'type' => 'input',
 			'label' => 'Max Matches',
-			'placeholder' => 0,
+			'placeholder' => 5000,
 			'validation' => 'trim|is_natural',
 			'preferences' => TRUE,
 			'help' => __('Set the maximum amount of matches the search daemon keeps in RAM for each index and results returned to the client.'),

@@ -540,10 +540,13 @@ class Post_model extends CI_Model
 					$board->id . '_spoiler_size_' . $post->media_orig)
 				)
 				{
-					$imgdir = $this->get_media_dir($board, $post, TRUE);
+					$imgpath = $this->get_media_dir($board, $post, TRUE);
 					$imgsize = FALSE;
-					if($imgdir !== FALSE)
-						$imgsize = @getimagesize($imgdir);
+
+					if(file_exists($imgpath))
+					{
+						$imgsize = @getimagesize($imgpath);
+					}
 					$this->cache->save('foolfuuka_' .
 						config_item('encryption_key') . '_board_' .
 						$board->id . '_spoiler_size_' . $post->media_orig, $imgsize, 86400);

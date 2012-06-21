@@ -517,6 +517,9 @@ class Radix_model extends CI_Model
 	}
 	
 	
+	/**
+	 * Clears the APC/memcached cache 
+	 */
 	function p_clear_cache()
 	{
 		$all = $this->get_all();
@@ -760,7 +763,6 @@ class Radix_model extends CI_Model
 	 */
 	private function p_preload($preferences = FALSE)
 	{
-
 		if($this->auth->is_logged_in() || (!$object = $this->cache->get('foolfuuka/' . config_item('encryption_key') . '/models/radix/preload')))
 		{
 			if (!$this->auth->is_mod_admin())

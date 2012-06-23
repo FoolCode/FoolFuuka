@@ -1481,7 +1481,8 @@ class Radix_model extends CI_Model
 			'_threads',
 			'_users',
 			'_daily',
-			'_search'
+			'_search',
+			'_extra'
 		);
 
 		foreach ($tables as $table)

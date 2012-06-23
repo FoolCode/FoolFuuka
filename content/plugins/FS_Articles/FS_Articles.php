@@ -366,8 +366,8 @@ class FS_Articles extends Plugins_model
 	
 	function clear_cache()
 	{
-		$this->cache->delete('foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/top');	
-		$this->cache->delete('foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/bottom');	
+		$this->cache->delete('foolfuuka/' . config_item('random_id') . '/plugins/FF_Articles/get_nav/top');	
+		$this->cache->delete('foolfuuka/' . config_item('random_id') . '/plugins/FF_Articles/get_nav/bottom');	
 	}
 
 
@@ -434,7 +434,7 @@ class FS_Articles extends Plugins_model
 	
 	function get_nav($where, $nav)
 	{
-		if(FALSE === ($result = $this->cache->get('foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/' . $where)))
+		if(FALSE === ($result = $this->cache->get('foolfuuka/' . config_item('random_id') . '/plugins/FF_Articles/get_nav/' . $where)))
 		{
 			$query = $this->db->query('
 				SELECT slug, title
@@ -445,7 +445,7 @@ class FS_Articles extends Plugins_model
 			$result = $query->result();
 			
 			$this->cache->save(
-				'foolfuuka/' . config_item('encryption_key') . '/plugins/FF_Articles/get_nav/' . $where,
+				'foolfuuka/' . config_item('random_id') . '/plugins/FF_Articles/get_nav/' . $where,
 				$result,
 				300
 			);

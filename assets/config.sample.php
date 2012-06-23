@@ -31,8 +31,9 @@ $db['default']['dbprefix'] = 'fs_';
 // Session encryption: just tap randomly on your keyboard to make a random key
 $config['encryption_key'] = '';
 
-
-
+// Random ID that distinguishes this FoOlFrame from all the others on the server
+$config['random_id'] = '';
 
 // Leave this alone, it's an automation
 $config['db_table_prefix'] = $db['default']['dbprefix'];
+$config['cookie_prefix'] = strtolower(FOOL_NAME . '_' . $config['random_id'] . '_');

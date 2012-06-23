@@ -524,11 +524,11 @@ class Radix_model extends CI_Model
 	{
 		$all = $this->get_all();
 		
-		$this->cache->delete('foolfuuka/' . config_item('encryption_key') . '/models/radix/preload');
+		$this->cache->delete('foolfuuka/' . config_item('random_id') . '/models/radix/preload');
 		
 		foreach($all as $a)
 		{
-			$this->cache->delete('foolfuuka/' . config_item('encryption_key') . '/models/radix/load_preferences/' . $a->id);
+			$this->cache->delete('foolfuuka/' . config_item('random_id') . '/models/radix/load_preferences/' . $a->id);
 		}
 	}
 
@@ -764,7 +764,7 @@ class Radix_model extends CI_Model
 	 */
 	private function p_preload($preferences = FALSE)
 	{
-		if($this->auth->is_logged_in() || (!$object = $this->cache->get('foolfuuka/' . config_item('encryption_key') . '/models/radix/preload')))
+		if($this->auth->is_logged_in() || (!$object = $this->cache->get('foolfuuka/' . config_item('random_id') . '/models/radix/preload')))
 		{
 			if (!$this->auth->is_mod_admin())
 			{
@@ -775,7 +775,7 @@ class Radix_model extends CI_Model
 			$query = $this->db->get('boards');
 			$object = $query->result();
 			
-			$this->cache->save('foolfuuka/' . config_item('encryption_key') . '/models/radix/preload', $object, 900);
+			$this->cache->save('foolfuuka/' . config_item('random_id') . '/models/radix/preload', $object, 900);
 		}
 		
 		if (!is_array($object) || empty($object))
@@ -871,14 +871,14 @@ class Radix_model extends CI_Model
 		foreach ($ids as $id)
 		{
 			if(!$result = $this->cache->get(
-					'foolfuuka/' . config_item('encryption_key') . '/models/radix/load_preferences/' . $id
+					'foolfuuka/' . config_item('random_id') . '/models/radix/load_preferences/' . $id
 				)
 			)
 			{
 				$query = $this->db->where('board_id', $id)->get('boards_preferences');
 				$result = $query->result();
 				$this->cache->save(
-					'foolfuuka/' . config_item('encryption_key') . '/models/radix/load_preferences/' . $id,
+					'foolfuuka/' . config_item('random_id') . '/models/radix/load_preferences/' . $id,
 					$result,
 					900
 				);

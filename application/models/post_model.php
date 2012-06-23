@@ -557,7 +557,7 @@ class Post_model extends CI_Model
 			if ($post->spoiler && $post->preview_w == 0)
 			{
 				if(!$imgsize = $this->cache->get('foolfuuka_' .
-					config_item('encryption_key') . '_board_' .
+					config_item('random_id') . '_board_' .
 					$board->id . '_spoiler_size_' . $post->media_orig)
 				)
 				{
@@ -569,7 +569,7 @@ class Post_model extends CI_Model
 						$imgsize = @getimagesize($imgpath);
 					}
 					$this->cache->save('foolfuuka_' .
-						config_item('encryption_key') . '_board_' .
+						config_item('random_id') . '_board_' .
 						$board->id . '_spoiler_size_' . $post->media_orig, $imgsize, 86400);
 				}
 
@@ -1816,7 +1816,7 @@ class Post_model extends CI_Model
 			$type_cache = 'thread_num';
 		}
 
-		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache))
+		if(!$threads = $this->cache->get('foolfuuka_' . config_item('random_id') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache))
 		{
 			switch ($type)
 			{
@@ -1845,7 +1845,7 @@ class Post_model extends CI_Model
 			if($threads > 2500)
 			{
 				$this->cache->save(
-					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache,
+					'foolfuuka_' . config_item('random_id') . '_board_' . $board->id . '_get_latest_threads_count_' . $type_cache,
 					$threads,
 					1800
 				);
@@ -2208,7 +2208,7 @@ class Post_model extends CI_Model
 
 
 		// cache the count or get the cached count
-		if(!$threads = $this->cache->get('foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type))
+		if(!$threads = $this->cache->get('foolfuuka_' . config_item('random_id') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type))
 		{
 			switch ($type)
 			{
@@ -2234,7 +2234,7 @@ class Post_model extends CI_Model
 			if($threads > 2500)
 			{
 				$this->cache->save(
-					'foolfuuka_' . config_item('encryption_key') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type,
+					'foolfuuka_' . config_item('random_id') . '_board_' . $board->id . '_get_gallery_threads_count_' . $type,
 					$threads,
 					1800
 				);

@@ -229,6 +229,12 @@ class Install extends Install_Controller
 		$this->config->set_item('encryption_key', $random_string);
 		$config = str_replace("\$config['encryption_key'] = ''",
 			"\$config['encryption_key'] = '" . addslashes($random_string) . "'", $config);
+		
+		// random 3 letters string for distinguishing foolframes
+		$random_id = strtolower(random_string('alnum', 3));
+		$this->config->set_item('random_id', $random_id);
+		$config = str_replace("\$config['random_id'] = ''",
+			"\$config['random_id'] = '" . addslashes($random_id) . "'", $config);
 
 		// check if a manual config file must be made manually (due to no permissions on FoOlSlide root)
 		$manual_config = FALSE;

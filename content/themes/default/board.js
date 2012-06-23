@@ -874,7 +874,8 @@ jQuery(document).ready(function() {
 		if (post[1].match(/^q\d+(_\d+)?$/)) {
 			post[1] = post[1].replace('q', '').replace('_', ',');
 			jQuery("#reply_chennodiscursus").append(">>" + post[1] + "\n");
-			post[1] = post[1].replace(',', '_')
+			post[1] = post[1].replace(',', '_');
+
 		}
 		replyHighlight(post[1]);
 	}

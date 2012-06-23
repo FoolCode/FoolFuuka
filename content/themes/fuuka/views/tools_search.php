@@ -171,7 +171,7 @@ if (!isset($board))
 					<td class="postblock"><?= __('Results') ?></td>
 					<td>
 						<label>
-							<?php echo form_radio(array('name' => 'type', 'value' => 'posts', 'checked' => (empty($search["type"])) ? TRUE : FALSE)); ?>
+							<?php echo form_radio(array('name' => 'type', 'value' => '', 'checked' => (empty($search["type"])) ? TRUE : FALSE)); ?>
 							<span><?= __('All Posts') ?></span>
 						</label><br />
 						<label>

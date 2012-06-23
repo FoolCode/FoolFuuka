@@ -268,7 +268,7 @@ searchd
 	client_timeout = 300
 	max_children = ' . get_setting('fu_sphinx_max_children', 10) . '
 	pid_file = ' . get_setting('fu_sphinx_dir', '/usr/local/sphinx/var') . '/searchd.pid
-	max_matches = 5000
+	max_matches = ' . get_setting('fu_sphinx_max_matches', 5000) . '
 	seamless_rotate = 1
 	preopen_indexes = 1
 	unlink_old = 1

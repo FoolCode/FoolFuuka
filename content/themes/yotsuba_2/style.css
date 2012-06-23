@@ -25,6 +25,28 @@ body.theme_default.yotsuba_b {
 	text-shadow: none;
 }
 
+.theme_default .navbar .nav > li > a:hover {
+    color:#ddd;
+    text-shadow: none;
+}
+
+.theme_default.yotsuba_b .navbar .nav > li > a:hover {
+    color: #544cff;
+    text-shadow: none;
+}
+
+.theme_default .dropdown-menu li > a:hover,
+.theme_default .dropdown-menu .active > a,
+.theme_default .dropdown-menu .active > a:hover {
+    background:#6A836F;
+}
+
+.theme_default.yotsuba_b .dropdown-menu li > a:hover,
+.theme_default.yotsuba_b .dropdown-menu .active > a,
+.theme_default.yotsuba_b .dropdown-menu .active > a:hover {
+    background:#8181DB;
+}
+
 .theme_default .container-fluid {
 	background: transparent;
 }
@@ -75,8 +97,8 @@ body.theme_default.yotsuba_b {
 	color:#FFF !important;
 }
 
-.theme_default.yotsuba_b .btn_inverse {
-	background: #98E;
+.theme_default.yotsuba_b .btn-inverse {
+	background: #8181DB;
 }
 
 .theme_default .btn-inverse:hover {
@@ -85,7 +107,7 @@ body.theme_default.yotsuba_b {
 }
 
 .theme_default.yotsuba_b .btn-inverse:hover {
-	background: #76C;
+	background: #5d68db;
 }
 
 .theme_default .search-dropdown.active {
@@ -111,6 +133,14 @@ body.theme_default.yotsuba_b {
 
 /* BOARD */
 
+.theme_default article.thread {
+    padding: 25px 0;
+    margin: 0 15px;
+    word-wrap: break-word;
+    border-top:1px solid #9b9b9b;
+    border-top:1px solid rgba(155, 155, 155, 0.48);
+}
+
 .theme_default .post {
 	background: #F0E0D6;
 	border: 1px solid #D9BFB7;
@@ -121,13 +151,17 @@ body.theme_default.yotsuba_b {
 .theme_default.yotsuba_b .post {
 	background: #D6DAF0;
 	border: 1px solid #B7C5D9;
+    border-left: none;
+    border-top: none;
 }
 
 .theme_default .post.post_ghost {
+    border: 1px solid #baa49e;
     border-left:5px solid #A99FA7;
 }
 
 .theme_default.yotsuba_b .post.post_ghost {
+    border: 1px solid #769bb3;
     border-left:5px solid #98E;
 }
 
@@ -224,7 +258,8 @@ body.theme_default.yotsuba_b {
 }
 
 .theme_default .divider {
-    border-top: 1px solid #000;
+    border-top:1px solid #9b9b9b;
+    border-top:1px solid rgba(155, 155, 155, 0.48);
 }
 
 .theme_default section.global_message {

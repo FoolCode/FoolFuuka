@@ -18,7 +18,7 @@ class FU_Dice_Roll extends Plugins_model
 				'type' => 'checkbox',
 				'help' => __('Enable dice roll?')
 			);
-			
+
 			return array('return' => $structure);
 		});
 	}
@@ -29,7 +29,7 @@ class FU_Dice_Roll extends Plugins_model
 		{
 			return array('return' => $data);
 		}
-		
+
 		if ($data['email'] !== FALSE || $data['email'] != '')
 		{
 			if (preg_match('/dice[ +](\d+)[ d+](\d+)(([ +-]+?)(-?\d+))?/', $data['email'], $result))
@@ -39,9 +39,9 @@ class FU_Dice_Roll extends Plugins_model
 				$dice = array(
 					'total' => $result[1],
 					'side' => $result[2],
-					'modifier' => $result[3],
-					'expr' => $result[4],
-					'val' => $result[5],
+					'modifier' => (isset($result[3]) ? $result[3] : NULL),
+					'expr' => (isset($result[4]) ? $result[4] : '+'),
+					'val' => (isset($result[5]) ? $result[5] : 0),
 					'sum' => 0,
 					'output' => array()
 				);
@@ -55,7 +55,7 @@ class FU_Dice_Roll extends Plugins_model
 
 				if ($dice['modifier'] !== NULL)
 				{
-					if (strpos($dice['modifier'], '-') !== FALSE)
+					if (strpos($dice['expr'], '-') !== FALSE)
 					{
 						$dice['val'] *= -1;
 					}

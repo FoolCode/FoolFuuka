@@ -199,10 +199,10 @@ class Theme_model extends CI_Model
 
 	public function get_selected_theme_class($class = array())
 	{
-		if (($theme_styles = $this->get_available_styles($this->_selected_theme)))
+		if ($theme_styles = $this->get_available_styles($this->_selected_theme))
 		{
 			$style = $this->input->cookie('foolfuuka_theme_' . $this->_selected_theme . '_style');
-			if (in_array($style, $theme_styles))
+			if ($style !== FALSE && in_array($style, $theme_styles))
 				$class[] = $style;
 			else
 				$class[] = current($theme_styles);

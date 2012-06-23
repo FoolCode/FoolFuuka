@@ -861,14 +861,6 @@ jQuery(document).ready(function() {
 		jQuery('.file_search_remove').remove();
 	}
 
-	// keep it scrolled down while we add the uglier top header
-	var brand = jQuery('.brand:eq(0)');
-	jQuery('.letters').show();
-	var brand_offset = brand.offset().top;
-	if(jQuery(window).scrollTop() <= brand_offset)
-		jQuery.scrollTo(brand_offset);
-
-
 	var post = location.href.split(/#/);
 	if (post[1]) {
 		if (post[1].match(/^q\d+(_\d+)?$/)) {

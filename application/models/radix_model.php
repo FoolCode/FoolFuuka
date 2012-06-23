@@ -629,6 +629,7 @@ class Radix_model extends CI_Model
 			// remove the triggers just to be safe
 			$this->mysql_remove_triggers($board);
 			$this->mysql_create_tables($board);
+			$this->mysql_create_extra($board);
 			$this->mysql_create_triggers($board);
 
 			// if the user didn't select sphinx for search, enable the table _search silently
@@ -1219,6 +1220,29 @@ class Radix_model extends CI_Model
 			)
 			ON DUPLICATE KEY UPDATE banned = 1
 		');
+	}
+	
+	
+	/**
+	 * Creates the special "_extra" table for plugins
+	 * 
+	 * @param object $board the board object
+	 */
+	private function p_mysql_create_extra($board)
+	{
+		// with true it gives the charset string directly
+		$charset = $this->mysql_check_multibyte(TRUE);
+		
+		$this->db->query("
+			CREATE TABLE IF NOT EXISTS " . $this->get_table($board, '_extra') . " (
+				doc_id int unsigned NOT NULL auto_increment,
+				json text,
+
+				PRIMARY KEY (`doc_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=" . $charset . ";
+		");
+		
+		$columns = $this->plugins->run_hook('model/radix/mysql_create_extra/columns');
 	}
 
 

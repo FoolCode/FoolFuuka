@@ -36,7 +36,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 			echo form_input(array(
 				'name' => 'reply_bokunonome',
 				'id' => 'reply_bokunonome',
-				'value' => ((isset($this->fu_reply_name)) ? $this->fu_reply_name : '')
+				'value' => $this->fu->reply_name
 			));
 			?>
 		</div>
@@ -52,7 +52,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 			echo form_input(array(
 				'name' => 'reply_elitterae',
 				'id' => 'reply_elitterae',
-				'value' => ((isset($this->fu_reply_email)) ? $this->fu_reply_email : '')
+				'value' => $this->fu->reply_email
 			));
 			?>
 		</div>
@@ -70,7 +70,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 			echo form_password(array(
 				'name' => 'reply_nymphassword',
 				'id' => 'reply_nymphassword',
-				'value' => $this->fu_reply_password,
+				'value' => $this->fu->reply_password,
 				'required' => 'required'
 			));
 			?>

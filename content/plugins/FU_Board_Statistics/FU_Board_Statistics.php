@@ -548,7 +548,7 @@ class FU_Board_Statistics extends Plugins_model
 	{
 		$query = $this->db->query('
 			SELECT
-				(FLOOR(timestamp/300)%288)*300 AS time, COUNT(timestamp), COUNT(media_id),
+				(FLOOR(timestamp/300)%288)*300 AS time, COUNT(timestamp), COUNT(media_hash),
 				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM ' . $this->radix->get_table($board) . '
 			USE INDEX(timestamp_index)
@@ -588,7 +588,7 @@ class FU_Board_Statistics extends Plugins_model
 	{
 		$query = $this->db->query('
 			SELECT
-				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(timestamp), COUNT(media_id),
+				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(timestamp), COUNT(media_hash),
 				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
 			FROM ' . $this->radix->get_table($board) . '
 			USE INDEX(timestamp_index)
@@ -824,7 +824,8 @@ class FU_Board_Statistics extends Plugins_model
 
 	function generate_gnuplot_template($stat)
 	{
-		$options = $this->stats[$stat]['gnuplot'];
+		$stats = $this->get_available_stats();
+		$options = $stats[$stat]['gnuplot'];
 
 		$template = array();
 		$template[] = "set terminal png transparent size 800,600";
@@ -867,93 +868,99 @@ class FU_Board_Statistics extends Plugins_model
 
 		$available = $this->get_available_stats();
 
-		// Obtain all of the statistics already stored on the database to check for update frequency.
-		$stats = $this->db->query('
-			SELECT
-				board_id, name, timestamp
-			FROM ' . $this->db->protect_identifiers('plugin_fu-board-statistics',
-			TRUE) . '
-			ORDER BY timestamp DESC
-		');
-
-		// Obtain the list of all statistics enabled.
-		$avail = array();
-		foreach ($available as $k => $a)
+		while(true)
 		{
-			// get only the non-realtime ones
-			if (isset($available['frequency']))
-				$avail[] = $k;
-		}
-
-		foreach ($boards as $board)
-		{
-			if (!is_null($shortname) && $shortname != $board->shortname)
-				continue;
-
-			// Update all statistics for the specified board or current board.
-			echo $board->shortname . ' (' . $board->id . ')' . PHP_EOL;
+			// Obtain all of the statistics already stored on the database to check for update frequency.
+			$stats = $this->db->query('
+				SELECT
+					board_id, name, timestamp
+				FROM ' . $this->db->protect_identifiers('plugin_fu-board-statistics',
+				TRUE) . '
+				ORDER BY timestamp DESC
+			');
+	
+			// Obtain the list of all statistics enabled.
+			$avail = array();
 			foreach ($available as $k => $a)
 			{
-				echo '  ' . $k . ' ';
-				$found = FALSE;
-				$skip = FALSE;
-				foreach ($stats->result() as $r)
-				{
-					// Determine if the statistics already exists or that the information is outdated.
-					if ($r->board_id == $board->id && $r->name == $k)
-					{
-						// This statistics report has run once already.
-						$found = TRUE;
-
-						if(!isset($a['frequency']))
-						{
-							$skip = TRUE;
-							continue;
-						}
-
-						// This statistics report has not reached its frequency EOL.
-						if ((time() - strtotime($r->timestamp)) <= $a['frequency'])
-						{
-							$skip = TRUE;
-							continue;
-						}
-
-						// This statistics report has another process locked.
-						if (!$this->lock_stat($r->board_id, $k, $r->timestamp))
-						{
-							continue;
-						}
-						break;
-					}
-				}
-
-				// racing conditions with our cron.
-				if ($found === FALSE)
-				{
-					$this->save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
-				}
-
-				// We were able to obtain a LOCK on the statistics report and has already reached the
-				// targeted frequency time.
-				if ($skip === FALSE)
-				{
-					echo '* Processing...';
-					$process = 'process_' . $k;
-					$this->db->reconnect();
-					$result = $this->$process($board);
-
-					// This statistics report generates a graph via GNUPLOT.
-					if (isset($this->stats[$k]['gnuplot']) && is_array($result) && !empty($result))
-					{
-						$this->graph_gnuplot($board->shortname, $k, $result);
-					}
-
-					// Save the statistics report in a JSON array.
-					$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
-				}
-
-				echo PHP_EOL;
+				// get only the non-realtime ones
+				if (isset($available['frequency']))
+					$avail[] = $k;
 			}
+		
+			foreach ($boards as $board)
+			{
+				if (!is_null($shortname) && $shortname != $board->shortname)
+					continue;
+	
+				// Update all statistics for the specified board or current board.
+				echo $board->shortname . ' (' . $board->id . ')' . PHP_EOL;
+				foreach ($available as $k => $a)
+				{
+					echo '  ' . $k . ' ';
+					$found = FALSE;
+					$skip = FALSE;
+					foreach ($stats->result() as $r)
+					{
+						// Determine if the statistics already exists or that the information is outdated.
+						if ($r->board_id == $board->id && $r->name == $k)
+						{
+							// This statistics report has run once already.
+							$found = TRUE;
+	
+							if(!isset($a['frequency']))
+							{
+								$skip = TRUE;
+								continue;
+							}
+	
+							// This statistics report has not reached its frequency EOL.
+							if ((time() - strtotime($r->timestamp)) <= $a['frequency'])
+							{
+								$skip = TRUE;
+								continue;
+							}
+	
+							// This statistics report has another process locked.
+							if (!$this->lock_stat($r->board_id, $k, $r->timestamp))
+							{
+								continue;
+							}
+							break;
+						}
+					}
+	
+					// racing conditions with our cron.
+					if ($found === FALSE)
+					{
+						$this->save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
+					}
+	
+					// We were able to obtain a LOCK on the statistics report and has already reached the
+					// targeted frequency time.
+					if ($skip === FALSE)
+					{
+						echo '* Processing...';
+						$process = 'process_' . $k;
+						$this->db->reconnect();
+						$result = $this->$process($board);
+	
+						// This statistics report generates a graph via GNUPLOT.
+						if (isset($available[$k]['gnuplot']) && is_array($result) && !empty($result))
+						{
+							$this->graph_gnuplot($board->shortname, $k, $result);
+						}
+	
+						// Save the statistics report in a JSON array.
+						$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
+					}
+	
+					echo PHP_EOL;
+				}
+			}
+			
+			$stats->free_result();
+			sleep(10);
 		}
 	}
 	

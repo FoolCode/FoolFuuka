@@ -87,6 +87,7 @@ class Cli extends MY_Controller
 				cli_notice('notice', 'php index.php cli database ...');
 				cli_notice('notice', '    create_search <board_shortname>             Creates the _search table necessary if you don\'t have SphinxSearch');
 				cli_notice('notice', '    drop_search <board_shortname>               Drops the _search table, good idea if you don\'t need it anymore after implementing SphinxSearch');
+				cli_notice('notice', '    create_extra <board_shortname>              Creates the _extra table for the board');
 				cli_notice('notice', '    mysql_convert_utf8mb4 <board_shortname>     Converts the MySQL tables to support 4byte characters that otherwise get ignored.');
 				cli_notice('notice', '    recreate_triggers <board_shortname>         Recreate triggers for the selected board.');
 				cli_notice('notice', '    recheck_banned [<board_shortname>]          Try deleting banned images, if there\'s any left.');
@@ -110,6 +111,16 @@ class Cli extends MY_Controller
 				if(!$board)
 					return $this->_error('_parameter_board_exist');
 				$result = $this->radix->remove_search($board);
+				break;
+				
+			// create the _search table for a specific board
+			case 'create_extra':
+				if(!isset($parameters[1]))
+					return $this->_error('_parameter_board');
+				$board = $this->radix->get_by_shortname($parameters[1]);
+				if(!$board)
+					return $this->_error('_parameter_board_exist');
+				$result = $this->radix->mysql_create_extra($board);
 				break;
 				
 			// convert a specific board to utf8mb4

@@ -18,11 +18,11 @@ if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?
 					<tbody>
 						<tr>
 							<td class="postblock"><?= __('Name') ?></td>
-							<td><?php echo form_input(array('name' => 'NAMAE', 'size' => 63, 'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:''))) ?></td>
+							<td><?php echo form_input(array('name' => 'NAMAE', 'size' => 63, 'value' => $this->fu->reply_name)) ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('E-mail') ?></td>
-							<td><?php echo form_input(array('name' => 'MERU', 'size' => 63, 'value' => ((isset($this->fu_reply_email))?$this->fu_reply_email:''))) ?></td>
+							<td><?php echo form_input(array('name' => 'MERU', 'size' => 63, 'value' => $this->fu->reply_email)) ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Subject') ?></td>
@@ -42,7 +42,7 @@ if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
-							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)) ?></td>
+							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu->reply_password)) ?></td>
 						</tr>
 						<?php if ($this->auth->is_mod_admin()) : ?>
 						<tr>
@@ -99,11 +99,11 @@ if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?
 					<tbody>
 						<tr>
 							<td class="postblock"><?= __('Name') ?></td>
-							<td><?php echo form_input(array('name' => 'NAMAE', 'size' => 63, 'value' => ((isset($this->fu_reply_name))?$this->fu_reply_name:''))); ?></td>
+							<td><?php echo form_input(array('name' => 'NAMAE', 'size' => 63, 'value' => $this->fu->reply_name)); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('E-mail') ?></td>
-							<td><?php echo form_input(array('name' => 'MERU', 'size' => 63, 'value' => ((isset($this->fu_reply_email))?$this->fu_reply_email:''))); ?></td>
+							<td><?php echo form_input(array('name' => 'MERU', 'size' => 63, 'value' => $this->fu->reply_email)); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Subject') ?></td>
@@ -125,7 +125,7 @@ if (!isset($thread_id) && isset($is_page) && !get_selected_radix()->archive) : ?
 						<?php endif; ?>
 						<tr>
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
-							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu_reply_password)); ?></td>
+							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu->reply_password)); ?></td>
 						</tr>
 						<?php if ($this->auth->is_mod_admin()) : ?>
 						<tr>

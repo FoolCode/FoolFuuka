@@ -23,7 +23,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				echo form_input(array(
 					'name' => 'reply_bokunonome',
 					'id' => 'reply_bokunonome',
-					'value' => ((isset($this->fu_reply_name)) ? $this->fu_reply_name : '')
+					'value' => $this->fu->reply_name
 				));
 			?></td>
 		</tr>
@@ -39,7 +39,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 				echo form_input(array(
 					'name' => 'reply_elitterae',
 					'id' => 'reply_elitterae',
-					'value' => ((isset($this->fu_reply_email)) ? $this->fu_reply_email : '')
+					'value' => $this->fu->reply_email
 				));
 			?></td>
 		</tr>
@@ -105,7 +105,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !get_selecte
 			<td><?=  form_password(array(
 					'name' => 'reply_nymphassword',
 					'id' => 'reply_nymphassword',
-					'value' => $this->fu_reply_password,
+					'value' => $this->fu->reply_password,
 					'required' => 'required'
 				));
 				?> <span style="font-size: smaller;">(Password used for file deletion)</span>

@@ -8,6 +8,12 @@ class Public_Controller extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		
+		// fu is a general variable containing things like cookies
+		if(!isset($this->fu))
+		{
+			$this->fu = new stdClass();
+		}
 
 		// get the password needed for the reply field
 		if($this->input->cookie('foolfuuka_reply_password') == FALSE || strlen($this->input->cookie('foolfuuka_reply_password')) < 3)
@@ -16,29 +22,24 @@ class Public_Controller extends MY_Controller
 			$this->load->helper('string');
 			$rand_pass = random_string('alnum', 16);
 			$this->input->set_cookie('foolfuuka_reply_password', $rand_pass, 60*60*24*30);
-			$this->fu_reply_password = $rand_pass;
+			$this->fu->reply_password = $rand_pass;
 		}
 		else
 		{
-			$this->fu_reply_password = $this->input->cookie('foolfuuka_reply_password');
+			$this->fu->reply_password = $this->input->cookie('foolfuuka_reply_password');
 		}
 
+		$this->fu->reply_email = '';
+		$this->fu->reply_name = '';
+		
 		if($this->input->cookie('foolfuuka_reply_email') != FALSE)
 		{
-			$this->fu_reply_email = $this->input->cookie('foolfuuka_reply_email');
-		}
-		else
-		{
-			$this->fu_reply_email = '';
+			$this->fu->reply_email = $this->input->cookie('foolfuuka_reply_email');
 		}
 
 		if($this->input->cookie('foolfuuka_reply_name') != FALSE)
 		{
-			$this->fu_reply_name = $this->input->cookie('foolfuuka_reply_name');
-		}
-		else
-		{
-			$this->fu_reply_name = '';
+			$this->fu->reply_name = $this->input->cookie('foolfuuka_reply_name');
 		}
 
 		$this->load->model('theme_model', 'theme');

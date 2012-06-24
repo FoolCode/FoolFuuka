@@ -186,27 +186,6 @@ class Post_model extends CI_Model
 
 
 	/**
-	 * Returns the SQL string to append to queries to be able to
-	 * get the entries from the extra table
-	 *
-	 * @param object $board
-	 * @param bool|string $join_on alternative join table name
-	 * @return string SQL to append to retrieve extra data
-	 */
-	private function p_sql_extra_join($board, $join_on = FALSE)
-	{
-		return '
-			LEFT JOIN
-				' . $this->radix->get_table($board, '_extra') . ' AS `xg`
-			ON
-			' . ($join_on ? $join_on : $this->radix->get_table($board)) . '.`doc_id`
-			=
-			' . $this->db->protect_identifiers('xg') . '.`doc_id`
-		';
-	}
-
-
-	/**
 	 * Puts in the $posts_arr class variable the number of the posts that
 	 * we for sure know exist since we've fetched them once during processing
 	 *
@@ -1480,7 +1459,6 @@ class Post_model extends CI_Model
 						SELECT *, ' . $result['board'] . ' AS board
 						FROM ' . $this->radix->get_table($this->radix->get_by_id($result['board'])) . '
 						' . $this->sql_media_join($this->radix->get_by_id($result['board'])) . '
-						' . $this->sql_extra_join($this->radix->get_by_id($result['board'])) . '
 						' . $this->sql_report_join($this->radix->get_by_id($result['board'])) . '
 						WHERE num = ' . $result['num'] . ' AND subnum = ' . $result['subnum'] . '
 					)
@@ -1679,7 +1657,6 @@ class Post_model extends CI_Model
 				SELECT *
 				FROM ' . $this->radix->get_table($board) . '
 				' . $this->sql_media_join($board) . '
-				' . $this->sql_extra_join($board) . '
 				' . $this->sql_report_join($board) . '
 				WHERE doc_id IN (' . implode(', ', $doc_ids) . ')
 				ORDER BY timestamp ' . ($args['order'] == 'asc'?'ASC':'DESC') . ',
@@ -1790,7 +1767,6 @@ class Post_model extends CI_Model
 					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
 						ON g.num = t.unq_thread_num AND g.subnum = 0
 					' . $this->sql_media_join($board, 'g') . '
-					' . $this->sql_extra_join($board, 'g') . '
 					' . $this->sql_report_join($board, 'g') . '
 				',
 					array(
@@ -1885,7 +1861,6 @@ class Post_model extends CI_Model
 					SELECT *
 					FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
-					' . $this->sql_extra_join($board) . '
 					' . $this->sql_report_join($board) . '
 					WHERE thread_num = ' . $thread->unq_thread_num . '
 					ORDER BY op DESC, num DESC, subnum DESC
@@ -1984,7 +1959,6 @@ class Post_model extends CI_Model
 					SELECT *
 					FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
-					' . $this->sql_extra_join($board) . '
 					' . $this->sql_report_join($board) . '
 					WHERE thread_num = ? AND doc_id > ?
 					ORDER BY num, subnum ASC
@@ -2000,7 +1974,6 @@ class Post_model extends CI_Model
 					SELECT *
 					FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
-					' . $this->sql_extra_join($board) . '
 					' . $this->sql_report_join($board) . '
 					WHERE thread_num = ? AND subnum <> 0
 					ORDER BY num, subnum ASC
@@ -2036,7 +2009,6 @@ class Post_model extends CI_Model
 						)
 					) AS x
 					' . $this->sql_media_join($board, 'x') . '
-					' . $this->sql_extra_join($board, 'x') . '
 					' . $this->sql_report_join($board, 'x') . '
 					ORDER BY num, subnum ASC
 				',
@@ -2052,7 +2024,6 @@ class Post_model extends CI_Model
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
-					' . $this->sql_extra_join($board) . '
 					' . $this->sql_report_join($board) . '
 					WHERE thread_num = ?
 					ORDER BY num, subnum ASC
@@ -2165,7 +2136,6 @@ class Post_model extends CI_Model
 				$query = $this->db->query('
 					SELECT * FROM ' . $this->radix->get_table($board) . '
 					' . $this->sql_media_join($board) . '
-					' . $this->sql_extra_join($board) . '
 					' . $this->sql_report_join($board) . '
 					WHERE ' . $this->radix->get_table($board) . '.`media_id` <> 0
 					ORDER BY timestamp DESC LIMIT ?, ?
@@ -2190,7 +2160,6 @@ class Post_model extends CI_Model
 					LEFT JOIN ' . $this->radix->get_table($board) . ' AS g
 						ON g.num = t.unq_thread_num AND g.subnum = 0
 					' . $this->sql_media_join($board, 'g') . '
-					' . $this->sql_extra_join($board, 'g') . '
 					' . $this->sql_report_join($board, 'g') . '
 				',
 					array(
@@ -2305,7 +2274,6 @@ class Post_model extends CI_Model
 						SELECT *, CONCAT(' . $this->db->escape($posts['board_id']) . ') AS board_id
 						FROM ' . $this->radix->get_table($board) . ' AS g
 						' . $this->sql_media_join($board, 'g') . '
-						' . $this->sql_extra_join($board, 'g') . '
 						' . $this->sql_report_join($board, 'g') . '
 						WHERE g.`doc_id` = ' . implode(' OR g.`doc_id` = ', $posts['doc_id']) . '
 					)
@@ -2357,7 +2325,6 @@ class Post_model extends CI_Model
 			SELECT num, thread_num, subnum
 			FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
-			' . $this->sql_extra_join($board) . '
 			WHERE num = ? AND subnum = ? LIMIT 0, 1
 		',
 			array($num, $subnum)
@@ -2403,7 +2370,6 @@ class Post_model extends CI_Model
 			SELECT *
 			FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
-			' . $this->sql_extra_join($board) . '
 			WHERE num = ? AND subnum = ? LIMIT 0, 1
 		',
 			array($num, $subnum)
@@ -2432,7 +2398,6 @@ class Post_model extends CI_Model
 		$query = $this->db->query('
 			SELECT * ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
-			' . $this->sql_extra_join($board) . '
 			WHERE doc_id = ? LIMIT 0, 1
 		',
 			array($doc_id)
@@ -2459,7 +2424,6 @@ class Post_model extends CI_Model
 		$query = $this->db->query('
 			SELECT * FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
-			' . $this->sql_extra_join($board) . '
 			' . $this->sql_report_join($board) . '
 			WHERE doc_id = ? LIMIT 0, 1;
 		',
@@ -2487,7 +2451,6 @@ class Post_model extends CI_Model
 		$query = $this->db->query('
 			SELECT * FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
-			' . $this->sql_extra_join($board) . '
 			WHERE media_orig = ?
 			ORDER BY num DESC LIMIT 0, 1
 		',
@@ -3045,7 +3008,6 @@ class Post_model extends CI_Model
 				SELECT *
 				FROM ' . $this->radix->get_table($board) . '
 				' . $this->sql_media_join($board) . '
-				' . $this->sql_extra_join($board) . '
 				WHERE poster_ip = ? AND comment = ? AND  timestamp >= ?
 				ORDER BY doc_id DESC
 			',
@@ -3068,32 +3030,6 @@ class Post_model extends CI_Model
 			}
 		}
 
-		// Hook system for filling the _extra table
-		$extra = array($insert_id);
-
-		// json is stored in json column as a string, and you just send the result array to it
-		$json_array = $this->plugins->run_hook('model/post/comment/extra_json', array($default_post_arr));
-		if(isset($json_array['return']) && is_array($json_array['return']))
-		{
-			$extra[] = json_encode($json_array['return']);
-		}
-
-		// the plugin must create extra columns by itself to use this array. keys must be the columns
-		$extra_columns = array();
-		$data_array = $this->plugins->run_hook('model/post/comment/extra_data', array($default_post_arr));
-		if(isset($data_array['return']) && is_array($data_array['return']))
-		{
-			$extra_columns = array_keys($data_array['return']);
-			$extra = array_merge($extra, array_values($data_array['return']));
-		}
-
-		$this->db->query('
-			INSERT INTO ' . $this->radix->get_table($board, '_extra') .'
-			(doc_id, json' . (!empty($extra_columns)?', ' . implode(', ', $extra_columns):'') . ')
-			VALUES
-			(' . implode(', ', array_map(function($extra){ return '?'; }, $extra)). ')',
-			$extra
-		);
 		
 		$this->db->trans_commit();
 
@@ -3193,7 +3129,6 @@ class Post_model extends CI_Model
 		$query = $this->db->query('
 			SELECT * FROM ' . $this->radix->get_table($board) . '
 			' . $this->sql_media_join($board) . '
-			' . $this->sql_extra_join($board) . '
 			WHERE doc_id = ? LIMIT 0, 1
 		',
 			array($post['doc_id'])
@@ -3255,7 +3190,6 @@ class Post_model extends CI_Model
 			$thread = $this->db->query('
 				SELECT * FROM ' . $this->radix->get_table($board) . '
 				' . $this->sql_media_join($board) . '
-				' . $this->sql_extra_join($board) . '
 				WHERE thread_num = ?
 			',array($row->num));
 

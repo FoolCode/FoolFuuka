@@ -705,7 +705,7 @@ class Tank_auth
 
 		if ($this->ci->user_autologin->set($user_id, md5($key)))
 		{
-			set_cookie(array(
+			$this->ci->input->set_cookie(array(
 				'name' => $this->ci->config->item('autologin_cookie_name', 'tank_auth'),
 				'value' => serialize(array('user_id' => $user_id, 'key' => $key)),
 				'expire' => $this->ci->config->item('autologin_cookie_life', 'tank_auth'),
@@ -768,7 +768,7 @@ class Tank_auth
 
 
 						// Renew users cookie to prevent it from expiring
-						set_cookie(array(
+						$this->ci->input->set_cookie(array(
 							'name' => $this->ci->config->item('autologin_cookie_name', 'tank_auth'),
 							'value' => $cookie,
 							'expire' => $this->ci->config->item('autologin_cookie_life', 'tank_auth'),

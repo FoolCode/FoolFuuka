@@ -1235,7 +1235,7 @@ class Radix_model extends CI_Model
 		
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS " . $this->get_table($board, '_extra') . " (
-				doc_id int unsigned NOT NULL auto_increment,
+				doc_id int unsigned NOT NULL,
 				json text,
 
 				PRIMARY KEY (`doc_id`)

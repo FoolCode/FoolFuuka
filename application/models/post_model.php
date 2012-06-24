@@ -2882,6 +2882,13 @@ class Post_model extends CI_Model
 				$timestamp = time() - ($diff * 60 * 60);
 			}
 
+			$default_post_arr = array(
+				$num, $num, $num, $num, $num, $timestamp, $lvl,
+				($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL,
+				($subject)?$subject:NULL, ($comment)?$comment:NULL,
+				$password, $this->input->ip_address(), $poster_hash
+			);
+			
 			// ghost reply to existing thread
 			$this->db->query('
 				INSERT INTO ' . $this->radix->get_table($board) . '
@@ -2919,12 +2926,7 @@ class Post_model extends CI_Model
 					?, ?, ?, ?, ?, ?, ?, ?
 				)
 			',
-				array(
-					$num, $num, $num, $num, $num, $timestamp, $lvl,
-					($email)?$email:NULL, ($name)?$name:NULL, ($trip)?$trip:NULL,
-					($subject)?$subject:NULL, ($comment)?$comment:NULL,
-					$password, $this->input->ip_address(), $poster_hash
-				)
+				$default_post_arr
 			);
 
 			// we can grab the ID only here
@@ -3037,7 +3039,7 @@ class Post_model extends CI_Model
 
 			// we can grab the ID only here
 			$insert_id = $this->db->insert_id();
-
+			
 			// check that it wasn't posted multiple times
 			$check_duplicate = $this->db->query('
 				SELECT *
@@ -3066,6 +3068,33 @@ class Post_model extends CI_Model
 			}
 		}
 
+		// Hook system for filling the _extra table
+		$extra = array($insert_id);
+
+		// json is stored in json column as a string, and you just send the result array to it
+		$json_array = $this->plugins->run_hook('model/post/comment/extra_json', array($default_post_arr));
+		if(isset($json_array['return']) && is_array($json_array['return']))
+		{
+			$extra[] = json_encode($json_array['return']);
+		}
+
+		// the plugin must create extra columns by itself to use this array. keys must be the columns
+		$extra_columns = array();
+		$data_array = $this->plugins->run_hook('model/post/comment/extra_data', array($default_post_arr));
+		if(isset($data_array['return']) && is_array($data_array['return']))
+		{
+			$extra_columns = array_keys($data_array['return']);
+			$extra = array_merge($extra, array_values($data_array['return']));
+		}
+
+		$this->db->query('
+			INSERT INTO ' . $this->radix->get_table($board, '_extra') .'
+			(doc_id, json' . (!empty($extra_columns)?', ' . implode(', ', $extra_columns):'') . ')
+			VALUES
+			(' . implode(', ', array_map(function($extra){ return '?'; }, $extra)). ')',
+			$extra
+		);
+		
 		$this->db->trans_commit();
 
 		// success, now check if there's extra work to do

@@ -124,13 +124,13 @@
 									<li>
 										<a href="<?= site_url(array(get_selected_radix()->shortname, 'by_post')) ?>">
 											<?= __('By Post') ?>
-											<?php if ($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) != 1) echo ' <i class="icon-ok"></i>'; ?>
+											<?php if ($this->input->cookie('default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) != 1) echo ' <i class="icon-ok"></i>'; ?>
 										</a>
 									</li>
 									<li>
 										<a href="<?= site_url(array(get_selected_radix()->shortname, 'by_thread')) ?>">
 											<?= __('By Thread') ?>
-											<?php if ($this->input->cookie('foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) == 1) echo ' <i class="icon-ok"></i>'; ?>
+											<?php if ($this->input->cookie('default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board')) == 1) echo ' <i class="icon-ok"></i>'; ?>
 										</a>
 									</li>
 								</ul>
@@ -267,7 +267,7 @@
 					<?php foreach(config_item('ff_available_languages') as $key => $lang) : ?>
 						 <li>
 							 <a href="<?= site_url(array('@system', 'functions', 'language', $key)) ?>">
-								 <?= $lang ?><?= ((!$this->input->cookie('foolfuuka_language') && $key == 'en_EN') || $key == $this->input->cookie('foolfuuka_language'))?' <i class="icon-ok"></i>':'' ?>
+								 <?= $lang ?><?= ((!$this->input->cookie('language') && $key == 'en_EN') || $key == $this->input->cookie('language'))?' <i class="icon-ok"></i>':'' ?>
 							 </a>
 						 </li>
 					<?php endforeach; ?>

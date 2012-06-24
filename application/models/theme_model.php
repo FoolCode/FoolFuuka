@@ -201,7 +201,7 @@ class Theme_model extends CI_Model
 	{
 		if ($theme_styles = $this->get_available_styles($this->_selected_theme))
 		{
-			$style = $this->input->cookie('foolfuuka_theme_' . $this->_selected_theme . '_style');
+			$style = $this->input->cookie('theme_' . $this->_selected_theme . '_style');
 			if ($style !== FALSE && in_array($style, $theme_styles))
 				$class[] = $style;
 			else

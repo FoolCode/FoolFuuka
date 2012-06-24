@@ -565,7 +565,7 @@ class Chan extends Public_Controller
 		$options = (!empty($options)) ? $options :
 			array(
 				'per_page' => get_selected_radix()->threads_per_page,
-				'type' => ($this->input->cookie('foolfuuka_default_theme_by_thread' .
+				'type' => ($this->input->cookie('default_theme_by_thread' .
 					(get_selected_radix()->archive?'_archive':'_board')) ? 'by_thread' : 'by_post')
 			);
 
@@ -601,7 +601,7 @@ class Chan extends Public_Controller
 	public function p_by_thread()
 	{
 		$this->input->set_cookie(
-			'foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'),
+			'default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'),
 			'1',
 			60 * 60 * 24 * 30
 		);
@@ -612,7 +612,7 @@ class Chan extends Public_Controller
 	public function p_by_post()
 	{
 		$this->input->set_cookie(
-			'foolfuuka_default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'),
+			'default_theme_by_thread' . (get_selected_radix()->archive?'_archive':'_board'),
 			'1', '');
 		redirect(get_selected_radix()->shortname);
 	}
@@ -1214,7 +1214,7 @@ class Chan extends Public_Controller
 		$search = $this->uri->ruri_to_assoc($radix?2:1, $modifiers);
 
 		// get latest 5 searches for LATEST SEARCHES
-		$cookie = $this->input->cookie('foolfuuka_search_latest_5');
+		$cookie = $this->input->cookie('search_latest_5');
 
 		if(!is_array($cookie_array = @json_decode($cookie, TRUE)))
 		{
@@ -1257,7 +1257,7 @@ class Chan extends Public_Controller
 
 		array_unshift($cookie_array, $search_opts);
 		$cookie_array_json = json_encode($cookie_array);
-		$this->input->set_cookie('foolfuuka_search_latest_5', $cookie_array_json, 60 * 60 * 24 * 30, '', '/');
+		$this->input->set_cookie('search_latest_5', $cookie_array_json, 60 * 60 * 24 * 30, '', '/');
 
 		// deletion mode only for mods and admins
 		if($this->auth->is_mod_admin() && $search['deletion_mode'])

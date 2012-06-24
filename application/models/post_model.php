@@ -183,8 +183,8 @@ class Post_model extends CI_Model
 			' . $this->db->protect_identifiers('mg') . '.`media_id`
 		';
 	}
-	
-	
+
+
 	/**
 	 * Returns the SQL string to append to queries to be able to
 	 * get the entries from the extra table
@@ -2627,14 +2627,14 @@ class Post_model extends CI_Model
 		// process comment name+trip
 		if ($data['name'] === FALSE || $data['name'] == '')
 		{
-			$this->input->set_cookie('foolfuuka_reply_name', '', 0);
+			$this->input->set_cookie('reply_name', '', 0);
 			$name = $board->anonymous_default_name;
 			$trip = '';
 		}
 		else
 		{
 			// store name in cookie to repopulate forms
-			$this->input->set_cookie('foolfuuka_reply_name', $data['name'], 60 * 60 * 24 * 30);
+			$this->input->set_cookie('reply_name', $data['name'], 60 * 60 * 24 * 30);
 
 			$name_trip = $this->process_name($data['name']);
 			$name = $name_trip[0];
@@ -2644,7 +2644,7 @@ class Post_model extends CI_Model
 		// process comment email
 		if ($data['email'] === FALSE || $data['email'] == '')
 		{
-			$this->input->set_cookie('foolfuuka_reply_email', '', 0);
+			$this->input->set_cookie('reply_email', '', 0);
 			$email = '';
 		}
 		else
@@ -2652,7 +2652,7 @@ class Post_model extends CI_Model
 			// store email in cookie to repopulate forms
 			if ($data['email'] != 'sage')
 			{
-				$this->input->set_cookie('foolfuuka_reply_email', $data['email'], 60 * 60 * 24 * 30);
+				$this->input->set_cookie('reply_email', $data['email'], 60 * 60 * 24 * 30);
 			}
 
 			$email = $data['email'];
@@ -2676,7 +2676,7 @@ class Post_model extends CI_Model
 		else
 		{
 			// store password in cookie to repopulate forms
-			$this->input->set_cookie('foolfuuka_reply_password', $data['password'], 60 * 60 * 24 * 30);
+			$this->input->set_cookie('reply_password', $data['password'], 60 * 60 * 24 * 30);
 
 			$password = $data['password'];
 		}

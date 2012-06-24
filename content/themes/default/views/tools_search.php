@@ -316,7 +316,7 @@ if (isset($board)) :
 					<div class="pull-right"><a href="#" data-function="clearLatestSearches" class="btn btn-warning btn-mini" style="margin:0; padding: 1px 3px; line-height:normal;color:#FFF; position:relative; top:-1px;"><?= __('Clear') ?></a></div>
 				</li>
 				<?php
-					if (isset($latest_searches) || $latest_searches = @json_decode($this->input->cookie('foolfuuka_search_latest_5'), TRUE))
+					if (isset($latest_searches) || $latest_searches = @json_decode($this->input->cookie('search_latest_5'), TRUE))
 					{
 						// sanitization
 						foreach($latest_searches as $item)

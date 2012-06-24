@@ -17,12 +17,6 @@ function setCookie(name, value, expires, path, domain, secure)
 		( secure ? ";secure" : "" );
 }
 
-var changeTheme = function(theme)
-{
-	setCookie('foolfuuka_theme', theme, 30, '/');
-	window.location.reload();
-}
-
 var toggle = function(element)
 {
 	var el;
@@ -149,7 +143,7 @@ var doBacklink = function(el)
     else
     {
         var post = el.href.match(/\/(\w+)\/post\/(.*?)\/$/);
-		
+
 		if (typeof backlinkFetched[post[1] + '_' + post[2]] !== 'undefined')
 		{
 			src = document.createElement('div');
@@ -174,7 +168,7 @@ var doBacklink = function(el)
 			document.body.appendChild(blk);
 			return false;
 		}
-		
+
         backlinkjqXHR = jQuery.ajax({
             url: backend_vars.api_url + 'api/chan/post/',
             dataType: 'jsonp',
@@ -220,7 +214,7 @@ var rmBacklink = function(el)
     {
         document.body.removeChild(blk);
     }
-	
+
 	if (backlinkjqXHR !== null)
 	{
 		backlinkjqXHR.abort();

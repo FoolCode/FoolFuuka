@@ -6,18 +6,39 @@ if (!defined('BASEPATH'))
 
 class MY_Input extends CI_Input
 {
-	
+
 	function __construct()
 	{
 		parent::__construct();
 	}
-	
-	
+
+
+	/**
+	 * Fetch an item from the COOKIE array
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	bool
+	 * @return	string
+	 */
+	function cookie($index = '', $xss_clean = FALSE)
+	{
+		$prefix = '';
+
+		if (!isset($_COOKIE[$index]) && config_item('cookie_prefix') != '')
+		{
+			$prefix = config_item('cookie_prefix');
+		}
+
+		return $this->_fetch_from_array($_COOKIE, $prefix . $index, $xss_clean);
+	}
+
+
 	/**
 	 * Enable the post array to work with associative arrays
-	 * 
+	 *
 	 * @param type $index
-	 * @param type $xss_clean 
+	 * @param type $xss_clean
 	 */
 	function post($index = NULL, $xss_clean = FALSE)
 	{
@@ -34,8 +55,8 @@ class MY_Input extends CI_Input
 		}
 		return parent::post($index, $xss_clean);
 	}
-	
-	
+
+
 	/**
 	 * Fetch the IP Address, modified to output numeric (decimal) IP
 	 *
@@ -94,6 +115,6 @@ class MY_Input extends CI_Input
 
 		return $this->ip_address;
 	}
-	
-	
+
+
 }

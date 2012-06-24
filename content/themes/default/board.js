@@ -117,7 +117,7 @@ var bindFunctions = function()
 					break
 
 				case 'delete':
-					var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
+					var foolfuuka_reply_password = getCookie(backend_vars.cookie_prefix + 'foolfuuka_reply_password');
 					modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
 					modal.find(".modal-loading").hide();
 					modal.find(".modal-information").html('\
@@ -266,7 +266,7 @@ var bindFunctions = function()
 					break;
 
 				case 'clearLatestSearches':
-					setCookie('foolfuuka_search_latest_5', '', 0, '/', backend_vars.cookie_domain);
+					setCookie(backend_vars.cookie_prefix + 'search_latest_5', '', 0, '/', backend_vars.cookie_domain);
 					jQuery('li.latest_search').each(function(idx){
 						jQuery(this).remove();
 					});
@@ -710,13 +710,13 @@ function replyHighlight(id)
 
 var changeTheme = function(theme)
 {
-	setCookie('foolfuuka_theme', theme, 30, '/');
+	setCookie(backend_vars.cookie_prefix + 'theme', theme, 30, '/');
 	window.location.reload();
 }
 
 var changeLanguage = function(language)
 {
-	setCookie('foolfuuka_language', language, 30, '/');
+	setCookie(backend_vars.cookie_prefix + 'language', language, 30, '/');
 	window.location.reload();
 }
 

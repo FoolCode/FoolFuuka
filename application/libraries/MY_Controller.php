@@ -152,6 +152,7 @@ class MY_Controller extends CI_Controller
 				'system_url'  => site_url('@system'),
 				'api_url'   => site_url('@system'),
 				'cookie_domain' => config_item('cookie_domain'),
+				'cookie_prefix' => config_item('cookie_prefix'),
 				'selected_theme' => isset($this->theme)?$this->theme->get_selected_theme():'',
 				'csrf_hash' => $this->security->get_csrf_hash(),
 				'images' => array(

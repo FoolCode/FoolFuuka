@@ -1,0 +1,196 @@
+html,body { background:#eefff2; color:#002200; } img { border: none; } a { color:#34345c; } a:visited { color:#34345c; } a:hover { color:#DD0000; } .js, .js a { color:black;text-decoration:none; } .js:hover, .js a:hover { color:black;font-weight:bold;text-decoration:underline; } .thumb, .nothumb { float: left; margin: 2px 20px; } .doubledash { vertical-align:top;clear:both;float:left; } .inline { vertical-align:top; } .reply { background:#d6f0da; } .subreply { background:#cce1cf; } .highlight { background:#d6bad0; } .greentext { color:#789922; } .postername { color:#117743; font-weight:bold; text-decoration: none; } .postertrip { color:#228854; text-decoration: none; } a.tooltip span, a.tooltip-red span { display:none; }
+
+h1{
+    font:bold 2em Verdana,Tahoma,sans-serif;
+    margin:0.1em;
+}
+h2{
+    font:bold 1.25em Verdana,Tahoma,sans-serif;
+    margin:0.1em;
+}
+ul{
+    margin:0;
+    list-style-type:circle;
+}
+.postblock{
+    font-weight:bold;
+    background:#98c1a9;
+    text-align:center;
+}
+.postspan{
+    font-weight:bold;
+    background:#d6f0da;
+    text-align:left;
+    padding:0.3em;
+    margin:0.3em 0.3em 0.3em 0;
+}
+.generic-table, .generic-table-monowidth{
+    margin-left:auto;
+    margin-right:auto;
+    overflow:hidden;
+}
+.generic-table-monowidth{
+    width:40em;
+}
+.generic-table {
+    margin-top:1em;
+}
+.generic-table-monowidth th {
+    background:#88cc99;
+    font-weight:bold;
+    text-align:right;
+    padding:2px;
+}
+.generic-table-monowidth tr {
+    background:#d6f0da;
+    padding:2px;
+}
+.generic-table th {
+    background:#7faa66;
+    color:#402800;
+    font-weight:800;
+    text-align:left;
+    padding:2px;
+}
+.report-thumbs div{
+    float:left;
+    width:300px;
+    height:300px;
+
+}
+.report-thumbs table{
+    border-spacing:0;
+    background:#d6f0da;
+    border:solid 2px #8c9;
+    margin:1em auto 1em auto;
+}
+.report-thumbs table tr {
+    font-weight:800;
+    text-align:center;
+    background:#8c9;
+}
+.nothumb {
+    color: inherit;
+    background: #eee;
+    border: 1px solid #aaa;
+    text-align: center;
+    padding: 1em;
+}
+.omittedposts {
+    color:#707070;
+}
+
+.filetitle {
+    font-size:1.1em;
+    color:#0f0c5d;
+    font-weight: bold;
+}
+.theader {
+    background:#E04000;
+    text-align:center;
+    padding:2px;
+    color:white;
+    width:100%;
+    font-weight:bold;
+}
+.newthr{
+    clear: left;
+}
+
+.warning,.info {
+    background: #dece7a;
+    color: #654225;
+    font-weight:bold;
+}
+.error, .alert{
+    background: #de887a;
+    color: #652534;
+    font-weight:bold;
+}
+
+.alert h4 {
+	margin-top :0;
+}
+
+.warning,.error { padding: 0.675em 0.5em 1.325em 0.5em; }
+.info, .alert{ padding: 0.675em 0.5em 0.675em 0.5em; }
+
+.container{
+    -moz-border-radius: 0.75em;
+    margin: 4em auto 1em auto;
+    width: 70%;
+}
+
+a.tooltip span, a.tooltip-red span{
+    font-family:Georgia, serif;
+    display:none;
+    padding:6px;
+    margin:2em 0 0 0.5em;
+    width:25%;
+}
+a.tooltip:hover span, a.tooltip-red:hover span{
+    display:inline;
+    position:absolute;
+    border:1px solid black;
+    background:lightyellow;
+    color:black;
+    font-weight:normal;
+    text-align:left;
+    text-decoration:none;
+}
+a.tooltip-red:hover{
+    color:white;
+}
+
+.spoiler, .spoiler:hover {
+    color: black;
+    background: black;
+    text-decoration: none;
+}
+.spoiler a {
+    color: black !important;
+}
+.spoiler:hover, .spoiler:hover a {
+    color: white !important;
+}
+
+.trip{
+    font-weight:normal !important;
+}
+
+.invis-link {
+    text-decoration: none;
+}
+.invis-link:hover {
+    text-decoration: underline;
+}
+
+.quoted-by {
+    color: #707070;
+    font-size: 0.75em;
+    margin-left: 25px;
+    padding-top: 3px;
+    text-decoration: none;
+}
+.quote-preview-op {
+    background-color: #EEFFF2;
+}
+#quote-preview {
+    position: absolute;
+    color: #002200;
+}
+#quote-preview-s {
+    border: 1px solid #888;
+    padding: 3px;
+}
+
+code,.code { white-space: pre }
+a img { vertical-align: top; }
+
+.overline { text-decoration: overline; }
+.underline { text-decoration: underline; }
+.aa { font-family:Mona,'MS PGothic' !important; }
+.strikethrough { text-decoration: line-through; }
+.banned { font-weight: bold; color: red; }
+.admin{ color: #c00000 !important; }
+.mod{ color: #800080 !important; }

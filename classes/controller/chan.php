@@ -25,7 +25,7 @@ class Controller_Chan extends \Controller_Common
 		$this->_theme = new \Theme();
 
 		$this->_theme->set_module('foolfuuka');
-		$this->_theme->set_theme('default');
+		$this->_theme->set_theme(\Cookie::get('theme')?:'default');
 		$this->_theme->set_layout('chan');
 
 		if (!is_null($this->_radix))
@@ -65,10 +65,15 @@ class Controller_Chan extends \Controller_Common
 	public function router($method, $params)
 	{
 		$this->_radix = \Radix::set_selected_by_shortname($method);
-		$this->_theme->bind('radix', $this->_radix?:null);
+		$this->_theme->bind('radix', $this->_radix ? : null);
+
 		if ($this->_radix)
 		{
 			$method = array_shift($params);
+		}
+		else if (!in_array($method, array('index', 'theme', 'search')))
+		{
+			return call_user_func_array(array($this, 'action_404'), $params);
 		}
 
 		if (method_exists($this, 'action_'.$method))
@@ -92,6 +97,36 @@ class Controller_Chan extends \Controller_Common
 		return \Response::forge($this->_theme->build('index'));
 	}
 
+	
+	public function action_theme($theme = 'default', $style = '')
+	{
+		$this->_theme->set_title(__('Changing Theme Settings'));
+
+		if (!in_array($theme, $this->_theme->get_available_themes()))
+		{
+			$theme = 'default';
+		}
+
+		\Cookie::set('theme', $theme, 31536000, '/');
+		
+		if ($style !== '' && in_array($style, $this->_theme->get_available_styles($theme)))
+		{
+			\Cookie::set('theme_' . $theme . '_style', $style, 31536000, NULL, '/');
+		}
+
+		if (\Input::referrer())
+		{
+			$this->_theme->bind('url', \Input::referrer());
+		}
+		else
+		{
+			$this->_theme->bind('url', \Uri::base());
+		}
+		
+		$this->_theme->set_layout('redirect');
+		return \Response::forge($this->_theme->build('redirection'));
+	}
+	
 
 	/**
 	 * The 404 action for the application.

@@ -42,6 +42,16 @@ return array(
 		 */
 		'min_php_version' => '5.3.0'
 	),
+	
+	
+	/**
+	 * Locations of the data out of the module folder
+	 */
+	'directories' => array(
+		'themes' => DOCROOT.'foolfuuka/themes/',
+		'plugins' => DOCROOT.'foolfuuka/plugins/'
+	),
+	
 
 	/**
 	 * Preferences for when there's no default specified

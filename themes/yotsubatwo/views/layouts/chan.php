@@ -73,7 +73,7 @@ header('imagetoolbar: false');
 						<ul class="nav">
 							<li class="dropdown">
 								<a href="<?= Uri::base() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">
-									<?= ($radix) ? '/' . $board->shortname . '/' . ' - ' . $board->name :  Preferences::get('ff.gen.website_title') ?> <b class="caret"></b>
+									<?= ($radix) ? '/' . $radix->shortname . '/' . ' - ' . $radix->name :  Preferences::get('ff.gen.website_title') ?> <b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
 									<?= '<li><a href="' . Uri::create('@default') . '">' . __('Index') . '</a></li>'; ?>
@@ -115,7 +115,7 @@ header('imagetoolbar: false');
 							</li>
 							<?php endif; ?>
 							<li style="padding-right:0px;">
-								<a href="<?= Uri::create(array($board->shortname)) ?>" style="padding-right:4px;"><?= __('Index') ?></a>
+								<a href="<?= Uri::create(array($radix->shortname)) ?>" style="padding-right:4px;"><?= __('Index') ?></a>
 							</li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:2px; padding-right:4px;">
@@ -162,7 +162,7 @@ header('imagetoolbar: false');
 
 			<div role="main" id="main">
 				<?php if ($is_page) : ?>
-				<?= $template['partials']['tools_reply_box'] ?>
+				<?= isset($template['partials']['tools_reply_box']) ? $template['partials']['tools_reply_box'] : '' ?>
 
 				<div class="divider"></div>
 				<?php endif; ?>

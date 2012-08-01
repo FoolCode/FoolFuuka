@@ -249,7 +249,7 @@ header('imagetoolbar: false');
 						if (($theme = $this->get_by_name($theme))) :
 					?>
 						 <li>
-							 <a href="<?= Uri::create(array('@system', 'functions', 'theme', $theme['directory'])) ?>">
+							 <a href="<?= Uri::create(array('theme', $theme['directory'])) ?>">
 								 <?= $theme['name'] ?><?= ($theme['directory'] == $this->get_selected_theme())?' <i class="icon-ok"></i>':'' ?>
 							 </a>
 						 </li>

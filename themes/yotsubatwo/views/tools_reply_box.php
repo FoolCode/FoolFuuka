@@ -1,45 +1,39 @@
-<?php if (!defined('DOCROOT')) exit('No direct script access allowed');
+<?php if (!defined('DOCROOT')) exit('No direct script access allowed'); ?>
 
-if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !Radix::get_selected()->archive) || (isset($thread_id))) :
-?>
-
-<?= form_open_multipart(Radix::get_selected()->shortname . '/submit') ?>
-<?= form_hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
-<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
-<?= form_hidden('MAX_FILE_SIZE', Radix::get_selected()->max_image_size_kilobytes * 1024) ?>
-<?php endif; ?>
+<?= Form::open(array('enctype' => 'multipart/form-data', 'action' => $radix->shortname . '/submit')) ?>
+<?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
 
 <table id="reply">
 	<tbody>
 		<tr>
 			<td><?= __('Name') ?></td>
 			<td><?php
-				echo form_input(array(
+				echo \Form::input(array(
 					'name' => 'name',
 					'id' => 'reply_name_yep',
 					'style' => 'display:none'
 				));
 
-				echo form_input(array(
+				echo \Form::input(array(
 					'name' => 'reply_bokunonome',
 					'id' => 'reply_bokunonome',
-					'value' => $this->fu->reply_name
+					'value' => $user_name
 				));
 			?></td>
 		</tr>
 		<tr>
 			<td><?= __('E-mail') ?></td>
 			<td><?php
-				echo form_input(array(
+				echo \Form::input(array(
 					'name' => 'email',
 					'id' => 'reply_email_yep',
 					'style' => 'display:none'
 				));
 
-				echo form_input(array(
+				echo \Form::input(array(
 					'name' => 'reply_elitterae',
 					'id' => 'reply_elitterae',
-					'value' => $this->fu->reply_email
+					'value' => $user_email
 				));
 			?></td>
 		</tr>
@@ -47,7 +41,7 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !Radix::get_
 			<td><?= __('Subject') ?></td>
 			<td>
 				<?php
-				echo form_input(array(
+				echo \Form::input(array(
 					'name' => 'reply_talkingde',
 					'id' => 'reply_talkingde',
 				));
@@ -65,21 +59,21 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !Radix::get_
 					$submit_array['data-function'] = 'comment';
 					$submit_array['data-post'] = $thread_id;
 				}
-				echo form_submit($submit_array);
+				echo \Form::submit($submit_array);
 				?>
 
-				[ <label><?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)) ?> Spoiler Image?</label> ]
+				[ <label><?php echo \Form::checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)) ?> Spoiler Image?</label> ]
 			</td>
 		</tr>
 		<tr>
 			<td><?= __('Comment') ?></td>
 			<td><?php
-				echo form_textarea(array(
+				echo \Form::textarea(array(
 					'name' => 'reply',
 					'id' => 'reply_comment_yep',
 					'style' => 'display:none'
 				));
-				echo form_textarea(array(
+				echo \Form::textarea(array(
 					'name' => 'reply_chennodiscursus',
 					'id' => 'reply_chennodiscursus',
 					'placeholder' => (!Radix::get_selected()->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '',
@@ -97,31 +91,31 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !Radix::get_
 		<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
 		<tr>
 			<td><?= __('File') ?></td>
-			<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')) ?></td>
+			<td><?php echo \Form::upload(array('name' => 'file_image', 'id' => 'file_image')) ?></td>
 		</tr>
 		<?php endif; ?>
 		<tr>
 			<td><?= __('Password') ?></td>
-			<td><?=  form_password(array(
+			<td><?=  \Form::password(array(
 					'name' => 'reply_nymphassword',
 					'id' => 'reply_nymphassword',
-					'value' => $this->fu->reply_password,
+					'value' => $user_pass,
 					'required' => 'required'
 				));
 				?> <span style="font-size: smaller;">(Password used for file deletion)</span>
 			</td>
 		</tr>
-		<?php if (Auth::has_access('maccess.mod')) : ?>
+		<?php if (\Auth::has_access('comment.as_mod')) : ?>
 		<tr>
 			<td><?= __('Post as') ?></td>
 			<td>
 				<?php
 					$postas = array('user' => __('User'), 'mod' => __('Moderator'));
-					if ($this->auth->is_admin())
+					if (\Auth::has_access('comment.as_admin'))
 					{
 						$postas['admin'] = __('Administrator');
 					}
-					echo form_dropdown('reply_postas', $postas, 'User', 'id="reply_postas"');
+					echo \Form::dropdown('reply_postas', $postas, 'User', 'id="reply_postas"');
 				?>
 			</td>
 		</tr>
@@ -147,5 +141,4 @@ if ((isset($enabled_tools_reply_box) && $enabled_tools_reply_box && !Radix::get_
 		<?php endif; ?>
 	</tbody>
 </table>
-<?= form_close() ?>
-<?php endif; ?>
+<?= \Form::close() ?>

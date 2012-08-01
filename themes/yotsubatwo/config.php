@@ -5,7 +5,7 @@ if (!defined('DOCROOT'))
 
 return array(
 	
-	'directory' => 'yotsuba_2',
+	'directory' => 'yotsubatwo',
 	
 	'name' => 'Yotsuba 2.0',
 	

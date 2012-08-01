@@ -30,7 +30,7 @@ header('imagetoolbar: false');
 			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 		<?php if (Preferences::get('fu.sphinx.global')) : ?>
-			<link rel="search" type="application/opensearchdescription+xml" title="<?= Preferences::get('ff.gen.site_title'); ?> " href="<?= Uri::create('@system/functions/opensearch') ?>" />
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= Preferences::get('ff.gen.website_title'); ?> " href="<?= Uri::create('@system/functions/opensearch') ?>" />
 		<?php endif; ?>
 		<?= Preferences::get('ff.theme.header_code'); ?>
 
@@ -39,7 +39,7 @@ header('imagetoolbar: false');
 	<?php if ($disable_headers !== TRUE) : ?>
 		<div class="letters"><?php
 			$board_urls = array();
-			foreach (Radix::get_archives() as $key => $item)
+			foreach (\Radix::get_archives() as $key => $item)
 			{
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
@@ -49,13 +49,13 @@ header('imagetoolbar: false');
 				echo sprintf(__('Archives: [ %s ]'), implode(' / ', $board_urls));
 			}
 
-			if (Radix::get_archives() && Radix::get_boards())
+			if (\Radix::get_archives() && \Radix::get_boards())
 			{
 				echo ' ';
 			}
 
 			$board_urls = array();
-			foreach (Radix::get_boards() as $key => $item)
+			foreach (\Radix::get_boards() as $key => $item)
 			{
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
@@ -145,8 +145,8 @@ header('imagetoolbar: false');
 								$top_nav[] = array('href' => Uri::create(array($radix->shortname, 'gallery')), 'text' => __('Gallery'));
 							}
 
-							$top_nav = Plugins::run_hook('fu_themes_generic_top_nav_buttons', array($top_nav), 'simple');
-							$top_nav = Plugins::run_hook('fu_themes_default_top_nav_buttons', array($top_nav), 'simple');
+							$top_nav = Plugins::run_hook('ff.themes.generic_top_nav_buttons', array($top_nav), 'simple');
+							$top_nav = Plugins::run_hook('fu.themes.default_top_nav_buttons', array($top_nav), 'simple');
 
 							foreach ($top_nav as $nav)
 							{
@@ -280,8 +280,8 @@ header('imagetoolbar: false');
 
 			<?php
 			$bottom_nav = array();
-			$bottom_nav = Plugins::run_hook('fu_themes_generic_bottom_nav_buttons', array($bottom_nav), 'simple');
-			$bottom_nav = Plugins::run_hook('fu_themes_default_bottom_nav_buttons', array($bottom_nav), 'simple');
+			$bottom_nav = Plugins::run_hook('ff.themes.generic_bottom_nav_buttons', array($bottom_nav), 'simple');
+			$bottom_nav = Plugins::run_hook('fu.themes.default_bottom_nav_buttons', array($bottom_nav), 'simple');
 
 			if (!empty($bottom_nav))
 			{
@@ -297,9 +297,9 @@ header('imagetoolbar: false');
 				echo '</div>';
 			}
 
-			if (Preferences::get('fu.theme.footer_text'))
+			if (Preferences::get('ff.theme.footer_text'))
 			{
-				echo '<section class="footer_text">' . Preferences::get('fu.theme.footer_text') . '</section>';
+				echo '<section class="footer_text">' . Preferences::get('ff.theme.footer_text') . '</section>';
 			}
 			?>
 		</footer>
@@ -316,7 +316,7 @@ header('imagetoolbar: false');
 		<script defer src="<?= Uri::base() . $this->fallback_asset('board.js') ?>"></script>
 <?php if (Preferences::get('ff.theme.google_analytics')) : ?>
 		<script>
-			var _gaq=[['_setAccount','<?= Preferences::get('fs_theme_google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
+			var _gaq=[['_setAccount','<?= Preferences::get('ff.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
 			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 				s.parentNode.insertBefore(g,s)}(document,'script'));
@@ -329,6 +329,6 @@ header('imagetoolbar: false');
 		  <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
 		  <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 		<![endif]-->
-		<?= Preferences::get('fu.theme.footer_code'); ?>
+		<?= Preferences::get('ff.theme.footer_code'); ?>
 	</body>
 </html>

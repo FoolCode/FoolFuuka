@@ -748,7 +748,7 @@ class Radix extends \Model_Base
 			{
 				if (!isset($result_object[$item->id]->$key) && isset($arr['boards_preferences']))
 				{
-					$result_object[$item->id]->$key = \Config::get('foolfuuka.radix.'.$key);
+					$result_object[$item->id]->$key = \Config::get('foolfuuka.preferences.radix.'.$key);
 				}
 
 				foreach (array('sub', 'sub_inverse') as $sub)

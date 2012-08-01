@@ -22,11 +22,7 @@ class Controller_Chan extends \Controller_Common
 	{
 		parent::before();
 
-		$this->_theme = new \Theme();
-
-		$this->_theme->set_module('foolfuuka');
-		$this->_theme->set_theme(\Cookie::get('theme')?:'default');
-		$this->_theme->set_layout('chan');
+		$this->_theme = \Theme::instance('foolfuuka');
 
 		if (!is_null($this->_radix))
 		{
@@ -63,7 +59,7 @@ class Controller_Chan extends \Controller_Common
 
 
 	public function router($method, $params)
-	{
+	{	//die(\Debug::dump($params));
 		$this->_radix = \Radix::set_selected_by_shortname($method);
 		$this->_theme->bind('radix', $this->_radix ? : null);
 

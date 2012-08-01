@@ -321,31 +321,32 @@ class Board extends \Model\Model_Base
 			case 'by_post':
 
 				$query = \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-						->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
-						->order_by('time_bump', 'desc')
-						->limit($per_page)->offset(($page * $per_page) - $per_page);
+					->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
+					->order_by('time_bump', 'desc')
+					->limit($per_page)->offset(($page * $per_page) - $per_page);
 				break;
 
 			case 'by_thread':
 
 				$query = \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-						->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
-						->order_by('thread_num', 'desc')
-						->limit($per_page)->offset(($page * $per_page) - $per_page);
+					->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
+					->order_by('thread_num', 'desc')
+					->limit($per_page)->offset(($page * $per_page) - $per_page);
 				break;
 
 			case 'ghost':
 
 				$query = \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-						->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
-						->where('time_ghost_bump', '', \DB::expr('IS NOT NULL'))
-						->order_by('time_ghost_bump', 'desc')
-						->limit($per_page)->offset(($page * $per_page) - $per_page);
+					->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
+					->where('time_ghost_bump', '', \DB::expr('IS NOT NULL'))
+					->order_by('time_ghost_bump', 'desc')
+					->limit($per_page)->offset(($page * $per_page) - $per_page);
 				break;
 		}
 
 		$threads = $query->as_object()->execute()->as_array();
-
+		
+		
 		if (!count($threads))
 		{
 			$this->_comments = array();

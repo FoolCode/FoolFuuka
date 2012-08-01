@@ -8,3 +8,9 @@
 ));
 
 Autoloader::add_core_namespace('Foolfuuka\\Model');
+
+
+$theme = \Theme::forge('foolfuuka');
+$theme->set_module('foolfuuka');
+$theme->set_theme(\Cookie::get('theme')?:'default');
+$theme->set_layout('chan');

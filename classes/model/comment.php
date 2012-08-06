@@ -187,7 +187,7 @@ class Comment extends \Model\Model_Base
 		$find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
 		$html = '\\1<span class="greentext">\\2</span>\\3';
 
-		$html = \Plugins::run_hook('fu_post_model_process_comment_greentext_result', array($html), 'simple');
+		$html = \Plugins::run_hook('fu.comment_model.process_comment.greentext_result', array($html), 'simple');
 
 		$comment = $this->comment;
 
@@ -289,7 +289,7 @@ class Comment extends \Model\Model_Base
 			'attr_backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $current_p_num_u . '"',
 		);
 
-		$build_url = \Plugins::run_hook('fu_post_model_process_internal_links_html_result', array($data, $build_url), 'simple');
+		$build_url = \Plugins::run_hook('fu.comment_model.process_internal_links.html_result', array($data, $build_url), 'simple');
 
 		static::$_backlinks[$data->num][$this->num] = implode(
 			'<a href="' . \Uri::create(array($data->board->shortname, 'thread', $data->post->thread_num)) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
@@ -358,7 +358,7 @@ class Comment extends \Model\Model_Base
 			'backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . (($data->board) ? $data->board->shortname : $data->shortname) . '" data-post="' . $data->num . '"'
 		);
 
-		$build_url = \Plugins::run_hook('fu_post_model_process_crossboard_links_html_result', array($data, $build_url), 'simple');
+		$build_url = \Plugins::run_hook('fu.comment_model.process_crossboard_links.html_result', array($data, $build_url), 'simple');
 
 		if (!$data->board)
 		{

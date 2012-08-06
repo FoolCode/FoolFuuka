@@ -81,7 +81,7 @@ if (!defined('DOCROOT'))
 			{
 				$postas['admin'] = __('Administrator');
 			}
-			echo Form::dropdown('reply_postas', $postas, 'User', 'id="reply_postas"');
+			echo Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas'));
 			?>
 		</div>
 		<?php endif; ?>

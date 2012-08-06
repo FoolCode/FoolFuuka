@@ -146,7 +146,7 @@ header('imagetoolbar: false');
 							}
 
 							$top_nav = Plugins::run_hook('ff.themes.generic_top_nav_buttons', array($top_nav), 'simple');
-							$top_nav = Plugins::run_hook('fu.themes.yotsuba2_top_nav_buttons', array($top_nav), 'simple');
+							$top_nav = Plugins::run_hook('fu.themes.yotsubatwo_top_nav_buttons', array($top_nav), 'simple');
 
 							foreach ($top_nav as $nav)
 							{
@@ -249,7 +249,7 @@ header('imagetoolbar: false');
 						foreach($this->get_available_styles('yotsuba_2') as $key => $style) :
 						?>
 							<li>
-								<a href="<?= Uri::create(array('@system', 'functions', 'theme', $this->get_selected_theme(), $style)) ?>">
+								<a href="<?= Uri::create(array('theme', $this->get_selected_theme(), $style)) ?>">
 									<?= $key ?><?= ($style == $this->get_selected_theme_class()) ?' <i class="icon-ok"></i>':'' ?>
 								</a>
 							</li>
@@ -268,7 +268,7 @@ header('imagetoolbar: false');
 						if (($theme = $this->get_by_name($theme))) :
 							?>
 							<li>
-								<a href="<?= Uri::create(array('@system', 'functions', 'theme', $theme['directory'])) ?>">
+								<a href="<?= Uri::create(array('theme', $theme['directory'])) ?>">
 									<?= $theme['name'] ?><?= ($theme['directory'] == $this->get_selected_theme())?' <i class="icon-ok"></i>':'' ?>
 								</a>
 							</li>
@@ -300,7 +300,7 @@ header('imagetoolbar: false');
 			<?php
 			$bottom_nav = array();
 			$bottom_nav = Plugins::run_hook('ff.themes.generic_bottom_nav_buttons', array($bottom_nav), 'simple');
-			$bottom_nav = Plugins::run_hook('fu.themes.yotsuba2_bottom_nav_buttons', array($bottom_nav), 'simple');
+			$bottom_nav = Plugins::run_hook('fu.themes.yotsubatwo_bottom_nav_buttons', array($bottom_nav), 'simple');
 
 			if (!empty($bottom_nav))
 			{

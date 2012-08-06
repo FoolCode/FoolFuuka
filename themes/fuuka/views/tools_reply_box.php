@@ -3,7 +3,7 @@ if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::get_selected()->archive) : ?>
-<?= form_open_multipart(Radix::get_selected()->shortname .'/sending', array('id' => 'postform')) ?>
+<?= Form::open(array('enctype' => 'multipart/form-data', 'action' => $radix->shortname . '/submit')) ?>
 <table style="margin-left: auto; margin-right: auto">
 	<tbody>
 		<tr>
@@ -18,42 +18,42 @@ if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::ge
 					<tbody>
 						<tr>
 							<td class="postblock"><?= __('Name') ?></td>
-							<td><?php echo form_input(array('name' => 'NAMAE', 'size' => 63, 'value' => $this->fu->reply_name)) ?></td>
+							<td><?php echo \Form::input(array('name' => 'NAMAE', 'size' => 63, 'value' => $user_name)) ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('E-mail') ?></td>
-							<td><?php echo form_input(array('name' => 'MERU', 'size' => 63, 'value' => $this->fu->reply_email)) ?></td>
+							<td><?php echo \Form::input(array('name' => 'MERU', 'size' => 63, 'value' => $user_email)) ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Subject') ?></td>
-							<td><?php echo form_input(array('name' => 'subject', 'size' => 63)) ?></td>
+							<td><?php echo \Form::input(array('name' => 'subject', 'size' => 63)) ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Comment') ?></td>
-							<td><?php echo form_textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)) ?></td>
+							<td><?php echo \Form::textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)) ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('File') ?></td>
-							<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')) ?></td>
+							<td><?php echo \Form::file(array('name' => 'file_image', 'id' => 'file_image')) ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Spoiler') ?></td>
-							<td><?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)) ?></td>
+							<td><?php echo \Form::checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)) ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
-							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu->reply_password)) ?></td>
+							<td><?php echo \Form::password(array('name' => 'delpass', 'size' => 24, 'value' => $user_pass)) ?></td>
 						</tr>
-						<?php if (Auth::has_access('maccess.mod')) : ?>
+						<?php if (\Auth::has_access('maccess.mod')) : ?>
 						<tr>
 							<td class="postblock"><?= __('Post As') ?></td>
 							<td><?php
 								$postas = array('user' => __('User'), 'mod' => __('Moderator'));
-								if ($this->auth->is_admin())
+								if (\Auth::has_access('comment.as_admin'))
 								{
 									$postas['admin'] = __('Administrator');
 								}
-								echo form_dropdown('reply_postas', $postas,'id="reply_postas"');
+								echo \Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas'));
 							?></td>
 						</tr>
 						<?php endif; ?>
@@ -61,9 +61,9 @@ if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::ge
 							<td class="postblock"><?= __('Action') ?></td>
 							<td>
 								<?php
-									echo form_hidden('parent', 0);
-									echo form_hidden('MAX_FILE_SIZE', 3072);
-									echo form_submit(array(
+									echo \Form::hidden('parent', 0);
+									echo \Form::hidden('MAX_FILE_SIZE', 3072);
+									echo \Form::submit(array(
 										'name' => 'reply_action',
 										'value' => 'Submit'
 									));
@@ -76,7 +76,7 @@ if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::ge
 		</tr>
 	</tbody>
 </table>
-<?= form_close() ?>
+<?= \Form::close() ?>
 
 <hr/>
 <?php endif; ?>
@@ -99,33 +99,33 @@ if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::ge
 					<tbody>
 						<tr>
 							<td class="postblock"><?= __('Name') ?></td>
-							<td><?php echo form_input(array('name' => 'NAMAE', 'size' => 63, 'value' => $this->fu->reply_name)); ?></td>
+							<td><?php echo \Form::input(array('name' => 'NAMAE', 'size' => 63, 'value' => $user_name)); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('E-mail') ?></td>
-							<td><?php echo form_input(array('name' => 'MERU', 'size' => 63, 'value' => $this->fu->reply_email)); ?></td>
+							<td><?php echo \Form::input(array('name' => 'MERU', 'size' => 63, 'value' => $user_email)); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Subject') ?></td>
-							<td><?php echo form_input(array('name' => 'subject', 'size' => 63)); ?></td>
+							<td><?php echo \Form::input(array('name' => 'subject', 'size' => 63)); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Comment') ?></td>
-							<td><?php echo form_textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)); ?></td>
+							<td><?php echo \Form::textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)); ?></td>
 						</tr>
 						<?php if (!Radix::get_selected()->archive) : ?>
 						<tr>
 							<td class="postblock"><?= __('File') ?></td>
-							<td><?php echo form_upload(array('name' => 'file_image', 'id' => 'file_image')); ?></td>
+							<td><?php echo \Form::upload(array('name' => 'file_image', 'id' => 'file_image')); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Spoiler') ?></td>
-							<td><?php echo form_checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)); ?></td>
+							<td><?php echo \Form::checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)); ?></td>
 						</tr>
 						<?php endif; ?>
 						<tr>
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
-							<td><?php echo form_password(array('name' => 'delpass', 'size' => 24, 'value' => $this->fu->reply_password)); ?></td>
+							<td><?php echo \Form::password(array('name' => 'delpass', 'size' => 24, 'value' => $user_pass)); ?></td>
 						</tr>
 						<?php if (Auth::has_access('maccess.mod')) : ?>
 						<tr>
@@ -133,10 +133,10 @@ if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::ge
 							<td>
 								<?php
 								$postas = array('user' => __('User'), 'mod' => __('Moderator'));
-								if ($this->auth->is_admin()) {
+								if (\Auth::has_access('comment.as_admin')) {
 									$postas['admin'] = __('Administrator');
 								}
-								echo form_dropdown('reply_postas', $postas,'id="reply_postas"');
+								echo \Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas'));
 								?>
 							</td>
 						</tr>
@@ -145,17 +145,17 @@ if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::ge
 							<td class="postblock"><?= __('Action') ?></td>
 							<td>
 								<?php
-									echo form_hidden('parent', $thread_id);
-									echo form_hidden('MAX_FILE_SIZE', 3072);
-									echo form_submit(array(
+									echo \Form::hidden('parent', $thread_id);
+									echo \Form::hidden('MAX_FILE_SIZE', 3072);
+									echo \Form::submit(array(
 										'name' => 'reply_action',
 										'value' => 'Submit'
 									));
-									echo form_submit(array(
+									echo \Form::submit(array(
 										'name' => 'reply_delete',
 										'value' => 'Delete Selected Posts'
 									));
-									echo form_submit(array(
+									echo \Form::submit(array(
 										'name' => 'reply_report',
 										'value' => 'Report Selected Posts'
 									));

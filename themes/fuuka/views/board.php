@@ -4,23 +4,23 @@ if (!defined('DOCROOT'))
 
 if (isset($thread_id))
 {
-	echo form_open_multipart(Radix::get_selected()->shortname .'/sending', array('id' => 'postform'));
+	echo \Form::open(array('enctype' => 'multipart/form-data', 'action' => $radix->shortname . '/sending'));
+	echo \Form::hidden('id', 'postform');
 }
 ?>
 
 <div class="content">
 <?php
-foreach ($posts as $key => $post) :
+foreach ($board->get_comments() as $key => $post) :
 	if (isset($post['op'])) :
 		$op = $post['op'];
-		$selected_radix = isset($op->board)?$op->board:Radix::get_selected();
 ?>
 	<div id="<?= $op->num ?>">
 		<?php if ($op->preview_orig) : ?>
 			<span><?= __('File:') . ' ' . \Num::format_bytes($op->media_size, 0) . ', ' . $op->media_w . 'x' . $op->media_h . ', ' . $op->media_filename_processed ?> <?= '<!-- ' . substr($op->media_hash, 0, -2) . '-->' ?></span>
 			<?php if ($op->media_status != 'banned') : ?>
-				<?php if (!$selected_radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-					[<a href="<?= Uri::create(Radix::get_selected()->shortname . '/search/image/' . $op->safe_media_hash) ?>"><?= __('View Same') ?></a>]
+				<?php if (!$op->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
+					[<a href="<?= Uri::create($op->board->shortname . '/search/image/' . $op->safe_media_hash) ?>"><?= __('View Same') ?></a>]
 					[<a href="http://google.com/searchbyimage?image_url=<?= $op->thumb_link ?>">Google</a>]
 					[<a href="http://iqdb.org/?url=<?= $op->thumb_link ?>">iqdb</a>]
 					[<a href="http://saucenao.com/search.php?url=<?= $op->thumb_link ?>">SauceNAO</a>]
@@ -58,17 +58,17 @@ foreach ($posts as $key => $post) :
 		</label>
 
 		<?php if (!isset($thread_id)) : ?>
-			<a class="js" href="<?= Uri::create($selected_radix->shortname . '/thread/' . $op->num) ?>">No.<?= $op->num ?></a>
+			<a class="js" href="<?= Uri::create($op->board->shortname . '/thread/' . $op->num) ?>">No.<?= $op->num ?></a>
 		<?php else : ?>
-			<a class="js" href="<?= Uri::create($selected_radix->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
+			<a class="js" href="<?= Uri::create($op->board->shortname . '/thread/' . $op->num) ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
 		<?php endif; ?>
 
 		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . 'content/themes/' . (($this->get_selected_theme()) ? $this->get_selected_theme() : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="<?php _('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
 		<?php if ($op->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . 'content/themes/' . (($this->get_selected_theme()) ? $this->get_selected_theme() : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="<?php _('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
 
-		[<a href="<?= Uri::create($selected_radix->shortname . '/thread/' . $op->num) ?>"><?= __('Reply') ?></a>]
-		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= Uri::create($selected_radix->shortname . '/last50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>
-		<?php if ($selected_radix->archive) : ?> [<a href="http://boards.4chan.org/<?= $selected_radix->shortname . '/res/' . $op->num ?>"><?= __('Original') ?></a>]<?php endif; ?>
+		[<a href="<?= Uri::create($op->board->shortname . '/thread/' . $op->num) ?>"><?= __('Reply') ?></a>]
+		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= Uri::create($op->board->shortname . '/last50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>
+		<?php if ($op->board->archive) : ?> [<a href="http://boards.4chan.org/<?= $op->board->shortname . '/res/' . $op->num ?>"><?= __('Original') ?></a>]<?php endif; ?>
 
 		<div class="quoted-by" style="display: <?= (isset($p->backlinks)) ? 'block' : 'none' ?>">
 			<?= __('Quoted By:') ?> <?= (isset($p->backlinks)) ? implode(' ', $p->backlinks) : '' ?>
@@ -114,4 +114,4 @@ foreach ($posts as $key => $post) :
 <?php endforeach; ?>
 </div>
 
-<?php if (isset($thread_id)) echo form_close(); ?>
+<?php if (isset($thread_id)) echo \Form::close(); ?>

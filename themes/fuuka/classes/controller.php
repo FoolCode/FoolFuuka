@@ -3,87 +3,24 @@
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-
-/**
- * READER CONTROLLER
- *
- * This file allows you to override the standard FoOlSlide controller to make
- * your own URLs for your theme, and to make sure your theme keeps working
- * even if the FoOlSlide default theme gets modified.
- *
- * For more information, refer to the support sites linked in your admin panel.
- */
-class Theme_Plugin_fuuka extends Plugins_model
+class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 {
-
-	function __construct()
-	{
-		parent::__construct();
-	}
-
-
-	function initialize_plugin()
-	{
-		// use hooks for manipulating comments
-		Plugins::register_hook($this, 'fu_post_model_process_comment_greentext_result', 8, '_greentext');
-		Plugins::register_hook($this, 'fu_post_model_process_internal_links_html_result', 8,
-			'_process_internal_links_html');
-
-		Plugins::register_hook($this, 'fu_post_model_process_crossboard_links_html_result', 8,
-			'_process_crossboard_links_html');
-
-		Plugins::register_hook($this, 'fu_chan_controller_before_page', 3, 'page');
-		Plugins::register_hook($this, 'fu_chan_controller_before_gallery', 3, function(){ show_404(); });
-		// for safety, force 404
-		Plugins::register_hook($this, 'fu_chan_controller_before_submit', 3, function(){ show_404(); });
-
-		// if we have to outright change the name of the function, we need to register a new controller function
-		Plugins::register_controller_function($this, array('chan', '(:any)', 'sending'), 'sending');
-	}
-
-
-	function _greentext($html)
-	{
-		return '\\1<span class="greentext">\\2</span>\\3';
-	}
-
-	function _process_internal_links_html($data, $html, $previous_result = NULL)
-	{
-		// a plugin with higher priority modified this
-		if(!is_null($previous_result))
-		{
-			return array('return' => $previous_result);
-		}
-
-		return array('return' => array(
-			'tags' => array('<span class="unkfunc">', '</span>'),
-			'hash' => '',
-			'attr' => 'class="backlink" onclick="replyHighlight(' . $data->num . ');"',
-			'attr_op' => 'class="backlink"',
-			'attr_backlink' => 'class="backlink"',
-		));
-	}
-
-	function _process_crossboard_links_html($data, $html, $previous_result = NULL)
-	{
-		// a plugin with higher priority modified this
-		if(!is_null($previous_result))
-		{
-			return array('return' => $previous_result);
-		}
-
-		return array('return' => array(
-			'tags' => array('<span class="unkfunc">', 'suffix' => '</span>'),
-			'backlink' => ''
-		));
-	}
 
 	/**
 	 * @param int $page
 	 */
-	public function page($page = 1)
-	{
-		return array('parameters' => array($page, FALSE, array('per_page' => 24, 'type' => 'by_thread')));
+	public function action_page($page = 1)
+	{		
+		$order = \Cookie::get('default_theme_page_mode_'. ($this->_radix->archive ? 'archive' : 'board')) === 'by_thread'
+			? 'by_thread' : 'by_post';
+
+		$options = array(
+			'per_page' => 24,
+			'per_thread' => 6,
+			'order' => $order
+		);
+
+		return $this->latest($page, $options);
 	}
 
 	/**

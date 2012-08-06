@@ -3,26 +3,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="generator" content="<?= FOOL_NAME ?> <?= FOOL_VERSION ?>" />
+		<meta name="generator" content="<?= \Config::get('foolfuuka.main.name') ?> <?= \Config::get('foolfuuka.main.version') ?>" />
 		<?= $template['metadata'] ?>
 
 		<title><?= $template['title'] ?></title>
 		<?php
-		foreach($this->fallback_override('style.css', $this->get_config('extends_css')) as $css)
-		{
-			echo link_tag($css);
-		}
+			foreach($this->fallback_override('style.css', $this->get_config('extends_css')) as $css)
+				echo '<link href="'.Uri::base().$css.'"rel="stylesheet" type="text/css" />';
 		?>
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="<?= Uri::base() . $this->fallback_asset('plugins.js') ?>" type="text/javascript"></script>
-		<?php if (get_setting('fu.sphinx.global')) : ?>
-			<link rel="search" type="application/opensearchdescription+xml" title="<?= get_setting('fs_gen_site_title', FOOL_PREF_GEN_WEBSITE_TITLE) ?> " href="<?= Uri::create('@system/functions/opensearch') ?>" />
+		<?php if (\Preferences::get('fu.sphinx.global')) : ?>
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('ff.gen.website_title', FOOL_PREF_GEN_WEBSITE_TITLE) ?> " href="<?= Uri::create('@system/functions/opensearch') ?>" />
 		<?php endif; ?>
-		<?= get_setting('fs_theme_header_code') ?>
+		<?= \Preferences::get('ff.theme.header_code') ?>
 	</head>
 	<body>
-<?php if ($disable_headers !== TRUE) : ?>
+	<?php if ($disable_headers !== TRUE) : ?>
 		<div><?php
 			$board_urls = array();
 			foreach (Radix::get_all() as $key => $item)
@@ -40,10 +38,10 @@
 			$board_urls = array();
 
 			$board_urls[] = '<a href="' . Uri::base() . '">' . strtolower(__('Index')) . '</a>';
-			if (Radix::get_selected())
+			if ($radix)
 			{
-				$board_urls[] = '<a href="' . Uri::create(Radix::get_selected()->shortname) . '">' . strtolower(__('Top')) . '</a>';
-				$board_urls[] = '<a href="' . Uri::create(array(Radix::get_selected()->shortname, 'statistics')) . '">' . strtolower(__('Statistics')) . '</a>';
+				$board_urls[] = '<a href="' . Uri::create($radix->shortname) . '">' . strtolower(__('Top')) . '</a>';
+				$board_urls[] = '<a href="' . Uri::create(array($radix->shortname, 'statistics')) . '">' . strtolower(__('Statistics')) . '</a>';
 			}
 			$board_urls[] = '<a href="https://github.com/FoOlRulez/FoOlFuuka/issues">' . strtolower(__('Report Bug')) . '</a>';
 
@@ -52,8 +50,8 @@
 
 		<?php
 			$top_nav = array();
-			$top_nav = Plugins::run_hook('fu_themes_generic_top_nav_buttons', array($top_nav), 'simple');
-			$top_nav = Plugins::run_hook('fu_themes_fuuka_top_nav_buttons', array($top_nav), 'simple');
+			$top_nav = Plugins::run_hook('ff.themes_generic_top_nav_buttons', array($top_nav), 'simple');
+			$top_nav = Plugins::run_hook('fu.themes.fuuka_top_nav_buttons', array($top_nav), 'simple');
 
 			if (!empty($top_nav))
 			{
@@ -71,18 +69,18 @@
 		?></div>
 
 		<div style="min-height: 30px;">
-			<h1><?= (Radix::get_selected()) ? Radix::get_selected()->formatted_title : '' ?></h1>
+			<h1><?= ($radix) ? $radix->formatted_title : '' ?></h1>
 			<?php if (isset($section_title)) : ?>
 				<h2><?= $section_title ?></h2>
-			<?php elseif (get_setting('fs_theme_header_text')) : ?>
-				<div><?= get_setting('fs_theme_header_text') ?></div>
+			<?php elseif (\Preferences::get('ff.theme.header_text')) : ?>
+				<div><?= \Preferences::get('ff.theme.header_text') ?></div>
 			<?php endif; ?>
 
 			<hr />
 
 			<?= $template['partials']['tools_search'] ?>
 			<hr />
-			<?php if ($is_page) echo $template['partials']['tools_reply_box']; ?>
+			<?= isset ($template['partials']['tools_reply_box']) ? $template['partials']['tools_reply_box'] : ''; ?>
 		</div>
 <?php endif; ?>
 
@@ -163,8 +161,8 @@
 			<div style="float: right;">
 				<?php
 					$bottom_nav = array();
-					$bottom_nav = Plugins::run_hook('fu_themes_generic_bottom_nav_buttons', array($bottom_nav), 'simple');
-					$bottom_nav = Plugins::run_hook('fu_themes_fuuka_bottom_nav_buttons', array($bottom_nav), 'simple');
+					$bottom_nav = Plugins::run_hook('ff.themes.generic_bottom_nav_buttons', array($bottom_nav), 'simple');
+					$bottom_nav = Plugins::run_hook('fu.themes.fuuka_bottom_nav_buttons', array($bottom_nav), 'simple');
 
 					if (!empty($bottom_nav))
 					{
@@ -196,9 +194,9 @@
 		<?php endif; ?>
 
 		<?php
-			if (get_setting('fs_theme_footer_text'))
+			if (\Preferences::get('ff.theme.footer_text'))
 			{
-				echo '<div style="clear: both;">' . get_setting('fs_theme_footer_text') . '</div>';
+				echo '<div style="clear: both;">' . \Preferences::get('ff.theme.footer_text') . '</div>';
 			}
 		?>
 
@@ -206,15 +204,15 @@
 			var backend_vars = <?= json_encode($backend_vars) ?>;
 		</script>
 
-		<?php if (get_setting('fs_theme_google_analytics')) : ?>
+		<?php if (\Preferences::get('ff.theme.google_analytics')) : ?>
 			<script>
-				var _gaq=[['_setAccount','<?= get_setting('fs_theme_google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
+				var _gaq=[['_setAccount','<?= \Preferences::get('ff.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
 				(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 					g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 					s.parentNode.insertBefore(g,s)}(document,'script'));
 			</script>
 		<?php endif; ?>
 
-		<?= get_setting('fs_theme_footer_code') ?>
+		<?= \Preferences::get('ff.theme.footer_code') ?>
 	</body>
 </html>

@@ -45,6 +45,8 @@ class Comment extends \Model\Model_Base
 	 * @var bool
 	 */
 	protected $_backlinks_hash_only_url = false;
+	
+	protected $current_board_for_prc = null;
 
 	/**
 	 * Sets the callbacks so they return URLs good for realtime updates
@@ -105,8 +107,9 @@ class Comment extends \Model\Model_Base
 			case 'comment':
 				return $this->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
 			case 'comment_processed':
-
 				return $this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
+			case 'formatted':
+				return $this->formatted = $this->build_comment();
 		}
 
 		return null;
@@ -127,6 +130,42 @@ class Comment extends \Model\Model_Base
 		}
 
 		return new Comment($post, $board, $options);
+	}
+	
+	
+	public static function forge_for_api($post, &$board, $api, $options = array())
+	{
+		if (is_array($post))
+		{
+			$array = array();
+			foreach ($post as $p)
+			{
+				$array[] = static::forge_for_api($p, $board, $api, $options);
+			}
+
+			return $array;
+		}
+
+		$comment = new Comment($post, $board, $options);
+		
+		$fields = $comment->_forced_entries;
+		
+		if (isset($api['formatted']) && $api['formatted'])
+		{
+			$fields[] = 'formatted';
+		}
+		
+		foreach ($fields as $field)
+		{
+			$comment->$field;
+		}
+
+		if (isset($api['board']) && !$api['board'])
+		{
+			unset($comment->board);
+		}
+		
+		return $comment;
 	}
 
 
@@ -389,9 +428,10 @@ class Comment extends \Model\Model_Base
 	 * @param object $post database row for the post
 	 * @return string the post box HTML with the selected theme
 	 */
-	protected function p_build_board_comment()
+	protected function p_build_comment()
 	{
-		return \Theme::build('board_comment', array('p' => $post), TRUE, TRUE);
+		$theme = \Theme::instance('foolfuuka');
+		return $theme->build('board_comment', array('p' => $this), TRUE, TRUE);
 	}
 
 

@@ -719,7 +719,6 @@ class Radix extends \Model_Base
 				->as_object()->execute()->as_array('id');
 		}
 
-
 		if (!is_array($object) || empty($object))
 		{
 			static::$preloaded_radixes = array();

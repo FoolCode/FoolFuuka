@@ -73,6 +73,8 @@ class Board extends \Model\Model_Base
 	 * @var array
 	 */
 	private $_radix = null;
+	
+	private $_api = null;
 
 
 	public static function forge()
@@ -182,6 +184,13 @@ class Board extends \Model\Model_Base
 		return $this;
 	}
 
+	
+	protected function p_set_api($enable = true)
+	{
+		$this->_api = $enable;
+		
+		return $this;
+	}
 
 	protected function p_set_page($page)
 	{
@@ -493,8 +502,16 @@ class Board extends \Model\Model_Base
 			\Profiler::mark('Board::get_threads_comments End Prematurely');
 			return array();
 		}
-
-		$this->_comments_unsorted = Comment::forge($result, $this->_radix);
+		
+		if ($this->_api)
+		{
+			$this->_comments_unsorted = Comment::forge_for_api($result, $this->_radix, $this->_api);
+		}
+		else
+		{
+			$this->_comments_unsorted = Comment::forge($result, $this->_radix);
+		}
+		
 		$this->_comments = $this->_comments_unsorted;
 
 		\Profiler::mark_memory($this->_comments, 'Board $this->_comments');
@@ -597,9 +614,24 @@ class Board extends \Model\Model_Base
 			throw new BoardThreadNotFoundException(__('There\'s no such a thread.'));
 		}
 
-		$this->_comments_unsorted =
-			Comment::forge($query_result, $this->_radix, array('realtime' => $realtime, 'backlinks_hash_only_url' => true));
-
+		if ($this->_api)
+		{
+			$this->_comments_unsorted =
+				Comment::forge_for_api($query_result, $this->_radix, $this->_api, array(
+					'realtime' => $realtime, 
+					'backlinks_hash_only_url' => true
+				));
+			
+		}
+		else
+		{
+			$this->_comments_unsorted =
+				Comment::forge($query_result, $this->_radix, array(
+					'realtime' => $realtime, 
+					'backlinks_hash_only_url' => true
+				));
+		}
+		
 		// process entire thread and store in $result array
 		$result = array();
 
@@ -730,10 +762,17 @@ class Board extends \Model\Model_Base
 	}
 
 
-	protected function p_get_post()
+	protected function p_get_post($num)
 	{
 		// default variables
 		$this->set_method_fetching('get_post_comments');
+		
+		if(!static::is_natural($num) || $num < 1)
+		{
+			throw new BoardMalformedInputException(__('The thread number is invalid.'));
+		}
+
+		$this->set_options('num', $num);
 
 		return $this;
 	}
@@ -757,7 +796,6 @@ class Board extends \Model\Model_Base
 		else if (isset($this->_options['doc_id']))
 		{
 			$query->where('doc_id', $this->_options['doc_id']);
-			break;
 		}
 		else
 		{
@@ -771,7 +809,15 @@ class Board extends \Model\Model_Base
 			throw new BoardPostNotFoundException;
 		}
 
-		$this->_comments_unsorted = Comment::forge($result, $this->_radix);
+		if ($this->_api)
+		{
+			$this->_comments_unsorted = Comment::forge_for_api($result, $this->_radix, $this->_api);
+		}
+		else
+		{
+			$this->_comments_unsorted = Comment::forge($result, $this->_radix);
+		}
+		
 		$this->_comments = $this->_comments_unsorted;
 
 		return $this;

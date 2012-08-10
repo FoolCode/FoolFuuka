@@ -98,7 +98,7 @@ var bindFunctions = function()
 							reply_alert.html(data.success);
 							reply_alert.addClass('success'); // deals with showing the alert
 							jQuery("#reply_chennodiscursus").val("");
-							realtimethread();
+							insertPost(data);
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							reply_alert.html('Connection error.');
@@ -358,14 +358,13 @@ var bindFunctions = function()
 				backlink_spin.spin('small');
 				backlink_jqxhr = jQuery.ajax({
 					url: backend_vars.api_url + 'api/chan/post/' ,
-					dataType: 'jsonp',
+					dataType: 'json',
 					type: 'GET',
 					cache: false,
 					data: {
 						board: that.data('board'),
 						num: that.data('post'),
 						theme: backend_vars.selected_theme,
-						format: 'jsonp'
 					},
                     beforeSend: function(xhr) {
                         xhr.withCredentials = true;
@@ -491,59 +490,15 @@ var realtimethread = function(){
 	clearTimeout(currentlapse);
 	jQuery.ajax({
 		url: backend_vars.api_url + 'api/chan/thread/',
-		dataType: 'jsonp',
+		dataType: 'json',
 		type: 'GET',
 		data: {
 			num : backend_vars.thread_id,
 			board: backend_vars.board_shortname,
 			latest_doc_id: backend_vars.latest_doc_id,
 			theme: backend_vars.selected_theme,
-			format: 'jsonp'
 		},
-		success: function(data){
-			var w_height = jQuery(document).height();
-			var found_posts = false;
-			if(typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined") {
-				jQuery.each(data[backend_vars.thread_id].posts, function(idx, value){
-					found_posts = true;
-					var post = jQuery(value.formatted)
-					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
-					post.find('[rel=tooltip]').tooltip({
-						placement: 'top',
-						delay: 200
-					});
-					post.find('[rel=tooltip_right]').tooltip({
-						placement: 'right',
-						delay: 200
-					});
-					backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-
-					// avoid inserting twice
-					if(jQuery('.doc_id_' + value.doc_id).length == 0)
-						jQuery('article.thread aside.posts').append(post);
-					if(backend_vars.latest_doc_id < value.doc_id)
-						backend_vars.latest_doc_id = value.doc_id;
-				});
-			}
-
-			if(found_posts)
-			{
-				if(jQuery('#reply_form :focus').length > 0)
-				{
-					window.scrollBy(0, jQuery(document).height() - w_height);
-				}
-
-				timelapse = 10;
-			}
-			else
-			{
-				if(timelapse < 30)
-				{
-					timelapse += 5;
-				}
-			}
-			currentlapse = setTimeout(realtimethread, timelapse*1000);
-		},
+		success: insertPost,
 		error: function(jqXHR, textStatus, errorThrown) {
 		},
 		complete: function() {
@@ -551,6 +506,57 @@ var realtimethread = function(){
 	});
 
 	return false;
+}
+
+
+var insertPost = function(data)
+{
+    var w_height = jQuery(document).height();
+    var found_posts = false;
+    if(typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined") 
+    {
+        jQuery.each(data[backend_vars.thread_id].posts, function(idx, value){
+
+            found_posts = true;
+            var post = jQuery(value.formatted)
+            post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+            post.find('[rel=tooltip]').tooltip({
+                placement: 'top',
+                delay: 200
+            });
+            post.find('[rel=tooltip_right]').tooltip({
+                placement: 'right',
+                delay: 200
+            });
+            backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
+
+            // avoid inserting twice
+            if(jQuery('.doc_id_' + value.doc_id).length == 0)
+                jQuery('article.thread aside.posts').append(post);
+            if(backend_vars.latest_doc_id < value.doc_id)
+                backend_vars.latest_doc_id = value.doc_id;
+        });
+    }
+
+    if(found_posts)
+    {
+        if(jQuery('#reply_form :focus').length > 0)
+        {
+            window.scrollBy(0, jQuery(document).height() - w_height);
+        }
+
+        timelapse = 10;
+    }
+    else
+    {
+        if(timelapse < 30)
+        {
+            timelapse += 5;
+        }
+    }
+    currentlapse = setTimeout(realtimethread, timelapse*1000);
+    
+    return false;
 }
 
 var toggleSearch = function(mode)

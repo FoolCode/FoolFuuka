@@ -7,6 +7,7 @@ class Controller_Chan extends \Controller_Common
 
 	protected $_theme = null;
 	protected $_radix = null;
+	protected $_to_bind = null;
 
 
 	public function before()
@@ -14,11 +15,6 @@ class Controller_Chan extends \Controller_Common
 		parent::before();
 
 		$this->_theme = \Theme::instance('foolfuuka');
-
-		if (!is_null($this->_radix))
-		{
-			$this->_theme->set_title($this->_radix->formatted_title);
-		}
 
 		$pass = \Cookie::get('reply_password');
 		$name = \Cookie::get('reply_name');
@@ -31,7 +27,7 @@ class Controller_Chan extends \Controller_Common
 			\Cookie::set('reply_password', $pass, 60*60*24*30);
 		}
 
-		$this->_theme->bind(array(
+		$this->_to_bind = array(
 			'user_name' => $name,
 			'user_email' => $email,
 			'user_pass' => $pass,
@@ -65,8 +61,9 @@ class Controller_Chan extends \Controller_Common
 					'update_now' => __('Update now')
 				)
 			)
-		));
+		);
 
+		$this->_theme->bind($this->_to_bind);
 		$this->_theme->set_partial('tools_modal', 'tools_modal');
 		$this->_theme->set_partial('tools_search', 'tools_search');
 	}
@@ -79,6 +76,9 @@ class Controller_Chan extends \Controller_Common
 
 		if ($this->_radix)
 		{
+			$this->_to_bind['backend_vars']['board_shortname'] = $this->_radix->shortname;
+			$this->_theme->bind($this->_to_bind);
+			$this->_theme->set_title($this->_radix->formatted_title);
 			$method = array_shift($params);
 		}
 		else if (!in_array($method, array('index', 'theme', 'search')))

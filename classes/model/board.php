@@ -609,6 +609,11 @@ class Board extends \Model\Model_Base
 
 		$query_result = $query->as_object()->execute()->as_array();
 
+		if (!count($query_result) && isset($latest_doc_id))
+		{
+			return $this->_comments = $this->_comments_unsorted = array();
+		}
+		
 		if (!count($query_result))
 		{
 			throw new BoardThreadNotFoundException(__('There\'s no such a thread.'));

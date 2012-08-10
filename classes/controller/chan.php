@@ -41,7 +41,30 @@ class Controller_Chan extends \Controller_Common
 			'is_last50' => false,
 			'order' => false,
 			'modifiers' => array(),
-			'backend_vars' => array()
+			'backend_vars' => array(
+				'site_url'  => \Uri::base(),
+				'default_url'  => \Uri::base(),
+				'archive_url'  => \Uri::base(),
+				'system_url'  => \Uri::base(),
+				'api_url'   => \Uri::base(),
+				'cookie_domain' => \Config::get('foolframe.cookie_prefix'),
+				'cookie_prefix' => \Config::get('config.cookie.domain'),
+				'selected_theme' => isset($this->_theme)?$this->_theme->get_selected_theme():'',
+		//		'csrf_hash' => $this->security->get_csrf_hash(),
+				'images' => array(
+					'banned_image' => \Uri::base() . 'content/themes/default/images/banned-image.png',
+					'banned_image_width' => 150,
+					'banned_image_height' => 150,
+					'missing_image' => \Uri::base() . 'content/themes/default/images/missing-image.jpg',
+					'missing_image_width' => 150,
+					'missing_image_height' => 150,
+				),
+				'gettext' => array(
+					'submit_state' => __('Submitting'),
+					'thread_is_real_time' => __('This thread is being displayed in real time.'),
+					'update_now' => __('Update now')
+				)
+			)
 		));
 
 		$this->_theme->set_partial('tools_modal', 'tools_modal');
@@ -50,7 +73,7 @@ class Controller_Chan extends \Controller_Common
 
 
 	public function router($method, $params)
-	{	//die(\Debug::dump($params));
+	{
 		$this->_radix = \Radix::set_selected_by_shortname($method);
 		$this->_theme->bind('radix', $this->_radix ? : null);
 
@@ -224,7 +247,7 @@ class Controller_Chan extends \Controller_Common
 				'total' => $board->get_count()
 			)
 		));
-
+		
 		if (!$this->_radix->archive)
 		{
 			$this->_theme->set_partial('tools_new_thread_box', 'tools_reply_box');
@@ -307,6 +330,13 @@ class Controller_Chan extends \Controller_Common
 			'latest_timestamp' => $latest_timestamp,
 			'thread_op_data' => $thread[$num]['op']
 		));
+		
+		$backend_vars = $this->_theme->get_var('backend_vars');
+		$backend_vars['thread_id'] = $num;
+		$backend_vars['latest_timestamp'] = $latest_timestamp;
+		$backend_vars['latest_doc_id'] = $latest_doc_id;
+		$backend_vars['board_shortname'] = $this->_radix->shortname;
+		$this->_theme->bind('backend_vars', $backend_vars);
 
 		if (!$thread_status['dead'] || ($thread_status['dead'] && !$this->_radix->disable_ghost))
 		{
@@ -543,18 +573,41 @@ class Controller_Chan extends \Controller_Common
 
 		if($val->run($data))
 		{
-			$comment = \Comment::forge((object) $data, $this->_radix, array('clean' => false));
-			$comment->media = $media;
-			$comment->insert();
+			try
+			{
+				$comment = \Comment::forge((object) $data, $this->_radix, array('clean' => false));
+				$comment->media = $media;
+				$comment->insert();
+			}
+			catch (Model\CommentSendingException $e)
+			{
+				if (\Input::is_ajax())
+				{
+					return \Response::forge(json_encode(array('error' => $e->getMessage())));
+				}
+				else
+				{
+					return $this->error(implode(' ', $val->error()));
+				}
+			}
 		}
 		else
 		{
 			return $this->error(implode(' ', $val->error()));
 		}
 
-		$this->_theme->set_layout('redirect');
-		return \Response::forge($this->_theme->build('redirect',
-			array('url' => \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/'.$comment->num))));
+		if (\Input::is_ajax())
+		{
+			$comment_api = \Comment::forge_for_api($comment, $this->_radix, array('board' => false, 'formatted' => true));
+			return \Response::forge(
+				json_encode(array($comment->thread_num => array('posts' => array($comment_api)))));
+		}
+		else
+		{
+			$this->_theme->set_layout('redirect');
+			return \Response::forge($this->_theme->build('redirect',
+				array('url' => \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/'.$comment->num))));
+		}
 
 	}
 }

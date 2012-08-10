@@ -541,7 +541,7 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	protected function clean_fields()
+	public function clean_fields()
 	{
 		if (!\Auth::has_access('maccess.mod'))
 			unset($this->poster_ip);
@@ -954,11 +954,11 @@ class Comment extends \Model\Model_Base
 				FROM
 				(
 					SELECT subnum
-					FROM ' . \Radix::get_table($board) . '
+					FROM ' . \Radix::get_table($this->board) . '
 					WHERE
 						num = (
 							SELECT MAX(num)
-							FROM ' . \Radix::get_table($board) . '
+							FROM ' . \Radix::get_table($this->board) . '
 							WHERE thread_num = '.intval($this->thread_num).'
 						)
 				) AS x)

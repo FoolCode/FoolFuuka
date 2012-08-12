@@ -60,7 +60,7 @@ class Comment extends \Model\Model_Base
 	protected $_forced_entries = array(
 		'title_processed', 'name_processed', 'email_processed', 'trip_processed', 'media_orig_processed',
 		'preview_orig_processed', 'media_filename_processed', 'media_hash_processed', 'poster_hash_processed',
-		'original_timestamp', 'fourchan_date', 'comment', 'comment_processed'
+		'original_timestamp', 'fourchan_date', 'comment_sanitized', 'comment_processed'
 	);
 
 	public $board = null;
@@ -105,7 +105,8 @@ class Comment extends \Model\Model_Base
 			case 'fourchan_date':
 				return $this->fourchan_date = gmdate('n/j/y(D)G:i', $this->original_timestamp);
 			case 'comment':
-				return $this->comment = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
+				// we always used comment_processed, this is an exception
+				return $this->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
 			case 'comment_processed':
 				return $this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
 			case 'formatted':
@@ -828,6 +829,8 @@ class Comment extends \Model\Model_Base
 		{
 			$this->$key = (string) $this->$key;
 		}
+		
+		\Plugins::run_hook('fu.comment.insert.alter_input_after_checks', array(&$this), 'simple');
 
 		// process comment name+trip
 		if ($this->name === '')
@@ -847,6 +850,12 @@ class Comment extends \Model\Model_Base
 			if(!$comment_parsed)
 			{
 				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
+			}
+			
+			// clean up to reset eventual auto-built entries
+			foreach ($this->_forced_entries as $field)
+			{
+				unset($this->$field);
 			}
 
 		}
@@ -933,6 +942,8 @@ class Comment extends \Model\Model_Base
 			$this->timestamp = $this->timestamp - ($diff * 60 * 60);
 		}
 
+		\Plugins::run_hook('fu.comment.insert.alter_input_before_sql', array(&$this), 'simple');
+		
 		\DB::start_transaction();
 
 		// being processing insert...

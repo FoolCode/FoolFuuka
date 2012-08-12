@@ -78,7 +78,7 @@ class Radix extends \Model_Base
 				'validation' => 'required|max_length[5]|valid_string[alpha,dashes,numeric]',
 				'validation_func' => function($input, $form_internal)
 				{
-					// if we're not using the special subdomain for peripherals
+					/*// if we're not using the special subdomain for peripherals
 					if (\Preferences::get('ff.srv_sys_subdomain', FOOL_PREF_SYS_SUBDOMAIN) === FALSE)
 					{
 						if (in_array($input['shortname'], unserialize(FOOL_PROTECTED_RADIXES)))
@@ -89,7 +89,7 @@ class Radix extends \Model_Base
 									unserialize(FOOL_PROTECTED_RADIXES)).'".'
 							);
 						}
-					}
+					}*/
 
 					// if we're working on the same object
 					if (isset($input['id']))
@@ -402,7 +402,7 @@ class Radix extends \Model_Base
 			),
 		);
 
-		$structure = \Plugins::run_hook('fu_radix_model_structure_alter', array($structure), 'simple');
+		$structure = \Plugins::run_hook('fu.radix.structure.structure_alter', array($structure), 'simple');
 
 		$structure = array_merge($structure,
 			array(

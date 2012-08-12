@@ -1,231 +1,13 @@
 <?php
+
+namespace Foolfuuka\Plugins\Board_Statistics;
+
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-
-class FU_Board_Statistics extends Plugins_model
+class Board_Statistics extends \Plugins
 {
-	
-	
-	function initialize_plugin()
-	{
-		// don't add the admin panels if the user is not an admin
-		if ($this->auth->is_admin())
-		{
-			Plugins::register_controller_function($this,
-				array('admin', 'plugins', 'board_statistics'), 'manage');
-
-			Plugins::register_admin_sidebar_element('plugins',
-				array(
-					"content" => array(
-						"board_statistics" => array(
-							"level" => "admin",
-							"name" => __("Statistics"),
-							"icon" => 'icon-bar-chart'
-						),
-					)
-				)
-			);
-
-			Plugins::register_controller_function($this,
-				array('cli', 'board_stats', 'help'), 'cli_help');
-
-			Plugins::register_controller_function($this,
-				array('cli', 'board_stats', 'cron'), 'cli_cron');
-
-			Plugins::register_controller_function($this,
-				array('cli', 'board_stats', 'cron', '(:any)'), 'cli_cron');
-		}
-
-		Plugins::register_controller_function($this,
-			array('chan', '(:any)', 'statistics'), 'chan_statistics');
-		
-		Plugins::register_controller_function($this,
-			array('chan', '(:any)', 'statistics', '(:any)'), 'chan_statistics');
-
-		
-		
-		Plugins::register_hook($this, 'fu_themes_generic_top_nav_buttons', 3, function($top_nav){
-			if(Radix::get_selected())
-				$top_nav[] = array('href' => Uri::create(array(Radix::get_selected()->shortname, 'statistics')), 'text' => __('Stats'));
-				return array('return' => $top_nav);
-		});
-
-		
-		Plugins::register_hook($this, 'fu_cli_controller_after_help', 5, function(){ 
-			cli_notice('notice', '    board_stats [help]   Run processes relative to the creation of statistics');
-			return NULL;
-		});
-	}
-	
-	
-	function cli_help()
-	{
-		cli_notice('notice', '');
-		cli_notice('notice', 'Command list:');
-		cli_notice('notice', 'php index.php cli board_stats ...');
-		cli_notice('notice', '    help                        Shows this help');
-		cli_notice('notice', '    cron                        Create statistics for all the boards in a loop');
-		cli_notice('notice', '    cron [board_shortname]      Create statistics for the selected board');
-		
-	}
-	
-	
-	function structure()
-	{
-		$arr = array(
-			'open' => array(
-				'type' => 'open',
-			),
-			'fu_plugins_board_statistics_enabled' => array(
-				'type' => 'checkbox_array',
-				'label' => 'Enabled statistics',
-				'help' => __('Select the statistics to enable. Some might be too slow to process, so you should disable them. Some statistics don\'t use extra processing power so they are enabled by default.'),
-				'checkboxes' => array()
-			),
-			'separator-2' => array(
-				'type' => 'separator-short'
-			),
-			'submit' => array(
-				'type' => 'submit',
-				'class' => 'btn-primary',
-				'value' => __('Submit')
-			),
-			'close' => array(
-				'type' => 'close'
-			),
-		);
-		
-		foreach($this->get_stats() as $key => $stat)
-		{
-			$arr['fu_plugins_board_statistics_enabled']['checkboxes'][] = array(
-				'type' => 'checkbox',
-				'label' => $key,
-				'help' => sprintf(__('Enable %s statistics'), $stat['name']),
-				'array_key' => $key,
-				'preferences' => TRUE,
-			);
-		}
-		
-		return $arr;
-	}
-
-	
-	function manage()
-	{
-		$this->viewdata['controller_title'] = '<a href="' . Uri::create("admin/plugins/board_statistics") . '">' . __("Board Statistics") . '</a>';
-		$this->viewdata['function_title'] = __('Manage');
-
-		if($this->input->post())
-		{
-			$this->load->model('preferences_model', 'preferences');
-			$this->preferences->submit_auto($this->structure());
-		}
-		
-		$data['form'] = $this->structure();
-		
-		$this->viewdata["main_content_view"] = $this->load->view("admin/form_creator.php", $data, TRUE);
-		$this->load->view("admin/default.php", $this->viewdata);
-	}
-	
-	
-	/**
-	 * @param null $report
-	 */
-	public function chan_statistics($report = NULL)
-	{
-		// Load Statistics Model
-
-		if (is_null($report))
-		{
-			$stats = $this->get_available_stats();
-
-			// Set template variables required to build the HTML.
-			$this->theme->set_title(Radix::get_selected()->formatted_title . ' &raquo; ' . __('Statistics'));
-			Chan::_set_parameters(
-				array(
-					'section_title' => __('Statistics'),
-					'is_statistics' => TRUE,
-					'is_statistics_list' => TRUE,
-					'info' => $stats
-				), array(
-					'tools_search' => TRUE
-				)
-			);
-			
-			ob_start();
-			?>
-
-			<div style="margin: 20px auto; width:960px;">
-				<nav style="margin-top:20px;">
-					<ul>
-						<?php foreach ($stats as $key => $stat) : ?>
-						<li>
-							<a href="<?php echo Uri::create(array(Radix::get_selected()->shortname, 'statistics', $key)) ?>" title="<?php echo form_prep($stat['name']) ?>" ><?php echo $stat['name'] ?></a>
-						</li>
-						<?php endforeach; ?>
-					</ul>
-				</nav>
-			</div>
-
-			<?php
-			$string = ob_get_clean();
-			$this->theme->build('plugin', array('content' => $string));
-		}
-		else
-		{
-			$stats = $this->check_available_stats($report, Radix::get_selected());
-
-			if (!is_array($stats))
-			{
-				return get_instance()->show_404();
-			}
-
-			// Set template variables required to build the HTML.
-			$this->load->helper('date');
-			$this->theme->set_title(Radix::get_selected()->formatted_title . ' &raquo; '
-				. __('Statistics') . ': ' . $stats['info']['name']);
-
-			if (isset($stats['info']['frequency']))
-			{
-				$section_title = sprintf(__('Statistics: %s (Next Update in %s)'),
-					$stats['info']['name'],
-					timespan(time(), strtotime($stats['timestamp']) + $stats['info']['frequency'])
-				);
-			}
-			else
-			{
-				$section_title = sprintf(__('Statistics: %s'), $stats['info']['name']);
-			}
-				
-			Chan::_set_parameters(
-				array(
-					'section_title' => $section_title,
-					'is_statistics' => TRUE,
-					'is_statistics_list' => FALSE
-				),
-				array(
-					'tools_search' => TRUE
-				)
-			);
-			
-			$data = $stats['data'];
-			$info = $stats['info'];
-			ob_start();
-			?>
-			<div style="margin: 20px auto; width:960px;">
-			<?php
-			include FCPATH . 'content/plugins/FU_Board_Statistics/views/' . $stats['info']['interface'] . '.php';
-			?>
-			</div> 
-			<?php
-			$string = ob_get_clean();
-			$this->theme->build('plugin', array('content' => $string));
-		}
-	}
-	
-	
-	function get_stats()
+	public static function get_stats()
 	{
 		return array(
 			'availability' => array(
@@ -397,7 +179,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 	
 	
-	function get_available_stats()
+	public static function get_available_stats()
 	{
 		$stats = $this->get_stats();
 		// this variable is going to be a serialized array
@@ -421,7 +203,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 	
 	
-	function check_available_stats($stat, $selected_board)
+	public static function check_available_stats($stat, $selected_board)
 	{
 		$available = $this->get_available_stats();
 
@@ -459,7 +241,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 	
 	
-	function get_stat($board_id, $name)
+	public static function get_stat($board_id, $name)
 	{
 		$stat = $this->db->query('
 			SELECT *
@@ -486,7 +268,7 @@ class FU_Board_Statistics extends Plugins_model
 	 *
 	 * @return boolean
 	 */
-	function lock_stat($board_id, $name, $temp_timestamp)
+	public static function lock_stat($board_id, $name, $temp_timestamp)
 	{
 		// again, to avoid racing conditions, let's also check that the timestamp hasn't been changed
 		$this->db->query('
@@ -504,7 +286,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function save_stat($board_id, $name, $timestamp, $data = '')
+	public static function save_stat($board_id, $name, $timestamp, $data = '')
 	{
 		$this->db->query('
 			INSERT
@@ -520,7 +302,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_availability($board)
+	public static function process_availability($board)
 	{
 		$query = $this->db->query('
 				SELECT
@@ -544,7 +326,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_daily_activity($board)
+	public static function process_daily_activity($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -564,7 +346,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_daily_activity_archive($board)
+	public static function process_daily_activity_archive($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -584,7 +366,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_daily_activity_hourly($board)
+	public static function process_daily_activity_hourly($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -604,7 +386,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_image_reposts($board)
+	public static function process_image_reposts($board)
 	{
 		$query = $this->db->query('
 			SELECT *
@@ -619,7 +401,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_karma($board)
+	public static function process_karma($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -637,7 +419,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_new_users($board)
+	public static function process_new_users($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -653,7 +435,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_population($board)
+	public static function process_population($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -672,7 +454,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_post_count($board)
+	public static function process_post_count($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -688,7 +470,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_post_rate($board)
+	public static function process_post_rate($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -704,7 +486,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_post_rate_archive($board)
+	public static function process_post_rate_archive($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -720,7 +502,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_users_online($board)
+	public static function process_users_online($board)
 	{
 		$query = $this->db->query('
 			SELECT name, trip, MAX(timestamp), num, subnum
@@ -737,7 +519,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function process_users_online_internal($board)
+	public static function process_users_online_internal($board)
 	{
 		$query = $this->db->query('
 			SELECT
@@ -764,7 +546,7 @@ class FU_Board_Statistics extends Plugins_model
 	 *
 	 * @return void
 	 */
-	function graph_gnuplot($board, $stat, $data)
+	public static function graph_gnuplot($board, $stat, $data)
 	{
 		// Create all missing directory paths for statistics.
 		if (!file_exists(FCPATH . 'content/cache/'))
@@ -822,7 +604,7 @@ class FU_Board_Statistics extends Plugins_model
 	}
 
 
-	function generate_gnuplot_template($stat)
+	public static function generate_gnuplot_template($stat)
 	{
 		$stats = $this->get_available_stats();
 		$options = $stats[$stat]['gnuplot'];
@@ -855,154 +637,4 @@ class FU_Board_Statistics extends Plugins_model
 		return implode("\n", $template);
 	}
 	
-	
-	
-	/**
-	 * Run a cron to update the statistics of all boards.
-	 *
-	 * @param int $id
-	 */
-	function cli_cron($shortname = NULL)
-	{
-		$boards = Radix::get_all();
-
-		$available = $this->get_available_stats();
-
-		while(true)
-		{
-			// Obtain all of the statistics already stored on the database to check for update frequency.
-			$stats = $this->db->query('
-				SELECT
-					board_id, name, timestamp
-				FROM ' . $this->db->protect_identifiers('plugin_fu-board-statistics',
-				TRUE) . '
-				ORDER BY timestamp DESC
-			');
-	
-			// Obtain the list of all statistics enabled.
-			$avail = array();
-			foreach ($available as $k => $a)
-			{
-				// get only the non-realtime ones
-				if (isset($available['frequency']))
-					$avail[] = $k;
-			}
-		
-			foreach ($boards as $board)
-			{
-				if (!is_null($shortname) && $shortname != $board->shortname)
-					continue;
-	
-				// Update all statistics for the specified board or current board.
-				echo $board->shortname . ' (' . $board->id . ')' . PHP_EOL;
-				foreach ($available as $k => $a)
-				{
-					echo '  ' . $k . ' ';
-					$found = FALSE;
-					$skip = FALSE;
-					foreach ($stats->result() as $r)
-					{
-						// Determine if the statistics already exists or that the information is outdated.
-						if ($r->board_id == $board->id && $r->name == $k)
-						{
-							// This statistics report has run once already.
-							$found = TRUE;
-	
-							if(!isset($a['frequency']))
-							{
-								$skip = TRUE;
-								continue;
-							}
-	
-							// This statistics report has not reached its frequency EOL.
-							if ((time() - strtotime($r->timestamp)) <= $a['frequency'])
-							{
-								$skip = TRUE;
-								continue;
-							}
-	
-							// This statistics report has another process locked.
-							if (!$this->lock_stat($r->board_id, $k, $r->timestamp))
-							{
-								continue;
-							}
-							break;
-						}
-					}
-	
-					// racing conditions with our cron.
-					if ($found === FALSE)
-					{
-						$this->save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
-					}
-	
-					// We were able to obtain a LOCK on the statistics report and has already reached the
-					// targeted frequency time.
-					if ($skip === FALSE)
-					{
-						echo '* Processing...';
-						$process = 'process_' . $k;
-						$this->db->reconnect();
-						$result = $this->$process($board);
-	
-						// This statistics report generates a graph via GNUPLOT.
-						if (isset($available[$k]['gnuplot']) && is_array($result) && !empty($result))
-						{
-							$this->graph_gnuplot($board->shortname, $k, $result);
-						}
-	
-						// Save the statistics report in a JSON array.
-						$this->save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
-					}
-	
-					echo PHP_EOL;
-				}
-			}
-			
-			$stats->free_result();
-			sleep(10);
-		}
-	}
-	
-	
-	
-	/**
-	 * Using the install function creates folders and database entries for 
-	 * the plugin to function. 
-	 */
-	function plugin_install()
-	{
-		$this->db->query("
-			CREATE TABLE IF NOT EXISTS `" . $this->db->dbprefix('plugin_fu-board-statistics') . "` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`board_id` int(11) NOT NULL,
-				`name` varchar(32) NOT NULL,
-				`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-				`data` longtext NOT NULL,
-				PRIMARY KEY (`id`),
-				UNIQUE KEY `board_name_index` (`board_id`,`name`),
-				KEY `timestamp_index` (`timestamp`)
-			) ENGINE=InnoDB CHARSET=utf8;
-	    ");
-	}
-	
-	/**
-	 * Removes everything by the plugin.
-	 */
-	function plugin_remove()
-	{
-		$this->db->query('
-			DROP TABLE `' . $this->db->dbprefix('plugin_fu-board-statistics') . '`
-	    ');
-	}
-	
-	function plugin_enable()
-	{
-		$this->plugin_install();
-	}
-	
-	function plugin_disable()
-	{
-	}
-
 }

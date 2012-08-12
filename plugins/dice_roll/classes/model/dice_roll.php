@@ -1,38 +1,24 @@
 <?php
 
+namespace Foolfuuka\Plugins\Dice_Roll;
+
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 
-class FU_Dice_Roll extends Plugins_model
+class Dice_Roll extends \Plugins
 {
-
-
-	function initialize_plugin()
+	
+	public static function roll(&$data)
 	{
-		Plugins::register_hook($this, 'fu_post_model_comment_alter_input', 4, 'roll');
-		Plugins::register_hook($this, 'fu_radix_model_structure_alter', 4, function($structure){
-			$structure['plugin_dice_roll_enable'] = array(
-				'database' => TRUE,
-				'boards_preferences' => TRUE,
-				'type' => 'checkbox',
-				'help' => __('Enable dice roll?')
-			);
-
-			return array('return' => $structure);
-		});
-	}
-
-	function roll($board, $data)
-	{
-		if($board->plugin_dice_roll_enable == 0)
+		if($data->board->plugin_dice_roll_enable == 0)
 		{
-			return array('return' => $data);
+			return null;
 		}
 
-		if ($data['email'] !== FALSE || $data['email'] != '')
+		if ($data->email !== FALSE || $data->email != '')
 		{
-			if (preg_match('/dice[ +](\d+)[ d+](\d+)(([ +-]+?)(-?\d+))?/', $data['email'], $result))
+			if (preg_match('/dice[ +](\d+)[ d+](\d+)(([ +-]+?)(-?\d+))?/', $data->email, $result))
 			{
 				$modifier = '';
 
@@ -65,11 +51,11 @@ class FU_Dice_Roll extends Plugins_model
 				}
 
 				$output = '[b]rolled ' . implode(', ', $dice['num']) . $modifier . ' = ' . $dice['sum'] . '[/b]';
-				$data['comment'] = trim($output . "\n\n" . $data['comment']);
+				$data->comment = trim($output . "\n\n" . $data->comment);
 			}
 		}
 
-		return array('return' => $data);
+		return null;
 	}
 
 }

@@ -7,9 +7,20 @@ class Fool
 	public function run()
 	{
 		\Cli::write('--'.__('FoolFuuka module management.'));
-		$section = \Cli::prompt('  '.__('Select the section.'), array('database', 'boards'));
 		
-		$this->{'cli_'.$section.'_help'}();
+		$sections = array('database', 'boards');
+		$sections = \Plugins::run_hook('foolframe.task.fool.run.sections.alter', array(array('database', 'board')), 'simple');
+		
+		$section = \Cli::prompt('  '.__('Select the section.'), $sections);
+		
+		if (method_exists($this, 'cli_'.$section.'_help'))
+		{
+			$this->{'cli_'.$section.'_help'}();
+		}
+		else
+		{
+			\Plugins::run_hook('foolframe.task.fool.run.sections.call_help.'.$section, array(), 'simple');
+		}
 		
 		$done = false;
 		while(!$done)
@@ -17,7 +28,14 @@ class Fool
 			$done = true;
 			$result = \Cli::prompt(__('Choose the method to run'));
 			$parameters = explode(' ', $result);
-			$done = $this->{'cli_'.$section}($parameters);
+			if (method_exists($this, 'cli_'.$section))
+			{
+				$done = $this->{'cli_'.$section}($parameters);
+			}
+			else
+			{
+				$done = \Plugins::run_hook('foolframe.task.fool.run.sections.call.'.$section, array($parameters), 'simple');
+			}
 		}
 		
 		\Cli::write(__('Goodbye.'));

@@ -456,7 +456,7 @@ class Radix extends \Model_Base
 	{
 		$all = static::get_all();
 
-		\Cache::delete('mode.radix.preload');
+		\Cache::delete('model.radix.preload');
 
 		foreach ($all as $a)
 		{

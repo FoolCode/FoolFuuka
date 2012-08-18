@@ -5,7 +5,7 @@ if (!defined('DOCROOT'))
 
 $charset = \Config::get('db.default.charset');
 
-if (!\DBUtil::table_exists('banned_posters'))
+if (!\DBUtil::table_exists('plugin_fu-board-statistics'))
 {
 	\DBUtil::create_table('plugin_fu-board-statistics', array(
 		'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),

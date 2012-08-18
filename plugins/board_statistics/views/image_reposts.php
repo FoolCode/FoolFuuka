@@ -9,8 +9,20 @@ if (!defined('DOCROOT'))
 		<div class="image_reposts_number">
 			<strong>#<?php echo $key+1 ?></strong> - Reposts: <?php echo $item->total ?>
 		</div>
-		<a href="<?php echo Uri::create(array(Radix::get_selected()->shortname, 'search', 'image', $this->post->get_media_hash($item->media_hash, TRUE))) ?>">
-			<img src="<?php echo $this->post->get_media_link(Radix::get_selected(), $item, TRUE) ?>" />
+		
+		<?php
+			$media = \Media::forge_empty(\Radix::get_selected());
+			$media->media_id = $item->media_id;
+			$media->media_hash = $item->media_hash;
+			$media->media = $item->media;
+			$media->preview_op = $item->preview_op;
+			$media->preview_reply = $item->preview_reply;
+			$media->total = $item->total;
+			$media->banned = $item->banned;
+		?>
+		
+		<a href="<?= Uri::create(array(Radix::get_selected()->shortname, 'search', 'image', $media->safe_media_hash)) ?>">
+			<img src="<?= $media->media_link  ?>" />
 		</a>
 	</div>
 <?php endforeach; ?>

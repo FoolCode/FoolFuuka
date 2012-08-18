@@ -8,7 +8,9 @@ if (!defined('DOCROOT'))
 	'Foolfuuka\\Plugins\\Board_Statistics\\Controller_Plugin_Fu_Board_Statistics_Admin_Board_Statistics' 
 		=> __DIR__.'/classes/controller/admin.php',
 	'Foolfuuka\\Plugins\\Board_Statistics\\Controller_Plugin_Fu_Board_Statistics_Chan' 
-		=> __DIR__.'/classes/controller/chan.php'
+		=> __DIR__.'/classes/controller/chan.php',
+	'Foolfuuka\\Plugins\\Board_Statistics\\Task' 
+		=> __DIR__.'/classes/tasks/task.php'
 ));
 
 // don't add the admin panels if the user is not an admin
@@ -19,6 +21,18 @@ if (\Auth::has_access('maccess.admin'))
 	\Plugins::register_sidebar_element('admin', 'plugins', array(
 		"content" => array("board_statistics" => array("level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart'))
 	));
+
+	\Plugins::register_hook('foolframe.task.fool.run.sections.alter', function($array){
+		$array[] = 'board_statistics';
+		return array('return' => $array);
+	}, 5);
+	
+	\Plugins::register_hook('foolframe.task.fool.run.sections.call_help.board_statistics', 
+		'Foolfuuka\\Plugins\\Board_Statistics\\Task::cli_board_statistics_help', 5);
+	
+	\Plugins::register_hook('foolframe.task.fool.run.sections.call.board_statistics', 
+		'Foolfuuka\\Plugins\\Board_Statistics\\Task::cli_board_statistics', 5);
+
 }
 
 \Plugins::register_hook('ff.themes.generic_top_nav_buttons', function($top_nav){
@@ -27,28 +41,5 @@ if (\Auth::has_access('maccess.admin'))
 		return array('return' => $top_nav);
 }, 3);
 
-/*
-if ($this->auth->is_admin())
-{
-
-	Plugins::register_controller_function($this,
-		array('cli', 'board_stats', 'help'), 'cli_help');
-
-	Plugins::register_controller_function($this,
-		array('cli', 'board_stats', 'cron'), 'cli_cron');
-
-	Plugins::register_controller_function($this,
-		array('cli', 'board_stats', 'cron', '(:any)'), 'cli_cron');
-}
-
-Plugins::register_controller_function($this,
-	array('chan', '(:any)', 'statistics'), 'chan_statistics');
-
-Plugins::register_controller_function($this,
-	array('chan', '(:any)', 'statistics', '(:any)'), 'chan_statistics');
-
-Plugins::register_hook($this, 'fu_cli_controller_after_help', 5, function(){ 
-	cli_notice('notice', '    board_stats [help]   Run processes relative to the creation of statistics');
-	return NULL;
-});
-*/
+\Router::add('(?!(admin|api|search|_))(\w+)/statistics', 'plugin/fu/board_statistics/chan/$2/statistics', true);
+\Router::add('(?!(admin|api|search|_))(\w+)/statistics/(:any)', 'plugin/fu/board_statistics/chan/$2/statistics/$3', true);

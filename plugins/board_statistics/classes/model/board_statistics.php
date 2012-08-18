@@ -181,9 +181,9 @@ class Board_Statistics extends \Plugins
 	
 	public static function get_available_stats()
 	{
-		$stats = $this->get_stats();
+		$stats = static::get_stats();
 		// this variable is going to be a serialized array
-		$enabled = get_setting('fu_plugins_board_statistics_enabled');
+		$enabled = \Preferences::get('fu.plugins.board_statistics.enabled');
 		
 		if(!$enabled)
 		{
@@ -205,7 +205,7 @@ class Board_Statistics extends \Plugins
 	
 	public static function check_available_stats($stat, $selected_board)
 	{
-		$available = $this->get_available_stats();
+		$available = static::get_available_stats();
 
 		if (isset($available[$stat]))
 		{
@@ -213,49 +213,49 @@ class Board_Statistics extends \Plugins
 			{
 				// real time stat
 				$process_function = 'process_' . $stat;
-				$result = $this->$process_function($selected_board);
+				$result = static::$process_function($selected_board);
 
 				return array('info' => $available[$stat], 'data' => json_encode($result));
 			}
 			else
 			{
-				$query = $this->db->query('
-					SELECT *
-					FROM ' . $this->db->protect_identifiers('plugin_fu-board-statistics',
-						TRUE) . '
-					WHERE board_id = ? AND name = ?
-					LIMIT 0,1
-				',
-					array($selected_board->id, $stat));
-				if ($query->num_rows() != 1)
+				$result = \DB::select()
+					->from('plugin_fu-board-statistics')
+					->where('board_id', '=', $selected_board->id)
+					->where('name', '=', $stat)
+					->offset(0)
+					->limit(1)
+					->as_object()
+					->execute()
+					->as_array();
+				
+				if (count($result) != 1)
 				{
-					return FALSE;
+					return false;
 				}
 
-				$result = $query->result();
 			}
 
 			return array('info' => $available[$stat], 'data' => $result[0]->data, 'timestamp' => $result[0]->timestamp);
 		}
-		return FALSE;
+		return false;
 	}
 	
 	
 	public static function get_stat($board_id, $name)
 	{
-		$stat = $this->db->query('
-			SELECT *
-			FROM ' . $this->db->protect_identifiers('plugin_fu-board-statistics',
-			TRUE) . '
-			WHERE board_id = ? and name = ?
-		', array($board_id, $name));
+		
+		$stat = \DB::select()
+			->from('plugin_fu-board-statistics')
+			->where('board_id', '=', $board_id)
+			->where('name', '=', $name)
+			->as_object()
+			->execute();
 
-		if ($stat->num_rows() == 0)
-			return FALSE;
+		if ( ! count($stat))
+			return false;
 
-		$result = $stat->result();
-		$stat->free_result();
-		return $result[0];
+		return $stat->current();
 	}
 	
 	
@@ -271,269 +271,213 @@ class Board_Statistics extends \Plugins
 	public static function lock_stat($board_id, $name, $temp_timestamp)
 	{
 		// again, to avoid racing conditions, let's also check that the timestamp hasn't been changed
-		$this->db->query('
-			UPDATE ' . $this->db->protect_identifiers('plugin_fu-board-statistics',
-				TRUE) . '
-			SET timestamp = ?
-			WHERE board_id = ? AND name = ? AND timestamp = ?
-		',
-			array(date('Y-m-d H:i:s', time() + 600), $board_id, $name, $temp_timestamp)); // hopefully 10 minutes is enough for everything
+		$affected = \DB::update('plugin_fu-board-statistics')
+			->set('timestamp', date('Y-m-d H:i:s', time() + 600))
+			->where('board_id', '=', $board_id)
+			->where('name', '=', $name)
+			->where('timestamp', '=', $temp_timestamp)
+			->execute(); // hopefully 10 minutes is enough for everything
 
-		if ($this->db->affected_rows() != 1)
-			return FALSE;
+		if ($affected != 1)
+			return false;
 
-		return TRUE;
+		return true;
 	}
 
 
 	public static function save_stat($board_id, $name, $timestamp, $data = '')
 	{
-		$this->db->query('
-			INSERT
-			INTO ' . $this->db->protect_identifiers('plugin_fu-board-statistics',
-				TRUE) . '
-			(board_id, name, timestamp, data)
-			VALUES
-				(?, ?, ?, ?)
-			ON DUPLICATE KEY UPDATE
-				timestamp = VALUES(timestamp), data = VALUES(data);
-		',
-			array($board_id, $name, $timestamp, json_encode($data)));
+		$result = \DB::select(\DB::expr('COUNT(*) as count'))
+			->from('plugin_fu-board-statistics')
+			->where('board_id', '=', $board_id)
+			->where('name', '=', $name)
+			->execute()
+			->current();
+		
+		if ( ! $result['count'])
+		{
+			\DB::insert('plugin_fu-board-statistics')
+				->set(array('board_id' => $board_id, 'name' => $name, 
+					'timestamp' => $timestamp, 'data' =>json_encode($data)))
+				->execute();
+		}
+		else
+		{
+			\DB::update('plugin_fu-board-statistics')
+				->where('board_id', '=', $board_id)
+				->where('name', '=', $name)
+				->set(array('timestamp' => $timestamp, 'data' =>json_encode($data)))
+				->execute();
+		}
 	}
 
 
 	public static function process_availability($board)
 	{
-		$query = $this->db->query('
-				SELECT
-					name, trip, COUNT(num) AS posts,
-					AVG(timestamp%86400) AS avg1,
-					STDDEV_POP(timestamp%86400) AS std1,
-					(AVG((timestamp+43200)%86400)+43200)%86400 avg2,
-					STDDEV_POP((timestamp+43200)%86400) AS std2
-				FROM ' . Radix::get_table($board) . '
-				FORCE INDEX(fullname_index)
-				WHERE timestamp > ?
-				GROUP BY name, trip
-				HAVING count(*) > 4
-				ORDER BY name, trip
-		',
-			array(time() - 2592000));
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select(\DB::expr('
+				name, trip, COUNT(num) AS posts,
+				AVG(timestamp%86400) AS avg1,
+				STDDEV_POP(timestamp%86400) AS std1,
+				(AVG((timestamp+43200)%86400)+43200)%86400 avg2,
+				STDDEV_POP((timestamp+43200)%86400) AS std2
+			'))
+			->from(\DB::expr(\Radix::get_table($board).' FORCE INDEX(timestamp_index)'))
+			->where('timestamp', '>', time() - 2592000)
+			->group_by('name', 'trip')
+			->having(\DB::expr('count(*)'), '>', 4)
+			->order_by('name')
+			->order_by('trip')
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_daily_activity($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				(FLOOR(timestamp/300)%288)*300 AS time, COUNT(timestamp), COUNT(media_hash),
-				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
-			FROM ' . Radix::get_table($board) . '
-			USE INDEX(timestamp_index)
-			WHERE timestamp > ?
-			GROUP BY FLOOR(timestamp/300)%288
-			ORDER BY FLOOR(timestamp/300)%288;
-		',
-			array(time() - 86400));
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select(\DB::expr('(FLOOR(timestamp/300)%288)*300 AS time'), 
+				\DB::expr('COUNT(timestamp)'), 
+				\DB::expr('COUNT(media_hash)'),
+				\DB::expr('COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)'))
+			->from(\DB::expr(\Radix::get_table($board).' USE INDEX(timestamp_index)'))
+			->where('timestamp', '>', time() - 86400)
+			->group_by(\DB::expr('FLOOR(timestamp/300)%288'))
+			->order_by(\DB::expr('FLOOR(timestamp/300)%288'))
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_daily_activity_archive($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(timestamp),
-				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
-			FROM ' . Radix::get_table($board) . '
-			USE INDEX(timestamp_index)
-			WHERE timestamp> ? AND subnum != 0
-			GROUP BY FLOOR(timestamp/3600)%24
-			ORDER BY FLOOR(timestamp/3600)%24;
-		',
-			array(time() - 86400));
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select(\DB::expr('((FLOOR(timestamp/3600)%24)*3600)+1800 AS time'), 
+				\DB::expr('COUNT(timestamp)'),
+				\DB::expr('COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)'))
+			->from(\DB::expr(\Radix::get_table($board).' USE INDEX(timestamp_index)'))
+			->where('timestamp', '>', time() - 86400)
+			->where('subnum', '<>', 0)
+			->group_by(\DB::expr('FLOOR(timestamp/3600)%24'))
+			->order_by(\DB::expr('FLOOR(timestamp/3600)%24'))
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_daily_activity_hourly($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time, COUNT(timestamp), COUNT(media_hash),
-				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
-			FROM ' . Radix::get_table($board) . '
-			USE INDEX(timestamp_index)
-			WHERE timestamp > ?
-			GROUP BY FLOOR(timestamp/3600)%24
-			ORDER BY FLOOR(timestamp/3600)%24;
-		',
-			array(time() - 86400));
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select(\DB::expr('((FLOOR(timestamp/3600)%24)*3600)+1800 AS time'), 
+				\DB::expr('COUNT(timestamp)'),
+				\DB::expr('COUNT(media_hash)'), 
+				\DB::expr('COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)'))
+			->from(\DB::expr(\Radix::get_table($board).' USE INDEX(timestamp_index)'))
+			->where('timestamp', '>', time() - 86400)
+			->group_by(\DB::expr('FLOOR(timestamp/3600)%24'))
+			->order_by(\DB::expr('FLOOR(timestamp/3600)%24'))
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_image_reposts($board)
 	{
-		$query = $this->db->query('
-			SELECT *
-			FROM ' . Radix::get_table($board, '_images') . '
-			ORDER BY total DESC
-			LIMIT 0, 200;
-		');
-
-		$array = $query->result();
-		$query->free_result();
-		return $array;
+		return \DB::select()
+			->from(\DB::expr(\Radix::get_table($board, '_images')))
+			->order_by('total', 'desc')
+			->offset(0)
+			->limit(200)
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_karma($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				day AS time, posts, images, sage
-			FROM ' . Radix::get_table($board, '_daily') . '
-			WHERE day > floor((?-31536000)/86400)*86400
-			GROUP BY day
-			ORDER BY day
-		',
-			array(time()));
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select(\DB::expr('day AS time'), 'posts', 'images', 'sage')
+			->from(\DB::expr(\Radix::get_table($board, '_daily')))
+			->where('day', '>', \DB::expr('floor(('.time().'-31536000)/86400)*86400'))
+			->group_by('day')
+			->order_by('day')
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_new_users($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				name, trip, firstseen, postcount
-			FROM ' . Radix::get_table($board, '_users') . '
-			WHERE postcount > 30
-			ORDER BY firstseen DESC;
-		');
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select('name', 'trip', 'firstseen', 'postcount')
+			->from(\DB::expr(\Radix::get_table($board, '_users')))
+			->where('postcount', '>', 30)
+			->order_by('firstseen', 'desc')
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_population($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				day AS time, trips, names, anons
-			FROM ' . Radix::get_table($board, '_daily') . '
-			WHERE day > floor((?-31536000)/86400)*86400
-			GROUP BY day
-			ORDER BY day
-		',
-			array(time())
-		);
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select(\DB::expr('day AS time'), 'trips', 'names', 'anons')
+			->from(\DB::expr(\Radix::get_table($board, '_daily')))	
+			->where('day', '>', \DB::expr('floor(('.time().'-31536000)/86400)*86400'))
+			->group_by('day')
+			->order_by('day')
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_post_count($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				name, trip, postcount
-			FROM ' . Radix::get_table($board, '_users') . '
-			ORDER BY postcount DESC
-			LIMIT 512
-		');
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select('name', 'trip', 'postcount')
+			->from(\DB::expr(\Radix::get_table($board, '_users')))	
+			->order_by('postcount', 'desc')
+			->limit(512)
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_post_rate($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				COUNT(timestamp), COUNT(timestamp)/60
-			FROM ' . Radix::get_table($board) . '
-			WHERE timestamp > ?
-		',
-			array(time() - 3600));
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select(\DB::expr('COUNT(timestamp)'), \DB::expr('COUNT(timestamp)/60'))
+			->from(\DB::expr(\Radix::get_table($board)))	
+			->where('timestamp', '>', time() - 3600)
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_post_rate_archive($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				COUNT(timestamp), COUNT(timestamp)/60
-			FROM ' . Radix::get_table($board) . '
-			WHERE timestamp > ? AND subnum != 0
-		',
-			array(time() - 3600));
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select(\DB::expr('COUNT(timestamp)'), \DB::expr('COUNT(timestamp)/60'))
+			->from(\DB::expr(\Radix::get_table($board)))	
+			->where('timestamp', '>', time() - 3600)
+			->where('subnum', '<>', 0)
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_users_online($board)
 	{
-		$query = $this->db->query('
-			SELECT name, trip, MAX(timestamp), num, subnum
-			FROM ' . Radix::get_table($board) . '
-			WHERE timestamp > ?
-			GROUP BY name, trip
-			ORDER BY MAX(timestamp) DESC
-		',
-			array(time() - 1800));
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select('name', 'trip', \DB::expr('MAX(timestamp)'), 'num', 'subnum')
+			->from(\DB::expr(\Radix::get_table($board)))
+			->where('timestamp', '>', time() - 1800)
+			->group_by('name', 'trip')
+			->order_by(\DB::expr('MAX(timestamp)'), 'desc')
+			->execute()
+			->as_array();
 	}
 
 
 	public static function process_users_online_internal($board)
 	{
-		$query = $this->db->query('
-			SELECT
-				name, trip, MAX(timestamp), num, subnum
-			FROM ' . Radix::get_table($board) . '
-			WHERE poster_ip <> 0 AND timestamp > ?
-			GROUP BY name, trip
-			ORDER BY MAX(timestamp) DESC
-		',
-			array(time() - 3600));
-
-		$array = $query->result_array();
-		$query->free_result();
-		return $array;
+		return \DB::select('name', 'trip', \DB::expr('MAX(timestamp)'), 'num', 'subnum')
+			->from(\DB::expr(\Radix::get_table($board)))
+			->where('poster_ip', '<>', 0)
+			->where('timestamp', '>', time() - 3600)
+			->group_by('name', 'trip')
+			->order_by(\DB::expr('MAX(timestamp)'), 'desc')
+			->execute()
+			->as_array();
 	}
 
 
@@ -549,23 +493,23 @@ class Board_Statistics extends \Plugins
 	public static function graph_gnuplot($board, $stat, $data)
 	{
 		// Create all missing directory paths for statistics.
-		if (!file_exists(FCPATH . 'content/cache/'))
+		if (!file_exists(DOCROOT . 'foolfuuka/cache/'))
 		{
-			mkdir(FCPATH . 'content/cache/');
+			mkdir(DOCROOT . 'foolfuuka/cache/');
 		}
-		if (!file_exists(FCPATH . 'content/statistics/'))
+		if (!file_exists(DOCROOT . 'foolfuuka/statistics/'))
 		{
-			mkdir(FCPATH . 'content/statistics/');
+			mkdir(DOCROOT . 'foolfuuka/statistics/');
 		}
-		if (!file_exists(FCPATH . 'content/statistics/' . $board . '/'))
+		if (!file_exists(DOCROOT . 'foolfuuka/statistics/' . $board . '/'))
 		{
-			mkdir(FCPATH . 'content/statistics/' . $board . '/');
+			mkdir(DOCROOT . 'foolfuuka/statistics/' . $board . '/');
 		}
 
 		// Set PATH for INFILE, GNUFILE, and OUTFILE for read/write.
-		$INFILE = FCPATH . 'content/cache/statistics-' . $board . '-' . $stat . '.dat';
-		$GNUFILE = FCPATH . 'content/cache/statistics-' . $board . '-' . $stat . '.gnu';
-		$OUTFILE = FCPATH . 'content/statistics/' . $board . '/' . $stat . '.png';
+		$INFILE = DOCROOT . 'foolfuuka/cache/statistics-' . $board . '-' . $stat . '.dat';
+		$GNUFILE = DOCROOT . 'foolfuuka/cache/statistics-' . $board . '-' . $stat . '.gnu';
+		$OUTFILE = DOCROOT . 'foolfuuka/statistics/' . $board . '/' . $stat . '.png';
 
 		// Obtain starting and ending data points for x range.
 		$X_START = (!empty($data) ? $data[0]['time'] : 0);
@@ -578,7 +522,7 @@ class Board_Statistics extends \Plugins
 			$graph_data[] = implode("\t", $line);
 		}
 		$graph_data = implode("\n", $graph_data);
-		write_file($INFILE, $graph_data);
+		file_put_contents($INFILE, $graph_data);
 
 		// Set template variables for replacement.
 		$template_vars = array(
@@ -595,8 +539,8 @@ class Board_Statistics extends \Plugins
 		);
 
 		$template = str_replace($template_vars, $template_vals,
-			$this->generate_gnuplot_template($stat));
-		write_file($GNUFILE, $template);
+			static::generate_gnuplot_template($stat));
+		file_put_contents($GNUFILE, $template);
 
 		// Execute GNUPLOT with GNUFILE input.
 		$result = @exec('/usr/bin/gnuplot ' . $GNUFILE);
@@ -606,7 +550,7 @@ class Board_Statistics extends \Plugins
 
 	public static function generate_gnuplot_template($stat)
 	{
-		$stats = $this->get_available_stats();
+		$stats = static::get_available_stats();
 		$options = $stats[$stat]['gnuplot'];
 
 		$template = array();

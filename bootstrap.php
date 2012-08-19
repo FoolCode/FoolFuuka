@@ -8,8 +8,9 @@
 	'Foolfuuka\\Tasks\\Fool' => APPPATH.'modules/foolfuuka/classes/task/fool.php'
 ));
 
-Autoloader::add_core_namespace('Foolfuuka\\Model');
+\Autoloader::add_core_namespace('Foolfuuka\\Model');
 
+\Package::load('stringparser-bbcode', APPPATH.'modules/foolfuuka/packages/stringparser-bbcode/');
 
 $theme = \Theme::forge('foolfuuka');
 $theme->set_module('foolfuuka');

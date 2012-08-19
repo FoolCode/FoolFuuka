@@ -272,7 +272,7 @@ class Comment extends \Model\Model_Base
 
 		$comment = static::auto_linkify($comment, 'url', TRUE);
 		$comment = preg_replace($find, $html, $comment);
-		//$comment = parse_bbcode($comment, ($this->board->archive && !$this->subnum));
+		$comment = static::parse_bbcode($comment, ($this->board->archive && !$this->subnum));
 
 		// additional formatting
 		if ($this->board->archive && !$this->subnum)
@@ -298,6 +298,89 @@ class Comment extends \Model\Model_Base
 		}
 
 		return $this->comment_processed = nl2br(trim($comment));
+	}
+	
+	
+	protected static function parse_bbcode($str, $special_code, $strip = true)
+	{
+		$bbcode = new \StringParser_BBCode();
+
+		$codes = array();
+		
+		// add list of bbcode for formatting
+		$codes[] = array('code', 'simple_replace', NULL, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
+			array('block', 'inline'), array());
+		$codes[] = array('spoiler', 'simple_replace', NULL,
+			array('start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
+			array('code'));
+		$codes[] = array('sub', 'simple_replace', NULL, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline',
+			array('block', 'inline'), array('code'));
+		$codes[] = array('sup', 'simple_replace', NULL, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline',
+			array('block', 'inline'), array('code'));
+		$codes[] = array('b', 'simple_replace', NULL, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline',
+			array('block', 'inline'), array('code'));
+		$codes[] = array('i', 'simple_replace', NULL, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline',
+			array('block', 'inline'), array('code'));
+		$codes[] = array('m', 'simple_replace', NULL, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'),
+			'inline', array('block', 'inline'), array('code'));
+		$codes[] = array('o', 'simple_replace', NULL, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'),
+			'inline', array('block', 'inline'), array('code'));
+		$codes[] = array('s', 'simple_replace', NULL,
+			array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
+			array('code'));
+		$codes[] = array('u', 'simple_replace', NULL,
+			array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
+			array('code'));
+		$codes[] = array('EXPERT', 'simple_replace', NULL,
+			array('start_tag' => '<span class="expert">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
+			array('code'));
+
+		foreach($codes as $code)
+		{
+			if($strip)
+			{
+				$code[1] = 'callback_replace';
+				$code[2] = '\\Comment::strip_unused_bbcode'; // this also fixes pre/code 
+			}
+
+			$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
+		}
+
+		// if $special == TRUE, add special bbcode
+		if ($special_code === TRUE)
+		{
+			/* @todo put this into theme bootstrap
+			if ($CI->theme->get_selected_theme() == 'fuuka')
+			{
+				$bbcode->addCode('moot', 'simple_replace', NULL,
+					array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'),
+					'inline', array('block', 'inline'), array());
+			}
+			else*/
+			{
+				$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline',
+					array('block', 'inline'), array());
+			}
+		}
+
+		return $bbcode->parse($str);
+	}
+	
+	public static function strip_unused_bbcode($action, $attributes, $content, $params, &$node_object)
+	{
+		if($content === '' || $content === FALSE)
+			return '';
+
+		// if <code> has multiple lines, wrap it in <pre> instead
+		if($params['start_tag'] == '<code>')
+		{
+			if(count(array_filter(preg_split('/\r\n|\r|\n/', $content))) > 1)
+			{
+				return '<pre>' . $content . '</pre>';
+			}
+		}
+
+		return $params['start_tag'] . $content . $params['end_tag'];
 	}
 
 

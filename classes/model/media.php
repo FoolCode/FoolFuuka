@@ -120,6 +120,35 @@ class Media extends \Model\Model_Base
 		return new Media($media, $board);
 	}
 
+	
+	protected static function p_get_by($board, $where, $value, $op = 0)
+	{
+		$result = \DB::select()
+			->from(\DB::expr(\Radix::get_table($board, '_images')))
+			->where($where, $value)
+			->as_object()
+			->execute()
+			->current();
+		
+		if ($result)
+		{
+			return new Media($result, $board, $op);
+		}
+		
+		throw new MediaNotFoundException;
+	}
+	
+	
+	protected static function p_get_by_id($board, $value, $op = 0)
+	{
+		return static::get_by($board, 'id', $value, $op);
+	}
+	
+	
+	protected static function p_get_by_media_hash($board, $value, $op = 0)
+	{
+		return static::get_by($board, 'media_hash', $value, $op);
+	}
 
 
 	protected static function p_forge_from_upload($board)

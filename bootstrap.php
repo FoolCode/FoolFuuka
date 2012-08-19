@@ -11,6 +11,7 @@
 \Autoloader::add_core_namespace('Foolfuuka\\Model');
 
 \Package::load('stringparser-bbcode', APPPATH.'modules/foolfuuka/packages/stringparser-bbcode/');
+\Package::load('sphinxql', APPPATH.'modules/foolfuuka/packages/sphinxql/');
 
 $theme = \Theme::forge('foolfuuka');
 $theme->set_module('foolfuuka');

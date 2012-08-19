@@ -276,7 +276,7 @@ class Sphinxql
 		
 		if ( $this->_offset !== null)
 		{
-			$query .= 'LIMIT '.((int) $this->_offset). ' ';
+			$query .= 'OFFSET '.((int) $this->_offset). ' ';
 		}
 		
 		if ( ! empty($this->_options))

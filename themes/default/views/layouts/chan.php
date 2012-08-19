@@ -11,7 +11,7 @@ header('imagetoolbar: false');
 		<?= $template['metadata'] ?>
 
 		<title><?= $template['title'] ?></title>
-		<link href='<?= Uri::base() ?>' rel='index' title='<?= Preferences::get('ff.gen.site_title') ?>' />
+		<link href='<?= Uri::base() ?>' rel='index' title='<?= Preferences::get('ff.gen.website_title') ?>' />
 		<?php if ($radix) : ?>
 		<link href="<?= Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS" />
 		<link href="<?= Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom" />
@@ -76,7 +76,7 @@ header('imagetoolbar: false');
 									<?= ($radix) ? '/' . $radix->shortname . '/' . ' - ' . $radix->name :  Preferences::get('ff.gen.website_title') ?> <b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
-									<?= '<li><a href="' . Uri::create('@default') . '">' . __('Index') . '</a></li>'; ?>
+									<?= '<li><a href="' . Uri::base() . '">' . __('Index') . '</a></li>'; ?>
 									<?= (Auth::has_access('maccess.mod')) ? '<li><a href="' . Uri::create('@system/admin') . '">' . __('Control Panel') . '</a></li>' : '' ?>
 									<li class="divider"></li>
 									<?php

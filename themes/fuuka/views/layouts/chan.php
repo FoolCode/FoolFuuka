@@ -185,7 +185,7 @@
 					{
 						if (($theme = $this->get_by_name($theme)))
 						{
-							$theme_links[] = '<a href="' . Uri::create(array('@system', 'functions', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
+							$theme_links[] = '<a href="' . Uri::create(array('_', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
 						}
 					}
 					echo 'Theme [ ' . implode(' / ', $theme_links) . ' ]';

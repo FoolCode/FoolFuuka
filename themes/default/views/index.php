@@ -41,7 +41,7 @@ if (!defined('DOCROOT'))
 			}
 		}
 
-		$index_nav = Plugins::run_hook('fu.themes.generic.index_nav_elements', array($index_nav), 'simple');
+		$index_nav = Plugins::run_hook('ff.themes.generic.index_nav_elements', array($index_nav), 'simple');
 		$index_nav = Plugins::run_hook('fu.themes.default.index_nav_elements', array($index_nav), 'simple');
 
 		foreach($index_nav as $item) : ?>

@@ -8,5 +8,5 @@ if (!defined('DOCROOT'))
 ));
 
 
-\Router::add('(?!(admin|api|content|assets|search))(\w+)', 'theme/fu/yotsubatwo/chan/$2/page');
-\Router::add('(?!(admin|api|content|assets|search))(\w+)/(:any)', 'theme/fu/yotsubatwo/chan/$2/$3');
+\Router::add('(?!(admin|api|_))(\w+)', 'theme/fu/yotsubatwo/chan/$2/page');
+\Router::add('(?!(admin|api|_))(\w+)/(:any)', 'theme/fu/yotsubatwo/chan/$2/$3');

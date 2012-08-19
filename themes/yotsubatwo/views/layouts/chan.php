@@ -11,7 +11,7 @@ header('imagetoolbar: false');
 		<?= $template['metadata'] ?>
 
 		<title><?= $template['title'] ?></title>
-		<link href='<?= Uri::base() ?>' rel='index' title='<?= Preferences::get('ff.gen.site_title') ?>' />
+		<link href='<?= Uri::base() ?>' rel='index' title='<?= Preferences::get('ff.gen.website_title') ?>' />
 		<?php if ($radix) : ?>
 		<link href="<?= Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS" />
 		<link href="<?= Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom" />
@@ -246,10 +246,10 @@ header('imagetoolbar: false');
 					</a>
 					<ul class="dropdown-menu">
 						<?php
-						foreach($this->get_available_styles('yotsuba_2') as $key => $style) :
+						foreach($this->get_available_styles($this->get_selected_theme()) as $key => $style) :
 						?>
 							<li>
-								<a href="<?= Uri::create(array('theme', $this->get_selected_theme(), $style)) ?>">
+								<a href="<?= Uri::create(array('_', 'theme', $this->get_selected_theme(), $style)) ?>">
 									<?= $key ?><?= ($style == $this->get_selected_theme_class()) ?' <i class="icon-ok"></i>':'' ?>
 								</a>
 							</li>
@@ -268,7 +268,7 @@ header('imagetoolbar: false');
 						if (($theme = $this->get_by_name($theme))) :
 							?>
 							<li>
-								<a href="<?= Uri::create(array('theme', $theme['directory'])) ?>">
+								<a href="<?= Uri::create(array('_', 'theme', $theme['directory'])) ?>">
 									<?= $theme['name'] ?><?= ($theme['directory'] == $this->get_selected_theme())?' <i class="icon-ok"></i>':'' ?>
 								</a>
 							</li>

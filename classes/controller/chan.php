@@ -71,27 +71,42 @@ class Controller_Chan extends \Controller_Common
 
 	public function router($method, $params)
 	{
-		$this->_radix = \Radix::set_selected_by_shortname($method);
-		$this->_theme->bind('radix', $this->_radix ? : null);
-
-		if ($this->_radix)
+		$segments = \Uri::segments();
+		
+		// the underscore function is never a board
+		if (isset($segments[0]) && $segments[0] !== '_')
 		{
-			$this->_to_bind['backend_vars']['board_shortname'] = $this->_radix->shortname;
-			$this->_theme->bind($this->_to_bind);
-			$this->_theme->set_title($this->_radix->formatted_title);
-			$method = array_shift($params);
-		}
-		else if (!in_array($method, array('index', 'theme', 'search')))
-		{
-			return call_user_func_array(array($this, 'action_404'), $params);
-		}
+			
+			$this->_radix = \Radix::set_selected_by_shortname($method);
 
+			if ($this->_radix)
+			{
+				$this->_theme->bind('radix', $this->_radix);
+				$this->_to_bind['backend_vars']['board_shortname'] = $this->_radix->shortname;
+				$this->_theme->bind($this->_to_bind);
+				$this->_theme->set_title($this->_radix->formatted_title);
+				$method = array_shift($params);
+				
+				// methods callable with a radix are prefixed with radix_
+				if (method_exists($this, 'radix_'.$method))
+				{
+					return call_user_func_array(array($this, 'radix_'.$method), $params);
+				}
+				
+				// a board and no function means we're out of the street
+				throw new \HttpNotFoundException;
+			}
+		}
+		
+		$this->_radix = null;
+		$this->_theme->bind('radix', null);
+		
 		if (method_exists($this, 'action_'.$method))
 		{
 			return call_user_func_array(array($this, 'action_'.$method), $params);
 		}
 
-		return call_user_func_array(array($this, 'action_404'), $params);
+		throw new \HttpNotFoundException;
 	}
 
 
@@ -105,36 +120,6 @@ class Controller_Chan extends \Controller_Common
 	{
 		$this->_theme->bind('disable_headers', TRUE);
 		return \Response::forge($this->_theme->build('index'));
-	}
-
-	
-	public function action_theme($theme = 'default', $style = '')
-	{
-		$this->_theme->set_title(__('Changing Theme Settings'));
-
-		if (!in_array($theme, $this->_theme->get_available_themes()))
-		{
-			$theme = 'default';
-		}
-
-		\Cookie::set('theme', $theme, 31536000, '/');
-		
-		if ($style !== '' && in_array($style, $this->_theme->get_available_styles($theme)))
-		{
-			\Cookie::set('theme_' . $theme . '_style', $style, 31536000, NULL, '/');
-		}
-
-		if (\Input::referrer())
-		{
-			$this->_theme->bind('url', \Input::referrer());
-		}
-		else
-		{
-			$this->_theme->bind('url', \Uri::base());
-		}
-		
-		$this->_theme->set_layout('redirect');
-		return \Response::forge($this->_theme->build('redirection'));
 	}
 	
 
@@ -162,8 +147,38 @@ class Controller_Chan extends \Controller_Common
 		return \Response::forge($this->_theme->build('error', array('error' => $error)));
 	}
 
+	
+	public function action_theme($theme = 'default', $style = '')
+	{
+		$this->_theme->set_title(__('Changing Theme Settings'));
 
-	public function action_page_mode($_mode = 'by_post')
+		if (!in_array($theme, $this->_theme->get_available_themes()))
+		{
+			$theme = 'default';
+		}
+
+		\Cookie::set('theme', $theme, 31536000, '/');
+		
+		if ($style !== '' && in_array($style, $this->_theme->get_available_styles($theme)))
+		{
+			\Cookie::set('theme_' . $theme . '_style', $style, 31536000, '/');
+		}
+
+		if (\Input::referrer())
+		{
+			$this->_theme->bind('url', \Input::referrer());
+		}
+		else
+		{
+			$this->_theme->bind('url', \Uri::base());
+		}
+		
+		$this->_theme->set_layout('redirect');
+		return \Response::forge($this->_theme->build('redirection'));
+	}
+	
+
+	public function radix_page_mode($_mode = 'by_post')
 	{
 		$mode = $_mode === 'by_thread' ? 'by_thread' : 'by_post';
 		$type = $this->_radix->archive ? 'archive' : 'board';
@@ -173,7 +188,7 @@ class Controller_Chan extends \Controller_Common
 	}
 
 
-	public function action_page($page = 1)
+	public function radix_page($page = 1)
 	{
 		$order = \Cookie::get('default_theme_page_mode_'. ($this->_radix->archive ? 'archive' : 'board')) === 'by_thread'
 			? 'by_thread' : 'by_post';
@@ -188,7 +203,7 @@ class Controller_Chan extends \Controller_Common
 	}
 
 
-	public function action_ghost($page = 1)
+	public function radix_ghost($page = 1)
 	{
 		$options = array(
 			'per_page' => $this->_radix->threads_per_page,
@@ -260,17 +275,17 @@ class Controller_Chan extends \Controller_Common
 
 
 
-	public function action_thread($num = 0)
+	public function radix_thread($num = 0)
 	{
 		return $this->thread($num);
 	}
 
-	public function action_last50($num = 0)
+	public function radix_last50($num = 0)
 	{
 		\Response::redirect($this->_radix->shortname.'/last/50/'.$num);
 	}
 
-	public function action_last($limit = 0, $num = 0)
+	public function radix_last($limit = 0, $num = 0)
 	{
 		if (!\Board::is_natural($limit) || $limit < 1)
 		{
@@ -349,7 +364,7 @@ class Controller_Chan extends \Controller_Common
 	}
 
 
-	public function action_gallery($page = 1)
+	public function radix_gallery($page = 1)
 	{
 		try
 		{
@@ -369,7 +384,7 @@ class Controller_Chan extends \Controller_Common
 	}
 
 
-	public function action_post($num)
+	public function radix_post($num)
 	{
 		try
 		{
@@ -407,7 +422,7 @@ class Controller_Chan extends \Controller_Common
 	 * As of 2012-05-17, fetching of posts with same media hash is done via search system.
 	 * Due to backwards compatibility, this function will still be used for non-urlsafe and urlsafe hashes.
 	 */
-	public function action_image()
+	public function radix_image()
 	{
 		// support non-urlsafe hash
 		$uri = \Uri::segments();
@@ -444,7 +459,7 @@ class Controller_Chan extends \Controller_Common
 	/**
 	 * @param $filename
 	 */
-	public function action_full_image($filename)
+	public function radix_full_image($filename)
 	{
 		// Check if $filename is valid.
 		if (!in_array(substr($filename, -3), array('gif', 'jpg', 'png')) || !\Board::is_natural(substr($filename, 0, 13)))
@@ -498,7 +513,7 @@ class Controller_Chan extends \Controller_Common
 	}
 
 
-	public function action_submit()
+	public function radix_submit()
 	{
 		// adapter
 		if(!\Input::post())

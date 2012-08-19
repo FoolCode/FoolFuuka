@@ -1,10 +1,12 @@
 <?php
 return array(
-	'_root_'  => 'foolfuuka/chan/index',  // The default route
+	'_root_' => 'foolfuuka/chan/index',  // The default route
 	'api/chan/(:any)' => 'foolfuuka/api/chan/$1',
 	'admin/boards/(:any)' => 'foolfuuka/admin/boards/$1',
-	'search/(:any)' => 'foolfuuka/chan/search',
-	'(?!(admin|api|search|_))(\w+)' => 'foolfuuka/chan/$2/page',
-	'(?!(admin|api|search|_))(\w+)/(:any)' => 'foolfuuka/chan/$2/$3',
-	'_404_'   => 'foolfuuka/chan/404',    // The main 404 route
+	'_/theme/(:any)' => 'foolfuuka/chan/theme/$1',
+	'_/search/(:any)' => 'foolfuuka/chan/search',
+	'_/notfound/action404' => 'foolfuuka/chan/404', // we need to properly redirect the 404
+	'(?!(admin|api|_))(\w+)' => 'foolfuuka/chan/$2/page',
+	'(?!(admin|api|_))(\w+)/(:any)' => 'foolfuuka/chan/$2/$3',
+	'_404_'=> '_/notfound/action404',    // The main 404 route
 );

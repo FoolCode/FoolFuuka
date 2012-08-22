@@ -30,56 +30,56 @@ class Board extends \Model\Model_Base
 	 *
 	 * @var array
 	 */
-	private $_comments = null;
+	protected $_comments = null;
 
 	/**
 	 * Array of Comment in a plain array
 	 *
 	 * @var array
 	 */
-	private $_comments_unsorted = null;
+	protected $_comments_unsorted = null;
 
 	/**
 	 * The count of the query without LIMIT
 	 *
 	 * @var int
 	 */
-	private $_total_count = 0;
+	protected $_total_count = 0;
 
 	/**
 	 * The method selected to retrieve comments
 	 *
 	 * @var string
 	 */
-	private $_method_fetching = null;
+	protected $_method_fetching = null;
 
 	/**
 	 * The method selected to retrieve the comment's count without LIMIT
 	 *
 	 * @var string
 	 */
-	private $_method_counting = null;
+	protected $_method_counting = null;
 
 	/**
 	 * The options to give to the retrieving method
 	 *
 	 * @var array
 	 */
-	private $_options = array();
+	protected $_options = array();
 
 	/**
 	 * The selected Radix
 	 *
 	 * @var array
 	 */
-	private $_radix = null;
+	protected $_radix = null;
 	
-	private $_api = null;
+	protected $_api = null;
 
 
 	public static function forge()
 	{
-		return new Board();
+		return new static();
 	}
 
 	/**

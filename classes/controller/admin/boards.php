@@ -328,7 +328,7 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 
 	function action_sphinx()
 	{
-		$this->_views["model_title"] = 'Sphinx';
+		$this->_views["method_title"] = 'Sphinx';
 
 		$form = array();
 
@@ -340,15 +340,14 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 			'type' => 'checkbox',
 			'label' => 'Global SphinxSearch',
 			'placeholder' => 'FoOlFuuka',
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Activate Sphinx globally (enables crossboard search)')
 		);
 
 		$form['fu.sphinx.listen'] = array(
 			'type' => 'input',
 			'label' => 'Listen (Sphinx)',
-			'placeholder' => FOOL_PREF_SPHINX_LISTEN,
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Set the address and port to your Sphinx instance.'),
 			'class' => 'span2',
 			'validation' => 'trim|max_length[48]',
@@ -372,7 +371,7 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 					);
 				}
 
-				if (!intval($sphinx_ip_port[1]) <= 0)
+				if (intval($sphinx_ip_port[1]) <= 0)
 				{
 					return array(
 						'error_code' => 'PORT_NOT_A_NUMBER',
@@ -380,9 +379,13 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 					);
 				}
 
-				$connection = @\SphinxQL::set_server($sphinx_ip_port[0], $sphinx_ip_port[1]);
-
-				if ($connection === FALSE)
+				\Foolz\Sphinxql\Sphinxql::addConnection('default', $sphinx_ip_port[0], $sphinx_ip_port[1]);
+	
+				try
+				{
+					\Foolz\Sphinxql\Sphinxql::forge()->connect();
+				}
+				catch (\Foolz\Sphinxql\SphinxqlConnectionException $e)
 				{
 					return array(
 						'warning_code' => 'CONNECTION_NOT_ESTABLISHED',
@@ -397,8 +400,7 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 		$form['fu.sphinx.listen_mysql'] = array(
 			'type' => 'input',
 			'label' => 'Listen (MySQL)',
-			'placeholder' => FOOL_PREF_SPHINX_LISTEN_MYSQL,
-			'preferences' => TRUE,
+			'preferences' => true,
 			'validation' => 'trim|max_length[48]',
 			'help' => __('Set the address and port to your MySQL instance.'),
 			'class' => 'span2'
@@ -408,8 +410,8 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 			'type' => 'input',
 			'label' => 'Connection Flags (MySQL)',
 			'placeholder' => 0,
-			'preferences' => TRUE,
-			'validation' => 'trim|is_natural',
+			'preferences' => true,
+			'validation' => 'trim',
 			'help' => __('Set the MySQL client connection flags to enable compression, SSL, or secure connection.'),
 			'class' => 'span2'
 		);
@@ -417,8 +419,7 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 		$form['fu.sphinx.dir'] = array(
 			'type' => 'input',
 			'label' => 'Working Directory',
-			'placeholder' => FOOL_PREF_SPHINX_DIR,
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Set the working directory to your Sphinx working directory.'),
 			'class' => 'span3',
 			'validation' => 'trim',
@@ -439,19 +440,16 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 		$form['fu.sphinx.min_word_len'] = array(
 			'type' => 'input',
 			'label' => 'Minimum Word Length',
-			'placeholder' => FOOL_PREF_SPHINX_MIN_WORD,
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Set the minimum word length indexed by Sphinx.'),
 			'class' => 'span1',
-			'validation' => 'trim|is_natural_no_zero'
+			'validation' => 'trim'
 		);
 
 		$form['fu.sphinx.mem_limit'] = array(
 			'type' => 'input',
 			'label' => 'Memory Limit',
-			'placeholder' => FOOL_PREF_SPHINX_MEMORY,
-			'validation' => 'is_natural|greater_than[256]',
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Set the memory limit for the Sphinx instance in MegaBytes.'),
 			'class' => 'span1'
 		);
@@ -460,8 +458,8 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 			'type' => 'input',
 			'label' => 'Max Children',
 			'placeholder' => 0,
-			'validation' => 'trim|is_natural',
-			'preferences' => TRUE,
+			'validation' => 'trim',
+			'preferences' => true,
 			'help' => __('Set the maximum number of children to fork for searchd.'),
 			'class' => 'span1'
 		);
@@ -470,8 +468,8 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 			'type' => 'input',
 			'label' => 'Max Matches',
 			'placeholder' => 5000,
-			'validation' => 'trim|is_natural',
-			'preferences' => TRUE,
+			'validation' => 'trim',
+			'preferences' => true,
 			'help' => __('Set the maximum amount of matches the search daemon keeps in RAM for each index and results returned to the client.'),
 			'class' => 'span1'
 		);
@@ -496,7 +494,7 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 		$data['form'] = $form;
 
 		$this->_views["main_content_view"] = \View::forge("admin/form_creator", $data);
-		$this->_views["main_content_view"] .= '<pre>'.\SphinxQL::generate_sphinx_config(\Radix::get_all()).'</pre>';
+		//$this->_views["main_content_view"] .= '<pre>'.\SphinxQL::generate_sphinx_config(\Radix::get_all()).'</pre>';
 		return \Response::forge(\View::forge("admin/default", $this->_views));
 	}
 

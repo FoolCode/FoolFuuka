@@ -511,6 +511,231 @@ class Controller_Chan extends \Controller_Common
 		// we reached the end with nothing
 		return $this->show_404();
 	}
+	
+	
+	function action_search()
+	{
+		return $this->radix_search();
+	}
+	
+	
+	function radix_search()
+	{
+		if (\Input::get('submit_search_global'))
+		{
+			$this->_radix = null;
+		}
+		
+		$text = \Input::get('text');
+		
+		if ($this->_radix !== null && (\Input::get('submit_post') || (\Input::get('submit_undefined')
+				&& (\Board::is_valid_post_number($text) || strpos($text, '//boards.4chan.org') !== false))))
+		{
+			$this->post(str_replace(',', '_', $text));
+		}
+		
+		// Check all allowed search modifiers and apply only these
+		$modifiers = array(
+			'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
+			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
+			'order', 'page');
+		
+		if(\Auth::has_access('comment.see_ip'));
+		{
+			$modifiers[] = 'poster_ip';
+			$modifiers[] = 'deletion_mode';
+		}
+		
+		// GET -> URL Redirection to provide URL presentable for sharing links.
+		if (!\Input::post('deletion_mode_captcha') && \Input::get())
+		{
+			if ($this->_radix !== null)
+			{
+				$redirect_url = array($this->_radix->shortname, 'search');
+			}
+			else
+			{
+				$redirect_url = array('_', 'search');
+			}
+
+			foreach ($modifiers as $modifier)
+			{
+				if (\Input::get($modifier))
+				{
+					array_push($redirect_url, $modifier);
+
+					if($modifier == 'image')
+					{
+						array_push($redirect_url, 
+							rawurlencode(static::urlsafe_b64encode(static::urlsafe_b64decode(\Input::get($modifier)))));
+					}
+					else
+					{
+						array_push($redirect_url, rawurlencode(\Input::get($modifier)));
+					}
+				}
+			}
+
+			\Response::redirect(\Uri::create($redirect_url), 'location', 303);
+		}
+		
+		$search = \Uri::uri_to_assoc(\Uri::segments(), 2, $modifiers);
+
+		// latest searches system
+		if( ! is_array($cookie_array = @json_decode(\Cookie::get('search_latest_5'), true)))
+		{
+			$cookie_array = array();
+		}
+		
+		// sanitize
+		foreach($cookie_array as $item)
+		{
+			// all subitems must be array, all must have 'board'
+			if( ! is_array($item) || ! isset($item['board']))
+			{
+				$cookie_array = array();
+				break;
+			}
+		}
+		
+		$search_opts = array_filter($search);
+
+		$search_opts['board'] = $this->_radix !== null ? $this->_radix->shortname : false;
+		unset($search_opts['page']);
+		
+		// if it's already in the latest searches, remove the previous entry
+		foreach($cookie_array as $key => $item)
+		{
+			if($item === $search_opts)
+			{
+				unset($cookie_array[$key]);
+				break;
+			}
+		}
+		
+		// we don't want more than 5 entries for latest searches
+		if(count($cookie_array) > 4)
+		{
+			array_pop($cookie_array);
+		}
+		
+		array_unshift($cookie_array, $search_opts);
+		\Cookie::set('search_latest_5', json_encode($cookie_array), 60 * 60 * 24 * 30);
+
+		try
+		{
+			$board = \Search::forge()
+				->get_search($search)
+				->set_radix($this->_radix)
+				->set_page(isset($search['page']) ? $search['page'] : 1);
+			$board->get_comments();
+		}
+		catch (Model\SearchException $e)
+		{
+			return $this->error($e);
+		}
+		catch (Model\BoardException $e)
+		{
+			return $this->error($e);
+		}
+		
+		// Generate the $title with all search modifiers enabled.
+		$title = array();
+
+		if ($search['text'])
+			array_push($title,
+				sprintf(__('that contain &lsquo;%s&rsquo;'),
+					trim(e(urldecode($search['text'])))));
+		if ($search['subject'])
+			array_push($title,
+				sprintf(__('with the subject &lsquo;%s&rsquo;'),
+					trim(e(urldecode($search['subject'])))));
+		if ($search['username'])
+			array_push($title,
+				sprintf(__('with the username &lsquo;%s&rsquo;'),
+					trim(e(urldecode($search['username'])))));
+		if ($search['tripcode'])
+			array_push($title,
+				sprintf(__('with the tripcode &lsquo;%s&rsquo;'),
+					trim(e(urldecode($search['tripcode'])))));
+		if ($search['filename'])
+			array_push($title,
+				sprintf(__('with the filename &lsquo;%s&rsquo;'),
+					trim(e(urldecode($search['filename'])))));
+		if ($search['image'])
+		{
+			// non-urlsafe else urlsafe
+			if (mb_strlen(urldecode($search['image'])) > 22)
+			{
+				array_push($title,
+					sprintf(__('with the image hash &lsquo;%s&rsquo;'),
+						trim(rawurldecode($search['image']))));
+			}
+			else
+			{
+				$search['image'] = static::urlsafe_b64encode(static::urlsafe_b64decode($search['image']));
+				array_push($title,
+					sprintf(__('with the image hash &lsquo;%s&rsquo;'),
+						trim($search['image'])));
+			}
+		}
+		if ($search['deleted'] == 'deleted')
+			array_push($title, __('that have been deleted'));
+		if ($search['deleted'] == 'not-deleted')
+			array_push($title, __('that has not been deleted'));
+		if ($search['ghost'] == 'only')
+			array_push($title, __('that are by ghosts'));
+		if ($search['ghost'] == 'none')
+			array_push($title, __('that are not by ghosts'));
+		if ($search['type'] == 'op')
+			array_push($title, __('that are only OP posts'));
+		if ($search['type'] == 'posts')
+			array_push($title, __('that are only non-OP posts'));
+		if ($search['filter'] == 'image')
+			array_push($title, __('that do not contain images'));
+		if ($search['filter'] == 'text')
+			array_push($title, __('that only contain images'));
+		if ($search['capcode'] == 'user')
+			array_push($title, __('that were made by users'));
+		if ($search['capcode'] == 'mod')
+			array_push($title, __('that were made by mods'));
+		if ($search['capcode'] == 'admin')
+			array_push($title, __('that were made by admins'));
+		if ($search['start'])
+			array_push($title, sprintf(__('posts after %s'), trim(e($search['start']))));
+		if ($search['end'])
+			array_push($title, sprintf(__('posts before %s'), trim(e($search['end']))));
+		if ($search['order'] == 'asc')
+			array_push($title, __('in ascending order'));
+		if (!empty($title))
+		{
+			$title = sprintf(__('Searching for posts %s.'),
+				implode(' ' . __('and') . ' ', $title));
+		}
+		else
+		{
+			$title = __('Displaying all posts with no filters applied.');
+		}
+		
+		$this->_theme->set_title(\Radix::get_selected()->formatted_title.' &raquo; '.$title);
+		$this->_theme->bind('board', $board);
+		
+		$pagination = $search;
+		unset($pagination['page']);
+		$this->_theme->bind('pagination', array(
+				'base_url' => \Uri::create(array_merge(
+					array($this->_radix !== null ?$this->_radix->shortname : '_', 'search'), $pagination)),
+				'current_page' => $search['page'] ? : 1,
+				'total' => $board->get_count()
+			));
+		$this->_theme->bind('search', $pagination);
+		
+		\Profiler::mark_memory($this, 'Controller Chan $this');
+		\Profiler::mark('Controller Chan::search End');
+		return \Response::forge($this->_theme->build('board'));
+		
+		
+	}
 
 
 	public function radix_submit()
@@ -625,4 +850,5 @@ class Controller_Chan extends \Controller_Common
 		}
 
 	}
+	
 }

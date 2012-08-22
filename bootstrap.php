@@ -5,6 +5,7 @@
 	'Foolfuuka\\Model\\Board' => APPPATH.'modules/foolfuuka/classes/model/board.php',
 	'Foolfuuka\\Model\\Search' => APPPATH.'modules/foolfuuka/classes/model/search.php',
 	'Foolfuuka\\Model\\Comment' => APPPATH.'modules/foolfuuka/classes/model/comment.php',
+	'Foolfuuka\\Model\\Report' => APPPATH.'modules/foolfuuka/classes/model/report.php',
 	'Foolfuuka\\Model\\Media' => APPPATH.'modules/foolfuuka/classes/model/media.php',
 	'Foolfuuka\\Tasks\\Fool' => APPPATH.'modules/foolfuuka/classes/task/fool.php',
 ));

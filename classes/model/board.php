@@ -767,17 +767,15 @@ class Board extends \Model\Model_Base
 	}
 
 
-	protected function p_get_post($num)
+	protected function p_get_post($num = null)
 	{
 		// default variables
 		$this->set_method_fetching('get_post_comments');
 		
-		if(!static::is_natural($num) || $num < 1)
+		if ($num !== null)
 		{
-			throw new BoardMalformedInputException(__('The thread number is invalid.'));
+			$this->set_options('num', $num);
 		}
-
-		$this->set_options('num', $num);
 
 		return $this;
 	}

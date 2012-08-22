@@ -111,6 +111,12 @@ class Comment extends \Model\Model_Base
 				return $this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
 			case 'formatted':
 				return $this->formatted = $this->build_comment();
+			case 'reports':
+				if (\Auth::has_access('comment.reports'))
+				{
+					return $this->reports = \Report::get_by_doc_id($this->board, $this->doc_id);
+				}
+				
 		}
 
 		return null;

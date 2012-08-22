@@ -281,19 +281,6 @@ class Board extends \Model\Model_Base
 			$board = $this->_radix;
 		}
 
-		// only show report notifications to certain users
-		if (\Auth::has_access('comment.reports'))
-		{
-			$query->join(\DB::expr('
-					(SELECT
-						id AS report_id, doc_id AS report_doc_id, reason AS report_reason, ip_reporter as report_ip_reporter,
-						status AS report_status, created AS report_created
-					FROM `fu_reports`
-					WHERE `board_id` = '.$board->id.') AS r'),
-				'LEFT'
-			);
-			$query->on(\DB::expr(($join_on ? '`'.$join_on.'`' : Radix::get_table($board)).'.`doc_id`'), '=', \DB::expr('`r`.`report_doc_id`'));
-		}
 	}
 
 
@@ -771,7 +758,7 @@ class Board extends \Model\Model_Base
 	{
 		// default variables
 		$this->set_method_fetching('get_post_comments');
-		
+
 		if ($num !== null)
 		{
 			$this->set_options('num', $num);
@@ -787,18 +774,18 @@ class Board extends \Model\Model_Base
 
 		$query = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
 
-		if (isset($this->_options['num']))
+		if (isset($num))
 		{
-			if(!static::is_valid_post_number($this->_options['num']))
+			if(!static::is_valid_post_number($num))
 			{
 				throw new BoardMalformedInputException;
 			}
-			$num_arr = static::split_post_number($this->_options['num']);
+			$num_arr = static::split_post_number($num);
 			$query->where('num' , $num_arr['num'])->where('subnum', $num_arr['subnum']);
 		}
-		else if (isset($this->_options['doc_id']))
+		else if (isset($doc_id))
 		{
-			$query->where('doc_id', $this->_options['doc_id']);
+			$query->where('doc_id', $doc_id);
 		}
 		else
 		{

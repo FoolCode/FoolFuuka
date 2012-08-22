@@ -33,7 +33,7 @@ class Controller_Api_Chan extends \Controller_Rest
 
 		if (!$board) 
 		{
-			$board = \Input::get('board');
+			$board = \Input::post('board');
 		}
 		
 		if (!$board)
@@ -63,7 +63,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	{
 		if (!$this->check_board())
 		{
-			return false;
+			return $this->response(array('error' => __("No board selected.")), 404);;
 		}
 
 		$num = \Input::get('num');
@@ -132,7 +132,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	{
 		if (!$this->check_board())
 		{
-			return false;
+			return $this->response(array('error' => __("No board selected.")), 404);;
 		}
 
 		$num = \Input::get('num');
@@ -163,6 +163,29 @@ class Controller_Api_Chan extends \Controller_Rest
 		catch (Model\BoardException $e)
 		{
 			$this->response(array('error' => __("Unknown error.")), 500);
+		}
+	}
+	
+	
+	function post_report()
+	{
+		if ( ! $this->check_board())
+		{
+			return $this->response(array('error' => __("No board selected.")), 404);
+		}
+		
+		if (\Input::post('action') === 'add')
+		{
+			try
+			{
+				\Report::add($this->_radix, \Input::post('doc_id'), \Input::post('reason'));
+			}
+			catch (Model\ReportException $e)
+			{
+				$this->response(array('error' => $e->getMessage()), 404);
+			}
+			
+			return $this->response(array('success' => __("Post reported.")), 200);;
 		}
 	}
 

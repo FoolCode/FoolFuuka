@@ -8,16 +8,15 @@ class ReportSentTooManyException extends ReportException {}
 class ReportCommentNotFoundException extends ReportException {}
 
 class Report extends \Model\Model_Base
-{
-	const status_new = 1;
-	
+{	
 	public $id = null;
 	public $board_id = null;
 	public $doc_id = null;
 	public $reason = null;
 	public $ip_reporter = null;
-	public $status = null;
 	public $created = null;
+	
+	public $reason_processed = null;
 	
 	public $board = null;
 	public $comment = null;
@@ -45,9 +44,11 @@ class Report extends \Model\Model_Base
 			$new->$key = $item;
 		}
 		
+		$new->reason_processed = e($new->reason);
+		
 		if ( ! isset($new->board))
 		{
-			$new->board &= \Radix::get_by_id($new->board_id);
+			$new->board = \Radix::get_by_id($new->board_id);
 		}
 		
 		return $new;
@@ -101,23 +102,22 @@ class Report extends \Model\Model_Base
 	{
 		static::preload();
 		
-		$result = null;
+		$result = array();
 		
 		switch ($by)
 		{
 			case 'id':
 				if (isset(static::$_preloaded['id']))
 				{
-					$result = static::$_preloaded['id'];
+					$result[] = static::$_preloaded['id'];
 				}
 				break;
 			case 'doc_id':
 				foreach(static::$_preloaded as $item)
 				{
-					if ($item['board_id'] === $first->id && $item['doc_id'] === $second)
+					if ($item->board_id === $first->id && $item->doc_id === $second)
 					{
-						$result = $item;
-						break;
+						$result[] = $item;
 					}
 				}
 				break;
@@ -148,12 +148,12 @@ class Report extends \Model\Model_Base
 	public static function p_add(&$board, $doc_id, $reason, $ip_reporter = null)
 	{
 		$new = new static();
-		$new->board &= $board;
-		$new->board_id = $this->board->shortname;
+		$new->board =& $board;
+		$new->board_id = $board->id;
 		
 		try
 		{
-			Board::get_post()->set_radix($new->board)->set_options('doc_id', $doc_id)->get_comments();
+			Board::forge()->get_post()->set_radix($new->board)->set_options('doc_id', $doc_id)->get_comments();
 		}
 		catch (BoardException $e)
 		{
@@ -175,9 +175,7 @@ class Report extends \Model\Model_Base
 			$ip_reporter = \Input::ip_decimal();
 		}
 		$new->ip_reporter = $ip_reporter;
-		
-		$new->status = static::status_new;
-		
+				
 		// check how many reports have been sent in the last hour to prevent spam
 		$count = \DB::select(\DB::expr('COUNT(*) as count'))
 			->from('reports')
@@ -195,12 +193,11 @@ class Report extends \Model\Model_Base
 		
 		\DB::insert('reports')
 			->set(array(
-				'board_id' => $this->board_id,
-				'doc_id' => $this->doc_id,
-				'reason' => $this->reason,
-				'ip_reporter' => $this->ip_reporter,
-				'status' => $this->status,
-				'created' => $this->created,
+				'board_id' => $new->board_id,
+				'doc_id' => $new->doc_id,
+				'reason' => $new->reason,
+				'ip_reporter' => $new->ip_reporter,
+				'created' => $new->created,
 			))
 			->execute();
 		
@@ -224,7 +221,7 @@ class Report extends \Model\Model_Base
 	{
 		try
 		{
-			$comments = Board::get_post()
+			$comments = Board::forge()->get_post()
 				->set_radix($this->board)
 				->set_options('doc_id', $this->doc_id)
 				->get_comments();

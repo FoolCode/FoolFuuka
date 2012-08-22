@@ -70,7 +70,6 @@ class Install_Foolfuuka
 				'doc_id' => array('type' => 'varchar', 'constraint' => 64),
 				'reason' => array('type' => 'text'),
 				'ip_reporter' => array('type' => 'decimal', 'constraint' => '39,0'),
-				'status' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
 				'created' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true)
 			), array('id'), true, 'innodb', $charset.'_general_ci');
 

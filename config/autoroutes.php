@@ -1,8 +1,9 @@
 <?php
 return array(
 	'_root_' => 'foolfuuka/chan/index',  // The default route
-	'api/chan/(:any)' => 'foolfuuka/api/chan/$1',
+	'_/api/chan/(:any)' => 'foolfuuka/api/chan/$1',
 	'admin/boards/(:any)' => 'foolfuuka/admin/boards/$1',
+	'admin/posts/(:any)' => 'foolfuuka/admin/posts/$1',
 	'_/theme/(:any)' => 'foolfuuka/chan/theme/$1',
 	'_/search/(:any)' => 'foolfuuka/chan/search',
 	'_/notfound/action404' => 'foolfuuka/chan/404', // we need to properly redirect the 404

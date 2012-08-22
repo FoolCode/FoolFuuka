@@ -136,7 +136,8 @@ var bindFunctions = function()
 					modal.find(".modal-loading").hide();
 					modal.find(".modal-information").html('\
 					<span class="modal-label">Post ID</span>\n\
-					<input type="text" class="modal-post" value="' + el.data("post-id") + '" readonly="readonly" />\n\
+					<input type="text" class="modal-post" value="' + el.data("post") + '" readonly="readonly" />\n\
+					<input type="hidden" class="modal-board" value="' + el.data("board") + '" readonly="readonly" />\n\
 					<input type="hidden" class="modal-post-id" value="' + post + '" />\n\
 					<span class="modal-field">Comment</span>\n\
 					<textarea class="modal-comment"></textarea>');
@@ -220,18 +221,24 @@ var bindFunctions = function()
 				case 'submitModal':
 					var loading = modal.find(".modal-loading");
 					var action = $(this).data("action");
-					var _post = modal.find(".modal-post-id").val();
-					var _href = $(this).data(action) + _post + '/';
+					var _board = modal.find(".modal-board").val();
+					var _doc_id = modal.find(".modal-post-id").val();
+					var _href = '';
+					var _data = {};
 
 					if (action == 'report') {
-						var _data = {
-							post: _post,
+						_href = backend_vars.api_url+'_/api/chan/report/';
+						_data = {
+							action: 'add',
+							board: _board,
+							doc_id: _doc_id,
 							reason: modal.find(".modal-comment").val(),
 							csrf_fool: backend_vars.csrf_hash
 						};
 					}
 					else if (action == 'delete') {
-						var _data = {
+						_href = backend_vars.api_url+'_/api/delete/'+$(this).data(action) + _post + '/';
+						_data = {
 							post: _post,
 							password: modal.find(".modal-password").val(),
 							csrf_fool: backend_vars.csrf_hash
@@ -244,7 +251,7 @@ var bindFunctions = function()
 
 					jQuery.post(_href, _data, function(result) {
 						loading.hide();
-						if (result.status == 'failed') {
+						if (typeof result.error !== 'undefined') {
 							modal.find(".modal-error").html('<div class="alert alert-error" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
 							return false;
 						}
@@ -357,7 +364,7 @@ var bindFunctions = function()
 				backlink_spin = that;
 				backlink_spin.spin('small');
 				backlink_jqxhr = jQuery.ajax({
-					url: backend_vars.api_url + 'api/chan/post/' ,
+					url: backend_vars.api_url + '_/api/chan/post/' ,
 					dataType: 'json',
 					type: 'GET',
 					cache: false,
@@ -489,7 +496,7 @@ var currentlapse = 0;
 var realtimethread = function(){
 	clearTimeout(currentlapse);
 	jQuery.ajax({
-		url: backend_vars.api_url + 'api/chan/thread/',
+		url: backend_vars.api_url + '_/api/chan/thread/',
 		dataType: 'json',
 		type: 'GET',
 		data: {

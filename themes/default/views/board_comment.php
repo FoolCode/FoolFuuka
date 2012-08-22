@@ -97,7 +97,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 			<?php if ($p->deleted == 1) : ?><span class="post_type"><i class="icon-trash" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually.')) ?>"></i></span><?php endif ?>
 
 			<span class="post_controls">
-				<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= Uri::create('@radix/' . $p->board->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= __('View') ?></a><?php endif; ?><a href="<?= Uri::create('@radix/' . $p->board->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($p->subnum > 0 || Auth::has_access('maccess.mod') || !$p->board->archive) : ?><a href="<?= Uri::create('@radix/' . $p->board->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
+				<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= Uri::create('@radix/' . $p->board->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= __('View') ?></a><?php endif; ?><a href="<?= Uri::create('@radix/' . $p->board->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($p->subnum > 0 || Auth::has_access('maccess.mod') || !$p->board->archive) : ?><a href="<?= Uri::create('@radix/' . $p->board->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 		</div>
 	</header>
@@ -124,19 +124,21 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-board-url="<?= Uri::create(array('@radix', $p->board->shortname)) ?>" data-id="<?= $p->doc_id ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($p->poster_ip) ?></button>
 			<button class="btn btn-mini" data-function="searchUser" data-board="<?= $p->board->shortname ?>" data-board-url="<?= Uri::create(array('@radix', $p->board->shortname)) ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= \Inet::dtop($p->poster_ip) ?>"><?= __('Search IP') ?></button>
 			<?php if (Preferences::get('fu.sphinx.global')) : ?>
-			<button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $p->board->shortname ?>" data-board-url="<?= Uri::create(array('@radix', $p->board->shortname)) ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= \Inet::dtop($p->poster_ip) ?>"><?= __('Search IP Globally') ?></button>
+				<button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $p->board->shortname ?>" data-board-url="<?= Uri::create(array('@radix', $p->board->shortname)) ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= \Inet::dtop($p->poster_ip) ?>"><?= __('Search IP Globally') ?></button>
 			<?php endif; ?>
-		<?php endif; ?>
-		<?php if (isset($p->report_status) && !is_null($p->report_status)) : ?>
-			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-board-url="<?= Uri::create(array('@radix', $p->board->shortname)) ?>" data-id="<?= $p->doc_id ?>" data-action="remove_report"><?= __('Delete Report') ?></button>
 		<?php endif; ?>
 	</div>
 
-	<?php if (isset($p->report_status) && !is_null($p->report_status)) : ?>
-	<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $p->report_reason_processed ?>
-		<br/>
-		<div class="ip_reporter"><?= \Inet::dtop($p->report_ip_reporter) ?></div>
-	</div>
+	<?php if ($p->reports) : ?>
+		<?php foreach ($p->reports as $report) : ?>
+			<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->reason_processed ?>
+				<br/>
+				<div class="ip_reporter">
+					<?= \Inet::dtop($report->ip_reporter) ?>
+					<button class="btn btn-mini" data-function="mod" data-report-id="<?= $report->id ?>" data-id="<?= $p->doc_id ?>" data-action="remove_report"><?= __('Delete Report') ?></button>
+				</div>
+			</div>
+		<?php endforeach; ?>
 	<?php endif; ?>
 	<?php endif; ?>
 </article>

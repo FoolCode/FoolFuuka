@@ -776,7 +776,7 @@ class Board extends \Model\Model_Base
 
 		if (isset($num))
 		{
-			if(!static::is_valid_post_number($num))
+			if( ! static::is_valid_post_number($num))
 			{
 				throw new BoardMalformedInputException;
 			}
@@ -789,14 +789,14 @@ class Board extends \Model\Model_Base
 		}
 		else
 		{
-			throw new BoardMissingOptionsException;
+			throw new BoardMissingOptionsException(__('No posts found with the submitted options.'));
 		}
 
 		$result = $query->as_object()->execute()->as_array();
 
 		if(!count($result))
 		{
-			throw new BoardPostNotFoundException;
+			throw new BoardPostNotFoundException(__('Post not found.'));
 		}
 
 		if ($this->_api)

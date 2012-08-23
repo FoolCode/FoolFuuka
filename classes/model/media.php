@@ -566,7 +566,7 @@ class Media extends \Model\Model_Base
 	 * @param bool $thumb if thumbnail should be deleted
 	 * @return bool TRUE on success or if it didn't exist in first place, FALSE on failure
 	 */
-	protected function p_delete_media($media = true, $thumb = true)
+	public function p_delete($media = true, $thumb = true)
 	{
 		if (!$this->media_hash)
 		{
@@ -578,8 +578,17 @@ class Media extends \Model\Model_Base
 		{
 			if ($media === true)
 			{
-				$media_file = $this->get_media_dir();
-				if (file_exists($media_file))
+				try
+				{
+					$media_file = $this->get_media_dir();
+					die('here');
+				}
+				catch (MediaDirNotAvailableException $e)
+				{
+					$media_file = null;
+				}
+				
+				if ($media_file !== null && file_exists($media_file))
 				{
 					if (!unlink($media_file))
 					{
@@ -594,8 +603,17 @@ class Media extends \Model\Model_Base
 
 				// remove OP thumbnail
 				$this->op = 1;
-				$thumb_file = $this->get_media_dir(true);
-				if (file_exists($thumb_file))
+				
+				try
+				{
+					$thumb_file = $this->get_media_dir(true);
+				}
+				catch(MediaDirNotAvailableException $e)
+				{
+					$thumb_file = null;
+				}
+				
+				if ($thumb_file !== null && file_exists($thumb_file))
 				{
 					if (!unlink($thumb_file))
 					{
@@ -605,10 +623,17 @@ class Media extends \Model\Model_Base
 
 				// remove reply thumbnail
 				$this->op = 0;
-				$thumb_file = $this->get_media_dir(TRUE);
-				if (file_exists($thumb_file))
+				try
 				{
-					if (!unlink($thumb_file))
+					$thumb_file = $this->get_media_dir(TRUE);
+				}
+				catch(MediaDirNotAvailableException $e)
+				{
+					$thumb_file = null;
+				}
+				if ($thumb_file !== null && file_exists($thumb_file))
+				{
+					if ( ! unlink($thumb_file))
 					{
 						throw new MediaFileNotFoundException;
 					}

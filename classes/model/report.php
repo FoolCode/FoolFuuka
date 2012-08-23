@@ -44,7 +44,7 @@ class Report extends \Model\Model_Base
 			$new->$key = $item;
 		}
 		
-		$new->reason_processed = e($new->reason);
+		$new->reason_processed = e(@iconv('UTF-8', 'UTF-8//IGNORE', $new->reason));
 		
 		if ( ! isset($new->board))
 		{

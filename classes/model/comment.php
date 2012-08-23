@@ -189,7 +189,8 @@ class Comment extends \Model\Model_Base
 
 		$media_fields = Media::get_fields();
 		$media = new \stdClass();
-
+		$do_media = false;
+		
 		foreach ($post as $key => $value)
 		{
 			if(!in_array($key, $media_fields))
@@ -198,11 +199,19 @@ class Comment extends \Model\Model_Base
 			}
 			else
 			{
+				$do_media = true;
 				$media->$key = $value;
 			}
 		}
 
-		$this->media = Media::forge_from_comment($media, $this->board, $this->op);
+		if ($do_media)
+		{
+			$this->media = Media::forge_from_comment($media, $this->board, $this->op);
+		}
+		else
+		{
+			$this->media = null;
+		}
 
 		foreach ($options as $key => $value)
 		{
@@ -646,9 +655,9 @@ class Comment extends \Model\Model_Base
 	 *
 	 * @return array|bool
 	 */
-	protected function p_delete($password = null, $force)
+	protected function p_delete($password = null)
 	{
-		if(!\Auth::has_access('comment.passwordless_deletion'))
+		if( ! \Auth::has_access('comment.passwordless_deletion'))
 		{
 			if ( ! class_exists('PHPSecLib\\Crypt_Hash', false))
 			{
@@ -661,7 +670,7 @@ class Comment extends \Model\Model_Base
 
 			if($this->delpass != $hashed)
 			{
-				throw new \CommentDeleteWrongPassException;
+				throw new \CommentDeleteWrongPassException(__('The password you inserted didn\'t match the password deletion password.'));
 			}
 		}
 
@@ -675,10 +684,17 @@ class Comment extends \Model\Model_Base
 		}
 
 		// remove message reports
-		\DB::delete('reports')->where('board_id', $this->board->id)->where('doc_id', $this->doc_id)->execute();
-
+		$reports_affected = \DB::delete('reports')->where('board_id', $this->board->id)->where('doc_id', $this->doc_id)->execute();
+		if ($reports_affected > 0)
+		{
+			\Report::clear_cache();
+		}
+		
 		// remove its image file
-		$this->delete_media();
+		if (isset($this->media))
+		{
+			$this->media->delete();
+		}
 
 		// if it's OP delete all other comments
 		if ($this->op)
@@ -689,7 +705,9 @@ class Comment extends \Model\Model_Base
 			$posts = Comment::forge($to_delete_arr);
 
 			foreach($posts as $post)
+			{
 				$post->delete(null, true);
+			}
 		}
 	}
 

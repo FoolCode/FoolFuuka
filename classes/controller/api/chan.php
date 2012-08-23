@@ -38,13 +38,13 @@ class Controller_Api_Chan extends \Controller_Rest
 		
 		if (!$board)
 		{
-			$this->response(array('error' => __('You didn\'t select a board')), 404);
+			//$this->response(array('error' => __('You didn\'t select a board')), 404);
 			return false;
 		}
 			
 		if(!$this->_radix = \Radix::set_selected_by_shortname($board))
 		{
-			$this->response(array('error' => __('The board you selected doesn\'t exist')), 404);
+			//$this->response(array('error' => __('The board you selected doesn\'t exist')), 404);
 			return false;
 		}
 		
@@ -113,17 +113,17 @@ class Controller_Api_Chan extends \Controller_Rest
 						'type' => 'thread',
 				));
 
-				$this->response($board->get_comments(), 200);
+				return $this->response($board->get_comments(), 200);
 			}
 				
 		}
 		catch(Model\BoardThreadNotFoundException $e)
 		{
-			$this->response(array('error' => __("Thread not found.")), 404);
+			return $this->response(array('error' => __("Thread not found.")), 404);
 		}
 		catch (Model\BoardException $e)
 		{
-			$this->response(array('error' => __("Unknown error.")), 500);
+			return $this->response(array('error' => __("Unknown error.")), 500);
 		}
 	}
 
@@ -158,23 +158,23 @@ class Controller_Api_Chan extends \Controller_Rest
 		}
 		catch(Model\BoardThreadNotFoundException $e)
 		{
-			$this->response(array('error' => __("Thread not found.")), 404);
+			return $this->response(array('error' => __("Thread not found.")), 404);
 		}
 		catch (Model\BoardException $e)
 		{
-			$this->response(array('error' => __("Unknown error.")), 500);
+			return $this->response(array('error' => __("Unknown error.")), 500);
 		}
 	}
 	
 	
-	function post_report()
+	function post_user_actions()
 	{
 		if ( ! $this->check_board())
 		{
 			return $this->response(array('error' => __("No board selected.")), 404);
 		}
 		
-		if (\Input::post('action') === 'add')
+		if (\Input::post('action') === 'report')
 		{
 			try
 			{
@@ -182,10 +182,39 @@ class Controller_Api_Chan extends \Controller_Rest
 			}
 			catch (Model\ReportException $e)
 			{
-				$this->response(array('error' => $e->getMessage()), 404);
+				return $this->response(array('error' => $e->getMessage()), 404);
 			}
 			
 			return $this->response(array('success' => __("Post reported.")), 200);;
+		}
+		
+		if (\Input::post('action') === 'delete')
+		{
+			try
+			{
+				$comments = \Board::forge()
+					->get_post()
+					->set_options('doc_id', \Input::post('doc_id'))
+					->set_radix($this->_radix)
+					->get_comments();
+
+				$comment = $comments[0];
+			}
+			catch (Model\BoardException $e)
+			{
+				return $this->response(array('error' => $e->getMessage()), 404);
+			}
+			
+			try
+			{
+				$comment->delete(\Input::post('password'));
+			}
+			catch (Model\BoardException $e)
+			{
+				return $this->response(array('error' => $e->getMessage()), 404);
+			}
+			
+			return $this->response(array('success' => __("Post deleted.")), 200);;
 		}
 	}
 

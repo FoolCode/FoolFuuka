@@ -135,13 +135,13 @@ class Media extends \Model\Model_Base
 			return new Media($result, $board, $op);
 		}
 		
-		throw new MediaNotFoundException;
+		throw new MediaNotFoundException(__('The image could not be found.'));
 	}
 	
 	
-	protected static function p_get_by_id($board, $value, $op = 0)
+	protected static function p_get_by_media_id($board, $value, $op = 0)
 	{
-		return static::get_by($board, 'id', $value, $op);
+		return static::get_by($board, 'media_id', $value, $op);
 	}
 	
 	
@@ -643,6 +643,44 @@ class Media extends \Model\Model_Base
 			}
 		}
 
+	}
+	
+	
+	public function ban()
+	{
+		$count = \DB::select()
+			->from('banned_md5')
+			->where('md5', $this->media_hash)
+			->as_object()
+			->execute()
+			->current()
+			->count;
+		
+		if (! $count)
+		{
+			\DB::insert('banned_md5')
+				->set(array('md5' => $this->media_hash))
+				->execute();
+		}
+		
+		foreach (\Radix::get_all() as $radix)
+		{
+			try
+			{
+				$media = \Media::get_by_media_hash($radix, $this->media_hash);
+				\DB::update(\DB::expr(\Radix::get_table('_images')))
+					->where('media_id', $media->id)
+					->value('banned', 1)
+					->execute();
+				$media->delete();
+			}
+			catch (MediaNotFoundException $e)
+			{
+				\DB::insert(\DB::expr(\Radix::get_table('_images')))
+					->set(array('media_hash' => $this->media_hash, 'banned' => 1))
+					->execute();
+			}			
+		}
 	}
 
 

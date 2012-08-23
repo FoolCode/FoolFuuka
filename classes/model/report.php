@@ -74,7 +74,7 @@ class Report extends \Model\Model_Base
 				->execute()
 				->as_array('id');
 			
-			\Cache::set('foolfuuka.model.report.preload.preloaded', static::$_preloaded);
+			\Cache::set('foolfuuka.model.report.preload.preloaded', static::$_preloaded, 1800);
 		}
 	}
 	
@@ -207,11 +207,16 @@ class Report extends \Model\Model_Base
 	}
 	
 	
-	public static function p_remove($id)
+	public static function p_delete($id)
 	{
-		\DB::delete('reports')
+		$count = \DB::delete('reports')
 			->where('id', $id)
 			->execute();
+		
+		if ( ! $count)
+		{
+			throw new ReportNotFoundException(__('The report could not be found in the database to be deleted.'));
+		}
 		
 		static::clear_cache();
 	}

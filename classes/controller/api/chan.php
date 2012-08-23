@@ -63,7 +63,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	{
 		if (!$this->check_board())
 		{
-			return $this->response(array('error' => __("No board selected.")), 404);;
+			return $this->response(array('error' => __("No board selected.")), 404);
 		}
 
 		$num = \Input::get('num');
@@ -132,7 +132,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	{
 		if (!$this->check_board())
 		{
-			return $this->response(array('error' => __("No board selected.")), 404);;
+			return $this->response(array('error' => __("No board selected.")), 404);
 		}
 
 		$num = \Input::get('num');
@@ -199,14 +199,6 @@ class Controller_Api_Chan extends \Controller_Rest
 					->get_comments();
 
 				$comment = $comments[0];
-			}
-			catch (Model\BoardException $e)
-			{
-				return $this->response(array('error' => $e->getMessage()), 404);
-			}
-			
-			try
-			{
 				$comment->delete(\Input::post('password'));
 			}
 			catch (Model\BoardException $e)
@@ -214,8 +206,88 @@ class Controller_Api_Chan extends \Controller_Rest
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
 			
-			return $this->response(array('success' => __("Post deleted.")), 200);;
+			return $this->response(array('success' => __("Post deleted.")), 200);
 		}
+	}
+	
+	
+	function post_mod_actions()
+	{
+		if ( ! \Auth::has_access('comment.mod_capcode'))
+		{
+			return $this->response(array('error' => __("Forbidden.")), 403);
+		}
+		
+		if ( ! $this->check_board())
+		{
+			return $this->response(array('error' => __("No board selected.")), 404);
+		}
+		
+		if (\Input::post('action') === 'delete_report')
+		{
+			try
+			{
+				\Report::delete(\Input::post('id'));
+			}
+			catch (Model\Report\ReportException $e)
+			{
+				return $this->response(array('error' => $e->getMessage()), 404);
+			}
+			
+			return $this->response(array('success' => __("Report deleted.")), 200);
+		}
+		
+		if (\Input::post('action') === 'delete_post')
+		{
+			try
+			{
+				$comments = \Board::forge()
+					->get_post()
+					->set_options('doc_id', \Input::post('id'))
+					->set_radix($this->_radix)
+					->get_comments();
+
+				$comment = $comments[0];
+				$comment->delete();
+			}
+			catch (Model\BoardException $e)
+			{
+				return $this->response(array('error' => $e->getMessage()), 404);
+			}
+			
+			return $this->response(array('success' => __("Post deleted.")), 200);
+		}
+		
+		if (\Input::post('action') === 'delete_image')
+		{
+			try
+			{
+				\Media::get_by_media_id($this->_radix, \Input::post('id'))->delete();
+			}
+			catch (Model\MediaNotFoundException $e)
+			{
+				return $this->response(array('error' => $e->getMessage()), 404);
+			}
+			
+			return $this->response(array('success' => __("Image deleted.")), 200);
+		}
+		
+		if (\Input::post('action') === 'ban_image')
+		{
+			try
+			{
+				\Media::get_by_media_id($this->_radix, \Input::post('id'))->ban();
+			}
+			catch (Model\MediaNotFoundException $e)
+			{
+				return $this->response(array('error' => $e->getMessage()), 404);
+			}
+			
+			return $this->response(array('success' => __("Image banned.")), 200);
+		}
+		
+		if (\Input::post('action') === 'ban_user')
+		{}
 	}
 
 }

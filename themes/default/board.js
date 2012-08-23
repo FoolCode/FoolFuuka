@@ -119,14 +119,14 @@ var bindFunctions = function()
 				case 'mod':
 					el.attr({'disabled': 'disabled'});
 					jQuery.ajax({
-						url: backend_vars.mod_url,
+						url: backend_vars.api_url + '_/api/chan/mod_actions/',
 						dataType: 'json',
 						type: 'POST',
 						cache: false,
 						data: {
 							board: el.data('board'),
-							doc_id: el.data('id'),
-							actions: [el.data('action')],
+							id: el.data('id'),
+							action: el.data('action'),
 							theme: backend_vars.selected_theme,
 							csrf_fool: backend_vars.csrf_hash
 						},

@@ -116,34 +116,6 @@ var bindFunctions = function()
 					event.preventDefault();
 					break
 
-				case 'delete':
-					var foolfuuka_reply_password = getCookie(backend_vars.cookie_prefix + 'foolfuuka_reply_password');
-					modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
-					modal.find(".modal-loading").hide();
-					modal.find(".modal-information").html('\
-					<span class="modal-label">Password</span>\n\
-					<input type="password" class="modal-password" />\n\
-					<input type="hidden" class="modal-post-id" value="' + post + '" />');
-					modal.find(".submitModal").data("action", 'delete');
-					if(foolfuuka_reply_password != null)
-					{
-						modal.find(".modal-password").val(foolfuuka_reply_password);
-					}
-					break;
-
-				case 'report':
-					modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
-					modal.find(".modal-loading").hide();
-					modal.find(".modal-information").html('\
-					<span class="modal-label">Post ID</span>\n\
-					<input type="text" class="modal-post" value="' + el.data("post") + '" readonly="readonly" />\n\
-					<input type="hidden" class="modal-board" value="' + el.data("board") + '" readonly="readonly" />\n\
-					<input type="hidden" class="modal-post-id" value="' + post + '" />\n\
-					<span class="modal-field">Comment</span>\n\
-					<textarea class="modal-comment"></textarea>');
-					modal.find(".submitModal").data("action", 'report');
-					break;
-
 				case 'mod':
 					el.attr({'disabled': 'disabled'});
 					jQuery.ajax({
@@ -217,19 +189,46 @@ var bindFunctions = function()
 					el.closest(".modal").modal('hide');
 					return false;
 					break;
+					
+				case 'delete':
+					var foolfuuka_reply_password = getCookie(backend_vars.cookie_prefix + 'foolfuuka_reply_password');
+					modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
+					modal.find(".modal-loading").hide();
+					modal.find(".modal-information").html('\
+					<span class="modal-label">Password</span>\n\
+					<input type="hidden" class="modal-post-id" value="' + el.data("post") + '" />\n\
+					<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
+					<input type="password" class="modal-password" />');
+					modal.find(".submitModal").data("action", 'delete');
+					if(foolfuuka_reply_password != null)
+					{
+						modal.find(".modal-password").val(foolfuuka_reply_password);
+					}
+					break;
+
+				case 'report':
+					modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
+					modal.find(".modal-loading").hide();
+					modal.find(".modal-information").html('\
+					<span class="modal-label">Post ID</span>\n\
+					<input type="text" class="modal-post-id" value="' + el.data("post") + '" />\n\
+					<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
+					<span class="modal-field">Comment</span>\n\
+					<textarea class="modal-comment"></textarea>');
+					modal.find(".submitModal").data("action", 'report');
+					break;
 
 				case 'submitModal':
 					var loading = modal.find(".modal-loading");
 					var action = $(this).data("action");
 					var _board = modal.find(".modal-board").val();
 					var _doc_id = modal.find(".modal-post-id").val();
-					var _href = '';
+					var _href = backend_vars.api_url+'_/api/chan/user_actions/';
 					var _data = {};
 
 					if (action == 'report') {
-						_href = backend_vars.api_url+'_/api/chan/report/';
 						_data = {
-							action: 'add',
+							action: 'report',
 							board: _board,
 							doc_id: _doc_id,
 							reason: modal.find(".modal-comment").val(),
@@ -237,9 +236,10 @@ var bindFunctions = function()
 						};
 					}
 					else if (action == 'delete') {
-						_href = backend_vars.api_url+'_/api/delete/'+$(this).data(action) + _post + '/';
 						_data = {
-							post: _post,
+							action: 'delete',
+							board: _board,
+							doc_id: _doc_id,
 							password: modal.find(".modal-password").val(),
 							csrf_fool: backend_vars.csrf_hash
 						};
@@ -261,7 +261,7 @@ var bindFunctions = function()
 							toggleHighlight(modal.find(".modal-post").val().replace(',', '_'), 'reported', false);
 						}
 						else if (action == 'delete') {
-							jQuery('.doc_id_' + post).hide();
+							jQuery('.doc_id_' + _doc_id).hide();
 						}
 					}, 'json');
 					return false;

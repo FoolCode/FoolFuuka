@@ -19,5 +19,5 @@ if (\Auth::has_access('maccess.admin'))
 	));
 }
 
-\Plugins::register_hook('foolfuuka\model\comment.delete_media.call.before',
+\Plugins::register_hook('foolfuuka\model\media.delete.call.before',
 	'Foolfuuka\\Plugins\\Nginx_Cache_Purge\\Nginx_Cache_Purge::before_delete_media', 5);

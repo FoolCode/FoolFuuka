@@ -8,18 +8,32 @@ if (!defined('DOCROOT'))
 class Nginx_Cache_Purge extends \Plugins
 {
 
-	public static function before_delete_media($media = true, $thumb = true, $post = null)
+	public static function before_delete_media($post, $media = true, $thumb = true)
 	{
 		$dir = array();
 		
 		if($media)
 		{
-			$dir['full'] = $post->get_media_link(false);
+			try
+			{
+				$dir['full'] = $post->get_media_link(false);
+			}
+			catch (\Foolfuuka\Model\MediaDirNotAvailableException $e)
+			{
+				
+			}
 		}
 		
 		if($thumb)
 		{
-			$dir['thumb'] = $post->get_media_link(true);
+			try
+			{
+				$dir['thumb'] = $post->get_media_link(true);
+			}
+			catch (\Foolfuuka\Model\MediaDirNotAvailableException $e)
+			{
+				
+			}
 		}
 		
 		$url_user_password = static::parse_urls();

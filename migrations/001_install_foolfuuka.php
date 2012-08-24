@@ -20,15 +20,14 @@ class Install_Foolfuuka
 		{
 			\DBUtil::create_table('banned_posters', array(
 				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
-				'banned_ip' => array('type' => 'decimal', 'constraint' => '39,0'),
-				'banned' => array('type' => 'smallint', 'constraint' => 2, 'unsigned' => true),
-				'banned_reason' => array('type' => 'text'),
-				'banned_start' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
-				'banned_length' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
-				'board_ids' => array('type' => 'text', 'default' => null, 'null' => true)
+				'ip' => array('type' => 'decimal', 'constraint' => '39,0'),
+				'reason' => array('type' => 'text'),
+				'start' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
+				'length' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
+				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0)
 			), array('id'), true, 'innodb', $charset.'_general_ci');
 
-			\DBUtil::create_index('banned_posters', 'banned_ip', 'banned_ip_index', 'unique');
+			\DBUtil::create_index('banned_posters', 'ip', 'ip_index');
 		}
 
 		if (!\DBUtil::table_exists('boards'))

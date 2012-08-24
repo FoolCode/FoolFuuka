@@ -287,7 +287,22 @@ class Controller_Api_Chan extends \Controller_Rest
 		}
 		
 		if (\Input::post('action') === 'ban_user')
-		{}
+		{
+			try
+			{
+				\Ban::add(\Inet::ptod(\Input::post('ip')), 
+					\Input::post('reason'),
+					\Input::post('length'),
+					\Input::post('board_ban') === 'global' ? array() : array($this->_radix->id)
+				);
+			}
+			catch (Model\BanException $e)
+			{
+				return $this->response(array('error' => $e->getMessage()), 404);
+			}
+			
+			return $this->response(array('success' => __("User banned.")), 200);
+		}
 	}
 
 }

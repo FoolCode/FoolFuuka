@@ -801,57 +801,32 @@ class Comment extends \Model\Model_Base
 		if(!\Auth::has_access('comment.limitless_comment'))
 		{
 			// check if the user is banned
-			$banned = \DB::select()->from('banned_posters')->where('banned_ip', \Input::ip_decimal())
-				->as_object()->execute()->as_array();
-
-			if(count($banned))
+			if ($ban = \Ban::is_banned(\Input::ip_decimal(), $this->board))
 			{
-				$is_banned = false;
-				$banned = $banned->current();
-				if (strtotime($banned) + $banned->banned_length > time())
+				if ($ban->board_id == 0)
 				{
-					// if null user is banned through all the boards, else there's a serialized array of board_ids
-					if (!is_null($banned->board_ids))
-					{
-						$ids = json_decode($banned->board_ids);
-						if (is_null($ids))
-						{
-							// error in decode, let it pass
-						}
-						else
-						{
-							if (in_array($this->board->id, $ids))
-							{
-								$banned_string = __('It looks like you were banned on /'.$this->board->shortname.'/.');
-								$is_banned = true;
-							}
-						}
-					}
-					else
-					{
-						$banned_string = __('It looks like you were banned on all boards.');
-						$is_banned = true;
-					}
+					$banned_string = __('It looks like you were banned on all boards.');
+				}
+				else
+				{
+					$banned_string = __('It looks like you were banned on /'.$this->board->shortname.'/.');
+				}
+				
+				if ($ban->length)
+				{
+					$banned_string .= ' '.__('This ban will last until:').' '.date(DATE_COOKIE, $ban->start + $ban->length).'.';
+				}
+				else
+				{
+					$banned_string .= ' '.__('This ban will last forever.');
 				}
 
-				if ($is_banned)
+				if ($this->reason)
 				{
-					if ($banned->banned_length)
-					{
-						$banned_string .= ' '.__('This ban will last until:').' '.date(DATE_COOKIE, strtotime($banned) + $banned->banned_length).'.';
-					}
-					else
-					{
-						$banned_string .= ' '.__('This ban will last forever.');
-					}
-
-					if ($this->banned_reason)
-					{
-						$banned_string .= ' '.__('The reason for this ban is:').' «'.$this->banned_reason.'».';
-					}
-
-					throw new CommentSendingBannedException($banned_string);
+					$banned_string .= ' '.__('The reason for this ban is:').' «'.$this->reason.'».';
 				}
+				
+				throw new CommentSendingBannedException($banned_string);
 			}
 
 			if ($this->thread_num < 1)

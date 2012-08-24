@@ -199,7 +199,7 @@ class Controller_Api_Chan extends \Controller_Rest
 					->set_radix($this->_radix)
 					->get_comments();
 
-				$comment = $comments[0];
+				$comment = current($comments);
 				$comment->delete(\Input::post('password'));
 			}
 			catch (Model\BoardException $e)
@@ -248,7 +248,7 @@ class Controller_Api_Chan extends \Controller_Rest
 					->set_radix($this->_radix)
 					->get_comments();
 
-				$comment = $comments[0];
+				$comment = current($comments);
 				$comment->delete();
 			}
 			catch (Model\BoardException $e)

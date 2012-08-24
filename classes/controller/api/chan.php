@@ -142,7 +142,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			return $this->response(array('error' => __("You are missing the 'num' parameter.")), 404);
 		}
 		
-		if (!\Board::is_natural($num))
+		if (!\Board::is_valid_post_number($num))
 		{
 			return $this->response(array('error' => __("Invalid value for 'num'.")), 404);
 		}
@@ -154,15 +154,16 @@ class Controller_Api_Chan extends \Controller_Rest
 				->set_radix($this->_radix)
 				->set_api(array('formatted' => true, 'board' => false));
 
-			$this->response($board->get_comments(), 200);
+			// no index for the single post
+			$this->response(current($board->get_comments()), 200);
 		}
-		catch(Model\BoardThreadNotFoundException $e)
+		catch(Model\BoardPostNotFoundException $e)
 		{
-			return $this->response(array('error' => __("Thread not found.")), 404);
+			return $this->response(array('error' => __("Post not found.")), 200);
 		}
 		catch (Model\BoardException $e)
 		{
-			return $this->response(array('error' => __("Unknown error.")), 500);
+			return $this->response(array('error' => $e->getMessage()), 404);
 		}
 	}
 	

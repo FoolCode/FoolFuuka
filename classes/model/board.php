@@ -808,8 +808,11 @@ class Board extends \Model\Model_Base
 			$this->_comments_unsorted = Comment::forge($result, $this->_radix);
 		}
 		
-		$this->_comments = $this->_comments_unsorted;
-
+		foreach ($this->_comments_unsorted as $comment)
+		{
+			$this->_comments[$comment->num.($comment->subnum ? '_'.$comment->subnum : '')] = $comment;
+		}
+		
 		return $this;
 	}
 

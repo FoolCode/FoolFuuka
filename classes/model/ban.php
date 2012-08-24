@@ -75,7 +75,8 @@ class Ban extends \Model\Model_Base
 			return false;
 		}
 		
-		if ($ban->start + $ban->length > time())
+		// if length = 0 then we have a permaban
+		if ( ! $ban->length || $ban->start + $ban->length > time())
 		{
 			// return the object, will be global if it's a global ban
 			return $ban;

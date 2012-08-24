@@ -840,7 +840,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			$comment_api = \Comment::forge_for_api($comment, $this->_radix, array('board' => false, 'formatted' => true));
 			return \Response::forge(
-				json_encode(array($comment->thread_num => array('posts' => array($comment_api)))));
+				json_encode(array('success' => __('Message sent.'), $comment->thread_num => array('posts' => array($comment_api)))));
 		}
 		else
 		{

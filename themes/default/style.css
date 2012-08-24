@@ -937,7 +937,7 @@ body.theme_default {
 }
 
 .theme_default .modal-field {
-    float: left;
+	float: left;
     margin-left: 10px;
     padding-top: 10px;
     font-weight: bold;

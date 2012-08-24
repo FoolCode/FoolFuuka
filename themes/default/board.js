@@ -217,6 +217,24 @@ var bindFunctions = function()
 					<textarea class="modal-comment"></textarea>');
 					modal.find(".submitModal").data("action", 'report');
 					break;
+					
+				case 'ban':
+					modal.find(".title").html('Ban user with IP ' + el.data("ip"));
+					modal.find(".modal-loading").hide();
+					modal.find(".modal-information").html('\
+					<span class="modal-label">IP</span>\n\
+					<input type="text" class="modal-ip" value="' + el.data("ip") + '" /><br/>\n\
+					<span class="modal-label">Days</span>\n\
+					<input type="text" class="modal-days" value="3" /><br/>\n\
+					<span class="modal-label modal-board-ban" style="text-align:left">Only this board</span>\n\
+					<input type="radio" name="board" checked value="board" /><br/>\n\
+					<span class="modal-label modal-global-ban">Global</span>\n\
+					<input type="radio" name="board" value="global" /><br/>\n\
+					<span class="modal-field">Comment</span>\n\
+					<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
+					<textarea class="modal-comment"></textarea>');
+					modal.find(".submitModal").data("action", 'ban');
+					break;
 
 				case 'submitModal':
 					var loading = modal.find(".modal-loading");
@@ -242,6 +260,18 @@ var bindFunctions = function()
 							doc_id: _doc_id,
 							password: modal.find(".modal-password").val(),
 							csrf_fool: backend_vars.csrf_hash
+						};
+					}
+					else if (action == 'ban')
+					{						
+						_href = backend_vars.api_url+'_/api/chan/mod_actions/';
+						_data = {
+							action: 'ban_user',
+							board: modal.find('.modal-board').val(),
+							board_ban: modal.find('input:radio[name=board]:checked').val(),
+							length: modal.find('.modal-days').val() * 24 * 60 * 60,
+							ip: modal.find('.modal-ip').val(),
+							reason: modal.find('.modal-comment').val()
 						};
 					}
 					else {

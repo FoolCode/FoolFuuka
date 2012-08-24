@@ -92,7 +92,7 @@ foreach ($board->get_comments() as $key => $post) :
 						<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="ban_image"><?= __('Ban Image') ?></button>
 					<?php endif; ?>
 					<?php if ($op->poster_ip) : ?>
-						<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($op->poster_ip) ?></button>
+						<button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $op->board->shortname ?>" data-ip="<?= \Inet::dtop($op->poster_ip) ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($op->poster_ip) ?></button>
 						<button class="btn btn-mini" data-function="searchUser" data-board="<?= $op->board->shortname ?>" data-board-url="<?= Uri::create(array('@radix', $op->board->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= \Inet::dtop($op->poster_ip) ?>"><?= __('Search IP') ?></button>
 						<?php if (Preferences::get('fu.sphinx.global')) : ?>
 						<button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $op->board->shortname ?>" data-board-url="<?= Uri::create(array('@radix', $op->board->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= \Inet::dtop($op->poster_ip) ?>"><?= __('Search IP Globally') ?></button>

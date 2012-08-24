@@ -121,7 +121,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->doc_id ?>" data-action="ban_image"><?= __('Ban Image') ?></button>
 		<?php endif; ?>
 		<?php if ($p->poster_ip) : ?>
-			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->doc_id ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($p->poster_ip) ?></button>
+			<button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $p->board->shortname ?>" data-ip="<?= \Inet::dtop($p->poster_ip) ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($p->poster_ip) ?></button>
 			<button class="btn btn-mini" data-function="searchUser" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= \Inet::dtop($p->poster_ip) ?>"><?= __('Search IP') ?></button>
 			<?php if (Preferences::get('fu.sphinx.global')) : ?>
 				<button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= \Inet::dtop($p->poster_ip) ?>"><?= __('Search IP Globally') ?></button>

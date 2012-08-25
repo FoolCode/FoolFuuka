@@ -262,7 +262,7 @@ class Search extends Board
 				->execute()
 				->as_array();
 			
-			$total = $meta['total_found'];
+			$this->_total_count = $meta['total_found'];
 		}
 		else /* use mysql as fallback for non-sphinx indexed boards */
 		{

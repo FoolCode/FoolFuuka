@@ -72,7 +72,7 @@ class Controller_Chan extends \Controller_Common
 	public function router($method, $params)
 	{
 		$segments = \Uri::segments();
-		
+
 		// the underscore function is never a board
 		if (isset($segments[0]) && $segments[0] !== '_')
 		{
@@ -92,7 +92,7 @@ class Controller_Chan extends \Controller_Common
 				{
 					return call_user_func_array(array($this, 'radix_'.$method), $params);
 				}
-				
+
 				// a board and no function means we're out of the street
 				throw new \HttpNotFoundException;
 			}

@@ -620,7 +620,8 @@ class Board extends \Model\Model_Base
 			$this->_comments_unsorted =
 				Comment::forge($query_result, $this->_radix, array(
 					'realtime' => $realtime, 
-					'backlinks_hash_only_url' => true
+					'backlinks_hash_only_url' => true,
+					'prefetch_backlinks' => true
 				));
 		}
 		

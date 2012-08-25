@@ -33,7 +33,7 @@ class Comment extends \Model\Model_Base
 	 *
 	 * @var type
 	 */
-	protected static $_backlinks = array();
+	public static $_backlinks_arr = array();
 
 	// global variables used for processing due to callbacks
 
@@ -108,6 +108,8 @@ class Comment extends \Model\Model_Base
 				return $this->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
 			case 'comment_processed':
 				return $this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
+			case 'backlinks':
+				return $this->backlinks = $this->get_backlinks();
 			case 'formatted':
 				return $this->formatted = $this->build_comment();
 			case 'reports':
@@ -115,7 +117,6 @@ class Comment extends \Model\Model_Base
 				{
 					return $this->reports = \Report::get_by_doc_id($this->board, $this->doc_id);
 				}
-				
 		}
 
 		return null;
@@ -221,12 +222,18 @@ class Comment extends \Model\Model_Base
 		{
 			$this->clean_fields();
 		}
+		
+		if ($this->_prefetch_backlinks)
+		{
+			// to get the backlinks we need to get the comment processed
+			$this->comment_processed;
+		}
 
 		$num = $this->num.($this->subnum ? ',' . $this->subnum : '');
 		static::$_posts[$this->thread_num][] = $num;
 	}
-
-
+	
+	
 	/**
 	 * Processes the comment, strips annoying data from moot, converts BBCode,
 	 * converts > to greentext, >> to internal link, and >>> to crossboard link
@@ -415,8 +422,8 @@ class Comment extends \Model\Model_Base
 		$data->board = $this->board;
 		$data->post = $this;
 
-		$current_p_num_c = $this->num . ($this->subnum > 0 ? ',' . $this->subnum : '');
-		$current_p_num_u = $this->num . ($this->subnum > 0 ? '_' . $this->subnum : '');
+		$current_p_num_c = $this->num . ($this->subnum ? ',' . $this->subnum : '');
+		$current_p_num_u = $this->num . ($this->subnum ? '_' . $this->subnum : '');
 
 		$build_url = array(
 			'tags' => array('', ''),
@@ -428,7 +435,7 @@ class Comment extends \Model\Model_Base
 
 		$build_url = \Plugins::run_hook('fu.comment_model.process_internal_links.html_result', array($data, $build_url), 'simple');
 
-		static::$_backlinks[$data->num][$this->num] = implode(
+		static::$_backlinks_arr[$data->num][$current_p_num_u] = implode(
 			'<a href="' . \Uri::create(array($data->board->shortname, 'thread', $data->post->thread_num)) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
 			$build_url['attr_backlink'] . '>&gt;&gt;' . $current_p_num_c . '</a>'
 		, $build_url['tags']);
@@ -471,6 +478,17 @@ class Comment extends \Model\Model_Base
 
 		// return un-altered
 		return $matches[0];
+	}
+	
+	
+	public function p_get_backlinks()
+	{
+		if (isset(static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')]))
+		{
+			return static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')];
+		}
+		
+		return array();
 	}
 
 

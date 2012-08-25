@@ -78,7 +78,7 @@ foreach ($board->get_comments() as $key => $post) :
 				<a href="<?= Uri::create($op->board->shortname . '/thread/' . $num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= Uri::create($op->board->shortname . '/thread/' . $num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . Uri::create($op->board->shortname . '/last50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($op->board->archive) ? '<a href="http://boards.4chan.org/' . $op->board->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?= Uri::create($op->board->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if (Auth::has_access('maccess.mod') || !$op->board->archive) : ?><a href="<?= Uri::create($op->board->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 
-			<div class="backlink_list"<?= (isset($op->backlinks)) ? ' style="display:block"' : '' ?>>
+			<div class="backlink_list"<?= $op->backlinks ? ' style="display:block"' : '' ?>>
 				<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
 			</div>
 

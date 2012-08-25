@@ -103,8 +103,8 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 		</div>
 	</header>
 
-	<div class="backlink_list"<?= (isset($p->backlinks)) ? ' style="display:block"' : '' ?>>
-		<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $p->num ?>"><?= (isset($p->backlinks)) ? implode(' ', $p->backlinks) : '' ?></span>
+	<div class="backlink_list"<?= $p->backlinks ? ' style="display:block"' : '' ?>>
+		<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $p->num ?>"><?= $p->backlinks ? implode(' ', $p->backlinks) : '' ?></span>
 	</div>
 
 	<div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $p->comment_processed)) echo ' shift-jis'; ?>">

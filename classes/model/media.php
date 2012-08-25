@@ -48,6 +48,7 @@ class Media extends \Model\Model_Base
 		'media_id',
 		'spoiler',
 		'preview_orig',
+		'media',
 		'preview_op',
 		'preview_reply',
 		'preview_w',
@@ -225,7 +226,7 @@ class Media extends \Model\Model_Base
 		switch ($name)
 		{
 			case 'media_status':
-				try { $this->media_link = $this->get_link(); }
+				try { $this->media_link = $this->get_link(false); }
 				catch (MediaNotFoundException $e) {}
 				return $this->media_status;
 			case 'safe_media_hash':
@@ -235,7 +236,7 @@ class Media extends \Model\Model_Base
 				try { return $this->remote_media_link = $this->get_remote_link(); }
 				catch (MediaNotFoundException $e) { return null; }
 			case 'media_link':
-				try { return $this->media_link = $this->get_link(); }
+				try { return $this->media_link = $this->get_link(false); }
 				catch (MediaNotFoundException $e) { return null; }
 			case 'thumb_link':
 				try { return $this->thumb_link = $this->get_link(true); }
@@ -408,9 +409,9 @@ class Media extends \Model\Model_Base
 		}
 
 		try
-		{
+		{	
 			// full image
-			if ( ! $thumbnail && file_exists($this->get_dir(false)))
+			if ( ! $thumbnail && file_exists($this->get_dir(false)) !== false)
 			{
 				$image = $this->media;
 			}
@@ -579,7 +580,6 @@ class Media extends \Model\Model_Base
 				try
 				{
 					$media_file = $this->get_dir();
-					die('here');
 				}
 				catch (MediaDirNotAvailableException $e)
 				{

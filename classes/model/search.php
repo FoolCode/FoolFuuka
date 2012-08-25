@@ -308,8 +308,8 @@ class Search extends Board
 			$query = \DB::select()
 				->from(\DB::expr(\Radix::get_table($this->_radix)));
 				
-			static::sql_media_join($sub, $this->_radix);
-			static::sql_report_join($sub, $this->_radix);
+			static::sql_media_join($query, $this->_radix);
+			static::sql_report_join($query, $this->_radix);
 			
 			if (isset($docs))
 			{

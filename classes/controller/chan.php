@@ -845,7 +845,7 @@ class Controller_Chan extends \Controller_Common
 		else
 		{
 			$this->_theme->set_layout('redirect');
-			return \Response::forge($this->_theme->build('redirect',
+			return \Response::forge($this->_theme->build('redirection',
 				array('url' => \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/'.$comment->num))));
 		}
 

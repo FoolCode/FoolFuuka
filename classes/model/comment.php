@@ -717,7 +717,7 @@ class Comment extends \Model\Model_Base
 		if ($this->op)
 		{
 			$to_delete = \DB::select()->from(\DB::expr(Radix::get_table($this->board)));
-			\Board::sql_media_join($this->board, $to_delete);
+			\Board::sql_media_join($to_delete, $this->board, $to_delete);
 			$to_delete_arr = $to_delete->where('thread_num', $this->thread_num)->as_object()->execute()->as_array();
 			$posts = Comment::forge($to_delete_arr);
 

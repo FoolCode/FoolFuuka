@@ -413,7 +413,7 @@ class Controller_Chan extends \Controller_Common
 
 		$this->_theme->set_title(__('Redirecting'));
 		$this->_theme->set_layout('redirect');
-		return \Response::forge($this->_theme->build('redirect', array('url' => $redirect)));
+		return \Response::forge($this->_theme->build('redirection', array('url' => $redirect)));
 	}
 
 
@@ -439,7 +439,7 @@ class Controller_Chan extends \Controller_Common
 		$hash = mb_substr($imploded_uri, 0, 22);
 		if (strpos($hash, '/') !== false || strpos($hash, '+') !== false)
 		{
-			$hash = \Comment::urlsafe_b64encode(Comment::urlsafe_b64decode($hash));
+			$hash = \Media::urlsafe_b64encode(\Media::urlsafe_b64decode($hash));
 		}
 
 		// Obtain the PAGE from URI.
@@ -451,7 +451,7 @@ class Controller_Chan extends \Controller_Common
 
 		// Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
 		$page = intval($page);
-		Response::redirect(Uri::create(array(
+		return Response::redirect(Uri::create(array(
 			\Radix::get_selected()->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page)), 'location', 301);
 	}
 

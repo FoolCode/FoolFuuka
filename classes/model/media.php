@@ -225,8 +225,9 @@ class Media extends \Model\Model_Base
 		switch ($name)
 		{
 			case 'media_status':
-				try { return $this->media_link = $this->get_link(); }
-				catch (MediaNotFoundException $e) { return null; }
+				try { $this->media_link = $this->get_link(); }
+				catch (MediaNotFoundException $e) {}
+				return $this->media_status;
 			case 'safe_media_hash':
 				try { return $this->safe_media_hash = $this->get_hash(true); }
 				catch (MediaNotFoundException $e) { return null; }
@@ -313,7 +314,7 @@ class Media extends \Model\Model_Base
 				}
 				else
 				{
-					$image = !is_null($this->preview_op) ? $this->preview_op : $this->preview_reply;
+					$image = $this->preview_op !== null ? $this->preview_op : $this->preview_reply;
 				}
 			}
 			else
@@ -324,7 +325,7 @@ class Media extends \Model\Model_Base
 				}
 				else
 				{
-					$image = !is_null($this->preview_reply) ? $this->preview_reply : $this->preview_op;
+					$image = $this->preview_reply !== null ? $this->preview_reply : $this->preview_op;
 				}
 			}
 		}
@@ -359,10 +360,10 @@ class Media extends \Model\Model_Base
 			throw new MediaHashNotFoundException;
 		}
 
-		$this->media_status = 'available';
+		$this->media_status = 'normal';
 
 		// these features will only affect guest users
-		if ($this->board->hide_thumbnails && !\Auth::has_access('comment.show_hidden_thumbnails'))
+		if ($this->board->hide_thumbnails && ! \Auth::has_access('comment.show_hidden_thumbnails'))
 		{
 			// hide all thumbnails for the board
 			if (!$this->board->hide_thumbnails)
@@ -409,7 +410,7 @@ class Media extends \Model\Model_Base
 		try
 		{
 			// full image
-			if (!$thumbnail && file_exists($this->get_dir(false)))
+			if ( ! $thumbnail && file_exists($this->get_dir(false)))
 			{
 				$image = $this->media;
 			}
@@ -418,7 +419,6 @@ class Media extends \Model\Model_Base
 		{
 
 		}
-
 
 		try
 		{
@@ -462,8 +462,7 @@ class Media extends \Model\Model_Base
 				.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 		}
 
-		$this->media_status = 'not-available';
-		return FALSE;
+		return false;
 	}
 
 

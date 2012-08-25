@@ -40,29 +40,27 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 	</div>
 
 	<div class="thread_image_box">
-		<?php if ($p->media->media_status != 'available') : ?>
-			<?php if ($p->media->media_status == 'banned') : ?>
-				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
-			<?php else : ?>
-				<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
-				</a>
-			<?php endif; ?>
+		<?php if ($p->media->media_status == 'banned') : ?>
+			<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
+		<?php elseif ($p->media->thumb_link === false): ?>
+			<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+				<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
+			</a>
 		<?php else: ?>
-		<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-			<?php if(!Auth::has_access('maccess.mod') && !$p->board->transparent_spoiler && $p->spoiler) :?>
-			<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
-			<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
-			<img src="<?= Uri::create('content/themes/default/images/transparent_pixel.png') ?>" data-original="<?= $p->media->thumb_link ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
-			<noscript>
-				<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-					<img src="<?= $p->media->thumb_link ?>" style="margin-left: -<?= $p->media->preview_w ?>px" <?= ($p->media->preview_w > 0 && $p->media->preview_h > 0) ? 'width="' . $p->media->preview_w . '" height="' . $p->media->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
-				</a>
-			</noscript>
-			<?php else : ?>
-			<img src="<?= $p->media->thumb_link ?>" <?= ($p->media->preview_w > 0 && $p->media->preview_h > 0) ? 'width="' . $p->media->preview_w . '" height="' . $p->media->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
-			<?php endif; ?>
-		</a>
+			<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+				<?php if(!Auth::has_access('maccess.mod') && !$p->board->transparent_spoiler && $p->spoiler) :?>
+				<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
+				<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
+				<img src="<?= Uri::create('content/themes/default/images/transparent_pixel.png') ?>" data-original="<?= $p->media->thumb_link ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+				<noscript>
+					<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+						<img src="<?= $p->media->thumb_link ?>" style="margin-left: -<?= $p->media->preview_w ?>px" <?= ($p->media->preview_w > 0 && $p->media->preview_h > 0) ? 'width="' . $p->media->preview_w . '" height="' . $p->media->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+					</a>
+				</noscript>
+				<?php else : ?>
+				<img src="<?= $p->media->thumb_link ?>" <?= ($p->media->preview_w > 0 && $p->media->preview_h > 0) ? 'width="' . $p->media->preview_w . '" height="' . $p->media->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+				<?php endif; ?>
+			</a>
 		<?php endif; ?>
 	</div>
 	<?php endif; ?>

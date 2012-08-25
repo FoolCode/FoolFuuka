@@ -11,22 +11,20 @@ foreach ($board->get_comments() as $key => $post) :
 <article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->board->shortname ?>">
 	<?php if (!is_null($op->media)) : ?>
 		<div class="thread_image_box">
-			<?php if ($op->media->media_status != 'available') : ?>
-				<?php if ($op->media->media_status == 'banned') : ?>
-					<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png')?>" width="150" height="150" />
-				<?php else : ?>
-					<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-						<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg')?>" width="150" height="150" />
-					</a>
-				<?php endif; ?>
-			<?php else: ?>
-			<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-				<?php if(!Auth::has_access('maccess.mod') && !$op->board->transparent_spoiler && $op->media->spoiler) :?>
-				<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
-				<?php else : ?>
-				<img src="<?= $op->media->thumb_link ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
-				<?php endif; ?>
-			</a>
+			<?php if ($op->media->media_status === 'banned') : ?>
+				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png')?>" width="150" height="150" />
+			<?php elseif ($op->media->thumb_link === false) : ?>
+				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg')?>" width="150" height="150" />
+				</a>
+			<?php else : ?>
+				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+					<?php if(!Auth::has_access('maccess.mod') && !$op->board->transparent_spoiler && $op->media->spoiler) :?>
+					<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
+					<?php else : ?>
+					<img src="<?= $op->media->thumb_link ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
+					<?php endif; ?>
+				</a>
 			<?php endif; ?>
 
 			<div class="post_file" style="padding-left: 2px;<?php if ($op->media->preview_w > 149) : ?> max-width:<?= $op->media->preview_w .'px'; endif; ?>;">

@@ -13,8 +13,8 @@ if (!defined('DOCROOT'))
 					<input type="checkbox" name="delete[]" value="<?= $p->doc_id ?>"/>
 					<?php if (isset($modifiers['post_show_board_name']) &&  $modifiers['post_show_board_name']): ?><span class="post_show_board">/<?= $p->board->shortname ?>/</span><?php endif; ?>
 					<span class="filetitle"><?= $p->title_processed ?></span>
-					<span class="postername<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?>"><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . htmlspecialchars($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
-					<span class="postertrip<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?>"><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= $p->trip_processed ?></span>
+					<span class="postername<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= (($p->email_processed && $p->email_processed != 'noko') ? '<a href="mailto:' . htmlspecialchars($p->email_processed) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
+					<span class="postertrip<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= $p->trip_processed ?></span>
 					<span class="poster_hash"><?php if ($p->poster_hash_processed) : ?>ID:<?= $p->poster_hash_processed ?><?php endif; ?></span>
 					<?php if ($p->capcode == 'M') : ?>
 						<span class="postername mod">## <?= __('Mod') ?></span>
@@ -33,38 +33,36 @@ if (!defined('DOCROOT'))
 					<a class="js" href="<?= Uri::create(array($p->board->shortname, 'thread', $p->thread_num)) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php endif; ?>
 
-				<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . 'content/themes/' . (($this->get_selected_theme()) ? $this->get_selected_theme() : 'default') . '/images/icons/file-delete-icon.png'; ?>" alt="[DELETED]" title="<?= __('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
-				<?php if ($p->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . 'content/themes/' . (($this->get_selected_theme()) ? $this->get_selected_theme() : 'default') . '/images/icons/spoiler-icon.png'; ?>" alt="[SPOILER]" title="<?= __('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
-				<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= Uri::base() . 'content/themes/' . (($this->get_selected_theme()) ? $this->get_selected_theme() : 'default') . '/images/icons/communicate-icon.png'; ?>" alt="[INTERNAL]" title="<?= __('This post is not an archived reply.') ?>"/><?php endif ?>
+				<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
+				<?php if ($p->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
+				<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= __('This post is not an archived reply.') ?>"/><?php endif ?>
 
 				<?php if (isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?= Uri::create(array($p->board->shortname, 'thread', $p->thread_num)) . '#p' . $p->num . (($p->subnum) ? '_' . $p->subnum : '') ?>">View</a>]<?php endif; ?>
 
 				<br/>
-				<?php if ($p->preview_orig) : ?>
+				<?php if ($p->media !== null) : ?>
 					<span>
-						<?= __('File:') . ' ' . \Num::format_bytes($p->media_size, 0) . ', ' . $p->media_w . 'x' . $p->media_h . ', ' . $p->media_filename_processed; ?>
-						<?= '<!-- ' . substr($p->media_hash, 0, -2) . '-->' ?>
+						<?= __('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->media_filename_processed; ?>
+						<?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
 					</span>
-					<?php if ($p->media_status != 'banned') : ?>
+					<?php if ($p->media->media_status != 'banned') : ?>
 						<?php if (!$p->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
 							[<a href="<?= Uri::create($p->board->shortname . '/search/image/' . $p->safe_media_hash) ?>"><?= __('View Same') ?></a>]
-							[<a href="http://google.com/searchbyimage?image_url=<?= $p->thumb_link ?>">Google</a>]
-							[<a href="http://iqdb.org/?url=<?= $p->thumb_link ?>">iqdb</a>]
-							[<a href="http://saucenao.com/search.php?url=<?= $p->thumb_link ?>">SauceNAO</a>]
+							[<a href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>">Google</a>]
+							[<a href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>">iqdb</a>]
+							[<a href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>">SauceNAO</a>]
 						<?php endif; ?>
 					<?php endif; ?>
 					<br />
-					<?php if ($p->media_status != 'available') :?>
-						<?php if ($p->media_status == 'banned') : ?>
-							<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
-						<?php else : ?>
-							<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" rel="noreferrer">
-								<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
-							</a>
-						<?php endif; ?>
+					<?php if ($p->media->media_status == 'banned') : ?>
+						<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
+					<?php elseif ($p->media->thumb_link === null): ?>
+						<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" rel="noreferrer">
+							<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
+						</a>
 					<?php else: ?>
-					<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" rel="noreferrer">
-						<img src="<?= $p->thumb_link ?>" alt="<?= $p->num ?>" width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>" class="thumb" />
+					<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" rel="noreferrer">
+						<img src="<?= $p->media->thumb_link ?>" alt="<?= $p->num ?>" width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>" class="thumb" />
 					</a>
 					<?php endif; ?>
 				<?php endif; ?>

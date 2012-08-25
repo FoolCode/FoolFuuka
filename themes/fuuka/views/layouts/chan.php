@@ -15,7 +15,7 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="<?= Uri::base() . $this->fallback_asset('plugins.js') ?>" type="text/javascript"></script>
 		<?php if (\Preferences::get('fu.sphinx.global')) : ?>
-			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('ff.gen.website_title', FOOL_PREF_GEN_WEBSITE_TITLE) ?> " href="<?= Uri::create('@system/functions/opensearch') ?>" />
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('ff.gen.website_title') ?> " href="<?= Uri::create('functions/opensearch') ?>" />
 		<?php endif; ?>
 		<?= \Preferences::get('ff.theme.header_code') ?>
 	</head>

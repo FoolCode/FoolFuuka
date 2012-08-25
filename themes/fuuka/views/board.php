@@ -65,7 +65,7 @@ foreach ($board->get_comments() as $key => $post) :
 		<?php endif; ?>
 
 		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?php _('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
-		<?php if ($op->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('/images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?php _('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
+		<?php if ($op->media->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('/images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?php _('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
 
 		[<a href="<?= Uri::create($op->board->shortname . '/thread/' . $op->num) ?>"><?= __('Reply') ?></a>]
 		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= Uri::create($op->board->shortname . '/last50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>

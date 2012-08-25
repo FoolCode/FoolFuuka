@@ -73,16 +73,17 @@ if (!defined('DOCROOT'))
 			));
 			?>
 		</div>
-		<?php if (\Auth::has_access('comment.as_mod')) : ?>
+		<?php
+			$postas = array('N' => __('User'));
+
+			if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = __('Moderator');
+			if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = __('Administrator');
+			if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = __('Developer');
+			if (count($postas) > 1) :
+		?>
 		<div class="input-prepend">
-			<label class="add-on" for="reply_postas"><?= __('Post As') ?></label><?php
-			$postas = array('user' => __('User'), 'mod' => __('Moderator'));
-			if (\Auth::has_access('comment.as_admin'))
-			{
-				$postas['admin'] = __('Administrator');
-			}
-			echo Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas'));
-			?>
+			<label class="add-on" for="reply_postas"><?= __('Post As') ?></label>
+				<?= Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas')); ?>
 		</div>
 		<?php endif; ?>
 

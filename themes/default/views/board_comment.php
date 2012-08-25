@@ -80,9 +80,12 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 			<?php if ($p->capcode != 'N') : ?>
 				<?php if ($p->capcode == 'M') : ?>
 					<span class="post_level post_level_moderator">## <?= __('Mod') ?></span>
-					<?php endif ?>
+				<?php endif ?>
 				<?php if ($p->capcode == 'A') : ?>
 					<span class="post_level post_level_administrator">## <?= __('Admin') ?></span>
+				<?php endif ?>
+				<?php if ($p->capcode == 'D') : ?>
+					<span class="post_level post_level_developer">## <?= __('Developer') ?></span>
 				<?php endif ?>
 			<?php endif; ?>
 

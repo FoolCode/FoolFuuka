@@ -192,5 +192,6 @@ a img { vertical-align: top; }
 .aa { font-family:Mona,'MS PGothic' !important; }
 .strikethrough { text-decoration: line-through; }
 .banned { font-weight: bold; color: red; }
-.admin{ color: #c00000 !important; }
 .mod{ color: #800080 !important; }
+.admin{ color: #c00000 !important; }
+.developer{ color: #0000F0 !important }

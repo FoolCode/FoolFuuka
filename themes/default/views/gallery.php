@@ -21,6 +21,9 @@ foreach ($board->get_comments() as $k => $p) :
 				<?php endif ?>
 				<?php if ($p->capcode == 'A') : ?>
 					<span class="post_level post_level_administrator">## <?= __('Admin') ?></span>
+				<?php endif ?>
+				<?php if ($p->capcode == 'D') : ?>
+					<span class="post_level post_level_developer">## <?= __('Developer') ?></span>
 				<?php endif ?><br/>
 				<time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>"><?= gmdate('D M d H:i:s Y', $p->timestamp) ?></time>
 				<span class="post_number"><a href="<?= Uri::create($radix->shortname . '/thread/' . $p->num) . '#' . $p->num ?>" data-function="highlight" data-post="<?= $p->num ?>">No.</a><a href="<?= Uri::create($radix->shortname . '/thread/' . $p->num) . '#q' . $p->num ?>" data-function="quote" data-post="<?= $p->num ?>"><?= $p->num ?></a></span>

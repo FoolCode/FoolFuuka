@@ -548,6 +548,10 @@ body.theme_default {
     color:#FF0000;
 }
 
+.theme_default article.thread .post_level.post_level_developer {
+    color:#0000F0;
+}
+
 .theme_default article.thread .backlink_list {
     font-size:11px;
     color:#888;

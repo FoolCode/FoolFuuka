@@ -1052,7 +1052,7 @@ class Radix extends \Model_Base
 				media_orig varchar(20),
 				spoiler bool NOT NULL DEFAULT '0',
 				deleted bool NOT NULL DEFAULT '0',
-				capcode enum('N', 'M', 'A', 'G') NOT NULL DEFAULT 'N',
+				capcode varchar(1) NOT NULL DEFAULT 'N',
 				email varchar(100),
 				name varchar(100),
 				trip varchar(25),

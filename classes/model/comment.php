@@ -970,6 +970,11 @@ class Comment extends \Model\Model_Base
 				$allowed_capcodes[] = 'A';
 			}
 
+			if(\Auth::has_access('comment.dev_capcode'))
+			{
+				$allowed_capcodes[] = 'D';
+			}
+			
 			if(!in_array($this->capcode, $allowed_capcodes))
 			{
 				throw new CommentSendingUnallowedCapcodeException(__('You\'re not allowed to use this capcode.'));

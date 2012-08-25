@@ -230,7 +230,7 @@ class Report extends \Model\Model_Base
 				->set_radix($this->board)
 				->set_options('doc_id', $this->doc_id)
 				->get_comments();
-			$this->comment = $comments[0];
+			$this->comment = current($comments);
 		}
 		catch (BoardException $e)
 		{

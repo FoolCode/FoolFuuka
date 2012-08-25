@@ -23,7 +23,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	
 	
 	/**
-	 * Commodity to check that the ID is not wrong and return a coherent error
+	 * Commodity to check that the shortname is not wrong and return a coherent error
 	 * 
 	 * @author Woxxy
 	 */

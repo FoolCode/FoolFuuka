@@ -225,20 +225,19 @@ class Media extends \Model\Model_Base
 		switch ($name)
 		{
 			case 'media_status':
-				try { $this->media_link = $this->get_media_link(); }
+				try { return $this->media_link = $this->get_link(); }
 				catch (MediaNotFoundException $e) { return null; }
-				return $this->media_status;
 			case 'safe_media_hash':
-				try { return $this->safe_media_hash = $this->get_media_hash(true); }
+				try { return $this->safe_media_hash = $this->get_hash(true); }
 				catch (MediaNotFoundException $e) { return null; }
 			case 'remote_media_link':
-				try { return $this->remote_media_link = $this->get_remote_media_link(); }
+				try { return $this->remote_media_link = $this->get_remote_link(); }
 				catch (MediaNotFoundException $e) { return null; }
 			case 'media_link':
-				try { return $this->media_link = $this->get_media_link(); }
+				try { return $this->media_link = $this->get_link(); }
 				catch (MediaNotFoundException $e) { return null; }
 			case 'thumb_link':
-				try { return $this->thumb_link = $this->get_media_link(true); }
+				try { return $this->thumb_link = $this->get_link(true); }
 				catch (MediaNotFoundException $e) { return null; }
 			case 'preview_w':
 			case 'preview_h':
@@ -252,7 +251,7 @@ class Media extends \Model\Model_Base
 					{
 						try
 						{
-							$imgpath = $this->get_media_dir(true);
+							$imgpath = $this->get_dir(true);
 							$imgsize = false;
 
 							if ($imgpath)
@@ -297,7 +296,7 @@ class Media extends \Model\Model_Base
 	 * @param bool $thumbnail if we're looking for a thumbnail
 	 * @return bool|string FALSE if it has no image in database, string for the path
 	 */
-	protected function p_get_media_dir($thumbnail = false, $precise = false)
+	protected function p_get_dir($thumbnail = false, $precise = false)
 	{
 		if (!$this->media_hash)
 		{
@@ -353,7 +352,7 @@ class Media extends \Model\Model_Base
 	 * @param bool $thumbnail if it's a thumbnail we're looking for
 	 * @return bool|string FALSE on not found, a fallback image if not found for thumbnails, or the URL on success
 	 */
-	protected function p_get_media_link($thumbnail = false)
+	protected function p_get_link($thumbnail = false)
 	{
 		if (!$this->media_hash)
 		{
@@ -390,7 +389,7 @@ class Media extends \Model\Model_Base
 		try
 		{
 			// locate the image
-			if ($thumbnail && file_exists($this->get_media_dir($thumbnail)) !== false)
+			if ($thumbnail && file_exists($this->get_dir($thumbnail)) !== false)
 			{
 				if ($this->op == 1)
 				{
@@ -410,7 +409,7 @@ class Media extends \Model\Model_Base
 		try
 		{
 			// full image
-			if (!$thumbnail && file_exists($this->get_media_dir(false)))
+			if (!$thumbnail && file_exists($this->get_dir(false)))
 			{
 				$image = $this->media;
 			}
@@ -424,7 +423,7 @@ class Media extends \Model\Model_Base
 		try
 		{
 			// fallback if we have the full image but not the thumbnail
-			if ($thumbnail && !isset($image) && file_exists($this->get_media_dir(false)))
+			if ($thumbnail && !isset($image) && file_exists($this->get_dir(false)))
 			{
 				$thumbnail = false;
 				$image = $this->media;
@@ -473,7 +472,7 @@ class Media extends \Model\Model_Base
 	 *
 	 * @return bool|string FALSE if there's no media, local URL if it's not remote, or the remote URL
 	 */
-	protected function p_get_remote_media_link()
+	protected function p_get_remote_link()
 	{
 		if (!$this->media_hash)
 		{
@@ -494,9 +493,9 @@ class Media extends \Model\Model_Base
 		{
 			try
 			{
-				if (file_exists($this->get_media_dir()) !== false)
+				if (file_exists($this->get_dir()) !== false)
 				{
-					return $this->get_media_link();
+					return $this->get_link();
 				}
 			}
 			catch (MediaNotFoundException $e)
@@ -514,7 +513,7 @@ class Media extends \Model\Model_Base
 	 * @param bool $urlsafe if TRUE it will return a modified base64 compatible with URL
 	 * @return bool|string FALSE if media_hash not found, or the base64 string
 	 */
-	protected function p_get_media_hash($urlsafe = FALSE)
+	protected function p_get_hash($urlsafe = FALSE)
 	{
 		if (is_object($this) || is_array($this))
 		{
@@ -580,7 +579,7 @@ class Media extends \Model\Model_Base
 			{
 				try
 				{
-					$media_file = $this->get_media_dir();
+					$media_file = $this->get_dir();
 					die('here');
 				}
 				catch (MediaDirNotAvailableException $e)
@@ -606,7 +605,7 @@ class Media extends \Model\Model_Base
 				
 				try
 				{
-					$thumb_file = $this->get_media_dir(true);
+					$thumb_file = $this->get_dir(true);
 				}
 				catch(MediaDirNotAvailableException $e)
 				{
@@ -625,7 +624,7 @@ class Media extends \Model\Model_Base
 				$this->op = 0;
 				try
 				{
-					$thumb_file = $this->get_media_dir(TRUE);
+					$thumb_file = $this->get_dir(TRUE);
 				}
 				catch(MediaDirNotAvailableException $e)
 				{
@@ -646,7 +645,7 @@ class Media extends \Model\Model_Base
 	}
 	
 	
-	public function ban()
+	public function p_ban()
 	{
 		$count = \DB::select()
 			->from('banned_md5')
@@ -684,14 +683,14 @@ class Media extends \Model\Model_Base
 	}
 
 
-	public function rollback_upload()
+	public function p_rollback_upload()
 	{
 		if (!is_null($this->temp_filename) && file_exists($this->temp_path.$this->temp_filename))
 			unlink($this->temp_path.$this->temp_filename);
 	}
 
 
-	public function insert($microtime, $spoiler, $is_op)
+	public function p_insert($microtime, $spoiler, $is_op)
 	{
 		$this->op = $is_op;
 		$full_path = $this->temp_path.$this->temp_filename;
@@ -731,7 +730,7 @@ class Media extends \Model\Model_Base
 
 			try
 			{
-				$duplicate_dir = $duplicate->get_media_dir();
+				$duplicate_dir = $duplicate->get_dir();
 				if (file_exists($duplicate_dir))
 				{
 					$do_full = false;
@@ -742,7 +741,7 @@ class Media extends \Model\Model_Base
 
 			try
 			{
-				$duplicate_dir_thumb = $duplicate->get_media_dir(true, true);
+				$duplicate_dir_thumb = $duplicate->get_dir(true, true);
 				if (file_exists($duplicate_dir_thumb))
 				{
 					$duplicate_dir_thumb_size = getimagesize($duplicate_dir_thumb);
@@ -804,7 +803,7 @@ class Media extends \Model\Model_Base
 	}
 
 
-	public function path_from_filename($thumbnail = false)
+	public function p_path_from_filename($thumbnail = false)
 	{
 		return \Preferences::get('fu.boards.directory', DOCROOT.'content/boards').'/'.$this->board->shortname.'/'.
 			($thumbnail ? 'thumb' : 'image').'/'.

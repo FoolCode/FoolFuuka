@@ -41,7 +41,7 @@ class Search extends Board
 			{
 				$media = \Media::forge_empty();
 				$media->media_hash = $args['image'];
-				$args['image'] = $media->get_media_hash();
+				$args['image'] = $media->get_hash();
 			}
 			else
 			{

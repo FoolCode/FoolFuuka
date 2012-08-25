@@ -4,7 +4,6 @@ namespace Foolfuuka\Model;
 
 class CommentDeleteWrongPassException extends \FuelException {}
 
-
 class CommentException extends \FuelException {}
 class CommentSendingException extends CommentException {}
 class CommentSendingDuplicateException extends CommentSendingException {}

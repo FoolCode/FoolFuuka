@@ -10,7 +10,7 @@ class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_C
 	/**
 	 * @param null $report
 	 */
-	public function action_statistics($report = NULL)
+	public function radix_statistics($report = NULL)
 	{
 		// Load Statistics Model
 

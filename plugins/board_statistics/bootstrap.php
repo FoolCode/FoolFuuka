@@ -41,5 +41,5 @@ if (\Auth::has_access('maccess.admin'))
 		return array('return' => $top_nav);
 }, 3);
 
-\Router::add('(?!(admin|api|search|_))(\w+)/statistics', 'plugin/fu/board_statistics/chan/$2/statistics', true);
-\Router::add('(?!(admin|api|search|_))(\w+)/statistics/(:any)', 'plugin/fu/board_statistics/chan/$2/statistics/$3', true);
+\Router::add('(?!(admin|_))(\w+)/statistics', 'plugin/fu/board_statistics/chan/$2/statistics', true);
+\Router::add('(?!(admin|search|_))(\w+)/statistics/(:any)', 'plugin/fu/board_statistics/chan/$2/statistics/$3', true);

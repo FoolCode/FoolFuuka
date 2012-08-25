@@ -22,7 +22,7 @@ if (!defined('DOCROOT'))
 		?>
 		
 		<a href="<?= Uri::create(array(Radix::get_selected()->shortname, 'search', 'image', $media->safe_media_hash)) ?>">
-			<img src="<?= $media->media_link  ?>" />
+			<img  src="<?= $media->media_link  ?>" />
 		</a>
 	</div>
 <?php endforeach; ?>

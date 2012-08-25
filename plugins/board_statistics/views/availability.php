@@ -30,7 +30,7 @@ if (!defined('DOCROOT'))
 				$val_ed = ($values[1] + 86400) % 86400;
 				?>
 				<a href="<?php echo $poster_link ?>">
-					<span class="poster_name"><?php echo fuuka_htmlescape($d->name) ?></span> <span class="poster_trip"><?php echo fuuka_htmlescape($d->trip) ?></span>
+					<span class="poster_name"><?php echo e($d->name) ?></span> <span class="poster_trip"><?php echo e($d->trip) ?></span>
 				</a>
 			</td>
 			<td style="text-align:center"><?php echo $d->posts ?></td>

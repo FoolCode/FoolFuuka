@@ -451,7 +451,7 @@ class Controller_Chan extends \Controller_Common
 
 		// Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
 		$page = intval($page);
-		return Response::redirect(Uri::create(array(
+		return \Response::redirect(Uri::create(array(
 			\Radix::get_selected()->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page)), 'location', 301);
 	}
 
@@ -772,11 +772,11 @@ class Controller_Chan extends \Controller_Common
 			$data['delpass'] = $post['reply_nymphassword'];
 		if(isset($post['reply_nymphassword']))
 			$data['delpass'] = $post['reply_nymphassword'];
-		if(isset($post['reply_nymphblind']))
-			$data['spoiler'] = $post['reply_nymphblind'];
+		if(isset($post['reply_gattai_spoilered']))
+			$data['spoiler'] = true;
 		if(isset($post['reply_postas']))
 			$data['capcode'] = $post['reply_postas'];
-
+		
 		$media = null;
 
 		if (count(\Upload::get_files()))
@@ -784,6 +784,7 @@ class Controller_Chan extends \Controller_Common
 			try
 			{
 				$media = \Media::forge_from_upload($this->_radix);
+				$media->spoiler = isset($data['spoiler']) && $data['spoiler'];
 			}
 			catch (\Model\MediaUploadNoFileException $e)
 			{

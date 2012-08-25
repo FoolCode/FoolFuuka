@@ -924,7 +924,7 @@ class Comment extends \Model\Model_Base
 			$this->allow_media = $status['disable_image_upload'];
 		}
 
-		foreach(array('name', 'email', 'subject', 'delpass', 'spoiler', 'comment', 'capcode') as $key)
+		foreach(array('name', 'email', 'subject', 'delpass', 'comment', 'capcode') as $key)
 		{
 			$this->$key = (string) $this->$key;
 		}
@@ -1005,14 +1005,13 @@ class Comment extends \Model\Model_Base
 		$microtime = str_replace('.', '', (string) microtime(true));
 		$this->timestamp = substr($microtime, 0, 10);
 		$this->op = (bool) !$this->thread_num;
-		$this->spoiler = (bool) !$this->spoiler;
 
 		// process comment media
 		if (!is_null($this->media))
 		{
 			try
 			{
-				$this->media->insert($microtime, $this->spoiler, $this->op);
+				$this->media->insert($microtime, $this->op);
 			}
 			catch (MediaInsertException $e)
 			{
@@ -1029,7 +1028,6 @@ class Comment extends \Model\Model_Base
 
 			$this->media = Media::forge_empty($this->board);
 		}
-
 
 		// 2ch-style codes, only if enabled
 		if($this->num && $this->board->enable_poster_hash)
@@ -1128,7 +1126,7 @@ class Comment extends \Model\Model_Base
 				'title' => $this->title,
 				'comment' => $this->comment,
 				'delpass' => $this->delpass,
-				'spoiler' => $this->spoiler,
+				'spoiler' => $this->media->spoiler,
 				'poster_ip' => $this->poster_ip,
 				'poster_hash' => $this->poster_hash,
 				'preview_orig' => $this->media->preview_orig,
@@ -1140,7 +1138,7 @@ class Comment extends \Model\Model_Base
 				'media_size' => $this->media->media_size,
 				'media_hash' => $this->media->media_hash,
 				'media_orig' => $this->media->media_orig,
-				'exif' => $this->media->exif
+				'exif' => json_encode($this->media->exif)
 			))->execute();
 
 		// check that it wasn't posted multiple times

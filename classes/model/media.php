@@ -21,7 +21,7 @@ class Media extends \Model\Model_Base
 	public $op; // required to know the size of the thumbnail
 
 	public $media_id = 0;
-	public $spoiler = 0;
+	public $spoiler = false;
 	public $preview_orig = null;
 	public $preview_w = 0;
 	public $preview_h = 0;
@@ -689,7 +689,7 @@ class Media extends \Model\Model_Base
 	}
 
 
-	public function p_insert($microtime, $spoiler, $is_op)
+	public function p_insert($microtime, $is_op)
 	{
 		$this->op = $is_op;
 		$full_path = $this->temp_path.$this->temp_filename;
@@ -707,8 +707,6 @@ class Media extends \Model\Model_Base
 			throw new MediaInsertImageSizeSmall(__('The image you uploaded is too small.'));
 		}
 
-
-		$this->spoiler = $spoiler;
 		$this->media_w = $getimagesize[0];
 		$this->media_h = $getimagesize[1];
 		$this->media_orig = $microtime.'.'.$this->temp_extension;

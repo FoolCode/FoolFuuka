@@ -632,11 +632,11 @@ class Controller_Chan extends \Controller_Common
 		}
 		catch (Model\SearchException $e)
 		{
-			return $this->error($e);
+			return $this->error($e->getMessage());
 		}
 		catch (Model\BoardException $e)
 		{
-			return $this->error($e);
+			return $this->error($e->getMessage());
 		}
 		
 		// Generate the $title with all search modifiers enabled.
@@ -716,19 +716,39 @@ class Controller_Chan extends \Controller_Common
 		{
 			$title = __('Displaying all posts with no filters applied.');
 		}
+
+		if ($this->_radix)
+		{
+			$this->_theme->set_title($this->_radix->formatted_title.' &raquo; '.$title);
+		}
+		else
+		{
+			$this->_theme->set_title('Global Search &raquo; '.$title);
+		}
 		
-		$this->_theme->set_title(\Radix::get_selected()->formatted_title.' &raquo; '.$title);
+		$this->_theme->bind('section_title', $title);
 		$this->_theme->bind('board', $board);
 		
 		$pagination = $search;
 		unset($pagination['page']);
+		$pagination_arr = array();
+		$pagination_arr[] = $this->_radix !== null ?$this->_radix->shortname : '_';
+		$pagination_arr[] = 'search';
+		foreach ($pagination as $key => $item)
+		{
+			if ($item || $item === 0)
+			{
+				$pagination_arr[] = $key;
+				$pagination_arr[] = $item;
+			}
+		}
+
+		$pagination_arr[] = 'page';
 		$this->_theme->bind('pagination', array(
-				'base_url' => \Uri::create(array_merge(
-					array($this->_radix !== null ?$this->_radix->shortname : '_', 'search'), $pagination)),
+				'base_url' => \Uri::create($pagination_arr),
 				'current_page' => $search['page'] ? : 1,
-				'total' => $board->get_count()
+				'total' => $board->get_count()/25 +1
 			));
-		$this->_theme->bind('search', $pagination);
 		
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::search End');

@@ -843,7 +843,9 @@ class Radix extends \Model_Base
 	protected static function p_get_table($shortname, $suffix = '')
 	{
 		if (is_object($shortname))
+		{
 			$shortname = $shortname->shortname;
+		}
 
 		if (\Preferences::get('fu.boards.db'))
 		{
@@ -851,7 +853,7 @@ class Radix extends \Model_Base
 		}
 		else
 		{
-			return \DB::quote_identifier('board_'.$shortname.$suffix);
+			return \DB::quote_identifier(\DB::table_prefix().'board_'.$shortname.$suffix);
 		}
 	}
 
@@ -1061,6 +1063,7 @@ class Radix extends \Model_Base
 				delpass tinytext,
 				sticky bool NOT NULL DEFAULT '0',
 				poster_hash varchar(8),
+				poster_country varchar(2),
 				exif text,
 
 				PRIMARY KEY (`doc_id`),
@@ -1547,7 +1550,7 @@ class Radix extends \Model_Base
 	 */
 	protected static function p_remove_search($board)
 	{
-		return $this->mysql_remove_search($board);
+		return static::mysql_remove_search($board);
 	}
 
 
@@ -1562,7 +1565,7 @@ class Radix extends \Model_Base
 		\DB::query("DROP TABLE IF EXISTS ".static::get_table($board, '_search'))->execute();
 
 		// set in preferences that this is not a board with MyISAM search
-		$this->save(array('id' => $board->id, 'myisam_search' => 0));
+		static::save(array('id' => $board->id, 'myisam_search' => 0));
 
 		return true;
 	}
@@ -1578,9 +1581,7 @@ class Radix extends \Model_Base
 	protected static function p_mysql_check_charset($board, $suffix)
 	{
 		// rather than using information_schema, for ease let's just check the output of the create table
-		\DB::query('SHOW CREATE TABLE '.static::get_table($board, $suffix))->execute();
-
-		$row = $this->row_array();
+		$row = \DB::query('SHOW CREATE TABLE '.static::get_table($board, $suffix))->execute()->current();
 
 		$create_table = $row['Create Table'];
 
@@ -1615,7 +1616,7 @@ class Radix extends \Model_Base
 
 		foreach ($tables as $table)
 		{
-			if ($this->mysql_check_charset($board, $table))
+			if (static::mysql_check_charset($board, $table))
 			{
 				\DB::query("ALTER TABLE ".static::get_table($board, $table)." CONVERT TO CHARACTER SET utf8mb4")->execute();
 			}

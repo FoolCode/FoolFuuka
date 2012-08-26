@@ -15,14 +15,14 @@ class Controller_Admin_Boards extends \Controller_Admin
 			\Response::redirect('admin');
 		}
 
+		\Radix::preload(true);
+		
 		$this->_views['controller_title'] = __('Boards');
 	}
 
 
 	public function action_manage()
 	{
-		\Radix::preload(true);
-
 		$this->_views['method_title'] = __('Login');
 		$this->_views['main_content_view'] = \View::forge('admin/boards/manage', array('boards' => \Radix::get_all()));
 
@@ -89,7 +89,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 		$this->_views["method_title"] = __('Editing board:').' '.$board->shortname;
 		$this->_views["main_content_view"] = \View::forge('admin/form_creator', $data);
 
-		if (!$board->sphinx && !$board->myisam_search)
+		if ( ! $board->sphinx && ! $board->myisam_search)
 		{
 			$this->_views["main_content_view"] = '
 				<div class="alert">
@@ -167,7 +167,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 			switch ($type)
 			{
 				case("create"):
-					if (!$this->radix->create_search($board))
+					if ( ! \Radix::create_search($board))
 					{
 						\Notices::set_flash('error', sprintf(__('Failed to create the search table for the board %s.'), $board->shortname));
 					}
@@ -180,7 +180,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 					break;
 
 				case("remove"):
-					if (!\Radix::remove_search($board))
+					if ( ! \Radix::remove_search($board))
 					{
 						\Notices::set_flash('error', sprintf(__('Failed to remove the search table for the board %s.'), $board->shortname));
 					}
@@ -205,10 +205,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 					'<br/>'.
 					__('Normally, even if the page times out, the database will keep building it.').
 					'<br/>'.
-					__('To make sure your search table is fully created, you can execute the following via the command line of your server.').
-					'<br/>'.
-					'<pre>$ cd '.FCPATH.'
-$ php index.php cli database create_search '.$board->shortname.'</pre>'.
+					__('To make sure your search table is fully created, you can execute the following via the command line of your server.').' '.
 					__('For very large boards, past a few millions of entries, this would could hours: you should use SphinxSearch instead, or anyway you should use the command line.');
 
 				$this->_views["main_content_view"] = \View::forge('admin/confirm', $data);

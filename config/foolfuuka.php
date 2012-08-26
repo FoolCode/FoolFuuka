@@ -99,7 +99,8 @@ return array(
 		),
 
 		'boards' => array(
-			'directory' => 'content/boards'
+			'directory' => DOCROOT.'foolfuuka/boards/',
+			'boards.url' => \Uri::base().'foolfuuka/boards/'
 		),
 
 		'comment' => array(

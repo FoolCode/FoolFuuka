@@ -32,7 +32,6 @@ class Search extends Board
 		\Profiler::mark('Board::get_search_comments Start');
 		extract($this->_options);
 
-
 		// if image is set, get either media_hash or media_id
 		if ($args['image'] !== null && static::is_natural($args['image']))
 		{
@@ -76,7 +75,7 @@ class Search extends Board
 		{
 			throw new SearchRequiresSphinxException(__('Sorry, this action requires the SphinxSearch engine.'));	
 		}
-		else if (($this->_radix !== null && $this->_radix->sphinx) || \Preferences::get('ff.sphinx.global', 0))
+		else if (($this->_radix !== null && $this->_radix->sphinx) || \Preferences::get('fu.sphinx.global'))
 		{
 			// establish connection to sphinx
 			$sphinx_server = explode(':', \Preferences::get('fu.sphinx.listen'));
@@ -88,7 +87,7 @@ class Search extends Board
 			}
 
 			// determine if all boards will be used for search or not
-			if ($this->_radix === false)
+			if ($this->_radix === null)
 			{
 				\Radix::preload(TRUE);
 				$indexes = array();
@@ -239,7 +238,8 @@ class Search extends Board
 				throw new SearchEmptyResultException(__('No results found.'));
 			}
 
-			$this->_total_count = Sphinxql::meta();
+			$meta = Sphinxql::meta();
+			$this->_total_count = $meta['total'];
 
 			// populate array to query for full records
 			$sql = array();
@@ -247,10 +247,9 @@ class Search extends Board
 			foreach ($search as $post => $result)
 			{
 				$board = \Radix::get_by_id($result['board']);
-				$sub = \DB::select('*', \DB::expr($result['board'] . ' AS board'))
+				$sub = \DB::select('*', \DB::expr($result['board'] . ' AS board_id'))
 					->from(\DB::expr(\Radix::get_table($board)));
-				static::sql_media_join($sub);
-				static::sql_report_join($sub);
+				static::sql_media_join($sub, $board);
 				$sql[] = '('.$sub->where('doc_id', '=', $result['id']).')';
 			}
 			
@@ -262,7 +261,6 @@ class Search extends Board
 				->execute()
 				->as_array();
 			
-			$this->_total_count = $meta['total_found'];
 		}
 		else /* use mysql as fallback for non-sphinx indexed boards */
 		{
@@ -419,15 +417,15 @@ class Search extends Board
 			
 			$this->_total_count = \DB::count_last_query();
 		}
-
+		
 		foreach ($result as $item)
 		{
-			$this->_comments_unsorted[] = 
-				\Comment::forge($item, ($this->_radix !== null ? $this->_radix : \Radix::get_by_id($item->board->id)));
+			$board = $this->_radix !== null ? $this->_radix : \Radix::get_by_id($item->board_id);
+			$this->_comments_unsorted[] = \Comment::forge($item, $board);
 		}
 
-		$this->_comments = $this->_comments_unsorted;
-		
+		$this->_comments[0]['posts'] = $this->_comments_unsorted;
+
 		return $this;
 	}
 	

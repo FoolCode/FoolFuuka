@@ -123,7 +123,7 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public static function forge($post, &$board, $options = array())
+	public static function forge($post, $board, $options = array())
 	{
 		if (is_array($post))
 		{
@@ -140,7 +140,7 @@ class Comment extends \Model\Model_Base
 	}
 	
 	
-	public static function forge_for_api($post, &$board, $api, $options = array())
+	public static function forge_for_api($post, $board, $api, $options = array())
 	{
 		if (is_array($post))
 		{
@@ -176,11 +176,11 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function __construct($post, &$board, $options = array())
+	public function __construct($post, $board, $options = array())
 	{
 		//parent::__construct();
 
-		$this->board = & $board;
+		$this->board = $board;
 
 		if (\Auth::has_access('comment.reports'))
 		{

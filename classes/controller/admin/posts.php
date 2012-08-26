@@ -9,8 +9,10 @@ class Controller_Admin_Posts extends \Controller_Admin
 	{
 		parent::before();
 
-		if (!\Auth::has_access('boards.edit'))
+		if ( ! \Auth::has_access('boards.edit'))
+		{
 			\Response::redirect('admin');
+		}
 
 		$this->_views['controller_title'] = __('Posts');
 	}

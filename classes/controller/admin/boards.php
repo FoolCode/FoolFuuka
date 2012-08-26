@@ -10,8 +10,10 @@ class Controller_Admin_Boards extends \Controller_Admin
 	{
 		parent::before();
 
-		if (!\Auth::has_access('boards.edit'))
+		if ( ! \Auth::has_access('boards.edit'))
+		{
 			\Response::redirect('admin');
+		}
 
 		$this->_views['controller_title'] = __('Boards');
 	}
@@ -43,7 +45,11 @@ class Controller_Admin_Boards extends \Controller_Admin
 	{
 		$data['form'] = \Radix::structure();
 
-		if (\Input::post())
+		if (\Input::post() && ! \Security::check_token())
+		{
+			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
+		}
+		else if (\Input::post())
 		{
 			$result = \Validation::form_validate($data['form']);
 			if (isset($result['error']))
@@ -113,7 +119,11 @@ class Controller_Admin_Boards extends \Controller_Admin
 	{
 		$data['form'] = \Radix::structure();
 
-		if (\Input::post())
+		if (\Input::post() && ! \Security::check_token())
+		{
+			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
+		}
+		else if (\Input::post())
 		{
 			$result = \Validation::form_validate($data['form']);
 			if (isset($result['error']))
@@ -148,7 +158,11 @@ class Controller_Admin_Boards extends \Controller_Admin
 			throw new \HttpNotFoundException;
 		}
 
-		if (\Input::post())
+		if (\Input::post() && ! \Security::check_token())
+		{
+			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
+		}
+		elseif (\Input::post())
 		{
 			switch ($type)
 			{
@@ -223,7 +237,11 @@ $ php index.php cli database create_search '.$board->shortname.'</pre>'.
 			throw new \HttpNotFoundException;
 		}
 
-		if (\Input::post())
+		if (\Input::post() && ! \Security::check_token())
+		{
+			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
+		}
+		else if (\Input::post())
 		{
 			switch ($type)
 			{

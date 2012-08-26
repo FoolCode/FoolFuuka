@@ -46,7 +46,7 @@ class Controller_Chan extends \Controller_Common
 				'cookie_domain' => \Config::get('foolframe.cookie_prefix'),
 				'cookie_prefix' => \Config::get('config.cookie.domain'),
 				'selected_theme' => isset($this->_theme)?$this->_theme->get_selected_theme():'',
-		//		'csrf_hash' => $this->security->get_csrf_hash(),
+				'csrf_token_key' => \Config::get('security.csrf_token_key'),
 				'images' => array(
 					'banned_image' => \Uri::base() . 'content/themes/default/images/banned-image.png',
 					'banned_image_width' => 150,
@@ -744,6 +744,17 @@ class Controller_Chan extends \Controller_Common
 		if(!\Input::post())
 		{
 			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
+		}
+		
+		if ( ! \Security::check_token())
+		{
+			if (\Input::is_ajax())
+			{
+				return \Response::forge(
+				json_encode(array('error' => __('The security token wasn\'t found. Try resubmitting.'))));
+			}
+			
+			return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
 		}
 
 		// Determine if the invalid post fields are populated by bots.

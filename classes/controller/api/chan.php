@@ -27,7 +27,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	 * 
 	 * @author Woxxy
 	 */
-	function check_board()
+	protected function check_board()
 	{
 		$board = \Input::get('board');
 
@@ -59,7 +59,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	 *
 	 * @author Woxxy
 	 */
-	function get_thread()
+	public function get_thread()
 	{
 		if (!$this->check_board())
 		{
@@ -128,7 +128,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	}
 
 
-	function get_post()
+	public function get_post()
 	{
 		if (!$this->check_board())
 		{
@@ -168,8 +168,13 @@ class Controller_Api_Chan extends \Controller_Rest
 	}
 	
 	
-	function post_user_actions()
+	public function post_user_actions()
 	{
+		if ( ! \Security::check_token())
+		{
+			return $this->response(array('error' => __('The security token wasn\'t found. Try resubmitting.')));
+		}
+		
 		if ( ! $this->check_board())
 		{
 			return $this->response(array('error' => __("No board selected.")), 404);
@@ -212,8 +217,13 @@ class Controller_Api_Chan extends \Controller_Rest
 	}
 	
 	
-	function post_mod_actions()
+	public function post_mod_actions()
 	{
+		if ( ! \Security::check_token())
+		{
+			return $this->response(array('error' => __('The security token wasn\'t found. Try resubmitting.')));
+		}
+		
 		if ( ! \Auth::has_access('comment.mod_capcode'))
 		{
 			return $this->response(array('error' => __("Forbidden.")), 403);

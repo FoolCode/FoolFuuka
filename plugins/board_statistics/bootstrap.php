@@ -42,4 +42,4 @@ if (\Auth::has_access('maccess.admin'))
 }, 3);
 
 \Router::add('(?!(admin|_))(\w+)/statistics', 'plugin/fu/board_statistics/chan/$2/statistics', true);
-\Router::add('(?!(admin|search|_))(\w+)/statistics/(:any)', 'plugin/fu/board_statistics/chan/$2/statistics/$3', true);
+\Router::add('(?!(admin|_))(\w+)/statistics/(:any)', 'plugin/fu/board_statistics/chan/$2/statistics/$3', true);

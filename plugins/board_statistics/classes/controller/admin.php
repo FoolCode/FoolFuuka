@@ -7,6 +7,17 @@ if (!defined('DOCROOT'))
 
 class Controller_Plugin_Fu_Board_Statistics_Admin_Board_Statistics extends \Controller_Admin
 {
+	public function before()
+	{
+		if ( ! \Auth::has_access('maccess.admin'))
+		{
+			\Response::redirect('admin');
+		}
+		
+		parent::before();
+	}
+	
+	
 	protected function structure()
 	{
 		$arr = array(

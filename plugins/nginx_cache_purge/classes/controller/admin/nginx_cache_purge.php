@@ -10,6 +10,11 @@ class Controller_Plugin_Fu_Nginx_Cache_Purge_Admin_Nginx_Cache_Purge extends \Co
 	
 	public function before()
 	{
+		if ( ! \Auth::has_access('maccess.admin'))
+		{
+			\Response::redirect('admin');
+		}
+		
 		parent::before();
 		
 		$this->_views['controller_title'] = 'Nginx Cache Purge';

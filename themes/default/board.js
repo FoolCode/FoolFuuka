@@ -67,23 +67,26 @@ var bindFunctions = function()
 
 					var reply_alert = jQuery('#reply_ajax_notices');
 					reply_alert.removeClass('error').removeClass('success');
+					_data = {
+						reply_numero: post,
+						reply_bokunonome: jQuery("#reply_bokunonome").val(),
+						reply_elitterae: jQuery("#reply_elitterae").val(),
+						reply_talkingde: jQuery("#reply_talkingde").val(),
+						reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
+						reply_nymphassword: jQuery("#reply_nymphassword").val(),
+						reply_postas: jQuery("#reply_postas").val(),
+						reply_gattai: 'Submit',
+						theme: backend_vars.selected_theme
+					};
+					
+					_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
+					
 					jQuery.ajax({
 						url: backend_vars.site_url + backend_vars.board_shortname + '/submit/' ,
 						dataType: 'json',
 						type: 'POST',
 						cache: false,
-						data: {
-							reply_numero: post,
-							reply_bokunonome: jQuery("#reply_bokunonome").val(),
-							reply_elitterae: jQuery("#reply_elitterae").val(),
-							reply_talkingde: jQuery("#reply_talkingde").val(),
-							reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
-							reply_nymphassword: jQuery("#reply_nymphassword").val(),
-							reply_postas: jQuery("#reply_postas").val(),
-							reply_gattai: 'Submit',
-							theme: backend_vars.selected_theme,
-							csrf_fool: backend_vars.csrf_hash
-						},
+						data: _data,
 						success: function(data){
 							// clear button's timeout, we can deal with the rest now
 							clearTimeout(buttonTimeout);
@@ -118,18 +121,19 @@ var bindFunctions = function()
 
 				case 'mod':
 					el.attr({'disabled': 'disabled'});
+					_data = {
+						board: el.data('board'),
+						id: el.data('id'),
+						action: el.data('action'),
+						theme: backend_vars.selected_theme
+					};
+					_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
 					jQuery.ajax({
 						url: backend_vars.api_url + '_/api/chan/mod_actions/',
 						dataType: 'json',
 						type: 'POST',
 						cache: false,
-						data: {
-							board: el.data('board'),
-							id: el.data('id'),
-							action: el.data('action'),
-							theme: backend_vars.selected_theme,
-							csrf_fool: backend_vars.csrf_hash
-						},
+						data: _data,
 						success: function(data){
 							el.removeAttr('disabled');
 							if (typeof data.error !== "undefined")
@@ -278,6 +282,8 @@ var bindFunctions = function()
 						// Stop It! Unable to determine what action to use.
 						return false;
 					}
+					
+					_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
 
 					jQuery.post(_href, _data, function(result) {
 						loading.hide();
@@ -401,7 +407,7 @@ var bindFunctions = function()
 					data: {
 						board: that.data('board'),
 						num: that.data('post'),
-						theme: backend_vars.selected_theme,
+						theme: backend_vars.selected_theme
 					},
                     beforeSend: function(xhr) {
                         xhr.withCredentials = true;
@@ -533,7 +539,7 @@ var realtimethread = function(){
 			num : backend_vars.thread_id,
 			board: backend_vars.board_shortname,
 			latest_doc_id: backend_vars.latest_doc_id,
-			theme: backend_vars.selected_theme,
+			theme: backend_vars.selected_theme
 		},
 		success: insertPost,
 		error: function(jqXHR, textStatus, errorThrown) {

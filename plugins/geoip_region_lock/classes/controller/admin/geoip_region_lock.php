@@ -10,6 +10,11 @@ class Controller_Plugin_Fu_Geoip_Region_Lock_Admin_Geoip_Region_Lock extends \Co
 	
 	public function before()
 	{
+		if ( ! \Auth::has_access('maccess.admin'))
+		{
+			\Response::redirect('admin');
+		}
+		
 		parent::before();
 		
 		$this->_views['controller_title'] = __('GeoIP Region Lock');

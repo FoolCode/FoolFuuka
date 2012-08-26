@@ -52,7 +52,7 @@ class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_C
 
 			if (!is_array($stats))
 			{
-				return get_instance()->show_404();
+				return $this->error(__('Statistic currently not available.'));
 			}
 
 			// Set template variables required to build the HTML.

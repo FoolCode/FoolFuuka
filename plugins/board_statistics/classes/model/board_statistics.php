@@ -272,7 +272,7 @@ class Board_Statistics extends \Plugins
 	{
 		// again, to avoid racing conditions, let's also check that the timestamp hasn't been changed
 		$affected = \DB::update('plugin_fu-board-statistics')
-			->set('timestamp', date('Y-m-d H:i:s', time() + 600))
+			->value('timestamp', date('Y-m-d H:i:s', time() + 600))
 			->where('board_id', '=', $board_id)
 			->where('name', '=', $name)
 			->where('timestamp', '=', $temp_timestamp)

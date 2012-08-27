@@ -30,7 +30,7 @@ header('imagetoolbar: false');
 			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 		<?php if (Preferences::get('fu.sphinx.global')) : ?>
-			<link rel="search" type="application/opensearchdescription+xml" title="<?= Preferences::get('ff.gen.website_title'); ?> " href="<?= Uri::create('@system/functions/opensearch') ?>" />
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= Preferences::get('ff.gen.website_title'); ?> " href="<?= Uri::create('_/opensearch') ?>" />
 		<?php endif; ?>
 		<?= Preferences::get('ff.theme.header_code'); ?>
 

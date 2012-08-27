@@ -117,108 +117,57 @@ if (!isset($radix) && Preferences::get('fu.sphinx.global'))
 						<?php echo \Form::input(array('name' => 'image', 'size' => '32', 'id' => 'image', 'value' => (isset($search["image"])) ? rawurldecode($search["image"]) : '')); ?>
 					</td>
 				</tr>
+				
+				<?php
+					$checkboxes = array(
+						'Deleted posts' => array(
+							array('value' => false, 'text' => __('All')),
+							array('value' => 'deleted', 'text' => __('Only Deleted Posts')),
+							array('value' => 'not-deleted', 'text' => __('Only Non-Deleted Posts'))
+						),
+						'Ghost posts' => array(
+							array('value' => false, 'text' => __('All')),
+							array('value' => 'only', 'text' => __('Only Ghost Posts')),
+							array('value' => 'none', 'text' => __('Only Non-Ghost Posts'))
+						),
+						'Show posts' => array(
+							array('value' => false, 'text' => __('All')),
+							array('value' => 'text', 'text' => __('Only Containing Images')),
+							array('value' => 'image', 'text' => __('Only Containing Text'))
+						),
+						'Results' => array(
+							array('value' => false, 'text' => __('All')),
+							array('value' => 'op', 'text' => __('Only Opening Posts')),
+							array('value' => 'posts', 'text' => __('Only Reply Posts'))
+						),
+						'Capcode' => array(
+							array('value' => false, 'text' => __('All')),
+							array('value' => 'user', 'text' => __('Only Opening Posts')),
+							array('value' => 'mod', 'text' => __('Only Moderator Posts')),
+							array('value' => 'admin', 'text' => __('Only Admin Posts')),
+							array('value' => 'dev', 'text' => __('Only Developer Posts'))
+						),
+						'Order' => array(
+							array('value' => false, 'text' => __('New Posts First')),
+							array('value' => 'asc', 'text' => __('Old Posts First'))
+						)
+					);
+					
+					foreach ($checkboxes as $name => $checkbox) :
+				?>
 				<tr>
-					<td class="postblock"><?= __('Deleted Posts') ?></td>
+					<td class="postblock"><?= $name ?></td>
 					<td>
+				<?php foreach ($checkbox as $element) : ?>
 						<label>
-							<?php echo \Form::radio(array('name' => 'deleted', 'value' => '', 'checked' => (empty($search["deleted"])) ? TRUE : FALSE)); ?>
-							<span><?= __('Show All Posts') ?></span>
+						<?= \Form::radio($name, $element['value'] ? : '', isset($search[$name]) && $element['value'] === $search[$name]) ?>
+						<span><?= __($element['text']) ?></span>
 						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'deleted', 'value' => 'deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'deleted') ? TRUE : FALSE)); ?>
-							<span><?= __('Only Deleted Posts') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'deleted', 'value' => 'not-deleted', 'checked' => (!empty($search["deleted"]) && $search["deleted"] == 'not-deleted') ? TRUE : FALSE)); ?>
-							<span><?= __('Only Non-Deleted Posts') ?></span>
-						</label>
+				<?php endforeach; ?>
 					</td>
 				</tr>
-				<tr>
-					<td class="postblock"><?= __('Ghost Posts') ?></td>
-					<td>
-						<label>
-							<?php echo \Form::radio(array('name' => 'ghost', 'value' => '', 'checked' => (empty($search["ghost"])) ? TRUE : FALSE)); ?>
-							<span><?= __('Show All Posts') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'ghost', 'value' => 'only', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'only') ? TRUE : FALSE)); ?>
-							<span><?= __('Only Ghost Posts') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'ghost', 'value' => 'none', 'checked' => (!empty($search["ghost"]) && $search["ghost"] == 'none') ? TRUE : FALSE)); ?>
-							<span><?= __('Only Non-Ghost Posts') ?></span>
-						</label>
-					</td>
-				</tr>
-				<tr>
-					<td class="postblock"><?= __('Show Posts') ?></td>
-					<td>
-						<label>
-							<?php echo \Form::radio(array('name' => 'filter', 'value' => '', 'checked' => (empty($search["filter"])) ? TRUE : FALSE)); ?>
-							<span><?= __('Show All Posts') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'filter', 'value' => 'text', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'text') ? TRUE : FALSE)); ?>
-							<span><?= __('Only Containing Images') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'filter', 'value' => 'image', 'checked' => (!empty($search["filter"]) && $search["filter"] == 'image') ? TRUE : FALSE)); ?>
-							<span><?= __('Only Containing Text') ?></span>
-						</label>
-					</td>
-				</tr>
-				<tr>
-					<td class="postblock"><?= __('Results') ?></td>
-					<td>
-						<label>
-							<?php echo \Form::radio(array('name' => 'type', 'value' => '', 'checked' => (empty($search["type"])) ? TRUE : FALSE)); ?>
-							<span><?= __('All Posts') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'type', 'value' => 'posts', 'checked' => (empty($search["type"]) || (!empty($search["type"]) && $search["type"] == 'posts')) ? TRUE : FALSE)); ?>
-							<span><?= __('Only Reply Posts') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'type', 'value' => 'op', 'checked' => (!empty($search["type"]) && $search["type"] == 'op') ? TRUE : FALSE)); ?>
-							<span><?= __('Only OP Posts') ?></span>
-						</label>
-					</td>
-				</tr>
-				<tr>
-					<td class="postblock"><?= __('Capcode') ?></td>
-					<td>
-						<label>
-							<?php echo \Form::radio(array('name' => 'capcode', 'value' => '', 'checked' => (empty($search["capcode"])) ? TRUE : FALSE)); ?>
-							<span><?= __('Show All Posts') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'capcode', 'value' => 'user', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'user') ? TRUE : FALSE)); ?>
-							<span><?= __('Only by Users') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'capcode', 'value' => 'mod', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'mod') ? TRUE : FALSE)); ?>
-							<span><?= __('Only by Mods') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'capcode', 'value' => 'admin', 'checked' => (!empty($search["capcode"]) && $search["capcode"] == 'admin') ? TRUE : FALSE)); ?>
-							<span><?= __('Only by Admins') ?></span>
-						</label>
-					</td>
-				</tr>
-				<tr>
-					<td class="postblock"><?= __('Order') ?></td>
-					<td>
-						<label>
-							<?php echo \Form::radio(array('name' => 'order', 'value' => 'desc', 'checked' => (empty($search["order"]) || (!empty($search["order"]) && $search["order"] == 'desc')) ? TRUE : FALSE)); ?>
-							<span><?= __('New Posts First') ?></span>
-						</label><br />
-						<label>
-							<?php echo \Form::radio(array('name' => 'order', 'value' => 'asc', 'checked' => (!empty($search["order"]) && $search["order"] == 'asc') ? TRUE : FALSE)); ?>
-							<span><?= __('Old Posts First') ?></span>
-						</label>
-					</td>
-				</tr>
+				<?php endforeach; ?>
+				
 				<tr>
 					<td class="postblock"><?= __('Action') ?></td>
 					<td>

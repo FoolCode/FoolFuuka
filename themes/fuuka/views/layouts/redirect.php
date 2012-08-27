@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="generator" content="<?= FOOL_NAME ?> <?= FOOL_VERSION ?>" />
+		<meta name="generator" content="<?= \Config::get('foolfuuka.main.name') ?> <?= \Config::get('foolfuuka.main.version') ?>" />
 
 		<title><?= (isset($title)) ? $title : $template['title']; ?></title>
 		<style type="text/css">

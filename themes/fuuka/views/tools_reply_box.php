@@ -2,7 +2,7 @@
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::get_selected()->archive) : ?>
+if (!isset($thread_id) && ! $radix->archive) : ?>
 <?= Form::open(array('enctype' => 'multipart/form-data', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
 <table style="margin-left: auto; margin-right: auto">
@@ -119,7 +119,7 @@ if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::ge
 						<?php if (!Radix::get_selected()->archive) : ?>
 						<tr>
 							<td class="postblock"><?= __('File') ?></td>
-							<td><?php echo \Form::upload(array('name' => 'file_image', 'id' => 'file_image')); ?></td>
+							<td><?php echo \Form::file(array('name' => 'file_image', 'id' => 'file_image')); ?></td>
 						</tr>
 						<tr>
 							<td class="postblock"><?= __('Spoiler') ?></td>

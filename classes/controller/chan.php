@@ -177,6 +177,26 @@ class Controller_Chan extends \Controller_Common
 		return \Response::forge($this->_theme->build('redirection'));
 	}
 	
+	
+	public function action_language($theme = 'en_EN')
+	{
+		$this->_theme->set_title(__('Changing Language'));
+
+		\Cookie::set('language', $theme, 31536000);
+
+		if (\Input::referrer())
+		{
+			$this->_theme->bind('url', \Input::referrer());
+		}
+		else
+		{
+			$this->_theme->bind('url', \Uri::base());
+		}
+		
+		$this->_theme->set_layout('redirect');
+		return \Response::forge($this->_theme->build('redirection'));
+	}
+	
 
 	public function radix_page_mode($_mode = 'by_post')
 	{

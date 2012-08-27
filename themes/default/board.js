@@ -78,9 +78,9 @@ var bindFunctions = function()
 						reply_gattai: 'Submit',
 						theme: backend_vars.selected_theme
 					};
-					
+
 					_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
-					
+
 					jQuery.ajax({
 						url: backend_vars.site_url + backend_vars.board_shortname + '/submit/' ,
 						dataType: 'json',
@@ -193,9 +193,9 @@ var bindFunctions = function()
 					el.closest(".modal").modal('hide');
 					return false;
 					break;
-					
+
 				case 'delete':
-					var foolfuuka_reply_password = getCookie(backend_vars.cookie_prefix + 'foolfuuka_reply_password');
+					var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
 					modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
 					modal.find(".modal-loading").hide();
 					modal.find(".modal-information").html('\
@@ -221,7 +221,7 @@ var bindFunctions = function()
 					<textarea class="modal-comment"></textarea>');
 					modal.find(".submitModal").data("action", 'report');
 					break;
-					
+
 				case 'ban':
 					modal.find(".title").html('Ban user with IP ' + el.data("ip"));
 					modal.find(".modal-loading").hide();
@@ -267,7 +267,7 @@ var bindFunctions = function()
 						};
 					}
 					else if (action == 'ban')
-					{						
+					{
 						_href = backend_vars.api_url+'_/api/chan/mod_actions/';
 						_data = {
 							action: 'ban_user',
@@ -282,7 +282,7 @@ var bindFunctions = function()
 						// Stop It! Unable to determine what action to use.
 						return false;
 					}
-					
+
 					_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
 
 					jQuery.post(_href, _data, function(result) {
@@ -309,7 +309,7 @@ var bindFunctions = function()
 					break;
 
 				case 'clearLatestSearches':
-					setCookie(backend_vars.cookie_prefix + 'search_latest_5', '', 0, '/', backend_vars.cookie_domain);
+					setCookie('search_latest_5', '', 0, '/', backend_vars.cookie_domain);
 					jQuery('li.latest_search').each(function(idx){
 						jQuery(this).remove();
 					});
@@ -556,7 +556,7 @@ var insertPost = function(data)
 {
     var w_height = jQuery(document).height();
     var found_posts = false;
-    if(typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined") 
+    if(typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined")
     {
         jQuery.each(data[backend_vars.thread_id].posts, function(idx, value){
 
@@ -598,7 +598,7 @@ var insertPost = function(data)
         }
     }
     currentlapse = setTimeout(realtimethread, timelapse*1000);
-    
+
     return false;
 }
 
@@ -759,19 +759,20 @@ function replyHighlight(id)
 
 var changeTheme = function(theme)
 {
-	setCookie(backend_vars.cookie_prefix + 'theme', theme, 30, '/');
+	setCookie('theme', theme, 30, '/');
 	window.location.reload();
 }
 
 var changeLanguage = function(language)
 {
-	setCookie(backend_vars.cookie_prefix + 'language', language, 30, '/');
+	setCookie('language', language, 30, '/');
 	window.location.reload();
 }
 
 
 function setCookie( name, value, expires, path, domain, secure )
 {
+    name = backend_vars.cookie_prefix + name;
 	var today = new Date();
 	today.setTime( today.getTime() );
 	if ( expires )
@@ -789,6 +790,7 @@ function setCookie( name, value, expires, path, domain, secure )
 
 
 function getCookie( check_name ) {
+    check_name = backend_vars.cookie_prefix + check_name;
 	var a_all_cookies = document.cookie.split( ';' );
 	var a_temp_cookie = '';
 	var cookie_name = '';

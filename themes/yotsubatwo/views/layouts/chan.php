@@ -284,13 +284,13 @@ header('imagetoolbar: false');
 						<?= __('Change Language') ?> <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<?php /* foreach(config_item('ff_available_languages') as $key => $lang) : ?>
-						<li>
-							<a href="<?= Uri::create(array('@system', 'functions', 'language', $key)) ?>">
-								<?= $lang ?><?= ((!$this->input->cookie('language') && $key == 'en_EN') || $key == $this->input->cookie('language'))?' <i class="icon-ok"></i>':'' ?>
-							</a>
-						</li>
-						<?php endforeach;  */?>
+						<?php foreach(\Config::get('foolframe.preferences.lang.available') as $key => $lang) : ?>
+						 <li>
+							 <a href="<?= Uri::create(array('_', 'language', $key)) ?>">
+								 <?= $lang ?><?= ((!\Cookie::get('language') && $key == 'en_EN') || $key == \Cookie::get('language'))?' <i class="icon-ok"></i>':'' ?>
+							 </a>
+						 </li>
+						<?php endforeach; ?>
 						<li class="divider"></li>
 						<li><a href="http://archive.foolz.us/articles/translate/"><?= __('Add a Translation') ?></a></li>
 					</ul>

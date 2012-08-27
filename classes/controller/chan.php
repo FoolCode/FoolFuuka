@@ -43,8 +43,8 @@ class Controller_Chan extends \Controller_Common
 				'archive_url'  => \Uri::base(),
 				'system_url'  => \Uri::base(),
 				'api_url'   => \Uri::base(),
-				'cookie_domain' => \Config::get('foolframe.cookie_prefix'),
-				'cookie_prefix' => \Config::get('config.cookie.domain'),
+				'cookie_domain' => \Config::get('foolframe.config.cookie_domain'),
+				'cookie_prefix' => \Config::get('foolframe.config.cookie_prefix'),
 				'selected_theme' => isset($this->_theme)?$this->_theme->get_selected_theme():'',
 				'csrf_token_key' => \Config::get('security.csrf_token_key'),
 				'images' => array(
@@ -76,7 +76,7 @@ class Controller_Chan extends \Controller_Common
 		// the underscore function is never a board
 		if (isset($segments[0]) && $segments[0] !== '_')
 		{
-			
+
 			$this->_radix = \Radix::set_selected_by_shortname($method);
 
 			if ($this->_radix)
@@ -86,7 +86,7 @@ class Controller_Chan extends \Controller_Common
 				$this->_theme->bind($this->_to_bind);
 				$this->_theme->set_title($this->_radix->formatted_title);
 				$method = array_shift($params);
-				
+
 				// methods callable with a radix are prefixed with radix_
 				if (method_exists($this, 'radix_'.$method))
 				{
@@ -97,10 +97,10 @@ class Controller_Chan extends \Controller_Common
 				throw new \HttpNotFoundException;
 			}
 		}
-		
+
 		$this->_radix = null;
 		$this->_theme->bind('radix', null);
-		
+
 		if (method_exists($this, 'action_'.$method))
 		{
 			return call_user_func_array(array($this, 'action_'.$method), $params);
@@ -121,7 +121,7 @@ class Controller_Chan extends \Controller_Common
 		$this->_theme->bind('disable_headers', TRUE);
 		return \Response::forge($this->_theme->build('index'));
 	}
-	
+
 
 	/**
 	 * The 404 action for the application.
@@ -147,7 +147,7 @@ class Controller_Chan extends \Controller_Common
 		return \Response::forge($this->_theme->build('error', array('error' => $error)));
 	}
 
-	
+
 	public function action_theme($theme = 'default', $style = '')
 	{
 		$this->_theme->set_title(__('Changing Theme Settings'));
@@ -158,7 +158,7 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		\Cookie::set('theme', $theme, 31536000, '/');
-		
+
 		if ($style !== '' && in_array($style, $this->_theme->get_available_styles($theme)))
 		{
 			\Cookie::set('theme_' . $theme . '_style', $style, 31536000, '/');
@@ -172,12 +172,12 @@ class Controller_Chan extends \Controller_Common
 		{
 			$this->_theme->bind('url', \Uri::base());
 		}
-		
+
 		$this->_theme->set_layout('redirect');
 		return \Response::forge($this->_theme->build('redirection'));
 	}
-	
-	
+
+
 	public function action_language($theme = 'en_EN')
 	{
 		$this->_theme->set_title(__('Changing Language'));
@@ -192,11 +192,11 @@ class Controller_Chan extends \Controller_Common
 		{
 			$this->_theme->bind('url', \Uri::base());
 		}
-		
+
 		$this->_theme->set_layout('redirect');
 		return \Response::forge($this->_theme->build('redirection'));
 	}
-	
+
 
 	public function radix_page_mode($_mode = 'by_post')
 	{
@@ -282,7 +282,7 @@ class Controller_Chan extends \Controller_Common
 				'total' => $board->get_count()
 			)
 		));
-		
+
 		if (!$this->_radix->archive)
 		{
 			$this->_theme->set_partial('tools_new_thread_box', 'tools_reply_box');
@@ -365,7 +365,7 @@ class Controller_Chan extends \Controller_Common
 			'latest_timestamp' => $latest_timestamp,
 			'thread_op_data' => $thread[$num]['op']
 		));
-		
+
 		$backend_vars = $this->_theme->get_var('backend_vars');
 		$backend_vars['thread_id'] = $num;
 		$backend_vars['latest_timestamp'] = $latest_timestamp;
@@ -531,41 +531,41 @@ class Controller_Chan extends \Controller_Common
 		// we reached the end with nothing
 		return $this->show_404();
 	}
-	
-	
+
+
 	function action_search()
 	{
 		return $this->radix_search();
 	}
-	
-	
+
+
 	function radix_search()
 	{
 		if (\Input::get('submit_search_global'))
 		{
 			$this->_radix = null;
 		}
-		
+
 		$text = \Input::get('text');
-		
+
 		if ($this->_radix !== null && (\Input::get('submit_post') || (\Input::get('submit_undefined')
 				&& (\Board::is_valid_post_number($text) || strpos($text, '//boards.4chan.org') !== false))))
 		{
 			$this->post(str_replace(',', '_', $text));
 		}
-		
+
 		// Check all allowed search modifiers and apply only these
 		$modifiers = array(
 			'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
 			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
-		
+
 		if(\Auth::has_access('comment.see_ip'));
 		{
 			$modifiers[] = 'poster_ip';
 			$modifiers[] = 'deletion_mode';
 		}
-		
+
 		// GET -> URL Redirection to provide URL presentable for sharing links.
 		if (!\Input::post('deletion_mode_captcha') && \Input::get())
 		{
@@ -586,7 +586,7 @@ class Controller_Chan extends \Controller_Common
 
 					if($modifier == 'image')
 					{
-						array_push($redirect_url, 
+						array_push($redirect_url,
 							rawurlencode(static::urlsafe_b64encode(static::urlsafe_b64decode(\Input::get($modifier)))));
 					}
 					else
@@ -598,7 +598,7 @@ class Controller_Chan extends \Controller_Common
 
 			\Response::redirect(\Uri::create($redirect_url), 'location', 303);
 		}
-		
+
 		$search = \Uri::uri_to_assoc(\Uri::segments(), 2, $modifiers);
 
 		// latest searches system
@@ -606,7 +606,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			$cookie_array = array();
 		}
-		
+
 		// sanitize
 		foreach($cookie_array as $item)
 		{
@@ -617,12 +617,12 @@ class Controller_Chan extends \Controller_Common
 				break;
 			}
 		}
-		
+
 		$search_opts = array_filter($search);
 
 		$search_opts['board'] = $this->_radix !== null ? $this->_radix->shortname : false;
 		unset($search_opts['page']);
-		
+
 		// if it's already in the latest searches, remove the previous entry
 		foreach($cookie_array as $key => $item)
 		{
@@ -632,13 +632,13 @@ class Controller_Chan extends \Controller_Common
 				break;
 			}
 		}
-		
+
 		// we don't want more than 5 entries for latest searches
 		if(count($cookie_array) > 4)
 		{
 			array_pop($cookie_array);
 		}
-		
+
 		array_unshift($cookie_array, $search_opts);
 		\Cookie::set('search_latest_5', json_encode($cookie_array), 60 * 60 * 24 * 30);
 
@@ -658,7 +658,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			return $this->error($e->getMessage());
 		}
-		
+
 		// Generate the $title with all search modifiers enabled.
 		$title = array();
 
@@ -745,10 +745,10 @@ class Controller_Chan extends \Controller_Common
 		{
 			$this->_theme->set_title('Global Search &raquo; '.$title);
 		}
-		
+
 		$this->_theme->bind('section_title', $title);
 		$this->_theme->bind('board', $board);
-		
+
 		$pagination = $search;
 		unset($pagination['page']);
 		$pagination_arr = array();
@@ -769,6 +769,7 @@ class Controller_Chan extends \Controller_Common
 				'current_page' => $search['page'] ? : 1,
 				'total' => $board->get_count()/25 +1,
 			));
+
 		
 		$this->_theme->bind('modifiers', array(
 			'post_show_board_name' => $this->_radix === null,
@@ -778,8 +779,8 @@ class Controller_Chan extends \Controller_Common
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::search End');
 		return \Response::forge($this->_theme->build('board'));
-		
-		
+
+
 	}
 
 
@@ -790,7 +791,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
 		}
-		
+
 		if ( ! \Security::check_token())
 		{
 			if (\Input::is_ajax())
@@ -798,7 +799,7 @@ class Controller_Chan extends \Controller_Common
 				return \Response::forge(
 				json_encode(array('error' => __('The security token wasn\'t found. Try resubmitting.'))));
 			}
-			
+
 			return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
 		}
 
@@ -830,7 +831,7 @@ class Controller_Chan extends \Controller_Common
 			$data['spoiler'] = true;
 		if(isset($post['reply_postas']))
 			$data['capcode'] = $post['reply_postas'];
-		
+
 		$media = null;
 
 		if (count(\Upload::get_files()))
@@ -905,5 +906,5 @@ class Controller_Chan extends \Controller_Common
 		}
 
 	}
-	
+
 }

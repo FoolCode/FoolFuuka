@@ -4,6 +4,7 @@ if (!defined('DOCROOT'))
 
 if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::get_selected()->archive) : ?>
 <?= Form::open(array('enctype' => 'multipart/form-data', 'action' => $radix->shortname . '/submit')) ?>
+<?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
 <table style="margin-left: auto; margin-right: auto">
 	<tbody>
 		<tr>
@@ -129,17 +130,18 @@ if (!isset($thread_id) && isset($is_page) && Radix::get_selected() && !Radix::ge
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
 							<td><?php echo \Form::password(array('name' => 'delpass', 'size' => 24, 'value' => $user_pass)); ?></td>
 						</tr>
-						<?php if (Auth::has_access('maccess.mod')) : ?>
+						<?php
+							$postas = array('N' => __('User'));
+
+							if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = __('Moderator');
+							if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = __('Moderator');
+							if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = __('Developer');
+							if (count($postas) > 1) :
+						?>
 						<tr>
 							<td class="postblock"><?= __('Post As') ?></td>
 							<td>
-								<?php
-								$postas = array('user' => __('User'), 'mod' => __('Moderator'));
-								if (\Auth::has_access('comment.as_admin')) {
-									$postas['admin'] = __('Administrator');
-								}
-								echo \Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas'));
-								?>
+								<?= \Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas')); ?>
 							</td>
 						</tr>
 						<?php endif; ?>

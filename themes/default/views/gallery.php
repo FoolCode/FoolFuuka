@@ -59,7 +59,7 @@ foreach ($board->get_comments() as $k => $p) :
 				<?= __('Replies') ?> : <?= $p->nreplies ?> | <?= __('Images') ?>: <?= $p->nimages ?>
 			<?php endif; ?>
 			<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
-			<?php if ($p->spoiler == 1) : ?><span class="post_type"><img src="<?= Uri::base() . $this->fallback_asset('images/icons/spoiler-icon.png'); ?>" title="<?= htmlspecialchars(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>
+			<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><span class="post_type"><img src="<?= Uri::base() . $this->fallback_asset('images/icons/spoiler-icon.png'); ?>" title="<?= htmlspecialchars(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>
 		</div>
 	</article>
 <?php

@@ -1,6 +1,6 @@
 <?php
 
-namespace \Foolfuuka\Themes\Fuuka;
+namespace Foolfuuka\Themes\Fuuka;
 
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
@@ -11,6 +11,7 @@ class Theme_Fu_Fuuka extends \Model_Base
 	{
 		return '\\1<span class="greentext">\\2</span>\\3';
 	}
+	
 
 	public static function process_internal_links_html($data, $html, $previous_result = NULL)
 	{
@@ -30,7 +31,6 @@ class Theme_Fu_Fuuka extends \Model_Base
 	}
 	
 	
-
 	public static function process_crossboard_links_html($data, $html, $previous_result = NULL)
 	{
 		// a plugin with higher priority modified this

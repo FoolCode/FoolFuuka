@@ -77,10 +77,13 @@
 			<?php endif; ?>
 
 			<hr />
-
+			
 			<?= $template['partials']['tools_search'] ?>
+			
 			<hr />
+			<?php if ( ! isset($thread_id)) : ?>
 			<?= isset ($template['partials']['tools_reply_box']) ? $template['partials']['tools_reply_box'] : ''; ?>
+			<?php endif; ?>
 		</div>
 <?php endif; ?>
 

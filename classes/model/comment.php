@@ -924,7 +924,7 @@ class Comment extends \Model\Model_Base
 			$this->allow_media = $status['disable_image_upload'];
 		}
 
-		foreach(array('name', 'email', 'subject', 'delpass', 'comment', 'capcode') as $key)
+		foreach(array('name', 'email', 'title', 'delpass', 'comment', 'capcode') as $key)
 		{
 			$this->$key = (string) $this->$key;
 		}
@@ -935,11 +935,19 @@ class Comment extends \Model\Model_Base
 		if ($this->name === '')
 		{
 			$this->name = $this->board->anonymous_default_name;
-			$this->trip = '';
+			$this->trip = null;
 		}
 		else
 		{
 			$this->process_name();
+		}
+		
+		foreach(array('email', 'title', 'delpass', 'comment') as $key)
+		{
+			if ($this->$key === '') 
+			{
+				$this->$key = null;
+			}
 		}
 
 		// we want to know if the comment will display empty, and in case we won't let it pass
@@ -960,7 +968,7 @@ class Comment extends \Model\Model_Base
 		}
 
 		// process comment password
-		if ($this->delpass == '')
+		if ($this->delpass === '')
 		{
 			throw new CommentSendingNoDelPassException(__('You must submit a deletion password.'));
 		}
@@ -1073,6 +1081,7 @@ class Comment extends \Model\Model_Base
 							SELECT MAX(num)
 							FROM ' . \Radix::get_table($this->board) . '
 							WHERE thread_num = '.intval($this->thread_num).'
+							
 						)
 				) AS x)
 			');
@@ -1138,7 +1147,7 @@ class Comment extends \Model\Model_Base
 				'media_size' => $this->media->media_size,
 				'media_hash' => $this->media->media_hash,
 				'media_orig' => $this->media->media_orig,
-				'exif' => json_encode($this->media->exif)
+				'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null
 			))->execute();
 
 		// check that it wasn't posted multiple times

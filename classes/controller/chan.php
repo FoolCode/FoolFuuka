@@ -767,8 +767,13 @@ class Controller_Chan extends \Controller_Common
 		$this->_theme->bind('pagination', array(
 				'base_url' => \Uri::create($pagination_arr),
 				'current_page' => $search['page'] ? : 1,
-				'total' => $board->get_count()/25 +1
+				'total' => $board->get_count()/25 +1,
 			));
+		
+		$this->_theme->bind('modifiers', array(
+			'post_show_board_name' => $this->_radix === null,
+			'post_show_view_button' => true
+		));
 		
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::search End');
@@ -819,8 +824,6 @@ class Controller_Chan extends \Controller_Common
 			$data['title'] = $post['reply_talkingde'];
 		if(isset($post['reply_chennodiscursus']))
 			$data['comment'] = $post['reply_chennodiscursus'];
-		if(isset($post['reply_nymphassword']))
-			$data['delpass'] = $post['reply_nymphassword'];
 		if(isset($post['reply_nymphassword']))
 			$data['delpass'] = $post['reply_nymphassword'];
 		if(isset($post['reply_gattai_spoilered']))
@@ -879,7 +882,7 @@ class Controller_Chan extends \Controller_Common
 				}
 				else
 				{
-					return $this->error(implode(' ', $val->error()));
+					return $this->error($e->getMessage());
 				}
 			}
 		}

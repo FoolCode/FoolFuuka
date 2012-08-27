@@ -197,6 +197,12 @@ class Controller_Chan extends \Controller_Common
 		return \Response::forge($this->_theme->build('redirection'));
 	}
 
+	
+	public function action_opensearch()
+	{
+		return \Response::forge(\View::forge('foolfuuka::opensearch'));
+	}
+	
 
 	public function radix_page_mode($_mode = 'by_post')
 	{
@@ -541,14 +547,14 @@ class Controller_Chan extends \Controller_Common
 
 	function radix_search()
 	{
-		if (\Input::get('submit_search_global'))
+		if (\Input::post('submit_search_global'))
 		{
 			$this->_radix = null;
 		}
 
-		$text = \Input::get('text');
+		$text = \Input::post('text');
 
-		if ($this->_radix !== null && (\Input::get('submit_post') || (\Input::get('submit_undefined')
+		if ($this->_radix !== null && (\Input::post('submit_post') || (\Input::post('submit_undefined')
 				&& (\Board::is_valid_post_number($text) || strpos($text, '//boards.4chan.org') !== false))))
 		{
 			$this->post(str_replace(',', '_', $text));
@@ -567,7 +573,7 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		// GET -> URL Redirection to provide URL presentable for sharing links.
-		if (!\Input::post('deletion_mode_captcha') && \Input::get())
+		if (!\Input::post('deletion_mode_captcha') && \Input::post())
 		{
 			if ($this->_radix !== null)
 			{
@@ -580,18 +586,18 @@ class Controller_Chan extends \Controller_Common
 
 			foreach ($modifiers as $modifier)
 			{
-				if (\Input::get($modifier))
+				if (\Input::post($modifier))
 				{
 					array_push($redirect_url, $modifier);
 
 					if($modifier == 'image')
 					{
 						array_push($redirect_url,
-							rawurlencode(static::urlsafe_b64encode(static::urlsafe_b64decode(\Input::get($modifier)))));
+							rawurlencode(static::urlsafe_b64encode(static::urlsafe_b64decode(\Input::post($modifier)))));
 					}
 					else
 					{
-						array_push($redirect_url, rawurlencode(\Input::get($modifier)));
+						array_push($redirect_url, rawurlencode(\Input::post($modifier)));
 					}
 				}
 			}

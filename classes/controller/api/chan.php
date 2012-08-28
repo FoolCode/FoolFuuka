@@ -191,7 +191,7 @@ class Controller_Api_Chan extends \Controller_Rest
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
 			
-			return $this->response(array('success' => __("Post reported.")), 200);;
+			return $this->response(array('success' => __("Post reported.")), 200);
 		}
 		
 		if (\Input::post('action') === 'delete')
@@ -242,9 +242,9 @@ class Controller_Api_Chan extends \Controller_Rest
 		{
 			try
 			{
-				\Report::delete(\Input::post('id'));
+				\Report::delete(\Input::post('id')); die('here');
 			}
-			catch (Model\Report\ReportException $e)
+			catch (Model\ReportException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}

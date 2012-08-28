@@ -24,7 +24,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 	public function action_manage()
 	{
 		$this->_views['method_title'] = __('Login');
-		$this->_views['main_content_view'] = \View::forge('admin/boards/manage', array('boards' => \Radix::get_all()));
+		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/boards/manage', array('boards' => \Radix::get_all()));
 
 		return \Response::forge(\View::forge('admin/default', $this->_views));
 	}

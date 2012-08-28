@@ -27,6 +27,7 @@ class Controller_Chan extends \Controller_Common
 			\Cookie::set('reply_password', $pass, 60*60*24*30);
 		}
 
+		// KEEP THIS IN SYNC WITH THE ONE IN THE POSTS ADMIN PANEL
 		$this->_to_bind = array(
 			'user_name' => $name,
 			'user_email' => $email,
@@ -38,6 +39,9 @@ class Controller_Chan extends \Controller_Common
 			'order' => false,
 			'modifiers' => array(),
 			'backend_vars' => array(
+				'user_name' => $name,
+				'user_email' => $email,
+				'user_pass' => $pass,
 				'site_url'  => \Uri::base(),
 				'default_url'  => \Uri::base(),
 				'archive_url'  => \Uri::base(),

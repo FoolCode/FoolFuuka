@@ -89,8 +89,9 @@ foreach ($board->get_comments() as $key => $post) :
 				<div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 0;">
 					<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="delete_post"><?= __('Delete Post') ?></button>
 					<?php if (!is_null($op->media)) : ?>
-						<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="delete_image"><?= __('Delete Image') ?></button>
-						<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="ban_image"><?= __('Ban Image') ?></button>
+						<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->media->media_id ?>" data-action="delete_image"><?= __('Delete Image') ?></button>
+						<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->media->media_id ?>" data-action="ban_image_local"><?= __('Ban Image') ?></button>
+						<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->media->media_id ?>" data-action="ban_image_global"><?= __('Ban Image Globally') ?></button>
 					<?php endif; ?>
 					<?php if ($op->poster_ip) : ?>
 						<button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $op->board->shortname ?>" data-ip="<?= \Inet::dtop($op->poster_ip) ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($op->poster_ip) ?></button>

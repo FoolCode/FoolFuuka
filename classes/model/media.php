@@ -644,9 +644,20 @@ class Media extends \Model\Model_Base
 	}
 	
 	
-	public function p_ban()
+	public function p_ban($global = false)
 	{
-		$count = \DB::select()
+		if ( ! $global)
+		{
+			\DB::update(\DB::expr(\Radix::get_table($this->board, '_images')))
+				->where('media_id', $this->media_id)
+				->value('banned', 1)
+				->execute();
+			$this->delete();
+			
+			return $this;
+		}
+		
+		$count = \DB::select(\DB::expr('COUNT(*) as count'))
 			->from('banned_md5')
 			->where('md5', $this->media_hash)
 			->as_object()
@@ -654,7 +665,7 @@ class Media extends \Model\Model_Base
 			->current()
 			->count;
 		
-		if (! $count)
+		if ( ! $count)
 		{
 			\DB::insert('banned_md5')
 				->set(array('md5' => $this->media_hash))
@@ -666,15 +677,15 @@ class Media extends \Model\Model_Base
 			try
 			{
 				$media = \Media::get_by_media_hash($radix, $this->media_hash);
-				\DB::update(\DB::expr(\Radix::get_table('_images')))
-					->where('media_id', $media->id)
+				\DB::update(\DB::expr(\Radix::get_table($radix, '_images')))
+					->where('media_id', $media->media_id)
 					->value('banned', 1)
 					->execute();
 				$media->delete();
 			}
 			catch (MediaNotFoundException $e)
 			{
-				\DB::insert(\DB::expr(\Radix::get_table('_images')))
+				\DB::insert(\DB::expr(\Radix::get_table($radix,'_images')))
 					->set(array('media_hash' => $this->media_hash, 'banned' => 1))
 					->execute();
 			}			

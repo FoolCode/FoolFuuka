@@ -287,11 +287,17 @@ class Controller_Api_Chan extends \Controller_Rest
 			return $this->response(array('success' => __("Image deleted.")), 200);
 		}
 		
-		if (\Input::post('action') === 'ban_image')
+		if (\Input::post('action') === 'ban_image_local' || \Input::post('action') === 'ban_image_global')
 		{
+			$global = false;
+			if (\Input::post('action') === 'ban_image_global')
+			{
+				$global = true;
+			}
+				
 			try
 			{
-				\Media::get_by_media_id($this->_radix, \Input::post('id'))->ban();
+				\Media::get_by_media_id($this->_radix, \Input::post('id'))->ban($global);
 			}
 			catch (Model\MediaNotFoundException $e)
 			{

@@ -125,7 +125,7 @@ foreach ($board->get_comments() as $key => $post) :
 				<br/>
 				<div class="ip_reporter">
 					<?= \Inet::dtop($report->ip_reporter) ?>
-					<button class="btn btn-mini" data-function="mod" data-report-id="<?= $report->id ?>" data-id="<?= $op->doc_id ?>" data-action="remove_report"><?= __('Delete Report') ?></button>
+					<button class="btn btn-mini" data-function="mod" data-report-id="<?= $report->id ?>" data-id="<?= $op->doc_id ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-action="delete_report"><?= __('Delete Report') ?></button>
 				</div>
 			</div>
 		<?php endforeach ?>

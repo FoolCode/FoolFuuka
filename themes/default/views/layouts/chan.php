@@ -145,6 +145,11 @@ header('imagetoolbar: false');
 								$top_nav[] = array('href' => Uri::create(array($radix->shortname, 'gallery')), 'text' => __('Gallery'));
 							}
 
+							if (\Auth::has_access('comment.reports'))
+							{
+								$top_nav[] = array('href' => Uri::create(array('admin', 'posts', 'reports')), 'text' => __('Reports').(\Report::count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.\Report::count().'</span>' : ''));			
+							}
+							
 							$top_nav = Plugins::run_hook('ff.themes.generic_top_nav_buttons', array($top_nav), 'simple');
 							$top_nav = Plugins::run_hook('fu.themes.default_top_nav_buttons', array($top_nav), 'simple');
 

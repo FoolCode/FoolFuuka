@@ -18,7 +18,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 		<span class="post_file_controls">
 		<?php if ($p->media->media_status != 'banned') : ?>
 			<?php if (!$p->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-			<a href="<?= Uri::create('@radix/' . $p->board->shortname . '/search/image/' . $p->media->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><a
+			<a href="<?= Uri::create($p->board->shortname . '/search/image/' . $p->media->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><a
 				href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>" target="_blank" class="btnr parent">Google</a><a
 				href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>" target="_blank" class="btnr parent">iqdb</a><a
 				href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
@@ -136,7 +136,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 				<br/>
 				<div class="ip_reporter">
 					<?= \Inet::dtop($report->ip_reporter) ?>
-					<button class="btn btn-mini" data-function="mod" data-report-id="<?= $report->id ?>" data-id="<?= $p->doc_id ?>" data-action="remove_report"><?= __('Delete Report') ?></button>
+					<button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-action="delete_report"><?= __('Delete Report') ?></button>
 				</div>
 			</div>
 		<?php endforeach; ?>

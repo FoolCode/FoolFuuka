@@ -204,10 +204,7 @@ var bindFunctions = function()
 					<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
 					<input type="password" class="modal-password" />');
 					modal.find(".submitModal").data("action", 'delete');
-					if(foolfuuka_reply_password != null)
-					{
-						modal.find(".modal-password").val(foolfuuka_reply_password);
-					}
+					modal.find(".modal-password").val(backend_vars.user_pass);
 					break;
 
 				case 'report':

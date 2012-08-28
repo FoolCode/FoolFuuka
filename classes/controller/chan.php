@@ -360,7 +360,7 @@ class Controller_Chan extends \Controller_Common
 			return $this->error();
 		}
 
-		$this->_theme->set_title(\Radix::get_selected()->formatted_title.' &raquo; '.__('Thread').' #'.$num);
+		$this->_theme->set_title(__('Thread').' #'.$num);
 		$this->_theme->bind(array(
 			'thread_id' => $num,
 			'board' => $board,
@@ -507,7 +507,7 @@ class Controller_Chan extends \Controller_Common
 			if ($image['error_type'] == 'no_record')
 			{
 				$this->output->set_status_header('404');
-				$this->theme->set_title(__('Error'));
+				$this->theme->g(__('Error'));
 				$this->_set_parameters(
 					array(
 						'error' => __('There is no record of the specified image in our database.')
@@ -521,7 +521,7 @@ class Controller_Chan extends \Controller_Common
 			if ($image['error_type'] == 'not_on_server')
 			{
 				$this->output->set_status_header('404');
-				$this->theme->set_title(\Radix::get_selected()->formatted_title . ' &raquo; ' . __('Image Pruned'));
+				$this->theme->set_title(__('Image Pruned'));
 				$this->_set_parameters(
 					array(
 						'section_title' => __('Error 404: The image has been pruned from the server.'),
@@ -745,7 +745,7 @@ class Controller_Chan extends \Controller_Common
 
 		if ($this->_radix)
 		{
-			$this->_theme->set_title($this->_radix->formatted_title.' &raquo; '.$title);
+			$this->_theme->set_title($title);
 		}
 		else
 		{

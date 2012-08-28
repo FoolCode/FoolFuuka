@@ -119,7 +119,7 @@ class Controller_Api_Chan extends \Controller_Rest
 		}
 		catch(Model\BoardThreadNotFoundException $e)
 		{
-			return $this->response(array('error' => __("Thread not found.")), 404);
+			return $this->response(array('error' => __("Thread not found.")), 200);
 		}
 		catch (Model\BoardException $e)
 		{
@@ -209,7 +209,11 @@ class Controller_Api_Chan extends \Controller_Rest
 			}
 			catch (Model\BoardException $e)
 			{
-				return $this->response(array('error' => $e->getMessage()), 404);
+				return $this->response(array('error' => $e->getMessage()), 200);
+			}
+			catch (Model\CommentDeleteWrongPassException $e)
+			{
+				return $this->response(array('error' => $e->getMessage()), 200);
 			}
 			
 			return $this->response(array('success' => __("Post deleted.")), 200);

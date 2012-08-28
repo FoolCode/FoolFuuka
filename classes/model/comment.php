@@ -2,9 +2,10 @@
 
 namespace Foolfuuka\Model;
 
-class CommentDeleteWrongPassException extends \FuelException {}
-
 class CommentException extends \FuelException {}
+
+class CommentDeleteWrongPassException extends CommentException {}
+
 class CommentSendingException extends CommentException {}
 class CommentSendingDuplicateException extends CommentSendingException {}
 class CommentSendingThreadWithoutMediaException extends CommentSendingException {}
@@ -683,11 +684,11 @@ class Comment extends \Model\Model_Base
 
 			$hasher = new \PHPSecLib\Crypt_Hash();
 
-			$hashed = base64_encode($hasher->hasher()->pbkdf2($password, \Config::get('auth.salt'), 10000, 32));
+			$hashed = base64_encode($hasher->pbkdf2($password, \Config::get('auth.salt'), 10000, 32));
 
 			if($this->delpass != $hashed)
 			{
-				throw new \CommentDeleteWrongPassException(__('The password you inserted didn\'t match the password deletion password.'));
+				throw new CommentDeleteWrongPassException(__('The password you inserted didn\'t match the password deletion password.'));
 			}
 		}
 

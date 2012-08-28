@@ -5,7 +5,7 @@ if (!defined('DOCROOT'))
 
 <div id="reply" class="thread_form_wrap clearfix">
 <section class="thread_form clearfix">
-<?= Form::open(array('enctype' => 'multipart/form-data', 'action' => $radix->shortname . '/submit')) ?>
+<?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
 <?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
 <fieldset>

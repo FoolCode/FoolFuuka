@@ -3,7 +3,7 @@ if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 if (!isset($thread_id) && ! $radix->archive) : ?>
-<?= Form::open(array('enctype' => 'multipart/form-data', 'action' => $radix->shortname . '/submit')) ?>
+<?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
 <table style="margin-left: auto; margin-right: auto">
 	<tbody>

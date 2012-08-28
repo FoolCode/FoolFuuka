@@ -288,7 +288,7 @@ var bindFunctions = function()
 					jQuery.post(_href, _data, function(result) {
 						loading.hide();
 						if (typeof result.error !== 'undefined') {
-							modal.find(".modal-error").html('<div class="alert alert-error" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.reason + '</p></div>');
+							modal.find(".modal-error").html('<div class="alert alert-error" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.error + '</p></div>').show();
 							return false;
 						}
 						modal.modal('hide');
@@ -816,6 +816,36 @@ function getCookie( check_name ) {
 	if ( !b_cookie_found )
 	{
 		return null;
+	}
+}
+
+function fuel_set_csrf_token(form)
+{
+	if (document.cookie.length > 0 && typeof form != undefined)
+	{
+		var c_name = backend_vars.csrf_token_key;
+		c_start = document.cookie.indexOf(c_name + "=");
+		if (c_start != -1)
+		{
+			c_start = c_start + c_name.length + 1;
+			c_end = document.cookie.indexOf(";" , c_start);
+			if (c_end == -1)
+			{
+				c_end=document.cookie.length;
+			}
+			value=unescape(document.cookie.substring(c_start, c_end));
+			if (value != "")
+			{
+				for(i=0; i<form.elements.length; i++)
+				{
+					if (form.elements[i].name == c_name)
+					{
+						form.elements[i].value = value;
+						break;
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -4,7 +4,7 @@ if (!defined('DOCROOT'))
 
 if (isset($thread_id))
 {
-	echo \Form::open(array('enctype' => 'multipart/form-data', 'action' => $radix->shortname . '/submit'));
+	echo \Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit'));
 	echo \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token());
 	echo \Form::hidden('id', 'postform');
 }

@@ -46,6 +46,60 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 		{
 			return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
 		}
+		
+		
+		if (\Input::post('reply_delete'))
+		{
+			foreach (\Input::post('delete') as $idx => $doc_id)
+			{
+				try
+				{
+					$comments = \Board::forge()
+						->get_post()
+						->set_options('doc_id', $doc_id)
+						->set_radix($this->_radix)
+						->get_comments();
+
+					$comment = current($comments);
+					$comment->delete(\Input::post('delpass'));
+				}
+				catch (Model\BoardException $e)
+				{
+					return $this->response(array('error' => $e->getMessage()), 404);
+				}
+				catch (Model\CommentDeleteWrongPassException $e)
+				{
+					return $this->response(array('error' => $e->getMessage()), 404);
+				}
+			}
+
+			$this->_theme->set_layout('redirect');
+			$this->_theme->set_title(__('Redirecting...'));
+			$this->_theme->bind('url', \Uri::create(array($this->_radix->shortname, 'thread', $comment->thread_num)));
+			return \Response::forge($this->_theme->build('redirection'));
+		}
+
+		
+		if (\Input::post('reply_report'))
+		{
+			
+			foreach (\Input::post('delete') as $idx => $doc_id)
+			{
+				try
+				{
+					\Report::add($this->_radix, $doc_id, \Input::post('KOMENTO'));
+				}
+				catch (Model\ReportException $e)
+				{
+					return $this->response(array('error' => $e->getMessage()), 404);
+				}
+			}
+			
+			$this->_theme->set_layout('redirect');
+			$this->_theme->set_title(__('Redirecting...'));
+			$this->_theme->bind('url', \Uri::create($this->_radix->shortname.'/thread/'.\Input::post('parent')));
+			return \Response::forge($this->_theme->build('redirection'));
+		}
 
 		// Determine if the invalid post fields are populated by bots.
 		if (isset($post['name']) && mb_strlen($post['name']) > 0)
@@ -391,60 +445,7 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 		/**
 		 * The form has been submitted to be validated and processed.
 		 */
-		if ($this->input->post('reply_delete') == 'Delete Selected Posts')
-		{
-			foreach ($this->input->post('delete') as $idx => $doc_id)
-			{
-				$post = array(
-					'doc_id' => $doc_id,
-					'password' => $this->input->post('delpass')
-				);
-
-				$this->post->delete(Radix::get_selected(), $post);
-			}
-
-			$this->set_layout('redirect');
-			$this->set_title(__('Redirecting...'));
-			Chan::_set_parameters(
-				array(
-					'title' => fuuka_title(0),
-					'url' => Uri::create(Radix::get_selected()->shortname)
-				)
-			);
-			$this->build('redirection');
-			return TRUE;
-		}
-
-
-		/**
-		 * The form has been submitted to be validated and processed.
-		 */
-		if ($this->input->post('reply_report') == 'Report Selected Posts')
-		{
-			$this->load->model('report_model', 'report');
-			foreach ($this->input->post('delete') as $idx => $doc_id)
-			{
-				$post = array(
-					'board' => Radix::get_selected()->id,
-					'doc_id' => $doc_id,
-					'reason' => $this->input->post('KOMENTO')
-				);
-
-				$this->report->add($post);
-			}
-
-			$this->set_layout('redirect');
-			$this->set_title(__('Redirecting...'));
-			Chan::_set_parameters(
-				array(
-					'title' => fuuka_title(0),
-					'url' => Uri::create(Radix::get_selected()->shortname . '/thread/' .
-						$this->input->post('parent'))
-				)
-			);
-			$this->build('redirection');
-			return TRUE;
-		}
+		
 
 		/**
 		 * ERROR: We reached the point of no return and wasn't able to do anything.

@@ -1,6 +1,6 @@
 <?php if (!defined('DOCROOT')) exit('No direct script access allowed'); ?>
 
-<?= Form::open(array('enctype' => 'multipart/form-data', 'action' => $radix->shortname . '/submit')) ?>
+<?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
 
 <table id="reply">

@@ -78,19 +78,6 @@ class Radix extends \Model_Base
 				'validation' => 'required|max_length[5]|valid_string[alpha,dashes,numeric]',
 				'validation_func' => function($input, $form_internal)
 				{
-					/*// if we're not using the special subdomain for peripherals
-					if (\Preferences::get('ff.srv_sys_subdomain', FOOL_PREF_SYS_SUBDOMAIN) === FALSE)
-					{
-						if (in_array($input['shortname'], unserialize(FOOL_PROTECTED_RADIXES)))
-						{
-							return array(
-								'error_code' => 'PROTECTED_RADIX',
-								'error' => __('You can\'t use the protected shortnames unless you activate the system subdomain feature. The protected shortnames are:').' "'.implode(", ",
-									unserialize(FOOL_PROTECTED_RADIXES)).'".'
-							);
-						}
-					}*/
-
 					// if we're working on the same object
 					if (isset($input['id']))
 					{
@@ -733,14 +720,7 @@ class Radix extends \Model_Base
 			$result_object[$item->id]->formatted_title = ($item->name) ?
 				'/'.$item->shortname.'/ - '.$item->name : '/'.$item->shortname.'/';
 
-			if ($item->archive == 1)
-			{
-				$result_object[$item->id]->href = \Uri::create(array('@archive', $item->shortname));
-			}
-			else
-			{
-				$result_object[$item->id]->href = \Uri::create(array('@board', $item->shortname));
-			}
+			$result_object[$item->id]->href = \Uri::create(array($item->shortname));
 
 			// load the basic value of the preferences
 			foreach ($structure as $key => $arr)
@@ -1174,7 +1154,7 @@ class Radix extends \Model_Base
 
 		\DB::query("
 			CREATE TABLE IF NOT EXISTS ".static::get_table($board, '_extra')." (
-				doc_id int unsigned NOT NULL,
+				doc_id int(11) unsigned NOT NULL,
 				json text,
 
 				PRIMARY KEY (`doc_id`)

@@ -83,6 +83,7 @@ class Comment extends \Model\Model_Base
 	public $poster_hash = null;
 
 	public $media = null;
+	public $extra = null;
 
 
 	public function __get($name)
@@ -189,14 +190,22 @@ class Comment extends \Model\Model_Base
 		}
 
 		$media_fields = Media::get_fields();
+		$extra_fields = Extra::get_fields();
 		$media = new \stdClass();
+		$extra = new \stdClass();
 		$do_media = false;
+		$do_extra = false;
 		
 		foreach ($post as $key => $value)
 		{
-			if(!in_array($key, $media_fields))
+			if( ! in_array($key, $media_fields))
 			{
 				$this->$key = $value;
+			}
+			else if (in_array($key, $extra_fields))
+			{
+				$do_extra = true;
+				$extra->$key = $value;
 			}
 			else
 			{
@@ -213,6 +222,8 @@ class Comment extends \Model\Model_Base
 		{
 			$this->media = null;
 		}
+		
+		$this->extra = Extra::forge($extra, $this->board);
 
 		foreach ($options as $key => $value)
 		{
@@ -1179,7 +1190,7 @@ class Comment extends \Model\Model_Base
 		}
 
 		// update poster_hash for non-ghost posts
-		if (!$this->ghost && $this->op && $this->board->enable_poster_hash)
+		if ( ! $this->ghost && $this->op && $this->board->enable_poster_hash)
 		{
 			$this->poster_hash = substr(substr(crypt(md5(Input::ip().'id'.$comment->thread_num),'id'),+3), 0, 8);
 
@@ -1187,6 +1198,13 @@ class Comment extends \Model\Model_Base
 				->value('poster_hash', $this->poster_hash)->where('doc_id', $comment->doc_id)->execute();
 		}
 
+		// set data for extra fields
+		\Plugins::run_hook('fu.comment.insert.extra_json_array', array(&$this), 'simple');
+		
+		// insert the extra row DURING A TRANSACTION
+		$this->extra->doc_id = $last_id;
+		$this->extra->insert();		
+		
 		\DB::commit_transaction();
 
 		// success, now check if there's extra work to do

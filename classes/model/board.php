@@ -264,6 +264,19 @@ class Board extends \Model\Model_Base
 			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : Radix::get_table($board)).'.`media_id`'),
 				'=', \DB::expr('`mg`.`media_id`'));
 	}
+	
+	
+	protected function p_sql_extra_join($query, &$board = null, $join_on = false)
+	{
+		if (is_null($board))
+		{
+			$board = $this->_radix;
+		}
+
+		$query->join(\DB::expr(Radix::get_table($board, '_extra').' AS `ex`'), 'LEFT')
+			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : Radix::get_table($board)).'.`doc_id`'),
+				'=', \DB::expr('`ex`.`doc_id`'));
+	}
 
 
 	/**
@@ -363,7 +376,7 @@ class Board extends \Model\Model_Base
 
 			$temp = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
 			static::sql_media_join($temp);
-			static::sql_report_join($temp);
+			static::sql_extra_join($temp);
 			$temp->where('thread_num', $thread->unq_thread_num)
 				->order_by('op', 'desc')->order_by('num', 'desc')->order_by('subnum', 'desc')
 				->limit($per_thread + 1)->offset(0);
@@ -479,7 +492,7 @@ class Board extends \Model\Model_Base
 			->on(\DB::expr('g.num'), '=', \DB::expr('t.unq_thread_num AND g.subnum = 0'));
 
 		static::sql_media_join($query, null, 'g');
-		static::sql_report_join($query, null, 'g');
+		static::sql_extra_join($query, null, 'g');
 
 		$result = $query->as_object()->execute()->as_array();
 
@@ -557,7 +570,7 @@ class Board extends \Model\Model_Base
 			case 'from_doc_id':
 				$query = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
 				static::sql_media_join($query);
-				static::sql_report_join($query);
+				static::sql_extra_join($query);
 				$query->where('thread_num', $num)->where('doc_id', '>', $latest_doc_id)
 					->order_by('num', 'asc')->order_by('subnum', 'asc');
 				break;
@@ -565,7 +578,7 @@ class Board extends \Model\Model_Base
 			case 'ghosts':
 				$query = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
 				static::sql_media_join($query);
-				static::sql_report_join($query);
+				static::sql_extra_join($query);
 				$query->where('thread_num', $num)->where('subnum', '<>', 0)
 					->order_by('num', 'asc')->order_by('subnum', 'asc');
 				break;
@@ -582,14 +595,14 @@ class Board extends \Model\Model_Base
 					) AS x
 				'));
 				static::sql_media_join($query,null, 'x');
-				static::sql_report_join($query, null, 'x');
+				static::sql_extra_join($query, null, 'x');
 				$query->order_by('num', 'asc')->order_by('subnum', 'asc');
 				break;
 
 			case 'thread':
 				$query = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
 				static::sql_media_join($query);
-				static::sql_report_join($query);
+				static::sql_extra_join($query);
 				$query->where('thread_num', $num)->order_by('num', 'asc')->order_by('subnum', 'asc');
 				break;
 		}

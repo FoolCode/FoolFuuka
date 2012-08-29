@@ -10,10 +10,7 @@ class SearchSphinxOfflineException extends SearchException {}
 class SearchEmptyResultException extends SearchException {}
 
 class Search extends Board
-{
-	
-	// \Board::forge()->get_search($arguments)->set_page(1)
-	
+{	
 	protected function p_get_search($arguments)
 	{
 		// prepare
@@ -250,6 +247,7 @@ class Search extends Board
 				$sub = \DB::select('*', \DB::expr($result['board'] . ' AS board_id'))
 					->from(\DB::expr(\Radix::get_table($board)));
 				static::sql_media_join($sub, $board);
+				static::sql_extra_join($sub, $board);
 				$sql[] = '('.$sub->where('doc_id', '=', $result['id']).')';
 			}
 			
@@ -307,7 +305,7 @@ class Search extends Board
 				->from(\DB::expr(\Radix::get_table($this->_radix)));
 				
 			static::sql_media_join($query, $this->_radix);
-			static::sql_report_join($query, $this->_radix);
+			static::sql_extra_join($query, $this->_radix);
 			
 			if (isset($docs))
 			{

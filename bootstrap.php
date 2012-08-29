@@ -6,6 +6,7 @@
 	'Foolfuuka\\Model\\Search' => APPPATH.'modules/foolfuuka/classes/model/search.php',
 	'Foolfuuka\\Model\\Comment' => APPPATH.'modules/foolfuuka/classes/model/comment.php',
 	'Foolfuuka\\Model\\Media' => APPPATH.'modules/foolfuuka/classes/model/media.php',
+	'Foolfuuka\\Model\\Extra' => APPPATH.'modules/foolfuuka/classes/model/extra.php',
 	'Foolfuuka\\Model\\Report' => APPPATH.'modules/foolfuuka/classes/model/report.php',
 	'Foolfuuka\\Model\\Ban' => APPPATH.'modules/foolfuuka/classes/model/ban.php',
 	'Foolfuuka\\Tasks\\Fool' => APPPATH.'modules/foolfuuka/classes/task/fool.php',

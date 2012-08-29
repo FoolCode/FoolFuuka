@@ -341,6 +341,12 @@ class Radix extends \Model_Base
 				'help' => __('Should the image spoilers be semi-transparent? (mods and admins have it always on for moderation)'),
 				'type' => 'checkbox',
 			),
+			'enable_flags' => array(
+				'database' => TRUE,
+				'boards_preferences' => TRUE,
+				'help' => __('Display flags? (needs GeoIP)'),
+				'type' => 'checkbox',
+			),
 			'display_exif' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,

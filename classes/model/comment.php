@@ -81,6 +81,7 @@ class Comment extends \Model\Model_Base
 	public $comment = null;
 	public $delpass = null;
 	public $poster_hash = null;
+	public $poster_country = null;
 
 	public $media = null;
 	public $extra = null;
@@ -241,6 +242,11 @@ class Comment extends \Model\Model_Base
 			$this->comment_processed;
 		}
 
+		if ($this->poster_country !== null)
+		{
+			$this->poster_country_name = \Config::get('geoip_codes.codes.'.strtoupper($this->poster_country));
+		}
+		
 		$num = $this->num.($this->subnum ? ',' . $this->subnum : '');
 		static::$_posts[$this->thread_num][] = $num;
 	}
@@ -1026,7 +1032,17 @@ class Comment extends \Model\Model_Base
 
 		$microtime = str_replace('.', '', (string) microtime(true));
 		$this->timestamp = substr($microtime, 0, 10);
-		$this->op = (bool) !$this->thread_num;
+		$this->op = (bool) ! $this->thread_num;
+		
+		if ($this->poster_ip === null)
+		{
+			$this->poster_ip = \Input::ip_decimal();
+		}
+		
+		if ($this->board->enable_flags && function_exists('geoip_country_code_by_name'))
+		{
+			$this->poster_country = \geoip_country_code_by_name(\Inet::dtop($this->poster_ip));
+		}
 
 		// process comment media
 		if (!is_null($this->media))
@@ -1132,8 +1148,6 @@ class Comment extends \Model\Model_Base
 			}
 		}
 
-		$this->poster_ip = \Input::ip_decimal();
-
 		list($last_id, $num_affected) =
 			\DB::insert(\DB::expr(Radix::get_table($this->board)))
 			->set(array(
@@ -1152,6 +1166,7 @@ class Comment extends \Model\Model_Base
 				'spoiler' => $this->media->spoiler,
 				'poster_ip' => $this->poster_ip,
 				'poster_hash' => $this->poster_hash,
+				'poster_country' => $this->poster_country,
 				'preview_orig' => $this->media->preview_orig,
 				'preview_w' => $this->media->preview_w,
 				'preview_h' => $this->media->preview_h,
@@ -1161,7 +1176,7 @@ class Comment extends \Model\Model_Base
 				'media_size' => $this->media->media_size,
 				'media_hash' => $this->media->media_hash,
 				'media_orig' => $this->media->media_orig,
-				'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null
+				'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
 			))->execute();
 
 		// check that it wasn't posted multiple times

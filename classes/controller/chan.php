@@ -881,6 +881,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			try
 			{
+				$data['poster_ip'] = \Input::ip_decimal();
 				$comment = \Comment::forge((object) $data, $this->_radix, array('clean' => false));
 				$comment->media = $media;
 				$comment->insert();

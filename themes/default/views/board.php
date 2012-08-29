@@ -71,6 +71,7 @@ foreach ($board->get_comments() as $key => $post) :
 
 			<a href="<?= Uri::create($op->board->shortname . '/thread/' . $op->thread_num) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= Uri::create(array($op->board->shortname, $quote_mode, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
 
+			<?php if ($op->poster_country !== null) : ?><span class="post_type"><img title="<?= e($op->poster_country_name) ?>" src="<?= \Uri::base() ?>assets/famfamfam_flag_icons/png/<?= strtolower($op->poster_country) ?>.png" style="position:relative; bottom:1px" /></span><?php endif; ?>
 			<?php if (isset($op->media) && $op->media->spoiler == 1) : ?><span class="post_type"><i class="icon-eye-close" title="<?= htmlspecialchars(__('This post contains a spoiler image.')) ?>"></i></span><?php endif ?>
 			<?php if ($op->deleted == 1) : ?><span class="post_type"><i class="icon-trash" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually.')) ?>"></i></span><?php endif ?>
 

@@ -275,7 +275,7 @@ class Board extends \Model\Model_Base
 
 		$query->join(\DB::expr(Radix::get_table($board, '_extra').' AS `ex`'), 'LEFT')
 			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : Radix::get_table($board)).'.`doc_id`'),
-				'=', \DB::expr('`ex`.`doc_id`'));
+				'=', \DB::expr('`ex`.`extra_id`'));
 	}
 
 

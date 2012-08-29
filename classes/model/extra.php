@@ -11,7 +11,7 @@ class Extra
 	public $json_array = null;
 	
 	public static $_fields = array(
-		'doc_id', 
+		'extra_id', 
 		'json', // gets automatically converted to associative array
 		'json_array'
 	);
@@ -63,7 +63,7 @@ class Extra
 		{
 			\DB::insert(\DB::expr(Radix::get_table($this->_radix, '_extra')))
 				->set(array(
-					'doc_id' => $this->doc_id,
+					'extra_id' => $this->doc_id,
 					'json' => ! empty($this->json_array) ? json_encode($this->json_array) : null
 				))->execute();
 		}

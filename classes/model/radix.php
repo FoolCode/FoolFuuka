@@ -1160,10 +1160,10 @@ class Radix extends \Model_Base
 
 		\DB::query("
 			CREATE TABLE IF NOT EXISTS ".static::get_table($board, '_extra')." (
-				doc_id int(11) unsigned NOT NULL,
+				extra_id int(11) unsigned NOT NULL,
 				json text,
 
-				PRIMARY KEY (`doc_id`)
+				PRIMARY KEY (`extra_id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=".$charset.";
 		")->execute();
 	}

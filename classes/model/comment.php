@@ -1219,7 +1219,7 @@ class Comment extends \Model\Model_Base
 		\Plugins::run_hook('fu.comment.insert.extra_json_array', array(&$this), 'simple');
 		
 		// insert the extra row DURING A TRANSACTION
-		$this->extra->doc_id = $last_id;
+		$this->extra->extra_id = $last_id;
 		$this->extra->insert();		
 		
 		\DB::commit_transaction();

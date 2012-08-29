@@ -11,3 +11,13 @@ if (!defined('DOCROOT'))
 	}
 			
 }, 3);
+
+\Plugins::register_hook('foolfuuka\model\comment.clean_fields.call.before', function(&$comment){
+
+	if( ! \Auth::has_access('maccess.mod'))
+	{
+		if ($comment->extra instanceof \Foolfuuka\Model\Extra)
+			unset($comment->extra->json_array['hostname']);
+	}
+	
+}, 5);

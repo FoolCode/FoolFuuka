@@ -75,7 +75,7 @@ foreach ($board->get_comments() as $key => $post) :
 			<?php if ($op->deleted == 1) : ?><span class="post_type"><i class="icon-trash" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually.')) ?>"></i></span><?php endif ?>
 
 			<span class="post_controls">
-				<a href="<?= Uri::create($op->board->shortname . '/thread/' . $num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= Uri::create($op->board->shortname . '/thread/' . $num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . Uri::create($op->board->shortname . '/last50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($op->board->archive) ? '<a href="http://boards.4chan.org/' . $op->board->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?= Uri::create($op->board->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if (Auth::has_access('maccess.mod') || !$op->board->archive) : ?><a href="<?= Uri::create($op->board->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
+				<a href="<?= Uri::create($op->board->shortname . '/thread/' . $num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= Uri::create($op->board->shortname . '/thread/' . $num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . Uri::create($op->board->shortname . '/last/50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($op->board->archive) ? '<a href="http://boards.4chan.org/' . $op->board->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?= Uri::create($op->board->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if (Auth::has_access('maccess.mod') || !$op->board->archive) : ?><a href="<?= Uri::create($op->board->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 
 			<div class="backlink_list"<?= $op->backlinks ? ' style="display:block"' : '' ?>>
@@ -95,9 +95,9 @@ foreach ($board->get_comments() as $key => $post) :
 					<?php endif; ?>
 					<?php if ($op->poster_ip) : ?>
 						<button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $op->board->shortname ?>" data-ip="<?= \Inet::dtop($op->poster_ip) ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($op->poster_ip) ?></button>
-						<button class="btn btn-mini" data-function="searchUser" data-board="<?= $op->board->shortname ?>" data-board-url="<?= Uri::create(array('@radix', $op->board->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= \Inet::dtop($op->poster_ip) ?>"><?= __('Search IP') ?></button>
+						<button class="btn btn-mini" data-function="searchUser" data-board="<?= $op->board->shortname ?>" data-board-url="<?= Uri::create(array($op->board->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= \Inet::dtop($op->poster_ip) ?>"><?= __('Search IP') ?></button>
 						<?php if (Preferences::get('fu.sphinx.global')) : ?>
-						<button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $op->board->shortname ?>" data-board-url="<?= Uri::create(array('@radix', $op->board->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= \Inet::dtop($op->poster_ip) ?>"><?= __('Search IP Globally') ?></button>
+						<button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $op->board->shortname ?>" data-board-url="<?= Uri::create(array($op->board->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= \Inet::dtop($op->poster_ip) ?>"><?= __('Search IP Globally') ?></button>
 						<?php endif; ?>
 					<?php endif; ?>
 				</div>
@@ -139,18 +139,25 @@ foreach ($board->get_comments() as $key => $post) :
 		<?php
 		if (isset($post['posts'])) :
 			$post_counter = 0;
+			$image_counter = 0;
 			foreach ($post['posts'] as $p)
 			{
-				if (!is_null($p->media))
-					$post_counter++;
+				$post_counter++;
+				if ($p->media !== null)
+					$image_counter++;
 
-				if ($post_counter == 150)
+				if ($image_counter == 150)
 					$modifiers['lazyload'] = TRUE;
 
 				if ($p->thread_num == 0)
 					$p->thread_num = $p->num;
 
-				echo $this->build('board_comment', array('p' => $p, 'modifiers' => $modifiers), TRUE, TRUE);
+				echo $this->build('board_comment', array(
+					'p' => $p, 
+					'modifiers' => $modifiers, 
+					'post_counter' => $post_counter,
+					'image_counter' => $image_counter
+				), true);
 			}
 
 		endif; ?>

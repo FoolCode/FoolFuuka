@@ -76,8 +76,8 @@ header('imagetoolbar: false');
 									<?= ($radix) ? '/' . $radix->shortname . '/' . ' - ' . $radix->name :  Preferences::get('ff.gen.website_title') ?> <b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
-									<?= '<li><a href="' . Uri::create('@default') . '">' . __('Index') . '</a></li>'; ?>
-									<?= (Auth::has_access('maccess.mod')) ? '<li><a href="' . \Uri::create('@system/admin') . '">' . __('Control Panel') . '</a></li>' : '' ?>
+									<?= '<li><a href="' . Uri::base() . '">' . __('Index') . '</a></li>'; ?>
+									<?= (Auth::has_access('maccess.mod')) ? '<li><a href="' . \Uri::create('admin') . '">' . __('Control Panel') . '</a></li>' : '' ?>
 									<li class="divider"></li>
 									<?php
 									if (Radix::get_archives())

@@ -243,7 +243,7 @@ var bindFunctions = function()
 					var _board = modal.find(".modal-board").val();
 					var _doc_id = modal.find(".modal-post-id").val();
 					var _href = backend_vars.api_url+'_/api/chan/user_actions/';
-					var _data = {};
+					var _data = {};
 
 					if (action == 'report') {
 						_data = {

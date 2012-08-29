@@ -198,7 +198,7 @@ class Comment extends \Model\Model_Base
 		
 		foreach ($post as $key => $value)
 		{
-			if( ! in_array($key, $media_fields))
+			if( ! in_array($key, $media_fields) && ! in_array($key, $extra_fields))
 			{
 				$this->$key = $value;
 			}
@@ -669,10 +669,12 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function clean_fields()
+	public function p_clean_fields()
 	{
-		if (!\Auth::has_access('maccess.mod'))
+		if ( ! \Auth::has_access('comment.see_ip'))
+		{
 			unset($this->poster_ip);
+		}
 
 		unset($this->delpass);
 	}

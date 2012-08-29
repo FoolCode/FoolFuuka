@@ -43,7 +43,7 @@ class Extra
 			{
 				if ($key === 'json')
 				{
-					$new->json_array = json_decode($item);
+					$new->json_array = json_decode($item, true);
 				}
 				else
 				{
@@ -51,6 +51,8 @@ class Extra
 				}
 			}
 		}
+		
+		unset($new->json);
 		
 		return $new;
 	}

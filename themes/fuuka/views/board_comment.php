@@ -26,7 +26,7 @@ if (!defined('DOCROOT'))
 						<span class="postername admin">## <?= __('Developers') ?></span>
 					<?php endif ?>
 					<?= gmdate('D M d H:i:s Y', $p->original_timestamp) ?>
-					<?php if ($p->poster_country !== null) : ?><span class="poster_country"><img title="<?= e($p->poster_country_name) ?>" src="<?= \Uri::base() ?>assets/famfamfam_flag_icons/png/<?= strtolower($p->poster_country) ?>.png" /></span><?php endif; ?>
+					<?php if ($p->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
 				</label>
 				<?php if (!isset($thread_id)) : ?>
 					<a class="js" href="<?= Uri::create(array($p->board->shortname, 'thread', $p->thread_num)) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>

@@ -57,7 +57,7 @@ foreach ($board->get_comments() as $key => $post) :
 				<span class="postername admin">## <?= __('Developer') ?></span>
 			<?php endif ?>
 			<?= gmdate('D M d H:i:s Y', $op->original_timestamp) ?>
-			<?php if ($op->poster_country !== null) : ?><span class="poster_country"><img title="<?= e($op->poster_country_name) ?>" src="<?= \Uri::base() ?>assets/famfamfam_flag_icons/png/<?= strtolower($op->poster_country) ?>.png" /></span><?php endif; ?>
+			<?php if ($op->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span></span><?php endif; ?>
 		</label>
 
 		<?php if (!isset($thread_id)) : ?>

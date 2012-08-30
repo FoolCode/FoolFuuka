@@ -13,7 +13,7 @@ if (!defined('DOCROOT'))
 					<input type="checkbox" name="delete[]" value="<?= $p->doc_id ?>"/>
 					<?php if (isset($modifiers['post_show_board_name']) &&  $modifiers['post_show_board_name']): ?><span class="post_show_board">/<?= $p->board->shortname ?>/</span><?php endif; ?>
 					<span class="filetitle"><?= $p->title_processed ?></span>
-					<span class="postername<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= (($p->email && $p->email !== 'noko') ? '<a href="mailto:' . urlencode($p->email) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
+					<span class="postername<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= (($p->email && $p->email !== 'noko') ? '<a href="mailto:' . rawurlencode($p->email) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
 					<span class="postertrip<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= $p->trip_processed ?></span>
 					<span class="poster_hash"><?php if ($p->poster_hash_processed) : ?>ID:<?= $p->poster_hash_processed ?><?php endif; ?></span>
 					<?php if ($p->capcode == 'M') : ?>

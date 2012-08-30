@@ -63,7 +63,7 @@ class Extra
 		{
 			\DB::insert(\DB::expr(Radix::get_table($this->_radix, '_extra')))
 				->set(array(
-					'extra_id' => $this->doc_id,
+					'extra_id' => $this->extra_id,
 					'json' => ! empty($this->json_array) ? json_encode($this->json_array) : null
 				))->execute();
 		}

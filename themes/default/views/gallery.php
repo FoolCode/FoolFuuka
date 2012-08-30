@@ -13,7 +13,7 @@ foreach ($board->get_comments() as $k => $p) :
 		<header>
 			<div class="post_data">
 				<h2 class="post_title"><?= $p->title_processed ?></h2>
-				<span class="post_author"><?= (($p->email && $p->email !== 'noko') ? '<a href="mailto:' . htmlspecialchars(urlencode($p->email)) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
+				<span class="post_author"><?= (($p->email && $p->email !== 'noko') ? '<a href="mailto:' . urlencode($p->email) . '">' . $p->name_processed . '</a>' : $p->name_processed) ?></span>
 				<span class="post_trip"><?= $p->trip_processed ?></span>
 				<span class="poster_hash"><?= ($p->poster_hash_processed) ? 'ID:' . $p->poster_hash_processed : '' ?></span>
 				<?php if ($p->capcode == 'M') : ?>

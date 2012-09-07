@@ -301,119 +301,130 @@ class Search extends Board
 				}
 			}
 
-			$query = \DB::select()
-				->from(\DB::expr(\Radix::get_table($this->_radix)));
+			
+			foreach (array('*', 'COUNT(*) as count') as $select_key => $select)
+			{
+				$query = \DB::select(\DB::expr($select))
+					->from(\DB::expr(\Radix::get_table($this->_radix)));
+
+				static::sql_media_join($query, $this->_radix);
+				static::sql_extra_join($query, $this->_radix);
+
+				if (isset($docs))
+				{
+					$query->where('doc_id', 'IN', array($docs));
+				}
+
+				if ($args['subject'])
+				{
+					$query->where('title', 'like', $args['subject']);
+				}
+				if ($args['username'])
+				{
+					$query->where('name', 'like', $args['username']);
+					//$this->db->use_index('name_trip_index');
+				}
+				if ($args['tripcode'])
+				{
+					$query->where('trip', 'like', $args['tripcode']);
+					//$this->db->use_index('trip_index');
+				}
+				if ($args['email'])
+				{
+					$query->where('email', 'like', $args['email']);
+					//$this->db->use_index('email_index');
+				}
+				if ($args['image'])
+				{
+					$query->where('media_id', '=', $args['image']);
+					//$this->db->use_index('media_id_index');
+				}
+				if (\Auth::has_access('comment.see_ip') && $args['poster_ip'])
+				{
+					$query->where('poster_ip', '=', (int) inet_ptod($args['poster_ip']));
+				}
+				if ($args['capcode'] == 'admin')
+				{
+					$query->where('capcode', '=', 'A');
+				}
+				if ($args['capcode'] == 'mod')
+				{
+					$query->where('capcode', '=', 'M');
+				}
+				if ($args['capcode'] == 'user')
+				{
+					$query->where('capcode', '<>', 'A');
+					$query->where('capcode', '<>', 'M');
+				}
+				if ($args['deleted'] == 'deleted')
+				{
+					$query->where('deleted', '=', 1);
+				}
+				if ($args['deleted'] == 'not-deleted')
+				{
+					$query->where('deleted', '=', 0);
+				}
+				if ($args['ghost'] == 'only')
+				{
+					$query->where('subnum', '<>', 0);
+					//$this->db->use_index('subnum_index');
+				}
+				if ($args['ghost'] == 'none')
+				{
+					$query->where('subnum', '=', 0);
+					//$this->db->use_index('subnum_index');
+				}
+				if ($args['type'] == 'op')
+				{
+					$query->where('op', '=', 1);
+					//$this->db->use_index('op_index');
+				}
+				if ($args['type'] == 'posts')
+				{
+					$query->where('op', '=', 0);
+					//$this->db->use_index('op_index');
+				}
+				if ($args['filter'] == 'image')
+				{
+					$query->where('media_id', '=', 0);
+					//$this->db->use_index('media_id_index');
+				}
+				if ($args['filter'] == 'text')
+				{
+					$query->where('media_id', '<>', 0);
+					//$this->db->use_index('media_id_index');
+				}
+				if ($args['start'])
+				{
+					$query->where('timestamp', '>=', (int) strtotime($args['start']));
+					//$this->db->use_index('timestamp_index');
+				}
+				if ($args['end'])
+				{
+					$query->where('timestamp', '<=', (int) strtotime($args['end']));
+					//$this->db->use_index('timestamp_index');
+				}
 				
-			static::sql_media_join($query, $this->_radix);
-			static::sql_extra_join($query, $this->_radix);
-			
-			if (isset($docs))
-			{
-				$query->where('doc_id', 'IN', array($docs));
+				$result_which = $query->limit(5000)
+					->order_by('timestamp', ($args['order'] == 'asc' ? 'ASC' : 'DESC'))
+					->as_object()
+					->execute()
+					->as_array();
+				
+				if ( ! count($result_which))
+				{
+					throw new SearchEmptyResultException(__('No results found.'));
+				}
+
+				if ( ! $select_key) // we're getting the actual result, not the count
+				{
+					$result = $result_which;
+				}
+				else
+				{
+					$this->_total_count = $result->current()->count;
+				}
 			}
-			
-			if ($args['subject'])
-			{
-				$query->where('title', 'like', $args['subject']);
-			}
-			if ($args['username'])
-			{
-				$query->where('name', 'like', $args['username']);
-				//$this->db->use_index('name_trip_index');
-			}
-			if ($args['tripcode'])
-			{
-				$query->where('trip', 'like', $args['tripcode']);
-				//$this->db->use_index('trip_index');
-			}
-			if ($args['email'])
-			{
-				$query->where('email', 'like', $args['email']);
-				//$this->db->use_index('email_index');
-			}
-			if ($args['image'])
-			{
-				$query->where('media_id', '=', $args['image']);
-				//$this->db->use_index('media_id_index');
-			}
-			if (\Auth::has_access('comment.see_ip') && $args['poster_ip'])
-			{
-				$query->where('poster_ip', '=', (int) inet_ptod($args['poster_ip']));
-			}
-			if ($args['capcode'] == 'admin')
-			{
-				$query->where('capcode', '=', 'A');
-			}
-			if ($args['capcode'] == 'mod')
-			{
-				$query->where('capcode', '=', 'M');
-			}
-			if ($args['capcode'] == 'user')
-			{
-				$query->where('capcode', '<>', 'A');
-				$query->where('capcode', '<>', 'M');
-			}
-			if ($args['deleted'] == 'deleted')
-			{
-				$query->where('deleted', '=', 1);
-			}
-			if ($args['deleted'] == 'not-deleted')
-			{
-				$query->where('deleted', '=', 0);
-			}
-			if ($args['ghost'] == 'only')
-			{
-				$query->where('subnum', '<>', 0);
-				//$this->db->use_index('subnum_index');
-			}
-			if ($args['ghost'] == 'none')
-			{
-				$query->where('subnum', '=', 0);
-				//$this->db->use_index('subnum_index');
-			}
-			if ($args['type'] == 'op')
-			{
-				$query->where('op', '=', 1);
-				//$this->db->use_index('op_index');
-			}
-			if ($args['type'] == 'posts')
-			{
-				$query->where('op', '=', 0);
-				//$this->db->use_index('op_index');
-			}
-			if ($args['filter'] == 'image')
-			{
-				$query->where('media_id', '=', 0);
-				//$this->db->use_index('media_id_index');
-			}
-			if ($args['filter'] == 'text')
-			{
-				$query->where('media_id', '<>', 0);
-				//$this->db->use_index('media_id_index');
-			}
-			if ($args['start'])
-			{
-				$query->where('timestamp', '>=', (int) strtotime($args['start']));
-				//$this->db->use_index('timestamp_index');
-			}
-			if ($args['end'])
-			{
-				$query->where('timestamp', '<=', (int) strtotime($args['end']));
-				//$this->db->use_index('timestamp_index');
-			}
-			
-			$result = $query->limit(5000)
-				->order_by('timestamp', ($args['order'] == 'asc'?'ASC':'DESC'))
-				->as_object()
-				->execute()
-				->as_array();
-			
-			if ( ! count($result))
-			{
-				throw new SearchEmptyResultException(__('No results found.'));
-			}
-			
-			$this->_total_count = \DB::count_last_query();
 		}
 		
 		foreach ($result as $item)

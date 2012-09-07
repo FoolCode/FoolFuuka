@@ -935,9 +935,9 @@ class Comment extends \Model\Model_Base
 				$thread->get_comments();
 				$status = $thread->check_thread_status();
 			}
-			catch (\Model\BoardException $e)
+			catch (Model\BoardException $e)
 			{
-				throw new \Model\CommentSendingException($e->getMessage());
+				throw new Model\CommentSendingException($e->getMessage());
 			}
 
 			$this->ghost = $status['dead'];

@@ -820,7 +820,7 @@ class Comment extends \Model\Model_Base
 	 */
 	protected function p_process_secure_tripcode($plain)
 	{
-		return substr(base64_encode(sha1($plain . base64_decode(FOOLFUUKA_SECURE_TRIPCODE_SALT), TRUE)), 0, 11);
+		return substr(base64_encode(sha1($plain . base64_decode(\Config::get('foolframe.preferences.comment.secure_tripcode_salt')), TRUE)), 0, 11);
 	}
 
 
@@ -834,8 +834,8 @@ class Comment extends \Model\Model_Base
 	 */
 	protected function p_insert()
 	{
-		// check that the user isn't starting more than a thread in 5 minutes
-		if(!\Auth::has_access('comment.limitless_comment'))
+		// some users don't need to be limited, in here go all the ban and posting limitators
+		if( ! \Auth::has_access('comment.limitless_comment'))
 		{
 			// check if the user is banned
 			if ($ban = \Ban::is_banned(\Input::ip_decimal(), $this->board))

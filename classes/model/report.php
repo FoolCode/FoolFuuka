@@ -6,12 +6,14 @@ class ReportNotFoundException extends ReportException {}
 class ReportReasonTooLongException extends ReportException {}
 class ReportSentTooManyException extends ReportException {}
 class ReportCommentNotFoundException extends ReportException {}
+class ReportMediaNotFoundException extends ReportException {}
 
 class Report extends \Model\Model_Base
 {	
 	public $id = null;
 	public $board_id = null;
 	public $doc_id = null;
+	public $media_id = null;
 	public $reason = null;
 	public $ip_reporter = null;
 	public $created = null;
@@ -98,6 +100,12 @@ class Report extends \Model\Model_Base
 	}
 	
 	
+	public static function get_by_media_id($board, $doc_id)
+	{
+		return static::get_by('media_id', $board, $doc_id);
+	}
+	
+	
 	protected static function p_get_by($by, $first, $second = null)
 	{
 		static::preload();
@@ -116,6 +124,15 @@ class Report extends \Model\Model_Base
 				foreach(static::$_preloaded as $item)
 				{
 					if ($item->board_id === $first->id && $item->doc_id === $second)
+					{
+						$result[] = $item;
+					}
+				}
+				break;
+			case 'media_id':
+				foreach(static::$_preloaded as $item)
+				{
+					if ($item->board_id === $first->id && $item->media_id === $second)
 					{
 						$result[] = $item;
 					}
@@ -145,23 +162,38 @@ class Report extends \Model\Model_Base
 	}
 	
 	
-	public static function p_add(&$board, $doc_id, $reason, $ip_reporter = null)
+	public static function p_add(&$board, $id, $reason, $ip_reporter = null, $mode = 'doc_id')
 	{
 		$new = new static();
 		$new->board =& $board;
 		$new->board_id = $board->id;
 		
-		try
+		if ($mode === 'media_id')
 		{
-			Board::forge()->get_post()->set_radix($new->board)->set_options('doc_id', $doc_id)->get_comments();
+			try
+			{
+				Media::get_by_media_id($new->board, $id);
+			}
+			catch (MediaNotFoundException $e)
+			{
+				throw new ReportMediaNotFoundException(__('The media you are reporting could not be found.'));
+			}
+			
+			$new->media_id = (int) $id;
 		}
-		catch (BoardException $e)
+		else
 		{
-			throw new ReportCommentNotFoundException(__('The report you are reporting could not be found.'));
+			try
+			{
+				Board::forge()->get_post()->set_radix($new->board)->set_options('doc_id', $id)->get_comments();
+			}
+			catch (BoardException $e)
+			{
+				throw new ReportCommentNotFoundException(__('The report you are reporting could not be found.'));
+			}
+			
+			$new->doc_id =  (int) $id;
 		}
-		
-		$new->doc_id =  (int) $doc_id;
-
 			
 		if (mb_strlen($reason) > 10000)
 		{

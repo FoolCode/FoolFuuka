@@ -2,7 +2,8 @@
 
 namespace Foolfuuka\Model;
 
-class MediaNotFoundException extends \FuelException {}
+class MediaException extends \FuelException {}
+class MediaNotFoundException extends MediaException {}
 class MediaHashNotFoundException extends MediaNotFoundException {}
 class MediaDirNotAvailableException extends MediaNotFoundException {}
 class MediaFileNotFoundException extends MediaNotFoundException {}
@@ -149,6 +150,29 @@ class Media extends \Model\Model_Base
 	protected static function p_get_by_media_hash($board, $value, $op = 0)
 	{
 		return static::get_by($board, 'media_hash', $value, $op);
+	}
+	
+	
+	/**
+	 * 
+	 * @param type $board
+	 * @param type $filename
+	 */
+	protected static function p_get_by_filename($board, $filename)
+	{
+		$result = \DB::select('media_id')
+			->from(\DB::expr(\Radix::get_table($board)))
+			->where('media_orig', '=', $filename)
+			->as_object()
+			->execute()
+			->current();
+		
+		if ($result)
+		{
+			return static::get_by_media_id($board, $result->media_id);
+		}
+		
+		throw new MediaNotFoundException();
 	}
 
 

@@ -52,10 +52,10 @@ class Controller_Chan extends \Controller_Common
 				'selected_theme' => isset($this->_theme)?$this->_theme->get_selected_theme():'',
 				'csrf_token_key' => \Config::get('security.csrf_token_key'),
 				'images' => array(
-					'banned_image' => \Uri::base() . 'content/themes/default/images/banned-image.png',
+					'banned_image' => \Uri::base().$this->_theme->fallback_asset('images/banned-image.png'),
 					'banned_image_width' => 150,
 					'banned_image_height' => 150,
-					'missing_image' => \Uri::base() . 'content/themes/default/images/missing-image.jpg',
+					'missing_image' => \Uri::base().$this->_theme->fallback_asset('images/missing-image.jpg'),
 					'missing_image_width' => 150,
 					'missing_image_height' => 150,
 				),
@@ -76,7 +76,7 @@ class Controller_Chan extends \Controller_Common
 	public function router($method, $params)
 	{
 		$segments = \Uri::segments();
-
+	
 		// the underscore function is never a board
 		if (isset($segments[0]) && $segments[0] !== '_')
 		{
@@ -133,22 +133,22 @@ class Controller_Chan extends \Controller_Common
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_404()
+	public function action_404($error = null)
 	{
 		return \Response::forge($this->_theme->build('error',
 					array(
-					'error' => __('Page not found. You can use the search if you were looking for something!')
-				)));
+					'error' => $error === null ? __('Page not found. You can use the search if you were looking for something!') : $error
+				)), 404);
 	}
 
 
-	protected function error($error = null)
+	protected function error($error = null, $code = 200)
 	{
 		if (is_null($error))
 		{
-			return \Response::forge($this->_theme->build('error', array('error' => __('We encountered an unexpected error.'))));
+			return \Response::forge($this->_theme->build('error', array('error' => __('We encountered an unexpected error.'))), $code);
 		}
-		return \Response::forge($this->_theme->build('error', array('error' => $error)));
+		return \Response::forge($this->_theme->build('error', array('error' => $error)), $code);
 	}
 
 
@@ -256,7 +256,7 @@ class Controller_Chan extends \Controller_Common
 			$board->get_comments();
 			$board->get_count();
 		}
-		catch (\Model\BoardException $e)
+		catch (Model\BoardException $e)
 		{
 			\Profiler::mark('Controller Chan::latest End Prematurely');
 			return $this->error($e->getMessage());
@@ -338,12 +338,12 @@ class Controller_Chan extends \Controller_Common
 			// execute in case there's more exceptions to handle
 			$thread = $board->get_comments();
 		}
-		catch(\Model\BoardThreadNotFoundException $e)
+		catch (Model\BoardThreadNotFoundException $e)
 		{
 			\Profiler::mark('Controller Chan::thread End Prematurely');
 			return $this->action_post($num);
 		}
-		catch (\Model\BoardException $e)
+		catch (Model\BoardException $e)
 		{
 			\Profiler::mark('Controller Chan::thread End Prematurely');
 			return $this->error($e->getMessage());
@@ -358,7 +358,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			$thread_status = $board->check_thread_status();
 		}
-		catch (\Model\BoardThreadNotFoundException $e)
+		catch (Model\BoardThreadNotFoundException $e)
 		{
 			\Profiler::mark('Controller Chan::thread End Prematurely');
 			return $this->error();
@@ -403,7 +403,7 @@ class Controller_Chan extends \Controller_Common
 
 			$comments = $board->get_comments();
 		}
-		catch (\Model\BoardException $e)
+		catch (Model\BoardException $e)
 		{
 			return $this->error($e->getMessage());
 		}
@@ -422,11 +422,11 @@ class Controller_Chan extends \Controller_Common
 
 			$comments = $board->get_comments();
 		}
-		catch (\Model\BoardMalformedInputException $e)
+		catch (Model\BoardMalformedInputException $e)
 		{
 			return $this->error(__('The post number you submitted is invalid.'));
 		}
-		catch (\Model\BoardPostNotFoundException $e)
+		catch (Model\BoardPostNotFoundException $e)
 		{
 			return $this->error(__('The post you are looking for does not exist.'));
 		}
@@ -492,54 +492,27 @@ class Controller_Chan extends \Controller_Common
 	public function radix_full_image($filename)
 	{
 		// Check if $filename is valid.
-		if (!in_array(substr($filename, -3), array('gif', 'jpg', 'png')) || !\Board::is_natural(substr($filename, 0, 13)))
+		if ( ! in_array(\Input::extension(), array('gif', 'jpg', 'png')) || ! \Board::is_natural(substr($filename, 0, 13)))
 		{
-			return $this->action_404();
+			return $this->action_404(__('The filename submitted is not compatible with the system.'));
 		}
 
-		// Fetch the FULL IMAGE with the FILENAME specified.
-		$image = \Comment::get_full_media(get_selected_radix(), $filename);
-
-		if (isset($image['media_link']))
+		try
 		{
-			redirect($image['media_link'], 'location', 303);
+			$media = \Media::get_by_filename($this->_radix, $filename.'.'.\Input::extension());
+		}
+		catch (Model\MediaException $e)
+		{
+			return $this->action_404(__('The image'));
+		}
+		
+		if ($media->media_link !== null)
+		{
+			//return \Response::redirect($media->media_link, 'location', 303);
 		}
 
-		if (isset($image['error_type']))
-		{
-			// NOT FOUND, INVALID MEDIA HASH
-			if ($image['error_type'] == 'no_record')
-			{
-				$this->output->set_status_header('404');
-				$this->theme->g(__('Error'));
-				$this->_set_parameters(
-					array(
-						'error' => __('There is no record of the specified image in our database.')
-					)
-				);
-				$this->theme->build('error');
-				return FALSE;
-			}
-
-			// NOT AVAILABLE ON SERVER
-			if ($image['error_type'] == 'not_on_server')
-			{
-				$this->output->set_status_header('404');
-				$this->theme->set_title(__('Image Pruned'));
-				$this->_set_parameters(
-					array(
-						'section_title' => __('Error 404: The image has been pruned from the server.'),
-						'modifiers' => array('post_show_single_post' => TRUE, 'post_show_view_button' => TRUE),
-						'posts' => array('posts' => array('posts' => array($image['result'])))
-					)
-				);
-				$this->theme->build('board');
-				return FALSE;
-			}
-		}
-
-		// we reached the end with nothing
-		return $this->show_404();
+		return \Response::redirect(
+			\Uri::create(array($this->_radix->shortname, 'search', 'image', substr($media->media_hash, 0, -2))), 'location', 404);
 	}
 
 
@@ -851,11 +824,11 @@ class Controller_Chan extends \Controller_Common
 				$media = \Media::forge_from_upload($this->_radix);
 				$media->spoiler = isset($data['spoiler']) && $data['spoiler'];
 			}
-			catch (\Model\MediaUploadNoFileException $e)
+			catch (Model\MediaUploadNoFileException $e)
 			{
 				$media = null;
 			}
-			catch (\Model\MediaUploadException $e)
+			catch (Model\MediaUploadException $e)
 			{
 				return $this->error($e->getMessage());
 			}

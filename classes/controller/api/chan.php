@@ -194,6 +194,20 @@ class Controller_Api_Chan extends \Controller_Rest
 			return $this->response(array('success' => __("Post reported.")), 200);
 		}
 		
+		if (\Input::post('action') === 'report_media')
+		{
+			try
+			{
+				\Report::add($this->_radix, \Input::post('media_id'), \Input::post('reason'));
+			}
+			catch (Model\ReportException $e)
+			{
+				return $this->response(array('error' => $e->getMessage()), 404);
+			}
+			
+			return $this->response(array('success' => __("Media reported.")), 200);
+		}
+		
 		if (\Input::post('action') === 'delete')
 		{
 			try

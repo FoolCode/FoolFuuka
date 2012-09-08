@@ -9,14 +9,14 @@ class Install_Foolfuuka
     {
 		$charset = \Config::get('db.default.charset');
 
-		if (!\DBUtil::table_exists('banned_md5'))
+		if ( ! \DBUtil::table_exists('banned_md5'))
 		{
 			\DBUtil::create_table('banned_md5', array(
 				'md5' => array('type' => 'varchar', 'constraint' => 24),
 			), array('md5'), true, 'innodb', 'utf8_general_ci');
 		}
 
-		if (!\DBUtil::table_exists('banned_posters'))
+		if ( ! \DBUtil::table_exists('banned_posters'))
 		{
 			\DBUtil::create_table('banned_posters', array(
 				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
@@ -30,7 +30,7 @@ class Install_Foolfuuka
 			\DBUtil::create_index('banned_posters', 'ip', 'ip_index');
 		}
 
-		if (!\DBUtil::table_exists('boards'))
+		if ( ! \DBUtil::table_exists('boards'))
 		{
 			\DBUtil::create_table('boards', array(
 				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
@@ -49,7 +49,7 @@ class Install_Foolfuuka
 			\DBUtil::create_index('boards', 'hide_thumbnails', 'hide_thumbnails_index');
 		}
 
-		if (!\DBUtil::table_exists('boards_preferences'))
+		if ( ! \DBUtil::table_exists('boards_preferences'))
 		{
 			\DBUtil::create_table('boards_preferences', array(
 				'board_preference_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
@@ -61,12 +61,13 @@ class Install_Foolfuuka
 			\DBUtil::create_index('boards_preferences', array('board_id', 'name'), 'board_id_name_index');
 		}
 
-		if (!\DBUtil::table_exists('reports'))
+		if ( ! \DBUtil::table_exists('reports'))
 		{
 			\DBUtil::create_table('reports', array(
 				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
 				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
-				'doc_id' => array('type' => 'varchar', 'constraint' => 64),
+				'doc_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
+				'media_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
 				'reason' => array('type' => 'text'),
 				'ip_reporter' => array('type' => 'decimal', 'constraint' => '39,0'),
 				'created' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true)

@@ -381,6 +381,12 @@ class Controller_Chan extends \Controller_Common
 		$backend_vars['latest_timestamp'] = $latest_timestamp;
 		$backend_vars['latest_doc_id'] = $latest_doc_id;
 		$backend_vars['board_shortname'] = $this->_radix->shortname;
+		
+		if (isset($options['last_limit']) && $options['last_limit'])
+		{
+			$backend_vars['last_limit'] = $options['last_limit'];
+		}
+		
 		$this->_theme->bind('backend_vars', $backend_vars);
 
 		if (!$thread_status['dead'] || ($thread_status['dead'] && !$this->_radix->disable_ghost))
@@ -814,6 +820,9 @@ class Controller_Chan extends \Controller_Common
 			$data['spoiler'] = true;
 		if(isset($post['reply_postas']))
 			$data['capcode'] = $post['reply_postas'];
+		
+		if(isset($post['reply_last_limit']))
+			$data['last_limit'] = $post['reply_last_limit'];
 
 		$media = null;
 
@@ -850,6 +859,14 @@ class Controller_Chan extends \Controller_Common
 
 		// leave the capcode check to the model
 
+		// this is for redirecting, not for the database
+		$limit = false;
+		if (isset($data['last_limit']))
+		{
+			$limit = $data['last_limit'];
+			unset($data['last_limit']);
+		}
+		
 		if($val->run($data))
 		{
 			try
@@ -878,7 +895,8 @@ class Controller_Chan extends \Controller_Common
 
 		if (\Input::is_ajax())
 		{
-			$comment_api = \Comment::forge_for_api($comment, $this->_radix, array('board' => false, 'formatted' => true));
+			$comment_api = \Comment::forge_for_api($comment, $this->_radix, 
+				array('board' => false, 'formatted' => true,), array('controller_method' => ! $limit ? 'thread' : 'last/'.$limit));
 			return \Response::forge(
 				json_encode(array('success' => __('Message sent.'), $comment->thread_num => array('posts' => array($comment_api)))));
 		}
@@ -886,7 +904,12 @@ class Controller_Chan extends \Controller_Common
 		{
 			$this->_theme->set_layout('redirect');
 			return \Response::forge($this->_theme->build('redirection',
-				array('url' => \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/'.$comment->num))));
+				array('url' => \Uri::create(array(
+					$this->_radix->shortname,
+					! $limit ? 'thread' : 'last/'.$limit,
+					$comment->thread_num,
+					$comment->num
+			)))));
 		}
 
 	}

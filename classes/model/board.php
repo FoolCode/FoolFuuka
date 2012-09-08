@@ -562,6 +562,9 @@ class Board extends \Model\Model_Base
 	protected function p_get_thread_comments()
 	{
 		\Profiler::mark('Board::get_thread_comments Start');
+		
+		$controller_method = 'thread';
+		
 		extract($this->_options);
 
 		// determine type
@@ -597,6 +600,8 @@ class Board extends \Model\Model_Base
 				static::sql_media_join($query,null, 'x');
 				static::sql_extra_join($query, null, 'x');
 				$query->order_by('num', 'asc')->order_by('subnum', 'asc');
+				
+				$controller_method = 'last/'.$last_limit;
 				break;
 
 			case 'thread':
@@ -624,7 +629,8 @@ class Board extends \Model\Model_Base
 			$this->_comments_unsorted =
 				Comment::forge_for_api($query_result, $this->_radix, $this->_api, array(
 					'realtime' => $realtime, 
-					'backlinks_hash_only_url' => true
+					'backlinks_hash_only_url' => true,
+					'controller_method' => $controller_method
 				));
 			
 		}
@@ -634,7 +640,8 @@ class Board extends \Model\Model_Base
 				Comment::forge($query_result, $this->_radix, array(
 					'realtime' => $realtime, 
 					'backlinks_hash_only_url' => true,
-					'prefetch_backlinks' => true
+					'prefetch_backlinks' => true,
+					'controller_method' => $controller_method
 				));
 		}
 		

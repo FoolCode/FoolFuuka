@@ -98,7 +98,9 @@ class Controller_Api_Chan extends \Controller_Rest
 					->set_options(array(
 						'type' => 'from_doc_id',
 						'latest_doc_id' => $latest_doc_id,
-						'realtime' => true
+						'realtime' => true,
+						'controller_method' => 
+							\Board::is_natural(\Input::get('last_limit')) ? 'last/'.\Input::get('last_limit') : 'thread'
 				));
 
 				return $this->response($board->get_comments(), 200);

@@ -47,6 +47,9 @@ class Comment extends \Model\Model_Base
 	protected $_backlinks_hash_only_url = false;
 	
 	protected $current_board_for_prc = null;
+	
+	
+	public $_controller_method = 'thread';
 
 	/**
 	 * Sets the callbacks so they return URLs good for realtime updates
@@ -454,7 +457,7 @@ class Comment extends \Model\Model_Base
 		$build_url = \Plugins::run_hook('fu.comment_model.process_internal_links.html_result', array($data, $build_url), 'simple');
 
 		static::$_backlinks_arr[$data->num][$current_p_num_u] = implode(
-			'<a href="' . \Uri::create(array($data->board->shortname, 'thread', $data->post->thread_num)) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
+			'<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $data->post->thread_num)) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
 			$build_url['attr_backlink'] . '>&gt;&gt;' . $current_p_num_c . '</a>'
 		, $build_url['tags']);
 
@@ -466,7 +469,7 @@ class Comment extends \Model\Model_Base
 					. $build_url['attr_op'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 			}
 
-			return implode('<a href="' . \Uri::create(array($data->board->shortname, 'thread', $num)) . '#' . $data->num . '" '
+			return implode('<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $num)) . '#' . $data->num . '" '
 				. $build_url['attr_op'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 		}
 
@@ -480,14 +483,14 @@ class Comment extends \Model\Model_Base
 						. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 				}
 
-				return implode('<a href="' . \Uri::create(array($data->board->shortname, 'thread', $key)) . '#' . $build_url['hash'] . $data->num . '" '
+				return implode('<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $key)) . '#' . $build_url['hash'] . $data->num . '" '
 					. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 			}
 		}
 
 		if ($this->realtime === TRUE)
 		{
-			return implode('<a href="' . \Uri::create(array($data->board->shortname, 'thread', $key)) . '#' . $build_url['hash'] . $data->num . '" '
+			return implode('<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $key)) . '#' . $build_url['hash'] . $data->num . '" '
 				. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 		}
 

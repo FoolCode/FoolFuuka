@@ -708,7 +708,7 @@ class Radix extends \Model_Base
 		}
 		else
 		{
-			$object = \DB::select()->from('boards')->where('hidden', 0)->order_by('shortname', 'asc')
+			$object = \DB::select()->from('boards')->order_by('shortname', 'asc')
 				->as_object()->execute()->as_array('id');
 		}
 

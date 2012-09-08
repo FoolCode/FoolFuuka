@@ -2,6 +2,7 @@
 
 <?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
+<?= isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
 
 <table id="reply">
 	<tbody>

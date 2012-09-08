@@ -51,7 +51,7 @@ foreach ($board->get_comments() as $k => $p) :
 
 			<?php if ($p->media->media_status == 'banned') : ?>
 				<div class="post_file_controls">
-					<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" class="btnr" target="_blank">Full</a><?php if ($op->media->total > 1) : ?><a href="<?= Uri::create($radix->shortname . '/search/image/' . urlencode(substr($p->media->media_hash, 0, -2))) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a target="_blank" href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>" class="btnr parent">Google</a>
+					<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" class="btnr" target="_blank">Full</a><?php if ($p->media->total > 1) : ?><a href="<?= Uri::create($radix->shortname . '/search/image/' . urlencode(substr($p->media->media_hash, 0, -2))) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a target="_blank" href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>" class="btnr parent">Google</a>
 				</div>
 			<?php endif; ?>
 		</div>

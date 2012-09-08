@@ -77,6 +77,7 @@ var bindFunctions = function()
 				reply_nymphassword: jQuery("#reply_nymphassword").val(),
 				reply_postas: jQuery("#reply_postas").val(),
 				reply_gattai: 'Submit',
+				reply_last_limit: typeof backend_vars.last_limit === "undefined" ? null : backend_vars.last_limit,
 				theme: backend_vars.selected_theme
 			};
 
@@ -514,11 +515,6 @@ var showBacklink = function(backlink, pos, height, width)
 	backlink.find("article").removeAttr("id").find(".post_controls").remove();
 	backlink.find(".post_file_controls").remove();
 
-	// remove the image from the backlink box if it's a gallery
-	if(typeof page_function !== 'undefined' && backend_vars.page_function == "gallery")
-	{
-		backlink.find(".thread_image_box").remove();
-	}
 	var swap_image = backlink.find('[data-original]');
 	if(swap_image.length > 0)
 	{
@@ -532,7 +528,7 @@ var backlinkify = function(elem, post_id, subnum)
 	if(subnum > 0)
 		post_id += "_" + subnum;
 
-	elem.find("a.[data-backlink=true]").each(function(idx, post) {
+	elem.find("a[data-backlink=true]").each(function(idx, post) {
 		p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
 
 		if (typeof backlinks[p_id] === "undefined")
@@ -540,7 +536,15 @@ var backlinkify = function(elem, post_id, subnum)
 			backlinks[p_id] = [];
 		}
 
-		backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+		if (typeof backend_vars.last_limit === "undefined")
+		{
+			backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+		}
+		else
+		{
+			backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/last/' + backend_vars.last_limit + '/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');			
+		}
+		
 		backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
 	});
 
@@ -575,7 +579,8 @@ var realtimethread = function(){
 			num : backend_vars.thread_id,
 			board: backend_vars.board_shortname,
 			latest_doc_id: backend_vars.latest_doc_id,
-			theme: backend_vars.selected_theme
+			theme: backend_vars.selected_theme,
+			last_limit: typeof backend_vars.last_limit === "undefined" ? null : backend_vars.last_limit
 		},
 		success: insertPost,
 		error: function(jqXHR, textStatus, errorThrown) {

@@ -5,6 +5,7 @@ if (!defined('DOCROOT'))
 if (!isset($thread_id) && ! $radix->archive) : ?>
 <?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
+<?= isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
 <table style="margin-left: auto; margin-right: auto">
 	<tbody>
 		<tr>

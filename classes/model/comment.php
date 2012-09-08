@@ -963,6 +963,10 @@ class Comment extends \Model\Model_Base
 		else
 		{
 			$this->process_name();
+			if ($this->trip === '')
+			{
+				$this->trip = null;
+			}
 		}
 		
 		foreach(array('email', 'title', 'delpass', 'comment') as $key)

@@ -34,309 +34,349 @@ var bindFunctions = function()
 			search_el.removeClass('active');
 		}
 	});
+	
+	
+	var clickCallbacks = {
+		
+		highlight: function(el, post)
+		{
+			if (post) 
+			{
+				replyHighlight(post);
+			}
+		},
 
-	// unite all the onclick functions in here
-	jQuery("body").on("click",
-		"a.[data-function], button.[data-function], input.[data-function]",
-		function(event) {
-			var el = jQuery(this);
-			var post = el.data("post");
-			var modal = jQuery("#post_tools_modal");
-			switch (el.data("function")) {
-				case 'highlight':
-					if (post) replyHighlight(post);
-					break;
+		quote: function(el, post)
+		{
+			jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
+		},
 
-				case 'quote':
-					jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
-					break;
+		comment: function(el, post)
+		{
+			// sending an image
+			if(jQuery("#file_image").val())
+				return true;
 
-				case 'comment':
-					// sending an image
-					if(jQuery("#file_image").val())
-						return true;
+			var originalText = el.attr('value');
+			el.attr({'value': backend_vars.gettext['submit_state'], 'disabled': 'disabled'});
 
-					var originalText = el.attr('value');
-					el.attr({'value': backend_vars.gettext['submit_state'], 'disabled': 'disabled'});
+			// to make sure nobody gets pissed off with a blocked button
+			var buttonTimeout = setTimeout(function(){
+				el.attr({'value': originalText});
+				el.removeAttr('disabled');
+			}, 15000);
 
-					// to make sure nobody gets pissed off with a blocked button
-					var buttonTimeout = setTimeout(function(){
-						el.attr({'value': originalText});
-						el.removeAttr('disabled');
-					}, 15000);
+			var reply_alert = jQuery('#reply_ajax_notices');
+			reply_alert.removeClass('error').removeClass('success');
+			_data = {
+				reply_numero: post,
+				reply_bokunonome: jQuery("#reply_bokunonome").val(),
+				reply_elitterae: jQuery("#reply_elitterae").val(),
+				reply_talkingde: jQuery("#reply_talkingde").val(),
+				reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
+				reply_nymphassword: jQuery("#reply_nymphassword").val(),
+				reply_postas: jQuery("#reply_postas").val(),
+				reply_gattai: 'Submit',
+				theme: backend_vars.selected_theme
+			};
 
-					var reply_alert = jQuery('#reply_ajax_notices');
-					reply_alert.removeClass('error').removeClass('success');
-					_data = {
-						reply_numero: post,
-						reply_bokunonome: jQuery("#reply_bokunonome").val(),
-						reply_elitterae: jQuery("#reply_elitterae").val(),
-						reply_talkingde: jQuery("#reply_talkingde").val(),
-						reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
-						reply_nymphassword: jQuery("#reply_nymphassword").val(),
-						reply_postas: jQuery("#reply_postas").val(),
-						reply_gattai: 'Submit',
-						theme: backend_vars.selected_theme
-					};
+			_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
 
-					_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
-
-					jQuery.ajax({
-						url: backend_vars.site_url + backend_vars.board_shortname + '/submit/' ,
-						dataType: 'json',
-						type: 'POST',
-						cache: false,
-						data: _data,
-						success: function(data){
-							// clear button's timeout, we can deal with the rest now
-							clearTimeout(buttonTimeout);
-							el.attr({'value': originalText});
-							el.removeAttr('disabled');
-							if (typeof data.error !== "undefined")
-							{
-								reply_alert.html(data.error);
-								reply_alert.addClass('error'); // deals with showing the alert
-								return false;
-							}
-							reply_alert.html(data.success);
-							reply_alert.addClass('success'); // deals with showing the alert
-							jQuery("#reply_chennodiscursus").val("");
-							insertPost(data);
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-							reply_alert.html('Connection error.');
-							reply_alert.addClass('error');
-							reply_alert.show();
-						},
-						complete: function() {
-						}
-					});
-					event.preventDefault();
-					break;
-
-				case 'realtimethread':
-					realtimethread();
-					event.preventDefault();
-					break
-
-				case 'mod':
-					el.attr({'disabled': 'disabled'});
-					_data = {
-						board: el.data('board'),
-						id: el.data('id'),
-						action: el.data('action'),
-						theme: backend_vars.selected_theme
-					};
-					_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
-					jQuery.ajax({
-						url: backend_vars.api_url + '_/api/chan/mod_actions/',
-						dataType: 'json',
-						type: 'POST',
-						cache: false,
-						data: _data,
-						success: function(data){
-							el.removeAttr('disabled');
-							if (typeof data.error !== "undefined")
-							{
-								alert(data.error);
-								return false;
-							}
-
-							// might need to be upgraded to array support
-							switch(el.data('action'))
-							{
-								case 'remove_post':
-									jQuery('.doc_id_' + el.data('id')).remove();
-									break;
-								case 'remove_image':
-									jQuery('.doc_id_' + el.data('id')).find('.thread_image_box:eq(0) img')
-										.attr('src', backend_vars.images['missing_image'])
-										.css({
-											width: backend_vars.images['missing_image_width'],
-											height: backend_vars.images['missing_image_height']
-										});
-									break;
-								case 'remove_report':
-									jQuery('.doc_id_' + el.data('id')).removeClass('reported')
-									break;
-								case 'ban_user':
-									jQuery('.doc_id_' + el.data('id')).find('[data-action=ban_user]').text('Banned');
-									break;
-								case 'ban_md5':
-									jQuery('.doc_id_' + el.data('id')).find('.thread_image_box:eq(0) img')
-										.attr('src', backend_vars.images['banned_image'])
-										.css({
-											width: backend_vars.images['banned_image_width'],
-											height: backend_vars.images['banned_image_height']
-										});
-									break;
-							}
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-
-						},
-						complete: function() {
-						}
-					});
-					return false;
-					break;
-
-				case 'activateModeration':
-					jQuery('button[data-function=activateModeration]').parent().hide();
-					jQuery('.post_mod_controls button[data-function]').attr({'disabled': 'disabled'});
-					setTimeout(function(){
-						jQuery('.post_mod_controls button[data-function]').removeAttr('disabled');
-					}, 700);
-					jQuery('.post_mod_controls').show();
-					break;
-				case 'closeModal':
-					el.closest(".modal").modal('hide');
-					return false;
-					break;
-
-				case 'delete':
-					var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
-					modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
-					modal.find(".modal-loading").hide();
-					modal.find(".modal-information").html('\
-					<span class="modal-label">Password</span>\n\
-					<input type="hidden" class="modal-post-id" value="' + el.data("post") + '" />\n\
-					<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
-					<input type="password" class="modal-password" />');
-					modal.find(".submitModal").data("action", 'delete');
-					modal.find(".modal-password").val(backend_vars.user_pass);
-					break;
-
-				case 'report':
-					modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
-					modal.find(".modal-loading").hide();
-					modal.find(".modal-information").html('\
-					<span class="modal-label">Post ID</span>\n\
-					<input type="text" class="modal-post-id" value="' + el.data("post") + '" />\n\
-					<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
-					<span class="modal-field">Comment</span>\n\
-					<textarea class="modal-comment"></textarea>');
-					modal.find(".submitModal").data("action", 'report');
-					break;
-
-				case 'ban':
-					modal.find(".title").html('Ban user with IP ' + el.data("ip"));
-					modal.find(".modal-loading").hide();
-					modal.find(".modal-information").html('\
-					<span class="modal-label">IP</span>\n\
-					<input type="text" class="modal-ip" value="' + el.data("ip") + '" /><br/>\n\
-					<span class="modal-label">Days</span>\n\
-					<input type="text" class="modal-days" value="3" /><br/>\n\
-					<span class="modal-label modal-board-ban" style="text-align:left">Only this board</span>\n\
-					<input type="radio" name="board" checked value="board" /><br/>\n\
-					<span class="modal-label modal-global-ban">Global</span>\n\
-					<input type="radio" name="board" value="global" /><br/>\n\
-					<span class="modal-field">Comment</span>\n\
-					<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
-					<textarea class="modal-comment"></textarea>');
-					modal.find(".submitModal").data("action", 'ban');
-					break;
-
-				case 'submitModal':
-					var loading = modal.find(".modal-loading");
-					var action = $(this).data("action");
-					var _board = modal.find(".modal-board").val();
-					var _doc_id = modal.find(".modal-post-id").val();
-					var _href = backend_vars.api_url+'_/api/chan/user_actions/';
-					var _data = {};
-
-					if (action == 'report') {
-						_data = {
-							action: 'report',
-							board: _board,
-							doc_id: _doc_id,
-							reason: modal.find(".modal-comment").val(),
-							csrf_fool: backend_vars.csrf_hash
-						};
-					}
-					else if (action == 'delete') {
-						_data = {
-							action: 'delete',
-							board: _board,
-							doc_id: _doc_id,
-							password: modal.find(".modal-password").val(),
-							csrf_fool: backend_vars.csrf_hash
-						};
-					}
-					else if (action == 'ban')
+			jQuery.ajax({
+				url: backend_vars.site_url + backend_vars.board_shortname + '/submit/' ,
+				dataType: 'json',
+				type: 'POST',
+				cache: false,
+				data: _data,
+				success: function(data){
+					// clear button's timeout, we can deal with the rest now
+					clearTimeout(buttonTimeout);
+					el.attr({'value': originalText});
+					el.removeAttr('disabled');
+					if (typeof data.error !== "undefined")
 					{
-						_href = backend_vars.api_url+'_/api/chan/mod_actions/';
-						_data = {
-							action: 'ban_user',
-							board: modal.find('.modal-board').val(),
-							board_ban: modal.find('input:radio[name=board]:checked').val(),
-							length: modal.find('.modal-days').val() * 24 * 60 * 60,
-							ip: modal.find('.modal-ip').val(),
-							reason: modal.find('.modal-comment').val()
-						};
+						reply_alert.html(data.error);
+						reply_alert.addClass('error'); // deals with showing the alert
+						return false;
 					}
-					else {
-						// Stop It! Unable to determine what action to use.
+					reply_alert.html(data.success);
+					reply_alert.addClass('success'); // deals with showing the alert
+					jQuery("#reply_chennodiscursus").val("");
+					insertPost(data);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					reply_alert.html('Connection error.');
+					reply_alert.addClass('error');
+					reply_alert.show();
+				},
+				complete: function() {
+				}
+			});
+			event.preventDefault();
+		},
+		
+		realtimethread: function(el, post)
+		{
+			realtimethread();
+			event.preventDefault();
+		},
+		
+		mod: function(el, post)
+		{
+			el.attr({'disabled': 'disabled'});
+			_data = {
+				board: el.data('board'),
+				id: el.data('id'),
+				action: el.data('action'),
+				theme: backend_vars.selected_theme
+			};
+			_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
+			jQuery.ajax({
+				url: backend_vars.api_url + '_/api/chan/mod_actions/',
+				dataType: 'json',
+				type: 'POST',
+				cache: false,
+				data: _data,
+				success: function(data){
+					el.removeAttr('disabled');
+					if (typeof data.error !== "undefined")
+					{
+						alert(data.error);
 						return false;
 					}
 
-					_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
+					// might need to be upgraded to array support
+					switch(el.data('action'))
+					{
+						case 'remove_post':
+							jQuery('.doc_id_' + el.data('id')).remove();
+							break;
+						case 'delete_image':
+							jQuery('.doc_id_' + el.data('doc-id')).find('.thread_image_box:eq(0) img')
+								.attr('src', backend_vars.images['missing_image'])
+								.css({
+									width: backend_vars.images['missing_image_width'],
+									height: backend_vars.images['missing_image_height']
+								});
+							break;
+						case 'remove_report':
+							jQuery('.doc_id_' + el.data('id')).removeClass('reported')
+							break;
+						case 'ban_user':
+							jQuery('.doc_id_' + el.data('id')).find('[data-action=ban_user]').text('Banned');
+							break;
+						case 'ban_image_global':
+						case 'ban_image_local':
+							jQuery('.doc_id_' + el.data('doc-id')).find('.thread_image_box:eq(0) img')
+								.attr('src', backend_vars.images['banned_image'])
+								.css({
+									width: backend_vars.images['banned_image_width'],
+									height: backend_vars.images['banned_image_height']
+								});
+							break;
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
 
-					jQuery.post(_href, _data, function(result) {
-						loading.hide();
-						if (typeof result.error !== 'undefined') {
-							modal.find(".modal-error").html('<div class="alert alert-error" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.error + '</p></div>').show();
-							return false;
-						}
-						modal.modal('hide');
+				},
+				complete: function() {
+				}
+			});
+			return false;
+		},
+		
+		activateModeration: function(el, post)
+		{
+			jQuery('button[data-function=activateModeration]').parent().hide();
+			jQuery('.post_mod_controls button[data-function]').attr({'disabled': 'disabled'});
+			setTimeout(function(){
+				jQuery('.post_mod_controls button[data-function]').removeAttr('disabled');
+			}, 700);
+			jQuery('.post_mod_controls').show();
+		},
+		
+		closeModal: function(el, post)
+		{
+			el.closest(".modal").modal('hide');
+			return false;
+		},
+		
+		'delete': function(el, post)
+		{
+			var modal = jQuery("#post_tools_modal");
+			var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
+			modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
+			modal.find(".modal-loading").hide();
+			modal.find(".modal-information").html('\
+			<span class="modal-label">Password</span>\n\
+			<input type="hidden" class="modal-post-id" value="' + el.data("post") + '" />\n\
+			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
+			<input type="password" class="modal-password" />');
+			modal.find(".submitModal").data("action", 'delete');
+			modal.find(".modal-password").val(backend_vars.user_pass);
+		},
+		
+		
+		report: function(el, post)
+		{
+			var modal = jQuery("#post_tools_modal");
+			modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
+			modal.find(".modal-loading").hide();
+			modal.find(".modal-information").html('\
+			<span class="modal-label">Post ID</span>\n\
+			<input type="text" class="modal-post-id" value="' + el.data("post") + '" />\n\
+			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
+			<br>\n\
+			<span class="modal-field">Comment</span>\n\
+			<textarea class="modal-comment"></textarea>');
+			modal.find(".submitModal").data("action", 'report');
+		},
 
-						if (action == 'report') {
-							toggleHighlight(modal.find(".modal-post").val().replace(',', '_'), 'reported', false);
-						}
-						else if (action == 'delete') {
-							jQuery('.doc_id_' + _doc_id).hide();
-						}
-					}, 'json');
-					return false;
-					break;
+		report_media: function(el, post)
+		{
+			var modal = jQuery("#post_tools_modal");
+			modal.find(".title").html('Report &raquo; Media No.' + el.data("post-media-id"));
+			modal.find(".modal-loading").hide();
+			modal.find(".modal-information").html('\
+			<span class="modal-label">Media ID</span>\n\
+			<input type="text" class="modal-post-id" value="' + el.data("media-id") + '" />\n\
+			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
+			<span class="modal-field">Comment</span>\n\
+			<textarea class="modal-comment"></textarea>');
+			modal.find(".submitModal").data("action", 'repor_media');
+		},
 
-				case 'searchShow':
-					el.parent().find('.search-dropdown-menu').show();
-					el.parent().parent().addClass('active');
-					break;
+		ban: function(el, post)
+		{
+			var modal = jQuery("#post_tools_modal");
+			modal.find(".title").html('Ban user with IP ' + el.data("ip"));
+			modal.find(".modal-loading").hide();
+			modal.find(".modal-information").html('\
+			<span class="modal-label">IP</span>\n\
+			<input type="text" class="modal-ip" value="' + el.data("ip") + '" /><br/>\n\
+			<span class="modal-label">Days</span>\n\
+			<input type="text" class="modal-days" value="3" /><br/>\n\
+			<span class="modal-label modal-board-ban" style="text-align:left">Only this board</span>\n\
+			<input type="radio" name="board" checked value="board" /><br/>\n\
+			<span class="modal-label modal-global-ban">Global</span>\n\
+			<input type="radio" name="board" value="global" /><br/>\n\
+			<span class="modal-field">Comment</span>\n\
+			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
+			<textarea class="modal-comment"></textarea>');
+			modal.find(".submitModal").data("action", 'ban');
+		},
 
-				case 'clearLatestSearches':
-					setCookie('search_latest_5', '', 0, '/', backend_vars.cookie_domain);
-					jQuery('li.latest_search').each(function(idx){
-						jQuery(this).remove();
-					});
-					return false;
-					break;
+		submitModal: function(el, post)
+		{
+			var modal = jQuery("#post_tools_modal");
+			var loading = modal.find(".modal-loading");
+			var action = el.data("action");
+			var _board = modal.find(".modal-board").val();
+			var _doc_id = modal.find(".modal-post-id").val();
+			var _href = backend_vars.api_url+'_/api/chan/user_actions/';
+			var _data = {};
 
-				case 'searchUser':
-					window.location.href = backend_vars.site_url + $(this).data('board') +
-						'/search/poster_ip/' + $(this).data('poster-ip');
-					//return false;
-					break;
-
-				case 'searchUserGlobal':
-					window.location.href = backend_vars.site_url + 'search/poster_ip/' + $(this).data('poster-ip');
-					//return false;
-					break;
-
-				default:
-					break;
+			if (action == 'report') {
+				_data = {
+					action: 'report',
+					board: _board,
+					doc_id: _doc_id,
+					reason: modal.find(".modal-comment").val(),
+					csrf_fool: backend_vars.csrf_hash
+				};
 			}
-		});
+			else if (action == 'report_media') {
+				_data = {
+					action: 'report_media',
+					board: _board,
+					media_id: modal.find(".modal-media-id").val(),
+					reason: modal.find(".modal-comment").val(),
+					csrf_fool: backend_vars.csrf_hash
+				};
+			}
+			else if (action == 'delete') {
+				_data = {
+					action: 'delete',
+					board: _board,
+					doc_id: _doc_id,
+					password: modal.find(".modal-password").val(),
+					csrf_fool: backend_vars.csrf_hash
+				};
+			}
+			else if (action == 'ban')
+			{
+				_href = backend_vars.api_url+'_/api/chan/mod_actions/';
+				_data = {
+					action: 'ban_user',
+					board: modal.find('.modal-board').val(),
+					board_ban: modal.find('input:radio[name=board]:checked').val(),
+					length: modal.find('.modal-days').val() * 24 * 60 * 60,
+					ip: modal.find('.modal-ip').val(),
+					reason: modal.find('.modal-comment').val()
+				};
+			}
+			else {
+				// Stop It! Unable to determine which action to use.
+				return false;
+			}
+
+			_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
+
+			jQuery.post(_href, _data, function(result) {
+				loading.hide();
+				if (typeof result.error !== 'undefined') {
+					modal.find(".modal-error").html('<div class="alert alert-error" data-alert="alert"><a class="close" href="#">&times;</a><p>' + result.error + '</p></div>').show();
+					return false;
+				}
+				modal.modal('hide');
+
+				if (action == 'report') {
+					toggleHighlight('.doc_id_' + _doc_id, 'reported', false);
+				}
+				else if (action == 'delete') {
+					jQuery('.doc_id_' + _doc_id).hide();
+				}
+			}, 'json');
+			return false;
+		},
+
+		searchShow: function(el, post)
+		{
+			el.parent().find('.search-dropdown-menu').show();
+			el.parent().parent().addClass('active');
+		},
+
+		clearLatestSearches: function(el, post)
+		{
+			setCookie('search_latest_5', '', 0, '/', backend_vars.cookie_domain);
+			jQuery('li.latest_search').each(function(idx){
+				jQuery(this).remove();
+			});
+		},
+
+		searchUser: function(el, post)
+		{
+			window.location.href = backend_vars.site_url + $(this).data('board') +
+				'/search/poster_ip/' + $(this).data('poster-ip');
+		},
+
+		searchUserGlobal: function(el, post)
+		{
+			window.location.href = backend_vars.site_url + 'search/poster_ip/' + $(this).data('poster-ip');
+		}
+	}
+	
+
+	// unite all the onclick functions in here
+	jQuery("body").on("click", "a[data-function], button[data-function], input[data-function]", function(event) {
+		var el = jQuery(this);
+		var post = el.data("post");
+		return clickCallbacks[el.data("function")](el, post);
+	});
 
 	// how could we make it working well on cellphones?
-	if( navigator.userAgent.match(/Android/i) ||
-		navigator.userAgent.match(/webOS/i) ||
-		navigator.userAgent.match(/iPhone/i) ||
-		navigator.userAgent.match(/iPad/i) ||
-		navigator.userAgent.match(/iPod/i) ||
-		navigator.userAgent.match(/BlackBerry/)
-		){
+	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent))
+	{
 		return false;
 	}
 
@@ -355,7 +395,6 @@ var bindFunctions = function()
 			var pos = that.offset();
 			var height = that.height();
 			var width = that.width();
-
 
 			if(that.attr('data-backlink') != 'true')
 			{
@@ -625,76 +664,6 @@ var findSameImageFromFile = function(obj)
 	reader.readAsBinaryString(obj.files[0]);
 }
 
-var getSearch = function(type, searchForm)
-{
-	var location = searchForm.action;
-
-	if (searchForm.text.value != "")
-		location += 'text/' + encodeURIComponent(searchForm.text.value) + '/';
-
-	if (type == 'advanced')
-	{
-		if (searchForm.subject.value != "")
-			location += 'subject/' + encodeURIComponent(searchForm.subject.value) + '/';
-
-		if (searchForm.username.value != "")
-			location += 'username/' + encodeURIComponent(searchForm.username.value) + '/';
-
-		if (searchForm.tripcode.value != "")
-			location += 'tripcode/' + encodeURIComponent(searchForm.tripcode.value) + '/';
-
-		if (getRadioValue(searchForm.capcode) != "")
-			location += 'capcode/' + getRadioValue(searchForm.capcode) + '/';
-
-        if (searchForm.image.value != "")
-            location += 'image/' + encodeURIComponent(searchForm.image.value) + '/';
-
-		if (getRadioValue(searchForm.deleted) != "")
-			location += 'deleted/' + getRadioValue(searchForm.deleted) + '/';
-
-		if (getRadioValue(searchForm.ghost) != "")
-			location += 'ghost/' + getRadioValue(searchForm.ghost) + '/';
-
-		if (getRadioValue(searchForm.type) != "")
-			location += 'type/' + getRadioValue(searchForm.type) + '/';
-
-		if (getRadioValue(searchForm.filter) != "")
-			location += 'filter/' + getRadioValue(searchForm.filter) + '/';
-
-		if (searchForm.date_start.value != "")
-		{
-			var validate_date = /^\d{4}-\d{2}-\d{2}$/;
-			if (validate_date.test(searchForm.date_start.value))
-			{
-				location += 'start/' + encodeURIComponent(searchForm.date_start.value) + '/';
-			}
-			else
-			{
-				alert('Sorry, you have entered an invalid date format. (Ex: YYYY-MM-DD)');
-				return false;
-			}
-		}
-
-		if (searchForm.date_end.value != "")
-		{
-			var validate_date = /^\d{4}-\d{2}-\d{2}$/;
-			if (validate_date.test(searchForm.date_end.value))
-			{
-				location += 'end/' + encodeURIComponent(searchForm.date_end.value) + '/';
-			}
-			else
-			{
-				alert('Sorry, you have entered an invalid date format. (Ex: YYYY-MM-DD)');
-				return false;
-			}
-		}
-
-		location += 'order/' + getRadioValue(searchForm.order) + '/';
-	}
-
-	window.location = location;
-}
-
 var getPost = function(postForm)
 {
 	if (postForm.post.value == "") {
@@ -703,33 +672,6 @@ var getPost = function(postForm)
 	}
 	var post = postForm.post.value.match(/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/);
 	window.location = postForm.action + encodeURIComponent(((typeof post[1] != 'undefined') ? post[1] : '') + ((typeof post[2] != 'undefined') ? '_' + post[2] : '')) + '/';
-}
-
-var getRadioValue = function(group)
-{
-	if (typeof group == "undefined")
-		return '';
-
-	for (index = 0; index < group.length; index++)
-	{
-		if (group[index].checked == true)
-			return encodeURIComponent(group[index].value);
-	}
-}
-
-var getCheckValue = function(group)
-{
-	if (typeof group == "undefined")
-		return '';
-
-	var values = new Array();
-	for (index = 0; index < group.length; index++)
-	{
-		if (group[index].checked == true)
-			values.push(group[index].value);
-	}
-
-	return encodeURIComponent(values.join("-"));
 }
 
 function toggleHighlight(id, classn, single)
@@ -974,5 +916,10 @@ jQuery(document).ready(function() {
 	jQuery('li.latest_search').tooltip({
 		placement: 'left',
 		animation: false
+	});
+	
+	jQuery('#thread_o_matic .thread_image_box').tooltip({
+		placement: 'bottom',
+		animation: true
 	});
 });

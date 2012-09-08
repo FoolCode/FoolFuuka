@@ -475,7 +475,7 @@ body.theme_default {
 
 
 .theme_default article.thread > .thread_image_box > .thread_image_link{
-    display:block;
+    /*display:block;*/
 }
 
 .theme_default article.thread > .thread_tools_bottom {

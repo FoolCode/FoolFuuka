@@ -31,7 +31,7 @@ foreach ($board->get_comments() as $k => $p) :
 				<span class="post_controls"><a href="<?= Uri::create($radix->shortname . '/thread/' . $p->num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= Uri::create($radix->shortname . '/thread/' . $p->num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($p->count_all) && $p->count_all > 50) ? '<a href="' . Uri::create($radix->shortname . '/last50/' . $p->num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?php if ($radix->archive == 1) : ?><a href="http://boards.4chan.org/<?= $radix->shortname . '/res/' . $p->num ?>" class="btnr parent"><?= __('Original') ?></a><?php endif; ?><a href="<?= Uri::create($radix->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?= $p->doc_id ?>" data-post-id="<?= $p->num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true"><?= __('Report') ?></a><?php if (Auth::has_access('maccess.mod')) : ?><a href="<?= Uri::create($radix->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?= $p->doc_id ?>" data-post-id="<?= $p->num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true"><?= __('Delete') ?></a><?php endif; ?></span>
 			</div>
 		</header>
-		<div class="thread_image_box">
+		<div class="thread_image_box" title="<?= htmlspecialchars('<strong>'.$p->comment_processed.'</strong>') ?>">
 			<?php if ($p->media->media_status == 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
 			<?php elseif ($p->media->thumb_link === false) : ?>
@@ -39,7 +39,7 @@ foreach ($board->get_comments() as $k => $p) :
 					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
 				</a>
 			<?php else: ?>
-				<a href="<?= Uri::create($radix->shortname . '/thread/' . $p->num) ?>" data-backlink="<?= $p->num ?>" rel="noreferrer" target="_blank" class="thread_image_link"<?= ($p->media->media_link)?' data-expand="true"':'' ?>>
+				<a href="<?= Uri::create($radix->shortname . '/thread/' . $p->num) ?>" rel="noreferrer" target="_blank" class="thread_image_link"<?= ($p->media->media_link)?' data-expand="true"':'' ?>>
 					<?php if(!Auth::has_access('maccess.mod') && !$radix->transparent_spoiler && $p->spoiler) :?>
 					<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 					<?php else : ?>
@@ -51,7 +51,7 @@ foreach ($board->get_comments() as $k => $p) :
 
 			<?php if ($p->media->media_status == 'banned') : ?>
 				<div class="post_file_controls">
-					<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" class="btnr" target="_blank">Full</a><a href="<?= Uri::create($radix->shortname . '/search/image/' . urlencode(substr($p->media->media_hash, 0, -2))) ?>" class="btnr parent"><?= __('View Same') ?></a><a target="_blank" href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>" class="btnr parent">Google</a>
+					<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" class="btnr" target="_blank">Full</a><?php if ($op->media->total > 1) : ?><a href="<?= Uri::create($radix->shortname . '/search/image/' . urlencode(substr($p->media->media_hash, 0, -2))) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a target="_blank" href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>" class="btnr parent">Google</a>
 				</div>
 			<?php endif; ?>
 		</div>

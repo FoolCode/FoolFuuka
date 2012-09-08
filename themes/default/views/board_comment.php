@@ -18,7 +18,7 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 		<span class="post_file_controls">
 		<?php if ($p->media->media_status != 'banned') : ?>
 			<?php if (!$p->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-			<a href="<?= Uri::create($p->board->shortname . '/search/image/' . $p->media->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><a
+			<?php if ($p->media->total > 1) : ?><a href="<?= Uri::create($p->board->shortname . '/search/image/' . $p->media->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
 				href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>" target="_blank" class="btnr parent">Google</a><a
 				href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>" target="_blank" class="btnr parent">iqdb</a><a
 				href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
@@ -119,9 +119,9 @@ $quote_mode = (isset($is_last50) && $is_last50) ? 'last50' : 'thread';
 	<div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">
 		<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-board-url="<?= Uri::create(array($p->board->shortname)) ?>" data-id="<?= $p->doc_id ?>" data-action="delete_post"><?= __('Delete Post') ?></button>
 		<?php if (!is_null($p->media)) : ?>
-			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->media->media_id ?>" data-action="delete_image"><?= __('Delete Image') ?></button>
-			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->media->media_id ?>" data-action="ban_image_local"><?= __('Ban Image') ?></button>
-			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->media->media_id ?>" data-action="ban_image_global"><?= __('Ban Image Globally') ?></button>
+			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="delete_image"><?= __('Delete Image') ?></button>
+			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="ban_image_local"><?= __('Ban Image') ?></button>
+			<button class="btn btn-mini" data-function="mod" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="ban_image_global"><?= __('Ban Image Globally') ?></button>
 		<?php endif; ?>
 		<?php if ($p->poster_ip) : ?>
 			<button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $p->board->shortname ?>" data-ip="<?= \Inet::dtop($p->poster_ip) ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($p->poster_ip) ?></button>

@@ -503,7 +503,7 @@ class Radix extends \Model_Base
 		{
 			if (!$radix = static::get_by_id($data['id']))
 			{
-				show_404();
+				throw new HttpNotFoundException;
 			}
 
 			// save normal values

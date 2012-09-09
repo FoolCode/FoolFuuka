@@ -808,9 +808,15 @@ class Controller_Chan extends \Controller_Common
 		if(isset($post['reply_numero']))
 			$data['thread_num'] = $post['reply_numero'];
 		if(isset($post['reply_bokunonome']))
+		{
 			$data['name'] = $post['reply_bokunonome'];
+			\Cookie::set('reply_name', $data['name'], 60*60*24*30);
+		}
 		if(isset($post['reply_elitterae']))
+		{
 			$data['email'] = $post['reply_elitterae'];
+			\Cookie::set('reply_email', $data['email'], 60*60*24*30);
+		}
 		if(isset($post['reply_talkingde']))
 			$data['title'] = $post['reply_talkingde'];
 		if(isset($post['reply_chennodiscursus']))
@@ -909,7 +915,7 @@ class Controller_Chan extends \Controller_Common
 					$this->_radix->shortname,
 					! $limit ? 'thread' : 'last/'.$limit,
 					$comment->thread_num,
-					$comment->num
+					'#'.$comment->num
 			)))));
 		}
 

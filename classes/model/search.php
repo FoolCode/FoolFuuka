@@ -148,17 +148,9 @@ class Search extends Board
 					$query->match('media_hash', $args['image']);
 				}
 			}
-			if ($args['capcode'] == 'admin')
+			if ($args['capcode'] !== null)
 			{
-				$query->where('cap', 3);
-			}
-			if ($args['capcode'] == 'mod')
-			{
-				$query->where('cap', 2);
-			}
-			if ($args['capcode'] == 'user')
-			{
-				$query->where('cap', 1);
+				$query->where('cap', $args['capcode']);
 			}
 			if ($args['deleted'] == 'deleted')
 			{

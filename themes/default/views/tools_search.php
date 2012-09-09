@@ -18,7 +18,7 @@ if (isset($radix)) :
 		echo Form::open(
 			array(
 				'class' => 'navbar-search pull-right',
-				'method' => 'GET',
+				'method' => 'POST',
 				'action' => Uri::create(((!$radix->shortname)?'':'@radix/' . $radix->shortname) . '/search')
 			)
 		);

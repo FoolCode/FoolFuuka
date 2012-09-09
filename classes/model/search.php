@@ -30,21 +30,9 @@ class Search extends Board
 		extract($this->_options);
 
 		// if image is set, get either media_hash or media_id
-		if ($args['image'] !== null && static::is_natural($args['image']))
+		if ($args['image'] !== null)
 		{
-			// this is urlsafe, let's convert it else decode it
-			if (mb_strlen($args['image']) < 23)
-			{
-				$media = \Media::forge_empty();
-				$media->media_hash = $args['image'];
-				$args['image'] = $media->get_hash();
-			}
-			else
-			{
-				$args['image'] = rawurldecode($args['image']);
-			}
-
-			if(substr($args['image'], -2) != '==')
+			if(substr($args['image'], -2) !== '==')
 			{
 				$args['image'] .= '==';
 			}

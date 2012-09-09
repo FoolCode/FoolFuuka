@@ -589,7 +589,8 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		$search = \Uri::uri_to_assoc(\Uri::segments(), 2, $modifiers);
-
+		$this->_theme->bind('search', $search);
+		
 		// latest searches system
 		if( ! is_array($cookie_array = @json_decode(\Cookie::get('search_latest_5'), true)))
 		{
@@ -608,7 +609,7 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		$search_opts = array_filter($search);
-
+		
 		$search_opts['board'] = $this->_radix !== null ? $this->_radix->shortname : false;
 		unset($search_opts['page']);
 
@@ -629,14 +630,28 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		array_unshift($cookie_array, $search_opts);
+		$this->_theme->bind('latest_searches', $cookie_array);
 		\Cookie::set('search_latest_5', json_encode($cookie_array), 60 * 60 * 24 * 30);
+
+		foreach ($search as $key => $value)
+		{
+			if ($value !== null)
+			{
+				$search[$key] = trim(rawurldecode($value));
+			}
+		}
+		
+		if ($search['image'] !== null)
+		{
+			$search['image'] = base64_encode(\Media::urlsafe_b64decode($search['image']));
+		}
 
 		try
 		{
 			$board = \Search::forge()
 				->get_search($search)
 				->set_radix($this->_radix)
-				->set_page(isset($search['page']) ? $search['page'] : 1);
+				->set_page($search['page'] ? $search['page'] : 1);
 			$board->get_comments();
 		}
 		catch (Model\SearchException $e)
@@ -654,39 +669,28 @@ class Controller_Chan extends \Controller_Common
 		if ($search['text'])
 			array_push($title,
 				sprintf(__('that contain &lsquo;%s&rsquo;'),
-					trim(e(urldecode($search['text'])))));
+					e($search['text'])));
 		if ($search['subject'])
 			array_push($title,
 				sprintf(__('with the subject &lsquo;%s&rsquo;'),
-					trim(e(urldecode($search['subject'])))));
+					e($search['subject'])));
 		if ($search['username'])
 			array_push($title,
 				sprintf(__('with the username &lsquo;%s&rsquo;'),
-					trim(e(urldecode($search['username'])))));
+					e($search['username'])));
 		if ($search['tripcode'])
 			array_push($title,
 				sprintf(__('with the tripcode &lsquo;%s&rsquo;'),
-					trim(e(urldecode($search['tripcode'])))));
+					e($search['tripcode'])));
 		if ($search['filename'])
 			array_push($title,
 				sprintf(__('with the filename &lsquo;%s&rsquo;'),
-					trim(e(urldecode($search['filename'])))));
+					e($search['filename'])));
 		if ($search['image'])
 		{
-			// non-urlsafe else urlsafe
-			if (mb_strlen(urldecode($search['image'])) > 22)
-			{
-				array_push($title,
-					sprintf(__('with the image hash &lsquo;%s&rsquo;'),
-						trim(rawurldecode($search['image']))));
-			}
-			else
-			{
-				$search['image'] = \Media::urlsafe_b64encode(\Media::urlsafe_b64decode($search['image']));
-				array_push($title,
-					sprintf(__('with the image hash &lsquo;%s&rsquo;'),
-						trim($search['image'])));
-			}
+			array_push($title,
+				sprintf(__('with the image hash &lsquo;%s&rsquo;'),
+					e($search['image'])));
 		}
 		if ($search['deleted'] == 'deleted')
 			array_push($title, __('that have been deleted'));
@@ -711,9 +715,9 @@ class Controller_Chan extends \Controller_Common
 		if ($search['capcode'] == 'admin')
 			array_push($title, __('that were made by admins'));
 		if ($search['start'])
-			array_push($title, sprintf(__('posts after %s'), trim(e($search['start']))));
+			array_push($title, sprintf(__('posts after %s'), e($search['start'])));
 		if ($search['end'])
-			array_push($title, sprintf(__('posts before %s'), trim(e($search['end']))));
+			array_push($title, sprintf(__('posts before %s'), e($search['end'])));
 		if ($search['order'] == 'asc')
 			array_push($title, __('in ascending order'));
 		if (!empty($title))
@@ -758,7 +762,6 @@ class Controller_Chan extends \Controller_Common
 				'current_page' => $search['page'] ? : 1,
 				'total' => $board->get_count()/25 +1,
 			));
-
 		
 		$this->_theme->bind('modifiers', array(
 			'post_show_board_name' => $this->_radix === null,
@@ -768,8 +771,6 @@ class Controller_Chan extends \Controller_Common
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::search End');
 		return \Response::forge($this->_theme->build('board'));
-
-
 	}
 
 

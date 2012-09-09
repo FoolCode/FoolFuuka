@@ -48,7 +48,7 @@ if (!defined('DOCROOT'))
 					</span>
 					<?php if ($p->media->media_status != 'banned') : ?>
 						<?php if (!$p->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-							[<a href="<?= Uri::create($p->board->shortname . '/search/image/' . $p->safe_media_hash) ?>"><?= __('View Same') ?></a>]
+							[<a href="<?= Uri::create($p->board->shortname . '/search/image/' . $p->media->safe_media_hash) ?>"><?= __('View Same') ?></a>]
 							[<a href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>">Google</a>]
 							[<a href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>">iqdb</a>]
 							[<a href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>">SauceNAO</a>]

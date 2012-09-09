@@ -2,17 +2,20 @@
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-if (!isset($radix) && Preferences::get('fu.sphinx.global'))
+if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
 {
-	// searh can work also without a board selected
-	$radix = new \stdClass();
-	$radix->shortname = '';
+	// search can work also without a radix selected
+	$search_radix = '_';
 }
-?>
+else if (isset($radix))
+{
+	$search_radix = $radix->shortname;
+}
 
+?>
 <div style="overflow:hidden;">
 	<!--- Search Input -->
-	<?php echo \Form::open(Uri::create(((!$radix->shortname)?'':'@radix/' . $radix->shortname) . '/search')); ?>
+	<?php echo \Form::open(Uri::create($search_radix.'/search')); ?>
 	<div id="simple-search" class="postspan" style="float:left">
 		<?= __('Text Search') ?>
 		[<a class="tooltip" href="#">?<span>Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing the word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt></span></a>]
@@ -32,12 +35,12 @@ if (!isset($radix) && Preferences::get('fu.sphinx.global'))
 			'value' => 'Go'
 		));
 		?>
-		<a href="<?php echo Uri::create(((!$radix->shortname)?'':'@radix/' . $radix->shortname) . '/search') ?>" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ <?= __('Advanced') ?> ]</a>
+		<a href="<?php echo Uri::create($search_radix.'/search') ?>" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ <?= __('Advanced') ?> ]</a>
 	</div>
 	<?php echo \Form::close(); ?>
 
 	<!--- Advanced Search Input -->
-	<?php echo \Form::open(Uri::create(((!$radix->shortname)?'':'@radix/' . $radix->shortname) . '/search')); ?>
+	<?php echo \Form::open(Uri::create($search_radix.'/search')); ?>
 	<div id="advanced-search" class="postspan" style="float:left;display:none">
 		<table style="float:left">
 			<tbody>

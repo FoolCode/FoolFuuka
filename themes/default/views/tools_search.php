@@ -2,14 +2,17 @@
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-if (!isset($radix) && Preferences::get('fu.sphinx.global'))
+if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
 {
 	// search can work also without a radix selected
-	$radix = new stdClass();
-	$radix->shortname = '';
+	$search_radix = '_';
+}
+else if (isset($radix))
+{
+	$search_radix = $radix->shortname;
 }
 
-if (isset($radix)) :
+if (isset($search_radix)) :
 ?>
 
 <ul class="nav pull-right">
@@ -19,7 +22,7 @@ if (isset($radix)) :
 			array(
 				'class' => 'navbar-search pull-right',
 				'method' => 'POST',
-				'action' => Uri::create(((!$radix->shortname)?'':'@radix/' . $radix->shortname) . '/search')
+				'action' => Uri::create($search_radix.'/search')
 			)
 		);
 		echo Form::input(array(
@@ -27,7 +30,7 @@ if (isset($radix)) :
 			'data-function' => 'searchShow',
 			'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : '',
 			'class' => 'span4 search-query',
-			'placeholder' => ($radix->shortname)?__('Search or Insert Post No. or Thread URL'):__('Global Search')
+			'placeholder' => ($search_radix  !== '_') ? __('Search or Insert Post No. or Thread URL') : __('Global Search')
 		));
 		?>
 		<div class="search-dropdown-menu">

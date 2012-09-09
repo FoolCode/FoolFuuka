@@ -22,7 +22,7 @@ foreach ($board->get_comments() as $key => $post) :
 			<span><?= __('File:') . ' ' . \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->media_filename_processed ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
 			<?php if ($op->media->media_status != 'banned') : ?>
 				<?php if (!$op->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-					[<a href="<?= Uri::create($op->board->shortname . '/search/image/' . $op->safe_media_hash) ?>"><?= __('View Same') ?></a>]
+					[<a href="<?= Uri::create($op->board->shortname . '/search/image/' . $op->media->safe_media_hash) ?>"><?= __('View Same') ?></a>]
 					[<a href="http://google.com/searchbyimage?image_url=<?= $op->media->thumb_link ?>">Google</a>]
 					[<a href="http://iqdb.org/?url=<?= $op->media->thumb_link ?>">iqdb</a>]
 					[<a href="http://saucenao.com/search.php?url=<?= $op->media->thumb_link ?>">SauceNAO</a>]

@@ -65,8 +65,12 @@ class Search extends Board
 			// establish connection to sphinx
 			$sphinx_server = explode(':', \Preferences::get('fu.sphinx.listen'));
 			Sphinxql::addConnection('default', $sphinx_server[0], $sphinx_server[1]);
-
-			if ( ! Sphinxql::connect())
+		
+			try
+			{
+				Sphinxql::connect();
+			}
+			catch (\Foolz\Sphinxql\SphinxqlConnectionException $e)
 			{
 				throw new SearchSphinxOfflineException(__('The search backend is currently not online. Try later or contact us in case it\'s offline for too long.'));
 			}

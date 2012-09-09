@@ -682,7 +682,7 @@ class Controller_Chan extends \Controller_Common
 			}
 			else
 			{
-				$search['image'] = static::urlsafe_b64encode(static::urlsafe_b64decode($search['image']));
+				$search['image'] = \Media::urlsafe_b64encode(\Media::urlsafe_b64decode($search['image']));
 				array_push($title,
 					sprintf(__('with the image hash &lsquo;%s&rsquo;'),
 						trim($search['image'])));

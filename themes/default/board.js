@@ -357,13 +357,13 @@ var bindFunctions = function()
 
 		searchUser: function(el, post)
 		{
-			window.location.href = backend_vars.site_url + $(this).data('board') +
-				'/search/poster_ip/' + $(this).data('poster-ip');
+			window.location.href = backend_vars.site_url + el.data('board') +
+				'/search/poster_ip/' + el.data('poster-ip');
 		},
 
 		searchUserGlobal: function(el, post)
 		{
-			window.location.href = backend_vars.site_url + 'search/poster_ip/' + $(this).data('poster-ip');
+			window.location.href = backend_vars.site_url + '_/search/poster_ip/' + el.data('poster-ip');
 		}
 	}
 	

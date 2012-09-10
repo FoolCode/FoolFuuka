@@ -73,7 +73,7 @@ class Board extends \Model\Model_Base
 	 * @var array
 	 */
 	protected $_radix = null;
-	
+
 	protected $_api = null;
 
 
@@ -191,11 +191,11 @@ class Board extends \Model\Model_Base
 		return $this;
 	}
 
-	
+
 	protected function p_set_api($enable = true)
 	{
 		$this->_api = $enable;
-		
+
 		return $this;
 	}
 
@@ -271,8 +271,8 @@ class Board extends \Model\Model_Base
 			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : Radix::get_table($board)).'.`media_id`'),
 				'=', \DB::expr('`mg`.`media_id`'));
 	}
-	
-	
+
+
 	protected function p_sql_extra_join($query, &$board = null, $join_on = false)
 	{
 		if (is_null($board))
@@ -361,8 +361,8 @@ class Board extends \Model\Model_Base
 		}
 
 		$threads = $query->as_object()->execute()->as_array();
-		
-		
+
+
 		if (!count($threads))
 		{
 			$this->_comments = array();
@@ -459,7 +459,7 @@ class Board extends \Model\Model_Base
 			case 'ghost':
 				$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
 						->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
-						->where('time_ghost_bump', \DB::expr('IS NOT NULL'));
+						->where('time_ghost_bump', '', \DB::expr('IS NOT NULL'));
 				break;
 		}
 
@@ -508,7 +508,7 @@ class Board extends \Model\Model_Base
 			\Profiler::mark('Board::get_threads_comments End Prematurely');
 			return array();
 		}
-		
+
 		if ($this->_api)
 		{
 			$this->_comments_unsorted = Comment::forge_for_api($result, $this->_radix, $this->_api);
@@ -517,7 +517,7 @@ class Board extends \Model\Model_Base
 		{
 			$this->_comments_unsorted = Comment::forge($result, $this->_radix);
 		}
-		
+
 		$this->_comments = $this->_comments_unsorted;
 
 		\Profiler::mark_memory($this->_comments, 'Board $this->_comments');
@@ -568,9 +568,9 @@ class Board extends \Model\Model_Base
 	protected function p_get_thread_comments()
 	{
 		\Profiler::mark('Board::get_thread_comments Start');
-		
+
 		$controller_method = 'thread';
-		
+
 		extract($this->_options);
 
 		// determine type
@@ -606,7 +606,7 @@ class Board extends \Model\Model_Base
 				static::sql_media_join($query,null, 'x');
 				static::sql_extra_join($query, null, 'x');
 				$query->order_by('num', 'asc')->order_by('subnum', 'asc');
-				
+
 				$controller_method = 'last/'.$last_limit;
 				break;
 
@@ -624,7 +624,7 @@ class Board extends \Model\Model_Base
 		{
 			return $this->_comments = $this->_comments_unsorted = array();
 		}
-		
+
 		if (!count($query_result))
 		{
 			throw new BoardThreadNotFoundException(__('There\'s no such a thread.'));
@@ -634,23 +634,23 @@ class Board extends \Model\Model_Base
 		{
 			$this->_comments_unsorted =
 				Comment::forge_for_api($query_result, $this->_radix, $this->_api, array(
-					'realtime' => $realtime, 
+					'realtime' => $realtime,
 					'backlinks_hash_only_url' => true,
 					'controller_method' => $controller_method
 				));
-			
+
 		}
 		else
 		{
 			$this->_comments_unsorted =
 				Comment::forge($query_result, $this->_radix, array(
-					'realtime' => $realtime, 
+					'realtime' => $realtime,
 					'backlinks_hash_only_url' => true,
 					'prefetch_backlinks' => true,
 					'controller_method' => $controller_method
 				));
 		}
-		
+
 		// process entire thread and store in $result array
 		$result = array();
 
@@ -836,12 +836,12 @@ class Board extends \Model\Model_Base
 		{
 			$this->_comments_unsorted = Comment::forge($result, $this->_radix);
 		}
-		
+
 		foreach ($this->_comments_unsorted as $comment)
 		{
 			$this->_comments[$comment->num.($comment->subnum ? '_'.$comment->subnum : '')] = $comment;
 		}
-		
+
 		return $this;
 	}
 

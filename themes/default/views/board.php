@@ -139,7 +139,7 @@ foreach ($board->get_comments() as $key => $post) :
 <?php elseif (isset($post['posts'])): ?>
 <article class="clearfix thread">
 	
-	<?php \Plugins::run_hook('fu.themes.default_after_headless_open', array($radix)); ?>
+	<?php \Plugins::run_hook('fu.themes.default_after_headless_open', array(isset($radix) ? $radix : null)); ?>
 	
 <?php endif; ?>
 

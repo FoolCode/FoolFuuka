@@ -4,10 +4,10 @@ namespace Foolfuuka;
 
 class Controller_Api_Chan extends \Controller_Rest
 {
-	
+
 	protected $_radix = null;
 	protected $format = 'json';
-	
+
 	public function before()
 	{
 		parent::before();
@@ -15,17 +15,18 @@ class Controller_Api_Chan extends \Controller_Rest
 			header("Access-Control-Allow-Origin: https://boards.4chan.org");
 		else
 			header("Access-Control-Allow-Origin: http://boards.4chan.org");
-		
-		header('Access-Control-Allow-Credentials: true');	
+
+		header('Access-Control-Allow-Credentials: true');
 		header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 		header('Access-Control-Max-Age: 604800');
-		
+
 		if ( ! \Input::get('board') && ! \Input::get('action'))
 		{
 			$segments = \Uri::segments();
 			$uri = \Uri::base().'_'.
 				'/'.array_shift($segments).'/'.array_shift($segments).'/'.array_shift($segments).'/?';
-			
+
+			echo count($segments);
 			foreach ($segments as $key => $segment)
 			{
 				if ($key % 2 == 0)
@@ -37,42 +38,42 @@ class Controller_Api_Chan extends \Controller_Rest
 					$uri .= urlencode($segment).'&';
 				}
 			}
-			
+
 			\Response::redirect($uri);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Commodity to check that the shortname is not wrong and return a coherent error
-	 * 
+	 *
 	 * @author Woxxy
 	 */
 	protected function check_board()
 	{
 		$board = \Input::get('board');
 
-		if (!$board) 
+		if (!$board)
 		{
 			$board = \Input::post('board');
 		}
-		
+
 		if (!$board)
 		{
 			//$this->response(array('error' => __('You didn\'t select a board')), 404);
 			return false;
 		}
-			
+
 		if(!$this->_radix = \Radix::set_selected_by_shortname($board))
 		{
 			//$this->response(array('error' => __('The board you selected doesn\'t exist')), 404);
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Returns a thread
 	 *
@@ -89,12 +90,12 @@ class Controller_Api_Chan extends \Controller_Rest
 
 		$num = \Input::get('num');
 		$latest_doc_id = \Input::get('latest_doc_id');
-		
+
 		if (!$num)
 		{
 			return $this->response(array('error' => __("You are missing the 'num' parameter.")), 404);
 		}
-		
+
 		if (!\Board::is_natural($num))
 		{
 			return $this->response(array('error' => __("Invalid value for 'num'.")), 404);
@@ -120,7 +121,7 @@ class Controller_Api_Chan extends \Controller_Rest
 						'type' => 'from_doc_id',
 						'latest_doc_id' => $latest_doc_id,
 						'realtime' => true,
-						'controller_method' => 
+						'controller_method' =>
 							\Board::is_natural(\Input::get('last_limit')) ? 'last/'.\Input::get('last_limit') : 'thread'
 				));
 
@@ -138,7 +139,7 @@ class Controller_Api_Chan extends \Controller_Rest
 
 				return $this->response($board->get_comments(), 200);
 			}
-				
+
 		}
 		catch(Model\BoardThreadNotFoundException $e)
 		{
@@ -159,23 +160,24 @@ class Controller_Api_Chan extends \Controller_Rest
 		}
 
 		$num = \Input::get('num');
+		$theme =\Input::get('theme');
 
 		if (!$num)
 		{
 			return $this->response(array('error' => __("You are missing the 'num' parameter.")), 404);
 		}
-		
+
 		if (!\Board::is_valid_post_number($num))
 		{
 			return $this->response(array('error' => __("Invalid value for 'num'.")), 404);
 		}
-		
+
 		try
 		{
 			$board = \Board::forge()
 				->get_post($num)
 				->set_radix($this->_radix)
-				->set_api(array('formatted' => true, 'board' => false));
+				->set_api(array('board' => false, 'theme' => $theme));
 
 			// no index for the single post
 			$this->response(current($board->get_comments()), 200);
@@ -189,20 +191,20 @@ class Controller_Api_Chan extends \Controller_Rest
 			return $this->response(array('error' => $e->getMessage()), 404);
 		}
 	}
-	
-	
+
+
 	public function post_user_actions()
 	{
 		if ( ! \Security::check_token())
 		{
 			return $this->response(array('error' => __('The security token wasn\'t found. Try resubmitting.')));
 		}
-		
+
 		if ( ! $this->check_board())
 		{
 			return $this->response(array('error' => __("No board selected.")), 404);
 		}
-		
+
 		if (\Input::post('action') === 'report')
 		{
 			try
@@ -213,10 +215,10 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
-			
+
 			return $this->response(array('success' => __("Post reported.")), 200);
 		}
-		
+
 		if (\Input::post('action') === 'report_media')
 		{
 			try
@@ -227,10 +229,10 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
-			
+
 			return $this->response(array('success' => __("Media reported.")), 200);
 		}
-		
+
 		if (\Input::post('action') === 'delete')
 		{
 			try
@@ -252,29 +254,29 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				return $this->response(array('error' => $e->getMessage()), 200);
 			}
-			
+
 			return $this->response(array('success' => __("Post deleted.")), 200);
 		}
 	}
-	
-	
+
+
 	public function post_mod_actions()
 	{
 		if ( ! \Security::check_token())
 		{
 			return $this->response(array('error' => __('The security token wasn\'t found. Try resubmitting.')));
 		}
-		
+
 		if ( ! \Auth::has_access('comment.mod_capcode'))
 		{
 			return $this->response(array('error' => __("Forbidden.")), 403);
 		}
-		
+
 		if ( ! $this->check_board())
 		{
 			return $this->response(array('error' => __("No board selected.")), 404);
 		}
-		
+
 		if (\Input::post('action') === 'delete_report')
 		{
 			try
@@ -285,10 +287,10 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
-			
+
 			return $this->response(array('success' => __("Report deleted.")), 200);
 		}
-		
+
 		if (\Input::post('action') === 'delete_post')
 		{
 			try
@@ -306,10 +308,10 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
-			
+
 			return $this->response(array('success' => __("Post deleted.")), 200);
 		}
-		
+
 		if (\Input::post('action') === 'delete_image')
 		{
 			try
@@ -320,10 +322,10 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
-			
+
 			return $this->response(array('success' => __("Image deleted.")), 200);
 		}
-		
+
 		if (\Input::post('action') === 'ban_image_local' || \Input::post('action') === 'ban_image_global')
 		{
 			$global = false;
@@ -331,7 +333,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				$global = true;
 			}
-				
+
 			try
 			{
 				\Media::get_by_media_id($this->_radix, \Input::post('id'))->ban($global);
@@ -340,15 +342,15 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
-			
+
 			return $this->response(array('success' => __("Image banned.")), 200);
 		}
-		
+
 		if (\Input::post('action') === 'ban_user')
 		{
 			try
 			{
-				\Ban::add(\Inet::ptod(\Input::post('ip')), 
+				\Ban::add(\Inet::ptod(\Input::post('ip')),
 					\Input::post('reason'),
 					\Input::post('length'),
 					\Input::post('board_ban') === 'global' ? array() : array($this->_radix->id)
@@ -358,7 +360,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
-			
+
 			return $this->response(array('success' => __("User banned.")), 200);
 		}
 	}

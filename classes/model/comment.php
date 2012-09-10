@@ -159,7 +159,7 @@ class Comment extends \Model\Model_Base
 
 		$fields = $comment->_forced_entries;
 
-		if (isset($api['formatted']) && $api['formatted'])
+		if (isset($api['theme']) && $api['theme'] !== null)
 		{
 			$fields[] = 'formatted';
 		}
@@ -173,6 +173,12 @@ class Comment extends \Model\Model_Base
 		{
 			unset($comment->board);
 		}
+
+		// remove controller method
+		unset($comment->_controller_method);
+
+		// remove radix data
+		unset($comment->extra->_radix);
 
 		return $comment;
 	}

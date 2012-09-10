@@ -44,7 +44,7 @@ class Board extends \Model\Model_Base
 	 *
 	 * @var int
 	 */
-	protected $_total_count = 0;
+	protected $_total_count = null;
 
 	/**
 	 * The method selected to retrieve comments
@@ -91,7 +91,14 @@ class Board extends \Model\Model_Base
 	{
 		if (is_null($this->_comments))
 		{
-			$this->{$this->_method_fetching}();
+			if (method_exists($this, 'p_'.$this->_method_fetching))
+			{
+				$this->{$this->_method_fetching}();
+			}
+			else
+			{
+				$this->_comments = false;
+			}
 		}
 
 		return $this->_comments;
@@ -105,9 +112,9 @@ class Board extends \Model\Model_Base
 	 */
 	protected function p_get_count()
 	{
-		if (is_null($this->_total_count))
+		if ($this->_total_count === null)
 		{
-			if (method_exists($this, $this->_method_counting))
+			if (method_exists($this, 'p_'.$this->_method_counting))
 			{
 				$this->{$this->_method_counting}();
 			}
@@ -440,24 +447,23 @@ class Board extends \Model\Model_Base
 			$type_cache = 'ghost_num';
 		}
 
-		switch ($type)
+		switch ($order)
 		{
 			// these two are the same
 			case 'by_post':
 			case 'by_thread':
 				$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
-						->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))->cached(300);
+						->from(\DB::expr(Radix::get_table($this->_radix, '_threads')));
 				break;
 
 			case 'ghost':
 				$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
 						->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
-						->where('time_ghost_bump', \DB::expr('IS NOT NULL'))->cached(300);
+						->where('time_ghost_bump', \DB::expr('IS NOT NULL'));
 				break;
 		}
 
-		$this->_total_count = $query_threads->as_object()->execute()->current()->threads;
-
+		$this->_total_count = $query_threads->as_object()->cached(300)->execute()->current()->threads;
 		\Profiler::mark_memory($this, 'Board $this');
 		\Profiler::mark('Board::get_latest_count End');
 		return $this;

@@ -289,7 +289,7 @@ class Controller_Chan extends \Controller_Common
 			'pagination' => array(
 				'base_url' => \Uri::create(array($this->_radix->shortname, 'page')),
 				'current_page' => $page,
-				'total' => $board->get_count()
+				'total' => $board->get_count()/$options['per_page'] +1
 			)
 		));
 

@@ -19,6 +19,27 @@ class Controller_Api_Chan extends \Controller_Rest
 		header('Access-Control-Allow-Credentials: true');	
 		header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 		header('Access-Control-Max-Age: 604800');
+		
+		if ( ! \Input::get('board') || ! \Input::get('action'))
+		{
+			$segments = \Uri::segments();
+			$uri = 'https://archive.foolz.us/'.'_'.
+				'/'.array_shift($segments).'/'.array_shift($segments).'/'.array_shift($segments).'/?';
+			
+			foreach ($segments as $key => $segment)
+			{
+				if ($key % 2 == 0)
+				{
+					$uri .= urlencode($segment).'=';
+				}
+				else
+				{
+					$uri .= urlencode($segment).'&';
+				}
+			}
+			
+			\Response::redirect($uri);
+		}
 	}
 	
 	

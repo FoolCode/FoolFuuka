@@ -76,6 +76,11 @@ class Controller_Chan extends \Controller_Common
 	public function router($method, $params)
 	{
 		$segments = \Uri::segments();
+		
+		if (isset($segments[0]) && $segments[0] === 'search')
+		{
+			\Response::redirect(implode('/', array_merge(array('_'), $segments)));
+		}
 	
 		// the underscore function is never a board
 		if (isset($segments[0]) && $segments[0] !== '_')

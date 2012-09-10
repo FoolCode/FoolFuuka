@@ -978,7 +978,7 @@ class Comment extends \Model\Model_Base
 		}
 
 		// we want to know if the comment will display empty, and in case we won't let it pass
-		if($this->comment !== '')
+		if($this->comment !== null)
 		{
 			$comment_parsed = $this->process_comment();
 			if(!$comment_parsed)

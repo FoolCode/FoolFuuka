@@ -748,25 +748,26 @@ class Media extends \Model\Model_Base
 		$this->preview_orig = $microtime.'s.'.$this->temp_extension;
 		$this->media_hash = base64_encode(pack("H*", md5(file_get_contents($full_path))));
 
-		$hash_query = \DB::select()->from(\DB::expr(Radix::get_table($this->board, '_images')))
-				->where('media_hash', $this->media_hash)->as_object()->execute();
-
 		$do_thumb = true;
 		$do_full = true;
-
-		// do we have this file already in database?
-		if (count($hash_query) === 1)
+		
+		try
 		{
-			$duplicate = $hash_query->current();
-			$duplicate = new Media($duplicate, $this->board);
-
+			$duplicate = static::get_by_media_hash($this->board, $this->media_hash);
+			
+			// we want the current media to work with the same filenames as previously stored
+			$this->media = $duplicate->media;
+			$this->preview_op = $duplicate->preview_op;
+			$this->preview_reply = $duplicate->preview_reply;
+			
+			// if we're here, we got the media
 			try
 			{
 				$duplicate_dir = $duplicate->get_dir();
 				if (file_exists($duplicate_dir))
 				{
 					$do_full = false;
-				}
+				}				
 			}
 			catch (MediaDirNotAvailableException $e)
 			{}
@@ -785,28 +786,31 @@ class Media extends \Model\Model_Base
 			catch (MediaDirNotAvailableException $e)
 			{}
 		}
+		catch (MediaNotFoundException $e)
+		{}
 
 		if ($do_thumb)
 		{
 			$thumb_width = $this->board->thumbnail_reply_width;
 			$thumb_height = $this->board->thumbnail_reply_height;
+			
 			if ($is_op)
 			{
 				$thumb_width = $this->board->thumbnail_op_width;
 				$thumb_height = $this->board->thumbnail_op_height;
 			}
 
-			if (!file_exists($this->path_from_filename(true)))
+			if ( ! file_exists($this->path_from_filename(true, $is_op)))
 			{
-				mkdir($this->path_from_filename(true), 0777, true);
+				mkdir($this->path_from_filename(true, $is_op), 0777, true);
 			}
 
 			\Image::forge(array('driver' => 'imagemagick', 'quality' => 80, 'temp_dir' => APPPATH.'/tmp/'))
 				->load($full_path)
 				->resize($thumb_width, $thumb_height)
-				->save($this->path_from_filename(true).$this->preview_orig);
+				->save($this->path_from_filename(true, $is_op, true));
 
-			$thumb_getimagesize = getimagesize($this->path_from_filename(true).$this->preview_orig);
+			$thumb_getimagesize = getimagesize($this->path_from_filename(true, $is_op, true));
 			$this->preview_w = $thumb_getimagesize[0];
 			$this->preview_h = $thumb_getimagesize[1];
 		}
@@ -818,7 +822,7 @@ class Media extends \Model\Model_Base
 				mkdir($this->path_from_filename(), 0777, true);
 			}
 
-			copy($full_path, $this->path_from_filename().$this->media_orig);
+			copy($full_path, $this->path_from_filename(false, false, true));
 		}
 
 		if (function_exists('exif_read_data') && in_array(strtolower($this->temp_extension), array('jpg', 'jpeg', 'tiff')))
@@ -835,11 +839,37 @@ class Media extends \Model\Model_Base
 	}
 
 
-	public function p_path_from_filename($thumbnail = false)
+	public function p_path_from_filename($thumbnail = false, $is_op = false, $with_filename = false)
 	{
-		return \Preferences::get('fu.boards.directory', DOCROOT.'content/boards').'/'.$this->board->shortname.'/'.
-			($thumbnail ? 'thumb' : 'image').'/'.
-			substr($this->media_orig, 0, 4).'/'.substr($this->media_orig, 4, 2).'/';
+		$dir = \Preferences::get('fu.boards.directory').'/'.$this->board->shortname.'/'.
+			($thumbnail ? 'thumb' : 'image').'/';
+			
+		// we first check if we have media/preview_op/preview_reply available to reuse the value
+		if ($thumbnail)
+		{
+			if ($is_op && $this->preview_op !== null)
+			{
+				return $dir.'/'.substr($this->preview_op, 0, 4).'/'.substr($this->preview_op, 4, 2).'/'.
+					($with_filename ? $this->preview_op : '');
+			}
+			else if ( ! $is_op && $this->preview_reply !== null)
+			{
+				return $dir.'/'.substr($this->preview_reply, 0, 4).'/'.substr($this->preview_reply, 4, 2).'/'.
+					($with_filename ? $this->preview_reply : '');
+			}
+		}
+		else
+		{
+			if ($this->media !== null)
+			{
+				return $dir.'/'.substr($this->media, 0, 4).'/'.substr($this->media, 4, 2).'/'.
+					($with_filename ? $this->media : '');
+			}
+		}
+			
+		// we didn't have media/preview_op/preview_reply so fallback to making a new file
+		return $dir.'/'.substr($this->media_orig, 0, 4).'/'.substr($this->media_orig, 4, 2).'/'.
+				($with_filename ? $this->media_orig : '');
 	}
 
 }

@@ -89,6 +89,8 @@
 
 		<?= $template['body'] ?>
 
+		<?php \Plugins::run_hook('fu.themes.fuuka_after_body_template') ?>
+		
 		<?php if ($disable_headers !== TRUE) : ?>
 			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<table style="float: left;">

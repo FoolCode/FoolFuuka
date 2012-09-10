@@ -8,6 +8,11 @@ foreach ($board->get_comments() as $key => $post) :
 		$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
 ?>
 <article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->board->shortname ?>">
+	
+	
+	<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($op)); ?>
+	
+	
 	<?php if (!is_null($op->media)) : ?>
 		<div class="thread_image_box">
 			<?php if ($op->media->media_status === 'banned') : ?>
@@ -133,6 +138,9 @@ foreach ($board->get_comments() as $key => $post) :
 	<?php endif; ?>
 <?php elseif (isset($post['posts'])): ?>
 <article class="clearfix thread">
+	
+	<?php \Plugins::run_hook('fu.themes.default_after_headless_open'); ?>
+	
 <?php endif; ?>
 
 	<aside class="posts">

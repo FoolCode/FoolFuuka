@@ -147,9 +147,9 @@ header('imagetoolbar: false');
 
 							if (\Auth::has_access('comment.reports'))
 							{
-								$top_nav[] = array('href' => Uri::create(array('admin', 'posts', 'reports')), 'text' => __('Reports').(\Report::count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.\Report::count().'</span>' : ''));			
+								$top_nav[] = array('href' => Uri::create(array('admin', 'posts', 'reports')), 'text' => __('Reports').(\Report::count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.\Report::count().'</span>' : ''));
 							}
-							
+
 							$top_nav = Plugins::run_hook('ff.themes.generic_top_nav_buttons', array($top_nav), 'simple');
 							$top_nav = Plugins::run_hook('fu.themes.default_top_nav_buttons', array($top_nav), 'simple');
 
@@ -181,7 +181,7 @@ header('imagetoolbar: false');
 					echo $template['partials']['tools_modal'];
 				endif;
 				?>
-					
+
 				<?php \Plugins::run_hook('fu.themes.default_after_body_template'); ?>
 
 				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>

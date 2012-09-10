@@ -1,6 +1,7 @@
 <?php if (!defined('DOCROOT')) exit('No direct script access allowed'); ?>
 
 <?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
+<?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
 <?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
 <?= isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
 
@@ -92,7 +93,7 @@
 		<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
 		<tr>
 			<td><?= __('File') ?></td>
-			<td><?php echo \Form::upload(array('name' => 'file_image', 'id' => 'file_image')) ?></td>
+			<td><?php echo \Form::file(array('name' => 'file_image', 'id' => 'file_image')) ?></td>
 		</tr>
 		<?php endif; ?>
 		<tr>
@@ -126,8 +127,7 @@
 			<td></td>
 			<td>
 				<?php
-					$this->load->library('Markdown_Parser');
-					echo Markdown(Radix::get_selected()->posting_rules);
+					echo \Markdown::parse($radix->posting_rules);
 				?>
 			</td>
 		</tr>

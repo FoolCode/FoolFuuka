@@ -161,10 +161,9 @@ header('imagetoolbar: false');
 			</div>
 
 			<div role="main" id="main">
-				<?php if ($is_page) : ?>
-				<?= isset($template['partials']['tools_reply_box']) ? $template['partials']['tools_reply_box'] : '' ?>
-
-				<div class="divider"></div>
+				<?php if (isset($template['partials']['tools_reply_box'])) : ?>
+					<?=  $template['partials']['tools_reply_box'] ?>
+					<div class="divider"></div>
 				<?php endif; ?>
 
 				<?php if (Preferences::get('ff.theme.header_text')) : ?>
@@ -176,6 +175,8 @@ header('imagetoolbar: false');
 				<?php endif; ?>
 
 				<?= $template['body'] ?>
+				
+				<?php \Plugins::run_hook('fu.themes.yotsuba2_after_body_template'); ?>
 
 				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<div class="paginate">

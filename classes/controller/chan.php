@@ -76,12 +76,12 @@ class Controller_Chan extends \Controller_Common
 	public function router($method, $params)
 	{
 		$segments = \Uri::segments();
-		
+
 		if (isset($segments[0]) && $segments[0] === 'search')
 		{
 			\Response::redirect(implode('/', array_merge(array('_'), $segments)));
 		}
-	
+
 		// the underscore function is never a board
 		if (isset($segments[0]) && $segments[0] !== '_')
 		{
@@ -206,12 +206,12 @@ class Controller_Chan extends \Controller_Common
 		return \Response::forge($this->_theme->build('redirection'));
 	}
 
-	
+
 	public function action_opensearch()
 	{
 		return \Response::forge(\View::forge('foolfuuka::opensearch'));
 	}
-	
+
 
 	public function radix_page_mode($_mode = 'by_post')
 	{
@@ -386,12 +386,12 @@ class Controller_Chan extends \Controller_Common
 		$backend_vars['latest_timestamp'] = $latest_timestamp;
 		$backend_vars['latest_doc_id'] = $latest_doc_id;
 		$backend_vars['board_shortname'] = $this->_radix->shortname;
-		
+
 		if (isset($options['last_limit']) && $options['last_limit'])
 		{
 			$backend_vars['last_limit'] = $options['last_limit'];
 		}
-		
+
 		$this->_theme->bind('backend_vars', $backend_vars);
 
 		if (!$thread_status['dead'] || ($thread_status['dead'] && !$this->_radix->disable_ghost))
@@ -443,7 +443,7 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		// it always returns an array
-		$comment = $comments[0];
+		$comment = current($comments);
 
 		$redirect =  \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/');
 
@@ -516,7 +516,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			return $this->action_404(__('The image'));
 		}
-		
+
 		if ($media->media_link !== null)
 		{
 			//return \Response::redirect($media->media_link, 'location', 303);
@@ -545,7 +545,7 @@ class Controller_Chan extends \Controller_Common
 		if ($this->_radix !== null && (\Input::post('submit_post') || (\Input::post('submit_undefined')
 				&& (\Board::is_valid_post_number($text) || strpos($text, '//boards.4chan.org') !== false))))
 		{
-			$this->post(str_replace(',', '_', $text));
+			return $this->radix_post(str_replace(',', '_', $text));
 		}
 
 		// Check all allowed search modifiers and apply only these
@@ -595,7 +595,7 @@ class Controller_Chan extends \Controller_Common
 
 		$search = \Uri::uri_to_assoc(\Uri::segments(), 2, $modifiers);
 		$this->_theme->bind('search', $search);
-		
+
 		// latest searches system
 		if( ! is_array($cookie_array = @json_decode(\Cookie::get('search_latest_5'), true)))
 		{
@@ -614,7 +614,7 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		$search_opts = array_filter($search);
-		
+
 		$search_opts['board'] = $this->_radix !== null ? $this->_radix->shortname : false;
 		unset($search_opts['page']);
 
@@ -645,12 +645,12 @@ class Controller_Chan extends \Controller_Common
 				$search[$key] = trim(rawurldecode($value));
 			}
 		}
-		
+
 		if ($search['image'] !== null)
 		{
 			$search['image'] = base64_encode(\Media::urlsafe_b64decode($search['image']));
 		}
-		
+
 		if ($search['poster_ip'] !== null)
 		{
 			$search['poster_ip'] = \Inet::ptod($search['poster_ip']);
@@ -772,12 +772,12 @@ class Controller_Chan extends \Controller_Common
 				'current_page' => $search['page'] ? : 1,
 				'total' => $board->get_count()/25 +1,
 			));
-		
+
 		$this->_theme->bind('modifiers', array(
 			'post_show_board_name' => $this->_radix === null,
 			'post_show_view_button' => true
 		));
-		
+
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::search End');
 		return \Response::forge($this->_theme->build('board'));
@@ -837,7 +837,7 @@ class Controller_Chan extends \Controller_Common
 			$data['spoiler'] = true;
 		if(isset($post['reply_postas']))
 			$data['capcode'] = $post['reply_postas'];
-		
+
 		if(isset($post['reply_last_limit']))
 			$data['last_limit'] = $post['reply_last_limit'];
 
@@ -883,7 +883,7 @@ class Controller_Chan extends \Controller_Common
 			$limit = $data['last_limit'];
 			unset($data['last_limit']);
 		}
-		
+
 		if($val->run($data))
 		{
 			try
@@ -912,7 +912,7 @@ class Controller_Chan extends \Controller_Common
 
 		if (\Input::is_ajax())
 		{
-			$comment_api = \Comment::forge_for_api($comment, $this->_radix, 
+			$comment_api = \Comment::forge_for_api($comment, $this->_radix,
 				array('board' => false, 'formatted' => true,), array('controller_method' => ! \Board::is_natural($limit) ? 'thread' : 'last/'.$limit));
 			return \Response::forge(
 				json_encode(array('success' => __('Message sent.'), $comment->thread_num => array('posts' => array($comment_api)))));

@@ -45,10 +45,10 @@ class Comment extends \Model\Model_Base
 	 * @var bool
 	 */
 	protected $_backlinks_hash_only_url = false;
-	
+
 	protected $current_board_for_prc = null;
-	
-	
+
+
 	public $_controller_method = 'thread';
 
 	/**
@@ -102,10 +102,6 @@ class Comment extends \Model\Model_Base
 		{
 			case 'original_timestamp':
 				$this->original_timestamp = $this->timestamp;
-				$newyork = new \DateTime(date('Y-m-d H:i:s', $this->timestamp), new \DateTimeZone('America/New_York'));
-				$utc = new \DateTime(date('Y-m-d H:i:s', $this->timestamp), new \DateTimeZone('UTC'));
-				$diff = $newyork->diff($utc)->h;
-				$this->timestamp = $this->timestamp + ($diff * 60 * 60);
 				return $this->original_timestamp;
 			case 'fourchan_date':
 				return $this->fourchan_date = gmdate('n/j/y(D)G:i', $this->original_timestamp);
@@ -144,8 +140,8 @@ class Comment extends \Model\Model_Base
 
 		return new Comment($post, $board, $options);
 	}
-	
-	
+
+
 	public static function forge_for_api($post, $board, $api, $options = array())
 	{
 		if (is_array($post))
@@ -160,14 +156,14 @@ class Comment extends \Model\Model_Base
 		}
 
 		$comment = new Comment($post, $board, $options);
-		
+
 		$fields = $comment->_forced_entries;
-		
+
 		if (isset($api['formatted']) && $api['formatted'])
 		{
 			$fields[] = 'formatted';
 		}
-		
+
 		foreach ($fields as $field)
 		{
 			$comment->$field;
@@ -177,7 +173,7 @@ class Comment extends \Model\Model_Base
 		{
 			unset($comment->board);
 		}
-		
+
 		return $comment;
 	}
 
@@ -199,7 +195,7 @@ class Comment extends \Model\Model_Base
 		$extra = new \stdClass();
 		$do_media = false;
 		$do_extra = false;
-		
+
 		foreach ($post as $key => $value)
 		{
 			if( ! in_array($key, $media_fields) && ! in_array($key, $extra_fields))
@@ -226,7 +222,7 @@ class Comment extends \Model\Model_Base
 		{
 			$this->media = null;
 		}
-		
+
 		$this->extra = Extra::forge($extra, $this->board);
 
 		foreach ($options as $key => $value)
@@ -234,11 +230,21 @@ class Comment extends \Model\Model_Base
 			$this->{'_'.$key} = $value;
 		}
 
+		// format 4chan archive timestamp
+		if ($this->board->archive)
+		{
+			// archives are in new york time
+			$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));
+			$utc = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('UTC'));
+			$diff = $newyork->diff($utc)->h;
+			$this->timestamp = $this->timestamp + ($diff * 60 * 60);
+		}
+
 		if ($this->_clean)
 		{
 			$this->clean_fields();
 		}
-		
+
 		if ($this->_prefetch_backlinks)
 		{
 			// to get the backlinks we need to get the comment processed
@@ -249,12 +255,12 @@ class Comment extends \Model\Model_Base
 		{
 			$this->poster_country_name = \Config::get('geoip_codes.codes.'.strtoupper($this->poster_country));
 		}
-		
+
 		$num = $this->num.($this->subnum ? ',' . $this->subnum : '');
 		static::$_posts[$this->thread_num][] = $num;
 	}
-	
-	
+
+
 	/**
 	 * Processes the comment, strips annoying data from moot, converts BBCode,
 	 * converts > to greentext, >> to internal link, and >>> to crossboard link
@@ -341,14 +347,14 @@ class Comment extends \Model\Model_Base
 
 		return $this->comment_processed = nl2br(trim($comment));
 	}
-	
-	
+
+
 	protected static function parse_bbcode($str, $special_code, $strip = true)
 	{
 		$bbcode = new \StringParser_BBCode();
 
 		$codes = array();
-		
+
 		// add list of bbcode for formatting
 		$codes[] = array('code', 'simple_replace', NULL, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
 			array('block', 'inline'), array());
@@ -382,7 +388,7 @@ class Comment extends \Model\Model_Base
 			if($strip)
 			{
 				$code[1] = 'callback_replace';
-				$code[2] = '\\Comment::strip_unused_bbcode'; // this also fixes pre/code 
+				$code[2] = '\\Comment::strip_unused_bbcode'; // this also fixes pre/code
 			}
 
 			$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
@@ -407,7 +413,7 @@ class Comment extends \Model\Model_Base
 
 		return $bbcode->parse($str);
 	}
-	
+
 	public static function strip_unused_bbcode($action, $attributes, $content, $params, &$node_object)
 	{
 		if($content === '' || $content === FALSE)
@@ -500,15 +506,15 @@ class Comment extends \Model\Model_Base
 		// return un-altered
 		return $matches[0];
 	}
-	
-	
+
+
 	public function p_get_backlinks()
 	{
 		if (isset(static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')]))
 		{
 			return static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')];
 		}
-		
+
 		return array();
 	}
 
@@ -715,13 +721,13 @@ class Comment extends \Model\Model_Base
 		}
 
 		\DB::start_transaction();
-		
+
 		// remove message
 		\DB::delete(\DB::expr(Radix::get_table($this->board)))->where('doc_id', $this->doc_id)->execute();
 
 		// remove its extras
 		\DB::delete(\DB::expr(Radix::get_table($this->board, '_extra')))->where('extra_id', $this->doc_id)->execute();
-		
+
 		// remove message search entry
 		if($this->board->myisam_search)
 		{
@@ -734,7 +740,7 @@ class Comment extends \Model\Model_Base
 		{
 			\Report::clear_cache();
 		}
-		
+
 		// remove its image file
 		if (isset($this->media))
 		{
@@ -750,7 +756,7 @@ class Comment extends \Model\Model_Base
 				->as_object()
 				->execute()
 				->as_array();
-			
+
 			foreach ($replies as $reply)
 			{
 				$comments = \Board::forge()
@@ -758,12 +764,12 @@ class Comment extends \Model\Model_Base
 					->set_options('doc_id', $reply->doc_id)
 					->set_radix($this->board)
 					->get_comments();
-			
+
 				$comment = current($comments);
 				$comment->delete(null, true);
 			}
 		}
-		
+
 		\DB::commit_transaction();
 	}
 
@@ -867,7 +873,7 @@ class Comment extends \Model\Model_Base
 				{
 					$banned_string = __('It looks like you were banned on /'.$this->board->shortname.'/.');
 				}
-				
+
 				if ($ban->length)
 				{
 					$banned_string .= ' '.__('This ban will last until:').' '.date(DATE_COOKIE, $ban->start + $ban->length).'.';
@@ -881,7 +887,7 @@ class Comment extends \Model\Model_Base
 				{
 					$banned_string .= ' '.__('The reason for this ban is:').' «'.$this->reason.'».';
 				}
-				
+
 				throw new CommentSendingBannedException($banned_string);
 			}
 
@@ -967,7 +973,7 @@ class Comment extends \Model\Model_Base
 		{
 			$this->$key = (string) $this->$key;
 		}
-		
+
 		\Plugins::run_hook('fu.comment.insert.alter_input_after_checks', array(&$this), 'simple');
 
 		// process comment name+trip
@@ -984,10 +990,10 @@ class Comment extends \Model\Model_Base
 				$this->trip = null;
 			}
 		}
-		
+
 		foreach(array('email', 'title', 'delpass', 'comment') as $key)
 		{
-			if ($this->$key === '') 
+			if ($this->$key === '')
 			{
 				$this->$key = null;
 			}
@@ -1001,7 +1007,7 @@ class Comment extends \Model\Model_Base
 			{
 				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
 			}
-			
+
 			// clean up to reset eventual auto-built entries
 			foreach ($this->_forced_entries as $field)
 			{
@@ -1042,7 +1048,7 @@ class Comment extends \Model\Model_Base
 			{
 				$allowed_capcodes[] = 'D';
 			}
-			
+
 			if(!in_array($this->capcode, $allowed_capcodes))
 			{
 				throw new CommentSendingUnallowedCapcodeException(__('You\'re not allowed to use this capcode.'));
@@ -1056,12 +1062,12 @@ class Comment extends \Model\Model_Base
 		$microtime = str_replace('.', '', (string) microtime(true));
 		$this->timestamp = substr($microtime, 0, 10);
 		$this->op = (bool) ! $this->thread_num;
-		
+
 		if ($this->poster_ip === null)
 		{
 			$this->poster_ip = \Input::ip_decimal();
 		}
-		
+
 		if ($this->board->enable_flags && function_exists('geoip_country_code_by_name'))
 		{
 			$this->poster_country = \geoip_country_code_by_name(\Inet::dtop($this->poster_ip));
@@ -1106,7 +1112,7 @@ class Comment extends \Model\Model_Base
 		}
 
 		\Plugins::run_hook('fu.comment.insert.alter_input_before_sql', array(&$this), 'simple');
-		
+
 		\DB::start_transaction();
 
 		// being processing insert...
@@ -1134,7 +1140,7 @@ class Comment extends \Model\Model_Base
 							SELECT MAX(num)
 							FROM ' . \Radix::get_table($this->board) . '
 							WHERE thread_num = '.intval($this->thread_num).'
-							
+
 						)
 				) AS x)
 			');
@@ -1240,11 +1246,11 @@ class Comment extends \Model\Model_Base
 
 		// set data for extra fields
 		\Plugins::run_hook('fu.comment.insert.extra_json_array', array(&$this), 'simple');
-		
+
 		// insert the extra row DURING A TRANSACTION
 		$this->extra->extra_id = $last_id;
-		$this->extra->insert();		
-		
+		$this->extra->insert();
+
 		\DB::commit_transaction();
 
 		// success, now check if there's extra work to do

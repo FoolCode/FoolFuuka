@@ -154,7 +154,22 @@ class Search extends Board
 			}
 			if ($args['capcode'] !== null)
 			{
-				$query->where('cap', $args['capcode']);
+				if ($args['capcode'] === 'user')
+				{
+					$query->where('cap', ord('U'));
+				} 
+				else if ($args['capcode'] === 'mod')
+				{
+					$query->where('cap', ord('M'));
+				}
+				else if ($args['capcode'] === 'admin')
+				{
+					$query->where('cap', ord('A'));
+				}
+				else if ($args['capcode'] === 'dev')
+				{
+					$query->where('cap', ord('D'));
+				}
 			}
 			if ($args['deleted'] == 'deleted')
 			{

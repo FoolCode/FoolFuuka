@@ -294,7 +294,7 @@ class Controller_Chan extends \Controller_Common
 			'pagination' => array(
 				'base_url' => \Uri::create(array($this->_radix->shortname, 'page')),
 				'current_page' => $page,
-				'total' => $board->get_count()/$options['per_page'] +1
+				'total' => floor($board->get_count()/$options['per_page']+1)
 			)
 		));
 
@@ -770,7 +770,7 @@ class Controller_Chan extends \Controller_Common
 		$this->_theme->bind('pagination', array(
 				'base_url' => \Uri::create($pagination_arr),
 				'current_page' => $search['page'] ? : 1,
-				'total' => $board->get_count()/25 +1,
+				'total' => floor($board->get_count()/25+1),
 			));
 
 		$this->_theme->bind('modifiers', array(

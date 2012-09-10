@@ -3,11 +3,14 @@
 return array(
 
 	'roles' => array(
-		'user' => array('access' => array('user', 'member'), 'maccess' => array('user')),
+		'user' => array(
+			'access' => array('user', 'member'),
+			'maccess' => array('user')
+		),
 		'mod' => array(
 			'access' => array('mod'),
 			'maccess' => array('user', 'mod'),
-			'comment' => array('see_ip', 'passwordless_deletion', 'limitless_comment', 'reports', 'mod_capcode', 'dev_capcode'),
+			'comment' => array('see_ip', 'passwordless_deletion', 'limitless_comment', 'reports', 'mod_capcode'),
 			'users' => array('access')
 		),
 		'admin' => array(

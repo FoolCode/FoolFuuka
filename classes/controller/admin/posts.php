@@ -4,12 +4,12 @@ namespace Foolfuuka;
 
 class Controller_Admin_Posts extends \Controller_Admin
 {
-	
+
 	public function before()
 	{
 		parent::before();
 
-		if ( ! \Auth::has_access('boards.edit'))
+		if ( ! \Auth::has_access('comment.reports'))
 		{
 			\Response::redirect('admin');
 		}
@@ -20,12 +20,12 @@ class Controller_Admin_Posts extends \Controller_Admin
 	public function action_reports()
 	{
 		$this->_views['method_title'] = __('Reports');
-		
+
 		$theme = \Theme::instance('foolfuuka');
 		$theme->set_theme('default');
-		
+
 		$reports = \Report::get_all();
-		
+
 		foreach ($reports as $key => $report)
 		{
 			foreach ($reports as $k => $r)
@@ -36,7 +36,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 				}
 			}
 		}
-		
+
 		$pass = \Cookie::get('reply_password');
 		$name = \Cookie::get('reply_name');
 		$email = \Cookie::get('reply_email');
@@ -76,12 +76,12 @@ class Controller_Admin_Posts extends \Controller_Admin
 				'update_now' => __('Update now')
 			)
 		);
-		
+
 		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/manage', array('backend_vars' => $backend_vars, 'theme' => $theme, 'reports' => $reports));
 		return \Response::forge(\View::forge('admin/default', $this->_views));
 	}
-	
-	
+
+
 }
 
 /* end of file posts.php */

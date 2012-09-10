@@ -527,7 +527,7 @@ class Comment extends \Model\Model_Base
 		$data->url = $matches[2];
 		$data->num = $matches[4];
 		$data->shortname = $matches[3];
-		$data->board = \Radix::get_by_shortname($this->shortname);
+		$data->board = \Radix::get_by_shortname($data->shortname);
 
 		$build_url = array(
 			'tags' => array('', ''),

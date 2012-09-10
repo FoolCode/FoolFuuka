@@ -10,7 +10,7 @@ foreach ($board->get_comments() as $key => $post) :
 <article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->board->shortname ?>">
 	
 	
-	<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($op)); ?>
+	<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($op->board)); ?>
 	
 	
 	<?php if (!is_null($op->media)) : ?>
@@ -139,7 +139,7 @@ foreach ($board->get_comments() as $key => $post) :
 <?php elseif (isset($post['posts'])): ?>
 <article class="clearfix thread">
 	
-	<?php \Plugins::run_hook('fu.themes.default_after_headless_open'); ?>
+	<?php \Plugins::run_hook('fu.themes.default_after_headless_open', array($radix)); ?>
 	
 <?php endif; ?>
 

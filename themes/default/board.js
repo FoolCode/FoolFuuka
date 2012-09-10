@@ -89,7 +89,7 @@ var bindFunctions = function()
 				type: 'POST',
 				cache: false,
 				data: _data,
-				success: function(data){
+				success: function(data, textStatus, jqXHR){
 					// clear button's timeout, we can deal with the rest now
 					clearTimeout(buttonTimeout);
 					el.attr({'value': originalText});
@@ -103,7 +103,7 @@ var bindFunctions = function()
 					reply_alert.html(data.success);
 					reply_alert.addClass('success'); // deals with showing the alert
 					jQuery("#reply_chennodiscursus").val("");
-					insertPost(data);
+					insertPost(data, textStatus, jqXHR);
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					reply_alert.html('Connection error.');
@@ -589,8 +589,10 @@ var realtimethread = function(){
 		},
 		success: insertPost,
 		error: function(jqXHR, textStatus, errorThrown) {
+			timelapse = 10;
 		},
 		complete: function() {
+			currentlapse = setTimeout(realtimethread, timelapse*1000);
 		}
 	});
 
@@ -598,11 +600,12 @@ var realtimethread = function(){
 }
 
 
-var insertPost = function(data)
+var insertPost = function(data, textStatus, jqXHR)
 {
 	var w_height = jQuery(document).height();
 	var found_posts = false;
-	if(typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined")
+
+	if(jqXHR.status == 200 && typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined")
 	{
 		jQuery.each(data[backend_vars.thread_id].posts, function(idx, value){
 
@@ -643,9 +646,6 @@ var insertPost = function(data)
 			timelapse += 5;
 		}
 	}
-	currentlapse = setTimeout(realtimethread, timelapse*1000);
-
-	return false;
 }
 
 var toggleSearch = function(mode)

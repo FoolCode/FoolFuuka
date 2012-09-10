@@ -648,7 +648,7 @@ class Controller_Chan extends \Controller_Common
 		
 		if ($search['poster_ip'] !== null)
 		{
-			$search['image'] = \Inet::ptod($search['poster_ip']);
+			$search['poster_ip'] = \Inet::ptod($search['poster_ip']);
 		}
 
 		try

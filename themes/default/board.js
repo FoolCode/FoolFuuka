@@ -34,13 +34,13 @@ var bindFunctions = function()
 			search_el.removeClass('active');
 		}
 	});
-	
-	
+
+
 	var clickCallbacks = {
-		
+
 		highlight: function(el, post)
 		{
-			if (post) 
+			if (post)
 			{
 				replyHighlight(post);
 			}
@@ -115,13 +115,13 @@ var bindFunctions = function()
 			});
 			event.preventDefault();
 		},
-		
+
 		realtimethread: function(el, post)
 		{
 			realtimethread();
 			event.preventDefault();
 		},
-		
+
 		mod: function(el, post)
 		{
 			el.attr({'disabled': 'disabled'});
@@ -185,7 +185,7 @@ var bindFunctions = function()
 			});
 			return false;
 		},
-		
+
 		activateModeration: function(el, post)
 		{
 			jQuery('button[data-function=activateModeration]').parent().hide();
@@ -195,13 +195,13 @@ var bindFunctions = function()
 			}, 700);
 			jQuery('.post_mod_controls').show();
 		},
-		
+
 		closeModal: function(el, post)
 		{
 			el.closest(".modal").modal('hide');
 			return false;
 		},
-		
+
 		'delete': function(el, post)
 		{
 			var modal = jQuery("#post_tools_modal");
@@ -216,8 +216,8 @@ var bindFunctions = function()
 			modal.find(".submitModal").data("action", 'delete');
 			modal.find(".modal-password").val(backend_vars.user_pass);
 		},
-		
-		
+
+
 		report: function(el, post)
 		{
 			var modal = jQuery("#post_tools_modal");
@@ -366,7 +366,7 @@ var bindFunctions = function()
 			window.location.href = backend_vars.site_url + '_/search/poster_ip/' + el.data('poster-ip');
 		}
 	}
-	
+
 
 	// unite all the onclick functions in here
 	jQuery("body").on("click", "a[data-function], button[data-function], input[data-function]", function(event) {
@@ -446,9 +446,9 @@ var bindFunctions = function()
 						num: that.data('post'),
 						theme: backend_vars.selected_theme
 					},
-                    beforeSend: function(xhr) {
-                        xhr.withCredentials = true;
-                    },
+					beforeSend: function(xhr) {
+						xhr.withCredentials = true;
+					},
 					success: function(data){
 						backlink_spin.spin(false);
 						if (typeof data.error !== "undefined")
@@ -529,6 +529,11 @@ var backlinkify = function(elem, post_id, subnum)
 		post_id += "_" + subnum;
 
 	elem.find("a[data-backlink=true]").each(function(idx, post) {
+		if (jQuery(post).text().indexOf('/') >= 0)
+		{
+			return true;
+		}
+
 		p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
 
 		if (typeof backlinks[p_id] === "undefined")
@@ -542,9 +547,9 @@ var backlinkify = function(elem, post_id, subnum)
 		}
 		else
 		{
-			backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/last/' + backend_vars.last_limit + '/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');			
+			backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/last/' + backend_vars.last_limit + '/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
 		}
-		
+
 		backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);
 	});
 
@@ -595,52 +600,52 @@ var realtimethread = function(){
 
 var insertPost = function(data)
 {
-    var w_height = jQuery(document).height();
-    var found_posts = false;
-    if(typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined")
-    {
-        jQuery.each(data[backend_vars.thread_id].posts, function(idx, value){
+	var w_height = jQuery(document).height();
+	var found_posts = false;
+	if(typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined")
+	{
+		jQuery.each(data[backend_vars.thread_id].posts, function(idx, value){
 
-            found_posts = true;
-            var post = jQuery(value.formatted)
-            post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
-            post.find('[rel=tooltip]').tooltip({
-                placement: 'top',
-                delay: 200
-            });
-            post.find('[rel=tooltip_right]').tooltip({
-                placement: 'right',
-                delay: 200
-            });
-            backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
+			found_posts = true;
+			var post = jQuery(value.formatted)
+			post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+			post.find('[rel=tooltip]').tooltip({
+				placement: 'top',
+				delay: 200
+			});
+			post.find('[rel=tooltip_right]').tooltip({
+				placement: 'right',
+				delay: 200
+			});
+			backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
 
-            // avoid inserting twice
-            if(jQuery('.doc_id_' + value.doc_id).length == 0)
-                jQuery('article.thread aside.posts').append(post);
-            if(backend_vars.latest_doc_id < value.doc_id)
-                backend_vars.latest_doc_id = value.doc_id;
-        });
-    }
+			// avoid inserting twice
+			if(jQuery('.doc_id_' + value.doc_id).length == 0)
+				jQuery('article.thread aside.posts').append(post);
+			if(backend_vars.latest_doc_id < value.doc_id)
+				backend_vars.latest_doc_id = value.doc_id;
+		});
+	}
 
-    if(found_posts)
-    {
-        if(jQuery('#reply_form :focus').length > 0)
-        {
-            window.scrollBy(0, jQuery(document).height() - w_height);
-        }
+	if(found_posts)
+	{
+		if(jQuery('#reply_form :focus').length > 0)
+		{
+			window.scrollBy(0, jQuery(document).height() - w_height);
+		}
 
-        timelapse = 10;
-    }
-    else
-    {
-        if(timelapse < 30)
-        {
-            timelapse += 5;
-        }
-    }
-    currentlapse = setTimeout(realtimethread, timelapse*1000);
+		timelapse = 10;
+	}
+	else
+	{
+		if(timelapse < 30)
+		{
+			timelapse += 5;
+		}
+	}
+	currentlapse = setTimeout(realtimethread, timelapse*1000);
 
-    return false;
+	return false;
 }
 
 var toggleSearch = function(mode)
@@ -716,7 +721,7 @@ var changeLanguage = function(language)
 
 function setCookie( name, value, expires, path, domain, secure )
 {
-    name = backend_vars.cookie_prefix + name;
+	name = backend_vars.cookie_prefix + name;
 	var today = new Date();
 	today.setTime( today.getTime() );
 	if ( expires )
@@ -734,7 +739,7 @@ function setCookie( name, value, expires, path, domain, secure )
 
 
 function getCookie( check_name ) {
-    check_name = backend_vars.cookie_prefix + check_name;
+	check_name = backend_vars.cookie_prefix + check_name;
 	var a_all_cookies = document.cookie.split( ';' );
 	var a_temp_cookie = '';
 	var cookie_name = '';
@@ -922,7 +927,7 @@ jQuery(document).ready(function() {
 		placement: 'left',
 		animation: false
 	});
-	
+
 	jQuery('#thread_o_matic .thread_image_box').tooltip({
 		placement: 'bottom',
 		animation: true

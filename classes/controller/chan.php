@@ -645,6 +645,11 @@ class Controller_Chan extends \Controller_Common
 		{
 			$search['image'] = base64_encode(\Media::urlsafe_b64decode($search['image']));
 		}
+		
+		if ($search['poster_ip'] !== null)
+		{
+			$search['image'] = \Inet::ptod($search['poster_ip']);
+		}
 
 		try
 		{

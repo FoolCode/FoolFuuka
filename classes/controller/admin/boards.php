@@ -443,8 +443,8 @@ class Controller_Admin_Boards extends \Controller_Admin
 				if (!file_exists($input['fu.sphinx.dir']))
 				{
 					return array(
-						'error_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',
-						'error' => __('Couldn\'t find the Sphinx working directory.')
+						'warning_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',
+						'warning' => __('Couldn\'t find the Sphinx working directory.')
 					);
 				}
 

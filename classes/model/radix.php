@@ -701,10 +701,20 @@ class Radix extends \Model_Base
 			}
 			catch (\CacheNotFoundException $e)
 			{
-				$object = \DB::select()->from('boards')->where('hidden', 0)->order_by('shortname', 'asc')
-					->as_object()->execute()->as_array('id');
+				$object = \DB::select()
+					->from('boards')
+					->where('hidden', 0)
+					->order_by('shortname', 'asc')
+					->as_object()
+					->execute()
+					->as_array('id');
+								
 				\Cache::set('model.radix.preload', $object, 900);
 			}
+			
+			// take them all and then filter/do whatever (we use this to split the boards through various subdomains)
+			// only public is affected! admins and mods will see all boards at all the time
+			$object = \Plugins::run_hook('fu.radix.preload.public.alter_result', array($object), 'simple');
 		}
 		else
 		{

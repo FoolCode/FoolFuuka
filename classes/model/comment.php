@@ -63,7 +63,7 @@ class Comment extends \Model\Model_Base
 	protected $_forced_entries = array(
 		'title_processed', 'name_processed', 'email_processed', 'trip_processed', 'media_orig_processed',
 		'preview_orig_processed', 'media_filename_processed', 'media_hash_processed', 'poster_hash_processed',
-		'original_timestamp', 'fourchan_date', 'comment_sanitized', 'comment_processed'
+		'original_timestamp', 'fourchan_date', 'comment_sanitized', 'comment_processed', 'poster_country_name_processed'
 	);
 
 	public $board = null;

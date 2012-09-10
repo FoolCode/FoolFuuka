@@ -695,9 +695,9 @@ class Comment extends \Model\Model_Base
 	 *
 	 * @return array|bool
 	 */
-	protected function p_delete($password = null)
+	protected function p_delete($password = null, $force = false)
 	{
-		if( ! \Auth::has_access('comment.passwordless_deletion'))
+		if( ! \Auth::has_access('comment.passwordless_deletion') && $force !== true)
 		{
 			if ( ! class_exists('PHPSecLib\\Crypt_Hash', false))
 			{
@@ -714,9 +714,14 @@ class Comment extends \Model\Model_Base
 			}
 		}
 
+		\DB::start_transaction();
+		
 		// remove message
 		\DB::delete(\DB::expr(Radix::get_table($this->board)))->where('doc_id', $this->doc_id)->execute();
 
+		// remove its extras
+		\DB::delete(\DB::expr(Radix::get_table($this->board, '_extra')))->where('extra_id', $this->doc_id)->execute();
+		
 		// remove message search entry
 		if($this->board->myisam_search)
 		{
@@ -739,16 +744,27 @@ class Comment extends \Model\Model_Base
 		// if it's OP delete all other comments
 		if ($this->op)
 		{
-			$to_delete = \DB::select()->from(\DB::expr(Radix::get_table($this->board)));
-			\Board::sql_media_join($to_delete, $this->board, $to_delete);
-			$to_delete_arr = $to_delete->where('thread_num', $this->thread_num)->as_object()->execute()->as_array();
-			$posts = Comment::forge($to_delete_arr);
-
-			foreach($posts as $post)
+			$replies = \DB::select('doc_id')
+				->from(\DB::expr(Radix::get_table($this->board)))
+				->where('thread_num', $this->thread_num)
+				->as_object()
+				->execute()
+				->as_array();
+			
+			foreach ($replies as $reply)
 			{
-				$post->delete(null, true);
+				$comments = \Board::forge()
+					->get_post()
+					->set_options('doc_id', $reply->doc_id)
+					->set_radix($this->board)
+					->get_comments();
+			
+				$comment = current($comments);
+				$comment->delete(null, true);
 			}
 		}
+		
+		\DB::commit_transaction();
 	}
 
 
@@ -1193,7 +1209,7 @@ class Comment extends \Model\Model_Base
 
 		if(count($check_duplicate) > 1)
 		{
-			DB::rollback_transaction();
+			\DB::rollback_transaction();
 			throw new CommentSendingDuplicateException(__('You are sending the same post twice.'));
 		}
 

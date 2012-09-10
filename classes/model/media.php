@@ -331,7 +331,7 @@ class Media extends \Model\Model_Base
 
 		if ($thumbnail === true)
 		{
-			if ($this->op == 1)
+			if ($this->op)
 			{
 				if ($precise)
 				{
@@ -591,7 +591,7 @@ class Media extends \Model\Model_Base
 	 */
 	public function p_delete($media = true, $thumb = true)
 	{
-		if (!$this->media_hash)
+		if ( ! $this->media_hash)
 		{
 			throw new MediaHashNotFoundException;
 		}
@@ -774,6 +774,7 @@ class Media extends \Model\Model_Base
 
 			try
 			{
+				$duplicate->op = $is_op;
 				$duplicate_dir_thumb = $duplicate->get_dir(true, true);
 				if (file_exists($duplicate_dir_thumb))
 				{
@@ -829,7 +830,7 @@ class Media extends \Model\Model_Base
 		{
 			$exif = exif_read_data($full_path);
 
-			if ($exif !== FALSE)
+			if ($exif !== false)
 			{
 				$this->exif = $exif;
 			}
@@ -857,6 +858,10 @@ class Media extends \Model\Model_Base
 				return $dir.'/'.substr($this->preview_reply, 0, 4).'/'.substr($this->preview_reply, 4, 2).'/'.
 					($with_filename ? $this->preview_reply : '');
 			}
+			
+			// we didn't have media/preview_op/preview_reply so fallback to making a new file
+			return $dir.'/'.substr($this->preview_orig, 0, 4).'/'.substr($this->preview_orig, 4, 2).'/'.
+				($with_filename ? $this->preview_orig : '');
 		}
 		else
 		{
@@ -865,11 +870,13 @@ class Media extends \Model\Model_Base
 				return $dir.'/'.substr($this->media, 0, 4).'/'.substr($this->media, 4, 2).'/'.
 					($with_filename ? $this->media : '');
 			}
+			
+			// we didn't have media/preview_op/preview_reply so fallback to making a new file
+			return $dir.'/'.substr($this->media_orig, 0, 4).'/'.substr($this->media_orig, 4, 2).'/'.
+				($with_filename ? $this->media_orig : '');
 		}
 			
-		// we didn't have media/preview_op/preview_reply so fallback to making a new file
-		return $dir.'/'.substr($this->media_orig, 0, 4).'/'.substr($this->media_orig, 4, 2).'/'.
-				($with_filename ? $this->media_orig : '');
+		
 	}
 
 }

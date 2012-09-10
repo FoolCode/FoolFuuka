@@ -287,7 +287,7 @@ class Controller_Chan extends \Controller_Common
 			'posts_per_thread' => $options['per_thread'] - 1,
 			'order' => $options['order'],
 			'pagination' => array(
-				'base_url' => \Uri::create(array($this->_radix->shortname, $options['order'])),
+				'base_url' => \Uri::create(array($this->_radix->shortname, 'page')),
 				'current_page' => $page,
 				'total' => $board->get_count()
 			)
@@ -341,7 +341,7 @@ class Controller_Chan extends \Controller_Common
 		catch (Model\BoardThreadNotFoundException $e)
 		{
 			\Profiler::mark('Controller Chan::thread End Prematurely');
-			return $this->action_post($num);
+			return $this->radix_post($num);
 		}
 		catch (Model\BoardException $e)
 		{

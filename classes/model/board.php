@@ -813,6 +813,8 @@ class Board extends \Model\Model_Base
 			throw new BoardMissingOptionsException(__('No posts found with the submitted options.'));
 		}
 
+		static::sql_media_join($query);
+		static::sql_extra_join($query);
 		$result = $query->as_object()->execute()->as_array();
 
 		if(!count($result))

@@ -38,7 +38,7 @@ class Search extends Board
 			}
 
 			// if board set, grab media_id
-			if ($this->_radix !== false)
+			if ($this->_radix !== null)
 			{
 				try
 				{

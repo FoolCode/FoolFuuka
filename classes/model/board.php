@@ -504,9 +504,12 @@ class Board extends \Model\Model_Base
 
 		if(!count($result))
 		{
+			$this->_comments = array();
+			$this->_comments_unsorted = array();
+			
 			\Profiler::mark_memory($this, 'Board $this');
 			\Profiler::mark('Board::get_threads_comments End Prematurely');
-			return array();
+			return $this;
 		}
 
 		if ($this->_api)

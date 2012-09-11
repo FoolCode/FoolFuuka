@@ -13,19 +13,16 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 	 */
 	public function radix_page($page = 1)
 	{
-		$order = \Cookie::get('default_theme_page_mode_'. ($this->_radix->archive ? 'archive' : 'board')) === 'by_thread'
-			? 'by_thread' : 'by_post';
-
 		$options = array(
 			'per_page' => 24,
 			'per_thread' => 6,
-			'order' => $order
+			'order' => ($this->_radix->archive ? 'by_thread' : 'by_post')
 		);
 
 		return $this->latest($page, $options);
 	}
-	
-	
+
+
 	public function radix_gallery($page = 1)
 	{
 		throw new \HttpNotFoundException;
@@ -41,13 +38,13 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 		{
 			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
 		}
-		
+
 		if ( ! \Security::check_token())
 		{
 			return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
 		}
-		
-		
+
+
 		if (\Input::post('reply_delete'))
 		{
 			foreach (\Input::post('delete') as $idx => $doc_id)
@@ -79,10 +76,10 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 			return \Response::forge($this->_theme->build('redirection'));
 		}
 
-		
+
 		if (\Input::post('reply_report'))
 		{
-			
+
 			foreach (\Input::post('delete') as $idx => $doc_id)
 			{
 				try
@@ -94,7 +91,7 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 					return $this->response(array('error' => $e->getMessage()), 404);
 				}
 			}
-			
+
 			$this->_theme->set_layout('redirect');
 			$this->_theme->set_title(__('Redirecting...'));
 			$this->_theme->bind('url', \Uri::create($this->_radix->shortname.'/thread/'.\Input::post('parent')));
@@ -129,7 +126,7 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 			$data['spoiler'] = true;
 		if(isset($post['reply_postas']))
 			$data['capcode'] = $post['reply_postas'];
-		
+
 		$media = null;
 
 		if (count(\Upload::get_files()))

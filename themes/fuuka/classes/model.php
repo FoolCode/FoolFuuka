@@ -11,7 +11,7 @@ class Theme_Fu_Fuuka extends \Model_Base
 	{
 		return '\\1<span class="greentext">\\2</span>\\3';
 	}
-	
+
 
 	public static function process_internal_links_html($data, $html, $previous_result = NULL)
 	{
@@ -29,8 +29,8 @@ class Theme_Fu_Fuuka extends \Model_Base
 			'attr_backlink' => 'class="backlink"',
 		));
 	}
-	
-	
+
+
 	public static function process_crossboard_links_html($data, $html, $previous_result = NULL)
 	{
 		// a plugin with higher priority modified this
@@ -41,7 +41,7 @@ class Theme_Fu_Fuuka extends \Model_Base
 
 		return array('return' => array(
 			'tags' => array('<span class="unkfunc">', 'suffix' => '</span>'),
-			'backlink' => ''
+			'backlink' => 'class="backlink"'
 		));
 	}
 }

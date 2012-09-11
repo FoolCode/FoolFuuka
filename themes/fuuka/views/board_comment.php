@@ -67,7 +67,7 @@ if (!defined('DOCROOT'))
 					</a>
 					<?php endif; ?>
 				<?php endif; ?>
-				<div class="quoted-by" style="display: <?= (isset($p->backlinks)) ? 'block' : 'none' ?>">
+				<div class="quoted-by" style="display: <?= $p->backlinks ? 'block' : 'none' ?>">
 					<?= __('Quoted By:') ?> <?= (isset($p->backlinks)) ? implode(' ', $p->backlinks) : '' ?>
 				</div>
 				<blockquote><p><?= $p->comment_processed ?></p></blockquote>

@@ -4,7 +4,7 @@ if (!defined('DOCROOT'))
 
 if (isset($thread_id))
 {
-	echo \Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit'));
+	echo \Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform'));
 	echo \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token());
 	echo \Form::hidden('id', 'postform');
 	echo isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '';
@@ -62,9 +62,9 @@ foreach ($board->get_comments() as $key => $post) :
 		</label>
 
 		<?php if (!isset($thread_id)) : ?>
-			<a class="js" href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->num)) ?>">No.<?= $op->num ?></a>
+			<a class="js" href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.<?= $op->num ?></a>
 		<?php else : ?>
-			<a class="js" href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->num)) ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
+			<a class="js" href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
 		<?php endif; ?>
 
 		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?php _('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
@@ -74,8 +74,8 @@ foreach ($board->get_comments() as $key => $post) :
 		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= Uri::create($op->board->shortname . '/last/50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>
 		<?php if ($op->board->archive) : ?> [<a href="http://boards.4chan.org/<?= $op->board->shortname . '/res/' . $op->num ?>"><?= __('Original') ?></a>]<?php endif; ?>
 
-		<div class="quoted-by" style="display: <?= (isset($p->backlinks)) ? 'block' : 'none' ?>">
-			<?= __('Quoted By:') ?> <?= (isset($p->backlinks)) ? implode(' ', $p->backlinks) : '' ?>
+		<div class="quoted-by" style="display: <?= $op->backlinks ? 'block' : 'none' ?>">
+			<?= __('Quoted By:') ?> <?= (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?>
 		</div>
 
 		<blockquote><p><?= $op->comment_processed ?></p></blockquote>

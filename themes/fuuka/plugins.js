@@ -80,7 +80,7 @@ var replyHighlight = function(post)
 
 var replyQuote = function(text)
 {
-	var replybox = document.forms.postform.KOMENTO;
+	var replybox = document.forms.postform.form_KOMENTO;
 	if (!replybox) return;
 
 	if (replybox.createTextRage && replybox.caretPos)
@@ -116,12 +116,12 @@ var viewPost = function(postForm)
 
 var backlinkify = function()
 {
-    var p, b, backlinks = document.forms.postform.getElementsByClassName('backlink');
-    for (p = 0, b = backlinks.length; p < b; ++p)
-    {
-        backlinks[p].addEventListener('mouseover', doBacklink, false);
-        backlinks[p].addEventListener('mouseout', rmBacklink, false);
-    }
+	var p, b, backlinks = document.forms.postform.getElementsByClassName('backlink');
+	for (p = 0, b = backlinks.length; p < b; ++p)
+	{
+		backlinks[p].addEventListener('mouseover', doBacklink, false);
+		backlinks[p].addEventListener('mouseout', rmBacklink, false);
+	}
 }
 
 var backlinkjqXHR = null;
@@ -129,50 +129,50 @@ var backlinkFetched = {};
 
 var doBacklink = function(el)
 {
-    var parent, doc, clr, src, blk, x, y, w, maxWidth = 500;
-    el = el.target || window.event.srcElement;
+	var parent, doc, clr, src, blk, x, y, w, maxWidth = 500;
+	el = el.target || window.event.srcElement;
 
-    blk = document.createElement('div');
-    blk.id = 'quote-preview';
+	blk = document.createElement('div');
+	blk.id = 'quote-preview';
 
-    if ((src = document.getElementById(el.getAttribute('href').split('#')[1])))
-    {
-        w = src.offsetWidth;
-        if (w > maxWidth)
-        {
-            w = maxWidth;
-        }
+	if ((src = document.getElementById(el.getAttribute('href').split('#')[1])))
+	{
+		w = src.offsetWidth;
+		if (w > maxWidth)
+		{
+			w = maxWidth;
+		}
 
-        src = src.cloneNode(true);
-        src.id = 'quote-preview-s';
-        if (src.tagName == 'DIV')
-        {
-            src.setAttribute('class', 'quote-preview-op');
-            clr = document.createElement('div');
-            clr.setAttribute('class', 'newthr');
-            src.appendChild(clr);
-        }
+		src = src.cloneNode(true);
+		src.id = 'quote-preview-s';
+		if (src.tagName == 'DIV')
+		{
+			src.setAttribute('class', 'quote-preview-op');
+			clr = document.createElement('div');
+			clr.setAttribute('class', 'newthr');
+			src.appendChild(clr);
+		}
 
-        x = 0;
-        y = el.offsetHeight + 1;
-        parent = el;
-        do {
-            x += parent.offsetLeft;
-            y += parent.offsetTop;
-        } while (parent = parent.offsetParent);
+		x = 0;
+		y = el.offsetHeight + 1;
+		parent = el;
+		do {
+			x += parent.offsetLeft;
+			y += parent.offsetTop;
+		} while (parent = parent.offsetParent);
 
-        if ((doc = document.body.offsetWidth - x - w) < 0)
-        {
-            x += doc;
-        }
+		if ((doc = document.body.offsetWidth - x - w) < 0)
+		{
+			x += doc;
+		}
 
-        blk.setAttribute('style', 'left:' + x + 'px; top:' + y + 'px;');
-        blk.appendChild(src);
-        document.body.appendChild(blk);
-    }
-    else
-    {
-        var post = el.href.match(/\/(\w+)\/post\/(.*?)\/$/);
+		blk.setAttribute('style', 'left:' + x + 'px; top:' + y + 'px;');
+		blk.appendChild(src);
+		document.body.appendChild(blk);
+	}
+	else
+	{
+		var post = el.href.match(/\/(\w+)\/post\/(.*?)\/$/);
 
 		if (typeof backlinkFetched[post[1] + '_' + post[2]] !== 'undefined')
 		{
@@ -199,51 +199,50 @@ var doBacklink = function(el)
 			return false;
 		}
 
-        backlinkjqXHR = jQuery.ajax({
-            url: backend_vars.api_url + 'api/chan/post/',
-            dataType: 'jsonp',
-            type: 'GET',
-            data: {
-                board: post[1],
-                num: post[2],
-				theme: backend_vars.selected_theme,
-                format: 'jsonp'
-            },
-            success: function(data) {
+		backlinkjqXHR = jQuery.ajax({
+			url: backend_vars.api_url + '_/api/chan/post/',
+			dataType: 'json',
+			type: 'GET',
+			data: {
+				board: post[1],
+				num: post[2],
+				theme: backend_vars.selected_theme
+			},
+			success: function(data) {
 				backlinkFetched[post[1] + '_' + post[2]] = data;
 				backlinkjqXHR = null;
-                src = document.createElement('div');
-                src.innerHTML = data.formatted;
+				src = document.createElement('div');
+				src.innerHTML = data.formatted;
 
-                w = maxWidth;
-                x = 0;
-                y = el.offsetHeight + 1;
-                parent = el;
-                do {
-                    x += parent.offsetLeft;
-                    y += parent.offsetTop;
-                } while (parent = parent.offsetParent);
+				w = maxWidth;
+				x = 0;
+				y = el.offsetHeight + 1;
+				parent = el;
+				do {
+					x += parent.offsetLeft;
+					y += parent.offsetTop;
+				} while (parent = parent.offsetParent);
 
-                if ((doc = document.body.offsetWidth - x - w) < 0)
-                {
-                    x += doc;
-                }
+				if ((doc = document.body.offsetWidth - x - w) < 0)
+				{
+					x += doc;
+				}
 
-                blk.setAttribute('style', 'left:' + x + 'px; top:' + y + 'px;');
-                blk.appendChild(src);
-                document.body.appendChild(blk);
-            }
-        });
-    }
+				blk.setAttribute('style', 'left:' + x + 'px; top:' + y + 'px;');
+				blk.appendChild(src);
+				document.body.appendChild(blk);
+			}
+		});
+	}
 }
 
 var rmBacklink = function(el)
 {
-    var blk;
-    if ((blk = document.getElementById('quote-preview')))
-    {
-        document.body.removeChild(blk);
-    }
+	var blk;
+	if ((blk = document.getElementById('quote-preview')))
+	{
+		document.body.removeChild(blk);
+	}
 
 	if (backlinkjqXHR !== null)
 	{
@@ -260,14 +259,14 @@ var run = function()
 		replyHighlight(post[1]);
 	}
 
-    backlinkify();
+	backlinkify();
 }
 
 if (window.addEventListener)
 {
-    window.addEventListener('DOMContentLoaded', run, false);
+	window.addEventListener('DOMContentLoaded', run, false);
 }
 else
 {
-    window.onload = run;
+	window.onload = run;
 }

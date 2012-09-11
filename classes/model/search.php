@@ -222,7 +222,7 @@ class Search extends Board
 
 			// set sphinx options
 			$query->limit($limit)
-				->offset((($page * $limit) - $limit) > 5000 ? 5000 : ($page * $limit) - $limit)
+				->offset((($page * $limit) - $limit) >= 5000 ? 4999 : ($page * $limit) - $limit)
 				->option('max_matches', \Preferences::get('fu.sphinx.max_matches', 5000))
 				->option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
 

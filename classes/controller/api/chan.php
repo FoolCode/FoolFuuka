@@ -11,11 +11,8 @@ class Controller_Api_Chan extends \Controller_Rest
 	public function before()
 	{
 		parent::before();
-		if(isset($_SERVER['https']) && $_SERVER['https'] == 'on')
-			header("Access-Control-Allow-Origin: https://boards.4chan.org");
-		else
-			header("Access-Control-Allow-Origin: http://boards.4chan.org");
-
+			
+		header("Access-Control-Allow-Origin: https://boards.4chan.org http://boards.4chan.org");
 		header('Access-Control-Allow-Credentials: true');
 		header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 		header('Access-Control-Max-Age: 604800');

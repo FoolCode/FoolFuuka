@@ -90,9 +90,7 @@ var bindFunctions = function()
 				cache: false,
 				data: _data,
 				success: function(data, textStatus, jqXHR){
-					// clear button's timeout, we can deal with the rest now
-					el.attr({'value': originalText});
-					el.removeAttr('disabled');
+					
 					if (typeof data.error !== "undefined")
 					{
 						reply_alert.html(data.error);
@@ -110,7 +108,10 @@ var bindFunctions = function()
 					reply_alert.show();
 				},
 				complete: function() {
+					// clear button's timeout, we can deal with the rest now
 					clearTimeout(buttonTimeout);
+					el.attr({'value': originalText});
+					el.removeAttr('disabled');
 				}
 			});
 			event.preventDefault();

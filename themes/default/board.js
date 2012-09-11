@@ -405,13 +405,6 @@ var bindFunctions = function()
 				backlink.css('display', 'block');
 				backlink.html(quote.formatted);
 			}
-			else if(backend_vars.thread_id == that.data('post'))
-			{
-				// OP
-				quote = backend_vars.thread_op_data;
-				backlink.css('display', 'block');
-				backlink.html(quote.formatted);
-			}
 			else if(jQuery('#' + that.data('post')).hasClass('post'))
 			{
 				// normal posts

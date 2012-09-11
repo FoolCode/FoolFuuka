@@ -60,7 +60,7 @@ class Search extends Board
 		{
 			throw new SearchRequiresSphinxException(__('Sorry, this action requires the SphinxSearch engine.'));	
 		}
-		else if (($this->_radix !== null && $this->_radix->sphinx) || \Preferences::get('fu.sphinx.global'))
+		else if (($this->_radix !== null && $this->_radix->sphinx) || ($this->_radix === null && \Preferences::get('fu.sphinx.global')))
 		{
 			// establish connection to sphinx
 			$sphinx_server = explode(':', \Preferences::get('fu.sphinx.listen'));

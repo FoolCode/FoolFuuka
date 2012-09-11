@@ -109,6 +109,7 @@ class Controller_Chan extends \Controller_Common
 
 		$this->_radix = null;
 		$this->_theme->bind('radix', null);
+		$this->_theme->set_title(\Preferences::get('fu.gen.website_title'));
 
 		if (method_exists($this, 'action_'.$method))
 		{
@@ -441,13 +442,13 @@ class Controller_Chan extends \Controller_Common
 		{
 			return $this->error(__('The post you are looking for does not exist.'));
 		}
-
+		
 		// it always returns an array
 		$comment = current($comments);
 
 		$redirect =  \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/');
 
-		if (!$comment->op)
+		if ( ! $comment->op)
 		{
 			$redirect .= '#'.$comment->num.($comment->subnum ? '_'.$comment->subnum :'');
 		}
@@ -653,6 +654,11 @@ class Controller_Chan extends \Controller_Common
 
 		if ($search['poster_ip'] !== null)
 		{
+			if ( ! filter_var($search['poster_ip'], FILTER_VALIDATE_IP))
+			{
+				return $this->error(__('The poster IP you inserted is not a valid IP address.'));
+			}
+				
 			$search['poster_ip'] = \Inet::ptod($search['poster_ip']);
 		}
 

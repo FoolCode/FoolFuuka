@@ -826,7 +826,7 @@ class Board extends \Model\Model_Base
 		static::sql_extra_join($query);
 		$result = $query->as_object()->execute()->as_array();
 
-		if(!count($result))
+		if( ! count($result))
 		{
 			throw new BoardPostNotFoundException(__('Post not found.'));
 		}

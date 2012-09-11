@@ -46,12 +46,12 @@ var bindFunctions = function()
 			}
 		},
 
-		quote: function(el, post)
+		quote: function(el, post, event)
 		{
 			jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
 		},
 
-		comment: function(el, post)
+		comment: function(el, post, event)
 		{
 			// sending an image
 			if(jQuery("#file_image").val())
@@ -117,13 +117,13 @@ var bindFunctions = function()
 			event.preventDefault();
 		},
 
-		realtimethread: function(el, post)
+		realtimethread: function(el, post, event)
 		{
 			realtimethread();
 			event.preventDefault();
 		},
 
-		mod: function(el, post)
+		mod: function(el, post, event)
 		{
 			el.attr({'disabled': 'disabled'});
 			_data = {
@@ -187,7 +187,7 @@ var bindFunctions = function()
 			return false;
 		},
 
-		activateModeration: function(el, post)
+		activateModeration: function(el, post, event)
 		{
 			jQuery('button[data-function=activateModeration]').parent().hide();
 			jQuery('.post_mod_controls button[data-function]').attr({'disabled': 'disabled'});
@@ -203,7 +203,7 @@ var bindFunctions = function()
 			return false;
 		},
 
-		'delete': function(el, post)
+		'delete': function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
 			var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
@@ -219,7 +219,7 @@ var bindFunctions = function()
 		},
 
 
-		report: function(el, post)
+		report: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
 			modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
@@ -234,7 +234,7 @@ var bindFunctions = function()
 			modal.find(".submitModal").data("action", 'report');
 		},
 
-		report_media: function(el, post)
+		report_media: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
 			modal.find(".title").html('Report &raquo; Media No.' + el.data("post-media-id"));
@@ -248,7 +248,7 @@ var bindFunctions = function()
 			modal.find(".submitModal").data("action", 'repor_media');
 		},
 
-		ban: function(el, post)
+		ban: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
 			modal.find(".title").html('Ban user with IP ' + el.data("ip"));
@@ -268,7 +268,7 @@ var bindFunctions = function()
 			modal.find(".submitModal").data("action", 'ban');
 		},
 
-		submitModal: function(el, post)
+		submitModal: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
 			var loading = modal.find(".modal-loading");
@@ -342,13 +342,13 @@ var bindFunctions = function()
 			return false;
 		},
 
-		searchShow: function(el, post)
+		searchShow: function(el, post, event)
 		{
 			el.parent().find('.search-dropdown-menu').show();
 			el.parent().parent().addClass('active');
 		},
 
-		clearLatestSearches: function(el, post)
+		clearLatestSearches: function(el, post, event)
 		{
 			setCookie('search_latest_5', '', 0, '/', backend_vars.cookie_domain);
 			jQuery('li.latest_search').each(function(idx){
@@ -356,13 +356,13 @@ var bindFunctions = function()
 			});
 		},
 
-		searchUser: function(el, post)
+		searchUser: function(el, post, event)
 		{
 			window.location.href = backend_vars.site_url + el.data('board') +
 				'/search/poster_ip/' + el.data('poster-ip');
 		},
 
-		searchUserGlobal: function(el, post)
+		searchUserGlobal: function(el, post, event)
 		{
 			window.location.href = backend_vars.site_url + '_/search/poster_ip/' + el.data('poster-ip');
 		}
@@ -373,7 +373,7 @@ var bindFunctions = function()
 	jQuery("body").on("click", "a[data-function], button[data-function], input[data-function]", function(event) {
 		var el = jQuery(this);
 		var post = el.data("post");
-		return clickCallbacks[el.data("function")](el, post);
+		return clickCallbacks[el.data("function")](el, post, event);
 	});
 
 	// how could we make it working well on cellphones?

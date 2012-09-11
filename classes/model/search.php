@@ -272,14 +272,14 @@ class Search extends Board
 				{
 					$query->where(\DB::expr(
 						'MATCH ('.\Radix::get_table($this->_radix, '_search').'.`comment`) '.
-						'AGAINST ('.\DB::escape($args['text']).' IN BOOLEAN MODE)'));
+						'AGAINST ('.\DB::escape($args['text']).' IN BOOLEAN MODE)'), '');
 				}
 
 				if($args['filename'])
 				{
 					$query->where(\DB::expr(
 						'MATCH ('.\Radix::get_table($this->_radix, '_search').'.`media_filename`) '.
-						'AGAINST ('.\DB::escape($args['filename']).' IN BOOLEAN MODE)'));
+						'AGAINST ('.\DB::escape($args['filename']).' IN BOOLEAN MODE)'), '');
 				}
 				
 				$query->limit(5000);
@@ -311,7 +311,7 @@ class Search extends Board
 
 				if (isset($docs))
 				{
-					$query->where('doc_id', 'IN', array($docs));
+					$query->where('doc_id', 'IN', $docs);
 				}
 
 				if ($args['subject'])
@@ -404,8 +404,9 @@ class Search extends Board
 					//$this->db->use_index('timestamp_index');
 				}
 				
-				$result_which = $query->limit(5000)
-					->order_by('timestamp', ($args['order'] == 'asc' ? 'ASC' : 'DESC'))
+				$result_which = $query->limit($limit)
+					->offset((($page * $limit) - $limit) > 5000 ? 5000 : ($page * $limit) - $limit)
+					->order_by('timestamp', ($args['order'] === 'asc' ? 'ASC' : 'DESC'))
 					->as_object()
 					->execute()
 					->as_array();
@@ -421,7 +422,7 @@ class Search extends Board
 				}
 				else
 				{
-					$this->_total_count = $result->current()->count;
+					$this->_total_count = current($result_which)->count;
 				}
 			}
 		}

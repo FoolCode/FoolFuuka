@@ -160,7 +160,7 @@ class Controller_Api_Chan extends \Controller_Rest
 		}
 
 		$num = \Input::get('num');
-		$theme =\Input::get('theme');
+		$theme = \Input::get('theme');
 
 		if (!$num)
 		{

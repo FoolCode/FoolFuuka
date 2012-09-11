@@ -176,7 +176,7 @@ header('imagetoolbar: false');
 
 				<?= $template['body'] ?>
 				
-				<?php \Plugins::run_hook('fu.themes.yotsuba2_after_body_template'); ?>
+				<?php \Plugins::run_hook('fu.themes.yotsubatwo_after_body_template'); ?>
 
 				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<div class="paginate">

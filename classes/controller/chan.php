@@ -493,7 +493,7 @@ class Controller_Chan extends \Controller_Common
 
 		// Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
 		$page = intval($page);
-		return \Response::redirect(Uri::create(array(
+		return \Response::redirect(\Uri::create(array(
 			\Radix::get_selected()->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page)), 'location', 301);
 	}
 
@@ -582,7 +582,7 @@ class Controller_Chan extends \Controller_Common
 					if($modifier == 'image')
 					{
 						array_push($redirect_url,
-							rawurlencode(static::urlsafe_b64encode(static::urlsafe_b64decode(\Input::post($modifier)))));
+							rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier)))));
 					}
 					else
 					{

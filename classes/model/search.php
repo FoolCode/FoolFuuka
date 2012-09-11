@@ -205,11 +205,11 @@ class Search extends Board
 			}
 			if ($args['start'])
 			{
-				$query->where('timestamp >=', intval(strtotime($args['start'])));
+				$query->where('timestamp', '>=', intval(strtotime($args['start'])));
 			}
 			if ($args['end'])
 			{
-				$query->where('timestamp <=', intval(strtotime($args['end'])));
+				$query->where('timestamp', '<=', intval(strtotime($args['end'])));
 			}
 			if ($args['order'] == 'asc')
 			{

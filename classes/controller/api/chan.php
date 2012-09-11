@@ -113,7 +113,7 @@ class Controller_Api_Chan extends \Controller_Rest
 				$board = \Board::forge()
 					->get_thread($num)
 					->set_radix($this->_radix)
-					->set_api(array('formatted' => true, 'board' => false))
+					->set_api(array('theme' => true, 'board' => false))
 					->set_options(array(
 						'type' => 'from_doc_id',
 						'latest_doc_id' => $latest_doc_id,
@@ -129,7 +129,7 @@ class Controller_Api_Chan extends \Controller_Rest
 				$board = \Board::forge()
 					->get_thread($num)
 					->set_radix($this->_radix)
-					->set_api(array('formatted' => true, 'board' => false))
+					->set_api(array('theme' => true, 'board' => false))
 					->set_options(array(
 						'type' => 'thread',
 				));

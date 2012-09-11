@@ -919,12 +919,12 @@ class Comment extends \Model\Model_Base
 			{
 				$row = $check->current();
 
-				if ($this->comment && $row->comment == $this->comment && \Auth::has_access('comment.limitless_comment'))
+				if ($this->comment != null && $row->comment == $this->comment)
 				{
 					throw new CommentSendingSameCommentException(__('You\'re sending the same comment as the last time'));
 				}
 
-				if (time() - $row->timestamp < 10 && time() - $row->timestamp > 0 && !\Auth::has_access('comment.limitless_comment'))
+				if (time() - $row->timestamp < 10 && time() - $row->timestamp > 0)
 				{
 					throw new CommentSendingTimeLimitException(__('You must wait up to 10 seconds to post again.'));
 				}
@@ -1097,6 +1097,12 @@ class Comment extends \Model\Model_Base
 			if (!$this->thread_num)
 			{
 				throw new CommentSendingThreadWithoutMediaException(__('You can\'t start a new thread without an image.'));
+			}
+
+			// in case of no media, check comment field again for null
+			if ($this->comment === null)
+			{
+				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
 			}
 
 			$this->media = Media::forge_empty($this->board);

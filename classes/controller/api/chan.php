@@ -20,7 +20,7 @@ class Controller_Api_Chan extends \Controller_Rest
 		header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 		header('Access-Control-Max-Age: 604800');
 
-		if ( ! \Input::get('board') && ! \Input::get('action'))
+		if ( ! \Input::get('board') && ! \Input::get('action') && ! \Input::post('board') && ! \Input::post('action'))
 		{
 			$segments = \Uri::segments();
 			$uri = \Uri::base().'_'.

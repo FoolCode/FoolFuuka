@@ -442,7 +442,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			return $this->error(__('The post you are looking for does not exist.'));
 		}
-		
+
 		// it always returns an array
 		$comment = current($comments);
 
@@ -658,7 +658,7 @@ class Controller_Chan extends \Controller_Common
 			{
 				return $this->error(__('The poster IP you inserted is not a valid IP address.'));
 			}
-				
+
 			$search['poster_ip'] = \Inet::ptod($search['poster_ip']);
 		}
 
@@ -927,12 +927,10 @@ class Controller_Chan extends \Controller_Common
 		{
 			$this->_theme->set_layout('redirect');
 			return \Response::forge($this->_theme->build('redirection',
-				array('url' => \Uri::create(array(
-					$this->_radix->shortname,
-					! $limit ? 'thread' : 'last/'.$limit,
-					$comment->thread_num,
-					'#'.$comment->num
-			)))));
+				array(
+					'url' => \Uri::create(array($this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num)).'#'.$comment->num
+				)
+			));
 		}
 
 	}

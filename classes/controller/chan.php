@@ -426,7 +426,7 @@ class Controller_Chan extends \Controller_Common
 	}
 
 
-	public function radix_post($num)
+	public function radix_post($num = 0)
 	{
 		try
 		{

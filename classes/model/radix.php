@@ -483,18 +483,49 @@ class Radix extends \Model_Base
 			{
 				foreach ($item['sub'] as $k => $i)
 				{
-					if (isset($i['boards_preferences']) && isset($data[$k]))
+					if (isset($i['boards_preferences']))
 					{
-						$data_boards_preferences[$k] = $data[$k];
+						if (isset($data[$k]))
+						{
+							$data_boards_preferences[$k] = $data[$k];
+						}
+						else
+						{
+							$data_boards_preferences[$k] = null;
+						}
+						
 						unset($data[$k]);
 					}
+					else if (isset($i['database']))
+					{
+						if ( ! isset($data[$k]))
+						{
+							$data[$k] = null;
+						}
+					}
 				}
+				
 			}
 
-			if (isset($item['boards_preferences']) && isset($data[$key]))
+			if (isset($item['boards_preferences']))
 			{
-				$data_boards_preferences[$key] = $data[$key];
+				if (isset($data[$key]))
+				{
+					$data_boards_preferences[$key] = $data[$key];
+				}
+				else
+				{
+					$data_boards_preferences[$key] = null;
+				}
+				
 				unset($data[$key]);
+			}
+			else if (isset($item['database']))
+			{
+				if ( ! isset($data[$key]))
+				{
+					$data[$key] = null;
+				}
 			}
 		}
 

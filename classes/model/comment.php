@@ -1109,9 +1109,9 @@ class Comment extends \Model\Model_Base
 		}
 
 		// 2ch-style codes, only if enabled
-		if($this->num && $this->board->enable_poster_hash)
+		if($this->thread_num && $this->board->enable_poster_hash)
 		{
-			$this->poster_hash = substr(substr(crypt(md5(\Input::ip().'id'.$num),'id'),+3), 0, 8);
+			$this->poster_hash = substr(substr(crypt(md5(\Input::ip().'id'.$this->thread_num),'id'),+3), 0, 8);
 		}
 
 		if($this->board->archive)

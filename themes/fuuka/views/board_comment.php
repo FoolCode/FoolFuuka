@@ -42,19 +42,20 @@ if (!defined('DOCROOT'))
 
 				<br/>
 				<?php if ($p->media !== null) : ?>
+					<?php if ($p->media->media_status != 'banned') : ?>
 					<span>
 						<?= __('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->media_filename_processed; ?>
 						<?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
 					</span>
-					<?php if ($p->media->media_status != 'banned') : ?>
+					
 						<?php if (!$p->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
 							[<a href="<?= Uri::create($p->board->shortname . '/search/image/' . $p->media->safe_media_hash) ?>"><?= __('View Same') ?></a>]
 							[<a href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>">Google</a>]
 							[<a href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>">iqdb</a>]
 							[<a href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>">SauceNAO</a>]
 						<?php endif; ?>
-					<?php endif; ?>
 					<br />
+					<?php endif; ?>
 					<?php if ($p->media->media_status == 'banned') : ?>
 						<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
 					<?php elseif ($p->media->thumb_link === null): ?>

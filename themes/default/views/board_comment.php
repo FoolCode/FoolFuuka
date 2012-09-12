@@ -25,6 +25,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 		<?php endif ?>
 		</span>
 
+		<?php if ($p->media->media_status !== 'banned') : ?>
 		<?php if (mb_strlen($p->media->media_filename_processed) > 38) : ?>
 			<span class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p->media->media_filename) ?>">
 				<?= mb_substr($p->media->media_filename_processed, 0, 32) . ' (...)' . mb_substr($p->media->media_filename_processed, mb_strrpos($p->media->media_filename_processed, '.')) . ', ' ?>
@@ -36,6 +37,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 		<span class="post_file_metadata">
 			<?= \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h ?>
 		</span>
+		<?php endif; ?>
 	</div>
 
 	<div class="thread_image_box">

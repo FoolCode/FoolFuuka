@@ -31,9 +31,11 @@ foreach ($board->get_comments() as $key => $post) :
 				</a>
 			<?php endif; ?>
 
+			<?php if ($op->media->media_status !== 'banned') : ?>
 			<div class="post_file" style="padding-left: 2px;<?php if ($op->media->preview_w > 149) : ?> max-width:<?= $op->media->preview_w .'px'; endif; ?>;">
 				<?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->media_filename_processed; ?>
 			</div>
+			<?php endif; ?>
 
 			<div class="post_file_controls">
 				<?php if ($op->media->media_status != 'banned') : ?>

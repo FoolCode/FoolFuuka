@@ -493,7 +493,7 @@ class Radix extends \Model_Base
 						{
 							$data_boards_preferences[$k] = null;
 						}
-						
+
 						unset($data[$k]);
 					}
 					else if (isset($i['database']))
@@ -504,7 +504,7 @@ class Radix extends \Model_Base
 						}
 					}
 				}
-				
+
 			}
 
 			if (isset($item['boards_preferences']))
@@ -517,7 +517,7 @@ class Radix extends \Model_Base
 				{
 					$data_boards_preferences[$key] = null;
 				}
-				
+
 				unset($data[$key]);
 			}
 			else if (isset($item['database']))
@@ -639,7 +639,6 @@ class Radix extends \Model_Base
 
 		// for huge boards, this may time out with PHP, while MySQL will keep going
 		static::mysql_remove_tables($board);
-
 		static::clear_cache();
 
 		return true;
@@ -739,10 +738,10 @@ class Radix extends \Model_Base
 					->as_object()
 					->execute()
 					->as_array('id');
-								
+
 				\Cache::set('model.radix.preload', $object, 900);
 			}
-			
+
 			// take them all and then filter/do whatever (we use this to split the boards through various subdomains)
 			// only public is affected! admins and mods will see all boards at all the time
 			$object = \Plugins::run_hook('fu.radix.preload.public.alter_result', array($object), 'simple');
@@ -834,15 +833,23 @@ class Radix extends \Model_Base
 		$selected = false;
 		foreach ($ids as $id)
 		{
-			try
+			if ( ! \Auth::has_access('maccess.mod'))
 			{
-				$result = \Cache::get('model.radix.load_preferences.'.$id);
+				try
+				{
+					$result = \Cache::get('model.radix.load_preferences.'.$id);
+				}
+				catch (\CacheNotFoundException $e)
+				{
+					$result = \DB::select()->from('boards_preferences')->where('board_id', $id)
+						->as_object()->execute()->as_array();
+					\Cache::set('model.radix.load_preferences.'.$id, $result, 900);
+				}
 			}
-			catch (\CacheNotFoundException $e)
+			else
 			{
 				$result = \DB::select()->from('boards_preferences')->where('board_id', $id)
 					->as_object()->execute()->as_array();
-				\Cache::set('model.radix.load_preferences.'.$id, $result, 900);
 			}
 
 			foreach ($result as $value)

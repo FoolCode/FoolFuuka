@@ -31,6 +31,7 @@ foreach ($board->get_comments() as $k => $p) :
 				<span class="post_controls"><a href="<?= Uri::create($radix->shortname . '/thread/' . $p->num) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= Uri::create($radix->shortname . '/thread/' . $p->num) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($p->count_all) && $p->count_all > 50) ? '<a href="' . Uri::create($radix->shortname . '/last50/' . $p->num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?php if ($radix->archive == 1) : ?><a href="http://boards.4chan.org/<?= $radix->shortname . '/res/' . $p->num ?>" class="btnr parent"><?= __('Original') ?></a><?php endif; ?><a href="<?= Uri::create($radix->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?= $p->doc_id ?>" data-post-id="<?= $p->num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true"><?= __('Report') ?></a><?php if (Auth::has_access('maccess.mod')) : ?><a href="<?= Uri::create($radix->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?= $p->doc_id ?>" data-post-id="<?= $p->num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true"><?= __('Delete') ?></a><?php endif; ?></span>
 			</div>
 		</header>
+		<?php if ($p->media !== null) : ?>
 		<div class="thread_image_box" title="<?= $p->comment_processed ? htmlspecialchars('<strong>'.($p->comment_processed).'</strong>') : '' ?>">
 			<?php if ($p->media->media_status == 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
@@ -55,6 +56,7 @@ foreach ($board->get_comments() as $k => $p) :
 				</div>
 			<?php endif; ?>
 		</div>
+		<?php endif; ?>
 		<div class="thread_tools_bottom">
 			<?php if (isset($p->nreplies)) : ?>
 				<?= __('Replies') ?> : <?= $p->nreplies ?> | <?= __('Images') ?>: <?= $p->nimages ?>

@@ -33,7 +33,7 @@ foreach ($board->get_comments() as $k => $p) :
 		</header>
 		<?php if ($p->media !== null) : ?>
 		<div class="thread_image_box" title="<?= $p->comment_processed ? htmlspecialchars('<strong>'.($p->comment_processed).'</strong>') : '' ?>">
-			<?php if ($p->media->media_status == 'banned') : ?>
+			<?php if ($p->media->media_status === 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
 			<?php elseif ($p->media->thumb_link === false) : ?>
 				<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
@@ -48,9 +48,10 @@ foreach ($board->get_comments() as $k => $p) :
 					<?php endif; ?>
 				</a>
 			<?php endif; ?>
+			<?php if ($p->media->media_status !== 'banned') : ?>
 			<div class="post_file" style="padding-left: 2px"><?= \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->media_filename ?></div>
-
-			<?php if ($p->media->media_status == 'banned') : ?>
+			<?php endif ?>
+			<?php if ($p->media->media_status === 'banned') : ?>
 				<div class="post_file_controls">
 					<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" class="btnr" target="_blank">Full</a><?php if ($p->media->total > 1) : ?><a href="<?= Uri::create($radix->shortname . '/search/image/' . urlencode(substr($p->media->media_hash, 0, -2))) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a target="_blank" href="http://iqdb.org/?url=<?= $p->media->thumb_link ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->media->thumb_link ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>" class="btnr parent">Google</a>
 				</div>

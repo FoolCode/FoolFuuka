@@ -116,7 +116,7 @@ var viewPost = function(postForm)
 
 var backlinkify = function()
 {
-	var p, b, backlinks = document.forms.postform.getElementsByClassName('backlink');
+	var p, b, backlinks = document.getElementsByClassName('backlink');
 	for (p = 0, b = backlinks.length; p < b; ++p)
 	{
 		backlinks[p].addEventListener('mouseover', doBacklink, false);

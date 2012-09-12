@@ -312,7 +312,7 @@ class Comment extends \Model\Model_Base
 			}
 		}
 
-		$comment = htmlentities($comment, ENT_COMPAT | ENT_IGNORE, 'UTF-8', FALSE);
+		$comment = htmlentities($comment, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
 
 		// preg_replace_callback handle
 		$this->current_board_for_prc = $this->board;
@@ -324,7 +324,7 @@ class Comment extends \Model\Model_Base
 		$comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/(\d+(?:,\d+)?)?(\/?)))'i",
 			array(get_class($this), 'process_crossboard_links'), $comment);
 
-		$comment = static::auto_linkify($comment, 'url', TRUE);
+		$comment = static::auto_linkify($comment, 'url', true);
 		$comment = preg_replace($find, $html, $comment);
 		$comment = static::parse_bbcode($comment, ($this->board->archive && !$this->subnum));
 
@@ -362,30 +362,30 @@ class Comment extends \Model\Model_Base
 		$codes = array();
 
 		// add list of bbcode for formatting
-		$codes[] = array('code', 'simple_replace', NULL, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
+		$codes[] = array('code', 'simple_replace', null, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
 			array('block', 'inline'), array());
-		$codes[] = array('spoiler', 'simple_replace', NULL,
+		$codes[] = array('spoiler', 'simple_replace', null,
 			array('start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
 			array('code'));
-		$codes[] = array('sub', 'simple_replace', NULL, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline',
+		$codes[] = array('sub', 'simple_replace', null, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline',
 			array('block', 'inline'), array('code'));
-		$codes[] = array('sup', 'simple_replace', NULL, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline',
+		$codes[] = array('sup', 'simple_replace', null, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline',
 			array('block', 'inline'), array('code'));
-		$codes[] = array('b', 'simple_replace', NULL, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline',
+		$codes[] = array('b', 'simple_replace', null, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline',
 			array('block', 'inline'), array('code'));
-		$codes[] = array('i', 'simple_replace', NULL, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline',
+		$codes[] = array('i', 'simple_replace', null, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline',
 			array('block', 'inline'), array('code'));
-		$codes[] = array('m', 'simple_replace', NULL, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'),
+		$codes[] = array('m', 'simple_replace', null, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'),
 			'inline', array('block', 'inline'), array('code'));
-		$codes[] = array('o', 'simple_replace', NULL, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'),
+		$codes[] = array('o', 'simple_replace', null, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'),
 			'inline', array('block', 'inline'), array('code'));
-		$codes[] = array('s', 'simple_replace', NULL,
+		$codes[] = array('s', 'simple_replace', null,
 			array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
 			array('code'));
-		$codes[] = array('u', 'simple_replace', NULL,
+		$codes[] = array('u', 'simple_replace', null,
 			array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
 			array('code'));
-		$codes[] = array('EXPERT', 'simple_replace', NULL,
+		$codes[] = array('EXPERT', 'simple_replace', null,
 			array('start_tag' => '<span class="expert">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
 			array('code'));
 
@@ -400,19 +400,19 @@ class Comment extends \Model\Model_Base
 			$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
 		}
 
-		// if $special == TRUE, add special bbcode
-		if ($special_code === TRUE)
+		// if $special == true, add special bbcode
+		if ($special_code === true)
 		{
 			/* @todo put this into theme bootstrap
 			if ($CI->theme->get_selected_theme() == 'fuuka')
 			{
-				$bbcode->addCode('moot', 'simple_replace', NULL,
+				$bbcode->addCode('moot', 'simple_replace', null,
 					array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'),
 					'inline', array('block', 'inline'), array());
 			}
 			else*/
 			{
-				$bbcode->addCode('moot', 'simple_replace', NULL, array('start_tag' => '', 'end_tag' => ''), 'inline',
+				$bbcode->addCode('moot', 'simple_replace', null, array('start_tag' => '', 'end_tag' => ''), 'inline',
 					array('block', 'inline'), array());
 			}
 		}
@@ -422,7 +422,7 @@ class Comment extends \Model\Model_Base
 
 	public static function strip_unused_bbcode($action, $attributes, $content, $params, &$node_object)
 	{
-		if($content === '' || $content === FALSE)
+		if($content === '' || $content === false)
 			return '';
 
 		// if <code> has multiple lines, wrap it in <pre> instead
@@ -500,7 +500,7 @@ class Comment extends \Model\Model_Base
 			}
 		}
 
-		if ($this->realtime === TRUE)
+		if ($this->_realtime === true)
 		{
 			return implode('<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $key)) . '#' . $build_url['hash'] . $data->num . '" '
 				. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
@@ -580,7 +580,7 @@ class Comment extends \Model\Model_Base
 	protected function p_build_comment()
 	{
 		$theme = \Theme::instance('foolfuuka');
-		return $theme->build('board_comment', array('p' => $this), TRUE, TRUE);
+		return $theme->build('board_comment', array('p' => $this), true, true);
 	}
 
 
@@ -595,13 +595,13 @@ class Comment extends \Model\Model_Base
 	 * @param type $popup
 	 * @return type
 	 */
-	protected static function p_auto_linkify($str, $type = 'both', $popup = FALSE)
+	protected static function p_auto_linkify($str, $type = 'both', $popup = false)
 	{
 		if ($type != 'email')
 		{
 			if (preg_match_all("#(^|\s|\(|\])((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $str, $matches))
 			{
-				$pop = ($popup == TRUE) ? " target=\"_blank\" " : "";
+				$pop = ($popup == true) ? " target=\"_blank\" " : "";
 
 				for ($i = 0; $i < count($matches['0']); $i++)
 				{
@@ -614,7 +614,7 @@ class Comment extends \Model\Model_Base
 
 					$internal = (strpos($matches['6'][$i], $_SERVER['HTTP_HOST']) === 0);
 
-					if (!$internal && defined('FOOL_SUBDOMAINS_ENABLED') && FOOL_SUBDOMAINS_ENABLED == TRUE)
+					if (!$internal && defined('FOOL_SUBDOMAINS_ENABLED') && FOOL_SUBDOMAINS_ENABLED == true)
 					{
 						$subdomains = array(
 							FOOL_SUBDOMAINS_SYSTEM,
@@ -633,7 +633,7 @@ class Comment extends \Model\Model_Base
 								$host = implode('.', $host_array);
 								if (strpos($matches['6'][$i], $host) === 0)
 								{
-									$internal = TRUE;
+									$internal = true;
 									break;
 								}
 							}
@@ -851,7 +851,7 @@ class Comment extends \Model\Model_Base
 	 */
 	protected function p_process_secure_tripcode($plain)
 	{
-		return substr(base64_encode(sha1($plain . base64_decode(\Config::get('foolframe.preferences.comment.secure_tripcode_salt')), TRUE)), 0, 11);
+		return substr(base64_encode(sha1($plain . base64_decode(\Config::get('foolframe.preferences.comment.secure_tripcode_salt')), true)), 0, 11);
 	}
 
 
@@ -934,8 +934,8 @@ class Comment extends \Model\Model_Base
 			$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents(DOCROOT.'assets/anti-spam/databases')));
 			foreach($spam as $s)
 			{
-				if(strpos($comment, $s) !== FALSE || strpos($name, $s) !== FALSE
-					|| strpos($subject, $s) !== FALSE || strpos($email, $s) !== FALSE)
+				if(strpos($comment, $s) !== false || strpos($name, $s) !== false
+					|| strpos($subject, $s) !== false || strpos($email, $s) !== false)
 				{
 					throw new CommentSendingSpamException(__('Your post has undesidered content.'));
 				}

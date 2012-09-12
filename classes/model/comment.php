@@ -973,7 +973,7 @@ class Comment extends \Model\Model_Base
 			}
 
 			$this->ghost = $status['dead'];
-			$this->allow_media = $status['disable_image_upload'];
+			$this->allow_media = ! $status['disable_image_upload'];
 		}
 
 		foreach(array('name', 'email', 'title', 'delpass', 'comment', 'capcode') as $key)

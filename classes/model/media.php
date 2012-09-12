@@ -496,7 +496,7 @@ class Media extends \Model\Model_Base
 				.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 		}
 
-		return false;
+		throw new MediaNotFoundException;
 	}
 
 
@@ -524,16 +524,9 @@ class Media extends \Model\Model_Base
 		}
 		else
 		{
-			try
+			if (file_exists($this->get_dir()) !== false)
 			{
-				if (file_exists($this->get_dir()) !== false)
-				{
-					return $this->get_link();
-				}
-			}
-			catch (MediaNotFoundException $e)
-			{
-				return false;
+				return $this->get_link();
 			}
 		}
 	}

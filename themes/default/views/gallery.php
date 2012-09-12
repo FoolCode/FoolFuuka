@@ -66,7 +66,7 @@ foreach ($board->get_comments() as $k => $p) :
 		</div>
 	</article>
 <?php
-if ($separator%4 == 0)
+if ($separator % 4 == 0)
 	echo '<div class="clearfix"></div>';
 endforeach;
 ?>

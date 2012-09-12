@@ -520,11 +520,11 @@ class Controller_Chan extends \Controller_Common
 
 		if ($media->media_link !== null)
 		{
-			//return \Response::redirect($media->media_link, 'location', 303);
+			return \Response::redirect($media->media_link, 'location', 303);
 		}
 
 		return \Response::redirect(
-			\Uri::create(array($this->_radix->shortname, 'search', 'image', substr($media->media_hash, 0, -2))), 'location', 404);
+			\Uri::create(array($this->_radix->shortname, 'search', 'image', rawurlencode(substr($media->media_hash, 0, -2)))), 'location', 404);
 	}
 
 

@@ -122,7 +122,7 @@ class Media extends \Model\Model_Base
 		return new Media($media, $board);
 	}
 
-	
+
 	protected static function p_get_by($board, $where, $value, $op = 0)
 	{
 		$result = \DB::select()
@@ -131,30 +131,30 @@ class Media extends \Model\Model_Base
 			->as_object()
 			->execute()
 			->current();
-		
+
 		if ($result)
 		{
 			return new Media($result, $board, $op);
 		}
-		
+
 		throw new MediaNotFoundException(__('The image could not be found.'));
 	}
-	
-	
+
+
 	protected static function p_get_by_media_id($board, $value, $op = 0)
 	{
 		return static::get_by($board, 'media_id', $value, $op);
 	}
-	
-	
+
+
 	protected static function p_get_by_media_hash($board, $value, $op = 0)
 	{
 		return static::get_by($board, 'media_hash', $value, $op);
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * @param type $board
 	 * @param type $filename
 	 */
@@ -166,12 +166,12 @@ class Media extends \Model\Model_Base
 			->as_object()
 			->execute()
 			->current();
-		
+
 		if ($result)
 		{
 			return static::get_by_media_id($board, $result->media_id);
 		}
-		
+
 		throw new MediaNotFoundException();
 	}
 
@@ -433,7 +433,7 @@ class Media extends \Model\Model_Base
 		}
 
 		try
-		{	
+		{
 			// full image
 			if ( ! $thumbnail && file_exists($this->get_dir(false)) !== false)
 			{
@@ -609,7 +609,7 @@ class Media extends \Model\Model_Base
 				{
 					$media_file = null;
 				}
-				
+
 				if ($media_file !== null && file_exists($media_file))
 				{
 					if (!unlink($media_file))
@@ -625,7 +625,7 @@ class Media extends \Model\Model_Base
 
 				// remove OP thumbnail
 				$this->op = 1;
-				
+
 				try
 				{
 					$thumb_file = $this->get_dir(true);
@@ -634,7 +634,7 @@ class Media extends \Model\Model_Base
 				{
 					$thumb_file = null;
 				}
-				
+
 				if ($thumb_file !== null && file_exists($thumb_file))
 				{
 					if (!unlink($thumb_file))
@@ -666,8 +666,8 @@ class Media extends \Model\Model_Base
 		}
 
 	}
-	
-	
+
+
 	public function p_ban($global = false)
 	{
 		if ( ! $global)
@@ -677,10 +677,10 @@ class Media extends \Model\Model_Base
 				->value('banned', 1)
 				->execute();
 			$this->delete();
-			
+
 			return $this;
 		}
-		
+
 		$count = \DB::select(\DB::expr('COUNT(*) as count'))
 			->from('banned_md5')
 			->where('md5', $this->media_hash)
@@ -688,14 +688,14 @@ class Media extends \Model\Model_Base
 			->execute()
 			->current()
 			->count;
-		
+
 		if ( ! $count)
 		{
 			\DB::insert('banned_md5')
 				->set(array('md5' => $this->media_hash))
 				->execute();
 		}
-		
+
 		foreach (\Radix::get_all() as $radix)
 		{
 			try
@@ -712,7 +712,7 @@ class Media extends \Model\Model_Base
 				\DB::insert(\DB::expr(\Radix::get_table($radix,'_images')))
 					->set(array('media_hash' => $this->media_hash, 'banned' => 1))
 					->execute();
-			}			
+			}
 		}
 	}
 
@@ -750,16 +750,16 @@ class Media extends \Model\Model_Base
 
 		$do_thumb = true;
 		$do_full = true;
-		
+
 		try
 		{
 			$duplicate = static::get_by_media_hash($this->board, $this->media_hash);
-			
+
 			// we want the current media to work with the same filenames as previously stored
 			$this->media = $duplicate->media;
 			$this->preview_op = $duplicate->preview_op;
 			$this->preview_reply = $duplicate->preview_reply;
-			
+
 			// if we're here, we got the media
 			try
 			{
@@ -767,7 +767,7 @@ class Media extends \Model\Model_Base
 				if (file_exists($duplicate_dir))
 				{
 					$do_full = false;
-				}				
+				}
 			}
 			catch (MediaDirNotAvailableException $e)
 			{}
@@ -794,7 +794,7 @@ class Media extends \Model\Model_Base
 		{
 			$thumb_width = $this->board->thumbnail_reply_width;
 			$thumb_height = $this->board->thumbnail_reply_height;
-			
+
 			if ($is_op)
 			{
 				$thumb_width = $this->board->thumbnail_op_width;
@@ -844,7 +844,7 @@ class Media extends \Model\Model_Base
 	{
 		$dir = \Preferences::get('fu.boards.directory').'/'.$this->board->shortname.'/'.
 			($thumbnail ? 'thumb' : 'image').'/';
-			
+
 		// we first check if we have media/preview_op/preview_reply available to reuse the value
 		if ($thumbnail)
 		{
@@ -858,7 +858,7 @@ class Media extends \Model\Model_Base
 				return $dir.'/'.substr($this->preview_reply, 0, 4).'/'.substr($this->preview_reply, 4, 2).'/'.
 					($with_filename ? $this->preview_reply : '');
 			}
-			
+
 			// we didn't have media/preview_op/preview_reply so fallback to making a new file
 			return $dir.'/'.substr($this->preview_orig, 0, 4).'/'.substr($this->preview_orig, 4, 2).'/'.
 				($with_filename ? $this->preview_orig : '');
@@ -870,13 +870,13 @@ class Media extends \Model\Model_Base
 				return $dir.'/'.substr($this->media, 0, 4).'/'.substr($this->media, 4, 2).'/'.
 					($with_filename ? $this->media : '');
 			}
-			
+
 			// we didn't have media/preview_op/preview_reply so fallback to making a new file
 			return $dir.'/'.substr($this->media_orig, 0, 4).'/'.substr($this->media_orig, 4, 2).'/'.
 				($with_filename ? $this->media_orig : '');
 		}
-			
-		
+
+
 	}
 
 }

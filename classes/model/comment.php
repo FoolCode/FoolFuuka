@@ -183,6 +183,7 @@ class Comment extends \Model\Model_Base
 			}
 			
 			foreach (array(
+				'safe_media_hash', 
 				'preview_orig_processed', 
 				'media_filename_processed', 
 				'media_hash_processed',

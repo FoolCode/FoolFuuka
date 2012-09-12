@@ -187,6 +187,7 @@ class Comment extends \Model\Model_Base
 				'media_filename_processed', 
 				'media_hash_processed',
 				'media_link',
+				'remote_media_link',
 				'thumb_link'
 			) as $field)
 			{

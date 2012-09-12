@@ -177,12 +177,14 @@ class Comment extends \Model\Model_Base
 			foreach (Media::$_fields as $field)
 			{
 				if (!isset($comment->$field))
+				{
 					$comment->$field = $comment->media->$field;
+				}
 			}
 			
 			foreach (array('preview_orig_processed', 'media_filename_processed', 'media_hash_processed') as $field)
 			{
-				$comment->media->{$field.'_processed'};
+				$comment->media->{$field};
 			}
 		}
 		

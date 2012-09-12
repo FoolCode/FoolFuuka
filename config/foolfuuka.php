@@ -10,7 +10,7 @@ return array(
 		/**
 		 * Version for autoupgrades
 		 */
-		'version' => '1.5.0-dev-4',
+		'version' => '1.5.0-dev-5',
 
 		/**
 		 * Display name for the module
@@ -42,8 +42,8 @@ return array(
 		 */
 		'min_php_version' => '5.3.0'
 	),
-	
-	
+
+
 	/**
 	 * Locations of the data out of the module folder
 	 */
@@ -51,7 +51,7 @@ return array(
 		'themes' => DOCROOT.'foolfuuka/themes/',
 		'plugins' => DOCROOT.'foolfuuka/plugins/'
 	),
-	
+
 
 	/**
 	 * Preferences for when there's no default specified

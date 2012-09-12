@@ -47,7 +47,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 			</a>
 		<?php else: ?>
 			<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-				<?php if(!Auth::has_access('maccess.mod') && !$p->board->transparent_spoiler && $p->spoiler) :?>
+				<?php if(!Auth::has_access('maccess.mod') && !$p->board->transparent_spoiler && $p->media->spoiler) :?>
 				<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 				<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
 				<img src="<?= Uri::create('content/themes/default/images/transparent_pixel.png') ?>" data-original="<?= $p->media->thumb_link ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />

@@ -182,9 +182,15 @@ class Comment extends \Model\Model_Base
 				}
 			}
 			
-			foreach (array('preview_orig_processed', 'media_filename_processed', 'media_hash_processed') as $field)
+			foreach (array(
+				'preview_orig_processed', 
+				'media_filename_processed', 
+				'media_hash_processed',
+				'media_link',
+				'media_thumb'
+			) as $field)
 			{
-				$comment->media->{$field};
+				$comment->$field = $comment->media->{$field};
 			}
 		}
 		

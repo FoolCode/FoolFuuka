@@ -57,6 +57,9 @@ var bindFunctions = function()
 			if(jQuery("#file_image").val())
 				return true;
 
+			// forcibly call realtimethread to fetch unfetched posts before finally updating last_doc_id
+			realtimethread();
+
 			var originalText = el.attr('value');
 			el.attr({'value': backend_vars.gettext['submit_state'], 'disabled': 'disabled'});
 
@@ -90,7 +93,6 @@ var bindFunctions = function()
 				cache: false,
 				data: _data,
 				success: function(data, textStatus, jqXHR){
-					
 					if (typeof data.error !== "undefined")
 					{
 						reply_alert.html(data.error);

@@ -506,7 +506,7 @@ class Board extends \Model\Model_Base
 		{
 			$this->_comments = array();
 			$this->_comments_unsorted = array();
-			
+
 			\Profiler::mark_memory($this, 'Board $this');
 			\Profiler::mark('Board::get_threads_comments End Prematurely');
 			return $this;
@@ -725,6 +725,15 @@ class Board extends \Model\Model_Base
 			{
 				$thread_op_present = true;
 			}
+			else
+			{
+				$counter['posts']++;
+			}
+
+			if ($post->op == 0 && $post->subnum == 0 && $post->media !== null)
+			{
+				$counter['images']++;
+			}
 
 			if ($post->subnum > 0)
 			{
@@ -735,13 +744,6 @@ class Board extends \Model\Model_Base
 			{
 				$thread_last_bump = $post->timestamp;
 			}
-
-			if ($post->media_filename)
-			{
-				$counter['images']++;
-			}
-
-			$counter['posts']++;
 		}
 
 		// we didn't point to the thread OP, this is not a thread
@@ -764,7 +766,7 @@ class Board extends \Model\Model_Base
 		}
 
 		if ($counter['posts'] > $this->_radix->max_posts_count)
-		{	
+		{
 			$result['dead'] = true;
 			$result['disable_image_upload'] = true;
 		}

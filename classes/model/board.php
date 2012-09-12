@@ -623,12 +623,12 @@ class Board extends \Model\Model_Base
 
 		$query_result = $query->as_object()->execute()->as_array();
 
-		if (!count($query_result) && isset($latest_doc_id))
+		if ( ! count($query_result) && isset($latest_doc_id))
 		{
 			return $this->_comments = $this->_comments_unsorted = array();
 		}
 
-		if (!count($query_result))
+		if ( ! count($query_result))
 		{
 			throw new BoardThreadNotFoundException(__('There\'s no such a thread.'));
 		}
@@ -706,7 +706,7 @@ class Board extends \Model\Model_Base
 	 */
 	protected function p_check_thread_status()
 	{
-		if ($this->_method_fetching != 'get_thread_comments')
+		if ($this->_method_fetching !== 'get_thread_comments')
 		{
 			throw new BoardNotCompatibleMethodException;
 		}
@@ -745,10 +745,10 @@ class Board extends \Model\Model_Base
 		}
 
 		// we didn't point to the thread OP, this is not a thread
-		if (!$thread_op_present)
+		if ( ! $thread_op_present)
 		{
 			// this really should not happen here
-			throw new BoardThreadNotFoundException;
+			throw new BoardThreadNotFoundException(__('The thread you were looking for can\'t be found.'));
 		}
 
 		$result = array(
@@ -764,16 +764,9 @@ class Board extends \Model\Model_Base
 		}
 
 		if ($counter['posts'] > $this->_radix->max_posts_count)
-		{
-			if ($counter['images'] > $this->_radix->max_images_count)
-			{
-				$result['dead'] = true;
-				$result['disable_image_upload'] = true;
-			}
-			else
-			{
-				$result['dead'] = true;
-			}
+		{	
+			$result['dead'] = true;
+			$result['disable_image_upload'] = true;
 		}
 		else if ($counter['images'] > $this->_radix->max_images_count)
 		{

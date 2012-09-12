@@ -378,7 +378,7 @@ class Media extends \Model\Model_Base
 	 * @param bool $thumbnail if it's a thumbnail we're looking for
 	 * @return bool|string FALSE on not found, a fallback image if not found for thumbnails, or the URL on success
 	 */
-	protected function p_get_link($thumbnail = false)
+	protected function p_get_link($thumbnail = false, $force = false)
 	{
 		if (!$this->media_hash)
 		{
@@ -394,14 +394,20 @@ class Media extends \Model\Model_Base
 			if (!$this->board->hide_thumbnails)
 			{
 				$this->media_status = 'forbidden';
-				throw new MediaHiddenException;
+				if ( ! $force)
+				{
+					throw new MediaHiddenException;
+				}
 			}
 
 			// add a delay of 1 day to all thumbnails
 			if ($this->board->delay_thumbnails && ($this->timestamp + 86400) > time())
 			{
 				$this->media_status = 'forbidden-24h';
-				throw new MediaHiddenDayException;
+				if ( ! $force)
+				{
+					throw new MediaHiddenDayException;
+				}
 			}
 		}
 
@@ -409,7 +415,10 @@ class Media extends \Model\Model_Base
 		if ($this->banned == 1)
 		{
 			$this->media_status = 'banned';
-			throw new MediaBannedException;
+			if ( ! $force)
+			{
+				throw new MediaBannedException;
+			}
 		}
 
 		try

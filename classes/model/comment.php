@@ -1083,7 +1083,7 @@ class Comment extends \Model\Model_Base
 		// process comment media
 		if ($this->media !== null)
 		{
-			if ($this->ghost)
+			if ( ! $this->allow_media)
 			{
 				throw new CommentSendingImageInGhostException(__('You can\'t post images when the thread is in ghost mode.'));
 			}

@@ -231,7 +231,7 @@ class Controller_Chan extends \Controller_Common
 
 		$options = array(
 			'per_page' => $this->_radix->threads_per_page,
-			'per_thread' => 6,
+			'per_thread' => 5,
 			'order' => $order
 		);
 
@@ -243,7 +243,7 @@ class Controller_Chan extends \Controller_Common
 	{
 		$options = array(
 			'per_page' => $this->_radix->threads_per_page,
-			'per_thread' => 6,
+			'per_thread' => 5,
 			'order' => 'ghost'
 		);
 

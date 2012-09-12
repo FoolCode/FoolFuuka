@@ -68,7 +68,8 @@ class Search extends Board
 		
 			try
 			{
-				Sphinxql::connect();
+				// with suppress error
+				Sphinxql::connect(true);
 			}
 			catch (\Foolz\Sphinxql\SphinxqlConnectionException $e)
 			{

@@ -398,7 +398,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 	
 				try
 				{
-					\Foolz\Sphinxql\Sphinxql::forge()->connect();
+					\Foolz\Sphinxql\Sphinxql::connect(true);
 				}
 				catch (\Foolz\Sphinxql\SphinxqlConnectionException $e)
 				{

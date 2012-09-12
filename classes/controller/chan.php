@@ -528,6 +528,24 @@ class Controller_Chan extends \Controller_Common
 	}
 
 
+	public function radix_redirect($filename)
+	{
+		$this->_theme->set_layout('redirect');
+
+		if ($this->_radix->archive)
+		{
+			$redirect  = ($this->_radix->images_url) ? : '//images.4chan.org/'.$this->_radix->shortname.'/src/';
+			$redirect .= $filename.'.'.\Input::extension();
+		}
+		else
+		{
+			$redirect  = \Uri::create(array($this->_radix->shortname));
+		}
+
+		return \Response::forge($this->_theme->build('redirection', array('url' => $redirect)));
+	}
+
+
 	function action_search()
 	{
 		return $this->radix_search();

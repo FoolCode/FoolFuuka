@@ -19,10 +19,11 @@ if (!defined('DOCROOT'))
 			$media->preview_reply = $item->preview_reply;
 			$media->total = $item->total;
 			$media->banned = $item->banned;
+			$media->op = true;
 		?>
 		
 		<a href="<?= Uri::create(array(Radix::get_selected()->shortname, 'search', 'image', $media->safe_media_hash)) ?>">
-			<img  src="<?= $media->media_link  ?>" />
+			<img  src="<?= $media->thumb_link  ?>" />
 		</a>
 	</div>
 <?php endforeach; ?>

@@ -8,11 +8,11 @@ foreach ($board->get_comments() as $key => $post) :
 		$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
 ?>
 <article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->board->shortname ?>">
-	
-	
+
+
 	<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($op->board)); ?>
-	
-	
+
+
 	<?php if (!is_null($op->media)) : ?>
 		<div class="thread_image_box">
 			<?php if ($op->media->media_status === 'banned') : ?>
@@ -131,16 +131,16 @@ foreach ($board->get_comments() as $key => $post) :
 				<br/>
 				<div class="ip_reporter">
 					<?= \Inet::dtop($report->ip_reporter) ?>
-					<button class="btn btn-mini" data-function="mod" data-report-id="<?= $report->id ?>" data-id="<?= $op->doc_id ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-action="delete_report"><?= __('Delete Report') ?></button>
+					<button class="btn btn-mini" data-function="mod" data-report-id="<?= $report->id ?>" data-id="<?= $op->doc_id ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-action="delete_report"><?= __('Delete Report') ?></button>
 				</div>
 			</div>
 		<?php endforeach ?>
 	<?php endif; ?>
 <?php elseif (isset($post['posts'])): ?>
 <article class="clearfix thread">
-	
+
 	<?php \Plugins::run_hook('fu.themes.default_after_headless_open', array(isset($radix) ? $radix : null)); ?>
-	
+
 <?php endif; ?>
 
 	<aside class="posts">
@@ -161,8 +161,8 @@ foreach ($board->get_comments() as $key => $post) :
 					$p->thread_num = $p->num;
 
 				echo $this->build('board_comment', array(
-					'p' => $p, 
-					'modifiers' => $modifiers, 
+					'p' => $p,
+					'modifiers' => $modifiers,
 					'post_counter' => $post_counter,
 					'image_counter' => $image_counter
 				), true);

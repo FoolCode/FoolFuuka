@@ -936,10 +936,42 @@ class Controller_Chan extends \Controller_Common
 
 		if (\Input::is_ajax())
 		{
-			$comment_api = \Comment::forge_for_api($comment, $this->_radix,
-				array('board' => false, 'theme' => true), array('controller_method' => ! \Board::is_natural($limit) ? 'thread' : 'last/'.$limit));
-			return \Response::forge(
-				json_encode(array('success' => __('Message sent.'), $comment->thread_num => array('posts' => array($comment_api)))));
+			$latest_doc_id = \Input::post('latest_doc_id');
+			if ($latest_doc_id && \Board::is_natural($latest_doc_id))
+			{
+				try
+				{
+					$board = \Board::forge()
+						->get_thread($comment->thread_num)
+						->set_radix($this->_radix)
+						->set_api(array('theme' => \Input::post('theme'), 'board' => false))
+						->set_options(array(
+							'type' => 'from_doc_id',
+							'latest_doc_id' => $latest_doc_id,
+							'realtime' => true,
+							'controller_method' => $limit ? 'last/'.$limit : 'thread'
+					));
+					
+					$comments = $board->get_comments();
+				}
+				catch(Model\BoardThreadNotFoundException $e)
+				{
+					return $this->error(__("Thread not found."));
+				}
+				catch (Model\BoardException $e)
+				{
+					return $this->error(__("Unknown error."));
+				}
+
+				return \Response::forge(json_encode(array('success' => __('Message sent.')) + $comments));
+			}
+			else
+			{
+				$comment_api = \Comment::forge_for_api($comment, $this->_radix,
+					array('board' => false, 'theme' => true), array('controller_method' => ! \Board::is_natural($limit) ? 'thread' : 'last/'.$limit));
+				return \Response::forge(
+					json_encode(array('success' => __('Message sent.'), $comment->thread_num => array('posts' => array($comment_api)))));
+			}
 		}
 		else
 		{

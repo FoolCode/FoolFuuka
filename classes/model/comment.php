@@ -17,6 +17,7 @@ class CommentSendingTooManyCharactersException extends CommentSendingException {
 class CommentSendingSpamException extends CommentSendingException {}
 class CommentSendingTimeLimitException extends CommentSendingException {}
 class CommentSendingSameCommentException extends CommentSendingException {}
+class CommentSendingImageInGhostException extends CommentSendingException {}
 class CommentSendingBannedException extends CommentSendingException {}
 
 class Comment extends \Model\Model_Base
@@ -1080,8 +1081,13 @@ class Comment extends \Model\Model_Base
 		}
 
 		// process comment media
-		if (!is_null($this->media))
+		if ($this->media !== null)
 		{
+			if ($this->ghost)
+			{
+				throw new CommentSendingImageInGhostException(__('You can\'t post images when the thread is in ghost mode.'));
+			}
+			
 			try
 			{
 				$this->media->insert($microtime, $this->op);

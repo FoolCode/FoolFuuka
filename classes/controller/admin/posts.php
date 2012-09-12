@@ -23,6 +23,10 @@ class Controller_Admin_Posts extends \Controller_Admin
 
 		$theme = \Theme::instance('foolfuuka');
 		$theme->set_theme('default');
+		$theme->bind('modifiers', array(
+			'post_show_board_name' => $this->_radix === null,
+			'post_show_view_button' => true
+		));
 
 		$reports = \Report::get_all();
 

@@ -8,7 +8,7 @@
 	[data-function=activateModeration] {
 		display:none !important;
 	}
-	
+
 	.post_mod_controls {
 		display:block !important;
 	}
@@ -16,7 +16,6 @@
 <div class="theme_default clearfix" style="padding-bottom: 15px">
 	<article class="thread clearfix">
 		<?php
-				
 		foreach ($reports as $key => $report)
 		{
 			echo $report->get_comment()->formatted;

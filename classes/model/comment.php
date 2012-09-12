@@ -187,7 +187,7 @@ class Comment extends \Model\Model_Base
 				'media_filename_processed', 
 				'media_hash_processed',
 				'media_link',
-				'thumbs_link'
+				'thumb_link'
 			) as $field)
 			{
 				$comment->$field = $comment->media->{$field};

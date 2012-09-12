@@ -1104,7 +1104,7 @@ class Comment extends \Model\Model_Base
 			{
 				throw new CommentSendingImageInGhostException(__('You can\'t post images when the thread is in ghost mode.'));
 			}
-			
+
 			try
 			{
 				$this->media->insert($microtime, $this->op);
@@ -1134,7 +1134,7 @@ class Comment extends \Model\Model_Base
 		// 2ch-style codes, only if enabled
 		if($this->thread_num && $this->board->enable_poster_hash)
 		{
-			$this->poster_hash = substr(substr(crypt(md5(\Input::ip().'id'.$this->thread_num),'id'),+3), 0, 8);
+			$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$this->thread_num),'id'),+3), 0, 8);
 		}
 
 		if($this->board->archive)
@@ -1273,9 +1273,9 @@ class Comment extends \Model\Model_Base
 		// update poster_hash for non-ghost posts
 		if ( ! $this->ghost && $this->op && $this->board->enable_poster_hash)
 		{
-			$this->poster_hash = substr(substr(crypt(md5(Input::ip().'id'.$comment->thread_num),'id'),+3), 0, 8);
+			$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment->thread_num),'id'),+3), 0, 8);
 
-			\DB::update(\DB::exec(Radix::get_table($this->board)))
+			\DB::update(\DB::expr(\Radix::get_table($this->board)))
 				->value('poster_hash', $this->poster_hash)->where('doc_id', $comment->doc_id)->execute();
 		}
 

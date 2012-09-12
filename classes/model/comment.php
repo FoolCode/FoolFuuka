@@ -325,9 +325,9 @@ class Comment extends \Model\Model_Base
 		$comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/(\d+(?:,\d+)?)?(\/?)))'i",
 			array(get_class($this), 'process_crossboard_links'), $comment);
 
-		$comment = static::auto_linkify($comment, 'url', true);
 		$comment = preg_replace($find, $html, $comment);
 		$comment = static::parse_bbcode($comment, ($this->board->archive && !$this->subnum));
+		$comment = static::auto_linkify($comment, 'url', true);
 
 		// additional formatting
 		if ($this->board->archive && !$this->subnum)

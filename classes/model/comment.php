@@ -169,6 +169,23 @@ class Comment extends \Model\Model_Base
 		{
 			$comment->$field;
 		}
+		
+		// also spawn media variables
+		if ($comment->media !== null)
+		{
+			foreach (array('preview_orig_processed', 'media_filename_processed', 'media_hash_processed') as $field)
+			{
+				$comment->media->{$field.'_processed'};
+			}
+			
+			// backwards compatibility with 4chan X
+			foreach (Media::$_fields as $field)
+			{
+				if (!isset($comment->$field))
+				$comment->$field = $comment->media->$field;
+			}
+		}
+		
 
 		if (isset($api['board']) && !$api['board'])
 		{

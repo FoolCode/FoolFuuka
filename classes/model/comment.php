@@ -192,6 +192,8 @@ class Comment extends \Model\Model_Base
 			{
 				$comment->$field = $comment->media->{$field};
 			}
+			
+			unset($comment->media->board);
 		}
 		
 

@@ -57,9 +57,6 @@ var bindFunctions = function()
 			if(jQuery("#file_image").val())
 				return true;
 
-			// forcibly call realtimethread to fetch unfetched posts before finally updating last_doc_id
-			realtimethread();
-
 			var originalText = el.attr('value');
 			el.attr({'value': backend_vars.gettext['submit_state'], 'disabled': 'disabled'});
 
@@ -81,6 +78,7 @@ var bindFunctions = function()
 				reply_postas: jQuery("#reply_postas").val(),
 				reply_gattai: 'Submit',
 				reply_last_limit: typeof backend_vars.last_limit === "undefined" ? null : backend_vars.last_limit,
+				latest_doc_id: backend_vars.latest_doc_id,
 				theme: backend_vars.selected_theme
 			};
 

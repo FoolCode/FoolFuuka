@@ -271,7 +271,7 @@ class Media extends \Model\Model_Base
 				{
 					try
 					{
-						$imgsize = \Cache::get('comment.'.$this->board->id.'.'.$this->doc_id.'_spoiler_size');
+						$imgsize = \Cache::get('comment.comment_array.'.$this->board->id.'.'.$this->doc_id.'_spoiler_size');
 					}
 					catch (\CacheNotFoundException $e)
 					{
@@ -285,7 +285,7 @@ class Media extends \Model\Model_Base
 								$imgsize = @getimagesize($imgpath);
 							}
 
-							\Cache::set('comment.'.$this->board->id.'.'.$this->doc_id.'_spoiler_size', $imgsize, 86400);
+							\Cache::set('comment.comment_array.'.$this->board->id.'.'.$this->doc_id.'_spoiler_size', $imgsize, 86400);
 
 							if ($imgsize !== FALSE)
 							{

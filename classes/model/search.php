@@ -7,6 +7,7 @@ use Foolz\Sphinxql\Sphinxql;
 class SearchException extends \FuelException {}
 class SearchRequiresSphinxException extends SearchException {}
 class SearchSphinxOfflineException extends SearchException {}
+class SearchInvalidException extends SearchException {}
 class SearchEmptyResultException extends SearchException {}
 
 class Search extends Board
@@ -74,6 +75,11 @@ class Search extends Board
 			catch (\Foolz\Sphinxql\SphinxqlConnectionException $e)
 			{
 				throw new SearchSphinxOfflineException(__('The search backend is currently not online. Try later or contact us in case it\'s offline for too long.'));
+			}
+			catch (\Foolz\Sphinxql\SphinxqlDatabaseException $e)
+			{
+				Log::error('It looks like the user used a bad search string: '.$e->getMessage());
+				throw new SearchInvalidException(__('The order of the allowed special characters produced a bad query. Try wrapping your query in double quotes.'));
 			}
 
 			// determine if all boards will be used for search or not

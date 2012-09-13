@@ -235,7 +235,7 @@ class Search extends Board
 			}
 			catch (\Foolz\Sphinxql\SphinxqlDatabaseException $e)
 			{
-				Log::error('It looks like the user used a bad search string: '.$e->getMessage());
+				\Log::error('It looks like the user used a bad search string: '.$e->getMessage());
 				throw new SearchInvalidException(__('The order of the allowed special characters produced a bad query. Try wrapping your query in double quotes.'));
 			}
 			

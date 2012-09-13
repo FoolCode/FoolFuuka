@@ -90,7 +90,7 @@ class Media extends \Model\Model_Base
 		}
 
 		// let's unset 0 sizes so maybe the __get() can save the day
-		if ( ! $this->preview_w || ! $this->preview_h)
+		if ($this->preview_w === 0 || $this->preview_h === 0)
 		{
 			unset($this->preview_w, $this->preview_h);
 		}
@@ -746,8 +746,8 @@ class Media extends \Model\Model_Base
 
 		$this->media_w = $getimagesize[0];
 		$this->media_h = $getimagesize[1];
-		$this->media_orig = $microtime.'.'.$this->temp_extension;
-		$this->preview_orig = $microtime.'s.'.$this->temp_extension;
+		$this->media_orig = $microtime.'.'.strtolower($this->temp_extension);
+		$this->preview_orig = $microtime.'s.'.strtolower($this->temp_extension);
 		$this->media_hash = base64_encode(pack("H*", md5(file_get_contents($full_path))));
 
 		$do_thumb = true;
@@ -830,11 +830,17 @@ class Media extends \Model\Model_Base
 
 		if (function_exists('exif_read_data') && in_array(strtolower($this->temp_extension), array('jpg', 'jpeg', 'tiff')))
 		{
-			$exif = exif_read_data($full_path);
-
-			if ($exif !== false)
+			$media_data = null;
+			getimagesize($full_path, $media_data);
+			
+			if (strpos($media_data['APP1'], 'Exif') === 0)
 			{
-				$this->exif = $exif;
+				$exif = exif_read_data($full_path);
+
+				if ($exif !== false)
+				{
+					$this->exif = $exif;
+				}
 			}
 		}
 

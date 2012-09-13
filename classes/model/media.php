@@ -833,7 +833,7 @@ class Media extends \Model\Model_Base
 			$media_data = null;
 			getimagesize($full_path, $media_data);
 			
-			if (strpos($media_data['APP1'], 'Exif') === 0)
+			if ( ! isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0)
 			{
 				$exif = exif_read_data($full_path);
 

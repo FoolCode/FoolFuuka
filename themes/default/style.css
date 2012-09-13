@@ -529,6 +529,7 @@ body.theme_default {
 
 
 .theme_default article.thread .post_trip {
+	font-weight: normal;
     color: #117743;
 }
 

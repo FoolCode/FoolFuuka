@@ -56,8 +56,7 @@ foreach ($board->get_comments() as $key => $post) :
 	<header<?= (isset($op->report_status) && !is_null($op->report_status)) ? ' class="reported"' : '' ?>>
 		<div class="post_data">
 			<h2 class="post_title"><?= $op->title_processed ?></h2>
-			<span class="post_author"><?= ($op->email && $op->email !== 'noko') ? '<a href="mailto:' . rawurlencode($op->email) . '">' . $op->name_processed . '</a>' : $op->name_processed ?></span>
-			<span class="post_trip"><?= $op->trip_processed ?></span>
+			<span class="post_author"><?= ($op->email && $op->email !== 'noko') ? '<a href="mailto:' . rawurlencode($op->email) . '">' . $op->name_processed . ' <span class="post_trip">'.$op->trip_processed.'</span></a>' : $op->name_processed.' <span class="post_trip">'.$op->trip_processed.'</span>' ?></span>
 			<span class="poster_hash"><?= ($op->poster_hash_processed) ? 'ID:' . $op->poster_hash_processed : '' ?></span>
 			<?php if ($op->capcode != 'N') : ?>
 				<?php if ($op->capcode == 'M') : ?>

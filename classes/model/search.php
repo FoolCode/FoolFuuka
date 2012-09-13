@@ -76,11 +76,6 @@ class Search extends Board
 			{
 				throw new SearchSphinxOfflineException(__('The search backend is currently not online. Try later or contact us in case it\'s offline for too long.'));
 			}
-			catch (\Foolz\Sphinxql\SphinxqlDatabaseException $e)
-			{
-				Log::error('It looks like the user used a bad search string: '.$e->getMessage());
-				throw new SearchInvalidException(__('The order of the allowed special characters produced a bad query. Try wrapping your query in double quotes.'));
-			}
 
 			// determine if all boards will be used for search or not
 			if ($this->_radix === null)
@@ -234,7 +229,15 @@ class Search extends Board
 				->option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
 
 			// send sphinxql to searchd
-			$search = $query->execute();
+			try
+			{
+				$search = $query->execute();
+			}
+			catch (\Foolz\Sphinxql\SphinxqlDatabaseException $e)
+			{
+				Log::error('It looks like the user used a bad search string: '.$e->getMessage());
+				throw new SearchInvalidException(__('The order of the allowed special characters produced a bad query. Try wrapping your query in double quotes.'));
+			}
 			
 			if ( ! count($search))
 			{

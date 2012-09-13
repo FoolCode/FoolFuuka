@@ -765,12 +765,12 @@ class Board extends \Model\Model_Base
 			$result['disable_image_upload'] = true;
 		}
 
-		if ($counter['posts'] > $this->_radix->max_posts_count)
+		if ($counter['posts'] >= $this->_radix->max_posts_count)
 		{
 			$result['dead'] = true;
 			$result['disable_image_upload'] = true;
 		}
-		else if ($counter['images'] > $this->_radix->max_images_count)
+		else if ($counter['images'] >= $this->_radix->max_images_count)
 		{
 			$result['disable_image_upload'] = true;
 		}

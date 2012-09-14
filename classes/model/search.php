@@ -59,6 +59,8 @@ class Search extends Board
 				}
 				catch (MediaNotFoundException $e)
 				{
+					$this->_comments_unsorted = array();
+					$this->_comments = array();
 					\Profiler::mark('Board::get_search_comments End Prematurely');
 					throw new SearchEmptyResultException(__('No results found.'));
 				}
@@ -253,6 +255,8 @@ class Search extends Board
 			
 			if ( ! count($search))
 			{
+				$this->_comments_unsorted = array();
+				$this->_comments = array();
 				throw new SearchEmptyResultException(__('No results found.'));
 			}
 
@@ -312,6 +316,8 @@ class Search extends Board
 				
 				if ( ! count($result))
 				{
+					$this->_comments_unsorted = array();
+					$this->_comments = array();
 					throw new SearchEmptyResultException(__('No results found.'));
 				}
 
@@ -435,6 +441,8 @@ class Search extends Board
 				
 				if ( ! count($result_which))
 				{
+					$this->_comments_unsorted = array();
+					$this->_comments = array();
 					throw new SearchEmptyResultException(__('No results found.'));
 				}
 

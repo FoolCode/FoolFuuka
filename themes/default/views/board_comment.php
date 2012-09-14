@@ -15,7 +15,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 	<div class="post_file">
 
 		<span class="post_file_controls">
-		<?php if ($p->media->media_status != 'banned') : ?>
+		<?php if ($p->media->media_status !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
 			<?php if (!$p->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
 			<?php if ($p->media->total > 1) : ?><a href="<?= Uri::create($p->board->shortname . '/search/image/' . $p->media->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
 				href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>" target="_blank" class="btnr parent">Google</a><a

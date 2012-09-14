@@ -785,8 +785,8 @@ class Controller_Chan extends \Controller_Common
 		{
 			if ($item || $item === 0)
 			{
-				$pagination_arr[] = $key;
-				$pagination_arr[] = $item;
+				$pagination_arr[] = rawurlencode($key);
+				$pagination_arr[] = rawurlencode($item);
 			}
 		}
 

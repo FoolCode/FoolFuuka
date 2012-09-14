@@ -227,6 +227,7 @@ class Report extends \Model\Model_Base
 			->set(array(
 				'board_id' => $new->board_id,
 				'doc_id' => $new->doc_id,
+				'media_id' => $new->media_id,
 				'reason' => $new->reason,
 				'ip_reporter' => $new->ip_reporter,
 				'created' => $new->created,
@@ -256,6 +257,28 @@ class Report extends \Model\Model_Base
 	
 	public function p_get_comment()
 	{
+		
+		if ($this->media_id !== null)
+		{
+			// custom "get the first doc_id with the media"
+			$doc_id_res = \DB::select('doc_id')
+				->from(\DB::expr(\Radix::get_table($this->board)))
+				->where('media_id', $this->media_id)
+				->order_by('timestamp', 'desc')
+				->as_object()
+				->execute()
+				->current();
+
+			if ($doc_id_res !== null)
+			{
+				$this->doc_id = $doc_id_res->doc_id;
+			}
+			else
+			{
+				throw new ReportMediaNotFoundException(__('The report you are managing could not be found.'));
+			}
+		}
+		
 		try
 		{
 			$comments = Board::forge()->get_post()
@@ -266,7 +289,7 @@ class Report extends \Model\Model_Base
 		}
 		catch (BoardException $e)
 		{
-			throw new ReportCommentNotFoundException(__('The report you are reporting could not be found.'));
+			throw new ReportCommentNotFoundException(__('The report you are managing could not be found.'));
 		}
 		
 		return $this->comment;

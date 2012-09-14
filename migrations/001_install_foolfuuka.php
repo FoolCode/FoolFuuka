@@ -66,14 +66,15 @@ class Install_Foolfuuka
 			\DBUtil::create_table('reports', array(
 				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
 				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
-				'doc_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
-				'media_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
+				'doc_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true, 'default' => null),
+				'media_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true, 'default' => null),
 				'reason' => array('type' => 'text'),
 				'ip_reporter' => array('type' => 'decimal', 'constraint' => '39,0'),
 				'created' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true)
 			), array('id'), true, 'innodb', $charset.'_general_ci');
 
 			\DBUtil::create_index('reports', array('board_id', 'doc_id'), 'board_id_doc_id_index');
+			\DBUtil::create_index('reports', array('board_id', 'media_id'), 'board_id_media_id_index');
 		}
     }
 

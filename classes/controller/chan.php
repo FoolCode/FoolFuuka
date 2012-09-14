@@ -515,7 +515,7 @@ class Controller_Chan extends \Controller_Common
 		}
 		catch (Model\MediaException $e)
 		{
-			return $this->action_404(__('The image'));
+			return $this->action_404(__('The image was never in our databases.'));
 		}
 
 		if ($media->media_link !== null)

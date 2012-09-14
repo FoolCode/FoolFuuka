@@ -118,7 +118,12 @@ class Comment extends \Model\Model_Base
 			case 'reports':
 				if (\Auth::has_access('comment.reports'))
 				{
-					return $this->reports = \Report::get_by_doc_id($this->board, $this->doc_id);
+					$reports = \Report::get_by_doc_id($this->board, $this->doc_id);
+					if ($this->media)
+					{
+						$reports += \Report::get_by_media_id($this->board, $this->media->media_id);
+					}
+					return $this->reports = $reports;
 				}
 		}
 

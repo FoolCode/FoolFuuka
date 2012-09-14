@@ -218,7 +218,7 @@ class Controller_Api_Chan extends \Controller_Rest
 		{
 			try
 			{
-				\Report::add($this->_radix, \Input::post('media_id'), \Input::post('reason'));
+				\Report::add($this->_radix, \Input::post('media_id'), \Input::post('reason'), null, 'media_id');
 			}
 			catch (Model\ReportException $e)
 			{

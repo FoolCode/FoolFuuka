@@ -410,7 +410,7 @@ class Board extends \Model\Model_Base
 		{
 			if ($post->op == 0)
 			{
-				if ($post->preview_orig)
+				if ($post->media !== null && $post->media->preview_orig)
 				{
 					$results[$post->thread_num]['images_omitted']--;
 				}

@@ -23,7 +23,7 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 		}
 		catch (\Foolfuuka\Model\MediaException $e)
 		{
-			return $this->action_404(__('The image was never in our databases.'));
+			return $this->action_404(__('The image was not found.'));
 		}
 
 		if ($media->media_link !== null)

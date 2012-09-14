@@ -13,7 +13,7 @@ if (!defined('DOCROOT'))
 
 \Plugins::register_hook('foolfuuka\\model\\media.get_link.call.replace', function($element, $thumbnail = false, $direct = false) {
 
-	if ($direct === true || $thumbnail === true)
+	if ($direct === true || $thumbnail === true || ! is_object($element))
 	{
 		return array('return' => null);
 	}

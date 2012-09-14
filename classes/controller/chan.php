@@ -21,7 +21,7 @@ class Controller_Chan extends \Controller_Common
 		$email = \Cookie::get('reply_email');
 
 		// get the password needed for the reply field
-		if(!$pass || $pass < 3)
+		if( ! $pass || strlen($pass) < 3)
 		{
 			$pass = \Str::random('alnum', 7);
 			\Cookie::set('reply_password', $pass, 60*60*24*30);
@@ -839,31 +839,51 @@ class Controller_Chan extends \Controller_Common
 
 		$post = \Input::post();
 
-		if(isset($post['reply_numero']))
+		if (isset($post['reply_numero']))
 			$data['thread_num'] = $post['reply_numero'];
-		if(isset($post['reply_bokunonome']))
+		if (isset($post['reply_bokunonome']))
 		{
 			$data['name'] = $post['reply_bokunonome'];
 			\Cookie::set('reply_name', $data['name'], 60*60*24*30);
 		}
-		if(isset($post['reply_elitterae']))
+		
+		if (isset($post['reply_elitterae']))
 		{
 			$data['email'] = $post['reply_elitterae'];
 			\Cookie::set('reply_email', $data['email'], 60*60*24*30);
 		}
-		if(isset($post['reply_talkingde']))
+		
+		if (isset($post['reply_talkingde']))
+		{
 			$data['title'] = $post['reply_talkingde'];
-		if(isset($post['reply_chennodiscursus']))
+		}
+		
+		if (isset($post['reply_chennodiscursus']))
+		{
 			$data['comment'] = $post['reply_chennodiscursus'];
-		if(isset($post['reply_nymphassword']))
+		}
+		
+		if (isset($post['reply_nymphassword']))
+		{
 			$data['delpass'] = $post['reply_nymphassword'];
-		if(isset($post['reply_gattai_spoilered']))
+			\Cookie::set('reply_password', $data['delpass'], 60*60*24*30);
+		}
+		
+		if (isset($post['reply_gattai_spoilered']))
+		{
 			$data['spoiler'] = true;
-		if(isset($post['reply_postas']))
+		}
+		
+		if (isset($post['reply_postas']))
+		{
 			$data['capcode'] = $post['reply_postas'];
+		}
 
-		if(isset($post['reply_last_limit']))
+		if (isset($post['reply_last_limit']))
+		{
 			$data['last_limit'] = $post['reply_last_limit'];
+		}
+			
 
 		$media = null;
 

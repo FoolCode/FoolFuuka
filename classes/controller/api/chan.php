@@ -237,6 +237,7 @@ class Controller_Api_Chan extends \Controller_Rest
 				$comments = \Board::forge()
 					->get_post()
 					->set_options('doc_id', \Input::post('doc_id'))
+					->set_comment_options('clean', false)
 					->set_radix($this->_radix)
 					->get_comments();
 

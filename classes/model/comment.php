@@ -750,9 +750,9 @@ class Comment extends \Model\Model_Base
 
 			$hashed = base64_encode($hasher->pbkdf2($password, \Config::get('auth.salt'), 10000, 32));
 
-			if($this->delpass != $hashed)
+			if($this->delpass !== $hashed)
 			{
-				throw new CommentDeleteWrongPassException(__('The password you inserted didn\'t match the password deletion password.'));
+				throw new CommentDeleteWrongPassException(__('The password you inserted didn\'t match the deletion password.'));
 			}
 		}
 
@@ -1077,7 +1077,7 @@ class Comment extends \Model\Model_Base
 			throw new CommentSendingNoDelPassException(__('You must submit a deletion password.'));
 		}
 
-		if (!class_exists('PHPSecLib\\Crypt_Hash', false))
+		if ( ! class_exists('PHPSecLib\\Crypt_Hash', false))
 		{
 			import('phpseclib/Crypt/Hash', 'vendor');
 		}

@@ -66,6 +66,13 @@ class Board extends \Model\Model_Base
 	 * @var array
 	 */
 	protected $_options = array();
+	
+	/**
+	 * The options to give to the Comment class
+	 *
+	 * @var array
+	 */
+	protected $_comment_options = array();
 
 	/**
 	 * The selected Radix
@@ -179,6 +186,24 @@ class Board extends \Model\Model_Base
 		}
 
 		$this->_options[$name] = $value;
+
+		return $this;
+	}
+	
+	
+	protected function p_set_comment_options($name, $value = null)
+	{
+		if (is_array($name))
+		{
+			foreach ($name as $key => $item)
+			{
+				$this->set_options($key, $item);
+			}
+
+			return $this;
+		}
+
+		$this->_comment_options[$name] = $value;
 
 		return $this;
 	}
@@ -393,7 +418,7 @@ class Board extends \Model\Model_Base
 
 		$query_posts = \DB::query(implode(' UNION ', $sql_arr), \DB::SELECT)->as_object()->execute()->as_array();
 		// populate posts_arr array
-		$this->_comments_unsorted = Comment::forge($query_posts, $this->_radix);
+		$this->_comments_unsorted = Comment::forge($query_posts, $this->_radix, $this->_comment_options);
 		\Profiler::mark_memory($this->_comments_unsorted, 'Board $this->_comments_unsorted');
 		$results = array();
 
@@ -514,11 +539,11 @@ class Board extends \Model\Model_Base
 
 		if ($this->_api)
 		{
-			$this->_comments_unsorted = Comment::forge_for_api($result, $this->_radix, $this->_api);
+			$this->_comments_unsorted = Comment::forge_for_api($result, $this->_radix, $this->_api, $this->_comment_options);
 		}
 		else
 		{
-			$this->_comments_unsorted = Comment::forge($result, $this->_radix);
+			$this->_comments_unsorted = Comment::forge($result, $this->_radix, $this->_comment_options);
 		}
 
 		$this->_comments = $this->_comments_unsorted;
@@ -640,7 +665,7 @@ class Board extends \Model\Model_Base
 					'realtime' => $realtime,
 					'backlinks_hash_only_url' => true,
 					'controller_method' => $controller_method
-				));
+				) + $this->_comment_options);
 
 		}
 		else
@@ -651,7 +676,7 @@ class Board extends \Model\Model_Base
 					'backlinks_hash_only_url' => true,
 					'prefetch_backlinks' => true,
 					'controller_method' => $controller_method
-				));
+				) + $this->_comment_options);
 		}
 
 		// process entire thread and store in $result array
@@ -828,11 +853,11 @@ class Board extends \Model\Model_Base
 
 		if ($this->_api)
 		{
-			$this->_comments_unsorted = Comment::forge_for_api($result, $this->_radix, $this->_api);
+			$this->_comments_unsorted = Comment::forge_for_api($result, $this->_radix, $this->_api, $this->_comment_options);
 		}
 		else
 		{
-			$this->_comments_unsorted = Comment::forge($result, $this->_radix);
+			$this->_comments_unsorted = Comment::forge($result, $this->_radix, $this->_comment_options);
 		}
 
 		foreach ($this->_comments_unsorted as $comment)

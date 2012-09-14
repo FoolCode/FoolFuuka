@@ -93,7 +93,7 @@ foreach ($board->get_comments() as $key => $post) :
 					<button class="btn btn-mini" data-function="activateModeration"><?= __('Mod') ?><?php if ($op->poster_ip) echo ' ' .\Inet::dtop($op->poster_ip) ?></button>
 				</div>
 				<div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 0;">
-					<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="delete_post"><?= __('Delete Post') ?></button>
+					<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="delete_post"><?= __('Delete Thread') ?></button>
 					<?php if (!is_null($op->media)) : ?>
 						<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->media->media_id ?>" data-doc-id="<?= $op->doc_id ?>" data-action="delete_image"><?= __('Delete Image') ?></button>
 						<button class="btn btn-mini" data-function="mod" data-board="<?= $op->board->shortname ?>" data-id="<?= $op->media->media_id ?>" data-doc-id="<?= $op->doc_id ?>" data-action="ban_image_local"><?= __('Ban Image') ?></button>

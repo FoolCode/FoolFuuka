@@ -10,7 +10,7 @@ foreach ($board->get_comments() as $key => $post) :
 <article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->board->shortname ?>">
 
 
-	<?php if (isset($disable_default_after_op_open) && $disable_default_after_op_open === true : ?>
+	<?php if (isset($disable_default_after_op_open) && $disable_default_after_op_open === true) : ?>
 	<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($op->board)); ?>
 	<?php endif; ?>
 

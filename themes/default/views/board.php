@@ -131,7 +131,8 @@ foreach ($board->get_comments() as $key => $post) :
 			<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->reason_processed ?>
 				<br/>
 				<div class="ip_reporter">
-					<?= \Inet::dtop($report->ip_reporter) ?>
+					<strong><?= __('Info:') ?></strong>
+					<?= \Inet::dtop($report->ip_reporter) ?>, <?= __('Type:') ?> <?= $report->media_id !== null ? __('media') : __('post')?>, <?= __('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?> 
 					<button class="btn btn-mini" data-function="mod" data-report-id="<?= $report->id ?>" data-id="<?= $op->doc_id ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-action="delete_report"><?= __('Delete Report') ?></button>
 				</div>
 			</div>

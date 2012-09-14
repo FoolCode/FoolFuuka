@@ -237,15 +237,16 @@ var bindFunctions = function()
 		report_media: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
-			modal.find(".title").html('Report &raquo; Media No.' + el.data("post-media-id"));
+			modal.find(".title").html('Report &raquo; Media No.' + el.data("media-id"));
 			modal.find(".modal-loading").hide();
 			modal.find(".modal-information").html('\
 			<span class="modal-label">Media ID</span>\n\
-			<input type="text" class="modal-post-id" value="' + el.data("media-id") + '" />\n\
+			<input type="text" disabled="disabled" class="modal-media-id" value="' + el.data("media-id") + '" />\n\
+			<br>\n\
 			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
 			<span class="modal-field">Comment</span>\n\
 			<textarea class="modal-comment"></textarea>');
-			modal.find(".submitModal").data("action", 'repor_media');
+			modal.find(".submitModal").data("action", 'report_media');
 		},
 
 		ban: function(el, post, event)

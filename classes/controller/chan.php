@@ -931,7 +931,14 @@ class Controller_Chan extends \Controller_Common
 		}
 		else
 		{
-			return $this->error(implode(' ', $val->error()));
+			if (\Input::is_ajax())
+			{
+				return \Response::forge(json_encode(array('error' => implode(' ', $val->error()))));
+			}
+			else
+			{
+				return $this->error(implode(' ', $val->error()));
+			}
 		}
 
 		if (\Input::is_ajax())

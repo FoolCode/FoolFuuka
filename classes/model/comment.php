@@ -930,9 +930,13 @@ class Comment extends \Model\Model_Base
 			if ($this->thread_num < 1)
 			{
 				// one can create a new thread only once every 5 minutes
-				$check_op = \DB::select()->from(\DB::expr(Radix::get_table($this->board)))
-					->where('poster_ip', \Input::ip_decimal())->where('timestamp', '>', time() - 300)
-					->where('op', 1)->limit(1)->execute();
+				$check_op = \DB::select()
+					->from(\DB::expr(Radix::get_table($this->board)))
+					->where('poster_ip', \Input::ip_decimal())
+					->where('timestamp', '>', time() - 300)
+					->where('op', 1)
+					->limit(1)
+					->execute();
 
 				if(count($check_op))
 				{
@@ -941,20 +945,35 @@ class Comment extends \Model\Model_Base
 			}
 
 			// check the latest posts by the user to see if he's posting the same message or if he's posting too fast
-			$check = \DB::select()->from(\DB::expr(Radix::get_table($this->board)))
-				->where('poster_ip', \Input::ip_decimal())->order_by('timestamp', 'desc')->limit(1)
-				->as_object()->execute();
+			$check = \DB::select()
+				->from(\DB::expr(Radix::get_table($this->board)))
+				->where('poster_ip', \Input::ip_decimal())
+				->order_by('timestamp', 'desc')
+				->limit(1)
+				->as_object()
+				->execute();
 
 			if (count($check))
 			{
 				$row = $check->current();
 
-				if ($this->comment != null && $row->comment == $this->comment)
+				if ($this->comment !== null && $row->comment === $this->comment)
 				{
 					throw new CommentSendingSameCommentException(__('You\'re sending the same comment as the last time'));
 				}
 
-				if (time() - $row->timestamp < 10 && time() - $row->timestamp > 0)
+				$check_time = time();
+				
+				if ($this->board->archive)
+				{
+					// archives are in new york time
+					$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));
+					$utc = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('UTC'));
+					$diff = $newyork->diff($utc)->h;
+					$check_time = $check_time - ($diff * 60 * 60);
+				}
+				
+				if ($check_time - $row->timestamp < 10 && $check_time - $row->timestamp > 0)
 				{
 					throw new CommentSendingTimeLimitException(__('You must wait up to 10 seconds to post again.'));
 				}
@@ -1144,12 +1163,12 @@ class Comment extends \Model\Model_Base
 		}
 
 		// 2ch-style codes, only if enabled
-		if($this->thread_num && $this->board->enable_poster_hash)
+		if ($this->thread_num && $this->board->enable_poster_hash)
 		{
 			$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$this->thread_num),'id'),+3), 0, 8);
 		}
 
-		if($this->board->archive)
+		if ($this->board->archive)
 		{
 			// archives are in new york time
 			$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));

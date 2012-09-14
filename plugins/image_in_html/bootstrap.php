@@ -18,7 +18,14 @@ if (!defined('DOCROOT'))
 		return array('return' => null);
 	}
 	
-	$element->p_get_link($thumbnail);
+	try
+	{
+		$element->p_get_link($thumbnail);
+	}
+	catch (\Foolfuuka\Model\MediaNotFoundException $e)
+	{
+		return array('return' => null);
+	}
 	
 	return array('return' => \Uri::create(array($element->board->shortname, 'image_html')).$element->media);
 }, 4);

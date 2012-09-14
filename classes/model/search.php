@@ -29,6 +29,18 @@ class Search extends Board
 	{
 		\Profiler::mark('Board::get_search_comments Start');
 		extract($this->_options);
+		
+		$available_fields = array('subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
+			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'poster_ip'
+		);
+			
+		foreach ($available_fields as $field)
+		{
+			if ( ! isset($args[$field]))
+			{
+				$args[$field] = null;
+			}
+		}
 
 		// if image is set, get either media_hash or media_id
 		if ($args['image'] !== null)
@@ -108,7 +120,7 @@ class Search extends Board
 			// set db->from with indexes loaded
 			$query = Sphinxql::select('id', 'board');
 			$query->from($indexes);
-
+			
 			// begin filtering search params
 			if ($args['text'])
 			{

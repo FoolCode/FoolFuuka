@@ -194,7 +194,7 @@ class Media extends \Model\Model_Base
 
 		if (count(\Upload::get_files()) == 0)
 		{
-			throw new MediaUploadNoFileException(__('You must upload an image.'));
+			throw new MediaUploadNoFileException(__('You must upload an image or your image was too large.'));
 		}
 
 		if (count(\Upload::get_files()) != 1)

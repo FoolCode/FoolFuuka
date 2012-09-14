@@ -25,7 +25,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 		<?php endif ?>
 		</span>
 
-		<?php if ($p->media->media_status !== 'banned') : ?>
+		<?php if ($p->media->media_status !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
 		<?php if (mb_strlen($p->media->media_filename_processed) > 38) : ?>
 			<span class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p->media->media_filename) ?>">
 				<?= mb_substr($p->media->media_filename_processed, 0, 32) . ' (...)' . mb_substr($p->media->media_filename_processed, mb_strrpos($p->media->media_filename_processed, '.')) . ', ' ?>

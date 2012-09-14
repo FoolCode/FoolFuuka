@@ -38,7 +38,7 @@ foreach ($board->get_comments() as $key => $post) :
 			<?php endif; ?>
 
 			<div class="post_file_controls">
-				<?php if ($op->media->media_status != 'banned') : ?>
+				<?php if ($op->media->media_status !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
 					<?php if (!$op->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
 						<?php if ($op->media->total > 1) : ?><a href="<?= Uri::create($op->board->shortname . '/search/image/' . $op->media->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
 						href="http://google.com/searchbyimage?image_url=<?= $op->media->thumb_link ?>" target="_blank"

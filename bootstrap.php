@@ -22,3 +22,8 @@ $theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
 $theme->set_layout('chan');
 
 \Config::load('foolfuuka::geoip_codes', 'geoip_codes');
+
+if (\Auth::has_access('comment.reports'))
+{
+	Foolfuuka\Model\Reports::forge();
+}

@@ -25,5 +25,5 @@ $theme->set_layout('chan');
 
 if (\Auth::has_access('comment.reports'))
 {
-	\Foolfuuka\Model\Report::forge();
+	\Foolfuuka\Model\Report::preload();
 }

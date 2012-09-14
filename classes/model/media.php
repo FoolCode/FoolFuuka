@@ -90,7 +90,7 @@ class Media extends \Model\Model_Base
 		}
 
 		// let's unset 0 sizes so maybe the __get() can save the day
-		if ($this->preview_w === 0 || $this->preview_h === 0)
+		if ( ! $this->preview_w || ! $this->preview_h)
 		{
 			unset($this->preview_w, $this->preview_h);
 		}
@@ -280,6 +280,7 @@ class Media extends \Model\Model_Base
 							$imgpath = $this->get_dir(true);
 							$imgsize = false;
 
+							
 							if ($imgpath)
 							{
 								$imgsize = @getimagesize($imgpath);

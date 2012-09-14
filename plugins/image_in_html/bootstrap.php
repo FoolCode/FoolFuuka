@@ -9,3 +9,16 @@ if (!defined('DOCROOT'))
 ));
 
 \Router::add('(?!(admin|_))(\w+)/image_html/(:any)', 'plugin/fu/image_in_html/chan/$2/image_html/$3', true);
+
+
+\Plugins::register_hook('foolfuuka\\model\\media.get_link.call.replace', function($element, $thumbnail = false, $direct = false) {
+
+	if ($direct === true || $thumbnail === true)
+	{
+		return array('return' => null);
+	}
+	
+	$element->p_get_link($thumbnail);
+	
+	return array('return' => \Uri::create(array($element->board->shortname, 'image_html')).$element->media);
+}, 4);

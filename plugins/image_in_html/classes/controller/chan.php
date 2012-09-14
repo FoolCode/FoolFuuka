@@ -38,7 +38,7 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 					<a href="http://saucenao.ci'd om/search.php?url=<?= $media->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
 					<a href="#" class="btnr parent" style="background-color: #EF8B77; color: #fff" data-media-id="<?= $media->media_id ?>" data-board="<?= htmlspecialchars($this->_radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report_media"><?= __('Report') ?></a>
 				</nav>
-				<img src="<?= $media->media_link ?>">
+				<img src="<?= $media->get_link(false, true) ?>">
 			</article>
 			<style>
 				.theme_default .full_image {

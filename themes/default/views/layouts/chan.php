@@ -321,14 +321,15 @@ header('imagetoolbar: false');
 		<script defer src="<?= Uri::base() ?>assets/bootstrap2/js/bootstrap.min.js?v=<?= \Config::get('foolfuuka.main.version') ?>"></script>
 		<script defer src="<?= Uri::base() . $this->fallback_asset('plugins.js') ?>"></script>
 		<script defer src="<?= Uri::base() . $this->fallback_asset('board.js') ?>"></script>
-<?php if (Preferences::get('ff.theme.google_analytics')) : ?>
+		
+		<?php if (Preferences::get('ff.theme.google_analytics')) : ?>
 		<script>
 			var _gaq=[['_setAccount','<?= Preferences::get('ff.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
 			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 				s.parentNode.insertBefore(g,s)}(document,'script'));
 		</script>
-<?php endif; ?>
+		<?php endif; ?>
 
 		<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
 			 chromium.org/developers/how-tos/chrome-frame-getting-started -->

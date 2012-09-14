@@ -896,7 +896,7 @@ class Controller_Chan extends \Controller_Common
 			}
 			catch (Model\MediaUploadNoFileException $e)
 			{
-				$media = null;
+				return $this->error($e->getMessage());
 			}
 			catch (Model\MediaUploadException $e)
 			{

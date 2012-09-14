@@ -55,11 +55,11 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 				<img src="<?= Uri::create('content/themes/default/images/transparent_pixel.png') ?>" data-original="<?= $p->media->thumb_link ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 				<noscript>
 					<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-						<img src="<?= $p->media->thumb_link ?>" style="margin-left: -<?= $p->media->preview_w ?>px" <?= ($p->media->preview_w > 0 && $p->media->preview_h > 0) ? 'width="' . $p->media->preview_w . '" height="' . $p->media->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+						<img src="<?= $p->media->thumb_link ?>" style="margin-left: -<?= $p->media->preview_w ?>px" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 					</a>
 				</noscript>
 				<?php else : ?>
-				<img src="<?= $p->media->thumb_link ?>" <?= ($p->media->preview_w > 0 && $p->media->preview_h > 0) ? 'width="' . $p->media->preview_w . '" height="' . $p->media->preview_h . '" ' : '' ?>class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+				<img src="<?= $p->media->thumb_link ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 				<?php endif; ?>
 			</a>
 		<?php endif; ?>

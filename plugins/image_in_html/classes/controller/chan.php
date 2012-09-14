@@ -89,18 +89,25 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 			}
 			catch (\Foolfuuka\Model\SearchException $e)
 			{
-				return $this->error($e->getMessage());
+				$board_html = '';
 			}
 			catch (\Foolfuuka\Model\SearchEmptyResultException $e)
 			{
+				$board_html = '';
 			}
 			catch (\Foolfuuka\Model\BoardException $e)
 			{
-				return $this->error($e->getMessage());
+				$board_html = '';
 			}
 			
 			$image_html = $this->_theme->build('plugin', array('content' => $content), true);
-			$board_html = $this->_theme->build('board', array('board' => $board->get_comments(), 'disable_default_after_headless_open' => true), true);
+			
+			// we got search results
+			if ( ! isset($board_html))
+			{
+				$board_html = $this->_theme->build('board', array('board' => $board, 'disable_default_after_headless_open' => true), true);
+			}
+			
 			return \Response::forge($this->_theme->build('plugin', array('content' => $image_html.$board_html)));
 		}
 	

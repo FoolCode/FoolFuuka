@@ -11,6 +11,11 @@ class MediaHiddenException extends MediaNotFoundException {}
 class MediaHiddenDayException extends MediaNotFoundException {}
 class MediaBannedException extends MediaNotFoundException {}
 
+class MediaUploadException extends \FuelException {}
+class MediaUploadNoFileException extends MediaUploadException {}
+class MediaUploadMultipleNotAllowedException extends MediaUploadException {}
+class MediaUploadInvalidException extends MediaUploadException {}
+
 class MediaInsertException extends \FuelException {}
 class MediaInsertNoFileException extends MediaInsertException {}
 class MediaInsertMultipleNotAllowedException extends MediaInsertException {}

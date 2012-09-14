@@ -85,7 +85,7 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 					->set_options('limit', 5)
 					->set_page(1);
 
-				$comments = $board->get_comments();
+				$board->get_comments();
 			}
 			catch (\Foolfuuka\Model\SearchException $e)
 			{
@@ -93,7 +93,6 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 			}
 			catch (\Foolfuuka\Model\SearchEmptyResultException $e)
 			{
-				$comments = array();
 			}
 			catch (\Foolfuuka\Model\BoardException $e)
 			{
@@ -101,7 +100,7 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 			}
 			
 			$image_html = $this->_theme->build('plugin', array('content' => $content), true);
-			$board_html = $this->_theme->build('board', array('board' => $comments, 'disable_default_after_headless_open' => true), true);
+			$board_html = $this->_theme->build('board', array('board' => $board->get_comments(), 'disable_default_after_headless_open' => true), true);
 			return \Response::forge($this->_theme->build('plugin', array('content' => $image_html.$board_html)));
 		}
 	

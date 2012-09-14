@@ -58,6 +58,19 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 				.theme_default .full_image img {
 					max-width: 90%;
 				}
+				
+				.theme_default article.thread article.post:nth-of-type(-n+4) {
+					display:block;
+					float:none;
+					margin: 0px auto;
+				}
+				
+				.theme_default .post {
+					width: 50%;
+					display:block;
+					float:none;
+					margin: 10px auto;
+				}
 			</style>
 			<?php
 			$content = ob_get_clean();
@@ -69,8 +82,9 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 				$board = \Search::forge()
 					->get_search(array('image' => $media->media_hash))
 					->set_radix($this->_radix)
-					->per_page(5);
-				
+					->set_options('limit', 5)
+					->set_page(1);
+
 				$board->get_comments();
 			}
 			catch (Model\SearchException $e)
@@ -82,7 +96,9 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 				return $this->error($e->getMessage());
 			}
 			
-			return \Response::forge($this->_theme->build('plugin', array('content' => $content)));
+			$image_html = $this->_theme->build('plugin', array('content' => $content), true);
+			$board_html = $this->_theme->build('board', array('board' => $board, 'disable_default_after_op_open' => true), true);
+			return \Response::forge($this->_theme->build('plugin', array('content' => $image_html.$board_html)));
 		}
 	
 		return \Response::redirect(

@@ -384,7 +384,7 @@ class Media extends \Model\Model_Base
 	 * @param bool $thumbnail if it's a thumbnail we're looking for
 	 * @return bool|string FALSE on not found, a fallback image if not found for thumbnails, or the URL on success
 	 */
-	protected function p_get_link($thumbnail = false, $force = false)
+	public function p_get_link($thumbnail = false, $force = false)
 	{
 		if (!$this->media_hash)
 		{

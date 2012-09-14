@@ -97,7 +97,7 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 			}
 			
 			$image_html = $this->_theme->build('plugin', array('content' => $content), true);
-			$board_html = $this->_theme->build('board', array('board' => $board, 'disable_default_after_op_open' => true), true);
+			$board_html = $this->_theme->build('board', array('board' => $board, 'disable_default_after_headless_open' => true), true);
 			return \Response::forge($this->_theme->build('plugin', array('content' => $image_html.$board_html)));
 		}
 	

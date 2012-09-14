@@ -11,6 +11,7 @@ return array(
 			'access' => array('mod'),
 			'maccess' => array('user', 'mod'),
 			'comment' => array('see_ip', 'passwordless_deletion', 'limitless_comment', 'reports', 'mod_capcode'),
+			'media' => array('see_banned'),
 			'users' => array('access')
 		),
 		'admin' => array(
@@ -18,6 +19,7 @@ return array(
 			'maccess' => array('user', 'mod', 'admin'),
 			'boards' => array('edit'),
 			'comment' => array('see_ip', 'passwordless_deletion', 'limitless_comment', 'reports', 'mod_capcode', 'admin_capcode', 'dev_capcode'),
+			'media' => array('see_banned'),
 			'users' => array('access', 'change_credentials', 'change_group')
 		),
 	),

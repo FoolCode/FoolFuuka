@@ -505,6 +505,8 @@ class Media extends \Model\Model_Base
 				.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 		}
 
+		$this->media_status = 'not-available';
+		
 		throw new MediaNotFoundException;
 	}
 

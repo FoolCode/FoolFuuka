@@ -172,7 +172,7 @@ class Search extends Board
 			{
 				if ($args['capcode'] === 'user')
 				{
-					$query->where('cap', ord('U'));
+					$query->where('cap', ord('N'));
 				} 
 				else if ($args['capcode'] === 'mod')
 				{

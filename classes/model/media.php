@@ -655,7 +655,7 @@ class Media extends \Model\Model_Base
 				$this->op = 0;
 				try
 				{
-					$thumb_file = $this->get_dir(TRUE);
+					$thumb_file = $this->get_dir(true);
 				}
 				catch(MediaDirNotAvailableException $e)
 				{
@@ -684,7 +684,7 @@ class Media extends \Model\Model_Base
 				->where('media_id', $this->media_id)
 				->value('banned', 1)
 				->execute();
-			$this->delete();
+			$this->delete(true, true, true);
 
 			return $this;
 		}
@@ -713,7 +713,7 @@ class Media extends \Model\Model_Base
 					->where('media_id', $media->media_id)
 					->value('banned', 1)
 					->execute();
-				$media->delete();
+				$media->delete(true, true, true);
 			}
 			catch (MediaNotFoundException $e)
 			{

@@ -277,6 +277,8 @@ class Media extends \Model\Model_Base
 					try
 					{
 						$imgsize = \Cache::get('comment.comment_array.'.$this->board->id.'.'.$this->doc_id.'_spoiler_size');
+						$this->preview_h = $imgsize[1];
+						$this->preview_w = $imgsize[0];
 					}
 					catch (\CacheNotFoundException $e)
 					{
@@ -285,7 +287,6 @@ class Media extends \Model\Model_Base
 							$imgpath = $this->get_dir(true);
 							$imgsize = false;
 
-							
 							if ($imgpath)
 							{
 								$imgsize = @getimagesize($imgpath);
@@ -307,9 +308,9 @@ class Media extends \Model\Model_Base
 						}
 					}
 				}
-				$this->preview_w = 0;
-				$this->preview_h = 0;
-				return 0;
+
+				// $this->preview_h is already returned, need preview_w
+				return $this->preview_w;
 		}
 
 		if (substr($name, -10) === '_processed')
@@ -838,7 +839,7 @@ class Media extends \Model\Model_Base
 		{
 			$media_data = null;
 			getimagesize($full_path, $media_data);
-			
+
 			if ( ! isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0)
 			{
 				$exif = exif_read_data($full_path);

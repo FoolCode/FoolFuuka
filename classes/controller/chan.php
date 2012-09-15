@@ -430,6 +430,15 @@ class Controller_Chan extends \Controller_Common
 	{
 		try
 		{
+			if (\Input::post('post') || ! \Board::is_valid_post_number($num))
+			{
+				// obtain post number and unset search string
+				preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', \Input::post('post') ? : $num, $post);
+				unset($post[0]);
+
+				\Response::redirect(\Uri::create(array($this->_radix->shortname, 'post', implode('_', $post))), 'location', 301);
+			}
+
 			$board = \Board::forge()->get_post()->set_radix($this->_radix)->set_options('num', $num);
 
 			$comments = $board->get_comments();
@@ -846,34 +855,34 @@ class Controller_Chan extends \Controller_Common
 			$data['name'] = $post['reply_bokunonome'];
 			\Cookie::set('reply_name', $data['name'], 60*60*24*30);
 		}
-		
+
 		if (isset($post['reply_elitterae']))
 		{
 			$data['email'] = $post['reply_elitterae'];
 			\Cookie::set('reply_email', $data['email'], 60*60*24*30);
 		}
-		
+
 		if (isset($post['reply_talkingde']))
 		{
 			$data['title'] = $post['reply_talkingde'];
 		}
-		
+
 		if (isset($post['reply_chennodiscursus']))
 		{
 			$data['comment'] = $post['reply_chennodiscursus'];
 		}
-		
+
 		if (isset($post['reply_nymphassword']))
 		{
 			$data['delpass'] = $post['reply_nymphassword'];
 			\Cookie::set('reply_password', $data['delpass'], 60*60*24*30);
 		}
-		
+
 		if (isset($post['reply_gattai_spoilered']))
 		{
 			$data['spoiler'] = true;
 		}
-		
+
 		if (isset($post['reply_postas']))
 		{
 			$data['capcode'] = $post['reply_postas'];
@@ -883,7 +892,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			$data['last_limit'] = $post['reply_last_limit'];
 		}
-			
+
 
 		$media = null;
 
@@ -978,7 +987,7 @@ class Controller_Chan extends \Controller_Common
 							'realtime' => true,
 							'controller_method' => $limit ? 'last/'.$limit : 'thread'
 					));
-					
+
 					$comments = $board->get_comments();
 				}
 				catch(Model\BoardThreadNotFoundException $e)

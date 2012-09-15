@@ -34,7 +34,7 @@ if (!defined('DOCROOT'))
 					<a class="js" href="<?= Uri::create(array($p->board->shortname, $p->_controller_method, $p->thread_num)) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php endif; ?>
 
-				<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
+				<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
 				<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
 				<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= __('This post is not an archived reply.') ?>"/><?php endif ?>
 
@@ -47,7 +47,7 @@ if (!defined('DOCROOT'))
 						<?= __('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->media_filename_processed; ?>
 						<?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
 					</span>
-					
+
 						<?php if (!$p->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
 							[<a href="<?= Uri::create($p->board->shortname . '/search/image/' . $p->media->safe_media_hash) ?>"><?= __('View Same') ?></a>]
 							[<a href="http://google.com/searchbyimage?image_url=<?= $p->media->thumb_link ?>">Google</a>]
@@ -59,12 +59,12 @@ if (!defined('DOCROOT'))
 					<?php if ($p->media->media_status == 'banned') : ?>
 						<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
 					<?php elseif ($p->media->thumb_link === null): ?>
-						<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" rel="noreferrer">
+						<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" rel="noreferrer">
 							<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 						</a>
 					<?php else: ?>
-					<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->remote_media_link ?>" rel="noreferrer">
-						<img src="<?= $p->media->thumb_link ?>" alt="<?= $p->num ?>" width="<?= $p->preview_w ?>" height="<?= $p->preview_h ?>" class="thumb" />
+					<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" rel="noreferrer">
+						<img src="<?= $p->media->thumb_link ?>" alt="<?= $p->num ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="thumb" />
 					</a>
 					<?php endif; ?>
 				<?php endif; ?>

@@ -32,12 +32,12 @@ foreach ($board->get_comments() as $key => $post) :
 			<?php if ($op->media->media_status == 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
 			<?php elseif ($op->media->thumb_link === false) : ?>
-				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->remote_media_link ?>" rel="noreferrer">
+				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" rel="noreferrer">
 					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 				</a>
 			<?php else: ?>
-				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->remote_media_link ?>" rel="noreferrer">
-					<img src="<?= $op->media->thumb_link ?>" width="<?= $op->preview_w ?>" height="<?= $op->preview_h ?>" class="thumb" alt="<?= $op->num ?>" />
+				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" rel="noreferrer">
+					<img src="<?= $op->media->thumb_link ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thumb" alt="<?= $op->num ?>" />
 				</a>
 			<?php endif; ?>
 		<?php endif; ?>

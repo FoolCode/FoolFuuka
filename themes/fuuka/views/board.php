@@ -31,7 +31,7 @@ foreach ($board->get_comments() as $key => $post) :
 			<?php endif; ?>
 			<?php if ($op->media->media_status === 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
-			<?php elseif ($op->media->thumb_link !== 'normal') : ?>
+			<?php elseif ($op->media->media_status !== 'normal') : ?>
 				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" rel="noreferrer">
 					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 				</a>

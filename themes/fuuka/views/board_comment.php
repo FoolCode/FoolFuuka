@@ -58,7 +58,7 @@ if (!defined('DOCROOT'))
 					<?php endif; ?>
 					<?php if ($p->media->media_status === 'banned') : ?>
 						<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
-					<?php elseif ($p->media->thumb_link !== 'normal'): ?>
+					<?php elseif ($p->media->media_status !== 'normal'): ?>
 						<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" rel="noreferrer">
 							<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 						</a>

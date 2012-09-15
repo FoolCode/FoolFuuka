@@ -145,7 +145,7 @@ else if (isset($radix))
 						),
 						'Capcode' => array(
 							array('value' => false, 'text' => __('All')),
-							array('value' => 'user', 'text' => __('Only Opening Posts')),
+							array('value' => 'user', 'text' => __('Only User Posts')),
 							array('value' => 'mod', 'text' => __('Only Moderator Posts')),
 							array('value' => 'admin', 'text' => __('Only Admin Posts')),
 							array('value' => 'dev', 'text' => __('Only Developer Posts'))

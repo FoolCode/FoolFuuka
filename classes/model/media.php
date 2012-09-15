@@ -309,8 +309,7 @@ class Media extends \Model\Model_Base
 					}
 				}
 
-				// $this->preview_h is already returned, need preview_w
-				return $this->preview_w;
+				return $this->$name;
 		}
 
 		if (substr($name, -10) === '_processed')

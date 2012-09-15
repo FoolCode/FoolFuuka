@@ -274,6 +274,9 @@ class Media extends \Model\Model_Base
 			case 'preview_h':
 				if ($this->board->archive && $this->spoiler)
 				{
+					$this->preview_h = 0;
+					$this->preview_w = 0;
+
 					try
 					{
 						$imgsize = \Cache::get('comment.comment_array.'.$this->board->id.'.'.$this->doc_id.'_spoiler_size');

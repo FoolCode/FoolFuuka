@@ -143,7 +143,7 @@ class Search extends Board
 			}
 			if ($args['tripcode'])
 			{
-				$query->match('trip', $args['tripcode']);
+				$query->match('trip', '"'.$args['tripcode'].'"');
 			}
 			if ($args['email'])
 			{
@@ -165,7 +165,7 @@ class Search extends Board
 				}
 				else
 				{
-					$query->match('media_hash', $args['image']);
+					$query->match('media_hash', '"'.$args['image'].'"');
 				}
 			}
 			if ($args['capcode'] !== null)

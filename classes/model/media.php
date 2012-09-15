@@ -272,11 +272,11 @@ class Media extends \Model\Model_Base
 				catch (MediaNotFoundException $e) { return null; }
 			case 'preview_w':
 			case 'preview_h':
+				$this->preview_h = 0;
+				$this->preview_w = 0;
+
 				if ($this->board->archive && $this->spoiler)
 				{
-					$this->preview_h = 0;
-					$this->preview_w = 0;
-
 					try
 					{
 						$imgsize = \Cache::get('comment.comment_array.'.$this->board->id.'.'.$this->doc_id.'_spoiler_size');

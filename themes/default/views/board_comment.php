@@ -146,4 +146,4 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 	<?php endif; ?>
 	<?php endif; ?>
 </article>
-<br/>
+<div></div>

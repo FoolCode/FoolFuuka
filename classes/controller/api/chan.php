@@ -312,7 +312,7 @@ class Controller_Api_Chan extends \Controller_Rest
 		{
 			try
 			{
-				\Media::get_by_media_id($this->_radix, \Input::post('id'))->delete();
+				\Media::get_by_media_id($this->_radix, \Input::post('id'))->delete(true, true, true);
 			}
 			catch (Model\MediaNotFoundException $e)
 			{

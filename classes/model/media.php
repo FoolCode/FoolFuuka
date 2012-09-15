@@ -597,7 +597,7 @@ class Media extends \Model\Model_Base
 	 * @param bool $thumb if thumbnail should be deleted
 	 * @return bool TRUE on success or if it didn't exist in first place, FALSE on failure
 	 */
-	public function p_delete($media = true, $thumb = true)
+	public function p_delete($media = true, $thumb = true, $all = false)
 	{
 		if ( ! $this->media_hash)
 		{
@@ -605,7 +605,7 @@ class Media extends \Model\Model_Base
 		}
 
 		// delete media file only if there is only one image OR the image is banned
-		if ($this->total == 1 || $this->banned == 1 || \Auth::has_access('comment.passwordless_deletion'))
+		if ($this->total == 1 || $this->banned == 1 || (\Auth::has_access('comment.passwordless_deletion') && $all))
 		{
 			if ($media === true)
 			{

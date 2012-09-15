@@ -42,7 +42,7 @@ if (!defined('DOCROOT'))
 
 				<br/>
 				<?php if ($p->media !== null) : ?>
-					<?php if ($p->media->media_status != 'banned') : ?>
+					<?php if ($p->media->media_status !== 'banned') : ?>
 					<span>
 						<?= __('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->media_filename_processed; ?>
 						<?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
@@ -56,9 +56,9 @@ if (!defined('DOCROOT'))
 						<?php endif; ?>
 					<br />
 					<?php endif; ?>
-					<?php if ($p->media->media_status == 'banned') : ?>
+					<?php if ($p->media->media_status === 'banned') : ?>
 						<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
-					<?php elseif ($p->media->thumb_link === null): ?>
+					<?php elseif ($p->media->thumb_link !== 'normal'): ?>
 						<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" rel="noreferrer">
 							<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 						</a>

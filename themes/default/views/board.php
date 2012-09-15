@@ -19,7 +19,7 @@ foreach ($board->get_comments() as $key => $post) :
 		<div class="thread_image_box">
 			<?php if ($op->media->media_status === 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png')?>" width="150" height="150" />
-			<?php elseif ($op->media->thumb_link === false) : ?>
+			<?php elseif ($op->media->media_status !== 'normal') : ?>
 				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg')?>" width="150" height="150" />
 				</a>

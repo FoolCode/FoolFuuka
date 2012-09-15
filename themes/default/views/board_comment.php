@@ -41,9 +41,9 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 	</div>
 
 	<div class="thread_image_box">
-		<?php if ($p->media->media_status == 'banned') : ?>
+		<?php if ($p->media->media_status === 'banned') : ?>
 			<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
-		<?php elseif ($p->media->thumb_link === false): ?>
+		<?php elseif ($p->media->media_status !== 'normal'): ?>
 			<a href="<?= ($p->media->media_link) ? $p->media->media_link : $p->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 				<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
 			</a>

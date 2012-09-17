@@ -102,7 +102,7 @@ class Media extends \Model\Model_Base
 		{
 			$this->media_status = 'banned';
 		}
-		else if ($this->board->hide_thumbnails)
+		else if ($this->board->hide_thumbnails && \Admin::has_access('media.see_hidden'))
 		{
 			$this->media_status = 'forbidden';
 		}

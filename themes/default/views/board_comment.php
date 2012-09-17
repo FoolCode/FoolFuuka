@@ -4,16 +4,9 @@ if (!defined('DOCROOT'))
 
 $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 ?>
-
-<article class="post doc_id_<?= $p->doc_id ?>
-	<?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?>
-	<?php if ($p->thread_num == $p->num) : ?> post_is_op<?php endif; ?>
-	<?php if (isset($p->report_status) && !is_null($p->report_status)) : ?> reported<?php endif; ?>
-	<?php if (!is_null($p->media)) : ?> has_image clearfix<?php endif; ?>" id="<?= $num ?>">
-
+<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num == $p->num) : ?> post_is_op<?php endif; ?><?php if (isset($p->report_status) && !is_null($p->report_status)) : ?> reported<?php endif; ?><?php if (!is_null($p->media)) : ?> has_image clearfix<?php endif; ?>" id="<?= $num ?>">
 	<?php if (!is_null($p->media)) : ?>
 	<div class="post_file">
-
 		<span class="post_file_controls">
 		<?php if ($p->media->media_status !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
 			<?php if (!$p->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
@@ -24,7 +17,6 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 			<?php endif; ?>
 		<?php endif ?>
 		</span>
-
 		<?php if ($p->media->media_status !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
 		<?php if (mb_strlen($p->media->media_filename_processed) > 38) : ?>
 			<span class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p->media->media_filename) ?>">
@@ -39,7 +31,6 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 		</span>
 		<?php endif; ?>
 	</div>
-
 	<div class="thread_image_box">
 		<?php if ($p->media->media_status === 'banned') : ?>
 			<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
@@ -65,7 +56,6 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 		<?php endif; ?>
 	</div>
 	<?php endif; ?>
-
 	<header>
 		<div class="post_data">
 			<?php if (isset($modifiers['post_show_board_name']) &&  $modifiers['post_show_board_name']): ?>
@@ -73,8 +63,9 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 			<?php endif; ?>
 
 			<h2 class="post_title"><?= $p->title_processed ?></h2>
-			<span class="post_author"><?= ($p->email && $p->email !== 'noko') ? '<a href="mailto:'.rawurlencode($p->email).'">'.$p->name_processed.' <span class="post_trip">'.$p->trip_processed.'</span></a>' : $p->name_processed.' <span class="post_trip">'.$p->trip_processed.'</span></a>' ?></span>
-			<span class="poster_hash"><?= ($p->poster_hash_processed) ? 'ID:' . $p->poster_hash_processed : '' ?></span>
+			<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->name_processed ?><?php if ($p->trip_processed !== null) : ?><span class="post_trip"><?= $p->trip_processed ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?>
+			</span>
+			<?php if ($p->poster_hash_processed) : ?><span class="poster_hash">ID: <?= $p->poster_hash_processed ?></span><?php endif; ?>
 			<?php if ($p->capcode != 'N') : ?>
 				<?php if ($p->capcode == 'M') : ?>
 					<span class="post_level post_level_moderator">## <?= __('Mod') ?></span>
@@ -103,16 +94,13 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 			</span>
 		</div>
 	</header>
-
 	<div class="backlink_list"<?= $p->backlinks ? ' style="display:block"' : '' ?>>
 		<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $p->num ?>"><?= $p->backlinks ? implode(' ', $p->backlinks) : '' ?></span>
 	</div>
-
 	<div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $p->comment_processed)) echo ' shift-jis'; ?>">
 		<?= $p->comment_processed ?>
 	</div>
-
-	<?php if (Auth::has_access('maccess.mod')) : ?>
+	<?php if (\Auth::has_access('maccess.mod')) : ?>
 	<div class="btn-group" style="clear:both; padding:5px 0 0 0;">
 		<button class="btn btn-mini" data-function="activateModeration"><?= __('Mod') ?><?php if ($p->poster_ip) echo ' ' .\Inet::dtop($p->poster_ip) ?></button>
 	</div>
@@ -131,7 +119,6 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 			<?php endif; ?>
 		<?php endif; ?>
 	</div>
-
 	<?php if ($p->reports) : ?>
 		<?php foreach ($p->reports as $report) : ?>
 			<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->reason_processed ?>

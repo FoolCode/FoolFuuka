@@ -279,7 +279,7 @@ class Media extends \Model\Model_Base
 				{
 					try
 					{
-						$imgsize = \Cache::get('comment.comment_array.'.$this->board->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply').'_spoiler_size');
+						$imgsize = \Cache::get('fu.media.call.spoiler_size.'.$this->board->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'));
 						$this->preview_w = $imgsize[0];
 						$this->preview_h = $imgsize[1];
 					}
@@ -295,7 +295,7 @@ class Media extends \Model\Model_Base
 								$imgsize = @getimagesize($imgpath);
 							}
 
-							\Cache::set('comment.comment_array.'.$this->board->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply').'_spoiler_size', $imgsize, 86400);
+							\Cache::set('fu.media.call.spoiler_size.'.$this->board->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'), $imgsize, 86400);
 
 							if ($imgsize !== FALSE)
 							{

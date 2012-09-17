@@ -52,7 +52,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 				<?php if(!Auth::has_access('maccess.mod') && !$p->board->transparent_spoiler && $p->media->spoiler) :?>
 				<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 				<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
-				<img src="<?= Uri::create('content/themes/default/images/transparent_pixel.png') ?>" data-original="<?= $p->media->thumb_link ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+				<img src="<?= Uri::base() . $this->fallback_asset('images/transparent_pixel.png') ?>" data-original="<?= $p->media->thumb_link ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 				<noscript>
 					<a href="<?= ($p->media_link) ? $p->media_link : $p->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 						<img src="<?= $p->media->thumb_link ?>" style="margin-left: -<?= $p->media->preview_w ?>px" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />

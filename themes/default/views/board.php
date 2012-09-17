@@ -48,10 +48,10 @@ foreach ($board->get_comments() as $key => $post) :
 			</div>
 		</div>
 	<?php endif; ?>
-	<header<?= (isset($op->report_status) && !is_null($op->report_status)) ? ' class="reported"' : '' ?>>
+	<header>
 		<div class="post_data">
 			<?php if ($op->title_processed !== '') : ?><h2 class="post_title"><?= $op->title_processed ?></h2><?php endif; ?>
-			<span class="post_author"><?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($op->email) ?>"><?php endif; ?><?= $op->name_processed ?><?php if ($op->trip_processed) : ?><span class="post_trip"><?= $op->trip_processed ?></span><?php endif; ?><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
+			<span class="post_author"><?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($op->email) ?>"><?php endif; ?><?= $op->name_processed ?><?php if ($op->trip_processed) : ?><span class="post_trip"><?= $op->trip_processed ?></span><?php endif; ?><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?></span>
 			<?php if ($op->poster_hash_processed) : ?><span class="poster_hash">ID: <?= $op->poster_hash_processed ?></span><?php endif; ?>
 			<?php if ($op->capcode != 'N') : ?>
 				<?php if ($op->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= __('Mod') ?></span><?php endif ?>

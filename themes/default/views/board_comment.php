@@ -4,7 +4,7 @@ if (!defined('DOCROOT'))
 
 $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 ?>
-<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if (isset($p->report_status) && !is_null($p->report_status)) : ?> reported<?php endif; ?><?php if (!is_null($p->media)) : ?> has_image clearfix<?php endif; ?>" id="<?= $num ?>">
+<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if (!is_null($p->media)) : ?> has_image clearfix<?php endif; ?>" id="<?= $num ?>">
 	<?php if ($p->media !== null) : ?>
 	<div class="post_file">
 		<span class="post_file_controls">
@@ -63,7 +63,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 			<?php endif; ?>
 
 			<?php if ($p->title_processed !== '') : ?><h2 class="post_title"><?= $p->title_processed ?></h2><?php endif; ?>
-			<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->name_processed ?><?php if ($p->trip_processed) : ?><span class="post_trip"><?= $p->trip_processed ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?>
+			<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->name_processed ?><?php if ($p->trip_processed) : ?><span class="post_trip"><?= $p->trip_processed ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?></span>
 			</span>
 			<?php if ($p->poster_hash_processed) : ?><span class="poster_hash">ID: <?= $p->poster_hash_processed ?></span><?php endif; ?>
 			<?php if ($p->capcode != 'N') : ?>

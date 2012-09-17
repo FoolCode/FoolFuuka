@@ -659,11 +659,7 @@ body.theme_default {
     border-left:5px solid #3a533f;
 }
 
-.theme_default .post.reported {
-    background: #e2e2e2;
-}
-
-.theme_default .post.highlight {
+.theme_default .post.highlight .post_wrapper {
     background: #eedbea;
 }
 

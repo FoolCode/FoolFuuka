@@ -4,8 +4,8 @@ if (!defined('DOCROOT'))
 
 $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 ?>
-<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num == $p->num) : ?> post_is_op<?php endif; ?><?php if (isset($p->report_status) && !is_null($p->report_status)) : ?> reported<?php endif; ?><?php if (!is_null($p->media)) : ?> has_image clearfix<?php endif; ?>" id="<?= $num ?>">
-	<?php if (!is_null($p->media)) : ?>
+<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if (isset($p->report_status) && !is_null($p->report_status)) : ?> reported<?php endif; ?><?php if (!is_null($p->media)) : ?> has_image clearfix<?php endif; ?>" id="<?= $num ?>">
+	<?php if ($p->media !== null) : ?>
 	<div class="post_file">
 		<span class="post_file_controls">
 		<?php if ($p->media->media_status !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
@@ -63,25 +63,17 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 			<?php endif; ?>
 
 			<?php if ($p->title_processed !== '') : ?><h2 class="post_title"><?= $p->title_processed ?></h2><?php endif; ?>
-			<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->name_processed ?><?php if ($p->trip_processed !== null) : ?><span class="post_trip"><?= $p->trip_processed ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?>
+			<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->name_processed ?><?php if ($p->trip_processed) : ?><span class="post_trip"><?= $p->trip_processed ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?>
 			</span>
 			<?php if ($p->poster_hash_processed) : ?><span class="poster_hash">ID: <?= $p->poster_hash_processed ?></span><?php endif; ?>
 			<?php if ($p->capcode != 'N') : ?>
-				<?php if ($p->capcode == 'M') : ?>
-					<span class="post_level post_level_moderator">## <?= __('Mod') ?></span>
-				<?php endif ?>
-				<?php if ($p->capcode == 'A') : ?>
-					<span class="post_level post_level_administrator">## <?= __('Admin') ?></span>
-				<?php endif ?>
-				<?php if ($p->capcode == 'D') : ?>
-					<span class="post_level post_level_developer">## <?= __('Developer') ?></span>
-				<?php endif ?>
+				<?php if ($p->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= __('Mod') ?></span><?php endif ?>
+				<?php if ($p->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= __('Admin') ?></span><?php endif ?>
+				<?php if ($p->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= __('Developer') ?></span><?php endif ?>
 			<?php endif; ?>
-
 			<span class="time_wrap">
 				<time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>" <?php if ($p->board->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $p->original_timestamp) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $p->timestamp) ?></time>
 			</span>
-
 			<a href="<?= Uri::create(array($p->board->shortname, $p->_controller_method, $p->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= Uri::create(array($p->board->shortname, $p->_controller_method, $p->thread_num)) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
 
 			<?php if ($p->poster_country !== null) : ?><span class="post_type"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
@@ -90,7 +82,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 			<?php if ($p->deleted == 1) : ?><span class="post_type"><i class="icon-trash" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually.')) ?>"></i></span><?php endif ?>
 
 			<span class="post_controls">
-				<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= Uri::create($p->board->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= __('View') ?></a><?php endif; ?><a href="<?= Uri::create($p->board->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($p->subnum > 0 || Auth::has_access('maccess.mod') || !$p->board->archive) : ?><a href="<?= Uri::create($p->board->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
+				<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= Uri::create($p->board->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= __('View') ?></a><?php endif; ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($p->subnum > 0 || Auth::has_access('maccess.mod') || !$p->board->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 		</div>
 	</header>

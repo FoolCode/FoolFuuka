@@ -129,8 +129,7 @@ if (isset($search_radix)) :
 				?>
 				<li>
 					<label>
-						<?= \Form::radio($name, $element['value'] ? : '', isset($search[$name]) && $element['value'] === $search[$name]) ?>
-						<span><?= __($element['text']) ?></span>
+						<?= \Form::radio($name, $element['value'] ? : '', isset($search[$name]) && $element['value'] === $search[$name]) ?><span><?= __($element['text']) ?></span>
 					</label>
 				</li>
 				<?php  endforeach; ?>
@@ -139,7 +138,6 @@ if (isset($search_radix)) :
 
 			</ul>
 			<ul class="pull-left">
-
 				<li class="input-prepend"><label for="subject" class="add-on"><?= __('Subject') ?></label><?php
 					echo Form::input(array('name' => 'subject', 'id' => 'subject', 'value' => (isset($search["subject"]))
 						? rawurldecode($search["subject"]) : ''))

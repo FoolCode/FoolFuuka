@@ -8,14 +8,10 @@ foreach ($board->get_comments() as $key => $post) :
 		$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
 ?>
 <article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->board->shortname ?>">
-
-
 	<?php if ( ! isset($disable_default_after_op_open) || $disable_default_after_op_open !== true) : ?>
 	<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($op->board)); ?>
 	<?php endif; ?>
-
-
-	<?php if (!is_null($op->media)) : ?>
+	<?php if ($op->media !== null) : ?>
 		<div class="thread_image_box">
 			<?php if ($op->media->media_status === 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png')?>" width="150" height="150" />
@@ -32,13 +28,11 @@ foreach ($board->get_comments() as $key => $post) :
 					<?php endif; ?>
 				</a>
 			<?php endif; ?>
-
 			<?php if ($op->media->media_status !== 'banned') : ?>
-			<div class="post_file" style="padding-left: 2px;<?php if ($op->media->preview_w > 149) : ?> max-width:<?= $op->media->preview_w .'px'; endif; ?>;">
-				<?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->media_filename_processed; ?>
-			</div>
+				<div class="post_file" style="padding-left: 2px;<?php if ($op->media->preview_w > 149) : ?> max-width:<?= $op->media->preview_w .'px'; endif; ?>;">
+					<?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->media_filename_processed; ?>
+				</div>
 			<?php endif; ?>
-
 			<div class="post_file_controls">
 				<?php if ($op->media->media_status !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
 					<?php if (!$op->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
@@ -54,28 +48,19 @@ foreach ($board->get_comments() as $key => $post) :
 			</div>
 		</div>
 	<?php endif; ?>
-
 	<header<?= (isset($op->report_status) && !is_null($op->report_status)) ? ' class="reported"' : '' ?>>
 		<div class="post_data">
-			<h2 class="post_title"><?= $op->title_processed ?></h2>
-			<span class="post_author"><?= ($op->email && $op->email !== 'noko') ? '<a href="mailto:' . rawurlencode($op->email) . '">' . $op->name_processed . ' <span class="post_trip">'.$op->trip_processed.'</span></a>' : $op->name_processed.' <span class="post_trip">'.$op->trip_processed.'</span>' ?></span>
-			<span class="poster_hash"><?= ($op->poster_hash_processed) ? 'ID:' . $op->poster_hash_processed : '' ?></span>
+			<?php if ($op->title_processed !== '') : ?><h2 class="post_title"><?= $op->title_processed ?></h2><?php endif; ?>
+			<span class="post_author"><?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($op->email) ?>"><?php endif; ?><?= $op->name_processed ?><?php if ($op->trip_processed) : ?><span class="post_trip"><?= $op->trip_processed ?></span><?php endif; ?><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
+			<?php if ($op->poster_hash_processed) : ?><span class="poster_hash">ID: <?= $op->poster_hash_processed ?></span><?php endif; ?>
 			<?php if ($op->capcode != 'N') : ?>
-				<?php if ($op->capcode == 'M') : ?>
-					<span class="post_level post_level_moderator">## <?= __('Mod') ?></span>
-				<?php endif ?>
-				<?php if ($op->capcode == 'A') : ?>
-					<span class="post_level post_level_administrator">## <?= __('Admin') ?></span>
-				<?php endif ?>
-				<?php if ($op->capcode == 'D') : ?>
-					<span class="post_level post_level_developer">## <?= __('Developer') ?></span>
-				<?php endif ?>
+				<?php if ($op->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= __('Mod') ?></span><?php endif ?>
+				<?php if ($op->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= __('Admin') ?></span><?php endif ?>
+				<?php if ($op->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= __('Developer') ?></span><?php endif ?>
 			<?php endif; ?>
-
 			<span class="time_wrap">
 				<time datetime="<?= gmdate(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($op->board->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $op->original_timestamp) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $op->timestamp) ?></time>
 			</span>
-
 			<a href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
 
 			<?php if ($op->poster_country !== null) : ?><span class="post_type"><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span></span><?php endif; ?>
@@ -83,7 +68,7 @@ foreach ($board->get_comments() as $key => $post) :
 			<?php if ($op->deleted == 1) : ?><span class="post_type"><i class="icon-trash" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually.')) ?>"></i></span><?php endif ?>
 
 			<span class="post_controls">
-				<a href="<?= Uri::create(array($op->board->shortname, 'thread', $num)) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . Uri::create($op->board->shortname . '/last/50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($op->board->archive) ? '<a href="//boards.4chan.org/' . $op->board->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="<?= Uri::create($op->board->shortname . '/report/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if (Auth::has_access('maccess.mod') || !$op->board->archive) : ?><a href="<?= Uri::create($op->board->shortname . '/delete/' . $op->doc_id) ?>" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
+				<a href="<?= Uri::create(array($op->board->shortname, 'thread', $num)) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . Uri::create($op->board->shortname . '/last/50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($op->board->archive) ? '<a href="//boards.4chan.org/' . $op->board->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if (Auth::has_access('maccess.mod') || !$op->board->archive) : ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 
 			<div class="backlink_list"<?= $op->backlinks ? ' style="display:block"' : '' ?>>
@@ -142,11 +127,9 @@ foreach ($board->get_comments() as $key => $post) :
 	<?php endif; ?>
 <?php elseif (isset($post['posts'])): ?>
 <article class="clearfix thread">
-
 	<?php if ( ! isset($disable_default_after_headless_open) || $disable_default_after_headless_open !== true) : ?>
 	<?php \Plugins::run_hook('fu.themes.default_after_headless_open', array(isset($radix) ? $radix : null)); ?>
 	<?php endif; ?>
-
 <?php endif; ?>
 
 	<aside class="posts">

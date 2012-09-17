@@ -931,7 +931,7 @@ class Controller_Chan extends \Controller_Common
 		$limit = false;
 		if (isset($data['last_limit']))
 		{
-			$limit = $data['last_limit'];
+			$limit = intval($data['last_limit']);
 			unset($data['last_limit']);
 		}
 
@@ -1002,7 +1002,7 @@ class Controller_Chan extends \Controller_Common
 			else
 			{
 				$comment_api = \Comment::forge_for_api($comment, $this->_radix,
-					array('board' => false, 'theme' => true), array('controller_method' => ! \Board::is_natural($limit) ? 'thread' : 'last/'.$limit));
+					array('board' => false, 'theme' => true), array('controller_method' => $limit ? 'last/'.$limit : 'thread'));
 				return \Response::forge(
 					json_encode(array('success' => __('Message sent.'), $comment->thread_num => array('posts' => array($comment_api)))));
 			}

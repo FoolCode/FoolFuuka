@@ -7,9 +7,6 @@ class MediaNotFoundException extends MediaException {}
 class MediaHashNotFoundException extends MediaNotFoundException {}
 class MediaDirNotAvailableException extends MediaNotFoundException {}
 class MediaFileNotFoundException extends MediaNotFoundException {}
-class MediaHiddenException extends MediaNotFoundException {}
-class MediaHiddenDayException extends MediaNotFoundException {}
-class MediaBannedException extends MediaNotFoundException {}
 
 class MediaUploadException extends \FuelException {}
 class MediaUploadNoFileException extends MediaUploadException {}
@@ -98,6 +95,20 @@ class Media extends \Model\Model_Base
 		if ( ! $this->preview_w || ! $this->preview_h)
 		{
 			unset($this->preview_w, $this->preview_h);
+		}
+		
+		// we set them even for admins
+		if ($this->banned)
+		{
+			$this->media_status = 'banned';
+		}
+		else if ($this->board->hide_thumbnails)
+		{
+			$this->media_status = 'forbidden';
+		}
+		else
+		{
+			$this->media_status = 'normal';
 		}
 	}
 
@@ -321,7 +332,7 @@ class Media extends \Model\Model_Base
 			return $this->$name = e(@iconv('UTF-8', 'UTF-8//IGNORE', $this->$processing_name));
 		}
 
-		throw new \InvalidArgumentException;
+		throw new \InvalidArgumentException('Class variable '.$name.' not found in '.__CLASS__);
 	}
 
 
@@ -394,42 +405,6 @@ class Media extends \Model\Model_Base
 			throw new MediaHashNotFoundException;
 		}
 
-		$this->media_status = 'normal';
-
-		// these features will only affect guest users
-		if ($this->board->hide_thumbnails && ! \Auth::has_access('comment.show_hidden_thumbnails'))
-		{
-			// hide all thumbnails for the board
-			if (!$this->board->hide_thumbnails)
-			{
-				$this->media_status = 'forbidden';
-				if ( ! $force)
-				{
-					throw new MediaHiddenException;
-				}
-			}
-
-			// add a delay of 1 day to all thumbnails
-			if ($this->board->delay_thumbnails && ($this->timestamp + 86400) > time())
-			{
-				$this->media_status = 'forbidden-24h';
-				if ( ! $force)
-				{
-					throw new MediaHiddenDayException;
-				}
-			}
-		}
-
-		// this post contain's a banned media, do not display
-		if ($this->banned == 1)
-		{
-			$this->media_status = 'banned';
-			if ( ! $force)
-			{
-				throw new MediaBannedException;
-			}
-		}
-
 		try
 		{
 			// locate the image
@@ -476,7 +451,7 @@ class Media extends \Model\Model_Base
 		{
 
 		}
-
+		
 		if (isset($image))
 		{
 			$media_cdn = array();

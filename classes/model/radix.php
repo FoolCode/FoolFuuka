@@ -371,12 +371,6 @@ class Radix extends \Model_Base
 				'type' => 'checkbox',
 				'help' => __('Hide the thumbnails?')
 			),
-			'delay_thumbnails' => array(
-				'database' => TRUE,
-				'boards_preferences' => TRUE,
-				'type' => 'checkbox',
-				'help' => __('Hide the thumbnails for 24 hours? (for moderation purposes)')
-			),
 			'myisam_search' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,

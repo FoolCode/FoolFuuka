@@ -187,6 +187,43 @@ class Comment extends \Model\Model_Base
 				}
 			}
 			
+			// if we come across a banned image we set all the data to null. Normal users must not see this data.
+			if (($comment->media->banned && ! \Auth::has_access('media.see_banned')) 
+				|| ($comment->media->board->hide_thumbnails && ! \Auth::has_access('media.see_hidden')))
+			{
+				$banned = array(
+					'media_id' => 0,
+					'spoiler' => false,
+					'preview_orig' => null,
+					'preview_w' => 0,
+					'preview_h' => 0,
+					'media_filename' => null,
+					'media_w' => 0,
+					'media_h' => 0,
+					'media_size' => 0,
+					'media_hash' => null,
+					'media_orig' => null,
+					'exif' => null,
+					'total' => 0,
+					'banned' => 0,
+					'media' => null,
+					'preview_op' => null,
+					'preview_reply' => null,
+
+					// optionals
+					'safe_media_hash' => null,
+					'remote_media_link' => null,
+					'media_link' => null,
+					'thumb_link' => null,
+				);	
+
+				foreach ($banned as $key => $item)
+				{
+					$comment->media->$key = $item;
+				}
+			}
+			
+			// startup variables and put them also in the lower level for compatibility with older 4chan X
 			foreach (array(
 				'safe_media_hash', 
 				'preview_orig_processed', 

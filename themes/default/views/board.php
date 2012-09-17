@@ -7,7 +7,7 @@ foreach ($board->get_comments() as $key => $post) :
 		$op = $post['op'];
 		$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
 ?>
-<article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->board->shortname ?>">
+<article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->board->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>">
 	<?php if ( ! isset($disable_default_after_op_open) || $disable_default_after_op_open !== true) : ?>
 	<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($op->board)); ?>
 	<?php endif; ?>
@@ -103,7 +103,7 @@ foreach ($board->get_comments() as $key => $post) :
 	</div>
 	<div class="thread_tools_bottom">
 		<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
-		<span class="omitted">
+		<span class="omitted"><a style="display:inline-block" href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->thread_num))?>" data-function="expandThread" data-thread-num="<?= $op->thread_num ?>"><i class="icon icon-resize-full"></i></a>
 			<?= $post['omitted'] . ' ' . _ngettext('post', 'posts', $post['omitted']) ?>
 			<?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>
 				<?= ' ' . __('and') . ' ' . $post['images_omitted'] . ' ' . _ngettext('image', 'images', $post['images_omitted']) ?>

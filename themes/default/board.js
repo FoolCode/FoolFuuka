@@ -122,6 +122,39 @@ var bindFunctions = function()
 			realtimethread();
 			event.preventDefault();
 		},
+		
+		expandThread: function(el, post, event)
+		{
+			var thread_num = el.data('thread-num');
+
+			if ( ! el.data('expanded'))
+			{
+				el.spin('small')
+				jQuery.ajax({
+					url: backend_vars.api_url + '_/api/chan/thread/',
+					dataType: 'json',
+					type: 'GET',
+					data: {
+						num : thread_num,
+						board: backend_vars.board_shortname,
+						theme: backend_vars.selected_theme
+					},
+					success: function(data, textStatus, jqXHR){
+						insertPost(data, textStatus, jqXHR);
+						el.data('expanded', true).html('<i class="icon icon-resize-small"></i>');
+						el.spin(false);
+					}
+				});
+			}
+			else
+			{
+				var articles = jQuery('article.thread[data-thread-num=' + thread_num + '] aside.posts article');
+				articles.slice(0, articles.length - 5).remove();
+				el.data('expanded', false).html('<i class="icon icon-resize-full"></i>');
+			}
+			
+			return false;
+		},
 
 		mod: function(el, post, event)
 		{
@@ -234,7 +267,7 @@ var bindFunctions = function()
 			modal.find(".submitModal").data("action", 'report');
 		},
 
-		report_media: function(el, post, event)
+		reportMedia: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
 			modal.find(".title").html('Report &raquo; Media No.' + el.data("media-id"));
@@ -562,8 +595,11 @@ var backlinkify = function(elem, post_id, subnum)
 			}
 		});
 
-		post_backlink.html(post_backlink.html() + ((post_backlink.html().length > 0)?" ":"") + val.join(" "));
-		post_backlink.parent().show();
+		if (post_backlink.find('[data-post=' + post_id  + ']').length == 0)
+		{
+			post_backlink.html(post_backlink.html() + ((post_backlink.html().length > 0)?" ":"") + val.join(" "));
+			post_backlink.parent().show();
+		}
 	});
 }
 
@@ -600,33 +636,41 @@ var insertPost = function(data, textStatus, jqXHR)
 	var w_height = jQuery(document).height();
 	var found_posts = false;
 
-	if(jqXHR.status == 200 && typeof data[backend_vars.thread_id] !== "undefined" && typeof data[backend_vars.thread_id].posts !== "undefined")
+	jQuery.each(data, function(id, val)
 	{
-		jQuery.each(data[backend_vars.thread_id].posts, function(idx, value){
+		if (typeof val.posts !== "undefined")
+		{
+			var posts = jQuery([]);
+			jQuery.each(val.posts, function(idx, value)
+			{ 
+				found_posts = true;
+				var post = jQuery(value.formatted)
+				post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+				post.find('[rel=tooltip]').tooltip({
+					placement: 'top',
+					delay: 200
+				});
+				post.find('[rel=tooltip_right]').tooltip({
+					placement: 'right',
+					delay: 200
+				});
 
-			found_posts = true;
-			var post = jQuery(value.formatted)
-			post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
-			post.find('[rel=tooltip]').tooltip({
-				placement: 'top',
-				delay: 200
-			});
-			post.find('[rel=tooltip_right]').tooltip({
-				placement: 'right',
-				delay: 200
-			});
-
-			// avoid inserting twice
-			if(jQuery('.doc_id_' + value.doc_id).length == 0)
-			{
+				// avoid inserting twice
+				if (jQuery('.doc_id_' + value.doc_id).length != 0)
+				{
+					jQuery('.doc_id_' + value.doc_id).remove();
+				}
+					
 				backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-				jQuery('article.thread aside.posts').append(post);
-			}
+				posts = posts.add(post);
 
-			if(backend_vars.latest_doc_id < value.doc_id)
-				backend_vars.latest_doc_id = value.doc_id;
-		});
-	}
+				if(backend_vars.latest_doc_id < value.doc_id)
+					backend_vars.latest_doc_id = value.doc_id;
+			});
+
+			jQuery('article.thread[data-thread-num=' + id + '] aside.posts').append(posts);
+		}
+	});
 
 	if(found_posts)
 	{

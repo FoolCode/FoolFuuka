@@ -473,11 +473,6 @@ body.theme_default {
     font-size:12px;
 }
 
-
-.theme_default article.thread > .thread_image_box > .thread_image_link{
-    /*display:block;*/
-}
-
 .theme_default article.thread > .thread_tools_bottom {
     margin-left: 30px;
     padding: 6px 0px;
@@ -591,24 +586,17 @@ body.theme_default {
 	display:none;
 }
 
-.theme_default .post {
-    margin:2px 20px;
+.theme_default article.thread article.post {
+	margin: 0px 5px 3px 16px;
+}
+
+.theme_default .post_wrapper {
+    display:table-cell;
+    margin:2px 10px 2px 20px;
     margin-right:0px;
     padding: 0 0 10px 10px;
     background: #d6f0da;
     border-bottom:1px solid #ccc;
-    float:left;
-    clear:both;
-}
-
-.theme_default article.thread article.post:nth-of-type(-n+4) {
-    clear:none;
-    float:none;
-    display:-moz-inline-stack;
-    display:inline-block;
-    zoom:1;
-    *display:inline;
-    max-width:72%;
 }
 
 .theme_default .post.has_image {
@@ -643,12 +631,12 @@ body.theme_default {
     font-family: Verdana, Arial, sans-serif;
 }
 
-.theme_default .post > .text {
+.theme_default .post_wrapper > .text {
     padding: 7px 10px 0px 15px;
     word-wrap: break-word;
 }
 
-.theme_default .post > .thread_image_box {
+.theme_default .post_wrapper > .thread_image_box {
     float:left;
     text-align:center;
     color: #888;
@@ -659,15 +647,15 @@ body.theme_default {
     vertical-align:bottom;
 }
 
-.theme_default .post > .thread_image_box .post_image.is_spoiler_image {
+.theme_default .post_wrapper > .thread_image_box .post_image.is_spoiler_image {
     opacity: 0.2;
 }
 
-.theme_default .post > .thread_image_box .post_image.is_spoiler_image:hover {
+.theme_default .post_wrapper > .thread_image_box .post_image.is_spoiler_image:hover {
     opacity: 1.0;
 }
 
-.theme_default .post.post_ghost {
+.theme_default .post.post_ghost .post_wrapper {
     border-left:5px solid #3a533f;
 }
 

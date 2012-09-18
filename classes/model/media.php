@@ -196,7 +196,7 @@ class Media extends \Model\Model_Base
 	{
 		\Upload::process(array(
 			'path' => APPPATH.'tmp/media_upload/',
-			'max_size' => \Auth::has_access('media.limitless_media') ? $board->max_image_size_kilobytes * 1024 : 9999 * 1024 * 1024,
+			'max_size' => \Auth::has_access('media.limitless_media') ? 9999 * 1024 * 1024 : $board->max_image_size_kilobytes * 1024,
 			'randomize' => true,
 			'max_length' => 64,
 			'ext_whitelist' => array('jpg', 'jpeg', 'gif', 'png'),

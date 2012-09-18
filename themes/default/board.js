@@ -1,3 +1,74 @@
+jQuery(document).ready(function() {
+
+	// settings
+	jQuery.support.cors = true;
+	backend_vars.loaded_posts = [];
+
+	var lazyloaded = jQuery('img.lazyload');
+	if(lazyloaded.length > 149)
+	{
+		lazyloaded.lazyload({
+			threshold: 1000,
+			event: 'scroll'
+		});
+	}
+
+	// check if input[date] is supported, so we can use by default input[text] with placeholder without breaking w3
+	var i = document.createElement("input");
+	i.setAttribute("type", "date");
+	if(i.type !== "text")
+	{
+		jQuery('#date_end').replaceWith(jQuery('<input>').attr({id: 'date_end', name: 'end', type: 'date'}));
+		jQuery('#date_start').replaceWith(jQuery('<input>').attr({id: 'date_start', name: 'start', type: 'date'}));
+	}
+
+	// firefox sucks at styling input, so we need to add size="", that guess what? It's not w3 compliant!
+	jQuery('#file_image').attr({size: '16'});
+
+	var post = location.href.split(/#/);
+	if (post[1]) {
+		if (post[1].match(/^q\d+(_\d+)?$/)) {
+			post[1] = post[1].replace('q', '').replace('_', ',');
+			jQuery("#reply_chennodiscursus").append(">>" + post[1] + "\n");
+			post[1] = post[1].replace(',', '_');
+
+		}
+		
+		toggleHighlight(post[1]);
+	}
+
+	if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 24 * 60 * 60))
+	{
+		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + ' <a class="btnr" href="#" data-function="realtimeThread">' + backend_vars.gettext['update_now'] + '</a>');
+		setTimeout(realtimethread, 10000);
+	}
+
+	bindFunctions();
+
+	// localize and add 4chan tooltip where title
+	jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy').filter('[title]').tooltip({
+		placement: 'top',
+		delay: 300,
+		animation: false
+	});
+
+	jQuery('input[title]').tooltip({
+		placement: 'right',
+		delay: 200,
+		animation: false
+	});
+
+	jQuery('li.latest_search').tooltip({
+		placement: 'left',
+		animation: false
+	});
+
+	jQuery('#thread_o_matic .thread_image_box').tooltip({
+		placement: 'bottom',
+		animation: true
+	});
+});
+
 var bindFunctions = function()
 {
 	// the following block of code deals with drag and drop of images for MD5 hashing
@@ -42,7 +113,7 @@ var bindFunctions = function()
 		{
 			if (post)
 			{
-				replyHighlight(post);
+				toggleHighlight(post);
 			}
 		},
 
@@ -53,9 +124,13 @@ var bindFunctions = function()
 
 		comment: function(el, post, event)
 		{
-			// sending an image
-			if(jQuery("#file_image").val())
+			var file_el = jQuery("#file_image");
+			var progress_el = jQuery("#reply .progress .bar");
+			// if there's an image and the browser doesn't support FormData, use a normal upload process
+			if(file_el.val() && window.FormData === undefined)
+			{
 				return true;
+			}
 
 			var originalText = el.attr('value');
 			el.attr({'value': backend_vars.gettext['submit_state'], 'disabled': 'disabled'});
@@ -64,12 +139,13 @@ var bindFunctions = function()
 			var buttonTimeout = setTimeout(function(){
 				el.attr({'value': originalText});
 				el.removeAttr('disabled');
-			}, 15000);
+			}, 10000);
 
 			var reply_alert = jQuery('#reply_ajax_notices');
 			reply_alert.removeClass('error').removeClass('success');
-			_data = {
-				reply_numero: post,
+			
+			var data_obj = {
+				reply_numero: jQuery("#reply_numero").val(),
 				reply_bokunonome: jQuery("#reply_bokunonome").val(),
 				reply_elitterae: jQuery("#reply_elitterae").val(),
 				reply_talkingde: jQuery("#reply_talkingde").val(),
@@ -81,16 +157,28 @@ var bindFunctions = function()
 				latest_doc_id: backend_vars.latest_doc_id,
 				theme: backend_vars.selected_theme
 			};
-
-			_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
-
-			jQuery.ajax({
+			
+			data_obj[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
+			
+			var ajax_object = {
 				url: backend_vars.site_url + backend_vars.board_shortname + '/submit/' ,
 				dataType: 'json',
 				type: 'POST',
+				data: data_obj,
 				cache: false,
-				data: _data,
-				success: function(data, textStatus, jqXHR){
+				xhr: function() {
+					var xhr = jQuery.ajaxSettings.xhr();
+					 if(xhr instanceof window.XMLHttpRequest) {
+						xhr.upload.addEventListener('progress', function(evt){
+							if (evt.lengthComputable) 
+							{
+								progress_el.css('width', (evt.loaded/evt.total*100) + '%')
+							}
+						}, false);
+					}
+					return xhr;
+				},
+				success: function(data, textStatus, jqXHR) {
 					if (typeof data.error !== "undefined")
 					{
 						reply_alert.html(data.error);
@@ -100,6 +188,15 @@ var bindFunctions = function()
 					reply_alert.html(data.success);
 					reply_alert.addClass('success'); // deals with showing the alert
 					jQuery("#reply_chennodiscursus").val("");
+					
+					// redirect in case of new threads
+					if (data_obj.reply_numero < 1)
+					{
+						window.location = backend_vars.site_url + backend_vars.board_shortname + '/thread/' 
+							+ data.thread_num + '/';
+						return false;
+					}
+					
 					insertPost(data, textStatus, jqXHR);
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
@@ -112,12 +209,35 @@ var bindFunctions = function()
 					clearTimeout(buttonTimeout);
 					el.attr({'value': originalText});
 					el.removeAttr('disabled');
+					progress_el.css('width', '0%')
 				}
-			});
+			}
+			
+			// if we have FormData support, we can upload files!
+			if (window.FormData !== undefined)
+			{
+				ajax_object.processData = false;
+				ajax_object.contentType = false;
+				var data_formdata = new FormData();
+				jQuery.each(data_obj, function(id, val){
+					data_formdata.append(id, val);
+				})
+
+				if (typeof file_el[0].files !== 'undefined')
+				{
+					data_formdata.append('file_image', file_el[0].files[0])
+				}
+				
+				ajax_object.data = data_formdata;
+			}
+
+
+			jqxhr = jQuery.ajax(ajax_object);
+			
 			event.preventDefault();
 		},
 
-		realtimethread: function(el, post, event)
+		realtimeThread: function(el, post, event)
 		{
 			realtimethread();
 			event.preventDefault();
@@ -222,12 +342,12 @@ var bindFunctions = function()
 
 		activateModeration: function(el, post, event)
 		{
-			jQuery('button[data-function=activateModeration]').parent().hide();
 			jQuery('.post_mod_controls button[data-function]').attr({'disabled': 'disabled'});
 			setTimeout(function(){
 				jQuery('.post_mod_controls button[data-function]').removeAttr('disabled');
 			}, 700);
 			jQuery('.post_mod_controls').show();
+			jQuery('button[data-function=activateModeration]').parent().hide();			
 		},
 
 		closeModal: function(el, post)
@@ -365,11 +485,8 @@ var bindFunctions = function()
 					return false;
 				}
 				modal.modal('hide');
-
-				if (action == 'report') {
-					toggleHighlight('.doc_id_' + _doc_id, 'reported', false);
-				}
-				else if (action == 'delete') {
+				
+				if (action == 'delete') {
 					jQuery('.doc_id_' + _doc_id).hide();
 				}
 			}, 'json');
@@ -693,14 +810,6 @@ var insertPost = function(data, textStatus, jqXHR)
 	}
 }
 
-var toggleSearch = function(mode)
-{
-	var search;
-	if (!(search = document.getElementById('search_' + mode))) return;
-	search.style.display = search.style.display ? "" : "none";
-}
-
-
 var findSameImageFromFile = function(obj)
 {
 	var reader = new FileReader();
@@ -719,22 +828,13 @@ var findSameImageFromFile = function(obj)
 	reader.readAsBinaryString(obj.files[0]);
 }
 
-var getPost = function(postForm)
+var toggleHighlight = function(id)
 {
-	if (postForm.post.value == "") {
-		alert('Sorry, you must insert a valid post number.');
-		return false;
-	}
-	var post = postForm.post.value.match(/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/);
-	window.location = postForm.action + encodeURIComponent(((typeof post[1] != 'undefined') ? post[1] : '') + ((typeof post[2] != 'undefined') ? '_' + post[2] : '')) + '/';
-}
-
-function toggleHighlight(id, classn, single)
-{
+	var classn = 'highlight'
 	jQuery("article").each(function() {
 		var post = jQuery(this);
 
-		if (post.hasClass(classn) && single)
+		if (post.hasClass(classn))
 		{
 			post.removeClass(classn);
 		}
@@ -745,236 +845,3 @@ function toggleHighlight(id, classn, single)
 		}
 	})
 }
-
-function replyHighlight(id)
-{
-	toggleHighlight(id, 'highlight', true);
-}
-
-var changeTheme = function(theme)
-{
-	setCookie('theme', theme, 30, '/');
-	window.location.reload();
-}
-
-var changeLanguage = function(language)
-{
-	setCookie('language', language, 30, '/');
-	window.location.reload();
-}
-
-
-function setCookie( name, value, expires, path, domain, secure )
-{
-	name = backend_vars.cookie_prefix + name;
-	var today = new Date();
-	today.setTime( today.getTime() );
-	if ( expires )
-	{
-		expires = expires * 1000 * 60 * 60 * 24;
-	}
-	var expires_date = new Date( today.getTime() + (expires) );
-
-	document.cookie = name + "=" +escape( value ) +
-		( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
-		( ( path ) ? ";path=" + path : "" ) +
-		( ( domain ) ? ";domain=" + domain : "" ) +
-		( ( secure ) ? ";secure" : "" );
-}
-
-
-function getCookie( check_name ) {
-	check_name = backend_vars.cookie_prefix + check_name;
-	var a_all_cookies = document.cookie.split( ';' );
-	var a_temp_cookie = '';
-	var cookie_name = '';
-	var cookie_value = '';
-	var b_cookie_found = false;
-	for ( i = 0; i < a_all_cookies.length; i++ )
-	{
-		a_temp_cookie = a_all_cookies[i].split( '=' );
-		cookie_name = a_temp_cookie[0].replace(/^\s+|\s+$/g, '');
-		if ( cookie_name == check_name )
-		{
-			b_cookie_found = true;
-			if ( a_temp_cookie.length > 1 )
-			{
-				cookie_value = unescape( a_temp_cookie[1].replace(/^\s+|\s+$/g, '') );
-			}
-			return cookie_value;
-			break;
-		}
-		a_temp_cookie = null;
-		cookie_name = '';
-	}
-	if ( !b_cookie_found )
-	{
-		return null;
-	}
-}
-
-function fuel_set_csrf_token(form)
-{
-	if (document.cookie.length > 0 && typeof form != undefined)
-	{
-		var c_name = backend_vars.csrf_token_key;
-		c_start = document.cookie.indexOf(c_name + "=");
-		if (c_start != -1)
-		{
-			c_start = c_start + c_name.length + 1;
-			c_end = document.cookie.indexOf(";" , c_start);
-			if (c_end == -1)
-			{
-				c_end=document.cookie.length;
-			}
-			value=unescape(document.cookie.substring(c_start, c_end));
-			if (value != "")
-			{
-				for(i=0; i<form.elements.length; i++)
-				{
-					if (form.elements[i].name == c_name)
-					{
-						form.elements[i].value = value;
-						break;
-					}
-				}
-			}
-		}
-	}
-}
-
-
-function eliminateDuplicates(arr) {
-	var i,
-		len=arr.length,
-		out=[],
-		obj={};
-
-	for (i=0;i<len;i++) {
-		obj[arr[i]]=0;
-	}
-	for (i in obj) {
-		out.push(i);
-	}
-	return out;
-}
-
-var isEventSupported = (function() {
-
-	var TAGNAMES = {
-		'select': 'input',
-		'change': 'input',
-		'submit': 'form',
-		'reset': 'form',
-		'error': 'img',
-		'load': 'img',
-		'abort': 'img'
-	};
-
-	function isEventSupported( eventName, element ) {
-
-		element = element || document.createElement(TAGNAMES[eventName] || 'div');
-		eventName = 'on' + eventName;
-
-		// When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
-		var isSupported = eventName in element;
-
-		if ( !isSupported ) {
-			// If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
-			if ( !element.setAttribute ) {
-				element = document.createElement('div');
-			}
-			if ( element.setAttribute && element.removeAttribute ) {
-				element.setAttribute(eventName, '');
-				isSupported = typeof element[eventName] == 'function';
-
-				// If property was created, "remove it" (by setting value to `undefined`)
-				if ( typeof element[eventName] != 'undefined' ) {
-					element[eventName] = undefined;
-				}
-				element.removeAttribute(eventName);
-			}
-		}
-
-		element = null;
-		return isSupported;
-	}
-	return isEventSupported;
-})();
-
-jQuery(document).ready(function() {
-
-	// settings
-	jQuery.support.cors = true;
-	backend_vars.loaded_posts = [];
-
-	var lazyloaded = jQuery('img.lazyload');
-	if(lazyloaded.length > 149)
-	{
-		lazyloaded.lazyload({
-			threshold: 1000,
-			event: 'scroll'
-		});
-	}
-
-	// check if input[date] is supported, so we can use by default input[text] with placeholder without breaking w3
-	var i = document.createElement("input");
-	i.setAttribute("type", "date");
-	if(i.type !== "text")
-	{
-		jQuery('#date_end').replaceWith(jQuery('<input>').attr({id: 'date_end', name: 'end', type: 'date'}));
-		jQuery('#date_start').replaceWith(jQuery('<input>').attr({id: 'date_start', name: 'start', type: 'date'}));
-	}
-
-	// firefox sucks at styling input, so we need to add size="", that guess what? It's not w3 compliant!
-	jQuery('#file_search').attr({size: '4'});
-	jQuery('#file_image').attr({size: '16'});
-
-	// destroy the file search box if the browser doesn't support file API
-	if(!window.FileReader)
-	{
-		jQuery('.file_search_remove').remove();
-	}
-
-	var post = location.href.split(/#/);
-	if (post[1]) {
-		if (post[1].match(/^q\d+(_\d+)?$/)) {
-			post[1] = post[1].replace('q', '').replace('_', ',');
-			jQuery("#reply_chennodiscursus").append(">>" + post[1] + "\n");
-			post[1] = post[1].replace(',', '_');
-
-		}
-		replyHighlight(post[1]);
-	}
-
-	if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 24 * 60 * 60))
-	{
-		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + ' <a class="btnr" href="#" onClick="realtimethread(); return false;">' + backend_vars.gettext['update_now'] + '</a>');
-		setTimeout(realtimethread, 10000);
-	}
-
-	bindFunctions();
-
-	// localize and add 4chan tooltip where title
-	jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy').filter('[title]').tooltip({
-		placement: 'top',
-		delay: 300,
-		animation: false
-	});
-
-	jQuery('input[title]').tooltip({
-		placement: 'right',
-		delay: 200,
-		animation: false
-	});
-
-	jQuery('li.latest_search').tooltip({
-		placement: 'left',
-		animation: false
-	});
-
-	jQuery('#thread_o_matic .thread_image_box').tooltip({
-		placement: 'bottom',
-		animation: true
-	});
-});

@@ -10,6 +10,144 @@ window.log = function(){
   }
 };
 
+
+var setCookie = function (name, value, expires, path, domain, secure)
+{
+	name = backend_vars.cookie_prefix + name;
+	var today = new Date();
+	today.setTime( today.getTime() );
+	if ( expires )
+	{
+		expires = expires * 1000 * 60 * 60 * 24;
+	}
+	var expires_date = new Date( today.getTime() + (expires) );
+
+	document.cookie = name + "=" +escape( value ) +
+		( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+		( ( path ) ? ";path=" + path : "" ) +
+		( ( domain ) ? ";domain=" + domain : "" ) +
+		( ( secure ) ? ";secure" : "" );
+}
+
+
+var getCookie = function(check_name) {
+	check_name = backend_vars.cookie_prefix + check_name;
+	var a_all_cookies = document.cookie.split( ';' );
+	var a_temp_cookie = '';
+	var cookie_name = '';
+	var cookie_value = '';
+	var b_cookie_found = false;
+	for ( i = 0; i < a_all_cookies.length; i++ )
+	{
+		a_temp_cookie = a_all_cookies[i].split( '=' );
+		cookie_name = a_temp_cookie[0].replace(/^\s+|\s+$/g, '');
+		if ( cookie_name == check_name )
+		{
+			b_cookie_found = true;
+			if ( a_temp_cookie.length > 1 )
+			{
+				cookie_value = unescape( a_temp_cookie[1].replace(/^\s+|\s+$/g, '') );
+			}
+			return cookie_value;
+			break;
+		}
+		a_temp_cookie = null;
+		cookie_name = '';
+	}
+	if ( !b_cookie_found )
+	{
+		return null;
+	}
+}
+
+var fuel_set_csrf_token = function(form)
+{
+	if (document.cookie.length > 0 && typeof form != undefined)
+	{
+		var c_name = backend_vars.csrf_token_key;
+		c_start = document.cookie.indexOf(c_name + "=");
+		if (c_start != -1)
+		{
+			c_start = c_start + c_name.length + 1;
+			c_end = document.cookie.indexOf(";" , c_start);
+			if (c_end == -1)
+			{
+				c_end=document.cookie.length;
+			}
+			value=unescape(document.cookie.substring(c_start, c_end));
+			if (value != "")
+			{
+				for(i=0; i<form.elements.length; i++)
+				{
+					if (form.elements[i].name == c_name)
+					{
+						form.elements[i].value = value;
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+var eliminateDuplicates = function(arr) {
+	var i,
+		len=arr.length,
+		out=[],
+		obj={};
+
+	for (i=0;i<len;i++) {
+		obj[arr[i]]=0;
+	}
+	for (i in obj) {
+		out.push(i);
+	}
+	return out;
+}
+
+var isEventSupported = (function() {
+
+	var TAGNAMES = {
+		'select': 'input',
+		'change': 'input',
+		'submit': 'form',
+		'reset': 'form',
+		'error': 'img',
+		'load': 'img',
+		'abort': 'img'
+	};
+
+	function isEventSupported( eventName, element ) {
+
+		element = element || document.createElement(TAGNAMES[eventName] || 'div');
+		eventName = 'on' + eventName;
+
+		// When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
+		var isSupported = eventName in element;
+
+		if ( !isSupported ) {
+			// If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
+			if ( !element.setAttribute ) {
+				element = document.createElement('div');
+			}
+			if ( element.setAttribute && element.removeAttribute ) {
+				element.setAttribute(eventName, '');
+				isSupported = typeof element[eventName] == 'function';
+
+				// If property was created, "remove it" (by setting value to `undefined`)
+				if ( typeof element[eventName] != 'undefined' ) {
+					element[eventName] = undefined;
+				}
+				element.removeAttribute(eventName);
+			}
+		}
+
+		element = null;
+		return isSupported;
+	}
+	return isEventSupported;
+})();
+
 // make it safe to use console.log always
 (function(b){function c(){}for(var d="assert,clear,count,debug,dir,dirxml,error,exception,firebug,group,groupCollapsed,groupEnd,info,log,memoryProfile,memoryProfileEnd,profile,profileEnd,table,time,timeEnd,timeStamp,trace,warn".split(","),a;a=d.pop();){b[a]=b[a]||c}})((function(){try
 {console.log();return window.console;}catch(err){return window.console={};}})());

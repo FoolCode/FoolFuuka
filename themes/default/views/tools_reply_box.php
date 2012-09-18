@@ -7,7 +7,7 @@ if (!defined('DOCROOT'))
 <section class="thread_form clearfix">
 <?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
-<?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
+<?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0, array('id' => 'reply_numero')) ?>
 <?= isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
 <fieldset>
 
@@ -114,35 +114,27 @@ if (!defined('DOCROOT'))
 		<div class="btn-group" style="margin-bottom:5px">
 			<?php
 			$submit_array = array(
+				'data-function' => 'comment',
 				'name' => 'reply_gattai',
 				'value' => __('Submit'),
 				'class' => 'btn btn-primary',
 			);
-
-			if (isset($thread_id) && $thread_id > 0)
-			{
-				$submit_array['data-function'] = 'comment';
-				$submit_array['data-post'] = $thread_id;
-			}
+			
 			echo Form::submit($submit_array);
 
 			$submit_array = array(
+				'data-function' => 'comment',
 				'name' => 'reply_gattai_spoilered',
 				'value' => __('Submit Spoilered'),
 				'class' => 'btn',
 			);
 
-			if (isset($thread_id) && $thread_id > 0)
-			{
-				$submit_array['data-function'] = 'comment';
-				$submit_array['data-post'] = $thread_id;
-			}
 			echo Form::submit($submit_array);
 
 			echo Form::reset(array('class' => 'btn', 'name' => 'reset', 'value' => __('Reset')));
 			?>
 		</div>
-
+		<div class="progress progress-info progress-striped active" style="height:8px"><div class="bar" style="width: 0%"></div></div>
 		<?php
 			if ($radix->posting_rules)
 			{

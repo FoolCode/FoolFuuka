@@ -919,10 +919,10 @@ class Controller_Chan extends \Controller_Common
 		// some beginners' validation, while through validation will happen in the Comment model
 		$val = \Validation::forge();
 		$val->add_field('thread_num', __('Thread Number'), 'required');
-		$val->add_field('name', __('Username'), 'trim|max_length[64]');
-		$val->add_field('email', __('Email'), 'trim|max_length[64]');
-		$val->add_field('title', __('Subject'), 'trim|max_length[64]');
-		$val->add_field('comment', __('Comment'), 'trim|min_length[3]|max_length[4096]');
+		$val->add_field('name', __('Username'), 'max_length[64]');
+		$val->add_field('email', __('Email'), 'max_length[64]');
+		$val->add_field('title', __('Subject'), 'max_length[64]');
+		$val->add_field('comment', __('Comment'), 'min_length[3]|max_length[4096]');
 		$val->add_field('delpass', __('Password'), 'required|min_length[3]|max_length[32]');
 
 		// leave the capcode check to the model
@@ -1004,7 +1004,11 @@ class Controller_Chan extends \Controller_Common
 				$comment_api = \Comment::forge_for_api($comment, $this->_radix,
 					array('board' => false, 'theme' => true), array('controller_method' => $limit ? 'last/'.$limit : 'thread'));
 				return \Response::forge(
-					json_encode(array('success' => __('Message sent.'), $comment->thread_num => array('posts' => array($comment_api)))));
+					json_encode(array(
+						'success' => __('Message sent.'), 
+						'thread_num' => $comment->thread_num,
+						$comment->thread_num => array('posts' => array($comment_api)),
+				)));
 			}
 		}
 		else

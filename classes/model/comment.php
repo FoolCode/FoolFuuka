@@ -1068,7 +1068,7 @@ class Comment extends \Model\Model_Base
 
 		foreach(array('name', 'email', 'title', 'delpass', 'comment', 'capcode') as $key)
 		{
-			$this->$key = (string) $this->$key;
+			$this->$key = trim((string) $this->$key);
 		}
 
 		\Plugins::run_hook('fu.comment.insert.alter_input_after_checks', array(&$this), 'simple');

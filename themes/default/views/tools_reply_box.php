@@ -133,7 +133,7 @@ if (!defined('DOCROOT'))
 			echo Form::reset(array('class' => 'btn', 'name' => 'reset', 'value' => __('Reset')));
 			?>
 		</div>
-		<div class="progress progress-info progress-striped active" style="height:8px"><div class="bar" style="width: 0%"></div></div>
+		<div class="progress progress-info progress-striped active" style="height:8px; margin-bottom: 2px"><div class="bar" style="width: 0%"></div></div>
 		<?php
 			if ($radix->posting_rules)
 			{

@@ -903,11 +903,25 @@ class Controller_Chan extends \Controller_Common
 			}
 			catch (Model\MediaUploadNoFileException $e)
 			{
-				return $this->error($e->getMessage());
+				if (\Input::is_ajax())
+				{
+					return \Response::forge(json_encode(array('error' => $e->getMessage())));
+				}
+				else
+				{
+					return $this->error($e->getMessage());
+				}
 			}
 			catch (Model\MediaUploadException $e)
 			{
-				return $this->error($e->getMessage());
+				if (\Input::is_ajax())
+				{
+					return \Response::forge(json_encode(array('error' => $e->getMessage())));
+				}
+				else
+				{
+					return $this->error($e->getMessage());
+				}
 			}
 		}
 

@@ -125,6 +125,7 @@ var bindFunctions = function()
 		comment: function(el, post, event)
 		{
 			var file_el = jQuery("#file_image");
+			var progress_pos = 0;
 			var progress_el = jQuery("#reply .progress .bar");
 			// if there's an image and the browser doesn't support FormData, use a normal upload process
 			if(file_el.val() && window.FormData === undefined)
@@ -170,11 +171,16 @@ var bindFunctions = function()
 					var xhr = jQuery.ajaxSettings.xhr();
 					 if(xhr instanceof window.XMLHttpRequest) {
 						xhr.upload.addEventListener('progress', function(evt){
-							if (evt.lengthComputable) 
+							var progress_local = Math.ceil(evt.loaded/evt.total*100);
+							if (evt.lengthComputable && progress_pos !== progress_local) 
 							{
-								progress_el.css('width', (evt.loaded/evt.total*100) + '%')
+								progress_pos = progress_local;
+								progress_el.css('width', (progress_pos) + '%')
 							}
 						}, false);
+						
+						
+						
 					}
 					return xhr;
 				},

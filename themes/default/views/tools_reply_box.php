@@ -61,7 +61,6 @@ if (!defined('DOCROOT'))
 		<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
 		<div class="input-prepend">
 			<label class="add-on" for="file_image"><?= __('File') ?></label><input type="file" name="file_image" id="file_image" />
-			<?= Form::hidden('MAX_FILE_SIZE', $radix->max_image_size_kilobytes) ?>
 		</div>
 		<?php endif; ?>
 

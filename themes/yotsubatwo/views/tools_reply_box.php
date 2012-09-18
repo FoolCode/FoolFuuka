@@ -1,4 +1,6 @@
 <?php if (!defined('DOCROOT')) exit('No direct script access allowed'); ?>
+	
+<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($radix)); ?>
 
 <?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>

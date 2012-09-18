@@ -123,48 +123,72 @@ else if (isset($radix))
 				
 				<?php
 					$checkboxes = array(
-						'Deleted posts' => array(
-							array('value' => false, 'text' => __('All')),
-							array('value' => 'deleted', 'text' => __('Only Deleted Posts')),
-							array('value' => 'not-deleted', 'text' => __('Only Non-Deleted Posts'))
+						array(
+							'label' => __('Deleted posts'),
+							'name' => 'deleted',
+							'elements' => array(
+								array('value' => false, 'text' => __('All')),
+								array('value' => 'deleted', 'text' => __('Only Deleted Posts')),
+								array('value' => 'not-deleted', 'text' => __('Only Non-Deleted Posts'))
+							)
 						),
-						'Ghost posts' => array(
-							array('value' => false, 'text' => __('All')),
-							array('value' => 'only', 'text' => __('Only Ghost Posts')),
-							array('value' => 'none', 'text' => __('Only Non-Ghost Posts'))
+						array(
+							'label' => __('Ghost posts'),
+							'name' => 'ghost',
+							'elements' => array(
+								array('value' => false, 'text' => __('All')),
+								array('value' => 'only', 'text' => __('Only Ghost Posts')),
+								array('value' => 'none', 'text' => __('Only Non-Ghost Posts'))
+							)
 						),
-						'Show posts' => array(
-							array('value' => false, 'text' => __('All')),
-							array('value' => 'text', 'text' => __('Only Containing Images')),
-							array('value' => 'image', 'text' => __('Only Containing Text'))
+						array(
+							'label' => __('Show posts'),
+							'name' => 'filter',
+							'elements' => array(
+								array('value' => false, 'text' => __('All')),
+								array('value' => 'text', 'text' => __('Only Containing Images')),
+								array('value' => 'image', 'text' => __('Only Containing Text'))
+							)
 						),
-						'Results' => array(
-							array('value' => false, 'text' => __('All')),
-							array('value' => 'op', 'text' => __('Only Opening Posts')),
-							array('value' => 'posts', 'text' => __('Only Reply Posts'))
+						array(
+							'label' => __('Results'),
+							'name' => 'type',
+							'elements' => array(
+								array('value' => false, 'text' => __('All')),
+								array('value' => 'op', 'text' => __('Only Opening Posts')),
+								array('value' => 'posts', 'text' => __('Only Reply Posts'))
+							)
 						),
-						'Capcode' => array(
-							array('value' => false, 'text' => __('All')),
-							array('value' => 'user', 'text' => __('Only User Posts')),
-							array('value' => 'mod', 'text' => __('Only Moderator Posts')),
-							array('value' => 'admin', 'text' => __('Only Admin Posts')),
-							array('value' => 'dev', 'text' => __('Only Developer Posts'))
+						array(
+							'label' => __('Capcode'),
+							'name' => 'capcode',
+							'elements' => array(
+								array('value' => false, 'text' => __('All')),
+								array('value' => 'user', 'text' => __('Only User Posts')),
+								array('value' => 'mod', 'text' => __('Only Moderator Posts')),
+								array('value' => 'admin', 'text' => __('Only Admin Posts')),
+								array('value' => 'dev', 'text' => __('Only Developer Posts'))
+							)
 						),
-						'Order' => array(
-							array('value' => false, 'text' => __('New Posts First')),
-							array('value' => 'asc', 'text' => __('Old Posts First'))
+						array(
+							'label' => __('Order'),
+							'name' => 'order',
+							'elements' => array(
+								array('value' => false, 'text' => __('New Posts First')),
+								array('value' => 'asc', 'text' => __('Old Posts First'))
+							)
 						)
 					);
 					
-					foreach ($checkboxes as $name => $checkbox) :
+					foreach ($checkboxes as $checkbox) :
 				?>
 				<tr>
-					<td class="postblock"><?= $name ?></td>
+					<td class="postblock"><?= e($checkbox['label']) ?></td>
 					<td>
-				<?php foreach ($checkbox as $element) : ?>
+				<?php foreach ($checkbox['elements'] as $element) : ?>
 						<label>
-						<?= \Form::radio($name, $element['value'] ? : '', isset($search[$name]) && $element['value'] === $search[$name]) ?>
-						<span><?= __($element['text']) ?></span>
+						<?= \Form::radio($checkbox['name'], $element['value'] ? : '', isset($search[$checkbox['name']]) && $element['value'] === $search[$checkbox['name']]) ?>
+						<span><?= e($element['text']) ?></span>
 						</label><br />
 				<?php endforeach; ?>
 					</td>

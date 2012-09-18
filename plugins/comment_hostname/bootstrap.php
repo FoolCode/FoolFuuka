@@ -12,7 +12,7 @@ if (!defined('DOCROOT'))
 			
 }, 3);
 
-\Plugins::register_hook('foolfuuka\model\comment.clean_fields.call.before', function(&$comment){
+\Plugins::register_hook('foolfuuka\\model\\comment.clean_fields.call.before', function(&$comment){
 
 	if( ! \Auth::has_access('maccess.mod'))
 	{

@@ -347,7 +347,7 @@ class Comment extends \Model\Model_Base
 	 * @param object $post the database row for the post
 	 * @return string the processed comment
 	 */
-	protected function p_process_comment()
+	public function process_comment()
 	{
 		// default variables
 		$find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
@@ -517,7 +517,7 @@ class Comment extends \Model\Model_Base
 	 * @param array $matches the matches sent by preg_replace_callback
 	 * @return string the complete anchor
 	 */
-	protected function p_process_internal_links($matches)
+	public function process_internal_links($matches)
 	{
 		$num = $matches[2];
 
@@ -530,7 +530,7 @@ class Comment extends \Model\Model_Base
 		$current_p_num_c = $this->num . ($this->subnum ? ',' . $this->subnum : '');
 		$current_p_num_u = $this->num . ($this->subnum ? '_' . $this->subnum : '');
 
-		$build_url = array(
+		$build_url = array( 
 			'tags' => array('', ''),
 			'hash' => '',
 			'attr' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $data->num . '"',
@@ -586,7 +586,7 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function p_get_backlinks()
+	public function get_backlinks()
 	{
 		if (isset(static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')]))
 		{
@@ -604,7 +604,7 @@ class Comment extends \Model\Model_Base
 	 * @param array $matches the matches sent by preg_replace_callback
 	 * @return string the complete anchor
 	 */
-	protected function p_process_crossboard_links($matches)
+	public function process_crossboard_links($matches)
 	{
 		// create link object with all relevant information
 		$data = new \stdClass();
@@ -649,7 +649,7 @@ class Comment extends \Model\Model_Base
 	 * @param object $post database row for the post
 	 * @return string the post box HTML with the selected theme
 	 */
-	protected function p_build_comment()
+	public function build_comment()
 	{
 		$theme = \Theme::instance('foolfuuka');
 		return $theme->build('board_comment', array('p' => $this), true, true);
@@ -667,7 +667,7 @@ class Comment extends \Model\Model_Base
 	 * @param type $popup
 	 * @return type
 	 */
-	protected static function p_auto_linkify($str, $type = 'both', $popup = false)
+	public static function auto_linkify($str, $type = 'both', $popup = false)
 	{
 		if ($type != 'email')
 		{
@@ -762,8 +762,10 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function p_clean_fields()
+	public function clean_fields()
 	{
+		\Plugins::run_hook('foolfuuka\\model\\comment.clean_fields.call.before', array(&$this));
+		
 		if ( ! \Auth::has_access('comment.see_ip'))
 		{
 			unset($this->poster_ip);

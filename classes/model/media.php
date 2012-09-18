@@ -68,7 +68,7 @@ class Media extends \Model\Model_Base
 	);
 
 
-	protected static function p_get_fields()
+	public static function get_fields()
 	{
 		return static::$_fields;
 	}
@@ -120,7 +120,7 @@ class Media extends \Model\Model_Base
 	}
 
 
-	protected static function p_forge_from_comment($comment, $board, $op = false)
+	public static function forge_from_comment($comment, $board, $op = false)
 	{
 		// if this comment doesn't have media data
 		if (!isset($comment->media_id) || !$comment->media_id)
@@ -132,7 +132,7 @@ class Media extends \Model\Model_Base
 	}
 
 
-	protected static function p_forge_empty($board)
+	public static function forge_empty($board)
 	{
 		$media = new \stdClass();
 		return new Media($media, $board);
@@ -342,8 +342,8 @@ class Media extends \Model\Model_Base
 	 * @param bool $thumbnail if we're looking for a thumbnail
 	 * @return bool|string FALSE if it has no image in database, string for the path
 	 */
-	protected function p_get_dir($thumbnail = false, $precise = false)
-	{
+	public function get_dir($thumbnail = false, $precise = false)
+	{		
 		if (!$this->media_hash)
 		{
 			throw new MediaHashNotFoundException;
@@ -398,8 +398,15 @@ class Media extends \Model\Model_Base
 	 * @param bool $thumbnail if it's a thumbnail we're looking for
 	 * @return bool|string FALSE on not found, a fallback image if not found for thumbnails, or the URL on success
 	 */
-	public function p_get_link($thumbnail = false, $force = false)
+	public function get_link($thumbnail = false, $force = false)
 	{
+		$replace = \Plugins::run_hook('foolfuuka\\model\\media.get_link.call.replace', array($this, $thumbnail, $force));
+		
+		if ($replace['return'] !== null)
+		{
+			return $replace['return'];
+		}
+		
 		if (!$this->media_hash)
 		{
 			throw new MediaHashNotFoundException;
@@ -494,7 +501,7 @@ class Media extends \Model\Model_Base
 	 *
 	 * @return bool|string FALSE if there's no media, local URL if it's not remote, or the remote URL
 	 */
-	protected function p_get_remote_link()
+	public function get_remote_link()
 	{
 		if (!$this->media_hash)
 		{
@@ -528,7 +535,7 @@ class Media extends \Model\Model_Base
 	 * @param bool $urlsafe if TRUE it will return a modified base64 compatible with URL
 	 * @return bool|string FALSE if media_hash not found, or the base64 string
 	 */
-	protected function p_get_hash($urlsafe = FALSE)
+	public function get_hash($urlsafe = FALSE)
 	{
 		if (is_object($this) || is_array($this))
 		{
@@ -559,14 +566,14 @@ class Media extends \Model\Model_Base
 	}
 
 
-	protected static function p_urlsafe_b64encode($string)
+	public static function urlsafe_b64encode($string)
 	{
 		$string = base64_encode($string);
 		return str_replace(array('+', '/', '='), array('-', '_', ''), $string);
 	}
 
 
-	protected static function p_urlsafe_b64decode($string)
+	public static function urlsafe_b64decode($string)
 	{
 		$string = str_replace(array('-', '_'), array('+', '/'), $string);
 		return base64_decode($string);
@@ -708,7 +715,7 @@ class Media extends \Model\Model_Base
 	}
 
 
-	public function p_rollback_upload()
+	public function rollback_upload()
 	{
 		if (!is_null($this->temp_filename) && file_exists($this->temp_path.$this->temp_filename))
 			unlink($this->temp_path.$this->temp_filename);

@@ -34,7 +34,7 @@ class Radix extends \Model_Base
 	 * @param Object $radix If available insert to customize the
 	 * @return array the structure
 	 */
-	protected static function p_structure($radix = NULL)
+	public static function structure($radix = NULL)
 	{
 		$structure = array(
 			'open' => array(
@@ -868,7 +868,7 @@ class Radix extends \Model_Base
 	 * @param string $suffix board suffix like _images
 	 * @return string the table name with protected identifiers
 	 */
-	protected static function p_get_table($shortname, $suffix = '')
+	public static function get_table($shortname, $suffix = '')
 	{
 		if (is_object($shortname))
 		{
@@ -892,7 +892,7 @@ class Radix extends \Model_Base
 	 * @param type $shortname the board shortname
 	 * @return bool|object FALSE on failure, else the board object
 	 */
-	protected static function p_set_selected_by_shortname($shortname)
+	public static function set_selected_by_shortname($shortname)
 	{
 		if (false != ($val = static::get_by_shortname($shortname)))
 		{
@@ -912,7 +912,7 @@ class Radix extends \Model_Base
 	 *
 	 * @return bool|object FALSE if not set, else the board object
 	 */
-	protected static function p_get_selected()
+	public static function get_selected()
 	{
 		if (is_null(static::$selected_radix))
 		{
@@ -928,7 +928,7 @@ class Radix extends \Model_Base
 	 *
 	 * @return array the objects of the preloaded radixes
 	 */
-	protected static function p_get_all()
+	public static function get_all()
 	{
 		return static::$preloaded_radixes;
 	}
@@ -940,7 +940,7 @@ class Radix extends \Model_Base
 	 * @param int $radix_id the ID of the board
 	 * @return object the board object
 	 */
-	protected static function p_get_by_id($radix_id)
+	public static function get_by_id($radix_id)
 	{
 		$items = static::get_all();
 
@@ -959,7 +959,7 @@ class Radix extends \Model_Base
 	 * @param bool $switch TRUE if it must be equal or FALSE if not equal
 	 * @return bool|object FALSE if not found or the board object
 	 */
-	protected static function p_get_by_type($value, $type, $switch = true)
+	public static function get_by_type($value, $type, $switch = true)
 	{
 		$items = static::get_all();
 
@@ -980,7 +980,7 @@ class Radix extends \Model_Base
 	 *
 	 * @return object the board with the shortname
 	 */
-	protected static function p_get_by_shortname($shortname)
+	public static function get_by_shortname($shortname)
 	{
 		return static::get_by_type($shortname, 'shortname');
 	}
@@ -993,7 +993,7 @@ class Radix extends \Model_Base
 	 * @param boolean $switch the value to match
 	 * @return array the board objects
 	 */
-	protected static function p_filter_by_type($type, $switch)
+	public static function filter_by_type($type, $switch)
 	{
 		$items = static::get_all();
 
@@ -1012,7 +1012,7 @@ class Radix extends \Model_Base
 	 *
 	 * @return array the board objects that are archives
 	 */
-	protected static function p_get_archives()
+	public static function get_archives()
 	{
 		return static::filter_by_type('archive', true);
 	}
@@ -1023,7 +1023,7 @@ class Radix extends \Model_Base
 	 *
 	 * @return array the board objects that are boards
 	 */
-	protected static function p_get_boards()
+	public static function get_boards()
 	{
 		return static::filter_by_type('archive', false);
 	}

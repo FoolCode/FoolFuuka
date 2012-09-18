@@ -173,7 +173,7 @@ class Board extends \Model\Model_Base
 	}
 
 
-	protected function p_set_options($name, $value = null)
+	public function set_options($name, $value = null)
 	{
 		if (is_array($name))
 		{
@@ -285,7 +285,7 @@ class Board extends \Model\Model_Base
 	 * @param bool|string $join_on alternative join table name
 	 * @return string SQL to append to retrieve image filenames
 	 */
-	protected function p_sql_media_join($query, &$board = null, $join_on = false)
+	public function sql_media_join($query, &$board = null, $join_on = false)
 	{
 		if (is_null($board))
 		{
@@ -298,7 +298,7 @@ class Board extends \Model\Model_Base
 	}
 
 
-	protected function p_sql_extra_join($query, &$board = null, $join_on = false)
+	public function sql_extra_join($query, &$board = null, $join_on = false)
 	{
 		if (is_null($board))
 		{
@@ -308,24 +308,6 @@ class Board extends \Model\Model_Base
 		$query->join(\DB::expr(Radix::get_table($board, '_extra').' AS `ex`'), 'LEFT')
 			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : Radix::get_table($board)).'.`doc_id`'),
 				'=', \DB::expr('`ex`.`extra_id`'));
-	}
-
-
-	/**
-	 * If the user is an admin, this will return SQL to add reports to the
-	 * query output
-	 *
-	 * @param object $board
-	 * @param bool|string $join_on alternative join table name
-	 * @return string SQL to append reports to the rows
-	 */
-	protected function p_sql_report_join($query, $board = null, $join_on = false)
-	{
-		if (is_null($board))
-		{
-			$board = $this->_radix;
-		}
-
 	}
 
 

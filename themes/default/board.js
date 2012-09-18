@@ -635,42 +635,45 @@ var insertPost = function(data, textStatus, jqXHR)
 {
 	var w_height = jQuery(document).height();
 	var found_posts = false;
-
-	jQuery.each(data, function(id, val)
+	
+	if (data !== null)
 	{
-		if (typeof val.posts !== "undefined")
+		jQuery.each(data, function(id, val)
 		{
-			var posts = jQuery([]);
-			jQuery.each(val.posts, function(idx, value)
-			{ 
-				found_posts = true;
-				var post = jQuery(value.formatted)
-				post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
-				post.find('[rel=tooltip]').tooltip({
-					placement: 'top',
-					delay: 200
+			if (typeof val.posts !== "undefined")
+			{
+				var posts = jQuery([]);
+				jQuery.each(val.posts, function(idx, value)
+				{ 
+					found_posts = true;
+					var post = jQuery(value.formatted)
+					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+					post.find('[rel=tooltip]').tooltip({
+						placement: 'top',
+						delay: 200
+					});
+					post.find('[rel=tooltip_right]').tooltip({
+						placement: 'right',
+						delay: 200
+					});
+
+					// avoid inserting twice
+					if (jQuery('.doc_id_' + value.doc_id).length != 0)
+					{
+						jQuery('.doc_id_' + value.doc_id).remove();
+					}
+
+					backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
+					posts = posts.add(post);
+
+					if(backend_vars.latest_doc_id < value.doc_id)
+						backend_vars.latest_doc_id = value.doc_id;
 				});
-				post.find('[rel=tooltip_right]').tooltip({
-					placement: 'right',
-					delay: 200
-				});
 
-				// avoid inserting twice
-				if (jQuery('.doc_id_' + value.doc_id).length != 0)
-				{
-					jQuery('.doc_id_' + value.doc_id).remove();
-				}
-					
-				backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-				posts = posts.add(post);
-
-				if(backend_vars.latest_doc_id < value.doc_id)
-					backend_vars.latest_doc_id = value.doc_id;
-			});
-
-			jQuery('article.thread[data-thread-num=' + id + '] aside.posts').append(posts);
-		}
-	});
+				jQuery('article.thread[data-thread-num=' + id + '] aside.posts').append(posts);
+			}
+		});
+	}
 
 	if(found_posts)
 	{

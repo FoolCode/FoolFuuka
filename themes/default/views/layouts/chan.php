@@ -176,13 +176,10 @@ header('imagetoolbar: false');
 
 				<?= $template['body'] ?>
 
-				<?php
-				if ($disable_headers !== TRUE && $radix) :
-					echo $template['partials']['tools_modal'];
-				endif;
-				?>
-
 				<?php \Plugins::run_hook('fu.themes.default_after_body_template'); ?>
+
+				<?= $template['partials']['tools_modal']; ?>
+
 
 				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 					<div class="paginate">

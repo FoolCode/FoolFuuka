@@ -70,16 +70,6 @@ if (isset($search_radix)) :
 						'name' => 'submit_post'
 					));
 					?>
-
-					<?php
-					if (Auth::has_access('maccess.mod')) :
-						echo Form::submit(array(
-							'class' => 'btn btn-danger btn-mini',
-							'value' => __('Deletion Mode'),
-							'name' => 'deletion_mode'
-						));
-					endif;
-					?>
 				</li>
 
 				<li class="divider"></li>

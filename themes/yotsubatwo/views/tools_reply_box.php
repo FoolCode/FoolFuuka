@@ -2,7 +2,7 @@
 
 <?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
-<?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0) ?>
+<?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0, array('id' => 'reply_numero')) ?>
 <?= isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
 
 <table id="reply">
@@ -51,17 +51,13 @@
 
 				<?php
 				$submit_array = array(
+					'data-function' => 'comment',
 					'name' => 'reply_gattai',
 					'value' => __('Submit'),
-					'class' => 'btn'
+					'class' => 'btn',
 				);
-
-				if (isset($thread_id) && $thread_id > 0)
-				{
-					$submit_array['data-function'] = 'comment';
-					$submit_array['data-post'] = $thread_id;
-				}
-				echo \Form::submit($submit_array);
+				
+				echo Form::submit($submit_array);
 				?>
 
 				[ <label><?php echo \Form::checkbox(array('name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1)) ?> Spoiler Image?</label> ]
@@ -75,10 +71,11 @@
 					'id' => 'reply_comment_yep',
 					'style' => 'display:none'
 				));
-				echo \Form::textarea(array(
+				
+				echo Form::textarea(array(
 					'name' => 'reply_chennodiscursus',
 					'id' => 'reply_chennodiscursus',
-					'placeholder' => (!Radix::get_selected()->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '',
+					'placeholder' => (!$radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '',
 				));
 			?></td>
 		</tr>
@@ -95,6 +92,10 @@
 			<td><?= __('File') ?></td>
 			<td><?php echo \Form::file(array('name' => 'file_image', 'id' => 'file_image')) ?></td>
 		</tr>
+		<tr>
+			<td><?= __('Progress') ?></td>
+			<td><div class="progress progress-info progress-striped active" style="width: 300px; margin-bottom: 2px"><div class="bar" style="width: 0%"></div></div></td>
+		</tr>
 		<?php endif; ?>
 		<tr>
 			<td><?= __('Password') ?></td>
@@ -107,21 +108,21 @@
 				?> <span style="font-size: smaller;">(Password used for file deletion)</span>
 			</td>
 		</tr>
-		<?php if (\Auth::has_access('comment.as_mod')) : ?>
+		
+		<?php
+			$postas = array('N' => __('User'));
+
+			if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = __('Moderator');
+			if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = __('Administrator');
+			if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = __('Developer');
+			if (count($postas) > 1) :
+		?>
 		<tr>
 			<td><?= __('Post as') ?></td>
-			<td>
-				<?php
-					$postas = array('user' => __('User'), 'mod' => __('Moderator'));
-					if (\Auth::has_access('comment.as_admin'))
-					{
-						$postas['admin'] = __('Administrator');
-					}
-					echo \Form::dropdown('reply_postas', $postas, 'User', 'id="reply_postas"');
-				?>
-			</td>
+			<td><?= \Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas')); ?></td>
 		</tr>
 		<?php endif; ?>
+	
 		<?php if (Radix::get_selected()->posting_rules) : ?>
 		<tr class="rules">
 			<td></td>

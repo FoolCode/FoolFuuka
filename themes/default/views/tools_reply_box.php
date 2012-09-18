@@ -84,7 +84,7 @@ if (!defined('DOCROOT'))
 		?>
 		<div class="input-prepend">
 			<label class="add-on" for="reply_postas"><?= __('Post As') ?></label>
-				<?= Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas')); ?>
+				<?= \Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas')); ?>
 		</div>
 		<?php endif; ?>
 

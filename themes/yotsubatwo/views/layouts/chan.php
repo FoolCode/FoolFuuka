@@ -161,21 +161,25 @@ header('imagetoolbar: false');
 			</div>
 
 			<div role="main" id="main">
-				<?php if (isset($template['partials']['tools_reply_box'])) : ?>
-					<?=  $template['partials']['tools_reply_box'] ?>
+				
+				<?php if (Preferences::get('ff.theme.header_text')) : ?>
+				<div class="alert alert-block alert-error fade in">
+					<h4 class="alert-heading"><?= __('Global Announcement') ?></h4>
+					<?= Preferences::get('ff.theme.header_text') ?>
+				</div>
+				<?php endif; ?>
+				
+				<?php if (isset($template['partials']['tools_new_thread_box'])) : ?>
+					<?=  $template['partials']['tools_new_thread_box'] ?>
 					<div class="divider"></div>
 				<?php endif; ?>
 
-				<?php if (Preferences::get('ff.theme.header_text')) : ?>
-				<div class="alert alert-block alert-error fade in">
-					<button data-dismiss="alert" class="close" type="button">×</button>
-					<h4 class="alert-heading"><?= __('Global Announcement') ?></h4>
-					<p><?= Preferences::get('ff.theme.header_text') ?></p>
-				</div>
-				<?php endif; ?>
+				
 
 				<?= $template['body'] ?>
 				
+				<?= $template['partials']['tools_modal']; ?>
+
 				<?php \Plugins::run_hook('fu.themes.yotsubatwo_after_body_template'); ?>
 
 				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>

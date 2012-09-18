@@ -7,7 +7,7 @@ return array(
 	
 	'directory' => 'yotsubatwo',
 	
-	'name' => 'Yotsuba 2.0',
+	'name' => 'Yotsuba2!',
 	
 	'description' => 'The Yotsuba 2.0 theme',
 	

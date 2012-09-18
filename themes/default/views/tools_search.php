@@ -129,7 +129,7 @@ if (isset($search_radix)) :
 				?>
 				<li>
 					<label>
-						<?= \Form::radio($name, $element['value'] ? : '', isset($search[$name]) && $element['value'] === $search[$name]) ?><span><?= __($element['text']) ?></span>
+						<?= \Form::radio($name, $element['value'] ? : '', isset($search[$name]) && $element['value'] === $search[$name]) ?> <span><?= __($element['text']) ?></span>
 					</label>
 				</li>
 				<?php  endforeach; ?>

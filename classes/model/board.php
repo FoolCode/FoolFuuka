@@ -285,7 +285,7 @@ class Board extends \Model\Model_Base
 	 * @param bool|string $join_on alternative join table name
 	 * @return string SQL to append to retrieve image filenames
 	 */
-	public function sql_media_join($query, &$board = null, $join_on = false)
+	public function sql_media_join($query, $board = null, $join_on = false)
 	{
 		if (is_null($board))
 		{
@@ -298,7 +298,7 @@ class Board extends \Model\Model_Base
 	}
 
 
-	public function sql_extra_join($query, &$board = null, $join_on = false)
+	public function sql_extra_join($query, $board = null, $join_on = false)
 	{
 		if (is_null($board))
 		{
@@ -613,7 +613,7 @@ class Board extends \Model\Model_Base
 							->order_by('num', 'desc')->order_by('subnum', 'desc')->limit($last_limit).')
 					) AS x
 				'));
-				static::sql_media_join($query,null, 'x');
+				static::sql_media_join($query, null, 'x');
 				static::sql_extra_join($query, null, 'x');
 				$query->order_by('num', 'asc')->order_by('subnum', 'asc');
 

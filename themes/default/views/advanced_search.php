@@ -34,7 +34,7 @@ else if (isset($radix))
 
 $search_structure = \Search::structure();
 
-echo '<div class="pull-right"><table class="table"><tbody>';
+echo '<div class="pull-right" style="border-left: 1px solid #ccc; padding-left: 6px"><table class="table"><tbody>';
 foreach ($search_structure as $element)
 {
 	if (isset($element['access']) && ! \Auth::has_access($element['access']))

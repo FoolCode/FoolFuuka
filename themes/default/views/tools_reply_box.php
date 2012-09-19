@@ -11,20 +11,20 @@ if (!defined('DOCROOT'))
 <?= isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
 <fieldset>
 
-	<div class="input-prepend">
-		<label class="add-on" for="reply_talkingde"><?= __('Subject') ?></label><?php
-		echo Form::input(array(
-			'name' => 'reply_talkingde',
-			'id' => 'reply_talkingde',
-			'class' => 'span6'
-		));
-		?>
-	</div>
+	<div class="progress progress-info progress-striped active" style="height:8px; margin-top:0px; margin-bottom: 3px; background: #fff; width: 660px; opacity: 0;"><div class="bar" style="width: 0%"></div></div>
 
-	<label class="comment_label" for="reply_chennodiscursus"><?= __('Comment') ?></label>
-
+	<?php /*<label class="comment_label" for="reply_chennodiscursus"><?= __('Comment') ?></label>*/ ?>
 	<div class="pull-left">
 
+		<div class="input-prepend">
+			<label class="add-on" for="reply_talkingde"><?= __('Subject') ?></label><?php
+			echo Form::input(array(
+				'name' => 'reply_talkingde',
+				'id' => 'reply_talkingde',
+			));
+			?>
+		</div>
+		
 		<div class="input-prepend">
 			<label class="add-on" for="reply_bokunonome"><?= __('Name') ?></label><?php
 			echo Form::input(array(
@@ -56,13 +56,8 @@ if (!defined('DOCROOT'))
 			));
 			?>
 		</div>
-
-
-		<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
-		<div class="input-prepend">
-			<label class="add-on" for="file_image"><?= __('File') ?></label><input type="file" name="file_image" id="file_image" />
-		</div>
-		<?php endif; ?>
+		
+		
 
 		<div class="input-prepend">
 			<label class="add-on" for="reply_nymphassword"><?= __('Password') ?></label><?php
@@ -74,6 +69,19 @@ if (!defined('DOCROOT'))
 			));
 			?>
 		</div>
+		
+		<?php $used_progressbar = false ?>
+		<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
+		<div class="input-prepend">
+			<label class="add-on" for="file_image"><?= __('File') ?></label><input type="file" name="file_image" id="file_image" />
+			
+			<?php $used_progressbar = true ?>
+		</div>
+		<?php endif; ?>
+
+		<?php if (!$used_progressbar) : ?>
+			<div class="progress progress-info progress-striped active" style="height:8px; margin-top:0px; margin-bottom: 2px; background: #fff; width: 317px; position:relative; top:-3px"><div class="bar" style="width: 0%"></div></div>
+		<?php endif; ?>
 		<?php
 			$postas = array('N' => __('User'));
 
@@ -106,11 +114,8 @@ if (!defined('DOCROOT'))
 			'style' => 'height:132px; width:320px;'
 		));
 		?>
-	</div>
-
-
-	<div class="rules pull-left">
-		<div class="btn-group" style="margin-bottom:5px">
+		
+		<div class="btn-group">
 			<?php
 			$submit_array = array(
 				'data-function' => 'comment',
@@ -133,7 +138,11 @@ if (!defined('DOCROOT'))
 			echo Form::reset(array('class' => 'btn', 'name' => 'reset', 'value' => __('Reset')));
 			?>
 		</div>
-		<div class="progress progress-info progress-striped active" style="height:8px; margin-bottom: 2px"><div class="bar" style="width: 0%"></div></div>
+		
+	</div>
+
+
+	<div class="rules pull-left">
 		<?php
 			if ($radix->posting_rules)
 			{

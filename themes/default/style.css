@@ -116,11 +116,29 @@ body.theme_default {
 
 .theme_default .navbar .nav > li > a {
     color:#ddd;
+	padding: 11px 10px;
 }
+
+.theme_default .navbar .nav > li > a > i {
+	font-size:12px;
+	display:inline !important;
+	line-height: 8px;
+}
+
 
 
 .theme_default .navbar .nav > li > a:hover {
     color:#fff;
+}
+
+.navbar-inverse .nav li.dropdown.open > .dropdown-toggle,
+.navbar-inverse .nav li.dropdown.active > .dropdown-toggle,
+.navbar-inverse .nav li.dropdown.open.active > .dropdown-toggle {
+	background-color:transparent
+}
+
+.dropup .caret, .navbar-fixed-bottom .dropdown .caret {
+	border-bottom-color: #eee;
 }
 
 .theme_default .navbar .navbar-inner {
@@ -409,6 +427,7 @@ body.theme_default {
 
 .theme_default nav.index_nav > ul > li > ul > li h3 {
 	font-size: 1.5em;
+	line-height: 30px;
 }
 
 .theme_default nav.index_nav > ul > li > ul > li .help {
@@ -726,7 +745,7 @@ body.theme_default {
 .theme_default .thread_form_wrap {
     background:#d6f0da;
     border-bottom:2px solid #364041;
-    padding:18px 20px 5px 20px;
+    padding:8px 20px 5px 20px;
 }
 
 
@@ -807,21 +826,9 @@ body.theme_default {
     box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Opera hack */
-@media not screen and (1)
-{
-	.theme_default .thread_form input[type=file],
-	.theme_default .thread_form select {
-		height: 28px;
-		width: 220px;
-	}
-
-	.theme_default .thread_form input[type=submit],
-	.theme_default .thread_form input[type=reset] {
-		height:28px;
-	}
+.theme_default .thread_form input[type=file] {
+	line-height:28px;
 }
-
 
 .theme_default .thread_form .rules {
     font-size:11px;

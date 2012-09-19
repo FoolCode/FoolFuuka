@@ -127,6 +127,9 @@ var bindFunctions = function()
 			var file_el = jQuery("#file_image");
 			var progress_pos = 0;
 			var progress_el = jQuery("#reply .progress .bar");
+			// get initial opacity so we can go back to that, support for Yotsuba2 theme
+			//var progress_opacity = progress_el.css('opacity');
+			
 			// if there's an image and the browser doesn't support FormData, use a normal upload process
 			if(file_el.val() && window.FormData === undefined)
 			{
@@ -160,6 +163,8 @@ var bindFunctions = function()
 			};
 			
 			data_obj[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
+			
+			progress_el.parent().animate({'opacity': '1.0'}, 300);
 			
 			var ajax_object = {
 				url: backend_vars.site_url + backend_vars.board_shortname + '/submit/' ,
@@ -216,7 +221,8 @@ var bindFunctions = function()
 					clearTimeout(buttonTimeout);
 					el.attr({'value': originalText});
 					el.removeAttr('disabled');
-					progress_el.css('width', '0%')
+					progress_el.css('width', '0%');
+					progress_el.parent().animate({'opacity': '0.0'}, 300);
 				}
 			}
 			
@@ -230,7 +236,7 @@ var bindFunctions = function()
 					data_formdata.append(id, val);
 				})
 
-				if (typeof file_el[0].files !== 'undefined')
+				if (typeof file_el[0] !== 'undefined' && typeof file_el[0].files !== 'undefined')
 				{
 					data_formdata.append('file_image', file_el[0].files[0])
 				}

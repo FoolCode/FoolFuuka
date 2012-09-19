@@ -67,7 +67,7 @@ header('imagetoolbar: false');
 		?></div>
 	<?php endif; ?>
 		<div class="container-fluid">
-			<div class="navbar navbar-fixed-top">
+			<div class="navbar navbar-fixed-top navbar-inverse">
 				<div class="navbar-inner">
 					<div class="container">
 						<ul class="nav">

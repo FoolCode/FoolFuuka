@@ -627,7 +627,7 @@ class Controller_Chan extends \Controller_Common
 						array_push($redirect_url,
 							rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier)))));
 					}
-					else if ($modifier === 'boards')
+					else if ($modifier === 'boards' && ! \Input::post('submit_search_global'))
 					{
 						if (count(\Input::post($modifier)) == 1)
 						{
@@ -637,8 +637,22 @@ class Controller_Chan extends \Controller_Common
 						else if (count(\Input::post($modifier)) > 1)
 						{
 							$redirect_url[0] = '_';
-							array_push($redirect_url, $modifier);
-							array_push($redirect_url, rawurlencode(implode('.', \Input::post($modifier))));						
+							
+							// avoid setting this if we're just searching on all the boards
+							$sphinx_boards = array();
+							foreach (\Radix::get_all() as $k => $b)
+							{
+								if ($b->sphinx)
+								{
+									$sphinx_boards[] = $b;
+								}
+							}
+							
+							if(count($sphinx_boards) !== count(\Input::post($modifier)))
+							{
+								array_push($redirect_url, $modifier);
+								array_push($redirect_url, rawurlencode(implode('.', \Input::post($modifier))));		
+							}
 						}
 					}
 					else

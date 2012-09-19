@@ -5,6 +5,7 @@ return array(
 	'api/chan/(:any)' => 'foolfuuka/api/chan/$1',
 	'admin/boards/(:any)' => 'foolfuuka/admin/boards/$1',
 	'admin/posts/(:any)' => 'foolfuuka/admin/posts/$1',
+	'_/advanced_search' => 'foolfuuka/chan/advanced_search',
 	'_/theme/(:any)' => 'foolfuuka/chan/theme/$1',
 	'_/language/(:any)' => 'foolfuuka/chan/language/$1',
 	'_/opensearch' => 'foolfuuka/chan/opensearch/',

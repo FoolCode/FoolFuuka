@@ -12,6 +12,129 @@ class SearchEmptyResultException extends SearchException {}
 
 class Search extends Board
 {	
+	
+	public static function structure()
+	{
+		return array(
+			array(
+				'type' => 'input',
+				'label' => __('Comment'),
+				'name' => 'text'
+			),
+			array(
+				'type' => 'input',
+				'label' => __('Subject'),
+				'name' => 'subject'
+			),
+			array(
+				'type' => 'input',
+				'label' => __('Username'),
+				'name' => 'username'
+			),
+			array(
+				'type' => 'input',
+				'label' => __('Tripcode'),
+				'name' => 'tripcode'
+			),
+			array(
+				'type' => 'input',
+				'label' => __('Email'),
+				'name' => 'email'
+			),
+			array(
+				'type' => 'input',
+				'label' => __('Filename'),
+				'name' => 'filename'
+			),
+			array(
+				'type' => 'input',
+				'label' => __('Image hash'),
+				'placeholder' => __('You can drop your image here'),
+				'name' => 'image_hash'
+			),
+			array(
+				'type' => 'date',
+				'label' => __('Date Start'),
+				'name' => 'start',
+				'placeholder' => 'YYYY-MM-DD'
+			),
+			array(
+				'type' => 'date',
+				'label' => __('Date End'),
+				'name' => 'end',
+				'placeholder' => 'YYYY-MM-DD'
+			),
+			array(
+				'type' => 'input',
+				'label' => __('Poster IP'),
+				'name' => 'poster_ip',
+				'access' => 'comment.see_ip'
+			),
+			
+			array(
+				'type' => 'radio',
+				'label' => __('Deleted posts'),
+				'name' => 'deleted',
+				'elements' => array(
+					array('value' => false, 'text' => __('All')),
+					array('value' => 'deleted', 'text' => __('Only Deleted Posts')),
+					array('value' => 'not-deleted', 'text' => __('Only Non-Deleted Posts'))
+				)
+			),
+			array(
+				'type' => 'radio',
+				'label' => __('Ghost posts'),
+				'name' => 'ghost',
+				'elements' => array(
+					array('value' => false, 'text' => __('All')),
+					array('value' => 'only', 'text' => __('Only Ghost Posts')),
+					array('value' => 'none', 'text' => __('Only Non-Ghost Posts'))
+				)
+			),
+			array(
+				'type' => 'radio',
+				'label' => __('Show posts'),
+				'name' => 'filter',
+				'elements' => array(
+					array('value' => false, 'text' => __('All')),
+					array('value' => 'text', 'text' => __('Only Containing Images')),
+					array('value' => 'image', 'text' => __('Only Containing Text'))
+				)
+			),
+			array(
+				'type' => 'radio',
+				'label' => __('Results'),
+				'name' => 'type',
+				'elements' => array(
+					array('value' => false, 'text' => __('All')),
+					array('value' => 'op', 'text' => __('Only Opening Posts')),
+					array('value' => 'posts', 'text' => __('Only Reply Posts'))
+				)
+			),
+			array(
+				'type' => 'radio',
+				'label' => __('Capcode'),
+				'name' => 'capcode',
+				'elements' => array(
+					array('value' => false, 'text' => __('All')),
+					array('value' => 'user', 'text' => __('Only User Posts')),
+					array('value' => 'mod', 'text' => __('Only Moderator Posts')),
+					array('value' => 'admin', 'text' => __('Only Admin Posts')),
+					array('value' => 'dev', 'text' => __('Only Developer Posts'))
+				)
+			),
+			array(
+				'type' => 'radio',
+				'label' => __('Order'),
+				'name' => 'order',
+				'elements' => array(
+					array('value' => false, 'text' => __('New Posts First')),
+					array('value' => 'asc', 'text' => __('Old Posts First'))
+				)
+			)
+		);
+	}
+	
 	protected function p_get_search($arguments)
 	{
 		// prepare
@@ -30,7 +153,7 @@ class Search extends Board
 		\Profiler::mark('Board::get_search_comments Start');
 		extract($this->_options);
 		
-		$available_fields = array('subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
+		$available_fields = array('boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
 			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'poster_ip'
 		);
 			
@@ -40,6 +163,26 @@ class Search extends Board
 			{
 				$args[$field] = null;
 			}
+		}
+		
+		$boards = array();
+		if ($args['boards'] !== null)
+		{
+			\Radix::preload(TRUE);
+			foreach ($args['boards'] as $board)
+			{
+				$b = \Radix::get_by_shortname($board);
+				if ($b)
+				{
+					$boards[] = $b;
+				}
+			}
+		}
+		
+		if (empty($boards))
+		{
+			\Radix::preload(TRUE);
+			$boards = \Radix::get_all();
 		}
 
 		// if image is set, get either media_hash or media_id
@@ -94,10 +237,8 @@ class Search extends Board
 			// determine if all boards will be used for search or not
 			if ($this->_radix === null)
 			{
-				\Radix::preload(TRUE);
 				$indexes = array();
-
-				foreach (\Radix::get_all() as $radix)
+				foreach ($boards as $radix)
 				{
 					// ignore boards that don't have sphinx enabled
 					if (!$radix->sphinx)

@@ -70,6 +70,7 @@ class Controller_Chan extends \Controller_Common
 		$this->_theme->bind($this->_to_bind);
 		$this->_theme->set_partial('tools_modal', 'tools_modal');
 		$this->_theme->set_partial('tools_search', 'tools_search');
+		$this->_theme->set_partial('tools_advanced_search', 'advanced_search');
 	}
 
 
@@ -552,14 +553,32 @@ class Controller_Chan extends \Controller_Common
 		return \Response::forge($this->_theme->build('redirection', array('url' => $redirect)));
 	}
 
+	
+	public function radix_advanced_search()
+	{
+		return $this->action_advanced_search();
+	}
+	
+	public function action_advanced_search()
+	{
+		$this->_theme->bind('search_structure', \Search::structure());
+		
+		if ($this->_radix !== null)
+		{
+			$this->_theme->bind('search', array('board' => array($this->_radix->shortname)));
+		}
+		
+		return \Response::forge($this->_theme->build('advanced_search'));
+	}
+	
 
-	function action_search()
+	public function action_search()
 	{
 		return $this->radix_search();
 	}
 
 
-	function radix_search()
+	public function radix_search()
 	{
 		if (\Input::post('submit_search_global'))
 		{
@@ -576,7 +595,7 @@ class Controller_Chan extends \Controller_Common
 
 		// Check all allowed search modifiers and apply only these
 		$modifiers = array(
-			'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
+			'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
 			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
 			'order', 'page');
 
@@ -587,7 +606,7 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		// GET -> URL Redirection to provide URL presentable for sharing links.
-		if (!\Input::post('deletion_mode_captcha') && \Input::post())
+		if (\Input::post())
 		{
 			if ($this->_radix !== null)
 			{
@@ -602,15 +621,28 @@ class Controller_Chan extends \Controller_Common
 			{
 				if (\Input::post($modifier))
 				{
-					array_push($redirect_url, $modifier);
-
-					if($modifier == 'image')
+					if($modifier === 'image')
 					{
+						array_push($redirect_url, $modifier);
 						array_push($redirect_url,
 							rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier)))));
 					}
+					else if ($modifier === 'boards')
+					{
+						if (count(\Input::post($modifier)) == 1)
+						{
+							$modifiers[0] = $boards[0];
+						}
+						else if (count(\Input::post($modifier)) > 1)
+						{
+							$modifiers[0] = '_';
+							array_push($redirect_url, $modifier);
+							array_push($redirect_url, rawurlencode(implode('.', \Input::post($modifier))));						
+						}
+					}
 					else
 					{
+						array_push($redirect_url, $modifier);
 						array_push($redirect_url, rawurlencode(\Input::post($modifier)));
 					}
 				}
@@ -620,6 +652,7 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		$search = \Uri::uri_to_assoc(\Uri::segments(), 2, $modifiers);
+		
 		$this->_theme->bind('search', $search);
 
 		// latest searches system
@@ -670,6 +703,11 @@ class Controller_Chan extends \Controller_Common
 			{
 				$search[$key] = trim(rawurldecode($value));
 			}
+		}
+		
+		if ($search['boards'] !== null)
+		{
+			$search['boards'] = explode('.', $search['boards']);
 		}
 
 		if ($search['image'] !== null)
@@ -793,6 +831,11 @@ class Controller_Chan extends \Controller_Common
 			if ($item || $item === 0)
 			{
 				$pagination_arr[] = rawurlencode($key);
+				if (is_array($item))
+				{
+					$item = implode('.', $item);
+				}
+				
 				$pagination_arr[] = rawurlencode($item);
 			}
 		}

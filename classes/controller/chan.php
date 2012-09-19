@@ -627,7 +627,7 @@ class Controller_Chan extends \Controller_Common
 						array_push($redirect_url,
 							rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier)))));
 					}
-					else if ($modifier === 'boards' && ! \Input::post('submit_search_global'))
+					else if ($modifier === 'boards' && ! \Input::post('submit_search_global', false))
 					{
 						if (count(\Input::post($modifier)) == 1)
 						{

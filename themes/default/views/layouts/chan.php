@@ -172,6 +172,10 @@ header('imagetoolbar: false');
 					<section class="section_title"><?= Preferences::get('ff.theme.header_text') ?></section>
 				<?php endif; ?>
 
+				<div class="search_box">
+					<?= isset($template['partials']['tools_advanced_search']) ? $template['partials']['tools_advanced_search'] : ''; ?>
+				</div>
+					
 				<?= isset($template['partials']['tools_new_thread_box']) ? $template['partials']['tools_new_thread_box'] : ''; ?>
 
 				<?= $template['body'] ?>

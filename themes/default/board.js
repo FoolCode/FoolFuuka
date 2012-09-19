@@ -98,18 +98,39 @@ var bindFunctions = function()
 	}
 
 	jQuery("body").click(function(event){
-		var search_el = jQuery('.search-dropdown');
+		var search_el = jQuery('.search_box');
 		if(search_el.find(event.target).length != 1)
 		{
-			search_el.find('.search-dropdown-menu').hide();
-			search_el.removeClass('active');
+			search_el.fadeOut();
 		}
 	});
 
 
 	var clickCallbacks = {
 
-		highlight: function(el, post)
+		checkAll: function(el, post, event)
+		{
+			var checkboxes = el.parent().parent().find('input[type=checkbox]');
+			checkboxes.each(function(id, element)
+			{
+				jQuery(element).attr('checked', 'checked');
+			});
+			el.parent().find('.uncheck').show();
+			el.hide();
+		},
+		
+		uncheckAll: function(el, post, event)
+		{
+			var checkboxes = el.parent().parent().find('input[type=checkbox]');
+			checkboxes.each(function(id, element)
+			{
+				jQuery(element).attr('checked', false);
+			});
+			el.parent().find('.check').show();
+			el.hide();
+		},
+
+		highlight: function(el, post, event)
 		{
 			if (post)
 			{
@@ -127,8 +148,6 @@ var bindFunctions = function()
 			var file_el = jQuery("#file_image");
 			var progress_pos = 0;
 			var progress_el = jQuery("#reply .progress .bar");
-			// get initial opacity so we can go back to that, support for Yotsuba2 theme
-			//var progress_opacity = progress_el.css('opacity');
 			
 			// if there's an image and the browser doesn't support FormData, use a normal upload process
 			if(file_el.val() && window.FormData === undefined)
@@ -182,10 +201,7 @@ var bindFunctions = function()
 								progress_pos = progress_local;
 								progress_el.css('width', (progress_pos) + '%')
 							}
-						}, false);
-						
-						
-						
+						}, false);						
 					}
 					return xhr;
 				},
@@ -392,7 +408,7 @@ var bindFunctions = function()
 			modal.find(".modal-loading").hide();
 			modal.find(".modal-information").html('\
 			<span class="modal-label">Post ID</span>\n\
-			<input type="text" class="modal-post-id" value="' + el.data("post") + '" />\n\
+			<input type="hidden" class="modal-post-id" value="' + el.data("post") + '" />\n\
 			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
 			<br>\n\
 			<span class="modal-field">Comment</span>\n\
@@ -508,8 +524,9 @@ var bindFunctions = function()
 
 		searchShow: function(el, post, event)
 		{
-			el.parent().find('.search-dropdown-menu').show();
-			el.parent().parent().addClass('active');
+			jQuery('.search_box').fadeIn();
+			el.parents('.open').removeClass('open');
+			return false;
 		},
 
 		clearLatestSearches: function(el, post, event)
@@ -552,47 +569,48 @@ var bindFunctions = function()
 	var backlink_spin;
 
 	// hover functions go here
-	jQuery("#main").on("mouseover mouseout", "article a.[data-backlink]", function(event) {
+	jQuery("#main").on("mouseover mouseout", "article a[data-backlink]", function(event) 
+	{
 		if(event.type == "mouseover")
 		{
 			var backlink = jQuery("#backlink");
-			var that = jQuery(this);
+			var el = jQuery(this);
 
-			var pos = that.offset();
-			var height = that.height();
-			var width = that.width();
+			var pos = el.offset();
+			var height = el.height();
+			var width = el.width();
 
-			if(that.attr('data-backlink') != 'true')
+			if(el.attr('data-backlink') != 'true')
 			{
 				// gallery
-				var thread_id = that.attr('data-backlink');
+				var thread_id = el.attr('data-backlink');
 				quote = backend_vars.threads_data[thread_id];
 				backlink.css('display', 'block');
 				backlink.html(quote.formatted);
 			}
-			else if(jQuery('#' + that.data('post')).hasClass('post'))
+			else if(jQuery('#' + el.data('post')).hasClass('post'))
 			{
 				// normal posts
-				var toClone = jQuery('#' + that.data('post'));
+				var toClone = jQuery('#' + el.data('post'));
 				if (toClone.length == 0)
 					return false;
 				backlink.css('display', 'block');
 				backlink.html(toClone.clone());
 			}
-			else if (typeof backend_vars.loaded_posts[that.data('post')] !== 'undefined')
+			else if (typeof backend_vars.loaded_posts[el.data('post')] !== 'undefined')
 			{
-				if(backend_vars.loaded_posts[that.data('post')] === false)
+				if(backend_vars.loaded_posts[el.data('post')] === false)
 				{
-					shakeBacklink(that);
+					shakeBacklink(el);
 					return false;
 				}
-				var data = backend_vars.loaded_posts[that.data('post')];
+				var data = backend_vars.loaded_posts[el.data('post')];
 				backlink.html(data.formatted);
 				backlink.css('display', 'block');
 			}
 			else
 			{
-				backlink_spin = that;
+				backlink_spin = el;
 				backlink_spin.spin('small');
 				backlink_jqxhr = jQuery.ajax({
 					url: backend_vars.api_url + '_/api/chan/post/' ,
@@ -600,22 +618,19 @@ var bindFunctions = function()
 					type: 'GET',
 					cache: false,
 					data: {
-						board: that.data('board'),
-						num: that.data('post'),
+						board: el.data('board'),
+						num: el.data('post'),
 						theme: backend_vars.selected_theme
-					},
-					beforeSend: function(xhr) {
-						xhr.withCredentials = true;
 					},
 					success: function(data){
 						backlink_spin.spin(false);
 						if (typeof data.error !== "undefined")
 						{
-							backend_vars.loaded_posts[that.data('post')] = false;
-							shakeBacklink(that);
+							backend_vars.loaded_posts[el.data('post')] = false;
+							shakeBacklink(el);
 							return false;
 						}
-						backend_vars.loaded_posts[that.data('post')] = data;
+						backend_vars.loaded_posts[el.data('post')] = data;
 						backlink.html(data.formatted);
 						backlink.css('display', 'block');
 						showBacklink(backlink, pos, height, width);

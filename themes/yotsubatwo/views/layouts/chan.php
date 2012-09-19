@@ -37,7 +37,7 @@ header('imagetoolbar: false');
 	</head>
 	<body class="<?= $this->get_selected_theme_class(array('theme_default')) ?>">
 	<?php if ($disable_headers !== TRUE) : ?>
-		<div class="letters" style="display:none"><?php
+		<div class="letters"><?php
 			$board_urls = array();
 			foreach (\Radix::get_archives() as $key => $item)
 			{
@@ -174,7 +174,9 @@ header('imagetoolbar: false');
 					<div class="divider"></div>
 				<?php endif; ?>
 
-				
+				<div class="search_box">
+					<?= isset($template['partials']['tools_advanced_search']) ? $template['partials']['tools_advanced_search'] : ''; ?>
+				</div>
 
 				<?= $template['body'] ?>
 				

@@ -3,6 +3,10 @@
 .theme_default .clearfix:after { clear: both; }
 .theme_default .clearfix { zoom: 1; }
 
+input[type="radio"], input[type="checkbox"] {
+	margin-top: 0;
+}
+
 .theme_default .tooltip-inner{max-width:300px;}
 
 .theme_default a,
@@ -218,114 +222,6 @@ body.theme_default {
     text-shadow:none;
 }
 
-.theme_default .search-dropdown {
-    position:relative
-}
-
-.theme_default .search-dropdown .search-dropdown-menu {
-    z-index:100;
-    display:none;
-    position:absolute;
-    background:#FFF;
-	padding: 0 10px 0px;
-    width:480px;
-    top:34px;
-    right:0px;
-    border-radius:5px;
-    border-top-left-radius:0;
-    border-top-right-radius:0;
-    -webkit-border-radius:5px;
-    -webkit-border-top-left-radius:0;
-    -webkit-border-top-right-radius:0;
-    -moz-border-radius:5px;
-    -moz-border-radius-topleft:0;
-    -moz-border-radius-topright:0;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.351), inset 0px -1px 0px rgba(0, 0, 0, 0.102);
-    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.351), inset 0px -1px 0px rgba(0, 0, 0, 0.102);
-    -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.351), inset 0px -1px 0px rgba(0, 0, 0, 0.102);
-}
-
-.theme_default .search-dropdown .search-dropdown-menu .btn {
-	line-height: normal;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul {
-    list-style:none;
-    padding:0px 0px 8px 0px;
-	margin: 0;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul.pull-left {
-	width:58%
-}
-.theme_default .search-dropdown div.search-dropdown-menu ul.pull-right {
-	width:38%;
-	padding-left:2%;
-	border-left: 1px solid #ddd;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul li {
-    padding:0px;
-    color: #777;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul li.input-prepend {
-    padding:0px 7px 6px;
-    color: #777;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul li.divider {
-    padding:0;
-    height: 0px;
-    margin: 3px 0px;
-    overflow: hidden;
-    border-bottom: 1px solid #aaa;
-    *width: 100%;
-    *margin: -3px 0 3px;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul li.input-prepend {
-    margin-bottom: 0;
-	padding-left:0;
-	padding-right:0;
-}
-
-
-.theme_default .search-dropdown div.search-dropdown-menu ul li .add-on {
-    width:25%;
-    font-size:11px;
-    height:16px;
-    padding:2px;
-    line-height:16px;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul li label.add-on {
-	padding:2px;
-	width:25%;
-	display:inline-block;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul input[type=text],
-.theme_default .search-dropdown div.search-dropdown-menu ul input[type=date] {
-    padding:2px;
-    font-size:11px;
-    height:16px;
-    width: 70%;
-    margin-bottom:0;
-}
-
-.theme_default .search-dropdown div.search-dropdown-menu ul .help {
-	text-align:center;
-	font-size:10px;
-	line-height:10px;
-}
-
-.theme_default .search-dropdown label input,
-.theme_default .search-dropdown label textarea,
-.theme_default .search-dropdown label date {
-    display:inline;
-}
-
 .theme_default .search-dropdown label{
     display:inline;
     margin-bottom:0;
@@ -334,29 +230,123 @@ body.theme_default {
 }
 
 .theme_default .latest_search a {
-	width:100%;
-	max-width:100%;
-	height:1em;
-	overflow:hidden;
-	display:block;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	padding: 3px 4px 7px;
-	position:relative;
-	left:-4px;
-    color: #555;
-}
-
-.theme_default .latest_search a:hover {
-	background: #6A836F;
-	color:#FFF;
-	text-decoration:none;
 }
 
 .theme_default .latest_search a .options {
 	font-size:0.8em;
 }
 
+.theme_default .search_box {
+	background: #fff;
+	border: 1px solid #aaa;
+	display:none;
+	position:absolute;
+	top: 70px;
+	right: 20px;
+	padding: 0 10px;
+	z-index: 100;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
+}
+
+.theme_default .advanced_search {
+	width: 630px;
+	margin: 0px auto;
+}
+
+.theme_default .search_box .advanced_search {
+	width: 390px;
+	padding: 10px 8px 5px 2px;
+}
+
+.theme_default .search_box .advanced_search h4 {
+	display:none;
+}
+
+.theme_default .advanced_search .add-on {
+	width:100px;
+}
+
+.theme_default .search_box .add-on{
+	font-size: 11px;
+	height: 10px;
+	line-height:10px;
+	width: 70px;
+}
+
+.theme_default .advanced_search .input-prepend {
+	margin-bottom: 2px;
+}
+
+.theme_default .search_box .advanced_search input[type=text],
+.theme_default .search_box .advanced_search input[type=date] {
+	width: 140px;
+	font-size: 12px;
+	height: 10px;
+	line-height: 10px;
+}
+
+.theme_default .advanced_search .btn {
+	margin-bottom: 5px;
+}
+
+.theme_default .search_box .advanced_search .btn {
+	padding: 1px 4px;
+	font-size: 11px;
+}
+
+.theme_default .search_box .advanced_search .table {
+	margin-bottom: 5px;
+}
+
+.theme_default .search_box .advanced_search .table td {
+	padding: 3px 3px 0px;
+	font-size: 11px;
+}
+
+.theme_default .search_box .advanced_search .table td:first-of-type {
+	display:none;
+}
+
+.theme_default .search_box .advanced_search .table td label {
+	font-size: 11px;
+	line-height: 12px;
+}
+	
+.theme_default .advanced_search .radixes {
+	width: 330px;
+}
+
+.theme_default .search_box .advanced_search .radixes {
+	width: 235px;
+}
+
+.theme_default .search_box .advanced_search .radixes h5 {
+	font-size: 12px;
+	margin: 0;
+	display:inline;
+	margin-bottom: 3px;
+	border-bottom: 1px solid #ddd;
+}
+
+.theme_default .advanced_search .radixes label {
+	width: 75px;
+	float:left;
+}
+
+.theme_default .advanced_search .radixes .btn {
+	margin-bottom: 0;
+}
+
+.theme_default .advanced_search .radixes .btn.uncheck{
+	display:none;
+}
 
 
 
@@ -368,6 +358,12 @@ body.theme_default {
     border-bottom:3px solid #888;
     font-weight: normal;
 }
+
+.theme_default #main h3.section_title {
+	font-size: 18px;
+	margin-top: 0px
+}
+
 
 .theme_default #main .section_title a {
 	text-decoration: underline;

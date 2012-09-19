@@ -209,6 +209,12 @@ var doBacklink = function(el)
 				theme: backend_vars.selected_theme
 			},
 			success: function(data) {
+				if (typeof data.error !== "undefined")
+				{
+					// post not found
+					return false;
+				}
+				
 				backlinkFetched[post[1] + '_' + post[2]] = data;
 				backlinkjqXHR = null;
 				src = document.createElement('div');

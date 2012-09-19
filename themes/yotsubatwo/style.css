@@ -195,11 +195,11 @@ body.theme_default.yotsuba_b {
 	display:inline;
 }
 
-.theme_default input[type=text] {
+.theme_default #reply input[type=text] {
 	width: 260px;
 }
 
-.theme_default input[type=password] {
+.theme_default #reply input[type=password] {
 	width: 120px;
 }
 

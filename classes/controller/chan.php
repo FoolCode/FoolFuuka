@@ -631,6 +631,7 @@ class Controller_Chan extends \Controller_Common
 					{
 						if (count(\Input::post($modifier)) == 1)
 						{
+							$boards = \Input::post($modifier);
 							$modifiers[0] = $boards[0];
 						}
 						else if (count(\Input::post($modifier)) > 1)

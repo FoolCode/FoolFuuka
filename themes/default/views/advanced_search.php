@@ -26,7 +26,7 @@ else if (isset($radix))
 <?= \Form::submit(array(
 	'class' => 'btn btn-inverse',
 	'value' => __('Search on all boards'),
-	'name' => 'submit_search',
+	'name' => 'submit_search_global',
 ));
 ?>
 </div>

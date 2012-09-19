@@ -16,7 +16,7 @@ if (isset($search_radix)) :
 ?>
 
 <ul class="nav pull-right">
-	<li><a  style="padding-right: 0px"data-function="searchShow" href="<?= \Uri::create(array($search_radix, 'advanced_search')) ?>"><?= e(__('Adv.')) ?></a></li>
+	<li><a  style="padding-right: 2px" data-function="searchShow" href="<?= \Uri::create(array($search_radix, 'advanced_search')) ?>"><i class="icon icon-cog"></i></a></li>
 	
 	<?= \Form::open(
 			array(

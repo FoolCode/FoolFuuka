@@ -9,7 +9,7 @@ return array(
 	
 	'name' => 'Default',
 	
-	'description' => 'The default FoOlFuuka theme',
+	'description' => 'The default FoolFuuka theme',
 	
 	'version' => '0.1.0',
 	

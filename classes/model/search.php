@@ -49,7 +49,7 @@ class Search extends Board
 			array(
 				'type' => 'input',
 				'label' => __('Image hash'),
-				'placeholder' => __('You can drop your image here'),
+				'placeholder' => __('Drop your image here'),
 				'name' => 'image_hash'
 			),
 			array(

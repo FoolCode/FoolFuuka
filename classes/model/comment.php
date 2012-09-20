@@ -1061,7 +1061,7 @@ class Comment extends \Model\Model_Base
 			}
 			catch (Model\BoardException $e)
 			{
-				throw new Model\CommentSendingException($e->getMessage());
+				throw new CommentSendingException($e->getMessage());
 			}
 
 			$this->ghost = $status['dead'];
@@ -1073,6 +1073,12 @@ class Comment extends \Model\Model_Base
 			$this->$key = trim((string) $this->$key);
 		}
 
+		if (substr_count($this->comment, 'http') > 5)
+		{
+			\Log::error('Too many links.');
+			throw new CommentSendingException(__('You\'re posting too many links.'));
+		}
+		
 		\Plugins::run_hook('fu.comment.insert.alter_input_after_checks', array(&$this), 'simple');
 
 		// process comment name+trip
@@ -1167,7 +1173,7 @@ class Comment extends \Model\Model_Base
 			$this->poster_ip = \Input::ip_decimal();
 		}
 
-		if ($this->board->enable_flags && function_exists('geoip_country_code_by_name'))
+		if ($this->board->enable_flags && function_exists('\\geoip_country_code_by_name'))
 		{
 			$this->poster_country = \geoip_country_code_by_name(\Inet::dtop($this->poster_ip));
 		}

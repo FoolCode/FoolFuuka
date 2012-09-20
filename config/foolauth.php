@@ -10,6 +10,7 @@ return array(
 		'mod' => array(
 			'access' => array('mod'),
 			'maccess' => array('user', 'mod'),
+			'boards' => array('see_hidden'),
 			'comment' => array('see_ip', 'passwordless_deletion', 'limitless_comment', 'reports', 'mod_capcode'),
 			'media' => array('see_banned'),
 			'users' => array('access')
@@ -17,7 +18,7 @@ return array(
 		'admin' => array(
 			'access' => array('admin'),
 			'maccess' => array('user', 'mod', 'admin'),
-			'boards' => array('edit'),
+			'boards' => array('edit', 'see_hidden'),
 			'comment' => array('see_ip', 'passwordless_deletion', 'limitless_comment', 'reports', 'mod_capcode', 'admin_capcode', 'dev_capcode'),
 			'media' => array('see_banned', 'see_hidden', 'limitless_media'),
 			'users' => array('access', 'change_credentials', 'change_group')

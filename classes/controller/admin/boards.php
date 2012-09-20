@@ -14,8 +14,6 @@ class Controller_Admin_Boards extends \Controller_Admin
 		{
 			\Response::redirect('admin');
 		}
-
-		\Radix::preload(true);
 		
 		$this->_views['controller_title'] = __('Boards');
 	}

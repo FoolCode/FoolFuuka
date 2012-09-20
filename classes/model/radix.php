@@ -441,14 +441,8 @@ class Radix extends \Model_Base
 	 */
 	protected static function p_clear_cache()
 	{
-		$all = static::get_all();
-
 		\Cache::delete('fu.model.radix.preload');
-
-		foreach ($all as $a)
-		{
-			\Cache::delete('fu.model.radix.load_preferences.'.$a->id);
-		}
+		\Cache::delete('fu.model.radix.load_preferences');
 	}
 
 
@@ -607,7 +601,7 @@ class Radix extends \Model_Base
 		}
 		
 		static::clear_cache();
-		static::preload(TRUE);
+		static::preload();
 	}
 
 
@@ -729,37 +723,24 @@ class Radix extends \Model_Base
 	 * @param bool $preferences if TRUE it loads all the extra preferences for all the boards
 	 * @return FALSE if there is no boards, TRUE otherwise
 	 */
-	protected static function p_preload($preferences = false)
+	protected static function p_preload()
 	{
 		\Profiler::mark('Radix::preload Start');
 		
-		if ( ! \Auth::has_access('maccess.mod'))
+		try
 		{
-			try
-			{
-				$object = \Cache::get('fu.model.radix.preload');
-			}
-			catch (\CacheNotFoundException $e)
-			{
-				$object = \DB::select()
-					->from('boards')
-					->where('hidden', 0)
-					->order_by('shortname', 'asc')
-					->as_object()
-					->execute()
-					->as_array('id');
-
-				\Cache::set('fu.model.radix.preload', $object, 900);
-			}
-
-			// take them all and then filter/do whatever (we use this to split the boards through various subdomains)
-			// only public is affected! admins and mods will see all boards at all the time
-			$object = \Plugins::run_hook('fu.radix.preload.public.alter_result', array($object), 'simple');
+			$object = \Cache::get('fu.model.radix.preload');
 		}
-		else
+		catch (\CacheNotFoundException $e)
 		{
-			$object = \DB::select()->from('boards')->order_by('shortname', 'asc')
-				->as_object()->execute()->as_array('id');
+			$object = \DB::select()
+				->from('boards')
+				->order_by('shortname', 'asc')
+				->as_object()
+				->execute()
+				->as_array('id');
+
+			\Cache::set('fu.model.radix.preload', $object, 900);
 		}
 
 		if ( ! is_array($object) || empty($object))
@@ -801,90 +782,51 @@ class Radix extends \Model_Base
 				}
 			}
 		}
+		
+		// load the preferences from the board_preferences table
+		\Profiler::mark('Radix::load_preferences Start');
+		try
+		{
+			$preferences = \Cache::get('fu.model.radix.load_preferences');
+		}
+		catch (\CacheNotFoundException $e)
+		{
+			$preferences = \DB::select()
+				->from('boards_preferences')
+				->as_object()
+				->execute()
+				->as_array();
 
+			\Cache::set('fu.model.radix.load_preferences', $preferences, 900);
+		}
+		
+		foreach ($preferences as $value)
+		{
+			$result_object[$value->board_id]->{$value->name} = $value->value;
+		}
+		
+		// unset the hidden boards
+		if ( ! \Auth::has_access('boards.see_hidden'))
+		{
+			foreach ($result_object as $key => $value)
+			{
+				if ($value->hidden)
+				{
+					unset($result_object[$key]);
+				}
+			}
+		}
+		
 		static::$preloaded_radixes = $result_object;
 		\Profiler::mark_memory(static::$preloaded_radixes, 'Radix static::$preloaded_radixes');
-
-		if ($preferences) 
-		{
-			static::load_preferences();
-		}
+		\Profiler::mark('Radix::load_preferences End');
+		
+		// take them all and then filter/do whatever (we use this to split the boards through various subdomains)
+		// only public is affected! admins and mods will see all boards at all the time
+		static::$preloaded_radixes = \Plugins::run_hook('fu.radix.preload.public.alter_result', array(static::$preloaded_radixes), 'simple');
 
 		\Profiler::mark('Radix::preload End');
-		return false;
-	}
-
-
-	/**
-	 * Loads preferences data for the board.
-	 *
-	 * @param null|int|array|object $board null/array of IDs/ID/board object
-	 * @return object the object of the board chosen
-	 */
-	protected static function p_load_preferences($board = null)
-	{
-		\Profiler::mark('Radix::load_preferences Start');
-		
-		if (is_null($board))
-		{
-			$ids = array_keys(static::$preloaded_radixes);
-		}
-		else if (is_array($board))
-		{
-			$ids = $board;
-		}
-		else if (is_object($board))
-		{
-			$ids = array($board->id);
-		}
-		else // it's an id
-		{
-			$ids = array($board);
-		}
-
-		$selected = false;
-		foreach ($ids as $id)
-		{
-			if ( ! \Auth::has_access('maccess.mod'))
-			{
-				try
-				{
-					$result = \Cache::get('fu.model.radix.load_preferences.'.$id);
-				}
-				catch (\CacheNotFoundException $e)
-				{
-					$result = \DB::select()
-						->from('boards_preferences')
-						->where('board_id', $id)
-						->as_object()
-						->execute()
-						->as_array();
-					
-					\Cache::set('fu.model.radix.load_preferences.'.$id, $result, 900);
-				}
-			}
-			else
-			{
-				$result = \DB::select()
-					->from('boards_preferences')
-					->where('board_id', $id)
-					->as_object()
-					->execute()
-					->as_array();
-			}
-
-			foreach ($result as $value)
-			{
-				static::$preloaded_radixes[$id]->{$value->name} = $value->value;
-			}
-
-			$selected = static::$preloaded_radixes[$id];
-		}
-
-		// useful if only one has been selected
 		\Profiler::mark_memory(static::$preloaded_radixes, 'Radix static::$preloaded_radixes w/ preferences');
-		\Profiler::mark('Radix::load_preferences End');
-		return $selected;
 	}
 
 
@@ -923,7 +865,6 @@ class Radix extends \Model_Base
 	{
 		if (false != ($val = static::get_by_shortname($shortname)))
 		{
-			$val = static::load_preferences($val);
 			static::$selected_radix = $val;
 			return $val;
 		}

@@ -443,11 +443,11 @@ class Radix extends \Model_Base
 	{
 		$all = static::get_all();
 
-		\Cache::delete('model.radix.preload');
+		\Cache::delete('fu.model.radix.preload');
 
 		foreach ($all as $a)
 		{
-			\Cache::delete('model.radix.load_preferences.'.$a->id);
+			\Cache::delete('fu.model.radix.load_preferences.'.$a->id);
 		}
 	}
 
@@ -532,38 +532,50 @@ class Radix extends \Model_Base
 			}
 
 			// save normal values
-			\DB::update('boards')->set($data)->where('id', $data['id'])->execute();
+			\DB::update('boards')
+				->set($data)
+				->where('id', $data['id'])
+				->execute();
 
 			// save extra preferences
 			foreach ($data_boards_preferences as $name => $value)
 			{
-				$query = \DB::select()->from('boards_preferences')->where('board_id', $data['id'])
-					->and_where('name', $name)->execute();
+				$query = \DB::select()
+					->from('boards_preferences')
+					->where('board_id', $data['id'])
+					->and_where('name', $name)
+					->execute();
 
 				if (count($query))
 				{
-					\DB::update('boards_preferences')->value('value', $value)->where('name', $name)
-						->and_where('board_id', $data['id'])->execute();
+					\DB::update('boards_preferences')
+						->value('value', $value)
+						->where('name', $name)
+						->and_where('board_id', $data['id'])
+						->execute();
 				}
 				else
 				{
 					\DB::insert('boards_preferences')
-						->set(array('board_id' => $data['id'], 'name' => $name, 'value' => $value))->execute();
+						->set(array('board_id' => $data['id'], 'name' => $name, 'value' => $value))
+						->execute();
 				}
 			}
-
-			static::clear_cache();
-			static::preload(TRUE);
 		}
 		else
 		{
-			list($id, $rows_affected) = \DB::insert('boards')->set($data)->execute();
+			list($id, $rows_affected) = \DB::insert('boards')
+				->set($data)
+				->execute();
 
 			// save extra preferences
 			foreach ($data_boards_preferences as $name => $value)
 			{
-				$query = \DB::select()->from('boards_preferences')->where('board_id', $id)
-					->and_where('name', $name)->execute();
+				$query = \DB::select()
+					->from('boards_preferences')
+					->where('board_id', $id)
+					->and_where('name', $name)
+					->execute();
 
 				if (count($query))
 				{
@@ -588,11 +600,14 @@ class Radix extends \Model_Base
 			static::mysql_create_triggers($board);
 
 			// if the user didn't select sphinx for search, enable the table _search silently
-			if (!$board->sphinx)
+			if ( ! $board->sphinx)
 			{
 				static::mysql_create_search($board);
 			}
 		}
+		
+		static::clear_cache();
+		static::preload(TRUE);
 	}
 
 
@@ -717,11 +732,12 @@ class Radix extends \Model_Base
 	protected static function p_preload($preferences = false)
 	{
 		\Profiler::mark('Radix::preload Start');
-		if (!\Auth::has_access('maccess.mod'))
+		
+		if ( ! \Auth::has_access('maccess.mod'))
 		{
 			try
 			{
-				$object = \Cache::get('model.radix.preload');
+				$object = \Cache::get('fu.model.radix.preload');
 			}
 			catch (\CacheNotFoundException $e)
 			{
@@ -733,7 +749,7 @@ class Radix extends \Model_Base
 					->execute()
 					->as_array('id');
 
-				\Cache::set('model.radix.preload', $object, 900);
+				\Cache::set('fu.model.radix.preload', $object, 900);
 			}
 
 			// take them all and then filter/do whatever (we use this to split the boards through various subdomains)
@@ -746,7 +762,7 @@ class Radix extends \Model_Base
 				->as_object()->execute()->as_array('id');
 		}
 
-		if (!is_array($object) || empty($object))
+		if ( ! is_array($object) || empty($object))
 		{
 			static::$preloaded_radixes = array();
 			return false;
@@ -789,7 +805,8 @@ class Radix extends \Model_Base
 		static::$preloaded_radixes = $result_object;
 		\Profiler::mark_memory(static::$preloaded_radixes, 'Radix static::$preloaded_radixes');
 
-		if ($preferences == true) {
+		if ($preferences) 
+		{
 			static::load_preferences();
 		}
 
@@ -807,6 +824,7 @@ class Radix extends \Model_Base
 	protected static function p_load_preferences($board = null)
 	{
 		\Profiler::mark('Radix::load_preferences Start');
+		
 		if (is_null($board))
 		{
 			$ids = array_keys(static::$preloaded_radixes);
@@ -831,19 +849,28 @@ class Radix extends \Model_Base
 			{
 				try
 				{
-					$result = \Cache::get('model.radix.load_preferences.'.$id);
+					$result = \Cache::get('fu.model.radix.load_preferences.'.$id);
 				}
 				catch (\CacheNotFoundException $e)
 				{
-					$result = \DB::select()->from('boards_preferences')->where('board_id', $id)
-						->as_object()->execute()->as_array();
-					\Cache::set('model.radix.load_preferences.'.$id, $result, 900);
+					$result = \DB::select()
+						->from('boards_preferences')
+						->where('board_id', $id)
+						->as_object()
+						->execute()
+						->as_array();
+					
+					\Cache::set('fu.model.radix.load_preferences.'.$id, $result, 900);
 				}
 			}
 			else
 			{
-				$result = \DB::select()->from('boards_preferences')->where('board_id', $id)
-					->as_object()->execute()->as_array();
+				$result = \DB::select()
+					->from('boards_preferences')
+					->where('board_id', $id)
+					->as_object()
+					->execute()
+					->as_array();
 			}
 
 			foreach ($result as $value)

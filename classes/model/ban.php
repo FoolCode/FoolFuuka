@@ -66,7 +66,7 @@ class Ban extends \Model\Model_Base
 		{
 			$ban = $bans[0];
 		}
-		else if ($bans[$board->id])
+		else if (isset($bans[$board->id]))
 		{
 			$ban = $bans[$board->id];
 		}
@@ -89,7 +89,7 @@ class Ban extends \Model\Model_Base
 	public static function add($ip_decimal, $reason, $length, $board_ids = array())
 	{
 		// 0 is a global ban
-		if ( empty($board_ids))
+		if (empty($board_ids))
 		{
 			$board_ids = array(0);
 		}

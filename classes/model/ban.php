@@ -130,6 +130,15 @@ class Ban extends \Model\Model_Base
 		
 		$objects = array();
 		
+		try
+		{ 
+			$old = static::get_by_ip($ip_decimal);
+		}
+		catch (BanNotFoundException $e)
+		{
+			$old = false;
+		}
+		
 		foreach ($board_ids as $board_id)
 		{
 			$new = new static();
@@ -140,16 +149,15 @@ class Ban extends \Model\Model_Base
 			$new->length = $length;
 			$new->board_id = $board_id;
 			
-			try
-			{ 
-				$old = static::get_by_ip($ip_decimal);
+			if (isset($old[$new->board_id]))
+			{
 				\DB::update('banned_posters')
-					->where('id', $old->id)
+					->where('id', $old[$new->board_id]->id)
 					->value('start', $new->start)
 					->value('length', $new->length)
 					->execute();
 			}
-			catch (BanNotFoundException $e)
+			else
 			{
 				\DB::insert('banned_posters')
 					->set(array(

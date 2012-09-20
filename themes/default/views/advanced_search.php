@@ -1,3 +1,7 @@
+<?php
+if (!defined('DOCROOT'))
+	exit('No direct script access allowed');
+?>
 <div class="advanced_search clearfix">
 <h4><?= e(__('Advanced Search')) ?></h4>
 
@@ -15,7 +19,7 @@ else if (isset($radix))
 
 <?= \Form::open(array('method' => 'POST', 'action' => Uri::create($search_radix.'/search'))); ?>
 
-<div class="clearfix">
+<div class="buttons clearfix">
 <?= \Form::submit(array(
 	'class' => 'btn btn-inverse',
 	'value' => __('Search'),
@@ -34,7 +38,7 @@ else if (isset($radix))
 
 $search_structure = \Search::structure();
 
-echo '<div class="pull-right" style="border-left: 1px solid #ccc; padding-left: 6px"><table class="table"><tbody>';
+echo '<div class="checkboxes pull-right"><table class="table"><tbody>';
 foreach ($search_structure as $element)
 {
 	if (isset($element['access']) && ! \Auth::has_access($element['access']))
@@ -71,7 +75,8 @@ foreach ($search_structure as $element)
 		echo \Form::input(array(
 			'name' => $element['name'],
 			'id' => 'search_form_'.$element['name'],
-			'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : ''
+			'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : '',
+			'placeholder' => (isset($element['placeholder'])) ? $element['placeholder'] : '',
 		));
 		echo '</div>';
 	}

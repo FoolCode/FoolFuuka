@@ -261,12 +261,17 @@ body.theme_default {
 }
 
 .theme_default .search_box .advanced_search {
-	width: 390px;
+	width: 410px;
 	padding: 10px 8px 5px 2px;
 }
 
 .theme_default .search_box .advanced_search h4 {
 	display:none;
+}
+
+.theme_default .advanced_search .buttons {
+	border-bottom: 1px solid #bbb;
+	margin-bottom: 5px;
 }
 
 .theme_default .advanced_search .add-on {
@@ -292,31 +297,59 @@ body.theme_default {
 	line-height: 10px;
 }
 
+.theme_default .search_box .advanced_search input:-moz-placeholder,
+.theme_default .search_box .advanced_search textarea:-moz-placeholder {
+	font-size:10px;
+	line-height:13px;
+}
+.theme_default .search_box .advanced_search  input:-ms-input-placeholder,
+.theme_default .search_box .advanced_search textarea:-ms-input-placeholder {
+	font-size:10px;
+	line-height:13px;
+}
+
+.theme_default .search_box .advanced_search input::-webkit-input-placeholder,
+.theme_default .search_box .advanced_search textarea::-webkit-input-placeholder {
+	font-size:10px;
+	line-height:13px;
+}
+
+
 .theme_default .advanced_search .btn {
 	margin-bottom: 5px;
 }
 
 .theme_default .search_box .advanced_search .btn {
-	padding: 1px 4px;
+	padding: 0px 4px;
 	font-size: 11px;
+}
+
+.theme_default .search_box .advanced_search .checkboxes {
+	border-left: 1px solid #ccc;
+	padding-left: 10px
 }
 
 .theme_default .search_box .advanced_search .table {
-	margin-bottom: 5px;
+	margin-bottom: 0px;
 }
 
 .theme_default .search_box .advanced_search .table td {
-	padding: 3px 3px 0px;
-	font-size: 11px;
+	padding: 8px 3px 3px;
+	font-size: 12px;
 }
+
+.theme_default .advanced_search .table tr:first-of-type td {
+	border-top: none;
+}
+
 
 .theme_default .search_box .advanced_search .table td:first-of-type {
 	display:none;
 }
 
 .theme_default .search_box .advanced_search .table td label {
-	font-size: 11px;
-	line-height: 12px;
+	font-size: 12px;
+	line-height: 14px;
 }
 	
 .theme_default .advanced_search .radixes {

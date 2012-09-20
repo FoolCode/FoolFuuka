@@ -72,7 +72,8 @@ jQuery(document).ready(function() {
 var bindFunctions = function()
 {
 	// the following block of code deals with drag and drop of images for MD5 hashing
-	var search_dropdown = jQuery('#image');
+	var search_dropdown = jQuery('#search_form_image_hash');
+
 	if(isEventSupported('dragstart') && isEventSupported('drop') && !!window.FileReader)
 	{
 		search_dropdown.on('dragover', function(e) {
@@ -80,6 +81,7 @@ var bindFunctions = function()
 			e.stopPropagation();
 			e.originalEvent.dataTransfer.dropEffect = 'copy';
 		});
+		
 		search_dropdown.on('dragenter', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -849,7 +851,7 @@ var findSameImageFromFile = function(obj)
 			});
 			var digestBase64 = Crypto.util.bytesToBase64(digestBytes);
 			var digestBase64URL = digestBase64.replace('==', '').replace(/\//g, '_').replace(/\+/g, '-');
-			jQuery('#image').val(digestBase64URL);
+			jQuery('#search_form_image_hash').val(digestBase64URL);
 		}
 	}
 

@@ -171,9 +171,9 @@ if (!defined('DOCROOT'))
 			</div>
 		</div>
 
-		<script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
+		<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
 		<noscript>
-			<iframe src="//www.google.com/recaptcha/api/noscript?k=<?= \Config::get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br>
+			<iframe src="https://www.google.com/recaptcha/api/noscript?k=<?= \Config::get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br>
 			<textarea name="recaptcha_challenge_field" rows="3" cols="40">
 			</textarea>
 			<input type="hidden" name="recaptcha_response_field"  value="manual_challenge">

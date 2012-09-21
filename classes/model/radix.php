@@ -479,7 +479,14 @@ class Radix extends \Model_Base
 						}
 						else
 						{
-							$data_boards_preferences[$k] = null;
+							if ($i['type'] === 'checkbox')
+							{
+								$data_boards_preferences[$k] = false;
+							}
+							else
+							{
+								$data_boards_preferences[$k] = null;
+							}
 						}
 
 						unset($data[$k]);
@@ -488,7 +495,14 @@ class Radix extends \Model_Base
 					{
 						if ( ! isset($data[$k]))
 						{
-							$data[$k] = null;
+							if ($i['type'] === 'checkbox')
+							{
+								$data[$k] = false;
+							}
+							else
+							{
+								$data[$k] = null;
+							}
 						}
 					}
 				}
@@ -503,7 +517,14 @@ class Radix extends \Model_Base
 				}
 				else
 				{
-					$data_boards_preferences[$key] = null;
+					if ($item['type'] === 'checkbox')
+					{
+						$data_boards_preferences[$key] = false;
+					}
+					else
+					{
+						$data_boards_preferences[$key] = null;
+					}
 				}
 
 				unset($data[$key]);
@@ -512,7 +533,15 @@ class Radix extends \Model_Base
 			{
 				if ( ! isset($data[$key]))
 				{
-					$data[$key] = null;
+					if ($item['type'] === 'checkbox')
+					{
+						$data[$key] = false;
+					}
+					else
+					{
+						$data[$key] = null;
+					}
+					
 				}
 			}
 		}

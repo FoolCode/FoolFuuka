@@ -588,8 +588,7 @@ class Controller_Chan extends \Controller_Common
 
 		$text = \Input::post('text');
 
-		if ($this->_radix !== null && (\Input::post('submit_post') || (\Input::post('submit_undefined')
-				&& (\Board::is_valid_post_number($text) || strpos($text, '//boards.4chan.org') !== false))))
+		if ($this->_radix !== null && \Input::post('submit_post'))
 		{
 			return $this->radix_post(str_replace(',', '_', $text));
 		}

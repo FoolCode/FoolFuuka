@@ -257,6 +257,10 @@ class Comment extends \Model\Model_Base
 
 		// remove radix data
 		unset($comment->extra->_radix);
+		
+		// we don't have captcha in use in api
+		unset($comment->recaptcha_challenge);
+		unset($comment->recaptcha_response);
 
 		return $comment;
 	}

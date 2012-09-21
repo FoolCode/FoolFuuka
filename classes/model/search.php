@@ -97,8 +97,8 @@ class Search extends Board
 				'name' => 'filter',
 				'elements' => array(
 					array('value' => false, 'text' => __('All')),
-					array('value' => 'text', 'text' => __('Only Containing Images')),
-					array('value' => 'image', 'text' => __('Only Containing Text'))
+					array('value' => 'text', 'text' => __('Only With Images')),
+					array('value' => 'image', 'text' => __('Only Without Images'))
 				)
 			),
 			array(
@@ -128,8 +128,8 @@ class Search extends Board
 				'label' => __('Order'),
 				'name' => 'order',
 				'elements' => array(
-					array('value' => false, 'text' => __('New Posts First')),
-					array('value' => 'asc', 'text' => __('Old Posts First'))
+					array('value' => false, 'text' => __('Latest Posts First')),
+					array('value' => 'asc', 'text' => __('Oldest Posts First'))
 				)
 			)
 		);

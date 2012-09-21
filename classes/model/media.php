@@ -407,7 +407,7 @@ class Media extends \Model\Model_Base
 			return $replace['return'];
 		}
 		
-		if (!$this->media_hash)
+		if ( ! $this->media_hash)
 		{
 			throw new MediaHashNotFoundException;
 		}
@@ -487,7 +487,7 @@ class Media extends \Model\Model_Base
 				.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 		}
 
-		if ($thumbnail)
+		if ($thumbnail && $this->media_status === 'normal')
 		{
 			$this->media_status = 'not-available';
 		}
@@ -503,7 +503,7 @@ class Media extends \Model\Model_Base
 	 */
 	public function get_remote_link()
 	{
-		if (!$this->media_hash)
+		if ( ! $this->media_hash)
 		{
 			throw new MediaHashNotFoundException;
 		}

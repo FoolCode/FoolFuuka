@@ -19,6 +19,8 @@ class CommentSendingTimeLimitException extends CommentSendingException {}
 class CommentSendingSameCommentException extends CommentSendingException {}
 class CommentSendingImageInGhostException extends CommentSendingException {}
 class CommentSendingBannedException extends CommentSendingException {}
+class CommentSendingRequestCaptchaException extends CommentSendingException {}
+class CommentSendingWrongCaptchaException extends CommentSendingException {}
 
 class Comment extends \Model\Model_Base
 {
@@ -66,6 +68,9 @@ class Comment extends \Model\Model_Base
 		'poster_hash_processed', 'original_timestamp', 'fourchan_date', 'comment_sanitized', 
 		'comment_processed', 'poster_country_name_processed'
 	);
+	
+	public $recaptcha_challenge = null;
+	public $recaptcha_response = null;
 
 	public $board = null;
 
@@ -939,6 +944,32 @@ class Comment extends \Model\Model_Base
 	 */
 	protected function p_insert()
 	{
+		$this->ghost = false;
+		$this->allow_media = true;
+
+		// check if it's a thread and its status
+		if ($this->thread_num > 0)
+		{
+			try
+			{
+				$thread = Board::forge()->get_thread($this->thread_num)->set_radix($this->board);
+				$thread->get_comments();
+				$status = $thread->check_thread_status();
+			}
+			catch (Model\BoardException $e)
+			{
+				throw new CommentSendingException($e->getMessage());
+			}
+
+			$this->ghost = $status['dead'];
+			$this->allow_media = ! $status['disable_image_upload'];
+		}
+
+		foreach(array('name', 'email', 'title', 'delpass', 'comment', 'capcode') as $key)
+		{
+			$this->$key = trim((string) $this->$key);
+		}
+		
 		// some users don't need to be limited, in here go all the ban and posting limitators
 		if( ! \Auth::has_access('comment.limitless_comment'))
 		{
@@ -1022,13 +1053,57 @@ class Comment extends \Model\Model_Base
 					throw new CommentSendingTimeLimitException(__('You must wait up to 10 seconds to post again.'));
 				}
 			}
+			
+			// we want to know if the comment will display empty, and in case we won't let it pass
+			$comment_parsed = $this->process_comment();
+			if($this->comment !== '' && $comment_parsed === '')
+			{
+				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
+			}
+
+			// clean up to reset eventual auto-built entries
+			foreach ($this->_forced_entries as $field)
+			{
+				unset($this->$field);
+			}
+			
+			if ($this->recaptcha_challenge && $this->recaptcha_response && \ReCaptcha::available())
+			{
+				$recaptcha = \ReCaptcha::instance()
+					->check_answer(\Input::ip(), $this->recaptcha_challenge, $this->recaptcha_response);
+				
+				if ( ! $recaptcha)
+				{
+					throw new CommentSendingWrongCaptchaException(__('Incorrect CAPTCHA solution.'));
+				}
+			}
+			else // if there wasn't a recaptcha input, let's go with heavier checks
+			{
+				// 3+ links is suspect
+				if (substr_count($this->comment, 'http') > 2)
+				{
+					throw new CommentSendingRequestCaptchaException;
+				}
+
+				// bots usually fill all the fields
+				if ($this->comment && $this->subject && $this->email)
+				{
+					throw new CommentSendingRequestCaptchaException;
+				}
+				
+				// bots usually try various BBC, this checks if there's unparsed BBC after parsing it
+				if ($comment_parsed !== '' && substr_count($comment_parsed, '[') + substr_count($comment_parsed, ']') > 4)
+				{
+					throw new CommentSendingRequestCaptchaException;					
+				}
+			}
 
 			// load the spam list and check comment, name, subject and email
 			$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents(DOCROOT.'assets/anti-spam/databases')));
 			foreach($spam as $s)
 			{
-				if(strpos($comment, $s) !== false || strpos($name, $s) !== false
-					|| strpos($subject, $s) !== false || strpos($email, $s) !== false)
+				if(strpos($this->comment, $s) !== false || strpos($this->name, $s) !== false
+					|| strpos($this->subject, $s) !== false || strpos($this->email, $s) !== false)
 				{
 					throw new CommentSendingSpamException(__('Your post has undesidered content.'));
 				}
@@ -1047,38 +1122,6 @@ class Comment extends \Model\Model_Base
 			}
 		}
 
-		$this->ghost = false;
-		$this->allow_media = true;
-
-		// check if it's a thread and its status
-		if ($this->thread_num > 0)
-		{
-			try
-			{
-				$thread = Board::forge()->get_thread($this->thread_num)->set_radix($this->board);
-				$thread->get_comments();
-				$status = $thread->check_thread_status();
-			}
-			catch (Model\BoardException $e)
-			{
-				throw new CommentSendingException($e->getMessage());
-			}
-
-			$this->ghost = $status['dead'];
-			$this->allow_media = ! $status['disable_image_upload'];
-		}
-
-		foreach(array('name', 'email', 'title', 'delpass', 'comment', 'capcode') as $key)
-		{
-			$this->$key = trim((string) $this->$key);
-		}
-
-		if (substr_count($this->comment, 'http') > 5)
-		{
-			\Log::error('Too many links.');
-			throw new CommentSendingException(__('You\'re posting too many links.'));
-		}
-		
 		\Plugins::run_hook('fu.comment.insert.alter_input_after_checks', array(&$this), 'simple');
 
 		// process comment name+trip
@@ -1102,23 +1145,6 @@ class Comment extends \Model\Model_Base
 			{
 				$this->$key = null;
 			}
-		}
-
-		// we want to know if the comment will display empty, and in case we won't let it pass
-		if($this->comment !== null)
-		{
-			$comment_parsed = $this->process_comment();
-			if(!$comment_parsed)
-			{
-				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
-			}
-
-			// clean up to reset eventual auto-built entries
-			foreach ($this->_forced_entries as $field)
-			{
-				unset($this->$field);
-			}
-
 		}
 
 		// process comment password

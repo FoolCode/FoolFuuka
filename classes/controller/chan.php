@@ -952,6 +952,12 @@ class Controller_Chan extends \Controller_Common
 		{
 			$data['last_limit'] = $post['reply_last_limit'];
 		}
+		
+		if (isset($post['recaptcha_challenge_field']) && isset($post['recaptcha_response_field']))
+		{
+			$data['recaptcha_challenge'] = $post['recaptcha_challenge_field'];
+			$data['recaptcha_response'] = $post['recaptcha_response_field'];
+		}
 
 
 		$media = null;
@@ -1019,6 +1025,17 @@ class Controller_Chan extends \Controller_Common
 				$comment = \Comment::forge((object) $data, $this->_radix, array('clean' => false));
 				$comment->media = $media;
 				$comment->insert();
+			}
+			catch (Model\CommentSendingRequestCaptchaException $e)
+			{
+				if (\Input::is_ajax())
+				{
+					return \Response::forge(json_encode(array('captcha' => true)));
+				}
+				else
+				{
+					return $this->error(__('Your message looked like spam. Make sure you have JavaScript enabled to display the reCAPTCHA to submit the comment.'));
+				}
 			}
 			catch (Model\CommentSendingException $e)
 			{

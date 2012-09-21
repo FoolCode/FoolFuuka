@@ -166,6 +166,8 @@ header('imagetoolbar: false');
 			</div>
 
 			<div role="main" id="main">
+				<?= isset($template['partials']['tools_new_thread_box']) ? $template['partials']['tools_new_thread_box'] : ''; ?>
+
 				<?php if (isset($section_title)) : ?>
 					<h3 class="section_title"><?= $section_title ?></h3>
 				<?php elseif (Preferences::get('ff.theme.header_text')) : ?>
@@ -175,8 +177,6 @@ header('imagetoolbar: false');
 				<div class="search_box">
 					<?= isset($template['partials']['tools_advanced_search']) ? $template['partials']['tools_advanced_search'] : ''; ?>
 				</div>
-					
-				<?= isset($template['partials']['tools_new_thread_box']) ? $template['partials']['tools_new_thread_box'] : ''; ?>
 
 				<?= $template['body'] ?>
 

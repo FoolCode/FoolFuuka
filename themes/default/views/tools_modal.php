@@ -13,7 +13,7 @@ if (!defined('DOCROOT'))
 		<div class="modal-information"></div>
 	</div>
 	<div class="modal-footer">
-		<a href="#" class="btn secondary closeModal" data-function="closeModal"><?= __('Cancel') ?></a>
-		<a href="#" class="btn btn-primary submitModal" data-function="submitModal" data-report="" data-delete=""><?= __('Submit') ?></a>
+		<input type="button" value="<?= htmlspecialchars(__('Submit')) ?>" href="#" class="btn btn-primary submitModal" data-function="submitModal" data-report="" data-delete="">
+		<input type="button" value="<?= htmlspecialchars(__('Cancel')) ?>" href="#" class="btn secondary closeModal" data-function="closeModal">
 	</div>
 </div>

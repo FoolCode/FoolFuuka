@@ -1,74 +1,3 @@
-jQuery(document).ready(function() {
-
-	// settings
-	jQuery.support.cors = true;
-	backend_vars.loaded_posts = [];
-
-	var lazyloaded = jQuery('img.lazyload');
-	if(lazyloaded.length > 149)
-	{
-		lazyloaded.lazyload({
-			threshold: 1000,
-			event: 'scroll'
-		});
-	}
-
-	// check if input[date] is supported, so we can use by default input[text] with placeholder without breaking w3
-	var i = document.createElement("input");
-	i.setAttribute("type", "date");
-	if(i.type !== "text")
-	{
-		jQuery('#date_end').replaceWith(jQuery('<input>').attr({id: 'date_end', name: 'end', type: 'date'}));
-		jQuery('#date_start').replaceWith(jQuery('<input>').attr({id: 'date_start', name: 'start', type: 'date'}));
-	}
-
-	// firefox sucks at styling input, so we need to add size="", that guess what? It's not w3 compliant!
-	jQuery('#file_image').attr({size: '16'});
-
-	var post = location.href.split(/#/);
-	if (post[1]) {
-		if (post[1].match(/^q\d+(_\d+)?$/)) {
-			post[1] = post[1].replace('q', '').replace('_', ',');
-			jQuery("#reply_chennodiscursus").append(">>" + post[1] + "\n");
-			post[1] = post[1].replace(',', '_');
-
-		}
-		
-		toggleHighlight(post[1]);
-	}
-
-	if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 24 * 60 * 60))
-	{
-		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + ' <a class="btnr" href="#" data-function="realtimeThread">' + backend_vars.gettext['update_now'] + '</a>');
-		setTimeout(realtimethread, 10000);
-	}
-
-	bindFunctions();
-
-	// localize and add 4chan tooltip where title
-	jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy').filter('[title]').tooltip({
-		placement: 'top',
-		delay: 300,
-		animation: false
-	});
-
-	jQuery('input[title]').tooltip({
-		placement: 'right',
-		delay: 200,
-		animation: false
-	});
-
-	jQuery('li.latest_search').tooltip({
-		placement: 'left',
-		animation: false
-	});
-
-	jQuery('#thread_o_matic .thread_image_box').tooltip({
-		placement: 'bottom',
-		animation: true
-	});
-});
-
 var bindFunctions = function()
 {
 	// the following block of code deals with drag and drop of images for MD5 hashing
@@ -99,14 +28,18 @@ var bindFunctions = function()
 		});
 	}
 
-	jQuery("body").click(function(event){
-		var search_el = jQuery('.search_box');
-		if(search_el.find(event.target).length != 1)
-		{
-			search_el.fadeOut();
-		}
+	jQuery('.search-query').focus(function() {
+		var el = jQuery(this);
+		var offset = el.offset();
+		var width = el.width();
+		var search_box = jQuery('.search_box');
+		var comment_wrap = search_box.find('.comment_wrap');
+		var comment_wrap_pos = comment_wrap.position();
+		search_box.css({top: (offset.top - 11) + 'px', left: (offset.left - 13) + 'px' }).show();
+		el.parents('.open').removeClass('open');
+		search_box.find('input[name=text]').focus();
+		return false;
 	});
-
 
 	var clickCallbacks = {
 
@@ -311,6 +244,19 @@ var bindFunctions = function()
 					},
 					success: function(data, textStatus, jqXHR){
 						insertPost(data, textStatus, jqXHR);
+						var post_count = 0;
+						var media_count = 0;
+						jQuery.each(data[thread_num].posts, function(id, val){
+							post_count++;
+							if (val.media !== null)
+							{
+								media_count++;
+							}
+						})
+						var thread = jQuery('article.thread[data-thread-num=' + thread_num + '] ');
+						var displayed_string = post_count + ' posts ' + 
+							(media_count > 0 ? 'and ' + media_count + ' ' + (media_count == 1 ? 'image' : 'images') : '') + ' displayed';
+						thread.find('.omitted_text').text(displayed_string);
 						el.data('expanded', true).html('<i class="icon icon-resize-small"></i>');
 						el.spin(false);
 					}
@@ -318,8 +264,14 @@ var bindFunctions = function()
 			}
 			else
 			{
-				var articles = jQuery('article.thread[data-thread-num=' + thread_num + '] aside.posts article');
-				articles.slice(0, articles.length - 5).remove();
+				var thread = jQuery('article.thread[data-thread-num=' + thread_num + ']');
+				var articles =  thread.find('aside.posts article');
+				articles.slice(0, articles.length - 5).hide();
+				var post_count = articles.filter(':hidden').length;
+				var media_count = articles.find('.thread_image_box:hidden').length;
+				var omitted_string = post_count + ' posts ' + 
+					(media_count > 0 ? 'and ' + media_count + ' ' + (media_count == 1 ? 'image' : 'images') : '') + ' omitted';
+				thread.find('.omitted_text').text(omitted_string);
 				el.data('expanded', false).html('<i class="icon icon-resize-full"></i>');
 			}
 			
@@ -543,13 +495,6 @@ var bindFunctions = function()
 			return false;
 		},
 
-		searchShow: function(el, post, event)
-		{
-			jQuery('.search_box').fadeIn();
-			el.parents('.open').removeClass('open');
-			return false;
-		},
-
 		clearLatestSearches: function(el, post, event)
 		{
 			setCookie('search_latest_5', '', 0, '/', backend_vars.cookie_domain);
@@ -572,11 +517,23 @@ var bindFunctions = function()
 
 
 	// unite all the onclick functions in here
-	jQuery("body").on("click", "a[data-function], button[data-function], input[data-function]", function(event) {
+	jQuery(document.body).on("click", "a[data-function], button[data-function], input[data-function]", function(event) {
 		var el = jQuery(this);
 		var post = el.data("post");
 		return clickCallbacks[el.data("function")](el, post, event);
 	});
+	
+	jQuery(document.body).on("click", ".search_box, .search-query", function(event) { 
+		event.stopPropagation();
+	});
+	
+	jQuery(document.body).click(function(event) {
+		var search_input = jQuery('#search_form_comment');
+		jQuery('.search-query').val(search_input.val())
+		jQuery('.search_box').hide();
+	});
+	
+	
 
 	// how could we make it working well on cellphones?
 	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent))
@@ -616,7 +573,7 @@ var bindFunctions = function()
 				if (toClone.length == 0)
 					return false;
 				backlink.css('display', 'block');
-				backlink.html(toClone.clone());
+				backlink.html(toClone.clone().show());
 			}
 			else if (typeof backend_vars.loaded_posts[el.data('post')] !== 'undefined')
 			{
@@ -706,9 +663,7 @@ var showBacklink = function(backlink, pos, height, width)
 		});
 	}
 
-	backlink.find("article").removeAttr("id").find(".post_controls").remove();
-	backlink.find(".post_file_controls").remove();
-
+	// for lazyload
 	var swap_image = backlink.find('[data-original]');
 	if(swap_image.length > 0)
 	{
@@ -894,3 +849,83 @@ var toggleHighlight = function(id)
 		}
 	})
 }
+
+
+
+
+jQuery(document).ready(function() {
+
+	// settings
+	jQuery.support.cors = true;
+	backend_vars.loaded_posts = [];
+
+	var lazyloaded = jQuery('img.lazyload');
+	if(lazyloaded.length > 149)
+	{
+		lazyloaded.lazyload({
+			threshold: 1000,
+			event: 'scroll'
+		});
+	}
+
+	// check if input[date] is supported, so we can use by default input[text] with placeholder without breaking w3
+	var i = document.createElement("input");
+	i.setAttribute("type", "date");
+	if(i.type !== "text")
+	{
+		jQuery('#date_end').replaceWith(jQuery('<input>').attr({id: 'date_end', name: 'end', type: 'date'}));
+		jQuery('#date_start').replaceWith(jQuery('<input>').attr({id: 'date_start', name: 'start', type: 'date'}));
+	}
+	
+	// opera doesn't play well with the modal transition
+	if (navigator.appName == "Opera" && navigator.userAgent.match(/Version\/12\./))
+	{
+		$('#post_tools_modal').removeClass('fade');
+	}
+
+	// firefox sucks at styling input, so we need to add size="", that guess what? It's not w3 compliant!
+	jQuery('#file_image').attr({size: '16'});
+
+	var post = location.href.split(/#/);
+	if (post[1]) {
+		if (post[1].match(/^q\d+(_\d+)?$/)) {
+			post[1] = post[1].replace('q', '').replace('_', ',');
+			jQuery("#reply_chennodiscursus").append(">>" + post[1] + "\n");
+			post[1] = post[1].replace(',', '_');
+
+		}
+		
+		toggleHighlight(post[1]);
+	}
+
+	if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 24 * 60 * 60))
+	{
+		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + ' <a class="btnr" href="#" data-function="realtimeThread">' + backend_vars.gettext['update_now'] + '</a>');
+		setTimeout(realtimethread, 10000);
+	}
+
+	bindFunctions();
+
+	// localize and add 4chan tooltip where title
+	jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy').filter('[title]').tooltip({
+		placement: 'top',
+		delay: 300,
+		animation: false
+	});
+
+	jQuery('input[title]').tooltip({
+		placement: 'right',
+		delay: 200,
+		animation: false
+	});
+
+	jQuery('li.latest_search').tooltip({
+		placement: 'left',
+		animation: false
+	});
+
+	jQuery('#thread_o_matic .thread_image_box').tooltip({
+		placement: 'bottom',
+		animation: true
+	});
+});

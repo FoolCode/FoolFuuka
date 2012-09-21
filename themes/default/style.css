@@ -177,48 +177,23 @@ body.theme_default {
     text-decoration:none;
 }
 
-.theme_default .navbar-search {
-    padding: 0 10px 6px;
-}
-
-.theme_default .dropdown-menu li > a:hover,
-.theme_default .dropdown-menu .active > a,
-.theme_default .dropdown-menu .active > a:hover {
-    background:#6A836F;
-}
-
-.theme_default .search-dropdown .btn {
-	padding:2px 4px;
-	margin: 4px 0 0 0;
-}
-.theme_default .search-dropdown.active {
-    box-shadow: inset 0px 0px 10px #000;
-    -webkit-box-shadow: inset 0px 0px 10px #000;
-    -moz-box-shadow: inset 0px 0px 10px #000;
-	width:500px;
-}
 
 .theme_default .navbar-search .search-query {
     background: rgba(0,0,0,0.3);
     color:#eee;
     text-shadow:none;
-}
-
-.theme_default .search-dropdown.active .navbar-search .search-query {
-	width:460px;
-	background:#FFF;
-	color: #333;
+	width:390px;
 }
 
 /* individual: webkit */
 .theme_default .navbar-search .search-query::-webkit-input-placeholder {
-    color:#bbb;
+    color:#ccc;
     text-shadow:none;
 }
 
 /* individual: mozilla */
 .theme_default .navbar-search .search-query::-moz-placeholder {
-    color:#bbb;
+    color:#ccc;
     text-shadow:none;
 }
 
@@ -243,8 +218,6 @@ body.theme_default {
 	border: 1px solid #aaa;
 	display:none;
 	position:absolute;
-	top: 70px;
-	right: 20px;
 	padding: 0 10px;
 	z-index: 100;
 	border-radius: 4px;
@@ -289,12 +262,28 @@ body.theme_default {
 	margin-bottom: 2px;
 }
 
+.theme_default .advanced_search input[name=text] {
+	line-height: 23px;
+	font-size:20px;
+	height: 28px;
+	width: 608px;
+	padding: 3px 10px;
+	border-radius: 50px;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+}
+
 .theme_default .search_box .advanced_search input[type=text],
 .theme_default .search_box .advanced_search input[type=date] {
 	width: 140px;
 	font-size: 12px;
 	height: 10px;
 	line-height: 10px;
+}
+
+.theme_default .search_box .advanced_search input[type=date] {
+	font-size:10px;
+	line-height: 1;
 }
 
 .theme_default .search_box .advanced_search input:-moz-placeholder,
@@ -314,6 +303,37 @@ body.theme_default {
 	line-height:13px;
 }
 
+/* fix for bigger search in search box */
+
+.theme_default .search_box .advanced_search input[name=text]:-moz-placeholder,
+.theme_default .search_box .advanced_search textarea[name=text]:-moz-placeholder {
+	font-size:13px;
+	line-height:1;
+}
+.theme_default .search_box .advanced_search input[name=text]:-ms-input-placeholder,
+.theme_default .search_box .advanced_search textarea[name=text]:-ms-input-placeholder {
+	font-size:13px;
+	line-height:1;
+}
+
+.theme_default .search_box .advanced_search input[name=text]::-webkit-input-placeholder,
+.theme_default .search_box .advanced_search textarea[name=text]::-webkit-input-placeholder {
+	font-size:13px;
+	line-height:1;
+}
+
+.theme_default .search_box .advanced_search input[name=text] {
+	width: 390px;
+	height: 18px;
+	font-size: 13px;
+	line-height: 13px;
+	padding: 4px 14px;
+}
+
+.theme_default .advanced_search .comment_wrap {
+	border-bottom: 1px solid #bbb;
+	margin-bottom: 5px;
+}
 
 .theme_default .advanced_search .btn {
 	margin-bottom: 5px;
@@ -381,7 +401,43 @@ body.theme_default {
 	display:none;
 }
 
+.theme_default .advanced_search .latest_searches {
+	clear:left;
+}
 
+.theme_default .advanced_search .latest_searches h5 {
+	font-size: 12px;
+	display:inline;
+	border-bottom: 1px solid #ddd;
+}
+
+.theme_default .advanced_search .latest_searches ul {
+	list-style:none;	
+	margin-left: 0;
+	width: 238px;
+}
+
+.theme_default .advanced_search .latest_searches ul li {
+	line-height: 18px;
+	padding: 1px 2px 1px 4px;
+}
+
+.theme_default .advanced_search .latest_searches ul li:hover {
+	background: #6A836F;
+}
+
+.theme_default .advanced_search .latest_searches ul li:hover a {
+	width:100%;
+	height:100%;
+	display:block;
+	color:#fff;
+	text-decoration:none;
+	text-overflow: ellipsis;
+}
+
+
+
+/* the body part of things */
 
 .theme_default #main {
 }

@@ -64,7 +64,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 				<?php endif; ?>
 
 				<?php if ($p->title_processed !== '') : ?><h2 class="post_title"><?= $p->title_processed ?></h2><?php endif; ?>
-				<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->name_processed ?><?php if ($p->trip_processed) : ?> <span class="post_trip"><?= $p->trip_processed ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?></span>
+				<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->name_processed ?><?php if ($p->trip_processed) : ?> <span class="post_trip"><?= $p->trip_processed ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?></span>
 				</span>
 				<?php if ($p->poster_hash_processed) : ?><span class="poster_hash">ID:<?= $p->poster_hash_processed ?></span><?php endif; ?>
 				<?php if ($p->capcode != 'N') : ?>

@@ -3,7 +3,6 @@ if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 ?>
 <div class="advanced_search clearfix">
-<h4><?= e(__('Advanced Search')) ?></h4>
 
 <?php
 if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
@@ -19,6 +18,18 @@ else if (isset($radix))
 
 <?= \Form::open(array('method' => 'POST', 'action' => Uri::create($search_radix.'/search'))); ?>
 
+
+<div class="comment_wrap">
+<?= \Form::input(array(
+	'name' => 'text',
+	'id' => 'search_form_comment',
+	'value' => (isset($search['text'])) ? rawurldecode($search['text']) : '',
+	'placeholder' => ($search_radix  !== '_') ? __('Search or insert post number') : __('Search through all the boards'),
+));
+?>
+</div>
+
+
 <div class="buttons clearfix">
 <?= \Form::submit(array(
 	'class' => 'btn btn-inverse',
@@ -33,7 +44,18 @@ else if (isset($radix))
 	'name' => 'submit_search_global',
 ));
 ?>
+	
+<?php if (isset($radix)) : ?>
+<?= \Form::submit(array(
+	'class' => 'btn btn-inverse',
+	'value' => __('Go to post number'),
+	'name' => 'submit_post',
+));
+?>
+<?php endif; ?>
+
 </div>
+	
 <?php
 
 $search_structure = \Search::structure();
@@ -70,6 +92,11 @@ foreach ($search_structure as $element)
 	
 	if ($element['type'] === 'input')
 	{
+		if ($element['name'] === 'text')
+		{
+			continue;
+		}
+		
 		echo '<div class="input-prepend">';
 		echo '<label class="add-on" for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
 		echo \Form::input(array(
@@ -89,6 +116,7 @@ foreach ($search_structure as $element)
 			array('type' => 'date',
 				'name' => $element['name'],
 				'placeholder' => 'YYYY-MM-DD',
+				'autocomplete' => 'off',
 				'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : ''
 			)
 		);
@@ -112,7 +140,7 @@ foreach ($search_structure as $element)
 		}
 		if ($radixes) :
 		?>
-		<div><h5><?=e(__('On these archives'))?></h5>
+		<div><h5><?= e(__('On these archives')) ?></h5>
 			<a href="#" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></a>
 			<a href="#" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></a>
 		</div>
@@ -152,5 +180,54 @@ foreach ($search_structure as $element)
 </div>
 <?php endif ?>
 
+<div class="latest_searches">
+<h5><?= e(__('Your latest searches')) ?></h5>
+<ul>
+<?php
+if (isset($latest_searches) || $latest_searches = @json_decode(\Cookie::get('search_latest_5'), TRUE))
+{
+	// sanitization
+	foreach($latest_searches as $item)
+	{
+		// all subitems must be array, all must have 'radix'
+		if (!is_array($item) || !isset($item['board']))
+		{
+			$latest_searches = array();
+			break;
+		}
+	}
+
+	foreach($latest_searches as $latest_search)
+	{
+		$uri = ($latest_search['board'] === FALSE ? '' : $latest_search['board']) . '/search/';
+		$text = ($latest_search['board'] === FALSE) ? '<strong>global:</strong> ' : '/<strong>' . e($latest_search['board']) . '</strong>/: ';
+		unset($latest_search['board']);
+		if (isset($latest_search['text']))
+		{
+			$uri .= 'text/' . $latest_search['text'] . '/';
+			$text .= e(urldecode($latest_search['text'])) . ' ';
+			unset($latest_search['text']);
+		}
+		if (isset($latest_search['order']) && $latest_search['order'] == 'desc')
+		{
+			unset($latest_search['order']);
+		}
+
+		$extra_text = '';
+		$extra_text_br = '';
+		foreach($latest_search as $k => $i)
+		{
+			$uri .= $k.'/'.$i.'/';
+			$extra_text .= '<span class="options">[' . e($k) . '] ' . e(urldecode($i)) . ' </span>';
+			$extra_text_br .= '<br/><span class="options">[' . e($k) . '] ' . e(urldecode($i)) . ' </span>';
+		}
+
+		echo '<li title="' . htmlspecialchars($text . $extra_text_br) . '" class="latest_search"><a href="' . Uri::create($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
+	}
+}
+?>
+</ul>
+</div>
 <?= \Form::close() ?>
+
 </div>

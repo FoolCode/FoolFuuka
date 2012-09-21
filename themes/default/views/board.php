@@ -51,7 +51,7 @@ foreach ($board->get_comments() as $key => $post) :
 	<header>
 		<div class="post_data">
 			<?php if ($op->title_processed !== '') : ?><h2 class="post_title"><?= $op->title_processed ?></h2><?php endif; ?>
-			<span class="post_author"><?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:'<?= rawurlencode($op->email) ?>"><?php endif; ?><?= $op->name_processed ?><?php if ($op->trip_processed) : ?> <span class="post_trip"><?= $op->trip_processed ?></span><?php endif; ?><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?></span>
+			<span class="post_author"><?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><?= $op->name_processed ?><?php if ($op->trip_processed) : ?> <span class="post_trip"><?= $op->trip_processed ?></span><?php endif; ?><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?></span>
 			<?php if ($op->poster_hash_processed) : ?><span class="poster_hash">ID:<?= $op->poster_hash_processed ?></span><?php endif; ?>
 			<?php if ($op->capcode != 'N') : ?>
 				<?php if ($op->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= __('Mod') ?></span><?php endif ?>
@@ -103,12 +103,14 @@ foreach ($board->get_comments() as $key => $post) :
 	</div>
 	<div class="thread_tools_bottom">
 		<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
-		<span class="omitted"><a style="display:inline-block" href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->thread_num))?>" data-function="expandThread" data-thread-num="<?= $op->thread_num ?>"><i class="icon icon-resize-full"></i></a>
-			<?= $post['omitted'] . ' ' . _ngettext('post', 'posts', $post['omitted']) ?>
-			<?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>
-				<?= ' ' . __('and') . ' ' . $post['images_omitted'] . ' ' . _ngettext('image', 'images', $post['images_omitted']) ?>
-			<?php endif; ?>
-			<?= ' ' . _ngettext('omitted', 'omitted', $post['omitted'] + $post['images_omitted']) ?>
+		<span class="omitted">
+			<a style="display:inline-block" href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->thread_num))?>" data-function="expandThread" data-thread-num="<?= $op->thread_num ?>"><i class="icon icon-resize-full"></i></a>
+			<span class="omitted_text">
+				<span class="omitted_posts"><?= $post['omitted'] ?></span> <?= _ngettext('post', 'posts', $post['omitted']) ?>
+				<?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>
+					<?= __('and') ?> <span class="omitted_images"><?= $post['images_omitted'] ?></span> <?= _ngettext('image', 'images', $post['images_omitted']) ?>
+				<?php endif; ?>
+				<?= _ngettext('omitted', 'omitted', $post['omitted'] + $post['images_omitted']) ?>
 		</span>
 		<?php endif; ?>
 	</div>

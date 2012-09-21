@@ -118,6 +118,8 @@ var bindFunctions = function()
 				theme: backend_vars.selected_theme
 			};
 			
+			data_obj[el.attr('name')] = true;
+			
 			data_obj[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
 			
 			progress_el.parent().animate({'opacity': '1.0'}, 300);

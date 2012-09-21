@@ -210,7 +210,11 @@ var bindFunctions = function()
 					return xhr;
 				},
 				success: function(data, textStatus, jqXHR) {
-					window.Recaptcha.reload();
+					if (typeof window.Recaptcha !== "undefined")
+					{
+						window.Recaptcha.reload();
+					}
+					
 					jQuery("#recaptcha_response_field").val('');
 					if (typeof data.captcha !== "undefined")
 					{

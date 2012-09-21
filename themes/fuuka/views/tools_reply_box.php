@@ -46,6 +46,19 @@ if (!isset($thread_id) && ! $radix->archive) : ?>
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
 							<td><?php echo \Form::password(array('name' => 'delpass', 'size' => 24, 'value' => $user_pass)) ?></td>
 						</tr>
+						<?php if (\ReCaptcha::available()) : ?>
+						<tr id="recaptcha_widget">
+							<td class="postblock"><?= __('Verification') ?><br/>(<?= __('Optional') ?>)</td>
+							<td>
+								<script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
+								<noscript>
+									<iframe src="http://www.google.com/recaptcha/api/noscript?k=<?= \Config::get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br/>
+									<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+									<input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
+								</noscript>
+							</td>
+						</tr>
+						<?php endif; ?>
 						<?php
 							$postas = array('N' => __('User'));
 
@@ -131,6 +144,19 @@ if (!isset($thread_id) && ! $radix->archive) : ?>
 							<td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
 							<td><?php echo \Form::password(array('name' => 'delpass', 'size' => 24, 'value' => $user_pass)); ?></td>
 						</tr>
+						<?php if (\ReCaptcha::available()) : ?>
+						<tr id="recaptcha_widget">
+							<td class="postblock"><?= __('Verification') ?><br/>(<?= __('Optional') ?>)</td>
+							<td>
+								<script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
+								<noscript>
+									<iframe src="http://www.google.com/recaptcha/api/noscript?k=<?= \Config::get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br/>
+									<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+									<input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
+								</noscript>
+							</td>
+						</tr>
+						<?php endif; ?>
 						<?php
 							$postas = array('N' => __('User'));
 

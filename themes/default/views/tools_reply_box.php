@@ -3,6 +3,15 @@ if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 ?>
 
+<?php if (\ReCaptcha::available()) : ?>
+	<script>
+		var RecaptchaOptions = {
+		   theme : 'custom',
+		   custom_theme_widget: 'recaptcha_widget'
+		};
+	</script>
+<?php endif; ?>
+
 <div id="reply" class="thread_form_wrap clearfix">
 <section class="thread_form clearfix">
 <?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
@@ -70,17 +79,10 @@ if (!defined('DOCROOT'))
 			?>
 		</div>
 		
-		<?php $used_progressbar = false ?>
 		<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
 		<div class="input-prepend">
 			<label class="add-on" for="file_image"><?= __('File') ?></label><input type="file" name="file_image" id="file_image" />
-			
-			<?php $used_progressbar = true ?>
 		</div>
-		<?php endif; ?>
-
-		<?php if (!$used_progressbar) : ?>
-			<div class="progress progress-info progress-striped active" style="height:8px; margin-top:0px; margin-bottom: 2px; background: #fff; width: 317px; position:relative; top:-3px"><div class="bar" style="width: 0%"></div></div>
 		<?php endif; ?>
 		<?php
 			$postas = array('N' => __('User'));
@@ -143,12 +145,41 @@ if (!defined('DOCROOT'))
 
 
 	<div class="rules pull-left">
+		<div class="rules_box">
 		<?php
 			if ($radix->posting_rules)
 			{
 				echo \Markdown::parse($radix->posting_rules);
 			}
 		?>
+		</div>
+		
+		<?php if (\ReCaptcha::available()) : ?>
+		
+		<div class="recaptcha_widget" style="display:none">
+			<div><p><?= e(__('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
+			<div id="recaptcha_image" style="background: #fff; border: 1px solid #ccc; padding: 3px 6px; margin: 4px 0;"></div>
+			<div class="input-prepend">
+				<label class="add-on" for="recaptcha_response_field"><?= e(__('Solution')) ?></label>
+				<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
+			</div>
+			<div class="btn-group">
+				<a class="btn btn-mini" href="javascript:Recaptcha.reload()">Get another CAPTCHA</a>
+				<a class="recaptcha_only_if_image btn btn-mini" href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a>
+				<a class="recaptcha_only_if_audio btn btn-mini" href="javascript:Recaptcha.switch_type('image')">Get an image CAPTCHA</a>
+				<a class="btn btn-mini" href="javascript:Recaptcha.showhelp()">Help</a>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
+		<noscript>
+			<iframe src="http://www.google.com/recaptcha/api/noscript?k=<?= \Config::get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br>
+			<textarea name="recaptcha_challenge_field" rows="3" cols="40">
+			</textarea>
+			<input type="hidden" name="recaptcha_response_field"  value="manual_challenge">
+		</noscript>
+		<?php endif; ?>
+
 	</div>
 
 	<div id="reply_ajax_notices"></div>

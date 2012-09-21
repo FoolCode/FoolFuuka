@@ -177,6 +177,8 @@ var bindFunctions = function()
 				reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
 				reply_nymphassword: jQuery("#reply_nymphassword").val(),
 				reply_postas: jQuery("#reply_postas").val() === undefined ? 'N' : jQuery("#reply_postas").val(),
+				recaptcha_challenge_field: jQuery("#recaptcha_challenge_field").val(),
+				recaptcha_response_field: jQuery("#recaptcha_response_field").val(),
 				reply_gattai: 'Submit',
 				reply_last_limit: typeof backend_vars.last_limit === "undefined" ? null : backend_vars.last_limit,
 				latest_doc_id: backend_vars.latest_doc_id,
@@ -208,12 +210,25 @@ var bindFunctions = function()
 					return xhr;
 				},
 				success: function(data, textStatus, jqXHR) {
+					window.Recaptcha.reload();
+					jQuery("#recaptcha_response_field").val('');
+					if (typeof data.captcha !== "undefined")
+					{
+						jQuery('.recaptcha_widget').show();
+						jQuery('.rules_box').hide()
+						return false;
+					}
+					
 					if (typeof data.error !== "undefined")
 					{
 						reply_alert.html(data.error);
 						reply_alert.addClass('error'); // deals with showing the alert
 						return false;
 					}
+					
+					jQuery('.rules_box').show()
+					jQuery('.recaptcha_widget').hide();
+					
 					reply_alert.html(data.success);
 					reply_alert.addClass('success'); // deals with showing the alert
 					jQuery("#reply_chennodiscursus").val("");

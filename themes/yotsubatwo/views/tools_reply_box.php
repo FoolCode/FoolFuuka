@@ -2,6 +2,15 @@
 	
 <?php \Plugins::run_hook('fu.themes.default_after_op_open', array($radix)); ?>
 
+<?php if (\ReCaptcha::available()) : ?>
+	<script>
+		var RecaptchaOptions = {
+		   theme : 'custom',
+		   custom_theme_widget: 'recaptcha_widget'
+		};
+	</script>
+<?php endif; ?>
+
 <?= Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit')) ?>
 <?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
 <?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0, array('id' => 'reply_numero')) ?>
@@ -81,14 +90,28 @@
 				));
 			?></td>
 		</tr>
-		<?php /*
-		<tr>
+		<?php if (\ReCaptcha::available()) : ?>
+		<tr class="recaptcha_widget" style="display:none">
 			<td><?= __('Verification') ?></td>
-			<td> <div>
+			<td><div><p><?= e(__('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
+			<div id="recaptcha_image" style="background: #fff; border: 1px solid #ccc; padding: 3px 6px; margin: 4px 0;"></div>
+			<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
+			<div class="btn-group">
+				<a class="btn btn-mini" href="javascript:Recaptcha.reload()">Get another CAPTCHA</a>
+				<a class="recaptcha_only_if_image btn btn-mini" href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a>
+				<a class="recaptcha_only_if_audio btn btn-mini" href="javascript:Recaptcha.switch_type('image')">Get an image CAPTCHA</a>
+				<a class="btn btn-mini" href="javascript:Recaptcha.showhelp()">Help</a>
+			</div>
 
-				</div></td>
+			<script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
+			<noscript>
+				<iframe src="http://www.google.com/recaptcha/api/noscript?k=<?= \Config::get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br>
+				<textarea name="recaptcha_challenge_field" rows="3" cols="40">
+				</textarea>
+				<input type="hidden" name="recaptcha_response_field"  value="manual_challenge">
+			</noscript></td>
 		</tr>
-		 */ ?>
+		<?php endif; ?>
 		<?php if (!isset($disable_image_upload) || !$disable_image_upload) : ?>
 		<tr>
 			<td><?= __('File') ?></td>

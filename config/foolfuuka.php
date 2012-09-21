@@ -10,7 +10,7 @@ return array(
 		/**
 		 * Version for autoupgrades
 		 */
-		'version' => '1.5.1-dev-15',
+		'version' => '1.5.1-dev-16',
 
 		/**
 		 * Display name for the module

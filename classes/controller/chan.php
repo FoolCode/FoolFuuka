@@ -294,7 +294,7 @@ class Controller_Chan extends \Controller_Common
 			'posts_per_thread' => $options['per_thread'] - 1,
 			'order' => $options['order'],
 			'pagination' => array(
-				'base_url' => \Uri::create(array($this->_radix->shortname, 'page')),
+				'base_url' => \Uri::create(array($this->_radix->shortname, $option['order'] === 'ghost' ? 'ghost' : 'page')),
 				'current_page' => $page,
 				'total' => floor($board->get_count()/$options['per_page']+1)
 			)

@@ -396,7 +396,7 @@ class Controller_Chan extends \Controller_Common
 
 		$this->_theme->bind('backend_vars', $backend_vars);
 
-		if (!$thread_status['dead'] || ($thread_status['dead'] && !$this->_radix->disable_ghost))
+		if ( ! $thread_status['closed'])
 		{
 			$this->_theme->set_partial('tools_reply_box', 'tools_reply_box');
 		}
@@ -562,6 +562,7 @@ class Controller_Chan extends \Controller_Common
 	public function action_advanced_search()
 	{
 		$this->_theme->bind('search_structure', \Search::structure());
+		$this->_theme->bind('section_title', __('Advanced search'));
 		
 		if ($this->_radix !== null)
 		{

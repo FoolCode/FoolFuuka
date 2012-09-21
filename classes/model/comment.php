@@ -21,6 +21,7 @@ class CommentSendingImageInGhostException extends CommentSendingException {}
 class CommentSendingBannedException extends CommentSendingException {}
 class CommentSendingRequestCaptchaException extends CommentSendingException {}
 class CommentSendingWrongCaptchaException extends CommentSendingException {}
+class CommentSendingThreadClosedException extends CommentSendingException {}
 
 class Comment extends \Model\Model_Base
 {
@@ -961,6 +962,11 @@ class Comment extends \Model\Model_Base
 				throw new CommentSendingException($e->getMessage());
 			}
 
+			if ($status['closed'])
+			{
+				throw new CommentSendingThreadClosedException(__('The thread is closed.'));
+			}
+			
 			$this->ghost = $status['dead'];
 			$this->allow_media = ! $status['disable_image_upload'];
 		}

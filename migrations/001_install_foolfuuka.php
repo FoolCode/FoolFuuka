@@ -66,8 +66,8 @@ class Install_Foolfuuka
 			\DBUtil::create_table('reports', array(
 				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
 				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
-				'doc_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true, 'default' => null),
-				'media_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true, 'default' => null),
+				'doc_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true, 'default' => \DB::expr('NULL')),
+				'media_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true, 'default' => \DB::expr('NULL')),
 				'reason' => array('type' => 'text'),
 				'ip_reporter' => array('type' => 'decimal', 'constraint' => '39,0'),
 				'created' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true)

@@ -723,7 +723,7 @@ class Board extends \Model\Model_Base
 		$ghost_post_present = false;
 		$thread_last_bump = 0;
 		$counter = array('posts' => 0, 'images' => 0);
-
+		
 		foreach ($this->_comments_unsorted as $post)
 		{
 			// we need to find if there's the OP in the list
@@ -761,6 +761,7 @@ class Board extends \Model\Model_Base
 		}
 
 		$result = array(
+			'closed' => false,
 			'dead' => (bool) $this->_radix->archive,
 			'disable_image_upload' => (bool) $this->_radix->archive,
 		);
@@ -780,6 +781,11 @@ class Board extends \Model\Model_Base
 		else if ($counter['images'] >= $this->_radix->max_images_count)
 		{
 			$result['disable_image_upload'] = true;
+		}
+		
+		if ($this->_radix->disable_ghost && $result['dead'])
+		{
+			$result['closed'] = true;
 		}
 
 		return $result;

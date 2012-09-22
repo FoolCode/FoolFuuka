@@ -1416,6 +1416,12 @@ class Comment extends \Model\Model_Base
 			}
 			catch (\Database_Exception $e)
 			{
+				// 1213 is the deadlock exception
+				if ($e->getCode() !== 1213)
+				{
+					throw new CommentSendingDatabaseException(__('Something went wrong when inserting the post in the database. Try again.'));
+				}
+				
 				$try_count++;
 				
 				if ($try_count > $try_max)

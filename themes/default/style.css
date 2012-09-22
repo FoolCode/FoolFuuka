@@ -104,8 +104,6 @@ body.theme_default {
 	color: #FFF;
 }
 
-
-
 .theme_default .navbar {
     position:static;
     margin-bottom:0;
@@ -128,8 +126,6 @@ body.theme_default {
 	display:inline !important;
 	line-height: 8px;
 }
-
-
 
 .theme_default .navbar .nav > li > a:hover {
     color:#fff;
@@ -233,9 +229,23 @@ body.theme_default {
 	margin: 0px auto;
 }
 
+.theme_default .advanced_search .column {
+	display:inline-block;
+	width: 100px;
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    vertical-align: top;
+	width: 245px
+}
+
+.theme_default .advanced_search .column.checkboxes {
+	width: 170px;
+}
+
+
 .theme_default .search_box .advanced_search {
-	width: 410px;
-	padding: 10px 8px 5px 2px;
+	width: 420px;
+	padding: 10px 5px;
 }
 
 .theme_default .search_box .advanced_search h4 {
@@ -415,6 +425,7 @@ body.theme_default {
 	list-style:none;	
 	margin-left: 0;
 	width: 238px;
+	overflow:hidden;
 }
 
 .theme_default .advanced_search .latest_searches ul li {
@@ -426,13 +437,19 @@ body.theme_default {
 	background: #6A836F;
 }
 
-.theme_default .advanced_search .latest_searches ul li:hover a {
+.theme_default .advanced_search .latest_searches ul li a {
 	width:100%;
 	height:100%;
 	display:block;
+	overflow:hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #333;
+}
+
+.theme_default .advanced_search .latest_searches ul li:hover a {
 	color:#fff;
 	text-decoration:none;
-	text-overflow: ellipsis;
 }
 
 

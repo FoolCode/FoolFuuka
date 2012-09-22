@@ -28,19 +28,6 @@ var bindFunctions = function()
 		});
 	}
 
-	jQuery('.search-query').focus(function() {
-		var el = jQuery(this);
-		var offset = el.offset();
-		var width = el.width();
-		var search_box = jQuery('.search_box');
-		var comment_wrap = search_box.find('.comment_wrap');
-		var comment_wrap_pos = comment_wrap.position();
-		search_box.css({top: (offset.top - 11) + 'px', left: (offset.left - 13) + 'px' }).show();
-		el.parents('.open').removeClass('open');
-		search_box.find('input[name=text]').focus();
-		return false;
-	});
-
 	var clickCallbacks = {
 
 		checkAll: function(el, post, event)
@@ -535,7 +522,18 @@ var bindFunctions = function()
 		jQuery('.search_box').hide();
 	});
 	
-	
+	jQuery('.search-query').focus(function() {
+		var el = jQuery(this);
+		var offset = el.offset();
+		var width = el.outerWidth();
+		var search_box = jQuery('.search_box');
+		var comment_wrap = search_box.find('.comment_wrap');
+		var comment_wrap_pos = comment_wrap.position();
+		search_box.css({top: (offset.top - 11) + 'px', right: (jQuery(window).width() - (offset.left + width) - 16) + 'px' }).show();
+		el.parents('.open').removeClass('open');
+		search_box.find('input[name=text]').focus();
+		return false;
+	});
 
 	// how could we make it working well on cellphones?
 	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent))

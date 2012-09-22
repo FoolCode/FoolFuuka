@@ -56,33 +56,10 @@ else if (isset($radix))
 
 </div>
 	
+<?php $search_structure = \Search::structure(); ?>
+
+<div class="column">
 <?php
-
-$search_structure = \Search::structure();
-
-echo '<div class="checkboxes pull-right"><table class="table"><tbody>';
-foreach ($search_structure as $element)
-{
-	if (isset($element['access']) && ! \Auth::has_access($element['access']))
-	{
-		continue;
-	}
-		
-	if ($element['type'] === 'radio')
-	{
-		echo '<tr><td>'.e($element['label']).'</td><td>';
-		foreach ($element['elements'] as $el)
-		{
-			echo '<label>';
-			echo \Form::radio($element['name'], $el['value'] ? : '', isset($search[$element['name']]) && $el['value'] === $search[$element['name']]);
-			echo ' '.e($el['text']);
-			echo '</label>';
-		}
-		echo '</td></tr>';
-	}
-}
-echo '</tbody></table></div>';
-
 foreach ($search_structure as $element)
 {
 	if (isset($element['access']) && ! \Auth::has_access($element['access']))
@@ -228,6 +205,29 @@ if (isset($latest_searches) || $latest_searches = @json_decode(\Cookie::get('sea
 ?>
 </ul>
 </div>
+</div>
+<div class="column checkboxes"><table class="table"><tbody>
+<?php
+foreach ($search_structure as $element) :
+	if (isset($element['access']) && ! \Auth::has_access($element['access']))
+	{
+		continue;
+	}
+		
+	if ($element['type'] === 'radio') : ?>
+		<tr><td><?= e($element['label']) ?></td><td>
+		<?php foreach ($element['elements'] as $el) : ?>
+			<label>
+			<?= \Form::radio($element['name'], $el['value'] ? : '', isset($search[$element['name']]) && $el['value'] === $search[$element['name']]) ?>
+			<?= e($el['text']); ?>
+			</label>
+		<?php endforeach; ?>
+		</td></tr>
+	<?php endif;
+
+endforeach; ?>
+</tbody></table></div>	
+
 <?= \Form::close() ?>
 
 </div>

@@ -22,6 +22,7 @@ class CommentSendingBannedException extends CommentSendingException {}
 class CommentSendingRequestCaptchaException extends CommentSendingException {}
 class CommentSendingWrongCaptchaException extends CommentSendingException {}
 class CommentSendingThreadClosedException extends CommentSendingException {}
+class CommentSendingDatabaseException extends CommentSendingException {}
 
 class Comment extends \Model\Model_Base
 {
@@ -1265,8 +1266,6 @@ class Comment extends \Model\Model_Base
 
 		\Plugins::run_hook('fu.comment.insert.alter_input_before_sql', array(&$this), 'simple');
 
-		\DB::start_transaction();
-
 		// being processing insert...
 
 		if($this->ghost)
@@ -1328,82 +1327,107 @@ class Comment extends \Model\Model_Base
 				');
 			}
 		}
-
-		list($last_id, $num_affected) =
-			\DB::insert(\DB::expr(Radix::get_table($this->board)))
-			->set(array(
-				'num' => $num,
-				'subnum' => $subnum,
-				'thread_num' => $thread_num,
-				'op' => $this->op,
-				'timestamp' => $this->timestamp,
-				'capcode' => $this->capcode,
-				'email' => $this->email,
-				'name' => $this->name,
-				'trip' => $this->trip,
-				'title' => $this->title,
-				'comment' => $this->comment,
-				'delpass' => $this->delpass,
-				'spoiler' => $this->media->spoiler,
-				'poster_ip' => $this->poster_ip,
-				'poster_hash' => $this->poster_hash,
-				'poster_country' => $this->poster_country,
-				'preview_orig' => $this->media->preview_orig,
-				'preview_w' => $this->media->preview_w,
-				'preview_h' => $this->media->preview_h,
-				'media_filename' => $this->media->media_filename,
-				'media_w' => $this->media->media_w,
-				'media_h' => $this->media->media_h,
-				'media_size' => $this->media->media_size,
-				'media_hash' => $this->media->media_hash,
-				'media_orig' => $this->media->media_orig,
-				'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
-			))->execute();
-
-		// check that it wasn't posted multiple times
-		$check_duplicate = \DB::select()->from(\DB::expr(Radix::get_table($this->board)))
-			->where('poster_ip', \Input::ip_decimal())->where('comment', $this->comment)
-			->where('timestamp', '>=', $this->timestamp)->as_object()->execute();
-
-		if(count($check_duplicate) > 1)
+		
+		$try_max = 3;
+		$try_count = 0;
+		$try_done = false;
+		
+		while (true)
 		{
-			\DB::rollback_transaction();
-			throw new CommentSendingDuplicateException(__('You are sending the same post twice.'));
-		}
-
-		$comment = $check_duplicate->current();
-
-		$media_fields = Media::get_fields();
-		// refresh the current comment object with the one finalized fetched from DB
-		foreach ($comment as $key => $item)
-		{
-			if (in_array($key, $media_fields))
+			try
 			{
-				$this->media->$key = $item;
+				\DB::start_transaction();
+
+				list($last_id, $num_affected) =
+					\DB::insert(\DB::expr(Radix::get_table($this->board)))
+					->set(array(
+						'num' => $num,
+						'subnum' => $subnum,
+						'thread_num' => $thread_num,
+						'op' => $this->op,
+						'timestamp' => $this->timestamp,
+						'capcode' => $this->capcode,
+						'email' => $this->email,
+						'name' => $this->name,
+						'trip' => $this->trip,
+						'title' => $this->title,
+						'comment' => $this->comment,
+						'delpass' => $this->delpass,
+						'spoiler' => $this->media->spoiler,
+						'poster_ip' => $this->poster_ip,
+						'poster_hash' => $this->poster_hash,
+						'poster_country' => $this->poster_country,
+						'preview_orig' => $this->media->preview_orig,
+						'preview_w' => $this->media->preview_w,
+						'preview_h' => $this->media->preview_h,
+						'media_filename' => $this->media->media_filename,
+						'media_w' => $this->media->media_w,
+						'media_h' => $this->media->media_h,
+						'media_size' => $this->media->media_size,
+						'media_hash' => $this->media->media_hash,
+						'media_orig' => $this->media->media_orig,
+						'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
+					))->execute();
+
+				// check that it wasn't posted multiple times
+				$check_duplicate = \DB::select()->from(\DB::expr(Radix::get_table($this->board)))
+					->where('poster_ip', \Input::ip_decimal())->where('comment', $this->comment)
+					->where('timestamp', '>=', $this->timestamp)->as_object()->execute();
+
+				if(count($check_duplicate) > 1)
+				{
+					\DB::rollback_transaction();
+					throw new CommentSendingDuplicateException(__('You are sending the same post twice.'));
+				}
+
+				$comment = $check_duplicate->current();
+
+				$media_fields = Media::get_fields();
+				// refresh the current comment object with the one finalized fetched from DB
+				foreach ($comment as $key => $item)
+				{
+					if (in_array($key, $media_fields))
+					{
+						$this->media->$key = $item;
+					}
+					else
+					{
+						$this->$key = $item;
+					}
+				}
+
+				// update poster_hash for non-ghost posts
+				if ( ! $this->ghost && $this->op && $this->board->enable_poster_hash)
+				{
+					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment->thread_num),'id'),+3), 0, 8);
+
+					\DB::update(\DB::expr(\Radix::get_table($this->board)))
+						->value('poster_hash', $this->poster_hash)->where('doc_id', $comment->doc_id)->execute();
+				}
+
+				// set data for extra fields
+				\Plugins::run_hook('fu.comment.insert.extra_json_array', array(&$this), 'simple');
+
+				// insert the extra row DURING A TRANSACTION
+				$this->extra->extra_id = $last_id;
+				$this->extra->insert();
+
+				\DB::commit_transaction();
 			}
-			else
+			catch (\Database_Exception $e)
 			{
-				$this->$key = $item;
+				$try_count++;
+				
+				if ($try_count > $try_max)
+				{
+					throw new CommentSendingDatabaseException(__('Something went wrong when inserting the post in the database. Try again.'));
+				}
+				
+				continue;
 			}
+			
+			break;
 		}
-
-		// update poster_hash for non-ghost posts
-		if ( ! $this->ghost && $this->op && $this->board->enable_poster_hash)
-		{
-			$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment->thread_num),'id'),+3), 0, 8);
-
-			\DB::update(\DB::expr(\Radix::get_table($this->board)))
-				->value('poster_hash', $this->poster_hash)->where('doc_id', $comment->doc_id)->execute();
-		}
-
-		// set data for extra fields
-		\Plugins::run_hook('fu.comment.insert.extra_json_array', array(&$this), 'simple');
-
-		// insert the extra row DURING A TRANSACTION
-		$this->extra->extra_id = $last_id;
-		$this->extra->insert();
-
-		\DB::commit_transaction();
 
 		// success, now check if there's extra work to do
 

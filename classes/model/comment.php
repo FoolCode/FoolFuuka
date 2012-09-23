@@ -1208,7 +1208,7 @@ class Comment extends \Model\Model_Base
 				}
 
 				// bots usually fill all the fields
-				if ($this->comment && $this->subject && $this->email)
+				if ($this->comment && $this->title && $this->email)
 				{
 					throw new CommentSendingRequestCaptchaException;
 				}
@@ -1220,12 +1220,12 @@ class Comment extends \Model\Model_Base
 				}
 			}
 
-			// load the spam list and check comment, name, subject and email
+			// load the spam list and check comment, name, title and email
 			$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents(DOCROOT.'assets/anti-spam/databases')));
 			foreach($spam as $s)
 			{
 				if(strpos($this->comment, $s) !== false || strpos($this->name, $s) !== false
-					|| strpos($this->subject, $s) !== false || strpos($this->email, $s) !== false)
+					|| strpos($this->title, $s) !== false || strpos($this->email, $s) !== false)
 				{
 					throw new CommentSendingSpamException(__('Your post has undesidered content.'));
 				}

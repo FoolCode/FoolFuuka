@@ -741,7 +741,7 @@ var realtimethread = function(){
 		},
 		success: insertPost,
 		error: function(jqXHR, textStatus, errorThrown) {
-			timelapse = 10;
+			//timelapse = 10;
 		},
 		complete: function() {
 			currentlapse = setTimeout(realtimethread, timelapse*1000);

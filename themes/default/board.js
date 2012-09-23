@@ -807,7 +807,7 @@ var insertPost = function(data, textStatus, jqXHR)
 	}
 	else
 	{
-		if(timelapse < 30)
+		if(timelapse < 120)
 		{
 			timelapse += 5;
 		}
@@ -898,7 +898,7 @@ jQuery(document).ready(function() {
 		toggleHighlight(post[1]);
 	}
 
-	if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 24 * 60 * 60))
+	if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 6 * 60 * 60))
 	{
 		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + ' <a class="btnr" href="#" data-function="realtimeThread">' + backend_vars.gettext['update_now'] + '</a>');
 		setTimeout(realtimethread, 10000);

@@ -13,15 +13,32 @@
 ));
 
 \Autoloader::add_core_namespace('Foolfuuka\\Model');
+
+\Profiler::mark('Start sphinxql initialization');
+\Profiler::mark_memory(false, 'Start sphinxql initialization');
+
 \Package::load('sphinxql');
+
+\Profiler::mark('End sphinxql, Start stringparser-bbcode initialization');
+\Profiler::mark_memory(false, 'End sphinxql, Start stringparser-bbcode initialization');
+
 \Package::load('stringparser-bbcode', APPPATH.'modules/foolfuuka/packages/stringparser-bbcode/');
+
+\Profiler::mark('End stringparser-bbcode initialization, start Theme initialization');
+\Profiler::mark_memory(false, 'End stringparser-bbcode initialization, start Theme initialization');
 
 $theme = \Theme::forge('foolfuuka');
 $theme->set_module('foolfuuka');
 $theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
 $theme->set_layout('chan');
 
+\Profiler::mark('End stringparser-bbcode initialization, start geoip_codes initialization');
+\Profiler::mark_memory(false, 'End stringparser-bbcode initialization, start geoip_codes initialization');
+
 \Config::load('foolfuuka::geoip_codes', 'geoip_codes');
+
+\Profiler::mark('End geoip_codes initialization');
+\Profiler::mark_memory(false, 'End  geoip_codes initialization');
 
 if (\Auth::has_access('comment.reports'))
 {

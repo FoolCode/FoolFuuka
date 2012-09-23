@@ -65,6 +65,7 @@ class Comment extends \Model\Model_Base
 	protected $_realtime = false;
 	protected $_clean = true;
 	protected $_prefetch_backlinks = true;
+	protected static $_bbcode_parser = null;
 	protected $_force_entries = false;
 	protected $_forced_entries = array(
 		'title_processed', 'name_processed', 'email_processed', 'trip_processed',
@@ -221,8 +222,7 @@ class Comment extends \Model\Model_Base
 		unset($comment->extra->_radix);
 		
 		// we don't have captcha in use in api
-		unset($comment->recaptcha_challenge);
-		unset($comment->recaptcha_response);
+		unset($comment->recaptcha_challenge, $comment->recaptcha_response);
 
 		return $comment;
 	}
@@ -551,48 +551,54 @@ class Comment extends \Model\Model_Base
 
 	protected static function parse_bbcode($str, $special_code, $strip = true)
 	{
-		$bbcode = new \StringParser_BBCode();
-
-		$codes = array();
-
-		// add list of bbcode for formatting
-		$codes[] = array('code', 'simple_replace', null, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
-			array('block', 'inline'), array());
-		$codes[] = array('spoiler', 'simple_replace', null,
-			array('start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
-			array('code'));
-		$codes[] = array('sub', 'simple_replace', null, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline',
-			array('block', 'inline'), array('code'));
-		$codes[] = array('sup', 'simple_replace', null, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline',
-			array('block', 'inline'), array('code'));
-		$codes[] = array('b', 'simple_replace', null, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline',
-			array('block', 'inline'), array('code'));
-		$codes[] = array('i', 'simple_replace', null, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline',
-			array('block', 'inline'), array('code'));
-		$codes[] = array('m', 'simple_replace', null, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'),
-			'inline', array('block', 'inline'), array('code'));
-		$codes[] = array('o', 'simple_replace', null, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'),
-			'inline', array('block', 'inline'), array('code'));
-		$codes[] = array('s', 'simple_replace', null,
-			array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
-			array('code'));
-		$codes[] = array('u', 'simple_replace', null,
-			array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
-			array('code'));
-		$codes[] = array('EXPERT', 'simple_replace', null,
-			array('start_tag' => '<span class="expert">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
-			array('code'));
-
-		foreach($codes as $code)
+		if (static::$_bbcode_parser === null)
 		{
-			if($strip)
-			{
-				$code[1] = 'callback_replace';
-				$code[2] = '\\Comment::strip_unused_bbcode'; // this also fixes pre/code
-			}
+			$bbcode = new \StringParser_BBCode();
 
-			$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
+			$codes = array();
+
+			// add list of bbcode for formatting
+			$codes[] = array('code', 'simple_replace', null, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
+				array('block', 'inline'), array());
+			$codes[] = array('spoiler', 'simple_replace', null,
+				array('start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
+				array('code'));
+			$codes[] = array('sub', 'simple_replace', null, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline',
+				array('block', 'inline'), array('code'));
+			$codes[] = array('sup', 'simple_replace', null, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline',
+				array('block', 'inline'), array('code'));
+			$codes[] = array('b', 'simple_replace', null, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline',
+				array('block', 'inline'), array('code'));
+			$codes[] = array('i', 'simple_replace', null, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline',
+				array('block', 'inline'), array('code'));
+			$codes[] = array('m', 'simple_replace', null, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'),
+				'inline', array('block', 'inline'), array('code'));
+			$codes[] = array('o', 'simple_replace', null, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'),
+				'inline', array('block', 'inline'), array('code'));
+			$codes[] = array('s', 'simple_replace', null,
+				array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
+				array('code'));
+			$codes[] = array('u', 'simple_replace', null,
+				array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
+				array('code'));
+			$codes[] = array('EXPERT', 'simple_replace', null,
+				array('start_tag' => '<span class="expert">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
+				array('code'));
+
+			foreach($codes as $code)
+			{
+				if($strip)
+				{
+					$code[1] = 'callback_replace';
+					$code[2] = '\\Comment::strip_unused_bbcode'; // this also fixes pre/code
+				}
+
+				$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
+			}
+			
+			static::$_bbcode_parser = $bbcode;
 		}
+		
 
 		// if $special == true, add special bbcode
 		if ($special_code === true)
@@ -606,12 +612,12 @@ class Comment extends \Model\Model_Base
 			}
 			else*/
 			{
-				$bbcode->addCode('moot', 'simple_replace', null, array('start_tag' => '', 'end_tag' => ''), 'inline',
+				static::$_bbcode_parser->addCode('moot', 'simple_replace', null, array('start_tag' => '', 'end_tag' => ''), 'inline',
 					array('block', 'inline'), array());
 			}
 		}
 
-		return $bbcode->parse($str);
+		return static::$_bbcode_parser->parse($str);
 	}
 
 	public static function strip_unused_bbcode($action, $attributes, $content, $params, &$node_object)
@@ -737,7 +743,8 @@ class Comment extends \Model\Model_Base
 
 		$build_url = array(
 			'tags' => array('', ''),
-			'backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . (($data->board) ? $data->board->shortname : $data->shortname) . '" data-post="' . $data->num . '"'
+			'backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="'
+				.(($data->board) ? $data->board->shortname : $data->shortname) . '" data-post="' . $data->num . '"'
 		);
 
 		$build_url = \Plugins::run_hook('fu.comment_model.process_crossboard_links.html_result', array($data, $build_url), 'simple');
@@ -754,7 +761,8 @@ class Comment extends \Model\Model_Base
 
 		if ($data->num)
 		{
-			return implode('<a href="' . \Uri::create(array($data->board->shortname, 'post', $data->num)) . '" ' . $build_url['backlink'] . '>&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
+			return implode('<a href="' . \Uri::create(array($data->board->shortname, 'post', $data->num)) . '" '
+				.$build_url['backlink'] . '>&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
 		}
 
 		return implode('<a href="' . \Uri::create($data->board->shortname) . '">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
@@ -805,77 +813,16 @@ class Comment extends \Model\Model_Base
 						$period = '.';
 						$matches['6'][$i] = substr($matches['6'][$i], 0, -1);
 					}
-
-					$internal = (strpos($matches['6'][$i], $_SERVER['HTTP_HOST']) === 0);
-
-					if (!$internal && defined('FOOL_SUBDOMAINS_ENABLED') && FOOL_SUBDOMAINS_ENABLED == true)
-					{
-						$subdomains = array(
-							FOOL_SUBDOMAINS_SYSTEM,
-							FOOL_SUBDOMAINS_BOARD,
-							FOOL_SUBDOMAINS_ARCHIVE,
-							FOOL_SUBDOMAINS_DEFAULT
-						);
-
-						foreach ($subdomains as $subdomain)
-						{
-							if (strpos($matches['6'][$i], rtrim($subdomain, '.')) === 0)
-							{
-								$host_array = explode('.', $_SERVER['HTTP_HOST']);
-								array_shift($host_array);
-								array_unshift($host_array, $subdomain);
-								$host = implode('.', $host_array);
-								if (strpos($matches['6'][$i], $host) === 0)
-								{
-									$internal = true;
-									break;
-								}
-							}
-						}
-					}
-
-					if ($internal)
-					{
-						$str = str_replace($matches['0'][$i],
-							$matches['1'][$i] . '<a href="//' .
-							$matches['5'][$i] .
-							preg_replace('/[[\/\!]*?[^\[\]]*?]/si', '', $matches['6'][$i]) . '"' . $pop . '>http' .
-							$matches['4'][$i] . '://' .
-							$matches['5'][$i] .
-							$matches['6'][$i] . '</a>' .
-							$period, $str);
-					}
-					else
-					{
-						$str = str_replace($matches['0'][$i],
-							$matches['1'][$i] . '<a href="http' .
-							$matches['4'][$i] . '://' .
-							$matches['5'][$i] .
-							preg_replace('/[[\/\!]*?[^\[\]]*?]/si', '', $matches['6'][$i]) . '"' . $pop . '>http' .
-							$matches['4'][$i] . '://' .
-							$matches['5'][$i] .
-							$matches['6'][$i] . '</a>' .
-							$period, $str);
-					}
-				}
-			}
-		}
-
-		if ($type != 'url')
-		{
-			if (preg_match_all("/([a-zA-Z0-9_\.\-\+]+)@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-\.]*)/i", $str, $matches))
-			{
-				for ($i = 0; $i < count($matches['0']); $i++)
-				{
-					$period = '';
-					if (preg_match("|\.$|", $matches['3'][$i]))
-					{
-						$period = '.';
-						$matches['3'][$i] = substr($matches['3'][$i], 0, -1);
-					}
-
+					
 					$str = str_replace($matches['0'][$i],
-						safe_mailto($matches['1'][$i] . '@' . $matches['2'][$i] . '.' . $matches['3'][$i]) . $period, $str);
+						$matches['1'][$i] . '<a href="http' .
+						$matches['4'][$i] . '://' .
+						$matches['5'][$i] .
+						preg_replace('/[[\/\!]*?[^\[\]]*?]/si', '', $matches['6'][$i]) . '"' . $pop . '>http' .
+						$matches['4'][$i] . '://' .
+						$matches['5'][$i] .
+						$matches['6'][$i] . '</a>' .
+						$period, $str);
 				}
 			}
 		}

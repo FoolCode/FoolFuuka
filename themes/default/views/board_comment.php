@@ -34,7 +34,11 @@ class Board_comment extends \Theme
 	public function __toString()
 	{
 		$p = $this->p;
-		$modifiers = $this->modifiers;
+		if (isset($this->modifiers))
+		{
+			$modifiers = $this->modifiers;
+		}
+		
 		$perm = static::$permissions;
 		
 		$num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );

@@ -1118,7 +1118,7 @@ class Comment extends \Model\Model_Base
 
 				if ($ban->reason)
 				{
-					$banned_string .= ' '.__('The reason for this ban is:').' «'.$this->reason.'».';
+					$banned_string .= ' '.__('The reason for this ban is:').' «'.$ban->reason.'».';
 				}
 
 				throw new CommentSendingBannedException($banned_string);

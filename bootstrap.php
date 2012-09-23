@@ -32,8 +32,8 @@ $theme->set_module('foolfuuka');
 $theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
 $theme->set_layout('chan');
 
-\Profiler::mark('End stringparser-bbcode initialization, start geoip_codes initialization');
-\Profiler::mark_memory(false, 'End stringparser-bbcode initialization, start geoip_codes initialization');
+\Profiler::mark('End Theme initialization, start geoip_codes initialization');
+\Profiler::mark_memory(false, 'End Theme initialization, start geoip_codes initialization');
 
 \Config::load('foolfuuka::geoip_codes', 'geoip_codes');
 

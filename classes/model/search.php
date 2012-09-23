@@ -50,7 +50,7 @@ class Search extends Board
 				'type' => 'input',
 				'label' => __('Image hash'),
 				'placeholder' => __('Drop your image here'),
-				'name' => 'image_hash'
+				'name' => 'image'
 			),
 			array(
 				'type' => 'date',

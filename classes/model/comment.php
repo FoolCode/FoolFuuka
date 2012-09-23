@@ -702,7 +702,7 @@ class Comment extends \Model\Model_Base
 
 		if ($this->_realtime === true)
 		{
-			return implode('<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $key)) . '#' . $build_url['hash'] . $data->num . '" '
+			return implode('<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $this->thread_num)) . '#' . $build_url['hash'] . $data->num . '" '
 				. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 		}
 

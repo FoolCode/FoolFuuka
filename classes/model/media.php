@@ -389,7 +389,7 @@ class Media extends \Model\Model_Base
 	
 	public static function process($string)
 	{
-		return e( $string);
+		return e(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
 	}
 	
 	

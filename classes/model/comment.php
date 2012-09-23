@@ -327,8 +327,7 @@ class Comment extends \Model\Model_Base
 	{
 		if ( ! isset($this->comment_sanitized))
 		{
-			$this->comment_sanitized = $this->comment;
-			//$this->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
+			$this->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
 		}
 		
 		return $this->comment_sanitized;
@@ -339,8 +338,7 @@ class Comment extends \Model\Model_Base
 	{
 		if ( ! isset($this->comment_processed))
 		{
-			$this->comment_processed = $this->process_comment();
-			//$this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
+			$this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
 		}
 		
 		return $this->comment_processed;
@@ -386,7 +384,6 @@ class Comment extends \Model\Model_Base
 	
 	public static function process($string)
 	{
-		return e($string);
 		return e(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
 	}
 	

@@ -1064,34 +1064,6 @@ class Comment extends \Model\Model_Base
 		$this->ghost = false;
 		$this->allow_media = true;
 
-		// check if it's a thread and its status
-		if ($this->thread_num > 0)
-		{
-			try
-			{
-				$thread = Board::forge()->get_thread($this->thread_num)->set_radix($this->board);
-				$thread->get_comments();
-				$status = $thread->check_thread_status();
-			}
-			catch (Model\BoardException $e)
-			{
-				throw new CommentSendingException($e->getMessage());
-			}
-
-			if ($status['closed'])
-			{
-				throw new CommentSendingThreadClosedException(__('The thread is closed.'));
-			}
-			
-			$this->ghost = $status['dead'];
-			$this->allow_media = ! $status['disable_image_upload'];
-		}
-
-		foreach(array('name', 'email', 'title', 'delpass', 'comment', 'capcode') as $key)
-		{
-			$this->$key = trim((string) $this->$key);
-		}
-		
 		// some users don't need to be limited, in here go all the ban and posting limitators
 		if( ! \Auth::has_access('comment.limitless_comment'))
 		{
@@ -1123,7 +1095,40 @@ class Comment extends \Model\Model_Base
 
 				throw new CommentSendingBannedException($banned_string);
 			}
+		}
+		
+		
+		// check if it's a thread and its status
+		if ($this->thread_num > 0)
+		{
+			try
+			{
+				$thread = Board::forge()->get_thread($this->thread_num)->set_radix($this->board);
+				$thread->get_comments();
+				$status = $thread->check_thread_status();
+			}
+			catch (Model\BoardException $e)
+			{
+				throw new CommentSendingException($e->getMessage());
+			}
 
+			if ($status['closed'])
+			{
+				throw new CommentSendingThreadClosedException(__('The thread is closed.'));
+			}
+			
+			$this->ghost = $status['dead'];
+			$this->allow_media = ! $status['disable_image_upload'];
+		}
+
+		foreach(array('name', 'email', 'title', 'delpass', 'comment', 'capcode') as $key)
+		{
+			$this->$key = trim((string) $this->$key);
+		}
+		
+		// some users don't need to be limited, in here go all the ban and posting limitators
+		if( ! \Auth::has_access('comment.limitless_comment'))
+		{
 			if ($this->thread_num < 1)
 			{
 				// one can create a new thread only once every 5 minutes

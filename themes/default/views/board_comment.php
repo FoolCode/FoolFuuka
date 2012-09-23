@@ -28,7 +28,6 @@ class Board_comment extends \Theme
 			$this->$key = $item;
 		}
 		
-		die(\Debug::dump($this));
 	}
 	
 	

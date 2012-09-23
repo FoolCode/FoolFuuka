@@ -763,7 +763,7 @@ var insertPost = function(data, textStatus, jqXHR)
 		{
 			if (typeof val.posts !== "undefined")
 			{
-				var posts = jQuery([]);
+				var aside = jQuery('article.thread[data-thread-num=' + id + '] aside.posts');
 				jQuery.each(val.posts, function(idx, value)
 				{ 
 					found_posts = true;
@@ -785,13 +785,11 @@ var insertPost = function(data, textStatus, jqXHR)
 					}
 
 					backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-					posts = posts.add(post);
+					aside.append(value.formatted);
 
 					if(backend_vars.latest_doc_id < value.doc_id)
 						backend_vars.latest_doc_id = value.doc_id;
 				});
-
-				jQuery('article.thread[data-thread-num=' + id + '] aside.posts').append(posts);
 			}
 		});
 	}

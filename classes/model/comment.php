@@ -1116,7 +1116,7 @@ class Comment extends \Model\Model_Base
 					$banned_string .= ' '.__('This ban will last forever.');
 				}
 
-				if ($this->reason)
+				if ($ban->reason)
 				{
 					$banned_string .= ' '.__('The reason for this ban is:').' «'.$this->reason.'».';
 				}

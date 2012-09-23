@@ -94,7 +94,43 @@ class Media extends \Model\Model_Base
 		// let's unset 0 sizes so maybe the __get() can save the day
 		if ( ! $this->preview_w || ! $this->preview_h)
 		{
-			unset($this->preview_w, $this->preview_h);
+			$this->preview_h = 0;
+			$this->preview_w = 0;
+
+			if ($this->board->archive && $this->spoiler)
+			{
+				try
+				{
+					$imgsize = \Cache::get('fu.media.call.spoiler_size.'.$this->board->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'));
+					$this->preview_w = $imgsize[0];
+					$this->preview_h = $imgsize[1];
+				}
+				catch (\CacheNotFoundException $e)
+				{
+					try
+					{
+						$imgpath = $this->get_dir(true);
+						$imgsize = false;
+
+						if ($imgpath)
+						{
+							$imgsize = @getimagesize($imgpath);
+						}
+
+						\Cache::set('fu.media.call.spoiler_size.'.$this->board->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'), $imgsize, 86400);
+
+						if ($imgsize !== FALSE)
+						{
+							$this->preview_w = $imgsize[0];
+							$this->preview_h = $imgsize[1];
+						}
+					}
+					catch (MediaNotFoundException $e)
+					{
+
+					}
+				}
+			}
 		}
 		
 		// we set them even for admins
@@ -258,59 +294,6 @@ class Media extends \Model\Model_Base
 		$media->temp_extension = $file['extension'];
 
 		return new Media($media, $board);
-	}
-	
-	
-	public function __get($name)
-	{
-		switch ($name)
-		{
-			case 'preview_w':
-			case 'preview_h':
-				$this->preview_h = 0;
-				$this->preview_w = 0;
-
-				if ($this->board->archive && $this->spoiler)
-				{
-					try
-					{
-						$imgsize = \Cache::get('fu.media.call.spoiler_size.'.$this->board->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'));
-						$this->preview_w = $imgsize[0];
-						$this->preview_h = $imgsize[1];
-					}
-					catch (\CacheNotFoundException $e)
-					{
-						try
-						{
-							$imgpath = $this->get_dir(true);
-							$imgsize = false;
-
-							if ($imgpath)
-							{
-								$imgsize = @getimagesize($imgpath);
-							}
-
-							\Cache::set('fu.media.call.spoiler_size.'.$this->board->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'), $imgsize, 86400);
-
-							if ($imgsize !== FALSE)
-							{
-								$this->preview_w = $imgsize[0];
-								$this->preview_h = $imgsize[1];
-							}
-
-							return $this->$name;
-						}
-						catch (MediaNotFoundException $e)
-						{
-
-						}
-					}
-				}
-
-				return $this->$name;
-		}
-
-		throw new \InvalidArgumentException('Class variable '.$name.' not found in '.__CLASS__);
 	}
 
 

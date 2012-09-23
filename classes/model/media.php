@@ -259,28 +259,12 @@ class Media extends \Model\Model_Base
 
 		return new Media($media, $board);
 	}
-
-
+	
+	
 	public function __get($name)
 	{
 		switch ($name)
 		{
-			case 'media_status':
-				try { $this->media_link = $this->get_link(false); }
-				catch (MediaNotFoundException $e) {}
-				return $this->media_status;
-			case 'safe_media_hash':
-				try { return $this->safe_media_hash = $this->get_hash(true); }
-				catch (MediaNotFoundException $e) { return null; }
-			case 'remote_media_link':
-				try { return $this->remote_media_link = $this->get_remote_link(); }
-				catch (MediaNotFoundException $e) { return null; }
-			case 'media_link':
-				try { return $this->media_link = $this->get_link(false); }
-				catch (MediaNotFoundException $e) { return null; }
-			case 'thumb_link':
-				try { return $this->thumb_link = $this->get_link(true); }
-				catch (MediaNotFoundException $e) { return null; }
 			case 'preview_w':
 			case 'preview_h':
 				$this->preview_h = 0;
@@ -326,16 +310,139 @@ class Media extends \Model\Model_Base
 				return $this->$name;
 		}
 
-		if (substr($name, -10) === '_processed')
-		{
-			$processing_name = substr($name, 0, strlen($name) - 10);
-			return $this->$name = e(@iconv('UTF-8', 'UTF-8//IGNORE', $this->$processing_name));
-		}
-
 		throw new \InvalidArgumentException('Class variable '.$name.' not found in '.__CLASS__);
 	}
 
 
+	public function get_media_status()
+	{
+		if ( ! isset($this->media_status))
+		{
+			try
+			{
+				$this->media_link = $this->get_link(false);
+			}
+			catch (MediaNotFoundException $e) 
+			{
+				
+			}
+		}
+		
+		return $this->media_status;
+	}
+	
+	
+	public function get_safe_media_hash()
+	{
+		if ( ! isset($this->safe_media_hash))
+		{
+			try
+			{
+				$this->safe_media_hash = $this->get_hash(true);
+			}
+			catch (MediaNotFoundException $e) 
+			{
+				return null;
+			}
+		}
+		
+		return $this->safe_media_hash;
+	}
+	
+	
+	public function get_remote_media_link()
+	{
+		if ( ! isset($this->remote_media_link))
+		{
+			try
+			{
+				$this->remote_media_link = $this->get_remote_link();
+			}
+			catch (MediaNotFoundException $e) 
+			{
+				return null;
+			}
+		}
+		
+		return $this->remote_media_link;
+	}
+	
+	
+	public function get_media_link()
+	{
+		if ( ! isset($this->media_link))
+		{
+			try
+			{
+				$this->media_link = $this->get_link(false);
+			}
+			catch (MediaNotFoundException $e) 
+			{
+				return null;
+			}
+		}
+		
+		return $this->media_link;
+	}
+	
+	
+	public function get_thumb_link()
+	{
+		if ( ! isset($this->thumb_link))
+		{
+			try
+			{
+				$this->thumb_link = $this->get_link(true);
+			}
+			catch (MediaNotFoundException $e) 
+			{
+				return null;
+			}
+		}
+		
+		return $this->thumb_link;
+	}
+	
+	
+	public static function process($string)
+	{
+		return e(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
+	}
+	
+	
+	public function get_media_filename_processed()
+	{
+		if ( ! isset($this->media_filename_processed))
+		{
+			$this->media_filename_processed = static::process($this->media_filename);
+		}
+		
+		return $this->media_filename_processed;
+	}
+	
+	
+	public function get_preview_orig_processed()
+	{
+		if ( ! isset($this->preview_orig_processed))
+		{
+			$this->preview_orig_processed = static::process($this->preview_orig);
+		}
+		
+		return $this->preview_orig_processed;
+	}
+	
+	
+	public function get_media_hash_processed()
+	{
+		if ( ! isset($this->media_hash_processed))
+		{
+			$this->media_hash_processed = static::process($this->media_hash);
+		}
+		
+		return $this->media_hash_processed;
+	}
+	
+	
 	/**
 	 * Get the path to the media
 	 *

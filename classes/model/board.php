@@ -100,7 +100,13 @@ class Board extends \Model\Model_Base
 		{
 			if (method_exists($this, 'p_'.$this->_method_fetching))
 			{
+				\Profiler::mark('Start Board::get_comments() with method '.$this->_method_fetching);
+				\Profiler::mark_memory($this, 'Start Board::get_comments() with method '.$this->_method_fetching);
+				
 				$this->{$this->_method_fetching}();
+				
+				\Profiler::mark('End Board::get_comments() with method '.$this->_method_fetching);
+				\Profiler::mark_memory($this, 'End Board::get_comments() with method '.$this->_method_fetching);
 			}
 			else
 			{
@@ -123,7 +129,13 @@ class Board extends \Model\Model_Base
 		{
 			if (method_exists($this, 'p_'.$this->_method_counting))
 			{
+				\Profiler::mark('Start Board::get_comments() with method '.$this->_method_counting);
+				\Profiler::mark_memory($this, 'Start Board::get_comments() with method '.$this->_method_counting);
+				
 				$this->{$this->_method_counting}();
+				
+				\Profiler::mark('End Board::get_count() with method '.$this->_method_counting);
+				\Profiler::mark_memory($this, 'ENd Board::get_count() with method '.$this->_method_counting);
 			}
 			else
 			{

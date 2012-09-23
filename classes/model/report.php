@@ -57,6 +57,12 @@ class Report extends \Model\Model_Base
 	}
 	
 	
+	public function get_reason_processed()
+	{
+		return $this->reason_processed;
+	}
+	
+	
 	public static function p_preload()
 	{
 		if (static::$_preloaded !== null)
@@ -162,10 +168,10 @@ class Report extends \Model\Model_Base
 	}
 	
 	
-	public static function p_add(&$board, $id, $reason, $ip_reporter = null, $mode = 'doc_id')
+	public static function p_add($board, $id, $reason, $ip_reporter = null, $mode = 'doc_id')
 	{
 		$new = new static();
-		$new->board =& $board;
+		$new->board = $board;
 		$new->board_id = $board->id;
 		
 		if ($mode === 'media_id')

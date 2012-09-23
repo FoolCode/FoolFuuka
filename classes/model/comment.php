@@ -64,9 +64,10 @@ class Comment extends \Model\Model_Base
 	 */
 	protected $_realtime = false;
 	protected $_clean = true;
+	protected $_prefetch_backlinks = true;
 	protected $_force_entries = false;
 	protected $_forced_entries = array(
-		'title_processed', 'name_processed', 'email_processed', 'trip_processed', 'media_orig_processed',
+		'title_processed', 'name_processed', 'email_processed', 'trip_processed',
 		'poster_hash_processed', 'original_timestamp', 'fourchan_date', 'comment_sanitized', 
 		'comment_processed', 'poster_country_name_processed'
 	);
@@ -96,48 +97,8 @@ class Comment extends \Model\Model_Base
 
 	public $media = null;
 	public $extra = null;
-
-
-	public function __get($name)
-	{
-		if ($name != 'comment_processed' && substr($name, -10) === '_processed')
-		{
-			$processing_name = substr($name, 0, strlen($name) - 10);
-			return $this->$name = e(@iconv('UTF-8', 'UTF-8//IGNORE', $this->$processing_name));
-		}
-
-		switch ($name)
-		{
-			case 'original_timestamp':
-				$this->original_timestamp = $this->timestamp;
-				return $this->original_timestamp;
-			case 'fourchan_date':
-				return $this->fourchan_date = gmdate('n/j/y(D)G:i', $this->original_timestamp);
-			case 'comment':
-				// we always used comment_processed, this is an exception
-				return $this->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
-			case 'comment_processed':
-				return $this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
-			case 'backlinks':
-				return $this->backlinks = $this->get_backlinks();
-			case 'formatted':
-				return $this->formatted = $this->build_comment();
-			case 'reports':
-				if (\Auth::has_access('comment.reports'))
-				{
-					$reports = \Report::get_by_doc_id($this->board, $this->doc_id);
-					if ($this->media)
-					{
-						$reports += \Report::get_by_media_id($this->board, $this->media->media_id);
-					}
-					return $this->reports = $reports;
-				}
-		}
-
-		return null;
-	}
-
-
+	
+	
 	public static function forge($post, $board, $options = array())
 	{
 		if (is_array($post))
@@ -179,7 +140,7 @@ class Comment extends \Model\Model_Base
 
 		foreach ($fields as $field)
 		{
-			$comment->$field;
+			$comment->{'get_'.$field}();
 		}
 		
 		// also spawn media variables
@@ -188,7 +149,7 @@ class Comment extends \Model\Model_Base
 			// backwards compatibility with 4chan X
 			foreach (Media::$_fields as $field)
 			{
-				if (!isset($comment->$field))
+				if ( ! isset($comment->$field))
 				{
 					$comment->$field = $comment->media->$field;
 				}
@@ -216,7 +177,7 @@ class Comment extends \Model\Model_Base
 					'media' => null,
 					'preview_op' => null,
 					'preview_reply' => null,
-
+					
 					// optionals
 					'safe_media_hash' => null,
 					'remote_media_link' => null,
@@ -241,7 +202,7 @@ class Comment extends \Model\Model_Base
 				'thumb_link'
 			) as $field)
 			{
-				$comment->$field = $comment->media->{$field};
+				$comment->$field = $comment->media->{'get_'.$field}();
 			}
 			
 			unset($comment->media->board);
@@ -272,11 +233,6 @@ class Comment extends \Model\Model_Base
 		//parent::__construct();
 
 		$this->board = $board;
-
-		if (\Auth::has_access('comment.reports'))
-		{
-			$this->_forced_entries[] = 'report_reason_processed';
-		}
 
 		$media_fields = Media::get_fields();
 		$extra_fields = Extra::get_fields();
@@ -337,7 +293,7 @@ class Comment extends \Model\Model_Base
 		if ($this->_prefetch_backlinks)
 		{
 			// to get the backlinks we need to get the comment processed
-			$this->comment_processed;
+			$this->get_comment_processed();
 		}
 
 		if ($this->poster_country !== null)
@@ -347,6 +303,157 @@ class Comment extends \Model\Model_Base
 
 		$num = $this->num.($this->subnum ? ',' . $this->subnum : '');
 		static::$_posts[$this->thread_num][] = $num;
+	}
+	
+	
+	public function get_original_timestamp()
+	{
+		return $this->timestamp;
+	}
+	
+	
+	public function get_fourchan_date()
+	{
+		if ( ! isset($this->fourchan_date))
+		{
+			$this->fourchan_date = gmdate('n/j/y(D)G:i', $this->get_original_timestamp());
+		}
+		
+		return $this->fourchan_date;
+	}
+	
+	
+	public function get_comment_sanitized()
+	{
+		if ( ! isset($this->comment_sanitized))
+		{
+			$this->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
+		}
+		
+		return $this->comment_sanitized;
+	}
+	
+	
+	public function get_comment_processed()
+	{
+		if ( ! isset($this->comment_processed))
+		{
+			$this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
+		}
+		
+		return $this->comment_processed;
+	}
+	
+	
+	public function get_formatted()
+	{
+		if ( ! isset($this->formatted))
+		{
+			$this->formatted = $this->build_comment();
+		}
+		
+		return $this->formatted;
+	}
+	
+	
+	public function get_reports()
+	{		
+		if ( ! isset($this->reports))
+		{
+			if (\Auth::has_access('comment.reports'))
+			{
+				$reports = \Report::get_by_doc_id($this->board, $this->doc_id);
+				
+				if ($this->media)
+				{
+					$reports += \Report::get_by_media_id($this->board, $this->media->media_id);
+				}
+				
+				$this->reports = $reports;
+			}
+		}
+
+		return $this->reports;
+		
+	}
+	
+	
+	public static function process($string)
+	{
+		return e(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
+	}
+	
+	
+	public function get_title_processed()
+	{
+		if ( ! isset($this->title_processed))
+		{
+			$this->title_processed = static::process($this->title);
+		}
+		
+		return $this->title_processed;
+	}
+	
+	
+	public function get_name_processed()
+	{
+		if ( ! isset($this->name_processed))
+		{
+			$this->name_processed = static::process($this->name);
+		}
+		
+		return $this->name_processed;
+	}
+	
+	
+	public function get_email_processed()
+	{
+		if ( ! isset($this->email_processed))
+		{
+			$this->email_processed = static::process($this->email);
+		}
+		
+		return $this->email_processed;
+	}
+	
+	
+	public function get_trip_processed()
+	{
+		if ( ! isset($this->trip_processed))
+		{
+			$this->trip_processed = static::process($this->trip);
+		}
+		
+		return $this->trip_processed;
+	}
+	
+	
+	public function get_poster_hash_processed()
+	{
+		if ( ! isset($this->poster_hash_processed))
+		{
+			$this->poster_hash_processed = static::process($this->poster_hash);
+		}
+		
+		return $this->poster_hash_processed;
+	}
+	
+
+	public function get_poster_country_name_processed()
+	{
+		if ( ! isset($this->poster_country_name_processed))
+		{
+			if ( ! isset($this->poster_country_name))
+			{
+				$this->poster_country_name_processed = null;
+			}
+			else
+			{
+				$this->poster_country_name_processed = static::process($this->poster_country_name);
+			}
+		}
+		
+		return $this->poster_country_name_processed;
 	}
 
 

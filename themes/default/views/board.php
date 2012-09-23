@@ -13,35 +13,35 @@ foreach ($board->get_comments() as $key => $post) :
 	<?php endif; ?>
 	<?php if ($op->media !== null) : ?>
 		<div class="thread_image_box">
-			<?php if ($op->media->media_status === 'banned') : ?>
+			<?php if ($op->media->get_media_status() === 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png')?>" width="150" height="150" />
-			<?php elseif ($op->media->media_status !== 'normal') : ?>
-				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+			<?php elseif ($op->media->get_media_status() !== 'normal') : ?>
+				<a href="<?= ($op->media->get_media_link()) ? $op->media->get_media_link() : $op->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg')?>" width="150" height="150" />
 				</a>
 			<?php else : ?>
-				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+				<a href="<?= ($op->media->get_media_link()) ? $op->media->get_media_link() : $op->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 					<?php if(!Auth::has_access('maccess.mod') && !$op->board->transparent_spoiler && $op->media->spoiler) :?>
 					<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 					<?php else : ?>
-					<img src="<?= $op->media->thumb_link ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
+					<img src="<?= $op->media->get_thumb_link() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
 					<?php endif; ?>
 				</a>
 			<?php endif; ?>
-			<?php if ($op->media->media_status !== 'banned') : ?>
+			<?php if ($op->media->get_media_status() !== 'banned') : ?>
 				<div class="post_file" style="padding-left: 2px;<?php if ($op->media->preview_w > 149) : ?> max-width:<?= $op->media->preview_w .'px'; endif; ?>;">
-					<?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->media_filename_processed; ?>
+					<?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->get_media_filename_processed(); ?>
 				</div>
 			<?php endif; ?>
 			<div class="post_file_controls">
-				<?php if ($op->media->media_status !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
+				<?php if ($op->media->get_media_status() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
 					<?php if (!$op->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-						<?php if ($op->media->total > 1) : ?><a href="<?= Uri::create($op->board->shortname . '/search/image/' . $op->media->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
-						href="http://google.com/searchbyimage?image_url=<?= $op->media->thumb_link ?>" target="_blank"
+						<?php if ($op->media->total > 1) : ?><a href="<?= Uri::create($op->board->shortname . '/search/image/' . $op->media->get_safe_media_hash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
+						href="http://google.com/searchbyimage?image_url=<?= $op->media->get_thumb_link() ?>" target="_blank"
 						class="btnr parent">Google</a><a
-						href="http://iqdb.org/?url=<?= $op->media->thumb_link ?>" target="_blank"
+						href="http://iqdb.org/?url=<?= $op->media->get_thumb_link() ?>" target="_blank"
 						class="btnr parent">iqdb</a><a
-						href="http://saucenao.com/search.php?url=<?= $op->media->thumb_link ?>" target="_blank"
+						href="http://saucenao.com/search.php?url=<?= $op->media->get_thumb_link() ?>" target="_blank"
 						class="btnr parent">SauceNAO</a>
 					<?php endif; ?>
 				<?php endif; ?>
@@ -50,16 +50,16 @@ foreach ($board->get_comments() as $key => $post) :
 	<?php endif; ?>
 	<header>
 		<div class="post_data">
-			<?php if ($op->title_processed !== '') : ?><h2 class="post_title"><?= $op->title_processed ?></h2><?php endif; ?>
-			<span class="post_author"><?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><?= $op->name_processed ?><?php if ($op->trip_processed) : ?> <span class="post_trip"><?= $op->trip_processed ?></span><?php endif; ?><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?></span>
-			<?php if ($op->poster_hash_processed) : ?><span class="poster_hash">ID:<?= $op->poster_hash_processed ?></span><?php endif; ?>
+			<?php if ($op->get_title_processed() !== '') : ?><h2 class="post_title"><?= $op->get_title_processed() ?></h2><?php endif; ?>
+			<span class="post_author"><?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><?= $op->get_name_processed() ?><?php if ($op->get_trip_processed()) : ?> <span class="post_trip"><?= $op->get_trip_processed() ?></span><?php endif; ?><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?></span>
+			<?php if ($op->get_poster_hash_processed()) : ?><span class="poster_hash">ID:<?= $op->get_poster_hash_processed() ?></span><?php endif; ?>
 			<?php if ($op->capcode != 'N') : ?>
 				<?php if ($op->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= __('Mod') ?></span><?php endif ?>
 				<?php if ($op->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= __('Admin') ?></span><?php endif ?>
 				<?php if ($op->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= __('Developer') ?></span><?php endif ?>
 			<?php endif; ?>
 			<span class="time_wrap">
-				<time datetime="<?= gmdate(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($op->board->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $op->original_timestamp) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $op->timestamp) ?></time>
+				<time datetime="<?= gmdate(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($op->board->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $op->get_original_timestamp()) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $op->timestamp) ?></time>
 			</span>
 			<a href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
 
@@ -71,8 +71,8 @@ foreach ($board->get_comments() as $key => $post) :
 				<a href="<?= Uri::create(array($op->board->shortname, 'thread', $num)) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . Uri::create($op->board->shortname . '/last/50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($op->board->archive) ? '<a href="//boards.4chan.org/' . $op->board->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if (Auth::has_access('maccess.mod') || !$op->board->archive) : ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 
-			<div class="backlink_list"<?= $op->backlinks ? ' style="display:block"' : '' ?>>
-				<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?></span>
+			<div class="backlink_list"<?= $op->get_backlinks() ? ' style="display:block"' : '' ?>>
+				<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= $op->get_backlinks() ? implode(' ', $op->get_backlinks()) : '' ?></span>
 			</div>
 
 			<?php if (Auth::has_access('maccess.mod')) : ?>
@@ -98,8 +98,8 @@ foreach ($board->get_comments() as $key => $post) :
 		</div>
 	</header>
 
-	<div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $op->comment_processed)) echo ' shift-jis'; ?>">
-		<?= $op->comment_processed ?>
+	<div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $op->get_comment_processed())) echo ' shift-jis'; ?>">
+		<?= $op->get_comment_processed() ?>
 	</div>
 	<div class="thread_tools_bottom">
 		<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
@@ -115,14 +115,14 @@ foreach ($board->get_comments() as $key => $post) :
 		<?php endif; ?>
 	</div>
 
-	<?php if ($op->reports) : ?>
-		<?php foreach ($op->reports as $report) : ?>
-			<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->reason_processed ?>
+	<?php if ($op->get_reports()) : ?>
+		<?php foreach ($op->get_reports() as $report) : ?>
+			<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->get_reason_processed() ?>
 				<br/>
 				<div class="ip_reporter">
 					<strong><?= __('Info:') ?></strong>
 					<?= \Inet::dtop($report->ip_reporter) ?>, <?= __('Type:') ?> <?= $report->media_id !== null ? __('media') : __('post')?>, <?= __('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?> 
-					<button class="btn btn-mini" data-function="mod" data-report-id="<?= $report->id ?>" data-id="<?= $op->doc_id ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-action="delete_report"><?= __('Delete Report') ?></button>
+					<button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= htmlspecialchars($op->board->shortname) ?>" data-action="delete_report"><?= __('Delete Report') ?></button>
 				</div>
 			</div>
 		<?php endforeach ?>

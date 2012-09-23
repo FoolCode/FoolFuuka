@@ -19,35 +19,35 @@ foreach ($board->get_comments() as $key => $post) :
 ?>
 	<div id="<?= $op->num ?>">
 		<?php if ($op->media !== null) : ?>
-			<?php if ($op->media->media_status !== 'banned') : ?>
-			<span><?= __('File:') . ' ' . \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->media_filename_processed ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
+			<?php if ($op->media->get_media_status() !== 'banned') : ?>
+			<span><?= __('File:') . ' ' . \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->get_media_filename_processed() ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
 				<?php if (!$op->board->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-					[<a href="<?= Uri::create($op->board->shortname . '/search/image/' . $op->media->safe_media_hash) ?>"><?= __('View Same') ?></a>]
-					[<a href="http://google.com/searchbyimage?image_url=<?= $op->media->thumb_link ?>">Google</a>]
-					[<a href="http://iqdb.org/?url=<?= $op->media->thumb_link ?>">iqdb</a>]
-					[<a href="http://saucenao.com/search.php?url=<?= $op->media->thumb_link ?>">SauceNAO</a>]
+					[<a href="<?= Uri::create($op->board->shortname . '/search/image/' . $op->media->get_safe_media_hash()) ?>"><?= __('View Same') ?></a>]
+					[<a href="http://google.com/searchbyimage?image_url=<?= $op->media->get_thumb_link() ?>">Google</a>]
+					[<a href="http://iqdb.org/?url=<?= $op->media->get_thumb_link() ?>">iqdb</a>]
+					[<a href="http://saucenao.com/search.php?url=<?= $op->media->get_thumb_link() ?>">SauceNAO</a>]
 				<?php endif; ?>
 			<br />
 			<?php endif; ?>
-			<?php if ($op->media->media_status === 'banned') : ?>
+			<?php if ($op->media->get_media_status() === 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
-			<?php elseif ($op->media->media_status !== 'normal') : ?>
-				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" rel="noreferrer">
+			<?php elseif ($op->media->get_media_status() !== 'normal') : ?>
+				<a href="<?= ($op->media->get_media_link()) ? $op->media->get_media_link() : $op->media->get_remote_media_link() ?>" rel="noreferrer">
 					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 				</a>
 			<?php else: ?>
-				<a href="<?= ($op->media->media_link) ? $op->media->media_link : $op->media->remote_media_link ?>" rel="noreferrer">
-					<img src="<?= $op->media->thumb_link ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thumb" alt="<?= $op->num ?>" />
+				<a href="<?= ($op->media->get_media_link()) ? $op->media->get_media_link() : $op->media->get_remote_media_link() ?>" rel="noreferrer">
+					<img src="<?= $op->media->get_thumb_link() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thumb" alt="<?= $op->num ?>" />
 				</a>
 			<?php endif; ?>
 		<?php endif; ?>
 
 		<label>
 			<input type="checkbox" name="delete[]" value="<?= $op->doc_id ?>" />
-			<span class="filetitle"><?= $op->title_processed ?></span>
-			<span class="postername<?= ($op->capcode == 'M') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?><?= ($op->capcode == 'D') ? ' developer' : '' ?>"><?= (($op->email && $op->email !== 'noko') ? '<a href="mailto:' . rawurlencode($op->email) . '">' . $op->name_processed . '</a>' : $op->name_processed) ?></span>
-			<span class="postertrip<?= ($op->capcode == 'M') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?><?= ($op->capcode == 'D') ? ' developer' : '' ?>"><?= $op->trip_processed ?></span>
-			<span class="poster_hash"><?php if ($op->poster_hash_processed) : ?>ID:<?= $op->poster_hash_processed ?><?php endif; ?></span>
+			<span class="filetitle"><?= $op->get_title_processed() ?></span>
+			<span class="postername<?= ($op->capcode == 'M') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?><?= ($op->capcode == 'D') ? ' developer' : '' ?>"><?= (($op->email && $op->email !== 'noko') ? '<a href="mailto:' . rawurlencode($op->email) . '">' . $op->get_name_processed() . '</a>' : $op->get_name_processed()) ?></span>
+			<span class="postertrip<?= ($op->capcode == 'M') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?><?= ($op->capcode == 'D') ? ' developer' : '' ?>"><?= $op->get_trip_processed() ?></span>
+			<span class="poster_hash"><?php if ($op->get_poster_hash_processed()) : ?>ID:<?= $op->get_poster_hash_processed() ?><?php endif; ?></span>
 			<?php if ($op->capcode == 'M') : ?>
 				<span class="postername mod">## <?= __('Mod') ?></span>
 			<?php endif ?>
@@ -57,7 +57,7 @@ foreach ($board->get_comments() as $key => $post) :
 			<?php if ($op->capcode == 'D') : ?>
 				<span class="postername admin">## <?= __('Developer') ?></span>
 			<?php endif ?>
-			<?= gmdate('D M d H:i:s Y', $op->original_timestamp) ?>
+			<?= gmdate('D M d H:i:s Y', $op->get_original_timestamp()) ?>
 			<?php if ($op->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span></span><?php endif; ?>
 		</label>
 
@@ -74,11 +74,11 @@ foreach ($board->get_comments() as $key => $post) :
 		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= Uri::create($op->board->shortname . '/last/50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>
 		<?php if ($op->board->archive) : ?> [<a href="//boards.4chan.org/<?= $op->board->shortname . '/res/' . $op->num ?>"><?= __('Original') ?></a>]<?php endif; ?>
 
-		<div class="quoted-by" style="display: <?= $op->backlinks ? 'block' : 'none' ?>">
-			<?= __('Quoted By:') ?> <?= (isset($op->backlinks)) ? implode(' ', $op->backlinks) : '' ?>
+		<div class="quoted-by" style="display: <?= $op->get_backlinks() ? 'block' : 'none' ?>">
+			<?= __('Quoted By:') ?> <?= $op->get_backlinks() ? implode(' ', $op->get_backlinks()) : '' ?>
 		</div>
 
-		<blockquote><p><?= $op->comment_processed ?></p></blockquote>
+		<blockquote><p><?= $op->get_comment_processed() ?></p></blockquote>
 		<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
 		<span class="omitted">
 			<?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>

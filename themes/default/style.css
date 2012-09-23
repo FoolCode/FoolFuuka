@@ -381,6 +381,10 @@ body.theme_default {
 	font-size: 12px;
 	line-height: 14px;
 }
+
+.theme_default .advanced_search form {
+	margin-bottom: 0px;
+}
 	
 .theme_default .advanced_search .radixes {
 	width: 330px;

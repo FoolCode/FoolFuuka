@@ -22,8 +22,8 @@ if (!defined('DOCROOT'))
 			$media->op = true;
 		?>
 		
-		<a href="<?= Uri::create(array(Radix::get_selected()->shortname, 'search', 'image', $media->safe_media_hash)) ?>">
-			<img  src="<?= $media->thumb_link  ?>" />
+		<a href="<?= Uri::create(array(Radix::get_selected()->shortname, 'search', 'image', $media->get_safe_media_hash())) ?>">
+			<img  src="<?= $media->get_thumb_link()  ?>" />
 		</a>
 	</div>
 <?php endforeach; ?>

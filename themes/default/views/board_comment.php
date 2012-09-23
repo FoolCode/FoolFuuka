@@ -10,7 +10,7 @@ class Board_comment extends \Theme
 	
 	public static $permissions = null;
 	
-	public function __construct($data)
+	public function __construct($data, $theme)
 	{
 		if (static::$permissions === null)
 		{
@@ -28,6 +28,8 @@ class Board_comment extends \Theme
 			$this->$key = $item;
 		}
 		
+		
+		$this->_theme = $theme;
 	}
 	
 	
@@ -76,17 +78,17 @@ class Board_comment extends \Theme
 				</div>
 				<div class="thread_image_box">
 					<?php if ($p->media->get_media_status() === 'banned') : ?>
-						<img src="<?= \Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
+						<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
 					<?php elseif ($p->media->get_media_status() !== 'normal'): ?>
 						<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-							<img src="<?= \Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
+							<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
 						</a>
 					<?php else: ?>
 						<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 							<?php if(!$perm['maccess.mod'] && !$p->board->transparent_spoiler && $p->media->spoiler) :?>
 							<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 							<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
-							<img src="<?= \Uri::base() . $this->fallback_asset('images/transparent_pixel.png') ?>" data-original="<?= $p->media->get_thumb_link() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+							<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/transparent_pixel.png') ?>" data-original="<?= $p->media->get_thumb_link() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 							<noscript>
 								<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 									<img src="<?= $p->media->get_thumb_link() ?>" style="margin-left: -<?= $p->media->preview_w ?>px" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />

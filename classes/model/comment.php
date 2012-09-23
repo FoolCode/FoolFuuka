@@ -371,6 +371,10 @@ class Comment extends \Model\Model_Base
 				
 				$this->reports = $reports;
 			}
+			else
+			{
+				$this->reports = array();
+			}
 		}
 
 		return $this->reports;

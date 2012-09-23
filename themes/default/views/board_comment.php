@@ -46,7 +46,7 @@ $num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 					<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
 					<img src="<?= Uri::base() . $this->fallback_asset('images/transparent_pixel.png') ?>" data-original="<?= $p->media->get_thumb_link() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 					<noscript>
-						<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+						<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 							<img src="<?= $p->media->get_thumb_link() ?>" style="margin-left: -<?= $p->media->preview_w ?>px" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 						</a>
 					</noscript>

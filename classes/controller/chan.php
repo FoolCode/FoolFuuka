@@ -528,9 +528,9 @@ class Controller_Chan extends \Controller_Common
 			return $this->action_404(__('The image was never in our databases.'));
 		}
 
-		if ($media->media_link !== null)
+		if ($media->get_media_link())
 		{
-			return \Response::redirect($media->media_link, 'location', 303);
+			return \Response::redirect($media->get_media_link(), 'location', 303);
 		}
 
 		return \Response::redirect(

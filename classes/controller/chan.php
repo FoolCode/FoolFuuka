@@ -517,7 +517,7 @@ class Controller_Chan extends \Controller_Common
 	public function radix_full_image($filename)
 	{
 		// Check if $filename is valid.
-		if ( ! in_array(\Input::extension(), array('gif', 'jpg', 'png')) || ! \Board::is_natural(substr($filename, 0, 13)))
+		if ( ! in_array(\Input::extension(), array('gif', 'jpg', 'png', 'pdf')) || ! \Board::is_natural(substr($filename, 0, 13)))
 		{
 			return $this->action_404(__('The filename submitted is not compatible with the system.'));
 		}

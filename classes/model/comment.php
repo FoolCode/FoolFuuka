@@ -749,7 +749,7 @@ class Comment extends \Model\Model_Base
 
 		$build_url = \Plugins::run_hook('fu.comment_model.process_crossboard_links.html_result', array($data, $build_url), 'simple');
 
-		if (!$data->board)
+		if ( ! $data->board)
 		{
 			if ($data->num)
 			{

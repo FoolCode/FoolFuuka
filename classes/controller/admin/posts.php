@@ -21,8 +21,10 @@ class Controller_Admin_Posts extends \Controller_Admin
 	{
 		$this->_views['method_title'] = __('Reports');
 
-		$theme = \Theme::instance('foolfuuka');
-		$theme->set_theme('default');
+		$theme = \Theme::forge('foolfuuka');
+		$theme->set_module('foolfuuka');
+		$theme->set_theme($theme);
+		$theme->set_layout('chan');
 		$theme->bind('modifiers', array(
 			'post_show_board_name' => true,
 			'post_show_view_button' => true

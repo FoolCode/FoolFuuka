@@ -6,6 +6,7 @@ class Controller_Api_Chan extends \Controller_Rest
 {
 
 	protected $_radix = null;
+	protected $_theme = null;
 	protected $format = 'json';
 
 	public function before()
@@ -37,6 +38,14 @@ class Controller_Api_Chan extends \Controller_Rest
 			}
 
 			\Response::redirect($uri);
+		}
+		
+		if ($theme = \Input::get('theme', \Input::post('theme', false)))
+		{
+			$this->_theme = \Theme::forge('foolfuuka');
+			$this->_theme->set_module('foolfuuka');
+			$this->_theme->set_theme($theme);
+			$this->_theme->set_layout('chan');
 		}
 	}
 

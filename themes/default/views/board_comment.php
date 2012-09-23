@@ -18,7 +18,8 @@ class Board_comment extends \Theme
 				'maccess.mod' => \Auth::has_access('maccess.mod'),
 				'media.see_hidden' => \Auth::has_access('media.see_hidden'),
 				'media.see_banned' => \Auth::has_access('media.see_banned'),
-				'comment.passwordless_deletion' => \Auth::has_access('comment.passwordless_deletion')
+				'comment.passwordless_deletion' => \Auth::has_access('comment.passwordless_deletion'),
+				'fu.sphinx.global' => \Preferences::get('fu.sphinx.global')
 			);
 		}
 		
@@ -26,12 +27,15 @@ class Board_comment extends \Theme
 		{
 			$this->$key = $item;
 		}
+		
+		die(\Debug::dump($this));
 	}
 	
 	
 	public function __toString()
 	{
 		$p = $this->p;
+		$modifiers = $this->modifiers;
 		$perm = static::$permissions;
 		
 		$num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
@@ -142,7 +146,7 @@ class Board_comment extends \Theme
 					<?php if ($p->poster_ip) : ?>
 						<button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $p->board->shortname ?>" data-ip="<?= \Inet::dtop($p->poster_ip) ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($p->poster_ip) ?></button>
 						<button class="btn btn-mini" data-function="searchUser" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= \Inet::dtop($p->poster_ip) ?>"><?= __('Search IP') ?></button>
-						<?php if (\Preferences::get('fu.sphinx.global')) : ?>
+						<?php if ($perm['fu.sphinx.global']) : ?>
 							<button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $p->board->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= \Inet::dtop($p->poster_ip) ?>"><?= __('Search IP Globally') ?></button>
 						<?php endif; ?>
 					<?php endif; ?>

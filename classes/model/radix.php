@@ -72,7 +72,7 @@ class Radix extends \Model_Base
 				'database' => TRUE,
 				'type' => 'input',
 				'label' => __('Shortname'),
-				'help' => __('Insert the shorter name of the board. Reserved: "api", "cli", "admin".'),
+				'help' => __('Insert the shorter name of the board. Reserved: "admin".'),
 				'placeholder' => __('Req.'),
 				'class' => 'span1',
 				'validation' => 'required|max_length[5]|valid_string[alpha,dashes,numeric]',
@@ -461,6 +461,12 @@ class Radix extends \Model_Base
 
 		foreach ($structure as $key => $item)
 		{
+			if ($item['type'] === 'internal')
+			{
+				// we don't use this function to edit internal preferences
+				continue;
+			}
+			
 			// mix the sub and sub_inverse and flatten the array
 			if (isset($item['sub_inverse']) && isset($item['sub']))
 			{
@@ -563,26 +569,8 @@ class Radix extends \Model_Base
 			// save extra preferences
 			foreach ($data_boards_preferences as $name => $value)
 			{
-				$query = \DB::select()
-					->from('boards_preferences')
-					->where('board_id', $data['id'])
-					->and_where('name', $name)
-					->execute();
-
-				if (count($query))
-				{
-					\DB::update('boards_preferences')
-						->value('value', $value)
-						->where('name', $name)
-						->and_where('board_id', $data['id'])
-						->execute();
-				}
-				else
-				{
-					\DB::insert('boards_preferences')
-						->set(array('board_id' => $data['id'], 'name' => $name, 'value' => $value))
-						->execute();
-				}
+				
+				static::save_preferences($data['id'], $name, $value);
 			}
 		}
 		else
@@ -594,22 +582,7 @@ class Radix extends \Model_Base
 			// save extra preferences
 			foreach ($data_boards_preferences as $name => $value)
 			{
-				$query = \DB::select()
-					->from('boards_preferences')
-					->where('board_id', $id)
-					->and_where('name', $name)
-					->execute();
-
-				if (count($query))
-				{
-					\DB::update('boards_preferences')->value($name, $value)
-						->where('board_id', $id)->and_where('name', $name)->execute();
-				}
-				else
-				{
-					\DB::insert('boards_preferences')
-						->set(array('board_id' => $id, 'name' => $name, 'value' => $value))->execute();
-				}
+				static::save_preferences($id, $name, $value);
 			}
 
 			static::clear_cache();
@@ -631,6 +604,53 @@ class Radix extends \Model_Base
 		
 		static::clear_cache();
 		static::preload();
+	}
+	
+	
+	/**
+	 * Insert custom preferences. One must use this for "internal" preferences
+	 * 
+	 * @param int|stdClass $board_id can also be the board object
+	 * @param string $name
+	 * @param int|string|bool $value
+	 */
+	public static function save_preferences($board_id, $name, $value)
+	{
+		if (is_object($board_id))
+		{
+			$board_id = $board_id->id;
+		}
+
+		$result = \DB::select(\DB::expr('COUNT(*) as count'))
+			->from('boards_preferences')
+			->where('board_id', $board_id)
+			->where('name', $name)
+			->execute();
+		
+		if ($result)
+		{
+			\DB::update('boards_preferences')
+				->value('value', $value)
+				->where('board_id', $board_id)
+				->where('name', $name)
+				->execute();
+		}
+		else
+		{
+			\DB::insert('boards_preferences')
+				->set(array(
+					'board_id' => $board_id,
+					'name' => $name,
+					'value' => $value
+				))
+				->execute();			
+		}
+					
+		
+		// avoid the complete reloading
+		static::$preloaded_radixes[$board_id]->$name = $value;
+		
+		static::clear_cache();
 	}
 
 
@@ -831,7 +851,11 @@ class Radix extends \Model_Base
 		
 		foreach ($preferences as $value)
 		{
-			$result_object[$value->board_id]->{$value->name} = $value->value;
+			// in case of leftover values, it would try instantiating a new stdClass and that would trigger error
+			if (isset($result_object[$value->board_id]))
+			{
+				$result_object[$value->board_id]->{$value->name} = $value->value;
+			}
 		}
 		
 		// unset the hidden boards
@@ -1549,8 +1573,8 @@ class Radix extends \Model_Base
 		$word_length = static::mysql_get_min_word_length();
 
 		// save in the database the fact that this is a MyISAM
-		static::save(array('id' => $board->id, 'myisam_search' => 1));
-
+		static::save_preferences($board->id, 'myisam_search', 1);
+		
 		// fill only where there's a point to
 		\DB::query("
 			INSERT IGNORE INTO ".static::get_table($board, '_search')."
@@ -1590,7 +1614,7 @@ class Radix extends \Model_Base
 		\DB::query("DROP TABLE IF EXISTS ".static::get_table($board, '_search'))->execute();
 
 		// set in preferences that this is not a board with MyISAM search
-		static::save(array('id' => $board->id, 'myisam_search' => 0));
+		static::save_preferences($board->id, 'myisam_search', 0);
 
 		return true;
 	}

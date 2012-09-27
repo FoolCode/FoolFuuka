@@ -7,9 +7,9 @@ if (!defined('DOCROOT'))
 
 class Board_comment extends \Theme
 {
-	
+
 	public static $permissions = null;
-	
+
 	public function __construct($data, $theme)
 	{
 		if (static::$permissions === null)
@@ -22,17 +22,17 @@ class Board_comment extends \Theme
 				'fu.sphinx.global' => \Preferences::get('fu.sphinx.global')
 			);
 		}
-		
+
 		foreach ($data as $key => $item)
 		{
 			$this->$key = $item;
 		}
-		
-		
+
+
 		$this->_theme = $theme;
 	}
-	
-	
+
+
 	public function __toString()
 	{
 		$p = $this->p;
@@ -40,13 +40,13 @@ class Board_comment extends \Theme
 		{
 			$modifiers = $this->modifiers;
 		}
-		
+
 		$perm = static::$permissions;
-		
+
 		$num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
-		
+
 		ob_start();
-		
+
 		?>
 		<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if (!is_null($p->media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>">
 			<div class="post_wrapper">
@@ -122,9 +122,9 @@ class Board_comment extends \Theme
 						<a href="<?= \Uri::create(array($p->board->shortname, $p->_controller_method, $p->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= \Uri::create(array($p->board->shortname, $p->_controller_method, $p->thread_num)) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
 
 						<?php if ($p->poster_country !== null) : ?><span class="post_type"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
-						<?php if ($p->subnum > 0)   : ?><span class="post_type"><i class="icon-comment-alt" title="<?= htmlspecialchars(__('This post was made in the archive.')) ?>"></i></span><?php endif ?>
-						<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><span class="post_type"><i class="icon-eye-close" title="<?= htmlspecialchars(__('This post contains a spoiler image.')) ?>"></i></span><?php endif ?>
-						<?php if ($p->deleted == 1) : ?><span class="post_type"><i class="icon-trash" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually.')) ?>"></i></span><?php endif ?>
+						<?php if ($p->subnum > 0)   : ?><span class="post_type"><i class="icon-comment-alt" title="<?= htmlspecialchars(__('This post was submitted as a "ghost" reply.')) ?>"></i></span><?php endif ?>
+						<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><span class="post_type"><i class="icon-eye-close" title="<?= htmlspecialchars(__('The image in this post has been marked as a spoiler.')) ?>"></i></span><?php endif ?>
+						<?php if ($p->deleted == 1) : ?><span class="post_type"><i class="icon-trash" title="<?= htmlspecialchars(__('This post was delete before its lifetime expired.')) ?>"></i></span><?php endif ?>
 
 						<span class="post_controls">
 							<?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= \Uri::create($p->board->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= __('View') ?></a><?php endif; ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if ($p->subnum > 0 || $perm['comment.passwordless_deletion'] || !$p->board->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
@@ -162,7 +162,7 @@ class Board_comment extends \Theme
 							<br/>
 							<div class="ip_reporter">
 								<strong><?= __('Info:') ?></strong>
-								<?= \Inet::dtop($report->ip_reporter) ?>, <?= __('Type:') ?> <?= $report->media_id !== null ? __('media') : __('post')?>, <?= __('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?> 
+								<?= \Inet::dtop($report->ip_reporter) ?>, <?= __('Type:') ?> <?= $report->media_id !== null ? __('media') : __('post')?>, <?= __('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?>
 								<button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= htmlspecialchars($p->board->shortname) ?>" data-action="delete_report"><?= __('Delete Report') ?></button>
 							</div>
 						</div>
@@ -172,9 +172,9 @@ class Board_comment extends \Theme
 			</div>
 		</article>
 		<?php
-		
+
 		return ob_get_clean();
 	}
-	
-	
+
+
 }

@@ -50,13 +50,13 @@ foreach ($board->get_comments() as $key => $post) :
 			<span class="poster_hash"><?php if ($op->get_poster_hash_processed()) : ?>ID:<?= $op->get_poster_hash_processed() ?><?php endif; ?></span>
 			<?php if ($op->capcode == 'M') : ?>
 				<span class="postername mod">## <?= __('Mod') ?></span>
-			<?php endif ?>
+			<?php endif; ?>
 			<?php if ($op->capcode == 'A') : ?>
 				<span class="postername admin">## <?= __('Admin') ?></span>
-			<?php endif ?>
+			<?php endif; ?>
 			<?php if ($op->capcode == 'D') : ?>
 				<span class="postername admin">## <?= __('Developer') ?></span>
-			<?php endif ?>
+			<?php endif; ?>
 			<?= gmdate('D M d H:i:s Y', $op->get_original_timestamp()) ?>
 			<?php if ($op->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span></span><?php endif; ?>
 		</label>
@@ -67,8 +67,8 @@ foreach ($board->get_comments() as $key => $post) :
 			<a class="js" href="<?= Uri::create(array($op->board->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
 		<?php endif; ?>
 
-		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?php _('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
-		<?php if (isset($op->media) && $op->media->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('/images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?php _('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
+		<?php if (isset($op->media) && $op->media->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('/images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post has been marked as a spoiler.') ?>"/><?php endif; ?>
+		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was delete before its lifetime expired.') ?>"/><?php endif; ?>
 
 		[<a href="<?= Uri::create(array($op->board->shortname, 'thread', $op->num)) ?>"><?= __('Reply') ?></a>]
 		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= Uri::create($op->board->shortname . '/last/50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>

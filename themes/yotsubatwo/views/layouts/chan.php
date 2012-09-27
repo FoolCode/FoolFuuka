@@ -1,4 +1,4 @@
-<?php if (!defined('DOCROOT')) exit('No direct script access allowed'); 
+<?php if (!defined('DOCROOT')) exit('No direct script access allowed');
 header('X-UA-Compatible: IE=edge,chrome=1');
 header('imagetoolbar: false');
 ?>
@@ -16,10 +16,10 @@ header('imagetoolbar: false');
 		<link href="<?= Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS" />
 		<link href="<?= Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom" />
 		<?php endif; ?>
-		<link href="<?= Uri::base() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?= \Config::get('foolfuuka.main.version') ?>" rel="stylesheet" type="text/css" />
-		<link href="<?= Uri::base() ?>assets/font-awesome/css/font-awesome.css?v=<?= \Config::get('foolfuuka.main.version') ?>" rel="stylesheet" type="text/css" />
+		<link href="<?= Uri::base() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?= $this->_selected_theme_version ?>" rel="stylesheet" type="text/css" />
+		<link href="<?= Uri::base() ?>assets/font-awesome/css/font-awesome.css?v=<?= $this->_selected_theme_version ?>" rel="stylesheet" type="text/css" />
 		<!--[if lt IE 8]>
-			<link href="<?= Uri::base() ?>assets/font-awesome/css/font-awesome-ie7.css?v=<?= \Config::get('foolfuuka.main.version') ?>" rel="stylesheet" type="text/css" />
+			<link href="<?= Uri::base() ?>assets/font-awesome/css/font-awesome-ie7.css?v=<?= $this->_selected_theme_version ?>" rel="stylesheet" type="text/css" />
 		<![endif]-->
 		<?php
 			foreach($this->fallback_override('style.css', $this->get_config('extends_css')) as $css)
@@ -161,14 +161,14 @@ header('imagetoolbar: false');
 			</div>
 
 			<div role="main" id="main">
-				
+
 				<?php if (Preferences::get('ff.theme.header_text')) : ?>
 				<div class="alert alert-block alert-error fade in">
 					<h4 class="alert-heading"><?= __('Global Announcement') ?></h4>
 					<?= Preferences::get('ff.theme.header_text') ?>
 				</div>
 				<?php endif; ?>
-				
+
 				<?php if (isset($template['partials']['tools_new_thread_box'])) : ?>
 					<?=  $template['partials']['tools_new_thread_box'] ?>
 					<div class="divider"></div>
@@ -179,7 +179,7 @@ header('imagetoolbar: false');
 				</div>
 
 				<?= $template['body'] ?>
-				
+
 				<?= $template['partials']['tools_modal']; ?>
 
 				<?php \Plugins::run_hook('fu.themes.yotsubatwo_after_body_template'); ?>
@@ -337,7 +337,7 @@ header('imagetoolbar: false');
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="<?= Uri::base() ?>assets/js/jquery.js"><\/script>')</script>
-		<script defer src="<?= Uri::base() ?>assets/bootstrap2/js/bootstrap.min.js?v=<?= \Config::get('foolfuuka.main.version') ?>"></script>
+		<script defer src="<?= Uri::base() ?>assets/bootstrap2/js/bootstrap.min.js?v=<?= $this->_selected_theme_version ?>"></script>
 		<script defer src="<?= Uri::base() . $this->fallback_asset('plugins.js') ?>"></script>
 		<script defer src="<?= Uri::base() . $this->fallback_asset('board.js') ?>"></script>
 <?php if (Preferences::get('ff.theme.google_analytics')) : ?>

@@ -34,9 +34,9 @@ if (!defined('DOCROOT'))
 					<a class="js" href="<?= Uri::create(array($p->board->shortname, $p->_controller_method, $p->thread_num)) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php endif; ?>
 
-				<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was deleted before its lifetime has expired.') ?>"/><?php endif ?>
-				<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post is marked as spoiler.') ?>"/><?php endif ?>
-				<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= __('This post is not an archived reply.') ?>"/><?php endif ?>
+				<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= __('This post was submitted as a "ghost" reply.') ?>"/><?php endif ?>
+				<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post has been marked as a spoiler.') ?>"/><?php endif ?>
+				<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was delete before its lifetime expired.') ?>"/><?php endif ?>
 
 				<?php if (isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?= Uri::create(array($p->board->shortname, 'thread', $p->thread_num)) . '#' . $p->num . (($p->subnum) ? '_' . $p->subnum : '') ?>">View</a>]<?php endif; ?>
 

@@ -858,6 +858,11 @@ class Controller_Chan extends \Controller_Common
 					$item = implode('.', $item);
 				}
 				
+				if ($key == 'poster_ip')
+				{
+					$item = \Inet::dtop($item);
+				}
+				
 				$pagination_arr[] = rawurlencode($item);
 			}
 		}

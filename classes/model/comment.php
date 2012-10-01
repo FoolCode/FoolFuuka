@@ -69,10 +69,10 @@ class Comment extends \Model\Model_Base
 	protected $_force_entries = false;
 	protected $_forced_entries = array(
 		'title_processed', 'name_processed', 'email_processed', 'trip_processed',
-		'poster_hash_processed', 'original_timestamp', 'fourchan_date', 'comment_sanitized', 
+		'poster_hash_processed', 'original_timestamp', 'fourchan_date', 'comment_sanitized',
 		'comment_processed', 'poster_country_name_processed'
 	);
-	
+
 	public $recaptcha_challenge = null;
 	public $recaptcha_response = null;
 
@@ -98,8 +98,8 @@ class Comment extends \Model\Model_Base
 
 	public $media = null;
 	public $extra = null;
-	
-	
+
+
 	public static function forge($post, $board, $options = array())
 	{
 		if (is_array($post))
@@ -143,7 +143,7 @@ class Comment extends \Model\Model_Base
 		{
 			$comment->{'get_'.$field}();
 		}
-		
+
 		// also spawn media variables
 		if ($comment->media !== null)
 		{
@@ -155,9 +155,9 @@ class Comment extends \Model\Model_Base
 					$comment->$field = $comment->media->$field;
 				}
 			}
-			
+
 			// if we come across a banned image we set all the data to null. Normal users must not see this data.
-			if (($comment->media->banned && ! \Auth::has_access('media.see_banned')) 
+			if (($comment->media->banned && ! \Auth::has_access('media.see_banned'))
 				|| ($comment->media->board->hide_thumbnails && ! \Auth::has_access('media.see_hidden')))
 			{
 				$banned = array(
@@ -178,25 +178,25 @@ class Comment extends \Model\Model_Base
 					'media' => null,
 					'preview_op' => null,
 					'preview_reply' => null,
-					
+
 					// optionals
 					'safe_media_hash' => null,
 					'remote_media_link' => null,
 					'media_link' => null,
 					'thumb_link' => null,
-				);	
+				);
 
 				foreach ($banned as $key => $item)
 				{
 					$comment->media->$key = $item;
 				}
 			}
-			
+
 			// startup variables and put them also in the lower level for compatibility with older 4chan X
 			foreach (array(
-				'safe_media_hash', 
-				'preview_orig_processed', 
-				'media_filename_processed', 
+				'safe_media_hash',
+				'preview_orig_processed',
+				'media_filename_processed',
 				'media_hash_processed',
 				'media_link',
 				'remote_media_link',
@@ -205,10 +205,10 @@ class Comment extends \Model\Model_Base
 			{
 				$comment->$field = $comment->media->{'get_'.$field}();
 			}
-			
+
 			unset($comment->media->board);
 		}
-		
+
 
 		if (isset($api['board']) && !$api['board'])
 		{
@@ -220,7 +220,7 @@ class Comment extends \Model\Model_Base
 
 		// remove radix data
 		unset($comment->extra->_radix);
-		
+
 		// we don't have captcha in use in api
 		unset($comment->recaptcha_challenge, $comment->recaptcha_response);
 
@@ -304,71 +304,71 @@ class Comment extends \Model\Model_Base
 		$num = $this->num.($this->subnum ? ',' . $this->subnum : '');
 		static::$_posts[$this->thread_num][] = $num;
 	}
-	
-	
+
+
 	public function get_original_timestamp()
 	{
 		return $this->timestamp;
 	}
-	
-	
+
+
 	public function get_fourchan_date()
 	{
 		if ( ! isset($this->fourchan_date))
 		{
 			$this->fourchan_date = gmdate('n/j/y(D)G:i', $this->get_original_timestamp());
 		}
-		
+
 		return $this->fourchan_date;
 	}
-	
-	
+
+
 	public function get_comment_sanitized()
 	{
 		if ( ! isset($this->comment_sanitized))
 		{
 			$this->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
 		}
-		
+
 		return $this->comment_sanitized;
 	}
-	
-	
+
+
 	public function get_comment_processed()
 	{
 		if ( ! isset($this->comment_processed))
 		{
 			$this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
 		}
-		
+
 		return $this->comment_processed;
 	}
-	
-	
+
+
 	public function get_formatted()
 	{
 		if ( ! isset($this->formatted))
 		{
 			$this->formatted = $this->build_comment();
 		}
-		
+
 		return $this->formatted;
 	}
-	
-	
+
+
 	public function get_reports()
-	{		
+	{
 		if ( ! isset($this->reports))
 		{
 			if (\Auth::has_access('comment.reports'))
 			{
 				$reports = \Report::get_by_doc_id($this->board, $this->doc_id);
-				
+
 				if ($this->media)
 				{
 					$reports += \Report::get_by_media_id($this->board, $this->media->media_id);
 				}
-				
+
 				$this->reports = $reports;
 			}
 			else
@@ -378,70 +378,70 @@ class Comment extends \Model\Model_Base
 		}
 
 		return $this->reports;
-		
+
 	}
-	
-	
+
+
 	public static function process($string)
 	{
 		return e(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
 	}
-	
-	
+
+
 	public function get_title_processed()
 	{
 		if ( ! isset($this->title_processed))
 		{
 			$this->title_processed = static::process($this->title);
 		}
-		
+
 		return $this->title_processed;
 	}
-	
-	
+
+
 	public function get_name_processed()
 	{
 		if ( ! isset($this->name_processed))
 		{
 			$this->name_processed = static::process($this->name);
 		}
-		
+
 		return $this->name_processed;
 	}
-	
-	
+
+
 	public function get_email_processed()
 	{
 		if ( ! isset($this->email_processed))
 		{
 			$this->email_processed = static::process($this->email);
 		}
-		
+
 		return $this->email_processed;
 	}
-	
-	
+
+
 	public function get_trip_processed()
 	{
 		if ( ! isset($this->trip_processed))
 		{
 			$this->trip_processed = static::process($this->trip);
 		}
-		
+
 		return $this->trip_processed;
 	}
-	
-	
+
+
 	public function get_poster_hash_processed()
 	{
 		if ( ! isset($this->poster_hash_processed))
 		{
 			$this->poster_hash_processed = static::process($this->poster_hash);
 		}
-		
+
 		return $this->poster_hash_processed;
 	}
-	
+
 
 	public function get_poster_country_name_processed()
 	{
@@ -456,7 +456,7 @@ class Comment extends \Model\Model_Base
 				$this->poster_country_name_processed = static::process($this->poster_country_name);
 			}
 		}
-		
+
 		return $this->poster_country_name_processed;
 	}
 
@@ -595,10 +595,10 @@ class Comment extends \Model\Model_Base
 
 				$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
 			}
-			
+
 			static::$_bbcode_parser = $bbcode;
 		}
-		
+
 
 		// if $special == true, add special bbcode
 		if ($special_code === true)
@@ -658,7 +658,7 @@ class Comment extends \Model\Model_Base
 		$current_p_num_c = $this->num . ($this->subnum ? ',' . $this->subnum : '');
 		$current_p_num_u = $this->num . ($this->subnum ? '_' . $this->subnum : '');
 
-		$build_url = array( 
+		$build_url = array(
 			'tags' => array('', ''),
 			'hash' => '',
 			'attr' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $data->num . '"',
@@ -718,6 +718,7 @@ class Comment extends \Model\Model_Base
 	{
 		if (isset(static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')]))
 		{
+			ksort(static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')]);
 			return static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')];
 		}
 
@@ -813,7 +814,7 @@ class Comment extends \Model\Model_Base
 						$period = '.';
 						$matches['6'][$i] = substr($matches['6'][$i], 0, -1);
 					}
-					
+
 					$str = str_replace($matches['0'][$i],
 						$matches['1'][$i] . '<a href="http' .
 						$matches['4'][$i] . '://' .
@@ -834,7 +835,7 @@ class Comment extends \Model\Model_Base
 	public function clean_fields()
 	{
 		\Plugins::run_hook('foolfuuka\\model\\comment.clean_fields.call.before', array(&$this));
-		
+
 		if ( ! \Auth::has_access('comment.see_ip'))
 		{
 			unset($this->poster_ip);
@@ -1043,8 +1044,8 @@ class Comment extends \Model\Model_Base
 				throw new CommentSendingBannedException($banned_string);
 			}
 		}
-		
-		
+
+
 		// check if it's a thread and its status
 		if ($this->thread_num > 0)
 		{
@@ -1063,7 +1064,7 @@ class Comment extends \Model\Model_Base
 			{
 				throw new CommentSendingThreadClosedException(__('The thread is closed.'));
 			}
-			
+
 			$this->ghost = $status['dead'];
 			$this->allow_media = ! $status['disable_image_upload'];
 		}
@@ -1072,7 +1073,7 @@ class Comment extends \Model\Model_Base
 		{
 			$this->$key = trim((string) $this->$key);
 		}
-		
+
 		// some users don't need to be limited, in here go all the ban and posting limitators
 		if( ! \Auth::has_access('comment.limitless_comment'))
 		{
@@ -1112,7 +1113,7 @@ class Comment extends \Model\Model_Base
 				}
 
 				$check_time = time();
-				
+
 				if ($this->board->archive)
 				{
 					// archives are in new york time
@@ -1121,13 +1122,13 @@ class Comment extends \Model\Model_Base
 					$diff = $newyork->diff($utc)->h;
 					$check_time = $check_time - ($diff * 60 * 60);
 				}
-				
+
 				if ($check_time - $row->timestamp < 10 && $check_time - $row->timestamp > 0)
 				{
 					throw new CommentSendingTimeLimitException(__('You must wait up to 10 seconds to post again.'));
 				}
 			}
-			
+
 			// we want to know if the comment will display empty, and in case we won't let it pass
 			$comment_parsed = $this->process_comment();
 			if($this->comment !== '' && $comment_parsed === '')
@@ -1140,12 +1141,12 @@ class Comment extends \Model\Model_Base
 			{
 				unset($this->$field);
 			}
-			
+
 			if ($this->recaptcha_challenge && $this->recaptcha_response && \ReCaptcha::available())
 			{
 				$recaptcha = \ReCaptcha::instance()
 					->check_answer(\Input::ip(), $this->recaptcha_challenge, $this->recaptcha_response);
-				
+
 				if ( ! $recaptcha)
 				{
 					throw new CommentSendingWrongCaptchaException(__('Incorrect CAPTCHA solution.'));
@@ -1164,11 +1165,11 @@ class Comment extends \Model\Model_Base
 				{
 					throw new CommentSendingRequestCaptchaException;
 				}
-				
+
 				// bots usually try various BBC, this checks if there's unparsed BBC after parsing it
 				if ($comment_parsed !== '' && substr_count($comment_parsed, '[') + substr_count($comment_parsed, ']') > 4)
 				{
-					throw new CommentSendingRequestCaptchaException;					
+					throw new CommentSendingRequestCaptchaException;
 				}
 			}
 
@@ -1390,11 +1391,11 @@ class Comment extends \Model\Model_Base
 				');
 			}
 		}
-		
+
 		$try_max = 3;
 		$try_count = 0;
 		$try_done = false;
-		
+
 		while (true)
 		{
 			try
@@ -1484,17 +1485,17 @@ class Comment extends \Model\Model_Base
 				{
 					throw new CommentSendingDatabaseException(__('Something went wrong when inserting the post in the database. Try again.'));
 				}
-				
+
 				$try_count++;
-				
+
 				if ($try_count > $try_max)
 				{
 					throw new CommentSendingDatabaseException(__('Something went wrong when inserting the post in the database. Try again.'));
 				}
-				
+
 				continue;
 			}
-			
+
 			break;
 		}
 

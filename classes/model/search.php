@@ -11,8 +11,8 @@ class SearchInvalidException extends SearchException {}
 class SearchEmptyResultException extends SearchException {}
 
 class Search extends Board
-{	
-	
+{
+
 	public static function structure()
 	{
 		return array(
@@ -70,7 +70,7 @@ class Search extends Board
 				'name' => 'poster_ip',
 				'access' => 'comment.see_ip'
 			),
-			
+
 			array(
 				'type' => 'radio',
 				'label' => __('Deleted posts'),
@@ -134,7 +134,7 @@ class Search extends Board
 			)
 		);
 	}
-	
+
 	protected function p_get_search($arguments)
 	{
 		// prepare
@@ -152,11 +152,11 @@ class Search extends Board
 	{
 		\Profiler::mark('Board::get_search_comments Start');
 		extract($this->_options);
-		
+
 		$available_fields = array('boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
 			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'poster_ip'
 		);
-			
+
 		foreach ($available_fields as $field)
 		{
 			if ( ! isset($args[$field]))
@@ -164,7 +164,7 @@ class Search extends Board
 				$args[$field] = null;
 			}
 		}
-		
+
 		$boards = array();
 		if ($args['boards'] !== null)
 		{
@@ -178,7 +178,7 @@ class Search extends Board
 				}
 			}
 		}
-		
+
 		if (empty($boards))
 		{
 			\Radix::preload(TRUE);
@@ -207,7 +207,7 @@ class Search extends Board
 					\Profiler::mark('Board::get_search_comments End Prematurely');
 					throw new SearchEmptyResultException(__('No results found.'));
 				}
-				
+
 				$args['image'] = $media->media_id;
 			}
 		}
@@ -216,14 +216,14 @@ class Search extends Board
 		// global search requires sphinx
 		if ($this->_radix === null && ! \Preferences::get('fu.sphinx.global'))
 		{
-			throw new SearchRequiresSphinxException(__('Sorry, this action requires the SphinxSearch engine.'));	
+			throw new SearchRequiresSphinxException(__('Sorry, this action requires the SphinxSearch engine.'));
 		}
 		else if (($this->_radix !== null && $this->_radix->sphinx) || ($this->_radix === null && \Preferences::get('fu.sphinx.global')))
 		{
 			// establish connection to sphinx
 			$sphinx_server = explode(':', \Preferences::get('fu.sphinx.listen'));
 			Sphinxql::addConnection('default', $sphinx_server[0], $sphinx_server[1]);
-		
+
 			try
 			{
 				// with suppress error
@@ -263,7 +263,7 @@ class Search extends Board
 			// set db->from with indexes loaded
 			$query = Sphinxql::select('id', 'board');
 			$query->from($indexes);
-			
+
 			// begin filtering search params
 			if ($args['text'])
 			{
@@ -314,7 +314,7 @@ class Search extends Board
 				if ($args['capcode'] === 'user')
 				{
 					$query->where('cap', ord('N'));
-				} 
+				}
 				else if ($args['capcode'] === 'mod')
 				{
 					$query->where('cap', ord('M'));
@@ -393,7 +393,7 @@ class Search extends Board
 				\Log::error('It looks like the user used a bad search string: '.$e->getMessage());
 				throw new SearchInvalidException(__('The order of the allowed special characters produced a bad query. Try wrapping your query in double quotes.'));
 			}
-			
+
 			if ( ! count($search))
 			{
 				$this->_comments_unsorted = array();
@@ -416,7 +416,7 @@ class Search extends Board
 				static::sql_extra_join($sub, $board);
 				$sql[] = '('.$sub->where('doc_id', '=', $result['id']).')';
 			}
-			
+
 			// query mysql for full records
 			$result = \DB::query(implode(' UNION ', $sql) . '
 					ORDER BY timestamp ' . (($args['order'] == 'asc') ? 'ASC' : 'DESC') .',
@@ -424,7 +424,7 @@ class Search extends Board
 				->as_object()
 				->execute()
 				->as_array();
-			
+
 		}
 		else /* use mysql as fallback for non-sphinx indexed boards */
 		{
@@ -448,13 +448,13 @@ class Search extends Board
 						'MATCH ('.\Radix::get_table($this->_radix, '_search').'.`media_filename`) '.
 						'AGAINST ('.\DB::escape($args['filename']).' IN BOOLEAN MODE)'), '');
 				}
-				
+
 				$query->limit(5000);
-				
+
 				$result = $query->as_object()
 					->execute()
 					->as_array();
-				
+
 				if ( ! count($result))
 				{
 					$this->_comments_unsorted = array();
@@ -469,7 +469,7 @@ class Search extends Board
 				}
 			}
 
-			
+
 			foreach (array('*', 'COUNT(*) as count') as $select_key => $select)
 			{
 				$query = \DB::select(\DB::expr($select))
@@ -572,32 +572,37 @@ class Search extends Board
 					$query->where('timestamp', '<=', (int) strtotime($args['end']));
 					//$this->db->use_index('timestamp_index');
 				}
-				
-				$result_which = $query->limit($limit)
-					->offset((($page * $limit) - $limit) > 5000 ? 5000 : ($page * $limit) - $limit)
-					->order_by('timestamp', ($args['order'] === 'asc' ? 'ASC' : 'DESC'))
-					->as_object()
-					->execute()
-					->as_array();
-				
-				if ( ! count($result_which))
-				{
-					$this->_comments_unsorted = array();
-					$this->_comments = array();
-					throw new SearchEmptyResultException(__('No results found.'));
-				}
 
 				if ( ! $select_key) // we're getting the actual result, not the count
 				{
+					$result_which = $query->limit($limit)
+						->offset((($page * $limit) - $limit) > 5000 ? 5000 : ($page * $limit) - $limit)
+						->order_by('timestamp', ($args['order'] === 'asc' ? 'ASC' : 'DESC'))
+						->as_object()
+						->execute()
+						->as_array();
+
+					if ( ! count($result_which))
+					{
+						$this->_comments_unsorted = array();
+						$this->_comments = array();
+						throw new SearchEmptyResultException(__('No results found.'));
+					}
+
 					$result = $result_which;
 				}
 				else
 				{
-					$this->_total_count = current($result_which)->count;
+					print_r($query->as_object()
+						->execute());
+					die();
+
+					$this->_total_count = $query->as_object()
+						->execute()->current()->count;
 				}
 			}
 		}
-		
+
 		foreach ($result as $item)
 		{
 			$board = $this->_radix !== null ? $this->_radix : \Radix::get_by_id($item->board_id);
@@ -608,11 +613,11 @@ class Search extends Board
 
 		return $this;
 	}
-	
-	
+
+
 	public function get_search_count()
 	{
 		$this->get_comments();
 	}
-	
+
 }

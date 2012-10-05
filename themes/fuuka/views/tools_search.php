@@ -13,6 +13,8 @@ else if (isset($radix))
 }
 
 ?>
+
+<?php if (isset($search_radix)) : ?>
 <div style="overflow:hidden;">
 	<!--- Search Input -->
 	<?php echo \Form::open(Uri::create($search_radix.'/search')); ?>
@@ -120,7 +122,7 @@ else if (isset($radix))
 						<?php echo \Form::input(array('name' => 'image', 'size' => '32', 'id' => 'image', 'value' => (isset($search["image"])) ? rawurldecode($search["image"]) : '')); ?>
 					</td>
 				</tr>
-				
+
 				<?php
 					$checkboxes = array(
 						array(
@@ -179,7 +181,7 @@ else if (isset($radix))
 							)
 						)
 					);
-					
+
 					foreach ($checkboxes as $checkbox) :
 				?>
 				<tr>
@@ -194,7 +196,7 @@ else if (isset($radix))
 					</td>
 				</tr>
 				<?php endforeach; ?>
-				
+
 				<tr>
 					<td class="postblock"><?= __('Action') ?></td>
 					<td>
@@ -272,3 +274,4 @@ else if (isset($radix))
 	<?php echo \Form::close(); ?>
 <?php endif; ?>
 </div>
+<?php endif; ?>

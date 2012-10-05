@@ -2,7 +2,6 @@
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 ?>
-<div class="advanced_search clearfix">
 
 <?php
 if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
@@ -16,8 +15,9 @@ else if (isset($radix))
 }
 ?>
 
+<?php if (isset($search_radix)) : ?>
+<div class="advanced_search clearfix">
 <?= \Form::open(array('method' => 'POST', 'action' => Uri::create($search_radix.'/search'))); ?>
-
 
 <div class="comment_wrap">
 <?= \Form::input(array(
@@ -37,14 +37,14 @@ else if (isset($radix))
 	'name' => 'submit_search',
 ));
 ?>
-	
+
 <?= \Form::submit(array(
 	'class' => 'btn btn-inverse',
 	'value' => __('Search on all boards'),
 	'name' => 'submit_search_global',
 ));
 ?>
-	
+
 <?php if (isset($radix)) : ?>
 <?= \Form::submit(array(
 	'class' => 'btn btn-inverse',
@@ -55,7 +55,7 @@ else if (isset($radix))
 <?php endif; ?>
 
 </div>
-	
+
 <?php $search_structure = \Search::structure(); ?>
 
 <div class="column">
@@ -66,14 +66,14 @@ foreach ($search_structure as $element)
 	{
 		continue;
 	}
-	
+
 	if ($element['type'] === 'input')
 	{
 		if ($element['name'] === 'text')
 		{
 			continue;
 		}
-		
+
 		echo '<div class="input-prepend">';
 		echo '<label class="add-on" for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
 		echo \Form::input(array(
@@ -84,7 +84,7 @@ foreach ($search_structure as $element)
 		));
 		echo '</div>';
 	}
-	
+
 	if ($element['type'] === 'date')
 	{
 		echo '<div class="input-prepend">';
@@ -106,7 +106,7 @@ foreach ($search_structure as $element)
 <?php if ( ! isset($radix) || $radix->sphinx) : ?>
 <div class="radixes">
 	<div>
-		<?php 
+		<?php
 		$radixes = \Radix::get_archives();
 		foreach($radixes as $key => $r)
 		{
@@ -129,9 +129,9 @@ foreach ($search_structure as $element)
 		?>
 		<?php endif; ?>
 	</div>
-	
+
 	<div style="clear:left; padding-top: 10px">
-		<?php 
+		<?php
 		$radixes = \Radix::get_boards();
 		foreach($radixes as $key => $r)
 		{
@@ -213,7 +213,7 @@ foreach ($search_structure as $element) :
 	{
 		continue;
 	}
-		
+
 	if ($element['type'] === 'radio') : ?>
 		<tr><td><?= e($element['label']) ?></td><td>
 		<?php foreach ($element['elements'] as $el) : ?>
@@ -226,8 +226,9 @@ foreach ($search_structure as $element) :
 	<?php endif;
 
 endforeach; ?>
-</tbody></table></div>	
+</tbody></table></div>
 
 <?= \Form::close() ?>
 
 </div>
+<?php endif; ?>

@@ -466,7 +466,7 @@ class Radix extends \Model_Base
 				// we don't use this function to edit internal preferences
 				continue;
 			}
-			
+
 			// mix the sub and sub_inverse and flatten the array
 			if (isset($item['sub_inverse']) && isset($item['sub']))
 			{
@@ -547,7 +547,6 @@ class Radix extends \Model_Base
 					{
 						$data[$key] = null;
 					}
-					
 				}
 			}
 		}
@@ -569,7 +568,6 @@ class Radix extends \Model_Base
 			// save extra preferences
 			foreach ($data_boards_preferences as $name => $value)
 			{
-				
 				static::save_preferences($data['id'], $name, $value);
 			}
 		}
@@ -601,15 +599,15 @@ class Radix extends \Model_Base
 				static::mysql_create_search($board);
 			}
 		}
-		
+
 		static::clear_cache();
 		static::preload();
 	}
-	
-	
+
+
 	/**
 	 * Insert custom preferences. One must use this for "internal" preferences
-	 * 
+	 *
 	 * @param int|stdClass $board_id can also be the board object
 	 * @param string $name
 	 * @param int|string|bool $value
@@ -626,7 +624,7 @@ class Radix extends \Model_Base
 			->where('board_id', $board_id)
 			->where('name', $name)
 			->execute();
-		
+
 		if ($result)
 		{
 			\DB::update('boards_preferences')
@@ -643,13 +641,16 @@ class Radix extends \Model_Base
 					'name' => $name,
 					'value' => $value
 				))
-				->execute();			
+				->execute();
 		}
-					
-		
-		// avoid the complete reloading
-		static::$preloaded_radixes[$board_id]->$name = $value;
-		
+
+		// only set if object exists
+		if (isset(static::$preloaded_radixes[$board_id]))
+		{
+			// avoid the complete reloading
+			static::$preloaded_radixes[$board_id]->$name = $value;
+		}
+
 		static::clear_cache();
 	}
 
@@ -775,7 +776,7 @@ class Radix extends \Model_Base
 	protected static function p_preload()
 	{
 		\Profiler::mark('Radix::preload Start');
-		
+
 		try
 		{
 			$object = \Cache::get('fu.model.radix.preload');
@@ -831,7 +832,7 @@ class Radix extends \Model_Base
 				}
 			}
 		}
-		
+
 		// load the preferences from the board_preferences table
 		\Profiler::mark('Radix::load_preferences Start');
 		try
@@ -848,7 +849,7 @@ class Radix extends \Model_Base
 
 			\Cache::set('fu.model.radix.load_preferences', $preferences, 900);
 		}
-		
+
 		foreach ($preferences as $value)
 		{
 			// in case of leftover values, it would try instantiating a new stdClass and that would trigger error
@@ -857,7 +858,7 @@ class Radix extends \Model_Base
 				$result_object[$value->board_id]->{$value->name} = $value->value;
 			}
 		}
-		
+
 		// unset the hidden boards
 		if ( ! \Auth::has_access('boards.see_hidden'))
 		{
@@ -869,11 +870,11 @@ class Radix extends \Model_Base
 				}
 			}
 		}
-		
+
 		static::$preloaded_radixes = $result_object;
 		\Profiler::mark_memory(static::$preloaded_radixes, 'Radix static::$preloaded_radixes');
 		\Profiler::mark('Radix::load_preferences End');
-		
+
 		// take them all and then filter/do whatever (we use this to split the boards through various subdomains)
 		// only public is affected! admins and mods will see all boards at all the time
 		static::$preloaded_radixes = \Plugins::run_hook('fu.radix.preload.public.alter_result', array(static::$preloaded_radixes), 'simple');
@@ -1574,7 +1575,7 @@ class Radix extends \Model_Base
 
 		// save in the database the fact that this is a MyISAM
 		static::save_preferences($board->id, 'myisam_search', 1);
-		
+
 		// fill only where there's a point to
 		\DB::query("
 			INSERT IGNORE INTO ".static::get_table($board, '_search')."

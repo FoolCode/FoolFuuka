@@ -41,6 +41,7 @@ class Theme_Fu_Fuuka extends \Model_Base
 
 		return array('return' => array(
 			'tags' => array('<span class="unkfunc">', 'suffix' => '</span>'),
+			'ext_link' => '//boards.4chan.org/',
 			'backlink' => 'class="backlink"'
 		));
 	}

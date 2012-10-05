@@ -744,6 +744,7 @@ class Comment extends \Model\Model_Base
 
 		$build_url = array(
 			'tags' => array('', ''),
+			'ext_link' => '//boards.4chan.org/',
 			'backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="'
 				.(($data->board) ? $data->board->shortname : $data->shortname) . '" data-post="' . $data->num . '"'
 		);
@@ -754,10 +755,10 @@ class Comment extends \Model\Model_Base
 		{
 			if ($data->num)
 			{
-				return implode('<a href="//boards.4chan.org/' . $data->shortname . '/res/' . $data->num . '">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
+				return implode('<a href="' . $build_url['ext_link'] . $data->shortname . '/res/' . $data->num . '">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
 			}
 
-			return implode('<a href="//boards.4chan.org/' . $data->shortname . '/">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
+			return implode('<a href="' . $build_url['ext_link'] . $data->shortname . '/">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
 		}
 
 		if ($data->num)

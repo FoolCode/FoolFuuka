@@ -463,7 +463,7 @@ class Comment extends \Model\Model_Base
 
 	/**
 	 * Processes the comment, strips annoying data from moot, converts BBCode,
-	 * converts > to greentext, >> to internal link, and >>> to crossboard link
+	 * converts > to greentext, >> to internal link, and >>> to external link
 	 *
 	 * @param object $board
 	 * @param object $post the database row for the post
@@ -515,8 +515,8 @@ class Comment extends \Model\Model_Base
 		$comment = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i",
 			array(get_class($this), 'process_internal_links'), $comment);
 
-		$comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/(\d+(?:,\d+)?)?(\/?)))'i",
-			array(get_class($this), 'process_crossboard_links'), $comment);
+		$comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
+			array(get_class($this), 'process_external_links'), $comment);
 
 		$comment = preg_replace($find, $html, $comment);
 		$comment = static::parse_bbcode($comment, ($this->board->archive && !$this->subnum));
@@ -727,47 +727,53 @@ class Comment extends \Model\Model_Base
 
 
 	/**
-	 * A callback function for preg_replace_callback for crossboard links (>>>//)
+	 * A callback function for preg_replace_callback for external links (>>>//)
 	 * Notice: this function generates some class variables
 	 *
 	 * @param array $matches the matches sent by preg_replace_callback
 	 * @return string the complete anchor
 	 */
-	public function process_crossboard_links($matches)
+	public function process_external_links($matches)
 	{
-		// create link object with all relevant information
+		// create $data object with all results from $matches
 		$data = new \stdClass();
-		$data->url = $matches[2];
-		$data->num = $matches[4];
+		$data->link = $matches[2];
 		$data->shortname = $matches[3];
 		$data->board = \Radix::get_by_shortname($data->shortname);
+		$data->query = $matches[4];
 
-		$build_url = array(
-			'tags' => array('', ''),
-			'ext_link' => '//boards.4chan.org/',
-			'backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="'
-				.(($data->board) ? $data->board->shortname : $data->shortname) . '" data-post="' . $data->num . '"'
+		$build_href = array(
+			// this will wrap the <a> element with a container element [open, close]
+			'tags' => array('open' => '', 'close' => ''),
+
+			// external links; defaults to 4chan
+			'short_link' => '//boards.4chan.org/'.$data->shortname.'/',
+			'query_link' => '//boards.4chan.org/'.$data->shortname.'/res/'.$data->query,
+
+			// backlink structure
+			'backlink_attr' => ' class="backlink" data-function="highlight" data-backlink="true" data-board="'
+				.(($data->board)?$data->board->shortname:$data->shortname).'" data-post="'.$data->query.'"'
 		);
 
-		$build_url = \Plugins::run_hook('fu.comment_model.process_crossboard_links.html_result', array($data, $build_url), 'simple');
+		$build_href = \Plugins::run_hook('fu.comment_model.process_external_links.html_result', array($data, $build_href), 'simple');
 
 		if ( ! $data->board)
 		{
-			if ($data->num)
+			if ($data->query)
 			{
-				return implode('<a href="' . $build_url['ext_link'] . $data->shortname . '/res/' . $data->num . '">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
+				return implode('<a href="'.$build_href['query_link'].'">&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
 			}
 
-			return implode('<a href="' . $build_url['ext_link'] . $data->shortname . '/">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
+			return implode('<a href="'.$build_href['short_link'].'">&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
 		}
 
-		if ($data->num)
+		if ($data->query)
 		{
-			return implode('<a href="' . \Uri::create(array($data->board->shortname, 'post', $data->num)) . '" '
-				.$build_url['backlink'] . '>&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
+			return implode('<a href="'.\Uri::create(array($data->board->shortname, 'post', $data->query)).'"'
+				.$build_href['backlink_attr'].'>&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
 		}
 
-		return implode('<a href="' . \Uri::create($data->board->shortname) . '">&gt;&gt;&gt;' . $data->url . '</a>', $build_url['tags']);
+		return implode('<a href="' . \Uri::create($data->board->shortname) . '">&gt;&gt;&gt;' . $data->link . '</a>', $build_href['tags']);
 
 		// return un-altered
 		return $matches[0];

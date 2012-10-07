@@ -31,7 +31,7 @@ class Theme_Fu_Fuuka extends \Model_Base
 	}
 
 
-	public static function process_crossboard_links_html($data, $html, $previous_result = NULL)
+	public static function process_external_links_html($data, $html, $previous_result = NULL)
 	{
 		// a plugin with higher priority modified this
 		if(!is_null($previous_result))
@@ -40,9 +40,10 @@ class Theme_Fu_Fuuka extends \Model_Base
 		}
 
 		return array('return' => array(
-			'tags' => array('<span class="unkfunc">', 'suffix' => '</span>'),
-			'ext_link' => '//boards.4chan.org/',
-			'backlink' => 'class="backlink"'
+			'tags' => array('open' =>'<span class="unkfunc">', 'close' => '</span>'),
+			'short_link' => '//boards.4chan.org/'.$data->shortname.'/',
+			'query_link' => '//boards.4chan.org/'.$data->shortname.'/res/'.$data->query,
+			'backlink_attr' => 'class="backlink"'
 		));
 	}
 }

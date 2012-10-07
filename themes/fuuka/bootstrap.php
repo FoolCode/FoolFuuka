@@ -18,5 +18,5 @@ if (!defined('DOCROOT'))
 	'\\Foolfuuka\\Themes\\Fuuka\\Theme_Fu_Fuuka::greentext', 8);
 \Plugins::register_hook('fu.comment_model.process_internal_links.html_result',
 	'\\Foolfuuka\\Themes\\Fuuka\\Theme_Fu_Fuuka::process_internal_links_html', 8);
-\Plugins::register_hook('fu.comment_model.process_crossboard_links.html_result',
-	'\\Foolfuuka\\Themes\\Fuuka\\Theme_Fu_Fuuka::process_crossboard_links_html', 8);
+\Plugins::register_hook('fu.comment_model.process_external_links.html_result',
+	'\\Foolfuuka\\Themes\\Fuuka\\Theme_Fu_Fuuka::process_external_links_html', 8);

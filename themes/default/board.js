@@ -10,7 +10,7 @@ var bindFunctions = function()
 			e.stopPropagation();
 			e.originalEvent.dataTransfer.dropEffect = 'copy';
 		});
-		
+
 		search_dropdown.on('dragenter', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -40,7 +40,7 @@ var bindFunctions = function()
 			el.parent().find('.uncheck').show();
 			el.hide();
 		},
-		
+
 		uncheckAll: function(el, post, event)
 		{
 			var checkboxes = el.parent().parent().find('input[type=checkbox]');
@@ -70,7 +70,7 @@ var bindFunctions = function()
 			var file_el = jQuery("#file_image");
 			var progress_pos = 0;
 			var progress_el = jQuery("#reply .progress .bar");
-			
+
 			// if there's an image and the browser doesn't support FormData, use a normal upload process
 			if(file_el.val() && window.FormData === undefined)
 			{
@@ -88,7 +88,7 @@ var bindFunctions = function()
 
 			var reply_alert = jQuery('#reply_ajax_notices');
 			reply_alert.removeClass('error').removeClass('success');
-			
+
 			var data_obj = {
 				reply_numero: jQuery("#reply_numero").val(),
 				reply_bokunonome: jQuery("#reply_bokunonome").val(),
@@ -104,13 +104,13 @@ var bindFunctions = function()
 				latest_doc_id: backend_vars.latest_doc_id,
 				theme: backend_vars.selected_theme
 			};
-			
+
 			data_obj[el.attr('name')] = true;
-			
+
 			data_obj[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
-			
+
 			progress_el.parent().animate({'opacity': '1.0'}, 300);
-			
+
 			var ajax_object = {
 				url: backend_vars.site_url + backend_vars.board_shortname + '/submit/' ,
 				dataType: 'json',
@@ -122,12 +122,12 @@ var bindFunctions = function()
 					 if(xhr instanceof window.XMLHttpRequest) {
 						xhr.upload.addEventListener('progress', function(evt){
 							var progress_local = Math.ceil(evt.loaded/evt.total*100);
-							if (evt.lengthComputable && progress_pos !== progress_local) 
+							if (evt.lengthComputable && progress_pos !== progress_local)
 							{
 								progress_pos = progress_local;
 								progress_el.css('width', (progress_pos) + '%')
 							}
-						}, false);						
+						}, false);
 					}
 					return xhr;
 				},
@@ -136,7 +136,7 @@ var bindFunctions = function()
 					{
 						window.Recaptcha.reload();
 					}
-					
+
 					jQuery("#recaptcha_response_field").val('');
 					if (typeof data.captcha !== "undefined")
 					{
@@ -144,30 +144,30 @@ var bindFunctions = function()
 						jQuery('.rules_box').hide()
 						return false;
 					}
-					
+
 					if (typeof data.error !== "undefined")
 					{
 						reply_alert.html(data.error);
 						reply_alert.addClass('error'); // deals with showing the alert
 						return false;
 					}
-					
+
 					jQuery('.rules_box').show()
 					jQuery('.recaptcha_widget').hide();
-					
+
 					reply_alert.html(data.success);
 					reply_alert.addClass('success'); // deals with showing the alert
 					jQuery("#reply_chennodiscursus").val("");
 					file_el.replaceWith('<input type="file" name="file_image" id="file_image" size="16">');
-					
+
 					// redirect in case of new threads
 					if (data_obj.reply_numero < 1)
 					{
-						window.location = backend_vars.site_url + backend_vars.board_shortname + '/thread/' 
+						window.location = backend_vars.site_url + backend_vars.board_shortname + '/thread/'
 							+ data.thread_num + '/';
 						return false;
 					}
-					
+
 					insertPost(data, textStatus, jqXHR);
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
@@ -184,7 +184,7 @@ var bindFunctions = function()
 					progress_el.parent().animate({'opacity': '0.0'}, 300);
 				}
 			}
-			
+
 			// if we have FormData support, we can upload files!
 			if (window.FormData !== undefined)
 			{
@@ -199,13 +199,13 @@ var bindFunctions = function()
 				{
 					data_formdata.append('file_image', file_el[0].files[0])
 				}
-				
+
 				ajax_object.data = data_formdata;
 			}
 
 
 			jqxhr = jQuery.ajax(ajax_object);
-			
+
 			event.preventDefault();
 		},
 
@@ -214,7 +214,7 @@ var bindFunctions = function()
 			realtimethread();
 			event.preventDefault();
 		},
-		
+
 		expandThread: function(el, post, event)
 		{
 			var thread_num = el.data('thread-num');
@@ -243,7 +243,7 @@ var bindFunctions = function()
 							}
 						})
 						var thread = jQuery('article.thread[data-thread-num=' + thread_num + '] ');
-						var displayed_string = post_count + ' posts ' + 
+						var displayed_string = post_count + ' posts ' +
 							(media_count > 0 ? 'and ' + media_count + ' ' + (media_count == 1 ? 'image' : 'images') : '') + ' displayed';
 						thread.find('.omitted_text').text(displayed_string);
 						el.data('expanded', true).html('<i class="icon icon-resize-small"></i>');
@@ -258,12 +258,12 @@ var bindFunctions = function()
 				articles.slice(0, articles.length - 5).hide();
 				var post_count = articles.filter(':hidden').length;
 				var media_count = articles.find('.thread_image_box:hidden').length;
-				var omitted_string = post_count + ' posts ' + 
+				var omitted_string = post_count + ' posts ' +
 					(media_count > 0 ? 'and ' + media_count + ' ' + (media_count == 1 ? 'image' : 'images') : '') + ' omitted';
 				thread.find('.omitted_text').text(omitted_string);
 				el.data('expanded', false).html('<i class="icon icon-resize-full"></i>');
 			}
-			
+
 			return false;
 		},
 
@@ -338,7 +338,7 @@ var bindFunctions = function()
 				jQuery('.post_mod_controls button[data-function]').removeAttr('disabled');
 			}, 700);
 			jQuery('.post_mod_controls').show();
-			jQuery('button[data-function=activateModeration]').parent().hide();			
+			jQuery('button[data-function=activateModeration]').parent().hide();
 		},
 
 		closeModal: function(el, post)
@@ -476,7 +476,7 @@ var bindFunctions = function()
 					return false;
 				}
 				modal.modal('hide');
-				
+
 				if (action == 'delete') {
 					jQuery('.doc_id_' + _doc_id).hide();
 				}
@@ -511,17 +511,17 @@ var bindFunctions = function()
 		var post = el.data("post");
 		return clickCallbacks[el.data("function")](el, post, event);
 	});
-	
-	jQuery(document.body).on("click", ".search_box, .search-query", function(event) { 
+
+	jQuery(document.body).on("click", ".search_box, .search-query", function(event) {
 		event.stopPropagation();
 	});
-	
+
 	jQuery(document.body).click(function(event) {
 		var search_input = jQuery('#search_form_comment');
 		jQuery('.search-query').val(search_input.val())
 		jQuery('.search_box').hide();
 	});
-	
+
 	jQuery('.search-query').focus(function() {
 		var el = jQuery(this);
 		var offset = el.offset();
@@ -547,7 +547,7 @@ var bindFunctions = function()
 	var backlink_spin;
 
 	// hover functions go here
-	jQuery("#main").on("mouseover mouseout", "article a[data-backlink]", function(event) 
+	jQuery("#main").on("mouseover mouseout", "article a[data-backlink]", function(event)
 	{
 		if(event.type == "mouseover")
 		{
@@ -612,6 +612,11 @@ var bindFunctions = function()
 						backlink.html(data.formatted);
 						backlink.css('display', 'block');
 						showBacklink(backlink, pos, height, width);
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						backend_vars.loaded_posts[el.data('post')] = false;
+						shakeBacklink(el);
+						return false;
 					}
 				});
 				return false;
@@ -756,7 +761,7 @@ var insertPost = function(data, textStatus, jqXHR)
 {
 	var w_height = jQuery(document).height();
 	var found_posts = false;
-	
+
 	if (data !== null)
 	{
 		jQuery.each(data, function(id, val)
@@ -765,7 +770,7 @@ var insertPost = function(data, textStatus, jqXHR)
 			{
 				var aside = jQuery('article.thread[data-thread-num=' + id + '] aside.posts');
 				jQuery.each(val.posts, function(idx, value)
-				{ 
+				{
 					found_posts = true;
 					var post = jQuery(value.formatted)
 					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
@@ -874,7 +879,7 @@ jQuery(document).ready(function() {
 		jQuery('#date_end').replaceWith(jQuery('<input>').attr({id: 'date_end', name: 'end', type: 'date'}));
 		jQuery('#date_start').replaceWith(jQuery('<input>').attr({id: 'date_start', name: 'start', type: 'date'}));
 	}
-	
+
 	// opera doesn't play well with the modal transition
 	if (navigator.appName == "Opera" && navigator.userAgent.match(/Version\/12\./))
 	{
@@ -892,7 +897,7 @@ jQuery(document).ready(function() {
 			post[1] = post[1].replace(',', '_');
 
 		}
-		
+
 		toggleHighlight(post[1]);
 	}
 

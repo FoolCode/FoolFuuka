@@ -697,7 +697,14 @@ var backlinkify = function(elem, post_id, subnum)
 
 		if (typeof backend_vars.last_limit === "undefined")
 		{
-			backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+			if (typeof backend_vars.thread_id === "undefined")
+			{
+				backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+			}
+			else
+			{
+				backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+			}
 		}
 		else
 		{
@@ -790,7 +797,7 @@ var insertPost = function(data, textStatus, jqXHR)
 					}
 
 					backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
-					aside.append(value.formatted);
+					aside.append(post);
 
 					if(backend_vars.latest_doc_id < value.doc_id)
 						backend_vars.latest_doc_id = value.doc_id;

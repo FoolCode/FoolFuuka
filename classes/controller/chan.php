@@ -427,7 +427,7 @@ class Controller_Chan extends \Controller_Common
 		$this->_theme->bind(array(
 			'board' => $board,
 			'pagination' => array(
-				'base_url' => \Uri::create(array($this->_radix->shortname, 'page')),
+				'base_url' => \Uri::create(array($this->_radix->shortname, 'gallery')),
 				'current_page' => $page,
 				'total' => floor($board->get_count()/100+1)
 			)

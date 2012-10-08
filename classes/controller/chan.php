@@ -13,7 +13,7 @@ class Controller_Chan extends \Controller_Common
 	public function before()
 	{
 		parent::before();
-		
+
 		$this->_theme = \Theme::forge('foolfuuka');
 		$this->_theme->set_module('foolfuuka');
 		$this->_theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
@@ -424,7 +424,14 @@ class Controller_Chan extends \Controller_Common
 			return $this->error($e->getMessage());
 		}
 
-		$this->_theme->bind('board', $board);
+		$this->_theme->bind(array(
+			'board' => $board,
+			'pagination' => array(
+				'base_url' => \Uri::create(array($this->_radix->shortname, 'page')),
+				'current_page' => $page,
+				'total' => floor($board->get_count()/100+1)
+			)
+		));
 		return \Response::forge($this->_theme->build('gallery'));
 
 	}
@@ -556,25 +563,25 @@ class Controller_Chan extends \Controller_Common
 		return \Response::forge($this->_theme->build('redirection', array('url' => $redirect)));
 	}
 
-	
+
 	public function radix_advanced_search()
 	{
 		return $this->action_advanced_search();
 	}
-	
+
 	public function action_advanced_search()
 	{
 		$this->_theme->bind('search_structure', \Search::structure());
 		$this->_theme->bind('section_title', __('Advanced search'));
-		
+
 		if ($this->_radix !== null)
 		{
 			$this->_theme->bind('search', array('board' => array($this->_radix->shortname)));
 		}
-		
+
 		return \Response::forge($this->_theme->build('advanced_search'));
 	}
-	
+
 
 	public function action_search()
 	{
@@ -634,7 +641,7 @@ class Controller_Chan extends \Controller_Common
 					{
 						if (\Input::post('submit_search_global'))
 						{
-							
+
 						}
 						else if (count(\Input::post($modifier)) == 1)
 						{
@@ -644,7 +651,7 @@ class Controller_Chan extends \Controller_Common
 						else if (count(\Input::post($modifier)) > 1)
 						{
 							$redirect_url[0] = '_';
-							
+
 							// avoid setting this if we're just searching on all the boards
 							$sphinx_boards = array();
 							foreach (\Radix::get_all() as $k => $b)
@@ -654,11 +661,11 @@ class Controller_Chan extends \Controller_Common
 									$sphinx_boards[] = $b;
 								}
 							}
-							
+
 							if(count($sphinx_boards) !== count(\Input::post($modifier)))
 							{
 								array_push($redirect_url, $modifier);
-								array_push($redirect_url, rawurlencode(implode('.', \Input::post($modifier))));		
+								array_push($redirect_url, rawurlencode(implode('.', \Input::post($modifier))));
 							}
 						}
 					}
@@ -674,7 +681,7 @@ class Controller_Chan extends \Controller_Common
 		}
 
 		$search = \Uri::uri_to_assoc(\Uri::segments(), 2, $modifiers);
-		
+
 		$this->_theme->bind('search', $search);
 
 		// latest searches system
@@ -726,7 +733,7 @@ class Controller_Chan extends \Controller_Common
 				$search[$key] = trim(rawurldecode($value));
 			}
 		}
-		
+
 		if ($search['boards'] !== null)
 		{
 			$search['boards'] = explode('.', $search['boards']);
@@ -857,12 +864,12 @@ class Controller_Chan extends \Controller_Common
 				{
 					$item = implode('.', $item);
 				}
-				
+
 				if ($key == 'poster_ip')
 				{
 					$item = \Inet::dtop($item);
 				}
-				
+
 				$pagination_arr[] = rawurlencode($item);
 			}
 		}
@@ -960,7 +967,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			$data['last_limit'] = $post['reply_last_limit'];
 		}
-		
+
 		if (isset($post['recaptcha_challenge_field']) && isset($post['recaptcha_response_field']))
 		{
 			$data['recaptcha_challenge'] = $post['recaptcha_challenge_field'];
@@ -1106,7 +1113,7 @@ class Controller_Chan extends \Controller_Common
 					array('board' => false, 'theme' => true), array('controller_method' => $limit ? 'last/'.$limit : 'thread'));
 				return \Response::forge(
 					json_encode(array(
-						'success' => __('Message sent.'), 
+						'success' => __('Message sent.'),
 						'thread_num' => $comment->thread_num,
 						$comment->thread_num => array('posts' => array($comment_api)),
 				)));

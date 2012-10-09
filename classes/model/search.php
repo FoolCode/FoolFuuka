@@ -593,12 +593,10 @@ class Search extends Board
 				}
 				else
 				{
-					print_r($query->as_object()
-						->execute());
-					die();
-
 					$this->_total_count = $query->as_object()
-						->execute()->current()->count;
+						->execute()
+						->current()
+						->count;
 				}
 			}
 		}

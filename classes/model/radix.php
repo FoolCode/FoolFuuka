@@ -389,7 +389,10 @@ class Radix extends \Model_Base
 			),
 		);
 
-		$structure = \Plugins::run_hook('fu.radix.structure.structure_alter', array($structure), 'simple');
+		$structure = \Foolz\Plugin\Hook::forge('fu.radix.structure.structure_alter')
+			->setParam('structure', $structure)
+			->execute()
+			->get($structure);
 
 		$structure = array_merge($structure,
 			array(
@@ -877,7 +880,10 @@ class Radix extends \Model_Base
 
 		// take them all and then filter/do whatever (we use this to split the boards through various subdomains)
 		// only public is affected! admins and mods will see all boards at all the time
-		static::$preloaded_radixes = \Plugins::run_hook('fu.radix.preload.public.alter_result', array(static::$preloaded_radixes), 'simple');
+		static::$preloaded_radixes = \Foolz\Plugin\Hook::forge('fu.radix.preload.public.alter_result')
+			->setParam('preloaded_radixes', static::$preloaded_radixes)
+			->execute()
+			->get(static::$preloaded_radixes);
 
 		\Profiler::mark('Radix::preload End');
 		\Profiler::mark_memory(static::$preloaded_radixes, 'Radix static::$preloaded_radixes w/ preferences');

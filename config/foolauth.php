@@ -8,13 +8,11 @@ return array(
 			'boards' => array('see_hidden'),
 			'comment' => array('see_ip', 'passwordless_deletion', 'limitless_comment', 'reports', 'mod_capcode'),
 			'media' => array('see_banned'),
-			'users' => array('access')
 		),
 		'admin' => array(
 			'boards' => array('edit', 'see_hidden'),
 			'comment' => array('see_ip', 'passwordless_deletion', 'limitless_comment', 'reports', 'mod_capcode', 'admin_capcode', 'dev_capcode'),
 			'media' => array('see_banned', 'see_hidden', 'limitless_media'),
-			'users' => array('access', 'change_credentials', 'change_group')
 		),
 	),
 );

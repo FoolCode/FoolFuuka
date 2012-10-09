@@ -9,7 +9,11 @@ class Fool
 		\Cli::write('--'.__('FoolFuuka module management.'));
 		
 		$sections = array('database', 'boards');
-		$sections = \Plugins::run_hook('foolframe.task.fool.run.sections.alter', array(array('database', 'board')), 'simple');
+
+		$sections = \Foolz\Plugin\Hook::forge('ff.task.fool.run.sections.alter')
+			->setParam('array', array('database', 'board'))
+			->execute()
+			->get(array('database', 'board'));
 		
 		$section = \Cli::prompt('  '.__('Select the section.'), $sections);
 		
@@ -19,7 +23,8 @@ class Fool
 		}
 		else
 		{
-			\Plugins::run_hook('foolframe.task.fool.run.sections.call_help.'.$section, array(), 'simple');
+			\Foolz\Plugin\Hook::forge('ff.task.fool.run.sections.call_help.'.$section)
+				->execute();
 		}
 		
 		$done = false;
@@ -34,7 +39,10 @@ class Fool
 			}
 			else
 			{
-				$done = \Plugins::run_hook('foolframe.task.fool.run.sections.call.'.$section, array($parameters), 'simple');
+				$done = \Foolz\Plugin\Hook::forge('ff.task.fool.run.sections.call.'.$section)
+					->setParam('parameters', $parameters)
+					->execute()
+					->get($parameters);
 			}
 		}
 		

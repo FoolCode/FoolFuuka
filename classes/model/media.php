@@ -132,7 +132,7 @@ class Media extends \Model\Model_Base
 				}
 			}
 		}
-		
+
 		// we set them even for admins
 		if ($this->banned)
 		{
@@ -305,16 +305,16 @@ class Media extends \Model\Model_Base
 			{
 				$this->media_link = $this->get_link(false);
 			}
-			catch (MediaNotFoundException $e) 
+			catch (MediaNotFoundException $e)
 			{
-				
+
 			}
 		}
-		
+
 		return $this->media_status;
 	}
-	
-	
+
+
 	public function get_safe_media_hash()
 	{
 		if ( ! isset($this->safe_media_hash))
@@ -323,16 +323,16 @@ class Media extends \Model\Model_Base
 			{
 				$this->safe_media_hash = $this->get_hash(true);
 			}
-			catch (MediaNotFoundException $e) 
+			catch (MediaNotFoundException $e)
 			{
 				return null;
 			}
 		}
-		
+
 		return $this->safe_media_hash;
 	}
-	
-	
+
+
 	public function get_remote_media_link()
 	{
 		if ( ! isset($this->remote_media_link))
@@ -341,16 +341,16 @@ class Media extends \Model\Model_Base
 			{
 				$this->remote_media_link = $this->get_remote_link();
 			}
-			catch (MediaNotFoundException $e) 
+			catch (MediaNotFoundException $e)
 			{
 				return null;
 			}
 		}
-		
+
 		return $this->remote_media_link;
 	}
-	
-	
+
+
 	public function get_media_link()
 	{
 		if ( ! isset($this->media_link))
@@ -359,16 +359,16 @@ class Media extends \Model\Model_Base
 			{
 				$this->media_link = $this->get_link(false);
 			}
-			catch (MediaNotFoundException $e) 
+			catch (MediaNotFoundException $e)
 			{
 				return null;
 			}
 		}
-		
+
 		return $this->media_link;
 	}
-	
-	
+
+
 	public function get_thumb_link()
 	{
 		if ( ! isset($this->thumb_link))
@@ -377,55 +377,55 @@ class Media extends \Model\Model_Base
 			{
 				$this->thumb_link = $this->get_link(true);
 			}
-			catch (MediaNotFoundException $e) 
+			catch (MediaNotFoundException $e)
 			{
 				return null;
 			}
 		}
-		
+
 		return $this->thumb_link;
 	}
-	
-	
+
+
 	public static function process($string)
 	{
 		return e(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
 	}
-	
-	
+
+
 	public function get_media_filename_processed()
 	{
 		if ( ! isset($this->media_filename_processed))
 		{
 			$this->media_filename_processed = static::process($this->media_filename);
 		}
-		
+
 		return $this->media_filename_processed;
 	}
-	
-	
+
+
 	public function get_preview_orig_processed()
 	{
 		if ( ! isset($this->preview_orig_processed))
 		{
 			$this->preview_orig_processed = static::process($this->preview_orig);
 		}
-		
+
 		return $this->preview_orig_processed;
 	}
-	
-	
+
+
 	public function get_media_hash_processed()
 	{
 		if ( ! isset($this->media_hash_processed))
 		{
 			$this->media_hash_processed = static::process($this->media_hash);
 		}
-		
+
 		return $this->media_hash_processed;
 	}
-	
-	
+
+
 	/**
 	 * Get the path to the media
 	 *
@@ -433,7 +433,7 @@ class Media extends \Model\Model_Base
 	 * @return bool|string FALSE if it has no image in database, string for the path
 	 */
 	public function get_dir($thumbnail = false, $precise = false)
-	{		
+	{
 		if (!$this->media_hash)
 		{
 			throw new MediaHashNotFoundException;
@@ -490,13 +490,17 @@ class Media extends \Model\Model_Base
 	 */
 	public function get_link($thumbnail = false, $force = false)
 	{
-		$replace = \Plugins::run_hook('foolfuuka\\model\\media.get_link.call.replace', array($this, $thumbnail, $force));
-		
-		if ($replace['return'] !== null)
+		$before = \Foolz\Plugin\Hook::forge('foolfuuka\\model\\media.get_link.call.before')
+			->setObject($this)
+			->setParams(array('thumbnail' => $thumbnail, 'force' => $force))
+			->execute()
+			->get();
+
+		if ( ! $before instanceof \Foolz\Plugin\Void)
 		{
-			return $replace['return'];
+			return $before;
 		}
-		
+
 		if ( ! $this->media_hash)
 		{
 			throw new MediaHashNotFoundException;
@@ -548,7 +552,7 @@ class Media extends \Model\Model_Base
 		{
 
 		}
-		
+
 		if (isset($image))
 		{
 			$media_cdn = array();
@@ -581,7 +585,7 @@ class Media extends \Model\Model_Base
 		{
 			$this->media_status = 'not-available';
 		}
-		
+
 		throw new MediaNotFoundException;
 	}
 
@@ -808,7 +812,9 @@ class Media extends \Model\Model_Base
 	public function rollback_upload()
 	{
 		if (!is_null($this->temp_filename) && file_exists($this->temp_path.$this->temp_filename))
+		{
 			unlink($this->temp_path.$this->temp_filename);
+		}
 	}
 
 

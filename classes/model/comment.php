@@ -475,7 +475,10 @@ class Comment extends \Model\Model_Base
 		$find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
 		$html = '\\1<span class="greentext">\\2</span>\\3';
 
-		$html = \Plugins::run_hook('fu.comment_model.process_comment.greentext_result', array($html), 'simple');
+		$html = \Foolz\Plugin\Hook::forge('fu.comment_model.process_comment.greentext_result')
+			->setParam('html', $html)
+			->execute()
+			->get($html);
 
 		$comment = $this->comment;
 
@@ -666,7 +669,12 @@ class Comment extends \Model\Model_Base
 			'attr_backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $current_p_num_u . '"',
 		);
 
-		$build_url = \Plugins::run_hook('fu.comment_model.process_internal_links.html_result', array($data, $build_url), 'simple');
+		$build_url = \Foolz\Plugin\Hook::forge('fu.comment_model.process_internal_links.html_result')
+			->setObject($this)
+			->setParam('data', $data)
+			->setParam('build_url', $build_url)
+			->execute()
+			->get($build_url);
 
 		static::$_backlinks_arr[$data->num][$current_p_num_u] = implode(
 			'<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $data->post->thread_num)) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
@@ -755,7 +763,12 @@ class Comment extends \Model\Model_Base
 				.(($data->board)?$data->board->shortname:$data->shortname).'" data-post="'.$data->query.'"'
 		);
 
-		$build_href = \Plugins::run_hook('fu.comment_model.process_external_links.html_result', array($data, $build_href), 'simple');
+		$build_href = \Foolz\Plugin\Hook::forge('fu.comment_model.process_external_links.html_result')
+			->setObject($this)
+			->setParam('data', $data)
+			->setParam('build_href', $build_href)
+			->execute()
+			->get($build_href);
 
 		if ( ! $data->board)
 		{
@@ -841,7 +854,9 @@ class Comment extends \Model\Model_Base
 
 	public function clean_fields()
 	{
-		\Plugins::run_hook('foolfuuka\\model\\comment.clean_fields.call.before', array(&$this));
+		\Foolz\Plugin\Hook::forge('foolfuuka\\model\\comment.clean_fields.call.before')
+			->setObject($this)
+			->execute();
 
 		if ( ! \Auth::has_access('comment.see_ip'))
 		{
@@ -1204,7 +1219,9 @@ class Comment extends \Model\Model_Base
 			}
 		}
 
-		\Plugins::run_hook('fu.comment.insert.alter_input_after_checks', array(&$this), 'simple');
+		\Foolz\Plugin\Hook::forge('fu.comment.insert.alter_input_after_checks')
+			->setObject($this)
+			->execute();
 
 		// process comment name+trip
 		if ($this->name === '')
@@ -1335,7 +1352,9 @@ class Comment extends \Model\Model_Base
 			$this->timestamp = $this->timestamp - ($diff * 60 * 60);
 		}
 
-		\Plugins::run_hook('fu.comment.insert.alter_input_before_sql', array(&$this), 'simple');
+		\Foolz\Plugin\Hook::forge('fu.comment.insert.alter_input_before_sql')
+			->setObject($this)
+			->execute();
 
 		// being processing insert...
 
@@ -1477,7 +1496,9 @@ class Comment extends \Model\Model_Base
 				}
 
 				// set data for extra fields
-				\Plugins::run_hook('fu.comment.insert.extra_json_array', array(&$this), 'simple');
+				\Foolz\Plugin\Hook::forge('fu.comment.insert.extra_json_array')
+					->setObject($this)
+					->execute();
 
 				// insert the extra row DURING A TRANSACTION
 				$this->extra->extra_id = $last_id;

@@ -24,10 +24,10 @@ if (\Auth::has_access('maccess.admin'))
 
 	\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.alter')
 		->setCall(function($result){
-			$array = $result->getParam('nav');
+			$array = $result->getParam('array');
 			$array[] = 'board_statistics';
 			$result->set($array);
-			$result->setParam('nav', $array);
+			$result->setParam('array', $array);
 		});
 
 	\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.call_help.board_statistics')

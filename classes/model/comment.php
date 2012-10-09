@@ -758,7 +758,8 @@ class Comment extends \Model\Model_Base
 			'short_link' => '//boards.4chan.org/'.$data->shortname.'/',
 			'query_link' => '//boards.4chan.org/'.$data->shortname.'/res/'.$data->query,
 
-			// backlink structure
+			// additional attributes + backlinking attributes
+			'attributes' => '',
 			'backlink_attr' => ' class="backlink" data-function="highlight" data-backlink="true" data-board="'
 				.(($data->board)?$data->board->shortname:$data->shortname).'" data-post="'.$data->query.'"'
 		);
@@ -774,7 +775,7 @@ class Comment extends \Model\Model_Base
 		{
 			if ($data->query)
 			{
-				return implode('<a href="'.$build_href['query_link'].'">&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
+				return implode('<a href="'.$build_href['query_link'].'"'.$build_href['attributes'].'>&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
 			}
 
 			return implode('<a href="'.$build_href['short_link'].'">&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
@@ -783,7 +784,7 @@ class Comment extends \Model\Model_Base
 		if ($data->query)
 		{
 			return implode('<a href="'.\Uri::create(array($data->board->shortname, 'post', $data->query)).'"'
-				.$build_href['backlink_attr'].'>&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
+				.$build_href['attributes'].$build_href['backlink_attr'].'>&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
 		}
 
 		return implode('<a href="' . \Uri::create($data->board->shortname) . '">&gt;&gt;&gt;' . $data->link . '</a>', $build_href['tags']);

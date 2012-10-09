@@ -66,7 +66,7 @@ class Board extends \Model\Model_Base
 	 * @var array
 	 */
 	protected $_options = array();
-	
+
 	/**
 	 * The options to give to the Comment class
 	 *
@@ -102,9 +102,9 @@ class Board extends \Model\Model_Base
 			{
 				\Profiler::mark('Start Board::get_comments() with method '.$this->_method_fetching);
 				\Profiler::mark_memory($this, 'Start Board::get_comments() with method '.$this->_method_fetching);
-				
+
 				$this->{$this->_method_fetching}();
-				
+
 				\Profiler::mark('End Board::get_comments() with method '.$this->_method_fetching);
 				\Profiler::mark_memory($this, 'End Board::get_comments() with method '.$this->_method_fetching);
 			}
@@ -131,9 +131,9 @@ class Board extends \Model\Model_Base
 			{
 				\Profiler::mark('Start Board::get_comments() with method '.$this->_method_counting);
 				\Profiler::mark_memory($this, 'Start Board::get_comments() with method '.$this->_method_counting);
-				
+
 				$this->{$this->_method_counting}();
-				
+
 				\Profiler::mark('End Board::get_count() with method '.$this->_method_counting);
 				\Profiler::mark_memory($this, 'ENd Board::get_count() with method '.$this->_method_counting);
 			}
@@ -201,8 +201,8 @@ class Board extends \Model\Model_Base
 
 		return $this;
 	}
-	
-	
+
+
 	protected function p_set_comment_options($name, $value = null)
 	{
 		if (is_array($name))
@@ -553,7 +553,7 @@ class Board extends \Model\Model_Base
 	{
 		extract($this->_options);
 
-		$query = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
+		$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
 			->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))->cached(300);
 
 		$this->_total_count = $query_threads->as_object()->execute()->current()->threads;
@@ -735,7 +735,7 @@ class Board extends \Model\Model_Base
 		$ghost_post_present = false;
 		$thread_last_bump = 0;
 		$counter = array('posts' => 0, 'images' => 0);
-		
+
 		foreach ($this->_comments_unsorted as $post)
 		{
 			// we need to find if there's the OP in the list
@@ -794,7 +794,7 @@ class Board extends \Model\Model_Base
 		{
 			$result['disable_image_upload'] = true;
 		}
-		
+
 		if ($this->_radix->disable_ghost && $result['dead'])
 		{
 			$result['closed'] = true;

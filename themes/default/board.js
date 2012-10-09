@@ -614,7 +614,6 @@ var bindFunctions = function()
 						showBacklink(backlink, pos, height, width);
 					},
 					error: function(jqXHR, textStatus, errorThrown){
-						backend_vars.loaded_posts[el.data('post')] = false;
 						shakeBacklink(el);
 						return false;
 					}

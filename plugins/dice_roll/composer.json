@@ -1,0 +1,24 @@
+{
+	"name": "foolz/dice_roll",
+	"type": "foolz-plugin",
+	"description": "Adds support for dice rolling on certain boards.",
+	"keywords": ["fake", "mock"],
+	"homepage": "http://www.foolz.us",
+	"license": "Apache-2.0",
+	"authors": [{"name": "foolz", "email": "support@foolz.us"}],
+	"support": {
+		"email": "support@foolz.us",
+		"irc": "irc://irc.irchighway.net/fooldriver"
+	},
+
+	"require" : {
+		"foolz/plugin": "dev"
+	},
+
+	"extra": {
+		"name": "Dice Roll",
+		"slug": "dice_roll",
+		"identifier": "fu",
+		"module": "foolfuuka"
+	}
+}

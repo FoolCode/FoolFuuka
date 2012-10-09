@@ -1,0 +1,24 @@
+{
+	"name": "foolz/nginx_cache_purge",
+	"type": "foolz-plugin",
+	"description": "Remove deleted images from the Nginx proxy cache when deleted locally. Requires Nginx compiled with ngx_cache_purge to work: https://github.com/FRiCKLE/ngx_cache_purge",
+	"keywords": ["fake", "mock"],
+	"homepage": "http://www.foolz.us",
+	"license": "Apache-2.0",
+	"authors": [{"name": "foolz", "email": "support@foolz.us"}],
+	"support": {
+		"email": "support@foolz.us",
+		"irc": "irc://irc.irchighway.net/fooldriver"
+	},
+
+	"require" : {
+		"foolz/plugin": "dev"
+	},
+
+	"extra": {
+		"name": "Nginx Cache Purge",
+		"slug": "nginx_cache_purge",
+		"identifier": "fu",
+		"module": "foolfuuka"
+	}
+}

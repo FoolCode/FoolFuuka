@@ -145,9 +145,9 @@ header('imagetoolbar: false');
 								$top_nav[] = array('href' => Uri::create(array($radix->shortname, 'gallery')), 'text' => __('Gallery'));
 							}
 
-							$top_nav = Plugins::run_hook('ff.themes.generic_top_nav_buttons', array($top_nav), 'simple');
-							$top_nav = Plugins::run_hook('fu.themes.yotsubatwo_top_nav_buttons', array($top_nav), 'simple');
-
+							$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+							$top_nav = \Foolz\Plugin\Hook::forge('fu.themes.yotsubatwo_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+							
 							foreach ($top_nav as $nav)
 							{
 								echo '<li><a href="' . $nav['href'] . '">' . $nav['text'] . '</a></li>';
@@ -182,7 +182,7 @@ header('imagetoolbar: false');
 
 				<?= $template['partials']['tools_modal']; ?>
 
-				<?php \Plugins::run_hook('fu.themes.yotsubatwo_after_body_template'); ?>
+				<?php \Foolz\Plugin\Hook::forge('fu.themes.yotsubatwo_after_body_template')->execute(); ?>
 
 				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<div class="paginate">
@@ -306,8 +306,8 @@ header('imagetoolbar: false');
 
 			<?php
 			$bottom_nav = array();
-			$bottom_nav = Plugins::run_hook('ff.themes.generic_bottom_nav_buttons', array($bottom_nav), 'simple');
-			$bottom_nav = Plugins::run_hook('fu.themes.yotsubatwo_bottom_nav_buttons', array($bottom_nav), 'simple');
+			$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+			$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.yotsubatwo_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
 			if (!empty($bottom_nav))
 			{

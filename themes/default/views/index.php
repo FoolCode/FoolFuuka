@@ -41,8 +41,8 @@ if (!defined('DOCROOT'))
 			}
 		}
 
-		$index_nav = Plugins::run_hook('ff.themes.generic.index_nav_elements', array($index_nav), 'simple');
-		$index_nav = Plugins::run_hook('fu.themes.default.index_nav_elements', array($index_nav), 'simple');
+		$index_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic.index_nav_elements')->setParam('nav', $index_nav)->execute()->get($index_nav);
+		$index_nav = \Foolz\Plugin\Hook::forge('fu.themes.default.index_nav_elements')->setParam('nav', $index_nav)->execute()->get($index_nav);
 
 		foreach($index_nav as $item) : ?>
 			<ul class="pull-left clearfix">

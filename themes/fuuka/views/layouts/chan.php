@@ -50,8 +50,8 @@
 
 		<?php
 			$top_nav = array();
-			$top_nav = Plugins::run_hook('ff.themes_generic_top_nav_buttons', array($top_nav), 'simple');
-			$top_nav = Plugins::run_hook('fu.themes.fuuka_top_nav_buttons', array($top_nav), 'simple');
+			$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+			$top_nav = \Foolz\Plugin\Hook::forge('fu.themes.fuuka_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
 
 			if (!empty($top_nav))
 			{
@@ -89,7 +89,7 @@
 
 		<?= $template['body'] ?>
 
-		<?php \Plugins::run_hook('fu.themes.fuuka_after_body_template') ?>
+		<?php \Foolz\Plugin\Hook::forge('fu.themes.fuuka_after_body_template')->execute(); ?>
 		
 		<?php if ($disable_headers !== TRUE) : ?>
 			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
@@ -166,8 +166,8 @@
 			<div style="float: right;">
 				<?php
 					$bottom_nav = array();
-					$bottom_nav = Plugins::run_hook('ff.themes.generic_bottom_nav_buttons', array($bottom_nav), 'simple');
-					$bottom_nav = Plugins::run_hook('fu.themes.fuuka_bottom_nav_buttons', array($bottom_nav), 'simple');
+					$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+					$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.fuuka_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
 					if (!empty($bottom_nav))
 					{

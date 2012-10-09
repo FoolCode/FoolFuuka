@@ -7,17 +7,19 @@ if (!defined('DOCROOT'))
 
 class Task
 {
-	
+
 	public static function cli_board_statistics_help()
 	{
 		\Cli::write('  --Board Statistics command list:');
 		\Cli::write('    cron                        Create statistics for all the boards in a loop');
 		\Cli::write('    cron [board_shortname]      Create statistics for the selected board');
 	}
-	
-	
-	public static function cli_board_statistics($parameters)
+
+
+	public static function cli_board_statistics($result)
 	{
+		$parameters = $result->getParam('parameters');
+
 		switch ($parameters[0])
 		{
 			case 'cron':
@@ -55,7 +57,7 @@ class Task
 				->as_object()
 				->execute()
 				->as_array();
-	
+
 			// Obtain the list of all statistics enabled.
 			$avail = array();
 			foreach ($available as $k => $a)
@@ -64,12 +66,12 @@ class Task
 				if (isset($available['frequency']))
 					$avail[] = $k;
 			}
-		
+
 			foreach ($boards as $board)
 			{
 				if (!is_null($shortname) && $shortname != $board->shortname)
 					continue;
-	
+
 				// Update all statistics for the specified board or current board.
 				\Cli::write($board->shortname . ' (' . $board->id . ')');
 				foreach ($available as $k => $a)
@@ -84,20 +86,20 @@ class Task
 						{
 							// This statistics report has run once already.
 							$found = TRUE;
-	
+
 							if(!isset($a['frequency']))
 							{
 								$skip = TRUE;
 								continue;
 							}
-	
+
 							// This statistics report has not reached its frequency EOL.
 							if ((time() - strtotime($r->timestamp)) <= $a['frequency'])
 							{
 								$skip = TRUE;
 								continue;
 							}
-	
+
 							// This statistics report has another process locked.
 							if (!Board_Statistics::lock_stat($r->board_id, $k, $r->timestamp))
 							{
@@ -106,13 +108,13 @@ class Task
 							break;
 						}
 					}
-	
+
 					// racing conditions with our cron.
 					if ($found === FALSE)
 					{
 						Board_Statistics::save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
 					}
-	
+
 					// We were able to obtain a LOCK on the statistics report and has already reached the
 					// targeted frequency time.
 					if ($skip === FALSE)
@@ -120,21 +122,21 @@ class Task
 						\Cli::write('* Processing...');
 						$process = 'process_' . $k;
 						$result = Board_Statistics::$process($board);
-	
+
 						// This statistics report generates a graph via GNUPLOT.
 						if (isset($available[$k]['gnuplot']) && is_array($result) && !empty($result))
 						{
 							Board_Statistics::graph_gnuplot($board->shortname, $k, $result);
 						}
-	
+
 						// Save the statistics report in a JSON array.
 						Board_Statistics::save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
 					}
 				}
 			}
-			
+
 			sleep(10);
 		}
 	}
-	
+
 }

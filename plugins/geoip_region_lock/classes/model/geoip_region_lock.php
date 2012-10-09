@@ -9,14 +9,16 @@ if (!defined('DOCROOT'))
 class Geoip_Region_Lock extends \Plugins
 {
 
-	public static function block_country_comment($board)
+	public static function block_country_comment($result)
 	{
+		$obj = $result->getObject();
+
 		// globally allowed and disallowed
 		$allow = \Preferences::get('fu.plugins.geoip_region_lock.allow_comment');
 		$disallow = \Preferences::get('fu.plugins.geoip_region_lock.disallow_comment');
 
-		$board_allow = trim($board->plugin_geo_ip_region_lock_allow_comment, " ,");
-		$board_disallow = trim($board->plugin_geo_ip_region_lock_disallow_comment, " ,");
+		$board_allow = trim($obj->board->plugin_geo_ip_region_lock_allow_comment, " ,");
+		$board_disallow = trim($obj->board->plugin_geo_ip_region_lock_disallow_comment, " ,");
 
 		// allow board settings to override global
 		if ($board_allow || $board_disallow)
@@ -36,14 +38,13 @@ class Geoip_Region_Lock extends \Plugins
 				foreach($allow as $al)
 				{
 					if(strtolower(trim($al)) == $country)
-						return null;
+						return;
 				}
 
-				return array('return' => array(
+				$result->set(array(
 					'error' => __('Your nation has been blocked from posting.') .
 						'<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
-				)
-				);
+				));
 			}
 
 			if($disallow)
@@ -54,17 +55,14 @@ class Geoip_Region_Lock extends \Plugins
 				{
 					if(strtolower(trim($disal)) == $country)
 					{
-						return array('return' => array(
+						$result->set( array(
 							'error' => __('Your nation has been blocked from posting.') .
 								'<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
-						)
-						);
+						));
 					}
 				}
 			}
 		}
-
-		return null;
 	}
 
 

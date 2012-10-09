@@ -5,7 +5,7 @@ if (!defined('DOCROOT'))
 
 \Autoloader::add_classes(array(
 	'Foolfuuka\\Plugins\\Nginx_Cache_Purge\\Nginx_Cache_Purge' => __DIR__.'/classes/model/nginx_cache_purge.php',
-	'Foolfuuka\\Plugins\\Nginx_Cache_Purge\\Controller_Plugin_Fu_Nginx_Cache_Purge_Admin_Nginx_Cache_Purge' 
+	'Foolfuuka\\Plugins\\Nginx_Cache_Purge\\Controller_Plugin_Fu_Nginx_Cache_Purge_Admin_Nginx_Cache_Purge'
 		=> __DIR__.'/classes/controller/admin/nginx_cache_purge.php'
 ));
 
@@ -19,5 +19,5 @@ if (\Auth::has_access('maccess.admin'))
 	));
 }
 
-\Plugins::register_hook('foolfuuka\\model\\media.delete.call.before',
-	'Foolfuuka\\Plugins\\Nginx_Cache_Purge\\Nginx_Cache_Purge::before_delete_media', 5);
+\Foolz\Plugin\Event::forge('foolfuuka\\model\\media.delete.call.before')
+	->setCall('Foolfuuka\\Plugins\\Nginx_Cache_Purge\\Nginx_Cache_Purge::before_delete_media');

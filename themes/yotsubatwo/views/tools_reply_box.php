@@ -1,6 +1,6 @@
 <?php if (!defined('DOCROOT')) exit('No direct script access allowed'); ?>
 	
-<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($radix)); ?>
+<?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_op_open')->setParam('board', $radix)->execute(); ?>
 
 <?php if (\ReCaptcha::available()) : ?>
 	<script>

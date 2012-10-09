@@ -8,15 +8,17 @@ if (!defined('DOCROOT'))
 
 class Dice_Roll extends \Plugins
 {
-	
-	public static function roll(&$data)
+
+	public static function roll($result)
 	{
+		$data = $result->getObject();
+
 		if($data->board->plugin_dice_roll_enable == 0)
 		{
 			return null;
 		}
 
-		if ($data->email !== FALSE || $data->email != '')
+		if ($data->email !== false || $data->email != '')
 		{
 			if (preg_match('/dice[ +](\d+)[ d+](\d+)(([ +-]+?)(-?\d+))?/', $data->email, $result))
 			{
@@ -25,7 +27,7 @@ class Dice_Roll extends \Plugins
 				$dice = array(
 					'total' => $result[1],
 					'side' => $result[2],
-					'modifier' => (isset($result[3]) ? $result[3] : NULL),
+					'modifier' => (isset($result[3]) ? $result[3] : null),
 					'expr' => (isset($result[4]) ? $result[4] : '+'),
 					'val' => (isset($result[5]) ? $result[5] : 0),
 					'sum' => 0,
@@ -39,9 +41,9 @@ class Dice_Roll extends \Plugins
 					$dice['num'][] = $rand;
 				}
 
-				if ($dice['modifier'] !== NULL)
+				if ($dice['modifier'] !== null)
 				{
-					if (strpos($dice['expr'], '-') !== FALSE)
+					if (strpos($dice['expr'], '-') !== false)
 					{
 						$dice['val'] *= -1;
 					}

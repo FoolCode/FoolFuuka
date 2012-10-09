@@ -8,10 +8,13 @@ if (!defined('DOCROOT'))
 class Nginx_Cache_Purge extends \Plugins
 {
 
-	public static function before_delete_media($post, $media = true, $thumb = true)
+	public static function before_delete_media($result)
 	{
+		$post = $result->getObject();
+		list($media, $thumb) = $result->getParams();
+
 		$dir = array();
-		
+
 		if($media)
 		{
 			try
@@ -20,10 +23,10 @@ class Nginx_Cache_Purge extends \Plugins
 			}
 			catch (\Foolfuuka\Model\MediaException $e)
 			{
-				
+
 			}
 		}
-		
+
 		if($thumb)
 		{
 			try
@@ -32,12 +35,12 @@ class Nginx_Cache_Purge extends \Plugins
 			}
 			catch (\Foolfuuka\Model\MediaException $e)
 			{
-				
+
 			}
 		}
-		
+
 		$url_user_password = static::parse_urls();
-		
+
 		foreach($url_user_password as $item)
 		{
 			foreach($dir as $d)
@@ -49,28 +52,28 @@ class Nginx_Cache_Purge extends \Plugins
 					$options['pass'] = $item['pass'];
 					$options['auth'] = 'any';
 				}
-				
+
 				\Request::forge($item['url'] . parse_url($d, PHP_URL_PATH), $options)->execute();
 			}
 		}
-		
-		return NULL;
+
+		return;
 	}
-	
-	
+
+
 	public static function parse_urls()
 	{
 		$text = \Preferences::get('fu.plugins.nginx_cache_purge.urls');
-		
+
 		if(!$text)
 		{
 			return array();
 		}
-		
+
 		$lines = preg_split('/\r\n|\r|\n/', $text);
-		
+
 		$lines_exploded = array();
-		
+
 		foreach($lines as $key => $line)
 		{
 			$explode = explode(':', $line);
@@ -79,17 +82,17 @@ class Nginx_Cache_Purge extends \Plugins
 			{
 				continue;
 			}
-			
+
 			if(count($explode) > 1)
 				$lines_exploded[$key]['url'] = rtrim(array_shift($explode) . ':' . array_shift($explode), '/');
-			
+
 			if(count($explode) > 1)
 			{
 				$lines_exploded[$key]['user'] = array_shift($explode);
 				$lines_exploded[$key]['pass'] = implode(':', $explode);
 			}
 		}
-		
+
 		return $lines_exploded;
 	}
 

@@ -7,16 +7,18 @@ if (!defined('DOCROOT'))
 	'Foolfuuka\\Plugins\\Dice_Roll\\Dice_Roll' => __DIR__.'/classes/model/dice_roll.php'
 ));
 
-\Plugins::register_hook('fu.comment.insert.alter_input_after_checks', 
-	'Foolfuuka\\Plugins\\Dice_Roll\\Dice_Roll::roll', 4);
+\Foolz\Plugin\Event::forge('fu.comment.insert.alter_input_after_checks')
+	->setCall('Foolfuuka\\Plugins\\Dice_Roll\\Dice_Roll::roll')
+	->setPriority(4);
 
-\Plugins::register_hook('fu.radix.structure.structure_alter', function($structure){
-	$structure['plugin_dice_roll_enable'] = array(
-		'database' => TRUE,
-		'boards_preferences' => TRUE,
-		'type' => 'checkbox',
-		'help' => __('Enable dice roll?')
-	);
-
-	return array('return' => $structure);
-}, 4);
+\Foolz\Plugin\Event::forge('fu.radix.structure.structure_alter')
+	->setCall(function($result){
+		$structure = $result->getParam('structure');
+		$structure['plugin_dice_roll_enable'] = array(
+			'database' => TRUE,
+			'boards_preferences' => TRUE,
+			'type' => 'checkbox',
+			'help' => __('Enable dice roll?')
+		);
+		$result->setParam('structure', $structure)->set($structure);
+	})->setPriority(4);

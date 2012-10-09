@@ -9,7 +9,7 @@ foreach ($board->get_comments() as $key => $post) :
 ?>
 <article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->board->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>">
 	<?php if ( ! isset($disable_default_after_op_open) || $disable_default_after_op_open !== true) : ?>
-	<?php \Plugins::run_hook('fu.themes.default_after_op_open', array($op->board)); ?>
+	<?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_op_open')->setParam('board', $op->board)->execute(); ?>
 	<?php endif; ?>
 	<?php if ($op->media !== null) : ?>
 		<div class="thread_image_box">
@@ -130,7 +130,7 @@ foreach ($board->get_comments() as $key => $post) :
 <?php elseif (isset($post['posts'])): ?>
 <article class="clearfix thread">
 	<?php if ( ! isset($disable_default_after_headless_open) || $disable_default_after_headless_open !== true) : ?>
-	<?php \Plugins::run_hook('fu.themes.default_after_headless_open', array(isset($radix) ? $radix : null)); ?>
+	<?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_headless_open')->setParam('board', array(isset($radix) ? $radix : null))->execute(); ?>
 	<?php endif; ?>
 <?php endif; ?>
 

@@ -5,7 +5,7 @@ if (!defined('DOCROOT'))
 
 \Autoloader::add_classes(array(
 	'Foolfuuka\\Plugins\\Geoip_Region_Lock\\Geoip_Region_Lock' => __DIR__.'/classes/model/geoip_region_lock.php',
-	'Foolfuuka\\Plugins\\Geoip_Region_Lock\\Controller_Plugin_Fu_Geoip_Region_Lock_Admin_Geoip_Region_Lock' 
+	'Foolfuuka\\Plugins\\Geoip_Region_Lock\\Controller_Plugin_Fu_Geoip_Region_Lock_Admin_Geoip_Region_Lock'
 		=> __DIR__.'/classes/controller/admin/geoip_region_lock.php'
 ));
 
@@ -22,11 +22,16 @@ if (\Auth::has_access('maccess.admin'))
 if ( ! \Auth::has_access('maccess.mod') && !(\Preferences::get('fu.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user')))
 {
 	\Foolfuuka\Plugins\Geoip_Region_Lock\Geoip_Region_Lock::block_country_view();
-	\Plugins::register_hook('fu.comment.insert.call.replace', 
-		'Foolfuuka\\Plugins\\Geoip_Region_Lock\\Geoip_Region_Lock::block_country_comment', 4);
+
+	\Foolz\Plugin\Event::forge('fu.comment.insert.call.before')
+		->setCall('Foolfuuka\\Plugins\\Geoip_Region_Lock\\Geoip_Region_Lock::block_country_comment')
+		->setPriority(4);
 }
 
-\Plugins::register_hook('fu.radix.structure.structure_alter', function($structure){
+\Foolz\Plugin\Event::forge('fu.radix.structure.structure_alter')
+	->setCall(function($result){
+	$structure = $result->getParam('structure');
+
 	$structure['plugin_geo_ip_region_lock_allow_comment'] = array(
 		'database' => TRUE,
 		'boards_preferences' => TRUE,
@@ -46,6 +51,5 @@ if ( ! \Auth::has_access('maccess.mod') && !(\Preferences::get('fu.plugins.geoip
 		'help' => __('Comma separated list of GeoIP 2-letter nation codes.'),
 		'default_value' => FALSE
 	);
-
-	return array('return' => $structure);
-}, 8);
+	$result->setParam('structure', $structure)->set($structure);
+})->setPriority(8);

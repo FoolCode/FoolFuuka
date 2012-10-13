@@ -940,10 +940,32 @@ class Media extends \Model\Model_Base
 				mkdir($this->path_from_filename(true, $is_op), 0777, true);
 			}
 
-			\Image::forge(array('driver' => 'imagemagick', 'quality' => 80, 'temp_dir' => APPPATH.'/tmp/'))
-				->load($full_path)
-				->resize($thumb_width, $thumb_height)
-				->save($this->path_from_filename(true, $is_op, true));
+			$return = \Foolz\Plugin\Hook::forge('fu.model.media.insert.resize')
+				->setObject($this)
+				->setParams(array(
+					'thumb_width' => $thumb_width,
+					'thumb_height' => $thumb_height,
+					'full_path' => $full_path,
+					'is_op' => $is_op
+				))
+				->execute()
+				->get();
+
+			if ($return instanceof \Foolz\Plugin\Void)
+			{
+				if (strtolower($this->temp_extension) === 'gif')
+				{
+					exec("convert ".$full_path." -coalesce -treedepth 4 -colors 256 -quality 80 -background none ".
+						"-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->path_from_filename(true, $is_op, true));
+				}
+				else
+				{
+					exec("convert ".$full_path."[0] -quality 80 -background none ".
+						"-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->path_from_filename(true, $is_op, true));
+				}
+			}
+
+
 
 			$thumb_getimagesize = getimagesize($this->path_from_filename(true, $is_op, true));
 			$this->preview_w = $thumb_getimagesize[0];
@@ -1015,8 +1037,5 @@ class Media extends \Model\Model_Base
 			return $dir.'/'.substr($this->media_orig, 0, 4).'/'.substr($this->media_orig, 4, 2).'/'.
 				($with_filename ? $this->media_orig : '');
 		}
-
-
 	}
-
 }

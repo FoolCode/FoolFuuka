@@ -385,7 +385,7 @@ body.theme_default {
 .theme_default .advanced_search form {
 	margin-bottom: 0px;
 }
-	
+
 .theme_default .advanced_search .radixes {
 	width: 330px;
 }
@@ -426,7 +426,7 @@ body.theme_default {
 }
 
 .theme_default .advanced_search .latest_searches ul {
-	list-style:none;	
+	list-style:none;
 	margin-left: 0;
 	width: 238px;
 	overflow:hidden;
@@ -957,6 +957,10 @@ body.theme_default {
     margin-left:20px;
     display:none;
 	clear:both;
+}
+
+.theme_default #reply_ajax_notices a {
+	text-decoration: underline
 }
 
 .theme_default #reply_ajax_notices.error {

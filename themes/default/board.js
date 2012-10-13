@@ -614,7 +614,10 @@ var bindFunctions = function()
 						showBacklink(backlink, pos, height, width);
 					},
 					error: function(jqXHR, textStatus, errorThrown){
-						shakeBacklink(el);
+						if (textStatus !== 'abort')
+						{
+							shakeBacklink(el);
+						}
 						return false;
 					}
 				});

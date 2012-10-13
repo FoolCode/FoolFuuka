@@ -5,6 +5,9 @@ namespace Foolfuuka;
 class Controller_Admin_Posts extends \Controller_Admin
 {
 
+	/**
+	 * Check that the user is an admin or a moderator and
+	 */
 	public function before()
 	{
 		parent::before();
@@ -17,6 +20,11 @@ class Controller_Admin_Posts extends \Controller_Admin
 		$this->_views['controller_title'] = __('Posts');
 	}
 
+	/**
+	 * Lists the post reports
+	 *
+	 * @return  Response
+	 */
 	public function action_reports()
 	{
 		$this->_views['method_title'] = __('Reports');
@@ -88,6 +96,128 @@ class Controller_Admin_Posts extends \Controller_Admin
 	}
 
 
-}
+	public function action_bans($page = 1)
+	{
+		$this->_views["method_title"] = __('Manage bans');
 
-/* end of file posts.php */
+		if ($page < 1 || ! ctype_digit($page))
+		{
+			$page = 1;
+		}
+
+		$bans = \Ban::get_paged_by('start', 'desc', $page);
+
+		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array('bans' => $bans));
+		return \Response::forge(\View::forge('admin/default', $this->_views));
+	}
+
+	public function action_appeals($page = 1)
+	{
+		$this->_views["method_title"] = __('Manage pending appeals');
+
+		if ($page < 1 || ! ctype_digit($page))
+		{
+			$page = 1;
+		}
+
+		$bans = \Ban::get_appeals_paged_by('start', 'desc', $page);
+
+		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array('bans' => $bans));
+		return \Response::forge(\View::forge('admin/default', $this->_views));
+	}
+
+	public function action_find_ban($ip = null)
+	{
+		$this->_views["method_title"] = __('Manage bans');
+
+		if (\Input::post('ip'))
+		{
+			\Response::redirect('admin/posts/find_ban/'.\Input::post('ip'));
+		}
+
+		if ($ip === null)
+		{
+			throw new \HttpNotFoundException;
+		}
+
+		$ip .= '.'.\Input::extension();
+
+		if ( ! filter_var($ip, FILTER_VALIDATE_IP))
+		{
+			throw new \HttpNotFoundException;
+		}
+
+		try
+		{
+			$bans = \Ban::get_by_ip(\Inet::ptod($ip));
+		}
+		catch (\Foolfuuka\Model\BanException $e)
+		{
+			$bans = array();
+		}
+
+
+		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array('bans' => $bans));
+		return \Response::forge(\View::forge('admin/default', $this->_views));
+	}
+
+	public function action_ban_manage($action, $id)
+	{
+		try
+		{
+			$ban = \Ban::get_by_id($id);
+		}
+		catch (\Foolfuuka\Model\BanException $e)
+		{
+			throw new \HttpNotFoundException;
+		}
+
+		if (\Input::post() && ! \Security::check_token())
+		{
+			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
+		}
+		elseif (\Input::post())
+		{
+			switch ($action)
+			{
+				case 'unban':
+					$ban->delete();
+					\Notices::set_flash('success', \Str::tr(__('The poster with IP :ip has been unbanned.'), array('ip' => \Inet::dtop($ban->ip))));
+					\Response::redirect('admin/posts/bans');
+					break;
+
+				case 'reject_appeal':
+					$ban->appeal_reject();
+					\Notices::set_flash('success', \Str::tr(__('The appeal of the poster with IP :ip has been rejected.'), array('ip' => \Inet::dtop($ban->ip))));
+					\Response::redirect('admin/posts/bans');
+					break;
+
+				default:
+					throw new \HttpNotFoundException;
+			}
+		}
+
+		switch ($action)
+		{
+			case 'unban':
+				$this->_views["method_title"] = __('Unbanning').' '.\Inet::dtop($ban->ip);
+				$data['alert_level'] = 'warning';
+				$data['message'] = __('Do you want to unban this user?');
+				break;
+
+			case 'reject_appeal':
+				$this->_views["method_title"] = __('Rejecting appeal for').' '.\Inet::dtop($ban->ip);
+				$data['alert_level'] = 'warning';
+				$data['message'] = __('Do you want to reject the appeal of this user? He won\'t be able to appeal again.');
+				break;
+
+			default:
+				throw new \HttpNotFoundException;
+		}
+
+		$this->_views["main_content_view"] = \View::forge('admin/confirm', $data);
+		return \Response::forge(\View::forge('admin/default', $this->_views));
+
+	}
+
+}

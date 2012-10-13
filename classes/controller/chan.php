@@ -161,6 +161,11 @@ class Controller_Chan extends \Controller_Common
 		return \Response::forge($this->_theme->build('error', array('error' => $error)), $code);
 	}
 
+	protected function message($level = 'success', $message = null, $code = 200)
+	{
+		return \Response::forge($this->_theme->build('message', array('level' => $level, 'message' => $message)), $code);
+	}
+
 
 	public function action_theme($theme = 'default', $style = '')
 	{
@@ -892,10 +897,70 @@ class Controller_Chan extends \Controller_Common
 	}
 
 
+	public function radix_appeal()
+	{
+		try
+		{
+			$bans = \Ban::get_by_ip(\Input::ip_decimal());
+		}
+		catch (\Foolfuuka\Model\BanException $e)
+		{
+			return $this->error(__('It doesn\'t look like you\'re banned.'));
+		}
+
+		// check for a global ban
+		if (isset($bans[0]))
+		{
+			$title = __('Appealing to a global ban.');
+			$ban = $bans[0];
+		}
+		else if (isset($bans[$this->_radix->id]))
+		{
+			$title = \Str::tr(__('Appealing to a ban on :board'), array('board' => '/'.$this->_radix->shortname.'/'));
+			$ban = $bans[$this->_radix->id];
+		}
+		else
+		{
+			return $this->error(__('It doesn\'t look like you\'re banned on this board.'));
+		}
+
+		if ($ban->appeal_status == \Ban::APPEAL_PENDING)
+		{
+			return $this->message('success', __('Your appeal is pending administrator review. Check again later.'));
+		}
+
+		if ($ban->appeal_status == \Ban::APPEAL_REJECTED)
+		{
+			return $this->message('error', __('Your appeal has been rejected.'));
+		}
+
+		if(\Input::post('appeal'))
+		{
+			if ( ! \Security::check_token())
+			{
+				return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
+			}
+			else
+			{
+				$val = \Validation::forge();
+				$val->add_field('appeal', __('Appeal'), 'required|trim|min_length[3]|max_length[4096]');
+
+				if($val->run())
+				{
+					$ban->appeal($val->input('appeal'));
+					return $this->message('success', __('Your appeal has been submitted!'));
+				}
+			}
+		}
+
+		return \Response::forge($this->_theme->build('appeal', array('title' => $title)));
+	}
+
+
 	public function radix_submit()
 	{
 		// adapter
-		if(!\Input::post())
+		if( ! \Input::post())
 		{
 			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
 		}

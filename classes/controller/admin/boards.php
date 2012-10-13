@@ -14,7 +14,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 		{
 			\Response::redirect('admin');
 		}
-		
+
 		$this->_views['controller_title'] = __('Boards');
 	}
 
@@ -195,7 +195,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 		switch ($type)
 		{
 			case('create'):
-				$this->_views["model_title"] = __('Creating search table for board:').' '.$board->shortname;
+				$this->_views["method_title"] = __('Creating search table for board:').' '.$board->shortname;
 				$data['alert_level'] = 'warning';
 				$data['message'] =
 					'<strong>'.__('Do you want to create the search table for this board?').'</strong><br/>'.
@@ -210,7 +210,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 				break;
 
 			case('remove'):
-				$this->_views["function_title"] = __('Removing search table for board:').' '.$board->shortname;
+				$this->_views["method_title"] = __('Removing search table for board:').' '.$board->shortname;
 				$data['alert_level'] = 'warning';
 				$data['message'] =
 					'<strong>'.__('Do you want to remove the search table for this board?').'</strong><br/>'.
@@ -393,7 +393,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 				}
 
 				\Foolz\Sphinxql\Sphinxql::addConnection('default', $sphinx_ip_port[0], $sphinx_ip_port[1]);
-	
+
 				try
 				{
 					\Foolz\Sphinxql\Sphinxql::connect(true);

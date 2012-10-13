@@ -24,10 +24,15 @@ class Install_Foolfuuka
 				'reason' => array('type' => 'text'),
 				'start' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
 				'length' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
-				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0)
+				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
+				'creator_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
+				'appeal' => array('type' => 'text'),
+				'appeal_status' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
 			), array('id'), true, 'innodb', $charset.'_general_ci');
 
 			\DBUtil::create_index('banned_posters', 'ip', 'ip_index');
+			\DBUtil::create_index('banned_posters', 'creator_id', 'creator_id_index');
+			\DBUtil::create_index('banned_posters', 'appeal_status', 'appeal_status_index');
 		}
 
 		if ( ! \DBUtil::table_exists('boards'))

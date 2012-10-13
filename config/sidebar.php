@@ -22,6 +22,8 @@ return array(
 			"default" => "reports",
 			"content" => array(
 				"reports" => array("level" => "mod", "name" => __("Reports"), "icon" => 'icon-tag'),
+				"bans" => array("level" => "mod", "name" => __("Bans"), "icon" => 'icon-truck'),
+				"appeals" => array("level" => "mod", "name" => __("Pending Appeals"), "icon" => 'icon-heart-empty'),
 			)
 		)
 

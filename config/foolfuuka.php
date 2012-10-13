@@ -100,7 +100,7 @@ return array(
 
 		'boards' => array(
 			'directory' => DOCROOT.'foolfuuka/boards/',
-			'boards.url' => \Uri::base().'foolfuuka/boards/'
+			'url' => \Uri::base().'foolfuuka/boards/'
 		),
 
 		'comment' => array(

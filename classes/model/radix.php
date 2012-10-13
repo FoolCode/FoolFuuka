@@ -1530,9 +1530,10 @@ class Radix extends \Model_Base
 	protected static function p_mysql_get_min_word_length()
 	{
 		// get the length of the word so we can get rid of a lot of rows
-		$length_res = \DB::query("SHOW VARIABLES WHERE Variable_name = 'ft_min_word_len'")
-			->as_object()->execute();
-		return $length_res[0]->Value;
+		return \DB::query("SHOW VARIABLES WHERE Variable_name = 'ft_min_word_len'", \DB::SELECT)
+			->as_object()
+			->execute()
+			->current()->Value;
 	}
 
 
@@ -1590,11 +1591,11 @@ class Radix extends \Model_Base
 			SELECT doc_id, num, subnum, thread_num, media_filename, comment
 			FROM ".static::get_table($board)."
 			WHERE
-				CHAR_LENGTH(media_filename) > :len
+				CHAR_LENGTH(".static::get_table($board).".media_filename) > :len
 					OR
-				CHAR_LENGTH(comment) > :len
+				CHAR_LENGTH(".static::get_table($board).".comment) > :len
 
-		")->parameters(array(':len' => &$word_length))->execute();
+		", \DB::INSERT)->parameters(array(':len' => $word_length))->execute();
 
 		return true;
 	}

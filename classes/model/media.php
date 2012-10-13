@@ -475,7 +475,7 @@ class Media extends \Model\Model_Base
 			throw new MediaDirNotAvailableException;
 		}
 
-		return \Preferences::get('fu.boards.directory', DOCROOT.'content/').'/'.$this->board->shortname.'/'
+		return \Preferences::get('fu.boards.directory').'/'.$this->board->shortname.'/'
 			.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 	}
 
@@ -577,7 +577,7 @@ class Media extends \Model\Model_Base
 					.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 			}
 
-			return \Preferences::get('fu.boards.url', \Uri::base()).'/'.$this->board->shortname.'/'
+			return \Preferences::get('fu.boards.url').'/'.$this->board->shortname.'/'
 				.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 		}
 

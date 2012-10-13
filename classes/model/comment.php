@@ -637,6 +637,24 @@ class Comment extends \Model\Model_Base
 			}
 		}
 
+		// limit nesting level
+		$parent_count = 0;
+		$temp_node_object = $node_object;
+		while ($temp_node_object->_parent !== null)
+		{
+			$parent_count++;
+			$temp_node_object = $temp_node_object->_parent;
+
+			if (in_array($params['start_tag'], array('<sub>', '<sup>')) && $parent_count > 1)
+			{
+				return $content;
+			}
+			else if ($parent_count > 4)
+			{
+				return $content;
+			}
+		}
+
 		return $params['start_tag'] . $content . $params['end_tag'];
 	}
 

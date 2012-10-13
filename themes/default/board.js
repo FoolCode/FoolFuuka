@@ -78,7 +78,11 @@ var bindFunctions = function()
 			}
 
 			var originalText = el.attr('value');
-			el.attr({'value': backend_vars.gettext['submit_state'], 'disabled': 'disabled'});
+			el_parent = el.parent();
+			el.attr({'value': backend_vars.gettext['submit_state']});
+			el_parent.find('[name=reply_gattai]').attr({disabled:'disabled'})
+			el_parent.find('[name=reply_gattai_spoilered]').attr({disabled:'disabled'})
+			//el.parent().find('[name=reply_gattai], [name=reply_gattai_spoilered]')
 
 			// to make sure nobody gets pissed off with a blocked button
 			var buttonTimeout = setTimeout(function(){
@@ -179,7 +183,8 @@ var bindFunctions = function()
 					// clear button's timeout, we can deal with the rest now
 					clearTimeout(buttonTimeout);
 					el.attr({'value': originalText});
-					el.removeAttr('disabled');
+					el_parent.find('[name=reply_gattai]').removeAttr('disabled');
+					el_parent.find('[name=reply_gattai_spoilered]').removeAttr('disabled');
 					progress_el.css('width', '0%');
 					progress_el.parent().animate({'opacity': '0.0'}, 300);
 				}

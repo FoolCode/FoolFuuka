@@ -78,7 +78,7 @@ var bindFunctions = function()
 			}
 
 			var originalText = el.attr('value');
-			el_parent = el.parent();
+			var el_parent = el.parent();
 			el.attr({'value': backend_vars.gettext['submit_state']});
 			el_parent.find('[name=reply_gattai]').attr({disabled:'disabled'})
 			el_parent.find('[name=reply_gattai_spoilered]').attr({disabled:'disabled'})

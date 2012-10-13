@@ -428,8 +428,15 @@ class Search extends Board
 		}
 		else /* use mysql as fallback for non-sphinx indexed boards */
 		{
+			// sadly like escaping has no love in fuelphp...
+			$like_escape = function($s, $e)
+			{
+				$s = str_replace(array($e, '_', '%'), array($e.$e, $e.'_', $e.'%'), $s);
+				return \DB::expr(\DB::escape("%".$s."%")." ESCAPE '".$e."'");
+			};
+
 			// begin filtering search params
-			if ($args['text'] || $args['filename'])
+			if ($args["text"] || $args['filename'])
 			{
 				// we're using fulltext fields, we better start from this
 				$query = \DB::select(\DB::expr(\Radix::get_table($this->_radix, '_search').'.`doc_id`'))
@@ -437,16 +444,18 @@ class Search extends Board
 
 				if($args['text'])
 				{
-					$query->where(\DB::expr(
-						'MATCH ('.\Radix::get_table($this->_radix, '_search').'.`comment`) '.
-						'AGAINST ('.\DB::escape($args['text']).' IN BOOLEAN MODE)'), '');
+					$query->where(
+						\DB::expr('MATCH ('.\Radix::get_table($this->_radix, '_search').'.`comment`) '.
+							'AGAINST ('.\DB::escape($args['text']).' IN BOOLEAN MODE)'),
+						\DB::expr(''), \DB::expr(''));
 				}
 
 				if($args['filename'])
 				{
 					$query->where(\DB::expr(
 						'MATCH ('.\Radix::get_table($this->_radix, '_search').'.`media_filename`) '.
-						'AGAINST ('.\DB::escape($args['filename']).' IN BOOLEAN MODE)'), '');
+							'AGAINST ('.\DB::escape($args['filename']).' IN BOOLEAN MODE)'),
+						\DB::expr(''), \DB::expr(''));
 				}
 
 				$query->limit(5000);
@@ -469,7 +478,6 @@ class Search extends Board
 				}
 			}
 
-
 			foreach (array('*', 'COUNT(*) as count') as $select_key => $select)
 			{
 				$query = \DB::select(\DB::expr($select))
@@ -485,21 +493,21 @@ class Search extends Board
 
 				if ($args['subject'])
 				{
-					$query->where('title', 'like', $args['subject']);
+					$query->where('title', 'like', $like_escape($args['subject'], '='));
 				}
 				if ($args['username'])
 				{
-					$query->where('name', 'like', $args['username']);
+					$query->where('name', 'like', $like_escape($args['username'], '='));
 					//$this->db->use_index('name_trip_index');
 				}
 				if ($args['tripcode'])
 				{
-					$query->where('trip', 'like', $args['tripcode']);
+					$query->where('trip', 'like', $like_escape($args['tripcode'], '='));
 					//$this->db->use_index('trip_index');
 				}
 				if ($args['email'])
 				{
-					$query->where('email', 'like', $args['email']);
+					$query->where('email', 'like', $like_escape($args['email'], '='));
 					//$this->db->use_index('email_index');
 				}
 				if ($args['image'])
@@ -509,7 +517,7 @@ class Search extends Board
 				}
 				if (\Auth::has_access('comment.see_ip') && $args['poster_ip'])
 				{
-					$query->where('poster_ip', '=', (int) inet_ptod($args['poster_ip']));
+					$query->where('poster_ip', '=', (int) \Inet::ptod($args['poster_ip']));
 				}
 				if ($args['capcode'] == 'admin')
 				{
@@ -519,10 +527,15 @@ class Search extends Board
 				{
 					$query->where('capcode', '=', 'M');
 				}
+				if ($args['capcode'] == 'dev')
+				{
+					$query->where('capcode', '=', 'D');
+				}
 				if ($args['capcode'] == 'user')
 				{
 					$query->where('capcode', '<>', 'A');
 					$query->where('capcode', '<>', 'M');
+					$query->where('capcode', '<>', 'D');
 				}
 				if ($args['deleted'] == 'deleted')
 				{
@@ -554,12 +567,13 @@ class Search extends Board
 				}
 				if ($args['filter'] == 'image')
 				{
-					$query->where('media_id', '=', 0);
+					// gotta use the expr else it will be confused on which media_id to use
+					$query->where(\DB::expr(\Radix::get_table($this->_radix).'.media_id'), '=', 0);
 					//$this->db->use_index('media_id_index');
 				}
 				if ($args['filter'] == 'text')
 				{
-					$query->where('media_id', '<>', 0);
+					$query->where(\DB::expr(\Radix::get_table($this->_radix).'.media_id'), '<>', 0);
 					//$this->db->use_index('media_id_index');
 				}
 				if ($args['start'])

@@ -626,7 +626,9 @@ class Radix extends \Model_Base
 			->from('boards_preferences')
 			->where('board_id', $board_id)
 			->where('name', $name)
-			->execute();
+			->as_object()
+			->execute()
+			->current()->count;
 
 		if ($result)
 		{

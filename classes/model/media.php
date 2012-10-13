@@ -17,6 +17,7 @@ class MediaInsertException extends \FuelException {}
 class MediaInsertNoFileException extends MediaInsertException {}
 class MediaInsertMultipleNotAllowedException extends MediaInsertException {}
 class MediaInsertInvalidException extends MediaInsertException {}
+class MediaInsertImageRepostException extends MediaInsertException {}
 
 class Media extends \Model\Model_Base
 {
@@ -853,6 +854,45 @@ class Media extends \Model\Model_Base
 			$this->media = $duplicate->media;
 			$this->preview_op = $duplicate->preview_op;
 			$this->preview_reply = $duplicate->preview_reply;
+
+			if ($this->board->min_image_repost_time)
+			{
+				// if it's -1 it means that image reposting is disabled, so this image shouldn't pass
+				if ($this->board->min_image_repost_time == -1)
+				{
+					throw new MediaInsertImageRepostException(
+						__('This image has already been posted once. This board doesn\'t allow image reposting.')
+					);
+				}
+
+				// we don't have to worry about archives with weird timestamps, we can't post images there
+				$duplicate_entry = \DB::select(\DB::expr('COUNT(*) as count'), 'timestamp')
+					->from(\DB::expr(\Radix::get_table($this->board)))
+					->where('media_id', '=', $duplicate->media_id)
+					->where('timestamp', '>', time() - $this->board->min_image_repost_time)
+					->order_by('timestamp', 'desc')
+					->limit(1)
+					->as_object()
+					->execute()
+					->current();
+
+				if ($duplicate_entry->count)
+				{
+					$datetime = new \DateTime(date('Y-m-d H:i:s', $duplicate_entry->timestamp + $this->board->min_image_repost_time));
+					$remain = $datetime->diff(new \DateTime());
+
+					throw new MediaInsertImageRepostException(
+						\Str::tr(
+							__('This image has been posted recently. You will be able to post it again in :time.'),
+							array('time' =>
+								 ($remain->d > 0 ? $remain->d.' '.__('day(s)') : '').' '
+								.($remain->h > 0 ? $remain->h.' '.__('hour(s)') : '').' '
+								.($remain->i > 0 ? $remain->i.' '.__('minute(s)') : '').' '
+								.($remain->s > 0 ? $remain->s.' '.__('second(s)') : ''))
+						)
+					);
+				}
+			}
 
 			// if we're here, we got the media
 			try

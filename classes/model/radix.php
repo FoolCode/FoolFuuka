@@ -347,12 +347,11 @@ class Radix extends \Model_Base
 				'help' => __('Display flags? (needs GeoIP)'),
 				'type' => 'checkbox',
 			),
-			'disable_animated_gif_thumbs' => array(
+			'enable_animated_gif_thumbs' => array(
 				'database' => TRUE,
 				'boards_preferences' => TRUE,
-				'help' => __('Disables the CPU-heavy animated gif thumbnail creation'),
+				'help' => __('Enables the CPU-heavy animated gif thumbnail creation'),
 				'type' => 'checkbox',
-				'disabled' => 'disabled',
 			),
 			'display_exif' => array(
 				'database' => TRUE,

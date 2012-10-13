@@ -953,7 +953,7 @@ class Media extends \Model\Model_Base
 
 			if ($return instanceof \Foolz\Plugin\Void)
 			{
-				if (strtolower($this->temp_extension) === 'gif')
+				if ($this->board->enable_animated_gif_thumbs && strtolower($this->temp_extension) === 'gif')
 				{
 					exec("convert ".$full_path." -coalesce -treedepth 4 -colors 256 -quality 80 -background none ".
 						"-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->path_from_filename(true, $is_op, true));

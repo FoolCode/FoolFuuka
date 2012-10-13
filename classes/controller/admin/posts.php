@@ -107,7 +107,11 @@ class Controller_Admin_Posts extends \Controller_Admin
 
 		$bans = \Ban::get_paged_by('start', 'desc', $page);
 
-		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array('bans' => $bans));
+		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array(
+			'bans' => $bans,
+			'page' => $page,
+			'page_url' => \Uri::create('admin/posts/bans')
+		));
 		return \Response::forge(\View::forge('admin/default', $this->_views));
 	}
 
@@ -122,7 +126,11 @@ class Controller_Admin_Posts extends \Controller_Admin
 
 		$bans = \Ban::get_appeals_paged_by('start', 'desc', $page);
 
-		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array('bans' => $bans));
+		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array(
+			'bans' => $bans,
+			'page' => $page,
+			'page_url' => \Uri::create('admin/posts/appeals')
+		));
 		return \Response::forge(\View::forge('admin/default', $this->_views));
 	}
 
@@ -132,7 +140,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 
 		if (\Input::post('ip'))
 		{
-			\Response::redirect('admin/posts/find_ban/'.\Input::post('ip'));
+			\Response::redirect('admin/posts/find_ban/'.trim(\Input::post('ip')));
 		}
 
 		if ($ip === null)
@@ -140,7 +148,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 			throw new \HttpNotFoundException;
 		}
 
-		$ip .= '.'.\Input::extension();
+		$ip = trim($ip.'.'.\Input::extension());
 
 		if ( ! filter_var($ip, FILTER_VALIDATE_IP))
 		{

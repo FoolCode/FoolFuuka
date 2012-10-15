@@ -159,7 +159,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 		{
 			$bans = \Ban::get_by_ip(\Inet::ptod($ip));
 		}
-		catch (\Foolfuuka\Model\BanException $e)
+		catch (\Foolz\Foolfuuka\Model\BanException $e)
 		{
 			$bans = array();
 		}
@@ -175,7 +175,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 		{
 			$ban = \Ban::get_by_id($id);
 		}
-		catch (\Foolfuuka\Model\BanException $e)
+		catch (\Foolz\Foolfuuka\Model\BanException $e)
 		{
 			throw new \HttpNotFoundException;
 		}

@@ -12,7 +12,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	public function before()
 	{
 		parent::before();
-			
+
 		header("Access-Control-Allow-Origin: *");
 		header('Access-Control-Allow-Credentials: true');
 		header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -39,7 +39,7 @@ class Controller_Api_Chan extends \Controller_Rest
 
 			\Response::redirect($uri);
 		}
-		
+
 		if ($theme = \Input::get('theme', \Input::post('theme', false)))
 		{
 			$this->_theme = \Theme::forge('foolfuuka');
@@ -145,11 +145,11 @@ class Controller_Api_Chan extends \Controller_Rest
 			}
 
 		}
-		catch(Model\BoardThreadNotFoundException $e)
+		catch(\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
 		{
 			return $this->response(array('error' => __("Thread not found.")), 200);
 		}
-		catch (Model\BoardException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
 			return $this->response(array('error' => __("Unknown error.")), 500);
 		}
@@ -186,11 +186,11 @@ class Controller_Api_Chan extends \Controller_Rest
 			// no index for the single post
 			$this->response(current($board->get_comments()), 200);
 		}
-		catch(Model\BoardPostNotFoundException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e)
 		{
 			return $this->response(array('error' => __("Post not found.")), 200);
 		}
-		catch (Model\BoardException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
 			return $this->response(array('error' => $e->getMessage()), 404);
 		}
@@ -215,7 +215,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				\Report::add($this->_radix, \Input::post('doc_id'), \Input::post('reason'));
 			}
-			catch (Model\ReportException $e)
+			catch (\Foolz\Foolfuuka\Model\ReportException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
@@ -229,7 +229,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				\Report::add($this->_radix, \Input::post('media_id'), \Input::post('reason'), null, 'media_id');
 			}
-			catch (Model\ReportException $e)
+			catch (\Foolz\Foolfuuka\Model\ReportException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
@@ -251,11 +251,11 @@ class Controller_Api_Chan extends \Controller_Rest
 				$comment = current($comments);
 				$comment->delete(\Input::post('password'));
 			}
-			catch (Model\BoardException $e)
+			catch (\Foolz\Foolfuuka\Model\BoardException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 200);
 			}
-			catch (Model\CommentDeleteWrongPassException $e)
+			catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 200);
 			}
@@ -288,7 +288,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				\Report::delete(\Input::post('id')); die('here');
 			}
-			catch (Model\ReportException $e)
+			catch (\Foolz\Foolfuuka\Model\ReportException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
@@ -309,7 +309,7 @@ class Controller_Api_Chan extends \Controller_Rest
 				$comment = current($comments);
 				$comment->delete();
 			}
-			catch (Model\BoardException $e)
+			catch (\Foolz\Foolfuuka\Model\BoardException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
@@ -323,7 +323,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				\Media::get_by_media_id($this->_radix, \Input::post('id'))->delete(true, true, true);
 			}
-			catch (Model\MediaNotFoundException $e)
+			catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
@@ -343,7 +343,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			{
 				\Media::get_by_media_id($this->_radix, \Input::post('id'))->ban($global);
 			}
-			catch (Model\MediaNotFoundException $e)
+			catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}
@@ -361,7 +361,7 @@ class Controller_Api_Chan extends \Controller_Rest
 					\Input::post('board_ban') === 'global' ? array() : array($this->_radix->id)
 				);
 			}
-			catch (Model\BanException $e)
+			catch (\Foolz\Foolfuuka\Model\BanException $e)
 			{
 				return $this->response(array('error' => $e->getMessage()), 404);
 			}

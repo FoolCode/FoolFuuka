@@ -1,6 +1,6 @@
 <?php
 
-namespace Foolfuuka\Model;
+namespace Foolz\Foolfuuka\Model;
 
 class CommentException extends \FuelException {}
 
@@ -1106,7 +1106,7 @@ class Comment extends \Model\Model_Base
 				$thread->get_comments();
 				$status = $thread->check_thread_status();
 			}
-			catch (Model\BoardException $e)
+			catch (BoardException $e)
 			{
 				throw new CommentSendingException($e->getMessage());
 			}

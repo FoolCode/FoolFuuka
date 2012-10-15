@@ -1,18 +1,20 @@
 <?php
 
+$model_dir = APPPATH.'modules/foolfuuka/classes/Foolz/Foolfuuka/Model/';
+
 \Autoloader::add_classes(array(
-	'Foolfuuka\\Model\\Radix' => APPPATH.'modules/foolfuuka/classes/model/radix.php',
-	'Foolfuuka\\Model\\Board' => APPPATH.'modules/foolfuuka/classes/model/board.php',
-	'Foolfuuka\\Model\\Search' => APPPATH.'modules/foolfuuka/classes/model/search.php',
-	'Foolfuuka\\Model\\Comment' => APPPATH.'modules/foolfuuka/classes/model/comment.php',
-	'Foolfuuka\\Model\\Media' => APPPATH.'modules/foolfuuka/classes/model/media.php',
-	'Foolfuuka\\Model\\Extra' => APPPATH.'modules/foolfuuka/classes/model/extra.php',
-	'Foolfuuka\\Model\\Report' => APPPATH.'modules/foolfuuka/classes/model/report.php',
-	'Foolfuuka\\Model\\Ban' => APPPATH.'modules/foolfuuka/classes/model/ban.php',
+	'Foolz\Foolfuuka\Model\Radix' => $model_dir.'Radix.php',
+	'Foolz\Foolfuuka\Model\Board' => $model_dir.'Board.php',
+	'Foolz\Foolfuuka\Model\Search' => $model_dir.'Search.php',
+	'Foolz\Foolfuuka\Model\Comment' => $model_dir.'Comment.php',
+	'Foolz\Foolfuuka\Model\Media' => $model_dir.'Media.php',
+	'Foolz\Foolfuuka\Model\Extra' => $model_dir.'Extra.php',
+	'Foolz\Foolfuuka\Model\Report' => $model_dir.'Report.php',
+	'Foolz\Foolfuuka\Model\Ban' => $model_dir.'Ban.php',
 	'Foolfuuka\\Tasks\\Fool' => APPPATH.'modules/foolfuuka/classes/task/fool.php',
 ));
 
-\Autoloader::add_core_namespace('Foolfuuka\\Model');
+\Autoloader::add_core_namespace('Foolz\\Foolfuuka\\Model');
 
 \Profiler::mark('Start sphinxql initialization');
 \Profiler::mark_memory(false, 'Start sphinxql initialization');
@@ -34,5 +36,5 @@
 
 if (\Auth::has_access('comment.reports'))
 {
-	\Foolfuuka\Model\Report::preload();
+	\Foolz\Foolfuuka\Model\Report::preload();
 }

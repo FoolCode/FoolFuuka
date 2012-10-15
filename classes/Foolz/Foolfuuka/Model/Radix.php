@@ -1,6 +1,6 @@
 <?php
 
-namespace Foolfuuka\Model;
+namespace Foolz\Foolfuuka\Model;
 
 class Radix extends \Model_Base
 {

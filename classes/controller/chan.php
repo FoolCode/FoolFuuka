@@ -271,7 +271,7 @@ class Controller_Chan extends \Controller_Common
 			$board->get_comments();
 			$board->get_count();
 		}
-		catch (Model\BoardException $e)
+		catch (Foolz\Foolfuuka\Model\BoardException $e)
 		{
 			\Profiler::mark('Controller Chan::latest End Prematurely');
 			return $this->error($e->getMessage());
@@ -353,12 +353,12 @@ class Controller_Chan extends \Controller_Common
 			// execute in case there's more exceptions to handle
 			$thread = $board->get_comments();
 		}
-		catch (Model\BoardThreadNotFoundException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
 		{
 			\Profiler::mark('Controller Chan::thread End Prematurely');
 			return $this->radix_post($num);
 		}
-		catch (Model\BoardException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
 			\Profiler::mark('Controller Chan::thread End Prematurely');
 			return $this->error($e->getMessage());
@@ -373,7 +373,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			$thread_status = $board->check_thread_status();
 		}
-		catch (Model\BoardThreadNotFoundException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
 		{
 			\Profiler::mark('Controller Chan::thread End Prematurely');
 			return $this->error();
@@ -424,7 +424,7 @@ class Controller_Chan extends \Controller_Common
 
 			$comments = $board->get_comments();
 		}
-		catch (Model\BoardException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
 			return $this->error($e->getMessage());
 		}
@@ -459,11 +459,11 @@ class Controller_Chan extends \Controller_Common
 
 			$comments = $board->get_comments();
 		}
-		catch (Model\BoardMalformedInputException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardMalformedInputException $e)
 		{
 			return $this->error(__('The post number you submitted is invalid.'));
 		}
-		catch (Model\BoardPostNotFoundException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e)
 		{
 			return $this->error(__('The post you are looking for does not exist.'));
 		}
@@ -538,7 +538,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			$media = \Media::get_by_filename($this->_radix, $filename.'.'.\Input::extension());
 		}
-		catch (Model\MediaException $e)
+		catch (\Foolz\Foolfuuka\Model\MediaException $e)
 		{
 			return $this->action_404(__('The image was never in our databases.'));
 		}
@@ -767,11 +767,11 @@ class Controller_Chan extends \Controller_Common
 				->set_page($search['page'] ? $search['page'] : 1);
 			$board->get_comments();
 		}
-		catch (Model\SearchException $e)
+		catch (\Foolz\Foolfuuka\Model\SearchException $e)
 		{
 			return $this->error($e->getMessage());
 		}
-		catch (Model\BoardException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
 			return $this->error($e->getMessage());
 		}
@@ -903,7 +903,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			$bans = \Ban::get_by_ip(\Input::ip_decimal());
 		}
-		catch (\Foolfuuka\Model\BanException $e)
+		catch (\Foolz\Foolfuuka\Model\BanException $e)
 		{
 			return $this->error(__('It doesn\'t look like you\'re banned.'));
 		}
@@ -1049,7 +1049,7 @@ class Controller_Chan extends \Controller_Common
 				$media = \Media::forge_from_upload($this->_radix);
 				$media->spoiler = isset($data['spoiler']) && $data['spoiler'];
 			}
-			catch (Model\MediaUploadNoFileException $e)
+			catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e)
 			{
 				if (\Input::is_ajax())
 				{
@@ -1060,7 +1060,7 @@ class Controller_Chan extends \Controller_Common
 					return $this->error($e->getMessage());
 				}
 			}
-			catch (Model\MediaUploadException $e)
+			catch (\Foolz\Foolfuuka\Model\MediaUploadException $e)
 			{
 				if (\Input::is_ajax())
 				{
@@ -1106,7 +1106,7 @@ class Controller_Chan extends \Controller_Common
 				$comment->media = $media;
 				$comment->insert();
 			}
-			catch (Model\CommentSendingRequestCaptchaException $e)
+			catch (\Foolz\Foolfuuka\Model\CommentSendingRequestCaptchaException $e)
 			{
 				if (\Input::is_ajax())
 				{
@@ -1117,7 +1117,7 @@ class Controller_Chan extends \Controller_Common
 					return $this->error(__('Your message looked like spam. Make sure you have JavaScript enabled to display the reCAPTCHA to submit the comment.'));
 				}
 			}
-			catch (Model\CommentSendingException $e)
+			catch (\Foolz\Foolfuuka\Model\CommentSendingException $e)
 			{
 				if (\Input::is_ajax())
 				{
@@ -1161,11 +1161,11 @@ class Controller_Chan extends \Controller_Common
 
 					$comments = $board->get_comments();
 				}
-				catch(Model\BoardThreadNotFoundException $e)
+				catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
 				{
 					return $this->error(__("Thread not found."));
 				}
-				catch (Model\BoardException $e)
+				catch (\Foolz\Foolfuuka\Model\BoardException $e)
 				{
 					return $this->error(__("Unknown error."));
 				}

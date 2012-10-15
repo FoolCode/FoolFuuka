@@ -1,12 +1,20 @@
 <?php
 
-namespace FoolFuuka\Model;
+namespace Foolz\Foolfuuka\Model;
 
+/**
+ * Thrown when there's no results from database or the value domain hasn't been respected
+ */
 class BanException extends \FuelException {}
-class BanNotFoundException extends BanException {}
-class BanReasonTooLongException extends BanException {}
-class BanInvalidLengthException extends BanException {}
 
+/**
+ * Thrown when there's no results from the database
+ */
+class BanNotFoundException extends BanException {}
+
+/**
+ * Manages the bans
+ */
 class Ban
 {
 	public $id = 0;
@@ -21,22 +29,17 @@ class Ban
 	const APPEAL_PENDING = 1;
 	const APPEAL_REJECTED = 2;
 
-	public static function get_by_id($id)
+	/**
+	 * Converts an array into a Ban object
+	 *
+	 * @param   array  $array  The array from database
+	 * @return  \Foolz\Foolfuuka\Model\Ban
+	 */
+	public static function fromArray($array)
 	{
-		$result = \DB::select()
-			->from('banned_posters')
-			->where('id', $id)
-			->as_object()
-			->execute()
-			->current();
-
-		if ( ! $result)
-		{
-			throw new BanNotFoundException(__('The ban could not be found.'));
-		}
-
 		$new = new static();
-		foreach ($result as $key => $item)
+
+		foreach ($array as $key => $item)
 		{
 			$new->$key = $item;
 		}
@@ -44,41 +47,79 @@ class Ban
 		return $new;
 	}
 
+	/**
+	 * Takes an array of arrays to create Ban objects
+	 *
+	 * @param   array  $array  The array from database
+	 * @return  array  An array of \Foolz\Foolfuuka\Model\Ban with as key the board_id
+	 */
+	public static function fromArrayDeep($array)
+	{
+		$new = [];
+
+		foreach ($array as $key => $item)
+		{
+			// use the board_id as key
+			$obj =  static::fromArray($item);
+			$new[$obj->board_id] = $obj;
+		}
+
+		return $new;
+	}
+
+	/**
+	 * Get the Ban object by ID
+	 *
+	 * @param   int  $id  The Ban id
+	 * @return  \Foolz\Foolfuuka\Model\Ban
+	 * @throws  BanNotFoundException
+	 */
+	public static function get_by_id($id)
+	{
+		$result = \DC::qb()
+			->select('*')
+			->from('banned_posters', 'u')
+			->where('u.id = :id')
+			->setParameter(':id', $id)
+			->execute()
+			->fetch();
+
+		if ( ! $result)
+		{
+			throw new BanNotFoundException(__('The ban could not be found.'));
+		}
+
+		return static::fromArray($result);
+	}
+
+	/**
+	 * Get the Ban(s) pending on one IP
+	 *
+	 * @param   int  $decimal_ip  The user IP in decimal form
+	 * @return  array
+	 * @throws  BanNotFoundException
+	 */
 	public static function get_by_ip($decimal_ip)
 	{
-		$result = \DB::select()
-			->from('banned_posters')
-			->where('ip', $decimal_ip)
-			->as_object()
+		$result = \DC::qb()
+			->select('*')
+			->from('banned_posters', 'u')
+			->where('u.ip = :ip')
+			->setParameter(':ip', $decimal_ip)
 			->execute()
-			->as_array();
+			->fetchAll();
 
 		if ( ! count($result))
 		{
 			throw new BanNotFoundException(__('The ban could not be found.'));
 		}
 
-		$objects = array();
-
-		foreach ($result as $r)
-		{
-			$new = new static();
-
-			foreach ($r as $key => $item)
-			{
-				$new->$key = $item;
-			}
-
-			// handy to use the board_id as key
-			$objects[$new->board_id] = $new;
-		}
-
-		return $objects;
+		return static::fromArrayDeep($result);
 	}
 
 	public static function get_paged_by($order_by, $direction, $page, $per_page = 30)
 	{
-		$bans = \DB::select()
+		$bans = \DB::select('*')
 			->from('banned_posters')
 			->order_by($order_by, $direction)
 			->limit($per_page)
@@ -86,7 +127,7 @@ class Ban
 			->execute()
 			->as_array();
 
-		$ban_objects = array();
+		$ban_objects = [];
 		foreach ($bans as $ban)
 		{
 			$new = new Ban();
@@ -103,7 +144,7 @@ class Ban
 
 	public static function get_appeals_paged_by($order_by, $direction, $page, $per_page = 30)
 	{
-		$bans = \DB::select()
+		$bans = \DB::select('*')
 			->from('banned_posters')
 			->where('appeal_status', '=', static::APPEAL_PENDING)
 			->order_by($order_by, $direction)
@@ -112,7 +153,7 @@ class Ban
 			->execute()
 			->as_array();
 
-		$ban_objects = array();
+		$ban_objects = [];
 		foreach ($bans as $ban)
 		{
 			$new = new Ban();
@@ -173,7 +214,7 @@ class Ban
 		else
 		{
 			// check that all ids are existing boards
-			$valid_board_ids = array();
+			$valid_board_ids = [];
 			foreach (\Radix::get_all() as $board)
 			{
 				$valid_board_ids[] = $board->id;
@@ -183,29 +224,29 @@ class Ban
 			{
 				if ( ! in_array($id, $valid_board_ids))
 				{
-					throw new BanInvalidBoardId(__('You inserted a non-existant board ID.'));
+					throw new BanException(__('You inserted a non-existant board ID.'));
 				}
 			}
 		}
 
 		if ( ! ctype_digit($ip_decimal))
 		{
-			throw new BanInvalidIpException(__('You inserted an invalid IP.'));
+			throw new BanException(__('You inserted an invalid IP.'));
 		}
 
 		if (mb_strlen($reason) > 10000)
 		{
-			throw new BanReasonTooLongException(__('You inserted a too long reason for the ban.'));
+			throw new BanException(__('You inserted a too long reason for the ban.'));
 		}
 
 		if ( ! ctype_digit($length))
 		{
-			throw new BanInvalidLengthException(__('You inserted an invalid length for the ban.'));
+			throw new BanException(__('You inserted an invalid length for the ban.'));
 		}
 
 		$time = time();
 
-		$objects = array();
+		$objects = [];
 
 		try
 		{
@@ -231,24 +272,26 @@ class Ban
 
 			if (isset($old[$new->board_id]))
 			{
-				\DB::update('banned_posters')
-					->where('id', $old[$new->board_id]->id)
-					->value('start', $new->start)
-					->value('length', $new->length)
-					->value('creator_id', $new->creator_id)
+				\DC::qb()
+					->update('banned_posters')
+					->where('id = :id')
+					->set('start', $new->start)
+					->set('length', $new->length)
+					->set('creator_id', $new->creator_id)
+					->setParameter(':id', $old[$new->board_id]->id)
 					->execute();
 			}
 			else
 			{
-				\DB::insert('banned_posters')
-					->set(array(
+				\DC::forge()
+					->insert('banned_posters', [
 						'ip' => $new->ip,
 						'reason' => $new->reason,
 						'start' => $new->start,
 						'length' => $new->length,
 						'board_id' => $new->board_id,
 						'creator_id' => $new->creator_id,
-					))->execute();
+					]);
 			}
 
 			$objects[] = $new;
@@ -259,34 +302,53 @@ class Ban
 
 	/**
 	 * Remove the entry for a ban (unban)
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Ban
 	 */
 	public function delete()
 	{
-		\DB::delete('banned_posters')
-			->where('id', '=', $this->id)
+		\DC::qb()
+			->delete('banned_posters')
+			->where('id = :id')
+			->setParameter(':id', $this->id)
 			->execute();
+
+		return $this;
 	}
 
 	/**
 	 * Adds the appeal message to the ban. Only one appeal is allowed
+	 *
+	 * @param   string  $appeal  The appeal test by the user
+	 * @return  \Foolz\Foolfuuka\Model\Ban
 	 */
 	public function appeal($appeal)
 	{
-		\DB::update('banned_posters')
-			->where('id', '=', $this->id)
-			->value('appeal', $appeal)
-			->value('appeal_status', static::APPEAL_PENDING)
+		\DC::qb()
+			->update('banned_posters')
+			->where('id = :id')
+			->set('appeal', $appeal)
+			->set('appeal_status', static::APPEAL_PENDING)
+			->setParameter(':id', $this->id)
 			->execute();
+
+		return $this;
 	}
 
 	/**
 	 * Sets the flag to deny the appeal
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Ban
 	 */
 	public function appeal_reject()
 	{
-		\DB::update('banned_posters')
-			->where('id', '=', $this->id)
-			->value('appeal_status', static::APPEAL_REJECTED)
+		\DC::qb()
+			->update('banned_posters')
+			->where('id = :id')
+			->set('appeal_status', static::APPEAL_REJECTED)
+			->setParameter(':id', $this->id)
 			->execute();
+
+		return $this;
 	}
 }

@@ -11,7 +11,7 @@ return array(
 
 	'description' => 'The default FoolFuuka theme',
 
-	'version' => '0.2.1-1',
+	'version' => '0.2.1-2',
 
 	'author' => 'Foolz',
 

@@ -34,7 +34,7 @@ if (!defined('DOCROOT'))
 				{
 					$element->p_get_link($thumbnail);
 				}
-				catch (\Foolfuuka\Model\MediaNotFoundException $e)
+				catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e)
 				{
 					return;
 				}

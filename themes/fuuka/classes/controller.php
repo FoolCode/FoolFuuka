@@ -60,11 +60,11 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 					$comment = current($comments);
 					$comment->delete(\Input::post('delpass'));
 				}
-				catch (Model\BoardException $e)
+				catch (\Foolz\Foolfuuka\Model\BoardException $e)
 				{
 					return $this->response(array('error' => $e->getMessage()), 404);
 				}
-				catch (Model\CommentDeleteWrongPassException $e)
+				catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e)
 				{
 					return $this->response(array('error' => $e->getMessage()), 404);
 				}
@@ -86,7 +86,7 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 				{
 					\Report::add($this->_radix, $doc_id, \Input::post('KOMENTO'));
 				}
-				catch (Model\ReportException $e)
+				catch (\Foolz\Foolfuuka\Model\ReportException $e)
 				{
 					return $this->response(array('error' => $e->getMessage()), 404);
 				}
@@ -136,11 +136,11 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 				$media = \Media::forge_from_upload($this->_radix);
 				$media->spoiler = isset($data['spoiler']) && $data['spoiler'];
 			}
-			catch (\Model\MediaUploadNoFileException $e)
+			catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e)
 			{
 				$media = null;
 			}
-			catch (\Model\MediaUploadException $e)
+			catch (\Foolz\Foolfuuka\Model\MediaUploadException $e)
 			{
 				return $this->error($e->getMessage());
 			}

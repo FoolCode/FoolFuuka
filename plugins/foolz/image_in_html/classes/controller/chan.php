@@ -8,7 +8,7 @@ if (!defined('DOCROOT'))
 class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 {
 
-	
+
 	public function radix_image_html($filename)
 	{
 		// Check if $filename is valid.
@@ -21,7 +21,7 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 		{
 			$media = \Media::get_by_filename($this->_radix, $filename.'.'.\Input::extension());
 		}
-		catch (\Foolfuuka\Model\MediaException $e)
+		catch (\Foolz\Foolfuuka\Model\MediaException $e)
 		{
 			return $this->action_404(__('The image was not found.'));
 		}
@@ -58,13 +58,13 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 				.theme_default .full_image img {
 					max-width: 90%;
 				}
-				
+
 				.theme_default article.thread article.post:nth-of-type(-n+4) {
 					display:block;
 					float:none;
 					margin: 0px auto;
 				}
-				
+
 				.theme_default .post {
 					width: 50%;
 					display:block;
@@ -74,9 +74,9 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 			</style>
 			<?php
 			$content = ob_get_clean();
-			
+
 			$this->_theme->bind('section_title', \Str::tr(__('Displaying image :image_filename'), array('image_filename' => $media->media)));
-			
+
 			try
 			{
 				$board = \Search::forge()
@@ -87,33 +87,33 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 
 				$board->get_comments();
 			}
-			catch (\Foolfuuka\Model\SearchException $e)
+			catch (\Foolz\Foolfuuka\Model\SearchException $e)
 			{
 				$board_html = '';
 			}
-			catch (\Foolfuuka\Model\SearchEmptyResultException $e)
+			catch (\Foolz\Foolfuuka\Model\SearchEmptyResultException $e)
 			{
 				$board_html = '';
 			}
-			catch (\Foolfuuka\Model\BoardException $e)
+			catch (\Foolz\Foolfuuka\Model\BoardException $e)
 			{
 				$board_html = '';
 			}
-			
+
 			$image_html = $this->_theme->build('plugin', array('content' => $content), true);
-			
+
 			// we got search results
 			if ( ! isset($board_html))
 			{
 				$board_html = $this->_theme->build('board', array('board' => $board, 'disable_default_after_headless_open' => true), true);
 			}
-			
+
 			return \Response::forge($this->_theme->build('plugin', array('content' => $image_html.$board_html)));
 		}
-	
+
 		return \Response::redirect(
 			\Uri::create(array($this->_radix->shortname, 'search', 'image', rawurlencode(substr($media->media_hash, 0, -2)))), 'location', 404);
 	}
-	
-	
+
+
 }

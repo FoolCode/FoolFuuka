@@ -21,7 +21,7 @@ class Nginx_Cache_Purge extends \Plugins
 			{
 				$dir['full'] = $post->get_link(false, true);
 			}
-			catch (\Foolfuuka\Model\MediaException $e)
+			catch (\Foolz\Foolfuuka\Model\MediaException $e)
 			{
 
 			}
@@ -33,7 +33,7 @@ class Nginx_Cache_Purge extends \Plugins
 			{
 				$dir['thumb'] = $post->get_link(true, true);
 			}
-			catch (\Foolfuuka\Model\MediaException $e)
+			catch (\Foolz\Foolfuuka\Model\MediaException $e)
 			{
 
 			}

@@ -24,7 +24,7 @@ class Theme_Fu_Fuuka
 			'attr_op' => 'class="backlink"',
 			'attr_backlink' => 'class="backlink"',
 		);
- 
+		
 		$result->setParam('build_url', $html)->set($html);
 	}
 

@@ -26,7 +26,7 @@ class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_C
 				'is_statistics_list' => TRUE,
 				'info' => $stats
 			));
-			
+
 			ob_start();
 			?>
 
@@ -62,7 +62,7 @@ class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_C
 			if (isset($stats['info']['frequency']))
 			{
 				$time_next = strtotime($stats['timestamp']) + $stats['info']['frequency'] - time();
-				
+
 				if ($time_next < 0)
 				{
 					$time_next = __('now!');
@@ -83,8 +83,8 @@ class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_C
 				{
 					$time_next = floor($time_next / 86400).' '.__('days');
 				}
-				
-				
+
+
 				$section_title = sprintf(__('Statistics: %s (Next Update in %s)'),
 					$stats['info']['name'],
 					$time_next
@@ -94,22 +94,22 @@ class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_C
 			{
 				$section_title = sprintf(__('Statistics: %s'), $stats['info']['name']);
 			}
-			
+
 			$this->_theme->bind(array(
 				'section_title' => $section_title,
 				'is_statistics' => TRUE,
 				'is_statistics_list' => TRUE,
 			));
-			
+
 			$data = $stats['data'];
 			$info = $stats['info'];
 			ob_start();
 			?>
 			<div style="margin: 20px auto; width:960px;">
 			<?php
-			include DOCROOT.'foolfuuka/plugins/board_statistics/views/' . $stats['info']['interface'] . '.php';
+			include __DIR__.'/../../views/' . $stats['info']['interface'] . '.php';
 			?>
-			</div> 
+			</div>
 			<?php
 			$string = ob_get_clean();
 			return \Response::forge($this->_theme->build('plugin', array('content' => $string)));

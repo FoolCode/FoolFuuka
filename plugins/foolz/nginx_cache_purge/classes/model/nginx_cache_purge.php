@@ -11,7 +11,9 @@ class Nginx_Cache_Purge extends \Plugins
 	public static function before_delete_media($result)
 	{
 		$post = $result->getObject();
-		list($media, $thumb) = $result->getParams();
+		$params = $result->getParams();
+		$media = isset($params[0]) ? $params[0] : true;
+		$thumb = isset($params[1]) ? $params[1] : true;
 
 		$dir = array();
 

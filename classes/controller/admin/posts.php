@@ -105,7 +105,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 			$page = 1;
 		}
 
-		$bans = \Ban::get_paged_by('start', 'desc', $page);
+		$bans = \Ban::getPagedBy('start', 'desc', $page);
 
 		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array(
 			'bans' => $bans,
@@ -124,7 +124,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 			$page = 1;
 		}
 
-		$bans = \Ban::get_appeals_paged_by('start', 'desc', $page);
+		$bans = \Ban::getAppealsPagedBy('start', 'desc', $page);
 
 		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array(
 			'bans' => $bans,
@@ -157,7 +157,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 
 		try
 		{
-			$bans = \Ban::get_by_ip(\Inet::ptod($ip));
+			$bans = \Ban::getByIp(\Inet::ptod($ip));
 		}
 		catch (\Foolz\Foolfuuka\Model\BanException $e)
 		{
@@ -173,7 +173,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 	{
 		try
 		{
-			$ban = \Ban::get_by_id($id);
+			$ban = \Ban::getById($id);
 		}
 		catch (\Foolz\Foolfuuka\Model\BanException $e)
 		{
@@ -195,7 +195,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 					break;
 
 				case 'reject_appeal':
-					$ban->appeal_reject();
+					$ban->appealReject();
 					\Notices::set_flash('success', \Str::tr(__('The appeal of the poster with IP :ip has been rejected.'), array('ip' => \Inet::dtop($ban->ip))));
 					\Response::redirect('admin/posts/bans');
 					break;

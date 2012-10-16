@@ -17,14 +17,72 @@ class BanNotFoundException extends BanException {}
  */
 class Ban
 {
+	/**
+	 * Autoincremented ID
+	 *
+	 * @var  int
+	 */
 	public $id = 0;
+
+	/**
+	 * Decimal IP of the banned user
+	 *
+	 * @var  string  A numeric string representing the decimal IP
+	 */
 	public $ip = 0;
+
+	/**
+	 * Explanation of why the user has been banned
+	 *
+	 * @var  string
+	 */
 	public $reason = '';
+
+	/**
+	 * The starting point of the ban in UNIX time
+	 *
+	 * @var  int
+	 */
 	public $start = 0;
+
+	/**
+	 * The length of the ban in seconds
+	 *
+	 * @var  int
+	 */
 	public $length = 0;
+
+	/**
+	 * The board to which this ban is referred to. 0 is a global ban
+	 *
+	 * @var  int  The board ID, otherwise 0 for global ban
+	 */
 	public $board_id = 0;
+
+	/**
+	 * The author of the ban as defined by the login system
+	 *
+	 * @var  int
+	 */
 	public $creator_id = 0;
 
+	/**
+	 * The plea by the user to get unbanned
+	 *
+	 * @var  string
+	 */
+	public $appeal = '';
+
+	/**
+	 * The status of the appeal
+	 *
+	 * @var  int  Based on the class constants APPEAL_*
+	 */
+	public $appeal_status = 0;
+
+	/**
+	 * Appeal statuses for the appeal_status field
+	 */
 	const APPEAL_NONE = 0;
 	const APPEAL_PENDING = 1;
 	const APPEAL_REJECTED = 2;
@@ -57,7 +115,7 @@ class Ban
 	{
 		$new = [];
 
-		foreach ($array as $key => $item)
+		foreach ($array as $item)
 		{
 			// use the board_id as key
 			$obj =  static::fromArray($item);
@@ -74,7 +132,7 @@ class Ban
 	 * @return  \Foolz\Foolfuuka\Model\Ban
 	 * @throws  BanNotFoundException
 	 */
-	public static function get_by_id($id)
+	public static function getById($id)
 	{
 		$result = \DC::qb()
 			->select('*')
@@ -99,7 +157,7 @@ class Ban
 	 * @return  array
 	 * @throws  BanNotFoundException
 	 */
-	public static function get_by_ip($decimal_ip)
+	public static function getByIp($decimal_ip)
 	{
 		$result = \DC::qb()
 			->select('*')
@@ -117,62 +175,66 @@ class Ban
 		return static::fromArrayDeep($result);
 	}
 
-	public static function get_paged_by($order_by, $direction, $page, $per_page = 30)
+	/**
+	 * Returns a list of bans by page and with a custom ordering
+	 *
+	 * @param   string  $order_by  The column to order by
+	 * @param   string  $order     The direction of the ordering
+	 * @param   int     $page      The page to fetch
+	 * @param   int     $per_page  The number of entries per page
+	 * @return  array  An array of \Foolz\Foolfuuka\Model\Ban
+	 */
+	public static function getPagedBy($order_by, $order, $page, $per_page = 30)
 	{
-		$bans = \DB::select('*')
-			->from('banned_posters')
-			->order_by($order_by, $direction)
-			->limit($per_page)
-			->offset(($page * $per_page) - $per_page)
+		$result = \DC::qb()
+			->select('*')
+			->from('banned_posters', 'u')
+			->orderBy($order_by, $order)
+			->setMaxResults($per_page)
+			->setFirstResult(($page * $per_page) - $per_page)
 			->execute()
-			->as_array();
+			->fetchAll();
 
-		$ban_objects = [];
-		foreach ($bans as $ban)
-		{
-			$new = new Ban();
-			foreach ($ban as $k => $i)
-			{
-				$new->$k = $i;
-			}
-			$ban_objects[] = $new;
-		}
-
-		return $ban_objects;
+		return static::fromArrayDeep($result);
 	}
 
-
-	public static function get_appeals_paged_by($order_by, $direction, $page, $per_page = 30)
+	/**
+	 * Returns a list of bans with an appended appeal by page and with a custom ordering
+	 *
+	 * @param   string  $order_by  The column to order by
+	 * @param   string  $order     The direction of the ordering
+	 * @param   int     $page      The page to fetch
+	 * @param   int     $per_page  The number of entries per page
+	 * @return  array  An array of \Foolz\Foolfuuka\Model\Ban
+	 */
+	public static function getAppealsPagedBy($order_by, $order, $page, $per_page = 30)
 	{
-		$bans = \DB::select('*')
-			->from('banned_posters')
-			->where('appeal_status', '=', static::APPEAL_PENDING)
-			->order_by($order_by, $direction)
-			->limit($per_page)
-			->offset(($page * $per_page) - $per_page)
+		$result = \DC::qb()
+			->select('*')
+			->from('banned_posters', 'u')
+			->where('appeal_status = :appeal_status')
+			->orderBy($order_by, $order)
+			->setMaxResults($per_page)
+			->setFirstResult(($page * $per_page) - $per_page)
+			->setParameter(':appeal_status', static::APPEAL_PENDING)
 			->execute()
-			->as_array();
+			->fetchAll();
 
-		$ban_objects = [];
-		foreach ($bans as $ban)
-		{
-			$new = new Ban();
-			foreach ($ban as $k => $i)
-			{
-				$new->$k = $i;
-			}
-			$ban_objects[] = $new;
-		}
-
-		return $ban_objects;
+		return static::fromArrayDeep($result);
 	}
 
-
-	public static function is_banned($decimal_ip, $board)
+	/**
+	 * Check if an user is banned on any board
+	 *
+	 * @param   string  $decimal_ip
+	 * @param   array   $board
+	 * @return  \Foolz\Foolfuuka\Model\Ban|boolean
+	 */
+	public static function isBanned($decimal_ip, $board)
 	{
 		try
 		{
-			$bans = static::get_by_ip($decimal_ip);
+			$bans = static::getByIp($decimal_ip);
 		}
 		catch (BanException $e)
 		{
@@ -203,13 +265,22 @@ class Ban
 		return false;
 	}
 
-
-	public static function add($ip_decimal, $reason, $length, $board_ids = array())
+	/**
+	 * Adds a new ban
+	 *
+	 * @param   string  $ip_decimal  The IP of the banned user in decimal format
+	 * @param   string  $reason      The reason for the ban
+	 * @param   int     $length      The lengthof the ban in seconds
+	 * @param   array   $board_ids   The array of board IDs, global ban if left empty
+	 * @return  \Foolz\Foolfuuka\Model\Ban
+	 * @throws  \Foolz\Foolfuuka\Model\BanException
+	 */
+	public static function add($ip_decimal, $reason, $length, $board_ids = [])
 	{
 		// 0 is a global ban
 		if (empty($board_ids))
 		{
-			$board_ids = array(0);
+			$board_ids = [0];
 		}
 		else
 		{
@@ -250,7 +321,7 @@ class Ban
 
 		try
 		{
-			$old = static::get_by_ip($ip_decimal);
+			$old = static::getByIp($ip_decimal);
 		}
 		catch (BanNotFoundException $e)
 		{
@@ -327,9 +398,10 @@ class Ban
 		\DC::qb()
 			->update('banned_posters')
 			->where('id = :id')
-			->set('appeal', $appeal)
+			->set('appeal', ':appeal')
 			->set('appeal_status', static::APPEAL_PENDING)
 			->setParameter(':id', $this->id)
+			->setParameter(':appeal', $appeal)
 			->execute();
 
 		return $this;
@@ -340,7 +412,7 @@ class Ban
 	 *
 	 * @return  \Foolz\Foolfuuka\Model\Ban
 	 */
-	public function appeal_reject()
+	public function appealReject()
 	{
 		\DC::qb()
 			->update('banned_posters')

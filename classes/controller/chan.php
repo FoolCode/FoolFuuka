@@ -901,7 +901,7 @@ class Controller_Chan extends \Controller_Common
 	{
 		try
 		{
-			$bans = \Ban::get_by_ip(\Input::ip_decimal());
+			$bans = \Ban::getByIp(\Input::ip_decimal());
 		}
 		catch (\Foolz\Foolfuuka\Model\BanException $e)
 		{

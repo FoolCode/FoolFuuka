@@ -1057,7 +1057,7 @@ class Comment extends \Model\Model_Base
 		if( ! \Auth::has_access('comment.limitless_comment'))
 		{
 			// check if the user is banned
-			if ($ban = \Ban::is_banned(\Input::ip_decimal(), $this->board))
+			if ($ban = \Ban::isBanned(\Input::ip_decimal(), $this->board))
 			{
 				if ($ban->board_id == 0)
 				{

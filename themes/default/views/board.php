@@ -117,7 +117,7 @@ foreach ($board->get_comments() as $key => $post) :
 
 	<?php if ($op->get_reports()) : ?>
 		<?php foreach ($op->get_reports() as $report) : ?>
-			<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->get_reason_processed() ?>
+			<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->getReasonProcessed() ?>
 				<br/>
 				<div class="ip_reporter">
 					<strong><?= __('Info:') ?></strong>

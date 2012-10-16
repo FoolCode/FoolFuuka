@@ -158,7 +158,7 @@ class Board_comment extends \Theme
 				</div>
 				<?php if ($p->get_reports()) : ?>
 					<?php foreach ($p->get_reports() as $report) : ?>
-						<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->get_reason_processed() ?>
+						<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->getReasonProcessed() ?>
 							<br/>
 							<div class="ip_reporter">
 								<strong><?= __('Info:') ?></strong>

@@ -38,7 +38,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 			'post_show_view_button' => true
 		));
 
-		$reports = \Report::get_all();
+		$reports = \Report::getAll();
 
 		foreach ($reports as $key => $report)
 		{

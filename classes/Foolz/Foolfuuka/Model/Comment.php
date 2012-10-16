@@ -362,11 +362,11 @@ class Comment extends \Model\Model_Base
 		{
 			if (\Auth::has_access('comment.reports'))
 			{
-				$reports = \Report::get_by_doc_id($this->board, $this->doc_id);
+				$reports = \Report::getByDocId($this->board, $this->doc_id);
 
 				if ($this->media)
 				{
-					$reports += \Report::get_by_media_id($this->board, $this->media->media_id);
+					$reports += \Report::getByMediaId($this->board, $this->media->media_id);
 				}
 
 				$this->reports = $reports;
@@ -929,7 +929,7 @@ class Comment extends \Model\Model_Base
 		$reports_affected = \DB::delete('reports')->where('board_id', $this->board->id)->where('doc_id', $this->doc_id)->execute();
 		if ($reports_affected > 0)
 		{
-			\Report::clear_cache();
+			\Report::clearCache();
 		}
 
 		// remove its image file

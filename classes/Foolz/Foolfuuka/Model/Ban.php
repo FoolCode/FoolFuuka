@@ -5,7 +5,7 @@ namespace Foolz\Foolfuuka\Model;
 /**
  * Thrown when there's no results from database or the value domain hasn't been respected
  */
-class BanException extends \FuelException {}
+class BanException extends \Exception {}
 
 /**
  * Thrown when there's no results from the database
@@ -91,6 +91,7 @@ class Ban
 	 * Converts an array into a Ban object
 	 *
 	 * @param   array  $array  The array from database
+	 *
 	 * @return  \Foolz\Foolfuuka\Model\Ban
 	 */
 	public static function fromArray($array)
@@ -109,6 +110,7 @@ class Ban
 	 * Takes an array of arrays to create Ban objects
 	 *
 	 * @param   array  $array  The array from database
+	 *
 	 * @return  array  An array of \Foolz\Foolfuuka\Model\Ban with as key the board_id
 	 */
 	public static function fromArrayDeep($array)
@@ -118,7 +120,7 @@ class Ban
 		foreach ($array as $item)
 		{
 			// use the board_id as key
-			$obj =  static::fromArray($item);
+			$obj = static::fromArray($item);
 			$new[$obj->board_id] = $obj;
 		}
 
@@ -154,6 +156,7 @@ class Ban
 	 * Get the Ban(s) pending on one IP
 	 *
 	 * @param   int  $decimal_ip  The user IP in decimal form
+	 *
 	 * @return  array
 	 * @throws  BanNotFoundException
 	 */
@@ -182,6 +185,7 @@ class Ban
 	 * @param   string  $order     The direction of the ordering
 	 * @param   int     $page      The page to fetch
 	 * @param   int     $per_page  The number of entries per page
+	 *
 	 * @return  array  An array of \Foolz\Foolfuuka\Model\Ban
 	 */
 	public static function getPagedBy($order_by, $order, $page, $per_page = 30)
@@ -205,6 +209,7 @@ class Ban
 	 * @param   string  $order     The direction of the ordering
 	 * @param   int     $page      The page to fetch
 	 * @param   int     $per_page  The number of entries per page
+	 *
 	 * @return  array  An array of \Foolz\Foolfuuka\Model\Ban
 	 */
 	public static function getAppealsPagedBy($order_by, $order, $page, $per_page = 30)
@@ -228,6 +233,7 @@ class Ban
 	 *
 	 * @param   string  $decimal_ip
 	 * @param   array   $board
+	 *
 	 * @return  \Foolz\Foolfuuka\Model\Ban|boolean
 	 */
 	public static function isBanned($decimal_ip, $board)
@@ -272,6 +278,7 @@ class Ban
 	 * @param   string  $reason      The reason for the ban
 	 * @param   int     $length      The lengthof the ban in seconds
 	 * @param   array   $board_ids   The array of board IDs, global ban if left empty
+	 *
 	 * @return  \Foolz\Foolfuuka\Model\Ban
 	 * @throws  \Foolz\Foolfuuka\Model\BanException
 	 */
@@ -391,6 +398,7 @@ class Ban
 	 * Adds the appeal message to the ban. Only one appeal is allowed
 	 *
 	 * @param   string  $appeal  The appeal test by the user
+	 *
 	 * @return  \Foolz\Foolfuuka\Model\Ban
 	 */
 	public function appeal($appeal)

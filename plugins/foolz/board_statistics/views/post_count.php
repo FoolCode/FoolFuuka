@@ -16,7 +16,7 @@ if (!defined('DOCROOT'))
 	<tr>
 		<td>
 			<?php
-			$params = array(Radix::get_selected()->shortname, 'search');
+			$params = array(\Radix::getSelected()->shortname, 'search');
 			if ($d['name'])
 				array_push($params, 'username/' . urlencode($d['name']));
 			if ($d['trip'])

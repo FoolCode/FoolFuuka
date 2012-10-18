@@ -23,7 +23,7 @@
 	<?php if ($disable_headers !== TRUE) : ?>
 		<div><?php
 			$board_urls = array();
-			foreach (Radix::get_all() as $key => $item)
+			foreach (\Radix::getAll() as $key => $item)
 			{
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
@@ -77,9 +77,9 @@
 			<?php endif; ?>
 
 			<hr />
-			
+
 			<?= $template['partials']['tools_search'] ?>
-			
+
 			<hr />
 			<?php if ( ! isset($thread_id)) : ?>
 			<?= isset($template['partials']['tools_new_thread_box']) ? $template['partials']['tools_new_thread_box'] : ''; ?>
@@ -90,7 +90,7 @@
 		<?= $template['body'] ?>
 
 		<?php \Foolz\Plugin\Hook::forge('fu.themes.fuuka_after_body_template')->execute(); ?>
-		
+
 		<?php if ($disable_headers !== TRUE) : ?>
 			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<table style="float: left;">

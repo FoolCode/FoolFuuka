@@ -111,7 +111,7 @@ if (!isset($thread_id) && ! $radix->archive) : ?>
 				<?php if (isset($reply_errors)) : ?>
 				<span style="color:red"><?= $reply_errors ?></span>
 				<?php endif; ?>
-				<span><?= (!Radix::get_selected()->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '' ?></span>
+				<span><?= ( ! Radix::getSelected()->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '' ?></span>
 				<table>
 					<tbody>
 						<tr>
@@ -130,7 +130,7 @@ if (!isset($thread_id) && ! $radix->archive) : ?>
 							<td class="postblock"><?= __('Comment') ?></td>
 							<td><?php echo \Form::textarea(array('name' => 'KOMENTO', 'cols' => 48, 'rows' => 4)); ?></td>
 						</tr>
-						<?php if (!Radix::get_selected()->archive) : ?>
+						<?php if ( ! Radix::getSelected()->archive) : ?>
 						<tr>
 							<td class="postblock"><?= __('File') ?></td>
 							<td><?php echo \Form::file(array('name' => 'file_image', 'id' => 'file_image')); ?></td>

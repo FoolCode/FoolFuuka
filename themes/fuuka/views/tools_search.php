@@ -221,9 +221,9 @@ else if (isset($radix))
 	</div>
 	<?php echo \Form::close(); ?>
 
-<?php if(Radix::get_selected()) : ?>
+<?php if(Radix::getSelected()) : ?>
 	<!--- Post Input -->
-	<?php echo \Form::open(Radix::get_selected()->shortname . '/post'); ?>
+	<?php echo \Form::open(Radix::getSelected()->shortname . '/post'); ?>
 	<div class="postspan" style="float:left">
 		<?= __('View Post') ?>
 
@@ -246,7 +246,7 @@ else if (isset($radix))
 	<?php echo \Form::close(); ?>
 
 	<!--- Page Input -->
-	<?php echo \Form::open(Radix::get_selected()->shortname . '/page'); ?>
+	<?php echo \Form::open(Radix::getSelected()->shortname . '/page'); ?>
 	<div class="postspan" style="float:left">
 		<?= __('View Page') ?>
 
@@ -263,13 +263,13 @@ else if (isset($radix))
 		echo \Form::submit(array(
 			'name' => 'submit',
 			'value' => 'View',
-			'onclick' => 'location.href=\'' . Uri::create(Radix::get_selected()->shortname . '/page/') . '\' + this.form.page.value + \'/\'; return false;'
+			'onclick' => 'location.href=\'' . Uri::create(Radix::getSelected()->shortname . '/page/') . '\' + this.form.page.value + \'/\'; return false;'
 		));
 		?>
 
 		<a class="tooltip" href="#">[?]<span><?= __('In Ghost Mode, only threads that contain ghost posts will be listed.') ?></span></a>
 
-		<input type="button" value="View in Ghost Mode" onclick="location.href='<?php echo Uri::create(Radix::get_selected()->shortname . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
+		<input type="button" value="View in Ghost Mode" onclick="location.href='<?php echo Uri::create(Radix::getSelected()->shortname . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
 	</div>
 	<?php echo \Form::close(); ?>
 <?php endif; ?>

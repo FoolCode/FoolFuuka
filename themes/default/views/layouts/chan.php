@@ -39,7 +39,7 @@ header('imagetoolbar: false');
 	<?php if ($disable_headers !== TRUE) : ?>
 		<div class="letters"><?php
 			$board_urls = array();
-			foreach (\Radix::get_archives() as $key => $item)
+			foreach (\Radix::getArchives() as $key => $item)
 			{
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
@@ -49,13 +49,13 @@ header('imagetoolbar: false');
 				echo sprintf(__('Archives: [ %s ]'), implode(' / ', $board_urls));
 			}
 
-			if (\Radix::get_archives() && \Radix::get_boards())
+			if (\Radix::getArchives() && \Radix::getBoards())
 			{
 				echo ' ';
 			}
 
 			$board_urls = array();
-			foreach (\Radix::get_boards() as $key => $item)
+			foreach (\Radix::getBoards() as $key => $item)
 			{
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
@@ -80,24 +80,24 @@ header('imagetoolbar: false');
 									<?= (Auth::has_access('maccess.mod')) ? '<li><a href="' . Uri::create('admin') . '">' . __('Control Panel') . '</a></li>' : '' ?>
 									<li class="divider"></li>
 									<?php
-										if (Radix::get_archives())
+										if (\Radix::getArchives())
 										{
 											echo '<li class="nav-header">' . __('Archives') . '</li>';
-											foreach (Radix::get_archives() as $key => $item)
+											foreach (\Radix::getArchives() as $key => $item)
 											{
 												echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
 											}
 										}
 
-										if (Radix::get_boards())
+										if (\Radix::getBoards())
 										{
-											if (Radix::get_archives())
+											if (\Radix::getArchives())
 											{
 												echo '<li class="divider"></li>';
 											}
 
 											echo '<li class="nav-header">' . __('Boards') . '</li>';
-											foreach (Radix::get_boards() as $key => $item)
+											foreach (\Radix::getBoards() as $key => $item)
 											{
 												echo '<li><a href="' . $item->href . '">/' . $item->shortname . '/ - ' . $item->name . '</a></li>';
 											}

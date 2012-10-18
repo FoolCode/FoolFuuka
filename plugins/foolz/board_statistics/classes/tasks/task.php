@@ -25,7 +25,7 @@ class Task
 			case 'cron':
 				if (isset($parameters[1]))
 				{
-					if (\Radix::get_by_shortname($parameters[1]) !== false)
+					if (\Radix::getByShortname($parameters[1]) !== false)
 					{
 						static::board_statistics($parameters[1]);
 						return true;
@@ -41,10 +41,10 @@ class Task
 				return false;
 		}
 	}
-	
+
 	public static function board_statistics($shortname = null)
 	{
-		$boards = \Radix::get_all();
+		$boards = \Radix::getAll();
 
 		$available = Board_Statistics::get_available_stats();
 

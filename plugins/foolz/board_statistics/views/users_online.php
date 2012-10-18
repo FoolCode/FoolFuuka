@@ -18,7 +18,7 @@ if (!defined('DOCROOT'))
 	<tr>
 		<td>
 			<?php
-			$params = array(Radix::get_selected()->shortname, 'search');
+			$params = array(\Radix::getSelected()->shortname, 'search');
 			if ($d->name)
 				array_push($params, 'username/' . urlencode($d->name));
 			if ($d->trip)
@@ -31,7 +31,7 @@ if (!defined('DOCROOT'))
 			</a>
 		</td>
 		<td style="width:350px; text-align:center;"><?php echo date('d-M-Y H:i:s', $d->{'MAX(timestamp)'}) ?></td>
-		<td><a href="<?php echo Uri::create(array(Radix::get_selected()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : ''))) ?>">
+		<td><a href="<?php echo Uri::create(array(\Radix::getSelected()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : ''))) ?>">
 			&gt;&gt;<?php echo $d->num . ($d->subnum ? ',' . $d->subnum : '') ?>
 		</a></td>
 	</tr>

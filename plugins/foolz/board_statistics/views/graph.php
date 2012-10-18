@@ -4,5 +4,5 @@ if (!defined('DOCROOT'))
 ?>
 
 <?php if (!empty($data)) : ?>
-	<img src="<?php echo Uri::create(array('foolfuuka', 'statistics', Radix::get_selected()->shortname)) . $info['location'] . '.png' ?>"/>
+	<img src="<?php echo Uri::create(array('foolfuuka', 'statistics', \Radix::getSelected()->shortname)) . $info['location'] . '.png' ?>"/>
 <?php endif; ?>

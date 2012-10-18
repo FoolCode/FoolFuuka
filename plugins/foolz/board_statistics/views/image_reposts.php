@@ -9,9 +9,9 @@ if (!defined('DOCROOT'))
 		<div class="image_reposts_number">
 			<strong>#<?php echo $key+1 ?></strong> - Reposts: <?php echo $item->total ?>
 		</div>
-		
+
 		<?php
-			$media = \Media::forge_empty(\Radix::get_selected());
+			$media = \Media::forge_empty(\Radix::getSelected());
 			$media->media_id = $item->media_id;
 			$media->media_hash = $item->media_hash;
 			$media->media = $item->media;
@@ -21,8 +21,8 @@ if (!defined('DOCROOT'))
 			$media->banned = $item->banned;
 			$media->op = true;
 		?>
-		
-		<a href="<?= Uri::create(array(Radix::get_selected()->shortname, 'search', 'image', $media->get_safe_media_hash())) ?>">
+
+		<a href="<?= Uri::create(array(\Radix::getSelected()->shortname, 'search', 'image', $media->get_safe_media_hash())) ?>">
 			<img  src="<?= $media->get_thumb_link()  ?>" />
 		</a>
 	</div>

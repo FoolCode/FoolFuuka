@@ -25,7 +25,7 @@ if (!defined('DOCROOT'))
 				}
 
 				// this function must NOT run for the radix_full_image function
-				if (\Radix::get_by_shortname(\Uri::segment(1)) && \Uri::segment(2) === 'full_image')
+				if (\Radix::getByShortname(\Uri::segment(1)) && \Uri::segment(2) === 'full_image')
 				{
 					return;
 				}

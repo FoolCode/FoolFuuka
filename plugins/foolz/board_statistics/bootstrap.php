@@ -42,9 +42,9 @@ if (!defined('DOCROOT'))
 		\Foolz\Plugin\Event::forge('ff.themes.generic_top_nav_buttons')
 			->setCall(function($result){
 				$top_nav = $result->getParam('nav');
-				if(\Radix::get_selected())
+				if(\Radix::getSelected())
 				{
-					$top_nav[] = array('href' => Uri::create(array(Radix::get_selected()->shortname, 'statistics')), 'text' => __('Stats'));
+					$top_nav[] = array('href' => Uri::create(array(Radix::getSelected()->shortname, 'statistics')), 'text' => __('Stats'));
 					$result->set($top_nav);
 					$result->setParam('nav', $top_nav);
 				}

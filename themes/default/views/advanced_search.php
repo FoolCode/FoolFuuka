@@ -107,7 +107,7 @@ foreach ($search_structure as $element)
 <div class="radixes">
 	<div>
 		<?php
-		$radixes = \Radix::get_archives();
+		$radixes = \Radix::getArchives();
 		foreach($radixes as $key => $r)
 		{
 			if ( ! $r->sphinx)
@@ -132,7 +132,7 @@ foreach ($search_structure as $element)
 
 	<div style="clear:left; padding-top: 10px">
 		<?php
-		$radixes = \Radix::get_boards();
+		$radixes = \Radix::getBoards();
 		foreach($radixes as $key => $r)
 		{
 			if ( ! $r->sphinx)

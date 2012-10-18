@@ -1,5 +1,5 @@
 <?php if (!defined('DOCROOT')) exit('No direct script access allowed'); ?>
-	
+
 <?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_op_open')->setParam('board', $radix)->execute(); ?>
 
 <?php if (\ReCaptcha::available()) : ?>
@@ -67,7 +67,7 @@
 					'value' => __('Submit'),
 					'class' => 'btn',
 				);
-				
+
 				echo Form::submit($submit_array);
 				?>
 
@@ -82,7 +82,7 @@
 					'id' => 'reply_comment_yep',
 					'style' => 'display:none'
 				));
-				
+
 				echo Form::textarea(array(
 					'name' => 'reply_chennodiscursus',
 					'id' => 'reply_chennodiscursus',
@@ -133,7 +133,7 @@
 				?> <span style="font-size: smaller;">(Password used for file deletion)</span>
 			</td>
 		</tr>
-		
+
 		<?php
 			$postas = array('N' => __('User'));
 
@@ -147,8 +147,8 @@
 			<td><?= \Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas')); ?></td>
 		</tr>
 		<?php endif; ?>
-	
-		<?php if (Radix::get_selected()->posting_rules) : ?>
+
+		<?php if (Radix::getSelected()->posting_rules) : ?>
 		<tr class="rules">
 			<td></td>
 			<td>

@@ -177,21 +177,21 @@ class Board_Statistics extends \Plugins
 			)
 		);
 	}
-	
-	
+
+
 	public static function get_available_stats()
 	{
 		$stats = static::get_stats();
 		// this variable is going to be a serialized array
 		$enabled = \Preferences::get('fu.plugins.board_statistics.enabled');
-		
+
 		if(!$enabled)
 		{
 			return array();
 		}
-		
+
 		$enabled = unserialize($enabled);
-		
+
 		foreach ($stats as $k => $s)
 		{
 			if (!$enabled[$k])
@@ -201,8 +201,8 @@ class Board_Statistics extends \Plugins
 		}
 		return $stats;
 	}
-	
-	
+
+
 	public static function check_available_stats($stat, $selected_board)
 	{
 		$available = static::get_available_stats();
@@ -228,7 +228,7 @@ class Board_Statistics extends \Plugins
 					->as_object()
 					->execute()
 					->as_array();
-				
+
 				if (count($result) != 1)
 				{
 					return false;
@@ -240,11 +240,11 @@ class Board_Statistics extends \Plugins
 		}
 		return false;
 	}
-	
-	
+
+
 	public static function get_stat($board_id, $name)
 	{
-		
+
 		$stat = \DB::select()
 			->from('plugin_fu-board-statistics')
 			->where('board_id', '=', $board_id)
@@ -257,8 +257,8 @@ class Board_Statistics extends \Plugins
 
 		return $stat->current();
 	}
-	
-	
+
+
 	/**
 	 * To avoid really dangerous racing conditions, turn up the timer before starting the update
 	 *
@@ -293,11 +293,11 @@ class Board_Statistics extends \Plugins
 			->where('name', '=', $name)
 			->execute()
 			->current();
-		
+
 		if ( ! $result['count'])
 		{
 			\DB::insert('plugin_fu-board-statistics')
-				->set(array('board_id' => $board_id, 'name' => $name, 
+				->set(array('board_id' => $board_id, 'name' => $name,
 					'timestamp' => $timestamp, 'data' =>json_encode($data)))
 				->execute();
 		}
@@ -321,7 +321,7 @@ class Board_Statistics extends \Plugins
 				(AVG((timestamp+43200)%86400)+43200)%86400 avg2,
 				STDDEV_POP((timestamp+43200)%86400) AS std2
 			'))
-			->from(\DB::expr(\Radix::get_table($board).' FORCE INDEX(timestamp_index)'))
+			->from(\DB::expr($board->getTable().' FORCE INDEX(timestamp_index)'))
 			->where('timestamp', '>', time() - 2592000)
 			->group_by('name', 'trip')
 			->having(\DB::expr('count(*)'), '>', 4)
@@ -334,11 +334,11 @@ class Board_Statistics extends \Plugins
 
 	public static function process_daily_activity($board)
 	{
-		return \DB::select(\DB::expr('(FLOOR(timestamp/300)%288)*300 AS time'), 
-				\DB::expr('COUNT(timestamp)'), 
+		return \DB::select(\DB::expr('(FLOOR(timestamp/300)%288)*300 AS time'),
+				\DB::expr('COUNT(timestamp)'),
 				\DB::expr('COUNT(media_hash)'),
 				\DB::expr('COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)'))
-			->from(\DB::expr(\Radix::get_table($board).' USE INDEX(timestamp_index)'))
+			->from(\DB::expr($board->getTable().' USE INDEX(timestamp_index)'))
 			->where('timestamp', '>', time() - 86400)
 			->group_by(\DB::expr('FLOOR(timestamp/300)%288'))
 			->order_by(\DB::expr('FLOOR(timestamp/300)%288'))
@@ -349,10 +349,10 @@ class Board_Statistics extends \Plugins
 
 	public static function process_daily_activity_archive($board)
 	{
-		return \DB::select(\DB::expr('((FLOOR(timestamp/3600)%24)*3600)+1800 AS time'), 
+		return \DB::select(\DB::expr('((FLOOR(timestamp/3600)%24)*3600)+1800 AS time'),
 				\DB::expr('COUNT(timestamp)'),
 				\DB::expr('COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)'))
-			->from(\DB::expr(\Radix::get_table($board).' USE INDEX(timestamp_index)'))
+			->from(\DB::expr($board->getTable().' USE INDEX(timestamp_index)'))
 			->where('timestamp', '>', time() - 86400)
 			->where('subnum', '<>', 0)
 			->group_by(\DB::expr('FLOOR(timestamp/3600)%24'))
@@ -364,11 +364,11 @@ class Board_Statistics extends \Plugins
 
 	public static function process_daily_activity_hourly($board)
 	{
-		return \DB::select(\DB::expr('((FLOOR(timestamp/3600)%24)*3600)+1800 AS time'), 
+		return \DB::select(\DB::expr('((FLOOR(timestamp/3600)%24)*3600)+1800 AS time'),
 				\DB::expr('COUNT(timestamp)'),
-				\DB::expr('COUNT(media_hash)'), 
+				\DB::expr('COUNT(media_hash)'),
 				\DB::expr('COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)'))
-			->from(\DB::expr(\Radix::get_table($board).' USE INDEX(timestamp_index)'))
+			->from(\DB::expr($board->getTable().' USE INDEX(timestamp_index)'))
 			->where('timestamp', '>', time() - 86400)
 			->group_by(\DB::expr('FLOOR(timestamp/3600)%24'))
 			->order_by(\DB::expr('FLOOR(timestamp/3600)%24'))
@@ -380,7 +380,7 @@ class Board_Statistics extends \Plugins
 	public static function process_image_reposts($board)
 	{
 		return \DB::select()
-			->from(\DB::expr(\Radix::get_table($board, '_images')))
+			->from(\DB::expr($board->getTable( '_images')))
 			->order_by('total', 'desc')
 			->offset(0)
 			->limit(200)
@@ -392,7 +392,7 @@ class Board_Statistics extends \Plugins
 	public static function process_karma($board)
 	{
 		return \DB::select(\DB::expr('day AS time'), 'posts', 'images', 'sage')
-			->from(\DB::expr(\Radix::get_table($board, '_daily')))
+			->from(\DB::expr($board->getTable('_daily')))
 			->where('day', '>', \DB::expr('floor(('.time().'-31536000)/86400)*86400'))
 			->group_by('day')
 			->order_by('day')
@@ -404,7 +404,7 @@ class Board_Statistics extends \Plugins
 	public static function process_new_users($board)
 	{
 		return \DB::select('name', 'trip', 'firstseen', 'postcount')
-			->from(\DB::expr(\Radix::get_table($board, '_users')))
+			->from(\DB::expr($board->getTable('_users')))
 			->where('postcount', '>', 30)
 			->order_by('firstseen', 'desc')
 			->execute()
@@ -415,7 +415,7 @@ class Board_Statistics extends \Plugins
 	public static function process_population($board)
 	{
 		return \DB::select(\DB::expr('day AS time'), 'trips', 'names', 'anons')
-			->from(\DB::expr(\Radix::get_table($board, '_daily')))	
+			->from(\DB::expr($board->getTable('_daily')))
 			->where('day', '>', \DB::expr('floor(('.time().'-31536000)/86400)*86400'))
 			->group_by('day')
 			->order_by('day')
@@ -427,7 +427,7 @@ class Board_Statistics extends \Plugins
 	public static function process_post_count($board)
 	{
 		return \DB::select('name', 'trip', 'postcount')
-			->from(\DB::expr(\Radix::get_table($board, '_users')))	
+			->from(\DB::expr($board->getTable('_users')))
 			->order_by('postcount', 'desc')
 			->limit(512)
 			->execute()
@@ -438,7 +438,7 @@ class Board_Statistics extends \Plugins
 	public static function process_post_rate($board)
 	{
 		return \DB::select(\DB::expr('COUNT(timestamp)'), \DB::expr('COUNT(timestamp)/60'))
-			->from(\DB::expr(\Radix::get_table($board)))	
+			->from(\DB::expr($board->getTable()))
 			->where('timestamp', '>', time() - 3600)
 			->execute()
 			->as_array();
@@ -448,7 +448,7 @@ class Board_Statistics extends \Plugins
 	public static function process_post_rate_archive($board)
 	{
 		return \DB::select(\DB::expr('COUNT(timestamp)'), \DB::expr('COUNT(timestamp)/60'))
-			->from(\DB::expr(\Radix::get_table($board)))	
+			->from(\DB::expr($board->getTable()))
 			->where('timestamp', '>', time() - 3600)
 			->where('subnum', '<>', 0)
 			->execute()
@@ -459,7 +459,7 @@ class Board_Statistics extends \Plugins
 	public static function process_users_online($board)
 	{
 		return \DB::select('name', 'trip', \DB::expr('MAX(timestamp)'), 'num', 'subnum')
-			->from(\DB::expr(\Radix::get_table($board)))
+			->from(\DB::expr($board->getTable()))
 			->where('timestamp', '>', time() - 1800)
 			->group_by('name', 'trip')
 			->order_by(\DB::expr('MAX(timestamp)'), 'desc')
@@ -471,7 +471,7 @@ class Board_Statistics extends \Plugins
 	public static function process_users_online_internal($board)
 	{
 		return \DB::select('name', 'trip', \DB::expr('MAX(timestamp)'), 'num', 'subnum')
-			->from(\DB::expr(\Radix::get_table($board)))
+			->from(\DB::expr($board->getTable()))
 			->where('poster_ip', '<>', 0)
 			->where('timestamp', '>', time() - 3600)
 			->group_by('name', 'trip')
@@ -580,5 +580,5 @@ class Board_Statistics extends \Plugins
 
 		return implode("\n", $template);
 	}
-	
+
 }

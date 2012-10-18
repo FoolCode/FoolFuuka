@@ -9,14 +9,14 @@ if (!defined('DOCROOT'))
 
 		$index_nav = array();
 
-		if (Radix::get_archives())
+		if (\Radix::getArchives())
 		{
 			$index_nav['archives'] = array(
 				'title' => __('Archives'),
 				'elements' => array()
 			);
 
-			foreach (Radix::get_archives() as $key => $item)
+			foreach (\Radix::getArchives() as $key => $item)
 			{
 				$index_nav['archives']['elements'][] = array(
 					'href' => $item->href,
@@ -25,14 +25,14 @@ if (!defined('DOCROOT'))
 			}
 		}
 
-		if (Radix::get_boards())
+		if (\Radix::getBoards())
 		{
 			$index_nav['boards'] = array(
 				'title' => __('Boards'),
 				'elements' => array()
 			);
 
-			foreach (Radix::get_boards() as $key => $item)
+			foreach (\Radix::getBoards() as $key => $item)
 			{
 				$index_nav['boards']['elements'][] = array(
 					'href' => $item->href,

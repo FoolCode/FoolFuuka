@@ -293,7 +293,7 @@ class Ban
 		{
 			// check that all ids are existing boards
 			$valid_board_ids = [];
-			foreach (\Radix::get_all() as $board)
+			foreach (\Radix::getAll() as $board)
 			{
 				$valid_board_ids[] = $board->id;
 			}

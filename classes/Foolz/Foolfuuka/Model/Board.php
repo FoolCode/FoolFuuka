@@ -304,8 +304,8 @@ class Board extends \Model\Model_Base
 			$board = $this->_radix;
 		}
 
-		$query->join(\DB::expr(Radix::get_table($board, '_images').' AS `mg`'), 'LEFT')
-			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : Radix::get_table($board)).'.`media_id`'),
+		$query->join(\DB::expr($board->getTable('_images').' AS `mg`'), 'LEFT')
+			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : $board->getTable()).'.`media_id`'),
 				'=', \DB::expr('`mg`.`media_id`'));
 	}
 
@@ -317,8 +317,8 @@ class Board extends \Model\Model_Base
 			$board = $this->_radix;
 		}
 
-		$query->join(\DB::expr(Radix::get_table($board, '_extra').' AS `ex`'), 'LEFT')
-			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : Radix::get_table($board)).'.`doc_id`'),
+		$query->join(\DB::expr($board->getTable('_extra').' AS `ex`'), 'LEFT')
+			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : $board->getTable()).'.`doc_id`'),
 				'=', \DB::expr('`ex`.`extra_id`'));
 	}
 
@@ -356,7 +356,7 @@ class Board extends \Model\Model_Base
 			case 'by_post':
 
 				$query = \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-					->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
+					->from(\DB::expr($this->_radix->getTable('_threads')))
 					->order_by('time_bump', 'desc')
 					->limit($per_page)->offset(($page * $per_page) - $per_page);
 				break;
@@ -364,7 +364,7 @@ class Board extends \Model\Model_Base
 			case 'by_thread':
 
 				$query = \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-					->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
+					->from(\DB::expr($this->_radix->getTable('_threads')))
 					->order_by('thread_num', 'desc')
 					->limit($per_page)->offset(($page * $per_page) - $per_page);
 				break;
@@ -372,7 +372,7 @@ class Board extends \Model\Model_Base
 			case 'ghost':
 
 				$query = \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-					->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
+					->from(\DB::expr($this->_radix->getTable('_threads')))
 					->where('time_ghost_bump', '', \DB::expr('IS NOT NULL'))
 					->order_by('time_ghost_bump', 'desc')
 					->limit($per_page)->offset(($page * $per_page) - $per_page);
@@ -400,7 +400,7 @@ class Board extends \Model\Model_Base
 		{
 			$threads_arr[$thread->unq_thread_num] = array('replies' => $thread->nreplies, 'images' => $thread->nimages);
 
-			$temp = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
+			$temp = \DB::select()->from(\DB::expr($this->_radix->getTable()));
 			static::sql_media_join($temp);
 			static::sql_extra_join($temp);
 			$temp->where('thread_num', $thread->unq_thread_num)
@@ -472,12 +472,12 @@ class Board extends \Model\Model_Base
 			case 'by_post':
 			case 'by_thread':
 				$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
-						->from(\DB::expr(Radix::get_table($this->_radix, '_threads')));
+						->from(\DB::expr($this->_radix->getTable('_threads')));
 				break;
 
 			case 'ghost':
 				$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
-						->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
+						->from(\DB::expr($this->_radix->getTable('_threads')))
 						->where('time_ghost_bump', '', \DB::expr('IS NOT NULL'));
 				break;
 		}
@@ -509,11 +509,11 @@ class Board extends \Model\Model_Base
 		extract($this->_options);
 
 		$inner_query =  \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-			->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))
+			->from(\DB::expr($this->_radix->getTable('_threads')))
 			->order_by('time_op', 'desc')->limit($per_page)->offset(($page * $per_page) - $per_page);
 
 		$query = \DB::select()->from(\DB::expr('('.$inner_query.') AS t'))
-			->join(\DB::expr(Radix::get_table($this->_radix).' AS g'), 'LEFT')
+			->join(\DB::expr($this->_radix->getTable().' AS g'), 'LEFT')
 			->on(\DB::expr('g.num'), '=', \DB::expr('t.unq_thread_num AND g.subnum = 0'));
 
 		static::sql_media_join($query, null, 'g');
@@ -554,7 +554,7 @@ class Board extends \Model\Model_Base
 		extract($this->_options);
 
 		$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
-			->from(\DB::expr(Radix::get_table($this->_radix, '_threads')))->cached(300);
+			->from(\DB::expr($this->_radix->getTable('_threads')))->cached(300);
 
 		$this->_total_count = $query_threads->as_object()->execute()->current()->threads;
 
@@ -599,7 +599,7 @@ class Board extends \Model\Model_Base
 		switch ($type)
 		{
 			case 'from_doc_id':
-				$query = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
+				$query = \DB::select()->from(\DB::expr($this->_radix->getTable()));
 				static::sql_media_join($query);
 				static::sql_extra_join($query);
 				$query->where('thread_num', $num)->where('doc_id', '>', $latest_doc_id)
@@ -607,7 +607,7 @@ class Board extends \Model\Model_Base
 				break;
 
 			case 'ghosts':
-				$query = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
+				$query = \DB::select()->from(\DB::expr($this->_radix->getTable()));
 				static::sql_media_join($query);
 				static::sql_extra_join($query);
 				$query->where('thread_num', $num)->where('subnum', '<>', 0)
@@ -617,10 +617,10 @@ class Board extends \Model\Model_Base
 			case 'last_x':
 				$query = \DB::select()->from(\DB::expr('
 					(
-						('.\DB::select()->from(\DB::expr(Radix::get_table($this->_radix)))->where('num',
+						('.\DB::select()->from(\DB::expr($this->_radix->getTable()))->where('num',
 							$num)->limit(1).')
 						UNION
-						('.\DB::select()->from(\DB::expr(Radix::get_table($this->_radix)))->where('thread_num',
+						('.\DB::select()->from(\DB::expr($this->_radix->getTable()))->where('thread_num',
 								$num)
 							->order_by('num', 'desc')->order_by('subnum', 'desc')->limit($last_limit).')
 					) AS x
@@ -633,7 +633,7 @@ class Board extends \Model\Model_Base
 				break;
 
 			case 'thread':
-				$query = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
+				$query = \DB::select()->from(\DB::expr($this->_radix->getTable()));
 				static::sql_media_join($query);
 				static::sql_extra_join($query);
 				$query->where('thread_num', $num)->order_by('num', 'asc')->order_by('subnum', 'asc');
@@ -822,7 +822,7 @@ class Board extends \Model\Model_Base
 	{
 		extract($this->_options);
 
-		$query = \DB::select()->from(\DB::expr(Radix::get_table($this->_radix)));
+		$query = \DB::select()->from(\DB::expr($this->_radix->getTable()));
 
 		if (isset($num))
 		{

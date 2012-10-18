@@ -18,7 +18,7 @@
 		<?php foreach ($bans as $b) : ?>
 		<tr>
 			<td><?= \Inet::dtop($b->ip) ?><?= \Preferences::get('fu.sphinx.global') ?  '<br><small><a href="'.\Uri::create('_/search/poster_ip/'.\Inet::dtop($b->ip)).'" target="_blank">'.__('Search posts').'</a></small>' : '' ?></td>
-			<td><?= $b->board_id ? '/'.\Radix::get_by_id($b->board_id)->shortname.'/' : __('Global') ?></td>
+			<td><?= $b->board_id ? '/'.\Radix::getById($b->board_id)->shortname.'/' : __('Global') ?></td>
 			<td><?= e($b->reason) ?><br><small><?= __('By:').' '.e(\Users::get_user_by('id', $b->creator_id)->username) ?></small></td>
 			<td><?= e($b->appeal) ?><br><small><?= __('Status:').' '.($b->appeal_status == \BAN::APPEAL_PENDING ? __('pending') : '').($b->appeal_status == \BAN::APPEAL_REJECTED ? __('rejected') : '').($b->appeal_status == \BAN::APPEAL_NONE ? __('none') : '') ?></small></td>
 			<td><?= date('d-M-y H:i:s T', $b->start) ?>, <?= $b->length ? ($b->length / 24 / 60 / 60).' '.__('Day(s)') : __('Forever') ?><br><small><?= __('Status:').' '.( ! $b->length || time() < $b->start + $b->length ? __('ongoing'): __('expired')) ?></small></td>

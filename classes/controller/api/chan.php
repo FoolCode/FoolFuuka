@@ -39,14 +39,6 @@ class Controller_Api_Chan extends \Controller_Rest
 
 			\Response::redirect($uri);
 		}
-
-		if ($theme = \Input::get('theme', \Input::post('theme', false)))
-		{
-			$this->_theme = \Theme::forge('foolfuuka');
-			$this->_theme->set_module('foolfuuka');
-			$this->_theme->set_theme($theme);
-			$this->_theme->set_layout('chan');
-		}
 	}
 
 
@@ -68,7 +60,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			return false;
 		}
 
-		if(!$this->_radix = \Radix::set_selected_by_shortname($board))
+		if(!$this->_radix = \Radix::setSelectedByShortname($board))
 		{
 			//$this->response(array('error' => __('The board you selected doesn\'t exist')), 404);
 			return false;

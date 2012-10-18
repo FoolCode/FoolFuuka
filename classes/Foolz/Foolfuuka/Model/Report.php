@@ -132,7 +132,7 @@ class Report extends \Model\Model_Base
 
 		if ( ! isset($new->radix))
 		{
-			$new->radix = \Radix::get_by_id($new->board_id);
+			$new->radix = \Radix::getById($new->board_id);
 		}
 
 		return $new;
@@ -146,7 +146,7 @@ class Report extends \Model\Model_Base
 	 */
 	public static function fromArrayDeep(array $array)
 	{
-		$result = array();
+		$result = [];
 
 		foreach ($array as $item)
 		{
@@ -212,7 +212,7 @@ class Report extends \Model\Model_Base
 	public static function getByDocId($radix, $doc_id)
 	{
 		static::preload();
-		$result = array();
+		$result = [];
 
 		foreach(static::$preloaded as $item)
 		{
@@ -236,7 +236,7 @@ class Report extends \Model\Model_Base
 	public static function getByMediaId($radix, $media_id)
 	{
 		static::preload();
-		$result = array();
+		$result = [];
 
 		foreach(static::$preloaded as $item)
 		{
@@ -353,14 +353,14 @@ class Report extends \Model\Model_Base
 
 		$new->created = time();
 
-		\DC::forge()->insert('reports', array(
+		\DC::forge()->insert('reports', [
 			'board_id' => $new->board_id,
 			'doc_id' => $new->doc_id,
 			'media_id' => $new->media_id,
 			'reason' => $new->reason,
 			'ip_reporter' => $new->ip_reporter,
 			'created' => $new->created,
-		));
+		]);
 
 		static::clearCache();
 

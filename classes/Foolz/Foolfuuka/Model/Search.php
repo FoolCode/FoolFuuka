@@ -171,7 +171,7 @@ class Search extends Board
 			\Radix::preload(TRUE);
 			foreach ($args['boards'] as $board)
 			{
-				$b = \Radix::get_by_shortname($board);
+				$b = \Radix::getByShortname($board);
 				if ($b)
 				{
 					$boards[] = $b;
@@ -182,7 +182,7 @@ class Search extends Board
 		if (empty($boards))
 		{
 			\Radix::preload(TRUE);
-			$boards = \Radix::get_all();
+			$boards = \Radix::getAll();
 		}
 
 		// if image is set, get either media_hash or media_id
@@ -409,9 +409,9 @@ class Search extends Board
 
 			foreach ($search as $post => $result)
 			{
-				$board = \Radix::get_by_id($result['board']);
+				$board = \Radix::getById($result['board']);
 				$sub = \DB::select('*', \DB::expr($result['board'] . ' AS board_id'))
-					->from(\DB::expr(\Radix::get_table($board)));
+					->from(\DB::expr($board->getTable()));
 				static::sql_media_join($sub, $board);
 				static::sql_extra_join($sub, $board);
 				$sql[] = '('.$sub->where('doc_id', '=', $result['id']).')';
@@ -439,13 +439,13 @@ class Search extends Board
 			if ($args["text"] || $args['filename'])
 			{
 				// we're using fulltext fields, we better start from this
-				$query = \DB::select(\DB::expr(\Radix::get_table($this->_radix, '_search').'.`doc_id`'))
-					->from(\DB::expr(\Radix::get_table($this->_radix, '_search')));
+				$query = \DB::select(\DB::expr($this->_radix->getTable('_search').'.`doc_id`'))
+					->from(\DB::expr($this->_radix->getTable('_search')));
 
 				if($args['text'])
 				{
 					$query->where(
-						\DB::expr('MATCH ('.\Radix::get_table($this->_radix, '_search').'.`comment`) '.
+						\DB::expr('MATCH ('.$this->_radix->getTable('_search').'.`comment`) '.
 							'AGAINST ('.\DB::escape($args['text']).' IN BOOLEAN MODE)'),
 						\DB::expr(''), \DB::expr(''));
 				}
@@ -453,7 +453,7 @@ class Search extends Board
 				if($args['filename'])
 				{
 					$query->where(\DB::expr(
-						'MATCH ('.\Radix::get_table($this->_radix, '_search').'.`media_filename`) '.
+						'MATCH ('.$this->_radix->getTable('_search').'.`media_filename`) '.
 							'AGAINST ('.\DB::escape($args['filename']).' IN BOOLEAN MODE)'),
 						\DB::expr(''), \DB::expr(''));
 				}
@@ -481,7 +481,7 @@ class Search extends Board
 			foreach (array('*', 'COUNT(*) as count') as $select_key => $select)
 			{
 				$query = \DB::select(\DB::expr($select))
-					->from(\DB::expr(\Radix::get_table($this->_radix)));
+					->from(\DB::expr($this->_radix->getTable()));
 
 				static::sql_media_join($query, $this->_radix);
 				static::sql_extra_join($query, $this->_radix);
@@ -568,12 +568,12 @@ class Search extends Board
 				if ($args['filter'] == 'image')
 				{
 					// gotta use the expr else it will be confused on which media_id to use
-					$query->where(\DB::expr(\Radix::get_table($this->_radix).'.media_id'), '=', 0);
+					$query->where(\DB::expr($this->_radix->getTable().'.media_id'), '=', 0);
 					//$this->db->use_index('media_id_index');
 				}
 				if ($args['filter'] == 'text')
 				{
-					$query->where(\DB::expr(\Radix::get_table($this->_radix).'.media_id'), '<>', 0);
+					$query->where(\DB::expr($this->_radix->getTable().'.media_id'), '<>', 0);
 					//$this->db->use_index('media_id_index');
 				}
 				if ($args['start'])
@@ -617,7 +617,7 @@ class Search extends Board
 
 		foreach ($result as $item)
 		{
-			$board = $this->_radix !== null ? $this->_radix : \Radix::get_by_id($item->board_id);
+			$board = $this->_radix !== null ? $this->_radix : \Radix::getById($item->board_id);
 			$this->_comments_unsorted[] = \Comment::forge($item, $board);
 		}
 

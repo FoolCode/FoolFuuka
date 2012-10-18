@@ -179,7 +179,7 @@ class Media extends \Model\Model_Base
 	protected static function p_get_by($board, $where, $value, $op = 0)
 	{
 		$result = \DB::select()
-			->from(\DB::expr(\Radix::get_table($board, '_images')))
+			->from(\DB::expr($board->getTable('_images')))
 			->where($where, $value)
 			->as_object()
 			->execute()
@@ -214,7 +214,7 @@ class Media extends \Model\Model_Base
 	protected static function p_get_by_filename($board, $filename)
 	{
 		$result = \DB::select('media_id')
-			->from(\DB::expr(\Radix::get_table($board)))
+			->from(\DB::expr($board->getTable()))
 			->where('media_orig', '=', $filename)
 			->as_object()
 			->execute()
@@ -765,7 +765,7 @@ class Media extends \Model\Model_Base
 	{
 		if ( ! $global)
 		{
-			\DB::update(\DB::expr(\Radix::get_table($this->board, '_images')))
+			\DB::update(\DB::expr($this->board->getTable('_images')))
 				->where('media_id', $this->media_id)
 				->value('banned', 1)
 				->execute();
@@ -789,12 +789,12 @@ class Media extends \Model\Model_Base
 				->execute();
 		}
 
-		foreach (\Radix::get_all() as $radix)
+		foreach (\Radix::getAll() as $radix)
 		{
 			try
 			{
 				$media = \Media::get_by_media_hash($radix, $this->media_hash);
-				\DB::update(\DB::expr(\Radix::get_table($radix, '_images')))
+				\DB::update(\DB::expr($radix->getTable('_images')))
 					->where('media_id', $media->media_id)
 					->value('banned', 1)
 					->execute();
@@ -802,7 +802,7 @@ class Media extends \Model\Model_Base
 			}
 			catch (MediaNotFoundException $e)
 			{
-				\DB::insert(\DB::expr(\Radix::get_table($radix,'_images')))
+				\DB::insert(\DB::expr($radix->getTable('_images')))
 					->set(array('media_hash' => $this->media_hash, 'banned' => 1))
 					->execute();
 			}
@@ -851,6 +851,7 @@ class Media extends \Model\Model_Base
 			$duplicate = static::get_by_media_hash($this->board, $this->media_hash);
 
 			// we want the current media to work with the same filenames as previously stored
+			$this->media_id = $duplicate->media_id;
 			$this->media = $duplicate->media;
 			$this->preview_op = $duplicate->preview_op;
 			$this->preview_reply = $duplicate->preview_reply;
@@ -867,7 +868,7 @@ class Media extends \Model\Model_Base
 
 				// we don't have to worry about archives with weird timestamps, we can't post images there
 				$duplicate_entry = \DB::select(\DB::expr('COUNT(*) as count'), 'timestamp')
-					->from(\DB::expr(\Radix::get_table($this->board)))
+					->from(\DB::expr($this->board->getTable()))
 					->where('media_id', '=', $duplicate->media_id)
 					->where('timestamp', '>', time() - $this->board->min_image_repost_time)
 					->order_by('timestamp', 'desc')
@@ -922,7 +923,9 @@ class Media extends \Model\Model_Base
 			{}
 		}
 		catch (MediaNotFoundException $e)
-		{}
+		{
+
+		}
 
 		if ($do_thumb)
 		{
@@ -996,6 +999,43 @@ class Media extends \Model\Model_Base
 					$this->exif = $exif;
 				}
 			}
+		}
+
+		if ( ! $this->media_id)
+		{
+			$this->media_id = \DC::forge()->insert($this->board->getTable('_images'), [
+				'media_hash' => $this->media_hash,
+				'media' => $this->media_orig,
+				'preview_op' => $this->op ? $this->preview_orig : null,
+				'preview_reply' => ! $this->op ? $this->preview_orig : null,
+				'total' => 1,
+				'banned' => false,
+			]);
+		}
+		else
+		{
+			$query = \DC::qb()
+				->update($this->board->getTable('_images'));
+			if ($this->media === null)
+			{
+				$query->set('media', ':media_orig')
+					->setParameter(':media_orig', $this->preview_orig);
+			}
+			if ($this->op && $this->preview_op === null)
+			{
+				$query->set('preview_op', ':preview_orig')
+				->setParameter(':preview_orig', $this->preview_orig);
+			}
+			if ( ! $this->op && $this->preview_reply === null)
+			{
+				$query->set('preview_reply', ':preview_orig')
+				->setParameter(':preview_orig', $this->preview_orig);
+			}
+			$query->set('total', 'total + 1');
+
+			$query->where('media_id = :media_id')
+				->setParameter(':media_id', $this->media_id)
+				->execute();
 		}
 
 		return $this;

@@ -14,10 +14,7 @@ class Controller_Chan extends \Controller_Common
 	{
 		parent::before();
 
-		$this->_theme = \Theme::forge('foolfuuka');
-		$this->_theme->set_module('foolfuuka');
-		$this->_theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
-		$this->_theme->set_layout('chan');
+		$this->_theme = \Theme::instance('foolfuuka');
 
 		$pass = \Cookie::get('reply_password');
 		$name = \Cookie::get('reply_name');
@@ -90,7 +87,7 @@ class Controller_Chan extends \Controller_Common
 		if (isset($segments[0]) && $segments[0] !== '_')
 		{
 
-			$this->_radix = \Radix::set_selected_by_shortname($method);
+			$this->_radix = \Radix::setSelectedByShortname($method);
 
 			if ($this->_radix)
 			{
@@ -519,7 +516,7 @@ class Controller_Chan extends \Controller_Common
 		// Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
 		$page = intval($page);
 		return \Response::redirect(\Uri::create(array(
-			\Radix::get_selected()->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page)), 'location', 301);
+			$this->_radix->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page)), 'location', 301);
 	}
 
 
@@ -659,7 +656,7 @@ class Controller_Chan extends \Controller_Common
 
 							// avoid setting this if we're just searching on all the boards
 							$sphinx_boards = array();
-							foreach (\Radix::get_all() as $k => $b)
+							foreach (\Radix::getAll() as $k => $b)
 							{
 								if ($b->sphinx)
 								{
@@ -1102,7 +1099,7 @@ class Controller_Chan extends \Controller_Common
 			try
 			{
 				$data['poster_ip'] = \Input::ip_decimal();
-				$comment = \Comment::forge((object) $data, $this->_radix, array('clean' => false));
+				$comment = \CommentInsert::forge((object) $data, $this->_radix, array('clean' => false));
 				$comment->media = $media;
 				$comment->insert();
 			}

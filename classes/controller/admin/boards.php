@@ -22,7 +22,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 	public function action_manage()
 	{
 		$this->_views['method_title'] = __('Manage');
-		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/boards/manage', array('boards' => \Radix::get_all()));
+		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/boards/manage', array('boards' => \Radix::getAll()));
 
 		return \Response::forge(\View::forge('admin/default', $this->_views));
 	}
@@ -33,7 +33,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 		\Radix::preload(true);
 
 		$this->_views['method_title'] = __('Login');
-		$this->_views['main_content_view'] = \View::forge('admin/form_creator', array('form' => \Radix::get_all()));
+		$this->_views['main_content_view'] = \View::forge('admin/form_creator', array('form' => \Radix::getAll()));
 
 		return \Response::forge(\View::forge('admin/default', $this->_views));
 	}
@@ -76,7 +76,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 			}
 		}
 
-		$board = \Radix::get_by_shortname($shortname);
+		$board = \Radix::getByShortname($shortname);
 		if ($board === FALSE)
 		{
 			throw new \HttpNotFoundException;
@@ -150,7 +150,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 
 	function action_search_table($type = FALSE, $id = 0)
 	{
-		$board = \Radix::get_by_id($id);
+		$board = \Radix::getById($id);
 		if ($board == FALSE)
 		{
 			throw new \HttpNotFoundException;
@@ -165,7 +165,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 			switch ($type)
 			{
 				case("create"):
-					if ( ! \Radix::create_search($board))
+					if ( ! \Radix::createSearch($board))
 					{
 						\Notices::set_flash('error', sprintf(__('Failed to create the search table for the board %s.'), $board->shortname));
 					}
@@ -178,7 +178,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 					break;
 
 				case("remove"):
-					if ( ! \Radix::remove_search($board))
+					if ( ! \Radix::removeSearch($board))
 					{
 						\Notices::set_flash('error', sprintf(__('Failed to remove the search table for the board %s.'), $board->shortname));
 					}
@@ -226,7 +226,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 
 	function action_delete($type = FALSE, $id = 0)
 	{
-		$board = \Radix::get_by_id($id);
+		$board = \Radix::getById($id);
 		if ($board == FALSE)
 		{
 			throw new \HttpNotFoundException;

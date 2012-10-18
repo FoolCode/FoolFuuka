@@ -7,16 +7,16 @@ class Fool
 	public function run()
 	{
 		\Cli::write('--'.__('FoolFuuka module management.'));
-		
+
 		$sections = array('database', 'boards');
 
 		$sections = \Foolz\Plugin\Hook::forge('ff.task.fool.run.sections.alter')
 			->setParam('array', array('database', 'board'))
 			->execute()
 			->get(array('database', 'board'));
-		
+
 		$section = \Cli::prompt('  '.__('Select the section.'), $sections);
-		
+
 		if (method_exists($this, 'cli_'.$section.'_help'))
 		{
 			$this->{'cli_'.$section.'_help'}();
@@ -26,7 +26,7 @@ class Fool
 			\Foolz\Plugin\Hook::forge('ff.task.fool.run.sections.call_help.'.$section)
 				->execute();
 		}
-		
+
 		$done = false;
 		while(!$done)
 		{
@@ -45,14 +45,14 @@ class Fool
 					->get($parameters);
 			}
 		}
-		
+
 		\Cli::write(__('Goodbye.'));
 	}
-	
+
 	public function cli_database_help()
 	{
 		\Cli::write('  --'.__('FoolFrame database management commands'));
-		
+
 		\Cli::write('    create_search <board_shortname>             Creates the _search table necessary if you don\'t have SphinxSearch');
 		\Cli::write('    drop_search <board_shortname>               Drops the _search table, good idea if you don\'t need it anymore after implementing SphinxSearch');
 		\Cli::write('    create_extra <board_shortname>              Creates the _extra table for the board');
@@ -60,7 +60,7 @@ class Fool
 		\Cli::write('    recreate_triggers <board_shortname>         Recreate triggers for the selected board.');
 		\Cli::write('    recheck_banned [<board_shortname>]          Try deleting banned images, if there\'s any left.');
 	}
-	
+
 	public function cli_database($parameters)
 	{
 		switch($parameters[0])
@@ -76,52 +76,55 @@ class Fool
 					\Cli::write(__('Missing parameter.'));
 					return false;
 				}
-				$board = \Radix::get_by_shortname($parameters[1]);
+				$board = \Radix::getByShortname($parameters[1]);
 				if(!$board)
 				{
 					\Cli::write(__('Board doesn\'t exist.'));
 					return false;
 				}
 				if ($parameters[0] == 'create_search')
-					\Radix::create_search($board);
+					$board->createSearch($board);
 				if ($parameters[0] == 'remove_search')
-					\Radix::remove_search($board);
+					$board->removeSearch($board);
 				if ($parameters[0] == 'create_extra')
-					\Radix::mysql_create_extra($board);
+					$board->mysqlCreateExtra($board);
 				if ($parameters[0] == 'mysql_convert_utf8mb4')
-					\Radix::mysql_change_charset($board);
+					$board->mysqlChangeCharset($board);
 				if ($parameters[0] == 'recreate_triggers')
 				{
-					\Radix::mysql_remove_triggers($board);
-					\Radix::mysql_create_triggers($board);
+					$board->mysqlRemoveTriggers($board);
+					$board->mysqlCreateTriggers($board);
 				}
 				break;
 
+			/** @todo reimplement recheck banned
 			case 'recheck_banned':
 				if(isset($parameters[1]))
 				{
-					$board = \Radix::get_by_shortname($parameters[1]);
+					$board = \Radix::getByShortname($parameters[1]);
 					if(!$board)
 					{
 						\Cli::write(__('Board doesn\'t exist.'));
 						return false;
 					}
 				}
-				else 
+				else
 				{
 					$board = false;
 				}
-				\Board::recheck_banned($board);
+				\Board::recheckBanned($board);
 				break;
+			 *
+			 */
 
 			default:
 				\Cli::write(__('Bad command.'));
 				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public function cli_boards_help()
 	{
 		\Cli::write('  --'.__('FoolFrame board management commands'));
@@ -131,7 +134,7 @@ class Fool
 		\Cli::write('                                      <set> can be \'archives\', \'boards\' or \'all\'');
 		\Cli::write('    remove_leftover_dirs              Removes the _removed directories');
 	}
-	
+
 	public function cli_boards($parameters)
 	{
 		switch($parameters[0])
@@ -142,7 +145,7 @@ class Fool
 					\Cli::write(__('Missing parameter.'));
 					return false;
 				}
-				$board = \Radix::get_by_shortname($parameters[1]);
+				$board = \Radix::getByShortname($parameters[1]);
 				if(!$board)
 				{
 					\Cli::write(__('Board doesn\'t exist.'));
@@ -163,11 +166,11 @@ class Fool
 					return false;
 				}
 				if($parameters[1] == 'all')
-					$board = \Radix::get_all();
+					$board = \Radix::getAll();
 				else if ($parameters[1] == 'boards')
-					$board = \Radix::get_archives();
+					$board = \Radix::getArchives();
 				else if ($parameters[1] == 'archives')
-					$board = \Radix::get_boards();
+					$board = \Radix::getBoards();
 				else return false;
 				if(!isset($parameters[2]))
 				{
@@ -181,12 +184,12 @@ class Fool
 
 			case 'remove_leftover_dirs':
 				// TRUE echoes the removed files
-				\Radix::remove_leftover_dirs(TRUE);
+				\Radix::removeLeftoverDirs(TRUE);
 				break;
-			
+
 			default:
 				\Cli::write(__('Bad command.'));
 				return false;
 		}
 	}
-}	
+}

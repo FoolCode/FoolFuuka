@@ -7,6 +7,7 @@ $model_dir = APPPATH.'modules/foolfuuka/classes/Foolz/Foolfuuka/Model/';
 	'Foolz\Foolfuuka\Model\Board' => $model_dir.'Board.php',
 	'Foolz\Foolfuuka\Model\Search' => $model_dir.'Search.php',
 	'Foolz\Foolfuuka\Model\Comment' => $model_dir.'Comment.php',
+	'Foolz\Foolfuuka\Model\CommentInsert' => $model_dir.'CommentInsert.php',
 	'Foolz\Foolfuuka\Model\Media' => $model_dir.'Media.php',
 	'Foolz\Foolfuuka\Model\Extra' => $model_dir.'Extra.php',
 	'Foolz\Foolfuuka\Model\Report' => $model_dir.'Report.php',
@@ -38,3 +39,8 @@ if (\Auth::has_access('comment.reports'))
 {
 	\Foolz\Foolfuuka\Model\Report::preload();
 }
+
+$theme = \Theme::forge('foolfuuka');
+$theme->set_module('foolfuuka');
+$theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
+$theme->set_layout('chan');

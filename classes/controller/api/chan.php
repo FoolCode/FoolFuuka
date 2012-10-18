@@ -12,7 +12,7 @@ class Controller_Api_Chan extends \Controller_Rest
 	public function before()
 	{
 		parent::before();
-			
+
 		header("Access-Control-Allow-Origin: *");
 		header('Access-Control-Allow-Credentials: true');
 		header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -38,14 +38,6 @@ class Controller_Api_Chan extends \Controller_Rest
 			}
 
 			\Response::redirect($uri);
-		}
-		
-		if ($theme = \Input::get('theme', \Input::post('theme', false)))
-		{
-			$this->_theme = \Theme::forge('foolfuuka');
-			$this->_theme->set_module('foolfuuka');
-			$this->_theme->set_theme($theme);
-			$this->_theme->set_layout('chan');
 		}
 	}
 

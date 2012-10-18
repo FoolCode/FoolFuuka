@@ -14,10 +14,7 @@ class Controller_Chan extends \Controller_Common
 	{
 		parent::before();
 
-		$this->_theme = \Theme::forge('foolfuuka');
-		$this->_theme->set_module('foolfuuka');
-		$this->_theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
-		$this->_theme->set_layout('chan');
+		$this->_theme = \Theme::instance('foolfuuka');
 
 		$pass = \Cookie::get('reply_password');
 		$name = \Cookie::get('reply_name');

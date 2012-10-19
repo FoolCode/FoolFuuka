@@ -1003,7 +1003,7 @@ class Media extends \Model\Model_Base
 
 		if ( ! $this->media_id)
 		{
-			$this->media_id = \DC::forge()->insert($this->board->getTable('_images'), [
+			 \DC::forge()->insert($this->board->getTable('_images'), [
 				'media_hash' => $this->media_hash,
 				'media' => $this->media_orig,
 				'preview_op' => $this->op ? $this->preview_orig : null,
@@ -1011,6 +1011,8 @@ class Media extends \Model\Model_Base
 				'total' => 1,
 				'banned' => false,
 			]);
+
+			$this->media_id = \DC::forge()->lastInsertId();
 		}
 		else
 		{

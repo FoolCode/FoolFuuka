@@ -64,7 +64,7 @@ class CommentInsert extends Comment
 				->set('images', 'images + :images')
 				->set('sage', 'sage + :sage')
 				->set('anons', 'anons + :anons')
-				->set('trip', 'trips + :trips')
+				->set('trips', 'trips + :trips')
 				->set('names', 'names + :names')
 				->where('day = :day')
 				->setParameter(':day', $item['day'])
@@ -144,41 +144,53 @@ class CommentInsert extends Comment
 			\DC::forge()->insert($this->radix->getTable('_threads'), [
 				'thread_num' => $this->num,
 				'time_op' => $this->timestamp,
+				'time_last' => $this->timestamp,
 				'time_bump' => $this->timestamp,
 				'time_ghost' => null,
 				'time_ghost_bump' => null,
 				'nreplies' => 1,
-				'nimages' => (int) ($this->media !== null)
+				'nimages' => ($this->media->media_id ? 1 : 0)
 			]);
 		}
 		else
 		{
 			if ( ! $this->subnum)
 			{
-				\DC::qb()
+				$query = \DC::qb()
 					->update($this->radix->getTable('_threads'))
-					->set('time_bump', 'GREATEST(time_bump, :time_bump)')
+					->set('time_last', 'GREATEST(time_last, :time_last)')
 					->set('nreplies', 'nreplies + 1')
-					->set('nimages', 'nimages + '. (int) ($this->media !== null))
-					->where('thread_num = :thread_num')
-					->setParameter(':time_bump', $this->timestamp)
-					->setParameter(':thread_num', $this->thread_num)
-					->setParameter(':thread_num', $this->thread_num)
-					->execute();
+					->set('nimages', 'nimages + '. ($this->media->media_id ? 1 : 0))
+					->setParameter(':time_last', $this->timestamp);
+
+				if ($this->email !== 'sage')
+				{
+					$query
+						->set('time_bump', 'GREATEST(time_bump, :time_bump)')
+						->setParameter(':time_bump', $this->timestamp);
+				}
+
 			}
 			else
 			{
-				\DC::qb()
+				$query = \DC::qb()
 					->update($this->radix->getTable('_threads'))
 					->set('time_ghost', 'COALESCE(time_ghost, :time_ghost)')
-					->set('time_ghost_bump', 'GREATEST(COALESCE(time_ghost_bump, 0), :time_ghost_bump)')
 					->set('nreplies', 'nreplies + 1')
-					->where('thread_num = :thread_num')
-					->setParameter(':time_ghost', $this->timestamp)
-					->setParameter(':time_ghost_bump', $this->timestamp)
-					->setParameter(':thread_num', $this->thread_num)
-					->execute();
+					->setParameter(':time_ghost', $this->timestamp);
+
+				if ($this->email !== 'sage')
+				{
+					$query
+						->set('time_ghost_bump', 'GREATEST(COALESCE(time_ghost_bump, 0), :time_ghost_bump)')
+						->setParameter(':time_ghost_bump', $this->timestamp);
+				}
 			}
+
+			$query
+				->where('thread_num = :thread_num')
+				->setParameter(':thread_num', $this->thread_num)
+				->execute();
 		}
 		\DC::forge()->commit();
 	}
@@ -599,11 +611,11 @@ class CommentInsert extends Comment
 			try
 			{
 				\DB::start_transaction();
-
+				
 				list($last_id, $num_affected) =
 					\DB::insert(\DB::expr($this->radix->getTable()))
-					->set(array(
-						'media_id' => $this->media !== null ? $this->media->media_id : 0,
+					->set([
+						'media_id' => $this->media->media_id ? $this->media->media_id : 0,
 						'num' => $num,
 						'subnum' => $subnum,
 						'thread_num' => $thread_num,
@@ -630,7 +642,7 @@ class CommentInsert extends Comment
 						'media_hash' => $this->media->media_hash,
 						'media_orig' => $this->media->media_orig,
 						'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
-					))->execute();
+					])->execute();
 
 				// check that it wasn't posted multiple times
 				$check_duplicate = \DB::select()->from(\DB::expr($this->radix->getTable()))

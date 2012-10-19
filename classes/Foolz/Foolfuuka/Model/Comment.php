@@ -893,22 +893,30 @@ class Comment extends \Model\Model_Base
 			}
 		}
 
-		\DB::start_transaction();
+		\DC::forge()->beginTransaction();
 
 		// remove message
-		\DB::delete(\DB::expr($this->radix->getTable()))->where('doc_id', $this->doc_id)->execute();
+		\DC::qb()
+			->delete($this->radix->getTable())
+			->where('doc_id = :doc_id')
+			->setParameter(':doc_id', $this->doc_id)
+			->execute();
 
 		// remove its extras
-		\DB::delete(\DB::expr($this->radix->getTable('_extra')))->where('extra_id', $this->doc_id)->execute();
-
-		// remove message search entry
-		if($this->radix->myisam_search)
-		{
-			\DB::delete(\DB::expr($this->radix->getTable('_search')))->where('doc_id', $this->doc_id)->execute();
-		}
+		\DC::qb()
+			->delete($this->radix->getTable('_extra'))
+			->where('extra_id = :doc_id')
+			->setParameter(':doc_id', $this->doc_id)
+			->execute();
 
 		// remove message reports
-		$reports_affected = \DB::delete('reports')->where('board_id', $this->radix->id)->where('doc_id', $this->doc_id)->execute();
+		$reports_affected = \DC::qb()
+			->delete(\DC::p('reports'))
+			->where('board_id = :board_id')
+			->andWhere('doc_id = :doc_id')
+			->setParameter(':board_id', $this->radix->id)
+			->setParameter(':doc_id', $this->doc_id)
+			->execute();
 		if ($reports_affected > 0)
 		{
 			\Report::clearCache();
@@ -917,24 +925,63 @@ class Comment extends \Model\Model_Base
 		// remove its image file
 		if (isset($this->media))
 		{
+			\DC::qb()
+				->update($this->radix->getTable('_images'))
+				->set('total', 'total - 1')
+				->where('media_id = :media_id')
+				->setParameter(':media_id', $this->media->media_id)
+				->execute();
+
 			$this->media->delete();
 		}
+
+		$item = [
+			'day' => floor(($this->timestamp/86400)*86400),
+			'images' => (int) ($this->media !== null),
+			'sage' => (int) ($this->email === 'sage'),
+			'anons' => (int) ($this->name === $this->radix->anonymous_default_name && $this->trip === null),
+			'trips' => (int) ($this->trip !== null),
+			'names' => (int) ($this->name !== $this->radix->anonymous_default_name || $this->trip !== null)
+		];
+
+		\DC::qb()
+			->update($this->radix->getTable('_daily'))
+			->set('images', 'images - :images')
+			->set('sage', 'sage - :sage')
+			->set('anons', 'anons - :anons')
+			->set('trips', 'trips - :trips')
+			->set('names', 'names - :names')
+			->where('day = :day')
+			->setParameter(':day', $item['day'])
+			->setParameter(':images', $item['images'])
+			->setParameter(':sage', $item['sage'])
+			->setParameter(':anons', $item['anons'])
+			->setParameter(':trips', $item['trips'])
+			->setParameter(':names', $item['names'])
+			->execute();
 
 		// if it's OP delete all other comments
 		if ($this->op)
 		{
-			$replies = \DB::select('doc_id')
-				->from(\DB::expr($this->radix->getTable()))
-				->where('thread_num', $this->thread_num)
-				->as_object()
+			\DC::qb()
+				->delete($this->radix->getTable('_threads'))
+				->where('thread_num = :thread_num')
+				->setParameter(':thread_num', $this->thread_num)
+				->execute();
+
+			$replies = \DC::qb()
+				->select('doc_id')
+				->from($this->radix->getTable(), 'b')
+				->where('thread_num = :thread_num')
+				->setParameter(':thread_num', $this->thread_num)
 				->execute()
-				->as_array();
+				->fetchAll();
 
 			foreach ($replies as $reply)
 			{
 				$comments = \Board::forge()
 					->get_post()
-					->set_options('doc_id', $reply->doc_id)
+					->set_options('doc_id', $reply['doc_id'])
 					->set_radix($this->radix)
 					->get_comments();
 
@@ -942,10 +989,74 @@ class Comment extends \Model\Model_Base
 				$comment->delete(null, true);
 			}
 		}
+		else
+		{
+			// To ensure consistency we LOCK the ROW with FOR UPDATE clause (in a crude way, but it should work)
+			$sql = \DC::qb()
+				->select('*')
+				->from($this->radix->getTable(), 't')
+				->join('t', $this->radix->getTable('_threads'), 'u', 't.thread_num = u.thread_num')
+				->where('t.thread_num = :thread_num')
+				->getSQL()
+				.' '.\DC::forge()->getDatabasePlatform()->getForUpdateSQL();
 
-		\DB::commit_transaction();
+			$posts = \DC::forge()->executeQuery($sql, [':thread_num' => $this->thread_num])
+				->fetchAll();
+
+			$post_op = null;
+			$time_last = null;
+			$time_bump = null;
+			$time_ghost = null;
+			$time_ghost_bump = null;
+			foreach ($posts as $post)
+			{
+				if ($post['op'])
+				{
+					$post_op = $post;
+				}
+
+				if ( ! $post['subnum'] && $time_last < $post['timestamp'])
+				{
+					$time_last = $post['timestamp'];
+				}
+
+				if ( ! $post['subnum'] && $time_bump < $post['timestamp'] && $post['email'] !== 'sage')
+				{
+					$time_bump = $post['timestamp'];
+				}
+
+				if ($post['subnum'] > 0)
+				{
+					if ($time_ghost === null || $time_ghost > $post['timestamp'])
+					{
+						$time_ghost = $post['timestamp'];
+					}
+
+					if ($time_ghost_bump === null || $time_ghost_bump < $post['timestamp'])
+					{
+						$time_ghost_bump = $post['timestamp'];
+					}
+				}
+			}
+
+			// update the thread timers
+			\DC::qb()
+				->update($this->radix->getTable('_threads'))
+				->set('time_last', ':time_last')
+				->set('time_bump', ':time_bump')
+				->set('time_ghost', ':time_ghost')
+				->set('time_ghost_bump', ':time_ghost_bump')
+				->where('thread_num = :thread_num')
+				->setParameter(':time_last', $time_last)
+				->setParameter(':time_bump', $time_bump)
+				->setParameter(':time_ghost', $time_ghost)
+				->setParameter(':time_ghost_bump', $time_ghost_bump)
+				->setParameter(':thread_num', $this->thread_num)
+				->execute();
+		}
+
+		\DC::forge()->commit();
 	}
-
 
 	/**
 	 * Processes the name with unprocessed tripcode and returns name and processed tripcode

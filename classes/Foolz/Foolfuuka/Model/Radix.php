@@ -43,7 +43,7 @@ class Radix //extends \Model_Base
 						->setParameter(':id', $input['id'])
 						->execute()
 						->fetch();
-\Debug::dump($row['count']);
+
 					if ($row['count'] != 1)
 					{
 						return [

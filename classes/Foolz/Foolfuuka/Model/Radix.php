@@ -474,7 +474,7 @@ class Radix //extends \Model_Base
 	 * Saves the data for a board. Plains the structure, runs the validation.
 	 * If 'id' is not set, it creates a new board.
 	 *
-	 * @param type $data
+	 * @param  array  $data  Associative array with the values for the structure
 	 */
 	public static function save($data)
 	{
@@ -579,8 +579,10 @@ class Radix //extends \Model_Base
 		{
 			if ( ! $radix = static::getById($data['id']))
 			{
-				throw new HttpNotFoundException;
+				// @todo proper error
+				return;
 			}
+
 			\DC::forge()->beginTransaction();
 
 			// save normal values
@@ -639,9 +641,9 @@ class Radix //extends \Model_Base
 	/**
 	 * Insert custom preferences. One must use this for "internal" preferences
 	 *
-	 * @param int|stdClass $board_id can also be the board object
-	 * @param string $name
-	 * @param int|string|bool $value
+	 * @param  \Foolz\Foolfuuka\Model\Radix|int  $board_id  can also be the board object
+	 * @param  string  $name   The name of the value to insert
+	 * @param  mixed   $value
 	 */
 	public static function savePreferences($board_id, $name, $value)
 	{
@@ -693,13 +695,13 @@ class Radix //extends \Model_Base
 	 * Removes the board and renames its dir with a _removed suffix and with a number
 	 * in case of collision
 	 *
-	 * @param type $id the ID of the board
-	 * @return boolean TRUE on success, FALSE on failure
+	 * @return  boolean  TRUE on success, FALSE on failure
 	 */
 	public function remove()
 	{
 		// always remove the triggers first
 		$this->removeTriggers();
+		\DC::forge()->beginTransaction();
 		\DC::qb()
 			->delete('boards_preferences')
 			->where('board_id = :id')
@@ -733,6 +735,7 @@ class Radix //extends \Model_Base
 
 		// for huge boards, this may time out with PHP, while MySQL will keep going
 		$this->removeTables();
+		\DC::forge()->commit();
 		static::clearCache();
 	}
 
@@ -740,8 +743,9 @@ class Radix //extends \Model_Base
 	/**
 	 * Maintenance function to remove leftover _removed folders
 	 *
-	 * @param type $echo echo CLI output
-	 * @return boolean TRUE on success, FALSE on failure
+	 * @param   boolean  $echo  echo CLI output
+	 *
+	 * @return  boolean  TRUE on success, FALSE on failure
 	 */
 	public static function removeLeftoverDirs($echo = FALSE)
 	{
@@ -808,9 +812,6 @@ class Radix //extends \Model_Base
 
 	/**
 	 * Puts the table in readily available variables
-	 *
-	 * @param bool $preferences if TRUE it loads all the extra preferences for all the boards
-	 * @return FALSE if there is no boards, TRUE otherwise
 	 */
 	protected static function preload()
 	{
@@ -934,8 +935,9 @@ class Radix //extends \Model_Base
 	/**
 	 * Set a radix for contiguous use
 	 *
-	 * @param type $shortname the board shortname
-	 * @return bool|object FALSE on failure, else the board object
+	 * @param   string  $shortname  the board shortname
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Radix  false on failure, else the board object
 	 */
 	public static function setSelectedByShortname($shortname)
 	{
@@ -954,7 +956,7 @@ class Radix //extends \Model_Base
 	/**
 	 * Returns the object of the selected radix
 	 *
-	 * @return bool|object FALSE if not set, else the board object
+	 * @return \Foolz\Foolfuuka\Model\Radix  false if not set, else the Radix object
 	 */
 	public static function getSelected()
 	{
@@ -970,7 +972,7 @@ class Radix //extends \Model_Base
 	/**
 	 * Returns all the radixes as array of objects
 	 *
-	 * @return array the objects of the preloaded radixes
+	 * @return  \Foolz\Foolfuuka\Model\Radix[]  the objects of the preloaded radixes
 	 */
 	public static function getAll()
 	{
@@ -982,8 +984,9 @@ class Radix //extends \Model_Base
 	/**
 	 * Returns the single radix
 	 *
-	 * @param int $radix_id the ID of the board
-	 * @return object the board object
+	 * @param   int  $radix_id  the ID of the board
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Radix  false on failure, else the board object
 	 */
 	public static function getById($radix_id)
 	{
@@ -1001,10 +1004,11 @@ class Radix //extends \Model_Base
 	/**
 	 * Returns the single radix by type selected
 	 *
-	 * @param string $value the value searched
-	 * @param string $type the variable name on which to match
-	 * @param bool $switch TRUE if it must be equal or FALSE if not equal
-	 * @return bool|object FALSE if not found or the board object
+	 * @param  string   $value   the value searched
+	 * @param  string   $type    the variable name on which to match
+	 * @param  boolean  $switch  true if it must be equal or false if not equal
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Radix  false if not found or the board object
 	 */
 	public static function getByType($value, $type, $switch = true)
 	{
@@ -1025,7 +1029,7 @@ class Radix //extends \Model_Base
 	/**
 	 * Returns the single radix by shortname
 	 *
-	 * @return object the board with the shortname
+	 * @return  \Foolz\Foolfuuka\Model\Radix  the board with the shortname, false if not found
 	 */
 	public static function getByShortname($shortname)
 	{
@@ -1036,9 +1040,10 @@ class Radix //extends \Model_Base
 	/**
 	 * Returns only the type specified (exam)
 	 *
-	 * @param string $type the variable name
-	 * @param boolean $switch the value to match
-	 * @return array the board objects
+	 * @param  string   $type    the variable name
+	 * @param  boolean  $switch  the value to match
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Radix[]  the Radix objects
 	 */
 	public static function filterByType($type, $switch)
 	{
@@ -1058,7 +1063,7 @@ class Radix //extends \Model_Base
 	/**
 	 * Returns an array of objects that are archives
 	 *
-	 * @return array the board objects that are archives
+	 * @return  \Foolz\Foolfuuka\Model\Radix[]  the board objects that are archives
 	 */
 	public static function getArchives()
 	{
@@ -1069,7 +1074,7 @@ class Radix //extends \Model_Base
 	/**
 	 * Returns an array of objects that are boards (not archives)
 	 *
-	 * @return array the board objects that are boards
+	 * @return  \Foolz\Foolfuuka\Model\Radix[]  the board objects that are boards
 	 */
 	public static function getBoards()
 	{
@@ -1079,9 +1084,9 @@ class Radix //extends \Model_Base
 	/**
 	 * Get the board table name with protexted identifiers
 	 *
-	 * @param string $shortname The shortname, or the whole board object
-	 * @param string $suffix board suffix like _images
-	 * @return string the table name with protected identifiers
+	 * @param   string  $suffix  board suffix like _images
+	 *
+	 * @return  string  the table name with protected identifiers
 	 */
 	public function getTable($suffix = '')
 	{
@@ -1098,8 +1103,6 @@ class Radix //extends \Model_Base
 
 	/**
 	 * Creates the tables for the board
-	 *
-	 * @param object $board the board object
 	 */
 	public function createTables()
 	{
@@ -1248,9 +1251,7 @@ class Radix //extends \Model_Base
 	}
 
 	/**
-	 * Remove the tables associated to the board
-	 *
-	 * @param object $board the board object
+	 * Remove the tables associated to the Radix
 	 */
 	public function removeTables()
 	{
@@ -1260,7 +1261,6 @@ class Radix //extends \Model_Base
 			'_threads',
 			'_users',
 			'_daily',
-			'_search',
 			'_extra'
 		];
 
@@ -1275,101 +1275,5 @@ class Radix //extends \Model_Base
 		{
 			\DC::forge()->query($query);
 		}
-	}
-
-	/**
-	 * Create the supplementary search table and fill it with the comments
-	 * Prefer this to the prefixed functions for future-proof database coverage
-	 *
-	 * @param object $board board object
-	 * @return
-	 */
-	public function createSearch()
-	{
-		/*
-		$sm = \DC::forge()->getSchemaManager();
-		$schema = $sm->createSchema();
-
-		$table_search = $schema->createTable($this->getTable('_search'));
-		$table_search->addOption('charset', 'utf8mb4');
-		$table_search->addOption('collate', 'utf8mb4_general_ci');
-		$table_search->addColumn('doc_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
-		$table_search->addColumn('num', 'integer', ['unsigned' => true]);
-		$table_search->addColumn('subnum', 'integer', ['unsigned' => true]);
-		$table_search->addColumn('thread_num', 'integer', ['unsigned' => true, 'default' => 0]);
-		$table_search->addColumn('media_filename', 'text');
-		$table_search->addColumn('comment', 'text');
-		$table_search->addPrimaryKey(['doc_id']);
-		$table_search->addIndex(['num'], 'num_index');
-		$table_search->addIndex(['subnum'], 'subnum_index');
-		$table_search->addIndex(['thread_num'], 'thread_num_subnum_index');
-		$table_search->
-
-		\DB::query("
-			CREATE TABLE IF NOT EXISTS ".$this->getTable( '_search')." (
-				doc_id int unsigned NOT NULL auto_increment,
-				num int unsigned NOT NULL,
-				subnum int unsigned NOT NULL,
-				thread_num int unsigned NOT NULL DEFAULT '0',
-				media_filename text,
-				comment text,
-
-				PRIMARY KEY (doc_id),
-				INDEX num_index (`num`),
-				INDEX subnum_index (`subnum`),
-				INDEX thread_num_subnum_index (`thread_num`),
-				FULLTEXT media_filename_fulltext(`media_filename`),
-				FULLTEXT comment_fulltext(`comment`)
-			) engine=MyISAM CHARSET=".$charset.";
-		")->execute();
-
-
-		$table_users = $schema->createTable($this->getTable('_users'));
-		$table_users->addOption('charset', $charset);
-		$table_users->addOption('collate', $collation);
-		$table_users->addColumn('user_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
-		$table_users->addColumn('name', 'string', ['length' => 100, 'default' => '']);
-		$table_users->addColumn('trip', 'string', ['length' => 25, 'default' => '']);
-		$table_users->addColumn('firstseen', 'integer', ['unsigned' => true]);
-		$table_users->addColumn('postcount', 'integer', ['unsigned' => true]);
-		$table_users->setPrimaryKey(['user_id']);
-		$table_users->addUniqueIndex(['name', 'trip'], 'name_trip_index');
-		$table_users->addIndex(['firstseen'], 'firstseen_index');
-		$table_users->addIndex(['postcount'], 'postcount_index');
-
-		// get the minumum word length
-		$word_length = static::mysql_get_min_word_length();
-
-		// save in the database the fact that this is a MyISAM
-		static::save_preferences($board->id, 'myisam_search', 1);
-
-		// fill only where there's a point to
-		\DB::query("
-			INSERT IGNORE INTO ".$this->getTable( '_search')."
-			SELECT doc_id, num, subnum, thread_num, media_filename, comment
-			FROM ".$this->getTable()."
-			WHERE
-				CHAR_LENGTH(".$this->getTable().".media_filename) > :len
-					OR
-				CHAR_LENGTH(".$this->getTable().".comment) > :len
-
-		", \DB::INSERT)->parameters(array(':len' => $word_length))->execute();
-
-		return true;
-		 *
-		 */
-	}
-
-
-	/**
-	 * Drop the _search table
-	 * Prefer this to the prefixed functions for future-proof database coverage
-	 *
-	 * @param object $board board object
-	 */
-	public function removeSearch()
-	{
-		$sm = \DC::forge()->getSchemaManager();
-		$sm->dropTable($this->getTable('_search'));
 	}
 }

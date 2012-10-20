@@ -2,7 +2,7 @@
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-foreach ($board->get_comments() as $key => $post) :
+foreach ($board->getComments() as $key => $post) :
 	if (isset($post['op'])) :
 		$op = $post['op'];
 		$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );

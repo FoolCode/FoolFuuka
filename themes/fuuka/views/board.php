@@ -13,7 +13,7 @@ if (isset($thread_id))
 
 <div class="content">
 <?php
-foreach ($board->get_comments() as $key => $post) :
+foreach ($board->getComments() as $key => $post) :
 	if (isset($post['op'])) :
 		$op = $post['op'];
 ?>

@@ -12,7 +12,7 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 	public function radix_image_html($filename)
 	{
 		// Check if $filename is valid.
-		if ( ! in_array(\Input::extension(), array('gif', 'jpg', 'png')) || ! \Board::is_natural(substr($filename, 0, 13)))
+		if ( ! in_array(\Input::extension(), array('gif', 'jpg', 'png')) || ! ctype_digit(substr($filename, 0, 13)))
 		{
 			return $this->action_404(__('The filename submitted is not compatible with the system.'));
 		}

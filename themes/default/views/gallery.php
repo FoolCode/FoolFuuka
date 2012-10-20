@@ -6,7 +6,7 @@ if (!defined('DOCROOT'))
 <div id="thread_o_matic" class="clearfix">
 <?php
 $separator = 0;
-foreach ($board->get_comments() as $k => $p) :
+foreach ($board->getComments() as $k => $p) :
 	$separator++;
 ?>
 	<article id="<?= $p->num ?>" class="thread doc_id_<?= $p->doc_id ?>">

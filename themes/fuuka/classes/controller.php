@@ -52,10 +52,10 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 				try
 				{
 					$comments = \Board::forge()
-						->get_post()
-						->set_options('doc_id', $doc_id)
-						->set_radix($this->_radix)
-						->get_comments();
+						->getPost()
+						->setOptions('doc_id', $doc_id)
+						->setRadix($this->_radix)
+						->getComments();
 
 					$comment = current($comments);
 					$comment->delete(\Input::post('delpass'));

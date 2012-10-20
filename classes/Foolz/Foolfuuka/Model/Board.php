@@ -11,16 +11,7 @@ class BoardMissingOptionsException extends BoardException {}
 
 
 /**
- * FoOlFuuka Post Model
- *
- * The Post Model deals with all the data in the board tables and
- * the media folders. It also processes the post for display.
- *
- * @package        	FoOlFrame
- * @subpackage    	FoOlFuuka
- * @category    	Models
- * @author        	FoOlRulez
- * @license         http://www.apache.org/licenses/LICENSE-2.0.html
+ * Deals with all the data in the board tables
  */
 class Board extends \Model\Model_Base
 {
@@ -28,62 +19,71 @@ class Board extends \Model\Model_Base
 	/**
 	 * Array of Comment sorted for output
 	 *
-	 * @var array
+	 * @var  \Foolz\Foolfuuka\Model\Comment[]
 	 */
-	protected $_comments = null;
+	protected $comments = null;
 
 	/**
 	 * Array of Comment in a plain array
 	 *
-	 * @var array
+	 * @var  \Foolz\Foolfuuka\Model\Comment[]
 	 */
-	protected $_comments_unsorted = null;
+	protected $comments_unsorted = null;
 
 	/**
 	 * The count of the query without LIMIT
 	 *
-	 * @var int
+	 * @var  int
 	 */
-	protected $_total_count = null;
+	protected $total_count = null;
 
 	/**
 	 * The method selected to retrieve comments
 	 *
-	 * @var string
+	 * @var  string
 	 */
-	protected $_method_fetching = null;
+	protected $method_fetching = null;
 
 	/**
 	 * The method selected to retrieve the comment's count without LIMIT
 	 *
-	 * @var string
+	 * @var  string
 	 */
-	protected $_method_counting = null;
+	protected $method_counting = null;
 
 	/**
 	 * The options to give to the retrieving method
 	 *
-	 * @var array
+	 * @var  array
 	 */
-	protected $_options = array();
+	protected $options = [];
 
 	/**
 	 * The options to give to the Comment class
 	 *
-	 * @var array
+	 * @var  array
 	 */
-	protected $_comment_options = array();
+	protected $comment_options = [];
 
 	/**
 	 * The selected Radix
 	 *
-	 * @var array
+	 * @var  \Foolz\Foolfuuka\Model\Radix
 	 */
-	protected $_radix = null;
+	protected $radix = null;
 
-	protected $_api = null;
+	/**
+	 * The options for the API. If null it means we're not using API mode
+	 *
+	 * @var  array
+	 */
+	protected $api = null;
 
-
+	/**
+	 * Creates a new instance of Comment
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Comment
+	 */
 	public static function forge()
 	{
 		return new static();
@@ -92,151 +92,202 @@ class Board extends \Model\Model_Base
 	/**
 	 * Returns the comments, and executes the query if not already executed
 	 *
-	 * @return array
+	 * @return  \Foolz\Foolfuuka\Model\Comment[]  The array of comment objects
 	 */
-	protected function p_get_comments()
+	protected function p_getComments()
 	{
-		if (is_null($this->_comments))
+		if ($this->comments === null)
 		{
-			if (method_exists($this, 'p_'.$this->_method_fetching))
+			if (method_exists($this, 'p_'.$this->method_fetching))
 			{
-				\Profiler::mark('Start Board::get_comments() with method '.$this->_method_fetching);
-				\Profiler::mark_memory($this, 'Start Board::get_comments() with method '.$this->_method_fetching);
+				\Profiler::mark('Start Board::getcomments() with method '.$this->method_fetching);
+				\Profiler::mark_memory($this, 'Start Board::getcomments() with method '.$this->method_fetching);
 
-				$this->{$this->_method_fetching}();
+				$this->{$this->method_fetching}();
 
-				\Profiler::mark('End Board::get_comments() with method '.$this->_method_fetching);
-				\Profiler::mark_memory($this, 'End Board::get_comments() with method '.$this->_method_fetching);
+				\Profiler::mark('End Board::getcomments() with method '.$this->method_fetching);
+				\Profiler::mark_memory($this, 'End Board::getcomments() with method '.$this->method_fetching);
 			}
 			else
 			{
-				$this->_comments = false;
+				$this->comments = false;
 			}
 		}
 
-		return $this->_comments;
+		return $this->comments;
 	}
-
 
 	/**
 	 * Returns the count without LIMIT, and executes the query if not already executed
 	 *
-	 * @return array
+	 * @return  int  The count
 	 */
-	protected function p_get_count()
+	protected function p_getCount()
 	{
-		if ($this->_total_count === null)
+		if ($this->total_count === null)
 		{
-			if (method_exists($this, 'p_'.$this->_method_counting))
+			if (method_exists($this, 'p_'.$this->method_counting))
 			{
-				\Profiler::mark('Start Board::get_comments() with method '.$this->_method_counting);
-				\Profiler::mark_memory($this, 'Start Board::get_comments() with method '.$this->_method_counting);
+				\Profiler::mark('Start Board::getcomments() with method '.$this->method_counting);
+				\Profiler::mark_memory($this, 'Start Board::getcomments() with method '.$this->method_counting);
 
-				$this->{$this->_method_counting}();
+				$this->{$this->method_counting}();
 
-				\Profiler::mark('End Board::get_count() with method '.$this->_method_counting);
-				\Profiler::mark_memory($this, 'ENd Board::get_count() with method '.$this->_method_counting);
+				\Profiler::mark('End Board::get_count() with method '.$this->method_counting);
+				\Profiler::mark_memory($this, 'End Board::get_count() with method '.$this->method_counting);
 			}
 			else
 			{
-				$this->_total_count = false;
+				$this->total_count = false;
 			}
 		}
 
-		return $this->_total_count;
+		return $this->total_count;
 	}
 
-
-	protected function p_get_pages()
+	/**
+	 * Returns the number of pages of the result
+	 *
+	 * @return  int  The number of pages
+	 */
+	protected function p_getPages()
 	{
-		return floor($this->get_count() / $this->_options['per_page']) + 1;
+		return floor($this->getCount() / $this->options['per_page']) + 1;
 	}
 
-
-	protected function p_get_highest($item)
+	/**
+	 * Returns the comment with the highest item
+	 *
+	 * @param  string  $key  The key (column) on which to calculate the "highest" Comment
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board
+	 */
+	protected function p_getHighest($key)
 	{
-		$temp = $this->_comments_unsorted[0];
+		$temp = $this->comments_unsorted[0];
 
-		foreach ($this->_comments_unsorted as $post)
+		foreach ($this->comments_unsorted as $comment)
 		{
-			if ($temp->$item < $post->$item)
+			if ($temp->$key < $comment->$key)
 			{
-				$temp = $post;
+				$temp = $comment;
 			}
 		}
 
-		return $post;
+		return $temp;
 	}
 
-
-	protected function p_set_method_fetching($name)
+	/**
+	 * Sets the fetching method
+	 *
+	 * @param  string  $name  The method name of the fetching method, without p_
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	protected function p_setMethodFetching($name)
 	{
-		$this->_method_fetching = $name;
-
+		$this->method_fetching = $name;
 		return $this;
 	}
 
-
-	protected function p_set_method_counting($name)
+	/**
+	 * Sets the counting method
+	 *
+	 * @param  string  $name  The method name of the counting method, without p_
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	protected function p_setMethodCounting($name)
 	{
-		$this->_method_counting = $name;
-
+		$this->method_counting = $name;
 		return $this;
 	}
 
-
-	public function set_options($name, $value = null)
+	/**
+	 * Set the options to pass to the counting and fetching methods. These are usually exploded in the method.
+	 *
+	 * @param  string|array  $name   The name of the variable, if associative array it will be used instead
+	 * @param  mixed         $value  The value of the variable
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	public function setOptions($name, $value = null)
 	{
 		if (is_array($name))
 		{
 			foreach ($name as $key => $item)
 			{
-				$this->set_options($key, $item);
+				$this->setOptions($key, $item);
 			}
 
 			return $this;
 		}
 
-		$this->_options[$name] = $value;
+		$this->options[$name] = $value;
 
 		return $this;
 	}
 
-
-	protected function p_set_comment_options($name, $value = null)
+	/**
+	 * Set the options to pass to the Comment object
+	 *
+	 * @param  string|array  $name   The name of the variable, if associative array it will be used instead
+	 * @param  mixed         $value  The value of the variable
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	protected function p_setCommentOptions($name, $value = null)
 	{
 		if (is_array($name))
 		{
 			foreach ($name as $key => $item)
 			{
-				$this->set_options($key, $item);
+				$this->setCommentOptions($key, $item);
 			}
 
 			return $this;
 		}
 
-		$this->_comment_options[$name] = $value;
+		$this->comment_options[$name] = $value;
 
 		return $this;
 	}
 
-
-	protected function p_set_radix(&$radix)
+	/**
+	 * Sets the Radix object
+	 *
+	 * @param  \Foolz\Foolfuuka\Model\Radix  $radix  The Radix object pertaining this Board
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	protected function p_setRadix(\Foolz\Foolfuuka\Model\Radix $radix)
 	{
-		$this->_radix = $radix;
-
+		$this->radix = $radix;
 		return $this;
 	}
 
-
-	protected function p_set_api($enable = true)
+	/**
+	 * Set the API options
+	 *
+	 * @param  array|null  $enable  If array it will be used to set API options, if null it will disable API mode
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	protected function p_setApi($enable = [])
 	{
-		$this->_api = $enable;
-
+		$this->api = $enable;
 		return $this;
 	}
 
-	protected function p_set_page($page)
+	/**
+	 * Sets the page to fetch
+	 *
+	 * @param  int  $page  The page to fetch
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 * @throws  \Foolz\Foolfuuka\Model\BoardException  If the page number is not valid
+	 */
+	protected function p_setPage($page)
 	{
 		$page = intval($page);
 
@@ -245,34 +296,37 @@ class Board extends \Model\Model_Base
 			throw new BoardException(__('The page number is not valid.'));
 		}
 
-		$this->set_options('page', $page);
+		$this->setoptions('page', $page);
 
 		return $this;
 	}
 
-
-	public static function is_natural($str)
+	/**
+	 * Checks if the string is a valid post number
+	 *
+	 * @param  $str  The string to test on
+	 *
+	 * @return  boolean  True if the post number is valid, false otherwise
+	 */
+	public static function isValidPostNumber($str)
 	{
-		return ctype_digit((string) $str);
+		return ctype_digit((string) $str) || preg_match('/^[0-9]+(,|_)[0-9]+$/', $str);
 	}
 
-	public static function is_valid_post_number($str)
+	/**
+	 * Splits the post number in num and subnum, even if there's no subnum in the string.
+	 *
+	 * @param  string  $num  The string to split. Must be a "valid post number" (check with static::isValidPostNumber())
+	 *
+	 * @return  array  Two keys: num, subnum
+	 */
+	public static function splitPostNumber($num)
 	{
-		if(static::is_natural($str))
-		{
-			return true;
-		}
-
-		return (bool) preg_match('/^[0-9]+(,|_)[0-9]+$/', $str);
-	}
-
-	public static function split_post_number($num)
-	{
-		if (strpos($num, ',') !== FALSE)
+		if (strpos($num, ',') !== false)
 		{
 			$arr = explode(',', $num);
 		}
-		else if (strpos($num, '_') !== FALSE)
+		else if (strpos($num, '_') !== false)
 		{
 			$arr = explode('_', $num);
 		}
@@ -288,144 +342,124 @@ class Board extends \Model\Model_Base
 		return $result;
 	}
 
-
 	/**
-	 * Returns the SQL string to append to queries to be able to
-	 * get the filenames required to create the path to media
+	 * Sets the board to the "latest" mode, to create index pages with a couple of the last posts per thread
+	 * Options: page, per_page, order[by_post, by_thread, ghost]
 	 *
-	 * @param object $board
-	 * @param bool|string $join_on alternative join table name
-	 * @return string SQL to append to retrieve image filenames
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
 	 */
-	public function sql_media_join($query, $board = null, $join_on = false)
+	protected function p_getLatest()
 	{
-		if (is_null($board))
-		{
-			$board = $this->_radix;
-		}
-
-		$query->join(\DB::expr($board->getTable('_images').' AS `mg`'), 'LEFT')
-			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : $board->getTable()).'.`media_id`'),
-				'=', \DB::expr('`mg`.`media_id`'));
-	}
-
-
-	public function sql_extra_join($query, $board = null, $join_on = false)
-	{
-		if (is_null($board))
-		{
-			$board = $this->_radix;
-		}
-
-		$query->join(\DB::expr($board->getTable('_extra').' AS `ex`'), 'LEFT')
-			->on(\DB::expr(($join_on ? '`'.$join_on.'`' : $board->getTable()).'.`doc_id`'),
-				'=', \DB::expr('`ex`.`extra_id`'));
-	}
-
-
-	protected function p_get_latest()
-	{
-		// prepare
-		$this->set_method_fetching('get_latest_comments')
-			->set_method_counting('get_latest_count')
-			->set_options(array(
+		$this
+			->setMethodFetching('getLatestComments')
+			->setMethodCounting('getLatestCount')
+			->setOptions([
 				'per_page' => 20,
 				'per_thread' => 5,
 				'order' => 'by_post'
-			));
+			]);
 
 		return $this;
 	}
 
 
 	/**
-	 * Get the latest
+	 * Returns the latest threads with a couple of the latest posts in each thread
 	 *
-	 * @param object $board
-	 * @param int $page the page to determine the offset
-	 * @param array $options modifiers
-	 * @return array|bool FALSE on error (likely from faulty $options), or the list of threads with 5 replies attached
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
 	 */
-	protected function p_get_latest_comments()
+	protected function p_getLatestComments()
 	{
-		\Profiler::mark('Board::get_latest_comments Start');
-		extract($this->_options);
+		\Profiler::mark('Board::getLatestComments Start');
+		extract($this->options);
 
 		switch ($order)
 		{
 			case 'by_post':
-
-				$query = \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-					->from(\DB::expr($this->_radix->getTable('_threads')))
-					->order_by('time_bump', 'desc')
-					->limit($per_page)->offset(($page * $per_page) - $per_page);
+				$query = \DC::qb()
+					->select('*, thread_num AS unq_thread_num')
+					->from($this->radix->getTable('_threads'), 'rt')
+					->orderBy('rt.time_bump', 'DESC')
+					->setMaxResults($per_page)
+					->setFirstResult(($page * $per_page) - $per_page);
 				break;
 
 			case 'by_thread':
-
-				$query = \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-					->from(\DB::expr($this->_radix->getTable('_threads')))
-					->order_by('thread_num', 'desc')
-					->limit($per_page)->offset(($page * $per_page) - $per_page);
+				$query = \DC::qb()
+					->select('*, thread_num AS unq_thread_num')
+					->from($this->radix->getTable('_threads'), 'rt')
+					->orderBy('rt.thread_num', 'DESC')
+					->setMaxResults($per_page)
+					->setFirstResult(($page * $per_page) - $per_page);
 				break;
 
 			case 'ghost':
-
-				$query = \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-					->from(\DB::expr($this->_radix->getTable('_threads')))
-					->where('time_ghost_bump', '', \DB::expr('IS NOT NULL'))
-					->order_by('time_ghost_bump', 'desc')
-					->limit($per_page)->offset(($page * $per_page) - $per_page);
+				$query = \DC::qb()
+					->select('*, thread_num AS unq_thread_num')
+					->from($this->radix->getTable('_threads'), 'rt')
+					->where('rt.time_ghost_bump IS NOT NULL')
+					->orderBy('rt.time_ghost_bump', 'DESC')
+					->setMaxResults($per_page)
+					->setFirstResult(($page * $per_page) - $per_page);
 				break;
 		}
 
-		$threads = $query->as_object()->execute()->as_array();
+		$threads = $query
+			->execute()
+			->fetchAll();
 
-
-		if (!count($threads))
+		if ( ! count($threads))
 		{
-			$this->_comments = array();
-			$this->_comments_unsorted = array();
+			$this->comments = [];
+			$this->comments_unsorted = [];
 
 			\Profiler::mark_memory($this, 'Board $this');
-			\Profiler::mark('Board::get_latest_comments End Prematurely');
+			\Profiler::mark('Board::get_latestcomments End Prematurely');
 			return $this;
 		}
 
 		// populate arrays with posts
-		$threads_arr = array();
-		$sql_arr = array();
+		$threads_arr = [];
+		$sql_arr = [];
 
 		foreach ($threads as $thread)
 		{
-			$threads_arr[$thread->unq_thread_num] = array('replies' => $thread->nreplies, 'images' => $thread->nimages);
+			$threads_arr[$thread['unq_thread_num']] = ['replies' => $thread['nreplies'], 'images' => $thread['nimages']];
 
-			$temp = \DB::select()->from(\DB::expr($this->_radix->getTable()));
-			static::sql_media_join($temp);
-			static::sql_extra_join($temp);
-			$temp->where('thread_num', $thread->unq_thread_num)
-				->order_by('op', 'desc')->order_by('num', 'desc')->order_by('subnum', 'desc')
-				->limit($per_thread + 1)->offset(0);
+			$temp = \DC::qb()
+				->select('*')
+				->from($this->radix->getTable(), 'r')
+				->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+				->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+				->where('r.thread_num = '.$thread['unq_thread_num'])
+				->orderBy('op', 'DESC')
+				->addOrderBy('num', 'DESC')
+				->addOrderBy('subnum', 'DESC')
+				->setMaxResults($per_thread + 1)
+				->setFirstResult(0);
 
-			$sql_arr[] = '('.$temp.')';
+			$sql_arr[] = '('.$temp->getSQL().')';
 		}
 
-		$query_posts = \DB::query(implode(' UNION ', $sql_arr), \DB::SELECT)->as_object()->execute()->as_array();
+		$query_posts = \DC::forge()
+			->executeQuery(implode(' UNION ', $sql_arr))
+			->fetchAll();
+
 		// populate posts_arr array
-		$this->_comments_unsorted = Comment::forge($query_posts, $this->_radix, $this->_comment_options);
-		\Profiler::mark_memory($this->_comments_unsorted, 'Board $this->_comments_unsorted');
-		$results = array();
+		$this->comments_unsorted = Comment::fromArrayDeep($query_posts, $this->radix, $this->comment_options);
+		\Profiler::mark_memory($this->comments_unsorted, 'Board $this->comments_unsorted');
+		$results = [];
 
 		foreach ($threads as $thread)
 		{
-			$results[$thread->thread_num] = array(
-				'omitted' => ($thread->nreplies - ($per_thread + 1)),
-				'images_omitted' => ($thread->nimages - 1)
-			);
+			$results[$thread['thread_num']] = [
+				'omitted' => ($thread['nreplies'] - ($per_thread + 1)),
+				'images_omitted' => ($thread['nimages'] - 1)
+			];
 		}
 
 		// populate results array and order posts
-		foreach ($this->_comments_unsorted as $post)
+		foreach ($this->comments_unsorted as $post)
 		{
 			if ($post->op == 0)
 			{
@@ -434,8 +468,8 @@ class Board extends \Model\Model_Base
 					$results[$post->thread_num]['images_omitted']--;
 				}
 
-				if (!isset($results[$post->thread_num]['posts']))
-					$results[$post->thread_num]['posts'] = array();
+				if ( ! isset($results[$post->thread_num]['posts']))
+					$results[$post->thread_num]['posts'] = [];
 
 				array_unshift($results[$post->thread_num]['posts'], $post);
 			}
@@ -445,19 +479,23 @@ class Board extends \Model\Model_Base
 			}
 		}
 
-		$this->_comments = $results;
+		$this->comments = $results;
 
-		\Profiler::mark_memory($this->_comments, 'Board $this->_comments');
+		\Profiler::mark_memory($this->comments, 'Board $this->comments');
 		\Profiler::mark_memory($this, 'Board $this');
-		\Profiler::mark('Board::get_latest_comments End');
+		\Profiler::mark('Board::get_latestcomments End');
 		return $this;
 	}
 
-
-	protected function p_get_latest_count()
+	/**
+	 * Returns the count of the threads available
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	protected function p_getLatestCount()
 	{
 		\Profiler::mark('Board::get_latest_count Start');
-		extract($this->_options);
+		extract($this->options);
 
 		$type_cache = 'thread_num';
 
@@ -466,185 +504,263 @@ class Board extends \Model\Model_Base
 			$type_cache = 'ghost_num';
 		}
 
-		switch ($order)
+		try
 		{
-			// these two are the same
-			case 'by_post':
-			case 'by_thread':
-				$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
-						->from(\DB::expr($this->_radix->getTable('_threads')));
-				break;
+			$this->total_count = \Cache::get('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$order);
+			return $this;
+		}
+		catch(\CacheNotFoundException $e)
+		{
+			switch ($order)
+			{
+				// these two are the same
+				case 'by_post':
+				case 'by_thread':
+					$query_threads = \DC::qb()
+						->select('COUNT(thread_num) AS threads')
+						->from($this->radix->getTable('_threads'), 'rt');
+					break;
 
-			case 'ghost':
-				$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
-						->from(\DB::expr($this->_radix->getTable('_threads')))
-						->where('time_ghost_bump', '', \DB::expr('IS NOT NULL'));
-				break;
+				case 'ghost':
+					$query_threads = \DC::qb()
+						->select('COUNT(thread_num) AS threads')
+						->from($this->radix->getTable('_threads'), 'rt')
+						->where('rt.time_ghost_bump IS NOT NULL');
+					break;
+			}
+
+			$result = $query_threads
+				->execute()
+				->fetch();
+
+			$this->total_count = $result['threads'];
+			\Cache::set('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$order, $this->total_count, 300);
 		}
 
-		$this->_total_count = $query_threads->as_object()->cached(300)->execute()->current()->threads;
 		\Profiler::mark_memory($this, 'Board $this');
 		\Profiler::mark('Board::get_latest_count End');
 		return $this;
 	}
 
-
-	protected function p_get_threads()
+	/**
+	 * Sets the "thread" mode
+	 * Options: page, per_page
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	protected function p_getThreads()
 	{
-		// prepare
-		$this->set_method_fetching('get_threads_comments')
-			->set_method_counting('get_threads_count')
-			->set_options(array(
+		$this
+			->setMethodFetching('getThreadsComments')
+			->setMethodCounting('getThreadsCount')
+			->setOptions([
 				'per_page' => 20,
 				'order' => 'by_post'
-			));
+			]);
 
 		return $this;
 	}
 
-
-	protected function p_get_threads_comments()
+	/**
+	 * Fetches a bunch of threads (in example for gallery)
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	protected function p_getThreadsComments()
 	{
-		\Profiler::mark('Board::get_threads_comments Start');
-		extract($this->_options);
+		\Profiler::mark('Board::getThreadsComments Start');
+		extract($this->options);
 
-		$inner_query =  \DB::select('*', \DB::expr('thread_num as unq_thread_num'))
-			->from(\DB::expr($this->_radix->getTable('_threads')))
-			->order_by('time_op', 'desc')->limit($per_page)->offset(($page * $per_page) - $per_page);
+		$inner_query = \DC::qb()
+			->select('*, thread_num as unq_thread_num')
+			->from($this->radix->getTable('_threads'), 'rt')
+			->orderBy('rt.time_op', 'DESC')
+			->setMaxResults($per_page)
+			->setFirstResult(($page * $per_page) - $per_page)
+			->getSQL();
 
-		$query = \DB::select()->from(\DB::expr('('.$inner_query.') AS t'))
-			->join(\DB::expr($this->_radix->getTable().' AS g'), 'LEFT')
-			->on(\DB::expr('g.num'), '=', \DB::expr('t.unq_thread_num AND g.subnum = 0'));
+		$result = \DC::qb()
+			->select('*')
+			->from('('.$inner_query.')', 'g')
+			->join('g', $this->radix->getTable(), 'r', 'r.num = g.unq_thread_num AND r.subnum = 0')
+			->leftJoin('g', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+			->leftJoin('g', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+			->execute()
+			->fetchAll();
 
-		static::sql_media_join($query, null, 'g');
-		static::sql_extra_join($query, null, 'g');
-
-		$result = $query->as_object()->execute()->as_array();
-
-		if(!count($result))
+		if( ! count($result))
 		{
-			$this->_comments = array();
-			$this->_comments_unsorted = array();
+			$this->comments = [];
+			$this->comments_unsorted = [];
 
 			\Profiler::mark_memory($this, 'Board $this');
-			\Profiler::mark('Board::get_threads_comments End Prematurely');
+			\Profiler::mark('Board::get_threadscomments End Prematurely');
 			return $this;
 		}
 
-		if ($this->_api)
+		if ($this->api)
 		{
-			$this->_comments_unsorted = Comment::forge_for_api($result, $this->_radix, $this->_api, $this->_comment_options);
+			$this->comments_unsorted = Comment::fromArrayDeepApi($result, $this->radix, $this->api, $this->comment_options);
 		}
 		else
 		{
-			$this->_comments_unsorted = Comment::forge($result, $this->_radix, $this->_comment_options);
+			$this->comments_unsorted = Comment::fromArrayDeep($result, $this->radix, $this->comment_options);
 		}
 
-		$this->_comments = $this->_comments_unsorted;
+		$this->comments = $this->comments_unsorted;
 
-		\Profiler::mark_memory($this->_comments, 'Board $this->_comments');
+		\Profiler::mark_memory($this->comments, 'Board $this->comments');
 		\Profiler::mark_memory($this, 'Board $this');
-		\Profiler::mark('Board::get_threads_comments End');
+		\Profiler::mark('Board::get_threadscomments End');
 		return $this;
 	}
-
-
-	protected function p_get_threads_count()
-	{
-		extract($this->_options);
-
-		$query_threads = \DB::select(\DB::expr('COUNT(thread_num) AS threads'))
-			->from(\DB::expr($this->_radix->getTable('_threads')))->cached(300);
-
-		$this->_total_count = $query_threads->as_object()->execute()->current()->threads;
-
-		return $this;
-	}
-
 
 	/**
-	 * Get the thread
-	 * Deals also with "last_x", and "from_doc_id" for realtime updates
+	 * Counts the available threads
 	 *
-	 * @param object $board
-	 * @param int $num thread number
-	 * @param array $options modifiers
-	 * @return array|bool FALSE on failure (probably caused by faulty $options) or the thread array
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
 	 */
-	protected function p_get_thread($num)
+	protected function p_getThreadsCount()
+	{
+		extract($this->options);
+
+		try
+		{
+			$this->total_count = \Cache::get('Foolz_Foolfuuka_Model_Board.getThreadsCount.result');
+		}
+		catch (\CacheNotFoundException $e)
+		{
+			$result = \DC::qb()
+				->select('COUNT(thread_num) AS threads')
+				->from($this->radix->getTable('_threads'), 'rt')
+				->execute()
+				->fetch();
+
+			$this->total_count = $result['threads'];
+			\Cache::set('Foolz_Foolfuuka_Model_Board.getThreadsCount.result', $this->total_count, 300);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Sets the Board object to Thread mode
+	 * Options: type=[from_doc_id, ghosts, last_x], (int)num(thread number)
+	 * Options for "from_doc_id": (int)latest_doc_id
+	 * Options for "last_x": (int)last_limit
+	 *
+	 * @param  int  $num  The number of the thread
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 * @throws  BoardMalformedInputException
+	 */
+	protected function p_getThread($num)
 	{
 		// default variables
-		$this->set_method_fetching('get_thread_comments')
-			->set_options(array('type' => 'thread', 'realtime' => false));
+		$this
+			->setMethodFetching('getThreadComments')
+			->setoptions(['type' => 'thread', 'realtime' => false]);
 
-		if(!static::is_natural($num) || $num < 1)
+		if( ! ctype_digit((string) $num) || $num < 1)
 		{
 			throw new BoardMalformedInputException(__('The thread number is invalid.'));
 		}
 
-		$this->set_options('num', $num);
+		$this->setOptions('num', $num);
 
 		return $this;
 	}
 
-	protected function p_get_thread_comments()
+	/**
+	 * Gets a thread
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 * @throws  BoardThreadNotFoundException  If the thread wasn't found
+	 */
+	protected function p_getThreadComments()
 	{
-		\Profiler::mark('Board::get_thread_comments Start');
+		\Profiler::mark('Board::get_threadcomments Start');
 
 		$controller_method = 'thread';
 
-		extract($this->_options);
+		extract($this->options);
 
 		// determine type
 		switch ($type)
 		{
 			case 'from_doc_id':
-				$query = \DB::select()->from(\DB::expr($this->_radix->getTable()));
-				static::sql_media_join($query);
-				static::sql_extra_join($query);
-				$query->where('thread_num', $num)->where('doc_id', '>', $latest_doc_id)
-					->order_by('num', 'asc')->order_by('subnum', 'asc');
+				$query = \DC::qb()
+					->select('*')
+					->from($this->radix->getTable(), 'r')
+					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+					->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+					->where('thread_num = :thread_num')
+					->andWhere('doc_id > :latest_doc_id')
+					->orderBy('num', 'ASC')
+					->addOrderBy('subnum', 'ASC')
+					->setParameter(':thread_num', $num)
+					->setParameter(':latest_doc_id', $latest_doc_id);
 				break;
 
 			case 'ghosts':
-				$query = \DB::select()->from(\DB::expr($this->_radix->getTable()));
-				static::sql_media_join($query);
-				static::sql_extra_join($query);
-				$query->where('thread_num', $num)->where('subnum', '<>', 0)
-					->order_by('num', 'asc')->order_by('subnum', 'asc');
+				$query = \DC::qb()
+					->select('*')
+					->from($this->radix->getTable(), 'r')
+					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+					->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+					->where('thread_num = :thread_num')
+					->where('subnum <> 0')
+					->orderBy('num', 'ASC')
+					->addOrderBy('subnum', 'ASC')
+					->setParameter(':thread_num', $num);
 				break;
 
 			case 'last_x':
-				$query = \DB::select()->from(\DB::expr('
-					(
-						('.\DB::select()->from(\DB::expr($this->_radix->getTable()))->where('num',
-							$num)->limit(1).')
-						UNION
-						('.\DB::select()->from(\DB::expr($this->_radix->getTable()))->where('thread_num',
-								$num)
-							->order_by('num', 'desc')->order_by('subnum', 'desc')->limit($last_limit).')
-					) AS x
-				'));
-				static::sql_media_join($query, null, 'x');
-				static::sql_extra_join($query, null, 'x');
-				$query->order_by('num', 'asc')->order_by('subnum', 'asc');
+				$subquery_first = \DC::qb()
+					->select('*')
+					->from(\DB::expr($this->radix->getTable(), 'xr'))
+					->where('num = '.\DC::forge()->quote($num))
+					->setMaxResults(1)
+					->getSQL();
+				$subquery_last = \DC::qb()
+					->select('*')
+					->from(\DB::expr($this->radix->getTable(), 'xrr'))
+					->where('thread_num = '.\DC::forge()->quote($num))
+					->orderBy('num', 'DESC')
+					->addOrderBy('subnum', 'DESC')
+					->setMaxResults($last_limit)
+					->getSQL();
+				$query = \DC::qb()
+					->select('*')
+					->from('(('.$subquery_first.') UNION ('.$subquery_last.'))', 'r')
+					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+					->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+					->orderBy('num', 'ASC')
+					->addOrderBy('subnum', 'ASC');
 
 				$controller_method = 'last/'.$last_limit;
 				break;
 
 			case 'thread':
-				$query = \DB::select()->from(\DB::expr($this->_radix->getTable()));
-				static::sql_media_join($query);
-				static::sql_extra_join($query);
-				$query->where('thread_num', $num)->order_by('num', 'asc')->order_by('subnum', 'asc');
+				$query = \DC::qb()
+					->select('*')
+					->from($this->radix->getTable(), 'r')
+					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+					->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+					->where('thread_num = :thread_num')
+					->orderBy('num', 'ASC')
+					->addOrderBy('subnum', 'ASC')
+					->setParameter(':thread_num', $num);
 				break;
 		}
 
-		$query_result = $query->as_object()->execute()->as_array();
+		$query_result = $query
+			->execute()
+			->fetchAll();
 
 		if ( ! count($query_result) && isset($latest_doc_id))
 		{
-			return $this->_comments = $this->_comments_unsorted = array();
+			return $this->comments = $this->comments_unsorted = [];
 		}
 
 		if ( ! count($query_result))
@@ -652,31 +768,31 @@ class Board extends \Model\Model_Base
 			throw new BoardThreadNotFoundException(__('There\'s no such a thread.'));
 		}
 
-		if ($this->_api)
+		if ($this->api)
 		{
-			$this->_comments_unsorted =
-				Comment::forge_for_api($query_result, $this->_radix, $this->_api, array(
+			$this->comments_unsorted =
+				Comment::fromArrayDeepApi($query_result, $this->radix, $this->api, [
 					'realtime' => $realtime,
 					'backlinks_hash_only_url' => true,
 					'controller_method' => $controller_method
-				) + $this->_comment_options);
+				] + $this->comment_options);
 
 		}
 		else
 		{
-			$this->_comments_unsorted =
-				Comment::forge($query_result, $this->_radix, array(
+			$this->comments_unsorted =
+				Comment::fromArrayDeep($query_result, $this->radix, [
 					'realtime' => $realtime,
 					'backlinks_hash_only_url' => true,
 					'prefetch_backlinks' => true,
 					'controller_method' => $controller_method
-				) + $this->_comment_options);
+				] + $this->comment_options);
 		}
 
 		// process entire thread and store in $result array
-		$result = array();
+		$result = [];
 
-		foreach ($this->_comments_unsorted as $post)
+		foreach ($this->comments_unsorted as $post)
 		{
 			if ($post->op == 0)
 			{
@@ -688,44 +804,26 @@ class Board extends \Model\Model_Base
 			}
 		}
 
-		/*
+		$this->comments = $result;
 
-		  // populate results with backlinks
-		  foreach ($this->backlinks as $key => $backlinks)
-		  {
-		  if (isset($result[$num]['op']) && $result[$num]['op']->num == $key)
-		  {
-		  $result[$num]['op']->backlinks = array_unique($backlinks);
-		  }
-		  else if (isset($result[$num]['posts'][$key]))
-		  {
-		  $result[$num]['posts'][$key]->backlinks = array_unique($backlinks);
-		  }
-		  }
-		 *
-		 *
-		 */
-
-		$this->_comments = $result;
-
-		\Profiler::mark_memory($this->_comments, 'Board $this->_comments');
+		\Profiler::mark_memory($this->comments, 'Board $this->comments');
 		\Profiler::mark_memory($this, 'Board $this');
-		\Profiler::mark('Board::get_thread_comments End');
+		\Profiler::mark('Board::get_threadcomments End');
 		return $this;
 	}
 
 
 	/**
-	 * Return the status of the thread to determine if it can be posted in, or if images can be posted
-	 * or if it's a ghost thread...
+	 * Returns an array specifying the thread statuses.
+	 * Returned array keys: closed, dead, disable_image_upload
 	 *
-	 * @param object $board
-	 * @param mixed $num if you send a $query->result() of a thread it will avoid another query
-	 * @return array statuses of the thread
+	 * @return  array  An associative array with boolean values
+	 * @throws  BoardNotCompatibleMethodException  If the specified fetching method is not "getThreadComments"
+	 * @throws  BoardThreadNotFoundException       If the thread was not found
 	 */
-	protected function p_check_thread_status()
+	protected function p_checkThreadStatus()
 	{
-		if ($this->_method_fetching !== 'get_thread_comments')
+		if ($this->method_fetching !== 'getThreadComments')
 		{
 			throw new BoardNotCompatibleMethodException;
 		}
@@ -734,9 +832,9 @@ class Board extends \Model\Model_Base
 		$thread_op_present = false;
 		$ghost_post_present = false;
 		$thread_last_bump = 0;
-		$counter = array('posts' => 0, 'images' => 0);
+		$counter = ['posts' => 0, 'images' => 0];
 
-		foreach ($this->_comments_unsorted as $post)
+		foreach ($this->comments_unsorted as $post)
 		{
 			// we need to find if there's the OP in the list
 			// let's be strict, we want the $num to be the OP
@@ -772,11 +870,11 @@ class Board extends \Model\Model_Base
 			throw new BoardThreadNotFoundException(__('The thread you were looking for can\'t be found.'));
 		}
 
-		$result = array(
+		$result = [
 			'closed' => false,
-			'dead' => (bool) $this->_radix->archive,
-			'disable_image_upload' => (bool) $this->_radix->archive,
-		);
+			'dead' => (bool) $this->radix->archive,
+			'disable_image_upload' => (bool) $this->radix->archive,
+		];
 
 		// time check
 		if (time() - $thread_last_bump > 432000 || $ghost_post_present)
@@ -785,17 +883,17 @@ class Board extends \Model\Model_Base
 			$result['disable_image_upload'] = true;
 		}
 
-		if ($counter['posts'] >= $this->_radix->max_posts_count)
+		if ($counter['posts'] >= $this->radix->max_posts_count)
 		{
 			$result['dead'] = true;
 			$result['disable_image_upload'] = true;
 		}
-		else if ($counter['images'] >= $this->_radix->max_images_count)
+		else if ($counter['images'] >= $this->radix->max_images_count)
 		{
 			$result['disable_image_upload'] = true;
 		}
 
-		if ($this->_radix->disable_ghost && $result['dead'])
+		if ($this->radix->disable_ghost && $result['dead'])
 		{
 			$result['closed'] = true;
 		}
@@ -803,66 +901,88 @@ class Board extends \Model\Model_Base
 		return $result;
 	}
 
-
-	protected function p_get_post($num = null)
+	/**
+	 * Sets the Board object to fetch a post
+	 * Options available: num OR doc_id
+	 *
+	 * @param  string  $num  If specified, a valid post number
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 */
+	protected function p_getPost($num = null)
 	{
 		// default variables
-		$this->set_method_fetching('get_post_comments');
+		$this->setmethod_fetching('getPostComments');
 
 		if ($num !== null)
 		{
-			$this->set_options('num', $num);
+			$this->setOptions('num', $num);
 		}
 
 		return $this;
 	}
 
-
-	protected function p_get_post_comments()
+	/**
+	 * Gets a post by num or doc_d
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
+	 * @throws  BoardMalformedInputException  If the $num is not a valid post number
+	 * @throws  BoardMissingOptionsException  If doc_id or num has not been specified
+	 * @throws  BoardPostNotFoundException    If the post has not been found
+	 */
+	protected function p_getPostComments()
 	{
-		extract($this->_options);
+		extract($this->options);
 
-		$query = \DB::select()->from(\DB::expr($this->_radix->getTable()));
+		$query = \DC::qb()
+			->from($this->radix->getTable(), 'r');
 
 		if (isset($num))
 		{
-			if( ! static::is_valid_post_number($num))
+			if( ! static::isValidPostNumber($num))
 			{
 				throw new BoardMalformedInputException;
 			}
-			$num_arr = static::split_post_number($num);
-			$query->where('num' , $num_arr['num'])->where('subnum', $num_arr['subnum']);
+			$num_arr = static::splitPostNumber($num);
+			$query->where('num = :num')
+				->andWhere('subnum = :subnum')
+				->setParameter(':num', $num_arr['num'])
+				->setParameter(':subnum', $num_arr['subnum']);
 		}
 		else if (isset($doc_id))
 		{
-			$query->where('doc_id', $doc_id);
+			$query->where('doc_id = :doc_id')
+				->setParameter(':doc_id', $doc_id);
 		}
 		else
 		{
 			throw new BoardMissingOptionsException(__('No posts found with the submitted options.'));
 		}
 
-		static::sql_media_join($query);
-		static::sql_extra_join($query);
-		$result = $query->as_object()->execute()->as_array();
+		$result = $query
+			->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+			->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+			->execute()
+			->fetchAll();
 
 		if( ! count($result))
 		{
 			throw new BoardPostNotFoundException(__('Post not found.'));
 		}
 
-		if ($this->_api)
+		if ($this->api)
 		{
-			$this->_comments_unsorted = Comment::forge_for_api($result, $this->_radix, $this->_api, $this->_comment_options);
+			$this->comments_unsorted = Comment::fromArrayDeepApi($result, $this->radix, $this->api, $this->comment_options);
 		}
 		else
 		{
-			$this->_comments_unsorted = Comment::forge($result, $this->_radix, $this->_comment_options);
+			// @todo for some reason Netbeans needs full namespace not to signal abstract
+			$this->comments_unsorted = new \Foolz\Foolfuuka\Model\Comment($result, $this->radix, $this->comment_options);
 		}
 
-		foreach ($this->_comments_unsorted as $comment)
+		foreach ($this->comments_unsorted as $comment)
 		{
-			$this->_comments[$comment->num.($comment->subnum ? '_'.$comment->subnum : '')] = $comment;
+			$this->comments[$comment->num.($comment->subnum ? '_'.$comment->subnum : '')] = $comment;
 		}
 
 		return $this;

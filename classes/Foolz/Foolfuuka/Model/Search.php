@@ -12,150 +12,170 @@ class SearchEmptyResultException extends SearchException {}
 
 class Search extends Board
 {
-
+	/**
+	 * Returns the structure for the search form
+	 *
+	 * @return  array
+	 */
 	public static function structure()
 	{
-		return array(
-			array(
+		return [
+			[
 				'type' => 'input',
 				'label' => __('Comment'),
 				'name' => 'text'
-			),
-			array(
+			],
+			[
 				'type' => 'input',
 				'label' => __('Subject'),
 				'name' => 'subject'
-			),
-			array(
+			],
+			[
 				'type' => 'input',
 				'label' => __('Username'),
 				'name' => 'username'
-			),
-			array(
+			],
+			[
 				'type' => 'input',
 				'label' => __('Tripcode'),
 				'name' => 'tripcode'
-			),
-			array(
+			],
+			[
 				'type' => 'input',
 				'label' => __('Email'),
 				'name' => 'email'
-			),
-			array(
+			],
+			[
 				'type' => 'input',
 				'label' => __('Filename'),
 				'name' => 'filename'
-			),
-			array(
+			],
+			[
 				'type' => 'input',
 				'label' => __('Image hash'),
 				'placeholder' => __('Drop your image here'),
 				'name' => 'image'
-			),
-			array(
+			],
+			[
 				'type' => 'date',
 				'label' => __('Date Start'),
 				'name' => 'start',
 				'placeholder' => 'YYYY-MM-DD'
-			),
-			array(
+			],
+			[
 				'type' => 'date',
 				'label' => __('Date End'),
 				'name' => 'end',
 				'placeholder' => 'YYYY-MM-DD'
-			),
-			array(
+			],
+			[
 				'type' => 'input',
 				'label' => __('Poster IP'),
 				'name' => 'poster_ip',
 				'access' => 'comment.see_ip'
-			),
+			],
 
-			array(
+			[
 				'type' => 'radio',
 				'label' => __('Deleted posts'),
 				'name' => 'deleted',
-				'elements' => array(
-					array('value' => false, 'text' => __('All')),
-					array('value' => 'deleted', 'text' => __('Only Deleted Posts')),
-					array('value' => 'not-deleted', 'text' => __('Only Non-Deleted Posts'))
-				)
-			),
-			array(
+				'elements' => [
+					['value' => false, 'text' => __('All')],
+					['value' => 'deleted', 'text' => __('Only Deleted Posts')],
+					['value' => 'not-deleted', 'text' => __('Only Non-Deleted Posts')]
+				]
+			],
+			[
 				'type' => 'radio',
 				'label' => __('Ghost posts'),
 				'name' => 'ghost',
-				'elements' => array(
-					array('value' => false, 'text' => __('All')),
-					array('value' => 'only', 'text' => __('Only Ghost Posts')),
-					array('value' => 'none', 'text' => __('Only Non-Ghost Posts'))
-				)
-			),
-			array(
+				'elements' => [
+					['value' => false, 'text' => __('All')],
+					['value' => 'only', 'text' => __('Only Ghost Posts')],
+					['value' => 'none', 'text' => __('Only Non-Ghost Posts')]
+				]
+			],
+			[
 				'type' => 'radio',
 				'label' => __('Show posts'),
 				'name' => 'filter',
-				'elements' => array(
-					array('value' => false, 'text' => __('All')),
-					array('value' => 'text', 'text' => __('Only With Images')),
-					array('value' => 'image', 'text' => __('Only Without Images'))
-				)
-			),
-			array(
+				'elements' => [
+					['value' => false, 'text' => __('All')],
+					['value' => 'text', 'text' => __('Only With Images')],
+					['value' => 'image', 'text' => __('Only Without Images')]
+				]
+			],
+			[
 				'type' => 'radio',
 				'label' => __('Results'),
 				'name' => 'type',
-				'elements' => array(
-					array('value' => false, 'text' => __('All')),
-					array('value' => 'op', 'text' => __('Only Opening Posts')),
-					array('value' => 'posts', 'text' => __('Only Reply Posts'))
-				)
-			),
-			array(
+				'elements' => [
+					['value' => false, 'text' => __('All')],
+					['value' => 'op', 'text' => __('Only Opening Posts')],
+					['value' => 'posts', 'text' => __('Only Reply Posts')]
+				]
+			],
+			[
 				'type' => 'radio',
 				'label' => __('Capcode'),
 				'name' => 'capcode',
-				'elements' => array(
-					array('value' => false, 'text' => __('All')),
-					array('value' => 'user', 'text' => __('Only User Posts')),
-					array('value' => 'mod', 'text' => __('Only Moderator Posts')),
-					array('value' => 'admin', 'text' => __('Only Admin Posts')),
-					array('value' => 'dev', 'text' => __('Only Developer Posts'))
-				)
-			),
-			array(
+				'elements' => [
+					['value' => false, 'text' => __('All')],
+					['value' => 'user', 'text' => __('Only User Posts')],
+					['value' => 'mod', 'text' => __('Only Moderator Posts')],
+					['value' => 'admin', 'text' => __('Only Admin Posts')],
+					['value' => 'dev', 'text' => __('Only Developer Posts')]
+				]
+			],
+			[
 				'type' => 'radio',
 				'label' => __('Order'),
 				'name' => 'order',
-				'elements' => array(
-					array('value' => false, 'text' => __('Latest Posts First')),
-					array('value' => 'asc', 'text' => __('Oldest Posts First'))
-				)
-			)
-		);
+				'elements' => [
+					['value' => false, 'text' => __('Latest Posts First')],
+					['value' => 'asc', 'text' => __('Oldest Posts First')]
+				]
+			]
+		];
 	}
 
-	protected function p_get_search($arguments)
+	/**
+	 * Sets the Board to Search mode
+	 * Options: (array)arguments, (int)limit, (int)page
+	 *
+	 * @param  array  $arguments  The search arguments
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Search  The current object
+	 */
+	protected function p_getSearch($arguments)
 	{
 		// prepare
-		$this->set_method_fetching('get_search_comments')
-			->set_method_counting('get_search_count')
-			->set_options(array(
+		$this->set_method_fetching('getSearchComments')
+			->set_method_counting('getSearchCount')
+			->set_options([
 				'args' => $arguments,
 				'limit' => 25,
-			));
+			]);
 
 		return $this;
 	}
 
-	protected function p_get_search_comments($options = array())
+	/**
+	 * Gets the search results
+	 *
+	 * @return  \Foolz\Foolfuuka\Model\Search  The current object
+	 * @throws  SearchEmptyResultException     If there's no results to display
+	 * @throws  SearchRequiresSphinxException  If the search submitted requires Sphinx to run
+	 * @throws  SearchSphinxOfflineException   If the Sphinx server is unreachable
+	 * @throws  SearchInvalidException         If the values of the search weren't compatible with the domain
+	 */
+	protected function p_getSearchComments()
 	{
 		\Profiler::mark('Board::get_search_comments Start');
-		extract($this->_options);
+		extract($this->options);
 
-		$available_fields = array('boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
-			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'poster_ip'
-		);
+		$available_fields = ['boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
+			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'poster_ip'];
 
 		foreach ($available_fields as $field)
 		{
@@ -165,10 +185,9 @@ class Search extends Board
 			}
 		}
 
-		$boards = array();
+		$boards = [];
 		if ($args['boards'] !== null)
 		{
-			\Radix::preload(TRUE);
 			foreach ($args['boards'] as $board)
 			{
 				$b = \Radix::getByShortname($board);
@@ -181,7 +200,6 @@ class Search extends Board
 
 		if (empty($boards))
 		{
-			\Radix::preload(TRUE);
 			$boards = \Radix::getAll();
 		}
 
@@ -194,16 +212,16 @@ class Search extends Board
 			}
 
 			// if board set, grab media_id
-			if ($this->_radix !== null)
+			if ($this->radix !== null)
 			{
 				try
 				{
-					$media = \Media::get_by_media_hash($this->_radix, $args['image']);
+					$media = \Media::get_by_media_hash($this->radix, $args['image']);
 				}
 				catch (MediaNotFoundException $e)
 				{
-					$this->_comments_unsorted = array();
-					$this->_comments = array();
+					$this->comments_unsorted = [];
+					$this->comments = [];
 					\Profiler::mark('Board::get_search_comments End Prematurely');
 					throw new SearchEmptyResultException(__('No results found.'));
 				}
@@ -214,11 +232,11 @@ class Search extends Board
 
 		// if global or board => use sphinx, else mysql for board only
 		// global search requires sphinx
-		if ($this->_radix === null && ! \Preferences::get('fu.sphinx.global'))
+		if ($this->radix === null && ! \Preferences::get('fu.sphinx.global'))
 		{
 			throw new SearchRequiresSphinxException(__('Sorry, this action requires the SphinxSearch engine.'));
 		}
-		else if (($this->_radix !== null && $this->_radix->sphinx) || ($this->_radix === null && \Preferences::get('fu.sphinx.global')))
+		else if (($this->radix !== null && $this->radix->sphinx) || ($this->radix === null && \Preferences::get('fu.sphinx.global')))
 		{
 			// establish connection to sphinx
 			$sphinx_server = explode(':', \Preferences::get('fu.sphinx.listen'));
@@ -235,13 +253,13 @@ class Search extends Board
 			}
 
 			// determine if all boards will be used for search or not
-			if ($this->_radix === null)
+			if ($this->radix === null)
 			{
-				$indexes = array();
+				$indexes = [];
 				foreach ($boards as $radix)
 				{
 					// ignore boards that don't have sphinx enabled
-					if (!$radix->sphinx)
+					if ( ! $radix->sphinx)
 					{
 						continue;
 					}
@@ -253,11 +271,11 @@ class Search extends Board
 			}
 			else
 			{
-				$indexes = array(
-					$this->_radix->shortname . '_ancient',
-					$this->_radix->shortname . '_main',
-					$this->_radix->shortname . '_delta'
-				);
+				$indexes = [
+					$this->radix->shortname . '_ancient',
+					$this->radix->shortname . '_main',
+					$this->radix->shortname . '_delta'
+				];
 			}
 
 			// set db->from with indexes loaded
@@ -269,7 +287,7 @@ class Search extends Board
 			{
 				if (mb_strlen($args['text']) < 1)
 				{
-					return array();
+					return [];
 				}
 
 				$query->match('comment', $args['text'], true);
@@ -300,7 +318,7 @@ class Search extends Board
 			}
 			if ($args['image'])
 			{
-				if($this->_radix !== null)
+				if($this->radix !== null)
 				{
 					$query->where('mid', (int) $args['image']);
 				}
@@ -396,42 +414,40 @@ class Search extends Board
 
 			if ( ! count($search))
 			{
-				$this->_comments_unsorted = array();
-				$this->_comments = array();
+				$this->comments_unsorted = [];
+				$this->comments = [];
 				throw new SearchEmptyResultException(__('No results found.'));
 			}
 
 			$meta = Sphinxql::meta();
-			$this->_total_count = $meta['total'];
+			$this->total_count = $meta['total'];
 
 			// populate array to query for full records
-			$sql = array();
+			$sql = [];
 
 			foreach ($search as $post => $result)
 			{
 				$board = \Radix::getById($result['board']);
-				$sub = \DB::select('*', \DB::expr($result['board'] . ' AS board_id'))
-					->from(\DB::expr($board->getTable()));
-				static::sql_media_join($sub, $board);
-				static::sql_extra_join($sub, $board);
-				$sql[] = '('.$sub->where('doc_id', '=', $result['id']).')';
+				$sql[] = \DC::qb()
+					->select('*, '.$result['board'].' AS board_id')
+					->from($board->getTable(), 'r')
+					->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+					->leftJoin('r', $board->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+					->where('doc_id = '.\DC::qb()->quote($result['id']))
+					->getSQL();
 			}
 
-			// query mysql for full records
-			$result = \DB::query(implode(' UNION ', $sql) . '
-					ORDER BY timestamp ' . (($args['order'] == 'asc') ? 'ASC' : 'DESC') .',
-					num ' . (($args['order'] == 'asc') ? 'ASC' : 'DESC'), \DB::SELECT)
-				->as_object()
-				->execute()
-				->as_array();
-
+			$result = \DC::forge()
+				->executeQuery(implode(' UNION ', $sql))
+				->fetchAll();
 		}
 		else /* use mysql as fallback for non-sphinx indexed boards */
 		{
+			/*
 			// sadly like escaping has no love in fuelphp...
 			$like_escape = function($s, $e)
 			{
-				$s = str_replace(array($e, '_', '%'), array($e.$e, $e.'_', $e.'%'), $s);
+				$s = str_replace([$e, '_', '%'], [$e.$e, $e.'_', $e.'%'], $s);
 				return \DB::expr(\DB::escape("%".$s."%")." ESCAPE '".$e."'");
 			};
 
@@ -439,13 +455,13 @@ class Search extends Board
 			if ($args["text"] || $args['filename'])
 			{
 				// we're using fulltext fields, we better start from this
-				$query = \DB::select(\DB::expr($this->_radix->getTable('_search').'.`doc_id`'))
-					->from(\DB::expr($this->_radix->getTable('_search')));
+				$query = \DB::select(\DB::expr($this->radix->getTable('_search').'.`doc_id`'))
+					->from(\DB::expr($this->radix->getTable('_search')));
 
 				if($args['text'])
 				{
 					$query->where(
-						\DB::expr('MATCH ('.$this->_radix->getTable('_search').'.`comment`) '.
+						\DB::expr('MATCH ('.$this->radix->getTable('_search').'.`comment`) '.
 							'AGAINST ('.\DB::escape($args['text']).' IN BOOLEAN MODE)'),
 						\DB::expr(''), \DB::expr(''));
 				}
@@ -453,7 +469,7 @@ class Search extends Board
 				if($args['filename'])
 				{
 					$query->where(\DB::expr(
-						'MATCH ('.$this->_radix->getTable('_search').'.`media_filename`) '.
+						'MATCH ('.$this->radix->getTable('_search').'.`media_filename`) '.
 							'AGAINST ('.\DB::escape($args['filename']).' IN BOOLEAN MODE)'),
 						\DB::expr(''), \DB::expr(''));
 				}
@@ -466,25 +482,25 @@ class Search extends Board
 
 				if ( ! count($result))
 				{
-					$this->_comments_unsorted = array();
-					$this->_comments = array();
+					$this->comments_unsorted = [];
+					$this->comments = [];
 					throw new SearchEmptyResultException(__('No results found.'));
 				}
 
-				$docs = array();
+				$docs = [];
 				foreach ($result as $rec)
 				{
 					$docs[] = $rec->doc_id;
 				}
 			}
 
-			foreach (array('*', 'COUNT(*) as count') as $select_key => $select)
+			foreach (['*', 'COUNT(*) as count'] as $select_key => $select)
 			{
 				$query = \DB::select(\DB::expr($select))
-					->from(\DB::expr($this->_radix->getTable()));
+					->from(\DB::expr($this->radix->getTable()));
 
-				static::sql_media_join($query, $this->_radix);
-				static::sql_extra_join($query, $this->_radix);
+				static::sql_media_join($query, $this->radix);
+				static::sql_extra_join($query, $this->radix);
 
 				if (isset($docs))
 				{
@@ -568,12 +584,12 @@ class Search extends Board
 				if ($args['filter'] == 'image')
 				{
 					// gotta use the expr else it will be confused on which media_id to use
-					$query->where(\DB::expr($this->_radix->getTable().'.media_id'), '=', 0);
+					$query->where(\DB::expr($this->radix->getTable().'.media_id'), '=', 0);
 					//$this->db->use_index('media_id_index');
 				}
 				if ($args['filter'] == 'text')
 				{
-					$query->where(\DB::expr($this->_radix->getTable().'.media_id'), '<>', 0);
+					$query->where(\DB::expr($this->radix->getTable().'.media_id'), '<>', 0);
 					//$this->db->use_index('media_id_index');
 				}
 				if ($args['start'])
@@ -598,8 +614,8 @@ class Search extends Board
 
 					if ( ! count($result_which))
 					{
-						$this->_comments_unsorted = array();
-						$this->_comments = array();
+						$this->comments_unsorted = [];
+						$this->comments = [];
 						throw new SearchEmptyResultException(__('No results found.'));
 					}
 
@@ -607,29 +623,32 @@ class Search extends Board
 				}
 				else
 				{
-					$this->_total_count = $query->as_object()
+					$this->total_count = $query->as_object()
 						->execute()
 						->current()
 						->count;
 				}
 			}
+			*/
 		}
 
 		foreach ($result as $item)
 		{
-			$board = $this->_radix !== null ? $this->_radix : \Radix::getById($item->board_id);
-			$this->_comments_unsorted[] = \Comment::forge($item, $board);
+			$board = $this->radix !== null ? $this->radix : \Radix::getById($item->board_id);
+			$this->comments_unsorted[] = \Comment::fromArrayDeep($item, $board);
 		}
 
-		$this->_comments[0]['posts'] = $this->_comments_unsorted;
+		$this->comments[0]['posts'] = $this->comments_unsorted;
 
 		return $this;
 	}
 
-
-	public function get_search_count()
+	/**
+	 * Sets the count of results, max 5000
+	 */
+	public function getSearchCount()
 	{
-		$this->get_comments();
+		$this->getComments();
 	}
 
 }

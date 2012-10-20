@@ -620,7 +620,7 @@ class Radix //extends \Model_Base
 			}
 
 			static::clearCache();
-			static::preload(TRUE);
+			static::preload();
 			$board = static::getById($id);
 			$board->createTables();
 

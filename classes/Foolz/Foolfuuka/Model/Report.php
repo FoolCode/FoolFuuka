@@ -310,10 +310,10 @@ class Report extends \Model\Model_Base
 			try
 			{
 				Board::forge()
-					->get_post()
-					->set_radix($new->radix)
-					->set_options('doc_id', $id)
-					->get_comments();
+					->getPost()
+					->setRadix($new->radix)
+					->setOptions('doc_id', $id)
+					->getComments();
 			}
 			catch (BoardException $e)
 			{
@@ -418,10 +418,11 @@ class Report extends \Model\Model_Base
 
 		try
 		{
-			$comments = Board::forge()->get_post()
-				->set_radix($this->radix)
-				->set_options('doc_id', $this->doc_id)
-				->get_comments();
+			$comments = Board::forge()
+				->getPost()
+				->setRadix($this->radix)
+				->setOptions('doc_id', $this->doc_id)
+				->getComments();
 			$this->comment = current($comments);
 		}
 		catch (BoardException $e)

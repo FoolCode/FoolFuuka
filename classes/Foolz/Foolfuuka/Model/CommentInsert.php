@@ -74,6 +74,7 @@ class CommentInsert extends Comment
 				->setParameter(':trips', $item['trips'])
 				->setParameter(':names', $item['names'])
 				->execute();
+
 		}
 		\DC::forge()->commit();
 	}
@@ -257,9 +258,11 @@ class CommentInsert extends Comment
 		{
 			try
 			{
-				$thread = Board::forge()->get_thread($this->thread_num)->set_radix($this->radix);
-				$thread->get_comments();
-				$status = $thread->check_thread_status();
+				$thread = Board::forge()
+					->getThread($this->thread_num)
+					->setRadix($this->radix);
+				$thread->getComments();
+				$status = $thread->checkThreadStatus();
 			}
 			catch (BoardException $e)
 			{
@@ -611,7 +614,7 @@ class CommentInsert extends Comment
 			try
 			{
 				\DB::start_transaction();
-				
+
 				list($last_id, $num_affected) =
 					\DB::insert(\DB::expr($this->radix->getTable()))
 					->set([
@@ -700,6 +703,8 @@ class CommentInsert extends Comment
 				// 1213 is the deadlock exception
 				if ($e->getCode() !== 1213)
 				{
+					\Log::error('Database error on insertion: ['.$e->getCode().'] '.$e->getMessage());
+
 					throw new CommentSendingDatabaseException(__('Something went wrong when inserting the post in the database. Try again.'));
 				}
 

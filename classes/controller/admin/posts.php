@@ -100,7 +100,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 	{
 		$this->_views["method_title"] = __('Manage bans');
 
-		if ($page < 1 || ! ctype_digit($page))
+		if ($page < 1 || ! ctype_digit((string) $page))
 		{
 			$page = 1;
 		}
@@ -119,7 +119,7 @@ class Controller_Admin_Posts extends \Controller_Admin
 	{
 		$this->_views["method_title"] = __('Manage pending appeals');
 
-		if ($page < 1 || ! ctype_digit($page))
+		if ($page < 1 || ! ctype_digit((string) $page))
 		{
 			$page = 1;
 		}

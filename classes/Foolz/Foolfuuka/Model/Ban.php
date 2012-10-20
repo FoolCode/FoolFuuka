@@ -307,7 +307,7 @@ class Ban
 			}
 		}
 
-		if ( ! ctype_digit($ip_decimal))
+		if ( ! ctype_digit((string) $ip_decimal))
 		{
 			throw new BanException(__('You inserted an invalid IP.'));
 		}

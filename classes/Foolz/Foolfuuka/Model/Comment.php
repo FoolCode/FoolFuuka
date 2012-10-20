@@ -82,36 +82,32 @@ class Comment extends \Model\Model_Base
 	public $extra = null;
 
 
-	public static function forge($post, $board, $options = array())
+	public static function fromArrayDeep($post, $board, $options = array())
 	{
-		if (is_array($post))
+		$array = array();
+		foreach ($post as $p)
 		{
-			$array = array();
-			foreach ($post as $p)
-			{
-				$array[] = static::forge($p, $board, $options);
-			}
-
-			return $array;
+			$array[] = new  static($p, $board, $options);
 		}
 
-		return new static($post, $board, $options);
+		return $array;
+	}
+
+
+	public static function fromArrayDeepApi($post, $board, $api, $options = array())
+	{
+		$array = array();
+		foreach ($post as $p)
+		{
+			$array[] = static::forge_for_api($p, $board, $api, $options);
+		}
+
+		return $array;
 	}
 
 
 	public static function forge_for_api($post, $board, $api, $options = array())
 	{
-		if (is_array($post))
-		{
-			$array = array();
-			foreach ($post as $p)
-			{
-				$array[] = static::forge_for_api($p, $board, $api, $options);
-			}
-
-			return $array;
-		}
-
 		$comment = new static($post, $board, $options);
 
 		$fields = $comment->_forced_entries;
@@ -212,8 +208,6 @@ class Comment extends \Model\Model_Base
 
 	public function __construct($post, $board, $options = array())
 	{
-		//parent::__construct();
-
 		$this->radix = $board;
 
 		$media_fields = Media::get_fields();
@@ -498,10 +492,10 @@ class Comment extends \Model\Model_Base
 
 		// format entire comment
 		$comment = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i",
-			array(get_class($this), 'process_internal_links'), $comment);
+			array($this, 'process_internal_links'), $comment);
 
 		$comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
-			array(get_class($this), 'process_external_links'), $comment);
+			array($this, 'process_external_links'), $comment);
 
 		$comment = preg_replace($find, $html, $comment);
 		$comment = static::parse_bbcode($comment, ($this->radix->archive && !$this->subnum));
@@ -980,10 +974,10 @@ class Comment extends \Model\Model_Base
 			foreach ($replies as $reply)
 			{
 				$comments = \Board::forge()
-					->get_post()
-					->set_options('doc_id', $reply['doc_id'])
-					->set_radix($this->radix)
-					->get_comments();
+					->getPost()
+					->setOptions('doc_id', $reply['doc_id'])
+					->setRadix($this->radix)
+					->getComments();
 
 				$comment = current($comments);
 				$comment->delete(null, true);

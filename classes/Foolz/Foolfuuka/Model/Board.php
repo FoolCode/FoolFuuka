@@ -718,13 +718,13 @@ class Board extends \Model\Model_Base
 			case 'last_x':
 				$subquery_first = \DC::qb()
 					->select('*')
-					->from(\DB::expr($this->radix->getTable(), 'xr'))
+					->from($this->radix->getTable(), 'xr')
 					->where('num = '.\DC::forge()->quote($num))
 					->setMaxResults(1)
 					->getSQL();
 				$subquery_last = \DC::qb()
 					->select('*')
-					->from(\DB::expr($this->radix->getTable(), 'xrr'))
+					->from($this->radix->getTable(), 'xrr')
 					->where('thread_num = '.\DC::forge()->quote($num))
 					->orderBy('num', 'DESC')
 					->addOrderBy('subnum', 'DESC')

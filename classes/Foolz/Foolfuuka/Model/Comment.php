@@ -195,7 +195,7 @@ class Comment extends \Model\Model_Base
 		unset($comment->_controller_method);
 
 		// remove radix data
-		unset($comment->extra->_radix);
+		unset($comment->extra->radix);
 
 		// we don't have captcha in use in api
 		unset($comment->recaptcha_challenge, $comment->recaptcha_response);
@@ -210,7 +210,7 @@ class Comment extends \Model\Model_Base
 		$this->radix = $board;
 
 		$media_fields = Media::getFields();
-		$extra_fields = Extra::get_fields();
+		$extra_fields = Extra::getFields();
 		$media = new \stdClass();
 		$extra = new \stdClass();
 		$do_media = false;

@@ -14,11 +14,13 @@ class MediaUploadMultipleNotAllowedException extends MediaUploadException {}
 class MediaUploadInvalidException extends MediaUploadException {}
 
 class MediaInsertException extends \FuelException {}
-class MediaInsertNoFileException extends MediaInsertException {}
-class MediaInsertMultipleNotAllowedException extends MediaInsertException {}
-class MediaInsertInvalidException extends MediaInsertException {}
-class MediaInsertImageRepostException extends MediaInsertException {}
+class MediaInsertInvalidFormatException extends MediaInsertException {}
+class MediaInsertDomainException extends MediaInsertException {}
+class MediaInsertRepostException extends MediaInsertException {}
 
+/**
+ * Manages Media files and database
+ */
 class Media extends \Model\Model_Base
 {
 	/**

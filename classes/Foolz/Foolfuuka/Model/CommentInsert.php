@@ -521,7 +521,7 @@ class CommentInsert extends Comment
 				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
 			}
 
-			$this->media = Media::forge_empty($this->radix);
+			$this->media = Media::forgeEmpty($this->radix);
 		}
 
 		// 2ch-style codes, only if enabled

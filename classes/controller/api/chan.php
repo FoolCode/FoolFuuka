@@ -313,7 +313,7 @@ class Controller_Api_Chan extends \Controller_Rest
 		{
 			try
 			{
-				\Media::get_by_media_id($this->_radix, \Input::post('id'))->delete(true, true, true);
+				\Media::getByMediaId($this->_radix, \Input::post('id'))->delete(true, true, true);
 			}
 			catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e)
 			{
@@ -333,7 +333,7 @@ class Controller_Api_Chan extends \Controller_Rest
 
 			try
 			{
-				\Media::get_by_media_id($this->_radix, \Input::post('id'))->ban($global);
+				\Media::getByMediaId($this->_radix, \Input::post('id'))->ban($global);
 			}
 			catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e)
 			{

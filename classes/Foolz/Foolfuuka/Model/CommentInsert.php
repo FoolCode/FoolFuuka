@@ -660,7 +660,7 @@ class CommentInsert extends Comment
 
 				$comment = $check_duplicate->current();
 
-				$media_fields = Media::get_fields();
+				$media_fields = Media::getFields();
 				// refresh the current comment object with the one finalized fetched from DB
 				foreach ($comment as $key => $item)
 				{

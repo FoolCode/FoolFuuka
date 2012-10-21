@@ -552,9 +552,9 @@ class Controller_Chan extends \Controller_Common
 			return $this->action_404(__('The image was never in our databases.'));
 		}
 
-		if ($media->get_media_link())
+		if ($media->getMediaLink())
 		{
-			return \Response::redirect($media->get_media_link(), 'location', 303);
+			return \Response::redirect($media->getMediaLink(), 'location', 303);
 		}
 
 		return \Response::redirect(
@@ -1055,7 +1055,7 @@ class Controller_Chan extends \Controller_Common
 		{
 			try
 			{
-				$media = \Media::forge_from_upload($this->_radix);
+				$media = \Media::forgeFromUpload($this->_radix);
 				$media->spoiler = isset($data['spoiler']) && $data['spoiler'];
 			}
 			catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e)

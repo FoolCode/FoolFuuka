@@ -126,7 +126,7 @@ class Comment extends \Model\Model_Base
 		if ($comment->media !== null)
 		{
 			// backwards compatibility with 4chan X
-			foreach (Media::$_fields as $field)
+			foreach (Media::getFields() as $field)
 			{
 				if ( ! isset($comment->$field))
 				{
@@ -136,7 +136,7 @@ class Comment extends \Model\Model_Base
 
 			// if we come across a banned image we set all the data to null. Normal users must not see this data.
 			if (($comment->media->banned && ! \Auth::has_access('media.see_banned'))
-				|| ($comment->media->board->hide_thumbnails && ! \Auth::has_access('media.see_hidden')))
+				|| ($comment->media->radix->hide_thumbnails && ! \Auth::has_access('media.see_hidden')))
 			{
 				$banned = array(
 					'media_id' => 0,
@@ -172,16 +172,14 @@ class Comment extends \Model\Model_Base
 
 			// startup variables and put them also in the lower level for compatibility with older 4chan X
 			foreach (array(
-				'safe_media_hash',
-				'preview_orig_processed',
-				'media_filename_processed',
-				'media_hash_processed',
-				'media_link',
-				'remote_media_link',
-				'thumb_link'
-			) as $field)
+				'safe_media_hash' => 'getSafeMediaHash',
+				'media_filename_processed' => 'getMediaFilenameProcessed',
+				'media_link' => 'getMediaLink',
+				'remote_media_link' => 'getRemoteMediaLink',
+				'thumb_link' => 'getThumbLink'
+			) as $var => $method)
 			{
-				$comment->$field = $comment->media->{'get_'.$field}();
+				$comment->$var = $comment->media->$method();
 			}
 
 			unset($comment->media->board);
@@ -208,9 +206,10 @@ class Comment extends \Model\Model_Base
 
 	public function __construct($post, $board, $options = array())
 	{
+		$post = $post;
 		$this->radix = $board;
 
-		$media_fields = Media::get_fields();
+		$media_fields = Media::getFields();
 		$extra_fields = Extra::get_fields();
 		$media = new \stdClass();
 		$extra = new \stdClass();
@@ -235,9 +234,9 @@ class Comment extends \Model\Model_Base
 			}
 		}
 
-		if ($do_media)
+		if ($do_media && isset($media->media_id) && $media->media_id > 0)
 		{
-			$this->media = Media::forge_from_comment($media, $this->radix, $this->op);
+			$this->media = new Media($media, $this->radix, $this->op);
 		}
 		else
 		{

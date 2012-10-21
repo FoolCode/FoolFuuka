@@ -296,7 +296,7 @@ class Report extends \Model\Model_Base
 		{
 			try
 			{
-				Media::get_by_media_id($new->radix, $id);
+				Media::getByMediaId($new->radix, $id);
 			}
 			catch (MediaNotFoundException $e)
 			{

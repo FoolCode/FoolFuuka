@@ -19,25 +19,25 @@ foreach ($board->getComments() as $key => $post) :
 ?>
 	<div id="<?= $op->num ?>">
 		<?php if ($op->media !== null) : ?>
-			<?php if ($op->media->get_media_status() !== 'banned') : ?>
-			<span><?= __('File:') . ' ' . \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->get_media_filename_processed() ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
+			<?php if ($op->media->getMediaStatus() !== 'banned') : ?>
+			<span><?= __('File:') . ' ' . \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed() ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
 				<?php if (!$op->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-					[<a href="<?= Uri::create($op->radix->shortname . '/search/image/' . $op->media->get_safe_media_hash()) ?>"><?= __('View Same') ?></a>]
-					[<a href="http://google.com/searchbyimage?image_url=<?= $op->media->get_thumb_link() ?>">Google</a>]
-					[<a href="http://iqdb.org/?url=<?= $op->media->get_thumb_link() ?>">iqdb</a>]
-					[<a href="http://saucenao.com/search.php?url=<?= $op->media->get_thumb_link() ?>">SauceNAO</a>]
+					[<a href="<?= Uri::create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>"><?= __('View Same') ?></a>]
+					[<a href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink() ?>">Google</a>]
+					[<a href="http://iqdb.org/?url=<?= $op->media->getThumbLink() ?>">iqdb</a>]
+					[<a href="http://saucenao.com/search.php?url=<?= $op->media->getThumbLink() ?>">SauceNAO</a>]
 				<?php endif; ?>
 			<br />
 			<?php endif; ?>
-			<?php if ($op->media->get_media_status() === 'banned') : ?>
+			<?php if ($op->media->getMediaStatus() === 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
-			<?php elseif ($op->media->get_media_status() !== 'normal') : ?>
-				<a href="<?= ($op->media->get_media_link()) ? $op->media->get_media_link() : $op->media->get_remote_media_link() ?>" rel="noreferrer">
+			<?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
+				<a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" rel="noreferrer">
 					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 				</a>
 			<?php else: ?>
-				<a href="<?= ($op->media->get_media_link()) ? $op->media->get_media_link() : $op->media->get_remote_media_link() ?>" rel="noreferrer">
-					<img src="<?= $op->media->get_thumb_link() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thumb" alt="<?= $op->num ?>" />
+				<a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" rel="noreferrer">
+					<img src="<?= $op->media->getThumbLink() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thumb" alt="<?= $op->num ?>" />
 				</a>
 			<?php endif; ?>
 		<?php endif; ?>

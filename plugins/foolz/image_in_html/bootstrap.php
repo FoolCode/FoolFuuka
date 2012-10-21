@@ -13,7 +13,7 @@ if (!defined('DOCROOT'))
 		\Router::add('(?!(admin|_))(\w+)/image_html/(:any)', 'plugin/fu/image_in_html/chan/$2/image_html/$3', true);
 
 
-		\Foolz\Plugin\Event::forge('foolfuuka\\model\\media.get_link.call.before')
+		\Foolz\Plugin\Event::forge('foolfuuka\\model\\media.getLink.call.before')
 			->setCall(function($result) {
 
 				$element = $result->getObject();
@@ -30,11 +30,8 @@ if (!defined('DOCROOT'))
 					return;
 				}
 
-				try
-				{
-					$element->p_get_link($thumbnail);
-				}
-				catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e)
+				$return = $element->p_getLink($thumbnail);
+				if ($return === null)
 				{
 					return;
 				}

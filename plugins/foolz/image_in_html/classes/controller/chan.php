@@ -31,7 +31,7 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 			ob_start();
 			?>
 			<article class="full_image">
-				<a href="<?= $media->get_link(false, true) ?>"><img src="<?= $media->get_link(false, true) ?>"></a>
+				<a href="<?= $media->getLink(false, true) ?>"><img src="<?= $media->getLink(false, true) ?>"></a>
 				<nav>
 					<?php if ($media->total) : ?><a href="<?= \Uri::create($this->_radix->shortname.'/search/image/'.$media->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?>
 					<a href="http://google.com/searchbyimage?image_url=<?= $media->thumb_link ?>" target="_blank" class="btnr parent">Google</a>

@@ -53,22 +53,22 @@ class Board_comment extends \Theme
 				<?php if ($p->media !== null) : ?>
 				<div class="post_file">
 					<span class="post_file_controls">
-					<?php if ($p->media->get_media_status() !== 'banned' || $perm['media.see_hidden']) : ?>
+					<?php if ($p->media->getMediaStatus() !== 'banned' || $perm['media.see_hidden']) : ?>
 						<?php if (!$p->radix->hide_thumbnails || $perm['media.see_hidden']) : ?>
-						<?php if ($p->media->total > 1) : ?><a href="<?= \Uri::create($p->radix->shortname . '/search/image/' . $p->media->get_safe_media_hash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
-							href="http://google.com/searchbyimage?image_url=<?= $p->media->get_thumb_link() ?>" target="_blank" class="btnr parent">Google</a><a
-							href="http://iqdb.org/?url=<?= $p->media->get_thumb_link() ?>" target="_blank" class="btnr parent">iqdb</a><a
-							href="http://saucenao.com/search.php?url=<?= $p->media->get_thumb_link() ?>" target="_blank" class="btnr parent">SauceNAO</a>
+						<?php if ($p->media->total > 1) : ?><a href="<?= \Uri::create($p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
+							href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">Google</a><a
+							href="http://iqdb.org/?url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">iqdb</a><a
+							href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">SauceNAO</a>
 						<?php endif; ?>
 					<?php endif ?>
 					</span>
-					<?php if ($p->media->get_media_status() !== 'banned' || $perm['media.see_banned']) : ?>
-					<?php if (mb_strlen($p->media->get_media_filename_processed()) > 38) : ?>
+					<?php if ($p->media->getMediaStatus() !== 'banned' || $perm['media.see_banned']) : ?>
+					<?php if (mb_strlen($p->media->getMediaFilenameProcessed()) > 38) : ?>
 						<span class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p->media->media_filename) ?>">
-							<?= mb_substr($p->media->get_media_filename_processed(), 0, 32) . ' (...)' . mb_substr($p->media->get_media_filename_processed(), mb_strrpos($p->media->get_media_filename_processed(), '.')) . ', ' ?>
+							<?= mb_substr($p->media->getMediaFilenameProcessed(), 0, 32) . ' (...)' . mb_substr($p->media->getMediaFilenameProcessed(), mb_strrpos($p->media->getMediaFilenameProcessed(), '.')) . ', ' ?>
 						</span>
 					<?php else: ?>
-						<?= $p->media->get_media_filename_processed() . ', ' ?>
+						<?= $p->media->getMediaFilenameProcessed() . ', ' ?>
 					<?php endif; ?>
 
 					<span class="post_file_metadata">
@@ -77,25 +77,25 @@ class Board_comment extends \Theme
 					<?php endif; ?>
 				</div>
 				<div class="thread_image_box">
-					<?php if ($p->media->get_media_status() === 'banned') : ?>
+					<?php if ($p->media->getMediaStatus() === 'banned') : ?>
 						<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
-					<?php elseif ($p->media->get_media_status() !== 'normal'): ?>
-						<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+					<?php elseif ($p->media->getMediaStatus() !== 'normal'): ?>
+						<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 							<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
 						</a>
 					<?php else: ?>
-						<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+						<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 							<?php if(!$perm['maccess.mod'] && !$p->radix->transparent_spoiler && $p->media->spoiler) :?>
 							<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 							<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
-							<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/transparent_pixel.png') ?>" data-original="<?= $p->media->get_thumb_link() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+							<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/transparent_pixel.png') ?>" data-original="<?= $p->media->getThumbLink() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 							<noscript>
-								<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-									<img src="<?= $p->media->get_thumb_link() ?>" style="margin-left: -<?= $p->media->preview_w ?>px" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+								<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+									<img src="<?= $p->media->getThumbLink() ?>" style="margin-left: -<?= $p->media->preview_w ?>px" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 								</a>
 							</noscript>
 							<?php else : ?>
-							<img src="<?= $p->media->get_thumb_link() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+							<img src="<?= $p->media->getThumbLink() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 							<?php endif; ?>
 						</a>
 					<?php endif; ?>

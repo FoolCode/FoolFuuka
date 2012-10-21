@@ -17,26 +17,12 @@ class Nginx_Cache_Purge extends \Plugins
 
 		if($media)
 		{
-			try
-			{
-				$dir['full'] = $post->get_link(false, true);
-			}
-			catch (\Foolz\Foolfuuka\Model\MediaException $e)
-			{
-
-			}
+			$dir['full'] = $post->getLink(false, true);
 		}
 
 		if($thumb)
 		{
-			try
-			{
-				$dir['thumb'] = $post->get_link(true, true);
-			}
-			catch (\Foolz\Foolfuuka\Model\MediaException $e)
-			{
-
-			}
+			$dir['thumb'] = $post->getLink(true, true);
 		}
 
 		$url_user_password = static::parse_urls();
@@ -45,6 +31,12 @@ class Nginx_Cache_Purge extends \Plugins
 		{
 			foreach($dir as $d)
 			{
+				// getLink gives null on failure
+				if ($d === null)
+				{
+					continue;
+				}
+
 				$options = array('driver' => 'curl');
 				if(isset($item['password']))
 				{

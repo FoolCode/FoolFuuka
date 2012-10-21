@@ -13,35 +13,35 @@ foreach ($board->getComments() as $key => $post) :
 	<?php endif; ?>
 	<?php if ($op->media !== null) : ?>
 		<div class="thread_image_box">
-			<?php if ($op->media->get_media_status() === 'banned') : ?>
+			<?php if ($op->media->getMediaStatus() === 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png')?>" width="150" height="150" />
-			<?php elseif ($op->media->get_media_status() !== 'normal') : ?>
-				<a href="<?= ($op->media->get_media_link()) ? $op->media->get_media_link() : $op->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+			<?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
+				<a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 					<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg')?>" width="150" height="150" />
 				</a>
 			<?php else : ?>
-				<a href="<?= ($op->media->get_media_link()) ? $op->media->get_media_link() : $op->media->get_remote_media_link() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+				<a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 					<?php if(!Auth::has_access('maccess.mod') && !$op->radix->transparent_spoiler && $op->media->spoiler) :?>
 					<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 					<?php else : ?>
-					<img src="<?= $op->media->get_thumb_link() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
+					<img src="<?= $op->media->getThumbLink() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
 					<?php endif; ?>
 				</a>
 			<?php endif; ?>
-			<?php if ($op->media->get_media_status() !== 'banned') : ?>
+			<?php if ($op->media->getMediaStatus() !== 'banned') : ?>
 				<div class="post_file" style="padding-left: 2px;<?php if ($op->media->preview_w > 149) : ?> max-width:<?= $op->media->preview_w .'px'; endif; ?>;">
-					<?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->get_media_filename_processed(); ?>
+					<?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed(); ?>
 				</div>
 			<?php endif; ?>
 			<div class="post_file_controls">
-				<?php if ($op->media->get_media_status() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
+				<?php if ($op->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
 					<?php if (!$op->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-						<?php if ($op->media->total > 1) : ?><a href="<?= Uri::create($op->radix->shortname . '/search/image/' . $op->media->get_safe_media_hash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
-						href="http://google.com/searchbyimage?image_url=<?= $op->media->get_thumb_link() ?>" target="_blank"
+						<?php if ($op->media->total > 1) : ?><a href="<?= Uri::create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
+						href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink() ?>" target="_blank"
 						class="btnr parent">Google</a><a
-						href="http://iqdb.org/?url=<?= $op->media->get_thumb_link() ?>" target="_blank"
+						href="http://iqdb.org/?url=<?= $op->media->getThumbLink() ?>" target="_blank"
 						class="btnr parent">iqdb</a><a
-						href="http://saucenao.com/search.php?url=<?= $op->media->get_thumb_link() ?>" target="_blank"
+						href="http://saucenao.com/search.php?url=<?= $op->media->getThumbLink() ?>" target="_blank"
 						class="btnr parent">SauceNAO</a>
 					<?php endif; ?>
 				<?php endif; ?>

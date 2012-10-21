@@ -42,29 +42,29 @@ if (!defined('DOCROOT'))
 
 				<br/>
 				<?php if ($p->media !== null) : ?>
-					<?php if ($p->media->get_media_status() !== 'banned') : ?>
+					<?php if ($p->media->getMediaStatus() !== 'banned') : ?>
 					<span>
-						<?= __('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->get_media_filename_processed(); ?>
+						<?= __('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->getMediaFilenameProcessed(); ?>
 						<?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
 					</span>
 
 						<?php if (!$p->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-							[<a href="<?= Uri::create($p->radix->shortname . '/search/image/' . $p->media->get_safe_media_hash()) ?>"><?= __('View Same') ?></a>]
-							[<a href="http://google.com/searchbyimage?image_url=<?= $p->media->get_thumb_link() ?>">Google</a>]
-							[<a href="http://iqdb.org/?url=<?= $p->media->get_thumb_link() ?>">iqdb</a>]
-							[<a href="http://saucenao.com/search.php?url=<?= $p->media->get_thumb_link() ?>">SauceNAO</a>]
+							[<a href="<?= Uri::create($p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>"><?= __('View Same') ?></a>]
+							[<a href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink() ?>">Google</a>]
+							[<a href="http://iqdb.org/?url=<?= $p->media->getThumbLink() ?>">iqdb</a>]
+							[<a href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink() ?>">SauceNAO</a>]
 						<?php endif; ?>
 					<br />
 					<?php endif; ?>
-					<?php if ($p->media->get_media_status() === 'banned') : ?>
+					<?php if ($p->media->getMediaStatus() === 'banned') : ?>
 						<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
-					<?php elseif ($p->media->get_media_status() !== 'normal'): ?>
-						<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->media->get_remote_media_link() ?>" rel="noreferrer">
+					<?php elseif ($p->media->getMediaStatus() !== 'normal'): ?>
+						<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" rel="noreferrer">
 							<img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 						</a>
 					<?php else: ?>
-					<a href="<?= ($p->media->get_media_link()) ? $p->media->get_media_link() : $p->media->get_remote_media_link() ?>" rel="noreferrer">
-						<img src="<?= $p->media->get_thumb_link() ?>" alt="<?= $p->num ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="thumb" />
+					<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" rel="noreferrer">
+						<img src="<?= $p->media->getThumbLink() ?>" alt="<?= $p->num ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="thumb" />
 					</a>
 					<?php endif; ?>
 				<?php endif; ?>

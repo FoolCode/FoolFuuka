@@ -2,18 +2,18 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-class MediaException extends \FuelException {}
+class MediaException extends \Exception {}
 class MediaNotFoundException extends MediaException {}
 class MediaHashNotFoundException extends MediaNotFoundException {}
 class MediaDirNotAvailableException extends MediaNotFoundException {}
 class MediaFileNotFoundException extends MediaNotFoundException {}
 
-class MediaUploadException extends \FuelException {}
+class MediaUploadException extends \Exception {}
 class MediaUploadNoFileException extends MediaUploadException {}
 class MediaUploadMultipleNotAllowedException extends MediaUploadException {}
 class MediaUploadInvalidException extends MediaUploadException {}
 
-class MediaInsertException extends \FuelException {}
+class MediaInsertException extends \Exception {}
 class MediaInsertInvalidFormatException extends MediaInsertException {}
 class MediaInsertDomainException extends MediaInsertException {}
 class MediaInsertRepostException extends MediaInsertException {}

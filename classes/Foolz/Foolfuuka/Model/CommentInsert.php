@@ -289,34 +289,41 @@ class CommentInsert extends Comment
 			if ($this->thread_num < 1)
 			{
 				// one can create a new thread only once every 5 minutes
-				$check_op = \DB::select()
-					->from(\DB::expr($this->radix->getTable()))
-					->where('poster_ip', \Input::ip_decimal())
-					->where('timestamp', '>', time() - 300)
-					->where('op', 1)
-					->limit(1)
-					->execute();
+				$check_op = \DC::qb()
+					->select('*')
+					->from($this->radix->getTable(), 'r')
+					->where('r.poster_ip = :poster_ip')
+					->andWhere('r.timestamp > :timestamp')
+					->andWhere('r.op = :op')
+					->setParameters([
+						':poster_ip' => \Input::ip_decimal(),
+						':timestamp' => time() - 300,
+						':op' => true
+					])
+					->setMaxResults(1)
+					->execute()
+					->fetch();
 
-				if(count($check_op))
+				if($check_op)
 				{
 					throw new CommentSendingTimeLimitException(__('You must wait up to 5 minutes to make another new thread.'));
 				}
 			}
 
 			// check the latest posts by the user to see if he's posting the same message or if he's posting too fast
-			$check = \DB::select()
-				->from(\DB::expr($this->radix->getTable()))
-				->where('poster_ip', \Input::ip_decimal())
-				->order_by('timestamp', 'desc')
-				->limit(1)
-				->as_object()
-				->execute();
+			$check = \DC::qb()
+				->select('*')
+				->from($this->radix->getTable(), 'r')
+				->where('poster_ip = :poster_ip')
+				->orderBy('timestamp', 'DESC')
+				->setMaxResults(1)
+				->setParameter(':poster_ip', \Input::ip_decimal())
+				->execute()
+				->fetch();
 
-			if (count($check))
+			if ($check)
 			{
-				$row = $check->current();
-
-				if ($this->comment !== null && $row->comment === $this->comment)
+				if ($this->comment !== null && $check->comment === $this->comment)
 				{
 					throw new CommentSendingSameCommentException(__('You\'re sending the same comment as the last time'));
 				}
@@ -332,14 +339,14 @@ class CommentInsert extends Comment
 					$check_time = $check_time - ($diff * 60 * 60);
 				}
 
-				if ($check_time - $row->timestamp < 10 && $check_time - $row->timestamp > 0)
+				if ($check_time - $check->timestamp < 10 && $check_time - $check->timestamp > 0)
 				{
 					throw new CommentSendingTimeLimitException(__('You must wait up to 10 seconds to post again.'));
 				}
 			}
 
 			// we want to know if the comment will display empty, and in case we won't let it pass
-			$comment_parsed = $this->process_comment();
+			$comment_parsed = $this->processComment();
 			if($this->comment !== '' && $comment_parsed === '')
 			{
 				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
@@ -418,7 +425,7 @@ class CommentInsert extends Comment
 		}
 		else
 		{
-			$this->process_name();
+			$this->processName();
 			if ($this->trip === '')
 			{
 				$this->trip = null;
@@ -547,61 +554,65 @@ class CommentInsert extends Comment
 
 		if($this->ghost)
 		{
-			$num = \DB::expr('
-				(SELECT MAX(num)
-				FROM
-				(
-					SELECT num
-					FROM '.$this->radix->getTable().'
-					WHERE thread_num = '.intval($this->thread_num).'
-				) AS x)
-			');
+			$num = '('.\DC::qb()
+				->select('MAX(num)')
+				->from('('.
+					\DC::qb()
+						->select('num')
+						->from($this->radix->getTable(), 'xr')
+						->where('thread_num = '.\DC::forge()->quote($this->thread_num))
+						->getSQL()
+				.')', 'x')
+				->getSQL().')';
 
-			$subnum = \DB::expr('
-				(SELECT MAX(subnum)+1
-				FROM
-				(
-					SELECT subnum
-					FROM ' . $this->radix->getTable() . '
-					WHERE
-						num = (
-							SELECT MAX(num)
-							FROM ' . $this->radix->getTable() . '
-							WHERE thread_num = '.intval($this->thread_num).'
-
-						)
-				) AS x)
-			');
+			$subnum = '('.\DC::qb()
+				->select('MAX(subnum)+1')
+				->from('('.
+					\DC::qb()
+						->select('subnum')
+						->from($this->radix->getTable(), 'xxr')
+						->where('num = ('.
+							\DC::qb()
+								->select('MAX(num)', 'maxnum')
+								->from($this->radix->getTable(), 'xxxr')
+								->where('thread_num = '.\DC::forge()->quote($this->thread_num))
+								->getSQL()
+						.')')
+						->getSQL()
+				.')', 'xx')
+				->getSQL().')';
 
 			$thread_num = $this->thread_num;
 		}
 		else
 		{
-			$num = \DB::expr('
-				(SELECT COALESCE(MAX(num), 0)+1 AS num
-				FROM
-				(
-					SELECT num
-					FROM '.$this->radix->getTable().'
-				) AS x)
-			');
+			$num = '('.\DC::qb()
+				->select('COALESCE(MAX(num), 0)+1 AS num')
+				->from('('.
+					\DC::qb()
+						->select('num')
+						->from($this->radix->getTable(), 'xxr')
+						->getSQL()
+				.')', 'x')
+				->getSQL().')';
 
 			$subnum = 0;
 
 			if($this->thread_num > 0)
 			{
-				$thread_num = $this->thread_num;
+				$thread_num = \DC::forge()->quote($this->thread_num);
 			}
 			else
 			{
-				$thread_num = \DB::expr('
-					(SELECT COALESCE(MAX(num), 0)+1 AS thread_num
-					FROM
-					(
-						SELECT num
-						FROM '.$this->radix->getTable().'
-					) AS x)
-				');
+				$thread_num = '('.\DC::qb()
+					->select('COALESCE(MAX(num), 0)+1 AS thread_num')
+					->from('('.
+						\DC::qb()
+							->select('num')
+							->from($this->radix->getTable(), 'xxxr')
+							->getSQL()
+					.')', 'xx')
+					->getSQL().')';
 			}
 		}
 
@@ -613,52 +624,85 @@ class CommentInsert extends Comment
 		{
 			try
 			{
-				\DB::start_transaction();
+				\DC::forge()->beginTransaction();
 
-				list($last_id, $num_affected) =
-					\DB::insert(\DB::expr($this->radix->getTable()))
-					->set([
-						'media_id' => $this->media->media_id ? $this->media->media_id : 0,
-						'num' => $num,
-						'subnum' => $subnum,
-						'thread_num' => $thread_num,
-						'op' => $this->op,
-						'timestamp' => $this->timestamp,
-						'capcode' => $this->capcode,
-						'email' => $this->email,
-						'name' => $this->name,
-						'trip' => $this->trip,
-						'title' => $this->title,
-						'comment' => $this->comment,
-						'delpass' => $this->delpass,
-						'spoiler' => $this->media->spoiler,
-						'poster_ip' => $this->poster_ip,
-						'poster_hash' => $this->poster_hash,
-						'poster_country' => $this->poster_country,
-						'preview_orig' => $this->media->preview_orig,
-						'preview_w' => $this->media->preview_w,
-						'preview_h' => $this->media->preview_h,
-						'media_filename' => $this->media->media_filename,
-						'media_w' => $this->media->media_w,
-						'media_h' => $this->media->media_h,
-						'media_size' => $this->media->media_size,
-						'media_hash' => $this->media->media_hash,
-						'media_orig' => $this->media->media_orig,
-						'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
-					])->execute();
+				$query_fields = [
+					'num' => $num,
+					'subnum' => $subnum,
+					'thread_num' => $thread_num,
+				];
+
+				$fields = [
+					'media_id' => $this->media->media_id ? $this->media->media_id : 0,
+					'op' => $this->op,
+					'timestamp' => $this->timestamp,
+					'capcode' => $this->capcode,
+					'email' => $this->email,
+					'name' => $this->name,
+					'trip' => $this->trip,
+					'title' => $this->title,
+					'comment' => $this->comment,
+					'delpass' => $this->delpass,
+					'spoiler' => $this->media->spoiler,
+					'poster_ip' => $this->poster_ip,
+					'poster_hash' => $this->poster_hash,
+					'poster_country' => $this->poster_country,
+					'preview_orig' => $this->media->preview_orig,
+					'preview_w' => $this->media->preview_w,
+					'preview_h' => $this->media->preview_h,
+					'media_filename' => $this->media->media_filename,
+					'media_w' => $this->media->media_w,
+					'media_h' => $this->media->media_h,
+					'media_size' => $this->media->media_size,
+					'media_hash' => $this->media->media_hash,
+					'media_orig' => $this->media->media_orig,
+					'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
+				];
+
+				foreach ($fields as $key => $item)
+				{
+					if ($item === null)
+					{
+						$fields[$key] = 'null';
+					}
+					else
+					{
+						$fields[$key] = \DC::forge()->quote($item);
+					}
+				}
+
+				$fields = $query_fields + $fields;
+
+				\DC::forge()->executeUpdate(
+					'INSERT INTO '.$this->radix->getTable().
+					'('.implode(', ', array_keys($fields)).')'.
+					'VALUES ('.implode(', ', array_values($fields)).')'
+				);
+
+				$last_id = \DC::forge()->lastInsertId();
 
 				// check that it wasn't posted multiple times
-				$check_duplicate = \DB::select()->from(\DB::expr($this->radix->getTable()))
-					->where('poster_ip', \Input::ip_decimal())->where('comment', $this->comment)
-					->where('timestamp', '>=', $this->timestamp)->as_object()->execute();
+				$check_duplicate = \DC::qb()
+					->select('*')
+					->from($this->radix->getTable(), 'r')
+					->where('comment = :comment')
+					->andWhere('poster_ip = :poster_ip')
+					->andWhere('timestamp >= :timestamp')
+					->setParameters([
+						':comment' => $this->comment,
+						':poster_ip' => \Input::ip_decimal(),
+						':timestamp' => $this->timestamp
+					])
+					->execute()
+					->fetchAll();
 
 				if(count($check_duplicate) > 1)
 				{
-					\DB::rollback_transaction();
+					\DC::forge()->rollBack();
 					throw new CommentSendingDuplicateException(__('You are sending the same post twice.'));
 				}
 
-				$comment = $check_duplicate->current();
+				$comment = current($check_duplicate);
 
 				$media_fields = Media::getFields();
 				// refresh the current comment object with the one finalized fetched from DB
@@ -683,8 +727,12 @@ class CommentInsert extends Comment
 				{
 					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment->thread_num),'id'),+3), 0, 8);
 
-					\DB::update(\DB::expr($this->radix->getTable()))
-						->value('poster_hash', $this->poster_hash)->where('doc_id', $comment->doc_id)->execute();
+					\DC::qb()
+						->update($this->radix->getTable())
+						->set('poster_hash', $this->poster_hash)
+						->where('doc_id = :doc_id')
+						->setParameter(':doc_id', $comment->doc_id)
+						->execute();
 				}
 
 				// set data for extra fields
@@ -696,18 +744,10 @@ class CommentInsert extends Comment
 				$this->extra->extra_id = $last_id;
 				$this->extra->insert();
 
-				\DB::commit_transaction();
+				\DC::forge()->commit();
 			}
-			catch (\Database_Exception $e)
+			catch (\Doctrine\DBAL\DBALException $e)
 			{
-				// 1213 is the deadlock exception
-				if ($e->getCode() !== 1213)
-				{
-					\Log::error('Database error on insertion: ['.$e->getCode().'] '.$e->getMessage());
-
-					throw new CommentSendingDatabaseException(__('Something went wrong when inserting the post in the database. Try again.'));
-				}
-
 				$try_count++;
 
 				if ($try_count > $try_max)
@@ -719,23 +759,6 @@ class CommentInsert extends Comment
 			}
 
 			break;
-		}
-
-		// success, now check if there's extra work to do
-
-		// we might be using the local MyISAM search table which doesn't support transactions
-		// so we must be really careful with the insertion
-		if($this->radix->myisam_search)
-		{
-			\DB::insert(\DB::expr($this->radix->getTable('_search')))
-				->set(array(
-					'doc_id' => $comment->doc_id,
-					'num' => $comment->num,
-					'subnum' => $comment->subnum,
-					'thread_num' => $comment->thread_num,
-					'media_filename' => $comment->media_filename,
-					'comment' => $comment->comment
-				))->execute();
 		}
 
 		return $this;

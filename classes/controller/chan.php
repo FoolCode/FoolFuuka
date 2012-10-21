@@ -1183,7 +1183,7 @@ class Controller_Chan extends \Controller_Common
 			}
 			else
 			{
-				$comment_api = \Comment::forge_for_api($comment, $this->_radix,
+				$comment_api = \Comment::forgeForApi($comment, $this->_radix,
 					array('board' => false, 'theme' => true), array('controller_method' => $limit ? 'last/'.$limit : 'thread'));
 				return \Response::forge(
 					json_encode(array(

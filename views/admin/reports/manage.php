@@ -18,7 +18,7 @@
 		<?php
 		foreach ($reports as $key => $report)
 		{
-			echo $report->getComment()->get_formatted();
+			echo $report->getComment()->getFormatted();
 		}
 		?>
 	</article>

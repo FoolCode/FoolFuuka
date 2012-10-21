@@ -8,55 +8,78 @@ class CommentDeleteWrongPassException extends CommentException {}
 
 class Comment extends \Model\Model_Base
 {
-
-	/**
+/**
 	 * Array of post numbers found in the database
 	 *
-	 * @var array
+	 * @var  array
 	 */
-	protected static $_posts = array();
+	protected static $_posts = [];
 
 	/**
 	 * Array of backlinks found in the posts
 	 *
-	 * @var type
+	 * @var  array
 	 */
-	public static $_backlinks_arr = array();
-
-	// global variables used for processing due to callbacks
+	public static $_backlinks_arr = [];
 
 	/**
 	 * If the backlinks must be full URLs or just the hash
 	 * Notice: this is global because it's used in a PHP callback
 	 *
-	 * @var bool
+	 * @var  boolean
 	 */
 	protected $_backlinks_hash_only_url = false;
 
-	protected $current_board_for_prc = null;
-
-
-	public $_controller_method = 'thread';
+	/**
+	 * Stores a Radix object for the link processing
+	 *
+	 * @var  null|\Foolz\Foolfuuka\Model\Radix
+	 */
+	protected $_current_radix_for_prc = null;
 
 	/**
-	 * Sets the callbacks so they return URLs good for realtime updates
-	 * Notice: this is global because it's used in a PHP callback
+	 * The controller method, usually "thread" or "last/xx"
 	 *
-	 * @var type
+	 * @var  string
 	 */
-	protected $_realtime = false;
-	protected $_clean = true;
-	protected $_prefetch_backlinks = true;
+	public $_controller_method = 'thread';
+
 	protected static $_bbcode_parser = null;
-	protected $_force_entries = false;
-	protected $_forced_entries = array(
-		'title_processed', 'name_processed', 'email_processed', 'trip_processed',
-		'poster_hash_processed', 'original_timestamp', 'fourchan_date', 'comment_sanitized',
-		'comment_processed', 'poster_country_name_processed'
-	);
+
+	protected $_options = [
+		'realtime' => false,
+		'clean' => true,
+		'prefetch_backlinks' => true,
+		'force_entries' => false
+	];
+
+	protected $_forced_entries = [
+		'title_processed' => 'getTitleProcessed',
+		'name_processed' => 'getNameProcessed',
+		'email_processed' => 'getEmailProcessed',
+		'trip_processed' => 'getTripProcessed',
+		'poster_hash_processed' => 'getPosterHashProcessed',
+		'original_timestamp' => 'getOriginalTimestamp',
+		'fourchan_date' => 'getFourchanDate',
+		'comment_sanitized' => 'getCommentSanitized',
+		'comment_processed' => 'getCommentProcessed',
+		'poster_country_name_processed' => 'getPosterCountryNameProcessed'
+	];
 
 	public $recaptcha_challenge = null;
 	public $recaptcha_response = null;
+
+	public $fourchan_date = false;
+	public $comment_sanitized = false;
+	public $comment_processed = false;
+	public $formatted = false;
+	public $reports = false;
+	public $title_processed = false;
+	public $name_processed = false;
+	public $email_processed = false;
+	public $trip_processed = false;
+	public $poster_hash_processed = false;
+	public $poster_country_name_processed = false;
 
 	public $radix = null;
 
@@ -82,58 +105,49 @@ class Comment extends \Model\Model_Base
 	public $extra = null;
 
 
-	public static function fromArrayDeep($post, $board, $options = array())
+	public static function fromArrayDeep($post, $radix, $options = [])
 	{
 		$array = array();
 		foreach ($post as $p)
 		{
-			$array[] = new  static($p, $board, $options);
+			$array[] = new  static($p, $radix, $options);
 		}
 
 		return $array;
 	}
 
 
-	public static function fromArrayDeepApi($post, $board, $api, $options = array())
+	public static function fromArrayDeepApi($post, $radix, $api, $options = [])
 	{
 		$array = array();
 		foreach ($post as $p)
 		{
-			$array[] = static::forge_for_api($p, $board, $api, $options);
+			$array[] = static::forgeForApi($p, $radix, $api, $options);
 		}
 
 		return $array;
 	}
 
 
-	public static function forge_for_api($post, $board, $api, $options = array())
+	public static function forgeForApi($post, $radix, $api, $options = array())
 	{
-		$comment = new static($post, $board, $options);
+		$comment = new static($post, $radix, $options);
 
 		$fields = $comment->_forced_entries;
 
 		if (isset($api['theme']) && $api['theme'] !== null)
 		{
-			$fields[] = 'formatted';
+			$fields[] = 'getFormatted';
 		}
 
-		foreach ($fields as $field)
+		foreach ($fields as $var => $method)
 		{
-			$comment->{'get_'.$field}();
+			$comment->$method();
 		}
 
 		// also spawn media variables
 		if ($comment->media !== null)
 		{
-			// backwards compatibility with 4chan X
-			foreach (Media::getFields() as $field)
-			{
-				if ( ! isset($comment->$field))
-				{
-					$comment->$field = $comment->media->$field;
-				}
-			}
-
 			// if we come across a banned image we set all the data to null. Normal users must not see this data.
 			if (($comment->media->banned && ! \Auth::has_access('media.see_banned'))
 				|| ($comment->media->radix->hide_thumbnails && ! \Auth::has_access('media.see_hidden')))
@@ -179,16 +193,16 @@ class Comment extends \Model\Model_Base
 				'thumb_link' => 'getThumbLink'
 			) as $var => $method)
 			{
-				$comment->$var = $comment->media->$method();
+				$comment->media->$method();
 			}
 
-			unset($comment->media->board);
+			unset($comment->media->radix);
 		}
 
 
 		if (isset($api['board']) && !$api['board'])
 		{
-			unset($comment->board);
+			unset($comment->radix);
 		}
 
 		// remove controller method
@@ -247,7 +261,7 @@ class Comment extends \Model\Model_Base
 
 		foreach ($options as $key => $value)
 		{
-			$this->{'_'.$key} = $value;
+			$this->_options[$key] = $value;
 		}
 
 		// format 4chan archive timestamp
@@ -260,15 +274,15 @@ class Comment extends \Model\Model_Base
 			$this->timestamp = $this->timestamp + ($diff * 60 * 60);
 		}
 
-		if ($this->_clean)
+		if ($this->_options['clean'])
 		{
-			$this->clean_fields();
+			$this->cleanFields();
 		}
 
-		if ($this->_prefetch_backlinks)
+		if ($this->_options['prefetch_backlinks'])
 		{
 			// to get the backlinks we need to get the comment processed
-			$this->get_comment_processed();
+			$this->getCommentProcessed();
 		}
 
 		if ($this->poster_country !== null)
@@ -281,26 +295,26 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function get_original_timestamp()
+	public function getOriginalTimestamp()
 	{
 		return $this->timestamp;
 	}
 
 
-	public function get_fourchan_date()
+	public function getFourchanDate()
 	{
-		if ( ! isset($this->fourchan_date))
+		if ($this->fourchan_date === false)
 		{
-			$this->fourchan_date = gmdate('n/j/y(D)G:i', $this->get_original_timestamp());
+			$this->fourchan_date = gmdate('n/j/y(D)G:i', $this->getOriginalTimestamp());
 		}
 
 		return $this->fourchan_date;
 	}
 
 
-	public function get_comment_sanitized()
+	public function getCommentSanitized()
 	{
-		if ( ! isset($this->comment_sanitized))
+		if ($this->comment_sanitized === false)
 		{
 			$this->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment);
 		}
@@ -308,32 +322,32 @@ class Comment extends \Model\Model_Base
 		return $this->comment_sanitized;
 	}
 
-
-	public function get_comment_processed()
+	public function getCommentProcessed()
 	{
-		if ( ! isset($this->comment_processed))
+		if ($this->comment_processed === false)
 		{
-			$this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->process_comment());
+			$this->comment_processed = @iconv('UTF-8', 'UTF-8//IGNORE', $this->processComment());
 		}
 
 		return $this->comment_processed;
 	}
 
 
-	public function get_formatted()
+	public function getFormatted()
 	{
-		if ( ! isset($this->formatted))
+		if ($this->formatted === false)
 		{
-			$this->formatted = $this->build_comment();
+			$this->formatted = $this->buildComment();
 		}
 
 		return $this->formatted;
 	}
 
 
-	public function get_reports()
+
+	public function getReports()
 	{
-		if ( ! isset($this->reports))
+		if ($this->reports === false)
 		{
 			if (\Auth::has_access('comment.reports'))
 			{
@@ -348,7 +362,7 @@ class Comment extends \Model\Model_Base
 			}
 			else
 			{
-				$this->reports = array();
+				$this->reports = [];
 			}
 		}
 
@@ -363,9 +377,9 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function get_title_processed()
+	public function getTitleProcessed()
 	{
-		if ( ! isset($this->title_processed))
+		if ($this->title_processed === false)
 		{
 			$this->title_processed = static::process($this->title);
 		}
@@ -373,10 +387,9 @@ class Comment extends \Model\Model_Base
 		return $this->title_processed;
 	}
 
-
-	public function get_name_processed()
+	public function getNameProcessed()
 	{
-		if ( ! isset($this->name_processed))
+		if ($this->name_processed === false)
 		{
 			$this->name_processed = static::process($this->name);
 		}
@@ -385,9 +398,9 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function get_email_processed()
+	public function getEmailProcessed()
 	{
-		if ( ! isset($this->email_processed))
+		if ($this->email_processed === false)
 		{
 			$this->email_processed = static::process($this->email);
 		}
@@ -396,9 +409,9 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function get_trip_processed()
+	public function getTripProcessed()
 	{
-		if ( ! isset($this->trip_processed))
+		if ($this->trip_processed === false)
 		{
 			$this->trip_processed = static::process($this->trip);
 		}
@@ -407,9 +420,9 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function get_poster_hash_processed()
+	public function getPosterHashProcessed()
 	{
-		if ( ! isset($this->poster_hash_processed))
+		if ($this->poster_hash_processed === false)
 		{
 			$this->poster_hash_processed = static::process($this->poster_hash);
 		}
@@ -417,10 +430,9 @@ class Comment extends \Model\Model_Base
 		return $this->poster_hash_processed;
 	}
 
-
-	public function get_poster_country_name_processed()
+	public function getPosterCountryNameProcessed()
 	{
-		if ( ! isset($this->poster_country_name_processed))
+		if ($this->poster_country_name_processed === false)
 		{
 			if ( ! isset($this->poster_country_name))
 			{
@@ -444,13 +456,13 @@ class Comment extends \Model\Model_Base
 	 * @param object $post the database row for the post
 	 * @return string the processed comment
 	 */
-	public function process_comment()
+	public function processComment()
 	{
 		// default variables
 		$find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
 		$html = '\\1<span class="greentext">\\2</span>\\3';
 
-		$html = \Foolz\Plugin\Hook::forge('fu.comment_model.process_comment.greentext_result')
+		$html = \Foolz\Plugin\Hook::forge('fu.comment_model.processComment.greentext_result')
 			->setParam('html', $html)
 			->execute()
 			->get($html);
@@ -491,14 +503,14 @@ class Comment extends \Model\Model_Base
 
 		// format entire comment
 		$comment = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i",
-			array($this, 'process_internal_links'), $comment);
+			[$this, 'process_internal_links'], $comment);
 
 		$comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
-			array($this, 'process_external_links'), $comment);
+			[$this, 'process_external_links'], $comment);
 
 		$comment = preg_replace($find, $html, $comment);
-		$comment = static::parse_bbcode($comment, ($this->radix->archive && !$this->subnum));
-		$comment = static::auto_linkify($comment, 'url', true);
+		$comment = static::parseBbcode($comment, ($this->radix->archive && !$this->subnum));
+		$comment = static::autoLinkify($comment, 'url', true);
 
 		// additional formatting
 		if ($this->radix->archive && !$this->subnum)
@@ -510,15 +522,15 @@ class Comment extends \Model\Model_Base
 			$comment = preg_replace($admin_find, $admin_html, $comment);
 
 			// literal bbcode
-			$lit_find = array(
+			$lit_find = [
 				"'\[banned:lit\]'i", "'\[/banned:lit\]'i",
 				"'\[moot:lit\]'i", "'\[/moot:lit\]'i"
-			);
+			];
 
-			$lit_html = array(
+			$lit_html = [
 				'[banned]', '[/banned]',
 				'[moot]', '[/moot]'
-			);
+			];
 
 			$comment = preg_replace($lit_find, $lit_html, $comment);
 		}
@@ -527,48 +539,48 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	protected static function parse_bbcode($str, $special_code, $strip = true)
+	protected static function parseBbcode($str, $special_code, $strip = true)
 	{
 		if (static::$_bbcode_parser === null)
 		{
 			$bbcode = new \StringParser_BBCode();
 
-			$codes = array();
+			$codes = [];
 
 			// add list of bbcode for formatting
-			$codes[] = array('code', 'simple_replace', null, array('start_tag' => '<code>', 'end_tag' => '</code>'), 'code',
-				array('block', 'inline'), array());
-			$codes[] = array('spoiler', 'simple_replace', null,
-				array('start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
-				array('code'));
-			$codes[] = array('sub', 'simple_replace', null, array('start_tag' => '<sub>', 'end_tag' => '</sub>'), 'inline',
-				array('block', 'inline'), array('code'));
-			$codes[] = array('sup', 'simple_replace', null, array('start_tag' => '<sup>', 'end_tag' => '</sup>'), 'inline',
-				array('block', 'inline'), array('code'));
-			$codes[] = array('b', 'simple_replace', null, array('start_tag' => '<b>', 'end_tag' => '</b>'), 'inline',
-				array('block', 'inline'), array('code'));
-			$codes[] = array('i', 'simple_replace', null, array('start_tag' => '<em>', 'end_tag' => '</em>'), 'inline',
-				array('block', 'inline'), array('code'));
-			$codes[] = array('m', 'simple_replace', null, array('start_tag' => '<tt class="code">', 'end_tag' => '</tt>'),
-				'inline', array('block', 'inline'), array('code'));
-			$codes[] = array('o', 'simple_replace', null, array('start_tag' => '<span class="overline">', 'end_tag' => '</span>'),
-				'inline', array('block', 'inline'), array('code'));
-			$codes[] = array('s', 'simple_replace', null,
-				array('start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
-				array('code'));
-			$codes[] = array('u', 'simple_replace', null,
-				array('start_tag' => '<span class="underline">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
-				array('code'));
-			$codes[] = array('EXPERT', 'simple_replace', null,
-				array('start_tag' => '<span class="expert">', 'end_tag' => '</span>'), 'inline', array('block', 'inline'),
-				array('code'));
+			$codes[] = ['code', 'simple_replace', null, ['start_tag' => '<code>', 'end_tag' => '</code>'], 'code',
+				['block', 'inline'], []];
+			$codes[] = ['spoiler', 'simple_replace', null,
+				['start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
+				['code']];
+			$codes[] = ['sub', 'simple_replace', null, ['start_tag' => '<sub>', 'end_tag' => '</sub>'], 'inline',
+				['block', 'inline'], ['code']];
+			$codes[] = ['sup', 'simple_replace', null, ['start_tag' => '<sup>', 'end_tag' => '</sup>'], 'inline',
+				['block', 'inline'], ['code']];
+			$codes[] = ['b', 'simple_replace', null, ['start_tag' => '<b>', 'end_tag' => '</b>'], 'inline',
+				['block', 'inline'], ['code']];
+			$codes[] = ['i', 'simple_replace', null, ['start_tag' => '<em>', 'end_tag' => '</em>'], 'inline',
+				['block', 'inline'], ['code']];
+			$codes[] = ['m', 'simple_replace', null, ['start_tag' => '<tt class="code">', 'end_tag' => '</tt>'],
+				'inline', ['block', 'inline'], ['code']];
+			$codes[] = ['o', 'simple_replace', null, ['start_tag' => '<span class="overline">', 'end_tag' => '</span>'],
+				'inline', ['block', 'inline'], ['code']];
+			$codes[] = ['s', 'simple_replace', null,
+				['start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
+				['code']];
+			$codes[] = ['u', 'simple_replace', null,
+				['start_tag' => '<span class="underline">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
+				['code']];
+			$codes[] = ['EXPERT', 'simple_replace', null,
+				['start_tag' => '<span class="expert">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
+				['code']];
 
 			foreach($codes as $code)
 			{
 				if($strip)
 				{
 					$code[1] = 'callback_replace';
-					$code[2] = '\\Comment::strip_unused_bbcode'; // this also fixes pre/code
+					$code[2] = '\\Comment::stripUnusedBbcode'; // this also fixes pre/code
 				}
 
 				$bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
@@ -585,20 +597,20 @@ class Comment extends \Model\Model_Base
 			if ($CI->theme->get_selected_theme() == 'fuuka')
 			{
 				$bbcode->addCode('moot', 'simple_replace', null,
-					array('start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'),
-					'inline', array('block', 'inline'), array());
+					['start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'),
+					'inline', array['block', 'inline'], []);
 			}
 			else*/
 			{
-				static::$_bbcode_parser->addCode('moot', 'simple_replace', null, array('start_tag' => '', 'end_tag' => ''), 'inline',
-					array('block', 'inline'), array());
+				static::$_bbcode_parser->addCode('moot', 'simple_replace', null, ['start_tag' => '', 'end_tag' => ''], 'inline',
+					['block', 'inline'], []);
 			}
 		}
 
 		return static::$_bbcode_parser->parse($str);
 	}
 
-	public static function strip_unused_bbcode($action, $attributes, $content, $params, &$node_object)
+	public static function stripUnusedBbcode($action, $attributes, $content, $params, &$node_object)
 	{
 		if($content === '' || $content === false)
 			return '';
@@ -620,7 +632,7 @@ class Comment extends \Model\Model_Base
 			$parent_count++;
 			$temp_node_object = $temp_node_object->_parent;
 
-			if (in_array($params['start_tag'], array('<sub>', '<sup>')) && $parent_count > 1)
+			if (in_array($params['start_tag'], ['<sub>', '<sup>']) && $parent_count > 1)
 			{
 				return $content;
 			}
@@ -641,7 +653,7 @@ class Comment extends \Model\Model_Base
 	 * @param array $matches the matches sent by preg_replace_callback
 	 * @return string the complete anchor
 	 */
-	public function process_internal_links($matches)
+	public function processInternalLinks($matches)
 	{
 		$num = $matches[2];
 
@@ -654,15 +666,15 @@ class Comment extends \Model\Model_Base
 		$current_p_num_c = $this->num . ($this->subnum ? ',' . $this->subnum : '');
 		$current_p_num_u = $this->num . ($this->subnum ? '_' . $this->subnum : '');
 
-		$build_url = array(
-			'tags' => array('', ''),
+		$build_url = [
+			'tags' => ['', ''],
 			'hash' => '',
 			'attr' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $data->num . '"',
 			'attr_op' => 'class="backlink op" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $data->num . '"',
 			'attr_backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $current_p_num_u . '"',
-		);
+		];
 
-		$build_url = \Foolz\Plugin\Hook::forge('fu.comment_model.process_internal_links.html_result')
+		$build_url = \Foolz\Plugin\Hook::forge('fu.comment_model.processInternalLinks.html_result')
 			->setObject($this)
 			->setParam('data', $data)
 			->setParam('build_url', $build_url)
@@ -670,7 +682,7 @@ class Comment extends \Model\Model_Base
 			->get($build_url);
 
 		static::$_backlinks_arr[$data->num][$current_p_num_u] = implode(
-			'<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $data->post->thread_num)) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
+			'<a href="' . \Uri::create([$data->board->shortname, $this->_controller_method, $data->post->thread_num]) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
 			$build_url['attr_backlink'] . '>&gt;&gt;' . $current_p_num_c . '</a>'
 		, $build_url['tags']);
 
@@ -682,7 +694,7 @@ class Comment extends \Model\Model_Base
 					. $build_url['attr_op'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 			}
 
-			return implode('<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $num)) . '#' . $data->num . '" '
+			return implode('<a href="' . \Uri::create([$data->board->shortname, $this->_controller_method, $num]) . '#' . $data->num . '" '
 				. $build_url['attr_op'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 		}
 
@@ -696,18 +708,18 @@ class Comment extends \Model\Model_Base
 						. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 				}
 
-				return implode('<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $key)) . '#' . $build_url['hash'] . $data->num . '" '
+				return implode('<a href="' . \Uri::create([$data->board->shortname, $this->_controller_method, $key]) . '#' . $build_url['hash'] . $data->num . '" '
 					. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 			}
 		}
 
-		if ($this->_realtime === true)
+		if ($this->_options['realtime'] === true)
 		{
-			return implode('<a href="' . \Uri::create(array($data->board->shortname, $this->_controller_method, $this->thread_num)) . '#' . $build_url['hash'] . $data->num . '" '
+			return implode('<a href="' . \Uri::create([$data->board->shortname, $this->_controller_method, $this->thread_num]) . '#' . $build_url['hash'] . $data->num . '" '
 				. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 		}
 
-		return implode('<a href="' . \Uri::create(array($data->board->shortname, 'post', $data->num)) . '" '
+		return implode('<a href="' . \Uri::create([$data->board->shortname, 'post', $data->num]) . '" '
 			. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 
 		// return un-altered
@@ -715,7 +727,7 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function get_backlinks()
+	public function getBacklinks()
 	{
 		if (isset(static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')]))
 		{
@@ -723,7 +735,7 @@ class Comment extends \Model\Model_Base
 			return static::$_backlinks_arr[$this->num . ($this->subnum ? '_' . $this->subnum : '')];
 		}
 
-		return array();
+		return [];
 	}
 
 
@@ -734,7 +746,7 @@ class Comment extends \Model\Model_Base
 	 * @param array $matches the matches sent by preg_replace_callback
 	 * @return string the complete anchor
 	 */
-	public function process_external_links($matches)
+	public function processExternalLinks($matches)
 	{
 		// create $data object with all results from $matches
 		$data = new \stdClass();
@@ -743,9 +755,9 @@ class Comment extends \Model\Model_Base
 		$data->board = \Radix::getByShortname($data->shortname);
 		$data->query = $matches[4];
 
-		$build_href = array(
+		$build_href = [
 			// this will wrap the <a> element with a container element [open, close]
-			'tags' => array('open' => '', 'close' => ''),
+			'tags' => ['open' => '', 'close' => ''],
 
 			// external links; defaults to 4chan
 			'short_link' => '//boards.4chan.org/'.$data->shortname.'/',
@@ -755,9 +767,9 @@ class Comment extends \Model\Model_Base
 			'attributes' => '',
 			'backlink_attr' => ' class="backlink" data-function="highlight" data-backlink="true" data-board="'
 				.(($data->board)?$data->board->shortname:$data->shortname).'" data-post="'.$data->query.'"'
-		);
+		];
 
-		$build_href = \Foolz\Plugin\Hook::forge('fu.comment_model.process_external_links.html_result')
+		$build_href = \Foolz\Plugin\Hook::forge('fu.comment_model.processExternalLinks.html_result')
 			->setObject($this)
 			->setParam('data', $data)
 			->setParam('build_href', $build_href)
@@ -776,7 +788,7 @@ class Comment extends \Model\Model_Base
 
 		if ($data->query)
 		{
-			return implode('<a href="'.\Uri::create(array($data->board->shortname, 'post', $data->query)).'"'
+			return implode('<a href="'.\Uri::create([$data->board->shortname, 'post', $data->query]).'"'
 				.$build_href['attributes'].$build_href['backlink_attr'].'>&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
 		}
 
@@ -794,10 +806,10 @@ class Comment extends \Model\Model_Base
 	 * @param object $post database row for the post
 	 * @return string the post box HTML with the selected theme
 	 */
-	public function build_comment()
+	public function buildComment()
 	{
 		$theme = \Theme::instance('foolfuuka');
-		return $theme->build('board_comment', array('p' => $this), true, true);
+		return $theme->build('board_comment', ['p' => $this], true, true);
 	}
 
 
@@ -812,7 +824,7 @@ class Comment extends \Model\Model_Base
 	 * @param type $popup
 	 * @return type
 	 */
-	public static function auto_linkify($str, $type = 'both', $popup = false)
+	public static function autoLinkify($str, $type = 'both', $popup = false)
 	{
 		if ($type != 'email')
 		{
@@ -846,9 +858,9 @@ class Comment extends \Model\Model_Base
 	}
 
 
-	public function clean_fields()
+	public function cleanFields()
 	{
-		\Foolz\Plugin\Hook::forge('foolfuuka\\model\\comment.clean_fields.call.before')
+		\Foolz\Plugin\Hook::forge('foolfuuka\\model\\comment.cleanFields.call.before')
 			->setObject($this)
 			->execute();
 
@@ -1056,38 +1068,38 @@ class Comment extends \Model\Model_Base
 	 *
 	 * @return array name without tripcode and processed tripcode concatenated with processed secure tripcode
 	 */
-	protected function p_process_name()
+	protected function p_processName()
 	{
 		$name = $this->name;
 
 		// define variables
-		$matches = array();
+		$matches = [];
 		$normal_trip = '';
 		$secure_trip = '';
 
 		if (preg_match("'^(.*?)(#)(.*)$'", $this->name, $matches))
 		{
-			$matches_trip = array();
+			$matches_trip = [];
 			$name = trim($matches[1]);
 
 			preg_match("'^(.*?)(?:#+(.*))?$'", $matches[3], $matches_trip);
 
 			if (count($matches_trip) > 1)
 			{
-				$normal_trip = static::process_tripcode($matches_trip[1]);
+				$normal_trip = static::processTripcode($matches_trip[1]);
 				$normal_trip = $normal_trip ? '!' . $normal_trip : '';
 			}
 
 			if (count($matches_trip) > 2)
 			{
-				$secure_trip = '!!' . static::process_secure_tripcode($matches_trip[2]);
+				$secure_trip = '!!' . static::processSecureTripcode($matches_trip[2]);
 			}
 		}
 
 		$this->name = $name;
 		$this->trip = $normal_trip . $secure_trip;
 
-		return array('name' => $name, 'trip' => $normal_trip . $secure_trip);
+		return ['name' => $name, 'trip' => $normal_trip . $secure_trip];
 	}
 
 
@@ -1097,7 +1109,7 @@ class Comment extends \Model\Model_Base
 	 * @param string $plain the word to generate the tripcode from
 	 * @return string the processed tripcode
 	 */
-	protected static function p_process_tripcode($plain)
+	protected static function p_processTripcode($plain)
 	{
 		if (trim($plain) == '')
 		{
@@ -1120,7 +1132,7 @@ class Comment extends \Model\Model_Base
 	 * @param string $plain the word to generate the secure tripcode from
 	 * @return string the processed secure tripcode
 	 */
-	protected function p_process_secure_tripcode($plain)
+	protected function p_processSecureTripcode($plain)
 	{
 		return substr(base64_encode(sha1($plain . base64_decode(\Config::get('foolframe.preferences.comment.secure_tripcode_salt')), true)), 0, 11);
 	}

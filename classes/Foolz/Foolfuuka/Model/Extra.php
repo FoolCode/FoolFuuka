@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-class ExtraException extends \FuelException {}
+class ExtraException extends \Exception {}
 
 /**
  * Manages Extra data appended to Comments

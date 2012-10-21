@@ -50,16 +50,16 @@ foreach ($board->getComments() as $key => $post) :
 	<?php endif; ?>
 	<header>
 		<div class="post_data">
-			<?php if ($op->get_title_processed() !== '') : ?><h2 class="post_title"><?= $op->get_title_processed() ?></h2><?php endif; ?>
-			<span class="post_author"><?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><?= $op->get_name_processed() ?><?php if ($op->get_trip_processed()) : ?> <span class="post_trip"><?= $op->get_trip_processed() ?></span><?php endif; ?><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?></span>
-			<?php if ($op->get_poster_hash_processed()) : ?><span class="poster_hash">ID:<?= $op->get_poster_hash_processed() ?></span><?php endif; ?>
+			<?php if ($op->getTitleProcessed() !== '') : ?><h2 class="post_title"><?= $op->getTitleProcessed() ?></h2><?php endif; ?>
+			<span class="post_author"><?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><?= $op->getNameProcessed() ?><?php if ($op->getTripProcessed()) : ?> <span class="post_trip"><?= $op->getTripProcessed() ?></span><?php endif; ?><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?></span>
+			<?php if ($op->getPosterHashProcessed()) : ?><span class="poster_hash">ID:<?= $op->getPosterHashProcessed() ?></span><?php endif; ?>
 			<?php if ($op->capcode != 'N') : ?>
 				<?php if ($op->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= __('Mod') ?></span><?php endif ?>
 				<?php if ($op->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= __('Admin') ?></span><?php endif ?>
 				<?php if ($op->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= __('Developer') ?></span><?php endif ?>
 			<?php endif; ?>
 			<span class="time_wrap">
-				<time datetime="<?= gmdate(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($op->radix->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $op->get_original_timestamp()) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $op->timestamp) ?></time>
+				<time datetime="<?= gmdate(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($op->radix->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $op->getOriginalTimestamp()) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $op->timestamp) ?></time>
 			</span>
 			<a href="<?= Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
 
@@ -71,8 +71,8 @@ foreach ($board->getComments() as $key => $post) :
 				<a href="<?= Uri::create(array($op->radix->shortname, 'thread', $num)) ?>" class="btnr parent"><?= __('View') ?></a><a href="<?= Uri::create(array($op->radix->shortname, $op->_controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= __('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . Uri::create($op->radix->shortname . '/last/50/' . $num) . '" class="btnr parent">' . __('Last 50') . '</a>' : '' ?><?= ($op->radix->archive) ? '<a href="//boards.4chan.org/' . $op->radix->shortname . '/res/' . $num . '" class="btnr parent">' . __('Original') . '</a>' : '' ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= __('Report') ?></a><?php if (Auth::has_access('maccess.mod') || !$op->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= __('Delete') ?></a><?php endif; ?>
 			</span>
 
-			<div class="backlink_list"<?= $op->get_backlinks() ? ' style="display:block"' : '' ?>>
-				<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= $op->get_backlinks() ? implode(' ', $op->get_backlinks()) : '' ?></span>
+			<div class="backlink_list"<?= $op->getBacklinks() ? ' style="display:block"' : '' ?>>
+				<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= $op->getBacklinks() ? implode(' ', $op->getBacklinks()) : '' ?></span>
 			</div>
 
 			<?php if (Auth::has_access('maccess.mod')) : ?>
@@ -98,8 +98,8 @@ foreach ($board->getComments() as $key => $post) :
 		</div>
 	</header>
 
-	<div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $op->get_comment_processed())) echo ' shift-jis'; ?>">
-		<?= $op->get_comment_processed() ?>
+	<div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $op->getCommentProcessed())) echo ' shift-jis'; ?>">
+		<?= $op->getCommentProcessed() ?>
 	</div>
 	<div class="thread_tools_bottom">
 		<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
@@ -115,8 +115,8 @@ foreach ($board->getComments() as $key => $post) :
 		<?php endif; ?>
 	</div>
 
-	<?php if ($op->get_reports()) : ?>
-		<?php foreach ($op->get_reports() as $report) : ?>
+	<?php if ($op->getReports()) : ?>
+		<?php foreach ($op->getReports() as $report) : ?>
 			<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->getReasonProcessed() ?>
 				<br/>
 				<div class="ip_reporter">

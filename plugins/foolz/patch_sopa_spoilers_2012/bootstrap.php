@@ -5,7 +5,7 @@ if (!defined('DOCROOT'))
 
 \Foolz\Plugin\Event::forge('foolz\plugin\plugin.execute.foolz/patch_sopa_spoilers_2012')
 	->setCall(function($result) {
-		$event = new \Foolz\Plugin\Event('foolfuuka\model\comment.process_comment.call.before');
+		$event = new \Foolz\Plugin\Event('foolfuuka\model\comment.processComment.call.before');
 		$event->setCall(function($result)
 		{
 			$post = $result->getObject();

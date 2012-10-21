@@ -12,10 +12,10 @@ if (!defined('DOCROOT'))
 				<label>
 					<input type="checkbox" name="delete[]" value="<?= $p->doc_id ?>"/>
 					<?php if (isset($modifiers['post_show_board_name']) &&  $modifiers['post_show_board_name']): ?><span class="post_show_board">/<?= $p->radix->shortname ?>/</span><?php endif; ?>
-					<span class="filetitle"><?= $p->get_title_processed() ?></span>
-					<span class="postername<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= (($p->email && $p->email !== 'noko') ? '<a href="mailto:' . rawurlencode($p->email) . '">' . $p->get_name_processed() . '</a>' : $p->get_name_processed()) ?></span>
-					<span class="postertrip<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= $p->get_trip_processed() ?></span>
-					<span class="poster_hash"><?php if ($p->get_poster_hash_processed()) : ?>ID:<?= $p->get_poster_hash_processed() ?><?php endif; ?></span>
+					<span class="filetitle"><?= $p->getTitleProcessed() ?></span>
+					<span class="postername<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= (($p->email && $p->email !== 'noko') ? '<a href="mailto:' . rawurlencode($p->email) . '">' . $p->getNameProcessed() . '</a>' : $p->getNameProcessed()) ?></span>
+					<span class="postertrip<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= $p->getTripProcessed() ?></span>
+					<span class="poster_hash"><?php if ($p->getPosterHashProcessed()) : ?>ID:<?= $p->getPosterHashProcessed() ?><?php endif; ?></span>
 					<?php if ($p->capcode == 'M') : ?>
 						<span class="postername mod">## <?= __('Mod') ?></span>
 					<?php endif ?>
@@ -25,7 +25,7 @@ if (!defined('DOCROOT'))
 					<?php if ($p->capcode == 'D') : ?>
 						<span class="postername admin">## <?= __('Developers') ?></span>
 					<?php endif ?>
-					<?= gmdate('D M d H:i:s Y', $p->get_original_timestamp()) ?>
+					<?= gmdate('D M d H:i:s Y', $p->getOriginalTimestamp()) ?>
 					<?php if ($p->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
 				</label>
 				<?php if (!isset($thread_id)) : ?>
@@ -68,10 +68,10 @@ if (!defined('DOCROOT'))
 					</a>
 					<?php endif; ?>
 				<?php endif; ?>
-				<div class="quoted-by" style="display: <?= $p->get_backlinks() ? 'block' : 'none' ?>">
-					<?= __('Quoted By:') ?> <?= $p->get_backlinks() ? implode(' ', $p->get_backlinks()) : '' ?>
+				<div class="quoted-by" style="display: <?= $p->getBacklinks() ? 'block' : 'none' ?>">
+					<?= __('Quoted By:') ?> <?= $p->getBacklinks() ? implode(' ', $p->getBacklinks()) : '' ?>
 				</div>
-				<blockquote><p><?= $p->get_comment_processed() ?></p></blockquote>
+				<blockquote><p><?= $p->getCommentProcessed() ?></p></blockquote>
 			</td>
 		</tr>
 	</tbody>

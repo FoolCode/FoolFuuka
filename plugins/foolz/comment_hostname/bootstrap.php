@@ -12,7 +12,7 @@ if (!defined('DOCROOT'))
 		}
 	})->setPriority(3);
 
-\Foolz\Plugin\Event::forge('foolfuuka\\model\\comment.clean_fields.call.before')
+\Foolz\Plugin\Event::forge('foolfuuka\\model\\comment.cleanFields.call.before')
 	->setCall(function($result){
 		$comment = $result->getObject();
 		if( ! \Auth::has_access('maccess.mod'))

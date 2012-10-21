@@ -14,7 +14,7 @@ class Theme_Fu_Fuuka
 	}
 
 
-	public static function process_internal_links_html($result)
+	public static function processInternalLinksHtml($result)
 	{
 		$data = $result->getParam('data');
 		$html = array(
@@ -29,7 +29,7 @@ class Theme_Fu_Fuuka
 	}
 
 
-	public static function process_external_links_html($result)
+	public static function processExternalLinksHtml($result)
 	{
 		$data = $result->getParam('data');
 		$html = array(

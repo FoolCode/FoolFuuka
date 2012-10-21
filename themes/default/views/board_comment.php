@@ -107,17 +107,17 @@ class Board_comment extends \Theme
 						<span class="post_show_board">/<?= $p->radix->shortname ?>/</span>
 						<?php endif; ?>
 
-						<?php if ($p->get_title_processed() !== '') : ?><h2 class="post_title"><?= $p->get_title_processed() ?></h2><?php endif; ?>
-						<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->get_name_processed() ?><?php if ($p->get_trip_processed()) : ?> <span class="post_trip"><?= $p->get_trip_processed() ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?></span>
+						<?php if ($p->getTitleProcessed() !== '') : ?><h2 class="post_title"><?= $p->getTitleProcessed() ?></h2><?php endif; ?>
+						<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->getNameProcessed() ?><?php if ($p->getTripProcessed()) : ?> <span class="post_trip"><?= $p->getTripProcessed() ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?></span>
 						</span>
-						<?php if ($p->get_poster_hash_processed()) : ?><span class="poster_hash">ID:<?= $p->get_poster_hash_processed() ?></span><?php endif; ?>
+						<?php if ($p->getPosterHashProcessed()) : ?><span class="poster_hash">ID:<?= $p->getPosterHashProcessed() ?></span><?php endif; ?>
 						<?php if ($p->capcode != 'N') : ?>
 							<?php if ($p->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= __('Mod') ?></span><?php endif ?>
 							<?php if ($p->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= __('Admin') ?></span><?php endif ?>
 							<?php if ($p->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= __('Developer') ?></span><?php endif ?>
 						<?php endif; ?>
 						<span class="time_wrap">
-							<time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>" <?php if ($p->radix->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $p->get_original_timestamp()) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $p->timestamp) ?></time>
+							<time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>" <?php if ($p->radix->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $p->getOriginalTimestamp()) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $p->timestamp) ?></time>
 						</span>
 						<a href="<?= \Uri::create(array($p->radix->shortname, $p->_controller_method, $p->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= \Uri::create(array($p->radix->shortname, $p->_controller_method, $p->thread_num)) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
 
@@ -131,11 +131,11 @@ class Board_comment extends \Theme
 						</span>
 					</div>
 				</header>
-				<div class="backlink_list"<?= $p->get_backlinks() ? ' style="display:block"' : '' ?>>
-					<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $p->num ?>"><?= $p->get_backlinks() ? implode(' ', $p->get_backlinks()) : '' ?></span>
+				<div class="backlink_list"<?= $p->getBacklinks() ? ' style="display:block"' : '' ?>>
+					<?= __('Quoted By:') ?> <span class="post_backlink" data-post="<?= $p->num ?>"><?= $p->getBacklinks() ? implode(' ', $p->getBacklinks()) : '' ?></span>
 				</div>
-				<div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $p->get_comment_processed())) echo ' shift-jis'; ?>">
-					<?= $p->get_comment_processed() ?>
+				<div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $p->getCommentProcessed())) echo ' shift-jis'; ?>">
+					<?= $p->getCommentProcessed() ?>
 				</div>
 				<?php if ($perm['maccess.mod']) : ?>
 				<div class="btn-group" style="clear:both; padding:5px 0 0 0;">
@@ -156,8 +156,8 @@ class Board_comment extends \Theme
 						<?php endif; ?>
 					<?php endif; ?>
 				</div>
-				<?php if ($p->get_reports()) : ?>
-					<?php foreach ($p->get_reports() as $report) : ?>
+				<?php if ($p->getReports()) : ?>
+					<?php foreach ($p->getReports() as $report) : ?>
 						<div class="report_reason"><?= '<strong>' . __('Reported Reason:') . '</strong> ' . $report->getReasonProcessed() ?>
 							<br/>
 							<div class="ip_reporter">

@@ -44,10 +44,10 @@ foreach ($board->getComments() as $key => $post) :
 
 		<label>
 			<input type="checkbox" name="delete[]" value="<?= $op->doc_id ?>" />
-			<span class="filetitle"><?= $op->get_title_processed() ?></span>
-			<span class="postername<?= ($op->capcode == 'M') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?><?= ($op->capcode == 'D') ? ' developer' : '' ?>"><?= (($op->email && $op->email !== 'noko') ? '<a href="mailto:' . rawurlencode($op->email) . '">' . $op->get_name_processed() . '</a>' : $op->get_name_processed()) ?></span>
-			<span class="postertrip<?= ($op->capcode == 'M') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?><?= ($op->capcode == 'D') ? ' developer' : '' ?>"><?= $op->get_trip_processed() ?></span>
-			<span class="poster_hash"><?php if ($op->get_poster_hash_processed()) : ?>ID:<?= $op->get_poster_hash_processed() ?><?php endif; ?></span>
+			<span class="filetitle"><?= $op->getTitleProcessed() ?></span>
+			<span class="postername<?= ($op->capcode == 'M') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?><?= ($op->capcode == 'D') ? ' developer' : '' ?>"><?= (($op->email && $op->email !== 'noko') ? '<a href="mailto:' . rawurlencode($op->email) . '">' . $op->getNameProcessed() . '</a>' : $op->getNameProcessed()) ?></span>
+			<span class="postertrip<?= ($op->capcode == 'M') ? ' mod' : '' ?><?= ($op->capcode == 'A') ? ' admin' : '' ?><?= ($op->capcode == 'D') ? ' developer' : '' ?>"><?= $op->getTripProcessed() ?></span>
+			<span class="poster_hash"><?php if ($op->getPosterHashProcessed()) : ?>ID:<?= $op->getPosterHashProcessed() ?><?php endif; ?></span>
 			<?php if ($op->capcode == 'M') : ?>
 				<span class="postername mod">## <?= __('Mod') ?></span>
 			<?php endif; ?>
@@ -57,7 +57,7 @@ foreach ($board->getComments() as $key => $post) :
 			<?php if ($op->capcode == 'D') : ?>
 				<span class="postername admin">## <?= __('Developer') ?></span>
 			<?php endif; ?>
-			<?= gmdate('D M d H:i:s Y', $op->get_original_timestamp()) ?>
+			<?= gmdate('D M d H:i:s Y', $op->getOriginalTimestamp()) ?>
 			<?php if ($op->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span></span><?php endif; ?>
 		</label>
 
@@ -74,11 +74,11 @@ foreach ($board->getComments() as $key => $post) :
 		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= Uri::create($op->radix->shortname . '/last/50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>
 		<?php if ($op->radix->archive) : ?> [<a href="//boards.4chan.org/<?= $op->radix->shortname . '/res/' . $op->num ?>"><?= __('Original') ?></a>]<?php endif; ?>
 
-		<div class="quoted-by" style="display: <?= $op->get_backlinks() ? 'block' : 'none' ?>">
-			<?= __('Quoted By:') ?> <?= $op->get_backlinks() ? implode(' ', $op->get_backlinks()) : '' ?>
+		<div class="quoted-by" style="display: <?= $op->getBacklinks() ? 'block' : 'none' ?>">
+			<?= __('Quoted By:') ?> <?= $op->getBacklinks() ? implode(' ', $op->getBacklinks()) : '' ?>
 		</div>
 
-		<blockquote><p><?= $op->get_comment_processed() ?></p></blockquote>
+		<blockquote><p><?= $op->getCommentProcessed() ?></p></blockquote>
 		<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
 		<span class="omitted">
 			<?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>

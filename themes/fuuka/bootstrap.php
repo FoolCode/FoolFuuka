@@ -14,14 +14,14 @@ if (!defined('DOCROOT'))
 \Router::add('(?!(admin|_))(\w+)/(:any)', 'theme/fu/fuuka/chan/$2/$3', true);
 
 // use hooks for manipulating comments
-\Foolz\Plugin\Event::forge('fu.comment_model.process_comment.greentext_result')
+\Foolz\Plugin\Event::forge('fu.comment_model.processComment.greentext_result')
 	->setCall('\\Foolfuuka\\Themes\\Fuuka\\Theme_Fu_Fuuka::greentext')
 	->setPriority(8);
 
-\Foolz\Plugin\Event::forge('fu.comment_model.process_internal_links.html_result')
-	->setCall('\\Foolfuuka\\Themes\\Fuuka\\Theme_Fu_Fuuka::process_internal_links_html')
+\Foolz\Plugin\Event::forge('fu.comment_model.processInternalLinks.html_result')
+	->setCall('\\Foolfuuka\\Themes\\Fuuka\\Theme_Fu_Fuuka::processInternalLinksHtml')
 	->setPriority(8);
 
-\Foolz\Plugin\Event::forge('fu.comment_model.process_external_links.html_result')
-	->setCall('\\Foolfuuka\\Themes\\Fuuka\\Theme_Fu_Fuuka::process_external_links_html')
+\Foolz\Plugin\Event::forge('fu.comment_model.processExternalLinks.html_result')
+	->setCall('\\Foolfuuka\\Themes\\Fuuka\\Theme_Fu_Fuuka::processExternalLinksHtml')
 	->setPriority(8);

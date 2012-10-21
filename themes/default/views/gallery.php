@@ -12,10 +12,10 @@ foreach ($board->getComments() as $k => $p) :
 	<article id="<?= $p->num ?>" class="thread doc_id_<?= $p->doc_id ?>">
 		<header>
 			<div class="post_data">
-				<h2 class="post_title"><?= $p->get_title_processed() ?></h2>
-				<span class="post_author"><?= (($p->email && $p->email !== 'noko') ? '<a href="mailto:' . rawurlencode($p->email) . '">' . $p->get_name_processed() . '</a>' : $p->get_name_processed()) ?></span>
-				<span class="post_trip"><?= $p->get_trip_processed() ?></span>
-				<span class="poster_hash"><?= ($p->get_poster_hash_processed()) ? 'ID:' . $p->get_poster_hash_processed() : '' ?></span>
+				<h2 class="post_title"><?= $p->getTitleProcessed() ?></h2>
+				<span class="post_author"><?= (($p->email && $p->email !== 'noko') ? '<a href="mailto:' . rawurlencode($p->email) . '">' . $p->getNameProcessed() . '</a>' : $p->getNameProcessed()) ?></span>
+				<span class="post_trip"><?= $p->getTripProcessed() ?></span>
+				<span class="poster_hash"><?= ($p->getPosterHashProcessed()) ? 'ID:' . $p->getPosterHashProcessed() : '' ?></span>
 				<?php if ($p->capcode == 'M') : ?>
 					<span class="post_level post_level_moderator">## <?= __('Mod') ?></span>
 				<?php endif ?>
@@ -32,7 +32,7 @@ foreach ($board->getComments() as $k => $p) :
 			</div>
 		</header>
 		<?php if ($p->media !== null) : ?>
-		<div class="thread_image_box" title="<?= $p->get_comment_processed() ? htmlspecialchars('<strong>'.($p->get_comment_processed()).'</strong>') : '' ?>">
+		<div class="thread_image_box" title="<?= $p->getCommentProcessed() ? htmlspecialchars('<strong>'.($p->getCommentProcessed()).'</strong>') : '' ?>">
 			<?php if ($p->media->getMediaStatus() === 'banned') : ?>
 				<img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
 			<?php elseif ($p->media->getMediaStatus() !== 'normal') : ?>

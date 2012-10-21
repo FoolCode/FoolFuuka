@@ -11,7 +11,7 @@ if (!defined('DOCROOT'))
 		</div>
 
 		<?php
-			$media = \Media::forge_empty(\Radix::getSelected());
+			$media = \Media::forgeEmpty(\Radix::getSelected());
 			$media->media_id = $item->media_id;
 			$media->media_hash = $item->media_hash;
 			$media->media = $item->media;

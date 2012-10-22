@@ -1248,6 +1248,8 @@ class Radix //extends \Model_Base
 		{
 			\DC::forge()->insert($this->getTable('_images'), ['md5' => $item['md5'], 'banned' => 1]);
 		}
+
+		\DC::forge()->commit();
 	}
 
 	/**

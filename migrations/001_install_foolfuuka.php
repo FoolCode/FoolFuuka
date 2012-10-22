@@ -7,88 +7,118 @@ class Install_Foolfuuka
 
     function up()
     {
-		$charset = \Config::get('db.default.charset');
+		$charset = 'utf8mb4';
+		$collation = 'utf8mb4_unicode_ci';
 
-		if ( ! \DBUtil::table_exists('banned_md5'))
+		$sm = \DC::forge()->getSchemaManager();
+		$schema = $sm->createSchema();
+
+		$banned_md5 = $schema->createTable(\DC::p('banned_md5'));
+		$banned_md5->addColumn('md5', 'string', ['length' => 24]);
+		$banned_md5->setPrimaryKey(['md5']);
+
+		$banned_posters = $schema->createTable(\DC::p('banned_posters'));
+		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
-			\DBUtil::create_table('banned_md5', array(
-				'md5' => array('type' => 'varchar', 'constraint' => 24),
-			), array('md5'), true, 'innodb', 'utf8_general_ci');
+			$banned_posters->addOption('charset', $charset);
+			$banned_posters->addOption('collate', $collation);
+		}
+		$banned_posters->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+		$banned_posters->addColumn('ip', 'decimal', ['unsigned' => true, 'precision' => 39, 'scale' => 0]);
+		$banned_posters->addColumn('reason', 'text', ['length' => 65532]);
+		$banned_posters->addColumn('start', 'integer', ['unsigned' => true, 'default' => 0]);
+		$banned_posters->addColumn('length', 'integer', ['unsigned' => true, 'default' => 0]);
+		$banned_posters->addColumn('board_id', 'integer', ['unsigned' => true, 'default' => 0]);
+		$banned_posters->addColumn('creator_id', 'integer', ['unsigned' => true, 'default' => 0]);
+		$banned_posters->addColumn('appeal', 'text', ['length' => 65532]);
+		$banned_posters->addColumn('appeal_status', 'integer', ['unsigned' => true, 'default' => 0]);
+		$banned_posters->setPrimaryKey(['id']);
+		$banned_posters->addIndex(['ip'], 'ip_index');
+		$banned_posters->addIndex(['creator_id'], 'creator_id_index');
+		$banned_posters->addIndex(['appeal_status'], 'appeal_status_index');
+
+		$boards = $schema->createTable(\DC::p('boards'));
+		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		{
+			$boards->addOption('charset', $charset);
+			$boards->addOption('collate', $collation);
+		}
+		$boards->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+		$boards->addColumn('shortname', 'string', ['constraint' => 32]);
+		$boards->addColumn('name', 'string', ['constraint' => 256]);
+		$boards->addColumn('archive', 'smallint', ['unsigned' => true, 'default' => 0]);
+		$boards->addColumn('sphinx', 'smallint', ['unsigned' => true, 'default' => 0]);
+		$boards->addColumn('hidden', 'smallint', ['unsigned' => true, 'default' => 0]);
+		$boards->addColumn('hide_thumbnails', 'smallint', ['unsigned' => true, 'default' => 0]);
+		$boards->addColumn('directory', 'text', ['length' => 65532]);
+		$boards->addColumn('max_indexed_id', 'integer', ['unsigned' => true, 'default' => 0]);
+		$boards->addColumn('max_ancient_id', 'integer', ['unsigned' => true, 'default' => 0]);
+		$boards->setPrimaryKey(['id']);
+		$boards->addUniqueIndex(['shortname'], 'shortname_index');
+
+		$boards_preferences = $schema->createTable(\DC::p('boards_preferences'));
+		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		{
+			$boards_preferences->addOption('charset', $charset);
+			$boards_preferences->addOption('collate', $collation);
+		}
+		$boards_preferences->addColumn('board_preference_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+		$boards_preferences->addColumn('board_id', 'integer', ['unsigned' => true]);
+		$boards_preferences->addColumn('name', 'string', ['constraint' => 64]);
+		$boards_preferences->addColumn('value', 'text', ['notnull' => false, 'length' => 65532]);
+		$boards_preferences->setPrimaryKey(['boards_preferences']);
+		$boards_preferences->addIndex(['board_id', 'name'], 'board_id_name_index');
+
+		$reports = $schema->createTable(\DC::p('reports'));
+		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		{
+			$reports->addOption('charset', $charset);
+			$reports->addOption('collate', $collation);
+		}
+		$reports->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+		$reports->addColumn('board_id', 'integer', ['unsigned' => true]);
+		$reports->addColumn('doc_id', 'integer', ['unsigned' => true, 'notnull' => false, 'default' => null]);
+		$reports->addColumn('media_id', 'integer', ['unsigned' => true, 'notnull' => false, 'default' => null]);
+		$reports->addColumn('reason', 'text', ['length' => 65532]);
+		$reports->addColumn('ip_reporter', 'decimal', ['unsigned' => true, 'precision' => 39, 'scale' => 0]);
+		$reports->addColumn('created', 'integer', ['unsigned' => true]);
+		$reports->setPrimaryKey(['id']);
+		$reports->addIndex(['board_id', 'doc_id'], 'board_id_doc_id_index');
+		$reports->addIndex(['board_id', 'media_id'], 'board_id_media_id_index');
+
+		\DC::forge()->beginTransaction();
+
+		foreach ($schema->getMigrateFromSql($sm->createSchema(), $sm->getDatabasePlatform()) as $query)
+		{
+			\DC::forge()->query($query);
 		}
 
-		if ( ! \DBUtil::table_exists('banned_posters'))
-		{
-			\DBUtil::create_table('banned_posters', array(
-				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
-				'ip' => array('type' => 'decimal', 'constraint' => '39,0'),
-				'reason' => array('type' => 'text'),
-				'start' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
-				'length' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
-				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
-				'creator_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
-				'appeal' => array('type' => 'text'),
-				'appeal_status' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
-			), array('id'), true, 'innodb', $charset.'_general_ci');
-
-			\DBUtil::create_index('banned_posters', 'ip', 'ip_index');
-			\DBUtil::create_index('banned_posters', 'creator_id', 'creator_id_index');
-			\DBUtil::create_index('banned_posters', 'appeal_status', 'appeal_status_index');
-		}
-
-		if ( ! \DBUtil::table_exists('boards'))
-		{
-			\DBUtil::create_table('boards', array(
-				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
-				'shortname' => array('type' => 'varchar', 'constraint' => 32),
-				'name' => array('type' => 'varchar', 'constraint' => 256),
-				'archive' => array('type' => 'smallint', 'constraint' => 2, 'unsigned' => true, 'default' => 0),
-				'sphinx' => array('type' => 'smallint', 'constraint' => 2, 'unsigned' => true, 'default' => 0),
-				'hidden' => array('type' => 'smallint', 'constraint' => 2, 'unsigned' => true, 'default' => 0),
-				'hide_thumbnails' => array('type' => 'smallint', 'constraint' => 2, 'unsigned' => true, 'default' => 0),
-				'directory' => array('type' => 'text'),
-				'max_indexed_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0),
-				'max_ancient_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0)
-			), array('id'), true, 'innodb', $charset.'_general_ci');
-
-			\DBUtil::create_index('boards', 'shortname', 'shortname_index', 'unique');
-			\DBUtil::create_index('boards', 'hide_thumbnails', 'hide_thumbnails_index');
-		}
-
-		if ( ! \DBUtil::table_exists('boards_preferences'))
-		{
-			\DBUtil::create_table('boards_preferences', array(
-				'board_preference_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
-				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
-				'name' => array('type' => 'varchar', 'constraint' => 64),
-				'value' => array('type' => 'text', 'null' => true),
-			), array('board_preference_id'), true, 'innodb', $charset.'_general_ci');
-
-			\DBUtil::create_index('boards_preferences', array('board_id', 'name'), 'board_id_name_index');
-		}
-
-		if ( ! \DBUtil::table_exists('reports'))
-		{
-			\DBUtil::create_table('reports', array(
-				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
-				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
-				'doc_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true, 'default' => \DB::expr('NULL')),
-				'media_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true, 'default' => \DB::expr('NULL')),
-				'reason' => array('type' => 'text'),
-				'ip_reporter' => array('type' => 'decimal', 'constraint' => '39,0'),
-				'created' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true)
-			), array('id'), true, 'innodb', $charset.'_general_ci');
-
-			\DBUtil::create_index('reports', array('board_id', 'doc_id'), 'board_id_doc_id_index');
-			\DBUtil::create_index('reports', array('board_id', 'media_id'), 'board_id_media_id_index');
-		}
+		\DC::forge()->commit();
     }
 
     function down()
     {
-       \DBUtil::drop_table('banned_md5');
-       \DBUtil::drop_table('banned_posters');
-       \DBUtil::drop_table('boards');
-       \DBUtil::drop_table('boards_preferences');
-       \DBUtil::drop_table('reports');
+		$sm = \DC::forge()->getSchemaManager();
+		$schema = $sm->createSchema();
+
+		foreach([
+			'banned_md5',
+			'banned_posters',
+			'boards',
+			'boards_preferences',
+			'reports'
+		] as $table)
+		{
+			$schema->dropTable(\DC::p($table));
+		}
+
+		\DC::forge()->beginTransaction();
+
+		foreach ($schema->getMigrateFromSql($sm->createSchema(), $sm->getDatabasePlatform()) as $query)
+		{
+			\DC::forge()->query($query);
+		}
+
+		\DC::forge()->commit();
     }
 }

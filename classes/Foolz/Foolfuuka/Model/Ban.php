@@ -138,7 +138,7 @@ class Ban
 	{
 		$result = \DC::qb()
 			->select('*')
-			->from('banned_posters', 'u')
+			->from(\DC::p('banned_posters'), 'u')
 			->where('u.id = :id')
 			->setParameter(':id', $id)
 			->execute()
@@ -164,7 +164,7 @@ class Ban
 	{
 		$result = \DC::qb()
 			->select('*')
-			->from('banned_posters', 'u')
+			->from(\DC::p('banned_posters'), 'u')
 			->where('u.ip = :ip')
 			->setParameter(':ip', $decimal_ip)
 			->execute()
@@ -192,7 +192,7 @@ class Ban
 	{
 		$result = \DC::qb()
 			->select('*')
-			->from('banned_posters', 'u')
+			->from(\DC::p('banned_posters'), 'u')
 			->orderBy($order_by, $order)
 			->setMaxResults($per_page)
 			->setFirstResult(($page * $per_page) - $per_page)
@@ -216,7 +216,7 @@ class Ban
 	{
 		$result = \DC::qb()
 			->select('*')
-			->from('banned_posters', 'u')
+			->from(\DC::p('banned_posters'), 'u')
 			->where('appeal_status = :appeal_status')
 			->orderBy($order_by, $order)
 			->setMaxResults($per_page)
@@ -351,7 +351,7 @@ class Ban
 			if (isset($old[$new->board_id]))
 			{
 				\DC::qb()
-					->update('banned_posters')
+					->update(\DC::p('banned_posters'))
 					->where('id = :id')
 					->set('start', $new->start)
 					->set('length', $new->length)
@@ -362,7 +362,7 @@ class Ban
 			else
 			{
 				\DC::forge()
-					->insert('banned_posters', [
+					->insert(\DC::p('banned_posters'), [
 						'ip' => $new->ip,
 						'reason' => $new->reason,
 						'start' => $new->start,
@@ -386,7 +386,7 @@ class Ban
 	public function delete()
 	{
 		\DC::qb()
-			->delete('banned_posters')
+			->delete(\DC::p('banned_posters'))
 			->where('id = :id')
 			->setParameter(':id', $this->id)
 			->execute();
@@ -404,7 +404,7 @@ class Ban
 	public function appeal($appeal)
 	{
 		\DC::qb()
-			->update('banned_posters')
+			->update(\DC::p('banned_posters'))
 			->where('id = :id')
 			->set('appeal', ':appeal')
 			->set('appeal_status', static::APPEAL_PENDING)
@@ -423,7 +423,7 @@ class Ban
 	public function appealReject()
 	{
 		\DC::qb()
-			->update('banned_posters')
+			->update(\DC::p('banned_posters'))
 			->where('id = :id')
 			->set('appeal_status', static::APPEAL_REJECTED)
 			->setParameter(':id', $this->id)

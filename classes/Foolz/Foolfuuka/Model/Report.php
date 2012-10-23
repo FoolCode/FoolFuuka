@@ -184,7 +184,7 @@ class Report extends \Model\Model_Base
 		{
 			static::$preloaded = \DC::qb()
 				->select('*')
-				->from('reports', 'r')
+				->from(\DC::p('reports'), 'r')
 				->execute()
 				->fetchAll();
 
@@ -339,7 +339,7 @@ class Report extends \Model\Model_Base
 		// check how many reports have been sent in the last hour to prevent spam
 		$row = \DC::qb()
 			->select('COUNT(*) as count')
-			->from('reports', 'r')
+			->from(\DC::p('reports'), 'r')
 			->where('created > :time')
 			->setParameter(':time', time() - 86400)
 			->execute()
@@ -353,7 +353,7 @@ class Report extends \Model\Model_Base
 
 		$new->created = time();
 
-		\DC::forge()->insert('reports', [
+		\DC::forge()->insert(\DC::p('reports'), [
 			'board_id' => $new->board_id,
 			'doc_id' => $new->doc_id,
 			'media_id' => $new->media_id,
@@ -377,7 +377,7 @@ class Report extends \Model\Model_Base
 	public static function p_delete($id)
 	{
 		\DC::qb()
-			->delete('reports')
+			->delete(\DC::p('reports'))
 			->where('id', ':id')
 			->setParameter(':id', $id)
 			->execute();
@@ -398,8 +398,9 @@ class Report extends \Model\Model_Base
 		if ($this->media_id !== null)
 		{
 			// custom "get the first doc_id with the media"
-			$doc_id_res = \DC::dq()
+			$doc_id_res = \DC::qb()
 				->select('doc_id')
+				->from(\Radix::getById($this->board_id)->getTable())
 				->where('media_id = :media_id')
 				->orderBy('timestamp', 'desc')
 				->setParameter('media_id', $this->media_id)

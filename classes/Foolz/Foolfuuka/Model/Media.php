@@ -818,11 +818,11 @@ class Media extends \Model\Model_Base
 		// return a safely escaped media hash for urls or un-altered media hash
 		if ($urlsafe === true)
 		{
-			return static::urlsafe_b64encode($this->media_hash);
+			return static::urlsafe_b64encode(static::urlsafe_b64decode($this->media_hash));
 		}
 		else
 		{
-			return base64_encode($this->media_hash);
+			return base64_encode(static::urlsafe_b64decode($this->media_hash));
 		}
 	}
 

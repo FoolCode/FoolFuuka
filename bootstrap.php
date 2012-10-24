@@ -45,3 +45,5 @@ $theme = \Theme::forge('foolfuuka');
 $theme->set_module('foolfuuka');
 $theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
 $theme->set_layout('chan');
+
+\Notices::set_flash('error', 'heh');

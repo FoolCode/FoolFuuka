@@ -150,9 +150,9 @@ class Search extends Board
 	protected function p_getSearch($arguments)
 	{
 		// prepare
-		$this->set_method_fetching('getSearchComments')
-			->set_method_counting('getSearchCount')
-			->set_options([
+		$this->setMethodFetching('getSearchComments')
+			->setMethodCounting('getSearchCount')
+			->setOptions([
 				'args' => $arguments,
 				'limit' => 25,
 			]);

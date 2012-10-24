@@ -631,7 +631,7 @@ class Radix //extends \Model_Base
 	 *
 	 * @param  \Foolz\Foolfuuka\Model\Radix|int  $board_id  can also be the board object
 	 * @param  string  $name   The name of the value to insert
-	 * @param  mixed   $value
+	 * @param  mixed   $value  The value to insert
 	 */
 	public static function savePreferences($board_id, $name, $value)
 	{
@@ -682,8 +682,6 @@ class Radix //extends \Model_Base
 	/**
 	 * Removes the board and renames its dir with a _removed suffix and with a number
 	 * in case of collision
-	 *
-	 * @return  boolean  TRUE on success, FALSE on failure
 	 */
 	public function remove()
 	{

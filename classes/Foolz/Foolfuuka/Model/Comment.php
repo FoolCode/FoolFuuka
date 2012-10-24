@@ -44,8 +44,18 @@ class Comment extends \Model\Model_Base
 	 */
 	public $_controller_method = 'thread';
 
+	/**
+	 * The bbcode parser object when created
+	 *
+	 * @var null|object
+	 */
 	protected static $_bbcode_parser = null;
 
+	/**
+	 * Switches
+	 *
+	 * @var  array
+	 */
 	protected $_options = [
 		'realtime' => false,
 		'clean' => true,
@@ -53,6 +63,11 @@ class Comment extends \Model\Model_Base
 		'force_entries' => false
 	];
 
+	/**
+	 * Entries that should be included in API requests
+	 *
+	 * @var  array
+	 */
 	protected $_forced_entries = [
 		'title_processed' => 'getTitleProcessed',
 		'name_processed' => 'getNameProcessed',
@@ -503,10 +518,10 @@ class Comment extends \Model\Model_Base
 
 		// format entire comment
 		$comment = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i",
-			[$this, 'process_internal_links'], $comment);
+			[$this, 'processInternalLinks'], $comment);
 
 		$comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
-			[$this, 'process_external_links'], $comment);
+			[$this, 'processExternalLinks'], $comment);
 
 		$comment = preg_replace($find, $html, $comment);
 		$comment = static::parseBbcode($comment, ($this->radix->archive && !$this->subnum));
@@ -535,7 +550,20 @@ class Comment extends \Model\Model_Base
 			$comment = preg_replace($lit_find, $lit_html, $comment);
 		}
 
-		return $this->comment_processed = nl2br(trim($comment));
+		$comment = nl2br(trim($comment));
+
+		if(preg_match_all('/\<pre\>(.*?)\<\/pre\>/', $comment, $match))
+		{
+			foreach($match as $a)
+			{
+				foreach($a as $b)
+				{
+					$comment = str_replace('<pre>'.$b.'</pre>', "<pre>".str_replace("<br />", "", $b)."</pre>", $comment);
+				}
+			}
+		}
+
+		return $this->comment_processed = $comment;
 	}
 
 

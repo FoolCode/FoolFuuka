@@ -912,7 +912,7 @@ class Board extends \Model\Model_Base
 	protected function p_getPost($num = null)
 	{
 		// default variables
-		$this->setmethod_fetching('getPostComments');
+		$this->setMethodFetching('getPostComments');
 
 		if ($num !== null)
 		{

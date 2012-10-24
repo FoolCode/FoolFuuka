@@ -26,7 +26,7 @@ class CommentInsert extends Comment
 	{
 		\DC::forge()->beginTransaction();
 		$item = [
-			'day' => floor(($this->timestamp/86400)*86400),
+			'day' => (int) (floor($this->timestamp/86400)*86400),
 			'images' => (int) ($this->media !== null),
 			'sage' => (int) ($this->email === 'sage'),
 			'anons' => (int) ($this->name === $this->radix->anonymous_default_name && $this->trip === null),

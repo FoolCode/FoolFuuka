@@ -12,6 +12,7 @@ $model_dir = APPPATH.'modules/foolfuuka/classes/Foolz/Foolfuuka/Model/';
 	'Foolz\Foolfuuka\Model\Extra' => $model_dir.'Extra.php',
 	'Foolz\Foolfuuka\Model\Report' => $model_dir.'Report.php',
 	'Foolz\Foolfuuka\Model\Ban' => $model_dir.'Ban.php',
+	'Foolz\Foolfuuka\Model\Schema' => $model_dir.'Schema.php',
 	'Foolfuuka\\Tasks\\Fool' => APPPATH.'modules/foolfuuka/classes/task/fool.php',
 ));
 

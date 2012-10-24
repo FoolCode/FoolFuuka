@@ -86,7 +86,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 
 		$this->_views["method_title"] = __('Editing board:').' '.$board->shortname;
 		$this->_views["main_content_view"] = \View::forge('admin/form_creator', $data);
-
+		/*
 		if ( ! $board->sphinx && ! $board->myisam_search)
 		{
 			$this->_views["main_content_view"] = '
@@ -108,7 +108,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 				</div>
 			'.$this->_views["main_content_view"];
 		}
-
+		*/
 		return \Response::forge(\View::forge('admin/default', $this->_views));
 	}
 

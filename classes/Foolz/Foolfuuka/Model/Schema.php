@@ -1,17 +1,15 @@
 <?php
 
-namespace Fuel\Migrations;
+namespace Foolz\Foolfuuka\Model;
 
-class Install_Foolfuuka
+class Schema
 {
-
-    function up()
-    {
+	public static function load(\Foolz\Foolframe\Model\SchemaManager $sm)
+	{
 		$charset = 'utf8mb4';
 		$collation = 'utf8mb4_unicode_ci';
 
-		$sm = \DC::forge()->getSchemaManager();
-		$schema = $sm->createSchema();
+		$schema = $sm->getCodedSchema();
 
 		$banned_md5 = $schema->createTable(\DC::p('banned_md5'));
 		$banned_md5->addColumn('md5', 'string', ['length' => 24]);
@@ -44,8 +42,8 @@ class Install_Foolfuuka
 			$boards->addOption('collate', $collation);
 		}
 		$boards->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
-		$boards->addColumn('shortname', 'string', ['constraint' => 32]);
-		$boards->addColumn('name', 'string', ['constraint' => 256]);
+		$boards->addColumn('shortname', 'string', ['length' => 32]);
+		$boards->addColumn('name', 'string', ['length' => 256]);
 		$boards->addColumn('archive', 'smallint', ['unsigned' => true, 'default' => 0]);
 		$boards->addColumn('sphinx', 'smallint', ['unsigned' => true, 'default' => 0]);
 		$boards->addColumn('hidden', 'smallint', ['unsigned' => true, 'default' => 0]);
@@ -64,9 +62,9 @@ class Install_Foolfuuka
 		}
 		$boards_preferences->addColumn('board_preference_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 		$boards_preferences->addColumn('board_id', 'integer', ['unsigned' => true]);
-		$boards_preferences->addColumn('name', 'string', ['constraint' => 64]);
+		$boards_preferences->addColumn('name', 'string', ['length' => 64]);
 		$boards_preferences->addColumn('value', 'text', ['notnull' => false, 'length' => 65532]);
-		$boards_preferences->setPrimaryKey(['boards_preferences']);
+		$boards_preferences->setPrimaryKey(['board_preference_id']);
 		$boards_preferences->addIndex(['board_id', 'name'], 'board_id_name_index');
 
 		$reports = $schema->createTable(\DC::p('reports'));
@@ -85,40 +83,5 @@ class Install_Foolfuuka
 		$reports->setPrimaryKey(['id']);
 		$reports->addIndex(['board_id', 'doc_id'], 'board_id_doc_id_index');
 		$reports->addIndex(['board_id', 'media_id'], 'board_id_media_id_index');
-
-		\DC::forge()->beginTransaction();
-
-		foreach ($schema->getMigrateFromSql($sm->createSchema(), $sm->getDatabasePlatform()) as $query)
-		{
-			\DC::forge()->query($query);
-		}
-
-		\DC::forge()->commit();
-    }
-
-    function down()
-    {
-		$sm = \DC::forge()->getSchemaManager();
-		$schema = $sm->createSchema();
-
-		foreach([
-			'banned_md5',
-			'banned_posters',
-			'boards',
-			'boards_preferences',
-			'reports'
-		] as $table)
-		{
-			$schema->dropTable(\DC::p($table));
-		}
-
-		\DC::forge()->beginTransaction();
-
-		foreach ($schema->getMigrateFromSql($sm->createSchema(), $sm->getDatabasePlatform()) as $query)
-		{
-			\DC::forge()->query($query);
-		}
-
-		\DC::forge()->commit();
-    }
+	}
 }

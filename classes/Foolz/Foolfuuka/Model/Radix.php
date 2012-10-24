@@ -395,12 +395,6 @@ class Radix //extends \Model_Base
 				'type' => 'checkbox',
 				'help' => __('Hide the thumbnails?')
 			],
-			'myisam_search' => [
-				'database' => true,
-				'boards_preferences' => true,
-				'type' => 'internal',
-				'help' => __('internal')
-			],
 			'sphinx' => [
 				'database' => true,
 				'type' => 'checkbox',
@@ -623,12 +617,6 @@ class Radix //extends \Model_Base
 			static::preload();
 			$board = static::getById($id);
 			$board->createTables();
-
-			// if the user didn't select sphinx for search, enable the table _search silently
-			if ( ! $board->sphinx)
-			{
-				$board->createSearch();
-			}
 
 			\DC::forge()->commit();
 		}

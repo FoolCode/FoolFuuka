@@ -86,29 +86,6 @@ class Controller_Admin_Boards extends \Controller_Admin
 
 		$this->_views["method_title"] = __('Editing board:').' '.$board->shortname;
 		$this->_views["main_content_view"] = \View::forge('admin/form_creator', $data);
-		/*
-		if ( ! $board->sphinx && ! $board->myisam_search)
-		{
-			$this->_views["main_content_view"] = '
-				<div class="alert">
-					<a class="btn btn-warning" href="'.\Uri::create('admin/boards/search_table/create/'.$board->id).'">
-						'.__('Create search table').'
-					</a> '.__('This board doesn\'t have the search table. You can create it by follwing this button.').'
-				</div>
-			'.$this->_views["main_content_view"];
-		}
-
-		if ($board->sphinx && $board->myisam_search)
-		{
-			$this->_views["main_content_view"] = '
-				<div class="alert">
-					<a class="btn btn-warning" href="'.\Uri::create('admin/boards/search_table/remove/'.$board->id).'">
-						'.__('Remove search table').'
-					</a> '.__('You are using Sphinx Search for this board, so you can remove the search table.').'
-				</div>
-			'.$this->_views["main_content_view"];
-		}
-		*/
 		return \Response::forge(\View::forge('admin/default', $this->_views));
 	}
 
@@ -148,82 +125,6 @@ class Controller_Admin_Boards extends \Controller_Admin
 	}
 
 
-	function action_search_table($type = FALSE, $id = 0)
-	{
-		$board = \Radix::getById($id);
-		if ($board == FALSE)
-		{
-			throw new \HttpNotFoundException;
-		}
-
-		if (\Input::post() && ! \Security::check_token())
-		{
-			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
-		}
-		elseif (\Input::post())
-		{
-			switch ($type)
-			{
-				case("create"):
-					if ( ! \Radix::createSearch($board))
-					{
-						\Notices::set_flash('error', sprintf(__('Failed to create the search table for the board %s.'), $board->shortname));
-					}
-					else
-					{
-						\Notices::set_flash('success',
-							sprintf(__('The search table for the board %s has been created.'), $board->shortname));
-					}
-					\Response::redirect('admin/boards/board/'.$board->shortname);
-					break;
-
-				case("remove"):
-					if ( ! \Radix::removeSearch($board))
-					{
-						\Notices::set_flash('error', sprintf(__('Failed to remove the search table for the board %s.'), $board->shortname));
-					}
-					else
-					{
-						\Notices::set_flash('success',
-							sprintf(__('The search table for the board %s has been removed.'), $board->shortname));
-					}
-					\Response::redirect('admin/boards/board/'.$board->shortname);
-					break;
-			}
-		}
-
-		switch ($type)
-		{
-			case('create'):
-				$this->_views["method_title"] = __('Creating search table for board:').' '.$board->shortname;
-				$data['alert_level'] = 'warning';
-				$data['message'] =
-					'<strong>'.__('Do you want to create the search table for this board?').'</strong><br/>'.
-					__('Creating the search table can take time if you have a board with even just 100.000 entries.').
-					'<br/>'.
-					__('Normally, even if the page times out, the database will keep building it.').
-					'<br/>'.
-					__('To make sure your search table is fully created, you can execute the following via the command line of your server.').' '.
-					__('For very large boards, past a few millions of entries, this would could hours: you should use SphinxSearch instead, or anyway you should use the command line.');
-
-				$this->_views["main_content_view"] = \View::forge('admin/confirm', $data);
-				break;
-
-			case('remove'):
-				$this->_views["method_title"] = __('Removing search table for board:').' '.$board->shortname;
-				$data['alert_level'] = 'warning';
-				$data['message'] =
-					'<strong>'.__('Do you want to remove the search table for this board?').'</strong><br/>'.
-					__('The search table can be created at any time, though it can take a while to create if the board is large.');
-
-				break;
-		}
-
-		$this->_views["main_content_view"] = \View::forge('admin/confirm', $data);
-		return \Response::forge(\View::forge('admin/default', $this->_views));
-	}
-
-
 	function action_delete($type = FALSE, $id = 0)
 	{
 		$board = \Radix::getById($id);
@@ -242,10 +143,6 @@ class Controller_Admin_Boards extends \Controller_Admin
 			{
 				case("board"):
 					$board->remove($id);
-					/*{
-						\Notices::set_flash('error', sprintf(__('Failed to delete the board %s.'), $board->shortname));
-						\Response::redirect('admin/boards/manage');
-					}*/
 					\Notices::set_flash('success', sprintf(__('The board %s has been deleted.'), $board->shortname));
 					\Response::redirect('admin/boards/manage');
 					break;

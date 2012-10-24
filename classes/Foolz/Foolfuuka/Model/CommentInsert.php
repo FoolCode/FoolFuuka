@@ -554,7 +554,7 @@ class CommentInsert extends Comment
 
 		if($this->ghost)
 		{
-			$num = '('.\DC::qb()
+			$this->num = '('.\DC::qb()
 				->select('MAX(num)')
 				->from('('.
 					\DC::qb()
@@ -702,7 +702,15 @@ class CommentInsert extends Comment
 					throw new CommentSendingDuplicateException(__('You are sending the same post twice.'));
 				}
 
-				$comment = current($check_duplicate);
+				$comment = \DC::qb()
+					->select('*')
+					->from($this->radix->getTable(), 'r')
+					->where('doc_id = :doc_id')
+					->setParameter(':doc_id', $last_id)
+					->execute()
+					->fetchAll();
+
+				$comment = current($comment);
 
 				$media_fields = Media::getFields();
 				// refresh the current comment object with the one finalized fetched from DB

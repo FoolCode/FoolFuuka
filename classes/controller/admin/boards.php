@@ -227,7 +227,7 @@ class Controller_Admin_Boards extends \Controller_Admin
 	function action_delete($type = FALSE, $id = 0)
 	{
 		$board = \Radix::getById($id);
-		if ($board == FALSE)
+		if ($board == false)
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -241,11 +241,11 @@ class Controller_Admin_Boards extends \Controller_Admin
 			switch ($type)
 			{
 				case("board"):
-					if (!\Radix::remove($id))
-					{
+					$board->remove($id);
+					/*{
 						\Notices::set_flash('error', sprintf(__('Failed to delete the board %s.'), $board->shortname));
 						\Response::redirect('admin/boards/manage');
-					}
+					}*/
 					\Notices::set_flash('success', sprintf(__('The board %s has been deleted.'), $board->shortname));
 					\Response::redirect('admin/boards/manage');
 					break;

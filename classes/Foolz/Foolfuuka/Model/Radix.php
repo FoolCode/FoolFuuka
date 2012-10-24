@@ -688,18 +688,17 @@ class Radix //extends \Model_Base
 	public function remove()
 	{
 		// always remove the triggers first
-		$this->removeTriggers();
 		\DC::forge()->beginTransaction();
 		\DC::qb()
 			->delete('boards_preferences')
 			->where('board_id = :id')
-			->setParameter(':id', $id)
+			->setParameter(':id', $this->id)
 			->execute();
 
 		\DC::qb()
 			->delete('boards')
 			->where('id = :id')
-			->setParameter(':id', $id)
+			->setParameter(':id', $this->id)
 			->execute();
 
 		// rename the directory and prevent directory collision

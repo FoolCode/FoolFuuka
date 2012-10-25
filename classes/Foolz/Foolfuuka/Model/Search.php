@@ -216,7 +216,7 @@ class Search extends Board
 			{
 				try
 				{
-					$media = \Media::get_by_media_hash($this->radix, $args['image']);
+					$media = \Media::getByMediaHash($this->radix, $args['image']);
 				}
 				catch (MediaNotFoundException $e)
 				{
@@ -443,7 +443,6 @@ class Search extends Board
 		}
 		else /* use mysql as fallback for non-sphinx indexed boards */
 		{
-			/*
 			// sadly like escaping has no love in fuelphp...
 			$like_escape = function($s, $e)
 			{
@@ -452,6 +451,9 @@ class Search extends Board
 			};
 
 			// begin filtering search params
+			/*
+			 *  Currently FoolFuuka has no cross-db way to do fulltext search
+			 *
 			if ($args["text"] || $args['filename'])
 			{
 				// we're using fulltext fields, we better start from this
@@ -493,6 +495,8 @@ class Search extends Board
 					$docs[] = $rec->doc_id;
 				}
 			}
+			 * 
+			 */
 
 			foreach (['*', 'COUNT(*) as count'] as $select_key => $select)
 			{
@@ -629,7 +633,6 @@ class Search extends Board
 						->count;
 				}
 			}
-			*/
 		}
 
 		foreach ($result as $item)

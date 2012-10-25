@@ -64,13 +64,17 @@ class Task
 			{
 				// get only the non-realtime ones
 				if (isset($available['frequency']))
+				{
 					$avail[] = $k;
+				}
 			}
 
 			foreach ($boards as $board)
 			{
 				if (!is_null($shortname) && $shortname != $board->shortname)
+				{
 					continue;
+				}
 
 				// Update all statistics for the specified board or current board.
 				\Cli::write($board->shortname . ' (' . $board->id . ')');
@@ -79,6 +83,7 @@ class Task
 					\Cli::write('  ' . $k . ' ');
 					$found = FALSE;
 					$skip = FALSE;
+
 					foreach ($stats as $r)
 					{
 						// Determine if the statistics already exists or that the information is outdated.
@@ -87,21 +92,21 @@ class Task
 							// This statistics report has run once already.
 							$found = TRUE;
 
-							if(!isset($a['frequency']))
+							if( ! isset($a['frequency']))
 							{
 								$skip = TRUE;
 								continue;
 							}
 
 							// This statistics report has not reached its frequency EOL.
-							if ((time() - strtotime($r->timestamp)) <= $a['frequency'])
+							if (time() - strtotime($r->timestamp) <= $a['frequency'])
 							{
 								$skip = TRUE;
 								continue;
 							}
 
 							// This statistics report has another process locked.
-							if (!Board_Statistics::lock_stat($r->board_id, $k, $r->timestamp))
+							if ( ! Board_Statistics::lock_stat($r->board_id, $k, $r->timestamp))
 							{
 								continue;
 							}

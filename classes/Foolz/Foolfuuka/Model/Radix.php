@@ -38,7 +38,7 @@ class Radix //extends \Model_Base
 					// check that the ID exists
 					$row = \DC::qb()
 						->select('COUNT(*) as count')
-						->from('boards', 'b')
+						->from(\DC::p('boards'), 'b')
 						->where('id = :id')
 						->setParameter(':id', $input['id'])
 						->execute()
@@ -81,7 +81,7 @@ class Radix //extends \Model_Base
 						// existence ensured by CRITICAL in the ID check
 						$row = \DC::qb()
 							->select('shortname')
-							->from('boards', 'b')
+							->from(\DC::p('boards'), 'b')
 							->where('id = :id')
 							->setParameter(':id', $input['id'])
 							->execute()
@@ -105,7 +105,7 @@ class Radix //extends \Model_Base
 
 					$row = \DC::qb()
 						->select('shortname')
-						->from('boards', 'r')
+						->from(\DC::p('boards'), 'r')
 						->where('shortname = :s')
 						->setParameter(':s', $input['shortname'])
 						->execute()
@@ -581,7 +581,7 @@ class Radix //extends \Model_Base
 
 			// save normal values
 			$update = \DC::qb()
-				->update('boards');
+				->update(\DC::p('boards'));
 
 			foreach ($data as $k => $i)
 			{
@@ -603,7 +603,7 @@ class Radix //extends \Model_Base
 		else
 		{
 			\DC::forge()->beginTransaction();
-			\DC::forge()->insert('boards', $data);
+			\DC::forge()->insert(\DC::p('boards'), $data);
 			$id = \DC::forge()->lastInsertId();
 
 
@@ -642,7 +642,7 @@ class Radix //extends \Model_Base
 
 		$result = \DC::qb()
 			->select('COUNT(*) as count')
-			->from('boards_preferences', 'p')
+			->from(\DC::p('boards_preferences'), 'p')
 			->where('board_id = :board_id', 'name = :name')
 			->setParameter(':board_id', $board_id)
 			->setParameter(':name', $name)
@@ -652,7 +652,7 @@ class Radix //extends \Model_Base
 		if ($result['count'])
 		{
 			\DC::qb()
-				->update('boards_preferences')
+				->update(\DC::p('boards_preferences'))
 				->set('value', \DC::forge()->quote($value))
 				->where('board_id = :board_id', 'name = :name')
 				->setParameter(':board_id', $board_id)
@@ -661,7 +661,7 @@ class Radix //extends \Model_Base
 		}
 		else
 		{
-			\DC::forge()->insert('boards_preferences', [
+			\DC::forge()->insert(\DC::p('boards_preferences'), [
 				'board_id' => $board_id,
 				'name' => $name,
 				'value' => $value
@@ -688,13 +688,13 @@ class Radix //extends \Model_Base
 		// always remove the triggers first
 		\DC::forge()->beginTransaction();
 		\DC::qb()
-			->delete('boards_preferences')
+			->delete(\DC::p('boards_preferences'))
 			->where('board_id = :id')
 			->setParameter(':id', $this->id)
 			->execute();
 
 		\DC::qb()
-			->delete('boards')
+			->delete(\DC::p('boards'))
 			->where('id = :id')
 			->setParameter(':id', $this->id)
 			->execute();
@@ -810,7 +810,7 @@ class Radix //extends \Model_Base
 		{
 			$result = \DC::qb()
 				->select('*')
-				->from('boards', 'b')
+				->from(\DC::p('boards'), 'b')
 				->orderBy('shortname', 'ASC')
 				->execute()
 				->fetchAll();
@@ -874,7 +874,7 @@ class Radix //extends \Model_Base
 		{
 			$preferences = \DC::qb()
 				->select('*')
-				->from('boards_preferences', 'p')
+				->from(\DC::p('boards_preferences'), 'p')
 				->execute()
 				->fetchAll();
 
@@ -1224,7 +1224,7 @@ class Radix //extends \Model_Base
 
 		$md5_array = \DC::qb()
 			->select('md5')
-			->from('banned_md5', 'm')
+			->from(\DC::p('banned_md5'), 'm')
 			->execute()
 			->fetchAll();
 

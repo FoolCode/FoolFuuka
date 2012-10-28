@@ -1,6 +1,6 @@
 <?php
 
-namespace Foolfuuka;
+namespace Foolz\Foolfuuka\Controller\Api;
 
 class Controller_Api_Chan extends \Controller_Rest
 {

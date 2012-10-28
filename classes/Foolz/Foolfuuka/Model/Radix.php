@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Config\Config;
+
 class Radix
 {
 	use \Foolz\Plugin\PlugSuit;
@@ -425,7 +427,7 @@ class Radix
 
 		foreach ($structure as $key => $item)
 		{
-			$default = \Config::get('foolfuuka.preferences.radix.'.$key);
+			$default = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key);
 
 			if($default !== null)
 			{
@@ -440,7 +442,7 @@ class Radix
 				{
 					foreach ($item[$inv] as $k => $i)
 					{
-						$default = \Config::get('foolfuuka.preferences.radix.'.$k);
+						$default = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$k);
 
 						if(!is_null($default))
 						{
@@ -962,7 +964,7 @@ class Radix
 	public static function getAll()
 	{
 		static::preload();
-		
+
 		return static::$preloaded_radixes;
 	}
 

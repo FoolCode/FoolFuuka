@@ -502,31 +502,47 @@ class Media
 		if ( ! \Upload::is_valid())
 		{
 			if (in_array($file['errors'], UPLOAD_ERR_INI_SIZE))
+			{
 				throw new MediaUploadInvalidException(
 					__('The server is misconfigured: the FoolFuuka upload size should be lower than PHP\'s upload limit.'));
+			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_PARTIAL))
+			{
 				throw new MediaUploadInvalidException(__('You uploaded the file partially.'));
+			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_CANT_WRITE))
+			{
 				throw new MediaUploadInvalidException(__('The image couldn\'t be saved on the disk.'));
+			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_EXTENSION))
+			{
 				throw new MediaUploadInvalidException(__('A PHP extension broke and made processing the image impossible.'));
+			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_MAX_SIZE))
+			{
 				throw new MediaUploadInvalidException(
 					\Str::tr(__('You uploaded a too big file. The maxmimum allowed filesize is :sizekb'),
 						['size' => $radix->max_image_size_kilobytes]));
+			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_EXT_NOT_WHITELISTED))
+			{
 				throw new MediaUploadInvalidException(__('You uploaded a file with an invalid extension.'));
+			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_MAX_FILENAME_LENGTH))
+			{
 				throw new MediaUploadInvalidException(__('You uploaded a file with a too long filename.'));
+			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_MOVE_FAILED))
+			{
 				throw new MediaUploadInvalidException(__('Your uploaded file couldn\'t me moved on the server.'));
+			}
 
 			throw new MediaUploadInvalidException(__('Unexpected upload error.'));
 		}
@@ -912,7 +928,7 @@ class Media
 	 */
 	public function p_ban($global = false)
 	{
-		if ( ! $global)
+		if ($global === false)
 		{
 			\DC::qb()
 				->update($this->radix->getTable('_images'))

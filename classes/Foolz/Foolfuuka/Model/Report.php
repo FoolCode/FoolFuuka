@@ -260,6 +260,7 @@ class Report
 	public static function getAll()
 	{
 		static::preload();
+		
 		return static::fromArrayDeep(static::$preloaded);
 	}
 
@@ -271,6 +272,7 @@ class Report
 	public static function count()
 	{
 		static::preload();
+
 		return count(static::$preloaded);
 	}
 
@@ -333,9 +335,9 @@ class Report
 
 		$new->reason = $reason;
 
-		if ($ip_reporter === null)
+		if ($new->ip_reporter === null)
 		{
-			$ip_reporter = \Input::ip_decimal();
+			$new->ip_reporter = \Input::ip_decimal();
 		}
 		$new->ip_reporter = $ip_reporter;
 

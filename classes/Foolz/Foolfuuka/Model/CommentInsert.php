@@ -618,7 +618,6 @@ class CommentInsert extends Comment
 
 		$try_max = 3;
 		$try_count = 0;
-		$try_done = false;
 
 		while (true)
 		{

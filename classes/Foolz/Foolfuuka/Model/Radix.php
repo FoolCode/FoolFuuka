@@ -530,7 +530,6 @@ class Radix
 						}
 					}
 				}
-
 			}
 
 			if (isset($item['boards_preferences']))
@@ -737,7 +736,7 @@ class Radix
 	{
 		$all = static::getAll();
 
-		$array = array();
+		$array = [];
 
 		// get all directories
 		if ($handle = opendir(\Preferences::get('fu.boards.directory')))
@@ -821,7 +820,7 @@ class Radix
 
 		if ( ! is_array($result) || empty($result))
 		{
-			static::$preloaded_radixes = array();
+			static::$preloaded_radixes = [];
 			return false;
 		}
 
@@ -963,6 +962,7 @@ class Radix
 	public static function getAll()
 	{
 		static::preload();
+		
 		return static::$preloaded_radixes;
 	}
 

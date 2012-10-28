@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolfuuka;
+namespace Foolz\Foolfuuka\Controller\Admin;
 
-class Controller_Admin_Boards extends \Controller_Admin
+class Boards extends \Foolz\Foolframe\Controller\Admin
 {
 
 
@@ -22,9 +22,9 @@ class Controller_Admin_Boards extends \Controller_Admin
 	public function action_manage()
 	{
 		$this->_views['method_title'] = __('Manage');
-		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/boards/manage', array('boards' => \Radix::getAll()));
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/boards/manage', array('boards' => \Radix::getAll()));
 
-		return \Response::forge(\View::forge('admin/default', $this->_views));
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 
@@ -33,9 +33,9 @@ class Controller_Admin_Boards extends \Controller_Admin
 		\Radix::preload(true);
 
 		$this->_views['method_title'] = __('Login');
-		$this->_views['main_content_view'] = \View::forge('admin/form_creator', array('form' => \Radix::getAll()));
+		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', array('form' => \Radix::getAll()));
 
-		return \Response::forge(\View::forge('admin/default', $this->_views));
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 
@@ -85,8 +85,8 @@ class Controller_Admin_Boards extends \Controller_Admin
 		$data['object'] = $board;
 
 		$this->_views["method_title"] = __('Editing board:').' '.$board->shortname;
-		$this->_views["main_content_view"] = \View::forge('admin/form_creator', $data);
-		return \Response::forge(\View::forge('admin/default', $this->_views));
+		$this->_views["main_content_view"] = \View::forge('foolz/foolframe::admin/form_creator', $data);
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 
@@ -119,9 +119,9 @@ class Controller_Admin_Boards extends \Controller_Admin
 
 		// panel for creating a new board
 		$this->_views["method_title"] = __('Creating a new board');
-		$this->_views["main_content_view"] = \View::forge('admin/form_creator', $data);
+		$this->_views["main_content_view"] = \View::forge('foolz/foolframe::admin/form_creator', $data);
 
-		return \Response::forge(\View::forge('admin/default', $this->_views));
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 
@@ -159,8 +159,8 @@ class Controller_Admin_Boards extends \Controller_Admin
 					__('Notice: due to its size, you will have to remove the image directory manually. The directory will have the "_removed" suffix. You can remove all the leftover "_removed" directories with the following command:').
 					' <code>php index.php cli boards remove_leftover_dirs</code>';
 
-				$this->_views["main_content_view"] = \View::forge('admin/confirm', $data);
-				return \Response::forge(\View::forge('admin/default', $this->_views));
+				$this->_views["main_content_view"] = \View::forge('foolz/foolfuuka::admin/confirm', $data);
+				return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 		}
 	}
 
@@ -231,8 +231,8 @@ class Controller_Admin_Boards extends \Controller_Admin
 		$data['form'] = $form;
 
 		// create a form
-		$this->_views["main_content_view"] = \View::forge("admin/form_creator", $data);
-		return \Response::forge(\View::forge("admin/default", $this->_views));
+		$this->_views["main_content_view"] = \View::forge("foolz/foolframe::admin/form_creator", $data);
+		return \Response::forge(\View::forge("foolz/foolframe::admin/default", $this->_views));
 	}
 
 
@@ -403,9 +403,9 @@ class Controller_Admin_Boards extends \Controller_Admin
 		// create the form
 		$data['form'] = $form;
 
-		$this->_views["main_content_view"] = \View::forge("admin/form_creator", $data);
+		$this->_views["main_content_view"] = \View::forge("foolz/foolframe::admin/form_creator", $data);
 		//$this->_views["main_content_view"] .= '<pre>'.\SphinxQL::generate_sphinx_config(\Radix::get_all()).'</pre>';
-		return \Response::forge(\View::forge("admin/default", $this->_views));
+		return \Response::forge(\View::forge("foolz/foolframe::admin/default", $this->_views));
 	}
 
 }

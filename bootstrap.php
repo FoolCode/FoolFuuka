@@ -15,7 +15,9 @@ $model_dir = __DIR__.'/classes/Foolz/Foolfuuka/Model/';
 	'Foolz\Foolfuuka\Model\Schema' => $model_dir.'Schema.php',
 	'Foolz\Foolfuuka\Tasks\Fool' => __DIR__.'/classes/Task/Fool.php',
 
-	'Foolz\Foolfuuka\Controller\Chan' => __DIR__.'/classes/Foolz/Foolfuuka/Controller/Chan.php'
+	'Foolz\Foolfuuka\Controller\Chan' => __DIR__.'/classes/Foolz/Foolfuuka/Controller/Chan.php',
+	'Foolz\Foolfuuka\Controller\Admin\Boards' => __DIR__.'/classes/Foolz/Foolfuuka/Controller/Admin/Boards.php',
+	'Foolz\Foolfuuka\Controller\Admin\Posts' => __DIR__.'/classes/Foolz/Foolfuuka/Controller/Admin/Posts.php'
 ]);
 
 \Autoloader::add_core_namespace('Foolz\Foolfuuka\Model');

@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolfuuka;
+namespace Foolz\Foolfuuka\Controller\Admin;
 
-class Controller_Admin_Posts extends \Controller_Admin
+class Posts extends \Foolz\Foolframe\Controller\Admin
 {
 
 	/**
@@ -30,8 +30,8 @@ class Controller_Admin_Posts extends \Controller_Admin
 		$this->_views['method_title'] = __('Reports');
 
 		$theme = \Theme::forge('foolfuuka');
-		$theme->set_module('foolfuuka');
-		$theme->set_theme($theme);
+		$theme->set_module('foolz/foolfuuka');
+		$theme->set_theme('default');
 		$theme->set_layout('chan');
 		$theme->bind('modifiers', array(
 			'post_show_board_name' => true,
@@ -91,8 +91,11 @@ class Controller_Admin_Posts extends \Controller_Admin
 			)
 		);
 
-		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/manage', array('backend_vars' => $backend_vars, 'theme' => $theme, 'reports' => $reports));
-		return \Response::forge(\View::forge('admin/default', $this->_views));
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/manage', array(
+			'backend_vars' => $backend_vars,
+			'theme' => $theme, 'reports' => $reports
+		));
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 
@@ -107,12 +110,12 @@ class Controller_Admin_Posts extends \Controller_Admin
 
 		$bans = \Ban::getPagedBy('start', 'desc', $page);
 
-		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array(
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/bans', array(
 			'bans' => $bans,
 			'page' => $page,
 			'page_url' => \Uri::create('admin/posts/bans')
 		));
-		return \Response::forge(\View::forge('admin/default', $this->_views));
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_appeals($page = 1)
@@ -126,12 +129,12 @@ class Controller_Admin_Posts extends \Controller_Admin
 
 		$bans = \Ban::getAppealsPagedBy('start', 'desc', $page);
 
-		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array(
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/bans', array(
 			'bans' => $bans,
 			'page' => $page,
 			'page_url' => \Uri::create('admin/posts/appeals')
 		));
-		return \Response::forge(\View::forge('admin/default', $this->_views));
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_find_ban($ip = null)
@@ -165,8 +168,8 @@ class Controller_Admin_Posts extends \Controller_Admin
 		}
 
 
-		$this->_views['main_content_view'] = \View::forge('foolfuuka::admin/reports/bans', array('bans' => $bans));
-		return \Response::forge(\View::forge('admin/default', $this->_views));
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/bans', array('bans' => $bans));
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_ban_manage($action, $id)
@@ -223,8 +226,8 @@ class Controller_Admin_Posts extends \Controller_Admin
 				throw new \HttpNotFoundException;
 		}
 
-		$this->_views["main_content_view"] = \View::forge('admin/confirm', $data);
-		return \Response::forge(\View::forge('admin/default', $this->_views));
+		$this->_views["main_content_view"] = \View::forge('foolz/foolframe::admin/confirm', $data);
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 
 	}
 

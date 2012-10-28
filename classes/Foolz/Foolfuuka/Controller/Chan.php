@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolfuuka;
+namespace Foolz\Foolfuuka\Controller;
 
-class Controller_Chan extends \Controller_Common
+class Chan extends \Controller
 {
 
 	protected $_theme = null;

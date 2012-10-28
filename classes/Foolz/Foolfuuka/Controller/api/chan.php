@@ -278,7 +278,7 @@ class Controller_Api_Chan extends \Controller_Rest
 		{
 			try
 			{
-				\Report::delete(\Input::post('id')); die('here');
+				\Report::delete(\Input::post('id'));
 			}
 			catch (\Foolz\Foolfuuka\Model\ReportException $e)
 			{

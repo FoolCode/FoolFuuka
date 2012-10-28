@@ -9,6 +9,8 @@ class ExtraException extends \Exception {}
  */
 class Extra
 {
+	use \Foolz\Plugin\PlugSuit;
+
 	/**
 	 * The comment's doc_id
 	 *

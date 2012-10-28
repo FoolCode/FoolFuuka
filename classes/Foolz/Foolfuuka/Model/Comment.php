@@ -6,9 +6,11 @@ class CommentException extends \FuelException {}
 
 class CommentDeleteWrongPassException extends CommentException {}
 
-class Comment extends \Model\Model_Base
+class Comment
 {
-/**
+	use \Foolz\Plugin\PlugSuit;
+
+	/**
 	 * Array of post numbers found in the database
 	 *
 	 * @var  array

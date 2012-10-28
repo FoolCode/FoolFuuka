@@ -35,8 +35,11 @@ class ReportMediaNotFoundException extends ReportException {}
 /**
  * Manages Reports
  */
-class Report extends \Model\Model_Base
+class Report
 {
+
+	use \Foolz\Plugin\PlugSuit;
+
 	/**
 	 * Autoincremented ID
 	 *

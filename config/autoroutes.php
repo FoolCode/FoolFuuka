@@ -1,8 +1,9 @@
 <?php
-return array(
-	'_root_' => 'foolfuuka/chan/index',  // The default route
-	'_/api/chan/(:any)' => 'foolfuuka/api/chan/$1',
-	'api/chan/(:any)' => 'foolfuuka/api/chan/$1',
+
+return [
+	'_root_' => 'foolz/foolfuuka/chan/index',  // The default route
+	'_/api/chan/(:any)' => 'foolz/foolfuuka/api/chan/$1',
+	'api/chan/(:any)' => 'foolz/foolfuuka/api/chan/$1',
 	'admin/boards/(:any)' => 'foolfuuka/admin/boards/$1',
 	'admin/posts/(:any)' => 'foolfuuka/admin/posts/$1',
 	'_/advanced_search' => 'foolfuuka/chan/advanced_search',
@@ -17,4 +18,4 @@ return array(
 	'(?!(admin|_))(\w+)' => 'foolfuuka/chan/$2/page',
 	'(?!(admin|_))(\w+)/(:any)' => 'foolfuuka/chan/$2/$3',
 	'_404_'=> '_/notfound/action404',    // The main 404 route
-);
+];

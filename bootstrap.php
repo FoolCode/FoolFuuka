@@ -1,8 +1,8 @@
 <?php
 
-$model_dir = APPPATH.'modules/foolfuuka/classes/Foolz/Foolfuuka/Model/';
+$model_dir = __DIR__.'/classes/Foolz/Foolfuuka/Model/';
 
-\Autoloader::add_classes(array(
+\Autoloader::add_classes([
 	'Foolz\Foolfuuka\Model\Radix' => $model_dir.'Radix.php',
 	'Foolz\Foolfuuka\Model\Board' => $model_dir.'Board.php',
 	'Foolz\Foolfuuka\Model\Search' => $model_dir.'Search.php',
@@ -13,28 +13,15 @@ $model_dir = APPPATH.'modules/foolfuuka/classes/Foolz/Foolfuuka/Model/';
 	'Foolz\Foolfuuka\Model\Report' => $model_dir.'Report.php',
 	'Foolz\Foolfuuka\Model\Ban' => $model_dir.'Ban.php',
 	'Foolz\Foolfuuka\Model\Schema' => $model_dir.'Schema.php',
-	'Foolfuuka\\Tasks\\Fool' => APPPATH.'modules/foolfuuka/classes/task/fool.php',
-));
+	'Foolz\Foolfuuka\Tasks\Fool' => __DIR__.'/classes/Task/Fool.php',
 
-\Autoloader::add_core_namespace('Foolz\\Foolfuuka\\Model');
+	'Foolz\Foolfuuka\Controller\Chan' => __DIR__.'/classes/Foolz/Foolfuuka/Controller/Chan.php'
+]);
 
-\Profiler::mark('Start sphinxql initialization');
-\Profiler::mark_memory(false, 'Start sphinxql initialization');
+\Autoloader::add_core_namespace('Foolz\Foolfuuka\Model');
 
-\Package::load('sphinxql');
-
-\Profiler::mark('End sphinxql, Start stringparser-bbcode initialization');
-\Profiler::mark_memory(false, 'End sphinxql, Start stringparser-bbcode initialization');
-
-\Package::load('stringparser-bbcode', APPPATH.'modules/foolfuuka/packages/stringparser-bbcode/');
-
-\Profiler::mark('End stringparser-bbcode initialization, start geoip_codes initialization');
-\Profiler::mark_memory(false, 'End stringparser-bbcode initialization, start geoip_codes initialization');
-
+\Package::load('stringparser-bbcode', __DIR__.'/packages/stringparser-bbcode/');
 \Config::load('foolfuuka::geoip_codes', 'geoip_codes');
-
-\Profiler::mark('End geoip_codes initialization');
-\Profiler::mark_memory(false, 'End  geoip_codes initialization');
 
 if (\Auth::has_access('comment.reports'))
 {
@@ -42,6 +29,6 @@ if (\Auth::has_access('comment.reports'))
 }
 
 $theme = \Theme::forge('foolfuuka');
-$theme->set_module('foolfuuka');
+$theme->set_module('foolz/foolfuuka');
 $theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
 $theme->set_layout('chan');

@@ -4,6 +4,8 @@ namespace Foolz\Foolfuuka\Model;
 
 class Schema
 {
+	use \Foolz\Plugin\PlugSuit;
+
 	public static function load(\Foolz\Foolframe\Model\SchemaManager $sm)
 	{
 		$charset = 'utf8mb4';

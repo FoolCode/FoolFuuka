@@ -13,8 +13,9 @@ class BoardMissingOptionsException extends BoardException {}
 /**
  * Deals with all the data in the board tables
  */
-class Board extends \Model\Model_Base
+class Board
 {
+	use \Foolz\Plugin\PlugSuit;
 
 	/**
 	 * Array of Comment sorted for output

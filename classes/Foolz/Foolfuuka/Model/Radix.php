@@ -2,8 +2,9 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-class Radix //extends \Model_Base
+class Radix
 {
+	use \Foolz\Plugin\PlugSuit;
 
 	/**
 	 * An array of all the preloaded boards

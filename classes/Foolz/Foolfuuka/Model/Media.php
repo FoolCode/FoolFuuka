@@ -21,8 +21,10 @@ class MediaInsertRepostException extends MediaInsertException {}
 /**
  * Manages Media files and database
  */
-class Media extends \Model\Model_Base
+class Media
 {
+	use \Foolz\Plugin\PlugSuit;
+
 	/**
 	 * If the media is referred to an opening post
 	 *

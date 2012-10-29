@@ -847,7 +847,7 @@ class Radix
 			{
 				if ( ! isset($result_object[$item['id']]->$key) && isset($arr['boards_preferences']))
 				{
-					$result_object[$item['id']]->$key = \Config::get('foolfuuka.preferences.radix.'.$key);
+					$result_object[$item['id']]->$key = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key);
 				}
 
 				foreach (['sub', 'sub_inverse'] as $sub)
@@ -858,7 +858,7 @@ class Radix
 						{
 							if ( ! isset($result_object[$item['id']]->$k) && isset($a['boards_preferences']))
 							{
-								$result_object[$item['id']]->$k = \Config::get('foolfuuka.preferences.radix.'.$k);
+								$result_object[$item['id']]->$k = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$k);
 							}
 						}
 					}

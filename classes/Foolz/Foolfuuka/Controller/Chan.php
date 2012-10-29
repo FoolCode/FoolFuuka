@@ -47,8 +47,8 @@ class Chan extends \Controller
 				'archive_url'  => \Uri::base(),
 				'system_url'  => \Uri::base(),
 				'api_url'   => \Uri::base(),
-				'cookie_domain' => \Config::get('foolframe.config.cookie_domain'),
-				'cookie_prefix' => \Config::get('foolframe.config.cookie_prefix'),
+				'cookie_domain' => \Foolz\Config\Config::get('foolz/foolframe', 'package', 'config.cookie_domain'),
+				'cookie_prefix' => \Foolz\Config\Config::get('foolz/foolframe', 'package', 'config.cookie_domain'),
 				'selected_theme' => isset($this->_theme)?$this->_theme->get_selected_theme():'',
 				'csrf_token_key' => \Config::get('security.csrf_token_key'),
 				'images' => array(

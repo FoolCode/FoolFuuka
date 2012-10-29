@@ -452,7 +452,7 @@ class CommentInsert extends Comment
 		}
 
 		$hasher = new \PHPSecLib\Crypt_Hash();
-		$this->delpass = base64_encode($hasher->pbkdf2($this->delpass, \Config::get('auth.salt'), 10000, 32));
+		$this->delpass = base64_encode($hasher->pbkdf2($this->delpass, \Foolz\Config\Config::get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
 
 		if ($this->capcode != '')
 		{

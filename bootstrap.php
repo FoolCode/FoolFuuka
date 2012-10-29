@@ -24,7 +24,6 @@ $model_dir = __DIR__.'/classes/Foolz/Foolfuuka/Model/';
 \Autoloader::add_core_namespace('Foolz\Foolfuuka\Model');
 
 \Package::load('stringparser-bbcode', __DIR__.'/packages/stringparser-bbcode/');
-\Config::load('foolfuuka::geoip_codes', 'geoip_codes');
 
 if (\Auth::has_access('comment.reports'))
 {

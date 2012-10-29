@@ -304,7 +304,7 @@ class Comment
 
 		if ($this->poster_country !== null)
 		{
-			$this->poster_country_name = \Config::get('geoip_codes.codes.'.strtoupper($this->poster_country));
+			$this->poster_country_name = \Foolz\Config\Config::get('foolz/foolfuuka', 'geoip_codes', 'codes.'.strtoupper($this->poster_country));
 		}
 
 		$num = $this->num.($this->subnum ? ','.$this->subnum : '');
@@ -920,7 +920,7 @@ class Comment
 
 			$hasher = new \PHPSecLib\Crypt_Hash();
 
-			$hashed = base64_encode($hasher->pbkdf2($password, \Config::get('auth.salt'), 10000, 32));
+			$hashed = base64_encode($hasher->pbkdf2($password, \Foolz\Config\Config::get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
 
 			if($this->delpass !== $hashed)
 			{
@@ -1159,6 +1159,6 @@ class Comment
 	 */
 	protected function p_processSecureTripcode($plain)
 	{
-		return substr(base64_encode(sha1($plain . base64_decode(\Config::get('foolframe.preferences.comment.secure_tripcode_salt')), true)), 0, 11);
+		return substr(base64_encode(sha1($plain . base64_decode(\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'preferences.comment.secure_tripcode_salt')), true)), 0, 11);
 	}
 }

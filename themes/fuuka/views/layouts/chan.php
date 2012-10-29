@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="generator" content="<?= \Config::get('foolfuuka.main.name') ?> <?= \Config::get('foolfuuka.main.version') ?>" />
+		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
 		<?= $template['metadata'] ?>
 
 		<title><?= $template['title'] ?></title>
@@ -13,9 +13,9 @@
 		?>
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script src="<?= Uri::base() . $this->fallback_asset('plugins.js') ?>" type="text/javascript"></script>
+		<script src="<?= \Uri::base() . $this->fallback_asset('plugins.js') ?>" type="text/javascript"></script>
 		<?php if (\Preferences::get('fu.sphinx.global')) : ?>
-			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('ff.gen.website_title') ?> " href="<?= Uri::create('_/opensearch') ?>" />
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('ff.gen.website_title') ?> " href="<?= \Uri::create('_/opensearch') ?>" />
 		<?php endif; ?>
 		<?= \Preferences::get('ff.theme.header_code') ?>
 	</head>
@@ -37,11 +37,11 @@
 		<?php
 			$board_urls = array();
 
-			$board_urls[] = '<a href="' . Uri::base() . '">' . strtolower(__('Index')) . '</a>';
+			$board_urls[] = '<a href="' . \Uri::base() . '">' . strtolower(__('Index')) . '</a>';
 			if ($radix)
 			{
-				$board_urls[] = '<a href="' . Uri::create($radix->shortname) . '">' . strtolower(__('Top')) . '</a>';
-				$board_urls[] = '<a href="' . Uri::create(array($radix->shortname, 'statistics')) . '">' . strtolower(__('Statistics')) . '</a>';
+				$board_urls[] = '<a href="' . \Uri::create($radix->shortname) . '">' . strtolower(__('Top')) . '</a>';
+				$board_urls[] = '<a href="' . \Uri::create(array($radix->shortname, 'statistics')) . '">' . strtolower(__('Statistics')) . '</a>';
 			}
 			$board_urls[] = '<a href="https://github.com/FoOlRulez/FoOlFuuka/issues">' . strtolower(__('Report Bug')) . '</a>';
 
@@ -190,7 +190,7 @@
 					{
 						if (($theme = $this->get_by_name($theme)))
 						{
-							$theme_links[] = '<a href="' . Uri::create(array('_', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
+							$theme_links[] = '<a href="' . \Uri::create(array('_', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
 						}
 					}
 					echo 'Theme [ ' . implode(' / ', $theme_links) . ' ]';

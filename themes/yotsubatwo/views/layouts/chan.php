@@ -6,20 +6,20 @@ header('imagetoolbar: false');
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="generator" content="<?= \Config::get('foolfuuka.main.name') ?> <?= \Config::get('foolfuuka.main.version') ?>" />
+		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
 		<?= $template['metadata'] ?>
 
 		<title><?= $template['title'] ?></title>
-		<link href='<?= Uri::base() ?>' rel='index' title='<?= Preferences::get('ff.gen.website_title') ?>' />
+		<link href='<?= \Uri::base() ?>' rel='index' title='<?= Preferences::get('ff.gen.website_title') ?>' />
 		<?php if ($radix) : ?>
-		<link href="<?= Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS" />
-		<link href="<?= Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom" />
+		<link href="<?= \Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS" />
+		<link href="<?= \Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom" />
 		<?php endif; ?>
-		<link href="<?= Uri::base() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?= $this->_selected_theme_version ?>" rel="stylesheet" type="text/css" />
-		<link href="<?= Uri::base() ?>assets/font-awesome/css/font-awesome.css?v=<?= $this->_selected_theme_version ?>" rel="stylesheet" type="text/css" />
+		<link href="<?= \Uri::base() ?>assets/bootstrap2/css/bootstrap.min.css?v=<?= $this->_selected_theme_version ?>" rel="stylesheet" type="text/css" />
+		<link href="<?= \Uri::base() ?>assets/font-awesome/css/font-awesome.css?v=<?= $this->_selected_theme_version ?>" rel="stylesheet" type="text/css" />
 		<!--[if lt IE 8]>
-			<link href="<?= Uri::base() ?>assets/font-awesome/css/font-awesome-ie7.css?v=<?= $this->_selected_theme_version ?>" rel="stylesheet" type="text/css" />
+			<link href="<?= \Uri::base() ?>assets/font-awesome/css/font-awesome-ie7.css?v=<?= $this->_selected_theme_version ?>" rel="stylesheet" type="text/css" />
 		<![endif]-->
 		<?php
 			foreach($this->fallback_override('style.css', $this->get_config('extends_css')) as $css)
@@ -29,10 +29,10 @@ header('imagetoolbar: false');
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<?php if (Preferences::get('fu.sphinx.global')) : ?>
-			<link rel="search" type="application/opensearchdescription+xml" title="<?= Preferences::get('ff.gen.website_title'); ?> " href="<?= Uri::create('_/opensearch') ?>" />
+		<?php if (\Preferences::get('fu.sphinx.global')) : ?>
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('ff.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>" />
 		<?php endif; ?>
-		<?= Preferences::get('ff.theme.header_code'); ?>
+		<?= \Preferences::get('ff.theme.header_code'); ?>
 
 	</head>
 	<body class="<?= $this->get_selected_theme_class(array('theme_default')) ?>">
@@ -72,11 +72,11 @@ header('imagetoolbar: false');
 					<div class="container">
 						<ul class="nav">
 							<li class="dropdown">
-								<a href="<?= Uri::base() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">
-									<?= ($radix) ? '/' . $radix->shortname . '/' . ' - ' . $radix->name :  Preferences::get('ff.gen.website_title') ?> <b class="caret"></b>
+								<a href="<?= \Uri::base() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">
+									<?= ($radix) ? '/' . $radix->shortname . '/' . ' - ' . $radix->name :  \Preferences::get('ff.gen.website_title') ?> <b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
-									<?= '<li><a href="' . Uri::base() . '">' . __('Index') . '</a></li>'; ?>
+									<?= '<li><a href="' . \Uri::base() . '">' . __('Index') . '</a></li>'; ?>
 									<?= (Auth::has_access('maccess.mod')) ? '<li><a href="' . \Uri::create('admin') . '">' . __('Control Panel') . '</a></li>' : '' ?>
 									<li class="divider"></li>
 									<?php
@@ -115,7 +115,7 @@ header('imagetoolbar: false');
 							</li>
 							<?php endif; ?>
 							<li style="padding-right:0px;">
-								<a href="<?= Uri::create(array($radix->shortname)) ?>" style="padding-right:4px;"><?= __('Index') ?></a>
+								<a href="<?= \Uri::create(array($radix->shortname)) ?>" style="padding-right:4px;"><?= __('Index') ?></a>
 							</li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:2px; padding-right:4px;">
@@ -123,13 +123,13 @@ header('imagetoolbar: false');
 								</a>
 								<ul class="dropdown-menu" style="margin-left:-9px">
 									<li>
-										<a href="<?= Uri::create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
+										<a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
 											<?= __('By Post') ?>
 											<?php if (\Cookie::get('default_theme_page_mode_' . ($radix->archive?'archive':'board')) !== 'by_thread') echo ' <i class="icon-ok"></i>'; ?>
 										</a>
 									</li>
 									<li>
-										<a href="<?= Uri::create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
+										<a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
 											<?= __('By Thread') ?>
 											<?php if (\Cookie::get('default_theme_page_mode_' . ($radix->archive?'archive':'board')) === 'by_thread') echo ' <i class="icon-ok"></i>'; ?>
 										</a>
@@ -141,8 +141,8 @@ header('imagetoolbar: false');
 							$top_nav = array();
 							if ($radix)
 							{
-								$top_nav[] = array('href' => Uri::create(array($radix->shortname, 'ghost')), 'text' => __('Ghost'));
-								$top_nav[] = array('href' => Uri::create(array($radix->shortname, 'gallery')), 'text' => __('Gallery'));
+								$top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'ghost')), 'text' => __('Ghost'));
+								$top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'gallery')), 'text' => __('Gallery'));
 							}
 
 							$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
@@ -162,10 +162,10 @@ header('imagetoolbar: false');
 
 			<div role="main" id="main">
 
-				<?php if (Preferences::get('ff.theme.header_text')) : ?>
+				<?php if (\Preferences::get('ff.theme.header_text')) : ?>
 				<div class="alert alert-block alert-error fade in">
 					<h4 class="alert-heading"><?= __('Global Announcement') ?></h4>
-					<?= Preferences::get('ff.theme.header_text') ?>
+					<?= \Preferences::get('ff.theme.header_text') ?>
 				</div>
 				<?php endif; ?>
 
@@ -243,7 +243,7 @@ header('imagetoolbar: false');
 			<div id="push"></div>
 		</div>
 		<footer id="footer">
-			<a href="http://github.com/FoOlRulez/FoOlFuuka"><?= \Config::get('foolfuuka.main.name') ?> Imageboard <?= \Config::get('foolfuuka.main.version') ?></a>
+			<a href="http://github.com/FoOlRulez/FoOlFuuka"><?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name') ?> Imageboard <?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?></a>
 			- <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
 
 			<div style="float:right">
@@ -256,7 +256,7 @@ header('imagetoolbar: false');
 						foreach($this->get_available_styles($this->get_selected_theme()) as $key => $style) :
 						?>
 							<li>
-								<a href="<?= Uri::create(array('_', 'theme', $this->get_selected_theme(), $style)) ?>">
+								<a href="<?= \Uri::create(array('_', 'theme', $this->get_selected_theme(), $style)) ?>">
 									<?= $key ?><?= ($style == $this->get_selected_theme_class()) ?' <i class="icon-ok"></i>':'' ?>
 								</a>
 							</li>
@@ -275,7 +275,7 @@ header('imagetoolbar: false');
 						if (($theme = $this->get_by_name($theme))) :
 							?>
 							<li>
-								<a href="<?= Uri::create(array('_', 'theme', $theme['directory'])) ?>">
+								<a href="<?= \Uri::create(array('_', 'theme', $theme['directory'])) ?>">
 									<?= $theme['name'] ?><?= ($theme['directory'] == $this->get_selected_theme())?' <i class="icon-ok"></i>':'' ?>
 								</a>
 							</li>
@@ -291,10 +291,10 @@ header('imagetoolbar: false');
 						<?= __('Change Language') ?> <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<?php foreach(\Config::get('foolframe.preferences.lang.available') as $key => $lang) : ?>
+						<?php foreach(\Foolz\Config\Config::get('foolz/foolframe', 'package', 'preferences.lang.available') as $key => $lang) : ?>
 						 <li>
-							 <a href="<?= Uri::create(array('_', 'language', $key)) ?>">
-								 <?= $lang ?><?= ((!\Cookie::get('language') && $key == 'en_EN') || $key == \Cookie::get('language'))?' <i class="icon-ok"></i>':'' ?>
+							 <a href="<?= \Uri::create(array('_', 'language', $key)) ?>">
+								 <?= $lang ?><?= (( ! \Cookie::get('language') && $key == 'en_EN') || $key == \Cookie::get('language'))?' <i class="icon-ok"></i>':'' ?>
 							 </a>
 						 </li>
 						<?php endforeach; ?>
@@ -323,9 +323,9 @@ header('imagetoolbar: false');
 				echo ' ]</div>';
 			}
 
-			if (Preferences::get('ff.theme.footer_text'))
+			if (\Preferences::get('ff.theme.footer_text'))
 			{
-				echo '<section class="footer_text">' . Preferences::get('ff.theme.footer_text') . '</section>';
+				echo '<section class="footer_text">' . \Preferences::get('ff.theme.footer_text') . '</section>';
 			}
 			?>
 		</footer>
@@ -336,13 +336,13 @@ header('imagetoolbar: false');
 		</script>
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="<?= Uri::base() ?>assets/js/jquery.js"><\/script>')</script>
-		<script defer src="<?= Uri::base() ?>assets/bootstrap2/js/bootstrap.min.js?v=<?= $this->_selected_theme_version ?>"></script>
-		<script defer src="<?= Uri::base() . $this->fallback_asset('plugins.js') ?>"></script>
-		<script defer src="<?= Uri::base() . $this->fallback_asset('board.js') ?>"></script>
-<?php if (Preferences::get('ff.theme.google_analytics')) : ?>
+		<script>window.jQuery || document.write('<script src="<?= \Uri::base().'assets/js/jquery.js' ?>"><\/script>')</script>
+		<script defer src="<?= \Uri::base().'assets/bootstrap2/js/bootstrap.min.js?v='.$this->_selected_theme_version ?>"></script>
+		<script defer src="<?= \Uri::base().$this->fallback_asset('plugins.js') ?>"></script>
+		<script defer src="<?= \Uri::base().$this->fallback_asset('board.js') ?>"></script>
+<?php if (\Preferences::get('ff.theme.google_analytics')) : ?>
 		<script>
-			var _gaq=[['_setAccount','<?= Preferences::get('ff.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
+			var _gaq=[['_setAccount','<?= \Preferences::get('ff.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
 			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 				s.parentNode.insertBefore(g,s)}(document,'script'));
@@ -355,6 +355,6 @@ header('imagetoolbar: false');
 		<script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
 		<script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 		<![endif]-->
-		<?= Preferences::get('ff.theme.footer_code'); ?>
+		<?= \Preferences::get('ff.theme.footer_code'); ?>
 	</body>
 </html>

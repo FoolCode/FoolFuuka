@@ -5,9 +5,16 @@ if (!defined('DOCROOT'))
 
 \Autoloader::add_classes(array(
 	'Foolfuuka\\Themes\\Default_\\Views\\Board_comment' => __DIR__.'/../default/views/board_comment.php',
-	'Foolfuuka\\Themes\\Yotsubatwo\\Controller_Theme_Fu_Yotsubatwo_Chan' => __DIR__.'/controller.php'
+	'Foolz\Foolfuuka\Themes\Yotsubatwo\Controller\Chan' => __DIR__.'/controller.php'
 ));
 
-
-\Router::add('(?!(admin|api|_))(\w+)', 'theme/fu/yotsubatwo/chan/$2/page');
-\Router::add('(?!(admin|api|_))(\w+)/(:any)', 'theme/fu/yotsubatwo/chan/$2/$3');
+\Foolz\Plugin\Event::forge('Fuel\Core\Router.parse_match.intercept')
+	->setCall(function($result)
+	{
+		if ($result->getParam('controller') === 'Foolz\Foolfuuka\Controller\Chan')
+		{
+			// reroute everything that goes to Chan through the custom Chan controller
+			$result->setParam('controller', 'Foolz\Foolfuuka\Themes\Yotsubatwo\Controller\Chan');
+			$result->set(true);
+		}
+	});

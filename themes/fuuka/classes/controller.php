@@ -1,13 +1,12 @@
 <?php
 
-namespace Foolfuuka\Themes\Fuuka;
+namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
-if (!defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
+class Chan extends \Foolz\Foolfuuka\Controller\Chan
 {
-
 	/**
 	 * @param int $page
 	 */
@@ -148,5 +147,4 @@ class Controller_Theme_Fu_Fuuka_Chan extends \Foolfuuka\Controller_Chan
 
 		return $this->submit($data, $media);
 	}
-
 }

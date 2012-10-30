@@ -73,7 +73,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 			'system_url'  => \Uri::base(),
 			'api_url'   => \Uri::base(),
 			'cookie_domain' => \Foolz\Config\Config::get('foolz/foolframe', 'package', 'config.cookie_domain'),
-			'cookie_prefix' => \Foolz\Config\Config::get('foolz/foolframe', 'package', 'config.cookie_domain'),
+			'cookie_prefix' => \Foolz\Config\Config::get('foolz/foolframe', 'package', 'config.cookie_prefix'),
 			'selected_theme' => $theme->get_selected_theme(),
 			'csrf_token_key' => \Config::get('security.csrf_token_key'),
 			'images' => array(

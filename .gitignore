@@ -1,2 +1,4 @@
 config/development/
 config/production/
+
+vendor

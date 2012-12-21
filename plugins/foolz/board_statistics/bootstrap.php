@@ -3,16 +3,13 @@
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-\Foolz\Plugin\Event::forge('foolz\plugin\plugin.execute.foolz/board_statistics')
+\Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/board_statistics')
 	->setCall(function($result) {
 		\Autoloader::add_classes(array(
-			'Foolfuuka\\Plugins\\Board_Statistics\\Board_Statistics' => __DIR__.'/classes/model/board_statistics.php',
-			'Foolfuuka\\Plugins\\Board_Statistics\\Controller_Plugin_Fu_Board_Statistics_Admin_Board_Statistics'
-				=> __DIR__.'/classes/controller/admin.php',
-			'Foolfuuka\\Plugins\\Board_Statistics\\Controller_Plugin_Fu_Board_Statistics_Chan'
-				=> __DIR__.'/classes/controller/chan.php',
-			'Foolfuuka\\Plugins\\Board_Statistics\\Task'
-				=> __DIR__.'/classes/tasks/task.php'
+			'Foolz\Foolfuuka\Plugins\BoardStatistics\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
+			'Foolz\Foolfuuka\Plugins\BoardStatistics\Controller\Admin' => __DIR__.'/classes/controller/admin.php',
+			'Foolz\Foolfuuka\Plugins\BoardStatistics\Controller\Chan' => __DIR__.'/classes/controller/chan.php',
+			'Foolz\Foolfuuka\Plugins\BoardStatistics\Task' => __DIR__.'/classes/tasks/task.php'
 		));
 
 		// don't add the admin panels if the user is not an admin
@@ -50,31 +47,45 @@ if (!defined('DOCROOT'))
 				}
 			})->setPriority(3);
 
-		\Router::add('(?!(admin|_))(\w+)/statistics', 'plugin/fu/board_statistics/chan/$2/statistics', true);
-		\Router::add('(?!(admin|_))(\w+)/statistics/(:any)', 'plugin/fu/board_statistics/chan/$2/statistics/$3', true);
+		\Foolz\Plugin\Event::forge('Fuel\Core\Router.parse_match.intercept')
+			->setCall(function($result)
+			{
+				if ($result->getParam('controller') === 'Foolz\Foolfuuka\Controller\Chan')
+				{
+					$method_params = $result->getParam('method_params');
+					if (isset($method_params[1]) && $method_params[1] === 'statistics')
+					{
+						$result->setParam('controller', 'Foolz\Foolfuuka\Plugins\BoardStatistics\Controller\Chan');
+						$result->set(true);
+					}
+				}
+			})->setPriority(4);
 	});
 
-\Foolz\Plugin\Event::forge('foolz\plugin\plugin.install.foolz/board_statistics')
+\Foolz\Plugin\Event::forge([
+	'Foolz\Plugin\Plugin::install.foolz/board_statistics',
+	'Foolz\Plugin\Plugin::upgrade.foolz/board_statistics'
+	])
 	->setCall(function($result) {
-		$charset = \Config::get('db.default.charset');
 
-		if (!\DBUtil::table_exists('plugin_fu-board-statistics'))
-		{
-			\DBUtil::create_table('plugin_fu-board-statistics', array(
-				'id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true),
-				'board_id' => array('type' => 'int', 'constraint' => 11, 'unsigned' => true),
-				'name' => array('type' => 'varchar', 'constraint' => 32),
-				'timestamp' => array('type' => 'timestamp', 'default' => \DB::expr('CURRENT_TIMESTAMP'), 'on_update' => \DB::expr('CURRENT_TIMESTAMP')),
-				'data' => array('type' => 'longtext'),
-			), array('id'), true, 'innodb', $charset.'_general_ci');
-
-			\DBUtil::create_index('plugin_fu-board-statistics', array('board_id', 'name'), 'board_id_name_index', 'unique');
-			\DBUtil::create_index('plugin_fu-board-statistics', 'timestamp', 'timestamp_index');
-		}
+		\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate')
+			->setCall(function($result) {
+				/* @var $schema \Doctrine\DBAL\Schema\Schema */
+				/* @var $table \Doctrine\DBAL\Schema\Table */
+				$schema = $result->getParam('schema');
+				$table = $schema->createTable(\DC::p('plugin_fu-board-statistics'));
+				if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+				{
+					$table->addOption('charset', 'utf8mb4');
+					$table->addOption('collate', 'utf8mb4_unicode_ci');
+				}
+				$table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+				$table->addColumn('board_id', 'integer', ['unsigned' => true]);
+				$table->addColumn('name', 'string', ['length' => 32]);
+				$table->addColumn('timestamp', 'integer', ['unsigned' => true]);
+				$table->addColumn('data', 'text');
+				$table->setPrimaryKey(['id']);
+				$table->addUniqueIndex(['board_id', 'name'], 'board_id_name_index');
+				$table->addIndex(['timestamp'], 'timestamp_index');
+			});
 	});
-
-\Foolz\Plugin\Event::forge('foolz\plugin\plugin.uninstall.foolz/board_statistics')
-	->setCall(function($result) {
-		\DB::drop_database('plugin_fu-board-statistics');
-	});
-

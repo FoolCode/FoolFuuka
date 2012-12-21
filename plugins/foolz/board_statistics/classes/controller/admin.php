@@ -1,11 +1,11 @@
 <?php
 
-namespace Foolfuuka\Plugins\Board_Statistics;
+namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Controller;
 
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-class Controller_Plugin_Fu_Board_Statistics_Admin_Board_Statistics extends \Controller_Admin
+class Chan extends \Controller_Admin
 {
 	public function before()
 	{
@@ -13,11 +13,11 @@ class Controller_Plugin_Fu_Board_Statistics_Admin_Board_Statistics extends \Cont
 		{
 			\Response::redirect('admin');
 		}
-		
+
 		parent::before();
 	}
-	
-	
+
+
 	protected function structure()
 	{
 		$arr = array(
@@ -53,19 +53,19 @@ class Controller_Plugin_Fu_Board_Statistics_Admin_Board_Statistics extends \Cont
 				'preferences' => true,
 			);
 		}
-		
+
 		return $arr;
 	}
-	
+
 	public function action_manage()
 	{
 		$this->_views['controller_title'] = __("Board Statistics");
 		$this->_views['method_title'] = __('Manage');
 
 		$data['form'] = $this->structure();
-		
+
 		\Preferences::submit_auto($data['form']);
-		
+
 		// create a form
 		$this->_views["main_content_view"] = \View::forge("admin/form_creator", $data);
 		return \Response::forge(\View::forge("admin/default", $this->_views));

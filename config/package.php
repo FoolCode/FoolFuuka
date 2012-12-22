@@ -48,8 +48,8 @@ return array(
 	 * Locations of the data out of the module folder
 	 */
 	'directories' => array(
-		'themes' => DOCROOT.'foolfuuka/themes/',
-		'plugins' => DOCROOT.'foolfuuka/plugins/'
+		'themes' => 'public/themes/',
+		'plugins' => 'public/plugins/'
 	),
 
 

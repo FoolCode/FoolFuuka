@@ -9,5 +9,8 @@
     ],
     "require": {
 
-    }
+    },
+	"autoload": {
+		"psr-0": {"Foolz\\Foolfuuka": "classes/"}
+	}
 }

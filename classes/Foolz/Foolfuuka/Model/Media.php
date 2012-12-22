@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+
 class MediaException extends \Exception {}
 class MediaNotFoundException extends MediaException {}
 class MediaHashNotFoundException extends MediaNotFoundException {}
@@ -387,10 +389,10 @@ class Media
 	 */
 	protected static function p_getBy(\Foolz\Foolfuuka\Model\Radix $radix, $where, $value, $op = true)
 	{
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('*')
 			->from($radix->getTable('_images'), 'ri')
-			->where(\DC::forge()->quoteIdentifier($where).' = '.\DC::forge()->quote($value))
+			->where(DC::forge()->quoteIdentifier($where).' = '.DC::forge()->quote($value))
 			->execute()
 			->fetch();
 
@@ -444,7 +446,7 @@ class Media
 	 */
 	protected static function p_getByFilename(\Foolz\Foolfuuka\Model\Radix $radix, $filename, $op = false)
 	{
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('media_id')
 			->from($radix->getTable(). 'r')
 			->where('r.media_orig = :media_orig')
@@ -930,7 +932,7 @@ class Media
 	{
 		if ($global === false)
 		{
-			\DC::qb()
+			DC::qb()
 				->update($this->radix->getTable('_images'))
 				->set('banned', true)
 				->where('media_id = :media_id')
@@ -941,7 +943,7 @@ class Media
 			return;
 		}
 
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('COUNT(*) as count')
 			->from($this->radix->getTable('_images'), 'ri')
 			->where('media_hash = :md5')
@@ -951,7 +953,7 @@ class Media
 
 		if ( ! $result['count'])
 		{
-			\DC::forge()
+			DC::forge()
 				->insert('banned_md5', ['md5' => $this->media_hash])
 				->execute();
 		}
@@ -961,7 +963,7 @@ class Media
 			try
 			{
 				$media = \Media::getByMediaHash($radix, $this->media_hash);
-				\DC::qb()
+				DC::qb()
 					->update($radix->getTable('_images'))
 					->set('banned', true)
 					->where('media_id = :media_id')
@@ -972,7 +974,7 @@ class Media
 			}
 			catch (MediaNotFoundException $e)
 			{
-				\DC::forge()
+				DC::forge()
 					->insert($radix->getTable('_images'), ['media_hash' => $this->media_hash, 'banned' => 1]);
 			}
 		}
@@ -1037,7 +1039,7 @@ class Media
 				}
 
 				// we don't have to worry about archives with weird timestamps, we can't post images there
-				$duplicate_entry = \DC::qb()
+				$duplicate_entry = DC::qb()
 					->select('COUNT(*) as count, MAX(timestamp) as max_timestamp')
 					->where('media_id = :media_id')
 					->andWhere('timestamp > :timestamp')
@@ -1161,7 +1163,7 @@ class Media
 
 		if ( ! $this->media_id)
 		{
-			 \DC::forge()->insert($this->radix->getTable('_images'), [
+			 DC::forge()->insert($this->radix->getTable('_images'), [
 				'media_hash' => $this->media_hash,
 				'media' => $this->media_orig,
 				'preview_op' => $this->op ? $this->preview_orig : null,
@@ -1170,11 +1172,11 @@ class Media
 				'banned' => false,
 			]);
 
-			$this->media_id = \DC::forge()->lastInsertId();
+			$this->media_id = DC::forge()->lastInsertId();
 		}
 		else
 		{
-			$query = \DC::qb()
+			$query = DC::qb()
 				->update($this->radix->getTable('_images'));
 			if ($this->media === null)
 			{

@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 use \Foolz\Config\Config;
 
 class Radix
@@ -39,9 +40,9 @@ class Radix
 				'validation_func' => function($input, $form_internal)
 				{
 					// check that the ID exists
-					$row = \DC::qb()
+					$row = DC::qb()
 						->select('COUNT(*) as count')
-						->from(\DC::p('boards'), 'b')
+						->from(DC::p('boards'), 'b')
 						->where('id = :id')
 						->setParameter(':id', $input['id'])
 						->execute()
@@ -82,9 +83,9 @@ class Radix
 					if (isset($input['id']))
 					{
 						// existence ensured by CRITICAL in the ID check
-						$row = \DC::qb()
+						$row = DC::qb()
 							->select('shortname')
-							->from(\DC::p('boards'), 'b')
+							->from(DC::p('boards'), 'b')
 							->where('id = :id')
 							->setParameter(':id', $input['id'])
 							->execute()
@@ -106,9 +107,9 @@ class Radix
 						}
 					}
 
-					$row = \DC::qb()
+					$row = DC::qb()
 						->select('shortname')
-						->from(\DC::p('boards'), 'r')
+						->from(DC::p('boards'), 'r')
 						->where('shortname = :s')
 						->setParameter(':s', $input['shortname'])
 						->execute()
@@ -579,15 +580,15 @@ class Radix
 				return;
 			}
 
-			\DC::forge()->beginTransaction();
+			DC::forge()->beginTransaction();
 
 			// save normal values
-			$update = \DC::qb()
-				->update(\DC::p('boards'));
+			$update = DC::qb()
+				->update(DC::p('boards'));
 
 			foreach ($data as $k => $i)
 			{
-				$update->set($k, \DC::forge()->quote($i));
+				$update->set($k, DC::forge()->quote($i));
 			}
 
 			$update->where('id = :id')
@@ -600,13 +601,13 @@ class Radix
 				static::savePreferences($data['id'], $name, $value);
 			}
 
-			\DC::forge()->commit();
+			DC::forge()->commit();
 		}
 		else
 		{
-			\DC::forge()->beginTransaction();
-			\DC::forge()->insert(\DC::p('boards'), $data);
-			$id = \DC::forge()->lastInsertId();
+			DC::forge()->beginTransaction();
+			DC::forge()->insert(DC::p('boards'), $data);
+			$id = DC::forge()->lastInsertId();
 
 
 			// save extra preferences
@@ -620,7 +621,7 @@ class Radix
 			$board = static::getById($id);
 			$board->createTables();
 
-			\DC::forge()->commit();
+			DC::forge()->commit();
 		}
 
 		static::clearCache();
@@ -642,9 +643,9 @@ class Radix
 			$board_id = $board_id->id;
 		}
 
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('COUNT(*) as count')
-			->from(\DC::p('boards_preferences'), 'p')
+			->from(DC::p('boards_preferences'), 'p')
 			->where('board_id = :board_id', 'name = :name')
 			->setParameter(':board_id', $board_id)
 			->setParameter(':name', $name)
@@ -653,9 +654,9 @@ class Radix
 
 		if ($result['count'])
 		{
-			\DC::qb()
-				->update(\DC::p('boards_preferences'))
-				->set('value', \DC::forge()->quote($value))
+			DC::qb()
+				->update(DC::p('boards_preferences'))
+				->set('value', DC::forge()->quote($value))
 				->where('board_id = :board_id', 'name = :name')
 				->setParameter(':board_id', $board_id)
 				->setParameter(':name', $name)
@@ -663,7 +664,7 @@ class Radix
 		}
 		else
 		{
-			\DC::forge()->insert(\DC::p('boards_preferences'), [
+			DC::forge()->insert(DC::p('boards_preferences'), [
 				'board_id' => $board_id,
 				'name' => $name,
 				'value' => $value
@@ -688,15 +689,15 @@ class Radix
 	public function remove()
 	{
 		// always remove the triggers first
-		\DC::forge()->beginTransaction();
-		\DC::qb()
-			->delete(\DC::p('boards_preferences'))
+		DC::forge()->beginTransaction();
+		DC::qb()
+			->delete(DC::p('boards_preferences'))
 			->where('board_id = :id')
 			->setParameter(':id', $this->id)
 			->execute();
 
-		\DC::qb()
-			->delete(\DC::p('boards'))
+		DC::qb()
+			->delete(DC::p('boards'))
 			->where('id = :id')
 			->setParameter(':id', $this->id)
 			->execute();
@@ -722,7 +723,7 @@ class Radix
 
 		// for huge boards, this may time out with PHP, while MySQL will keep going
 		$this->removeTables();
-		\DC::forge()->commit();
+		DC::forge()->commit();
 		static::clearCache();
 	}
 
@@ -810,9 +811,9 @@ class Radix
 		}
 		catch (\CacheNotFoundException $e)
 		{
-			$result = \DC::qb()
+			$result = DC::qb()
 				->select('*')
-				->from(\DC::p('boards'), 'b')
+				->from(DC::p('boards'), 'b')
 				->orderBy('shortname', 'ASC')
 				->execute()
 				->fetchAll();
@@ -874,9 +875,9 @@ class Radix
 		}
 		catch (\CacheNotFoundException $e)
 		{
-			$preferences = \DC::qb()
+			$preferences = DC::qb()
 				->select('*')
-				->from(\DC::p('boards_preferences'), 'p')
+				->from(DC::p('boards_preferences'), 'p')
 				->execute()
 				->fetchAll();
 
@@ -1080,12 +1081,12 @@ class Radix
 	{
 		if (\Preferences::get('fu.boards.db'))
 		{
-			return \DC::forge()->quoteIdentifier(\Preferences::get('fu.boards.db'))
-				.'.'.\DC::forge()->quoteIdentifier($this->shortname.$suffix);
+			return DC::forge()->quoteIdentifier(\Preferences::get('fu.boards.db'))
+				.'.'.DC::forge()->quoteIdentifier($this->shortname.$suffix);
 		}
 		else
 		{
-			return \DC::forge()->quoteIdentifier(\DC::p('board_'.$this->shortname.$suffix));
+			return DC::forge()->quoteIdentifier(DC::p('board_'.$this->shortname.$suffix));
 		}
 	}
 
@@ -1097,10 +1098,10 @@ class Radix
 		$charset = 'utf8mb4';
 		$collation = 'utf8mb4_unicode_ci';
 
-		$sm = \DC::forge()->getSchemaManager();
+		$sm = DC::forge()->getSchemaManager();
 		$schema = $sm->createSchema();
 		$table = $schema->createTable($this->getTable());
-		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$table->addOption('charset', $charset);
 			$table->addOption('collate', $collation);
@@ -1151,7 +1152,7 @@ class Radix
 		$table->addIndex(['timestamp'], 'timestamp_index');
 
 		$table_threads = $schema->createTable($this->getTable('_threads'));
-		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$table_threads->addOption('charset', $charset);
 			$table_threads->addOption('collate', $collation);
@@ -1170,7 +1171,7 @@ class Radix
 		$table_threads->addIndex(['time_ghost_bump'], 'time_ghost_bump_index');
 
 		$table_users = $schema->createTable($this->getTable('_users'));
-		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$table_users->addOption('charset', $charset);
 			$table_users->addOption('collate', $collation);
@@ -1209,7 +1210,7 @@ class Radix
 		$table_daily->setPrimaryKey(['day']);
 
 		$table_extra = $schema->createTable($this->getTable('_extra'));
-		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$table_extra->addOption('charset', $charset);
 			$table_extra->addOption('collate', $collation);
@@ -1218,26 +1219,26 @@ class Radix
 		$table_extra->addColumn('json', 'text', ['length' => 65532, 'notnull' => false]);
 		$table_extra->setPrimaryKey(['extra_id']);
 
-		\DC::forge()->beginTransaction();
+		DC::forge()->beginTransaction();
 
 		foreach ($schema->getMigrateFromSql($sm->createSchema(), $sm->getDatabasePlatform()) as $query)
 		{
-			\DC::forge()->query($query);
+			DC::forge()->query($query);
 		}
 
-		$md5_array = \DC::qb()
+		$md5_array = DC::qb()
 			->select('md5')
-			->from(\DC::p('banned_md5'), 'm')
+			->from(DC::p('banned_md5'), 'm')
 			->execute()
 			->fetchAll();
 
 		// in a transaction multiple inserts are almost like a single one
 		foreach ($md5_array as $item)
 		{
-			\DC::forge()->insert($this->getTable('_images'), ['md5' => $item['md5'], 'banned' => 1]);
+			DC::forge()->insert($this->getTable('_images'), ['md5' => $item['md5'], 'banned' => 1]);
 		}
 
-		\DC::forge()->commit();
+		DC::forge()->commit();
 	}
 
 	/**
@@ -1254,7 +1255,7 @@ class Radix
 			'_extra'
 		];
 
-		$sm = \DC::forge()->getSchemaManager();
+		$sm = DC::forge()->getSchemaManager();
 		$schema = $sm->createSchema();
 		foreach ($tables as $table)
 		{
@@ -1263,7 +1264,7 @@ class Radix
 
 		foreach ($schema->getMigrateFromSql($sm->createSchema(), $sm->getDatabasePlatform()) as $query)
 		{
-			\DC::forge()->query($query);
+			DC::forge()->query($query);
 		}
 	}
 }

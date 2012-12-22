@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+
 class CommentException extends \FuelException {}
 
 class CommentDeleteWrongPassException extends CommentException {}
@@ -928,25 +930,25 @@ class Comment
 			}
 		}
 
-		\DC::forge()->beginTransaction();
+		DC::forge()->beginTransaction();
 
 		// remove message
-		\DC::qb()
+		DC::qb()
 			->delete($this->radix->getTable())
 			->where('doc_id = :doc_id')
 			->setParameter(':doc_id', $this->doc_id)
 			->execute();
 
 		// remove its extras
-		\DC::qb()
+		DC::qb()
 			->delete($this->radix->getTable('_extra'))
 			->where('extra_id = :doc_id')
 			->setParameter(':doc_id', $this->doc_id)
 			->execute();
 
 		// remove message reports
-		$reports_affected = \DC::qb()
-			->delete(\DC::p('reports'))
+		$reports_affected = DC::qb()
+			->delete(DC::p('reports'))
 			->where('board_id = :board_id')
 			->andWhere('doc_id = :doc_id')
 			->setParameter(':board_id', $this->radix->id)
@@ -961,7 +963,7 @@ class Comment
 		// remove its image file
 		if (isset($this->media))
 		{
-			\DC::qb()
+			DC::qb()
 				->update($this->radix->getTable('_images'))
 				->set('total', 'total - 1')
 				->where('media_id = :media_id')
@@ -980,7 +982,7 @@ class Comment
 			'names' => (int) ($this->name !== $this->radix->anonymous_default_name || $this->trip !== null)
 		];
 
-		\DC::qb()
+		DC::qb()
 			->update($this->radix->getTable('_daily'))
 			->set('images', 'images - :images')
 			->set('sage', 'sage - :sage')
@@ -999,13 +1001,13 @@ class Comment
 		// if it's OP delete all other comments
 		if ($this->op)
 		{
-			\DC::qb()
+			DC::qb()
 				->delete($this->radix->getTable('_threads'))
 				->where('thread_num = :thread_num')
 				->setParameter(':thread_num', $this->thread_num)
 				->execute();
 
-			$replies = \DC::qb()
+			$replies = DC::qb()
 				->select('doc_id')
 				->from($this->radix->getTable(), 'b')
 				->where('thread_num = :thread_num')
@@ -1028,15 +1030,15 @@ class Comment
 		else
 		{
 			// To ensure consistency we LOCK the ROW with FOR UPDATE clause (in a crude way, but it should work)
-			$sql = \DC::qb()
+			$sql = DC::qb()
 				->select('*')
 				->from($this->radix->getTable(), 't')
 				->join('t', $this->radix->getTable('_threads'), 'u', 't.thread_num = u.thread_num')
 				->where('t.thread_num = :thread_num')
 				->getSQL()
-				.' '.\DC::forge()->getDatabasePlatform()->getForUpdateSQL();
+				.' '.DC::forge()->getDatabasePlatform()->getForUpdateSQL();
 
-			$posts = \DC::forge()->executeQuery($sql, [':thread_num' => $this->thread_num])
+			$posts = DC::forge()->executeQuery($sql, [':thread_num' => $this->thread_num])
 				->fetchAll();
 
 			$time_last = null;
@@ -1070,7 +1072,7 @@ class Comment
 			}
 
 			// update the thread timers
-			\DC::qb()
+			DC::qb()
 				->update($this->radix->getTable('_threads'))
 				->set('time_last', ':time_last')
 				->set('time_bump', ':time_bump')
@@ -1085,7 +1087,7 @@ class Comment
 				->execute();
 		}
 
-		\DC::forge()->commit();
+		DC::forge()->commit();
 	}
 
 	/**

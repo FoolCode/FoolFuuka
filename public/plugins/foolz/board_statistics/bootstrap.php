@@ -73,8 +73,8 @@ if (!defined('DOCROOT'))
 				/* @var $schema \Doctrine\DBAL\Schema\Schema */
 				/* @var $table \Doctrine\DBAL\Schema\Table */
 				$schema = $result->getParam('schema');
-				$table = $schema->createTable(\DC::p('plugin_fu-board-statistics'));
-				if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+				$table = $schema->createTable(DC::p('plugin_fu-board-statistics'));
+				if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 				{
 					$table->addOption('charset', 'utf8mb4');
 					$table->addOption('collate', 'utf8mb4_unicode_ci');

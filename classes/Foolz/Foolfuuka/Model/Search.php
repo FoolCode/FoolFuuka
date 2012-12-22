@@ -3,8 +3,9 @@
 namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Sphinxql\Sphinxql;
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 
-class SearchException extends \FuelException {}
+class SearchException extends \Exception {}
 class SearchRequiresSphinxException extends SearchException {}
 class SearchSphinxOfflineException extends SearchException {}
 class SearchInvalidException extends SearchException {}
@@ -428,16 +429,16 @@ class Search extends Board
 			foreach ($search as $post => $result)
 			{
 				$board = \Radix::getById($result['board']);
-				$sql[] = \DC::qb()
+				$sql[] = DC::qb()
 					->select('*, '.$result['board'].' AS board_id')
 					->from($board->getTable(), 'r')
 					->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
 					->leftJoin('r', $board->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
-					->where('doc_id = '.\DC::qb()->quote($result['id']))
+					->where('doc_id = '.DC::qb()->quote($result['id']))
 					->getSQL();
 			}
 
-			$result = \DC::forge()
+			$result = DC::forge()
 				->executeQuery(implode(' UNION ', $sql))
 				->fetchAll();
 		}

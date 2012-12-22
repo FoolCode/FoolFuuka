@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+
 class ExtraException extends \Exception {}
 
 /**
@@ -111,7 +113,7 @@ class Extra
 	{
 		if ( ! empty($this->json_array))
 		{
-			\DC::forge()->insert($this->_radix->getTable('_extra'), [
+			DC::forge()->insert($this->_radix->getTable('_extra'), [
 				'extra_id' => $this->extra_id,
 				'json' => ! empty($this->json_array) ? json_encode($this->json_array) : null
 			]);

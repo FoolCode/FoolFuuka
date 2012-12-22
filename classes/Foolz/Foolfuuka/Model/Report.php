@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+
 /**
  * Generic exception for Report
  */
@@ -185,9 +187,9 @@ class Report
 		}
 		catch (\CacheNotFoundException $e)
 		{
-			static::$preloaded = \DC::qb()
+			static::$preloaded = DC::qb()
 				->select('*')
-				->from(\DC::p('reports'), 'r')
+				->from(DC::p('reports'), 'r')
 				->execute()
 				->fetchAll();
 
@@ -342,9 +344,9 @@ class Report
 		$new->ip_reporter = $ip_reporter;
 
 		// check how many reports have been sent in the last hour to prevent spam
-		$row = \DC::qb()
+		$row = DC::qb()
 			->select('COUNT(*) as count')
-			->from(\DC::p('reports'), 'r')
+			->from(DC::p('reports'), 'r')
 			->where('created > :time')
 			->setParameter(':time', time() - 86400)
 			->execute()
@@ -358,7 +360,7 @@ class Report
 
 		$new->created = time();
 
-		\DC::forge()->insert(\DC::p('reports'), [
+		DC::forge()->insert(DC::p('reports'), [
 			'board_id' => $new->board_id,
 			'doc_id' => $new->doc_id,
 			'media_id' => $new->media_id,
@@ -381,8 +383,8 @@ class Report
 	 */
 	public static function p_delete($id)
 	{
-		\DC::qb()
-			->delete(\DC::p('reports'))
+		DC::qb()
+			->delete(DC::p('reports'))
 			->where('id', ':id')
 			->setParameter(':id', $id)
 			->execute();
@@ -403,7 +405,7 @@ class Report
 		if ($this->media_id !== null)
 		{
 			// custom "get the first doc_id with the media"
-			$doc_id_res = \DC::qb()
+			$doc_id_res = DC::qb()
 				->select('doc_id')
 				->from(\Radix::getById($this->board_id)->getTable())
 				->where('media_id = :media_id')

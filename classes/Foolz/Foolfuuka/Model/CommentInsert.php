@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+
 class CommentSendingException extends \Exception {}
 class CommentSendingDuplicateException extends CommentSendingException {}
 class CommentSendingThreadWithoutMediaException extends CommentSendingException {}
@@ -24,7 +26,7 @@ class CommentInsert extends Comment
 {
 	protected function insertTriggerDaily($is_retry = false)
 	{
-		\DC::forge()->beginTransaction();
+		DC::forge()->beginTransaction();
 		$item = [
 			'day' => (int) (floor($this->timestamp/86400)*86400),
 			'images' => (int) ($this->media !== null),
@@ -34,7 +36,7 @@ class CommentInsert extends Comment
 			'names' => (int) ($this->name !== $this->radix->anonymous_default_name || $this->trip !== null)
 		];
 
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('*')
 			->from($this->radix->getTable('_daily'), 'd')
 			->where('day = :day')
@@ -46,7 +48,7 @@ class CommentInsert extends Comment
 		{
 			try
 			{
-				\DC::forge()->insert($this->radix->getTable('_daily'), $item);
+				DC::forge()->insert($this->radix->getTable('_daily'), $item);
 			}
 			catch(\Doctrine\DBAL\DBALException $e)
 			{
@@ -59,7 +61,7 @@ class CommentInsert extends Comment
 		}
 		else
 		{
-			\DC::qb()
+			DC::qb()
 				->update($this->radix->getTable('_daily'))
 				->set('images', 'images + :images')
 				->set('sage', 'sage + :sage')
@@ -76,14 +78,14 @@ class CommentInsert extends Comment
 				->execute();
 
 		}
-		\DC::forge()->commit();
+		DC::forge()->commit();
 	}
 
 	protected function insertTriggerUsers($is_retry = false)
 	{
-		\DC::forge()->beginTransaction();
+		DC::forge()->beginTransaction();
 
-		$select = \DC::qb()
+		$select = DC::qb()
 			->select('*')
 			->from($this->radix->getTable('_users'), 'u');
 
@@ -106,7 +108,7 @@ class CommentInsert extends Comment
 		{
 			try
 			{
-				\DC::forge()->insert($this->radix->getTable('_users'), [
+				DC::forge()->insert($this->radix->getTable('_users'), [
 					'name' => (string) $this->name,
 					'trip' => (string) $this->trip,
 					'firstseen' => $this->timestamp,
@@ -123,7 +125,7 @@ class CommentInsert extends Comment
 		}
 		else
 		{
-			\DC::qb()
+			DC::qb()
 				->update($this->radix->getTable('_users'))
 				->set('postcount', 'postcount + 1')
 				->set('firstseen', ':firstseen')
@@ -134,15 +136,15 @@ class CommentInsert extends Comment
 				->execute();
 		}
 
-		\DC::forge()->commit();
+		DC::forge()->commit();
 	}
 
 	protected function insertTriggerThreads($is_retry = false)
 	{
-		\DC::forge()->beginTransaction();
+		DC::forge()->beginTransaction();
 		if ($this->op)
 		{
-			\DC::forge()->insert($this->radix->getTable('_threads'), [
+			DC::forge()->insert($this->radix->getTable('_threads'), [
 				'thread_num' => $this->num,
 				'time_op' => $this->timestamp,
 				'time_last' => $this->timestamp,
@@ -157,7 +159,7 @@ class CommentInsert extends Comment
 		{
 			if ( ! $this->subnum)
 			{
-				$query = \DC::qb()
+				$query = DC::qb()
 					->update($this->radix->getTable('_threads'))
 					->set('time_last', 'GREATEST(time_last, :time_last)')
 					->set('nreplies', 'nreplies + 1')
@@ -174,7 +176,7 @@ class CommentInsert extends Comment
 			}
 			else
 			{
-				$query = \DC::qb()
+				$query = DC::qb()
 					->update($this->radix->getTable('_threads'))
 					->set('time_ghost', 'COALESCE(time_ghost, :time_ghost)')
 					->set('nreplies', 'nreplies + 1')
@@ -193,7 +195,7 @@ class CommentInsert extends Comment
 				->setParameter(':thread_num', $this->thread_num)
 				->execute();
 		}
-		\DC::forge()->commit();
+		DC::forge()->commit();
 	}
 
 	/**
@@ -289,7 +291,7 @@ class CommentInsert extends Comment
 			if ($this->thread_num < 1)
 			{
 				// one can create a new thread only once every 5 minutes
-				$check_op = \DC::qb()
+				$check_op = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'r')
 					->where('r.poster_ip = :poster_ip')
@@ -311,7 +313,7 @@ class CommentInsert extends Comment
 			}
 
 			// check the latest posts by the user to see if he's posting the same message or if he's posting too fast
-			$check = \DC::qb()
+			$check = DC::qb()
 				->select('*')
 				->from($this->radix->getTable(), 'r')
 				->where('poster_ip = :poster_ip')
@@ -554,28 +556,28 @@ class CommentInsert extends Comment
 
 		if($this->ghost)
 		{
-			$this->num = '('.\DC::qb()
+			$this->num = '('.DC::qb()
 				->select('MAX(num)')
 				->from('('.
-					\DC::qb()
+					DC::qb()
 						->select('num')
 						->from($this->radix->getTable(), 'xr')
-						->where('thread_num = '.\DC::forge()->quote($this->thread_num))
+						->where('thread_num = '.DC::forge()->quote($this->thread_num))
 						->getSQL()
 				.')', 'x')
 				->getSQL().')';
 
-			$subnum = '('.\DC::qb()
+			$subnum = '('.DC::qb()
 				->select('MAX(subnum)+1')
 				->from('('.
-					\DC::qb()
+					DC::qb()
 						->select('subnum')
 						->from($this->radix->getTable(), 'xxr')
 						->where('num = ('.
-							\DC::qb()
+							DC::qb()
 								->select('MAX(num)', 'maxnum')
 								->from($this->radix->getTable(), 'xxxr')
-								->where('thread_num = '.\DC::forge()->quote($this->thread_num))
+								->where('thread_num = '.DC::forge()->quote($this->thread_num))
 								->getSQL()
 						.')')
 						->getSQL()
@@ -586,10 +588,10 @@ class CommentInsert extends Comment
 		}
 		else
 		{
-			$num = '('.\DC::qb()
+			$num = '('.DC::qb()
 				->select('COALESCE(MAX(num), 0)+1 AS num')
 				->from('('.
-					\DC::qb()
+					DC::qb()
 						->select('num')
 						->from($this->radix->getTable(), 'xxr')
 						->getSQL()
@@ -600,14 +602,14 @@ class CommentInsert extends Comment
 
 			if($this->thread_num > 0)
 			{
-				$thread_num = \DC::forge()->quote($this->thread_num);
+				$thread_num = DC::forge()->quote($this->thread_num);
 			}
 			else
 			{
-				$thread_num = '('.\DC::qb()
+				$thread_num = '('.DC::qb()
 					->select('COALESCE(MAX(num), 0)+1 AS thread_num')
 					->from('('.
-						\DC::qb()
+						DC::qb()
 							->select('num')
 							->from($this->radix->getTable(), 'xxxr')
 							->getSQL()
@@ -623,7 +625,7 @@ class CommentInsert extends Comment
 		{
 			try
 			{
-				\DC::forge()->beginTransaction();
+				DC::forge()->beginTransaction();
 
 				$query_fields = [
 					'num' => $num,
@@ -666,22 +668,22 @@ class CommentInsert extends Comment
 					}
 					else
 					{
-						$fields[$key] = \DC::forge()->quote($item);
+						$fields[$key] = DC::forge()->quote($item);
 					}
 				}
 
 				$fields = $query_fields + $fields;
 
-				\DC::forge()->executeUpdate(
+				DC::forge()->executeUpdate(
 					'INSERT INTO '.$this->radix->getTable().
 					'('.implode(', ', array_keys($fields)).')'.
 					'VALUES ('.implode(', ', array_values($fields)).')'
 				);
 
-				$last_id = \DC::forge()->lastInsertId();
+				$last_id = DC::forge()->lastInsertId();
 
 				// check that it wasn't posted multiple times
-				$check_duplicate = \DC::qb()
+				$check_duplicate = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'r')
 					->where('comment = :comment')
@@ -697,11 +699,11 @@ class CommentInsert extends Comment
 
 				if(count($check_duplicate) > 1)
 				{
-					\DC::forge()->rollBack();
+					DC::forge()->rollBack();
 					throw new CommentSendingDuplicateException(__('You are sending the same post twice.'));
 				}
 
-				$comment = \DC::qb()
+				$comment = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'r')
 					->where('doc_id = :doc_id')
@@ -734,7 +736,7 @@ class CommentInsert extends Comment
 				{
 					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment->thread_num),'id'),+3), 0, 8);
 
-					\DC::qb()
+					DC::qb()
 						->update($this->radix->getTable())
 						->set('poster_hash', $this->poster_hash)
 						->where('doc_id = :doc_id')
@@ -751,7 +753,7 @@ class CommentInsert extends Comment
 				$this->extra->extra_id = $last_id;
 				$this->extra->insert();
 
-				\DC::forge()->commit();
+				DC::forge()->commit();
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
 			{

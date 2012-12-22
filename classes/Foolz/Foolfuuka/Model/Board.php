@@ -2,7 +2,9 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-class BoardException extends \FuelException {}
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+
+class BoardException extends \Exception {}
 class BoardThreadNotFoundException extends BoardException {}
 class BoardPostNotFoundException extends BoardException {}
 class BoardMalformedInputException extends BoardException {}
@@ -382,7 +384,7 @@ class Board
 		switch ($order)
 		{
 			case 'by_post':
-				$query = \DC::qb()
+				$query = DC::qb()
 					->select('*, thread_num AS unq_thread_num')
 					->from($this->radix->getTable('_threads'), 'rt')
 					->orderBy('rt.time_bump', 'DESC')
@@ -391,7 +393,7 @@ class Board
 				break;
 
 			case 'by_thread':
-				$query = \DC::qb()
+				$query = DC::qb()
 					->select('*, thread_num AS unq_thread_num')
 					->from($this->radix->getTable('_threads'), 'rt')
 					->orderBy('rt.thread_num', 'DESC')
@@ -400,7 +402,7 @@ class Board
 				break;
 
 			case 'ghost':
-				$query = \DC::qb()
+				$query = DC::qb()
 					->select('*, thread_num AS unq_thread_num')
 					->from($this->radix->getTable('_threads'), 'rt')
 					->where('rt.time_ghost_bump IS NOT NULL')
@@ -435,7 +437,7 @@ class Board
 				'images' => $thread['nimages']
 			];
 
-			$temp = \DC::qb()
+			$temp = DC::qb()
 				->select('*')
 				->from($this->radix->getTable(), 'r')
 				->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -450,7 +452,7 @@ class Board
 			$sql_arr[] = '('.$temp->getSQL().')';
 		}
 
-		$query_posts = \DC::forge()
+		$query_posts = DC::forge()
 			->executeQuery(implode(' UNION ', $sql_arr))
 			->fetchAll();
 
@@ -527,13 +529,13 @@ class Board
 				// these two are the same
 				case 'by_post':
 				case 'by_thread':
-					$query_threads = \DC::qb()
+					$query_threads = DC::qb()
 						->select('COUNT(thread_num) AS threads')
 						->from($this->radix->getTable('_threads'), 'rt');
 					break;
 
 				case 'ghost':
-					$query_threads = \DC::qb()
+					$query_threads = DC::qb()
 						->select('COUNT(thread_num) AS threads')
 						->from($this->radix->getTable('_threads'), 'rt')
 						->where('rt.time_ghost_bump IS NOT NULL');
@@ -582,7 +584,7 @@ class Board
 		\Profiler::mark('Board::getThreadsComments Start');
 		extract($this->options);
 
-		$inner_query = \DC::qb()
+		$inner_query = DC::qb()
 			->select('*, thread_num as unq_thread_num')
 			->from($this->radix->getTable('_threads'), 'rt')
 			->orderBy('rt.time_op', 'DESC')
@@ -590,7 +592,7 @@ class Board
 			->setFirstResult(($page * $per_page) - $per_page)
 			->getSQL();
 
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('*')
 			->from('('.$inner_query.')', 'g')
 			->join('g', $this->radix->getTable(), 'r', 'r.num = g.unq_thread_num AND r.subnum = 0')
@@ -642,7 +644,7 @@ class Board
 		}
 		catch (\CacheNotFoundException $e)
 		{
-			$result = \DC::qb()
+			$result = DC::qb()
 				->select('COUNT(thread_num) AS threads')
 				->from($this->radix->getTable('_threads'), 'rt')
 				->execute()
@@ -701,7 +703,7 @@ class Board
 		switch ($type)
 		{
 			case 'from_doc_id':
-				$query = \DC::qb()
+				$query = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'r')
 					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -715,7 +717,7 @@ class Board
 				break;
 
 			case 'ghosts':
-				$query = \DC::qb()
+				$query = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'r')
 					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -728,21 +730,21 @@ class Board
 				break;
 
 			case 'last_x':
-				$subquery_first = \DC::qb()
+				$subquery_first = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'xr')
-					->where('num = '.\DC::forge()->quote($num))
+					->where('num = '.DC::forge()->quote($num))
 					->setMaxResults(1)
 					->getSQL();
-				$subquery_last = \DC::qb()
+				$subquery_last = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'xrr')
-					->where('thread_num = '.\DC::forge()->quote($num))
+					->where('thread_num = '.DC::forge()->quote($num))
 					->orderBy('num', 'DESC')
 					->addOrderBy('subnum', 'DESC')
 					->setMaxResults($last_limit)
 					->getSQL();
-				$query = \DC::qb()
+				$query = DC::qb()
 					->select('*')
 					->from('(('.$subquery_first.') UNION ('.$subquery_last.'))', 'r')
 					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -754,7 +756,7 @@ class Board
 				break;
 
 			case 'thread':
-				$query = \DC::qb()
+				$query = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'r')
 					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -947,7 +949,7 @@ class Board
 	{
 		extract($this->options);
 
-		$query = \DC::qb()
+		$query = DC::qb()
 			->select('*')
 			->from($this->radix->getTable(), 'r');
 
@@ -1000,6 +1002,4 @@ class Board
 
 		return $this;
 	}
-
-
 }

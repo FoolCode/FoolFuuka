@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+
 /**
  * Thrown when there's no results from database or the value domain hasn't been respected
  */
@@ -136,9 +138,9 @@ class Ban
 	 */
 	public static function getById($id)
 	{
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('*')
-			->from(\DC::p('banned_posters'), 'u')
+			->from(DC::p('banned_posters'), 'u')
 			->where('u.id = :id')
 			->setParameter(':id', $id)
 			->execute()
@@ -162,9 +164,9 @@ class Ban
 	 */
 	public static function getByIp($decimal_ip)
 	{
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('*')
-			->from(\DC::p('banned_posters'), 'u')
+			->from(DC::p('banned_posters'), 'u')
 			->where('u.ip = :ip')
 			->setParameter(':ip', $decimal_ip)
 			->execute()
@@ -190,9 +192,9 @@ class Ban
 	 */
 	public static function getPagedBy($order_by, $order, $page, $per_page = 30)
 	{
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('*')
-			->from(\DC::p('banned_posters'), 'u')
+			->from(DC::p('banned_posters'), 'u')
 			->orderBy($order_by, $order)
 			->setMaxResults($per_page)
 			->setFirstResult(($page * $per_page) - $per_page)
@@ -214,9 +216,9 @@ class Ban
 	 */
 	public static function getAppealsPagedBy($order_by, $order, $page, $per_page = 30)
 	{
-		$result = \DC::qb()
+		$result = DC::qb()
 			->select('*')
-			->from(\DC::p('banned_posters'), 'u')
+			->from(DC::p('banned_posters'), 'u')
 			->where('appeal_status = :appeal_status')
 			->orderBy($order_by, $order)
 			->setMaxResults($per_page)
@@ -350,8 +352,8 @@ class Ban
 
 			if (isset($old[$new->board_id]))
 			{
-				\DC::qb()
-					->update(\DC::p('banned_posters'))
+				DC::qb()
+					->update(DC::p('banned_posters'))
 					->where('id = :id')
 					->set('start', $new->start)
 					->set('length', $new->length)
@@ -361,8 +363,8 @@ class Ban
 			}
 			else
 			{
-				\DC::forge()
-					->insert(\DC::p('banned_posters'), [
+				DC::forge()
+					->insert(DC::p('banned_posters'), [
 						'ip' => $new->ip,
 						'reason' => $new->reason,
 						'start' => $new->start,
@@ -385,8 +387,8 @@ class Ban
 	 */
 	public function delete()
 	{
-		\DC::qb()
-			->delete(\DC::p('banned_posters'))
+		DC::qb()
+			->delete(DC::p('banned_posters'))
 			->where('id = :id')
 			->setParameter(':id', $this->id)
 			->execute();
@@ -403,8 +405,8 @@ class Ban
 	 */
 	public function appeal($appeal)
 	{
-		\DC::qb()
-			->update(\DC::p('banned_posters'))
+		DC::qb()
+			->update(DC::p('banned_posters'))
 			->where('id = :id')
 			->set('appeal', ':appeal')
 			->set('appeal_status', static::APPEAL_PENDING)
@@ -422,8 +424,8 @@ class Ban
 	 */
 	public function appealReject()
 	{
-		\DC::qb()
-			->update(\DC::p('banned_posters'))
+		DC::qb()
+			->update(DC::p('banned_posters'))
 			->where('id = :id')
 			->set('appeal_status', static::APPEAL_REJECTED)
 			->setParameter(':id', $this->id)

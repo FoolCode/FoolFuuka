@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+
 class Schema
 {
 	use \Foolz\Plugin\PlugSuit;
@@ -13,12 +15,12 @@ class Schema
 
 		$schema = $sm->getCodedSchema();
 
-		$banned_md5 = $schema->createTable(\DC::p('banned_md5'));
+		$banned_md5 = $schema->createTable(DC::p('banned_md5'));
 		$banned_md5->addColumn('md5', 'string', ['length' => 24]);
 		$banned_md5->setPrimaryKey(['md5']);
 
-		$banned_posters = $schema->createTable(\DC::p('banned_posters'));
-		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		$banned_posters = $schema->createTable(DC::p('banned_posters'));
+		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$banned_posters->addOption('charset', $charset);
 			$banned_posters->addOption('collate', $collation);
@@ -37,8 +39,8 @@ class Schema
 		$banned_posters->addIndex(['creator_id'], 'creator_id_index');
 		$banned_posters->addIndex(['appeal_status'], 'appeal_status_index');
 
-		$boards = $schema->createTable(\DC::p('boards'));
-		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		$boards = $schema->createTable(DC::p('boards'));
+		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$boards->addOption('charset', $charset);
 			$boards->addOption('collate', $collation);
@@ -56,8 +58,8 @@ class Schema
 		$boards->setPrimaryKey(['id']);
 		$boards->addUniqueIndex(['shortname'], 'shortname_index');
 
-		$boards_preferences = $schema->createTable(\DC::p('boards_preferences'));
-		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		$boards_preferences = $schema->createTable(DC::p('boards_preferences'));
+		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$boards_preferences->addOption('charset', $charset);
 			$boards_preferences->addOption('collate', $collation);
@@ -69,8 +71,8 @@ class Schema
 		$boards_preferences->setPrimaryKey(['board_preference_id']);
 		$boards_preferences->addIndex(['board_id', 'name'], 'board_id_name_index');
 
-		$reports = $schema->createTable(\DC::p('reports'));
-		if (\DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		$reports = $schema->createTable(DC::p('reports'));
+		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$reports->addOption('charset', $charset);
 			$reports->addOption('collate', $collation);

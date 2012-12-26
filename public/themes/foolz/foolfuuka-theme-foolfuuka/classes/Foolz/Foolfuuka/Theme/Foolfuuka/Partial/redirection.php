@@ -1,4 +1,9 @@
 <?php
-if (!defined('DOCROOT'))
-	exit('No direct script access allowed');
-?>
+
+namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
+
+class Redirection extends \Foolz\Theme\View
+{
+	public function toString()
+	{}
+}

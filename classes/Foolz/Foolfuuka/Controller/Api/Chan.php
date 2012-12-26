@@ -18,6 +18,24 @@ class Controller_Api_Chan extends \Controller_Rest
 		header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 		header('Access-Control-Max-Age: 604800');
 
+		// this has already been forged in the foolfuuka bootstrap
+		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
+
+		if (\Input::get('theme'))
+		{
+			try
+			{
+				// TODO theme choice limitations
+				$theme_name = \Input::get('theme', \Input::get('theme')) ? : 'foolz/foolfuuka-theme-foolfuuka';
+				$this->_theme = $theme_instance->get('foolz', $theme_name);
+			}
+			catch (\OutOfBoundsException $e)
+			{
+				$theme_name = 'foolz/foolfuuka-theme-foolfuuka';
+				$this->_theme = $theme_instance->get('foolz', $theme_name);
+			}
+		}
+
 		if ( ! \Input::get('board') && ! \Input::get('action') && ! \Input::post('board') && ! \Input::post('action'))
 		{
 			$segments = \Uri::segments();
@@ -112,7 +130,7 @@ class Controller_Api_Chan extends \Controller_Rest
 				$board = \Board::forge()
 					->getThread($num)
 					->setRadix($this->_radix)
-					->setApi(array('theme' => \Input::get('theme'), 'board' => false))
+					->setApi(array('theme' => $this->_theme, 'board' => false))
 					->setOptions(array(
 						'type' => 'from_doc_id',
 						'latest_doc_id' => $latest_doc_id,
@@ -128,7 +146,7 @@ class Controller_Api_Chan extends \Controller_Rest
 				$board = \Board::forge()
 					->getThread($num)
 					->setRadix($this->_radix)
-					->setApi(array('theme' => \Input::get('theme'), 'board' => false))
+					->setApi(array('theme' => $this->_theme, 'board' => false))
 					->setOptions(array(
 						'type' => 'thread',
 				));
@@ -156,7 +174,6 @@ class Controller_Api_Chan extends \Controller_Rest
 		}
 
 		$num = \Input::get('num');
-		$theme = \Input::get('theme');
 
 		if (!$num)
 		{
@@ -173,7 +190,7 @@ class Controller_Api_Chan extends \Controller_Rest
 			$board = \Board::forge()
 				->getPost($num)
 				->setRadix($this->_radix)
-				->setApi(array('board' => false, 'theme' => $theme));
+				->setApi(array('board' => false, 'theme' => $this->_theme));
 
 			// no index for the single post
 			$this->response(current($board->getComments()), 200);

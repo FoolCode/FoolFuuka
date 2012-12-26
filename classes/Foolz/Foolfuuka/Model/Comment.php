@@ -4,7 +4,7 @@ namespace Foolz\Foolfuuka\Model;
 
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 
-class CommentException extends \FuelException {}
+class CommentException extends \Exception {}
 
 class CommentDeleteWrongPassException extends CommentException {}
 
@@ -47,6 +47,13 @@ class Comment
 	 * @var  string
 	 */
 	public $_controller_method = 'thread';
+
+	/**
+	 * A reference to the theme that must be used to build the API response
+	 *
+	 * @var null|\Foolz\Theme\Theme
+	 */
+	public $_theme = null;
 
 	/**
 	 * The bbcode parser object when created
@@ -156,6 +163,7 @@ class Comment
 
 		if (isset($api['theme']) && $api['theme'] !== null)
 		{
+			$comment->_theme = $api['theme'];
 			$fields[] = 'getFormatted';
 		}
 
@@ -239,7 +247,6 @@ class Comment
 
 	public function __construct($post, $board, $options = [])
 	{
-		$post = $post;
 		$this->radix = $board;
 
 		$media_fields = Media::getFields();
@@ -839,9 +846,12 @@ class Comment
 	 */
 	public function buildComment()
 	{
-		$theme = \Theme::instance('foolfuuka');
+		$builder = $this->_theme->createBuilder();
+		$partial = $builder->createPartial('board_comment', 'board_comment');
+		$partial->getParamManager()
+			->setParam('p', $this);
 
-		return $theme->build('board_comment', ['p' => $this], true, true);
+		return $partial->build();
 	}
 
 

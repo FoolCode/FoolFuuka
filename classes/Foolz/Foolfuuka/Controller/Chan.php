@@ -42,6 +42,7 @@ class Chan extends \Controller
 
 		try
 		{
+			// TODO theme choice limitations ALSO IN API!
 			$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : 'foolz/foolfuuka-theme-foolfuuka';
 			$this->theme = $theme_instance->get('foolz', $theme_name);
 		}
@@ -1224,13 +1225,13 @@ class Chan extends \Controller
 					$board = \Board::forge()
 						->getThread($comment->thread_num)
 						->setRadix($this->_radix)
-						->setApi(array('theme' => \Input::post('theme'), 'board' => false))
-						->setOptions(array(
+						->setApi(['theme' => $this->theme, 'board' => false])
+						->setOptions([
 							'type' => 'from_doc_id',
 							'latest_doc_id' => $latest_doc_id,
 							'realtime' => true,
 							'controller_method' => $limit ? 'last/'.$limit : 'thread'
-					));
+						]);
 
 					$comments = $board->getComments();
 				}
@@ -1243,18 +1244,21 @@ class Chan extends \Controller
 					return $this->error(__("Unknown error."));
 				}
 
-				return \Response::forge(json_encode(array('success' => __('Message sent.')) + $comments));
+				return \Response::forge(json_encode(['success' => __('Message sent.')] + $comments));
 			}
 			else
 			{
-				$comment_api = \Comment::forgeForApi($comment, $this->_radix,
-					array('board' => false, 'theme' => true), array('controller_method' => $limit ? 'last/'.$limit : 'thread'));
+				$comment_api = \Comment::forgeForApi($comment, $this->_radix, [
+					'board' => false,
+					'theme' => $this->theme],
+					['controller_method' => $limit ? 'last/'.$limit : 'thread']);
+
 				return \Response::forge(
-					json_encode(array(
+					json_encode([
 						'success' => __('Message sent.'),
 						'thread_num' => $comment->thread_num,
-						$comment->thread_num => array('posts' => array($comment_api)),
-				)));
+						$comment->thread_num => ['posts' => [$comment_api]],
+					]));
 			}
 		}
 		else
@@ -1262,7 +1266,7 @@ class Chan extends \Controller
 			$this->builder->createLayout('redirect');
 			$this->builder->createPartial('body', 'redirection')
 				->getParamManager()
-				->setParam('url', \Uri::create(array($this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num)).'#'.$comment->num);
+				->setParam('url', \Uri::create([$this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
 			$this->builder->getProps()->addTitle(__('Redirecting'));
 
 			return \Response::forge($this->theme->build());

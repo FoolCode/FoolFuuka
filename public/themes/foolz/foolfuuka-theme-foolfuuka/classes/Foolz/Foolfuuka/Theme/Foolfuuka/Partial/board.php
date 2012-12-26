@@ -167,6 +167,9 @@ class Board extends \Foolz\Theme\View
 							'image_counter' => $image_counter
 						]);
 
+						// refreshes the string
+						$board_comment_view->doBuild();
+
 						echo $board_comment_view->build();
 					}
 

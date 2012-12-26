@@ -3,7 +3,6 @@
 return [
 	'_root_' => 'foolz/foolfuuka/chan/index',  // The default route
 	'_/api/chan/(:any)' => 'foolz/foolfuuka/api/chan/$1',
-	'api/chan/(:any)' => 'foolz/foolfuuka/api/chan/$1',
 	'admin/boards/(:any)' => 'foolz/foolfuuka/admin/boards/$1',
 	'admin/posts/(:any)' => 'foolz/foolfuuka/admin/posts/$1',
 	'_/advanced_search' => 'foolz/foolfuuka/chan/advanced_search',

@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Controller\Api;
 
-class Controller_Api_Chan extends \Controller_Rest
+class Chan extends \Controller_Rest
 {
 
 	protected $_radix = null;

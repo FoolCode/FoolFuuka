@@ -214,7 +214,7 @@ class Chan extends \Foolz\Theme\View
 			<?php endif; ?>
 
             <div class="search_box">
-				<?= isset($template['partials']['tools_advanced_search']) ? $template['partials']['tools_advanced_search'] : ''; ?>
+				<?= $this->getBuilder()->isPartial('tools_advanced_search') ? $this->getBuilder()->getPartial('tools_advanced_search')->build() : ''; ?>
             </div>
 
 			<?= $this->getBuilder()->getPartial('body')->build(); ?>

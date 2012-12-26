@@ -7,7 +7,6 @@ use Foolz\Foolframe\Model\Preferences;
 
 class BoardComment extends \Foolz\Theme\View
 {
-
 	public static $permissions = null;
 
 	public function __construct()

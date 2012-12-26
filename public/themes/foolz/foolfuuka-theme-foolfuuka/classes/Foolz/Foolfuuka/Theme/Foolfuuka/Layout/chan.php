@@ -15,6 +15,11 @@ class Chan extends \Foolz\Theme\View
 		$this->getFooter();
 	}
 
+	public function getSelectedThemeClass()
+	{
+		return 'theme_default';
+	}
+
 	public function getHeader()
 	{
 		$radix = $this->getBuilder()->getParamManager()->getParam('radix');
@@ -63,7 +68,7 @@ class Chan extends \Foolz\Theme\View
 		$disable_headers = $this->getBuilder()->getParamManager()->getParam('disable_headers');
 
 		?>
-	<body class="<?= '' /*$this->get_selected_theme_class(array('theme_default'))*/ ?>">
+	<body class="<?= $this->getSelectedThemeClass(); ?>">
 	<?php if ($disable_headers !== true) : ?>
 	<div class="letters"><?php
 		$board_urls = array();

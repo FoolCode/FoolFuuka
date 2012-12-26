@@ -164,7 +164,7 @@ class Chan extends \Controller
 
 	public function action_index()
 	{
-		$this->param_manager->getParam('disable_headers', true);
+		$this->param_manager->setParam('disable_headers', true);
 		$this->builder->createPartial('body', 'index');
 		return \Response::forge($this->builder->build());
 	}

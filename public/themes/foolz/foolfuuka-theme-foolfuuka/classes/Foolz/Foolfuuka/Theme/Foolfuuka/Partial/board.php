@@ -18,16 +18,14 @@ class Board extends \Foolz\Theme\View
 				$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
 				?>
 		<article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>">
-		<?php if ( ! isset($disable_default_after_op_open) || $disable_default_after_op_open !== true) : ?>
 				<?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_op_open')->setParam('board', $op->radix)->execute(); ?>
-				<?php endif; ?>
 				<?php if ($op->media !== null) : ?>
                 <div class="thread_image_box">
 					<?php if ($op->media->getMediaStatus() === 'banned') : ?>
-                    <img src="<?= \Uri::base() . $this->fallback_asset('images/banned-image.png')?>" width="150" height="150" />
+                    <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/banned-image.png')?>" width="150" height="150" />
 					<?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
                     <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-                        <img src="<?= \Uri::base() . $this->fallback_asset('images/missing-image.jpg')?>" width="150" height="150" />
+                        <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
                     </a>
 					<?php else : ?>
                     <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
@@ -47,12 +45,12 @@ class Board extends \Foolz\Theme\View
 						<?php if ($op->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
 						<?php if (!$op->radix->hide_thumbnails || \Auth::has_access('maccess.mod')) : ?>
 							<?php if ($op->media->total > 1) : ?><a href="<?= \Uri::create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
-                                    href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink() ?>" target="_blank"
-                                    class="btnr parent">Google</a><a
-                                    href="http://iqdb.org/?url=<?= $op->media->getThumbLink() ?>" target="_blank"
-                                    class="btnr parent">iqdb</a><a
-                                    href="http://saucenao.com/search.php?url=<?= $op->media->getThumbLink() ?>" target="_blank"
-                                    class="btnr parent">SauceNAO</a>
+                                href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink() ?>" target="_blank"
+                                class="btnr parent">Google</a><a
+                                href="http://iqdb.org/?url=<?= $op->media->getThumbLink() ?>" target="_blank"
+                                class="btnr parent">iqdb</a><a
+                                href="http://saucenao.com/search.php?url=<?= $op->media->getThumbLink() ?>" target="_blank"
+                                class="btnr parent">SauceNAO</a>
 							<?php endif; ?>
 						<?php endif; ?>
                     </div>
@@ -114,7 +112,7 @@ class Board extends \Foolz\Theme\View
                 <div class="thread_tools_bottom">
 					<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
 		<span class="omitted">
-			<a style="display:inline-block" href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num))?>" data-function="expandThread" data-thread-num="<?= $op->thread_num ?>"><i class="icon icon-resize-full"></i></a>
+			<a style="display:inline-block" href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) ?>" data-function="expandThread" data-thread-num="<?= $op->thread_num ?>"><i class="icon icon-resize-full"></i></a>
                     <span class="omitted_text">
 				<span class="omitted_posts"><?= $post['omitted'] ?></span> <?= _ngettext('post', 'posts', $post['omitted']) ?>
 						<?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>
@@ -139,9 +137,7 @@ class Board extends \Foolz\Theme\View
 				<?php endif; ?>
 				<?php elseif (isset($post['posts'])): ?>
 		<article class="clearfix thread">
-			<?php if ( ! isset($disable_default_after_headless_open) || $disable_default_after_headless_open !== true) : ?>
 					<?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_headless_open')->setParam('board', array(isset($radix) ? $radix : null))->execute(); ?>
-					<?php endif; ?>
 				<?php endif; ?>
 
             <aside class="posts">

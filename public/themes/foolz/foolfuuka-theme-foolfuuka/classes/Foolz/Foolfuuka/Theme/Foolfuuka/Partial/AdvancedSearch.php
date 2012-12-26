@@ -6,6 +6,9 @@ class AdvancedSearch extends \Foolz\Theme\View
 {
 	public function toString()
 	{
+		$radix = $this->getBuilderParamManager()->getParam('radix');
+		$search = $this->getBuilderParamManager()->getParam('search', []);
+
 		if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
 		{
 			// search can work also without a radix selected
@@ -19,7 +22,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 		<?php if (isset($search_radix)) : ?>
 	    <div class="advanced_search clearfix">
-			<?= \Form::open(array('method' => 'POST', 'action' => Uri::create($search_radix.'/search'))); ?>
+			<?= \Form::open(array('method' => 'POST', 'action' => \Uri::create($search_radix.'/search'))); ?>
 
 	    <div class="comment_wrap">
 			<?= \Form::input(array(
@@ -201,7 +204,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 								$extra_text_br .= '<br/><span class="options">[' . e($k) . '] ' . e(urldecode($i)) . ' </span>';
 							}
 
-							echo '<li title="' . htmlspecialchars($text . $extra_text_br) . '" class="latest_search"><a href="' . Uri::create($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
+							echo '<li title="' . htmlspecialchars($text . $extra_text_br) . '" class="latest_search"><a href="' . \Uri::create($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
 						}
 					}
 					?>

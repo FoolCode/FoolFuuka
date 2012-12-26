@@ -68,17 +68,17 @@ class BoardComment extends \Foolz\Theme\View
 				</div>
 				<div class="thread_image_box">
 					<?php if ($p->media->getMediaStatus() === 'banned') : ?>
-						<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
+						<img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
 					<?php elseif ($p->media->getMediaStatus() !== 'normal'): ?>
 						<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-							<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
+							<img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
 						</a>
 					<?php else: ?>
 						<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 							<?php if(!$perm['maccess.mod'] && !$p->radix->transparent_spoiler && $p->media->spoiler) :?>
 							<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 							<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
-							<img src="<?= \Uri::base() . $this->_theme->fallback_asset('images/transparent_pixel.png') ?>" data-original="<?= $p->media->getThumbLink() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+							<img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/transparent_pixel.png') ?>" data-original="<?= $p->media->getThumbLink() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 							<noscript>
 								<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 									<img src="<?= $p->media->getThumbLink() ?>" style="margin-left: -<?= $p->media->preview_w ?>px" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />

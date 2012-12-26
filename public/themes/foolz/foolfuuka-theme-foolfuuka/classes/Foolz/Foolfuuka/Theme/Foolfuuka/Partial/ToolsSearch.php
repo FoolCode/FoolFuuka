@@ -25,12 +25,12 @@ class ToolsSearch extends \Foolz\Theme\View
 		<?= \Form::open([
 			'class' => 'navbar-search',
 			'method' => 'POST',
-			'action' => Uri::create($search_radix.'/search')
+			'action' => \Uri::create($search_radix.'/search')
 		]);
 	    ?>
 
         <li>
-		<?= Form::input([
+		<?= \Form::input([
 			'name' => 'text',
 			'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : '',
 			'class' => 'search-query',

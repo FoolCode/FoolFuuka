@@ -287,7 +287,7 @@ class Chan extends \Controller
 	}
 
 
-	protected function latest($page = 1, $options = array())
+	protected function latest($page = 1, $options = [])
 	{
 		\Profiler::mark('Controller Chan::latest Start');
 		try
@@ -302,7 +302,7 @@ class Chan extends \Controller
 			$board->getComments();
 			$board->getCount();
 		}
-		catch (Foolz\Foolfuuka\Model\BoardException $e)
+		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
 			\Profiler::mark('Controller Chan::latest End Prematurely');
 			return $this->error($e->getMessage());
@@ -327,26 +327,30 @@ class Chan extends \Controller
 			$this->theme->bind('section_title', $order_string.' - '.__('Page').' '.$page);
 		}
 
-		$this->theme->bind(array(
+		$this->builder->createPartial('body', 'board')
+			->getParamManager()->setParams([
+				'board' => $board,
+				'posts_per_thread' => $options['per_thread'] - 1
+			]);
+
+		$this->param_manager->setParams([
 			'is_page' => true,
-			'board' => $board,
-			'posts_per_thread' => $options['per_thread'] - 1,
 			'order' => $options['order'],
 			'pagination' => array(
 				'base_url' => \Uri::create(array($this->_radix->shortname, $options['order'] === 'ghost' ? 'ghost' : 'page')),
 				'current_page' => $page,
 				'total' => $board->getPages()
 			)
-		));
+		]);
 
 		if (!$this->_radix->archive)
 		{
-			$this->theme->set_partial('tools_new_thread_box', 'tools_reply_box');
+			$this->builder->createPartial('tools_new_thread_box', 'tools_reply_box');
 		}
 
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::latest End');
-		return \Response::forge($this->theme->build('board'));
+		return \Response::forge($this->builder->build());
 	}
 
 
@@ -372,7 +376,7 @@ class Chan extends \Controller
 	}
 
 
-	protected function thread($num = 0, $options = array())
+	protected function thread($num = 0, $options = [])
 	{
 		\Profiler::mark('Controller Chan::thread Start');
 		$num = str_replace('S', '', $num);
@@ -413,19 +417,24 @@ class Chan extends \Controller
 			return $this->error();
 		}
 
-		$this->theme->set_title(__('Thread').' #'.$num);
-		$this->theme->bind(array(
+		$this->builder->getProps()->addTitle(__('Thread').' #'.$num);
+		$this->param_manager->setParams([
 			'thread_id' => $num,
-			'board' => $board,
 			'is_thread' => true,
 			'disable_image_upload' => $thread_status['disable_image_upload'],
 			'thread_dead' => $thread_status['dead'],
 			'latest_doc_id' => $latest_doc_id,
 			'latest_timestamp' => $latest_timestamp,
 			'thread_op_data' => $thread[$num]['op']
-		));
+		]);
 
-		$backend_vars = $this->theme->get_var('backend_vars');
+		$this->builder->createPartial('body', 'board')
+			->getParamManager()
+			->setParams([
+				'board' => $board,
+			]);
+
+		$backend_vars = $this->param_manager->getParam('backend_vars');
 		$backend_vars['thread_id'] = $num;
 		$backend_vars['latest_timestamp'] = $latest_timestamp;
 		$backend_vars['latest_doc_id'] = $latest_doc_id;
@@ -436,16 +445,16 @@ class Chan extends \Controller
 			$backend_vars['last_limit'] = $options['last_limit'];
 		}
 
-		$this->theme->bind('backend_vars', $backend_vars);
+		$this->param_manager->setParam('backend_vars', $backend_vars);
 
 		if ( ! $thread_status['closed'])
 		{
-			$this->theme->set_partial('tools_reply_box', 'tools_reply_box');
+			$this->builder->createPartial('tools_reply_box', 'tools_reply_box');
 		}
 
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::thread End');
-		return \Response::forge($this->theme->build('board'));
+		return \Response::forge($this->builder->build());
 	}
 
 

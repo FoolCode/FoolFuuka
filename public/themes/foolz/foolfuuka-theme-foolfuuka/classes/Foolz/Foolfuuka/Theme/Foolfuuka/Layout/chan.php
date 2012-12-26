@@ -30,7 +30,6 @@ class Chan extends \Foolz\Theme\View
         <meta charset="utf-8">
         <meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
         <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
-		<?php  /*<?= $template['metadata'] */?>
 
         <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
         <link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('ff.gen.website_title') ?>' />
@@ -202,9 +201,11 @@ class Chan extends \Foolz\Theme\View
 
 	public function getContent()
 	{
+		$pagination = $this->getBuilderParamManager()->getParam('pagination', false);
+
 		?>
         <div role="main" id="main">
-			<?= isset($template['partials']['tools_new_thread_box']) ? $template['partials']['tools_new_thread_box'] : ''; ?>
+			<?= $this->getBuilder()->isPartial('tools_new_thread_box') ? $this->getBuilder()->getPartial('tools_new_thread_box')->build() : ''; ?>
 
 			<?php if (isset($section_title)) : ?>
             <h3 class="section_title"><?= $section_title ?></h3>
@@ -222,8 +223,7 @@ class Chan extends \Foolz\Theme\View
 
 			<?= $this->getBuilder()->getPartial('tools_modal')->build(); ?>
 
-
-			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
+			<?php if ($pagination !== false && ! is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
             <div class="paginate">
                 <ul>
 					<?php if ($pagination['current_page'] == 1) : ?>

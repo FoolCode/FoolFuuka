@@ -1,16 +1,16 @@
 <?php
 
-namespace Foolfuuka\Themes\Default_\Views;
+namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-if (!defined('DOCROOT'))
-	exit('No direct script access allowed');
+use Foolz\Inet\Inet;
+use Foolz\Foolframe\Model\Preferences;
 
-class Board_comment extends \Theme
+class BoardComment extends \Foolz\Theme\View
 {
 
 	public static $permissions = null;
 
-	public function __construct($data, $theme)
+	public function __construct()
 	{
 		if (static::$permissions === null)
 		{
@@ -22,30 +22,21 @@ class Board_comment extends \Theme
 				'fu.sphinx.global' => \Preferences::get('fu.sphinx.global')
 			);
 		}
-
-		foreach ($data as $key => $item)
-		{
-			$this->$key = $item;
-		}
-
-
-		$this->_theme = $theme;
 	}
 
 
-	public function __toString()
+	public function toString()
 	{
-		$p = $this->p;
-		if (isset($this->modifiers))
+		$p = $this->getParamManager()->getParam('p');
+
+		if ($this->getParamManager()->getParam('modifiers', false))
 		{
-			$modifiers = $this->modifiers;
+			$modifiers = $this->getParamManager()->getParam('modifiers');
 		}
 
 		$perm = static::$permissions;
 
 		$num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
-
-		ob_start();
 
 		?>
 		<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if (!is_null($p->media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>">
@@ -139,7 +130,7 @@ class Board_comment extends \Theme
 				</div>
 				<?php if ($perm['maccess.mod']) : ?>
 				<div class="btn-group" style="clear:both; padding:5px 0 0 0;">
-					<button class="btn btn-mini" data-function="activateModeration"><?= __('Mod') ?><?php if ($p->poster_ip) echo ' ' .\Inet::dtop($p->poster_ip) ?></button>
+					<button class="btn btn-mini" data-function="activateModeration"><?= __('Mod') ?><?php if ($p->poster_ip) echo ' ' .Inet::dtop($p->poster_ip) ?></button>
 				</div>
 				<div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">
 					<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-board-url="<?= \Uri::create(array($p->radix->shortname)) ?>" data-id="<?= $p->doc_id ?>" data-action="delete_post"><?= __('Delete Post') ?></button>
@@ -149,10 +140,10 @@ class Board_comment extends \Theme
 						<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="ban_image_global"><?= __('Ban Image Globally') ?></button>
 					<?php endif; ?>
 					<?php if ($p->poster_ip) : ?>
-						<button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $p->radix->shortname ?>" data-ip="<?= \Inet::dtop($p->poster_ip) ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . \Inet::dtop($p->poster_ip) ?></button>
-						<button class="btn btn-mini" data-function="searchUser" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= \Inet::dtop($p->poster_ip) ?>"><?= __('Search IP') ?></button>
+						<button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $p->radix->shortname ?>" data-ip="<?= Inet::dtop($p->poster_ip) ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . Inet::dtop($p->poster_ip) ?></button>
+						<button class="btn btn-mini" data-function="searchUser" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= Inet::dtop($p->poster_ip) ?>"><?= __('Search IP') ?></button>
 						<?php if ($perm['fu.sphinx.global']) : ?>
-							<button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= \Inet::dtop($p->poster_ip) ?>"><?= __('Search IP Globally') ?></button>
+							<button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= Inet::dtop($p->poster_ip) ?>"><?= __('Search IP Globally') ?></button>
 						<?php endif; ?>
 					<?php endif; ?>
 				</div>
@@ -162,7 +153,7 @@ class Board_comment extends \Theme
 							<br/>
 							<div class="ip_reporter">
 								<strong><?= __('Info:') ?></strong>
-								<?= \Inet::dtop($report->ip_reporter) ?>, <?= __('Type:') ?> <?= $report->media_id !== null ? __('media') : __('post')?>, <?= __('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?>
+								<?= Inet::dtop($report->ip_reporter) ?>, <?= __('Type:') ?> <?= $report->media_id !== null ? __('media') : __('post')?>, <?= __('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?>
 								<button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-action="delete_report"><?= __('Delete Report') ?></button>
 							</div>
 						</div>
@@ -172,8 +163,6 @@ class Board_comment extends \Theme
 			</div>
 		</article>
 		<?php
-
-		return ob_get_clean();
 	}
 
 

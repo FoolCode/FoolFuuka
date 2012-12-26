@@ -734,7 +734,7 @@ class CommentInsert extends Comment
 				// update poster_hash for non-ghost posts
 				if ( ! $this->ghost && $this->op && $this->radix->enable_poster_hash)
 				{
-					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment->thread_num),'id'),+3), 0, 8);
+					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment->thread_num),'id'), 3), 0, 8);
 
 					DC::qb()
 						->update($this->radix->getTable())

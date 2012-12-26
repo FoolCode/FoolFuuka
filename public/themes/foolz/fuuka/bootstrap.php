@@ -3,7 +3,7 @@
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-require __DIR__.'/functions.php';
+require __DIR__ . '/functions.php';
 
 \Autoloader::add_classes(array(
 	'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan' => __DIR__.'/classes/controller.php',

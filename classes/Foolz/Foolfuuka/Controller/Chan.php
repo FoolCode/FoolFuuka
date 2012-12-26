@@ -5,16 +5,55 @@ namespace Foolz\Foolfuuka\Controller;
 class Chan extends \Controller
 {
 
-	protected $_theme = null;
-	protected $_radix = null;
-	protected $_to_bind = null;
+	/**
+	 * The Theme object
+	 *
+	 * @var  \Foolz\Theme\Theme
+	 */
+	protected $theme = null;
 
+	/**
+	 * A builder object with some defaults appended
+	 *
+	 * @var  \Foolz\Theme\Builder
+	 */
+	protected $builder = null;
+
+	/**
+	 * The ParamManager object of the builder
+	 *
+	 * @var  \Foolz\Theme\ParamManager
+	 */
+	protected $param_manager = null;
+
+	/**
+	 * The currently selected radix
+	 *
+	 * @var \Foolz\Foolfuuka\Model\Radix|null
+	 */
+	protected $_radix = null;
 
 	public function before()
 	{
 		parent::before();
 
-		$this->_theme = \Theme::instance('foolfuuka');
+		// this has already been forged in the foolfuuka bootstrap
+		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
+
+		try
+		{
+			$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : 'foolz/foolfuuka-theme-foolfuuka';
+			$this->theme = $theme_instance->get('foolz', $theme_name);
+		}
+		catch (\OutOfBoundsException $e)
+		{
+			$theme_name = 'foolz/foolfuuka-theme-foolfuuka';
+			$this->theme = $theme_instance->get('foolz', 'foolz/foolfuuka-theme-foolfuuka');
+		}
+
+		$this->builder = $this->theme->createBuilder();
+		$this->param_manager = $this->builder->getParamManager();
+		$this->builder->createLayout('chan');
 
 		$pass = \Cookie::get('reply_password');
 		$name = \Cookie::get('reply_name');
@@ -28,7 +67,7 @@ class Chan extends \Controller
 		}
 
 		// KEEP THIS IN SYNC WITH THE ONE IN THE POSTS ADMIN PANEL
-		$this->_to_bind = array(
+		$to_bind = [
 			'user_name' => $name,
 			'user_email' => $email,
 			'user_pass' => $pass,
@@ -37,8 +76,8 @@ class Chan extends \Controller
 			'is_thread' => false,
 			'is_last50' => false,
 			'order' => false,
-			'modifiers' => array(),
-			'backend_vars' => array(
+			'modifiers' => [],
+			'backend_vars' => [
 				'user_name' => $name,
 				'user_email' => $email,
 				'user_pass' => $pass,
@@ -49,28 +88,29 @@ class Chan extends \Controller
 				'api_url'   => \Uri::base(),
 				'cookie_domain' => \Foolz\Config\Config::get('foolz/foolframe', 'package', 'config.cookie_domain'),
 				'cookie_prefix' => \Foolz\Config\Config::get('foolz/foolframe', 'package', 'config.cookie_prefix'),
-				'selected_theme' => isset($this->_theme)?$this->_theme->get_selected_theme():'',
+				'selected_theme' => $theme_name,
 				'csrf_token_key' => \Config::get('security.csrf_token_key'),
-				'images' => array(
-					'banned_image' => \Uri::base().$this->_theme->fallback_asset('images/banned-image.png'),
+				'images' => [
+					'banned_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
 					'banned_image_width' => 150,
 					'banned_image_height' => 150,
-					'missing_image' => \Uri::base().$this->_theme->fallback_asset('images/missing-image.jpg'),
+					'missing_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/missing-image.jpg'),
 					'missing_image_width' => 150,
 					'missing_image_height' => 150,
-				),
-				'gettext' => array(
+				],
+				'gettext' => [
 					'submit_state' => __('Submitting'),
 					'thread_is_real_time' => __('This thread is being displayed in real time.'),
 					'update_now' => __('Update now')
-				)
-			)
-		);
+				]
+			]
+		];
 
-		$this->_theme->bind($this->_to_bind);
-		$this->_theme->set_partial('tools_modal', 'tools_modal');
-		$this->_theme->set_partial('tools_search', 'tools_search');
-		$this->_theme->set_partial('tools_advanced_search', 'advanced_search');
+		$this->param_manager->setParams($to_bind);
+
+		$this->builder->createPartial('tools_modal', 'tools_modal');
+		$this->builder->createPartial('tools_search', 'tools_search');
+		$this->builder->createPartial('tools_advanced_search', 'advanced_search');
 	}
 
 
@@ -91,10 +131,12 @@ class Chan extends \Controller
 
 			if ($this->_radix)
 			{
-				$this->_theme->bind('radix', $this->_radix);
-				$this->_to_bind['backend_vars']['board_shortname'] = $this->_radix->shortname;
-				$this->_theme->bind($this->_to_bind);
-				$this->_theme->set_title($this->_radix->formatted_title);
+				$this->param_manager->setParam('radix', $this->_radix);
+				$backend_vars = $this->param_manager->getParam('backend_vars');
+				$backend_vars['board_shortname'] = $this->_radix->shortname;
+				$this->param_manager->setParam('backend_vars', $backend_vars);
+				$this->builder->getProps()->addTitle($this->_radix->formatted_title);
+
 				$method = array_shift($params);
 
 				// methods callable with a radix are prefixed with radix_
@@ -109,8 +151,8 @@ class Chan extends \Controller
 		}
 
 		$this->_radix = null;
-		$this->_theme->bind('radix', null);
-		$this->_theme->set_title(\Preferences::get('fu.gen.website_title'));
+		$this->param_manager->setParam('radix', null);
+		$this->builder->getProps()->addTitle(\Preferences::get('fu.gen.website_title'));
 
 		if (method_exists($this, 'action_'.$method))
 		{
@@ -120,29 +162,17 @@ class Chan extends \Controller
 		throw new \HttpNotFoundException;
 	}
 
-
-	/**
-	 * The basic welcome message
-	 *
-	 * @access  public
-	 * @return  Response
-	 */
 	public function action_index()
 	{
-		$this->_theme->bind('disable_headers', TRUE);
-		return \Response::forge($this->_theme->build('index'));
+		$this->param_manager->getParam('disable_headers', true);
+		$this->builder->createPartial('body', 'index');
+		return \Response::forge($this->builder->build());
 	}
 
 
-	/**
-	 * The 404 action for the application.
-	 *
-	 * @access  public
-	 * @return  Response
-	 */
 	public function action_404($error = null)
 	{
-		return \Response::forge($this->_theme->build('error',
+		return \Response::forge($this->theme->build('error',
 					array(
 					'error' => $error === null ? __('Page not found. You can use the search if you were looking for something!') : $error
 				)), 404);
@@ -153,64 +183,64 @@ class Chan extends \Controller
 	{
 		if (is_null($error))
 		{
-			return \Response::forge($this->_theme->build('error', array('error' => __('We encountered an unexpected error.'))), $code);
+			return \Response::forge($this->theme->build('error', array('error' => __('We encountered an unexpected error.'))), $code);
 		}
-		return \Response::forge($this->_theme->build('error', array('error' => $error)), $code);
+		return \Response::forge($this->theme->build('error', array('error' => $error)), $code);
 	}
 
 	protected function message($level = 'success', $message = null, $code = 200)
 	{
-		return \Response::forge($this->_theme->build('message', array('level' => $level, 'message' => $message)), $code);
+		return \Response::forge($this->theme->build('message', array('level' => $level, 'message' => $message)), $code);
 	}
 
 
 	public function action_theme($theme = 'default', $style = '')
 	{
-		$this->_theme->set_title(__('Changing Theme Settings'));
+		$this->theme->set_title(__('Changing Theme Settings'));
 
-		if (!in_array($theme, $this->_theme->get_available_themes()))
+		if (!in_array($theme, $this->theme->get_available_themes()))
 		{
 			$theme = 'default';
 		}
 
 		\Cookie::set('theme', $theme, 31536000, '/');
 
-		if ($style !== '' && in_array($style, $this->_theme->get_available_styles($theme)))
+		if ($style !== '' && in_array($style, $this->theme->get_available_styles($theme)))
 		{
 			\Cookie::set('theme_' . $theme . '_style', $style, 31536000, '/');
 		}
 
 		if (\Input::referrer())
 		{
-			$this->_theme->bind('url', \Input::referrer());
+			$this->theme->bind('url', \Input::referrer());
 		}
 		else
 		{
-			$this->_theme->bind('url', \Uri::base());
+			$this->theme->bind('url', \Uri::base());
 		}
 
-		$this->_theme->set_layout('redirect');
-		return \Response::forge($this->_theme->build('redirection'));
+		$this->theme->set_layout('redirect');
+		return \Response::forge($this->theme->build('redirection'));
 	}
 
 
 	public function action_language($theme = 'en_EN')
 	{
-		$this->_theme->set_title(__('Changing Language'));
+		$this->theme->set_title(__('Changing Language'));
 
 		\Cookie::set('language', $theme, 31536000);
 
 		if (\Input::referrer())
 		{
-			$this->_theme->bind('url', \Input::referrer());
+			$this->theme->bind('url', \Input::referrer());
 		}
 		else
 		{
-			$this->_theme->bind('url', \Uri::base());
+			$this->theme->bind('url', \Uri::base());
 		}
 
-		$this->_theme->set_layout('redirect');
-		return \Response::forge($this->_theme->build('redirection'));
+		$this->theme->set_layout('redirect');
+		return \Response::forge($this->theme->build('redirection'));
 	}
 
 
@@ -293,11 +323,11 @@ class Chan extends \Controller
 					break;
 			}
 
-			$this->_theme->set_title(__('Page').' '.$page);
-			$this->_theme->bind('section_title', $order_string.' - '.__('Page').' '.$page);
+			$this->theme->set_title(__('Page').' '.$page);
+			$this->theme->bind('section_title', $order_string.' - '.__('Page').' '.$page);
 		}
 
-		$this->_theme->bind(array(
+		$this->theme->bind(array(
 			'is_page' => true,
 			'board' => $board,
 			'posts_per_thread' => $options['per_thread'] - 1,
@@ -311,12 +341,12 @@ class Chan extends \Controller
 
 		if (!$this->_radix->archive)
 		{
-			$this->_theme->set_partial('tools_new_thread_box', 'tools_reply_box');
+			$this->theme->set_partial('tools_new_thread_box', 'tools_reply_box');
 		}
 
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::latest End');
-		return \Response::forge($this->_theme->build('board'));
+		return \Response::forge($this->theme->build('board'));
 	}
 
 
@@ -383,8 +413,8 @@ class Chan extends \Controller
 			return $this->error();
 		}
 
-		$this->_theme->set_title(__('Thread').' #'.$num);
-		$this->_theme->bind(array(
+		$this->theme->set_title(__('Thread').' #'.$num);
+		$this->theme->bind(array(
 			'thread_id' => $num,
 			'board' => $board,
 			'is_thread' => true,
@@ -395,7 +425,7 @@ class Chan extends \Controller
 			'thread_op_data' => $thread[$num]['op']
 		));
 
-		$backend_vars = $this->_theme->get_var('backend_vars');
+		$backend_vars = $this->theme->get_var('backend_vars');
 		$backend_vars['thread_id'] = $num;
 		$backend_vars['latest_timestamp'] = $latest_timestamp;
 		$backend_vars['latest_doc_id'] = $latest_doc_id;
@@ -406,16 +436,16 @@ class Chan extends \Controller
 			$backend_vars['last_limit'] = $options['last_limit'];
 		}
 
-		$this->_theme->bind('backend_vars', $backend_vars);
+		$this->theme->bind('backend_vars', $backend_vars);
 
 		if ( ! $thread_status['closed'])
 		{
-			$this->_theme->set_partial('tools_reply_box', 'tools_reply_box');
+			$this->theme->set_partial('tools_reply_box', 'tools_reply_box');
 		}
 
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::thread End');
-		return \Response::forge($this->_theme->build('board'));
+		return \Response::forge($this->theme->build('board'));
 	}
 
 
@@ -436,7 +466,7 @@ class Chan extends \Controller
 			return $this->error($e->getMessage());
 		}
 
-		$this->_theme->bind(array(
+		$this->theme->bind(array(
 			'board' => $board,
 			'pagination' => array(
 				'base_url' => \Uri::create(array($this->_radix->shortname, 'gallery')),
@@ -444,7 +474,7 @@ class Chan extends \Controller
 				'total' => $board->getPages()
 			)
 		));
-		return \Response::forge($this->_theme->build('gallery'));
+		return \Response::forge($this->theme->build('gallery'));
 	}
 
 
@@ -487,9 +517,9 @@ class Chan extends \Controller
 			$redirect .= '#'.$comment->num.($comment->subnum ? '_'.$comment->subnum :'');
 		}
 
-		$this->_theme->set_title(__('Redirecting'));
-		$this->_theme->set_layout('redirect');
-		return \Response::forge($this->_theme->build('redirection', array('url' => $redirect)));
+		$this->theme->set_title(__('Redirecting'));
+		$this->theme->set_layout('redirect');
+		return \Response::forge($this->theme->build('redirection', array('url' => $redirect)));
 	}
 
 
@@ -564,7 +594,7 @@ class Chan extends \Controller
 
 	public function radix_redirect($filename = null)
 	{
-		$this->_theme->set_layout('redirect');
+		$this->theme->set_layout('redirect');
 
 		$redirect  = \Uri::create(array($this->_radix->shortname));
 
@@ -574,7 +604,7 @@ class Chan extends \Controller
 			$redirect .= $filename.'.'.\Input::extension();
 		}
 
-		return \Response::forge($this->_theme->build('redirection', array('url' => $redirect)));
+		return \Response::forge($this->theme->build('redirection', array('url' => $redirect)));
 	}
 
 
@@ -585,15 +615,15 @@ class Chan extends \Controller
 
 	public function action_advanced_search()
 	{
-		$this->_theme->bind('search_structure', \Search::structure());
-		$this->_theme->bind('section_title', __('Advanced search'));
+		$this->theme->bind('search_structure', \Search::structure());
+		$this->theme->bind('section_title', __('Advanced search'));
 
 		if ($this->_radix !== null)
 		{
-			$this->_theme->bind('search', array('board' => array($this->_radix->shortname)));
+			$this->theme->bind('search', array('board' => array($this->_radix->shortname)));
 		}
 
-		return \Response::forge($this->_theme->build('advanced_search'));
+		return \Response::forge($this->theme->build('advanced_search'));
 	}
 
 
@@ -696,7 +726,7 @@ class Chan extends \Controller
 
 		$search = \Uri::uri_to_assoc(\Uri::segments(), 2, $modifiers);
 
-		$this->_theme->bind('search', $search);
+		$this->theme->bind('search', $search);
 
 		// latest searches system
 		if( ! is_array($cookie_array = @json_decode(\Cookie::get('search_latest_5'), true)))
@@ -737,7 +767,7 @@ class Chan extends \Controller
 		}
 
 		array_unshift($cookie_array, $search_opts);
-		$this->_theme->bind('latest_searches', $cookie_array);
+		$this->theme->bind('latest_searches', $cookie_array);
 		\Cookie::set('search_latest_5', json_encode($cookie_array), 60 * 60 * 24 * 30);
 
 		foreach ($search as $key => $value)
@@ -854,15 +884,15 @@ class Chan extends \Controller
 
 		if ($this->_radix)
 		{
-			$this->_theme->set_title($title);
+			$this->theme->set_title($title);
 		}
 		else
 		{
-			$this->_theme->set_title('Global Search &raquo; '.$title);
+			$this->theme->set_title('Global Search &raquo; '.$title);
 		}
 
-		$this->_theme->bind('section_title', $title);
-		$this->_theme->bind('board', $board);
+		$this->theme->bind('section_title', $title);
+		$this->theme->bind('board', $board);
 
 		$pagination = $search;
 		unset($pagination['page']);
@@ -889,20 +919,20 @@ class Chan extends \Controller
 		}
 
 		$pagination_arr[] = 'page';
-		$this->_theme->bind('pagination', array(
+		$this->theme->bind('pagination', array(
 				'base_url' => \Uri::create($pagination_arr),
 				'current_page' => $search['page'] ? : 1,
 				'total' => floor($board->get_count()/25+1),
 			));
 
-		$this->_theme->bind('modifiers', array(
+		$this->theme->bind('modifiers', array(
 			'post_show_board_name' => $this->_radix === null,
 			'post_show_view_button' => true
 		));
 
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::search End');
-		return \Response::forge($this->_theme->build('board'));
+		return \Response::forge($this->theme->build('board'));
 	}
 
 
@@ -962,7 +992,7 @@ class Chan extends \Controller
 			}
 		}
 
-		return \Response::forge($this->_theme->build('appeal', array('title' => $title)));
+		return \Response::forge($this->theme->build('appeal', array('title' => $title)));
 	}
 
 
@@ -1195,8 +1225,8 @@ class Chan extends \Controller
 		}
 		else
 		{
-			$this->_theme->set_layout('redirect');
-			return \Response::forge($this->_theme->build('redirection',
+			$this->theme->set_layout('redirect');
+			return \Response::forge($this->theme->build('redirection',
 				array(
 					'url' => \Uri::create(array($this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num)).'#'.$comment->num
 				)

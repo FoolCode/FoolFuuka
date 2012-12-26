@@ -18,7 +18,7 @@ if (\Auth::has_access('comment.reports'))
 	\Foolz\Foolfuuka\Model\Report::preload();
 }
 
-$theme = \Foolz\Foolframe\Model\Theme::forge('foolfuuka');
-$theme->set_module('foolz/foolfuuka');
-$theme->set_theme(\Input::get('theme', \Cookie::get('theme')) ? : 'default');
-$theme->set_layout('chan');
+$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
+$theme_instance->addDir('foolz', VENDPATH.'foolz/foolfuuka/'.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
+$theme_instance->setBaseUrl(\Uri::base().'foolfuuka/');
+$theme_instance->setPublicDir(DOCROOT.'foolfuuka/');

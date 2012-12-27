@@ -703,7 +703,7 @@ class Radix
 			->execute();
 
 		// rename the directory and prevent directory collision
-		$base =	\Preferences::get('fu.boards.directory').'/'.$board->shortname;
+		$base =	\Preferences::get('fu.boards.directory').'/'.$this->shortname;
 		if (file_exists($base.'_removed'))
 		{
 			$incremented = \String::increment('_removed');
@@ -716,7 +716,7 @@ class Radix
 		}
 		else
 		{
-			$rename_to = \Preferences::get('fu.boards.directory').'/'.$board->shortname.'_removed';
+			$rename_to = \Preferences::get('fu.boards.directory').'/'.$this->shortname.'_removed';
 		}
 
 		rename($base, $rename_to);

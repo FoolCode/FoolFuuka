@@ -1,9 +1,7 @@
-<?php
-	foreach($theme->fallback_override('style.css', $theme->get_config('extends_css')) as $css)
-		echo '<link href="'.Uri::base().$css.'"rel="stylesheet" type="text/css" />';
-?>
-<script defer src="<?= Uri::base() . $theme->fallback_asset('plugins.js') ?>"></script>
-<script defer src="<?= Uri::base() . $theme->fallback_asset('board.js') ?>"></script>
+<link href="<?= $theme->getAssetManager()->getAssetLink('style.css') ?>"rel="stylesheet" type="text/css" />
+
+<script defer src="<?= $theme->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
+<script defer src="<?= $theme->getAssetManager()->getAssetLink('board.js') ?>"></script>
 <style>
 	[data-function=activateModeration] {
 		display:none !important;
@@ -18,7 +16,15 @@
 		<?php
 		foreach ($reports as $key => $report)
 		{
-			echo $report->getComment()->getFormatted();
+			// TODO clean up so we don't just edit stuff here
+			/** @var $r \Foolz\Foolfuuka\Model\Comment */
+			$r = $report->getComment();
+			$r->_theme = $theme;
+			echo $r->getFormatted([
+				'modifiers' => [
+					'post_show_board_name' => true,
+					'post_show_view_button' => true
+			]]);
 		}
 		?>
 	</article>

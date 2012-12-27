@@ -359,11 +359,11 @@ class Comment
 	}
 
 
-	public function getFormatted()
+	public function getFormatted($params = [])
 	{
 		if ($this->formatted === false)
 		{
-			$this->formatted = $this->buildComment();
+			$this->formatted = $this->buildComment($params);
 		}
 
 		return $this->formatted;
@@ -844,12 +844,13 @@ class Comment
 	 * @param object $post database row for the post
 	 * @return string the post box HTML with the selected theme
 	 */
-	public function buildComment()
+	public function buildComment($params = [])
 	{
 		$builder = $this->_theme->createBuilder();
 		$partial = $builder->createPartial('board_comment', 'board_comment');
 		$partial->getParamManager()
-			->setParam('p', $this);
+			->setParam('p', $this)
+			->setParams($params);
 
 		return $partial->build();
 	}

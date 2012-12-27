@@ -29,14 +29,15 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 	{
 		$this->_views['method_title'] = __('Reports');
 
-		$theme = \Theme::forge('foolfuuka');
-		$theme->set_module('foolz/foolfuuka');
-		$theme->set_theme('default');
-		$theme->set_layout('chan');
-		$theme->bind('modifiers', array(
-			'post_show_board_name' => true,
-			'post_show_view_button' => true
-		));
+		// this has already been forged in the foolfuuka bootstrap
+		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
+
+		$theme_name = 'foolz/foolfuuka-theme-foolfuuka';
+		$this->theme = $theme = $theme_instance->get('foolz', 'foolz/foolfuuka-theme-foolfuuka');
+
+		/*
+		$theme->bind();
+		*/
 
 		$reports = \Report::getAll();
 
@@ -63,7 +64,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 		}
 
 		// KEEP THIS IN SYNC WITH THE ONE IN THE CHAN CONTROLLER
-		$backend_vars = array(
+		$backend_vars = [
 			'user_name' => $name,
 			'user_email' => $email,
 			'user_pass' => $pass,
@@ -74,27 +75,28 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 			'api_url'   => \Uri::base(),
 			'cookie_domain' => \Foolz\Config\Config::get('foolz/foolframe', 'package', 'config.cookie_domain'),
 			'cookie_prefix' => \Foolz\Config\Config::get('foolz/foolframe', 'package', 'config.cookie_prefix'),
-			'selected_theme' => $theme->get_selected_theme(),
+			'selected_theme' => $theme_name,
 			'csrf_token_key' => \Config::get('security.csrf_token_key'),
-			'images' => array(
-				'banned_image' => \Uri::base().$theme->fallback_asset('images/banned-image.png'),
+			'images' => [
+				'banned_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
 				'banned_image_width' => 150,
 				'banned_image_height' => 150,
-				'missing_image' => \Uri::base().$theme->fallback_asset('images/missing-image.jpg'),
+				'missing_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/missing-image.jpg'),
 				'missing_image_width' => 150,
 				'missing_image_height' => 150,
-			),
-			'gettext' => array(
+			],
+			'gettext' => [
 				'submit_state' => __('Submitting'),
 				'thread_is_real_time' => __('This thread is being displayed in real time.'),
 				'update_now' => __('Update now')
-			)
-		);
+			]
+		];
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/manage', array(
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/manage', [
 			'backend_vars' => $backend_vars,
-			'theme' => $theme, 'reports' => $reports
-		));
+			'theme' => $theme,
+			'reports' => $reports
+		]);
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 

@@ -262,7 +262,7 @@ class Report
 	public static function getAll()
 	{
 		static::preload();
-		
+
 		return static::fromArrayDeep(static::$preloaded);
 	}
 
@@ -341,7 +341,10 @@ class Report
 		{
 			$new->ip_reporter = \Input::ip_decimal();
 		}
-		$new->ip_reporter = $ip_reporter;
+		else
+		{
+			$new->ip_reporter = $ip_reporter;
+		}
 
 		// check how many reports have been sent in the last hour to prevent spam
 		$row = DC::qb()
@@ -407,7 +410,7 @@ class Report
 			// custom "get the first doc_id with the media"
 			$doc_id_res = DC::qb()
 				->select('doc_id')
-				->from(\Radix::getById($this->board_id)->getTable())
+				->from(\Radix::getById($this->board_id)->getTable(), 'a')
 				->where('media_id = :media_id')
 				->orderBy('timestamp', 'desc')
 				->setParameter('media_id', $this->media_id)

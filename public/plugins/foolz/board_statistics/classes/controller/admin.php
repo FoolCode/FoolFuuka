@@ -1,11 +1,10 @@
 <?php
 
-namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Controller;
+namespace Foolz\Foolframe\Controller\Admin\Plugins;
 
-if (!defined('DOCROOT'))
-	exit('No direct script access allowed');
+use \Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
 
-class Chan extends \Controller_Admin
+class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 {
 	public function before()
 	{
@@ -43,7 +42,7 @@ class Chan extends \Controller_Admin
 			),
 		);
 
-		foreach(Board_Statistics::get_stats() as $key => $stat)
+		foreach(BS::get_stats() as $key => $stat)
 		{
 			$arr['fu.plugins.board_statistics.enabled']['checkboxes'][] = array(
 				'type' => 'checkbox',
@@ -67,7 +66,7 @@ class Chan extends \Controller_Admin
 		\Preferences::submit_auto($data['form']);
 
 		// create a form
-		$this->_views["main_content_view"] = \View::forge("admin/form_creator", $data);
-		return \Response::forge(\View::forge("admin/default", $this->_views));
+		$this->_views["main_content_view"] = \View::forge("foolz/foolframe::admin/form_creator", $data);
+		return \Response::forge(\View::forge("foolz/foolframe::admin/default", $this->_views));
 	}
 }

@@ -1,13 +1,12 @@
 <?php
 
-if (!defined('DOCROOT'))
-	exit('No direct script access allowed');
+use Foolz\Foolframe\Model\DoctrineConnession as DC;
 
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/board_statistics')
 	->setCall(function($result) {
 		\Autoloader::add_classes(array(
-			'Foolz\Foolfuuka\Plugins\BoardStatistics\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
-			'Foolz\Foolfuuka\Plugins\BoardStatistics\Controller\Admin' => __DIR__.'/classes/controller/admin.php',
+			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
+			'Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Controller\Chan' => __DIR__.'/classes/controller/chan.php',
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Task' => __DIR__.'/classes/tasks/task.php'
 		));
@@ -53,7 +52,8 @@ if (!defined('DOCROOT'))
 				if ($result->getParam('controller') === 'Foolz\Foolfuuka\Controller\Chan')
 				{
 					$method_params = $result->getParam('method_params');
-					if (isset($method_params[1]) && $method_params[1] === 'statistics')
+
+					if (isset($method_params[0]) && $method_params[0] === 'statistics')
 					{
 						$result->setParam('controller', 'Foolz\Foolfuuka\Plugins\BoardStatistics\Controller\Chan');
 						$result->set(true);

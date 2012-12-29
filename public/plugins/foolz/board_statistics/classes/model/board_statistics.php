@@ -1,11 +1,8 @@
 <?php
 
-namespace Foolfuuka\Plugins\Board_Statistics;
+namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Model;
 
-if (!defined('DOCROOT'))
-	exit('No direct script access allowed');
-
-class Board_Statistics extends \Plugins
+class BoardStatistics
 {
 	public static function get_stats()
 	{

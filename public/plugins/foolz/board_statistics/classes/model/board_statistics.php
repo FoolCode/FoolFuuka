@@ -184,7 +184,7 @@ class BoardStatistics
 		// this variable is going to be a serialized array
 		$enabled = \Preferences::get('fu.plugins.board_statistics.enabled');
 
-		if(!$enabled)
+		if( ! $enabled)
 		{
 			return array();
 		}
@@ -193,7 +193,7 @@ class BoardStatistics
 
 		foreach ($stats as $k => $s)
 		{
-			if (!$enabled[$k])
+			if ( ! $enabled[$k])
 			{
 				unset($stats[$k]);
 			}
@@ -222,8 +222,8 @@ class BoardStatistics
 					->select('*')
 					->from(DC::p('plugin_fu_board_statistics'), 'bs')
 					->where('board_id = :board_id')
-					->where('name = :name')
-					->setParameters([':board_id' => $selected_board->ud, ':name' => $stat])
+					->andWhere('name = :name')
+					->setParameters([':board_id' => $selected_board->id, ':name' => $stat])
 					->setFirstResult(0)
 					->setMaxResults(1)
 					->execute()
@@ -236,7 +236,7 @@ class BoardStatistics
 
 			}
 
-			return array('info' => $available[$stat], 'data' => $result[0]['data'], 'timestamp' => $result[0]->timestamp);
+			return array('info' => $available[$stat], 'data' => $result[0]['data'], 'timestamp' => $result[0]['timestamp']);
 		}
 		return false;
 	}
@@ -248,7 +248,7 @@ class BoardStatistics
 			->select('*')
 			->from(DC::p('plugin_fu_board_statistics'), 'bs')
 			->where('board_id = :board_id')
-			->where('name = :name')
+			->andWhere('name = :name')
 			->setParameters([':board_id' => $board_id, ':name' => $name])
 			->execute()
 			->fetchAll();
@@ -265,7 +265,7 @@ class BoardStatistics
 			->select('COUNT(*) as count')
 			->from(DC::p('plugin_fu_board_statistics'), 'bs')
 			->where('board_id = :board_id')
-			->where('name = :name')
+			->andWhere('name = :name')
 			->setParameters([':board_id' => $board_id, ':name' => $name])
 			->execute()
 			->fetch()['count'];
@@ -285,10 +285,15 @@ class BoardStatistics
 			DC::qb()
 				->update(DC::p('plugin_fu_board_statistics'))
 				->where('board_id = :board_id')
-				->where('name = :name')
-				->setParameters([':board_id' => $board_id, ':name' => $name])
-				->set('timestamp', $timestamp)
-				->set('data', json_encode($data))
+				->andWhere('name = :name')
+				->set('timestamp', ':timestamp')
+				->set('data', ':data')
+				->setParameters([
+					':board_id' => $board_id,
+					':name' => $name,
+					':timestamp' => $timestamp,
+					':data' => json_encode($data)
+				])
 				->execute();
 		}
 	}
@@ -344,7 +349,7 @@ class BoardStatistics
 			')
 			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
 			->where('timestamp > '.(time() - 86400))
-			->where('subnum <> 0')
+			->andWhere('subnum <> 0')
 			->groupBy('time')
 			->orderBy('time')
 			->execute()
@@ -377,7 +382,7 @@ class BoardStatistics
 			->from($board->getTable( '_images'), 'bi')
 			->orderBy('total', 'desc')
 			->setFirstResult(0)
-			->limit(200)
+			->setMaxResults(200)
 			->execute()
 			->fetchAll();
 	}
@@ -450,7 +455,7 @@ class BoardStatistics
 			->select('COUNT(timestamp), COUNT(timestamp)/60')
 			->from($board->getTable(), 'b')
 			->where('timestamp > '.(time() - 3600))
-			->where('subnum <> 0')
+			->andWhere('subnum <> 0')
 			->execute()
 			->fetchAll();
 	}
@@ -476,7 +481,7 @@ class BoardStatistics
 			->select('name, trip, MAX(timestamp), num, subnum')
 			->from($board->getTable(), 'b')
 			->where('poster_ip <> 0')
-			->where('timestamp > '.(time() - 3600))
+			->andWhere('timestamp > '.(time() - 3600))
 			->groupBy('name')
 			->addGroupBy('trip')
 			->orderBy('MAX(timestamp)', 'desc')

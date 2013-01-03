@@ -1,6 +1,6 @@
 <?php
 
-namespace Foolfuuka\Tasks;
+namespace Foolz\Foolfuuka\Task;
 
 class Fool
 {

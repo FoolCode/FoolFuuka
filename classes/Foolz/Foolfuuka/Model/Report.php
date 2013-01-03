@@ -3,6 +3,7 @@
 namespace Foolz\Foolfuuka\Model;
 
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use \Foolz\Cache\Cache;
 
 /**
  * Generic exception for Report
@@ -183,9 +184,9 @@ class Report
 
 		try
 		{
-			static::$preloaded = \Cache::get('foolfuuka.model.report.preload.preloaded');
+			static::$preloaded = Cache::item('foolfuuka.model.report.preload.preloaded')->get();
 		}
-		catch (\CacheNotFoundException $e)
+		catch (\OutOfBoundsException $e)
 		{
 			static::$preloaded = DC::qb()
 				->select('*')
@@ -193,7 +194,7 @@ class Report
 				->execute()
 				->fetchAll();
 
-			\Cache::set('foolfuuka.model.report.preload.preloaded', static::$preloaded, 1800);
+			Cache::item('foolfuuka.model.report.preload.preloaded')->set(static::$preloaded, 1800);
 		}
 	}
 
@@ -203,7 +204,7 @@ class Report
 	public static function p_clearCache()
 	{
 		static::$preloaded = null;
-		\Cache::delete('foolfuuka.model.report.preload.preloaded');
+		Cache::item('foolfuuka.model.report.preload.preloaded')->delete();
 	}
 
 	/**

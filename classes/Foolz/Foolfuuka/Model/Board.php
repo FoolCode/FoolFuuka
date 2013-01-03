@@ -3,6 +3,7 @@
 namespace Foolz\Foolfuuka\Model;
 
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use \Foolz\Cache\Cache;
 
 class BoardException extends \Exception {}
 class BoardThreadNotFoundException extends BoardException {}
@@ -519,10 +520,10 @@ class Board
 
 		try
 		{
-			$this->total_count = \Cache::get('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$type_cache);
+			$this->total_count = Cache::item('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$type_cache)->get();
 			return $this;
 		}
-		catch(\CacheNotFoundException $e)
+		catch(\OutOfBoundsException $e)
 		{
 			switch ($order)
 			{
@@ -547,7 +548,7 @@ class Board
 				->fetch();
 
 			$this->total_count = $result['threads'];
-			\Cache::set('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$type_cache, $this->total_count, 300);
+			Cache::item('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$type_cache)->set($this->total_count, 300);
 		}
 
 		\Profiler::mark_memory($this, 'Board $this');
@@ -640,9 +641,9 @@ class Board
 
 		try
 		{
-			$this->total_count = \Cache::get('Foolz_Foolfuuka_Model_Board.getThreadsCount.result');
+			$this->total_count = Cache::item('Foolz_Foolfuuka_Model_Board.getThreadsCount.result')->get();
 		}
-		catch (\CacheNotFoundException $e)
+		catch (\OutOfBoundsException $e)
 		{
 			$result = DC::qb()
 				->select('COUNT(thread_num) AS threads')
@@ -651,7 +652,7 @@ class Board
 				->fetch();
 
 			$this->total_count = $result['threads'];
-			\Cache::set('Foolz_Foolfuuka_Model_Board.getThreadsCount.result', $this->total_count, 300);
+			Cache::item('Foolz_Foolfuuka_Model_Board.getThreadsCount.result')->set($this->total_count, 300);
 		}
 
 		return $this;

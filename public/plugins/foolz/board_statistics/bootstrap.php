@@ -8,7 +8,7 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
 			'Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
 			'Foolz\Foolfuuka\Controller\Chan\BoardStatistics' => __DIR__.'/classes/controller/chan.php',
-			'Foolz\Foolfuuka\Plugins\BoardStatistics\Task' => __DIR__.'/classes/tasks/task.php'
+			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task' => __DIR__.'/classes/tasks/task.php'
 		));
 
 		// don't add the admin panels if the user is not an admin
@@ -29,10 +29,10 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 				});
 
 			\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.call_help.board_statistics')
-				->setCall('Foolfuuka\\Plugins\\Board_Statistics\\Task::cli_board_statistics_help');
+				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cli_board_statistics_help');
 
 			\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.call.board_statistics')
-				->setCall('Foolfuuka\\Plugins\\Board_Statistics\\Task::cli_board_statistics');
+				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cli_board_statistics');
 		}
 
 		\Foolz\Plugin\Event::forge('ff.themes.generic_top_nav_buttons')

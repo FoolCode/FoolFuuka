@@ -1,9 +1,9 @@
 <?php
 
-namespace Foolfuuka\Plugins\Board_Statistics;
+namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Model;
 
-if (!defined('DOCROOT'))
-	exit('No direct script access allowed');
+use \Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 
 class Task
 {
@@ -46,17 +46,17 @@ class Task
 	{
 		$boards = \Radix::getAll();
 
-		$available = Board_Statistics::get_available_stats();
+		$available = BS::get_available_stats();
 
 		while(true)
 		{
 			// Obtain all of the statistics already stored on the database to check for update frequency.
-			$stats = \DB::select('board_id', 'name', 'timestamp')
-				->from('plugin_fu_board_statistics')
-				->order_by('timestamp', 'desc')
-				->as_object()
+			$stats = DC::qb()
+				->select('board_id, name, timestamp')
+				->from(DC::p('plugin_fu_board_statistics'), 'bs')
+				->orderBy('timestamp', 'desc')
 				->execute()
-				->as_array();
+				->fetchAll();
 
 			// Obtain the list of all statistics enabled.
 			$avail = array();
@@ -71,7 +71,7 @@ class Task
 
 			foreach ($boards as $board)
 			{
-				if (!is_null($shortname) && $shortname != $board->shortname)
+				if ( ! is_null($shortname) && $shortname != $board->shortname)
 				{
 					continue;
 				}
@@ -87,7 +87,7 @@ class Task
 					foreach ($stats as $r)
 					{
 						// Determine if the statistics already exists or that the information is outdated.
-						if ($r->board_id == $board->id && $r->name == $k)
+						if ($r['board_id'] == $board->id && $r['name'] == $k)
 						{
 							// This statistics report has run once already.
 							$found = TRUE;
@@ -99,7 +99,7 @@ class Task
 							}
 
 							// This statistics report has not reached its frequency EOL.
-							if (time() - strtotime($r->timestamp) <= $a['frequency'])
+							if (time() - strtotime($r['timestamp']) <= $a['frequency'])
 							{
 								$skip = TRUE;
 								continue;
@@ -111,7 +111,7 @@ class Task
 					// racing conditions with our cron.
 					if ($found === FALSE)
 					{
-						Board_Statistics::save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
+						BS::save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
 					}
 
 					// We were able to obtain a LOCK on the statistics report and has already reached the
@@ -120,16 +120,16 @@ class Task
 					{
 						\Cli::write('* Processing...');
 						$process = 'process_' . $k;
-						$result = Board_Statistics::$process($board);
+						$result = BS::$process($board);
 
 						// This statistics report generates a graph via GNUPLOT.
-						if (isset($available[$k]['gnuplot']) && is_array($result) && !empty($result))
+						if (isset($available[$k]['gnuplot']) && is_array($result) && ! empty($result))
 						{
-							Board_Statistics::graph_gnuplot($board->shortname, $k, $result);
+							BS::graph_gnuplot($board->shortname, $k, $result);
 						}
 
 						// Save the statistics report in a JSON array.
-						Board_Statistics::save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
+						BS::save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
 					}
 				}
 			}

@@ -4,6 +4,7 @@ namespace Foolz\Foolfuuka\Model;
 
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 use \Foolz\Config\Config;
+use \Foolz\Cache\Cache;
 
 class Radix
 {
@@ -463,8 +464,8 @@ class Radix
 	 */
 	public static function clearCache()
 	{
-		\Cache::delete('fu.model.radix.preload');
-		\Cache::delete('fu.model.radix.load_preferences');
+		Cache::item('fu.model.radix.preload')->delete();
+		Cache::item('fu.model.radix.load_preferences')->delete();
 	}
 
 
@@ -807,9 +808,9 @@ class Radix
 
 		try
 		{
-			$result = \Cache::get('fu.model.radix.preload');
+			$result = Cache::item('fu.model.radix.preload')->get();
 		}
-		catch (\CacheNotFoundException $e)
+		catch (\OutOfBoundsException $e)
 		{
 			$result = DC::qb()
 				->select('*')
@@ -818,7 +819,7 @@ class Radix
 				->execute()
 				->fetchAll();
 
-			\Cache::set('fu.model.radix.preload', $result, 900);
+			Cache::item('fu.model.radix.preload')->set($result, 900);
 		}
 
 		if ( ! is_array($result) || empty($result))
@@ -871,9 +872,9 @@ class Radix
 		\Profiler::mark('Radix::load_preferences Start');
 		try
 		{
-			$preferences = \Cache::get('fu.model.radix.load_preferences');
+			$preferences = Cache::item('fu.model.radix.load_preferences')->get();
 		}
-		catch (\CacheNotFoundException $e)
+		catch (\OutOfBoundsException $e)
 		{
 			$preferences = DC::qb()
 				->select('*')
@@ -881,7 +882,7 @@ class Radix
 				->execute()
 				->fetchAll();
 
-			\Cache::set('fu.model.radix.load_preferences', $preferences, 900);
+			Cache::item('fu.model.radix.load_preferences')->set($preferences, 900);
 		}
 
 		foreach ($preferences as $value)

@@ -52,7 +52,7 @@ class Task
 		{
 			// Obtain all of the statistics already stored on the database to check for update frequency.
 			$stats = \DB::select('board_id', 'name', 'timestamp')
-				->from('plugin_fu-board-statistics')
+				->from('plugin_fu_board_statistics')
 				->order_by('timestamp', 'desc')
 				->as_object()
 				->execute()
@@ -102,12 +102,6 @@ class Task
 							if (time() - strtotime($r->timestamp) <= $a['frequency'])
 							{
 								$skip = TRUE;
-								continue;
-							}
-
-							// This statistics report has another process locked.
-							if ( ! Board_Statistics::lock_stat($r->board_id, $k, $r->timestamp))
-							{
 								continue;
 							}
 							break;

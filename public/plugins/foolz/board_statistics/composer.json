@@ -1,6 +1,6 @@
 {
-	"name": "foolz/board_statistics",
-	"type": "foolz-plugin",
+	"name": "foolz/foolfuuka-plugin-board-statistics",
+	"type": "foolz-foolfuuka-plugin",
 	"description": "Statistics for the boards, to keep live with a php daemon.",
 	"keywords": ["fake", "mock"],
 	"homepage": "http://www.foolz.us",

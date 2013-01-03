@@ -1,31 +1,25 @@
 <?php
 
-namespace Foolfuuka\Plugins\Board_Statistics;
+namespace Foolz\Foolfuuka\Controller\Chan;
 
-if (!defined('DOCROOT'))
-	exit('No direct script access allowed');
+use \Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
 
-class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_Chan
+class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 {
 	/**
 	 * @param null $report
 	 */
-	public function radix_statistics($report = NULL)
+	public function radix_statistics($report = null)
 	{
 		// Load Statistics Model
 
 		if (is_null($report))
 		{
-			$stats = Board_Statistics::get_available_stats();
+			$stats = BS::get_available_stats();
 
 			// Set template variables required to build the HTML.
-			$this->_theme->set_title($this->_radix->formatted_title . ' &raquo; ' . __('Statistics'));
-			$this->_theme->bind(array(
-				'section_title' => __('Statistics'),
-				'is_statistics' => TRUE,
-				'is_statistics_list' => TRUE,
-				'info' => $stats
-			));
+			$this->builder->getProps()->addTitle(__('Statistics'));
+			$this->param_manager->setParam('section_title', __('Statistics'));
 
 			ob_start();
 			?>
@@ -44,20 +38,22 @@ class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_C
 
 			<?php
 			$string = ob_get_clean();
-			return \Response::forge($this->_theme->build('plugin', array('content' => $string)));
+
+			$partial = $this->builder->createPartial('body', 'plugin');
+			$partial->getParamManager()->setParam('content', $string);
+
+			return \Response::forge($this->builder->build());
 		}
 		else
 		{
-			$stats = Board_Statistics::check_available_stats($report, $this->_radix);
+			$stats = BS::check_available_stats($report, $this->_radix);
 
 			if (!is_array($stats))
 			{
 				return $this->error(__('Statistic currently not available.'));
 			}
 
-			// Set template variables required to build the HTML.
-			$this->_theme->set_title($this->_radix->formatted_title . ' &raquo; '
-				. __('Statistics') . ': ' . $stats['info']['name']);
+			$this->builder->getProps()->addTitle(__('Statistics') . ': ' . $stats['info']['name']);
 
 			if (isset($stats['info']['frequency']))
 			{
@@ -95,11 +91,7 @@ class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_C
 				$section_title = sprintf(__('Statistics: %s'), $stats['info']['name']);
 			}
 
-			$this->_theme->bind(array(
-				'section_title' => $section_title,
-				'is_statistics' => TRUE,
-				'is_statistics_list' => TRUE,
-			));
+			$this->param_manager->setParam('section_title', $section_title);
 
 			$data = $stats['data'];
 			$info = $stats['info'];
@@ -112,7 +104,10 @@ class Controller_Plugin_Fu_Board_Statistics_Chan extends \Foolfuuka\Controller_C
 			</div>
 			<?php
 			$string = ob_get_clean();
-			return \Response::forge($this->_theme->build('plugin', array('content' => $string)));
+			$partial = $this->builder->createPartial('body', 'plugin');
+			$partial->getParamManager()->setParam('content', $string);
+
+			return \Response::forge($this->builder->build());
 		}
 	}
 }

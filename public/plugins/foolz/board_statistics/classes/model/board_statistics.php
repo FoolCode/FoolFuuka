@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Model;
 
+use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+
 class BoardStatistics
 {
 	public static function get_stats()
@@ -216,24 +218,25 @@ class BoardStatistics
 			}
 			else
 			{
-				$result = \DB::select()
-					->from('plugin_fu-board-statistics')
-					->where('board_id', '=', $selected_board->id)
-					->where('name', '=', $stat)
-					->offset(0)
-					->limit(1)
-					->as_object()
+				$result = DC::qb()
+					->select('*')
+					->from(DC::p('plugin_fu_board_statistics'), 'bs')
+					->where('board_id = :board_id')
+					->where('name = :name')
+					->setParameters([':board_id' => $selected_board->ud, ':name' => $stat])
+					->setFirstResult(0)
+					->setMaxResults(1)
 					->execute()
-					->as_array();
+					->fetchAll();
 
-				if (count($result) != 1)
+				if (count($result) !== 1)
 				{
 					return false;
 				}
 
 			}
 
-			return array('info' => $available[$stat], 'data' => $result[0]->data, 'timestamp' => $result[0]->timestamp);
+			return array('info' => $available[$stat], 'data' => $result[0]['data'], 'timestamp' => $result[0]->timestamp);
 		}
 		return false;
 	}
@@ -241,69 +244,51 @@ class BoardStatistics
 
 	public static function get_stat($board_id, $name)
 	{
-
-		$stat = \DB::select()
-			->from('plugin_fu-board-statistics')
-			->where('board_id', '=', $board_id)
-			->where('name', '=', $name)
-			->as_object()
-			->execute();
+		$stat = DC::qb()
+			->select('*')
+			->from(DC::p('plugin_fu_board_statistics'), 'bs')
+			->where('board_id = :board_id')
+			->where('name = :name')
+			->setParameters([':board_id' => $board_id, ':name' => $name])
+			->execute()
+			->fetchAll();
 
 		if ( ! count($stat))
 			return false;
 
-		return $stat->current();
+		return $stat[0];
 	}
-
-
-	/**
-	 * To avoid really dangerous racing conditions, turn up the timer before starting the update
-	 *
-	 * @param int  $board_id
-	 * @param type $name
-	 * @param date $temp_timestamp
-	 *
-	 * @return boolean
-	 */
-	public static function lock_stat($board_id, $name, $temp_timestamp)
-	{
-		// again, to avoid racing conditions, let's also check that the timestamp hasn't been changed
-		$affected = \DB::update('plugin_fu-board-statistics')
-			->value('timestamp', date('Y-m-d H:i:s', time() + 600))
-			->where('board_id', '=', $board_id)
-			->where('name', '=', $name)
-			->where('timestamp', '=', $temp_timestamp)
-			->execute(); // hopefully 10 minutes is enough for everything
-
-		if ($affected != 1)
-			return false;
-
-		return true;
-	}
-
 
 	public static function save_stat($board_id, $name, $timestamp, $data = '')
 	{
-		$result = \DB::select(\DB::expr('COUNT(*) as count'))
-			->from('plugin_fu-board-statistics')
-			->where('board_id', '=', $board_id)
-			->where('name', '=', $name)
+		$count = DC::qb()
+			->select('COUNT(*) as count')
+			->from(DC::p('plugin_fu_board_statistics'), 'bs')
+			->where('board_id = :board_id')
+			->where('name = :name')
+			->setParameters([':board_id' => $board_id, ':name' => $name])
 			->execute()
-			->current();
+			->fetch()['count'];
 
-		if ( ! $result['count'])
+		if ( ! $count)
 		{
-			\DB::insert('plugin_fu-board-statistics')
-				->set(array('board_id' => $board_id, 'name' => $name,
-					'timestamp' => $timestamp, 'data' =>json_encode($data)))
-				->execute();
+			DC::forge()
+				->insert(DC::p('plugin_fu_board_statistics'), [
+					'board_id' => $board_id,
+					'name' => $name,
+					'timestamp' => $timestamp,
+					'data' =>json_encode($data)
+				]);
 		}
 		else
 		{
-			\DB::update('plugin_fu-board-statistics')
-				->where('board_id', '=', $board_id)
-				->where('name', '=', $name)
-				->set(array('timestamp' => $timestamp, 'data' =>json_encode($data)))
+			DC::qb()
+				->update(DC::p('plugin_fu_board_statistics'))
+				->where('board_id = :board_id')
+				->where('name = :name')
+				->setParameters([':board_id' => $board_id, ':name' => $name])
+				->set('timestamp', $timestamp)
+				->set('data', json_encode($data))
 				->execute();
 		}
 	}
@@ -311,170 +296,192 @@ class BoardStatistics
 
 	public static function process_availability($board)
 	{
-		return \DB::select(\DB::expr('
+		return DC::qb()
+			->select('
 				name, trip, COUNT(num) AS posts,
 				AVG(timestamp%86400) AS avg1,
 				STDDEV_POP(timestamp%86400) AS std1,
 				(AVG((timestamp+43200)%86400)+43200)%86400 avg2,
 				STDDEV_POP((timestamp+43200)%86400) AS std2
-			'))
-			->from(\DB::expr($board->getTable().' FORCE INDEX(timestamp_index)'))
-			->where('timestamp', '>', time() - 2592000)
-			->group_by('name', 'trip')
-			->having(\DB::expr('count(*)'), '>', 4)
-			->order_by('name')
-			->order_by('trip')
+			')
+			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
+			->where('timestamp > '.(time() - 2592000))
+			->groupBy('name')
+			->addGroupBy('trip')
+			->having('count(*) > 4')
+			->orderBy('name')
+			->addOrderBy('trip')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_daily_activity($board)
 	{
-		return \DB::select(\DB::expr('(FLOOR(timestamp/300)%288)*300 AS time'),
-				\DB::expr('COUNT(timestamp)'),
-				\DB::expr('COUNT(media_hash)'),
-				\DB::expr('COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)'))
-			->from(\DB::expr($board->getTable().' USE INDEX(timestamp_index)'))
-			->where('timestamp', '>', time() - 86400)
-			->group_by(\DB::expr('FLOOR(timestamp/300)%288'))
-			->order_by(\DB::expr('FLOOR(timestamp/300)%288'))
+		return DC::qb()
+			->select('
+				(FLOOR(timestamp/300)%288)*300 AS time,
+				COUNT(timestamp),
+				COUNT(media_hash),
+				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
+			')
+			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
+			->where('timestamp > '.(time() - 86400))
+			->groupBy('time')
+			->orderBy('time')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_daily_activity_archive($board)
 	{
-		return \DB::select(\DB::expr('((FLOOR(timestamp/3600)%24)*3600)+1800 AS time'),
-				\DB::expr('COUNT(timestamp)'),
-				\DB::expr('COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)'))
-			->from(\DB::expr($board->getTable().' USE INDEX(timestamp_index)'))
-			->where('timestamp', '>', time() - 86400)
-			->where('subnum', '<>', 0)
-			->group_by(\DB::expr('FLOOR(timestamp/3600)%24'))
-			->order_by(\DB::expr('FLOOR(timestamp/3600)%24'))
+		return DC::qb()
+			->select('
+				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time,
+				COUNT(timestamp),
+				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
+			')
+			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
+			->where('timestamp > '.(time() - 86400))
+			->where('subnum <> 0')
+			->groupBy('time')
+			->orderBy('time')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_daily_activity_hourly($board)
 	{
-		return \DB::select(\DB::expr('((FLOOR(timestamp/3600)%24)*3600)+1800 AS time'),
-				\DB::expr('COUNT(timestamp)'),
-				\DB::expr('COUNT(media_hash)'),
-				\DB::expr('COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)'))
-			->from(\DB::expr($board->getTable().' USE INDEX(timestamp_index)'))
-			->where('timestamp', '>', time() - 86400)
-			->group_by(\DB::expr('FLOOR(timestamp/3600)%24'))
-			->order_by(\DB::expr('FLOOR(timestamp/3600)%24'))
+		return DC::qb()
+			->select('
+				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time,
+				COUNT(timestamp),
+				COUNT(media_hash),
+				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE NULL END)
+			')
+			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
+			->where('timestamp > '.(time() - 86400))
+			->groupBy('time')
+			->orderBy('time')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_image_reposts($board)
 	{
-		return \DB::select()
-			->from(\DB::expr($board->getTable( '_images')))
-			->order_by('total', 'desc')
-			->offset(0)
+		return DC::qb()
+			->select('*')
+			->from($board->getTable( '_images'), 'bi')
+			->orderBy('total', 'desc')
+			->setFirstResult(0)
 			->limit(200)
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_karma($board)
 	{
-		return \DB::select(\DB::expr('day AS time'), 'posts', 'images', 'sage')
-			->from(\DB::expr($board->getTable('_daily')))
-			->where('day', '>', \DB::expr('floor(('.time().'-31536000)/86400)*86400'))
-			->group_by('day')
-			->order_by('day')
+		return DC::qb()
+			->select('day AS time, posts, images, sage')
+			->from($board->getTable('_daily'), 'bd')
+			->where('day > '.floor((time() - 31536000) / 86400) * 86400)
+			->groupBy('day')
+			->orderBy('day')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_new_users($board)
 	{
-		return \DB::select('name', 'trip', 'firstseen', 'postcount')
-			->from(\DB::expr($board->getTable('_users')))
-			->where('postcount', '>', 30)
-			->order_by('firstseen', 'desc')
+		return DC::qb()
+			->select('name, trip, firstseen, postcount')
+			->from($board->getTable('_users'), 'bu')
+			->where('postcount > 30')
+			->orderBy('firstseen', 'desc')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_population($board)
 	{
-		return \DB::select(\DB::expr('day AS time'), 'trips', 'names', 'anons')
-			->from(\DB::expr($board->getTable('_daily')))
-			->where('day', '>', \DB::expr('floor(('.time().'-31536000)/86400)*86400'))
-			->group_by('day')
-			->order_by('day')
+		return DC::qb()
+			->select('day AS TIME, trips, names, anons')
+			->from($board->getTable('_daily'), 'bd')
+			->where('day > '.floor((time() - 31536000) / 86400) * 86400)
+			->groupBy('day')
+			->orderBy('day')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_post_count($board)
 	{
-		return \DB::select('name', 'trip', 'postcount')
-			->from(\DB::expr($board->getTable('_users')))
-			->order_by('postcount', 'desc')
-			->limit(512)
+		return DC::qb()
+			->select('name, trip, postcount')
+			->from($board->getTable('_users'), 'bu')
+			->orderBy('postcount', 'desc')
+			->setMaxResults(512)
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_post_rate($board)
 	{
-		return \DB::select(\DB::expr('COUNT(timestamp)'), \DB::expr('COUNT(timestamp)/60'))
-			->from(\DB::expr($board->getTable()))
-			->where('timestamp', '>', time() - 3600)
+		return DC::qb()
+			->select('COUNT(timestamp), COUNT(timestamp)/60')
+			->from($board->getTable(), 'b')
+			->where('timestamp > '.(time() - 3600))
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_post_rate_archive($board)
 	{
-		return \DB::select(\DB::expr('COUNT(timestamp)'), \DB::expr('COUNT(timestamp)/60'))
-			->from(\DB::expr($board->getTable()))
-			->where('timestamp', '>', time() - 3600)
-			->where('subnum', '<>', 0)
+		return DC::qb()
+			->select('COUNT(timestamp), COUNT(timestamp)/60')
+			->from($board->getTable(), 'b')
+			->where('timestamp > '.(time() - 3600))
+			->where('subnum <> 0')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_users_online($board)
 	{
-		return \DB::select('name', 'trip', \DB::expr('MAX(timestamp)'), 'num', 'subnum')
-			->from(\DB::expr($board->getTable()))
-			->where('timestamp', '>', time() - 1800)
-			->group_by('name', 'trip')
-			->order_by(\DB::expr('MAX(timestamp)'), 'desc')
+		return DC::qb()
+			->select('name, trip, MAX(timestamp), num, subnum')
+			->from($board->getTable(), 'b')
+			->where('timestamp > '.(time() - 1800))
+			->groupBy('name')
+			->addGroupBy('trip')
+			->orderBy('MAX(timestamp)', 'desc')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 
 	public static function process_users_online_internal($board)
 	{
-		return \DB::select('name', 'trip', \DB::expr('MAX(timestamp)'), 'num', 'subnum')
-			->from(\DB::expr($board->getTable()))
-			->where('poster_ip', '<>', 0)
-			->where('timestamp', '>', time() - 3600)
-			->group_by('name', 'trip')
-			->order_by(\DB::expr('MAX(timestamp)'), 'desc')
+		return DC::qb()
+			->select('name, trip, MAX(timestamp), num, subnum')
+			->from($board->getTable(), 'b')
+			->where('poster_ip <> 0')
+			->where('timestamp > '.(time() - 3600))
+			->groupBy('name')
+			->addGroupBy('trip')
+			->orderBy('MAX(timestamp)', 'desc')
 			->execute()
-			->as_array();
+			->fetchAll();
 	}
 
 

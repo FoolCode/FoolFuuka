@@ -60,31 +60,23 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 			})->setPriority(4);
 	});
 
-\Foolz\Plugin\Event::forge([
-	'Foolz\Plugin\Plugin::install.foolz/foolfuuka-plugin-board-statistics',
-	'Foolz\Plugin\Plugin::upgrade.foolz/foolfuuka-plugin-board-statistics'
-	])
+\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate.foolz/foolfuuka-plugin-board-statistics')
 	->setCall(function($result) {
-
-		\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate')
-			->setCall(function($result) {
-			die('here');
-				/* @var $schema \Doctrine\DBAL\Schema\Schema */
-				/* @var $table \Doctrine\DBAL\Schema\Table */
-				$schema = $result->getParam('schema');
-				$table = $schema->createTable(DC::p('plugin_fu_board_statistics'));
-				if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
-				{
-					$table->addOption('charset', 'utf8mb4');
-					$table->addOption('collate', 'utf8mb4_unicode_ci');
-				}
-				$table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
-				$table->addColumn('board_id', 'integer', ['unsigned' => true]);
-				$table->addColumn('name', 'string', ['length' => 32]);
-				$table->addColumn('timestamp', 'integer', ['unsigned' => true]);
-				$table->addColumn('data', 'text', ['length' => 65532]);
-				$table->setPrimaryKey(['id']);
-				$table->addUniqueIndex(['board_id', 'name'], 'board_id_name_index');
-				$table->addIndex(['timestamp'], 'timestamp_index');
-			});
+		/* @var $schema \Doctrine\DBAL\Schema\Schema */
+		/* @var $table \Doctrine\DBAL\Schema\Table */
+		$schema = $result->getParam('schema');
+		$table = $schema->createTable(DC::p('plugin_fu_board_statistics'));
+		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		{
+			$table->addOption('charset', 'utf8mb4');
+			$table->addOption('collate', 'utf8mb4_unicode_ci');
+		}
+		$table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+		$table->addColumn('board_id', 'integer', ['unsigned' => true]);
+		$table->addColumn('name', 'string', ['length' => 32]);
+		$table->addColumn('timestamp', 'integer', ['unsigned' => true]);
+		$table->addColumn('data', 'text', ['length' => 65532]);
+		$table->setPrimaryKey(['id']);
+		$table->addUniqueIndex(['board_id', 'name'], 'board_id_name_index');
+		$table->addIndex(['timestamp'], 'timestamp_index');
 	});

@@ -2,7 +2,7 @@
 
 use Foolz\Foolframe\Model\DoctrineConnection as DC;
 
-\Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/board_statistics')
+\Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
 	->setCall(function($result) {
 		\Autoloader::add_classes(array(
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
@@ -14,8 +14,6 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 		// don't add the admin panels if the user is not an admin
 		if (\Auth::has_access('maccess.admin'))
 		{
-			\Router::add('admin/plugins/board_statistics', 'plugin/fu/board_statistics/admin/board_statistics/manage');
-
 			\Plugins::register_sidebar_element('admin', 'plugins', array(
 				"content" => array("board_statistics/manage" => array("level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart'))
 			));
@@ -63,13 +61,14 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 	});
 
 \Foolz\Plugin\Event::forge([
-	'Foolz\Plugin\Plugin::install.foolz/board_statistics',
-	'Foolz\Plugin\Plugin::upgrade.foolz/board_statistics'
+	'Foolz\Plugin\Plugin::install.foolz/foolfuuka-plugin-board-statistics',
+	'Foolz\Plugin\Plugin::upgrade.foolz/foolfuuka-plugin-board-statistics'
 	])
 	->setCall(function($result) {
 
 		\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate')
 			->setCall(function($result) {
+			die('here');
 				/* @var $schema \Doctrine\DBAL\Schema\Schema */
 				/* @var $table \Doctrine\DBAL\Schema\Table */
 				$schema = $result->getParam('schema');
@@ -83,7 +82,7 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 				$table->addColumn('board_id', 'integer', ['unsigned' => true]);
 				$table->addColumn('name', 'string', ['length' => 32]);
 				$table->addColumn('timestamp', 'integer', ['unsigned' => true]);
-				$table->addColumn('data', 'text');
+				$table->addColumn('data', 'text', ['length' => 65532]);
 				$table->setPrimaryKey(['id']);
 				$table->addUniqueIndex(['board_id', 'name'], 'board_id_name_index');
 				$table->addIndex(['timestamp'], 'timestamp_index');

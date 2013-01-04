@@ -1,7 +1,7 @@
 {
-	"name": "foolz/dice_roll",
-	"type": "foolz-plugin",
-	"description": "Adds support for dice rolling on certain boards.",
+	"name": "foolz/foolfuuka-plugin-comment-hostname",
+	"type": "foolz-foolfuuka-plugin",
+	"description": "Store the posters' hostname in database.",
 	"keywords": ["fake", "mock"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",
@@ -16,8 +16,8 @@
 	},
 
 	"extra": {
-		"name": "Dice Roll",
-		"slug": "dice_roll",
+		"name": "Comment Hostname",
+		"slug": "comment_hostname",
 		"identifier": "fu",
 		"module": "foolfuuka"
 	}

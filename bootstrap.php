@@ -22,3 +22,41 @@ $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 $theme_instance->addDir('foolz', VENDPATH.'foolz/foolfuuka/'.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
 $theme_instance->setBaseUrl(\Uri::base().'foolfuuka/');
 $theme_instance->setPublicDir(DOCROOT.'foolfuuka/');
+
+// set an ->enabled on the themes we want to use
+if (\Auth::has_access('maccess.admin'))
+{
+	foreach ($theme_instance->getAll('foolz') as $theme)
+	{
+		$theme->enabled = true;
+	}
+}
+else
+{
+	if ($themes_enabled = \Foolz\Foolframe\Model\Preferences::get('fu.theme.active_themes'))
+	{
+		$themes_enabled = unserialize($themes_enabled);
+	}
+	else
+	{
+		$themes_enabled = ['foolz/foolfuuka-theme-foolfuuka' => 1];
+	}
+
+	foreach ($themes_enabled as $key => $item)
+	{
+		if ( ! $item && \Auth::has_access('maccess.admin'))
+		{
+			continue;
+		}
+
+		try
+		{
+			$theme = $theme_instance->get('foolz', $key);
+			$theme->enabled = true;
+		}
+		catch (\OutOfBoundsException $e)
+		{}
+	}
+}
+
+

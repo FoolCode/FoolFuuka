@@ -322,16 +322,18 @@ class Chan extends \Foolz\Theme\View
 					<?= __('Change Theme') ?> <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-					<?php /*foreach($this->get_available_themes() as $theme) :
-					if (($theme = $this->get_by_name($theme))) :
+					<?php foreach($this->getTheme()->getLoader()->getAll() as $dir) :
+	                    foreach ($dir as $theme) :
+							if (isset($theme->enabled) && $theme->enabled) :
 						?>
                         <li>
-                            <a href="<?= \Uri::create(array('theme', $theme['directory'])) ?>">
-								<?= $theme['name'] ?><?= ($theme['directory'] == $this->get_selected_theme())?' <i class="icon-ok"></i>':'' ?>
+                            <a href="<?= \Uri::create(array('theme', $theme->getConfig('name'))) ?>">
+								<?= $theme->getConfig('name') ?><?= ($theme === $this->getTheme())?' <i class="icon-ok"></i>':'' ?>
                             </a>
                         </li>
-						<?php endif; ?>
-					<?php endforeach; */    ?>
+						<?php endif;
+	                    endforeach;
+						endforeach; ?>
                 </ul>
             </div>
         </div>

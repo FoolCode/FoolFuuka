@@ -75,12 +75,7 @@ return array(
 			'memory' => 2047
 		),
 
-		'themes' => array(
-			'default' => 'default',
-			'theme_default_enabled' => true,
-			'theme_fuuka_enabled' => true,
-			'theme_yotsuba_enabled' => false
-		),
+		'themes' => array(),
 
 		'radix' => array(
 			'threads_per_page' => 10,

@@ -42,9 +42,13 @@ class Chan extends \Controller
 
 		try
 		{
-			// TODO theme choice limitations ALSO IN API!
 			$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : 'foolz/foolfuuka-theme-foolfuuka';
-			$this->theme = $theme_instance->get('foolz', $theme_name);
+			$theme = $theme_instance->get('foolz', $theme_name);
+			if ( ! isset($theme->enabled) || ! $theme->enabled)
+			{
+				throw new \OutOfBoundsException;
+			}
+			$this->theme = $theme;
 		}
 		catch (\OutOfBoundsException $e)
 		{
@@ -197,37 +201,38 @@ class Chan extends \Controller
 				'message' => $message
 			]);
 
-		return \Response::forge($this->theme->build(), $code);
+		return \Response::forge($this->builder->build(), $code);
 	}
 
 
-	public function action_theme($theme = 'default', $style = '')
+	public function action_theme($vendor = 'foolz', $theme = 'foolfuuka-theme-default', $style = '')
 	{
-		$this->theme->set_title(__('Changing Theme Settings'));
+		$this->builder->getProps()->addTitle(__('Changing Theme Settings'));
 
-		if (!in_array($theme, $this->theme->get_available_themes()))
-		{
-			$theme = 'default';
-		}
+		$theme = $vendor.'/'.$theme;
 
 		\Cookie::set('theme', $theme, 31536000, '/');
 
-		if ($style !== '' && in_array($style, $this->theme->get_available_styles($theme)))
+		if ($style !== '')
 		{
 			\Cookie::set('theme_' . $theme . '_style', $style, 31536000, '/');
 		}
 
 		if (\Input::referrer())
 		{
-			$this->theme->bind('url', \Input::referrer());
+			$url = \Input::referrer();
 		}
 		else
 		{
-			$this->theme->bind('url', \Uri::base());
+			$url = \Uri::base();
 		}
 
-		$this->theme->set_layout('redirect');
-		return \Response::forge($this->theme->build('redirection'));
+		$this->builder->createLayout('redirect');
+		$this->builder->createPartial('body', 'redirection')
+			->getParamManager()
+			->setParam('url', $url);
+		$this->builder->getProps()->addTitle(__('Redirecting'));
+		return \Response::forge($this->builder->build());
 	}
 
 
@@ -543,7 +548,7 @@ class Chan extends \Controller
 			->getParamManager()
 			->setParam('url', $redirect);
 		$this->builder->getProps()->addTitle(__('Redirecting'));
-		return \Response::forge($this->theme->build());
+		return \Response::forge($this->builder->build());
 	}
 
 
@@ -629,7 +634,7 @@ class Chan extends \Controller
 			->setParam('url', $redirect);
 		$this->builder->getProps()->addTitle(__('Redirecting'));
 
-		return \Response::forge($this->theme->build());
+		return \Response::forge($this->builder->build());
 	}
 
 	public function radix_advanced_search()
@@ -651,7 +656,7 @@ class Chan extends \Controller
 				->setParam('search', array('board' => array($this->_radix->shortname)));
 		}
 
-		return \Response::forge($this->theme->build());
+		return \Response::forge($this->builder->build());
 	}
 
 
@@ -964,7 +969,7 @@ class Chan extends \Controller
 
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::search End');
-		return \Response::forge($this->theme->build('board'));
+		return \Response::forge($this->builder->build('board'));
 	}
 
 
@@ -1027,7 +1032,7 @@ class Chan extends \Controller
 		$this->builder->createPartial('body', 'appeal')
 			->getParamManager()->setParam('title', $title);
 
-		return \Response::forge($this->theme->build());
+		return \Response::forge($this->builder->build());
 	}
 
 
@@ -1269,7 +1274,7 @@ class Chan extends \Controller
 				->setParam('url', \Uri::create([$this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
 			$this->builder->getProps()->addTitle(__('Redirecting'));
 
-			return \Response::forge($this->theme->build());
+			return \Response::forge($this->builder->build());
 		}
 
 	}

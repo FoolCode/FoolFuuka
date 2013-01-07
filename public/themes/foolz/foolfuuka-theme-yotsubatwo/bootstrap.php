@@ -4,7 +4,6 @@ if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 \Autoloader::add_classes(array(
-	'Foolfuuka\\Themes\\Default_\\Views\\Board_comment' => __DIR__.'/../default/views/board_comment.php',
 	'Foolz\Foolfuuka\Themes\Yotsubatwo\Controller\Chan' => __DIR__.'/controller.php'
 ));
 

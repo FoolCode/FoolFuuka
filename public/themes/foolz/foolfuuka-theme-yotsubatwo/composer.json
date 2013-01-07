@@ -18,5 +18,10 @@
 		"psr-0": {
 			"Foolz\\Foolfuuka\\Theme\\Yotsubatwo": "classes/"
 		}
+	},
+
+	"extra": {
+		"name": "Yotsubatwo",
+		"extends": "foolz/foolfuuka-theme-foolfuuka"
 	}
 }

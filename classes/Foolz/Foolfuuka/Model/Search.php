@@ -175,8 +175,8 @@ class Search extends Board
 		\Profiler::mark('Board::get_search_comments Start');
 		extract($this->options);
 
-		$available_fields = ['boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
-			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'poster_ip'];
+		$available_fields = ['boards', 'subject', 'text', 'username', 'tripcode', 'email', 'capcode', 'poster_ip',
+			'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order'];
 
 		foreach ($available_fields as $field)
 		{
@@ -265,23 +265,23 @@ class Search extends Board
 						continue;
 					}
 
-					$indexes[] = $radix->shortname . '_ancient';
-					$indexes[] = $radix->shortname . '_main';
-					$indexes[] = $radix->shortname . '_delta';
+					$indexes[] = $radix->shortname.'_ancient';
+					$indexes[] = $radix->shortname.'_main';
+					$indexes[] = $radix->shortname.'_delta';
 				}
 			}
 			else
 			{
 				$indexes = [
-					$this->radix->shortname . '_ancient',
-					$this->radix->shortname . '_main',
-					$this->radix->shortname . '_delta'
+					$this->radix->shortname.'_ancient',
+					$this->radix->shortname.'_main',
+					$this->radix->shortname.'_delta'
 				];
 			}
 
 			// set db->from with indexes loaded
-			$query = Sphinxql::select('id', 'board');
-			$query->from($indexes);
+			$query = Sphinxql::select('id', 'board')
+				->from($indexes);
 
 			// begin filtering search params
 			if ($args['text'])
@@ -309,25 +309,6 @@ class Search extends Board
 			{
 				$query->match('email', $args['email']);
 			}
-			if ($args['filename'])
-			{
-				$query->match('media_filename', $args['filename']);
-			}
-			if (\Auth::has_access('comment.see_ip') && $args['poster_ip'])
-			{
-				$query->where('pip', (int) \Inet::ptod($args['poster_ip']));
-			}
-			if ($args['image'])
-			{
-				if($this->radix !== null)
-				{
-					$query->where('mid', (int) $args['image']);
-				}
-				else
-				{
-					$query->match('media_hash', '"'.$args['image'].'"');
-				}
-			}
 			if ($args['capcode'] !== null)
 			{
 				if ($args['capcode'] === 'user')
@@ -347,6 +328,25 @@ class Search extends Board
 					$query->where('cap', ord('D'));
 				}
 			}
+			if (\Auth::has_access('comment.see_ip') && $args['poster_ip'])
+			{
+				$query->where('pip', (int) \Inet::ptod($args['poster_ip']));
+			}
+			if ($args['filename'])
+			{
+				$query->match('media_filename', $args['filename']);
+			}
+			if ($args['image'])
+			{
+				if($this->radix !== null)
+				{
+					$query->where('mid', (int) $args['image']);
+				}
+				else
+				{
+					$query->match('media_hash', '"'.$args['image'].'"');
+				}
+			}
 			if ($args['deleted'] == 'deleted')
 			{
 				$query->where('is_deleted', 1);
@@ -363,14 +363,6 @@ class Search extends Board
 			{
 				$query->where('is_internal', 0);
 			}
-			if ($args['type'] == 'op')
-			{
-				$query->where('is_op', 1);
-			}
-			if ($args['type'] == 'posts')
-			{
-				$query->where('is_op', 0);
-			}
 			if ($args['filter'] == 'image')
 			{
 				$query->where('has_image', 0);
@@ -378,6 +370,14 @@ class Search extends Board
 			if ($args['filter'] == 'text')
 			{
 				$query->where('has_image', 1);
+			}
+			if ($args['type'] == 'op')
+			{
+				$query->where('is_op', 1);
+			}
+			if ($args['type'] == 'posts')
+			{
+				$query->where('is_op', 0);
 			}
 			if ($args['start'])
 			{
@@ -394,6 +394,15 @@ class Search extends Board
 			else
 			{
 				$query->orderBy('timestamp', 'DESC');
+			}
+			if ($args['results'] == 'op')
+			{
+				$query->groupBy('thread_num');
+				$query->withinGroupOrderBy('is_op', 'desc');
+			}
+			if ($args['results'] == 'posts')
+			{
+				$query->where('is_op', 0);
 			}
 
 			// set sphinx options
@@ -496,7 +505,7 @@ class Search extends Board
 					$docs[] = $rec->doc_id;
 				}
 			}
-			 * 
+			 *
 			 */
 
 			foreach (['*', 'COUNT(*) as count'] as $select_key => $select)

@@ -30,7 +30,7 @@ input[type="radio"], input[type="checkbox"] {
 
 html{
 	height:100%;
-	background:#6A836F;
+	background:#222222;
 	margin:0;
 	padding:0;
 }
@@ -67,7 +67,7 @@ body.theme_default {
 }
 
 .theme_default #footer {
-	background:#6A836F;
+	background:#222222;
 	color:#f5f5f5;
 	font-size:11px;
 }
@@ -142,7 +142,7 @@ body.theme_default {
 }
 
 .theme_default .navbar .navbar-inner {
-	background:#6A836F;
+	background:#222222;
 	box-shadow:none;
 }
 
@@ -158,7 +158,7 @@ body.theme_default {
 }
 
 .theme_default .letters {
-	background:#6A836F;
+	background:#222222;
 	color:#ddd;
 	margin: 4px 0 -2px;
 	padding: 0 30px;
@@ -438,7 +438,7 @@ body.theme_default {
 }
 
 .theme_default .advanced_search .latest_searches ul li:hover {
-	background: #6A836F;
+	background: #222222;
 }
 
 .theme_default .advanced_search .latest_searches ul li a {
@@ -640,7 +640,7 @@ body.theme_default {
 }
 .theme_default article.thread .post_author {
 	font-weight: bold;
-	color: #117743;
+	color: #EEEEEE;
 }
 
 .theme_default article.thread .post_author a {
@@ -650,7 +650,7 @@ body.theme_default {
 
 .theme_default article.thread .post_trip {
 	font-weight: normal;
-	color: #117743;
+	color: #EEEEEE;
 }
 
 .theme_default article.thread .poster_hash {
@@ -808,7 +808,7 @@ body.theme_default {
 }
 
 .theme_default article.thread .spoiler .greentext {
-	color: black;
+	color: #EEEEEE;
 }
 
 .theme_default article.thread .spoiler:hover .greentext {
@@ -973,7 +973,7 @@ body.theme_default {
 
 .theme_default #reply_ajax_notices.success {
 	background:#DFFAD9;
-	border: 1px solid #61B84D;
+	border: 1px solid #222222;
 	margin-left:10px;
 	width:378px;
 	display:block;
@@ -993,7 +993,7 @@ body.theme_default {
 }
 
 .theme_default #thread_o_matic > article.thread:nth-of-type(n+5) {
-	border-top: 2px solid #6A836F;
+	border-top: 2px solid #222222;
 }
 
 .theme_default #thread_o_matic > article.thread > header {
@@ -1080,12 +1080,12 @@ body.theme_default {
 }
 
 .theme_default .spoiler {
-	color:#000;
-	background:#000;
+	color:#999;
+	background:#999;
 }
 
 .theme_default .spoiler:hover {
-	color:#fff;
+	color:#EEE;
 }
 
 .theme_default .overline {
@@ -1116,7 +1116,7 @@ body.theme_default {
 .theme_default .paginate {
 	padding:2px 10px 2px 35px;
 	height:36px;
-	background:#ddebdd;
+	background:#3e3e3e;
 }
 .theme_default .paginate ul {
 	background:#fff;
@@ -1157,11 +1157,6 @@ body.theme_default {
 .theme_default .paginate .next a {
 	border:0;
 }
-
-
-
-
-
 
 .flag {
 	display:inline-block;

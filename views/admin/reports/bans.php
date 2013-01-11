@@ -45,9 +45,9 @@
 <div class="pagination">
   <ul>
 	<?php if ($page > 1) : ?>
-    <li class=""><a href="<?= $page_url.($page - 1) ?>"><?= __('Prev') ?></a></li>
+	<li class=""><a href="<?= $page_url.($page - 1) ?>"><?= __('Prev') ?></a></li>
 	<?php endif; ?>
-    <li class=""><a href="<?= $page_url.($page + 1) ?>"><?= __('Next') ?></a></li>
+	<li class=""><a href="<?= $page_url.($page + 1) ?>"><?= __('Next') ?></a></li>
   </ul>
 </div>
 <?php endif; ?>

@@ -36,6 +36,21 @@ class ReportCommentNotFoundException extends ReportException {}
 class ReportMediaNotFoundException extends ReportException {}
 
 /**
+ * Thrown if the report reason is null.
+ */
+class ReportReasonNullException extends ReportException {}
+
+/**
+ * Thrown if the media reporter’s IP has already submitted a report for that post.
+ */
+class ReportAlreadySubmittedException extends ReportException {}
+
+/**
+ * Thrown if the reporter’s IP has been banned.
+ */
+class ReportSubmitterBannedException extends ReportException {}
+
+/**
  * Manages Reports
  */
 class Report
@@ -293,6 +308,9 @@ class Report
 	 * @throws  ReportCommentNotFoundException  If the reported doc_id doesn't exist
 	 * @throws  ReportReasonTooLongException    If the reason inserted was too long
 	 * @throws  ReportSentTooManyException      If the user sent too many reports in a timeframe
+	 * @throws  ReportReasonNullException       If the report reason is null
+	 * @throws  ReportAlreadySubmittedException If the reporter’s IP has already submitted a report for the post.
+	 * @throws  ReportSubmitterBannedException  If the reporter’s IP has been banned.
 	 */
 	public static function p_add($radix, $id, $reason, $ip_reporter = null, $mode = 'doc_id')
 	{
@@ -331,6 +349,11 @@ class Report
 			$new->doc_id =  (int) $id;
 		}
 
+		if (trim($reason) === null)
+		{
+			throw new ReportReasonNullException(__('Reports must have a reason.'));
+		}
+
 		if (mb_strlen($reason) > 10000)
 		{
 			throw new ReportReasonTooLongException(__('Your report reason was too long.'));
@@ -356,10 +379,60 @@ class Report
 			->execute()
 			->fetch();
 
-
 		if ($row['count'] > 25)
 		{
 			throw new ReportSentTooManyException(__('You sent too many reports in a hour.'));
+		}
+
+		$reported = DC::qb()
+			->select('IP_REPORTER(*) as ip_reporter')
+			->from(DC::p('reports'), 'r')
+			->where('id === :id')
+			->setParameter(':id', $id)
+			->execute()
+			->fetchAll();
+
+		if ($ip_reporter === $reported['ip_reporter'])
+		{
+			throw new ReportSubmitterBannedException(__('You can only submit one report per post.'));
+		}
+
+		if ($ban = \Ban::isBanned(\Input::ip_decimal(), $this->radix))
+		{
+			if ($ban->board_id == 0)
+			{
+				$banned_string = __('It looks like you were banned on all boards.');
+			}
+			else
+			{
+				$banned_string = __('It looks like you were banned on /'.$this->radix->shortname.'/.');
+			}
+
+			if ($ban->length)
+			{
+				$banned_string .= ' '.__('This ban will last until:').' '.date(DATE_COOKIE, $ban->start + $ban->length).'.';
+			}
+			else
+			{
+				$banned_string .= ' '.__('This ban will last forever.');
+			}
+
+			if ($ban->reason)
+			{
+				$banned_string .= ' '.__('The reason for this ban is:').' «'.$ban->reason.'».';
+			}
+
+			if ($ban->appeal_status == \Ban::APPEAL_NONE)
+			{
+				$banned_string .= ' '.\Str::tr(__('If you\'d like to appeal to your ban, go to the :appeal page.'),
+					array('appeal' => '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'.__('appeal').'</a>'));
+			}
+			else if ($ban->appeal_status == \Ban::APPEAL_PENDING)
+			{
+				$banned_string .= ' '.__('Your appeal is pending.');
+			}
+
+			throw new ReportSubmitterBannedException($banned_string);
 		}
 
 		$new->created = time();

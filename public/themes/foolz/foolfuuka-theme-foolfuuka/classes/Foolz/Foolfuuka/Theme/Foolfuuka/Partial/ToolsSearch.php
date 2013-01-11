@@ -21,24 +21,24 @@ class ToolsSearch extends \Foolz\Theme\View
 
 		if (isset($search_radix)) : ?>
 
-        <ul class="nav pull-right">
+		<ul class="nav pull-right">
 		<?= \Form::open([
 			'class' => 'navbar-search',
 			'method' => 'POST',
 			'action' => \Uri::create($search_radix.'/search')
 		]);
-	    ?>
+		?>
 
-        <li>
+		<li>
 		<?= \Form::input([
 			'name' => 'text',
 			'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : '',
 			'class' => 'search-query',
 			'placeholder' => ($search_radix  !== '_') ? __('Search or insert post number') : __('Search through all the boards')
 		]); ?>
-        </li>
+		</li>
 		<?= \Form::close() ?>
-        </ul>
+		</ul>
 		<?php endif;
 	}
 }

@@ -7,19 +7,19 @@ if (!defined('DOCROOT'))
 
 class Controller_Plugin_Fu_Nginx_Cache_Purge_Admin_Nginx_Cache_Purge extends \Controller_Admin
 {
-	
+
 	public function before()
 	{
 		if ( ! \Auth::has_access('maccess.admin'))
 		{
 			\Response::redirect('admin');
 		}
-		
+
 		parent::before();
-		
+
 		$this->_views['controller_title'] = 'Nginx Cache Purge';
 	}
-	
+
 	function structure()
 	{
 		return array(
@@ -54,9 +54,9 @@ http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
 	function action_manage()
 	{
 		$this->_views['method_title'] = 'Manage';
-		
+
 		$data['form'] = $this->structure();
-		
+
 		\Preferences::submit_auto($data['form']);
 
 		// create a form

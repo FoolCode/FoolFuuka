@@ -1,4 +1,35 @@
-<?php if (!defined('DOCROOT')) exit('No direct script access allowed'); ?>
+<?php
+
+namespace Foolz\Foolfuuka\Theme\Foolfuuka\Layout;
+
+class Chan extends \Foolz\Theme\View
+{
+	public function toString()
+	{
+		header('X-UA-Compatible: IE=edge,chrome=1');
+		header('imagetoolbar: false');
+
+		$this->getHeader();
+		$this->getNav();
+		$this->getContent();
+		$this->getFooter();
+	}
+
+	public function getSelectedThemeClass()
+	{
+		return 'theme_default';
+	}
+
+	public function getStyles()
+	{
+		?>
+    <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
+	<?php
+	}
+
+	public function getHeader()
+	{
+		?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
@@ -19,6 +50,13 @@
 		<?php endif; ?>
 		<?= \Preferences::get('ff.theme.header_code') ?>
 	</head>
+		<?php
+
+	}
+
+	public function getNav()
+	{
+		?>
 	<body>
 	<?php if ($disable_headers !== TRUE) : ?>
 		<div><?php
@@ -67,7 +105,12 @@
 				echo ' ]';
 			}
 		?></div>
+		<?php
+	}
 
+	public function getContent()
+	{
+		?>
 		<div style="min-height: 30px;">
 			<h1><?= ($radix) ? $radix->formatted_title : '' ?></h1>
 			<?php if (isset($section_title)) : ?>
@@ -163,6 +206,13 @@
 				</table>
 			<?php endif; ?>
 
+		<?php
+
+	}
+
+	public function getFooter()
+	{
+		?>
 			<div style="float: right;">
 				<?php
 					$bottom_nav = array();
@@ -221,3 +271,6 @@
 		<?= \Preferences::get('ff.theme.footer_code') ?>
 	</body>
 </html>
+	<?php
+	}
+}

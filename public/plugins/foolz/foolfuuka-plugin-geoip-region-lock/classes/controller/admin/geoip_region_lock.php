@@ -7,16 +7,16 @@ if (!defined('DOCROOT'))
 
 class Controller_Plugin_Fu_Geoip_Region_Lock_Admin_Geoip_Region_Lock extends \Controller_Admin
 {
-	
+
 	public function before()
 	{
 		if ( ! \Auth::has_access('maccess.admin'))
 		{
 			\Response::redirect('admin');
 		}
-		
+
 		parent::before();
-		
+
 		$this->_views['controller_title'] = __('GeoIP Region Lock');
 	}
 
@@ -107,7 +107,7 @@ class Controller_Plugin_Fu_Geoip_Region_Lock_Admin_Geoip_Region_Lock extends \Co
 
 
 		$data['form'] = $form;
-		
+
 		\Preferences::submit_auto($data['form']);
 
 		// create a form

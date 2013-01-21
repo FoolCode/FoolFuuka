@@ -1,8 +1,4 @@
-<?php
-
-if (! defined('DOCROOT'))
-	exit('No direct script access allowed'); ?>
-
+<?php if (!defined('DOCROOT')) exit('No direct script access allowed'); ?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -14,7 +10,7 @@ if (! defined('DOCROOT'))
 			.outer { text-align: center }
 			.inner { margin: auto; display: table; display: inline-block; text-decoration: none; text-align: left; padding: 1em; border: thin dotted }
 			.text { font-family: Mono, 'MS PGothic' !important }
-			h1 { font-family: Georgia, serif; margin: 0 0 .4em 0; font-size: 4em; text-align: center }
+			h1 { font-family: Georgia, serif; margin: 0 0 0.4em 0; font-size: 4em; text-align: center }
 			p { margin-top: 2em; text-align: center; font-size: small }
 			a { color: #34345C }
 			a:visited { color: #34345C }
@@ -28,7 +24,7 @@ if (! defined('DOCROOT'))
 		<h1><?= (isset($title)) ? $title : $template['title']; ?></h1>
 		<div class="outer">
 			<div class="inner">
-				<span class="text"><?= nl2br(fuuk_message()) ?></span>
+				<span class="text"><?= nl2br(fuuka_message()) ?></span>
 			</div>
 		</div>
 		<p><a href="<?= $url ?>" rel="noreferrer"><?= $url ?></a><br/>All characters <acronym title="DO NOT STEAL MY ART">&#169;</acronym> Darkpa's party</p>

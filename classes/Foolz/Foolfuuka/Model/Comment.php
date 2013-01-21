@@ -5,7 +5,6 @@ namespace Foolz\Foolfuuka\Model;
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 
 class CommentException extends \Exception {}
-
 class CommentDeleteWrongPassException extends CommentException {}
 
 class Comment
@@ -262,7 +261,7 @@ class Comment
 			{
 				$this->$key = $value;
 			}
-			else if (in_array($key, $extra_fields))
+			elseif (in_array($key, $extra_fields))
 			{
 				$do_extra = true;
 				$extra->$key = $value;
@@ -675,7 +674,7 @@ class Comment
 			{
 				return $content;
 			}
-			else if ($parent_count > 4)
+			elseif ($parent_count > 4)
 			{
 				return $content;
 			}

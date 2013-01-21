@@ -1,16 +1,16 @@
 <div class="btn-group">
-	<a class="btn btn-success btn-mini" href="<?php echo Uri::create('/admin/boards/add_new/') ?>">
-		<?php echo __('Add board') ?>
+	<a class="btn btn-success btn-mini" href="<?php echo Uri::create('/admin/boards/add/') ?>">
+		<?php echo __('Add Board') ?>
 	</a>
 </div>
 <br/>
 <table class="table table-bordered table-striped table-condensed">
 	<thead>
 			<tr>
-				<th><?php echo __('ID') ?></th>
-				<th><?php echo __('Shortname') ?></th>
+				<th width="5%"><?php echo __('ID') ?></th>
 				<th><?php echo __('Board') ?></th>
-				<th><?php echo __('Quick functions') ?></th>
+				<th><?php echo __('Name') ?></th>
+				<th><?php echo __('Actions') ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -23,7 +23,7 @@
 				</td>
 				<td>
 					<a href="<?php echo Uri::create("admin/boards/board/".$board->shortname) ?>">
-					   <?php echo e($board->shortname) ?>
+					   /<?php echo e($board->shortname) ?>/
 					</a>
 				</td>
 				<td>

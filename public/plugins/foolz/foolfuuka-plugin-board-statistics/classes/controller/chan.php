@@ -63,15 +63,15 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 				{
 					$time_next = __('now!');
 				}
-				else if ($time_next < 60)
+				elseif ($time_next < 60)
 				{
 					$time_next = $time_next.' ' .__('seconds');
 				}
-				else if ($time_next < 3600)
+				elseif ($time_next < 3600)
 				{
 					$time_next = floor($time_next / 60).' '.__('minutes');
 				}
-				else if ($time_next < 86400)
+				elseif ($time_next < 86400)
 				{
 					$time_next = floor($time_next / 3600).' '.__('hours');
 				}

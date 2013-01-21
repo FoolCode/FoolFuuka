@@ -519,7 +519,7 @@ class Radix
 
 						unset($data[$k]);
 					}
-					else if (isset($i['database']))
+					elseif (isset($i['database']))
 					{
 						if ( ! isset($data[$k]))
 						{
@@ -556,7 +556,7 @@ class Radix
 
 				unset($data[$key]);
 			}
-			else if (isset($item['database']))
+			elseif (isset($item['database']))
 			{
 				if ( ! isset($data[$key]))
 				{

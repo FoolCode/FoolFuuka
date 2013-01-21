@@ -4,7 +4,6 @@ namespace Foolz\Foolfuuka\Controller;
 
 class Chan extends \Controller
 {
-
 	/**
 	 * The Theme object
 	 *
@@ -118,7 +117,6 @@ class Chan extends \Controller
 		$this->builder->createPartial('tools_advanced_search', 'advanced_search');
 	}
 
-
 	public function router($method, $params)
 	{
 		$segments = \Uri::segments();
@@ -174,12 +172,10 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build());
 	}
 
-
 	public function action_404($error = null)
 	{
 		return $this->error($error === null ? __('Page not found. You can use the search if you were looking for something!') : $error, 404);
 	}
-
 
 	protected function error($error = null, $code = 200)
 	{
@@ -203,7 +199,6 @@ class Chan extends \Controller
 
 		return \Response::forge($this->builder->build(), $code);
 	}
-
 
 	public function action_theme($vendor = 'foolz', $theme = 'foolfuuka-theme-default', $style = '')
 	{
@@ -235,7 +230,6 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build());
 	}
 
-
 	public function action_language($theme = 'en_EN')
 	{
 		$this->builder->getProps()->addTitle(__('Changing Language'));
@@ -256,12 +250,10 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build());
 	}
 
-
 	public function action_opensearch()
 	{
 		return \Response::forge(\View::forge('foolfuuka::opensearch'));
 	}
-
 
 	public function radix_page_mode($_mode = 'by_post')
 	{
@@ -271,7 +263,6 @@ class Chan extends \Controller
 
 		\Response::redirect($this->_radix->shortname);
 	}
-
 
 	public function radix_page($page = 1)
 	{
@@ -287,7 +278,6 @@ class Chan extends \Controller
 		return $this->latest($page, $options);
 	}
 
-
 	public function radix_ghost($page = 1)
 	{
 		$options = array(
@@ -298,7 +288,6 @@ class Chan extends \Controller
 
 		return $this->latest($page, $options);
 	}
-
 
 	protected function latest($page = 1, $options = [])
 	{
@@ -366,7 +355,6 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build());
 	}
 
-
 	public function radix_thread($num = 0)
 	{
 		return $this->thread($num);
@@ -386,7 +374,6 @@ class Chan extends \Controller
 
 		return $this->thread($num, array('type' => 'last_x', 'last_limit' => $limit));
 	}
-
 
 	protected function thread($num = 0, $options = [])
 	{
@@ -469,7 +456,6 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build());
 	}
 
-
 	public function radix_gallery($page = 1)
 	{
 		try
@@ -502,7 +488,6 @@ class Chan extends \Controller
 		]);
 		return \Response::forge($this->builder->build());
 	}
-
 
 	public function radix_post($num = 0)
 	{
@@ -551,7 +536,6 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build());
 	}
 
-
 	/**
 	 * Display all of the posts that contain the MEDIA HASH provided.
 	 * As of 2012-05-17, fetching of posts with same media hash is done via search system.
@@ -590,7 +574,6 @@ class Chan extends \Controller
 			$this->_radix->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page)), 'location', 301);
 	}
 
-
 	public function radix_full_image($filename)
 	{
 		// Check if $filename is valid.
@@ -616,7 +599,6 @@ class Chan extends \Controller
 		return \Response::redirect(
 			\Uri::create(array($this->_radix->shortname, 'search', 'image', rawurlencode(substr($media->media_hash, 0, -2)))), 'location', 404);
 	}
-
 
 	public function radix_redirect($filename = null)
 	{
@@ -659,12 +641,10 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build());
 	}
 
-
 	public function action_search()
 	{
 		return $this->radix_search();
 	}
-
 
 	public function radix_search()
 	{
@@ -714,18 +694,18 @@ class Chan extends \Controller
 						array_push($redirect_url,
 							rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier)))));
 					}
-					else if ($modifier === 'boards')
+					elseif ($modifier === 'boards')
 					{
 						if (\Input::post('submit_search_global'))
 						{
 
 						}
-						else if (count(\Input::post($modifier)) == 1)
+						elseif (count(\Input::post($modifier)) == 1)
 						{
 							$boards = \Input::post($modifier);
 							$redirect_url[0] = $boards[0];
 						}
-						else if (count(\Input::post($modifier)) > 1)
+						elseif (count(\Input::post($modifier)) > 1)
 						{
 							$redirect_url[0] = '_';
 
@@ -972,7 +952,6 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build('board'));
 	}
 
-
 	public function radix_appeal()
 	{
 		try
@@ -990,7 +969,7 @@ class Chan extends \Controller
 			$title = __('Appealing to a global ban.');
 			$ban = $bans[0];
 		}
-		else if (isset($bans[$this->_radix->id]))
+		elseif (isset($bans[$this->_radix->id]))
 		{
 			$title = \Str::tr(__('Appealing to a ban on :board'), array('board' => '/'.$this->_radix->shortname.'/'));
 			$ban = $bans[$this->_radix->id];
@@ -1034,7 +1013,6 @@ class Chan extends \Controller
 
 		return \Response::forge($this->builder->build());
 	}
-
 
 	public function radix_submit()
 	{
@@ -1276,7 +1254,5 @@ class Chan extends \Controller
 
 			return \Response::forge($this->builder->build());
 		}
-
 	}
-
 }

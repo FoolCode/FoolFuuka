@@ -232,5 +232,4 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 
 	}
-
 }

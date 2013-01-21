@@ -4,12 +4,11 @@ namespace Foolz\Foolfuuka\Controller\Admin;
 
 class Boards extends \Foolz\Foolframe\Controller\Admin
 {
-
-
 	public function before()
 	{
 		parent::before();
 
+		// determine if the user is allowed access to these methods
 		if ( ! \Auth::has_access('boards.edit'))
 		{
 			\Response::redirect('admin');
@@ -17,7 +16,6 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$this->_views['controller_title'] = __('Boards');
 	}
-
 
 	public function action_manage()
 	{
@@ -27,29 +25,18 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
-
-	public function action_edit()
-	{
-		\Radix::preload(true);
-
-		$this->_views['method_title'] = __('Login');
-		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', array('form' => \Radix::getAll()));
-
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
-	}
-
-
-	public function action_board($shortname = NULL)
+	public function action_board($shortname = null)
 	{
 		$data['form'] = \Radix::structure();
 
 		if (\Input::post() && ! \Security::check_token())
 		{
-			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
+			\Notices::set('warning', __('The security token was not found. Please try again.'));
 		}
-		else if (\Input::post())
+		elseif (\Input::post())
 		{
 			$result = \Validation::form_validate($data['form']);
+
 			if (isset($result['error']))
 			{
 				\Notices::set('warning', $result['error']);
@@ -58,12 +45,13 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			{
 				// it's actually fully checked, we just have to throw it in DB
 				\Radix::save($result['success']);
+
 				if (is_null($shortname))
 				{
 					\Notices::set_flash('success', __('New board created!'));
 					\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 				}
-				else if ($shortname != $result['success']['shortname'])
+				elseif ($shortname != $result['success']['shortname'])
 				{
 					// case in which letter was changed
 					\Notices::set_flash('success', __('Board information updated.'));
@@ -77,20 +65,19 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		}
 
 		$board = \Radix::getByShortname($shortname);
-		if ($board === FALSE)
+		if ($board === false)
 		{
 			throw new \HttpNotFoundException;
 		}
 
 		$data['object'] = $board;
 
-		$this->_views["method_title"] = __('Editing board:').' '.$board->shortname;
+		$this->_views["method_title"] = [__('Manage'), __('Edit'), $shortname];
 		$this->_views["main_content_view"] = \View::forge('foolz/foolframe::admin/form_creator', $data);
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
-
-	function action_add_new()
+	function action_add()
 	{
 		$data['form'] = \Radix::structure();
 
@@ -98,7 +85,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		{
 			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
 		}
-		else if (\Input::post())
+		elseif (\Input::post())
 		{
 			$result = \Validation::form_validate($data['form']);
 			if (isset($result['error']))
@@ -118,14 +105,13 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$data['form']['open']['action'] = \Uri::create('admin/boards/add_new');
 
 		// panel for creating a new board
-		$this->_views["method_title"] = __('Creating a new board');
+		$this->_views["method_title"] = [__('Manage'), __('Add')];
 		$this->_views["main_content_view"] = \View::forge('foolz/foolframe::admin/form_creator', $data);
 
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
-
-	function action_delete($type = FALSE, $id = 0)
+	function action_delete($type = false, $id = 0)
 	{
 		$board = \Radix::getById($id);
 		if ($board == false)
@@ -137,7 +123,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		{
 			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
 		}
-		else if (\Input::post())
+		elseif (\Input::post())
 		{
 			switch ($type)
 			{
@@ -164,7 +150,6 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		}
 	}
 
-
 	function action_preferences()
 	{
 		$this->_views["method_title"] = __("Preferences");
@@ -178,28 +163,28 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$form['fu.boards.directory'] = array(
 			'type' => 'input',
 			'label' => __('Boards directory'),
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
 		);
 
 		$form['fu.boards.url'] = array(
 			'type' => 'input',
 			'label' => __('Boards URL'),
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
 		);
 
 		$form['fu.boards.db'] = array(
 			'type' => 'input',
 			'label' => __('Boards database'),
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
 		);
 
 		$form['fu.boards.media_balancers'] = array(
 			'type' => 'textarea',
 			'label' => __('Media load balancers'),
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Facultative. One per line the URLs where your images are reachable.'),
 			'class' => 'span6'
 		);
@@ -207,7 +192,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$form['fu.boards.media_balancers_https'] = array(
 			'type' => 'textarea',
 			'label' => __('HTTPS media load balancers'),
-			'preferences' => TRUE,
+			'preferences' => true,
 			'help' => __('Facultative. One per line the URLs where your images are reachable. This is used when the site is loaded via HTTPS protocol, and if empty it will fall back to HTTP media load balancers.'),
 			'class' => 'span6'
 		);
@@ -235,8 +220,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		return \Response::forge(\View::forge("foolz/foolframe::admin/default", $this->_views));
 	}
 
-
-	function action_sphinx()
+	function action_search()
 	{
 		$this->_views["method_title"] = 'Sphinx';
 
@@ -262,49 +246,49 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'class' => 'span2',
 			'validation' => 'trim|max_length[48]',
 			'validation_func' => function($input, $form)
-			{
-				if (strpos($input['fu.sphinx.listen'], ':') === FALSE)
 				{
-					return array(
-						'error_code' => 'MISSING_COLON',
-						'error' => __('The Sphinx listening address and port aren\'t formatted correctly.')
-					);
+					if (strpos($input['fu.sphinx.listen'], ':') === false)
+					{
+						return array(
+							'error_code' => 'MISSING_COLON',
+							'error' => __('The Sphinx listening address and port aren\'t formatted correctly.')
+						);
+					}
+
+					$sphinx_ip_port = explode(':', $input['fu.sphinx.listen']);
+
+					if (count($sphinx_ip_port) != 2)
+					{
+						return array(
+							'error_code' => 'WRONG_COLON_NUMBER',
+							'error' => __('The Sphinx listening address and port aren\'t formatted correctly.')
+						);
+					}
+
+					if (intval($sphinx_ip_port[1]) <= 0)
+					{
+						return array(
+							'error_code' => 'PORT_NOT_A_NUMBER',
+							'error' => __('The port specified isn\'t a valid number.')
+						);
+					}
+
+					\Foolz\Sphinxql\Sphinxql::addConnection('default', $sphinx_ip_port[0], $sphinx_ip_port[1]);
+
+					try
+					{
+						\Foolz\Sphinxql\Sphinxql::connect(true);
+					}
+					catch (\Foolz\Sphinxql\SphinxqlConnectionException $e)
+					{
+						return array(
+							'warning_code' => 'CONNECTION_NOT_ESTABLISHED',
+							'warning' => __('The Sphinx server couldn\'t be contacted at the specified address and port.')
+						);
+					}
+
+					return array('success' => true);
 				}
-
-				$sphinx_ip_port = explode(':', $input['fu.sphinx.listen']);
-
-				if (count($sphinx_ip_port) != 2)
-				{
-					return array(
-						'error_code' => 'WRONG_COLON_NUMBER',
-						'error' => __('The Sphinx listening address and port aren\'t formatted correctly.')
-					);
-				}
-
-				if (intval($sphinx_ip_port[1]) <= 0)
-				{
-					return array(
-						'error_code' => 'PORT_NOT_A_NUMBER',
-						'error' => __('The port specified isn\'t a valid number.')
-					);
-				}
-
-				\Foolz\Sphinxql\Sphinxql::addConnection('default', $sphinx_ip_port[0], $sphinx_ip_port[1]);
-
-				try
-				{
-					\Foolz\Sphinxql\Sphinxql::connect(true);
-				}
-				catch (\Foolz\Sphinxql\SphinxqlConnectionException $e)
-				{
-					return array(
-						'warning_code' => 'CONNECTION_NOT_ESTABLISHED',
-						'warning' => __('The Sphinx server couldn\'t be contacted at the specified address and port.')
-					);
-				}
-
-				return array('success' => TRUE);
-			}
 		);
 
 		$form['fu.sphinx.listen_mysql'] = array(
@@ -343,7 +327,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 					);
 				}
 
-				return array('success' => TRUE);
+				return array('success' => true);
 			}
 		);
 
@@ -407,7 +391,4 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		//$this->_views["main_content_view"] .= '<pre>'.\SphinxQL::generate_sphinx_config(\Radix::get_all()).'</pre>';
 		return \Response::forge(\View::forge("foolz/foolframe::admin/default", $this->_views));
 	}
-
 }
-
-/* end of file boards.php */

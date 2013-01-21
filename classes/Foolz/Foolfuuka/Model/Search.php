@@ -237,7 +237,7 @@ class Search extends Board
 		{
 			throw new SearchRequiresSphinxException(__('Sorry, this action requires the SphinxSearch engine.'));
 		}
-		else if (($this->radix !== null && $this->radix->sphinx) || ($this->radix === null && \Preferences::get('fu.sphinx.global')))
+		elseif (($this->radix !== null && $this->radix->sphinx) || ($this->radix === null && \Preferences::get('fu.sphinx.global')))
 		{
 			// establish connection to sphinx
 			$sphinx_server = explode(':', \Preferences::get('fu.sphinx.listen'));
@@ -315,15 +315,15 @@ class Search extends Board
 				{
 					$query->where('cap', ord('N'));
 				}
-				else if ($args['capcode'] === 'mod')
+				elseif ($args['capcode'] === 'mod')
 				{
 					$query->where('cap', ord('M'));
 				}
-				else if ($args['capcode'] === 'admin')
+				elseif ($args['capcode'] === 'admin')
 				{
 					$query->where('cap', ord('A'));
 				}
-				else if ($args['capcode'] === 'dev')
+				elseif ($args['capcode'] === 'dev')
 				{
 					$query->where('cap', ord('D'));
 				}

@@ -254,7 +254,7 @@ class Ban
 		{
 			$ban = $bans[0];
 		}
-		else if (isset($bans[$board->id]))
+		elseif (isset($bans[$board->id]))
 		{
 			$ban = $bans[$board->id];
 		}

@@ -4,7 +4,6 @@ namespace Foolz\Foolfuuka\Controller\Api;
 
 class Chan extends \Controller_Rest
 {
-
 	protected $_radix = null;
 	protected $_theme = null;
 	protected $format = 'json';
@@ -59,7 +58,6 @@ class Chan extends \Controller_Rest
 		}
 	}
 
-
 	/**
 	 * Commodity to check that the shortname is not wrong and return a coherent error
 	 */
@@ -86,7 +84,6 @@ class Chan extends \Controller_Rest
 
 		return true;
 	}
-
 
 	/**
 	 * Returns a thread
@@ -165,7 +162,6 @@ class Chan extends \Controller_Rest
 		}
 	}
 
-
 	public function get_post()
 	{
 		if (!$this->check_board())
@@ -204,7 +200,6 @@ class Chan extends \Controller_Rest
 			return $this->response(array('error' => $e->getMessage()), 404);
 		}
 	}
-
 
 	public function post_user_actions()
 	{
@@ -272,7 +267,6 @@ class Chan extends \Controller_Rest
 			return $this->response(array('success' => __("Post deleted.")), 200);
 		}
 	}
-
 
 	public function post_mod_actions()
 	{
@@ -378,5 +372,4 @@ class Chan extends \Controller_Rest
 			return $this->response(array('success' => __("User banned.")), 200);
 		}
 	}
-
 }

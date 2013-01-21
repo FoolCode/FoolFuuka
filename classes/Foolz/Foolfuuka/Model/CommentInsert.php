@@ -245,7 +245,7 @@ class CommentInsert extends Comment
 					$banned_string .= ' '.\Str::tr(__('If you\'d like to appeal to your ban, go to the :appeal page.'),
 						array('appeal' => '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'.__('appeal').'</a>'));
 				}
-				else if ($ban->appeal_status == \Ban::APPEAL_PENDING)
+				elseif ($ban->appeal_status == \Ban::APPEAL_PENDING)
 				{
 					$banned_string .= ' '.__('Your appeal is pending.');
 				}

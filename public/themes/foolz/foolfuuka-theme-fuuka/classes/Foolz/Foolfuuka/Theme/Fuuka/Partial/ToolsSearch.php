@@ -7,7 +7,7 @@ if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
 	// search can work also without a radix selected
 	$search_radix = '_';
 }
-else if (isset($radix))
+elseif (isset($radix))
 {
 	$search_radix = $radix->shortname;
 }

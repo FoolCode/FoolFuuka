@@ -167,9 +167,9 @@ class Fool
 				}
 				if($parameters[1] == 'all')
 					$board = \Radix::getAll();
-				else if ($parameters[1] == 'boards')
+				elseif ($parameters[1] == 'boards')
 					$board = \Radix::getArchives();
-				else if ($parameters[1] == 'archives')
+				elseif ($parameters[1] == 'archives')
 					$board = \Radix::getBoards();
 				else return false;
 				if(!isset($parameters[2]))

@@ -9,10 +9,10 @@ class Error extends \Foolz\Theme\View
 		$error = $this->getParamManager()->getParam('error');
 
 		?>
-		<div class="alert" style="margin:15%;">
-			<h4 class="alert-heading"><?= __('Error!') ?></h4>
+	    <div class="alert" style="margin:15%;">
+	        <h4 class="alert-heading"><?= __('Error!') ?></h4>
 			<?= $error ?>
-		</div>
+	    </div>
 		<?php
 	}
 }

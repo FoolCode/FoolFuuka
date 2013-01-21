@@ -342,7 +342,7 @@ class Media
 		{
 			$this->media_status = static::STATUS_BANNED;
 		}
-		else if ($this->radix->hide_thumbnails && ! \Auth::has_access('media.see_hidden'))
+		elseif ($this->radix->hide_thumbnails && ! \Auth::has_access('media.see_hidden'))
 		{
 			$this->media_status = static::STATUS_FORBIDDEN;
 		}
@@ -1225,7 +1225,7 @@ class Media
 				return $dir.'/'.substr($this->preview_op, 0, 4).'/'.substr($this->preview_op, 4, 2).'/'.
 					($with_filename ? $this->preview_op : '');
 			}
-			else if ( ! $is_op && $this->preview_reply !== null)
+			elseif ( ! $is_op && $this->preview_reply !== null)
 			{
 				return $dir.'/'.substr($this->preview_reply, 0, 4).'/'.substr($this->preview_reply, 4, 2).'/'.
 					($with_filename ? $this->preview_reply : '');

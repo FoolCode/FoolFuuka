@@ -12,7 +12,6 @@ class BoardMalformedInputException extends BoardException {}
 class BoardNotCompatibleMethodException extends BoardException {}
 class BoardMissingOptionsException extends BoardException {}
 
-
 /**
  * Deals with all the data in the board tables
  */
@@ -334,7 +333,7 @@ class Board
 		{
 			$arr = explode(',', $num);
 		}
-		else if (strpos($num, '_') !== false)
+		elseif (strpos($num, '_') !== false)
 		{
 			$arr = explode('_', $num);
 		}
@@ -904,7 +903,7 @@ class Board
 			$result['dead'] = true;
 			$result['disable_image_upload'] = true;
 		}
-		else if ($counter['images'] >= $this->radix->max_images_count)
+		elseif ($counter['images'] >= $this->radix->max_images_count)
 		{
 			$result['disable_image_upload'] = true;
 		}
@@ -966,7 +965,7 @@ class Board
 				->setParameter(':num', $num_arr['num'])
 				->setParameter(':subnum', $num_arr['subnum']);
 		}
-		else if (isset($doc_id))
+		elseif (isset($doc_id))
 		{
 			$query->where('doc_id = :doc_id')
 				->setParameter(':doc_id', $doc_id);

@@ -240,9 +240,9 @@ class Radix
 						'type' => 'textarea',
 						'label' => __('Thread refresh rate'),
 						'help' => __('Array of refresh rates in seconds per page in JSON format'),
-						'placeholder' => htmlspecialchars('[{'delay': 30, 'pages': [0, 1, 2]},'.
-							'{'delay': 120, 'pages': [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},'.
-							'{'delay': 30, 'pages': [13, 14, 15]}]'),
+						'placeholder' => htmlspecialchars('[{"delay": 30, "pages": [0, 1, 2]},'.
+							'{"delay": 120, "pages": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},'.
+							'{"delay": 30, "pages": [13, 14, 15]}]'),
 						'class' => 'span4',
 						'style' => 'height:70px;',
 						'validation_func' => function($input, $form_internal)
@@ -327,7 +327,7 @@ class Radix
 					'max_posts_count' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('The maximum amount of posts before a thread 'dies''),
+						'label' => __('The maximum amount of posts before a thread "dies".'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]',

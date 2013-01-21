@@ -17,7 +17,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$this->_views['controller_title'] = __('Boards');
 	}
 
-	public function actionManage()
+	public function action_manage()
 	{
 		$this->_views['method_title'] = __('Manage');
 		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/boards/manage',
@@ -26,7 +26,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
-	public function actionBoard($shortname = null)
+	public function action_board($shortname = null)
 	{
 		$data['form'] = \Radix::structure();
 
@@ -78,7 +78,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
-	function actionAdd()
+	function action_add()
 	{
 		$data['form'] = \Radix::structure();
 

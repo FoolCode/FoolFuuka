@@ -303,7 +303,7 @@ class Search extends Board
 			}
 			if ($args['tripcode'])
 			{
-				$query->match('trip', '"'.$args['tripcode'].''');
+				$query->match('trip', '"'.$args['tripcode'].'"');
 			}
 			if ($args['email'])
 			{
@@ -344,7 +344,7 @@ class Search extends Board
 				}
 				else
 				{
-					$query->match('media_hash', '''.$args['image'].''');
+					$query->match('media_hash', '"'.$args['image'].'"');
 				}
 			}
 			if ($args['deleted'] == 'deleted')
@@ -457,7 +457,7 @@ class Search extends Board
 			$like_escape = function($s, $e)
 			{
 				$s = str_replace([$e, '_', '%'], [$e.$e, $e.'_', $e.'%'], $s);
-				return \DB::expr(\DB::escape('%'.$s.'%').' ESCAPE ''.$e.''');
+				return \DB::expr(\DB::escape('%'.$s.'%').' ESCAPE "'.$e.'"');
 			};
 
 			// begin filtering search params

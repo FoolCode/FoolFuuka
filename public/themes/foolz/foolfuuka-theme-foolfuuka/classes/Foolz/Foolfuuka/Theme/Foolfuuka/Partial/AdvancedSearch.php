@@ -99,8 +99,8 @@ class AdvancedSearch extends \Foolz\Theme\View
 							'placeholder' => 'YYYY-MM-DD',
 							'autocomplete' => 'off',
 							'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : ''
-						)
-					];
+						]
+					);
 					echo '</div>';
 				}
 			}

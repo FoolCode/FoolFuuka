@@ -110,7 +110,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 
 					<div class="input-append pull-left">
 						<?php
-						echo \Form::textarea([]
+						echo \Form::textarea([
 							'name' => 'reply',
 							'id' => 'reply_comment_yep',
 							'style' => 'display:none'
@@ -135,7 +135,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 
 							echo \Form::submit($submit_array);
 
-							$submit_array = [(
+							$submit_array = [
 								'data-function' => 'comment',
 								'name' => 'reply_gattai_spoilered',
 								'value' => __('Submit Spoilered'),

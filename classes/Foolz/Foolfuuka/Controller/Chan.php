@@ -264,7 +264,7 @@ class Chan extends \Controller
 		\Response::redirect($this->_radix->shortname);
 	}
 
-	public function radixPage($page = 1)
+	public function radix_page($page = 1)
 	{
 		$order = \Cookie::get('default_theme_page_mode_'. ($this->_radix->archive ? 'archive' : 'board')) === 'by_thread'
 			? 'by_thread' : 'by_post';
@@ -457,7 +457,7 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build());
 	}
 
-	public function radixGallery($page = 1)
+	public function radix_gallery($page = 1)
 	{
 		try
 		{
@@ -1019,7 +1019,7 @@ class Chan extends \Controller
 		return \Response::forge($this->builder->build());
 	}
 
-	public function radixSubmit()
+	public function radix_submit()
 	{
 		// adapter
 		if (! \Input::post())
@@ -1115,7 +1115,7 @@ class Chan extends \Controller
 			{
 				if (\Input::is_ajax())
 				{
-					return \Response::forge(json_encode(['error' => $e->getMessage()]));
+					\Response::forge(json_encode(['error' => $e->getMessage()]));
 				}
 				else
 				{
@@ -1126,7 +1126,7 @@ class Chan extends \Controller
 			{
 				if (\Input::is_ajax())
 				{
-					return \Response::forge(json_encode(['error' => $e->getMessage()]);
+					return \Response::forge(json_encode(['error' => $e->getMessage()]));
 				}
 				else
 				{
@@ -1172,7 +1172,7 @@ class Chan extends \Controller
 			{
 				if (\Input::is_ajax())
 				{
-					return \Response::forge(json_encode(['captcha' => true)]);
+					return \Response::forge(json_encode(['captcha' => true]));
 				}
 				else
 				{
@@ -1229,7 +1229,7 @@ class Chan extends \Controller
 				}
 				catch (\Foolz\Foolfuuka\Model\BoardException $e)
 				{
-					return $this->error(__('Unknown error.');
+					return $this->error(__('Unknown error.'));
 				}
 
 				return \Response::forge(json_encode(['success' => __('Message sent.')] + $comments));

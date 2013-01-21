@@ -1,10 +1,9 @@
 <?php
 
-namespace Foolfuuka\Plugins\Dice_Roll;
-
 if (!defined('DOCROOT'))
 	exit('No direct script access allowed');
 
+namespace Foolfuuka\Plugins\Dice_Roll;
 
 class Dice_Roll extends \Plugins
 {
@@ -13,7 +12,7 @@ class Dice_Roll extends \Plugins
 	{
 		$data = $result->getObject();
 
-		if($data->board->plugin_dice_roll_enable == 0)
+		if ($data->board->plugin_dice_roll_enable == 0)
 		{
 			return null;
 		}
@@ -24,15 +23,15 @@ class Dice_Roll extends \Plugins
 			{
 				$modifier = '';
 
-				$dice = array(
+				$dice = [
 					'total' => $result[1],
 					'side' => $result[2],
 					'modifier' => (isset($result[3]) ? $result[3] : null),
 					'expr' => (isset($result[4]) ? $result[4] : '+'),
 					'val' => (isset($result[5]) ? $result[5] : 0),
 					'sum' => 0,
-					'output' => array()
-				);
+					'output' => []
+				];
 
 				for ($d = 0; $d < $dice['total']; $d++)
 				{
@@ -59,5 +58,4 @@ class Dice_Roll extends \Plugins
 
 		return null;
 	}
-
 }

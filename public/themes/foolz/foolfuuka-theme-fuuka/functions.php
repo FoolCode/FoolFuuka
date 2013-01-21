@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('DOCROOT'))
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 // Fuuka's Code
@@ -21,9 +21,9 @@ function fuuka_title($message)
 	}
 }
 
-function fuuka_message()
+function fuuk_message()
 {
-	$messages = array('　　　人　　　　　
+	$messages = ['　　　人　　　　　
 　　（＿_）　　　　
 　 （＿＿）　　　
 　（ ＿＿ ）　　　　
@@ -1808,6 +1808,6 @@ i 　乂-‐　－! i 　Sorry, I was mistaken. We don\'t actually have
 .　　　▲　　　　　　　　　.▲　　　　　　　　　.▲　　　　　　　　　.▲　　　　　
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 　CAUTION!!　　　CAUTION!!　　　CAUTION!!　　　CAUTION!!　　　
-━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+━━━━━━━━━━━━━━━━━━━━━━━━━━━'];
 	return $messages[array_rand($messages, 1)];
 }

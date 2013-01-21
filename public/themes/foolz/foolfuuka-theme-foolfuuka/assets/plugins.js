@@ -10,7 +10,6 @@ window.log = function(){
   }
 };
 
-
 var setCookie = function (name, value, expires, path, domain, secure)
 {
 	name = backend_vars.cookie_prefix + name;
@@ -28,7 +27,6 @@ var setCookie = function (name, value, expires, path, domain, secure)
 		( ( domain ) ? ";domain=" + domain : "" ) +
 		( ( secure ) ? ";secure" : "" );
 }
-
 
 var getCookie = function(check_name) {
 	check_name = backend_vars.cookie_prefix + check_name;
@@ -151,7 +149,6 @@ var isEventSupported = (function() {
 // make it safe to use console.log always
 (function(b){function c(){}for(var d="assert,clear,count,debug,dir,dirxml,error,exception,firebug,group,groupCollapsed,groupEnd,info,log,memoryProfile,memoryProfileEnd,profile,profileEnd,table,time,timeEnd,timeStamp,trace,warn".split(","),a;a=d.pop();){b[a]=b[a]||c}})((function(){try
 {console.log();return window.console;}catch(err){return window.console={};}})());
-
 
 /*
  * jQuery Pines Notify (pnotify) Plugin 1.2.0

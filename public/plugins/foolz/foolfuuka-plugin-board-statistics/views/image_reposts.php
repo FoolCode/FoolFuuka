@@ -1,5 +1,6 @@
 <?php
-if (!defined('DOCROOT'))
+
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 ?>
 
@@ -22,7 +23,7 @@ if (!defined('DOCROOT'))
 			$media->op = true;
 		?>
 
-		<a href="<?= Uri::create(array(\Radix::getSelected()->shortname, 'search', 'image', $media->getSafeMediaHash())) ?>">
+		<a href="<?= Uri::create([\Radix::getSelected()->shortname, 'search', 'image', $media->getSafeMediaHash()]) ?>">
 			<img  src="<?= $media->getThumbLink()  ?>" />
 		</a>
 	</div>

@@ -3,7 +3,7 @@ var bindFunctions = function()
 	// the following block of code deals with drag and drop of images for MD5 hashing
 	var search_dropdown = jQuery('#search_form_image');
 
-	if(isEventSupported('dragstart') && isEventSupported('drop') && !!window.FileReader)
+	if (isEventSupported('dragstart') && isEventSupported('drop') && !!window.FileReader)
 	{
 		search_dropdown.on('dragover', function(e) {
 			e.preventDefault();
@@ -17,8 +17,8 @@ var bindFunctions = function()
 		});
 
 		search_dropdown.on('drop', function(event) {
-			if(event.originalEvent.dataTransfer){
-				if(event.originalEvent.dataTransfer.files.length) {
+			if (event.originalEvent.dataTransfer){
+				if (event.originalEvent.dataTransfer.files.length) {
 					event.preventDefault();
 					event.stopPropagation();
 
@@ -208,7 +208,6 @@ var bindFunctions = function()
 				ajax_object.data = data_formdata;
 			}
 
-
 			jqxhr = jQuery.ajax(ajax_object);
 
 			event.preventDefault();
@@ -224,7 +223,7 @@ var bindFunctions = function()
 		{
 			var thread_num = el.data('thread-num');
 
-			if ( ! el.data('expanded'))
+			if (! el.data('expanded'))
 			{
 				el.spin('small')
 				jQuery.ajax({
@@ -540,8 +539,8 @@ var bindFunctions = function()
 		return false;
 	});
 
-	// how could we make it working well on cellphones?
-	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent))
+	// how could we make it work well on cellphones?
+	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent))
 	{
 		return false;
 	}
@@ -554,7 +553,7 @@ var bindFunctions = function()
 	// hover functions go here
 	jQuery("#main").on("mouseover mouseout", "article a[data-backlink]", function(event)
 	{
-		if(event.type == "mouseover")
+		if (event.type == "mouseover")
 		{
 			var backlink = jQuery("#backlink");
 			var el = jQuery(this);
@@ -563,7 +562,7 @@ var bindFunctions = function()
 			var height = el.height();
 			var width = el.width();
 
-			if(el.attr('data-backlink') != 'true')
+			if (el.attr('data-backlink') != 'true')
 			{
 				// gallery
 				var thread_id = el.attr('data-backlink');
@@ -571,7 +570,7 @@ var bindFunctions = function()
 				backlink.css('display', 'block');
 				backlink.html(quote.formatted);
 			}
-			else if(jQuery('#' + el.data('post')).hasClass('post'))
+			else if (jQuery('#' + el.data('post')).hasClass('post'))
 			{
 				// normal posts
 				var toClone = jQuery('#' + el.data('post'));
@@ -582,7 +581,7 @@ var bindFunctions = function()
 			}
 			else if (typeof backend_vars.loaded_posts[el.data('post')] !== 'undefined')
 			{
-				if(backend_vars.loaded_posts[el.data('post')] === false)
+				if (backend_vars.loaded_posts[el.data('post')] === false)
 				{
 					shakeBacklink(el);
 					return false;
@@ -658,7 +657,7 @@ var shakeBacklink = function(el)
 
 var showBacklink = function(backlink, pos, height, width)
 {
-	if(jQuery(window).width()/2 < pos.left + width/2)
+	if (jQuery(window).width()/2 < pos.left + width/2)
 	{
 		backlink.css({
 			right: (jQuery(window).width() - pos.left - width) + 'px',
@@ -677,7 +676,7 @@ var showBacklink = function(backlink, pos, height, width)
 
 	// for lazyload
 	var swap_image = backlink.find('[data-original]');
-	if(swap_image.length > 0)
+	if (swap_image.length > 0)
 	{
 		swap_image.attr('src', swap_image.attr('data-original'));
 	}
@@ -686,7 +685,7 @@ var showBacklink = function(backlink, pos, height, width)
 var backlinkify = function(elem, post_id, subnum)
 {
 	var backlinks = {};
-	if(subnum > 0)
+	if (subnum > 0)
 		post_id += "_" + subnum;
 
 	elem.find("a[data-backlink=true]").each(function(idx, post) {
@@ -723,13 +722,13 @@ var backlinkify = function(elem, post_id, subnum)
 
 	jQuery.each(backlinks, function(key, val){
 		var post = jQuery("#" + key);
-		if(post.length == 0)
+		if (post.length == 0)
 			return false;
 
 		var post_backlink = post.find(".post_backlink:eq(0)");
 		var already_backlinked = post_backlink.text().replace('>>', '').split(' ');
 		jQuery.each(already_backlinked, function(i,v){
-			if(typeof val[v] !== "undefined")
+			if (typeof val[v] !== "undefined")
 			{
 				delete val[v];
 			}
@@ -813,9 +812,9 @@ var insertPost = function(data, textStatus, jqXHR)
 		});
 	}
 
-	if(found_posts)
+	if (found_posts)
 	{
-		if(jQuery('#reply :focus').length > 0)
+		if (jQuery('#reply :focus').length > 0)
 		{
 			window.scrollBy(0, jQuery(document).height() - w_height);
 		}
@@ -824,7 +823,7 @@ var insertPost = function(data, textStatus, jqXHR)
 	}
 	else
 	{
-		if(timelapse < 120)
+		if (timelapse < 120)
 		{
 			timelapse += 5;
 		}
@@ -868,8 +867,6 @@ var toggleHighlight = function(id)
 }
 
 
-
-
 jQuery(document).ready(function() {
 
 	// settings
@@ -888,7 +885,7 @@ jQuery(document).ready(function() {
 	// check if input[date] is supported, so we can use by default input[text] with placeholder without breaking w3
 	var i = document.createElement("input");
 	i.setAttribute("type", "date");
-	if(i.type !== "text")
+	if (i.type !== "text")
 	{
 		jQuery('#date_end').replaceWith(jQuery('<input>').attr({id: 'date_end', name: 'end', type: 'date'}));
 		jQuery('#date_start').replaceWith(jQuery('<input>').attr({id: 'date_start', name: 'start', type: 'date'}));

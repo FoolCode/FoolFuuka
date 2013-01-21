@@ -1,4 +1,4 @@
-<?php if (!defined('DOCROOT')) exit('No direct script access allowed');
+<?php if (! defined('DOCROOT')) exit('No direct script access allowed');
 header('X-UA-Compatible: IE=edge,chrome=1');
 header('imagetoolbar: false');
 ?>
@@ -35,16 +35,16 @@ header('imagetoolbar: false');
 		<?= \Preferences::get('ff.theme.header_code'); ?>
 
 	</head>
-	<body class="<?= $this->get_selected_theme_class(array('theme_default')) ?>">
-	<?php if ($disable_headers !== TRUE) : ?>
+	<body class="<?= $this->get_selected_theme_class(['theme_default']) ?>">
+	<?php if ($disable_headers !== true) : ?>
 		<div class="letters"><?php
-			$board_urls = array();
+			$board_urls = [];
 			foreach (\Radix::getArchives() as $key => $item)
 			{
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
 
-			if (!empty($board_urls))
+			if (! empty($board_urls))
 			{
 				echo sprintf(__('Archives: [ %s ]'), implode(' / ', $board_urls));
 			}
@@ -54,13 +54,13 @@ header('imagetoolbar: false');
 				echo ' ';
 			}
 
-			$board_urls = array();
+			$board_urls = [];
 			foreach (\Radix::getBoards() as $key => $item)
 			{
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
 
-			if (!empty($board_urls))
+			if (! empty($board_urls))
 			{
 				echo sprintf(__('Boards: [ %s ]'), implode(' / ', $board_urls));
 			}
@@ -115,7 +115,7 @@ header('imagetoolbar: false');
 							</li>
 							<?php endif; ?>
 							<li style="padding-right:0px;">
-								<a href="<?= \Uri::create(array($radix->shortname)) ?>" style="padding-right:4px;"><?= __('Index') ?></a>
+								<a href="<?= \Uri::create([$radix->shortname]) ?>" style="padding-right:4px;"><?= __('Index') ?></a>
 							</li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:2px; padding-right:4px;">
@@ -123,13 +123,13 @@ header('imagetoolbar: false');
 								</a>
 								<ul class="dropdown-menu" style="margin-left:-9px">
 									<li>
-										<a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
+										<a href="<?= \Uri::create([$radix->shortname, 'page_mode', 'by_post']) ?>">
 											<?= __('By Post') ?>
 											<?php if (\Cookie::get('default_theme_page_mode_' . ($radix->archive?'archive':'board')) !== 'by_thread') echo ' <i class="icon-ok"></i>'; ?>
 										</a>
 									</li>
 									<li>
-										<a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
+										<a href="<?= \Uri::create([$radix->shortname, 'page_mode', 'by_thread']) ?>">
 											<?= __('By Thread') ?>
 											<?php if (\Cookie::get('default_theme_page_mode_' . ($radix->archive?'archive':'board')) === 'by_thread') echo ' <i class="icon-ok"></i>'; ?>
 										</a>
@@ -138,11 +138,11 @@ header('imagetoolbar: false');
 							</li>
 							<?php endif; ?>
 							<?php
-							$top_nav = array();
+							$top_nav = [];
 							if ($radix)
 							{
-								$top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'ghost')), 'text' => __('Ghost'));
-								$top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'gallery')), 'text' => __('Gallery'));
+								$top_nav[] = ['href' => \Uri::create([$radix->shortname, 'ghost']), 'text' => __('Ghost')];
+								$top_nav[] = ['href' => \Uri::create([$radix->shortname, 'gallery']), 'text' => __('Gallery')];
 							}
 
 							$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
@@ -256,7 +256,7 @@ header('imagetoolbar: false');
 						foreach($this->get_available_styles($this->get_selected_theme()) as $key => $style) :
 						?>
 							<li>
-								<a href="<?= \Uri::create(array('_', 'theme', $this->get_selected_theme(), $style)) ?>">
+								<a href="<?= \Uri::create(['_', 'theme', $this->get_selected_theme(), $style]) ?>">
 									<?= $key ?><?= ($style == $this->get_selected_theme_class()) ?' <i class="icon-ok"></i>':'' ?>
 								</a>
 							</li>
@@ -275,7 +275,7 @@ header('imagetoolbar: false');
 						if (($theme = $this->get_by_name($theme))) :
 							?>
 							<li>
-								<a href="<?= \Uri::create(array('_', 'theme', $theme['directory'])) ?>">
+								<a href="<?= \Uri::create(['_', 'theme', $theme['directory']]) ?>">
 									<?= $theme['name'] ?><?= ($theme['directory'] == $this->get_selected_theme())?' <i class="icon-ok"></i>':'' ?>
 								</a>
 							</li>
@@ -293,7 +293,7 @@ header('imagetoolbar: false');
 					<ul class="dropdown-menu">
 						<?php foreach(\Foolz\Config\Config::get('foolz/foolframe', 'package', 'preferences.lang.available') as $key => $lang) : ?>
 						 <li>
-							 <a href="<?= \Uri::create(array('_', 'language', $key)) ?>">
+							 <a href="<?= \Uri::create(['_', 'language', $key]) ?>">
 								 <?= $lang ?><?= (( ! \Cookie::get('language') && $key == 'en_EN') || $key == \Cookie::get('language'))?' <i class="icon-ok"></i>':'' ?>
 							 </a>
 						 </li>
@@ -305,11 +305,11 @@ header('imagetoolbar: false');
 			</div>
 
 			<?php
-			$bottom_nav = array();
+			$bottom_nav = [];
 			$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 			$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.yotsubatwo_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
-			if (!empty($bottom_nav))
+			if (! empty($bottom_nav))
 			{
 				echo '<div class="pull-right" style="margin-right: 15px;">[ ';
 				foreach ($bottom_nav as $key => $nav)
@@ -329,7 +329,6 @@ header('imagetoolbar: false');
 			}
 			?>
 		</footer>
-
 
 		<script>
 			var backend_vars = <?= json_encode($backend_vars) ?>;

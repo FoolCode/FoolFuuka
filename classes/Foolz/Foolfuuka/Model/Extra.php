@@ -111,7 +111,7 @@ class Extra
 	 */
 	public function insert()
 	{
-		if ( ! empty($this->json_array))
+		if (! empty($this->json_array))
 		{
 			DC::forge()->insert($this->radix->getTable('_extra'), [
 				'extra_id' => $this->extra_id,

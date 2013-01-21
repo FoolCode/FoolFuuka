@@ -4,19 +4,19 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
 	->setCall(function($result) {
-		\Autoloader::add_classes(array(
+		\Autoloader::add_classes([
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
 			'Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
 			'Foolz\Foolfuuka\Controller\Chan\BoardStatistics' => __DIR__.'/classes/controller/chan.php',
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task' => __DIR__.'/classes/tasks/task.php'
-		));
+		]);
 
 		// don't add the admin panels if the user is not an admin
 		if (\Auth::has_access('maccess.admin'))
 		{
-			\Plugins::register_sidebar_element('admin', 'plugins', array(
-				"content" => array("board_statistics/manage" => array("level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart'))
-			));
+			\Plugins::register_sidebar_element('admin', 'plugins', [
+				"content" => ["board_statistics/manage" => ["level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart']]
+			]);
 
 			\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.alter')
 				->setCall(function($result){
@@ -27,7 +27,7 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 				});
 
 			\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.call_help.board_statistics')
-				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cli_board_statistics_help');
+				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cliBoardStatisticsHelp');
 
 			\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.call.board_statistics')
 				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cli_board_statistics');
@@ -36,9 +36,9 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 		\Foolz\Plugin\Event::forge('ff.themes.generic_top_nav_buttons')
 			->setCall(function($result){
 				$top_nav = $result->getParam('nav');
-				if(\Radix::getSelected())
+				if (\Radix::getSelected())
 				{
-					$top_nav[] = array('href' => Uri::create(array(Radix::getSelected()->shortname, 'statistics')), 'text' => __('Stats'));
+					$top_nav[] = ['href' => Uri::create([Radix::getSelected()->shortname, 'statistics']), 'text' => __('Stats')];
 					$result->set($top_nav);
 					$result->setParam('nav', $top_nav);
 				}

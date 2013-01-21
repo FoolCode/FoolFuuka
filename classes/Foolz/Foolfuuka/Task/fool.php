@@ -8,12 +8,12 @@ class Fool
 	{
 		\Cli::write('--'.__('FoolFuuka module management.'));
 
-		$sections = array('database', 'boards');
+		$sections = ['database', 'boards'];
 
 		$sections = \Foolz\Plugin\Hook::forge('ff.task.fool.run.sections.alter')
-			->setParam('array', array('database', 'board'))
+			->setParam('array', ['database', 'board'])
 			->execute()
-			->get(array('database', 'board'));
+			->get(['database', 'board']);
 
 		$section = \Cli::prompt('  '.__('Select the section.'), $sections);
 
@@ -28,7 +28,7 @@ class Fool
 		}
 
 		$done = false;
-		while(!$done)
+		while (! $done)
 		{
 			$done = true;
 			$result = \Cli::prompt(__('Choose the method to run'));
@@ -49,7 +49,7 @@ class Fool
 		\Cli::write(__('Goodbye.'));
 	}
 
-	public function cli_database_help()
+	public function cliDatabaseHelp()
 	{
 		\Cli::write('  --'.__('FoolFrame database management commands'));
 
@@ -61,7 +61,7 @@ class Fool
 		\Cli::write('    recheck_banned [<board_shortname>]          Try deleting banned images, if there\'s any left.');
 	}
 
-	public function cli_database($parameters)
+	public function cliDatabase($parameters)
 	{
 		switch($parameters[0])
 		{
@@ -71,13 +71,13 @@ class Fool
 			case 'create_extra':
 			case 'mysql_convert_utf8mb4':
 			case 'recreate_triggers':
-				if(!isset($parameters[1]))
+				if (! isset($parameters[1]))
 				{
 					\Cli::write(__('Missing parameter.'));
 					return false;
 				}
 				$board = \Radix::getByShortname($parameters[1]);
-				if(!$board)
+				if(! $board)
 				{
 					\Cli::write(__('Board doesn\'t exist.'));
 					return false;
@@ -125,66 +125,68 @@ class Fool
 		return true;
 	}
 
-	public function cli_boards_help()
+	public function cliBoardsHelp()
 	{
 		\Cli::write('  --'.__('FoolFrame board management commands'));
 
-		\Cli::write('    set <board> <name> <value>        Changes a setting for the board, no <value> means NULL (ATTN: no value validation)');
-		\Cli::write('    mass_set <set> <name> <value>     Changes a setting for every board, no <value> means NULL (ATTN: no value validation)');
+		\Cli::write('    set <board> <name> <value>        Changes a setting for the board, no <value> means null (ATTN: no value validation)');
+		\Cli::write('    mass_set <set> <name> <value>     Changes a setting for every board, no <value> means null (ATTN: no value validation)');
 		\Cli::write('                                      <set> can be \'archives\', \'boards\' or \'all\'');
 		\Cli::write('    remove_leftover_dirs              Removes the _removed directories');
 	}
 
-	public function cli_boards($parameters)
+	public function cliBoards($parameters)
 	{
 		switch($parameters[0])
 		{
 			case 'set':
-				if(!isset($parameters[1]))
+				if (! isset($parameters[1]))
 				{
 					\Cli::write(__('Missing parameter.'));
 					return false;
 				}
 				$board = \Radix::getByShortname($parameters[1]);
-				if(!$board)
+				if (! $board)
 				{
 					\Cli::write(__('Board doesn\'t exist.'));
 				}
-				if(!isset($parameters[1]))
+				if (! isset($parameters[1]))
 				{
 					\Cli::write(__('Your request is missing parameters: <name>'));
 					return false;
 				}
-				$parameters[3] = isset($parameters[3])?$parameters[3]:NULL;
-				\Radix::save(array('id' => $board->id, $parameters[2] => $parameters[3]));
+				$parameters[3] = isset($parameters[3])?$parameters[3]:null;
+				\Radix::save(['id' => $board->id, $parameters[2] => $parameters[3]]);
 				break;
 
 			case 'mass_set':
-				if(!isset($parameters[1]) || !in_array($parameters[1], array('archives', 'boards', 'all')))
+				if (! isset($parameters[1]) || !in_array($parameters[1], ['archives', 'boards', 'all']))
 				{
-					\Cli::write(__("You must choose between 'archives', 'boards' or 'all'."));
+					\Cli::write(__("You must choose between 'archives', 'boards', or 'all'."));
 					return false;
 				}
-				if($parameters[1] == 'all')
+				if ($parameters[1] == 'all')
 					$board = \Radix::getAll();
 				elseif ($parameters[1] == 'boards')
 					$board = \Radix::getArchives();
 				elseif ($parameters[1] == 'archives')
 					$board = \Radix::getBoards();
-				else return false;
-				if(!isset($parameters[2]))
+				else
+					return false;
+
+				if (! isset($parameters[2]))
 				{
 					\Cli::write(__('Your request is missing parameters: <name>'));
 					return false;
 				}
-				$parameters[3] = isset($parameters[3])?$parameters[3]:NULL;
+				$parameters[3] = isset($parameters[3])?$parameters[3]:null;
 				foreach($board as $b)
-					\Radix::save(array('id' => $b->id, $parameters[2] => $parameters[3]));
+					\Radix::save(['id' => $b->id, $parameters[2] => $parameters[3]]);
 				break;
 
 			case 'remove_leftover_dirs':
-				// TRUE echoes the removed files
-				\Radix::removeLeftoverDirs(TRUE);
+				// true echoes the removed files
+				\Radix::removeLeftoverDirs(true);
 				break;
 
 			default:

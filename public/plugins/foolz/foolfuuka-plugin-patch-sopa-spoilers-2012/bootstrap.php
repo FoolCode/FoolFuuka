@@ -12,14 +12,13 @@
 			{
 				if (strpos($post->comment, '</spoiler>') > 0)
 				{
-					$post->comment = str_replace(array('[spoiler]', '[/spoiler]', '</spoiler>'), '', $post->comment);
+					$post->comment = str_replace(['[spoiler]', '[/spoiler]', '</spoiler>'], '', $post->comment);
 				}
 
 				if (preg_match('/^\[spoiler\].*\[\/spoiler\]$/s', $post->comment))
 				{
-					$post->comment = str_replace(array('[spoiler]', '[/spoiler]'), '', $post->comment);
+					$post->comment = str_replace(['[spoiler]', '[/spoiler]'], '', $post->comment);
 				}
 			}
-
 		});
 	});

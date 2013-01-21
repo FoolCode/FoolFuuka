@@ -153,7 +153,6 @@ class Comment
 		return $array;
 	}
 
-
 	public static function forgeForApi($post, $radix, $api, $options = [])
 	{
 		$comment = new static($post, $radix, $options);
@@ -225,7 +224,6 @@ class Comment
 			unset($comment->media->radix);
 		}
 
-
 		if (isset($api['board']) && !$api['board'])
 		{
 			unset($comment->radix);
@@ -243,7 +241,6 @@ class Comment
 		return $comment;
 	}
 
-
 	public function __construct($post, $board, $options = [])
 	{
 		$this->radix = $board;
@@ -257,7 +254,7 @@ class Comment
 
 		foreach ($post as $key => $value)
 		{
-			if( ! in_array($key, $media_fields) && ! in_array($key, $extra_fields))
+			if (! in_array($key, $media_fields) && ! in_array($key, $extra_fields))
 			{
 				$this->$key = $value;
 			}
@@ -319,12 +316,10 @@ class Comment
 		static::$_posts[$this->thread_num][] = $num;
 	}
 
-
 	public function getOriginalTimestamp()
 	{
 		return $this->timestamp;
 	}
-
 
 	public function getFourchanDate()
 	{
@@ -335,7 +330,6 @@ class Comment
 
 		return $this->fourchan_date;
 	}
-
 
 	public function getCommentSanitized()
 	{
@@ -357,7 +351,6 @@ class Comment
 		return $this->comment_processed;
 	}
 
-
 	public function getFormatted($params = [])
 	{
 		if ($this->formatted === false)
@@ -367,8 +360,6 @@ class Comment
 
 		return $this->formatted;
 	}
-
-
 
 	public function getReports()
 	{
@@ -444,7 +435,6 @@ class Comment
 		return $this->trip_processed;
 	}
 
-
 	public function getPosterHashProcessed()
 	{
 		if ($this->poster_hash_processed === false)
@@ -471,7 +461,6 @@ class Comment
 
 		return $this->poster_country_name_processed;
 	}
-
 
 	/**
 	 * Processes the comment, strips annoying data from moot, converts BBCode,
@@ -562,11 +551,11 @@ class Comment
 
 		$comment = nl2br(trim($comment));
 
-		if(preg_match_all('/\<pre\>(.*?)\<\/pre\>/', $comment, $match))
+		if (preg_match_all('/\<pre\>(.*?)\<\/pre\>/', $comment, $match))
 		{
-			foreach($match as $a)
+			foreach ($match as $a)
 			{
-				foreach($a as $b)
+				foreach ($a as $b)
 				{
 					$comment = str_replace('<pre>'.$b.'</pre>', "<pre>".str_replace("<br />", "", $b)."</pre>", $comment);
 				}
@@ -627,7 +616,6 @@ class Comment
 			static::$_bbcode_parser = $bbcode;
 		}
 
-
 		// if $special == true, add special bbcode
 		if ($special_code === true)
 		{
@@ -650,13 +638,13 @@ class Comment
 
 	public static function stripUnusedBbcode($action, $attributes, $content, $params, &$node_object)
 	{
-		if($content === '' || $content === false)
+		if ($content === '' || $content === false)
 			return '';
 
 		// if <code> has multiple lines, wrap it in <pre> instead
-		if($params['start_tag'] == '<code>')
+		if ($params['start_tag'] == '<code>')
 		{
-			if(count(array_filter(preg_split('/\r\n|\r|\n/', $content))) > 1)
+			if (count(array_filter(preg_split('/\r\n|\r|\n/', $content))) > 1)
 			{
 				return '<pre>'.$content.'</pre>';
 			}
@@ -682,7 +670,6 @@ class Comment
 
 		return $params['start_tag'].$content.$params['end_tag'];
 	}
-
 
 	/**
 	 * A callback function for preg_replace_callback for internal links (>>)
@@ -764,7 +751,6 @@ class Comment
 		return $matches[0];
 	}
 
-
 	public function getBacklinks()
 	{
 		$num = $this->subnum ? $this->num.'_'.$this->subnum : $this->num;
@@ -777,7 +763,6 @@ class Comment
 
 		return [];
 	}
-
 
 	/**
 	 * A callback function for preg_replace_callback for external links (>>>//)
@@ -816,7 +801,7 @@ class Comment
 			->execute()
 			->get($build_href);
 
-		if ( ! $data->board)
+		if (! $data->board)
 		{
 			if ($data->query)
 			{
@@ -835,7 +820,6 @@ class Comment
 		return implode('<a href="' . \Uri::create($data->board->shortname) . '">&gt;&gt;&gt;' . $data->link . '</a>', $build_href['tags']);
 	}
 
-
 	/**
 	 * Returns the HTML for the post with the currently selected theme
 	 *
@@ -853,8 +837,6 @@ class Comment
 
 		return $partial->build();
 	}
-
-
 
 	/**
 	 * This function is grabbed from Codeigniter Framework on which
@@ -899,21 +881,19 @@ class Comment
 		return $str;
 	}
 
-
 	public function cleanFields()
 	{
 		\Foolz\Plugin\Hook::forge('foolfuuka\\model\\comment.cleanFields.call.before')
 			->setObject($this)
 			->execute();
 
-		if ( ! \Auth::has_access('comment.see_ip'))
+		if (! \Auth::has_access('comment.see_ip'))
 		{
 			unset($this->poster_ip);
 		}
 
 		unset($this->delpass);
 	}
-
 
 	/**
 	 * Delete the post and eventually the entire thread if it's OP
@@ -923,9 +903,9 @@ class Comment
 	 */
 	protected function p_delete($password = null, $force = false)
 	{
-		if( ! \Auth::has_access('comment.passwordless_deletion') && $force !== true)
+		if (! \Auth::has_access('comment.passwordless_deletion') && $force !== true)
 		{
-			if ( ! class_exists('PHPSecLib\\Crypt_Hash', false))
+			if (! class_exists('PHPSecLib\\Crypt_Hash', false))
 			{
 				import('phpseclib/Crypt/Hash', 'vendor');
 			}
@@ -1057,12 +1037,12 @@ class Comment
 			$time_ghost_bump = null;
 			foreach ($posts as $post)
 			{
-				if ( ! $post['subnum'] && $time_last < $post['timestamp'])
+				if (! $post['subnum'] && $time_last < $post['timestamp'])
 				{
 					$time_last = $post['timestamp'];
 				}
 
-				if ( ! $post['subnum'] && $time_bump < $post['timestamp'] && $post['email'] !== 'sage')
+				if (! $post['subnum'] && $time_bump < $post['timestamp'] && $post['email'] !== 'sage')
 				{
 					$time_bump = $post['timestamp'];
 				}
@@ -1139,7 +1119,6 @@ class Comment
 		return ['name' => $name, 'trip' => $normal_trip . $secure_trip];
 	}
 
-
 	/**
 	 * Processes the tripcode
 	 *
@@ -1161,7 +1140,6 @@ class Comment
 
 		return substr(crypt($trip, $salt), -10);
 	}
-
 
 	/**
 	 * Process the secure tripcode

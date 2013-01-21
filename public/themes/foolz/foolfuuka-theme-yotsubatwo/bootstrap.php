@@ -1,11 +1,11 @@
 <?php
 
-if (!defined('DOCROOT'))
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-\Autoloader::add_classes(array(
+\Autoloader::add_classes([
 	'Foolz\Foolfuuka\Themes\Yotsubatwo\Controller\Chan' => __DIR__.'/controller.php'
-));
+]);
 
 \Foolz\Plugin\Event::forge('Fuel\Core\Router.parse_match.intercept')
 	->setCall(function($result)

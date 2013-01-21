@@ -1,9 +1,9 @@
 <?php
 
-if (!defined('DOCROOT'))
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-return array(
+return [
 
 	'directory' => 'fuuka',
 
@@ -27,4 +27,4 @@ return array(
 
 	'extends_css' => false,
 
-);
+];

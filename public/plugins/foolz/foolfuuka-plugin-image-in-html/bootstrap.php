@@ -2,10 +2,10 @@
 
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-image-in-html')
 	->setCall(function($result) {
-		\Autoloader::add_classes(array(
-			'Foolfuuka\\Plugins\\Image_In_Html\\Controller_Plugin_Fu_Image_In_Html_Chan'
+		\Autoloader::add_classes([
+			'Foolfuuka\\Plugins\\Image_In_Html\\ControllerPluginFuImageInHtmlChan'
 				=> __DIR__.'/classes/controller/chan.php'
-		));
+		]);
 
 		\Router::add('(?!(admin|_))(\w+)/image_html/(:any)', 'plugin/fu/image_in_html/chan/$2/image_html/$3', true);
 
@@ -33,8 +33,6 @@
 					return;
 				}
 
-				$result->set(\Uri::create(array($element->board->shortname, 'image_html')).$element->media);
+				$result->set(\Uri::create([$element->board->shortname, 'image_html']).$element->media);
 			})->setPriority(4);
 	});
-
-

@@ -12,7 +12,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 	{
 		parent::before();
 
-		if ( ! \Auth::has_access('comment.reports'))
+		if (! \Auth::has_access('comment.reports'))
 		{
 			\Response::redirect('admin');
 		}
@@ -57,7 +57,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 		$email = \Cookie::get('reply_email');
 
 		// get the password needed for the reply field
-		if(!$pass || $pass < 3)
+		if(! $pass || $pass < 3)
 		{
 			$pass = \Str::random('alnum', 7);
 			\Cookie::set('reply_password', $pass, 60*60*24*30);
@@ -103,7 +103,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 
 	public function action_bans($page = 1)
 	{
-		$this->_views["method_title"] = __('Manage bans');
+		$this->_views['method_title'] = __('Manage bans');
 
 		if ($page < 1 || ! ctype_digit((string) $page))
 		{
@@ -112,17 +112,17 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 
 		$bans = \Ban::getPagedBy('start', 'desc', $page);
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/bans', array(
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/bans', [
 			'bans' => $bans,
 			'page' => $page,
 			'page_url' => \Uri::create('admin/posts/bans')
-		));
+		]);
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_appeals($page = 1)
 	{
-		$this->_views["method_title"] = __('Manage pending appeals');
+		$this->_views['method_title'] = __('Manage pending appeals');
 
 		if ($page < 1 || ! ctype_digit((string) $page))
 		{
@@ -131,17 +131,17 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 
 		$bans = \Ban::getAppealsPagedBy('start', 'desc', $page);
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/bans', array(
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/bans', [
 			'bans' => $bans,
 			'page' => $page,
 			'page_url' => \Uri::create('admin/posts/appeals')
-		));
+		]);
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_find_ban($ip = null)
 	{
-		$this->_views["method_title"] = __('Manage bans');
+		$this->_views['method_title'] = __('Manage bans');
 
 		if (\Input::post('ip'))
 		{
@@ -155,7 +155,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 
 		$ip = trim($ip.'.'.\Input::extension());
 
-		if ( ! filter_var($ip, FILTER_VALIDATE_IP))
+		if (! filter_var($ip, FILTER_VALIDATE_IP))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -166,11 +166,10 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 		}
 		catch (\Foolz\Foolfuuka\Model\BanException $e)
 		{
-			$bans = array();
+			$bans = [];
 		}
 
-
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/bans', array('bans' => $bans));
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/reports/bans', ['bans' => $bans]);
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
@@ -195,13 +194,14 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 			{
 				case 'unban':
 					$ban->delete();
-					\Notices::set_flash('success', \Str::tr(__('The poster with IP :ip has been unbanned.'), array('ip' => \Inet::dtop($ban->ip))));
+					\Notices::set_flash('success', \Str::tr(__('The poster with IP :ip has been unbanned.'),
+						['ip' => \Inet::dtop($ban->ip)]));
 					\Response::redirect('admin/posts/bans');
 					break;
 
 				case 'reject_appeal':
 					$ban->appealReject();
-					\Notices::set_flash('success', \Str::tr(__('The appeal of the poster with IP :ip has been rejected.'), array('ip' => \Inet::dtop($ban->ip))));
+					\Notices::set_flash('success', \Str::tr(__('The appeal of the poster with IP :ip has been rejected.'), ['ip' => \Inet::dtop($ban->ip)]));
 					\Response::redirect('admin/posts/bans');
 					break;
 
@@ -213,13 +213,13 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 		switch ($action)
 		{
 			case 'unban':
-				$this->_views["method_title"] = __('Unbanning').' '.\Inet::dtop($ban->ip);
+				$this->_views['method_title'] = __('Unbanning').' '.\Inet::dtop($ban->ip);
 				$data['alert_level'] = 'warning';
 				$data['message'] = __('Do you want to unban this user?');
 				break;
 
 			case 'reject_appeal':
-				$this->_views["method_title"] = __('Rejecting appeal for').' '.\Inet::dtop($ban->ip);
+				$this->_views['method_title'] = __('Rejecting appeal for').' '.\Inet::dtop($ban->ip);
 				$data['alert_level'] = 'warning';
 				$data['message'] = __('Do you want to reject the appeal of this user? He won\'t be able to appeal again.');
 				break;
@@ -228,8 +228,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 				throw new \HttpNotFoundException;
 		}
 
-		$this->_views["main_content_view"] = \View::forge('foolz/foolframe::admin/confirm', $data);
+		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/confirm', $data);
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
-
 	}
 }

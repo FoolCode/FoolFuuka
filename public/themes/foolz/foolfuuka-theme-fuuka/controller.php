@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
-if ( ! defined('DOCROOT'))
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 class Chan extends \Foolz\Foolfuuka\Controller\Chan
@@ -10,19 +10,19 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 	/**
 	 * @param int $page
 	 */
-	public function radix_page($page = 1)
+	public function radixPage($page = 1)
 	{
-		$options = array(
+		$options = [
 			'per_page' => 24,
 			'per_thread' => 6,
 			'order' => ($this->_radix->archive ? 'by_thread' : 'by_post')
-		);
+		];
 
 		return $this->latest($page, $options);
 	}
 
 
-	public function radix_gallery($page = 1)
+	public function radixGallery($page = 1)
 	{
 		throw new \HttpNotFoundException;
 	}
@@ -30,15 +30,15 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 	/**
 	 * @return bool
 	 */
-	public function radix_submit()
+	public function radixSubmit()
 	{
 		// adapter
-		if(!\Input::post())
+		if (! \Input::post())
 		{
 			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
 		}
 
-		if ( ! \Security::check_token())
+		if (! \Security::check_token())
 		{
 			return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
 		}
@@ -61,20 +61,19 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 				}
 				catch (\Foolz\Foolfuuka\Model\BoardException $e)
 				{
-					return $this->response(array('error' => $e->getMessage()), 404);
+					return $this->response(['error' => $e->getMessage()], 404);
 				}
 				catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e)
 				{
-					return $this->response(array('error' => $e->getMessage()), 404);
+					return $this->response(['error' => $e->getMessage()], 404);
 				}
 			}
 
 			$this->_theme->set_layout('redirect');
 			$this->_theme->set_title(__('Redirecting...'));
-			$this->_theme->bind('url', \Uri::create(array($this->_radix->shortname, 'thread', $comment->thread_num)));
+			$this->_theme->bind('url', \Uri::create([$this->_radix->shortname, 'thread', $comment->thread_num]));
 			return \Response::forge($this->_theme->build('redirection'));
 		}
-
 
 		if (\Input::post('reply_report'))
 		{
@@ -87,7 +86,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 				}
 				catch (\Foolz\Foolfuuka\Model\ReportException $e)
 				{
-					return $this->response(array('error' => $e->getMessage()), 404);
+					return $this->response(['error' => $e->getMessage()], 404);
 				}
 			}
 
@@ -105,7 +104,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 		if (isset($post['email']) && mb_strlen($post['email']) > 0)
 			return $this->error();
 
-		$data = array();
+		$data = [];
 
 		$post = \Input::post();
 

@@ -58,9 +58,9 @@ class Chan extends \Foolz\Theme\View
 	{
 		?>
 	<body>
-	<?php if ($disable_headers !== TRUE) : ?>
+	<?php if ($disable_headers !== true) : ?>
 		<div><?php
-			$board_urls = array();
+			$board_urls = [];
 			foreach (\Radix::getAll() as $key => $item)
 			{
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
@@ -73,13 +73,13 @@ class Chan extends \Foolz\Theme\View
 		?>
 
 		<?php
-			$board_urls = array();
+			$board_urls = [];
 
 			$board_urls[] = '<a href="' . \Uri::base() . '">' . strtolower(__('Index')) . '</a>';
 			if ($radix)
 			{
 				$board_urls[] = '<a href="' . \Uri::create($radix->shortname) . '">' . strtolower(__('Top')) . '</a>';
-				$board_urls[] = '<a href="' . \Uri::create(array($radix->shortname, 'statistics')) . '">' . strtolower(__('Statistics')) . '</a>';
+				$board_urls[] = '<a href="' . \Uri::create([$radix->shortname, 'statistics']) . '">' . strtolower(__('Statistics')) . '</a>';
 			}
 			$board_urls[] = '<a href="https://github.com/FoOlRulez/FoOlFuuka/issues">' . strtolower(__('Report Bug')) . '</a>';
 
@@ -87,11 +87,11 @@ class Chan extends \Foolz\Theme\View
 		?>
 
 		<?php
-			$top_nav = array();
+			$top_nav = [];
 			$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
 			$top_nav = \Foolz\Plugin\Hook::forge('fu.themes.fuuka_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
 
-			if (!empty($top_nav))
+			if (! empty($top_nav))
 			{
 				echo '[ ';
 				foreach ($top_nav as $key => $nav)
@@ -124,7 +124,7 @@ class Chan extends \Foolz\Theme\View
 			<?= $template['partials']['tools_search'] ?>
 
 			<hr />
-			<?php if ( ! isset($thread_id)) : ?>
+			<?php if (! isset($thread_id)) : ?>
 			<?= isset($template['partials']['tools_new_thread_box']) ? $template['partials']['tools_new_thread_box'] : ''; ?>
 			<?php endif; ?>
 		</div>
@@ -134,7 +134,7 @@ class Chan extends \Foolz\Theme\View
 
 		<?php \Foolz\Plugin\Hook::forge('fu.themes.fuuka_after_body_template')->execute(); ?>
 
-		<?php if ($disable_headers !== TRUE) : ?>
+		<?php if ($disable_headers !== true) : ?>
 			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<table style="float: left;">
 					<tbody>
@@ -215,7 +215,7 @@ class Chan extends \Foolz\Theme\View
 		?>
 			<div style="float: right;">
 				<?php
-					$bottom_nav = array();
+					$bottom_nav = [];
 					$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 					$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.fuuka_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
@@ -235,12 +235,12 @@ class Chan extends \Foolz\Theme\View
 				?>
 
 				<?php
-					$theme_links = array();
+					$theme_links = [];
 					foreach ($this->get_available_themes() as $theme)
 					{
 						if (($theme = $this->get_by_name($theme)))
 						{
-							$theme_links[] = '<a href="' . \Uri::create(array('_', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
+							$theme_links[] = '<a href="' . \Uri::create(['_', 'theme', $theme['directory']]) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
 						}
 					}
 					echo 'Theme [ ' . implode(' / ', $theme_links) . ' ]';

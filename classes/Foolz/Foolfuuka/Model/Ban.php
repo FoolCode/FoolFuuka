@@ -55,7 +55,7 @@ class Ban
 	public $length = 0;
 
 	/**
-	 * The board to which this ban is referred to. 0 is a global ban
+	 * The board the user has been banned from. 0 is a global ban
 	 *
 	 * @var  int  The board ID, otherwise 0 for global ban
 	 */
@@ -130,7 +130,7 @@ class Ban
 	}
 
 	/**
-	 * Get the Ban object by ID
+	 * Get the object the user was banned for by ID
 	 *
 	 * @param   int  $id  The Ban id
 	 * @return  \Foolz\Foolfuuka\Model\Ban
@@ -146,7 +146,7 @@ class Ban
 			->execute()
 			->fetch();
 
-		if ( ! $result)
+		if (! $result)
 		{
 			throw new BanNotFoundException(__('The ban could not be found.'));
 		}
@@ -172,7 +172,7 @@ class Ban
 			->execute()
 			->fetchAll();
 
-		if ( ! count($result))
+		if (! count($result))
 		{
 			throw new BanNotFoundException(__('The ban could not be found.'));
 		}
@@ -231,7 +231,7 @@ class Ban
 	}
 
 	/**
-	 * Check if an user is banned on any board
+	 * Check if a user is banned on any board
 	 *
 	 * @param   string  $decimal_ip
 	 * @param   array   $board
@@ -250,7 +250,7 @@ class Ban
 		}
 
 		// check for global ban
-		if(isset($bans[0]))
+		if (isset($bans[0]))
 		{
 			$ban = $bans[0];
 		}
@@ -264,7 +264,7 @@ class Ban
 		}
 
 		// if length = 0 then we have a permaban
-		if ( ! $ban->length || $ban->start + $ban->length > time())
+		if (! $ban->length || $ban->start + $ban->length > time())
 		{
 			// return the object, will be global if it's a global ban
 			return $ban;
@@ -278,7 +278,7 @@ class Ban
 	 *
 	 * @param   string  $ip_decimal  The IP of the banned user in decimal format
 	 * @param   string  $reason      The reason for the ban
-	 * @param   int     $length      The lengthof the ban in seconds
+	 * @param   int     $length      The length of the ban in seconds
 	 * @param   array   $board_ids   The array of board IDs, global ban if left empty
 	 *
 	 * @return  \Foolz\Foolfuuka\Model\Ban
@@ -302,26 +302,26 @@ class Ban
 
 			foreach ($board_ids as $id)
 			{
-				if ( ! in_array($id, $valid_board_ids))
+				if (! in_array($id, $valid_board_ids))
 				{
-					throw new BanException(__('You inserted a non-existant board ID.'));
+					throw new BanException(__('You entered a non-existent board ID.'));
 				}
 			}
 		}
 
-		if ( ! ctype_digit((string) $ip_decimal))
+		if (! ctype_digit((string) $ip_decimal))
 		{
-			throw new BanException(__('You inserted an invalid IP.'));
+			throw new BanException(__('You entered an invalid IP.'));
 		}
 
 		if (mb_strlen($reason) > 10000)
 		{
-			throw new BanException(__('You inserted a too long reason for the ban.'));
+			throw new BanException(__('You entered a too long reason for the ban.'));
 		}
 
-		if ( ! ctype_digit($length))
+		if (! ctype_digit($length))
 		{
-			throw new BanException(__('You inserted an invalid length for the ban.'));
+			throw new BanException(__('You entered an invalid length for the ban.'));
 		}
 
 		$time = time();
@@ -399,7 +399,7 @@ class Ban
 	/**
 	 * Adds the appeal message to the ban. Only one appeal is allowed
 	 *
-	 * @param   string  $appeal  The appeal test by the user
+	 * @param   string  $appeal  The appeal submitted by the user
 	 *
 	 * @return  \Foolz\Foolfuuka\Model\Ban
 	 */

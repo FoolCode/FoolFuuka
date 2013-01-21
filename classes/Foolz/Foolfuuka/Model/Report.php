@@ -151,7 +151,7 @@ class Report
 
 		$new->reason_processed = htmlentities(@iconv('UTF-8', 'UTF-8//IGNORE', $new->reason));
 
-		if ( ! isset($new->radix))
+		if (! isset($new->radix))
 		{
 			$new->radix = \Radix::getById($new->board_id);
 		}
@@ -259,7 +259,7 @@ class Report
 		static::preload();
 		$result = [];
 
-		foreach(static::$preloaded as $item)
+		foreach (static::$preloaded as $item)
 		{
 			if ($item['board_id'] === $radix->id && $item['media_id'] === $media_id)
 			{
@@ -425,7 +425,7 @@ class Report
 			if ($ban->appeal_status == \Ban::APPEAL_NONE)
 			{
 				$banned_string .= ' '.\Str::tr(__('If you\'d like to appeal to your ban, go to the :appeal page.'),
-					array('appeal' => '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'.__('appeal').'</a>'));
+					['appeal' => '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'.__('appeal').'</a>']);
 			}
 			elseif ($ban->appeal_status == \Ban::APPEAL_PENDING)
 			{

@@ -13,16 +13,15 @@ class BoardComment extends \Foolz\Theme\View
 	{
 		if (static::$permissions === null)
 		{
-			static::$permissions = array(
+			static::$permissions = [
 				'maccess.mod' => \Auth::has_access('maccess.mod'),
 				'media.see_hidden' => \Auth::has_access('media.see_hidden'),
 				'media.see_banned' => \Auth::has_access('media.see_banned'),
 				'comment.passwordless_deletion' => \Auth::has_access('comment.passwordless_deletion'),
 				'fu.sphinx.global' => \Preferences::get('fu.sphinx.global')
-			);
+			];
 		}
 	}
-
 
 	public function toString()
 	{
@@ -35,7 +34,7 @@ class BoardComment extends \Foolz\Theme\View
 
 		$perm = static::$permissions;
 
-		$num =  $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
+		$num = $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 
 		?>
 		<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if (!is_null($p->media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>">
@@ -77,7 +76,7 @@ class BoardComment extends \Foolz\Theme\View
 						<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
 							<?php if(!$perm['maccess.mod'] && !$p->radix->transparent_spoiler && $p->media->spoiler) :?>
 							<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
-							<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == TRUE) : ?>
+							<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == true) : ?>
 							<img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/transparent_pixel.png') ?>" data-original="<?= $p->media->getThumbLink() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
 							<noscript>
 								<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
@@ -109,7 +108,7 @@ class BoardComment extends \Foolz\Theme\View
 						<span class="time_wrap">
 							<time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>" <?php if ($p->radix->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $p->getOriginalTimestamp()) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $p->timestamp) ?></time>
 						</span>
-						<a href="<?= \Uri::create(array($p->radix->shortname, $p->_controller_method, $p->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= \Uri::create(array($p->radix->shortname, $p->_controller_method, $p->thread_num)) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
+						<a href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
 
 						<?php if ($p->poster_country !== null) : ?><span class="post_type"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
 						<?php if ($p->subnum > 0)   : ?><span class="post_type"><i class="icon-comment-alt" title="<?= htmlspecialchars(__('This post was submitted as a "ghost" reply.')) ?>"></i></span><?php endif ?>
@@ -132,7 +131,7 @@ class BoardComment extends \Foolz\Theme\View
 					<button class="btn btn-mini" data-function="activateModeration"><?= __('Mod') ?><?php if ($p->poster_ip) echo ' ' .Inet::dtop($p->poster_ip) ?></button>
 				</div>
 				<div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">
-					<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-board-url="<?= \Uri::create(array($p->radix->shortname)) ?>" data-id="<?= $p->doc_id ?>" data-action="delete_post"><?= __('Delete Post') ?></button>
+					<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-board-url="<?= \Uri::create([$p->radix->shortname]) ?>" data-id="<?= $p->doc_id ?>" data-action="delete_post"><?= __('Delete Post') ?></button>
 					<?php if (!is_null($p->media)) : ?>
 						<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="delete_image"><?= __('Delete Image') ?></button>
 						<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="ban_image_local"><?= __('Ban Image') ?></button>
@@ -163,6 +162,4 @@ class BoardComment extends \Foolz\Theme\View
 		</article>
 		<?php
 	}
-
-
 }

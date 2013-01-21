@@ -304,7 +304,7 @@ class Media
 		}
 
 		// let's unset 0 sizes so maybe the __get() can save the day
-		if ( ! $this->preview_w || ! $this->preview_h)
+		if (! $this->preview_w || ! $this->preview_h)
 		{
 			$this->preview_h = 0;
 			$this->preview_w = 0;
@@ -501,7 +501,7 @@ class Media
 
 		$file = \Upload::get_files(0);
 
-		if ( ! \Upload::is_valid())
+		if (! \Upload::is_valid())
 		{
 			if (in_array($file['errors'], UPLOAD_ERR_INI_SIZE))
 			{
@@ -660,7 +660,7 @@ class Media
 	 */
 	public function getMediaFilenameProcessed()
 	{
-		if ( ! isset($this->media_filename_processed))
+		if (! isset($this->media_filename_processed))
 		{
 			$this->media_filename_processed = static::process($this->media_filename);
 		}
@@ -733,7 +733,7 @@ class Media
 			->execute()
 			->get();
 
-		if ( ! $before instanceof \Foolz\Plugin\Void)
+		if (! $before instanceof \Foolz\Plugin\Void)
 		{
 			return $before;
 		}
@@ -752,7 +752,7 @@ class Media
 		}
 
 		// full image
-		if ( ! $thumbnail && file_exists($this->getDir(false)) !== false)
+		if (! $thumbnail && file_exists($this->getDir(false)) !== false)
 		{
 			$image = $this->media;
 		}
@@ -772,7 +772,7 @@ class Media
 				$balancers = \Preferences::get('fu.boards.media_balancers_https');
 			}
 
-			if (!isset($balancers) && \Preferences::get('fu.boards.media_balancers'))
+			if (! isset($balancers) && \Preferences::get('fu.boards.media_balancers'))
 			{
 				$balancers = \Preferences::get('fu.boards.media_balancers');
 			}
@@ -782,7 +782,7 @@ class Media
 				$media_cdn = array_filter(preg_split('/\r\n|\r|\n/', $balancers));
 			}
 
-			if ( ! empty($media_cdn) && $this->media_id > 0)
+			if (! empty($media_cdn) && $this->media_id > 0)
 			{
 				return $media_cdn[($this->media_id % count($media_cdn))].'/'.$this->radix->shortname.'/'
 					.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
@@ -951,7 +951,7 @@ class Media
 			->execute()
 			->fetch();
 
-		if ( ! $result['count'])
+		if (! $result['count'])
 		{
 			DC::forge()
 				->insert('banned_md5', ['md5' => $this->media_hash])
@@ -998,7 +998,7 @@ class Media
 
 		$getimagesize = getimagesize($full_path);
 
-		if (!$getimagesize)
+		if (! $getimagesize)
 		{
 			throw new MediaInsertInvalidFormatException(__('The file you uploaded is not an image.'));
 		}
@@ -1100,7 +1100,7 @@ class Media
 				$thumb_height = $this->radix->thumbnail_op_height;
 			}
 
-			if ( ! file_exists($this->pathFromFilename(true, $is_op)))
+			if (! file_exists($this->pathFromFilename(true, $is_op)))
 			{
 				mkdir($this->pathFromFilename(true, $is_op), 0777, true);
 			}
@@ -1137,7 +1137,7 @@ class Media
 
 		if ($do_full)
 		{
-			if (!file_exists($this->pathFromFilename()))
+			if (! file_exists($this->pathFromFilename()))
 			{
 				mkdir($this->pathFromFilename(), 0777, true);
 			}
@@ -1150,7 +1150,7 @@ class Media
 			$media_data = null;
 			getimagesize($full_path, $media_data);
 
-			if ( ! isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0)
+			if (! isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0)
 			{
 				$exif = exif_read_data($full_path);
 
@@ -1161,7 +1161,7 @@ class Media
 			}
 		}
 
-		if ( ! $this->media_id)
+		if (! $this->media_id)
 		{
 			 DC::forge()->insert($this->radix->getTable('_images'), [
 				'media_hash' => $this->media_hash,
@@ -1188,7 +1188,7 @@ class Media
 				$query->set('preview_op', ':preview_orig')
 				->setParameter(':preview_orig', $this->preview_orig);
 			}
-			if ( ! $this->op && $this->preview_reply === null)
+			if (! $this->op && $this->preview_reply === null)
 			{
 				$query->set('preview_reply', ':preview_orig')
 				->setParameter(':preview_orig', $this->preview_orig);

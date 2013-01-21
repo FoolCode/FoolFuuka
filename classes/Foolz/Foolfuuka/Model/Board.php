@@ -298,7 +298,7 @@ class Board
 	{
 		$page = intval($page);
 
-		if($page < 1)
+		if ($page < 1)
 		{
 			throw new BoardException(__('The page number is not valid.'));
 		}
@@ -405,7 +405,7 @@ class Board
 				$query = DC::qb()
 					->select('*, thread_num AS unq_thread_num')
 					->from($this->radix->getTable('_threads'), 'rt')
-					->where('rt.time_ghost_bump IS NOT NULL')
+					->where('rt.time_ghost_bump IS NOT null')
 					->orderBy('rt.time_ghost_bump', 'DESC')
 					->setMaxResults($per_page)
 					->setFirstResult(($page * $per_page) - $per_page);
@@ -416,7 +416,7 @@ class Board
 			->execute()
 			->fetchAll();
 
-		if ( ! count($threads))
+		if (! count($threads))
 		{
 			$this->comments = [];
 			$this->comments_unsorted = [];
@@ -479,7 +479,7 @@ class Board
 					$results[$post->thread_num]['images_omitted']--;
 				}
 
-				if ( ! isset($results[$post->thread_num]['posts']))
+				if (! isset($results[$post->thread_num]['posts']))
 				{
 					$results[$post->thread_num]['posts'] = [];
 				}
@@ -522,7 +522,7 @@ class Board
 			$this->total_count = Cache::item('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$type_cache)->get();
 			return $this;
 		}
-		catch(\OutOfBoundsException $e)
+		catch (\OutOfBoundsException $e)
 		{
 			switch ($order)
 			{
@@ -538,7 +538,7 @@ class Board
 					$query_threads = DC::qb()
 						->select('COUNT(thread_num) AS threads')
 						->from($this->radix->getTable('_threads'), 'rt')
-						->where('rt.time_ghost_bump IS NOT NULL');
+						->where('rt.time_ghost_bump IS NOT null');
 					break;
 			}
 
@@ -601,7 +601,7 @@ class Board
 			->execute()
 			->fetchAll();
 
-		if( ! count($result))
+		if (! count($result))
 		{
 			$this->comments = [];
 			$this->comments_unsorted = [];
@@ -675,7 +675,7 @@ class Board
 			->setMethodFetching('getThreadComments')
 			->setoptions(['type' => 'thread', 'realtime' => false]);
 
-		if( ! ctype_digit((string) $num) || $num < 1)
+		if (! ctype_digit((string) $num) || $num < 1)
 		{
 			throw new BoardMalformedInputException(__('The thread number is invalid.'));
 		}
@@ -772,12 +772,12 @@ class Board
 			->execute()
 			->fetchAll();
 
-		if ( ! count($query_result) && isset($latest_doc_id))
+		if (! count($query_result) && isset($latest_doc_id))
 		{
 			return $this->comments = $this->comments_unsorted = [];
 		}
 
-		if ( ! count($query_result))
+		if (! count($query_result))
 		{
 			throw new BoardThreadNotFoundException(__('There\'s no such a thread.'));
 		}
@@ -826,7 +826,6 @@ class Board
 
 		return $this;
 	}
-
 
 	/**
 	 * Returns an array specifying the thread statuses.
@@ -879,7 +878,7 @@ class Board
 		}
 
 		// we didn't point to the thread OP, this is not a thread
-		if ( ! $thread_op_present)
+		if (! $thread_op_present)
 		{
 			// this really should not happen here
 			throw new BoardThreadNotFoundException(__('The thread you were looking for can\'t be found.'));
@@ -955,7 +954,7 @@ class Board
 
 		if (isset($num))
 		{
-			if( ! static::isValidPostNumber($num))
+			if (! static::isValidPostNumber($num))
 			{
 				throw new BoardMalformedInputException;
 			}
@@ -981,7 +980,7 @@ class Board
 			->execute()
 			->fetchAll();
 
-		if( ! count($result))
+		if (! count($result))
 		{
 			throw new BoardPostNotFoundException(__('Post not found.'));
 		}

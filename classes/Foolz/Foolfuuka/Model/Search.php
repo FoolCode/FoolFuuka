@@ -180,7 +180,7 @@ class Search extends Board
 
 		foreach ($available_fields as $field)
 		{
-			if ( ! isset($args[$field]))
+			if (! isset($args[$field]))
 			{
 				$args[$field] = null;
 			}
@@ -207,7 +207,7 @@ class Search extends Board
 		// if image is set, get either media_hash or media_id
 		if ($args['image'] !== null)
 		{
-			if(substr($args['image'], -2) !== '==')
+			if (substr($args['image'], -2) !== '==')
 			{
 				$args['image'] .= '==';
 			}
@@ -260,7 +260,7 @@ class Search extends Board
 				foreach ($boards as $radix)
 				{
 					// ignore boards that don't have sphinx enabled
-					if ( ! $radix->sphinx)
+					if (! $radix->sphinx)
 					{
 						continue;
 					}
@@ -303,7 +303,7 @@ class Search extends Board
 			}
 			if ($args['tripcode'])
 			{
-				$query->match('trip', '"'.$args['tripcode'].'"');
+				$query->match('trip', '"'.$args['tripcode'].''');
 			}
 			if ($args['email'])
 			{
@@ -338,13 +338,13 @@ class Search extends Board
 			}
 			if ($args['image'])
 			{
-				if($this->radix !== null)
+				if ($this->radix !== null)
 				{
 					$query->where('mid', (int) $args['image']);
 				}
 				else
 				{
-					$query->match('media_hash', '"'.$args['image'].'"');
+					$query->match('media_hash', '''.$args['image'].''');
 				}
 			}
 			if ($args['deleted'] == 'deleted')
@@ -422,7 +422,7 @@ class Search extends Board
 				throw new SearchInvalidException(__('The order of the allowed special characters produced a bad query. Try wrapping your query in double quotes.'));
 			}
 
-			if ( ! count($search))
+			if (! count($search))
 			{
 				$this->comments_unsorted = [];
 				$this->comments = [];
@@ -457,14 +457,14 @@ class Search extends Board
 			$like_escape = function($s, $e)
 			{
 				$s = str_replace([$e, '_', '%'], [$e.$e, $e.'_', $e.'%'], $s);
-				return \DB::expr(\DB::escape("%".$s."%")." ESCAPE '".$e."'");
+				return \DB::expr(\DB::escape('%'.$s.'%').' ESCAPE ''.$e.''');
 			};
 
 			// begin filtering search params
 			/*
 			 *  Currently FoolFuuka has no cross-db way to do fulltext search
 			 *
-			if ($args["text"] || $args['filename'])
+			if ($args['text'] || $args['filename'])
 			{
 				// we're using fulltext fields, we better start from this
 				$query = \DB::select(\DB::expr($this->radix->getTable('_search').'.`doc_id`'))
@@ -492,7 +492,7 @@ class Search extends Board
 					->execute()
 					->as_array();
 
-				if ( ! count($result))
+				if (! count($result))
 				{
 					$this->comments_unsorted = [];
 					$this->comments = [];
@@ -617,7 +617,7 @@ class Search extends Board
 					//$this->db->use_index('timestamp_index');
 				}
 
-				if ( ! $select_key) // we're getting the actual result, not the count
+				if (! $select_key) // we're getting the actual result, not the count
 				{
 					$result_which = $query->limit($limit)
 						->offset((($page * $limit) - $limit) > 5000 ? 5000 : ($page * $limit) - $limit)
@@ -626,7 +626,7 @@ class Search extends Board
 						->execute()
 						->as_array();
 
-					if ( ! count($result_which))
+					if (! count($result_which))
 					{
 						$this->comments_unsorted = [];
 						$this->comments = [];
@@ -663,5 +663,4 @@ class Search extends Board
 	{
 		$this->getComments();
 	}
-
 }

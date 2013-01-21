@@ -9,7 +9,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 		$radix = $this->getBuilderParamManager()->getParam('radix');
 		$search = $this->getBuilderParamManager()->getParam('search', []);
 
-		if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
+		if (! isset($radix) && \Preferences::get('fu.sphinx.global'))
 		{
 			// search can work also without a radix selected
 			$search_radix = '_';
@@ -21,49 +21,48 @@ class AdvancedSearch extends \Foolz\Theme\View
 		?>
 
 		<?php if (isset($search_radix)) : ?>
-	    <div class="advanced_search clearfix">
-			<?= \Form::open(array('method' => 'POST', 'action' => \Uri::create($search_radix.'/search'))); ?>
+		<div class="advanced_search clearfix">
+			<?= \Form::open(['method' => 'POST', 'action' => \Uri::create($search_radix.'/search')]); ?>
 
-	    <div class="comment_wrap">
-			<?= \Form::input(array(
+		<div class="comment_wrap">
+			<?= \Form::input([
 			'name' => 'text',
 			'id' => 'search_form_comment',
 			'value' => (isset($search['text'])) ? rawurldecode($search['text']) : '',
 			'placeholder' => ($search_radix  !== '_') ? __('Search or insert post number') : __('Search through all the boards'),
-		));
+		]);
 			?>
-	    </div>
+		</div>
 
-
-	    <div class="buttons clearfix">
-			<?= \Form::submit(array(
+		<div class="buttons clearfix">
+			<?= \Form::submit([
 			'class' => 'btn btn-inverse',
 			'value' => __('Search'),
 			'name' => 'submit_search',
-		));
+		]);
 			?>
 
-			<?= \Form::submit(array(
+			<?= \Form::submit([
 			'class' => 'btn btn-inverse',
 			'value' => __('Search on all boards'),
 			'name' => 'submit_search_global',
-		));
+		]);
 			?>
 
 			<?php if (isset($radix)) : ?>
-			<?= \Form::submit(array(
+			<?= \Form::submit([
 				'class' => 'btn btn-inverse',
 				'value' => __('Go to post number'),
 				'name' => 'submit_post',
-			));
+			]);
 			?>
 			<?php endif; ?>
 
-	    </div>
+		</div>
 
 			<?php $search_structure = \Search::structure(); ?>
 
-	    <div class="column">
+		<div class="column">
 			<?php
 			foreach ($search_structure as $element)
 			{
@@ -81,12 +80,12 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 					echo '<div class="input-prepend">';
 					echo '<label class="add-on" for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
-					echo \Form::input(array(
+					echo \Form::input([
 						'name' => $element['name'],
 						'id' => 'search_form_'.$element['name'],
 						'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : '',
 						'placeholder' => (isset($element['placeholder'])) ? $element['placeholder'] : '',
-					));
+					]);
 					echo '</div>';
 				}
 
@@ -95,37 +94,36 @@ class AdvancedSearch extends \Foolz\Theme\View
 					echo '<div class="input-prepend">';
 					echo '<label class="add-on" for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
 					echo \Form::input(
-						array('type' => 'date',
+						['type' => 'date',
 							'name' => $element['name'],
 							'placeholder' => 'YYYY-MM-DD',
 							'autocomplete' => 'off',
 							'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : ''
 						)
-					);
+					];
 					echo '</div>';
 				}
 			}
 			?>
 
-
-			<?php if ( ! isset($radix) || $radix->sphinx) : ?>
-	        <div class="radixes">
-	            <div>
+			<?php if (! isset($radix) || $radix->sphinx) : ?>
+			<div class="radixes">
+				<div>
 					<?php
 					$radixes = \Radix::getArchives();
 					foreach($radixes as $key => $r)
 					{
-						if ( ! $r->sphinx)
+						if (! $r->sphinx)
 						{
 							unset($radixes[$key]);
 						}
 					}
 					if ($radixes) :
 						?>
-	                    <div><h5><?= e(__('On these archives')) ?></h5>
-	                        <a href="#" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></a>
-	                        <a href="#" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></a>
-	                    </div>
+						<div><h5><?= e(__('On these archives')) ?></h5>
+							<a href="#" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></a>
+							<a href="#" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></a>
+						</div>
 						<?php
 						foreach ($radixes as $r)
 						{
@@ -133,9 +131,9 @@ class AdvancedSearch extends \Foolz\Theme\View
 						}
 						?>
 						<?php endif; ?>
-	            </div>
+				</div>
 
-	            <div style="clear:left; padding-top: 10px">
+				<div style="clear:left; padding-top: 10px">
 					<?php
 					$radixes = \Radix::getBoards();
 					foreach($radixes as $key => $r)
@@ -147,10 +145,10 @@ class AdvancedSearch extends \Foolz\Theme\View
 					}
 					if ($radixes):
 						?>
-	                    <div><h5><?= e(__('On these boards')) ?></h5>
-	                        <a href="#" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></a>
-	                        <a href="#" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></a>
-	                    </div>
+						<div><h5><?= e(__('On these boards')) ?></h5>
+							<a href="#" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></a>
+							<a href="#" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></a>
+						</div>
 						<?php
 						foreach ($radixes as $r)
 						{
@@ -158,15 +156,15 @@ class AdvancedSearch extends \Foolz\Theme\View
 						}
 						?>
 						<?php endif; ?>
-	            </div>
-	        </div>
+				</div>
+			</div>
 			<?php endif ?>
 
-	        <div class="latest_searches">
-	            <h5><?= e(__('Your latest searches')) ?></h5>
-	            <ul>
+			<div class="latest_searches">
+				<h5><?= e(__('Your latest searches')) ?></h5>
+				<ul>
 					<?php
-					if (isset($latest_searches) || $latest_searches = @json_decode(\Cookie::get('search_latest_5'), TRUE))
+					if (isset($latest_searches) || $latest_searches = @json_decode(\Cookie::get('search_latest_5'), true))
 					{
 						// sanitization
 						foreach($latest_searches as $item)
@@ -174,15 +172,15 @@ class AdvancedSearch extends \Foolz\Theme\View
 							// all subitems must be array, all must have 'radix'
 							if (!is_array($item) || !isset($item['board']))
 							{
-								$latest_searches = array();
+								$latest_searches = [];
 								break;
 							}
 						}
 
 						foreach($latest_searches as $latest_search)
 						{
-							$uri = ($latest_search['board'] === FALSE ? '' : $latest_search['board']) . '/search/';
-							$text = ($latest_search['board'] === FALSE) ? '<strong>global:</strong> ' : '/<strong>' . e($latest_search['board']) . '</strong>/: ';
+							$uri = ($latest_search['board'] === false ? '' : $latest_search['board']) . '/search/';
+							$text = ($latest_search['board'] === false) ? '<strong>global:</strong> ' : '/<strong>' . e($latest_search['board']) . '</strong>/: ';
 							unset($latest_search['board']);
 							if (isset($latest_search['text']))
 							{
@@ -208,10 +206,10 @@ class AdvancedSearch extends \Foolz\Theme\View
 						}
 					}
 					?>
-	            </ul>
-	        </div>
-	    </div>
-	    <div class="column checkboxes"><table class="table"><tbody>
+				</ul>
+			</div>
+		</div>
+		<div class="column checkboxes"><table class="table"><tbody>
 			<?php
 			foreach ($search_structure as $element) :
 				if (isset($element['access']) && ! \Auth::has_access($element['access']))
@@ -220,23 +218,22 @@ class AdvancedSearch extends \Foolz\Theme\View
 				}
 
 				if ($element['type'] === 'radio') : ?>
-	            <tr><td><?= e($element['label']) ?></td><td>
+				<tr><td><?= e($element['label']) ?></td><td>
 					<?php foreach ($element['elements'] as $el) : ?>
-	                <label>
+					<label>
 						<?= \Form::radio($element['name'], $el['value'] ? : '', isset($search[$element['name']]) && $el['value'] === $search[$element['name']]) ?>
 						<?= e($el['text']); ?>
-	                </label>
+					</label>
 					<?php endforeach; ?>
-	            </td></tr>
+				</td></tr>
 					<?php endif;
 
 			endforeach; ?>
-	    </tbody></table></div>
+		</tbody></table></div>
 
 			<?= \Form::close() ?>
 
-	    </div>
+		</div>
 		<?php endif;
 	}
-
 }

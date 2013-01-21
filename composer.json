@@ -1,15 +1,15 @@
 {
-    "name": "foolz/foolfuuka",
-    "description": "The core package of FoolFuuka Imageboard",
-    "authors": [
-        {
-            "name": "Foolz",
-            "email": "support@foolz.us"
-        }
-    ],
-    "require": {
+	"name": "foolz/foolfuuka",
+	"description": "The core package of FoolFuuka Imageboard",
+	"authors": [
+		{
+			"name": "Foolz",
+			"email": "support@foolz.us"
+		}
+	],
+	"require": {
 
-    },
+	},
 	"autoload": {
 		"psr-0": {"Foolz\\Foolfuuka": "classes/"}
 	}

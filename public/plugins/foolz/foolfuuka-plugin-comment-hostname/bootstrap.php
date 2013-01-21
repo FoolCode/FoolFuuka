@@ -17,7 +17,7 @@ use \Foolz\Inet\Inet;
 		\Foolz\Plugin\Event::forge('foolfuuka\\model\\comment.cleanFields.call.before')
 			->setCall(function($result){
 				$comment = $result->getObject();
-				if( ! \Auth::has_access('maccess.mod'))
+				if (! \Auth::has_access('maccess.mod'))
 				{
 					if ($comment->extra instanceof \Foolfuuka\Model\Extra)
 						unset($comment->extra->json_array['hostname']);

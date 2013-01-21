@@ -570,7 +570,7 @@ class StringParser_BBCode extends StringParser {
 						return false;
 					}
 					$this->_setStatus (1);
-				} else if ($needle == '[/') {
+				} elseif ($needle == '[/') {
 					if (count ($this->_stack) <= 1) {
 						$this->_appendText ($needle);
 						return true;
@@ -581,15 +581,15 @@ class StringParser_BBCode extends StringParser {
 			case 1: // OPEN TAG
 				if ($needle == ']') {
 					return $this->_openElement (0);
-				} else if (trim ($needle) == ':' || trim ($needle) == '=') {
+				} elseif (trim ($needle) == ':' || trim ($needle) == '=') {
 					$this->_quoting = null;
 					$this->_setStatus (3); // default value parser
 					break;
-				} else if (trim ($needle) == '="' || trim ($needle) == '= "' || trim ($needle) == '=\'' || trim ($needle) == '= \'') {
+				} elseif (trim ($needle) == '="' || trim ($needle) == '= "' || trim ($needle) == '=\'' || trim ($needle) == '= \'') {
 					$this->_quoting = substr (trim ($needle), -1);
 					$this->_setStatus (3); // default value parser with quotation
 					break;
-				} else if ($needle == ' ') {
+				} elseif ($needle == ' ') {
 					$this->_setStatus (4); // attribute parser
 					break;
 				} else {
@@ -631,15 +631,15 @@ class StringParser_BBCode extends StringParser {
 					if ($needle == '\\\\') {
 						$this->_appendText ('\\');
 						return true;
-					} else if ($needle == '\\'.$this->_quoting) {
+					} elseif ($needle == '\\'.$this->_quoting) {
 						$this->_appendText ($this->_quoting);
 						return true;
-					} else if ($needle == $this->_quoting.' ') {
+					} elseif ($needle == $this->_quoting.' ') {
 						$this->_setStatus (4);
 						return true;
-					} else if ($needle == $this->_quoting.']') {
+					} elseif ($needle == $this->_quoting.']') {
 						return $this->_openElement (2);
-					} else if ($needle == $this->_quoting) {
+					} elseif ($needle == $this->_quoting) {
 						// can't be, only ']' and ' ' allowed after quoting char
 						return $this->_reparseAfterCurrentBlock ();
 					} else {
@@ -650,7 +650,7 @@ class StringParser_BBCode extends StringParser {
 					if ($needle == ' ') {
 						$this->_setStatus (4);
 						return true;
-					} else if ($needle == ']') {
+					} elseif ($needle == ']') {
 						return $this->_openElement (2);
 					} else {
 						$this->_appendText ($needle);
@@ -666,20 +666,20 @@ class StringParser_BBCode extends StringParser {
 					// just ignore and continue in same mode
 					$this->_setStatus (4); // reset parameters
 					return true;
-				} else if ($needle == ']') {
+				} elseif ($needle == ']') {
 					if (strlen ($this->_savedName)) {
 						$this->_topNode ('setAttribute', $this->_savedName, true);
 					}
 					return $this->_openElement (2);
-				} else if ($needle == '=') {
+				} elseif ($needle == '=') {
 					$this->_quoting = null;
 					$this->_setStatus (5);
 					return true;
-				} else if ($needle == '="') {
+				} elseif ($needle == '="') {
 					$this->_quoting = '"';
 					$this->_setStatus (5);
 					return true;
-				} else if ($needle == '=\'') {
+				} elseif ($needle == '=\'') {
 					$this->_quoting = '\'';
 					$this->_setStatus (5);
 					return true;
@@ -693,17 +693,17 @@ class StringParser_BBCode extends StringParser {
 					if ($needle == '\\\\') {
 						$this->_appendText ('\\');
 						return true;
-					} else if ($needle == '\\'.$this->_quoting) {
+					} elseif ($needle == '\\'.$this->_quoting) {
 						$this->_appendText ($this->_quoting);
 						return true;
-					} else if ($needle == $this->_quoting.' ') {
+					} elseif ($needle == $this->_quoting.' ') {
 						$this->_topNode ('setAttribute', $this->_savedName, $this->_savedValue);
 						$this->_setStatus (4);
 						return true;
-					} else if ($needle == $this->_quoting.']') {
+					} elseif ($needle == $this->_quoting.']') {
 						$this->_topNode ('setAttribute', $this->_savedName, $this->_savedValue);
 						return $this->_openElement (2);
-					} else if ($needle == $this->_quoting) {
+					} elseif ($needle == $this->_quoting) {
 						// can't be, only ']' and ' ' allowed after quoting char
 						return $this->_reparseAfterCurrentBlock ();
 					} else {
@@ -715,7 +715,7 @@ class StringParser_BBCode extends StringParser {
 						$this->_topNode ('setAttribute', $this->_savedName, $this->_savedValue);
 						$this->_setStatus (4);
 						return true;
-					} else if ($needle == ']') {
+					} elseif ($needle == ']') {
 						$this->_topNode ('setAttribute', $this->_savedName, $this->_savedValue);
 						return $this->_openElement (2);
 					} else {
@@ -1046,7 +1046,7 @@ class StringParser_BBCode extends StringParser {
 				return $node->getReplacement ($output);
 			}
 			return $output;
-		} else if ($node->_type == STRINGPARSER_NODE_TEXT) {
+		} elseif ($node->_type == STRINGPARSER_NODE_TEXT) {
 			$output = $node->content;
 			$before = '';
 			$after = '';
@@ -1268,7 +1268,7 @@ class StringParser_BBCode extends StringParser {
 						if ($cpos == 0) {
 							$subnode->setFlag ($flag, $value);
 						}
-					} else if ($flag == 'newlinemode.end') {
+					} elseif ($flag == 'newlinemode.end') {
 						// do nothing
 					} else {
 						$subnode->setFlag ($flag, $value);
@@ -1342,7 +1342,7 @@ class StringParser_BBCode extends StringParser {
 		$result = false;
 		if ($this->_codes[$name]['callback_type'] == 'callback_replace?') {
 			$result = true;
-		} else if ($this->_codes[$name]['callback_type'] != 'usecontent?') {
+		} elseif ($this->_codes[$name]['callback_type'] != 'usecontent?') {
 			return false;
 		}
 		if ($check_attrs === false) {

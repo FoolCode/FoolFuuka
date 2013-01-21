@@ -1,9 +1,10 @@
 <?php
-if (!defined('DOCROOT'))
+
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 ?>
 
-<?php $data_array = json_decode($data, TRUE); ?>
+<?php $data_array = json_decode($data, true); ?>
 <table class="bordered-table" style="width:600px; margin: 10px auto;">
 	<thead>
 	<tr>

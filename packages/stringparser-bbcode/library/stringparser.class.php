@@ -990,7 +990,7 @@ class StringParser_Node {
 	/**
 	 * Append a node to the children
 	 *
-	 * This function appends a node to the children array(). It
+	 * This function appends a node to the children array. It
 	 * automatically sets the {@link StrinParser_Node::_parent _parent}
 	 * property of the node that is to be appended.
 	 *

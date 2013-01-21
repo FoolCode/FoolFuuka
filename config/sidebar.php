@@ -1,31 +1,30 @@
 <?php
 
-return array(
+return [
 
-	'sidebar' => array(
+	'sidebar' => [
 
-		'boards' => array(
+		'boards' => [
 			"name" => __("Boards"),
 			"level" => "admin",
 			"default" => "manage",
-			"content" => array(
-				"manage" => array("alt_highlight" => array("board"),
-					"level" => "admin", "name" => __("Manage"), "icon" => 'icon-th-list'),
-				"add_new" => array("level" => "admin", "name" => __("Add board"), "icon" => 'icon-asterisk'),
-				"sphinx" => array("level" => "admin", "name" => __("Sphinx Search"), "icon" => 'icon-search'),
-				"preferences" => array("level" => "admin", "name" => __("Preferences"), "icon" => 'icon-check')
-			)
-		),
-		'posts' => array(
+			"content" => [
+				"manage" => ["alt_highlight" => ["board"],
+					"level" => "admin", "name" => __("Manage"), "icon" => 'icon-th-list'],
+				"add_new" => ["level" => "admin", "name" => __("Add board"), "icon" => 'icon-asterisk'],
+				"sphinx" => ["level" => "admin", "name" => __("Sphinx Search"), "icon" => 'icon-search'],
+				"preferences" => ["level" => "admin", "name" => __("Preferences"), "icon" => 'icon-check']
+			]
+		],
+		'posts' => [
 			"name" => __("Posts"),
 			"level" => "mod",
 			"default" => "reports",
-			"content" => array(
-				"reports" => array("level" => "mod", "name" => __("Reports"), "icon" => 'icon-tag'),
-				"bans" => array("level" => "mod", "name" => __("Bans"), "icon" => 'icon-truck'),
-				"appeals" => array("level" => "mod", "name" => __("Pending Appeals"), "icon" => 'icon-heart-empty'),
-			)
-		)
-
-	)
-);
+			"content" => [
+				"reports" => ["level" => "mod", "name" => __("Reports"), "icon" => 'icon-tag'],
+				"bans" => ["level" => "mod", "name" => __("Bans"), "icon" => 'icon-truck'],
+				"appeals" => ["level" => "mod", "name" => __("Pending Appeals"), "icon" => 'icon-heart-empty'],
+			]
+		]
+	]
+];

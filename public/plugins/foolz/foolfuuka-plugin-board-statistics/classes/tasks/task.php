@@ -8,7 +8,7 @@ use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 class Task
 {
 
-	public static function cli_board_statistics_help()
+	public static function cliBoardStatisticsHelp()
 	{
 		\Cli::write('  --Board Statistics command list:');
 		\Cli::write('    cron                        Create statistics for all the boards in a loop');
@@ -46,7 +46,7 @@ class Task
 	{
 		$boards = \Radix::getAll();
 
-		$available = BS::get_available_stats();
+		$available = BS::getAvailableStats();
 
 		while(true)
 		{
@@ -59,7 +59,7 @@ class Task
 				->fetchAll();
 
 			// Obtain the list of all statistics enabled.
-			$avail = array();
+			$avail = [];
 			foreach ($available as $k => $a)
 			{
 				// get only the non-realtime ones
@@ -71,7 +71,7 @@ class Task
 
 			foreach ($boards as $board)
 			{
-				if ( ! is_null($shortname) && $shortname != $board->shortname)
+				if (! is_null($shortname) && $shortname != $board->shortname)
 				{
 					continue;
 				}
@@ -81,8 +81,8 @@ class Task
 				foreach ($available as $k => $a)
 				{
 					\Cli::write('  ' . $k . ' ');
-					$found = FALSE;
-					$skip = FALSE;
+					$found = false;
+					$skip = false;
 
 					foreach ($stats as $r)
 					{
@@ -90,18 +90,18 @@ class Task
 						if ($r['board_id'] == $board->id && $r['name'] == $k)
 						{
 							// This statistics report has run once already.
-							$found = TRUE;
+							$found = true;
 
-							if( ! isset($a['frequency']))
+							if (! isset($a['frequency']))
 							{
-								$skip = TRUE;
+								$skip = true;
 								continue;
 							}
 
 							// This statistics report has not reached its frequency EOL.
 							if (time() - strtotime($r['timestamp']) <= $a['frequency'])
 							{
-								$skip = TRUE;
+								$skip = true;
 								continue;
 							}
 							break;
@@ -109,14 +109,14 @@ class Task
 					}
 
 					// racing conditions with our cron.
-					if ($found === FALSE)
+					if ($found === false)
 					{
-						BS::save_stat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
+						BS::saveStat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
 					}
 
 					// We were able to obtain a LOCK on the statistics report and has already reached the
 					// targeted frequency time.
-					if ($skip === FALSE)
+					if ($skip === false)
 					{
 						\Cli::write('* Processing...');
 						$process = 'process_' . $k;
@@ -125,11 +125,11 @@ class Task
 						// This statistics report generates a graph via GNUPLOT.
 						if (isset($available[$k]['gnuplot']) && is_array($result) && ! empty($result))
 						{
-							BS::graph_gnuplot($board->shortname, $k, $result);
+							BS::graphGnuplot($board->shortname, $k, $result);
 						}
 
 						// Save the statistics report in a JSON array.
-						BS::save_stat($board->id, $k, date('Y-m-d H:i:s'), $result);
+						BS::saveStat($board->id, $k, date('Y-m-d H:i:s'), $result);
 					}
 				}
 			}
@@ -137,5 +137,4 @@ class Task
 			sleep(10);
 		}
 	}
-
 }

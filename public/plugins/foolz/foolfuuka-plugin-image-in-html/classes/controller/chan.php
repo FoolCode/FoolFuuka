@@ -1,18 +1,17 @@
 <?php
 
-namespace Foolfuuka\Plugins\Image_In_Html;
-
-if (!defined('DOCROOT'))
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
+namespace Foolfuuka\Plugins\ImageInHtml;
+
+class ControllerPluginFuImageInHtmlChan extends \Foolfuuka\Controller_Chan
 {
 
-
-	public function radix_image_html($filename)
+	public function radixImageHtml($filename)
 	{
 		// Check if $filename is valid.
-		if ( ! in_array(\Input::extension(), array('gif', 'jpg', 'png')) || ! ctype_digit(substr($filename, 0, 13)))
+		if (! in_array(\Input::extension(), ['gif', 'jpg', 'png']) || ! ctype_digit(substr($filename, 0, 13)))
 		{
 			return $this->action_404(__('The filename submitted is not compatible with the system.'));
 		}
@@ -44,43 +43,43 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 				.theme_default .full_image {
 					margin: 10px auto;
 					padding: 4px;
-					text-align:center;
+					text-align:center
 				}
 
 				.theme_default .full_image nav {
-					margin: 10px;
+					margin: 10px
 				}
 
 				.theme_default .full_image nav .btnr {
-					font-size: 20px
+					font: 20px
 				}
 
 				.theme_default .full_image img {
-					max-width: 90%;
+					max-width: 90%
 				}
 
 				.theme_default article.thread article.post:nth-of-type(-n+4) {
 					display:block;
 					float:none;
-					margin: 0px auto;
+					margin: 0 auto
 				}
 
 				.theme_default .post {
 					width: 50%;
 					display:block;
 					float:none;
-					margin: 10px auto;
+					margin: 10px auto
 				}
 			</style>
 			<?php
 			$content = ob_get_clean();
 
-			$this->_theme->bind('section_title', \Str::tr(__('Displaying image :image_filename'), array('image_filename' => $media->media)));
+			$this->_theme->bind('section_title', \Str::tr(__('Displaying image :image_filename'), ['image_filename' => $media->media]));
 
 			try
 			{
 				$board = \Search::forge()
-					->get_search(array('image' => $media->media_hash))
+					->get_search(['image' => $media->media_hash])
 					->set_radix($this->_radix)
 					->set_options('limit', 5)
 					->set_page(1);
@@ -100,20 +99,18 @@ class Controller_Plugin_Fu_Image_In_Html_Chan extends \Foolfuuka\Controller_Chan
 				$board_html = '';
 			}
 
-			$image_html = $this->_theme->build('plugin', array('content' => $content), true);
+			$image_html = $this->_theme->build('plugin', ['content' => $content], true);
 
 			// we got search results
-			if ( ! isset($board_html))
+			if (! isset($board_html))
 			{
-				$board_html = $this->_theme->build('board', array('board' => $board, 'disable_default_after_headless_open' => true), true);
+				$board_html = $this->_theme->build('board', ['board' => $board, 'disable_default_after_headless_open' => true], true);
 			}
 
-			return \Response::forge($this->_theme->build('plugin', array('content' => $image_html.$board_html)));
+			return \Response::forge($this->_theme->build('plugin', ['content' => $image_html.$board_html]));
 		}
 
 		return \Response::redirect(
-			\Uri::create(array($this->_radix->shortname, 'search', 'image', rawurlencode(substr($media->media_hash, 0, -2)))), 'location', 404);
+			\Uri::create([$this->_radix->shortname, 'search', 'image', rawurlencode(substr($media->media_hash, 0, -2))]), 'location', 404);
 	}
-
-
 }

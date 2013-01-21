@@ -13,37 +13,37 @@ class Index extends \Foolz\Theme\View
 		<h1><?= Preferences::get('fu.gen_index_title'); ?></h1>
 		<?php
 
-			$index_nav = array();
+			$index_nav = [];
 
 			if (\Radix::getArchives())
 			{
-				$index_nav['archives'] = array(
+				$index_nav['archives'] = [
 					'title' => __('Archives'),
-					'elements' => array()
-				);
+					'elements' => []
+				];
 
 				foreach (\Radix::getArchives() as $key => $item)
 				{
-					$index_nav['archives']['elements'][] = array(
+					$index_nav['archives']['elements'][] = [
 						'href' => $item->href,
 						'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
-					);
+					];
 				}
 			}
 
 			if (\Radix::getBoards())
 			{
-				$index_nav['boards'] = array(
+				$index_nav['boards'] = [
 					'title' => __('Boards'),
-					'elements' => array()
-				);
+					'elements' => []
+				];
 
 				foreach (\Radix::getBoards() as $key => $item)
 				{
-					$index_nav['boards']['elements'][] = array(
+					$index_nav['boards']['elements'][] = [
 						'href' => $item->href,
 						'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
-					);
+					];
 				}
 			}
 

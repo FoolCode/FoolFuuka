@@ -1,32 +1,32 @@
 <?php
 
-if (!defined('DOCROOT'))
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-lock')
 	->setCall(function($result) {
-		\Autoloader::add_classes(array(
-			'Foolfuuka\\Plugins\\Geoip_Region_Lock\\Geoip_Region_Lock' => __DIR__.'/classes/model/geoip_region_lock.php',
-			'Foolfuuka\\Plugins\\Geoip_Region_Lock\\Controller_Plugin_Fu_Geoip_Region_Lock_Admin_Geoip_Region_Lock'
-				=> __DIR__.'/classes/controller/admin/geoip_region_lock.php'
-		));
+		\Autoloader::add_classes([
+			'Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock' => __DIR__.'/classes/model/geoipregionlock.php',
+			'Foolfuuka\\Plugins\\GeoipRegionLock\\ControllerPluginFuGeoipRegionLockAdminGeoipRegionLock'
+				=> __DIR__.'/classes/controller/admin/geoipregionlock.php'
+		]);
 
 		// don't add the admin panels if the user is not an admin
 		if (\Auth::has_access('maccess.admin'))
 		{
 			\Router::add('admin/plugins/geoip_region_lock', 'plugin/fu/geoip_region_lock/admin/geoip_region_lock/manage');
 
-			\Plugins::register_sidebar_element('admin', 'plugins', array(
-				"content" => array("geoip_region_lock" => array("level" => "admin", "name" => 'GeoIP Region Lock', "icon" => 'icon-flag'))
-			));
+			\Plugins::register_sidebar_element('admin', 'plugins', [
+				"content" => ["geoip_region_lock" => ["level" => "admin", "name" => 'GeoIP Region Lock', "icon" => 'icon-flag']]
+			]);
 		}
 
-		if ( ! \Auth::has_access('maccess.mod') && !(\Preferences::get('fu.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user')))
+		if (! \Auth::has_access('maccess.mod') && !(\Preferences::get('fu.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user')))
 		{
-			\Foolfuuka\Plugins\Geoip_Region_Lock\Geoip_Region_Lock::block_country_view();
+			\Foolfuuka\Plugins\Geoip_Region_Lock\GeoipRegionLock::block_country_view();
 
 			\Foolz\Plugin\Event::forge('fu.comment.insert.call.before')
-				->setCall('Foolfuuka\\Plugins\\Geoip_Region_Lock\\Geoip_Region_Lock::block_country_comment')
+				->setCall('Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock::blockCountryComment')
 				->setPriority(4);
 		}
 
@@ -34,26 +34,25 @@ if (!defined('DOCROOT'))
 			->setCall(function($result){
 			$structure = $result->getParam('structure');
 
-			$structure['plugin_geo_ip_region_lock_allow_comment'] = array(
-				'database' => TRUE,
-				'boards_preferences' => TRUE,
+			$structure['plugin_geo_ip_region_lock_allow_comment'] = [
+				'database' => true,
+				'boards_preferences' => true,
 				'type' => 'input',
 				'class' => 'span3',
 				'label' => 'Nations allowed to post comments',
 				'help' => __('Comma separated list of GeoIP 2-letter nation codes.'),
-				'default_value' => FALSE
-			);
+				'default_value' => false
+			];
 
-			$structure['plugin_geo_ip_region_lock_disallow_comment'] = array(
-				'database' => TRUE,
-				'boards_preferences' => TRUE,
+			$structure['plugin_geo_ip_region_lock_disallow_comment'] = [
+				'database' => true,
+				'boards_preferences' => true,
 				'type' => 'input',
 				'class' => 'span3',
 				'label' => 'Nations disallowed to post comments',
 				'help' => __('Comma separated list of GeoIP 2-letter nation codes.'),
-				'default_value' => FALSE
-			);
+				'default_value' => false
+			];
 			$result->setParam('structure', $structure)->set($structure);
 		})->setPriority(8);
 	});
-

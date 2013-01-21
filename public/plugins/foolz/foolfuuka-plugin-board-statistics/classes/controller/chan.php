@@ -9,13 +9,13 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 	/**
 	 * @param null $report
 	 */
-	public function radix_statistics($report = null)
+	public function radixStatistics($report = null)
 	{
 		// Load Statistics Model
 
 		if (is_null($report))
 		{
-			$stats = BS::get_available_stats();
+			$stats = BS::getAvailableStats();
 
 			// Set template variables required to build the HTML.
 			$this->builder->getProps()->addTitle(__('Statistics'));
@@ -29,7 +29,7 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 					<ul>
 						<?php foreach ($stats as $key => $stat) : ?>
 						<li>
-							<a href="<?php echo \Uri::create(array($this->_radix->shortname, 'statistics', $key)) ?>" title="<?php echo htmlspecialchars($stat['name']) ?>" ><?php echo $stat['name'] ?></a>
+							<a href="<?php echo \Uri::create([$this->_radix->shortname, 'statistics', $key]) ?>" title="<?php echo htmlspecialchars($stat['name']) ?>" ><?php echo $stat['name'] ?></a>
 						</li>
 						<?php endforeach; ?>
 					</ul>
@@ -46,9 +46,9 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 		}
 		else
 		{
-			$stats = BS::check_available_stats($report, $this->_radix);
+			$stats = BS::checkAvailableStats($report, $this->_radix);
 
-			if (!is_array($stats))
+			if (! is_array($stats))
 			{
 				return $this->error(__('Statistic currently not available.'));
 			}
@@ -79,7 +79,6 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 				{
 					$time_next = floor($time_next / 86400).' '.__('days');
 				}
-
 
 				$section_title = sprintf(__('Statistics: %s (Next Update in %s)'),
 					$stats['info']['name'],

@@ -1,5 +1,6 @@
 <?php
-if (!defined('DOCROOT'))
+
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 ?>
 
@@ -17,7 +18,7 @@ if (!defined('DOCROOT'))
 		<tr>
 			<td style="width:50%; max-width:50%">
 				<?php
-				$params = array(\Radix::getSelected()->shortname, 'search');
+				$params = [\Radix::getSelected()->shortname, 'search'];
 				if ($d->name)
 					array_push($params, 'username/' . urlencode($d->name));
 				if ($d->trip)
@@ -25,7 +26,7 @@ if (!defined('DOCROOT'))
 
 				$poster_link = Uri::create($params);
 
-				$values = (($d->std2 < $d->std1) ? array($d->avg2 - $d->std2, $d->avg2 + $d->std2) : array($d->avg1 - $d->std1, $d->avg1 + $d->std1));
+				$values = (($d->std2 < $d->std1) ? [$d->avg2 - $d->std2, $d->avg2 + $d->std2] : [$d->avg1 - $d->std1, $d->avg1 + $d->std1]);
 				$val_st = ($values[0] + 86400) % 86400;
 				$val_ed = ($values[1] + 86400) % 86400;
 				?>

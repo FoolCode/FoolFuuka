@@ -5,8 +5,8 @@
  * used here to determine which nation is the two letters country code
  */
 
-return array(
-	'codes' => array(
+return [
+	'codes' => [
 		'' => '',
 		'AP' => 'Asia/Pacific Region',
 		'EU' => 'Europe',
@@ -261,5 +261,5 @@ return array(
 		'BL' => 'Saint Barthelemy',
 		'MF' => 'Saint Martin',
 		'BQ' => 'Bonaire, Saint Eustatius and Saba',
-	)
-);
+	]
+];

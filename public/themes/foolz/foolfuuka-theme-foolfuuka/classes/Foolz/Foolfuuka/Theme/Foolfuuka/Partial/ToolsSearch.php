@@ -14,7 +14,7 @@ class ToolsSearch extends \Foolz\Theme\View
 			// search can work also without a radix selected
 			$search_radix = '_';
 		}
-		elseif ( ! is_null($radix))
+		elseif (! is_null($radix))
 		{
 			$search_radix = $radix->shortname;
 		}

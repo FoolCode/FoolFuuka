@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Themes\Yotsubatwo\Controller;
 
-if (!defined('DOCROOT'))
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 class Chan extends \Foolz\Foolfuuka\Controller\Chan
@@ -12,13 +12,12 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 		$order = \Cookie::get('default_theme_page_mode_'. ($this->_radix->archive ? 'archive' : 'board')) === 'by_thread'
 			? 'by_thread' : 'by_post';
 
-		$options = array(
+		$options = [
 			'per_page' => 24,
 			'per_thread' => 6,
 			'order' => $order
-		);
+		];
 
 		return $this->latest($page, $options);
 	}
-
 }

@@ -240,14 +240,14 @@ class Radix
 						'type' => 'textarea',
 						'label' => __('Thread refresh rate'),
 						'help' => __('Array of refresh rates in seconds per page in JSON format'),
-						'placeholder' => htmlspecialchars('[{"delay": 30, "pages": [0, 1, 2]},'.
-							'{"delay": 120, "pages": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},'.
-							'{"delay": 30, "pages": [13, 14, 15]}]'),
+						'placeholder' => htmlspecialchars('[{'delay': 30, 'pages': [0, 1, 2]},'.
+							'{'delay': 120, 'pages': [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},'.
+							'{'delay': 30, 'pages': [13, 14, 15]}]'),
 						'class' => 'span4',
 						'style' => 'height:70px;',
 						'validation_func' => function($input, $form_internal)
 						{
-							if($input['page_settings'] === '')
+							if ($input['page_settings'] === '')
 							{
 								return true;
 							}
@@ -327,7 +327,7 @@ class Radix
 					'max_posts_count' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('The maximum amount of posts before a thread "dies"'),
+						'label' => __('The maximum amount of posts before a thread 'dies''),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]',
@@ -431,7 +431,7 @@ class Radix
 		{
 			$default = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key);
 
-			if($default !== null)
+			if ($default !== null)
 			{
 				$structure[$key]['default_value'] = $default;
 			}
@@ -446,7 +446,7 @@ class Radix
 					{
 						$default = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$k);
 
-						if(!is_null($default))
+						if (! is_null($default))
 						{
 							$structure[$key][$inv][$k]['default_value'] = $default;
 						}
@@ -521,7 +521,7 @@ class Radix
 					}
 					elseif (isset($i['database']))
 					{
-						if ( ! isset($data[$k]))
+						if (! isset($data[$k]))
 						{
 							if ($i['type'] === 'checkbox')
 							{
@@ -558,7 +558,7 @@ class Radix
 			}
 			elseif (isset($item['database']))
 			{
-				if ( ! isset($data[$key]))
+				if (! isset($data[$key]))
 				{
 					if ($item['type'] === 'checkbox')
 					{
@@ -575,7 +575,7 @@ class Radix
 		// data must be already sanitized through the form array
 		if (isset($data['id']))
 		{
-			if ( ! $radix = static::getById($data['id']))
+			if (! $radix = static::getById($data['id']))
 			{
 				// @todo proper error
 				return;
@@ -631,7 +631,7 @@ class Radix
 
 
 	/**
-	 * Insert custom preferences. One must use this for "internal" preferences
+	 * Insert custom preferences. One must use this for 'internal' preferences
 	 *
 	 * @param  \Foolz\Foolfuuka\Model\Radix|int  $board_id  can also be the board object
 	 * @param  string  $name   The name of the value to insert
@@ -734,9 +734,9 @@ class Radix
 	 *
 	 * @param   boolean  $echo  echo CLI output
 	 *
-	 * @return  boolean  TRUE on success, FALSE on failure
+	 * @return  boolean  true on success, false on failure
 	 */
-	public static function removeLeftoverDirs($echo = FALSE)
+	public static function removeLeftoverDirs($echo = false)
 	{
 		$all = static::getAll();
 
@@ -747,7 +747,7 @@ class Radix
 		{
 			while (false !== ($file = readdir($handle)))
 			{
-				if (in_array($file, array('..', '.')))
+				if (in_array($file, ['..', '.']))
 					continue;
 
 				if (is_dir(\Preferences::get('fu.boards.directory').'/'.$file))
@@ -822,7 +822,7 @@ class Radix
 			Cache::item('fu.model.radix.preload')->set($result, 900);
 		}
 
-		if ( ! is_array($result) || empty($result))
+		if (! is_array($result) || empty($result))
 		{
 			static::$preloaded_radixes = [];
 			return false;
@@ -847,7 +847,7 @@ class Radix
 			// load the basic value of the preferences
 			foreach ($structure as $key => $arr)
 			{
-				if ( ! isset($result_object[$item['id']]->$key) && isset($arr['boards_preferences']))
+				if (! isset($result_object[$item['id']]->$key) && isset($arr['boards_preferences']))
 				{
 					$result_object[$item['id']]->$key = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key);
 				}
@@ -895,7 +895,7 @@ class Radix
 		}
 
 		// unset the hidden boards
-		if ( ! \Auth::has_access('boards.see_hidden'))
+		if (! \Auth::has_access('boards.see_hidden'))
 		{
 			foreach ($result_object as $key => $value)
 			{

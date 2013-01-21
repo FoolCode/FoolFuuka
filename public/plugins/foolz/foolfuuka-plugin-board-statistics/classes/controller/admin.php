@@ -8,7 +8,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 {
 	public function before()
 	{
-		if ( ! \Auth::has_access('maccess.admin'))
+		if (! \Auth::has_access('maccess.admin'))
 		{
 			\Response::redirect('admin');
 		}
@@ -16,47 +16,46 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 		parent::before();
 	}
 
-
 	protected function structure()
 	{
-		$arr = array(
-			'open' => array(
+		$arr = [
+			'open' => [
 				'type' => 'open',
-			),
-			'fu.plugins.board_statistics.enabled' => array(
+			],
+			'fu.plugins.board_statistics.enabled' => [
 				'type' => 'checkbox_array',
 				'label' => 'Enabled statistics',
 				'help' => __('Select the statistics to enable. Some might be too slow to process, so you should disable them. Some statistics don\'t use extra processing power so they are enabled by default.'),
-				'checkboxes' => array()
-			),
-			'separator-2' => array(
+				'checkboxes' => []
+			],
+			'separator-2' => [
 				'type' => 'separator-short'
-			),
-			'submit' => array(
+			],
+			'submit' => [
 				'type' => 'submit',
 				'class' => 'btn-primary',
 				'value' => __('Submit')
-			),
-			'close' => array(
+			],
+			'close' => [
 				'type' => 'close'
-			),
-		);
+			],
+		];
 
-		foreach(BS::get_stats() as $key => $stat)
+		foreach(BS::getStats() as $key => $stat)
 		{
-			$arr['fu.plugins.board_statistics.enabled']['checkboxes'][] = array(
+			$arr['fu.plugins.board_statistics.enabled']['checkboxes'][] = [
 				'type' => 'checkbox',
 				'label' => $key,
 				'help' => sprintf(__('Enable %s statistics'), $stat['name']),
 				'array_key' => $key,
 				'preferences' => true,
-			);
+			];
 		}
 
 		return $arr;
 	}
 
-	public function action_manage()
+	public function actionManage()
 	{
 		$this->_views['controller_title'] = __("Board Statistics");
 		$this->_views['method_title'] = __('Manage');

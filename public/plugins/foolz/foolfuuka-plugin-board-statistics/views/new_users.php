@@ -1,5 +1,6 @@
 <?php
-if (!defined('DOCROOT'))
+
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 ?>
 
@@ -21,12 +22,12 @@ if (!defined('DOCROOT'))
 	</tr>
 	</thead>
 	<tbody>
-	<?php $data_array = json_decode($data, TRUE)?>
+	<?php $data_array = json_decode($data, true)?>
 	<?php foreach ($data_array as $d) : ?>
 	<tr>
 		<td style="width:50%">
 			<?php
-			$params = array(\Radix::getSelected()->shortname, 'search');
+			$params = [\Radix::getSelected()->shortname, 'search'];
 			if ($d['name'])
 				array_push($params, 'username/' . urlencode($d['name']));
 			if ($d['trip'])
@@ -44,4 +45,3 @@ if (!defined('DOCROOT'))
 		<?php endforeach; ?>
 	</tbody>
 </table>
-

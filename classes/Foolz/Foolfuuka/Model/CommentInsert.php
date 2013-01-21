@@ -52,7 +52,7 @@ class CommentInsert extends Comment
 			}
 			catch(\Doctrine\DBAL\DBALException $e)
 			{
-				if ( ! $is_retry)
+				if (! $is_retry)
 				{
 					// maybe we're trying to insert on something just inserted
 					return $this->insertTriggerDaily(true);
@@ -117,7 +117,7 @@ class CommentInsert extends Comment
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
 			{
-				if ( ! $is_retry)
+				if (! $is_retry)
 				{
 					return $this->insertTriggerUsers(true);
 				}
@@ -157,7 +157,7 @@ class CommentInsert extends Comment
 		}
 		else
 		{
-			if ( ! $this->subnum)
+			if (! $this->subnum)
 			{
 				$query = DC::qb()
 					->update($this->radix->getTable('_threads'))
@@ -243,7 +243,7 @@ class CommentInsert extends Comment
 				if ($ban->appeal_status == \Ban::APPEAL_NONE)
 				{
 					$banned_string .= ' '.\Str::tr(__('If you\'d like to appeal to your ban, go to the :appeal page.'),
-						array('appeal' => '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'.__('appeal').'</a>'));
+						['appeal' => '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'.__('appeal').'</a>']);
 				}
 				elseif ($ban->appeal_status == \Ban::APPEAL_PENDING)
 				{
@@ -253,7 +253,6 @@ class CommentInsert extends Comment
 				throw new CommentSendingBannedException($banned_string);
 			}
 		}
-
 
 		// check if it's a thread and its status
 		if ($this->thread_num > 0)
@@ -280,13 +279,13 @@ class CommentInsert extends Comment
 			$this->allow_media = ! $status['disable_image_upload'];
 		}
 
-		foreach(array('name', 'email', 'title', 'delpass', 'comment', 'capcode') as $key)
+		foreach(['name', 'email', 'title', 'delpass', 'comment', 'capcode'] as $key)
 		{
 			$this->$key = trim((string) $this->$key);
 		}
 
 		// some users don't need to be limited, in here go all the ban and posting limitators
-		if( ! \Auth::has_access('comment.limitless_comment'))
+		if (! \Auth::has_access('comment.limitless_comment'))
 		{
 			if ($this->thread_num < 1)
 			{
@@ -306,7 +305,7 @@ class CommentInsert extends Comment
 					->execute()
 					->fetch();
 
-				if($check_op)
+				if ($check_op)
 				{
 					throw new CommentSendingTimeLimitException(__('You must wait up to 5 minutes to make another new thread.'));
 				}
@@ -349,7 +348,7 @@ class CommentInsert extends Comment
 
 			// we want to know if the comment will display empty, and in case we won't let it pass
 			$comment_parsed = $this->processComment();
-			if($this->comment !== '' && $comment_parsed === '')
+			if ($this->comment !== '' && $comment_parsed === '')
 			{
 				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
 			}
@@ -365,7 +364,7 @@ class CommentInsert extends Comment
 				$recaptcha = \ReCaptcha::instance()
 					->check_answer(\Input::ip(), $this->recaptcha_challenge, $this->recaptcha_response);
 
-				if ( ! $recaptcha)
+				if (! $recaptcha)
 				{
 					throw new CommentSendingWrongCaptchaException(__('Incorrect CAPTCHA solution.'));
 				}
@@ -395,7 +394,7 @@ class CommentInsert extends Comment
 			$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents(DOCROOT.'assets/anti-spam/databases')));
 			foreach($spam as $s)
 			{
-				if(strpos($this->comment, $s) !== false || strpos($this->name, $s) !== false
+				if (strpos($this->comment, $s) !== false || strpos($this->name, $s) !== false
 					|| strpos($this->title, $s) !== false || strpos($this->email, $s) !== false)
 				{
 					throw new CommentSendingSpamException(__('Your post has undesidered content.'));
@@ -434,7 +433,7 @@ class CommentInsert extends Comment
 			}
 		}
 
-		foreach(array('email', 'title', 'delpass', 'comment') as $key)
+		foreach (['email', 'title', 'delpass', 'comment'] as $key)
 		{
 			if ($this->$key === '')
 			{
@@ -448,7 +447,7 @@ class CommentInsert extends Comment
 			throw new CommentSendingNoDelPassException(__('You must submit a deletion password.'));
 		}
 
-		if ( ! class_exists('PHPSecLib\\Crypt_Hash', false))
+		if (! class_exists('PHPSecLib\\Crypt_Hash', false))
 		{
 			import('phpseclib/Crypt/Hash', 'vendor');
 		}
@@ -458,24 +457,24 @@ class CommentInsert extends Comment
 
 		if ($this->capcode != '')
 		{
-			$allowed_capcodes = array('N');
+			$allowed_capcodes = ['N'];
 
-			if(\Auth::has_access('comment.mod_capcode'))
+			if (\Auth::has_access('comment.mod_capcode'))
 			{
 				$allowed_capcodes[] = 'M';
 			}
 
-			if(\Auth::has_access('comment.admin_capcode'))
+			if (\Auth::has_access('comment.admin_capcode'))
 			{
 				$allowed_capcodes[] = 'A';
 			}
 
-			if(\Auth::has_access('comment.dev_capcode'))
+			if (\Auth::has_access('comment.dev_capcode'))
 			{
 				$allowed_capcodes[] = 'D';
 			}
 
-			if(!in_array($this->capcode, $allowed_capcodes))
+			if (! in_array($this->capcode, $allowed_capcodes))
 			{
 				throw new CommentSendingUnallowedCapcodeException(__('You\'re not allowed to use this capcode.'));
 			}
@@ -502,7 +501,7 @@ class CommentInsert extends Comment
 		// process comment media
 		if ($this->media !== null)
 		{
-			if ( ! $this->allow_media)
+			if (! $this->allow_media)
 			{
 				throw new CommentSendingImageInGhostException(__('You can\'t post images when the thread is in ghost mode.'));
 			}
@@ -519,7 +518,7 @@ class CommentInsert extends Comment
 		else
 		{
 			// if no media is present and post is op, stop processing
-			if (!$this->thread_num)
+			if (! $this->thread_num)
 			{
 				throw new CommentSendingThreadWithoutMediaException(__('You can\'t start a new thread without an image.'));
 			}
@@ -554,7 +553,7 @@ class CommentInsert extends Comment
 
 		// being processing insert...
 
-		if($this->ghost)
+		if ($this->ghost)
 		{
 			$this->num = '('.DC::qb()
 				->select('MAX(num)')
@@ -600,7 +599,7 @@ class CommentInsert extends Comment
 
 			$subnum = 0;
 
-			if($this->thread_num > 0)
+			if ($this->thread_num > 0)
 			{
 				$thread_num = DC::forge()->quote($this->thread_num);
 			}
@@ -697,7 +696,7 @@ class CommentInsert extends Comment
 					->execute()
 					->fetchAll();
 
-				if(count($check_duplicate) > 1)
+				if (count($check_duplicate) > 1)
 				{
 					DC::forge()->rollBack();
 					throw new CommentSendingDuplicateException(__('You are sending the same post twice.'));
@@ -732,7 +731,7 @@ class CommentInsert extends Comment
 				$this->insertTriggerUsers();
 
 				// update poster_hash for non-ghost posts
-				if ( ! $this->ghost && $this->op && $this->radix->enable_poster_hash)
+				if (! $this->ghost && $this->op && $this->radix->enable_poster_hash)
 				{
 					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment->thread_num),'id'), 3), 0, 8);
 

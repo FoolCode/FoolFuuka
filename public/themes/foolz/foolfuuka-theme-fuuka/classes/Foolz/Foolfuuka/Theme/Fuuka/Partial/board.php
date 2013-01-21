@@ -1,10 +1,11 @@
 <?php
-if (!defined('DOCROOT'))
+
+if (! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 if (isset($thread_id))
 {
-	echo \Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform'));
+	echo \Form::open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform']);
 	echo \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token());
 	echo \Form::hidden('id', 'postform');
 	echo isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '';
@@ -62,15 +63,15 @@ foreach ($board->getComments() as $key => $post) :
 		</label>
 
 		<?php if (!isset($thread_id)) : ?>
-			<a class="js" href="<?= Uri::create(array($op->radix->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.<?= $op->num ?></a>
+			<a class="js" href="<?= Uri::create([$op->radix->shortname, $op->_controller_method, $op->num]).'#'.$op->num ?>">No.<?= $op->num ?></a>
 		<?php else : ?>
-			<a class="js" href="<?= Uri::create(array($op->radix->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
+			<a class="js" href="<?= Uri::create([$op->radix->shortname, $op->_controller_method, $op->num]).'#'.$op->num ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
 		<?php endif; ?>
 
 		<?php if (isset($op->media) && $op->media->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('/images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post has been marked as a spoiler.') ?>"/><?php endif; ?>
 		<?php if ($op->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was delete before its lifetime expired.') ?>"/><?php endif; ?>
 
-		[<a href="<?= Uri::create(array($op->radix->shortname, 'thread', $op->num)) ?>"><?= __('Reply') ?></a>]
+		[<a href="<?= Uri::create([$op->radix->shortname, 'thread', $op->num]) ?>"><?= __('Reply') ?></a>]
 		<?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= Uri::create($op->radix->shortname . '/last/50/' . $op->num) ?>"><?= __('Last 50') ?></a>]<?php endif; ?>
 		<?php if ($op->radix->archive) : ?> [<a href="//boards.4chan.org/<?= $op->radix->shortname . '/res/' . $op->num ?>"><?= __('Original') ?></a>]<?php endif; ?>
 
@@ -98,13 +99,13 @@ foreach ($board->getComments() as $key => $post) :
 		{
 			foreach ($post['posts'] as $p)
 			{
-				if(!isset($thread_id))
-					$thread_id = NULL;
+				if (! isset($thread_id))
+					$thread_id = null;
 
 				if ($p->thread_num == 0)
 					$p->thread_num = $p->num;
 
-				echo $this->build('board_comment', array('p' => $p, 'modifiers' => $modifiers), TRUE, TRUE);
+				echo $this->build('board_comment', ['p' => $p, 'modifiers' => $modifiers], true, true);
 			}
 		}
 	?>

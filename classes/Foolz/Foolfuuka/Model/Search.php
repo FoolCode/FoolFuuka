@@ -2,7 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use Foolz\Sphinxql\Sphinxql;
+use Foolz\SphinxQL\SphinxQL;
+use Foolz\SphinxQL\Connection as SphinxConnnection;
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 
 class SearchException extends \Exception {}
@@ -172,21 +173,24 @@ class Search extends Board
 	 */
 	protected function p_getSearchComments()
 	{
-		\Profiler::mark('Board::get_search_comments Start');
+		\Profiler::mark('Board::getSearchComments Start');
 		extract($this->options);
 
-		$available_fields = ['boards', 'subject', 'text', 'username', 'tripcode', 'email', 'capcode', 'poster_ip',
+		// set all empty fields to null
+		$search_fields = ['boards', 'subject', 'text', 'username', 'tripcode', 'email', 'capcode', 'poster_ip',
 			'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order'];
 
-		foreach ($available_fields as $field)
+		foreach ($search_fields as $field)
 		{
-			if (! isset($args[$field]))
+			if ( ! isset($args[$field]))
 			{
 				$args[$field] = null;
 			}
 		}
 
+		// populate an array containing all boards that would be searched
 		$boards = [];
+
 		if ($args['boards'] !== null)
 		{
 			foreach ($args['boards'] as $board)
@@ -199,12 +203,13 @@ class Search extends Board
 			}
 		}
 
-		if (empty($boards))
+		// search all boards if none selected
+		if (count($boards) == 0)
 		{
 			$boards = \Radix::getAll();
 		}
 
-		// if image is set, get either media_hash or media_id
+		// if image is set, get either the media_hash or media_id
 		if ($args['image'] !== null)
 		{
 			if (substr($args['image'], -2) !== '==')
@@ -212,7 +217,7 @@ class Search extends Board
 				$args['image'] .= '==';
 			}
 
-			// if board set, grab media_id
+			// if board is set, retrieve media_id
 			if ($this->radix !== null)
 			{
 				try
@@ -223,7 +228,8 @@ class Search extends Board
 				{
 					$this->comments_unsorted = [];
 					$this->comments = [];
-					\Profiler::mark('Board::get_search_comments End Prematurely');
+
+					\Profiler::mark('Board::getSearchComments Ended Prematurely');
 					throw new SearchEmptyResultException(__('No results found.'));
 				}
 
@@ -231,36 +237,37 @@ class Search extends Board
 			}
 		}
 
-		// if global or board => use sphinx, else mysql for board only
-		// global search requires sphinx
 		if ($this->radix === null && ! \Preferences::get('fu.sphinx.global'))
 		{
-			throw new SearchRequiresSphinxException(__('Sorry, this action requires the SphinxSearch engine.'));
+			// global search requires sphinx
+			throw new SearchRequiresSphinxException(__('Sorry, this action requires the Sphinx to be installed and running.'));
 		}
-		elseif (($this->radix !== null && $this->radix->sphinx) || ($this->radix === null && \Preferences::get('fu.sphinx.global')))
+		elseif (($this->radix == null && \Preferences::get('fu.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx))
 		{
-			// establish connection to sphinx
-			$sphinx_server = explode(':', \Preferences::get('fu.sphinx.listen'));
-			Sphinxql::addConnection('default', $sphinx_server[0], $sphinx_server[1]);
+			// configure sphinx connection params
+			$sphinx = explode(':', \Preferences::get('fu.sphinx.listen'));
+			$conn = new SphinxConnnection();
+			$conn->setConnectionParams($sphinx[0], $sphinx[1]);
+			$conn->silenceConnectionWarning(true);
 
+			// establish connection
 			try
 			{
-				// with suppress error
-				Sphinxql::connect(true);
+				SphinxQL::forge($conn);
 			}
-			catch (\Foolz\Sphinxql\SphinxqlConnectionException $e)
+			catch (\Foolz\SphinxQL\ConnectionException $e)
 			{
-				throw new SearchSphinxOfflineException(__('The search backend is currently not online. Try later or contact us in case it\'s offline for too long.'));
+				throw new SearchSphinxOfflineException(__('The search backend is currently unavailable.'));
 			}
 
 			// determine if all boards will be used for search or not
-			if ($this->radix === null)
+			if ($this->radix == null)
 			{
 				$indexes = [];
+
 				foreach ($boards as $radix)
 				{
-					// ignore boards that don't have sphinx enabled
-					if (! $radix->sphinx)
+					if ( ! $radix->sphinx)
 					{
 						continue;
 					}
@@ -279,12 +286,16 @@ class Search extends Board
 				];
 			}
 
-			// set db->from with indexes loaded
-			$query = Sphinxql::select('id', 'board')
-				->from($indexes);
+			// start search query
+			$query = SphinxQL::forge()->select('id', 'board')->from($indexes);
 
-			// begin filtering search params
-			if ($args['text'])
+			// parse search params
+			if ($args['subject'] !== null)
+			{
+				$query->match('title', $args['subject']);
+			}
+
+			if ($args['text'] !== null)
 			{
 				if (mb_strlen($args['text']) < 1)
 				{
@@ -293,22 +304,22 @@ class Search extends Board
 
 				$query->match('comment', $args['text'], true);
 			}
-			if ($args['subject'])
+
+			if ($args['username'] !== null)
 			{
-				$query->match('title', $args['subject']);
+				$query->match('username', $args['username']);
 			}
-			if ($args['username'])
+
+			if ($args['tripcode'] !== null)
 			{
-				$query->match('name', $args['username']);
+				$query->match('tripcode', '"'.$args['tripcode'].'"');
 			}
-			if ($args['tripcode'])
-			{
-				$query->match('trip', '"'.$args['tripcode'].'"');
-			}
-			if ($args['email'])
+
+			if ($args['email'] !== null)
 			{
 				$query->match('email', $args['email']);
 			}
+
 			if ($args['capcode'] !== null)
 			{
 				if ($args['capcode'] === 'user')
@@ -328,15 +339,18 @@ class Search extends Board
 					$query->where('cap', ord('D'));
 				}
 			}
-			if (\Auth::has_access('comment.see_ip') && $args['poster_ip'])
+
+			if (\Auth::has_access('comment.see_ip') && $args['poster_ip'] !== null)
 			{
 				$query->where('pip', (int) \Inet::ptod($args['poster_ip']));
 			}
-			if ($args['filename'])
+
+			if ($args['filename'] !== null)
 			{
 				$query->match('media_filename', $args['filename']);
 			}
-			if ($args['image'])
+
+			if ($args['image'] !== null)
 			{
 				if ($this->radix !== null)
 				{
@@ -347,62 +361,93 @@ class Search extends Board
 					$query->match('media_hash', '"'.$args['image'].'"');
 				}
 			}
-			if ($args['deleted'] == 'deleted')
+
+			if ($args['deleted'] !== null)
 			{
-				$query->where('is_deleted', 1);
+				if ($args['deleted'] == 'deleted')
+				{
+					$query->where('is_deleted', 1);
+				}
+
+				if ($args['deleted'] == 'not-deleted')
+				{
+					$query->where('is_deleted', 0);
+				}
 			}
-			if ($args['deleted'] == 'not-deleted')
+
+			if ($args['ghost'] !== null)
 			{
-				$query->where('is_deleted', 0);
+				if ($args['ghost'] == 'only')
+				{
+					$query->where('is_internal', 1);
+				}
+
+				if ($args['ghost'] == 'none')
+				{
+					$query->where('is_internal', 0);
+				}
 			}
-			if ($args['ghost'] == 'only')
+
+			if ($args['filter'] !== null)
 			{
-				$query->where('is_internal', 1);
+				if ($args['filter'] == 'image')
+				{
+					$query->where('has_image', 0);
+				}
+
+				if ($args['filter'] == 'text')
+				{
+					$query->where('has_image', 1);
+				}
 			}
-			if ($args['ghost'] == 'none')
+
+			if ($args['type'] !== null)
 			{
-				$query->where('is_internal', 0);
+				if ($args['type'] == 'op')
+				{
+					$query->where('is_op', 1);
+				}
+
+				if ($args['type'] == 'posts')
+				{
+					$query->where('is_op', 0);
+				}
 			}
-			if ($args['filter'] == 'image')
-			{
-				$query->where('has_image', 0);
-			}
-			if ($args['filter'] == 'text')
-			{
-				$query->where('has_image', 1);
-			}
-			if ($args['type'] == 'op')
-			{
-				$query->where('is_op', 1);
-			}
-			if ($args['type'] == 'posts')
-			{
-				$query->where('is_op', 0);
-			}
-			if ($args['start'])
+
+			if ($args['start'] !== null)
 			{
 				$query->where('timestamp', '>=', intval(strtotime($args['start'])));
 			}
-			if ($args['end'])
+
+			if ($args['end'] !== null)
 			{
 				$query->where('timestamp', '<=', intval(strtotime($args['end'])));
 			}
-			if ($args['order'] == 'asc')
+
+			if ($args['results'] !== null)
 			{
-				$query->orderBy('timestamp', 'ASC');
+				if ($args['results'] == 'op')
+				{
+					$query->groupBy('thread_num');
+					$query->withinGroupOrderBy('is_op', 'desc');
+				}
+
+				if ($args['results'] == 'posts')
+				{
+					$query->where('is_op', 0);
+				}
 			}
-			else
+
+			if ($args['order'] !== null)
 			{
-				$query->orderBy('timestamp', 'DESC');
-			}
-			if ($args['results'] == 'op')
-			{
-				$query->groupBy('thread_num');
-				$query->withinGroupOrderBy('is_op', 'desc');
-			}
-			if ($args['results'] == 'posts')
-			{
-				$query->where('is_op', 0);
+				if ($args['order'] == 'asc')
+				{
+					$query->orderBy('timestamp', 'ASC');
+				}
+				else
+				{
+					$query->orderBy('timestamp', 'DESC');
+				}
 			}
 
 			// set sphinx options
@@ -411,31 +456,33 @@ class Search extends Board
 				->option('max_matches', \Preferences::get('fu.sphinx.max_matches', 5000))
 				->option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
 
-			// send sphinxql to searchd
+			// submit query
 			try
 			{
 				$search = $query->execute();
 			}
-			catch (\Foolz\Sphinxql\SphinxqlDatabaseException $e)
+			catch(\Foolz\SphinxQL\DatabaseException $e)
 			{
-				\Log::error('It looks like the user used a bad search string: '.$e->getMessage());
-				throw new SearchInvalidException(__('The order of the allowed special characters produced a bad query. Try wrapping your query in double quotes.'));
+				\Log::error('Search Error: '.$e->getMessage());
+				throw new SearchInvalidException(__(''));
 			}
 
-			if (! count($search))
+			// no results found
+			if ( ! count($search))
 			{
 				$this->comments_unsorted = [];
 				$this->comments = [];
+
 				throw new SearchEmptyResultException(__('No results found.'));
 			}
 
-			$meta = Sphinxql::meta();
-			$this->total_count = $meta['total'];
+			$sphinx_meta = SphinxQL::forge()->meta();
+			$this->total_count = $sphinx_meta['total'];
 
-			// populate array to query for full records
+			// populate sql array for full records
 			$sql = [];
 
-			foreach ($search as $post => $result)
+			foreach ($search as $doc => $result)
 			{
 				$board = \Radix::getById($result['board']);
 				$sql[] = DC::qb()
@@ -451,203 +498,15 @@ class Search extends Board
 				->executeQuery(implode(' UNION ', $sql))
 				->fetchAll();
 		}
-		else /* use mysql as fallback for non-sphinx indexed boards */
+		else
 		{
-			// sadly like escaping has no love in fuelphp...
-			$like_escape = function($s, $e)
-			{
-				$s = str_replace([$e, '_', '%'], [$e.$e, $e.'_', $e.'%'], $s);
-				return \DB::expr(\DB::escape('%'.$s.'%').' ESCAPE "'.$e.'"');
-			};
-
-			// begin filtering search params
-			/*
-			 *  Currently FoolFuuka has no cross-db way to do fulltext search
-			 *
-			if ($args['text'] || $args['filename'])
-			{
-				// we're using fulltext fields, we better start from this
-				$query = \DB::select(\DB::expr($this->radix->getTable('_search').'.`doc_id`'))
-					->from(\DB::expr($this->radix->getTable('_search')));
-
-				if($args['text'])
-				{
-					$query->where(
-						\DB::expr('MATCH ('.$this->radix->getTable('_search').'.`comment`) '.
-							'AGAINST ('.\DB::escape($args['text']).' IN BOOLEAN MODE)'),
-						\DB::expr(''), \DB::expr(''));
-				}
-
-				if($args['filename'])
-				{
-					$query->where(\DB::expr(
-						'MATCH ('.$this->radix->getTable('_search').'.`media_filename`) '.
-							'AGAINST ('.\DB::escape($args['filename']).' IN BOOLEAN MODE)'),
-						\DB::expr(''), \DB::expr(''));
-				}
-
-				$query->limit(5000);
-
-				$result = $query->as_object()
-					->execute()
-					->as_array();
-
-				if (! count($result))
-				{
-					$this->comments_unsorted = [];
-					$this->comments = [];
-					throw new SearchEmptyResultException(__('No results found.'));
-				}
-
-				$docs = [];
-				foreach ($result as $rec)
-				{
-					$docs[] = $rec->doc_id;
-				}
-			}
-			 *
-			 */
-
-			foreach (['*', 'COUNT(*) as count'] as $select_key => $select)
-			{
-				$query = \DB::select(\DB::expr($select))
-					->from(\DB::expr($this->radix->getTable()));
-
-				static::sql_media_join($query, $this->radix);
-				static::sql_extra_join($query, $this->radix);
-
-				if (isset($docs))
-				{
-					$query->where('doc_id', 'IN', $docs);
-				}
-
-				if ($args['subject'])
-				{
-					$query->where('title', 'like', $like_escape($args['subject'], '='));
-				}
-				if ($args['username'])
-				{
-					$query->where('name', 'like', $like_escape($args['username'], '='));
-					//$this->db->use_index('name_trip_index');
-				}
-				if ($args['tripcode'])
-				{
-					$query->where('trip', 'like', $like_escape($args['tripcode'], '='));
-					//$this->db->use_index('trip_index');
-				}
-				if ($args['email'])
-				{
-					$query->where('email', 'like', $like_escape($args['email'], '='));
-					//$this->db->use_index('email_index');
-				}
-				if ($args['image'])
-				{
-					$query->where('media_id', '=', $args['image']);
-					//$this->db->use_index('media_id_index');
-				}
-				if (\Auth::has_access('comment.see_ip') && $args['poster_ip'])
-				{
-					$query->where('poster_ip', '=', (int) \Inet::ptod($args['poster_ip']));
-				}
-				if ($args['capcode'] == 'admin')
-				{
-					$query->where('capcode', '=', 'A');
-				}
-				if ($args['capcode'] == 'mod')
-				{
-					$query->where('capcode', '=', 'M');
-				}
-				if ($args['capcode'] == 'dev')
-				{
-					$query->where('capcode', '=', 'D');
-				}
-				if ($args['capcode'] == 'user')
-				{
-					$query->where('capcode', '<>', 'A');
-					$query->where('capcode', '<>', 'M');
-					$query->where('capcode', '<>', 'D');
-				}
-				if ($args['deleted'] == 'deleted')
-				{
-					$query->where('deleted', '=', 1);
-				}
-				if ($args['deleted'] == 'not-deleted')
-				{
-					$query->where('deleted', '=', 0);
-				}
-				if ($args['ghost'] == 'only')
-				{
-					$query->where('subnum', '<>', 0);
-					//$this->db->use_index('subnum_index');
-				}
-				if ($args['ghost'] == 'none')
-				{
-					$query->where('subnum', '=', 0);
-					//$this->db->use_index('subnum_index');
-				}
-				if ($args['type'] == 'op')
-				{
-					$query->where('op', '=', 1);
-					//$this->db->use_index('op_index');
-				}
-				if ($args['type'] == 'posts')
-				{
-					$query->where('op', '=', 0);
-					//$this->db->use_index('op_index');
-				}
-				if ($args['filter'] == 'image')
-				{
-					// gotta use the expr else it will be confused on which media_id to use
-					$query->where(\DB::expr($this->radix->getTable().'.media_id'), '=', 0);
-					//$this->db->use_index('media_id_index');
-				}
-				if ($args['filter'] == 'text')
-				{
-					$query->where(\DB::expr($this->radix->getTable().'.media_id'), '<>', 0);
-					//$this->db->use_index('media_id_index');
-				}
-				if ($args['start'])
-				{
-					$query->where('timestamp', '>=', (int) strtotime($args['start']));
-					//$this->db->use_index('timestamp_index');
-				}
-				if ($args['end'])
-				{
-					$query->where('timestamp', '<=', (int) strtotime($args['end']));
-					//$this->db->use_index('timestamp_index');
-				}
-
-				if (! $select_key) // we're getting the actual result, not the count
-				{
-					$result_which = $query->limit($limit)
-						->offset((($page * $limit) - $limit) > 5000 ? 5000 : ($page * $limit) - $limit)
-						->order_by('timestamp', ($args['order'] === 'asc' ? 'ASC' : 'DESC'))
-						->as_object()
-						->execute()
-						->as_array();
-
-					if (! count($result_which))
-					{
-						$this->comments_unsorted = [];
-						$this->comments = [];
-						throw new SearchEmptyResultException(__('No results found.'));
-					}
-
-					$result = $result_which;
-				}
-				else
-				{
-					$this->total_count = $query->as_object()
-						->execute()
-						->current()
-						->count;
-				}
-			}
+			// this is not implemented yet
 		}
 
-		foreach ($result as $item)
+		// process results
+		foreach ($result as $post)
 		{
-			$board = $this->radix !== null ? $this->radix : \Radix::getById($item->board_id);
+			$board = $this->radix !== null ? $this->radix : \Radix::getById($post->board_id);
 			$this->comments_unsorted[] = \Comment::fromArrayDeep($item, $board);
 		}
 

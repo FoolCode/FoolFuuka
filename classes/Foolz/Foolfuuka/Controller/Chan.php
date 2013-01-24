@@ -222,8 +222,7 @@ class Chan extends \Controller
 			$url = \Uri::base();
 		}
 
-		$this->builder->createLayout('redirect');
-		$this->builder->createPartial('body', 'redirection')
+		$this->builder->createLayout('redirect')
 			->getParamManager()
 			->setParam('url', $url);
 		$this->builder->getProps()->addTitle(__('Redirecting'));

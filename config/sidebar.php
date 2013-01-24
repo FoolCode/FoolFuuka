@@ -11,8 +11,7 @@ return [
 			"content" => [
 				"manage" => ["alt_highlight" => ["board"],
 					"level" => "admin", "name" => __("Manage"), "icon" => 'icon-th-list'],
-				"add_new" => ["level" => "admin", "name" => __("Add board"), "icon" => 'icon-asterisk'],
-				"sphinx" => ["level" => "admin", "name" => __("Sphinx Search"), "icon" => 'icon-search'],
+				"search" => ["level" => "admin", "name" => __("Search"), "icon" => 'icon-search'],
 				"preferences" => ["level" => "admin", "name" => __("Preferences"), "icon" => 'icon-check']
 			]
 		],

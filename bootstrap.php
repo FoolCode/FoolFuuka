@@ -55,7 +55,9 @@ else
 			$theme->enabled = true;
 		}
 		catch (\OutOfBoundsException $e)
-		{}
+		{
+
+		}
 	}
 }
 

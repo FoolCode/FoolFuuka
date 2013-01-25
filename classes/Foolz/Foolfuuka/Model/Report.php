@@ -326,7 +326,7 @@ class Report
 			}
 			catch (MediaNotFoundException $e)
 			{
-				throw new ReportMediaNotFoundException(__('The media you are reporting could not be found.'));
+				throw new ReportMediaNotFoundException(__('The media file you are reporting could not be found.'));
 			}
 
 			$new->media_id = (int) $id;
@@ -343,7 +343,7 @@ class Report
 			}
 			catch (BoardException $e)
 			{
-				throw new ReportCommentNotFoundException(__('The report you are reporting could not be found.'));
+				throw new ReportCommentNotFoundException(__('The post you are reporting could not be found.'));
 			}
 
 			$new->doc_id =  (int) $id;
@@ -351,12 +351,12 @@ class Report
 
 		if (trim($reason) === null)
 		{
-			throw new ReportReasonNullException(__('Reports must have a reason.'));
+			throw new ReportReasonNullException(__('A reason must be included with your report.'));
 		}
 
-		if (mb_strlen($reason) > 10000)
+		if (mb_strlen($reason) > 2048)
 		{
-			throw new ReportReasonTooLongException(__('Your report reason was too long.'));
+			throw new ReportReasonTooLongException(__('The reason for you report was too long.'));
 		}
 
 		$new->reason = $reason;
@@ -375,29 +375,39 @@ class Report
 			->select('COUNT(*) as count')
 			->from(DC::p('reports'), 'r')
 			->where('created > :time')
+			->andWhere('ip_reporter = :ip_reporter')
 			->setParameter(':time', time() - 86400)
+			->setParameter(':ip_reporter', $new->ip_reporter)
 			->execute()
 			->fetch();
 
 		if ($row['count'] > 25)
 		{
-			throw new ReportSentTooManyException(__('You sent too many reports in a hour.'));
+			throw new ReportSentTooManyException(__('You have submitted too many reports within an hour.'));
 		}
 
 		$reported = DC::qb()
-			->select('IP_REPORTER(*) as ip_reporter')
+			->select('COUNT(*) as count')
 			->from(DC::p('reports'), 'r')
-			->where('id === :id')
-			->setParameter(':id', $id)
+			->where('board_id = :board_id')
+			->andWhere('ip_reporter = :ip_reporter')
+			->andWhere('doc_id = :doc_id')
+			->orWhere('media_id = :media_id')
+			->setParameters([
+				':board_id' => $new->board_id,
+				':doc_id' => $new->doc_id,
+				':media_id' => $new->media_id,
+				':ip_reporter' => $new->ip_reporter
+			])
 			->execute()
-			->fetchAll();
+			->fetch();
 
-		if ($ip_reporter === $reported['ip_reporter'])
+		if ($reported['count'] > 0)
 		{
 			throw new ReportSubmitterBannedException(__('You can only submit one report per post.'));
 		}
 
-		if ($ban = \Ban::isBanned(\Input::ip_decimal(), $this->radix))
+		if ($ban = \Ban::isBanned(\Input::ip_decimal(), $new->radix))
 		{
 			if ($ban->board_id == 0)
 			{
@@ -497,7 +507,7 @@ class Report
 			}
 			else
 			{
-				throw new ReportMediaNotFoundException(__('The report you are managing could not be found.'));
+				throw new ReportMediaNotFoundException(__('The reported media file could not be found.'));
 			}
 		}
 
@@ -512,7 +522,7 @@ class Report
 		}
 		catch (BoardException $e)
 		{
-			throw new ReportCommentNotFoundException(__('The report you are managing could not be found.'));
+			throw new ReportCommentNotFoundException(__('The reported post could not be found.'));
 		}
 
 		return $this->comment;

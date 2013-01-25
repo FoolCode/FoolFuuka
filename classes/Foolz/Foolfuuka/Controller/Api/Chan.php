@@ -35,7 +35,7 @@ class Chan extends \Controller_Rest
 			}
 		}
 
-		if (! \Input::get('board') && ! \Input::get('action') && ! \Input::post('board') && ! \Input::post('action'))
+		if ( ! \Input::get('board') && ! \Input::get('action') && ! \Input::post('board') && ! \Input::post('action'))
 		{
 			$segments = \Uri::segments();
 			$uri = \Uri::base().'_'.
@@ -65,18 +65,18 @@ class Chan extends \Controller_Rest
 	{
 		$board = \Input::get('board');
 
-		if (! $board)
+		if ( ! $board)
 		{
 			$board = \Input::post('board');
 		}
 
-		if (! $board)
+		if ( ! $board)
 		{
 			//$this->response(['error' => __('You didn\'t select a board')], 404);
 			return false;
 		}
 
-		if(! $this->_radix = \Radix::setSelectedByShortname($board))
+		if( ! $this->_radix = \Radix::setSelectedByShortname($board))
 		{
 			//$this->response(['error' => __('The board you selected doesn\'t exist')], 404);
 			return false;
@@ -94,7 +94,7 @@ class Chan extends \Controller_Rest
 	 */
 	public function get_thread()
 	{
-		if (! $this->check_board())
+		if ( ! $this->check_board())
 		{
 			return $this->response(['error' => __('No board selected.')], 404);
 		}
@@ -102,14 +102,14 @@ class Chan extends \Controller_Rest
 		$num = \Input::get('num');
 		$latest_doc_id = \Input::get('latest_doc_id');
 
-		if (! $num)
+		if ( ! $num)
 		{
-			return $this->response(['error' => __('You are missing the 'num' parameter.')], 404);
+			return $this->response(['error' => __('The "num" parameter is missing.')], 404);
 		}
 
-		if (! ctype_digit((string) $num))
+		if ( ! ctype_digit((string) $num))
 		{
-			return $this->response(['error' => __('Invalid value for 'num'.')], 404);
+			return $this->response(['error' => __('The value for "num" is invalid.')], 404);
 		}
 
 		$num = intval($num);
@@ -119,15 +119,15 @@ class Chan extends \Controller_Rest
 			// build an array if we have more specifications
 			if ($latest_doc_id)
 			{
-				if (! ctype_digit((string) $latest_doc_id))
+				if ( ! ctype_digit((string) $latest_doc_id))
 				{
-					return $this->response(['error' => __('The value for 'latest_doc_id' is malformed.')], 404);
+					return $this->response(['error' => __('The value for "latest_doc_id" is malformed.')], 404);
 				}
 
 				$board = \Board::forge()
 					->getThread($num)
 					->setRadix($this->_radix)
-					->setApi(['theme' => $this->_theme, 'board' => false]))
+					->setApi(['theme' => $this->_theme, 'board' => false])
 					->setOptions([
 						'type' => 'from_doc_id',
 						'latest_doc_id' => $latest_doc_id,
@@ -154,31 +154,31 @@ class Chan extends \Controller_Rest
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
 		{
-			return $this->response([('error' => __('Thread not found.')], 200);
+			return $this->response(['error' => __('Thread not found.')], 200);
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
-			return $this->response(['error' => __('Unknown error.')], 500);
+			return $this->response(['error' => __('Encountered an unknown error.')], 500);
 		}
 	}
 
 	public function get_post()
 	{
-		if (! $this->check_board())
+		if ( ! $this->check_board())
 		{
-			return $this->response(['error' => __('No board selected.')], 404);
+			return $this->response(['error' => __('No board was selected.')], 404);
 		}
 
 		$num = \Input::get('num');
 
-		if (! $num)
+		if ( ! $num)
 		{
-			return $this->response(['error' => __('You are missing the 'num' parameter.')], 404);
+			return $this->response(['error' => __('The "num" parameter is missing.')], 404);
 		}
 
-		if (! \Board::isValidPostNumber($num))
+		if ( ! \Board::isValidPostNumber($num))
 		{
-			return $this->response(['error' => __('Invalid value for 'num'.')], 404);
+			return $this->response(['error' => __('The value for "num" is invalid.')], 404);
 		}
 
 		try
@@ -203,14 +203,14 @@ class Chan extends \Controller_Rest
 
 	public function post_user_actions()
 	{
-		if (! \Security::check_token())
+		if ( ! \Security::check_token())
 		{
-			return $this->response(['error' => __('The security token wasn\'t found. Try resubmitting.')]);
+			return $this->response(['error' => __('The security token was not found. Please try again.')]);
 		}
 
-		if (! $this->check_board())
+		if ( ! $this->check_board())
 		{
-			return $this->response(['error' => __('No board selected.')], 404);
+			return $this->response(['error' => __('No board was selected.')], 404);
 		}
 
 		if (\Input::post('action') === 'report')
@@ -224,7 +224,7 @@ class Chan extends \Controller_Rest
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('Post reported.')], 200);
+			return $this->response(['success' => __('This post was reported.')], 200);
 		}
 
 		if (\Input::post('action') === 'report_media')
@@ -238,7 +238,7 @@ class Chan extends \Controller_Rest
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('Media reported.')], 200);
+			return $this->response(['success' => __('This media was reported.')], 200);
 		}
 
 		if (\Input::post('action') === 'delete')
@@ -264,25 +264,25 @@ class Chan extends \Controller_Rest
 				return $this->response(['error' => $e->getMessage()], 200);
 			}
 
-			return $this->response(['success' => __('Post deleted.')], 200);
+			return $this->response(['success' => __('This post was deleted.')], 200);
 		}
 	}
 
 	public function post_mod_actions()
 	{
-		if (! \Security::check_token())
+		if ( ! \Security::check_token())
 		{
-			return $this->response(['error' => __('The security token wasn\'t found. Try resubmitting.')]);
+			return $this->response(['error' => __('The security token was not found. Please try again.')]);
 		}
 
-		if (! \Auth::has_access('comment.mod_capcode'))
+		if ( ! \Auth::has_access('comment.mod_capcode'))
 		{
-			return $this->response(['error' => __('Forbidden.')], 403);
+			return $this->response(['error' => __('Access Denied.')], 403);
 		}
 
-		if (! $this->check_board())
+		if ( ! $this->check_board())
 		{
-			return $this->response(['error' => __('No board selected.')], 404);
+			return $this->response(['error' => __('No board was selected.')], 404);
 		}
 
 		if (\Input::post('action') === 'delete_report')
@@ -296,7 +296,7 @@ class Chan extends \Controller_Rest
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('Report deleted.')], 200);
+			return $this->response(['success' => __('The report was deleted.')], 200);
 		}
 
 		if (\Input::post('action') === 'delete_post')
@@ -317,7 +317,7 @@ class Chan extends \Controller_Rest
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('Post deleted.')], 200);
+			return $this->response(['success' => __('This post was deleted.')], 200);
 		}
 
 		if (\Input::post('action') === 'delete_image')
@@ -331,7 +331,7 @@ class Chan extends \Controller_Rest
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('Image deleted.')], 200);
+			return $this->response(['success' => __('This image was deleted.')], 200);
 		}
 
 		if (\Input::post('action') === 'ban_image_local' || \Input::post('action') === 'ban_image_global')
@@ -351,7 +351,7 @@ class Chan extends \Controller_Rest
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('Image banned.')], 200);
+			return $this->response(['success' => __('This image was banned.')], 200);
 		}
 
 		if (\Input::post('action') === 'ban_user')
@@ -369,7 +369,7 @@ class Chan extends \Controller_Rest
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('User banned.')], 200);
+			return $this->response(['success' => __('This user was banned.')], 200);
 		}
 	}
 }

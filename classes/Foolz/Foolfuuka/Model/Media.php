@@ -19,6 +19,7 @@ class MediaInsertException extends \Exception {}
 class MediaInsertInvalidFormatException extends MediaInsertException {}
 class MediaInsertDomainException extends MediaInsertException {}
 class MediaInsertRepostException extends MediaInsertException {}
+class MediaThumbnailCreationException extends MediaInsertException {}
 
 /**
  * Manages Media files and database
@@ -988,6 +989,7 @@ class Media
 	 * @throws  MediaInsertInvalidFormatException  In case the media is not a valid format
 	 * @throws  MediaInsertDomainException         In case the media uploaded is in example too small or validations don't pass
 	 * @throws  MediaInsertRepostException         In case the media has been reposted too recently according to control panel settings
+	 * @throws  MediaThumbnailCreationException	   If the thumbnail fails to generate
 	 */
 	public function p_insert($microtime, $is_op)
 	{
@@ -1128,76 +1130,93 @@ class Media
 				}
 			}
 
-			$thumb_getimagesize = getimagesize($this->pathFromFilename(true, $is_op, true));
-			$this->preview_w = $thumb_getimagesize[0];
-			$this->preview_h = $thumb_getimagesize[1];
-		}
-
-		if ($do_full)
-		{
-			if ( ! file_exists($this->pathFromFilename()))
+			if ( ! file_exists($this->pathFromFilename(true, $is_op, true)))
 			{
-				mkdir($this->pathFromFilename(), 0777, true);
+				throw new MediaThumbnailCreationException(__('The thumbnail failed to generate.'));
+
+				DC::forge()->insert($this->radix->getTable('_images'), [
+						'media_hash' => $this->media_hash,
+						'media' => $this->media_orig,
+						'preview_op' => null,
+						'preview_reply' =>  null,
+						'total' => 1,
+						'banned' => false,
+					]);
+
+					$this->media_id = DC::forge()->lastInsertId();
 			}
-
-			copy($full_path, $this->pathFromFilename(false, false, true));
-		}
-
-		if (function_exists('exif_read_data') && in_array(strtolower($this->temp_extension), ['jpg', 'jpeg', 'tiff']))
-		{
-			$media_data = null;
-			getimagesize($full_path, $media_data);
-
-			if ( ! isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0)
+			else 
 			{
-				$exif = exif_read_data($full_path);
+				$thumb_getimagesize = getimagesize($this->pathFromFilename(true, $is_op, true));
+				$this->preview_w = $thumb_getimagesize[0];
+				$this->preview_h = $thumb_getimagesize[1];
 
-				if ($exif !== false)
+				if ($do_full)
 				{
-					$this->exif = $exif;
+					if ( ! file_exists($this->pathFromFilename()))
+					{
+						mkdir($this->pathFromFilename(), 0777, true);
+					}
+
+					copy($full_path, $this->pathFromFilename(false, false, true));
+				}
+
+				if (function_exists('exif_read_data') && in_array(strtolower($this->temp_extension), ['jpg', 'jpeg', 'tiff']))
+				{
+					$media_data = null;
+					getimagesize($full_path, $media_data);
+
+					if ( ! isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0)
+					{
+						$exif = exif_read_data($full_path);
+
+						if ($exif !== false)
+						{
+							$this->exif = $exif;
+						}
+					}
+				}
+
+				if ( ! $this->media_id)
+				{
+					 DC::forge()->insert($this->radix->getTable('_images'), [
+						'media_hash' => $this->media_hash,
+						'media' => $this->media_orig,
+						'preview_op' => $this->op ? $this->preview_orig : null,
+						'preview_reply' => ! $this->op ? $this->preview_orig : null,
+						'total' => 1,
+						'banned' => false,
+					]);
+
+					$this->media_id = DC::forge()->lastInsertId();
+				}
+				else
+				{
+					$query = DC::qb()
+						->update($this->radix->getTable('_images'));
+					if ($this->media === null)
+					{
+						$query->set('media', ':media_orig')
+							->setParameter(':media_orig', $this->preview_orig);
+					}
+					if ($this->op && $this->preview_op === null)
+					{
+						$query->set('preview_op', ':preview_orig')
+						->setParameter(':preview_orig', $this->preview_orig);
+					}
+					if ( ! $this->op && $this->preview_reply === null)
+					{
+						$query->set('preview_reply', ':preview_orig')
+						->setParameter(':preview_orig', $this->preview_orig);
+					}
+					$query->set('total', 'total + 1');
+
+					$query->where('media_id = :media_id')
+						->setParameter(':media_id', $this->media_id)
+						->execute();
 				}
 			}
 		}
-
-		if ( ! $this->media_id)
-		{
-			 DC::forge()->insert($this->radix->getTable('_images'), [
-				'media_hash' => $this->media_hash,
-				'media' => $this->media_orig,
-				'preview_op' => $this->op ? $this->preview_orig : null,
-				'preview_reply' => ! $this->op ? $this->preview_orig : null,
-				'total' => 1,
-				'banned' => false,
-			]);
-
-			$this->media_id = DC::forge()->lastInsertId();
-		}
-		else
-		{
-			$query = DC::qb()
-				->update($this->radix->getTable('_images'));
-			if ($this->media === null)
-			{
-				$query->set('media', ':media_orig')
-					->setParameter(':media_orig', $this->preview_orig);
-			}
-			if ($this->op && $this->preview_op === null)
-			{
-				$query->set('preview_op', ':preview_orig')
-				->setParameter(':preview_orig', $this->preview_orig);
-			}
-			if ( ! $this->op && $this->preview_reply === null)
-			{
-				$query->set('preview_reply', ':preview_orig')
-				->setParameter(':preview_orig', $this->preview_orig);
-			}
-			$query->set('total', 'total + 1');
-
-			$query->where('media_id = :media_id')
-				->setParameter(':media_id', $this->media_id)
-				->execute();
-		}
-
 		return $this;
 	}
 

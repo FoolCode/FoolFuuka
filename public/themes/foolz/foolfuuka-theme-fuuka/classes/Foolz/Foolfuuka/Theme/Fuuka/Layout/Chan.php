@@ -66,7 +66,7 @@ class Chan extends \Foolz\Theme\View
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
 
-			if ( !empty($board_urls))
+			if ( ! empty($board_urls))
 			{
 				echo '[ ' . implode(' / ', $board_urls) . ' ]';
 			}

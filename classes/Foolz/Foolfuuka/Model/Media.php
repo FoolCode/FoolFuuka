@@ -999,7 +999,7 @@ class Media
 		$getimagesize = getimagesize($full_path);
 
 		if ( ! $getimagesize)
-		{
+		{ZA
 			throw new MediaInsertInvalidFormatException(__('The file you uploaded is not an image.'));
 		}
 
@@ -1132,8 +1132,6 @@ class Media
 
 			if ( ! file_exists($this->pathFromFilename(true, $is_op, true)))
 			{
-				throw new MediaThumbnailCreationException(__('The thumbnail failed to generate.'));
-
 				DC::forge()->insert($this->radix->getTable('_images'), [
 						'media_hash' => $this->media_hash,
 						'media' => $this->media_orig,
@@ -1143,78 +1141,78 @@ class Media
 						'banned' => false,
 					]);
 
-					$this->media_id = DC::forge()->lastInsertId();
+				$this->media_id = DC::forge()->lastInsertId();
+
+				throw new MediaThumbnailCreationException(__('The thumbnail failed to generate.'));
 			}
-			else 
+			
+			$thumb_getimagesize = getimagesize($this->pathFromFilename(true, $is_op, true));
+			$this->preview_w = $thumb_getimagesize[0];
+			$this->preview_h = $thumb_getimagesize[1];
+
+			if ($do_full)
 			{
-				$thumb_getimagesize = getimagesize($this->pathFromFilename(true, $is_op, true));
-				$this->preview_w = $thumb_getimagesize[0];
-				$this->preview_h = $thumb_getimagesize[1];
-
-				if ($do_full)
+				if ( ! file_exists($this->pathFromFilename()))
 				{
-					if ( ! file_exists($this->pathFromFilename()))
-					{
-						mkdir($this->pathFromFilename(), 0777, true);
-					}
-
-					copy($full_path, $this->pathFromFilename(false, false, true));
+					mkdir($this->pathFromFilename(), 0777, true);
 				}
 
-				if (function_exists('exif_read_data') && in_array(strtolower($this->temp_extension), ['jpg', 'jpeg', 'tiff']))
+				copy($full_path, $this->pathFromFilename(false, false, true));
+			}
+
+			if (function_exists('exif_read_data') && in_array(strtolower($this->temp_extension), ['jpg', 'jpeg', 'tiff']))
+			{
+				$media_data = null;
+				getimagesize($full_path, $media_data);
+
+				if ( ! isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0)
 				{
-					$media_data = null;
-					getimagesize($full_path, $media_data);
+					$exif = exif_read_data($full_path);
 
-					if ( ! isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0)
+					if ($exif !== false)
 					{
-						$exif = exif_read_data($full_path);
-
-						if ($exif !== false)
-						{
-							$this->exif = $exif;
-						}
+						$this->exif = $exif;
 					}
 				}
+			}
 
-				if ( ! $this->media_id)
+			if ( ! $this->media_id)
+			{
+				DC::forge()->insert($this->radix->getTable('_images'), [
+					'media_hash' => $this->media_hash,
+					'media' => $this->media_orig,
+					'preview_op' => $this->op ? $this->preview_orig : null,
+					'preview_reply' => ! $this->op ? $this->preview_orig : null,
+					'total' => 1,
+					'banned' => false,
+				]);
+
+				$this->media_id = DC::forge()->lastInsertId();
+			}
+			else
+			{
+				$query = DC::qb()
+					->update($this->radix->getTable('_images'));
+				if ($this->media === null)
 				{
-					 DC::forge()->insert($this->radix->getTable('_images'), [
-						'media_hash' => $this->media_hash,
-						'media' => $this->media_orig,
-						'preview_op' => $this->op ? $this->preview_orig : null,
-						'preview_reply' => ! $this->op ? $this->preview_orig : null,
-						'total' => 1,
-						'banned' => false,
-					]);
-
-					$this->media_id = DC::forge()->lastInsertId();
+					$query->set('media', ':media_orig')
+						->setParameter(':media_orig', $this->preview_orig);
 				}
-				else
+				if ($this->op && $this->preview_op === null)
 				{
-					$query = DC::qb()
-						->update($this->radix->getTable('_images'));
-					if ($this->media === null)
-					{
-						$query->set('media', ':media_orig')
-							->setParameter(':media_orig', $this->preview_orig);
-					}
-					if ($this->op && $this->preview_op === null)
-					{
-						$query->set('preview_op', ':preview_orig')
-						->setParameter(':preview_orig', $this->preview_orig);
-					}
-					if ( ! $this->op && $this->preview_reply === null)
-					{
-						$query->set('preview_reply', ':preview_orig')
-						->setParameter(':preview_orig', $this->preview_orig);
-					}
-					$query->set('total', 'total + 1');
-
-					$query->where('media_id = :media_id')
-						->setParameter(':media_id', $this->media_id)
-						->execute();
+					$query->set('preview_op', ':preview_orig')
+					->setParameter(':preview_orig', $this->preview_orig);
 				}
+				if ( ! $this->op && $this->preview_reply === null)
+				{
+					$query->set('preview_reply', ':preview_orig')
+					->setParameter(':preview_orig', $this->preview_orig);
+				}
+				$query->set('total', 'total + 1');
+
+				$query->where('media_id = :media_id')
+					->setParameter(':media_id', $this->media_id)
+					->execute();
 			}
 		}
 		return $this;

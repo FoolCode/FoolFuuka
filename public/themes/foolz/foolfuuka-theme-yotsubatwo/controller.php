@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Themes\Yotsubatwo\Controller;
 
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 class Chan extends \Foolz\Foolfuuka\Controller\Chan

@@ -9,7 +9,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 		$radix = $this->getBuilderParamManager()->getParam('radix');
 		$search = $this->getBuilderParamManager()->getParam('search', []);
 
-		if (! isset($radix) && \Preferences::get('fu.sphinx.global'))
+		if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
 		{
 			// search can work also without a radix selected
 			$search_radix = '_';
@@ -106,14 +106,14 @@ class AdvancedSearch extends \Foolz\Theme\View
 			}
 			?>
 
-			<?php if (! isset($radix) || $radix->sphinx) : ?>
+			<?php if ( ! isset($radix) || $radix->sphinx) : ?>
 			<div class="radixes">
 				<div>
 					<?php
 					$radixes = \Radix::getArchives();
 					foreach($radixes as $key => $r)
 					{
-						if (! $r->sphinx)
+						if ( ! $r->sphinx)
 						{
 							unset($radixes[$key]);
 						}
@@ -170,7 +170,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 						foreach($latest_searches as $item)
 						{
 							// all subitems must be array, all must have 'radix'
-							if (!is_array($item) || !isset($item['board']))
+							if ( !is_array($item) || !isset($item['board']))
 							{
 								$latest_searches = [];
 								break;

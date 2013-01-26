@@ -1,4 +1,8 @@
-<?php if (! defined('DOCROOT')) exit('No direct script access allowed');
+<?php 
+
+if ( ! defined('DOCROOT')) 
+	exit('No direct script access allowed');
+
 header('X-UA-Compatible: IE=edge,chrome=1');
 header('imagetoolbar: false');
 ?>
@@ -44,7 +48,7 @@ header('imagetoolbar: false');
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
 
-			if (! empty($board_urls))
+			if ( ! empty($board_urls))
 			{
 				echo sprintf(__('Archives: [ %s ]'), implode(' / ', $board_urls));
 			}
@@ -60,7 +64,7 @@ header('imagetoolbar: false');
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
 
-			if (! empty($board_urls))
+			if ( ! empty($board_urls))
 			{
 				echo sprintf(__('Boards: [ %s ]'), implode(' / ', $board_urls));
 			}
@@ -309,7 +313,7 @@ header('imagetoolbar: false');
 			$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 			$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.yotsubatwo_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
-			if (! empty($bottom_nav))
+			if ( ! empty($bottom_nav))
 			{
 				echo '<div class="pull-right" style="margin-right: 15px;">[ ';
 				foreach ($bottom_nav as $key => $nav)

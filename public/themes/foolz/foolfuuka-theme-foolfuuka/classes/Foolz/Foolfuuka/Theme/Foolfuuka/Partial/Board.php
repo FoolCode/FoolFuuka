@@ -29,7 +29,7 @@ class Board extends \Foolz\Theme\View
                     </a>
 					<?php else : ?>
                     <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-						<?php if( ! \Auth::has_access('maccess.mod') && !$op->radix->transparent_spoiler && $op->media->spoiler) :?>
+						<?php if ( ! \Auth::has_access('maccess.mod') && !$op->radix->transparent_spoiler && $op->media->spoiler) :?>
                         <div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 						<?php else : ?>
                         <img src="<?= $op->media->getThumbLink() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
@@ -43,7 +43,7 @@ class Board extends \Foolz\Theme\View
 					<?php endif; ?>
                     <div class="post_file_controls">
 						<?php if ($op->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
-						<?php if (!$op->radix->hide_thumbnails || \Auth::has_access('maccess.mod')) : ?>
+						<?php if ( !$op->radix->hide_thumbnails || \Auth::has_access('maccess.mod')) : ?>
 							<?php if ($op->media->total > 1) : ?><a href="<?= \Uri::create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
                                 href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink() ?>" target="_blank"
                                 class="btnr parent">Google</a><a
@@ -89,7 +89,7 @@ class Board extends \Foolz\Theme\View
                         </div>
                         <div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 0;">
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="delete_post"><?= __('Delete Thread') ?></button>
-							<?php if (!is_null($op->media)) : ?>
+							<?php if ( !is_null($op->media)) : ?>
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->media->media_id ?>" data-doc-id="<?= $op->doc_id ?>" data-action="delete_image"><?= __('Delete Image') ?></button>
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->media->media_id ?>" data-doc-id="<?= $op->doc_id ?>" data-action="ban_image_local"><?= __('Ban Image') ?></button>
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->media->media_id ?>" data-doc-id="<?= $op->doc_id ?>" data-action="ban_image_global"><?= __('Ban Image Globally') ?></button>

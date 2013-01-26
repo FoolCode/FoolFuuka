@@ -12,7 +12,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 	{
 		parent::before();
 
-		if (! \Auth::has_access('comment.reports'))
+		if ( ! \Auth::has_access('comment.reports'))
 		{
 			\Response::redirect('admin');
 		}
@@ -57,7 +57,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 		$email = \Cookie::get('reply_email');
 
 		// get the password needed for the reply field
-		if(! $pass || $pass < 3)
+		if ( ! $pass || $pass < 3)
 		{
 			$pass = \Str::random('alnum', 7);
 			\Cookie::set('reply_password', $pass, 60*60*24*30);
@@ -155,7 +155,7 @@ class Posts extends \Foolz\Foolframe\Controller\Admin
 
 		$ip = trim($ip.'.'.\Input::extension());
 
-		if (! filter_var($ip, FILTER_VALIDATE_IP))
+		if ( ! filter_var($ip, FILTER_VALIDATE_IP))
 		{
 			throw new \HttpNotFoundException;
 		}

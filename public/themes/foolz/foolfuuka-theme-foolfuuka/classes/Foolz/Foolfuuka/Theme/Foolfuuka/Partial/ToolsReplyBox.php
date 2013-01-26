@@ -88,7 +88,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 							?>
 						</div>
 
-						<?php if (! $this->getBuilderParamManager()->getParam('disable_image_upload', false)) : ?>
+						<?php if ( ! $this->getBuilderParamManager()->getParam('disable_image_upload', false)) : ?>
 						<div class="input-prepend">
 							<label class="add-on" for="file_image"><?= __('File') ?></label><input type="file" name="file_image" id="file_image" />
 						</div>

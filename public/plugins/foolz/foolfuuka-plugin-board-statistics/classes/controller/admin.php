@@ -8,7 +8,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 {
 	public function before()
 	{
-		if (! \Auth::has_access('maccess.admin'))
+		if ( ! \Auth::has_access('maccess.admin'))
 		{
 			\Response::redirect('admin');
 		}

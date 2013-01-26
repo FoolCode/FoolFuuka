@@ -1,8 +1,8 @@
 <?php
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-if (! isset($thread_id) && ! $radix->archive) : ?>
+if ( ! isset($thread_id) && ! $radix->archive) : ?>
 <?= Form::open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform']) ?>
 <?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
 <?= isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>

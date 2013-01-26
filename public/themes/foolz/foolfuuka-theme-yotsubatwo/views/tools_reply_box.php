@@ -1,4 +1,7 @@
-<?php if (!defined('DOCROOT')) exit('No direct script access allowed'); ?>
+<?php 
+
+if ( ! defined('DOCROOT')) 
+	exit('No direct script access allowed'); ?>
 
 <?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_op_open')->setParam('board', $radix)->execute(); ?>
 
@@ -112,7 +115,7 @@
 			</noscript></td>
 		</tr>
 		<?php endif; ?>
-		<?php if (! isset($disable_image_upload) || !$disable_image_upload) : ?>
+		<?php if ( ! isset($disable_image_upload) || !$disable_image_upload) : ?>
 		<tr>
 			<td><?= __('File') ?></td>
 			<td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']) ?></td>

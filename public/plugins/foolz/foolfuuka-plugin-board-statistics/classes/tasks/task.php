@@ -71,7 +71,7 @@ class Task
 
 			foreach ($boards as $board)
 			{
-				if (! is_null($shortname) && $shortname != $board->shortname)
+				if ( ! is_null($shortname) && $shortname != $board->shortname)
 				{
 					continue;
 				}
@@ -92,7 +92,7 @@ class Task
 							// This statistics report has run once already.
 							$found = true;
 
-							if (! isset($a['frequency']))
+							if ( ! isset($a['frequency']))
 							{
 								$skip = true;
 								continue;

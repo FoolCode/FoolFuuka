@@ -254,7 +254,7 @@ class Comment
 
 		foreach ($post as $key => $value)
 		{
-			if (! in_array($key, $media_fields) && ! in_array($key, $extra_fields))
+			if ( ! in_array($key, $media_fields) && ! in_array($key, $extra_fields))
 			{
 				$this->$key = $value;
 			}
@@ -604,7 +604,7 @@ class Comment
 
 			foreach($codes as $code)
 			{
-				if($strip)
+				if ($strip)
 				{
 					$code[1] = 'callback_replace';
 					$code[2] = '\\Comment::stripUnusedBbcode'; // this also fixes pre/code
@@ -801,7 +801,7 @@ class Comment
 			->execute()
 			->get($build_href);
 
-		if (! $data->board)
+		if ( ! $data->board)
 		{
 			if ($data->query)
 			{
@@ -887,7 +887,7 @@ class Comment
 			->setObject($this)
 			->execute();
 
-		if (! \Auth::has_access('comment.see_ip'))
+		if ( ! \Auth::has_access('comment.see_ip'))
 		{
 			unset($this->poster_ip);
 		}
@@ -903,9 +903,9 @@ class Comment
 	 */
 	protected function p_delete($password = null, $force = false)
 	{
-		if (! \Auth::has_access('comment.passwordless_deletion') && $force !== true)
+		if ( ! \Auth::has_access('comment.passwordless_deletion') && $force !== true)
 		{
-			if (! class_exists('PHPSecLib\\Crypt_Hash', false))
+			if ( ! class_exists('PHPSecLib\\Crypt_Hash', false))
 			{
 				import('phpseclib/Crypt/Hash', 'vendor');
 			}
@@ -914,7 +914,7 @@ class Comment
 
 			$hashed = base64_encode($hasher->pbkdf2($password, \Foolz\Config\Config::get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
 
-			if($this->delpass !== $hashed)
+			if ($this->delpass !== $hashed)
 			{
 				throw new CommentDeleteWrongPassException(__('The password you inserted didn\'t match the deletion password.'));
 			}
@@ -1037,12 +1037,12 @@ class Comment
 			$time_ghost_bump = null;
 			foreach ($posts as $post)
 			{
-				if (! $post['subnum'] && $time_last < $post['timestamp'])
+				if ( ! $post['subnum'] && $time_last < $post['timestamp'])
 				{
 					$time_last = $post['timestamp'];
 				}
 
-				if (! $post['subnum'] && $time_bump < $post['timestamp'] && $post['email'] !== 'sage')
+				if ( ! $post['subnum'] && $time_bump < $post['timestamp'] && $post['email'] !== 'sage')
 				{
 					$time_bump = $post['timestamp'];
 				}

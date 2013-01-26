@@ -2,7 +2,7 @@
 
 namespace Foolfuuka\Plugins\NginxCachePurge;
 
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 class NginxCachePurge extends \Plugins
@@ -58,7 +58,7 @@ class NginxCachePurge extends \Plugins
 	{
 		$text = \Preferences::get('fu.plugins.nginx_cache_purge.urls');
 
-		if (! $text)
+		if ( ! $text)
 		{
 			return [];
 		}
@@ -79,7 +79,7 @@ class NginxCachePurge extends \Plugins
 			if (count($explode) > 1)
 				$lines_exploded[$key]['url'] = rtrim(array_shift($explode) . ':' . array_shift($explode), '/');
 
-			if(count($explode) > 1)
+			if (count($explode) > 1)
 			{
 				$lines_exploded[$key]['user'] = array_shift($explode);
 				$lines_exploded[$key]['pass'] = implode(':', $explode);

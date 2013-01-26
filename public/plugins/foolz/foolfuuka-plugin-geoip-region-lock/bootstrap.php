@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-lock')
@@ -21,7 +21,7 @@ if (! defined('DOCROOT'))
 			]);
 		}
 
-		if (! \Auth::has_access('maccess.mod') && !(\Preferences::get('fu.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user')))
+		if ( ! \Auth::has_access('maccess.mod') && !(\Preferences::get('fu.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user')))
 		{
 			\Foolfuuka\Plugins\Geoip_Region_Lock\GeoipRegionLock::block_country_view();
 

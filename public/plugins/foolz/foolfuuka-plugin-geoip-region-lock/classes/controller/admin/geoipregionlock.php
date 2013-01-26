@@ -2,7 +2,7 @@
 
 namespace Foolfuuka\Plugins\GeoipRegionLock;
 
-if (!defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 class ControllerPluginFuGeoipRegionLockAdminGeoipRegionLock extends \Controller_Admin
@@ -10,7 +10,7 @@ class ControllerPluginFuGeoipRegionLockAdminGeoipRegionLock extends \Controller_
 
 	public function before()
 	{
-		if (! \Auth::has_access('maccess.admin'))
+		if ( ! \Auth::has_access('maccess.admin'))
 		{
 			\Response::redirect('admin');
 		}

@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 namespace Foolfuuka\Plugins\Dice_Roll;

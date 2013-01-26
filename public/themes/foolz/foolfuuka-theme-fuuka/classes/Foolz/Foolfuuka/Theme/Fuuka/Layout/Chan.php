@@ -66,7 +66,7 @@ class Chan extends \Foolz\Theme\View
 				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
 			}
 
-			if (!empty($board_urls))
+			if ( !empty($board_urls))
 			{
 				echo '[ ' . implode(' / ', $board_urls) . ' ]';
 			}
@@ -91,7 +91,7 @@ class Chan extends \Foolz\Theme\View
 			$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
 			$top_nav = \Foolz\Plugin\Hook::forge('fu.themes.fuuka_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
 
-			if (!empty($top_nav))
+			if ( ! empty($top_nav))
 			{
 				echo '[ ';
 				foreach ($top_nav as $key => $nav)
@@ -219,7 +219,7 @@ class Chan extends \Foolz\Theme\View
 					$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 					$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.fuuka_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
-					if (!empty($bottom_nav))
+					if ( ! empty($bottom_nav))
 					{
 						echo '[ ';
 						foreach ($bottom_nav as $key => $nav)

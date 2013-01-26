@@ -43,7 +43,7 @@ class Chan extends \Controller
 		{
 			$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : 'foolz/foolfuuka-theme-foolfuuka';
 			$theme = $theme_instance->get('foolz', $theme_name);
-			if (! isset($theme->enabled) || ! $theme->enabled)
+			if ( ! isset($theme->enabled) || ! $theme->enabled)
 			{
 				throw new \OutOfBoundsException;
 			}
@@ -64,7 +64,7 @@ class Chan extends \Controller
 		$email = \Cookie::get('reply_email');
 
 		// get the password needed for the reply field
-		if (! $pass || strlen($pass) < 3)
+		if ( ! $pass || strlen($pass) < 3)
 		{
 			$pass = \Str::random('alnum', 7);
 			\Cookie::set('reply_password', $pass, 60*60*24*30);
@@ -345,7 +345,7 @@ class Chan extends \Controller
 			]
 		]);
 
-		if (! $this->_radix->archive)
+		if ( ! $this->_radix->archive)
 		{
 			$this->builder->createPartial('tools_new_thread_box', 'tools_reply_box');
 		}
@@ -367,7 +367,7 @@ class Chan extends \Controller
 
 	public function radix_last($limit = 0, $num = 0)
 	{
-		if (! ctype_digit((string) $limit) || $limit < 1)
+		if ( ! ctype_digit((string) $limit) || $limit < 1)
 		{
 			return $this->action_404();
 		}
@@ -446,7 +446,7 @@ class Chan extends \Controller
 
 		$this->param_manager->setParam('backend_vars', $backend_vars);
 
-		if (! $thread_status['closed'])
+		if ( ! $thread_status['closed'])
 		{
 			$this->builder->createPartial('tools_reply_box', 'tools_reply_box');
 		}
@@ -524,7 +524,7 @@ class Chan extends \Controller
 
 		$redirect =  \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/');
 
-		if (! $comment->op)
+		if ( ! $comment->op)
 		{
 			$redirect .= '#'.$comment->num.($comment->subnum ? '_'.$comment->subnum :'');
 		}
@@ -578,7 +578,7 @@ class Chan extends \Controller
 	public function radix_full_image($filename)
 	{
 		// Check if $filename is valid.
-		if (! in_array(\Input::extension(), ['gif', 'jpg', 'png', 'pdf']) || ! ctype_digit((string) substr($filename,
+		if ( ! in_array(\Input::extension(), ['gif', 'jpg', 'png', 'pdf']) || ! ctype_digit((string) substr($filename,
 		0, 13)))
 		{
 			return $this->action_404(__('The filename submitted is not compatible with the system.'));
@@ -745,7 +745,7 @@ class Chan extends \Controller
 		$this->param_manager->setParam('search', $search);
 
 		// latest searches system
-		if(! is_array($cookie_array = @json_decode(\Cookie::get('search_latest_5'), true)))
+		if ( ! is_array($cookie_array = @json_decode(\Cookie::get('search_latest_5'), true)))
 		{
 			$cookie_array = [];
 		}
@@ -754,7 +754,7 @@ class Chan extends \Controller
 		foreach($cookie_array as $item)
 		{
 			// all subitems must be array, all must have 'board'
-			if (! is_array($item) || ! isset($item['board']))
+			if ( ! is_array($item) || ! isset($item['board']))
 			{
 				$cookie_array = [];
 				break;
@@ -808,7 +808,7 @@ class Chan extends \Controller
 
 		if ($search['poster_ip'] !== null)
 		{
-			if (! filter_var($search['poster_ip'], FILTER_VALIDATE_IP))
+			if ( ! filter_var($search['poster_ip'], FILTER_VALIDATE_IP))
 			{
 				return $this->error(__('The poster IP you inserted is not a valid IP address.'));
 			}
@@ -891,7 +891,7 @@ class Chan extends \Controller
 		if ($search['order'] == 'asc')
 			array_push($title, __('in ascending order'));
 
-		if (! empty($title))
+		if ( ! empty($title))
 		{
 			$title = sprintf(__('Searching for posts %s.'),
 				implode(' ' . __('and') . ' ', $title));
@@ -995,7 +995,7 @@ class Chan extends \Controller
 
 		if (\Input::post('appeal'))
 		{
-			if (! \Security::check_token())
+			if ( ! \Security::check_token())
 			{
 				return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
 			}
@@ -1021,12 +1021,12 @@ class Chan extends \Controller
 	public function radix_submit()
 	{
 		// adapter
-		if (! \Input::post())
+		if ( ! \Input::post())
 		{
 			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
 		}
 
-		if (! \Security::check_token())
+		if ( ! \Security::check_token())
 		{
 			if (\Input::is_ajax())
 			{

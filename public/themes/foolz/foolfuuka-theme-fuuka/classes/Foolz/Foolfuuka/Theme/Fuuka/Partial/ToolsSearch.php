@@ -1,9 +1,9 @@
 <?php
 
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-if (! isset($radix) && \Preferences::get('fu.sphinx.global'))
+if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
 {
 	// search can work also without a radix selected
 	$search_radix = '_';
@@ -222,7 +222,7 @@ elseif (isset($radix))
 	</div>
 	<?php echo \Form::close(); ?>
 
-<?php if(Radix::getSelected()) : ?>
+<?php if (Radix::getSelected()) : ?>
 	<!--- Post Input -->
 	<?php echo \Form::open(Radix::getSelected()->shortname . '/post'); ?>
 	<div class="postspan" style="float:left">

@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 namespace Foolfuuka\Plugins\ImageInHtml;
@@ -11,7 +11,7 @@ class ControllerPluginFuImageInHtmlChan extends \Foolfuuka\Controller_Chan
 	public function radixImageHtml($filename)
 	{
 		// Check if $filename is valid.
-		if (! in_array(\Input::extension(), ['gif', 'jpg', 'png']) || ! ctype_digit(substr($filename, 0, 13)))
+		if ( ! in_array(\Input::extension(), ['gif', 'jpg', 'png']) || ! ctype_digit(substr($filename, 0, 13)))
 		{
 			return $this->action_404(__('The filename submitted is not compatible with the system.'));
 		}
@@ -102,7 +102,7 @@ class ControllerPluginFuImageInHtmlChan extends \Foolfuuka\Controller_Chan
 			$image_html = $this->_theme->build('plugin', ['content' => $content], true);
 
 			// we got search results
-			if (! isset($board_html))
+			if ( ! isset($board_html))
 			{
 				$board_html = $this->_theme->build('board', ['board' => $board, 'disable_default_after_headless_open' => true], true);
 			}

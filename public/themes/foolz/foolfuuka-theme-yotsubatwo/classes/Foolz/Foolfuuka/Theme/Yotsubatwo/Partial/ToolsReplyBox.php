@@ -126,7 +126,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 		            </noscript></td>
 		    </tr>
 				<?php endif; ?>
-				<?php if (! isset($disable_image_upload) || !$disable_image_upload) : ?>
+				<?php if ( ! isset($disable_image_upload) || !$disable_image_upload) : ?>
 		    <tr>
 		        <td><?= __('File') ?></td>
 		        <td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']) ?></td>

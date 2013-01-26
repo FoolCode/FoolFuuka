@@ -213,7 +213,7 @@ class StringParser {
 	 */
 	function addFilter ($type, $callback) {
 		// make sure the function is callable
-		if (!is_callable ($callback)) {
+		if ( !is_callable ($callback)) {
 			return false;
 		}
 		
@@ -293,14 +293,14 @@ class StringParser {
 			switch ($this->_parserMode) {
 				case STRINGPARSER_MODE_SEARCH:
 					$res = $this->_searchLoop ();
-					if (!$res) {
+					if ( !$res) {
 						$this->_parsing = false;
 						return false;
 					}
 					break;
 				case STRINGPARSER_MODE_LOOP:
 					$res = $this->_loop ();
-					if (!$res) {
+					if ( !$res) {
 						$this->_parsing = false;
 						return false;
 					}
@@ -311,13 +311,13 @@ class StringParser {
 			}
 			
 			$res = $this->_closeRemainingBlocks ();
-			if (!$res) {
+			if ( !$res) {
 				if ($this->strict) {
 					$this->_parsing = false;
 					return false;
 				} else {
 					$res = $this->_reparseAfterCurrentBlock ();
-					if (!$res) {
+					if ( !$res) {
 						$this->_parsing = false;
 						return false;
 					}
@@ -329,14 +329,14 @@ class StringParser {
 		
 		$res = $this->_modifyTree ();
 		
-		if (!$res) {
+		if ( !$res) {
 			$this->_parsing = false;
 			return false;
 		}
 		
 		$res = $this->_outputTree ();
 		
-		if (!$res) {
+		if ( !$res) {
 			$this->_parsing = false;
 			return false;
 		}
@@ -354,7 +354,7 @@ class StringParser {
 		}
 		
 		$res = StringParser_Node::destroyNode ($this->_root);
-		if (!$res) {
+		if ( !$res) {
 			$this->_parsing = false;
 			return false;
 		}
@@ -443,11 +443,11 @@ class StringParser {
 		$node_parent =& $topelem->_parent;
 		// remove the child from the tree
 		$res = $node_parent->removeChild ($topelem, false);
-		if (!$res) {
+		if ( !$res) {
 			return false;
 		}
 		$res = $this->_popNode ();
-		if (!$res) {
+		if ( !$res) {
 			return false;
 		}
 		
@@ -460,7 +460,7 @@ class StringParser {
 		// StringParser_Node?
 		$this->_setStatus (0);
 		$res = $this->_appendText ($this->_text{$topelem->occurredAt});
-		if (!$res) {
+		if ( !$res) {
 			return false;
 		}
 		
@@ -485,7 +485,7 @@ class StringParser {
 		}
 		while (count ($this->_stack) > 1) {
 			$res = $this->_popNode ();
-			if (!$res) {
+			if ( !$res) {
 				return false;
 			}
 		}
@@ -542,7 +542,7 @@ class StringParser {
 			// parser ends here
 			if ($needle === false) {
 				// original status 0 => no problem
-				if (!$this->_status) {
+				if ( !$this->_status) {
 					break;
 				}
 				// not in original status? strict mode?
@@ -551,7 +551,7 @@ class StringParser {
 				}
 				// break up parsing operation of current node
 				$res = $this->_reparseAfterCurrentBlock ();
-				if (!$res) {
+				if ( !$res) {
 					return false;
 				}
 				continue;
@@ -559,17 +559,17 @@ class StringParser {
 			// get subtext
 			$subtext = substr ($this->_text, $this->_cpos, $offset - $this->_cpos);
 			$res = $this->_appendText ($subtext);
-			if (!$res) {
+			if ( !$res) {
 				return false;
 			}
 			$this->_cpos = $offset;
 			$res = $this->_handleStatus ($this->_status, $needle);
-			if (!$res && $this->strict) {
+			if ( !$res && $this->strict) {
 				return false;
 			}
-			if (!$res) {
+			if ( !$res) {
 				$res = $this->_appendText ($this->_text{$this->_cpos});
-				if (!$res) {
+				if ( !$res) {
 					return false;
 				}
 				$this->_cpos++;
@@ -586,7 +586,7 @@ class StringParser {
 		if ($this->_cpos < strlen ($this->_text)) {
 			$subtext = substr ($this->_text, $this->_cpos);
 			$res = $this->_appendText ($subtext);
-			if (!$res) {
+			if ( !$res) {
 				return false;
 			}
 		}
@@ -611,7 +611,7 @@ class StringParser {
 			
 			if ($needle === false) {
 				// not found => see if character is allowed
-				if (!in_array ($this->_text{$this->_cpos}, $this->_charactersAllowed)) {
+				if ( !in_array ($this->_text{$this->_cpos}, $this->_charactersAllowed)) {
 					if ($strict) {
 						return false;
 					}
@@ -620,7 +620,7 @@ class StringParser {
 				}
 				// lot's of FIXMES
 				$res = $this->_appendText ($this->_text{$this->_cpos});
-				if (!$res) {
+				if ( !$res) {
 					return false;
 				}
 			}
@@ -628,17 +628,17 @@ class StringParser {
 			// get subtext
 			$subtext = substr ($this->_text, $offset, $offset - $this->_cpos);
 			$res = $this->_appendText ($subtext);
-			if (!$res) {
+			if ( !$res) {
 				return false;
 			}
 			$this->_cpos = $subtext;
 			$res = $this->_handleStatus ($this->_status, $needle);
-			if (!$res && $strict) {
+			if ( !$res && $strict) {
 				return false;
 			}
 		}
 		// original status 0 => no problem
-		if (!$this->_status) {
+		if ( !$this->_status) {
 			return true;
 		}
 		// not in original status? strict mode?
@@ -647,7 +647,7 @@ class StringParser {
 		}
 		// break up parsing operation of current node
 		$res = $this->_reparseAfterCurrentBlock ();
-		if (!$res) {
+		if ( !$res) {
 			return false;
 		}
 		// this will not cause an infinite loop because
@@ -663,7 +663,7 @@ class StringParser {
 	 * @return bool On success, the function returns true, else false
 	 */
 	function _appendText ($text) {
-		if (!strlen ($text)) {
+		if ( !strlen ($text)) {
 			return true;
 		}
 		// default: call _appendToLastTextChild
@@ -747,7 +747,7 @@ class StringParser {
 	function _pushNode (&$node) {
 		$stack_count = count ($this->_stack);
 		$max_node =& $this->_stack[$stack_count-1];
-		if (!$max_node->appendChild ($node)) {
+		if ( !$max_node->appendChild ($node)) {
 			return false;
 		}
 		$this->_stack[$stack_count] =& $node;
@@ -775,13 +775,13 @@ class StringParser {
 	 */
 	function _topNode () {
 		$args = func_get_args ();
-		if (!count ($args)) {
+		if ( !count ($args)) {
 			return; // oops?
 		}
 		$method = array_shift ($args);
 		$stack_count = count ($this->_stack);
 		$method = array (&$this->_stack[$stack_count-1], $method);
-		if (!is_callable ($method)) {
+		if ( !is_callable ($method)) {
 			return; // oops?
 		}
 		return call_user_func_array ($method, $args);
@@ -935,7 +935,7 @@ class StringParser_Node {
 	 * @return bool On success, the function returns true, else false.
 	 */
 	function prependChild (&$node) {
-		if (!is_object ($node)) {
+		if ( !is_object ($node)) {
 			return false;
 		}
 		
@@ -948,7 +948,7 @@ class StringParser_Node {
 		if ($node->_parent !== false) {
 			// remove node from there
 			$parent =& $node->_parent;
-			if (!$parent->removeChild ($node, false)) {
+			if ( !$parent->removeChild ($node, false)) {
 				return false;
 			}
 			unset ($parent);
@@ -999,7 +999,7 @@ class StringParser_Node {
 	 * @return bool On success, the function returns true, else false.
 	 */
 	function appendChild (&$node) {
-		if (!is_object ($node)) {
+		if ( !is_object ($node)) {
 			return false;
 		}
 		
@@ -1012,7 +1012,7 @@ class StringParser_Node {
 		if ($node->_parent !== null) {
 			// remove node from there
 			$parent =& $node->_parent;
-			if (!$parent->removeChild ($node, false)) {
+			if ( !$parent->removeChild ($node, false)) {
 				return false;
 			}
 			unset ($parent);
@@ -1035,7 +1035,7 @@ class StringParser_Node {
 	 * @return bool On success, the function returns true, else false.
 	 */
 	function insertChildBefore (&$node, &$reference) {
-		if (!is_object ($node)) {
+		if ( !is_object ($node)) {
 			return false;
 		}
 		
@@ -1055,7 +1055,7 @@ class StringParser_Node {
 		if ($node->_parent !== null) {
 			// remove node from there
 			$parent =& $node->_parent;
-			if (!$parent->removeChild ($node, false)) {
+			if ( !$parent->removeChild ($node, false)) {
 				return false;
 			}
 			unset ($parent);
@@ -1087,7 +1087,7 @@ class StringParser_Node {
 	 * @return bool On success, the function returns true, else false.
 	 */
 	function insertChildAfter (&$node, &$reference) {
-		if (!is_object ($node)) {
+		if ( !is_object ($node)) {
 			return false;
 		}
 		
@@ -1107,7 +1107,7 @@ class StringParser_Node {
 		if ($node->_parent !== false) {
 			// remove node from there
 			$parent =& $node->_parent;
-			if (!$parent->removeChild ($node, false)) {
+			if ( !$parent->removeChild ($node, false)) {
 				return false;
 			}
 			unset ($parent);
@@ -1160,7 +1160,7 @@ class StringParser_Node {
 			$child = $save;
 			
 			// else: get object
-			if (!isset($this->_children[$child])) {
+			if ( !isset($this->_children[$child])) {
 				return false;
 			}
 			$object =& $this->_children[$child];
@@ -1170,7 +1170,7 @@ class StringParser_Node {
 		$ccount = count ($this->_children);
 		
 		// index out of bounds
-		if (!is_int ($child) || $child < 0 || $child >= $ccount) {
+		if ( !is_int ($child) || $child < 0 || $child >= $ccount) {
 			return false;
 		}
 		
@@ -1219,7 +1219,7 @@ class StringParser_Node {
 	 */
 	function &firstChild () {
 		$ret = null;
-		if (!count ($this->_children)) {
+		if ( !count ($this->_children)) {
 			return $ret;
 		}
 		return $this->_children[0];
@@ -1234,7 +1234,7 @@ class StringParser_Node {
 	function &lastChild () {
 		$ret = null;
 		$c = count ($this->_children);
-		if (!$c) {
+		if ( !$c) {
 			return $ret;
 		}
 		return $this->_children[$c-1];
@@ -1264,14 +1264,14 @@ class StringParser_Node {
 		while (count ($node->_children)) {
 			$child = 0;
 			// remove first child until no more children remain
-			if (!$node->removeChild ($child, true)) {
+			if ( !$node->removeChild ($child, true)) {
 				return false;
 			}
 			unset($child);
 		}
 		
 		// now call the nodes destructor
-		if (!$node->_destroy ()) {
+		if ( !$node->_destroy ()) {
 			return false;
 		}
 		
@@ -1305,7 +1305,7 @@ class StringParser_Node {
 	 * @return mixed The index of the child node on success, else false.
 	 */
 	function _findChild (&$child) {
-		if (!is_object ($child)) {
+		if ( !is_object ($child)) {
 			return false;
 		}
 		
@@ -1523,7 +1523,7 @@ class StringParser_Node_Text extends StringParser_Node {
 	 * @param mixed $default The default return value
 	 */
 	function getFlag ($flag, $type = 'mixed', $default = null) {
-		if (!isset ($this->_flags[$flag])) {
+		if ( !isset ($this->_flags[$flag])) {
 			return $default;
 		}
 		$return = $this->_flags[$flag];

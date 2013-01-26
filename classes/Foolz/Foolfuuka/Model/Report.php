@@ -151,7 +151,7 @@ class Report
 
 		$new->reason_processed = htmlentities(@iconv('UTF-8', 'UTF-8//IGNORE', $new->reason));
 
-		if (! isset($new->radix))
+		if ( ! isset($new->radix))
 		{
 			$new->radix = \Radix::getById($new->board_id);
 		}

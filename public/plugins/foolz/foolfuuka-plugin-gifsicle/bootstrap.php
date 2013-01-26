@@ -6,7 +6,7 @@
 		\Foolz\Plugin\Event::forge('fu.model.media.insert.resize')
 			->setCall(function($result){
 
-				if (! $result instanceof \Foolz\Plugin\Void || strtolower($this->temp_extension) !== 'gif')
+				if ( ! $result instanceof \Foolz\Plugin\Void || strtolower($this->temp_extension) !== 'gif')
 				{
 					// someone is already done with the image or it's not a gif
 					return;

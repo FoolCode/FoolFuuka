@@ -37,13 +37,13 @@ class BoardComment extends \Foolz\Theme\View
 		$num = $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 
 		?>
-		<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if (!is_null($p->media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>">
+		<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if ( !is_null($p->media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>">
 			<div class="post_wrapper">
 				<?php if ($p->media !== null) : ?>
 				<div class="post_file">
 					<span class="post_file_controls">
 					<?php if ($p->media->getMediaStatus() !== 'banned' || $perm['media.see_hidden']) : ?>
-						<?php if (!$p->radix->hide_thumbnails || $perm['media.see_hidden']) : ?>
+						<?php if ( !$p->radix->hide_thumbnails || $perm['media.see_hidden']) : ?>
 						<?php if ($p->media->total > 1) : ?><a href="<?= \Uri::create($p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
 							href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">Google</a><a
 							href="http://iqdb.org/?url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">iqdb</a><a
@@ -74,7 +74,7 @@ class BoardComment extends \Foolz\Theme\View
 						</a>
 					<?php else: ?>
 						<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-							<?php if(!$perm['maccess.mod'] && !$p->radix->transparent_spoiler && $p->media->spoiler) :?>
+							<?php if ( !$perm['maccess.mod'] && !$p->radix->transparent_spoiler && $p->media->spoiler) :?>
 							<div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 							<?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == true) : ?>
 							<img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/transparent_pixel.png') ?>" data-original="<?= $p->media->getThumbLink() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
@@ -132,7 +132,7 @@ class BoardComment extends \Foolz\Theme\View
 				</div>
 				<div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">
 					<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-board-url="<?= \Uri::create([$p->radix->shortname]) ?>" data-id="<?= $p->doc_id ?>" data-action="delete_post"><?= __('Delete Post') ?></button>
-					<?php if (!is_null($p->media)) : ?>
+					<?php if ( !is_null($p->media)) : ?>
 						<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="delete_image"><?= __('Delete Image') ?></button>
 						<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="ban_image_local"><?= __('Ban Image') ?></button>
 						<button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="ban_image_global"><?= __('Ban Image Globally') ?></button>

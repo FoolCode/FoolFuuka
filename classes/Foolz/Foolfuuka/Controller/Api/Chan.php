@@ -76,7 +76,7 @@ class Chan extends \Controller_Rest
 			return false;
 		}
 
-		if( ! $this->_radix = \Radix::setSelectedByShortname($board))
+		if ( ! $this->_radix = \Radix::setSelectedByShortname($board))
 		{
 			//$this->response(['error' => __('The board you selected doesn\'t exist')], 404);
 			return false;

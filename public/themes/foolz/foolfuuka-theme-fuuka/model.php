@@ -2,7 +2,7 @@
 
 namespace Foolfuuka\Themes\Fuuka;
 
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 class Theme_Fu_Fuuka

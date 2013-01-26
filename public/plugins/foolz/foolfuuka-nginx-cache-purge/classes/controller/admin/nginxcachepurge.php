@@ -2,7 +2,7 @@
 
 namespace Foolfuuka\Plugins\NginxCachePurge;
 
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 class ControllerPluginFuNginxCachePurgeAdminNginxCachePurge extends \Controller_Admin
@@ -10,7 +10,7 @@ class ControllerPluginFuNginxCachePurgeAdminNginxCachePurge extends \Controller_
 
 	public function before()
 	{
-		if (! \Auth::has_access('maccess.admin'))
+		if ( ! \Auth::has_access('maccess.admin'))
 		{
 			\Response::redirect('admin');
 		}

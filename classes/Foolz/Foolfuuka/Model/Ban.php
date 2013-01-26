@@ -146,7 +146,7 @@ class Ban
 			->execute()
 			->fetch();
 
-		if (! $result)
+		if ( ! $result)
 		{
 			throw new BanNotFoundException(__('The ban could not be found.'));
 		}
@@ -172,7 +172,7 @@ class Ban
 			->execute()
 			->fetchAll();
 
-		if (! count($result))
+		if ( ! count($result))
 		{
 			throw new BanNotFoundException(__('The ban could not be found.'));
 		}
@@ -264,7 +264,7 @@ class Ban
 		}
 
 		// if length = 0 then we have a permaban
-		if (! $ban->length || $ban->start + $ban->length > time())
+		if ( ! $ban->length || $ban->start + $ban->length > time())
 		{
 			// return the object, will be global if it's a global ban
 			return $ban;
@@ -302,14 +302,14 @@ class Ban
 
 			foreach ($board_ids as $id)
 			{
-				if (! in_array($id, $valid_board_ids))
+				if ( ! in_array($id, $valid_board_ids))
 				{
 					throw new BanException(__('You entered a non-existent board ID.'));
 				}
 			}
 		}
 
-		if (! ctype_digit((string) $ip_decimal))
+		if ( ! ctype_digit((string) $ip_decimal))
 		{
 			throw new BanException(__('You entered an invalid IP.'));
 		}
@@ -319,7 +319,7 @@ class Ban
 			throw new BanException(__('You entered a too long reason for the ban.'));
 		}
 
-		if (! ctype_digit($length))
+		if ( ! ctype_digit($length))
 		{
 			throw new BanException(__('You entered an invalid length for the ban.'));
 		}

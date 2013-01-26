@@ -71,13 +71,13 @@ class Fool
 			case 'create_extra':
 			case 'mysql_convert_utf8mb4':
 			case 'recreate_triggers':
-				if (! isset($parameters[1]))
+				if ( ! isset($parameters[1]))
 				{
 					\Cli::write(__('Missing parameter.'));
 					return false;
 				}
 				$board = \Radix::getByShortname($parameters[1]);
-				if(! $board)
+				if ( ! $board)
 				{
 					\Cli::write(__('Board doesn\'t exist.'));
 					return false;
@@ -99,10 +99,10 @@ class Fool
 
 			/** @todo reimplement recheck banned
 			case 'recheck_banned':
-				if(isset($parameters[1]))
+				if (isset($parameters[1]))
 				{
 					$board = \Radix::getByShortname($parameters[1]);
-					if(!$board)
+					if ( !$board)
 					{
 						\Cli::write(__('Board doesn\'t exist.'));
 						return false;
@@ -140,17 +140,17 @@ class Fool
 		switch($parameters[0])
 		{
 			case 'set':
-				if (! isset($parameters[1]))
+				if ( ! isset($parameters[1]))
 				{
 					\Cli::write(__('Missing parameter.'));
 					return false;
 				}
 				$board = \Radix::getByShortname($parameters[1]);
-				if (! $board)
+				if ( ! $board)
 				{
 					\Cli::write(__('Board doesn\'t exist.'));
 				}
-				if (! isset($parameters[1]))
+				if ( ! isset($parameters[1]))
 				{
 					\Cli::write(__('Your request is missing parameters: <name>'));
 					return false;
@@ -160,7 +160,7 @@ class Fool
 				break;
 
 			case 'mass_set':
-				if (! isset($parameters[1]) || !in_array($parameters[1], ['archives', 'boards', 'all']))
+				if ( ! isset($parameters[1]) || !in_array($parameters[1], ['archives', 'boards', 'all']))
 				{
 					\Cli::write(__("You must choose between 'archives', 'boards', or 'all'."));
 					return false;
@@ -174,7 +174,7 @@ class Fool
 				else
 					return false;
 
-				if (! isset($parameters[2]))
+				if ( ! isset($parameters[2]))
 				{
 					\Cli::write(__('Your request is missing parameters: <name>'));
 					return false;

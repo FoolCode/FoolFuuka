@@ -2,9 +2,8 @@
 
 namespace Foolfuuka\Plugins\GeoipRegionLock;
 
-if (!defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
-
 
 class GeoipRegionLock extends \Plugins
 {
@@ -81,7 +80,7 @@ class GeoipRegionLock extends \Plugins
 
 			foreach($allow as $al)
 			{
-				if(strtolower(trim($al)) == $country)
+				if (strtolower(trim($al)) == $country)
 					return null;
 			}
 

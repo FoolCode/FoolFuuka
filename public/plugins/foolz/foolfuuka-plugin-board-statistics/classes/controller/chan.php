@@ -48,7 +48,7 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 		{
 			$stats = BS::checkAvailableStats($report, $this->_radix);
 
-			if (! is_array($stats))
+			if ( ! is_array($stats))
 			{
 				return $this->error(__('Statistic currently not available.'));
 			}

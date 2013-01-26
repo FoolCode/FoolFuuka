@@ -52,7 +52,7 @@ class CommentInsert extends Comment
 			}
 			catch(\Doctrine\DBAL\DBALException $e)
 			{
-				if (! $is_retry)
+				if ( ! $is_retry)
 				{
 					// maybe we're trying to insert on something just inserted
 					return $this->insertTriggerDaily(true);
@@ -117,7 +117,7 @@ class CommentInsert extends Comment
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
 			{
-				if (! $is_retry)
+				if ( ! $is_retry)
 				{
 					return $this->insertTriggerUsers(true);
 				}
@@ -157,7 +157,7 @@ class CommentInsert extends Comment
 		}
 		else
 		{
-			if (! $this->subnum)
+			if ( ! $this->subnum)
 			{
 				$query = DC::qb()
 					->update($this->radix->getTable('_threads'))
@@ -212,7 +212,7 @@ class CommentInsert extends Comment
 		$this->allow_media = true;
 
 		// some users don't need to be limited, in here go all the ban and posting limitators
-		if( ! \Auth::has_access('comment.limitless_comment'))
+		if ( ! \Auth::has_access('comment.limitless_comment'))
 		{
 			// check if the user is banned
 			if ($ban = \Ban::isBanned(\Input::ip_decimal(), $this->radix))
@@ -285,7 +285,7 @@ class CommentInsert extends Comment
 		}
 
 		// some users don't need to be limited, in here go all the ban and posting limitators
-		if (! \Auth::has_access('comment.limitless_comment'))
+		if ( ! \Auth::has_access('comment.limitless_comment'))
 		{
 			if ($this->thread_num < 1)
 			{
@@ -364,7 +364,7 @@ class CommentInsert extends Comment
 				$recaptcha = \ReCaptcha::instance()
 					->check_answer(\Input::ip(), $this->recaptcha_challenge, $this->recaptcha_response);
 
-				if (! $recaptcha)
+				if ( ! $recaptcha)
 				{
 					throw new CommentSendingWrongCaptchaException(__('Incorrect CAPTCHA solution.'));
 				}
@@ -447,7 +447,7 @@ class CommentInsert extends Comment
 			throw new CommentSendingNoDelPassException(__('You must submit a deletion password.'));
 		}
 
-		if (! class_exists('PHPSecLib\\Crypt_Hash', false))
+		if ( ! class_exists('PHPSecLib\\Crypt_Hash', false))
 		{
 			import('phpseclib/Crypt/Hash', 'vendor');
 		}
@@ -474,7 +474,7 @@ class CommentInsert extends Comment
 				$allowed_capcodes[] = 'D';
 			}
 
-			if (! in_array($this->capcode, $allowed_capcodes))
+			if ( ! in_array($this->capcode, $allowed_capcodes))
 			{
 				throw new CommentSendingUnallowedCapcodeException(__('You\'re not allowed to use this capcode.'));
 			}
@@ -501,7 +501,7 @@ class CommentInsert extends Comment
 		// process comment media
 		if ($this->media !== null)
 		{
-			if (! $this->allow_media)
+			if ( ! $this->allow_media)
 			{
 				throw new CommentSendingImageInGhostException(__('You can\'t post images when the thread is in ghost mode.'));
 			}
@@ -518,7 +518,7 @@ class CommentInsert extends Comment
 		else
 		{
 			// if no media is present and post is op, stop processing
-			if (! $this->thread_num)
+			if ( ! $this->thread_num)
 			{
 				throw new CommentSendingThreadWithoutMediaException(__('You can\'t start a new thread without an image.'));
 			}
@@ -731,7 +731,7 @@ class CommentInsert extends Comment
 				$this->insertTriggerUsers();
 
 				// update poster_hash for non-ghost posts
-				if (! $this->ghost && $this->op && $this->radix->enable_poster_hash)
+				if ( ! $this->ghost && $this->op && $this->radix->enable_poster_hash)
 				{
 					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment->thread_num),'id'), 3), 0, 8);
 

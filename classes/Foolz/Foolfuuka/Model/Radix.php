@@ -446,7 +446,7 @@ class Radix
 					{
 						$default = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$k);
 
-						if (! is_null($default))
+						if ( ! is_null($default))
 						{
 							$structure[$key][$inv][$k]['default_value'] = $default;
 						}
@@ -521,7 +521,7 @@ class Radix
 					}
 					elseif (isset($i['database']))
 					{
-						if (! isset($data[$k]))
+						if ( ! isset($data[$k]))
 						{
 							if ($i['type'] === 'checkbox')
 							{
@@ -558,7 +558,7 @@ class Radix
 			}
 			elseif (isset($item['database']))
 			{
-				if (! isset($data[$key]))
+				if ( ! isset($data[$key]))
 				{
 					if ($item['type'] === 'checkbox')
 					{
@@ -575,7 +575,7 @@ class Radix
 		// data must be already sanitized through the form array
 		if (isset($data['id']))
 		{
-			if (! $radix = static::getById($data['id']))
+			if ( ! $radix = static::getById($data['id']))
 			{
 				// @todo proper error
 				return;
@@ -822,7 +822,7 @@ class Radix
 			Cache::item('fu.model.radix.preload')->set($result, 900);
 		}
 
-		if (! is_array($result) || empty($result))
+		if ( ! is_array($result) || empty($result))
 		{
 			static::$preloaded_radixes = [];
 			return false;
@@ -847,7 +847,7 @@ class Radix
 			// load the basic value of the preferences
 			foreach ($structure as $key => $arr)
 			{
-				if (! isset($result_object[$item['id']]->$key) && isset($arr['boards_preferences']))
+				if ( ! isset($result_object[$item['id']]->$key) && isset($arr['boards_preferences']))
 				{
 					$result_object[$item['id']]->$key = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key);
 				}
@@ -895,7 +895,7 @@ class Radix
 		}
 
 		// unset the hidden boards
-		if (! \Auth::has_access('boards.see_hidden'))
+		if ( ! \Auth::has_access('boards.see_hidden'))
 		{
 			foreach ($result_object as $key => $value)
 			{

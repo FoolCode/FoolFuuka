@@ -416,7 +416,7 @@ class Board
 			->execute()
 			->fetchAll();
 
-		if (! count($threads))
+		if ( ! count($threads))
 		{
 			$this->comments = [];
 			$this->comments_unsorted = [];
@@ -479,7 +479,7 @@ class Board
 					$results[$post->thread_num]['images_omitted']--;
 				}
 
-				if (! isset($results[$post->thread_num]['posts']))
+				if ( ! isset($results[$post->thread_num]['posts']))
 				{
 					$results[$post->thread_num]['posts'] = [];
 				}
@@ -601,7 +601,7 @@ class Board
 			->execute()
 			->fetchAll();
 
-		if (! count($result))
+		if ( ! count($result))
 		{
 			$this->comments = [];
 			$this->comments_unsorted = [];
@@ -675,7 +675,7 @@ class Board
 			->setMethodFetching('getThreadComments')
 			->setoptions(['type' => 'thread', 'realtime' => false]);
 
-		if (! ctype_digit((string) $num) || $num < 1)
+		if ( ! ctype_digit((string) $num) || $num < 1)
 		{
 			throw new BoardMalformedInputException(__('The thread number is invalid.'));
 		}
@@ -772,12 +772,12 @@ class Board
 			->execute()
 			->fetchAll();
 
-		if (! count($query_result) && isset($latest_doc_id))
+		if ( ! count($query_result) && isset($latest_doc_id))
 		{
 			return $this->comments = $this->comments_unsorted = [];
 		}
 
-		if (! count($query_result))
+		if ( ! count($query_result))
 		{
 			throw new BoardThreadNotFoundException(__('There\'s no such a thread.'));
 		}
@@ -878,7 +878,7 @@ class Board
 		}
 
 		// we didn't point to the thread OP, this is not a thread
-		if (! $thread_op_present)
+		if ( ! $thread_op_present)
 		{
 			// this really should not happen here
 			throw new BoardThreadNotFoundException(__('The thread you were looking for can\'t be found.'));
@@ -954,7 +954,7 @@ class Board
 
 		if (isset($num))
 		{
-			if (! static::isValidPostNumber($num))
+			if ( ! static::isValidPostNumber($num))
 			{
 				throw new BoardMalformedInputException;
 			}
@@ -980,7 +980,7 @@ class Board
 			->execute()
 			->fetchAll();
 
-		if (! count($result))
+		if ( ! count($result))
 		{
 			throw new BoardPostNotFoundException(__('Post not found.'));
 		}

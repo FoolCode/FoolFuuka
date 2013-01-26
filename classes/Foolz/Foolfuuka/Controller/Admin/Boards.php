@@ -9,7 +9,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		parent::before();
 
 		// determine if the user is allowed access to these methods
-		if (! \Auth::has_access('boards.edit'))
+		if ( ! \Auth::has_access('boards.edit'))
 		{
 			\Response::redirect('admin');
 		}
@@ -320,7 +320,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'validation' => 'trim',
 			'validation_func' => function($input, $form)
 			{
-				if (! file_exists($input['fu.sphinx.dir']))
+				if ( ! file_exists($input['fu.sphinx.dir']))
 				{
 					return [
 						'warning_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',

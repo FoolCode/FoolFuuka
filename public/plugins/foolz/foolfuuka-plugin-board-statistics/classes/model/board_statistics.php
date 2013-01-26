@@ -183,7 +183,7 @@ class BoardStatistics
 		// this variable is going to be a serialized array
 		$enabled = \Preferences::get('fu.plugins.board_statistics.enabled');
 
-		if (! $enabled)
+		if ( ! $enabled)
 		{
 			return array();
 		}
@@ -192,7 +192,7 @@ class BoardStatistics
 
 		foreach ($stats as $k => $s)
 		{
-			if (! $enabled[$k])
+			if ( ! $enabled[$k])
 			{
 				unset($stats[$k]);
 			}
@@ -206,7 +206,7 @@ class BoardStatistics
 
 		if (isset($available[$stat]))
 		{
-			if (! isset($available[$stat]['frequency']))
+			if ( ! isset($available[$stat]['frequency']))
 			{
 				// real time stat
 				$process_function = 'process_' . $stat;
@@ -250,7 +250,7 @@ class BoardStatistics
 			->execute()
 			->fetchAll();
 
-		if (! count($stat))
+		if ( ! count($stat))
 			return false;
 
 		return $stat[0];
@@ -267,7 +267,7 @@ class BoardStatistics
 			->execute()
 			->fetch()['count'];
 
-		if (! $count)
+		if ( ! $count)
 		{
 			DC::forge()
 				->insert(DC::p('plugin_fu_board_statistics'), [
@@ -485,15 +485,15 @@ class BoardStatistics
 	public static function graphGnuplot($board, $stat, $data)
 	{
 		// Create all missing directory paths for statistics.
-		if (! file_exists(DOCROOT . 'foolfuuka/cache/'))
+		if ( ! file_exists(DOCROOT . 'foolfuuka/cache/'))
 		{
 			mkdir(DOCROOT . 'foolfuuka/cache/');
 		}
-		if (! file_exists(DOCROOT . 'foolfuuka/statistics/'))
+		if ( ! file_exists(DOCROOT . 'foolfuuka/statistics/'))
 		{
 			mkdir(DOCROOT . 'foolfuuka/statistics/');
 		}
-		if (! file_exists(DOCROOT . 'foolfuuka/statistics/' . $board . '/'))
+		if ( ! file_exists(DOCROOT . 'foolfuuka/statistics/' . $board . '/'))
 		{
 			mkdir(DOCROOT . 'foolfuuka/statistics/' . $board . '/');
 		}

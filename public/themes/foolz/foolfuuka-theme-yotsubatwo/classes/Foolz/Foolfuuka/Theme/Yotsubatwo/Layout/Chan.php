@@ -86,7 +86,7 @@ class Chan extends \Foolz\Theme\View
 			$board_urls[] = '<a href="'.$item->href.'">'.$item->shortname.'</a>';
 		}
 
-		if (! empty($board_urls))
+		if ( ! empty($board_urls))
 		{
 			echo sprintf(__('Archives: [ %s ]'), implode(' / ', $board_urls));
 		}
@@ -102,7 +102,7 @@ class Chan extends \Foolz\Theme\View
 			$board_urls[] = '<a href="'.$item->href.'">'.$item->shortname.'</a>';
 		}
 
-		if (! empty($board_urls))
+		if ( ! empty($board_urls))
 		{
 			echo sprintf(__('Boards: [ %s ]'), implode(' / ', $board_urls));
 		}
@@ -362,7 +362,7 @@ class Chan extends \Foolz\Theme\View
 		$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 		$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.default_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
-		if (! empty($bottom_nav))
+		if ( ! empty($bottom_nav))
 		{
 			echo '<div class="pull-right" style="margin-right: 15px;">';
 			foreach ($bottom_nav as $key => $nav)

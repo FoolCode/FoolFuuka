@@ -1,5 +1,6 @@
 <?php
-if (!defined('DOCROOT'))
+
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 if (isset($thread_id))
@@ -21,7 +22,7 @@ foreach ($board->getComments() as $key => $post) :
 		<?php if ($op->media !== null) : ?>
 			<?php if ($op->media->getMediaStatus() !== 'banned') : ?>
 			<span><?= __('File:') . ' ' . \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed() ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
-				<?php if (!$op->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
+				<?php if ( !$op->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
 					[<a href="<?= Uri::create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>"><?= __('View Same') ?></a>]
 					[<a href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink() ?>">Google</a>]
 					[<a href="http://iqdb.org/?url=<?= $op->media->getThumbLink() ?>">iqdb</a>]
@@ -61,7 +62,7 @@ foreach ($board->getComments() as $key => $post) :
 			<?php if ($op->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span></span><?php endif; ?>
 		</label>
 
-		<?php if (!isset($thread_id)) : ?>
+		<?php if ( !isset($thread_id)) : ?>
 			<a class="js" href="<?= Uri::create(array($op->radix->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.<?= $op->num ?></a>
 		<?php else : ?>
 			<a class="js" href="<?= Uri::create(array($op->radix->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
@@ -98,7 +99,7 @@ foreach ($board->getComments() as $key => $post) :
 		{
 			foreach ($post['posts'] as $p)
 			{
-				if(!isset($thread_id))
+				if ( ! isset($thread_id))
 					$thread_id = NULL;
 
 				if ($p->thread_num == 0)

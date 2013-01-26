@@ -1,5 +1,5 @@
 <?php
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 ?>
@@ -28,7 +28,7 @@ if (! defined('DOCROOT'))
 					<?= gmdate('D M d H:i:s Y', $p->getOriginalTimestamp()) ?>
 					<?php if ($p->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
 				</label>
-				<?php if (!isset($thread_id)) : ?>
+				<?php if ( !isset($thread_id)) : ?>
 					<a class="js" href="<?= Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 				<?php else : ?>
 					<a class="js" href="<?= Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
@@ -48,7 +48,7 @@ if (! defined('DOCROOT'))
 						<?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
 					</span>
 
-						<?php if (! $p->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
+						<?php if ( ! $p->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
 							[<a href="<?= Uri::create($p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>"><?= __('View Same') ?></a>]
 							[<a href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink() ?>">Google</a>]
 							[<a href="http://iqdb.org/?url=<?= $p->media->getThumbLink() ?>">iqdb</a>]

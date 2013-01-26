@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
-if (! defined('DOCROOT'))
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 class Chan extends \Foolz\Foolfuuka\Controller\Chan
@@ -21,7 +21,6 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 		return $this->latest($page, $options);
 	}
 
-
 	public function radixGallery($page = 1)
 	{
 		throw new \HttpNotFoundException;
@@ -33,16 +32,15 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 	public function radixSubmit()
 	{
 		// adapter
-		if (! \Input::post())
+		if ( ! \Input::post())
 		{
 			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
 		}
 
-		if (! \Security::check_token())
+		if ( ! \Security::check_token())
 		{
 			return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
 		}
-
 
 		if (\Input::post('reply_delete'))
 		{
@@ -108,21 +106,21 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
 		$post = \Input::post();
 
-		if(isset($post['parent']))
+		if (isset($post['parent']))
 			$data['thread_num'] = $post['parent'];
-		if(isset($post['NAMAE']))
+		if (isset($post['NAMAE']))
 			$data['name'] = $post['NAMAE'];
-		if(isset($post['MERU']))
+		if (isset($post['MERU']))
 			$data['email'] = $post['MERU'];
-		if(isset($post['subject']))
+		if (isset($post['subject']))
 			$data['title'] = $post['subject'];
-		if(isset($post['KOMENTO']))
+		if (isset($post['KOMENTO']))
 			$data['comment'] = $post['KOMENTO'];
-		if(isset($post['delpass']))
+		if (isset($post['delpass']))
 			$data['delpass'] = $post['delpass'];
-		if(isset($post['reply_spoiler']))
+		if (isset($post['reply_spoiler']))
 			$data['spoiler'] = true;
-		if(isset($post['reply_postas']))
+		if (isset($post['reply_postas']))
 			$data['capcode'] = $post['reply_postas'];
 
 		$media = null;

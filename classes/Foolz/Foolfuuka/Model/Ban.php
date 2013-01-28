@@ -352,6 +352,11 @@ class Ban
 
 			if (isset($old[$new->board_id]))
 			{
+				if ($new->length < $old[$new->board_id]->length)
+				{
+					$new->length = $old[$new->board_id]->length;
+				}
+
 				DC::qb()
 					->update(DC::p('banned_posters'))
 					->where('id = :id')

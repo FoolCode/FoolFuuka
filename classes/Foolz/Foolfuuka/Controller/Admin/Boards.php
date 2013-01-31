@@ -49,13 +49,13 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 				if (is_null($shortname))
 				{
-					\Notices::set_flash('success', __('New board created!'));
+					\Notics::setFlash('success', __('New board created!'));
 					\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 				}
 				elseif ($shortname != $result['success']['shortname'])
 				{
 					// case in which letter was changed
-					\Notices::set_flash('success', __('Board information updated.'));
+					\Notics::setFlash('success', __('Board information updated.'));
 					\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 				}
 				else
@@ -97,7 +97,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			{
 				// it's actually fully checked, we just have to throw it in DB
 				\Radix::save($result['success']);
-				\Notices::set_flash('success', __('New board created!'));
+				\Notics::setFlash('success', __('New board created!'));
 				\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 			}
 		}
@@ -130,7 +130,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			{
 				case('board'):
 					$board->remove($id);
-					\Notices::set_flash('success', sprintf(__('The board %s has been deleted.'), $board->shortname));
+					\Notics::setFlash('success', sprintf(__('The board %s has been deleted.'), $board->shortname));
 					\Response::redirect('admin/boards/manage');
 					break;
 			}
@@ -223,7 +223,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 	function action_search()
 	{
-		$this->_views['method_title'] = 'Sphinx';
+		$this->_views['method_title'] = __('Search');
 
 		$form = [];
 
@@ -375,7 +375,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$form['submit'] = [
 			'type' => 'submit',
-			'value' => __('Submit'),
+			'value' => __('Save'),
 			'class' => 'btn btn-primary'
 		];
 

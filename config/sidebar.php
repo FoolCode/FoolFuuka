@@ -25,8 +25,8 @@ return [
 				]
 			]
 		],
-		'posts' => [
-			'name' => __('Posts'),
+		'moderation' => [
+			'name' => __('Moderation'),
 			'level' => 'mod',
 			'default' => 'reports',
 			'content' => [

@@ -21,7 +21,7 @@ class ReportNotFoundException extends ReportException {}
 class ReportReasonTooLongException extends ReportException {}
 
 /**
- * Thrown if the user sent too many reports in a timeframe
+ * Thrown if the user sent too many moderation in a timeframe
  */
 class ReportSentTooManyException extends ReportException {}
 
@@ -129,7 +129,7 @@ class Report
 	public $comment = null;
 
 	/**
-	 * An array of preloaded reports
+	 * An array of preloaded moderation
 	 *
 	 * @var  array|null
 	 */
@@ -188,7 +188,7 @@ class Report
 	}
 
 	/**
-	 * Loads all the reports from the cache or the database
+	 * Loads all the moderation from the cache or the database
 	 */
 	public static function p_preload()
 	{
@@ -307,7 +307,7 @@ class Report
 	 * @throws  ReportMediaNotFoundException    If the reported media_id doesn't exist
 	 * @throws  ReportCommentNotFoundException  If the reported doc_id doesn't exist
 	 * @throws  ReportReasonTooLongException    If the reason inserted was too long
-	 * @throws  ReportSentTooManyException      If the user sent too many reports in a timeframe
+	 * @throws  ReportSentTooManyException      If the user sent too many moderation in a timeframe
 	 * @throws  ReportReasonNullException       If the report reason is null
 	 * @throws  ReportAlreadySubmittedException If the reporter’s IP has already submitted a report for the post.
 	 * @throws  ReportSubmitterBannedException  If the reporter’s IP has been banned.
@@ -370,7 +370,7 @@ class Report
 			$new->ip_reporter = $ip_reporter;
 		}
 
-		// check how many reports have been sent in the last hour to prevent spam
+		// check how many moderation have been sent in the last hour to prevent spam
 		$row = DC::qb()
 			->select('COUNT(*) as count')
 			->from(DC::p('reports'), 'r')

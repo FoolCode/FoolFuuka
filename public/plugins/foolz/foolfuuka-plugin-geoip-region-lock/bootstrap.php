@@ -16,7 +16,7 @@ if ( ! defined('DOCROOT'))
 		{
 			\Router::add('admin/plugins/geoip_region_lock', 'plugin/fu/geoip_region_lock/admin/geoip_region_lock/manage');
 
-			\Plugins::register_sidebar_element('admin', 'plugins', [
+			\Plugins::registerSidebarElement('admin', 'plugins', [
 				"content" => ["geoip_region_lock" => ["level" => "admin", "name" => 'GeoIP Region Lock', "icon" => 'icon-flag']]
 			]);
 		}

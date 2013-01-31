@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Controller\Api;
 
+use Foolz\Inet\Inet;
+
 class Chan extends \Controller_Rest
 {
 	protected $_radix = null;
@@ -358,7 +360,7 @@ class Chan extends \Controller_Rest
 		{
 			try
 			{
-				\Ban::add(\Inet::ptod(\Input::post('ip')),
+				\Ban::add(\Foolz\Inet\Inet::ptod(\Input::post('ip')),
 					\Input::post('reason'),
 					\Input::post('length'),
 					\Input::post('board_ban') === 'global' ? array() : array($this->_radix->id)

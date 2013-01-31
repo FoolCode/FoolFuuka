@@ -198,7 +198,7 @@ class Chan extends \Foolz\Theme\View
 
 							if (\Auth::has_access('comment.reports'))
 							{
-								$top_nav[] = ['href' => \Uri::create(['admin', 'posts', 'reports']), 'text' => __('Reports').(\Report::count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.\Report::count().'</span>' : '')];
+								$top_nav[] = ['href' => \Uri::create(['admin', 'moderation', 'reports']), 'text' => __('Reports').(\Report::count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.\Report::count().'</span>' : '')];
 							}
 
 							$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);

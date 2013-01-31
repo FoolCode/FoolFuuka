@@ -3,7 +3,7 @@
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/dice_roll')
 	->setCall(function($result) {
 
-		\Autoloader::add_classes([]
+		\Autoloader::add_classes([
 			'Foolfuuka\\Plugins\\Dice_Roll\\Dice_Roll' => __DIR__.'/classes/model/dice_roll.php'
 		]);
 

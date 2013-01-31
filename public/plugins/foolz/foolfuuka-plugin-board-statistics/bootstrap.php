@@ -14,7 +14,7 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 		// don't add the admin panels if the user is not an admin
 		if (\Auth::has_access('maccess.admin'))
 		{
-			\Plugins::register_sidebar_element('admin', 'plugins', [
+			\Plugins::registerSidebarElement('admin', 'plugins', [
 				"content" => ["board_statistics/manage" => ["level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart']]
 			]);
 

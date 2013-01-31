@@ -936,7 +936,7 @@ class Comment
 			->setParameter(':doc_id', $this->doc_id)
 			->execute();
 
-		// remove message reports
+		// remove message moderation
 		$reports_affected = DC::qb()
 			->delete(DC::p('reports'))
 			->where('board_id = :board_id')

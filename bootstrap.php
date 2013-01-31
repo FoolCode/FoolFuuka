@@ -10,7 +10,6 @@ class_alias('Foolz\\Foolfuuka\\Model\\Radix', 'Radix');
 class_alias('Foolz\\Foolfuuka\\Model\\Report', 'Report');
 class_alias('Foolz\\Foolfuuka\\Model\\Search', 'Search');
 
-
 \Package::load('stringparser-bbcode', __DIR__.'/packages/stringparser-bbcode/');
 
 if (\Auth::has_access('comment.reports'))
@@ -26,6 +25,21 @@ $theme_instance->setPublicDir(DOCROOT.'foolfuuka/');
 // set an ->enabled on the themes we want to use
 if (\Auth::has_access('maccess.admin'))
 {
+	\Foolz\Plugin\Event::forge('ff.model.system.environment.result')
+		->setCall(function($result) {
+			$environment = $result->getParam('environment');
+
+			foreach (\Foolz\Config\Config::get('foolz/foolfuuka', 'environment') as $section => $data)
+			{
+				foreach ($data as $k => $i)
+				{
+					array_push($environment[$section]['data'], $i);
+				}
+			}
+
+			$result->setParam('environment', $environment)->set($environment);
+		})->setPriority(0);
+
 	foreach ($theme_instance->getAll('foolz') as $theme)
 	{
 		$theme->enabled = true;

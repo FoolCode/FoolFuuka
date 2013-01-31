@@ -273,7 +273,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 							'error' => __('The port specified isn\'t a valid number.')
 						];
 					}
-
+/*
 					\Foolz\Sphinxql\Sphinxql::addConnection('default', $sphinx_ip_port[0], $sphinx_ip_port[1]);
 
 					try
@@ -287,7 +287,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 							'warning' => __('The Sphinx server couldn\'t be contacted at the specified address and port.')
 						];
 					}
-
+*/
 					return ['success' => true];
 				}
 		];
@@ -390,6 +390,31 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
 		//$this->_views['main_content_view'] .= '<pre>'.\SphinxQL::generate_sphinx_config(\Radix::get_all()).'</pre>';
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+	}
+
+	public function action_sphinx_config()
+	{
+		$data = [];
+
+		$data['mysql'] = [
+			'flag' => \Preferences::get('fu.sphinx.mysql.hostname', '0')
+		];
+
+		$data['sphinx'] = [
+			'working_directory' => \Preferences::get('fu.sphinx.dir', '/usr/local/sphinx'),
+			'mem_limit' => \Preferences::get('fu.sphinx.mem_limit', '1024M'),
+			'min_word_len' => \Preferences::get('fu.sphinx.min_word_len', 1),
+			'max_children' => \Preferences::get('fu.sphinx.max_children', 0),
+			'max_matches' => \Preferences::get('fu.sphinx.max_matches', 5000)
+		];
+
+		$data['boards'] = \Radix::getAll();
+		$data['example'] = current($data['boards']);
+
+		$this->_views['method_title'] = [__('Search'), 'Sphinx', __('Configuration File'), __('Generate')];
+
+		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/boards/sphinx_config', $data);
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 }

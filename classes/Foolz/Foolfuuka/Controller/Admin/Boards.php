@@ -49,13 +49,13 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 				if (is_null($shortname))
 				{
-					\Notics::setFlash('success', __('New board created!'));
+					\Notices::setFlash('success', __('New board created!'));
 					\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 				}
 				elseif ($shortname != $result['success']['shortname'])
 				{
 					// case in which letter was changed
-					\Notics::setFlash('success', __('Board information updated.'));
+					\Notices::setFlash('success', __('Board information updated.'));
 					\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 				}
 				else
@@ -97,7 +97,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			{
 				// it's actually fully checked, we just have to throw it in DB
 				\Radix::save($result['success']);
-				\Notics::setFlash('success', __('New board created!'));
+				\Notices::setFlash('success', __('New board created!'));
 				\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 			}
 		}
@@ -130,7 +130,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			{
 				case('board'):
 					$board->remove($id);
-					\Notics::setFlash('success', sprintf(__('The board %s has been deleted.'), $board->shortname));
+					\Notices::setFlash('success', sprintf(__('The board %s has been deleted.'), $board->shortname));
 					\Response::redirect('admin/boards/manage');
 					break;
 			}
@@ -389,7 +389,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$data['form'] = $form;
 
 		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
-		//$this->_views['main_content_view'] .= '<pre>'.\SphinxQL::generate_sphinx_config(\Radix::get_all()).'</pre>';
+		$this->_views['main_content_view'] .= '<a href="'.\Uri::create('admin/boards/sphinx_config').'" class="btn">'.__('Generate Config').'</a>';
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 

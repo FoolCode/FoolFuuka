@@ -3,7 +3,13 @@
 		<?= __('Configuration File') ?>
 	</div>
 
-	<i class="icon-warning-sign text-warning"></i> Notice: Due to security concerns, the database connection values have been left empty.
+
+<?php if ($example === false) : ?>
+	<i class="icon-exclamation-sign text-error"></i> <?= __('Error: You do not have any boards created. Please make one before generating a configuration file again.') ?>
+<?php else : ?>
+	<i class="icon-warning-sign text-warning"></i> <?= __('Notice: Due to security concerns, the database connection values have been left empty.') ?>
+
+	<hr/>
 
 <textarea class="input-block-level" rows="30" id="sphinx-config">
 ###########################################
@@ -445,3 +451,4 @@ searchd
 		jQuery(this).select();
 	});
 </script>
+<?php endif; ?>

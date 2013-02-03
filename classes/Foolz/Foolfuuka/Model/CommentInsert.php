@@ -555,7 +555,7 @@ class CommentInsert extends Comment
 
 		if ($this->ghost)
 		{
-			$this->num = '('.DC::qb()
+			$num = '('.DC::qb()
 				->select('MAX(num)')
 				->from('('.
 					DC::qb()

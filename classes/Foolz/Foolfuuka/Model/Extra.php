@@ -57,7 +57,7 @@ class Extra
 	 */
 	public static function setFields()
 	{
-		static::$fields = \Foolz\Plugin\Hook::forge('ff.model.extra.forge.add_columns')
+		static::$fields = \Foolz\Plugin\Hook::forge('foolframe.model.extra.forge.add_columns')
 			->setParam('fields', static::$fields)
 			->execute()
 			->get(static::$fields);

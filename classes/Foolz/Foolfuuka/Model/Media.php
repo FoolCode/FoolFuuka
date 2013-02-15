@@ -314,7 +314,7 @@ class Media
 			{
 				try
 				{
-					$imgsize = \Cache::get('fu.media.call.spoiler_size.'.$this->radix->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'));
+					$imgsize = \Cache::get('foolfuuka.media.call.spoiler_size.'.$this->radix->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'));
 					$this->preview_w = $imgsize[0];
 					$this->preview_h = $imgsize[1];
 				}
@@ -326,7 +326,7 @@ class Media
 						$imgsize = false;
 						$imgsize = @getimagesize($imgpath);
 
-						\Cache::set('fu.media.call.spoiler_size.'.$this->radix->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'), $imgsize, 86400);
+						\Cache::set('foolfuuka.media.call.spoiler_size.'.$this->radix->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'), $imgsize, 86400);
 
 						if ($imgsize !== false)
 						{
@@ -714,7 +714,7 @@ class Media
 			return null;
 		}
 
-		return \Preferences::get('fu.boards.directory').'/'.$this->radix->shortname.'/'
+		return \Preferences::get('foolfuuka.boards.directory').'/'.$this->radix->shortname.'/'
 			.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 	}
 
@@ -767,14 +767,14 @@ class Media
 		if (isset($image))
 		{
 			$media_cdn = [];
-			if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' && \Preferences::get('fu.boards.media_balancers_https'))
+			if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' && \Preferences::get('foolfuuka.boards.media_balancers_https'))
 			{
-				$balancers = \Preferences::get('fu.boards.media_balancers_https');
+				$balancers = \Preferences::get('foolfuuka.boards.media_balancers_https');
 			}
 
-			if ( ! isset($balancers) && \Preferences::get('fu.boards.media_balancers'))
+			if ( ! isset($balancers) && \Preferences::get('foolfuuka.boards.media_balancers'))
 			{
-				$balancers = \Preferences::get('fu.boards.media_balancers');
+				$balancers = \Preferences::get('foolfuuka.boards.media_balancers');
 			}
 
 			if (isset($balancers))
@@ -788,7 +788,7 @@ class Media
 					.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 			}
 
-			return \Preferences::get('fu.boards.url').'/'.$this->radix->shortname.'/'
+			return \Preferences::get('foolfuuka.boards.url').'/'.$this->radix->shortname.'/'
 				.($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
 		}
 
@@ -999,7 +999,7 @@ class Media
 		$getimagesize = getimagesize($full_path);
 
 		if ( ! $getimagesize)
-		{ZA
+		{
 			throw new MediaInsertInvalidFormatException(__('The file you uploaded is not an image.'));
 		}
 
@@ -1105,7 +1105,7 @@ class Media
 				mkdir($this->pathFromFilename(true, $is_op), 0777, true);
 			}
 
-			$return = \Foolz\Plugin\Hook::forge('fu.model.media.insert.resize')
+			$return = \Foolz\Plugin\Hook::forge('foolfuuka.model.media.insert.resize')
 				->setObject($this)
 				->setParams([
 					'thumb_width' => $thumb_width,
@@ -1145,7 +1145,7 @@ class Media
 
 				throw new MediaThumbnailCreationException(__('The thumbnail failed to generate.'));
 			}
-			
+
 			$thumb_getimagesize = getimagesize($this->pathFromFilename(true, $is_op, true));
 			$this->preview_w = $thumb_getimagesize[0];
 			$this->preview_h = $thumb_getimagesize[1];
@@ -1229,7 +1229,7 @@ class Media
 	 */
 	public function p_pathFromFilename($thumbnail = false, $is_op = false, $with_filename = false)
 	{
-		$dir = \Preferences::get('fu.boards.directory').'/'.$this->radix->shortname.'/'.
+		$dir = \Preferences::get('foolfuuka.boards.directory').'/'.$this->radix->shortname.'/'.
 			($thumbnail ? 'thumb' : 'image').'/';
 
 		// we first check if we have media/preview_op/preview_reply available to reuse the value

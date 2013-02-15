@@ -14,7 +14,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 		$thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
 		$reply_errors = $this->getBuilderParamManager()->getParam('reply_errors', false);
 
-		\Foolz\Plugin\Hook::forge('fu.themes.default_after_op_open')->setParam('board', $radix)->execute(); ?>
+		\Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setParam('board', $radix)->execute(); ?>
 
 		<?php if (\ReCaptcha::available()) : ?>
 		    <script>

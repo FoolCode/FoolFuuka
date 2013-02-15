@@ -237,15 +237,15 @@ class Search extends Board
 			}
 		}
 
-		if ($this->radix === null && ! \Preferences::get('fu.sphinx.global'))
+		if ($this->radix === null && ! \Preferences::get('foolfuuka.sphinx.global'))
 		{
 			// global search requires sphinx
 			throw new SearchRequiresSphinxException(__('Sorry, this action requires the Sphinx to be installed and running.'));
 		}
-		elseif (($this->radix == null && \Preferences::get('fu.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx))
+		elseif (($this->radix == null && \Preferences::get('foolfuuka.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx))
 		{
 			// configure sphinx connection params
-			$sphinx = explode(':', \Preferences::get('fu.sphinx.listen'));
+			$sphinx = explode(':', \Preferences::get('foolfuuka.sphinx.listen'));
 			$conn = new SphinxConnnection();
 			$conn->setConnectionParams($sphinx[0], $sphinx[1]);
 			$conn->silenceConnectionWarning(true);
@@ -453,7 +453,7 @@ class Search extends Board
 			// set sphinx options
 			$query->limit($limit)
 				->offset((($page * $limit) - $limit) >= 5000 ? 4999 : ($page * $limit) - $limit)
-				->option('max_matches', \Preferences::get('fu.sphinx.max_matches', 5000))
+				->option('max_matches', \Preferences::get('foolfuuka.sphinx.max_matches', 5000))
 				->option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
 
 			// submit query

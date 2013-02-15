@@ -412,7 +412,7 @@ class Radix
 			],
 		];
 
-		$structure = \Foolz\Plugin\Hook::forge('fu.radix.structure.structure_alter')
+		$structure = \Foolz\Plugin\Hook::forge('foolfuuka.radix.structure.structure_alter')
 			->setParam('structure', $structure)
 			->execute()
 			->get($structure);
@@ -464,8 +464,8 @@ class Radix
 	 */
 	public static function clearCache()
 	{
-		Cache::item('fu.model.radix.preload')->delete();
-		Cache::item('fu.model.radix.load_preferences')->delete();
+		Cache::item('foolfuuka.model.radix.preload')->delete();
+		Cache::item('foolfuuka.model.radix.load_preferences')->delete();
 	}
 
 
@@ -704,7 +704,7 @@ class Radix
 			->execute();
 
 		// rename the directory and prevent directory collision
-		$base =	\Preferences::get('fu.boards.directory').'/'.$this->shortname;
+		$base =	\Preferences::get('foolfuuka.boards.directory').'/'.$this->shortname;
 		if (file_exists($base.'_removed'))
 		{
 			$incremented = \String::increment('_removed');
@@ -717,7 +717,7 @@ class Radix
 		}
 		else
 		{
-			$rename_to = \Preferences::get('fu.boards.directory').'/'.$this->shortname.'_removed';
+			$rename_to = \Preferences::get('foolfuuka.boards.directory').'/'.$this->shortname.'_removed';
 		}
 
 		rename($base, $rename_to);
@@ -743,14 +743,14 @@ class Radix
 		$array = [];
 
 		// get all directories
-		if ($handle = opendir(\Preferences::get('fu.boards.directory')))
+		if ($handle = opendir(\Preferences::get('foolfuuka.boards.directory')))
 		{
 			while (false !== ($file = readdir($handle)))
 			{
 				if (in_array($file, ['..', '.']))
 					continue;
 
-				if (is_dir(\Preferences::get('fu.boards.directory').'/'.$file))
+				if (is_dir(\Preferences::get('foolfuuka.boards.directory').'/'.$file))
 				{
 					$array[] = $file;
 				}
@@ -782,7 +782,7 @@ class Radix
 		// exec the deletion
 		foreach ($array as $dir)
 		{
-			$cmd = 'rm -Rv '.\Preferences::get('fu.boards.directory').'/'.$dir;
+			$cmd = 'rm -Rv '.\Preferences::get('foolfuuka.boards.directory').'/'.$dir;
 			if ($echo)
 			{
 				echo $cmd.PHP_EOL;
@@ -808,7 +808,7 @@ class Radix
 
 		try
 		{
-			$result = Cache::item('fu.model.radix.preload')->get();
+			$result = Cache::item('foolfuuka.model.radix.preload')->get();
 		}
 		catch (\OutOfBoundsException $e)
 		{
@@ -819,7 +819,7 @@ class Radix
 				->execute()
 				->fetchAll();
 
-			Cache::item('fu.model.radix.preload')->set($result, 900);
+			Cache::item('foolfuuka.model.radix.preload')->set($result, 900);
 		}
 
 		if ( ! is_array($result) || empty($result))
@@ -872,7 +872,7 @@ class Radix
 		\Profiler::mark('Radix::load_preferences Start');
 		try
 		{
-			$preferences = Cache::item('fu.model.radix.load_preferences')->get();
+			$preferences = Cache::item('foolfuuka.model.radix.load_preferences')->get();
 		}
 		catch (\OutOfBoundsException $e)
 		{
@@ -882,7 +882,7 @@ class Radix
 				->execute()
 				->fetchAll();
 
-			Cache::item('fu.model.radix.load_preferences')->set($preferences, 900);
+			Cache::item('foolfuuka.model.radix.load_preferences')->set($preferences, 900);
 		}
 
 		foreach ($preferences as $value)
@@ -912,7 +912,7 @@ class Radix
 
 		// take them all and then filter/do whatever (we use this to split the boards through various subdomains)
 		// only public is affected! admins and mods will see all boards at all the time
-		static::$preloaded_radixes = \Foolz\Plugin\Hook::forge('fu.radix.preload.public.alter_result')
+		static::$preloaded_radixes = \Foolz\Plugin\Hook::forge('foolfuuka.radix.preload.public.alter_result')
 			->setParam('preloaded_radixes', static::$preloaded_radixes)
 			->execute()
 			->get(static::$preloaded_radixes);
@@ -1080,9 +1080,9 @@ class Radix
 	 */
 	public function getTable($suffix = '')
 	{
-		if (\Preferences::get('fu.boards.db'))
+		if (\Preferences::get('foolfuuka.boards.db'))
 		{
-			return DC::forge()->quoteIdentifier(\Preferences::get('fu.boards.db'))
+			return DC::forge()->quoteIdentifier(\Preferences::get('foolfuuka.boards.db'))
 				.'.'.DC::forge()->quoteIdentifier($this->shortname.$suffix);
 		}
 		else

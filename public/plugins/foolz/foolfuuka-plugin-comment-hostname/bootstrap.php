@@ -5,7 +5,7 @@ use \Foolz\Inet\Inet;
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-comment-hostname')
 	->setCall(function($result) {
 
-		\Foolz\Plugin\Event::forge('fu.comment.insert.extra_json_array')
+		\Foolz\Plugin\Event::forge('foolfuuka.comment.insert.extra_json_array')
 			->setCall(function($result){
 				$comment = $result->getObject();
 				if ($comment->poster_ip)

@@ -9,7 +9,7 @@ class ToolsSearch extends \Foolz\Theme\View
 	{
 		$radix = $this->getBuilderParamManager()->getParam('radix');
 
-		if (is_null($radix) && \Preferences::get('fu.sphinx.global'))
+		if (is_null($radix) && \Preferences::get('foolfuuka.sphinx.global'))
 		{
 			// search can work also without a radix selected
 			$search_radix = '_';

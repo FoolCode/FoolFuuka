@@ -25,7 +25,7 @@
 		<tbody>
 			<?php foreach ($bans as $b) : ?>
 			<tr>
-				<td><?= \Foolz\Inet\Inet::dtop($b->ip) ?><?= \Preferences::get('fu.sphinx.global') ?  '<br><small><a href="'.\Uri::create('_/search/poster_ip/'.\Inet::dtop($b->ip)).'" target="_blank">'.__('Search posts').'</a></small>' : '' ?></td>
+				<td><?= \Foolz\Inet\Inet::dtop($b->ip) ?><?= \Preferences::get('foolfuuka.sphinx.global') ?  '<br><small><a href="'.\Uri::create('_/search/poster_ip/'.\Inet::dtop($b->ip)).'" target="_blank">'.__('Search posts').'</a></small>' : '' ?></td>
 				<td><?= $b->board_id ? '/'.\Radix::getById($b->board_id)->shortname.'/' : __('Global') ?></td>
 				<td><?= e($b->reason) ?><br><small><?= __('By:').' '.e(\Users::getUserBy('id', $b->creator_id)->username) ?></small></td>
 				<td><?= e($b->appeal) ?><br><small><?= __('Status:').' '.($b->appeal_status == \BAN::APPEAL_PENDING ? __('pending') : '').($b->appeal_status == \BAN::APPEAL_REJECTED ? __('rejected') : '').($b->appeal_status == \BAN::APPEAL_NONE ? __('none') : '') ?></small></td>

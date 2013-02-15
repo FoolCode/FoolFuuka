@@ -476,7 +476,7 @@ class Comment
 		$find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
 		$html = '\\1<span class="greentext">\\2</span>\\3';
 
-		$html = \Foolz\Plugin\Hook::forge('fu.comment_model.processComment.greentext_result')
+		$html = \Foolz\Plugin\Hook::forge('foolfuuka.comment_model.processComment.greentext_result')
 			->setParam('html', $html)
 			->execute()
 			->get($html);
@@ -699,7 +699,7 @@ class Comment
 			'attr_backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $current_p_num_u . '"',
 		];
 
-		$build_url = \Foolz\Plugin\Hook::forge('fu.comment_model.processInternalLinks.html_result')
+		$build_url = \Foolz\Plugin\Hook::forge('foolfuuka.comment_model.processInternalLinks.html_result')
 			->setObject($this)
 			->setParam('data', $data)
 			->setParam('build_url', $build_url)
@@ -794,7 +794,7 @@ class Comment
 				.(($data->board)?$data->board->shortname:$data->shortname).'" data-post="'.$data->query.'"'
 		];
 
-		$build_href = \Foolz\Plugin\Hook::forge('fu.comment_model.processExternalLinks.html_result')
+		$build_href = \Foolz\Plugin\Hook::forge('foolfuuka.comment_model.processExternalLinks.html_result')
 			->setObject($this)
 			->setParam('data', $data)
 			->setParam('build_href', $build_href)

@@ -45,10 +45,10 @@ class Chan extends \Foolz\Theme\View
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="<?= \Uri::base() . $this->fallback_asset('plugins.js') ?>" type="text/javascript"></script>
-		<?php if (\Preferences::get('fu.sphinx.global')) : ?>
-			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('ff.gen.website_title') ?> " href="<?= \Uri::create('_/opensearch') ?>" />
+		<?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('foolframe.gen.website_title') ?> " href="<?= \Uri::create('_/opensearch') ?>" />
 		<?php endif; ?>
-		<?= \Preferences::get('ff.theme.header_code') ?>
+		<?= \Preferences::get('foolframe.theme.header_code') ?>
 	</head>
 		<?php
 
@@ -88,8 +88,8 @@ class Chan extends \Foolz\Theme\View
 
 		<?php
 			$top_nav = array();
-			$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
-			$top_nav = \Foolz\Plugin\Hook::forge('fu.themes.fuuka_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+			$top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+			$top_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
 
 			if ( ! empty($top_nav))
 			{
@@ -115,8 +115,8 @@ class Chan extends \Foolz\Theme\View
 			<h1><?= ($radix) ? $radix->formatted_title : '' ?></h1>
 			<?php if (isset($section_title)) : ?>
 				<h2><?= $section_title ?></h2>
-			<?php elseif (\Preferences::get('ff.theme.header_text')) : ?>
-				<div><?= \Preferences::get('ff.theme.header_text') ?></div>
+			<?php elseif (\Preferences::get('foolframe.theme.header_text')) : ?>
+				<div><?= \Preferences::get('foolframe.theme.header_text') ?></div>
 			<?php endif; ?>
 
 			<hr />
@@ -132,7 +132,7 @@ class Chan extends \Foolz\Theme\View
 
 		<?= $template['body'] ?>
 
-		<?php \Foolz\Plugin\Hook::forge('fu.themes.fuuka_after_body_template')->execute(); ?>
+		<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_after_body_template')->execute(); ?>
 
 		<?php if ($disable_headers !== TRUE) : ?>
 			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
@@ -216,8 +216,8 @@ class Chan extends \Foolz\Theme\View
 			<div style="float: right;">
 				<?php
 					$bottom_nav = array();
-					$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
-					$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.fuuka_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+					$bottom_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+					$bottom_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
 					if ( ! empty($bottom_nav))
 					{
@@ -249,9 +249,9 @@ class Chan extends \Foolz\Theme\View
 		<?php endif; ?>
 
 		<?php
-			if (\Preferences::get('ff.theme.footer_text'))
+			if (\Preferences::get('foolframe.theme.footer_text'))
 			{
-				echo '<div style="clear: both;">' . \Preferences::get('ff.theme.footer_text') . '</div>';
+				echo '<div style="clear: both;">' . \Preferences::get('foolframe.theme.footer_text') . '</div>';
 			}
 		?>
 
@@ -259,16 +259,16 @@ class Chan extends \Foolz\Theme\View
 			var backend_vars = <?= json_encode($backend_vars) ?>;
 		</script>
 
-		<?php if (\Preferences::get('ff.theme.google_analytics')) : ?>
+		<?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
 			<script>
-				var _gaq=[['_setAccount','<?= \Preferences::get('ff.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
+				var _gaq=[['_setAccount','<?= \Preferences::get('foolframe.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
 				(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 					g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 					s.parentNode.insertBefore(g,s)}(document,'script'));
 			</script>
 		<?php endif; ?>
 
-		<?= \Preferences::get('ff.theme.footer_code') ?>
+		<?= \Preferences::get('foolframe.theme.footer_code') ?>
 	</body>
 </html>
 	<?php

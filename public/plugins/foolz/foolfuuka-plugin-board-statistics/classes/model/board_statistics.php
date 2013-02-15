@@ -181,7 +181,7 @@ class BoardStatistics
 	{
 		$stats = static::getStats();
 		// this variable is going to be a serialized array
-		$enabled = \Preferences::get('fu.plugins.board_statistics.enabled');
+		$enabled = \Preferences::get('foolfuuka.plugins.board_statistics.enabled');
 
 		if ( ! $enabled)
 		{

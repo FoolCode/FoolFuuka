@@ -22,14 +22,14 @@ require __DIR__ . '/functions.php';
 	});
 
 // use hooks for manipulating comments
-\Foolz\Plugin\Event::forge('fu.comment_model.processComment.greentext_result')
+\Foolz\Plugin\Event::forge('foolfuuka.comment_model.processComment.greentext_result')
 	->setCall('\Foolz\Foolfuuka\Themes\Fuuka\Model\Fuuka::greentext')
 	->setPriority(8);
 
-\Foolz\Plugin\Event::forge('fu.comment_model.processInternalLinks.html_result')
+\Foolz\Plugin\Event::forge('foolfuuka.comment_model.processInternalLinks.html_result')
 	->setCall('\Foolz\Foolfuuka\Themes\Fuuka\Model\Fuuka::processInternalLinksHtml')
 	->setPriority(8);
 
-\Foolz\Plugin\Event::forge('fu.comment_model.processExternalLinks.html_result')
+\Foolz\Plugin\Event::forge('foolfuuka.comment_model.processExternalLinks.html_result')
 	->setCall('\Foolz\Foolfuuka\Themes\Fuuka\Model\Fuuka::processExternalLinksHtml')
 	->setPriority(8);

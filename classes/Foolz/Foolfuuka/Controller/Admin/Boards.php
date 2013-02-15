@@ -161,28 +161,28 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'type' => 'open'
 		];
 
-		$form['fu.boards.directory'] = [
+		$form['foolfuuka.boards.directory'] = [
 			'type' => 'input',
 			'label' => __('Boards directory'),
 			'preferences' => true,
 			'help' => __('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
 		];
 
-		$form['fu.boards.url'] = [
+		$form['foolfuuka.boards.url'] = [
 			'type' => 'input',
 			'label' => __('Boards URL'),
 			'preferences' => true,
 			'help' => __('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
 		];
 
-		$form['fu.boards.db'] = [
+		$form['foolfuuka.boards.db'] = [
 			'type' => 'input',
 			'label' => __('Boards database'),
 			'preferences' => true,
 			'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
 		];
 
-		$form['fu.boards.media_balancers'] = [
+		$form['foolfuuka.boards.media_balancers'] = [
 			'type' => 'textarea',
 			'label' => __('Media load balancers'),
 			'preferences' => true,
@@ -190,7 +190,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'class' => 'span6'
 		];
 
-		$form['fu.boards.media_balancers_https'] = [
+		$form['foolfuuka.boards.media_balancers_https'] = [
 			'type' => 'textarea',
 			'label' => __('HTTPS media load balancers'),
 			'preferences' => true,
@@ -231,7 +231,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'type' => 'open'
 		];
 
-		$form['fu.sphinx.global'] = [
+		$form['foolfuuka.sphinx.global'] = [
 			'type' => 'checkbox',
 			'label' => 'Global SphinxSearch',
 			'placeholder' => 'FoOlFuuka',
@@ -239,7 +239,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'help' => __('Activate Sphinx globally (enables crossboard search)')
 		];
 
-		$form['fu.sphinx.listen'] = [
+		$form['foolfuuka.sphinx.listen'] = [
 			'type' => 'input',
 			'label' => 'Listen (Sphinx)',
 			'preferences' => true,
@@ -248,7 +248,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'validation' => 'trim|max_length[48]',
 			'validation_func' => function($input, $form)
 				{
-					if (strpos($input['fu.sphinx.listen'], ':') === false)
+					if (strpos($input['foolfuuka.sphinx.listen'], ':') === false)
 					{
 						return [
 							'error_code' => 'MISSING_COLON',
@@ -256,7 +256,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 						];
 					}
 
-					$sphinx_ip_port = explode(':', $input['fu.sphinx.listen']);
+					$sphinx_ip_port = explode(':', $input['foolfuuka.sphinx.listen']);
 
 					if (count($sphinx_ip_port) != 2)
 					{
@@ -292,7 +292,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 				}
 		];
 
-		$form['fu.sphinx.listen_mysql'] = [
+		$form['foolfuuka.sphinx.listen_mysql'] = [
 			'type' => 'input',
 			'label' => 'Listen (MySQL)',
 			'preferences' => true,
@@ -301,7 +301,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'class' => 'span2'
 		];
 
-		$form['fu.sphinx.connection_flags'] = [
+		$form['foolfuuka.sphinx.connection_flags'] = [
 			'type' => 'input',
 			'label' => 'Connection Flags (MySQL)',
 			'placeholder' => 0,
@@ -311,7 +311,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'class' => 'span2'
 		];
 
-		$form['fu.sphinx.dir'] = [
+		$form['foolfuuka.sphinx.dir'] = [
 			'type' => 'input',
 			'label' => 'Working Directory',
 			'preferences' => true,
@@ -320,7 +320,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'validation' => 'trim',
 			'validation_func' => function($input, $form)
 			{
-				if ( ! file_exists($input['fu.sphinx.dir']))
+				if ( ! file_exists($input['foolfuuka.sphinx.dir']))
 				{
 					return [
 						'warning_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',
@@ -332,7 +332,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			}
 		];
 
-		$form['fu.sphinx.min_word_len'] = [
+		$form['foolfuuka.sphinx.min_word_len'] = [
 			'type' => 'input',
 			'label' => 'Minimum Word Length',
 			'preferences' => true,
@@ -341,7 +341,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'validation' => 'trim'
 		];
 
-		$form['fu.sphinx.mem_limit'] = [
+		$form['foolfuuka.sphinx.mem_limit'] = [
 			'type' => 'input',
 			'label' => 'Memory Limit',
 			'preferences' => true,
@@ -349,7 +349,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'class' => 'span1'
 		];
 
-		$form['fu.sphinx.max_children'] = [
+		$form['foolfuuka.sphinx.max_children'] = [
 			'type' => 'input',
 			'label' => 'Max Children',
 			'placeholder' => 0,
@@ -359,7 +359,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'class' => 'span1'
 		];
 
-		$form['fu.sphinx.max_matches'] = [
+		$form['foolfuuka.sphinx.max_matches'] = [
 			'type' => 'input',
 			'label' => 'Max Matches',
 			'placeholder' => 5000,
@@ -398,15 +398,15 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$data = [];
 
 		$data['mysql'] = [
-			'flag' => \Preferences::get('fu.sphinx.mysql.hostname', '0')
+			'flag' => \Preferences::get('foolfuuka.sphinx.mysql.hostname', '0')
 		];
 
 		$data['sphinx'] = [
-			'working_directory' => \Preferences::get('fu.sphinx.dir', '/usr/local/sphinx'),
-			'mem_limit' => \Preferences::get('fu.sphinx.mem_limit', '1024M'),
-			'min_word_len' => \Preferences::get('fu.sphinx.min_word_len', 1),
-			'max_children' => \Preferences::get('fu.sphinx.max_children', 0),
-			'max_matches' => \Preferences::get('fu.sphinx.max_matches', 5000)
+			'working_directory' => \Preferences::get('foolfuuka.sphinx.dir', '/usr/local/sphinx'),
+			'mem_limit' => \Preferences::get('foolfuuka.sphinx.mem_limit', '1024M'),
+			'min_word_len' => \Preferences::get('foolfuuka.sphinx.min_word_len', 1),
+			'max_children' => \Preferences::get('foolfuuka.sphinx.max_children', 0),
+			'max_matches' => \Preferences::get('foolfuuka.sphinx.max_matches', 5000)
 		];
 
 		$data['boards'] = \Radix::getAll();

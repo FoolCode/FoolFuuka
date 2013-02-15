@@ -1,9 +1,9 @@
-<?php 
+<?php
 
-if ( ! defined('DOCROOT')) 
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed'); ?>
 
-<?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_op_open')->setParam('board', $radix)->execute(); ?>
+<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setParam('board', $radix)->execute(); ?>
 
 <?php if (\ReCaptcha::available()) : ?>
 	<script>

@@ -7,11 +7,11 @@
 			'Foolfuuka\\Plugins\\Dice_Roll\\Dice_Roll' => __DIR__.'/classes/model/dice_roll.php'
 		]);
 
-		\Foolz\Plugin\Event::forge('fu.comment.insert.alter_input_after_checks')
+		\Foolz\Plugin\Event::forge('foolfuuka.comment.insert.alter_input_after_checks')
 			->setCall('Foolfuuka\\Plugins\\Dice_Roll\\Dice_Roll::roll')
 			->setPriority(4);
 
-		\Foolz\Plugin\Event::forge('fu.radix.structure.structure_alter')
+		\Foolz\Plugin\Event::forge('foolfuuka.radix.structure.structure_alter')
 			->setCall(function($result){
 				$structure = $result->getParam('structure');
 				$structure['plugin_dice_roll_enable'] = [

@@ -3,7 +3,7 @@
 if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
-if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
+if ( ! isset($radix) && \Preferences::get('foolfuuka.sphinx.global'))
 {
 	// search can work also without a radix selected
 	$search_radix = '_';
@@ -207,7 +207,7 @@ elseif (isset($radix))
 							'name' => 'submit_search'
 						]);
 
-						if (\Preferences::get('fu.sphinx.global')) :
+						if (\Preferences::get('foolfuuka.sphinx.global')) :
 							echo \Form::submit([
 								'value' => 'Global Search',
 								'name' => 'submit_search_global'

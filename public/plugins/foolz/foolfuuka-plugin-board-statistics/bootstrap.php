@@ -5,9 +5,9 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
 	->setCall(function($result) {
 		\Autoloader::add_classes([
-			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
-			'Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
+			'Foolz\Foolframe\Controller\Admin\Plugins\Fu\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
 			'Foolz\Foolfuuka\Controller\Chan\BoardStatistics' => __DIR__.'/classes/controller/chan.php',
+			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task' => __DIR__.'/classes/tasks/task.php'
 		]);
 
@@ -15,10 +15,10 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 		if (\Auth::has_access('maccess.admin'))
 		{
 			\Plugins::registerSidebarElement('admin', 'plugins', [
-				"content" => ["board_statistics/manage" => ["level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart']]
+				"content" => ["fu/board_statistics/manage" => ["level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart']]
 			]);
 
-			\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.alter')
+			\Foolz\Plugin\Event::forge('foolframe.task.fool.run.sections.alter')
 				->setCall(function($result){
 					$array = $result->getParam('array');
 					$array[] = 'board_statistics';
@@ -26,14 +26,14 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 					$result->setParam('array', $array);
 				});
 
-			\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.call_help.board_statistics')
+			\Foolz\Plugin\Event::forge('foolframe.task.fool.run.sections.call_help.board_statistics')
 				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cliBoardStatisticsHelp');
 
-			\Foolz\Plugin\Event::forge('ff.task.fool.run.sections.call.board_statistics')
+			\Foolz\Plugin\Event::forge('foolframe.task.fool.run.sections.call.board_statistics')
 				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cli_board_statistics');
 		}
 
-		\Foolz\Plugin\Event::forge('ff.themes.generic_top_nav_buttons')
+		\Foolz\Plugin\Event::forge('foolframe.themes.generic_top_nav_buttons')
 			->setCall(function($result){
 				$top_nav = $result->getParam('nav');
 				if (\Radix::getSelected())

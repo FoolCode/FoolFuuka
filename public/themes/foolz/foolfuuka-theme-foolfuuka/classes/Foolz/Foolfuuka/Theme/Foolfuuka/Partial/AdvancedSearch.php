@@ -9,7 +9,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 		$radix = $this->getBuilderParamManager()->getParam('radix');
 		$search = $this->getBuilderParamManager()->getParam('search', []);
 
-		if ( ! isset($radix) && \Preferences::get('fu.sphinx.global'))
+		if ( ! isset($radix) && \Preferences::get('foolfuuka.sphinx.global'))
 		{
 			// search can work also without a radix selected
 			$search_radix = '_';

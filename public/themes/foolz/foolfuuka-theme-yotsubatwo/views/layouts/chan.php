@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-if ( ! defined('DOCROOT')) 
+if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
 
 header('X-UA-Compatible: IE=edge,chrome=1');
@@ -15,7 +15,7 @@ header('imagetoolbar: false');
 		<?= $template['metadata'] ?>
 
 		<title><?= $template['title'] ?></title>
-		<link href='<?= \Uri::base() ?>' rel='index' title='<?= Preferences::get('ff.gen.website_title') ?>' />
+		<link href='<?= \Uri::base() ?>' rel='index' title='<?= Preferences::get('foolframe.gen.website_title') ?>' />
 		<?php if ($radix) : ?>
 		<link href="<?= \Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS" />
 		<link href="<?= \Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom" />
@@ -33,10 +33,10 @@ header('imagetoolbar: false');
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<?php if (\Preferences::get('fu.sphinx.global')) : ?>
-			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('ff.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>" />
+		<?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
+			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('foolframe.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>" />
 		<?php endif; ?>
-		<?= \Preferences::get('ff.theme.header_code'); ?>
+		<?= \Preferences::get('foolframe.theme.header_code'); ?>
 
 	</head>
 	<body class="<?= $this->get_selected_theme_class(['theme_default']) ?>">
@@ -77,7 +77,7 @@ header('imagetoolbar: false');
 						<ul class="nav">
 							<li class="dropdown">
 								<a href="<?= \Uri::base() ?>" id="brand" class="brand dropdown-toggle" data-toggle="dropdown">
-									<?= ($radix) ? '/' . $radix->shortname . '/' . ' - ' . $radix->name :  \Preferences::get('ff.gen.website_title') ?> <b class="caret"></b>
+									<?= ($radix) ? '/' . $radix->shortname . '/' . ' - ' . $radix->name :  \Preferences::get('foolframe.gen.website_title') ?> <b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
 									<?= '<li><a href="' . \Uri::base() . '">' . __('Index') . '</a></li>'; ?>
@@ -149,8 +149,8 @@ header('imagetoolbar: false');
 								$top_nav[] = ['href' => \Uri::create([$radix->shortname, 'gallery']), 'text' => __('Gallery')];
 							}
 
-							$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
-							$top_nav = \Foolz\Plugin\Hook::forge('fu.themes.yotsubatwo_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+							$top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+							$top_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.yotsubatwo_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
 
 							foreach ($top_nav as $nav)
 							{
@@ -166,10 +166,10 @@ header('imagetoolbar: false');
 
 			<div role="main" id="main">
 
-				<?php if (\Preferences::get('ff.theme.header_text')) : ?>
+				<?php if (\Preferences::get('foolframe.theme.header_text')) : ?>
 				<div class="alert alert-block alert-error fade in">
 					<h4 class="alert-heading"><?= __('Global Announcement') ?></h4>
-					<?= \Preferences::get('ff.theme.header_text') ?>
+					<?= \Preferences::get('foolframe.theme.header_text') ?>
 				</div>
 				<?php endif; ?>
 
@@ -186,7 +186,7 @@ header('imagetoolbar: false');
 
 				<?= $template['partials']['tools_modal']; ?>
 
-				<?php \Foolz\Plugin\Hook::forge('fu.themes.yotsubatwo_after_body_template')->execute(); ?>
+				<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.yotsubatwo_after_body_template')->execute(); ?>
 
 				<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<div class="paginate">
@@ -310,8 +310,8 @@ header('imagetoolbar: false');
 
 			<?php
 			$bottom_nav = [];
-			$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
-			$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.yotsubatwo_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+			$bottom_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+			$bottom_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.yotsubatwo_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
 			if ( ! empty($bottom_nav))
 			{
@@ -327,9 +327,9 @@ header('imagetoolbar: false');
 				echo ' ]</div>';
 			}
 
-			if (\Preferences::get('ff.theme.footer_text'))
+			if (\Preferences::get('foolframe.theme.footer_text'))
 			{
-				echo '<section class="footer_text">' . \Preferences::get('ff.theme.footer_text') . '</section>';
+				echo '<section class="footer_text">' . \Preferences::get('foolframe.theme.footer_text') . '</section>';
 			}
 			?>
 		</footer>
@@ -343,9 +343,9 @@ header('imagetoolbar: false');
 		<script defer src="<?= \Uri::base().'assets/bootstrap2/js/bootstrap.min.js?v='.$this->_selected_theme_version ?>"></script>
 		<script defer src="<?= \Uri::base().$this->fallback_asset('plugins.js') ?>"></script>
 		<script defer src="<?= \Uri::base().$this->fallback_asset('board.js') ?>"></script>
-<?php if (\Preferences::get('ff.theme.google_analytics')) : ?>
+<?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
 		<script>
-			var _gaq=[['_setAccount','<?= \Preferences::get('ff.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
+			var _gaq=[['_setAccount','<?= \Preferences::get('foolframe.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
 			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 				s.parentNode.insertBefore(g,s)}(document,'script'));
@@ -358,6 +358,6 @@ header('imagetoolbar: false');
 		<script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
 		<script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 		<![endif]-->
-		<?= \Preferences::get('ff.theme.footer_code'); ?>
+		<?= \Preferences::get('foolframe.theme.footer_code'); ?>
 	</body>
 </html>

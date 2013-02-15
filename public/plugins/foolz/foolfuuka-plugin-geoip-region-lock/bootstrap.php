@@ -1,14 +1,10 @@
 <?php
 
-if ( ! defined('DOCROOT'))
-	exit('No direct script access allowed');
-
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-lock')
 	->setCall(function($result) {
 		\Autoloader::add_classes([
-			'Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock' => __DIR__.'/classes/model/geoipregionlock.php',
-			'Foolfuuka\\Plugins\\GeoipRegionLock\\ControllerPluginFuGeoipRegionLockAdminGeoipRegionLock'
-				=> __DIR__.'/classes/controller/admin/geoipregionlock.php'
+			'Foolz\Foolframe\Controller\Admin\Plugins\Fu\GeoipRegionLock' => __DIR__.'/classes/controller/admin.php',
+			'Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock' =>__DIR__.'/classes/model/geoip_region_lock.php'
 		]);
 
 		// don't add the admin panels if the user is not an admin
@@ -17,20 +13,20 @@ if ( ! defined('DOCROOT'))
 			\Router::add('admin/plugins/geoip_region_lock', 'plugin/fu/geoip_region_lock/admin/geoip_region_lock/manage');
 
 			\Plugins::registerSidebarElement('admin', 'plugins', [
-				"content" => ["geoip_region_lock" => ["level" => "admin", "name" => 'GeoIP Region Lock', "icon" => 'icon-flag']]
+				"content" => ["fu/geoip_region_lock/manage" => ["level" => "admin", "name" => 'GeoIP Region Lock', "icon" => 'icon-flag']]
 			]);
 		}
 
-		if ( ! \Auth::has_access('maccess.mod') && !(\Preferences::get('fu.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user')))
+		if ( ! \Auth::has_access('maccess.mod') && !(\Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user')))
 		{
 			\Foolfuuka\Plugins\Geoip_Region_Lock\GeoipRegionLock::block_country_view();
 
-			\Foolz\Plugin\Event::forge('fu.comment.insert.call.before')
+			\Foolz\Plugin\Event::forge('foolfuuka.comment.insert.call.before')
 				->setCall('Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock::blockCountryComment')
 				->setPriority(4);
 		}
 
-		\Foolz\Plugin\Event::forge('fu.radix.structure.structure_alter')
+		\Foolz\Plugin\Event::forge('foolfuuka.radix.structure.structure_alter')
 			->setCall(function($result){
 			$structure = $result->getParam('structure');
 

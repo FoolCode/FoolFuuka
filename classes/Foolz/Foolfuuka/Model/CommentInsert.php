@@ -414,7 +414,7 @@ class CommentInsert extends Comment
 			}
 		}
 
-		\Foolz\Plugin\Hook::forge('fu.comment.insert.alter_input_after_checks')
+		\Foolz\Plugin\Hook::forge('foolfuuka.comment.insert.alter_input_after_checks')
 			->setObject($this)
 			->execute();
 
@@ -547,7 +547,7 @@ class CommentInsert extends Comment
 			$this->timestamp = $this->timestamp - ($diff * 60 * 60);
 		}
 
-		\Foolz\Plugin\Hook::forge('fu.comment.insert.alter_input_before_sql')
+		\Foolz\Plugin\Hook::forge('foolfuuka.comment.insert.alter_input_before_sql')
 			->setObject($this)
 			->execute();
 
@@ -744,7 +744,7 @@ class CommentInsert extends Comment
 				}
 
 				// set data for extra fields
-				\Foolz\Plugin\Hook::forge('fu.comment.insert.extra_json_array')
+				\Foolz\Plugin\Hook::forge('foolfuuka.comment.insert.extra_json_array')
 					->setObject($this)
 					->execute();
 

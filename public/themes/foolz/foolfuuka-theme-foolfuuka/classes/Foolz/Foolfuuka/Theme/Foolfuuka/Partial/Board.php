@@ -18,7 +18,7 @@ class Board extends \Foolz\Theme\View
 				$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
 				?>
 		<article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>">
-				<?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_op_open')->setParam('board', $op->radix)->execute(); ?>
+				<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setParam('board', $op->radix)->execute(); ?>
 				<?php if ($op->media !== null) : ?>
                 <div class="thread_image_box">
 					<?php if ($op->media->getMediaStatus() === 'banned') : ?>
@@ -97,7 +97,7 @@ class Board extends \Foolz\Theme\View
 							<?php if ($op->poster_ip) : ?>
                             <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $op->radix->shortname ?>" data-ip="<?= Inet::dtop($op->poster_ip) ?>" data-action="ban_user"><?= __('Ban IP:') . ' ' . Inet::dtop($op->poster_ip) ?></button>
                             <button class="btn btn-mini" data-function="searchUser" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= \Uri::create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= __('Search IP') ?></button>
-							<?php if (Preferences::get('fu.sphinx.global')) : ?>
+							<?php if (Preferences::get('foolfuuka.sphinx.global')) : ?>
                                 <button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= \Uri::create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= __('Search IP Globally') ?></button>
 								<?php endif; ?>
 							<?php endif; ?>
@@ -137,7 +137,7 @@ class Board extends \Foolz\Theme\View
 				<?php endif; ?>
 				<?php elseif (isset($post['posts'])): ?>
 		<article class="clearfix thread">
-					<?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_headless_open')->setParam('board', array(isset($radix) ? $radix : null))->execute(); ?>
+					<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_headless_open')->setParam('board', array(isset($radix) ? $radix : null))->execute(); ?>
 				<?php endif; ?>
 
             <aside class="posts">

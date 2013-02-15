@@ -41,7 +41,7 @@ class Chan extends \Foolz\Theme\View
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
 
 		<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
-		<link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('ff.gen.website_title') ?>'/>
+		<link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('foolframe.gen.website_title') ?>'/>
 		<?php if ($radix) : ?>
 		<link href="<?= \Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml"
 			  title="RSS"/>
@@ -60,12 +60,12 @@ class Chan extends \Foolz\Theme\View
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<?php if (\Preferences::get('fu.sphinx.global')) : ?>
+		<?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
 		<link rel="search" type="application/opensearchdescription+xml"
-			  title="<?= \Preferences::get('ff.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>"/>
+			  title="<?= \Preferences::get('foolframe.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>"/>
 		<?php endif; ?>
 
-		<?= \Preferences::get('ff.theme.header_code'); ?>
+		<?= \Preferences::get('foolframe.theme.header_code'); ?>
 
 	</head>
 		<?php
@@ -116,7 +116,7 @@ class Chan extends \Foolz\Theme\View
 							<li class="dropdown">
 								<a href="<?= \Uri::base() ?>" id="brand" class="brand dropdown-toggle"
 								   data-toggle="dropdown">
-									<?= ($radix) ? '/'.$radix->shortname.'/'.' - '.$radix->name : \Preferences::get('ff.gen.website_title') ?>
+									<?= ($radix) ? '/'.$radix->shortname.'/'.' - '.$radix->name : \Preferences::get('foolframe.gen.website_title') ?>
 									<b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
@@ -201,8 +201,8 @@ class Chan extends \Foolz\Theme\View
 								$top_nav[] = ['href' => \Uri::create(['admin', 'moderation', 'reports']), 'text' => __('Reports').(\Report::count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.\Report::count().'</span>' : '')];
 							}
 
-							$top_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
-							$top_nav = \Foolz\Plugin\Hook::forge('fu.themes.default_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+							$top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+							$top_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
 
 							foreach ($top_nav as $nav)
 							{
@@ -229,8 +229,8 @@ class Chan extends \Foolz\Theme\View
 
 			<?php if ($section_title) : ?>
 			<h3 class="section_title"><?= $section_title ?></h3>
-			<?php elseif (\Preferences::get('ff.theme.header_text')) : ?>
-			<section class="section_title"><?= \Preferences::get('ff.theme.header_text') ?></section>
+			<?php elseif (\Preferences::get('foolframe.theme.header_text')) : ?>
+			<section class="section_title"><?= \Preferences::get('foolframe.theme.header_text') ?></section>
 			<?php endif; ?>
 
 			<div class="search_box">
@@ -239,7 +239,7 @@ class Chan extends \Foolz\Theme\View
 
 			<?= $this->getBuilder()->getPartial('body')->build(); ?>
 
-			<?php \Foolz\Plugin\Hook::forge('fu.themes.default_after_body_template')->execute(); ?>
+			<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_body_template')->execute(); ?>
 
 			<?= $this->getBuilder()->getPartial('tools_modal')->build(); ?>
 
@@ -359,8 +359,8 @@ class Chan extends \Foolz\Theme\View
 
 		<?php
 		$bottom_nav = [];
-		$bottom_nav = \Foolz\Plugin\Hook::forge('ff.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
-		$bottom_nav = \Foolz\Plugin\Hook::forge('fu.themes.default_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+		$bottom_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+		$bottom_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
 		if ( ! empty($bottom_nav))
 		{
@@ -376,9 +376,9 @@ class Chan extends \Foolz\Theme\View
 			echo '</div>';
 		}
 
-		if (\Preferences::get('ff.theme.footer_text'))
+		if (\Preferences::get('foolframe.theme.footer_text'))
 		{
-			echo '<section class="footer_text">'.\Preferences::get('ff.theme.footer_text').'</section>';
+			echo '<section class="footer_text">'.\Preferences::get('foolframe.theme.footer_text').'</section>';
 		}
 		?>
 	</footer>
@@ -394,10 +394,10 @@ class Chan extends \Foolz\Theme\View
 	<script defer src="<?= $this->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
 	<script defer src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>"></script>
 
-		<?php if (\Preferences::get('ff.theme.google_analytics')) : ?>
+		<?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
 	<script>
 		var _gaq = [
-			['_setAccount', '<?= \Preferences::get('ff.theme.google_analytics') ?>'],
+			['_setAccount', '<?= \Preferences::get('foolframe.theme.google_analytics') ?>'],
 			['_trackPageview'],
 			['_trackPageLoadTime']
 		];
@@ -417,7 +417,7 @@ class Chan extends \Foolz\Theme\View
 		CFInstall.check({mode:'overlay'})
 	})</script>
 	<![endif]-->
-		<?= \Preferences::get('ff.theme.footer_code'); ?>
+		<?= \Preferences::get('foolframe.theme.footer_code'); ?>
 	</body>
 	</html>
 	<?php

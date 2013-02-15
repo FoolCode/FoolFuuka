@@ -155,7 +155,7 @@ class Chan extends \Controller
 
 		$this->_radix = null;
 		$this->param_manager->setParam('radix', null);
-		$this->builder->getProps()->addTitle(\Preferences::get('fu.gen.website_title'));
+		$this->builder->getProps()->addTitle(\Preferences::get('foolfuuka.gen.website_title'));
 
 		if (method_exists($this, 'action_'.$method))
 		{

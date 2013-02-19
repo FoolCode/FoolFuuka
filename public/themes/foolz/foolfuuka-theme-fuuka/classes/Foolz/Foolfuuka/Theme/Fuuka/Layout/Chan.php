@@ -81,7 +81,7 @@ class Chan extends \Foolz\Theme\View
 				$board_urls[] = '<a href="' . \Uri::create($radix->shortname) . '">' . strtolower(__('Top')) . '</a>';
 				$board_urls[] = '<a href="' . \Uri::create(array($radix->shortname, 'statistics')) . '">' . strtolower(__('Statistics')) . '</a>';
 			}
-			$board_urls[] = '<a href="https://github.com/FoOlRulez/FoOlFuuka/issues">' . strtolower(__('Report Bug')) . '</a>';
+			$board_urls[] = '<a href="https://github.com/FoolCode/FoOlFuuka/issues">' . strtolower(__('Report Bug')) . '</a>';
 
 			echo '[ ' . implode(' / ', $board_urls) . ' ]';
 		?>

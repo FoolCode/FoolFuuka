@@ -29,12 +29,12 @@ return [
 		/**
 		 *  URL to download a newer version
 		 */
-		'git_tags_url' => 'https://api.github.com/repos/foolrulez/foolfuuka/tags',
+		'git_tags_url' => 'https://api.github.com/repos/FoolCode/foolfuuka/tags',
 
 		/**
 		 * URL to fetch the changelog
 		 */
-		'git_changelog_url' => 'https://raw.github.com/foolrulez/FoOlFuuka/master/CHANGELOG.md',
+		'git_changelog_url' => 'https://raw.github.com/FoolCode/FoOlFuuka/master/CHANGELOG.md',
 
 		/**
 		 * Minimal PHP requirement

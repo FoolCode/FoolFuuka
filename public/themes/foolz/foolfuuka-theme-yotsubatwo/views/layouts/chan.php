@@ -247,7 +247,7 @@ header('imagetoolbar: false');
 			<div id="push"></div>
 		</div>
 		<footer id="footer">
-			<a href="http://github.com/FoOlRulez/FoOlFuuka"><?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name') ?> Imageboard <?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?></a>
+			<a href="http://github.com/FoolCode/FoOlFuuka"><?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name') ?> Imageboard <?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?></a>
 			- <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
 
 			<div style="float:right">

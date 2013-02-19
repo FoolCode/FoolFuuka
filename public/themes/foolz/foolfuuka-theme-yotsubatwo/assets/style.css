@@ -3,11 +3,11 @@ html {
 }
 
 body.theme_default {
-	background: #FFE url(../images/fade.png) top center repeat-x
+	background: #FFE url(images/fade.png) top center repeat-x
 }
 
 body.theme_default.yotsuba_b {
-	background: #EEF2FF url(../images/fade-blue.png) top center repeat-x
+	background: #EEF2FF url(images/fade-blue.png) top center repeat-x
 }
 
 .theme_default .letters {

@@ -449,7 +449,7 @@ class Media
 	{
 		$result = DC::qb()
 			->select('media_id')
-			->from($radix->getTable(). 'r')
+			->from($radix->getTable(), 'r')
 			->where('r.media_orig = :media_orig')
 			->setParameter(':media_orig', $filename)
 			->execute()
@@ -661,7 +661,7 @@ class Media
 	 */
 	public function getMediaFilenameProcessed()
 	{
-		if ( ! isset($this->media_filename_processed))
+		if ( ! $this->media_filename_processed)
 		{
 			$this->media_filename_processed = static::process($this->media_filename);
 		}

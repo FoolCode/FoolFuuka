@@ -391,8 +391,8 @@ class Chan extends \Foolz\Theme\View
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="<?= \Uri::base().'assets/js/jquery.js' ?>"><\/script>')</script>
 	<script defer src="<?= \Uri::base().'assets/bootstrap2/js/bootstrap.min.js?v=' ?>"></script>
-	<script defer src="<?= $this->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
-	<script defer src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>"></script>
+	<script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
+	<script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('board.js') ?>"></script>
 
 		<?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
 	<script>

@@ -36,8 +36,7 @@ class Chan extends \Foolz\Theme\View
 	<html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="generator"
-			  content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
+		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
 
 		<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
@@ -51,8 +50,7 @@ class Chan extends \Foolz\Theme\View
 		<link href="<?= \Uri::base().'assets/bootstrap2/css/bootstrap.min.css' ?>" rel="stylesheet" type="text/css"/>
 		<link href="<?= \Uri::base().'assets/font-awesome/css/font-awesome.css' ?>" rel="stylesheet" type="text/css"/>
 		<!--[if lt IE 8]>
-		<link href="<?= \Uri::base().'assets/font-awesome/css/font-awesome-ie7.css' ?>" rel="stylesheet"
-			  type="text/css"/>
+		<link href="<?= \Uri::base().'assets/font-awesome/css/font-awesome-ie7.css' ?>" rel="stylesheet" type="text/css"/>
 		<![endif]-->
 
 		<?php $this->getStyles(); ?>

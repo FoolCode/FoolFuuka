@@ -35,9 +35,8 @@ class Chan extends \Foolz\Theme\View
 	<head>
 		<meta charset="utf-8">
 		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
-		<?= $template['metadata'] ?>
 
-		<title><?= $template['title'] ?></title>
+		<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
 		<?php
 			foreach($this->fallback_override('style.css', $this->get_config('extends_css')) as $css)
 				echo '<link href="'.Uri::base().$css.'"rel="stylesheet" type="text/css" />';

@@ -23,8 +23,8 @@ class Chan extends \Foolz\Theme\View
 	public function getStyles()
 	{
 		?>
-	<link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet"
-		  type="text/css"/>
+    <link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
+    <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
 		<?php
 	}
 
@@ -192,8 +192,8 @@ class Chan extends \Foolz\Theme\View
 							$top_nav = [];
 							if ($radix)
 							{
-								$top_nav[] = ['href' => \Uri::create([$radix->shortname, 'ghost']], 'text' => __('Ghost'));
-								$top_nav[] = ['href' => \Uri::create([$radix->shortname, 'gallery']], 'text' => __('Gallery'));
+								$top_nav[] = ['href' => \Uri::create([$radix->shortname, 'ghost']), 'text' => __('Ghost')];
+								$top_nav[] = ['href' => \Uri::create([$radix->shortname, 'gallery']), 'text' => __('Gallery')];
 							}
 
 							if (\Auth::has_access('comment.reports'))

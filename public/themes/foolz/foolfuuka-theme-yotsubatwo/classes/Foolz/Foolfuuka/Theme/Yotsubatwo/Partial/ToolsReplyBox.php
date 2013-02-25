@@ -25,9 +25,9 @@ class ToolsReplyBox extends \Foolz\Theme\View
 			</script>
 			<?php endif; ?>
 
-		<?= Form::open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit']) ?>
-		<?= Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
-		<?= Form::hidden('reply_numero', isset($thread_id)?$thread_id:0, array('id' => 'reply_numero')) ?>
+		<?= \Form::open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit']) ?>
+		<?= \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
+		<?= \Form::hidden('reply_numero', isset($thread_id)?$thread_id:0, array('id' => 'reply_numero')) ?>
 		<?= isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
 
 		<table id="reply">
@@ -82,7 +82,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 						'class' => 'btn',
 					];
 
-					echo Form::submit($submit_array);
+					echo \Form::submit($submit_array);
 					?>
 
 					[ <label><?php echo \Form::checkbox(['name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1]) ?> Spoiler Image?</label> ]
@@ -97,7 +97,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 						'style' => 'display:none'
 					]);
 
-					echo Form::textarea([
+					echo \Form::textarea([
 						'name' => 'reply_chennodiscursus',
 						'id' => 'reply_chennodiscursus',
 						'placeholder' => (!$radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '',
@@ -162,7 +162,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 				</tr>
 					<?php endif; ?>
 
-				<?php if (Radix::getSelected()->posting_rules) : ?>
+				<?php if ($radix->posting_rules) : ?>
 			<tr class="rules">
 				<td></td>
 				<td>

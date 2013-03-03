@@ -324,7 +324,7 @@ class CommentInsert extends Comment
 
 			if ($check)
 			{
-				if ($this->comment !== null && $check->comment === $this->comment)
+				if ($this->comment !== null && $check['comment'] === $this->comment)
 				{
 					throw new CommentSendingSameCommentException(__('You\'re sending the same comment as the last time'));
 				}
@@ -340,7 +340,7 @@ class CommentInsert extends Comment
 					$check_time = $check_time - ($diff * 60 * 60);
 				}
 
-				if ($check_time - $check->timestamp < 10 && $check_time - $check->timestamp > 0)
+				if ($check_time - $check['timestamp'] < 10 && $check_time - $check['timestamp'] > 0)
 				{
 					throw new CommentSendingTimeLimitException(__('You must wait up to 10 seconds to post again.'));
 				}
@@ -574,7 +574,7 @@ class CommentInsert extends Comment
 						->from($this->radix->getTable(), 'xxr')
 						->where('num = ('.
 							DC::qb()
-								->select('MAX(num)', 'maxnum')
+								->select('MAX(num)')
 								->from($this->radix->getTable(), 'xxxr')
 								->where('thread_num = '.DC::forge()->quote($this->thread_num))
 								->getSQL()
@@ -755,7 +755,7 @@ class CommentInsert extends Comment
 				DC::forge()->commit();
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
-			{
+			{echo($e->getMessage());
 				$try_count++;
 
 				if ($try_count > $try_max)

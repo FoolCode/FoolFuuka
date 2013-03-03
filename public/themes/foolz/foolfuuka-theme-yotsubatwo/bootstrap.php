@@ -1,8 +1,5 @@
 <?php
 
-if ( ! defined('DOCROOT'))
-	exit('No direct script access allowed');
-
 \Autoloader::add_classes([
 	'Foolz\Foolfuuka\Themes\Yotsubatwo\Controller\Chan' => __DIR__.'/controller.php'
 ]);

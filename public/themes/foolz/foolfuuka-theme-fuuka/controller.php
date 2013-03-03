@@ -4,7 +4,7 @@ namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
 if ( ! defined('DOCROOT'))
 	exit('No direct script access allowed');
-
+die('here');
 class Chan extends \Foolz\Foolfuuka\Controller\Chan
 {
 	/**

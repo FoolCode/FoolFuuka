@@ -755,7 +755,7 @@ class CommentInsert extends Comment
 				DC::forge()->commit();
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
-			{echo($e->getMessage());
+			{
 				$try_count++;
 
 				if ($try_count > $try_max)

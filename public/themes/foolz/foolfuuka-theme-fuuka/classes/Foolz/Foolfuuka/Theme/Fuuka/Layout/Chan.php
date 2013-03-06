@@ -37,13 +37,10 @@ class Chan extends \Foolz\Theme\View
 		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
 
 		<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
-		<?php
-			foreach($this->fallback_override('style.css', $this->get_config('extends_css')) as $css)
-				echo '<link href="'.Uri::base().$css.'"rel="stylesheet" type="text/css" />';
-		?>
+		<?php $this->getStyles(); ?>
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script src="<?= \Uri::base() . $this->fallback_asset('plugins.js') ?>" type="text/javascript"></script>
+		<script src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('plugins.js') ?>" type="text/javascript"></script>
 		<?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
 			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('foolframe.gen.website_title') ?> " href="<?= \Uri::create('_/opensearch') ?>" />
 		<?php endif; ?>
@@ -55,9 +52,13 @@ class Chan extends \Foolz\Theme\View
 
 	public function getNav()
 	{
+		$radix = $this->getBuilderParamManager()->getParam('radix');
+		$disable_headers = $this->getBuilderParamManager()->getParam('disable_headers', false);
+		$section_title = $this->getBuilderParamManager()->getParam('section_title', false);
+
 		?>
 	<body>
-	<?php if ($disable_headers !== TRUE) : ?>
+	<?php if ($disable_headers !== true) : ?>
 		<div><?php
 			$board_urls = array();
 			foreach (\Radix::getAll() as $key => $item)
@@ -104,36 +105,37 @@ class Chan extends \Foolz\Theme\View
 				echo ' ]';
 			}
 		?></div>
+		<div style="min-height: 30px;">
+	        <h1><?= ($radix) ? $radix->formatted_title : '' ?></h1>
+			<?php if ($section_title !== false) : ?>
+	        <h2><?= $section_title ?></h2>
+			<?php elseif (\Preferences::get('foolframe.theme.header_text')) : ?>
+	        <div><?= \Preferences::get('foolframe.theme.header_text') ?></div>
+			<?php endif; ?>
+
+	        <hr />
+
+			<?= $this->getBuilder()->isPartial('tools_search') ? $this->getBuilder()->getPartial('tools_search')->build() : ''; ?>
+
+	        <hr />
+			<?php if ( ! isset($thread_id)) : ?>
+			<?= isset($template['partials']['tools_new_thread_box']) ? $template['partials']['tools_new_thread_box'] : ''; ?>
+			<?php endif; ?>
+	    </div>
+		<?php endif; ?>
 		<?php
 	}
 
 	public function getContent()
 	{
+		$disable_headers = $this->getBuilderParamManager()->getParam('disable_headers', false);
 		?>
-		<div style="min-height: 30px;">
-			<h1><?= ($radix) ? $radix->formatted_title : '' ?></h1>
-			<?php if (isset($section_title)) : ?>
-				<h2><?= $section_title ?></h2>
-			<?php elseif (\Preferences::get('foolframe.theme.header_text')) : ?>
-				<div><?= \Preferences::get('foolframe.theme.header_text') ?></div>
-			<?php endif; ?>
 
-			<hr />
-
-			<?= $template['partials']['tools_search'] ?>
-
-			<hr />
-			<?php if ( ! isset($thread_id)) : ?>
-			<?= isset($template['partials']['tools_new_thread_box']) ? $template['partials']['tools_new_thread_box'] : ''; ?>
-			<?php endif; ?>
-		</div>
-<?php endif; ?>
-
-		<?= $template['body'] ?>
+		<?= $this->getBuilder()->getPartial('body')->build(); ?>
 
 		<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_after_body_template')->execute(); ?>
 
-		<?php if ($disable_headers !== TRUE) : ?>
+		<?php if ($disable_headers !== true) : ?>
 			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
 				<table style="float: left;">
 					<tbody>
@@ -204,14 +206,16 @@ class Chan extends \Foolz\Theme\View
 					</tbody>
 				</table>
 			<?php endif; ?>
-
-		<?php
+		<?php endif;
 
 	}
 
 	public function getFooter()
 	{
+		$disable_headers = $this->getBuilderParamManager()->getParam('disable_headers', false);
+
 		?>
+		<?php if ($disable_headers !== true) : ?>
 			<div style="float: right;">
 				<?php
 					$bottom_nav = array();
@@ -235,13 +239,14 @@ class Chan extends \Foolz\Theme\View
 
 				<?php
 					$theme_links = array();
-					foreach ($this->get_available_themes() as $theme)
-					{
-						if (($theme = $this->get_by_name($theme)))
-						{
-							$theme_links[] = '<a href="' . \Uri::create(array('_', 'theme', $theme['directory'])) . '" onclick="changeTheme(\'' . $theme['directory'] . '\'); return false;">' . $theme['name'] . '</a>';
-						}
-					}
+					foreach($this->getTheme()->getLoader()->getAll() as $dir) :
+						foreach ($dir as $theme) :
+							if (isset($theme->enabled) && $theme->enabled) :
+								$theme_links[] = '<a href="' . \Uri::create(array('theme', $theme->getConfig('name'))) . '">' . $theme->getConfig('name') . '</a>';
+								endif;
+						endforeach;
+					endforeach;
+
 					echo 'Theme [ ' . implode(' / ', $theme_links) . ' ]';
 				?>
 			</div>
@@ -255,7 +260,7 @@ class Chan extends \Foolz\Theme\View
 		?>
 
 		<script>
-			var backend_vars = <?= json_encode($backend_vars) ?>;
+			var backend_vars = <?= json_encode($this->getBuilderParamManager()->getParam('backend_vars')) ?>;
 		</script>
 
 		<?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>

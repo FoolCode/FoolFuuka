@@ -1,13 +1,9 @@
 <?php
 
-if ( ! defined('DOCROOT'))
-	exit('No direct script access allowed');
-
 require __DIR__ . '/functions.php';
 
 \Autoloader::add_classes([
 	'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan' => __DIR__.'/classes/controller.php',
-	'Foolz\Foolfuuka\Themes\Fuuka\Model\Fuuka' => __DIR__.'/classes/model.php'
 ]);
 
 \Foolz\Plugin\Event::forge('Fuel\Core\Router.parse_match.intercept')
@@ -23,13 +19,40 @@ require __DIR__ . '/functions.php';
 
 // use hooks for manipulating comments
 \Foolz\Plugin\Event::forge('foolfuuka.comment_model.processComment.greentext_result')
-	->setCall('\Foolz\Foolfuuka\Themes\Fuuka\Model\Fuuka::greentext')
+	->setCall(function($result)
+	{
+		$html= '\\1<span class="greentext">\\2</span>\\3';;
+		$result->setParam('html', $html)->set($html);
+	})
 	->setPriority(8);
 
 \Foolz\Plugin\Event::forge('foolfuuka.comment_model.processInternalLinks.html_result')
-	->setCall('\Foolz\Foolfuuka\Themes\Fuuka\Model\Fuuka::processInternalLinksHtml')
+	->setCall(function($result)
+	{
+		$data = $result->getParam('data');
+		$html = [
+			'tags' => ['<span class="unkfunc">', '</span>'],
+			'hash' => '',
+			'attr' => 'class="backlink" onclick="replyHighlight(' . $data->num . ');"',
+			'attr_op' => 'class="backlink"',
+			'attr_backlink' => 'class="backlink"',
+		];
+
+		$result->setParam('build_url', $html)->set($html);
+	})
 	->setPriority(8);
 
 \Foolz\Plugin\Event::forge('foolfuuka.comment_model.processExternalLinks.html_result')
-	->setCall('\Foolz\Foolfuuka\Themes\Fuuka\Model\Fuuka::processExternalLinksHtml')
+	->setCall(function($result)
+	{
+		$data = $result->getParam('data');
+		$html = [
+			'tags' => ['open' =>'<span class="unkfunc">', 'close' => '</span>'],
+			'short_link' => '//boards.4chan.org/'.$data->shortname.'/',
+			'query_link' => '//boards.4chan.org/'.$data->shortname.'/res/'.$data->query,
+			'backlink_attr' => 'class="backlink"'
+		];
+
+		$result->setParam('build_url', $html)->set($html);
+	})
 	->setPriority(8);

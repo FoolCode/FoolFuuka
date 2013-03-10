@@ -41,7 +41,7 @@ class Chan extends \Controller
 
 		try
 		{
-			$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : 'foolz/foolfuuka-theme-foolfuuka';
+			$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
 			$theme = $theme_instance->get('foolz', $theme_name);
 			if ( ! isset($theme->enabled) || ! $theme->enabled)
 			{

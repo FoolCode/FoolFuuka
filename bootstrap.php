@@ -58,7 +58,7 @@ else
 
 	foreach ($themes_enabled as $key => $item)
 	{
-		if ( ! $item && \Auth::has_access('maccess.admin'))
+		if ( ! $item && ! \Auth::has_access('maccess.admin'))
 		{
 			continue;
 		}

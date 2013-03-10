@@ -26,9 +26,13 @@ class Chan extends \Controller_Rest
 		{
 			try
 			{
-				// TODO theme choice limitations
-				$theme_name = \Input::get('theme', \Input::get('theme')) ? : 'foolz/foolfuuka-theme-foolfuuka';
-				$this->_theme = $theme_instance->get('foolz', $theme_name);
+				$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
+				$theme = $theme_instance->get('foolz', $theme_name);
+				if ( ! isset($theme->enabled) || ! $theme->enabled)
+				{
+					throw new \OutOfBoundsException;
+				}
+				$this->_theme = $theme;
 			}
 			catch (\OutOfBoundsException $e)
 			{

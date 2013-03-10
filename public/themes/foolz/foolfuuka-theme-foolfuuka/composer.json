@@ -18,5 +18,8 @@
 		"psr-0": {
 			"Foolz\\Foolfuuka\\Theme\\Foolfuuka": "classes/"
 		}
+	},
+	"extra": {
+		"name" : "FoolFuuka"
 	}
 }

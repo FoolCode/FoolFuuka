@@ -23,8 +23,7 @@ class Chan extends \Foolz\Theme\View
 	public function getStyles()
 	{
 		?>
-	<link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet"
-		  type="text/css"/>
+		<link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
 		<?php
 	}
 
@@ -37,15 +36,11 @@ class Chan extends \Foolz\Theme\View
 	<head>
 		<meta charset="utf-8">
 		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
-
 		<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
 		<link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('foolframe.gen.website_title') ?>'/>
 		<?php if ($radix) : ?>
-		<link href="<?= \Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml"
-			  title="RSS"/>
-		<link href="<?= \Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate"
-			  type="application/atom+xml" title="Atom"/>
+		<link href="<?= \Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS"/>
+		<link href="<?= \Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom"/>
 		<?php endif; ?>
 		<link href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css"/>
 		<link href="<?= \Uri::base().'assets/font-awesome/css/font-awesome.css' ?>" rel="stylesheet" type="text/css"/>
@@ -59,8 +54,7 @@ class Chan extends \Foolz\Theme\View
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 		<?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
-		<link rel="search" type="application/opensearchdescription+xml"
-			  title="<?= \Preferences::get('foolframe.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>"/>
+		<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('foolframe.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>"/>
 		<?php endif; ?>
 
 		<?= \Preferences::get('foolframe.theme.header_code'); ?>
@@ -326,7 +320,7 @@ class Chan extends \Foolz\Theme\View
 						?>
 						<li>
 							<a href="<?= \Uri::create(array('theme', $theme->getConfig('name'))) ?>">
-								<?= $theme->getConfig('name') ?><?= ($theme === $this->getTheme())?' <i class="icon-ok"></i>':'' ?>
+								<?= $theme->getConfig('extra.name') ?><?= ($theme === $this->getTheme())?' <i class="icon-ok"></i>':'' ?>
 							</a>
 						</li>
 						<?php endif;
@@ -391,8 +385,7 @@ class Chan extends \Foolz\Theme\View
 	<script defer src="<?= \Uri::base().'assets/bootstrap2/js/bootstrap.min.js?v=' ?>"></script>
 	<script defer src="<?= $this->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
 	<script defer src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>"></script>
-
-		<?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
+	<?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
 	<script>
 		var _gaq = [
 			['_setAccount', '<?= \Preferences::get('foolframe.theme.google_analytics') ?>'],
@@ -405,15 +398,11 @@ class Chan extends \Foolz\Theme\View
 			s.parentNode.insertBefore(g, s)
 		}(document, 'script'));
 	</script>
-		<?php endif; ?>
+	<?php endif; ?>
 
-	<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
-	 chromium.org/developers/how-tos/chrome-frame-getting-started -->
 	<!--[if lt IE 7 ]>
 	<script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-	<script defer>window.attachEvent('onload', function () {
-		CFInstall.check({mode:'overlay'})
-	})</script>
+	<script defer>window.attachEvent('onload', function () { CFInstall.check({mode:'overlay'}) })</script>
 	<![endif]-->
 		<?= \Preferences::get('foolframe.theme.footer_code'); ?>
 	</body>

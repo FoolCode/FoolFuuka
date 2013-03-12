@@ -17,7 +17,7 @@ class Chan extends \Foolz\Theme\View
 
 	public function getSelectedThemeClass()
 	{
-		return 'theme_default';
+		return 'theme_default'.(\Cookie::get('theme_foolz/foolfuuka-theme-yotsubatwo_style') == 'yotsuba_b' ? ' yotsuba_b' : '');
 	}
 
 	public function getStyles()
@@ -36,23 +36,18 @@ class Chan extends \Foolz\Theme\View
 	<html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="generator"
-			  content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale = 0.5,maximum-scale = 2.0">
+		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
 
 		<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
 		<link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('foolframe.gen.website_title') ?>'/>
 		<?php if ($radix) : ?>
-		<link href="<?= \Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml"
-			  title="RSS"/>
-		<link href="<?= \Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate"
-			  type="application/atom+xml" title="Atom"/>
+		<link href="<?= \Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS"/>
+		<link href="<?= \Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom"/>
 		<?php endif; ?>
-		<link href="<?= \Uri::base().'assets/bootstrap2/css/bootstrap.min.css' ?>" rel="stylesheet" type="text/css"/>
+		<link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css"/>
 		<link href="<?= \Uri::base().'assets/font-awesome/css/font-awesome.css' ?>" rel="stylesheet" type="text/css"/>
 		<!--[if lt IE 8]>
-		<link href="<?= \Uri::base().'assets/font-awesome/css/font-awesome-ie7.css' ?>" rel="stylesheet"
-			  type="text/css"/>
+		<link href="<?= \Uri::base().'assets/font-awesome/css/font-awesome-ie7.css' ?>" rel="stylesheet" type="text/css"/>
 		<![endif]-->
 
 		<?php $this->getStyles(); ?>
@@ -323,17 +318,33 @@ class Chan extends \Foolz\Theme\View
 				</a>
 				<ul class="dropdown-menu">
 					<?php foreach($this->getTheme()->getLoader()->getAll() as $dir) :
-					foreach ($dir as $theme) :
-						if (isset($theme->enabled) && $theme->enabled) :
-							?>
-							<li>
-								<a href="<?= \Uri::create(['theme', $theme->getConfig('name')]) ?>">
-									<?= $theme->getConfig('name') ?><?= ($theme === $this->getTheme())?' <i class="icon-ok"></i>':'' ?>
-								</a>
-							</li>
+						foreach ($dir as $theme) :
+							if (isset($theme->enabled) && $theme->enabled) :
+								?>
+								<li>
+									<a href="<?= \Uri::create(array('theme', $theme->getConfig('name'))) ?>">
+										<?= $theme->getConfig('extra.name') ?><?= ($theme === $this->getTheme())?' <i class="icon-ok"></i>':'' ?>
+									</a>
+								</li>
 							<?php endif;
-					endforeach;
-				endforeach; ?>
+						endforeach;
+					endforeach; ?>
+				</ul>
+			</div>
+		</div>
+
+		<div style="float:right">
+			<div class="btn-group dropup pull-right">
+				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
+					<?= __('Change Style') ?> <span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<?php foreach (['yotsuba' => 'Yotsuba', 'yotsuba_b' => 'Yotsuba B'] as $key => $name) : ?>
+					<li>
+						<a href="<?= \Uri::create(['theme', 'foolz/foolfuuka-theme-yotsubatwo', $key]) ?>"><?= $name ?>
+							<?= ($key === \Cookie::get('theme_foolz/foolfuuka-theme-yotsubatwo_style'))?' <i class="icon-ok"></i>':'' ?></a>
+					</li>
+					<?php endforeach; ?>
 				</ul>
 			</div>
 		</div>

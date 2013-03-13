@@ -119,7 +119,7 @@ class Task
 					if ($skip === false)
 					{
 						\Cli::write('* Processing...');
-						$process = 'process_' . $k;
+						$process = 'process'.static::lowercaseToClassName($k);
 						$result = BS::$process($board);
 
 						// This statistics report generates a graph via GNUPLOT.
@@ -136,5 +136,25 @@ class Task
 
 			sleep(10);
 		}
+	}
+
+	/**
+	 * Reformats a lowercase string to a class name by splitting on underscores and capitalizing
+	 *
+	 * @param  string  $class_name  The name of the class, lowercase and with words separated by underscore
+	 *
+	 * @return  string
+	 */
+	public static function lowercaseToClassName($class_name)
+	{
+		$pieces = explode('_', $class_name);
+
+		$result = '';
+		foreach ($pieces as $piece)
+		{
+			$result .= ucfirst($piece);
+		}
+
+		return $result;
 	}
 }

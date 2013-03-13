@@ -233,20 +233,21 @@ class Chan extends \Controller
 
 	public function action_language($theme = 'en_EN')
 	{
-		$this->builder->getProps()->addTitle(__('Changing Language'));
-		$this->builder->createLayout('redirect');
-		$partial = $this->builder->createPartial('body', 'redirection');
-
 		\Cookie::set('language', $theme, 31536000);
 
 		if (\Input::referrer())
 		{
-			$partial->getParamManager()->setParam('url', \Input::referrer());
+			$url = \Input::referrer();
 		}
 		else
 		{
-			$partial->getParamManager()->setParam('url', \Uri::base());
+			$url = \Uri::base();
 		}
+
+		$this->builder->createLayout('redirect')
+			->getParamManager()
+			->setParam('url', $url);
+		$this->builder->getProps()->addTitle(__('Changing Language'));
 
 		return \Response::forge($this->builder->build());
 	}
@@ -531,8 +532,7 @@ class Chan extends \Controller
 			$redirect .= '#'.$comment->num.($comment->subnum ? '_'.$comment->subnum :'');
 		}
 
-		$this->builder->createLayout('redirect');
-		$this->builder->createPartial('body', 'redirection')
+		$this->builder->createLayout('redirect')
 			->getParamManager()
 			->setParam('url', $redirect);
 		$this->builder->getProps()->addTitle(__('Redirecting'));
@@ -615,8 +615,7 @@ class Chan extends \Controller
 			$redirect .= $filename.'.'.\Input::extension();
 		}
 
-		$this->builder->createLayout('redirect');
-		$this->builder->createPartial('body', 'redirection')
+		$this->builder->createLayout('redirect')
 			->getParamManager()
 			->setParam('url', $redirect);
 		$this->builder->getProps()->addTitle(__('Redirecting'));

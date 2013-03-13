@@ -405,7 +405,7 @@ class BoardStatistics
 	public static function processPopulation($board)
 	{
 		return DC::qb()
-			->select('day AS TIME, trips, names, anons')
+			->select('day AS time, trips, names, anons')
 			->from($board->getTable('_daily'), 'bd')
 			->where('day > '.floor((time() - 31536000) / 86400) * 86400)
 			->groupBy('day')
@@ -504,8 +504,8 @@ class BoardStatistics
 		$OUTFILE = DOCROOT . 'foolfuuka/statistics/' . $board . '/' . $stat . '.png';
 
 		// Obtain starting and ending data points for x range.
-		$X_START = (!empty($data) ? $data[0]['time'] : 0);
-		$X_END = (!empty($data) ? $data[count($data) - 1]['time'] : 0);
+		$X_START = ! empty($data) ? $data[0]['time'] : 0;
+		$X_END = ! empty($data) ? $data[count($data) - 1]['time'] : 0;
 
 		// Format and save the INFILE dataset for GNUPLOT.
 		$graph_data = array();

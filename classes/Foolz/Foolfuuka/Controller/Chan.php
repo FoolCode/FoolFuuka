@@ -55,7 +55,8 @@ class Chan extends \Controller
 			$this->theme = $theme_instance->get('foolz', 'foolz/foolfuuka-theme-foolfuuka');
 		}
 
-		$this->theme->bootstrap();
+		// TODO this is currently bootstrapped in the foolfuuka bootstrap because we need it running before the router.
+		//$this->theme->bootstrap();
 		$this->builder = $this->theme->createBuilder();
 		$this->param_manager = $this->builder->getParamManager();
 		$this->builder->createLayout('chan');

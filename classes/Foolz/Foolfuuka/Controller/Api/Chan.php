@@ -41,6 +41,9 @@ class Chan extends \Controller_Rest
 			}
 		}
 
+		// already done in the foolfuuka bootstrap
+		// $this->_theme->bootstrap();
+
 		if ( ! \Input::get('board') && ! \Input::get('action') && ! \Input::post('board') && ! \Input::post('action'))
 		{
 			$segments = \Uri::segments();

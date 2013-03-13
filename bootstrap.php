@@ -75,4 +75,20 @@ else
 	}
 }
 
+try
+{
+	$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
+	$theme = $theme_instance->get('foolz', $theme_name);
+	if ( ! isset($theme->enabled) || ! $theme->enabled)
+	{
+		throw new \OutOfBoundsException;
+	}
+}
+catch (\OutOfBoundsException $e)
+{
+	$theme_name = 'foolz/foolfuuka-theme-foolfuuka';
+	$theme = $theme_instance->get('foolz', 'foolz/foolfuuka-theme-foolfuuka');
+}
+
+$theme->bootstrap();
 

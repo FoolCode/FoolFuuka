@@ -9,7 +9,7 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 	/**
 	 * @param null $report
 	 */
-	public function radixStatistics($report = null)
+	public function radix_statistics($report = null)
 	{
 		// Load Statistics Model
 

@@ -209,7 +209,7 @@ class BoardStatistics
 			if ( ! isset($available[$stat]['frequency']))
 			{
 				// real time stat
-				$process_function = 'process_' . $stat;
+				$process_function = 'process' . static::lowercaseToClassName($stat);
 				$result = static::$process_function($selected_board);
 
 				return array('info' => $available[$stat], 'data' => json_encode($result));
@@ -570,5 +570,25 @@ class BoardStatistics
 		}
 
 		return implode("\n", $template);
+	}
+
+	/**
+	 * Reformats a lowercase string to a class name by splitting on underscores and capitalizing
+	 *
+	 * @param  string  $class_name  The name of the class, lowercase and with words separated by underscore
+	 *
+	 * @return  string
+	 */
+	public static function lowercaseToClassName($class_name)
+	{
+		$pieces = explode('_', $class_name);
+
+		$result = '';
+		foreach ($pieces as $piece)
+		{
+			$result .= ucfirst($piece);
+		}
+
+		return $result;
 	}
 }

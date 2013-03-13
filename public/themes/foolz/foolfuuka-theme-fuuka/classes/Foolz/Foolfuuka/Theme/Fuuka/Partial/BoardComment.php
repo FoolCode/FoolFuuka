@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
 
-class Board extends \Foolz\Theme\View
+class BoardComment extends \Foolz\Theme\View
 {
 	public function toString()
 	{
@@ -39,16 +39,16 @@ class Board extends \Foolz\Theme\View
 							<?php if ($p->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
 						</label>
 						<?php if ( !isset($thread_id)) : ?>
-		    <a class="js" href="<?= Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
+		    <a class="js" href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 			<?php else : ?>
-		    <a class="js" href="<?= Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
+		    <a class="js" href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 			<?php endif; ?>
 
-						<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= __('This post was submitted as a "ghost" reply.') ?>"/><?php endif ?>
-						<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post has been marked as a spoiler.') ?>"/><?php endif ?>
-						<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was delete before its lifetime expired.') ?>"/><?php endif ?>
+						<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= __('This post was submitted as a "ghost" reply.') ?>"/><?php endif ?>
+						<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><img class="inline" src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post has been marked as a spoiler.') ?>"/><?php endif ?>
+						<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was delete before its lifetime expired.') ?>"/><?php endif ?>
 
-						<?php if (isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?= Uri::create([$p->radix->shortname, 'thread', $p->thread_num]) . '#' . $p->num . (($p->subnum) ? '_' . $p->subnum : '') ?>">View</a>]<?php endif; ?>
+						<?php if (isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?= \Uri::create([$p->radix->shortname, 'thread', $p->thread_num]) . '#' . $p->num . (($p->subnum) ? '_' . $p->subnum : '') ?>">View</a>]<?php endif; ?>
 
 						<br/>
 						<?php if ($p->media !== null) : ?>
@@ -59,7 +59,7 @@ class Board extends \Foolz\Theme\View
 							</span>
 
 				<?php if ( ! $p->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-		            [<a href="<?= Uri::create($p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>"><?= __('View Same') ?></a>]
+		            [<a href="<?= \Uri::create($p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>"><?= __('View Same') ?></a>]
 		            [<a href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink() ?>">Google</a>]
 		            [<a href="http://iqdb.org/?url=<?= $p->media->getThumbLink() ?>">iqdb</a>]
 		            [<a href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink() ?>">SauceNAO</a>]
@@ -67,10 +67,10 @@ class Board extends \Foolz\Theme\View
 		        <br />
 				<?php endif; ?>
 			<?php if ($p->media->getMediaStatus() === 'banned') : ?>
-		        <img src="<?= Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
+		        <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
 				<?php elseif ($p->media->getMediaStatus() !== 'normal'): ?>
 		        <a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" rel="noreferrer">
-		            <img src="<?= Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
+		            <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 		        </a>
 				<?php else: ?>
 		        <a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" rel="noreferrer">

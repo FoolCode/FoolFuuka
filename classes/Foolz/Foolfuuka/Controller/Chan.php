@@ -1252,8 +1252,7 @@ class Chan extends \Controller
 		}
 		else
 		{
-			$this->builder->createLayout('redirect');
-			$this->builder->createPartial('body', 'redirection')
+			$this->builder->createLayout('redirect')
 				->getParamManager()
 				->setParam('url', \Uri::create([$this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
 			$this->builder->getProps()->addTitle(__('Redirecting'));

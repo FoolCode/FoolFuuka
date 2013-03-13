@@ -2,15 +2,12 @@
 
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
-if ( ! defined('DOCROOT'))
-	exit('No direct script access allowed');
-die('here');
 class Chan extends \Foolz\Foolfuuka\Controller\Chan
 {
 	/**
 	 * @param int $page
 	 */
-	public function radixPage($page = 1)
+	public function radix_page($page = 1)
 	{
 		$options = [
 			'per_page' => 24,
@@ -29,7 +26,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 	/**
 	 * @return bool
 	 */
-	public function radixSubmit()
+	public function radix_submit()
 	{
 		// adapter
 		if ( ! \Input::post())

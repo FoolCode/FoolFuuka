@@ -1,8 +1,5 @@
 <?php
 
-if ( ! defined('DOCROOT'))
-	exit('No direct script access allowed');
-
 // Fuuka's Code
 function fuuka_title($message)
 {
@@ -21,7 +18,7 @@ function fuuka_title($message)
 	}
 }
 
-function fuuk_message()
+function fuuka_message()
 {
 	$messages = ['　　　人　　　　　
 　　（＿_）　　　　

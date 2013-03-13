@@ -36,7 +36,7 @@ class Chan extends \Foolz\Theme\View
 		<meta charset="utf-8">
 		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
 
-		<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
+		<title><?= htmlspecialchars($this->getBuilder()->getProps()->getTitle()); ?></title>
 		<?php $this->getStyles(); ?>
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -242,7 +242,7 @@ class Chan extends \Foolz\Theme\View
 					foreach($this->getTheme()->getLoader()->getAll() as $dir) :
 						foreach ($dir as $theme) :
 							if (isset($theme->enabled) && $theme->enabled) :
-								$theme_links[] = '<a href="' . \Uri::create(array('theme', $theme->getConfig('name'))) . '">' . $theme->getConfig('name') . '</a>';
+								$theme_links[] = '<a href="' . \Uri::create(array('theme', $theme->getConfig('name'))) . '">' . $theme->getConfig('extra.name') . '</a>';
 								endif;
 						endforeach;
 					endforeach;

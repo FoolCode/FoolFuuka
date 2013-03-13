@@ -3,7 +3,7 @@
 require __DIR__ . '/functions.php';
 
 \Autoloader::add_classes([
-	'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan' => __DIR__.'/classes/controller.php',
+	'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan' => __DIR__.'/controller.php',
 ]);
 
 \Foolz\Plugin\Event::forge('Fuel\Core\Router.parse_match.intercept')

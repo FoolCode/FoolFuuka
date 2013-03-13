@@ -13,7 +13,7 @@ class Redirect extends \Foolz\Theme\View
 		?><!DOCTYPE html>
 	<html>
 		<head>
-			<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
+			<title><?= htmlspecialchars($this->getBuilder()->getProps()->getTitle()); ?></title>
 			<meta http-equiv="Refresh" content="0; url=<?= $url ?>"/>
 		</head>
 		<body>

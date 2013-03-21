@@ -943,7 +943,7 @@ class Chan extends \Controller
 		$this->param_manager->setParam('pagination', [
 			'base_url' => \Uri::create($pagination_arr),
 			'current_page' => $search['page'] ? : 1,
-			'total' => floor($board->get_count()/25+1),
+			'total' => floor($board->getCount()/25+1),
 		]);
 
 		$this->param_manager->setParam('modifiers', [

@@ -507,7 +507,7 @@ class Search extends Board
 		foreach ($result as $post)
 		{
 			$board = $this->radix !== null ? $this->radix : \Radix::getById($post->board_id);
-			$this->comments_unsorted[] = \Comment::fromArrayDeep($post, $board);
+			$this->comments_unsorted[] = \Comment::fromArray($post, $board);
 		}
 
 		$this->comments[0]['posts'] = $this->comments_unsorted;

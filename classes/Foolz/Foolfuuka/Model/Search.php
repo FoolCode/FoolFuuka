@@ -490,7 +490,7 @@ class Search extends Board
 					->from($board->getTable(), 'r')
 					->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
 					->leftJoin('r', $board->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
-					->where('doc_id = '.DC::qb()->quote($result['id']))
+					->where('doc_id = '.DC::forge()->quote($result['id']))
 					->getSQL();
 			}
 

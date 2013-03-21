@@ -44,10 +44,10 @@ class Gallery extends \Foolz\Theme\View
 			<?php if ($p->media !== null) : ?>
 		    <div class="thread_image_box" title="<?= $p->getCommentProcessed() ? htmlspecialchars('<strong>'.($p->getCommentProcessed()).'</strong>') : '' ?>">
 				<?php if ($p->media->getMediaStatus() === 'banned') : ?>
-		        <img src="<?= \Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" />
+		        <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
 				<?php elseif ($p->media->getMediaStatus() !== 'normal') : ?>
 		        <a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-		            <img src="<?= \Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" />
+		            <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
 		        </a>
 				<?php else: ?>
 		        <a href="<?= \Uri::create($radix->shortname . '/thread/' . $p->num) ?>" rel="noreferrer" target="_blank" class="thread_image_link"<?= ($p->media->getMediaLink())?' data-expand="true"':'' ?>>
@@ -70,8 +70,8 @@ class Gallery extends \Foolz\Theme\View
 				<?php if (isset($p->nreplies)) : ?>
 				<?= __('Replies') ?> : <?= $p->nreplies ?> | <?= __('Images') ?>: <?= $p->nimages ?>
 				<?php endif; ?>
-				<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= \Uri::base() . $this->fallback_asset('images/icons/file-delete-icon.png'); ?>" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
-				<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><span class="post_type"><img src="<?= \Uri::base() . $this->fallback_asset('images/icons/spoiler-icon.png'); ?>" title="<?= htmlspecialchars(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>
+				<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
+				<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><span class="post_type"><img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" title="<?= htmlspecialchars(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>
 		    </div>
 		</article>
 		<?php

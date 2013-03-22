@@ -56,18 +56,20 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 				}
 				catch (\Foolz\Foolfuuka\Model\BoardException $e)
 				{
-					return $this->response(['error' => $e->getMessage()], 404);
+					return $this->error($e->getMessage(), 404);
 				}
 				catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e)
 				{
-					return $this->response(['error' => $e->getMessage()], 404);
+					return $this->error($e->getMessage(), 404);
 				}
 			}
 
-			$this->_theme->set_layout('redirect');
-			$this->_theme->set_title(__('Redirecting...'));
-			$this->_theme->bind('url', \Uri::create([$this->_radix->shortname, 'thread', $comment->thread_num]));
-			return \Response::forge($this->_theme->build('redirection'));
+			$this->builder->createLayout('redirect')
+				->getParamManager()
+				->setParam('url', \Uri::create([$this->_radix->shortname, 'thread', $comment->thread_num]));
+			$this->builder->getProps()->addTitle(__('Redirecting'));
+
+			return \Response::forge($this->builder->build());
 		}
 
 		if (\Input::post('reply_report'))
@@ -81,44 +83,68 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 				}
 				catch (\Foolz\Foolfuuka\Model\ReportException $e)
 				{
-					return $this->response(['error' => $e->getMessage()], 404);
+					return $this->error($e->getMessage(), 404);
 				}
 			}
 
-			$this->_theme->set_layout('redirect');
-			$this->_theme->set_title(__('Redirecting...'));
-			$this->_theme->bind('url', \Uri::create($this->_radix->shortname.'/thread/'.\Input::post('parent')));
-			return \Response::forge($this->_theme->build('redirection'));
+			$this->builder->createLayout('redirect')
+				->getParamManager()
+				->setParam('url', \Uri::create($this->_radix->shortname.'/thread/'.\Input::post('parent')));
+			$this->builder->getProps()->addTitle(__('Redirecting'));
+
+			return \Response::forge($this->builder->build());
 		}
 
 		// Determine if the invalid post fields are populated by bots.
 		if (isset($post['name']) && mb_strlen($post['name']) > 0)
+		{
 			return $this->error();
+		}
 		if (isset($post['reply']) && mb_strlen($post['reply']) > 0)
+		{
 			return $this->error();
+		}
 		if (isset($post['email']) && mb_strlen($post['email']) > 0)
+		{
 			return $this->error();
+		}
 
 		$data = [];
 
 		$post = \Input::post();
 
 		if (isset($post['parent']))
+		{
 			$data['thread_num'] = $post['parent'];
+		}
 		if (isset($post['NAMAE']))
+		{
 			$data['name'] = $post['NAMAE'];
+		}
 		if (isset($post['MERU']))
+		{
 			$data['email'] = $post['MERU'];
+		}
 		if (isset($post['subject']))
+		{
 			$data['title'] = $post['subject'];
+		}
 		if (isset($post['KOMENTO']))
+		{
 			$data['comment'] = $post['KOMENTO'];
+		}
 		if (isset($post['delpass']))
+		{
 			$data['delpass'] = $post['delpass'];
+		}
 		if (isset($post['reply_spoiler']))
+		{
 			$data['spoiler'] = true;
+		}
 		if (isset($post['reply_postas']))
+		{
 			$data['capcode'] = $post['reply_postas'];
+		}
 
 		$media = null;
 
@@ -126,7 +152,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 		{
 			try
 			{
-				$media = \Media::forge_from_upload($this->_radix);
+				$media = \Media::forgeFromUpload($this->_radix);
 				$media->spoiler = isset($data['spoiler']) && $data['spoiler'];
 			}
 			catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e)

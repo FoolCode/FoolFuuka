@@ -9,7 +9,7 @@ return [
 		/**
 		 * Version for autoupgrades
 		 */
-		'version' => '1.5.2-dev-0',
+		'version' => '1.7.0-dev-0',
 
 		/**
 		 * Display name for the module

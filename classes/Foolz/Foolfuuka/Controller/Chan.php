@@ -254,7 +254,7 @@ class Chan extends \Controller
 
 	public function action_opensearch()
 	{
-		return \Response::forge(\View::forge('foolfuuka::opensearch'));
+		return \Response::forge(\View::forge('foolz/foolfuuka::opensearch'));
 	}
 
 	public function radix_page_mode($_mode = 'by_post')

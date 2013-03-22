@@ -265,7 +265,7 @@ class Board
 	 *
 	 * @return  \Foolz\Foolfuuka\Model\Board  The current object
 	 */
-	protected function p_setRadix(\Foolz\Foolfuuka\Model\Radix $radix)
+	protected function p_setRadix(\Foolz\Foolfuuka\Model\Radix $radix = null)
 	{
 		$this->radix = $radix;
 

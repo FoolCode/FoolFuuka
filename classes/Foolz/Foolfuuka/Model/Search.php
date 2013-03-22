@@ -438,16 +438,13 @@ class Search extends Board
 				}
 			}
 
-			if ($args['order'] !== null)
+			if ($args['order'] !== null && $args['order'] == 'asc')
 			{
-				if ($args['order'] == 'asc')
-				{
-					$query->orderBy('timestamp', 'ASC');
-				}
-				else
-				{
-					$query->orderBy('timestamp', 'DESC');
-				}
+				$query->orderBy('timestamp', 'ASC');
+			}
+			else
+			{
+				$query->orderBy('timestamp', 'DESC');
 			}
 
 			// set sphinx options

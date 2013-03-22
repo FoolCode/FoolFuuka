@@ -506,7 +506,8 @@ class Search extends Board
 		// process results
 		foreach ($result as $post)
 		{
-			$board = $this->radix !== null ? $this->radix : \Radix::getById($post->board_id);
+			$board = ($this->radix !== null ? $this->radix : \Radix::getById($post['board_id']));
+
 			$this->comments_unsorted[] = new \Comment($post, $board);
 		}
 

@@ -689,7 +689,7 @@ class CommentInsert extends Comment
 					->andWhere('poster_ip = :poster_ip')
 					->andWhere('timestamp >= :timestamp')
 					->setParameters([
-						':comment' => $this->comment,
+						':comment' => DC::forge()->quote($this->comment),
 						':poster_ip' => \Input::ip_decimal(),
 						':timestamp' => $this->timestamp
 					])
@@ -739,8 +739,8 @@ class CommentInsert extends Comment
 					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment['thread_num']),'id'), 3), 0, 8);
 
 					DC::qb()
-						->update($this->radix->getTable())
-						->set('poster_hash', $this->poster_hash)
+						->update($this->radix->getTable(), 'ph')
+						->set('poster_hash', DC::forge()->quote($this->poster_hash))
 						->where('doc_id = :doc_id')
 						->setParameter(':doc_id', $comment['doc_id'])
 						->execute();

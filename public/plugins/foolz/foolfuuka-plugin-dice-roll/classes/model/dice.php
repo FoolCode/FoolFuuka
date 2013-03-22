@@ -30,6 +30,11 @@ class Dice
 					'output' => []
 				];
 
+				if ($dice['total'] > 25)
+				{
+					return null;
+				}
+
 				for ($d = 0; $d < $dice['total']; $d++)
 				{
 					$rand = mt_rand(1, $dice['side']);

@@ -1080,7 +1080,7 @@ class Chan extends \Controller
 			\Cookie::set('reply_password', $data['delpass'], 60*60*24*30);
 		}
 
-		if (isset($post['reply_gattai_spoilered']))
+		if (isset($post['reply_gattai_spoilered']) || isset($post['reply_spoiler']))
 		{
 			$data['spoiler'] = true;
 		}

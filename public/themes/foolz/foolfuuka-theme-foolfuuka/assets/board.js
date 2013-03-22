@@ -109,7 +109,14 @@ var bindFunctions = function()
 				theme: backend_vars.selected_theme
 			};
 
+			// sets the type of submit (reply_gattai, reply_gattai_spoilered)
 			data_obj[el.attr('name')] = true;
+
+			// support for checkbox spoiler
+			if (el_parent.find('[name=reply_spoiler]:checked').length)
+			{
+				data_obj.reply_spoiler = true;
+			}
 
 			data_obj[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
 

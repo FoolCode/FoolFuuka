@@ -19,7 +19,7 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 			]);
 
 			\Foolz\Plugin\Event::forge('foolframe.task.fool.run.sections.alter')
-				->setCall(function($result){
+				->setCall(function($result) {
 					$array = $result->getParam('array');
 					$array[] = 'board_statistics';
 					$result->set($array);
@@ -34,7 +34,7 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 		}
 
 		\Foolz\Plugin\Event::forge('foolframe.themes.generic_top_nav_buttons')
-			->setCall(function($result){
+			->setCall(function($result) {
 				$top_nav = $result->getParam('nav');
 				if (\Radix::getSelected())
 				{
@@ -45,8 +45,7 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 			})->setPriority(3);
 
 		\Foolz\Plugin\Event::forge('Fuel\Core\Router.parse_match.intercept')
-			->setCall(function($result)
-			{
+			->setCall(function($result) {
 				if ($result->getParam('controller') === 'Foolz\Foolfuuka\Controller\Chan')
 				{
 					$method_params = $result->getParam('method_params');

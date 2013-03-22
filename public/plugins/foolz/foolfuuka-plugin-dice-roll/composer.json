@@ -18,7 +18,6 @@
 	"extra": {
 		"name": "Dice Roll",
 		"slug": "dice_roll",
-		"identifier": "fu",
 		"module": "foolfuuka"
 	}
 }

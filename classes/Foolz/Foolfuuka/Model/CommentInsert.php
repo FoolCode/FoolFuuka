@@ -495,7 +495,7 @@ class CommentInsert extends Comment
 
 		if ($this->radix->enable_flags && function_exists('\\geoip_country_code_by_name'))
 		{
-			$this->poster_country = \geoip_country_code_by_name(\Inet::dtop($this->poster_ip));
+			$this->poster_country = \geoip_country_code_by_name(\Foolz\Inet\Inet::dtop($this->poster_ip));
 		}
 
 		// process comment media

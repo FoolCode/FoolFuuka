@@ -814,7 +814,7 @@ class Chan extends \Controller
 				return $this->error(__('The poster IP you inserted is not a valid IP address.'));
 			}
 
-			$search['poster_ip'] = \Inet::ptod($search['poster_ip']);
+			$search['poster_ip'] = \Foolz\Inet\Inet::ptod($search['poster_ip']);
 		}
 
 		try
@@ -932,7 +932,7 @@ class Chan extends \Controller
 
 				if ($key == 'poster_ip')
 				{
-					$item = \Inet::dtop($item);
+					$item = \Foolz\Inet\Inet::dtop($item);
 				}
 
 				$pagination_arr[] = rawurlencode($item);

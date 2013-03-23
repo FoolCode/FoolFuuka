@@ -307,12 +307,12 @@ class Search extends Board
 
 			if ($args['username'] !== null)
 			{
-				$query->match('username', $args['username']);
+				$query->match('name', $args['username']);
 			}
 
 			if ($args['tripcode'] !== null)
 			{
-				$query->match('tripcode', '"'.$args['tripcode'].'"');
+				$query->match('trip', '"'.$args['tripcode'].'"');
 			}
 
 			if ($args['email'] !== null)

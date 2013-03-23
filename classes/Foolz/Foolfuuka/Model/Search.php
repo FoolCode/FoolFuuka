@@ -242,7 +242,7 @@ class Search extends Board
 			// global search requires sphinx
 			throw new SearchRequiresSphinxException(__('Sorry, this action requires the Sphinx to be installed and running.'));
 		}
-		elseif (($this->radix == null && \Preferences::get('foolfuuka.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx))
+		elseif (($this->radix === null && \Preferences::get('foolfuuka.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx))
 		{
 			// configure sphinx connection params
 			$sphinx = explode(':', \Preferences::get('foolfuuka.sphinx.listen'));
@@ -497,7 +497,8 @@ class Search extends Board
 		}
 		else
 		{
-			// this is not implemented yet
+			// this is not implemented yet, would require some sort of MySQL search
+			throw new SearchRequiresSphinxException(__('Sorry, this board does not have search enabled.'));
 		}
 
 		// process results

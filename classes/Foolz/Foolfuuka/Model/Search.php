@@ -342,7 +342,7 @@ class Search extends Board
 
 			if (\Auth::has_access('comment.see_ip') && $args['poster_ip'] !== null)
 			{
-				$query->where('pip', (int) \Inet::ptod($args['poster_ip']));
+				$query->where('pip', (int) \Foolz\Inet\Inet::ptod($args['poster_ip']));
 			}
 
 			if ($args['filename'] !== null)

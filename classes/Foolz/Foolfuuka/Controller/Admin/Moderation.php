@@ -194,14 +194,14 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			{
 				case 'unban':
 					$ban->delete();
-					\Notics::setFlash('success', \Str::tr(__('The poster with IP :ip has been unbanned.'),
+					\Notices::setFlash('success', \Str::tr(__('The poster with IP :ip has been unbanned.'),
 						['ip' => \Foolz\Inet\Inet::dtop($ban->ip)]));
 					\Response::redirect('admin/moderation/bans');
 					break;
 
 				case 'reject_appeal':
 					$ban->appealReject();
-					\Notics::setFlash('success', \Str::tr(__('The appeal of the poster with IP :ip has been rejected.'), ['ip' => \Foolz\Inet\Inet::dtop($ban->ip)]));
+					\Notices::setFlash('success', \Str::tr(__('The appeal of the poster with IP :ip has been rejected.'), ['ip' => \Foolz\Inet\Inet::dtop($ban->ip)]));
 					\Response::redirect('admin/moderation/bans');
 					break;
 

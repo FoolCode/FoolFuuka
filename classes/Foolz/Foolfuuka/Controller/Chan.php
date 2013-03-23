@@ -1115,7 +1115,7 @@ class Chan extends \Controller
 			{
 				if (\Input::is_ajax())
 				{
-					\Response::forge(json_encode(['error' => $e->getMessage()]));
+					return \Response::forge(json_encode(['error' => $e->getMessage()]));
 				}
 				else
 				{

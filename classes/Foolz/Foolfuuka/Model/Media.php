@@ -1009,6 +1009,11 @@ class Media
 			throw new MediaInsertDomainException(__('The image you uploaded is too small.'));
 		}
 
+		if ($getimagesize[0] > $this->radix->max_image_size_width || $getimagesize[1] > $this->radix->max_image_size_height)
+		{
+			throw new MediaInsertDomainException(__('The dimensions of the image you uploaded are too large.'));
+		}
+
 		$this->media_w = $getimagesize[0];
 		$this->media_h = $getimagesize[1];
 		$this->media_orig = $microtime.'.'.strtolower($this->temp_extension);

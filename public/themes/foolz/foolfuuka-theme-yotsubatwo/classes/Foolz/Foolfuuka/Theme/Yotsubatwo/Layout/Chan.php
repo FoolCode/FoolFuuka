@@ -45,9 +45,9 @@ class Chan extends \Foolz\Theme\View
 		<link href="<?= \Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom"/>
 		<?php endif; ?>
 		<link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css"/>
-		<link href="<?= \Uri::base().'assets/font-awesome/css/font-awesome.css' ?>" rel="stylesheet" type="text/css"/>
+		<link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>" rel="stylesheet" type="text/css"/>
 		<!--[if lt IE 8]>
-		<link href="<?= \Uri::base().'assets/font-awesome/css/font-awesome-ie7.css' ?>" rel="stylesheet" type="text/css"/>
+		<link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>" rel="stylesheet" type="text/css"/>
 		<![endif]-->
 
 		<?php $this->getStyles(); ?>

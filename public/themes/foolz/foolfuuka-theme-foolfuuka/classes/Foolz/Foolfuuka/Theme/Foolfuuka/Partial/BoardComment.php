@@ -67,10 +67,10 @@ class BoardComment extends \Foolz\Theme\View
 				</div>
 				<div class="thread_image_box">
 					<?php if ($p->media->getMediaStatus() === 'banned') : ?>
-						<img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
+						<img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
 					<?php elseif ($p->media->getMediaStatus() !== 'normal'): ?>
 						<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-							<img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
+							<img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
 						</a>
 					<?php else: ?>
 						<a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">

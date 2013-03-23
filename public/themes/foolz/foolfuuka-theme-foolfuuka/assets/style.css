@@ -713,6 +713,7 @@ body.theme_default {
 
 .theme_default article.thread article.post {
     margin: 0px 5px 3px 16px;
+    word-break: break-word;
 }
 
 .theme_default .post_wrapper {

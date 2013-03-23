@@ -41,10 +41,10 @@ class Board extends \Foolz\Theme\View
 					<br />
 					<?php endif; ?>
 					<?php if ($op->media->getMediaStatus() === 'banned') : ?>
-						<img src="<?= \Uri::base() . $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
+						<img src="<?= $this->fallback_asset('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
 					<?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
 						<a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" rel="noreferrer">
-							<img src="<?= \Uri::base() . $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
+							<img src="<?= $this->fallback_asset('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
 						</a>
 					<?php else: ?>
 						<a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" rel="noreferrer">

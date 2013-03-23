@@ -44,10 +44,10 @@ class Gallery extends \Foolz\Theme\View
 			<?php if ($p->media !== null) : ?>
 		    <div class="thread_image_box" title="<?= $p->getCommentProcessed() ? htmlspecialchars('<strong>'.($p->getCommentProcessed()).'</strong>') : '' ?>">
 				<?php if ($p->media->getMediaStatus() === 'banned') : ?>
-		        <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
+		        <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
 				<?php elseif ($p->media->getMediaStatus() !== 'normal') : ?>
 		        <a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-		            <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
+		            <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
 		        </a>
 				<?php else: ?>
 		        <a href="<?= \Uri::create($radix->shortname . '/thread/' . $p->num) ?>" rel="noreferrer" target="_blank" class="thread_image_link"<?= ($p->media->getMediaLink())?' data-expand="true"':'' ?>>

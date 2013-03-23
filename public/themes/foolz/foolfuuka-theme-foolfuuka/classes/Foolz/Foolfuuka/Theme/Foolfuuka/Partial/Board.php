@@ -22,10 +22,10 @@ class Board extends \Foolz\Theme\View
 				<?php if ($op->media !== null) : ?>
                 <div class="thread_image_box">
 					<?php if ($op->media->getMediaStatus() === 'banned') : ?>
-                    <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/banned-image.png')?>" width="150" height="150" />
+                    <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png')?>" width="150" height="150" />
 					<?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
                     <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-                        <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
+                        <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
                     </a>
 					<?php else : ?>
                     <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">

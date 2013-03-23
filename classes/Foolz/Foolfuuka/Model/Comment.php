@@ -757,7 +757,7 @@ class Comment
 
 		if (isset(static::$_backlinks_arr[$num]))
 		{
-			ksort(static::$_backlinks_arr[$num]);
+			ksort(static::$_backlinks_arr[$num], SORT_STRING);
 			return static::$_backlinks_arr[$num];
 		}
 

@@ -2,6 +2,7 @@
 	"name": "foolz/foolfuuka-theme-yotsubatwo",
 	"type": "foolz-foolfuuka-theme",
 	"description": "The YotsubaTwo FoolFuuka theme.",
+	"version": "1.0.0",
 	"keywords": ["theme", "default", "foolfuuka", "yotsubatwo"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",

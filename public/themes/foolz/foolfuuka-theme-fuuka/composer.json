@@ -2,6 +2,7 @@
 	"name": "foolz/foolfuuka-theme-fuuka",
 	"type": "foolz-foolfuuka-theme",
 	"description": "The fuuka FoolFuuka theme.",
+	"version": "1.0.0",
 	"keywords": ["theme", "default", "foolfuuka", "fuuka"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",

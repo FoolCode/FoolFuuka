@@ -369,7 +369,7 @@ class CommentInsert extends Comment
 					throw new CommentSendingWrongCaptchaException(__('Incorrect CAPTCHA solution.'));
 				}
 			}
-			else // if there wasn't a recaptcha input, let's go with heavier checks
+			elseif (\ReCaptcha::available()) // if there wasn't a recaptcha input, let's go with heavier checks
 			{
 				// 3+ links is suspect
 				if (substr_count($this->comment, 'http') > 2)

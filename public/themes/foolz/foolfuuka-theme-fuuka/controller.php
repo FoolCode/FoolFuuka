@@ -11,7 +11,6 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 	{
 		$options = [
 			'per_page' => 24,
-			'per_thread' => 6,
 			'order' => ($this->_radix->archive ? 'by_thread' : 'by_post')
 		];
 

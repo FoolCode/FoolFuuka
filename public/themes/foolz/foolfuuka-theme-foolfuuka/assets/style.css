@@ -218,7 +218,7 @@ body.theme_default.midnight {
 }
 
 .theme_default.midnight .letters {
-    background: #222222;
+    background: #000;
 	color: #c5c8c6;
 }
 
@@ -240,6 +240,11 @@ body.theme_default.midnight {
     color:#eee;
     text-shadow:none;
     width:390px;
+}
+
+.theme_default.midnight .navbar-search .search-query {
+	border-bottom-color: rgba(126, 126, 126, 0.3);
+	border-right-color: rgba(255, 255, 255, 0.15);
 }
 
 /* individual: webkit */
@@ -1045,11 +1050,25 @@ body.theme_default.midnight {
     margin-bottom: 5px;
     margin-right: 10px;
 }
-
+.theme_default.midnight .thread_form textarea,
+.theme_default.midnight .thread_form input[type=text],
+.theme_default.midnight .thread_form select,
+.theme_default.midnight .thread_form input[type=file],
+.theme_default.midnight .thread_form input[type=password],
+.theme_default.midnight .thread_form.uneditable-input {
+	background-color: #1d1f21;
+	border: 1px solid #494949;
+	color: #e6e6e6;
+}
 
 .theme_default .thread_form label {
     min-width:85px;
     color:#888;
+}
+
+.theme_default.midnight .thread_form label {
+	background-color: #1d1f21;
+    color:#e6e6e6;
 }
 
 .theme_default .thread_form input[type=file],
@@ -1063,8 +1082,20 @@ body.theme_default.midnight {
     box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.theme_default.midnight .thread_form input[type=file],
+.theme_default.midnight .thread_form select {
+	background-color: #1d1f21;
+	border: 1px solid #494949;
+}
+
 .theme_default .thread_form input[type=file] {
     line-height:28px;
+}
+
+.theme_default.midnight .thread_form .input-append .add-on,
+.theme_default.midnight .thread_form .input-prepend .add-on {
+	border: 1px solid #494949;
+	text-shadow: none;
 }
 
 .theme_default .thread_form .rules {
@@ -1101,16 +1132,21 @@ body.theme_default.midnight {
 .theme_default #reply_ajax_notices.error {
     background: #FFC5C5;
     border: 1px solid red;
-    margin-left:10px;
-    width:378px;
+    margin-left:0px;
+    display:block;
+}
+
+.theme_default.midnight #reply_ajax_notices.error {
+    background: #5F2627;
+    border: 1px solid #8D3A31;
+    margin-left:0px;
     display:block;
 }
 
 .theme_default #reply_ajax_notices.success {
     background:#DFFAD9;
     border: 1px solid #61B84D;
-    margin-left:10px;
-    width:378px;
+    margin-left:0px;
     display:block;
 }
 

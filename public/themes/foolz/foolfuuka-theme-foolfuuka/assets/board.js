@@ -695,7 +695,9 @@ var backlinkify = function(elem, post_id, subnum)
 {
 	var backlinks = {};
 	if (subnum > 0)
+	{
 		post_id += "_" + subnum;
+	}
 
 	elem.find("a[data-backlink=true]").each(function(idx, post) {
 		if (jQuery(post).text().indexOf('/') >= 0)
@@ -715,11 +717,11 @@ var backlinkify = function(elem, post_id, subnum)
 		{
 			if (typeof backend_vars.thread_id === "undefined")
 			{
-				backlinks[p_id].push('<a href="' + backend_vars.site_url + board_shortname + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+				backlinks[p_id].push('<a href="' + backend_vars.site_url + board_shortname + '/post/' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
 				// convert /post/ links to real urls
 				if (jQuery('#' + p_id).length)
 				{
-					jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/#' + post_id);
+					jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/post/' + post_id);
 				}
 			}
 			else
@@ -728,9 +730,8 @@ var backlinkify = function(elem, post_id, subnum)
 				// convert /post/ links to real urls
 				if (jQuery('#' + p_id).length)
 				{
-					jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id);
+					jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/thread/' + backend_vars.thread_id + '/#' + p_id);
 				}
-
 			}
 		}
 		else
@@ -830,8 +831,8 @@ var insertPost = function(data, textStatus, jqXHR)
 						jQuery('.doc_id_' + value.doc_id).remove();
 					}
 
-					backlinkify(jQuery('<div>' + value.comment_processed + '</div>'), value.num, value.subnum);
 					aside.append(post);
+					backlinkify(post, value.num, value.subnum);
 
 					if(backend_vars.latest_doc_id < value.doc_id)
 					{
@@ -841,10 +842,10 @@ var insertPost = function(data, textStatus, jqXHR)
 					// update comment box when encountering ghost posts
 					if (ghost === false && value.subnum > 0)
 					{
-						ghost = true;
-
 						jQuery("#file_image").parent().remove();
 						jQuery("#reply_chennodiscursus").attr("placeholder", backend_vars.gettext['ghost_mode']);
+
+						ghost = true;
 					}
 				});
 			}

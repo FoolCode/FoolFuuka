@@ -62,7 +62,7 @@ var bindFunctions = function()
 
 		quote: function(el, post, event)
 		{
-			jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
+			jQuery("#reply_chennodiscursus").insertAtCaret(">>" + post + "\n");
 		},
 
 		comment: function(el, post, event)
@@ -72,7 +72,7 @@ var bindFunctions = function()
 			var progress_el = jQuery("#reply .progress .bar");
 
 			// if there's an image and the browser doesn't support FormData, use a normal upload process
-			if(file_el.val() && window.FormData === undefined)
+			if (file_el.val() && window.FormData === undefined)
 			{
 				return true;
 			}
@@ -281,7 +281,7 @@ var bindFunctions = function()
 		mod: function(el, post, event)
 		{
 			el.attr({'disabled': 'disabled'});
-			var _data = {
+			_data = {
 				board: el.data('board'),
 				id: el.data('id'),
 				action: el.data('action'),
@@ -539,6 +539,7 @@ var bindFunctions = function()
 		var width = el.outerWidth();
 		var search_box = jQuery('.search_box');
 		var comment_wrap = search_box.find('.comment_wrap');
+		var comment_wrap_pos = comment_wrap.position();
 		search_box.css({top: (offset.top - 11) + 'px', right: (jQuery(window).width() - (offset.left + width) - 16) + 'px' }).show();
 		el.parents('.open').removeClass('open');
 		search_box.find('input[name=text]').focus();
@@ -620,6 +621,7 @@ var bindFunctions = function()
 						}
 						backend_vars.loaded_posts[el.data('post')] = data;
 						backlink.html(data.formatted);
+						backlink.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
 						backlink.css('display', 'block');
 						showBacklink(backlink, pos, height, width);
 					},
@@ -633,6 +635,7 @@ var bindFunctions = function()
 				});
 				return false;
 			}
+			backlink.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
 			showBacklink(backlink, pos, height, width);
 		}
 		else
@@ -700,14 +703,7 @@ var backlinkify = function(elem, post_id, subnum)
 			return true;
 		}
 
-		var p_id = jQuery(post).attr('data-post');
-		var board_shortname = jQuery(post).attr('data-board');
-
-		// convert /post/ links to real urls
-		if (jQuery('#' + p_id).length)
-		{
-			jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id);
-		}
+		p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
 
 		if (typeof backlinks[p_id] === "undefined")
 		{
@@ -798,7 +794,7 @@ var realtimethread = function(){
 	return false;
 }
 
-
+var ghost = false;
 var insertPost = function(data, textStatus, jqXHR)
 {
 	var w_height = jQuery(document).height();
@@ -814,12 +810,14 @@ var insertPost = function(data, textStatus, jqXHR)
 				jQuery.each(val.posts, function(idx, value)
 				{
 					found_posts = true;
-					var post = jQuery(value.formatted)
+					var post = jQuery(value.formatted);
+
 					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
 					post.find('[rel=tooltip]').tooltip({
 						placement: 'top',
 						delay: 200
 					});
+
 					post.find('[rel=tooltip_right]').tooltip({
 						placement: 'right',
 						delay: 200
@@ -835,7 +833,18 @@ var insertPost = function(data, textStatus, jqXHR)
 					aside.append(post);
 
 					if(backend_vars.latest_doc_id < value.doc_id)
+					{
 						backend_vars.latest_doc_id = value.doc_id;
+					}
+
+					// update comment box when encountering ghost posts
+					if (ghost === false && value.subnum > 0)
+					{
+						ghost = true;
+
+						jQuery("#file_image").parent().remove();
+						jQuery("#reply_chennodiscursus").attr("placeholder", backend_vars.gettext['ghost_mode']);
+					}
 				});
 			}
 		});
@@ -971,4 +980,44 @@ jQuery(document).ready(function() {
 		placement: 'bottom',
 		animation: true
 	});
+});
+
+// http://stackoverflow.com/a/3651124
+$.fn.extend({
+	insertAtCaret: function(text){
+		var obj;
+
+		if (typeof this[0].name !== 'undefined')
+		{
+			obj = this[0];
+		}
+		else
+		{
+			obj = this;
+		}
+
+		if ($.browser.msie)
+		{
+			obj.focus();
+			reply = document.selection.createRange();
+			reply.text = text;
+			obj.focus();
+		}
+		else if ($.browser.mozilla || $.browser.webkit)
+		{
+			var insPos = obj.selectionStart, endPos = obj.selectionEnd;
+			var scrollTop = obj.scrollTop;
+
+			obj.value = obj.value.substring(0, insPos) + text + obj.value.substring(endPos, obj.value.length);
+			obj.focus();
+			obj.selectionStart = insPos + text.length;
+			obj.selectionEnd = insPos + text.length;
+			obj.scrollTop = scrollTop;
+		}
+		else
+		{
+			obj.value += myValue;
+			obj.focus();
+		}
+	}
 });

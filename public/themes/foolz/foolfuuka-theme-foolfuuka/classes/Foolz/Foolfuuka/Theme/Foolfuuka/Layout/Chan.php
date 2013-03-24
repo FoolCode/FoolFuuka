@@ -17,13 +17,14 @@ class Chan extends \Foolz\Theme\View
 
 	public function getSelectedThemeClass()
 	{
-		return 'theme_default';
+		return 'theme_default'.(\Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style') == 'midnight' ? ' midnight' : '');
 	}
 
 	public function getStyles()
 	{
 		?>
 		<link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
+		<link href="<?= $this->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css"/>
 		<?php
 	}
 
@@ -308,7 +309,7 @@ class Chan extends \Foolz\Theme\View
 			Imageboard <?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?></a>
 		- <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
 
-		<div style="float:right">
+		<div class="pull-right">
 			<div class="btn-group dropup pull-right">
 				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
 					<?= __('Change Theme') ?> <span class="caret"></span>
@@ -330,7 +331,23 @@ class Chan extends \Foolz\Theme\View
 			</div>
 		</div>
 
-		<div style="float:right">
+		<div class="pull-right">
+			<div class="btn-group dropup pull-right">
+				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
+					<?= __('Change Style') ?> <span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<?php foreach (['default' => 'Default', 'midnight' => 'Midnight'] as $key => $name) : ?>
+					<li>
+						<a href="<?= \Uri::create(['theme', 'foolz/foolfuuka-theme-foolfuuka', $key]) ?>"><?= $name ?>
+							<?= ($key === \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style'))?' <i class="icon-ok"></i>':'' ?></a>
+					</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		</div>
+
+		<div class="pull-right">
 			<div class="btn-group dropup pull-right">
 				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
 					<?= __('Change Language') ?> <span class="caret"></span>
@@ -344,7 +361,7 @@ class Chan extends \Foolz\Theme\View
 					</li>
 					<?php endforeach; ?>
 					<li class="divider"></li>
-					<li><a href="http://archive.foolz.us/articles/translate/"><?= __('Add a Translation') ?></a></li>
+					<li><a href="//archive.foolz.us/_/articles/translate/"><?= __('Add a Translation') ?></a></li>
 				</ul>
 			</div>
 		</div>

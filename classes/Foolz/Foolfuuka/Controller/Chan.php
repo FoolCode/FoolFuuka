@@ -97,17 +97,18 @@ class Chan extends \Controller
 				'selected_theme' => $theme_name,
 				'csrf_token_key' => \Config::get('security.csrf_token_key'),
 				'images' => [
-					'banned_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
+					'banned_image' => $this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
 					'banned_image_width' => 150,
 					'banned_image_height' => 150,
-					'missing_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/missing-image.jpg'),
+					'missing_image' => $this->theme->getAssetManager()->getAssetLink('images/missing-image.jpg'),
 					'missing_image_width' => 150,
 					'missing_image_height' => 150,
 				],
 				'gettext' => [
 					'submit_state' => __('Submitting'),
 					'thread_is_real_time' => __('This thread is being displayed in real time.'),
-					'update_now' => __('Update now')
+					'update_now' => __('Update now'),
+					'ghost_mode' => __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.')
 				]
 			]
 		];
@@ -696,7 +697,8 @@ class Chan extends \Controller
 					{
 						array_push($redirect_url, $modifier);
 						array_push($redirect_url,
-							rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier)))));
+							rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier))))
+						);
 					}
 					elseif ($modifier === 'boards')
 					{
@@ -787,6 +789,7 @@ class Chan extends \Controller
 		$this->builder->getPartial('tools_search')
 			->getParamManager()
 			->setParam('latest_searches', $cookie_array);
+
 		\Cookie::set('search_latest_5', json_encode($cookie_array), 60 * 60 * 24 * 30);
 
 		foreach ($search as $key => $value)
@@ -1040,18 +1043,29 @@ class Chan extends \Controller
 
 		// Determine if the invalid post fields are populated by bots.
 		if (isset($post['name']) && mb_strlen($post['name']) > 0)
+		{
 			return $this->error();
+		}
+
 		if (isset($post['reply']) && mb_strlen($post['reply']) > 0)
+		{
 			return $this->error();
+		}
+
 		if (isset($post['email']) && mb_strlen($post['email']) > 0)
+		{
 			return $this->error();
+		}
 
 		$data = [];
 
 		$post = \Input::post();
 
 		if (isset($post['reply_numero']))
+		{
 			$data['thread_num'] = $post['reply_numero'];
+		}
+
 		if (isset($post['reply_bokunonome']))
 		{
 			$data['name'] = $post['reply_bokunonome'];

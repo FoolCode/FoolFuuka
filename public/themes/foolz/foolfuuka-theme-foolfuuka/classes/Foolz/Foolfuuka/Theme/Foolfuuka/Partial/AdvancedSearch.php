@@ -108,9 +108,13 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 			<?php if ( ! isset($radix) || $radix->sphinx) : ?>
 			<div class="radixes">
+				<?php
+				$boards = ( ! empty($search) && $search['boards'] !== null) ? explode('.', $search['boards']) : [];
+				?>
 				<div>
 					<?php
 					$radixes = \Radix::getArchives();
+
 					foreach($radixes as $key => $r)
 					{
 						if ( ! $r->sphinx)
@@ -118,6 +122,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 							unset($radixes[$key]);
 						}
 					}
+
 					if ($radixes) :
 						?>
 						<div><h5><?= e(__('On these archives')) ?></h5>
@@ -127,7 +132,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 						<?php
 						foreach ($radixes as $r)
 						{
-							echo '<label>'.\Form::checkbox('boards[]', $r->shortname, ! isset($radix) || $radix->shortname === $r->shortname).' /'.e($r->shortname).'/</label>';
+							echo '<label>'.\Form::checkbox('boards[]', $r->shortname, in_array($r->shortname, $boards) || empty($boards)).' /'.e($r->shortname).'/</label>';
 						}
 						?>
 						<?php endif; ?>
@@ -136,6 +141,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 				<div style="clear:left; padding-top: 10px">
 					<?php
 					$radixes = \Radix::getBoards();
+
 					foreach($radixes as $key => $r)
 					{
 						if ( ! $r->sphinx)
@@ -143,6 +149,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 							unset($radixes[$key]);
 						}
 					}
+
 					if ($radixes):
 						?>
 						<div><h5><?= e(__('On these boards')) ?></h5>
@@ -152,7 +159,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 						<?php
 						foreach ($radixes as $r)
 						{
-							echo '<label>'.\Form::checkbox('boards[]', $r->shortname, ! isset($radix) || $radix->shortname === $r->shortname).' /'.e($r->shortname).'/</label>';
+							echo '<label>'.\Form::checkbox('boards[]', $r->shortname, in_array($r->shortname, $boards) || empty($boards)).' /'.e($r->shortname).'/</label>';
 						}
 						?>
 						<?php endif; ?>
@@ -170,7 +177,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 						foreach($latest_searches as $item)
 						{
 							// all subitems must be array, all must have 'radix'
-							if ( !is_array($item) || !isset($item['board']))
+							if ( ! is_array($item) || ! isset($item['board']))
 							{
 								$latest_searches = [];
 								break;
@@ -179,30 +186,34 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 						foreach($latest_searches as $latest_search)
 						{
+							$extra_text = '';
+							$extra_text_br = '';
+
 							$uri = ($latest_search['board'] === false ? '' : $latest_search['board']) . '/search/';
 							$text = ($latest_search['board'] === false) ? '<strong>global:</strong> ' : '/<strong>' . e($latest_search['board']) . '</strong>/: ';
 							unset($latest_search['board']);
-							if (isset($latest_search['text']))
-							{
-								$uri .= 'text/' . $latest_search['text'] . '/';
-								$text .= e(urldecode($latest_search['text'])) . ' ';
-								unset($latest_search['text']);
-							}
+
 							if (isset($latest_search['order']) && $latest_search['order'] == 'desc')
 							{
 								unset($latest_search['order']);
 							}
 
-							$extra_text = '';
-							$extra_text_br = '';
 							foreach($latest_search as $k => $i)
 							{
+								if ($k == 'text')
+								{
+									$text .= e(urldecode($latest_search['text'])) . ' ';
+								}
+								else
+								{
+									$extra_text .= '<span class="options">[' . e($k) . '] ' . e(urldecode($i)) . ' </span>';
+									$extra_text_br .= '<br/><span class="options">[' . e($k) . '] ' . e(urldecode($i)) . ' </span>';
+								}
+
 								$uri .= $k.'/'.$i.'/';
-								$extra_text .= '<span class="options">[' . e($k) . '] ' . e(urldecode($i)) . ' </span>';
-								$extra_text_br .= '<br/><span class="options">[' . e($k) . '] ' . e(urldecode($i)) . ' </span>';
 							}
 
-							echo '<li title="' . htmlspecialchars($text . $extra_text_br) . '" class="latest_search"><a href="' . \Uri::create($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
+							echo '<li title="' . strip_tags($text . $extra_text_br) . '" class="latest_search"><a href="' . \Uri::create($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
 						}
 					}
 					?>

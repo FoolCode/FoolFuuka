@@ -40,7 +40,7 @@ class Chan extends \Foolz\Theme\View
 		<?php $this->getStyles(); ?>
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('plugins.js') ?>" type="text/javascript"></script>
+		<script src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>" type="text/javascript"></script>
 		<?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
 			<link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('foolframe.gen.website_title') ?> " href="<?= \Uri::create('_/opensearch') ?>" />
 		<?php endif; ?>
@@ -130,6 +130,8 @@ class Chan extends \Foolz\Theme\View
 	{
 		$disable_headers = $this->getBuilderParamManager()->getParam('disable_headers', false);
 		?>
+
+		<?= $this->getBuilder()->isPartial('tools_new_thread_box') ? $this->getBuilder()->getPartial('tools_new_thread_box')->build() : ''; ?>
 
 		<?= $this->getBuilder()->getPartial('body')->build(); ?>
 

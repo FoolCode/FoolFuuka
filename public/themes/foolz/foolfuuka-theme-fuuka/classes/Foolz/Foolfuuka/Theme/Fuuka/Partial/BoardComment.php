@@ -38,11 +38,11 @@ class BoardComment extends \Foolz\Theme\View
 							<?= gmdate('D M d H:i:s Y', $p->getOriginalTimestamp()) ?>
 							<?php if ($p->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
 						</label>
-						<?php if ( !isset($thread_id)) : ?>
-		    <a class="js" href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
-			<?php else : ?>
-		    <a class="js" href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
-			<?php endif; ?>
+						<?php if ( ! $this->getBuilderParamManager()->getParam('thread_id', 0)) : ?>
+						<a class="js" href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.<?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
+						<?php else : ?>
+						<a class="js" href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
+						<?php endif; ?>
 
 						<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= __('This post was submitted as a "ghost" reply.') ?>"/><?php endif ?>
 						<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post has been marked as a spoiler.') ?>"/><?php endif ?>

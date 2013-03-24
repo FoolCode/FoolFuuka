@@ -28,7 +28,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 		<?= \Form::open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit']) ?>
 		<?= \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
 		<?= \Form::hidden('reply_numero', isset($thread_id)?$thread_id:0, array('id' => 'reply_numero')) ?>
-		<?= isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
+		<?= isset($backend_vars['last_limit']) ? \Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
 
 		<table id="reply">
 			<tbody>
@@ -100,7 +100,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 					echo \Form::textarea([
 						'name' => 'reply_chennodiscursus',
 						'id' => 'reply_chennodiscursus',
-						'placeholder' => (!$radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '',
+						'placeholder' => (!$radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
 					]);
 					?></td>
 			</tr>

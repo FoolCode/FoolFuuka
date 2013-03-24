@@ -24,6 +24,7 @@ class Chan extends \Foolz\Theme\View
 	{
 		?>
     <link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
+	<link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css"/>
     <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
 		<?php
 	}
@@ -311,7 +312,7 @@ class Chan extends \Foolz\Theme\View
 			Imageboard <?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?></a>
 		- <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
 
-		<div style="float:right">
+		<div class="pull-right">
 			<div class="btn-group dropup pull-right">
 				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
 					<?= __('Change Theme') ?> <span class="caret"></span>
@@ -333,7 +334,7 @@ class Chan extends \Foolz\Theme\View
 			</div>
 		</div>
 
-		<div style="float:right">
+		<div class="pull-right">
 			<div class="btn-group dropup pull-right">
 				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
 					<?= __('Change Style') ?> <span class="caret"></span>
@@ -349,7 +350,7 @@ class Chan extends \Foolz\Theme\View
 			</div>
 		</div>
 
-		<div style="float:right">
+		<div class="pull-right">
 			<div class="btn-group dropup pull-right">
 				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
 					<?= __('Change Language') ?> <span class="caret"></span>

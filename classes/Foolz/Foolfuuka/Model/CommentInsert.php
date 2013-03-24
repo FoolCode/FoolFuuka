@@ -503,7 +503,14 @@ class CommentInsert extends Comment
 		{
 			if ( ! $this->allow_media)
 			{
-				throw new CommentSendingImageInGhostException(__('You can\'t post images when the thread is in ghost mode.'));
+				if ($this->ghost)
+				{
+					throw new CommentSendingImageInGhostException(__('You can\'t post images when the thread is in ghost mode.'));
+				}
+				else
+				{
+					throw new CommentSendingException(__('This thread has reached its image limit.'));
+				}
 			}
 
 			try

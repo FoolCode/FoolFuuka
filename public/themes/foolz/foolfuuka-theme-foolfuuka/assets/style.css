@@ -951,6 +951,10 @@ body.theme_default.midnight {
     border-bottom: 1px dotted #000;
 }
 
+.theme_default.midnight article.thread .backlink.op {
+    border-bottom: 1px dotted #81a2Be;
+}
+
 .theme_default .thread_image_box .spoiler_box {
     width: 150px;
     height:150px;

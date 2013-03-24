@@ -734,6 +734,10 @@ body.theme_default.midnight {
     color: #b294bb;
 }
 
+.theme_default article.thread .post_poster_data a {
+    text-decoration:underline;
+}
+
 .theme_default article.thread .post_author {
     font-weight: bold;
     color: #117743;
@@ -743,15 +747,12 @@ body.theme_default.midnight {
     color: #eee;
 }
 
-.theme_default article.thread .post_author a {
-    text-decoration:underline;
-}
-
-.theme_default article.thread .post_trip {
+.theme_default article.thread .post_tripcode {
+	font-weight: normal;
     color: #117743;
 }
 
-.theme_default.midnight article.thread .post_trip {
+.theme_default.midnight article.thread .post_tripcode {
     color: #eee;
 }
 

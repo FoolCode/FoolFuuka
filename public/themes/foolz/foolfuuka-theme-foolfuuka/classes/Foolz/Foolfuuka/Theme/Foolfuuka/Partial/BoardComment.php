@@ -97,14 +97,16 @@ class BoardComment extends \Foolz\Theme\View
 						<?php endif; ?>
 
 						<?php if ($p->getTitleProcessed() !== '') : ?><h2 class="post_title"><?= $p->getTitleProcessed() ?></h2><?php endif; ?>
-						<span class="post_author"><?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($p->email) ?>"><?php endif; ?><?= $p->getNameProcessed() ?><?php if ($p->getTripProcessed()) : ?> <span class="post_trip"><?= $p->getTripProcessed() ?></span><?php endif; ?><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?></span>
+						<span class="post_poster_data">
+							<?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($p->email) ?>"><?php endif; ?><span class="post_author"><?= $p->getNameProcessed() ?></span><span class="post_tripcode"><?= $p->getTripProcessed() ?></span><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?>
+
+							<?php if ($p->getPosterHashProcessed()) : ?><span class="poster_hash">ID:<?= $p->getPosterHashProcessed() ?></span><?php endif; ?>
+							<?php if ($p->capcode != 'N') : ?>
+								<?php if ($p->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= __('Mod') ?></span><?php endif ?>
+								<?php if ($p->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= __('Admin') ?></span><?php endif ?>
+								<?php if ($p->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= __('Developer') ?></span><?php endif ?>
+							<?php endif; ?>
 						</span>
-						<?php if ($p->getPosterHashProcessed()) : ?><span class="poster_hash">ID:<?= $p->getPosterHashProcessed() ?></span><?php endif; ?>
-						<?php if ($p->capcode != 'N') : ?>
-							<?php if ($p->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= __('Mod') ?></span><?php endif ?>
-							<?php if ($p->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= __('Admin') ?></span><?php endif ?>
-							<?php if ($p->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= __('Developer') ?></span><?php endif ?>
-						<?php endif; ?>
 						<span class="time_wrap">
 							<time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>" <?php if ($p->radix->archive) : ?> title="<?= __('4chan Time') . ': ' . gmdate('D M d H:i:s Y', $p->getOriginalTimestamp()) ?>"<?php endif; ?>><?= gmdate('D M d H:i:s Y', $p->timestamp) ?></time>
 						</span>

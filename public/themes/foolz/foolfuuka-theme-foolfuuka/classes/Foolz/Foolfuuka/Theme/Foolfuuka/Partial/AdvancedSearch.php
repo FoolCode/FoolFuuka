@@ -108,9 +108,13 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 			<?php if ( ! isset($radix) || $radix->sphinx) : ?>
 			<div class="radixes">
+				<?php
+				$boards = ($search['boards'] !== null) ? explode('.', $search['boards']) : [];
+				?>
 				<div>
 					<?php
 					$radixes = \Radix::getArchives();
+
 					foreach($radixes as $key => $r)
 					{
 						if ( ! $r->sphinx)
@@ -118,6 +122,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 							unset($radixes[$key]);
 						}
 					}
+
 					if ($radixes) :
 						?>
 						<div><h5><?= e(__('On these archives')) ?></h5>
@@ -127,7 +132,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 						<?php
 						foreach ($radixes as $r)
 						{
-							echo '<label>'.\Form::checkbox('boards[]', $r->shortname, ! isset($radix) || $radix->shortname === $r->shortname).' /'.e($r->shortname).'/</label>';
+							echo '<label>'.\Form::checkbox('boards[]', $r->shortname, in_array($r->shortname, $boards) || empty($boards)).' /'.e($r->shortname).'/</label>';
 						}
 						?>
 						<?php endif; ?>
@@ -136,6 +141,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 				<div style="clear:left; padding-top: 10px">
 					<?php
 					$radixes = \Radix::getBoards();
+
 					foreach($radixes as $key => $r)
 					{
 						if ( ! $r->sphinx)
@@ -143,6 +149,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 							unset($radixes[$key]);
 						}
 					}
+
 					if ($radixes):
 						?>
 						<div><h5><?= e(__('On these boards')) ?></h5>
@@ -152,7 +159,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 						<?php
 						foreach ($radixes as $r)
 						{
-							echo '<label>'.\Form::checkbox('boards[]', $r->shortname, ! isset($radix) || $radix->shortname === $r->shortname).' /'.e($r->shortname).'/</label>';
+							echo '<label>'.\Form::checkbox('boards[]', $r->shortname, in_array($r->shortname, $boards) || empty($boards)).' /'.e($r->shortname).'/</label>';
 						}
 						?>
 						<?php endif; ?>

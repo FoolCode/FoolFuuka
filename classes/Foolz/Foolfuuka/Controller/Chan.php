@@ -97,10 +97,10 @@ class Chan extends \Controller
 				'selected_theme' => $theme_name,
 				'csrf_token_key' => \Config::get('security.csrf_token_key'),
 				'images' => [
-					'banned_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
+					'banned_image' => $this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
 					'banned_image_width' => 150,
 					'banned_image_height' => 150,
-					'missing_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/missing-image.jpg'),
+					'missing_image' => $this->theme->getAssetManager()->getAssetLink('images/missing-image.jpg'),
 					'missing_image_width' => 150,
 					'missing_image_height' => 150,
 				],

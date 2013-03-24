@@ -131,6 +131,8 @@ class Chan extends \Foolz\Theme\View
 		$disable_headers = $this->getBuilderParamManager()->getParam('disable_headers', false);
 		?>
 
+		<?= $this->getBuilder()->isPartial('tools_new_thread_box') ? $this->getBuilder()->getPartial('tools_new_thread_box')->build() : ''; ?>
+
 		<?= $this->getBuilder()->getPartial('body')->build(); ?>
 
 		<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_after_body_template')->execute(); ?>

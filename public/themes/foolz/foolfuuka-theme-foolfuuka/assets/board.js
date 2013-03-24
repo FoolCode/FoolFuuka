@@ -62,7 +62,7 @@ var bindFunctions = function()
 
 		quote: function(el, post, event)
 		{
-			jQuery("#reply_chennodiscursus").val(jQuery("#reply_chennodiscursus").val() + ">>" + post + "\n");
+			jQuery("#reply_chennodiscursus").insertAtCaret(">>" + post + "\n");
 		},
 
 		comment: function(el, post, event)
@@ -72,7 +72,7 @@ var bindFunctions = function()
 			var progress_el = jQuery("#reply .progress .bar");
 
 			// if there's an image and the browser doesn't support FormData, use a normal upload process
-			if(file_el.val() && window.FormData === undefined)
+			if (file_el.val() && window.FormData === undefined)
 			{
 				return true;
 			}
@@ -949,4 +949,44 @@ jQuery(document).ready(function() {
 		placement: 'bottom',
 		animation: true
 	});
+});
+
+// http://stackoverflow.com/a/3651124
+$.fn.extend({
+	insertAtCaret: function(text){
+		var obj;
+
+		if (typeof this[0].name !== 'undefined')
+		{
+			obj = this[0];
+		}
+		else
+		{
+			obj = this;
+		}
+
+		if ($.browser.msie)
+		{
+			obj.focus();
+			reply = document.selection.createRange();
+			reply.text = text;
+			obj.focus();
+		}
+		else if ($.browser.mozilla || $.browser.webkit)
+		{
+			var insPos = obj.selectionStart, endPos = obj.selectionEnd;
+			var scrollTop = obj.scrollTop;
+
+			obj.value = obj.value.substring(0, insPos) + text + obj.value.substring(endPos, obj.value.length);
+			obj.focus();
+			obj.selectionStart = insPos + text.length;
+			obj.selectionEnd = insPos + text.length;
+			obj.scrollTop = scrollTop;
+		}
+		else
+		{
+			obj.value += myValue;
+			obj.focus();
+		}
+	}
 });

@@ -281,7 +281,7 @@ var bindFunctions = function()
 		mod: function(el, post, event)
 		{
 			el.attr({'disabled': 'disabled'});
-			_data = {
+			var _data = {
 				board: el.data('board'),
 				id: el.data('id'),
 				action: el.data('action'),
@@ -539,7 +539,6 @@ var bindFunctions = function()
 		var width = el.outerWidth();
 		var search_box = jQuery('.search_box');
 		var comment_wrap = search_box.find('.comment_wrap');
-		var comment_wrap_pos = comment_wrap.position();
 		search_box.css({top: (offset.top - 11) + 'px', right: (jQuery(window).width() - (offset.left + width) - 16) + 'px' }).show();
 		el.parents('.open').removeClass('open');
 		search_box.find('input[name=text]').focus();
@@ -701,7 +700,14 @@ var backlinkify = function(elem, post_id, subnum)
 			return true;
 		}
 
-		p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
+		var p_id = jQuery(post).attr('data-post');
+		var board_shortname = jQuery(post).attr('data-board');
+
+		// convert /post/ links to real urls
+		if (jQuery('#' + p_id).length)
+		{
+			jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id);
+		}
 
 		if (typeof backlinks[p_id] === "undefined")
 		{
@@ -712,16 +718,32 @@ var backlinkify = function(elem, post_id, subnum)
 		{
 			if (typeof backend_vars.thread_id === "undefined")
 			{
-				backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+				backlinks[p_id].push('<a href="' + backend_vars.site_url + board_shortname + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+				// convert /post/ links to real urls
+				if (jQuery('#' + p_id).length)
+				{
+					jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/#' + post_id);
+				}
 			}
 			else
 			{
-				backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+				backlinks[p_id].push('<a href="' + backend_vars.site_url + board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+				// convert /post/ links to real urls
+				if (jQuery('#' + p_id).length)
+				{
+					jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/thread/' + backend_vars.thread_id + '/#' + post_id);
+				}
+
 			}
 		}
 		else
 		{
-			backlinks[p_id].push('<a href="' + backend_vars.site_url + backend_vars.board_shortname + '/last/' + backend_vars.last_limit + '/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+			backlinks[p_id].push('<a href="' + backend_vars.site_url + board_shortname + '/last/' + backend_vars.last_limit + '/' + backend_vars.thread_id + '/#' + post_id + '" data-function="highlight" data-backlink="true" data-post="' + post_id + '">&gt;&gt;' + post_id.replace('_', ',') + '</a>');
+			// convert /post/ links to real urls
+			if (jQuery('#' + p_id).length)
+			{
+				jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/last/' + backend_vars.last_limit + '/' + backend_vars.thread_id + '/#' + post_id);
+			}
 		}
 
 		backlinks[p_id] = eliminateDuplicates(backlinks[p_id]);

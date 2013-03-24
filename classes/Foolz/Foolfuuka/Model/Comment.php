@@ -738,11 +738,11 @@ class Comment
 			}
 		}
 
-		if ($this->_options['realtime'] === true)
+		/*if ($this->_options['realtime'] === true)
 		{
 			return implode('<a href="' . \Uri::create([$data->board->shortname, $this->_controller_method, $this->thread_num]) . '#' . $build_url['hash'] . $data->num . '" '
 				. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
-		}
+		}*/
 
 		return implode('<a href="' . \Uri::create([$data->board->shortname, 'post', $data->num]) . '" '
 			. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);

@@ -703,7 +703,8 @@ var backlinkify = function(elem, post_id, subnum)
 			return true;
 		}
 
-		p_id = jQuery(post).text().replace('>>', '').replace(',', '_');
+		var p_id = jQuery(post).attr('data-post');
+		var board_shortname = jQuery(post).attr('data-board');
 
 		if (typeof backlinks[p_id] === "undefined")
 		{

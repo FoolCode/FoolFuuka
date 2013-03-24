@@ -48,7 +48,11 @@ class Board extends \Foolz\Theme\View
 						</a>
 					<?php else: ?>
 						<a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" rel="noreferrer">
+							<?php if ( ! \Auth::has_access('maccess.mod') && $op->media->spoiler) : ?>
+							<img src="<?= $this->getAssetManager()->getAssetLink('images/spoiler.png') ?>" width="100" height="100" class="thumb" alt="[SPOILER]" />
+							<?php else: ?>
 							<img src="<?= $op->media->getThumbLink() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thumb" alt="<?= $op->num ?>" />
+							<?php endif; ?>
 						</a>
 					<?php endif; ?>
 				<?php endif; ?>

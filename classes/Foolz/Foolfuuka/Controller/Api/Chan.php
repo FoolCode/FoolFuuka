@@ -230,7 +230,7 @@ class Chan extends \Controller_Rest
 			}
 			catch (\Foolz\Foolfuuka\Model\ReportException $e)
 			{
-				return $this->response(['error' => $e->getMessage()], 404);
+				return $this->response(['error' => $e->getMessage()], 200);
 			}
 
 			return $this->response(['success' => __('This post was reported.')], 200);
@@ -244,7 +244,7 @@ class Chan extends \Controller_Rest
 			}
 			catch (\Foolz\Foolfuuka\Model\ReportException $e)
 			{
-				return $this->response(['error' => $e->getMessage()], 404);
+				return $this->response(['error' => $e->getMessage()], 200);
 			}
 
 			return $this->response(['success' => __('This media was reported.')], 200);

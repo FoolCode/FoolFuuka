@@ -4,6 +4,22 @@ namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
 
 class BoardComment extends \Foolz\Theme\View
 {
+	public static $permissions = null;
+
+	public function __construct()
+	{
+		if (static::$permissions === null)
+		{
+			static::$permissions = [
+				'maccess.mod' => \Auth::has_access('maccess.mod'),
+				'media.see_hidden' => \Auth::has_access('media.see_hidden'),
+				'media.see_banned' => \Auth::has_access('media.see_banned'),
+				'comment.passwordless_deletion' => \Auth::has_access('comment.passwordless_deletion'),
+				'foolfuuka.sphinx.global' => \Preferences::get('foolfuuka.sphinx.global')
+			];
+		}
+	}
+
 	public function toString()
 	{
 		$p = $this->getParamManager()->getParam('p');
@@ -12,6 +28,8 @@ class BoardComment extends \Foolz\Theme\View
 		{
 			$modifiers = $this->getParamManager()->getParam('modifiers');
 		}
+
+		$perm = static::$permissions;
 		?>
 
 		<table>
@@ -74,7 +92,11 @@ class BoardComment extends \Foolz\Theme\View
 		        </a>
 				<?php else: ?>
 		        <a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" rel="noreferrer">
+					<?php if ( ! $perm['maccess.mod'] && $p->media->spoiler) : ?>
+					<img src="<?= $this->getAssetManager()->getAssetLink('images/spoiler.png') ?>" width="100" height="100" class="thumb" alt="[SPOILER]" />
+					<?php else: ?>
 		            <img src="<?= $p->media->getThumbLink() ?>" alt="<?= $p->num ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="thumb" />
+					<?php endif; ?>
 		        </a>
 				<?php endif; ?>
 			<?php endif; ?>

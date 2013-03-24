@@ -107,7 +107,8 @@ class Chan extends \Controller
 				'gettext' => [
 					'submit_state' => __('Submitting'),
 					'thread_is_real_time' => __('This thread is being displayed in real time.'),
-					'update_now' => __('Update now')
+					'update_now' => __('Update now'),
+					'ghost_mode' => __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.')
 				]
 			]
 		];
@@ -1040,18 +1041,29 @@ class Chan extends \Controller
 
 		// Determine if the invalid post fields are populated by bots.
 		if (isset($post['name']) && mb_strlen($post['name']) > 0)
+		{
 			return $this->error();
+		}
+
 		if (isset($post['reply']) && mb_strlen($post['reply']) > 0)
+		{
 			return $this->error();
+		}
+
 		if (isset($post['email']) && mb_strlen($post['email']) > 0)
+		{
 			return $this->error();
+		}
 
 		$data = [];
 
 		$post = \Input::post();
 
 		if (isset($post['reply_numero']))
+		{
 			$data['thread_num'] = $post['reply_numero'];
+		}
+
 		if (isset($post['reply_bokunonome']))
 		{
 			$data['name'] = $post['reply_bokunonome'];

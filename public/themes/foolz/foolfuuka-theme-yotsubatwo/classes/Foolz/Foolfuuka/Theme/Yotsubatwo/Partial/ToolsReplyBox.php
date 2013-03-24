@@ -100,7 +100,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 					echo \Form::textarea([
 						'name' => 'reply_chennodiscursus',
 						'id' => 'reply_chennodiscursus',
-						'placeholder' => (!$radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '',
+						'placeholder' => (!$radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
 					]);
 					?></td>
 			</tr>

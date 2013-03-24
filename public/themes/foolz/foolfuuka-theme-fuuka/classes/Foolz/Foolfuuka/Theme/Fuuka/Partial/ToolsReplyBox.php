@@ -122,7 +122,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 				<?php if (isset($reply_errors)) : ?>
                 <span style="color:red"><?= $reply_errors ?></span>
 				<?php endif; ?>
-                <span><?= ( ! \Radix::getSelected()->archive && isset($thread_dead) && $thread_dead) ? __('This thread has been archived. Any replies made will be marked as ghost posts and will only affect the ghost index.') : '' ?></span>
+                <span><?= ( ! \Radix::getSelected()->archive && isset($thread_dead) && $thread_dead) ? __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '' ?></span>
                 <table>
                     <tbody>
                     <tr>

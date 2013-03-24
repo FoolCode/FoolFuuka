@@ -621,6 +621,7 @@ var bindFunctions = function()
 						}
 						backend_vars.loaded_posts[el.data('post')] = data;
 						backlink.html(data.formatted);
+						backlink.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
 						backlink.css('display', 'block');
 						showBacklink(backlink, pos, height, width);
 					},
@@ -634,6 +635,7 @@ var bindFunctions = function()
 				});
 				return false;
 			}
+			backlink.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
 			showBacklink(backlink, pos, height, width);
 		}
 		else
@@ -776,7 +778,7 @@ var realtimethread = function(){
 	return false;
 }
 
-
+var ghost = false;
 var insertPost = function(data, textStatus, jqXHR)
 {
 	var w_height = jQuery(document).height();
@@ -792,12 +794,14 @@ var insertPost = function(data, textStatus, jqXHR)
 				jQuery.each(val.posts, function(idx, value)
 				{
 					found_posts = true;
-					var post = jQuery(value.formatted)
+					var post = jQuery(value.formatted);
+
 					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
 					post.find('[rel=tooltip]').tooltip({
 						placement: 'top',
 						delay: 200
 					});
+
 					post.find('[rel=tooltip_right]').tooltip({
 						placement: 'right',
 						delay: 200
@@ -813,7 +817,18 @@ var insertPost = function(data, textStatus, jqXHR)
 					aside.append(post);
 
 					if(backend_vars.latest_doc_id < value.doc_id)
+					{
 						backend_vars.latest_doc_id = value.doc_id;
+					}
+
+					// update comment box when encountering ghost posts
+					if (ghost === false && value.subnum > 0)
+					{
+						ghost = true;
+
+						jQuery("#file_image").parent().remove();
+						jQuery("#reply_chennodiscursus").attr("placeholder", backend_vars.gettext['ghost_mode']);
+					}
 				});
 			}
 		});

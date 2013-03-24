@@ -2,8 +2,6 @@
 
 namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
 
-use Foolz\Foolframe\Model\Preferences;
-
 class Index extends \Foolz\Theme\View
 {
 	public function toString()

@@ -109,7 +109,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 			<?php if ( ! isset($radix) || $radix->sphinx) : ?>
 			<div class="radixes">
 				<?php
-				$boards = ( ! empty($search) && $search['boards'] !== null) ? explode('.', $search['boards']) : [];
+				$boards = ( ! empty($search) && $search['boards'] !== null) ? explode('.', $search['boards']) : (isset($radix) ? [$radix->shortname] : []);
 				?>
 				<div>
 					<?php

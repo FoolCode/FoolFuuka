@@ -680,6 +680,12 @@ class Comment
 	 */
 	public function processInternalLinks($matches)
 	{
+		// don't process when $this->num is 0
+		if ($this->num == 0)
+		{
+			return $matches[0];
+		}
+
 		$num = $matches[2];
 
 		// create link object with all relevant information

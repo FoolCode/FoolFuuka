@@ -77,7 +77,7 @@ body.theme_default.midnight {
     margin: 0 auto -40px;
 }
 
-.theme_default .container-fluid {
+.theme_default.midnight .container-fluid {
     background: #1d1f21;
     color: #c5c8c6;
 }

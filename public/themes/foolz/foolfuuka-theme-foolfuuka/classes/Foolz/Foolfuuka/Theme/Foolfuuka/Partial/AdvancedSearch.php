@@ -189,7 +189,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 							$extra_text = '';
 							$extra_text_br = '';
 
-							$uri = ($latest_search['board'] === false ? '' : $latest_search['board']) . '/search/';
+							$uri = ($latest_search['board'] === false ? '_' : $latest_search['board']) . '/search/';
 							$text = ($latest_search['board'] === false) ? '<strong>global:</strong> ' : '/<strong>' . e($latest_search['board']) . '</strong>/: ';
 							unset($latest_search['board']);
 

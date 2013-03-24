@@ -697,7 +697,8 @@ class Chan extends \Controller
 					{
 						array_push($redirect_url, $modifier);
 						array_push($redirect_url,
-							rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier)))));
+							rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier))))
+						);
 					}
 					elseif ($modifier === 'boards')
 					{
@@ -788,6 +789,7 @@ class Chan extends \Controller
 		$this->builder->getPartial('tools_search')
 			->getParamManager()
 			->setParam('latest_searches', $cookie_array);
+
 		\Cookie::set('search_latest_5', json_encode($cookie_array), 60 * 60 * 24 * 30);
 
 		foreach ($search as $key => $value)

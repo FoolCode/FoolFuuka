@@ -44,7 +44,7 @@ class BoardComment extends \Foolz\Theme\View
 					<span class="post_file_controls">
 					<?php if ($p->media->getMediaStatus() !== 'banned' || $perm['media.see_hidden']) : ?>
 						<?php if ( !$p->radix->hide_thumbnails || $perm['media.see_hidden']) : ?>
-						<?php if ($p->media->total > 1) : ?><a href="<?= \Uri::create((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
+						<?php if ($p->media->total > 1) : ?><a href="<?= \Uri::create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $p->radix->shortname) . '/search/image/' . $p->media->getSafeMediaHash()) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?><a
 							href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">Google</a><a
 							href="http://iqdb.org/?url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">iqdb</a><a
 							href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">SauceNAO</a>

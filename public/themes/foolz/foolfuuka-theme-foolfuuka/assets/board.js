@@ -992,7 +992,6 @@ jQuery(document).ready(function() {
 	});
 });
 
-// modified http://stackoverflow.com/a/3651124
 $.fn.extend({
 	insertAtCaret: function(text){
 		var obj;
@@ -1006,22 +1005,10 @@ $.fn.extend({
 			obj = this;
 		}
 
-		if ($.browser.msie)
-		{
-			reply = document.selection.createRange();
-			reply.text = text;
-		}
-		else if ($.browser.mozilla || $.browser.webkit)
-		{
-			var insPos = obj.selectionStart, endPos = obj.selectionEnd;
+		var insPos = obj.selectionStart, endPos = obj.selectionEnd;
 
-			obj.value = obj.value.substring(0, insPos) + text + obj.value.substring(endPos, obj.value.length);
-			obj.selectionStart = insPos + text.length;
-			obj.selectionEnd = insPos + text.length;
-		}
-		else
-		{
-			obj.value += text;
-		}
+		obj.value = obj.value.substring(0, insPos) + text + obj.value.substring(endPos, obj.value.length);
+		obj.selectionStart = insPos + text.length;
+		obj.selectionEnd = insPos + text.length;
 	}
 });

@@ -589,7 +589,7 @@ class Chan extends \Controller
 
 		try
 		{
-			$media = \Media::get_by_filename($this->_radix, $filename.'.'.\Input::extension());
+			$media = \Media::getByFilename($this->_radix, $filename.'.'.\Input::extension());
 		}
 		catch (\Foolz\Foolfuuka\Model\MediaException $e)
 		{

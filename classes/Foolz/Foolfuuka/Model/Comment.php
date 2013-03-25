@@ -1008,6 +1008,7 @@ class Comment
 			$time_bump = null;
 			$time_ghost = null;
 			$time_ghost_bump = null;
+
 			foreach ($posts as $post)
 			{
 				if ( ! $post['subnum'] && $time_last < $post['timestamp'])
@@ -1032,6 +1033,11 @@ class Comment
 						$time_ghost_bump = $post['timestamp'];
 					}
 				}
+			}
+
+			if ($time_bump === null)
+			{
+				$time_bump = $time_last;
 			}
 
 			// update the thread timers

@@ -867,6 +867,8 @@ var insertPost = function(data, textStatus, jqXHR)
 			window.scrollBy(0, jQuery(document).height() - w_height);
 		}
 
+		enableRealtimeThread();
+
 		timelapse = 10;
 	}
 	else
@@ -914,6 +916,17 @@ var toggleHighlight = function(id)
 	})
 }
 
+var realtime = false;
+var enableRealtimeThread = function()
+{
+	if (realtime == false)
+	{
+		realtime = true;
+
+		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + ' <a class="btnr" href="#" data-function="realtimeThread">' + backend_vars.gettext['update_now'] + '</a>');
+		setTimeout(realtimethread, 10000);
+	}
+}
 
 jQuery(document).ready(function() {
 
@@ -962,8 +975,7 @@ jQuery(document).ready(function() {
 
 	if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 6 * 60 * 60))
 	{
-		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + ' <a class="btnr" href="#" data-function="realtimeThread">' + backend_vars.gettext['update_now'] + '</a>');
-		setTimeout(realtimethread, 10000);
+		enableRealtimeThread();
 	}
 
 	bindFunctions();

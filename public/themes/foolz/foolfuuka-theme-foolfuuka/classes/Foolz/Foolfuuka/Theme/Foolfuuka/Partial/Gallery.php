@@ -42,7 +42,7 @@ class Gallery extends \Foolz\Theme\View
 		        </div>
 		    </header>
 			<?php if ($p->media !== null) : ?>
-		    <div class="thread_image_box" title="<?= $p->getCommentProcessed() ? htmlspecialchars('<strong>'.($p->getCommentProcessed()).'</strong>') : '' ?>">
+		    <div class="thread_image_box" title="<?= $p->getCommentProcessed() ? htmlspecialchars(strip_tags($p->getCommentProcessed())) : '' ?>">
 				<?php if ($p->media->getMediaStatus() === 'banned') : ?>
 		        <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
 				<?php elseif ($p->media->getMediaStatus() !== 'normal') : ?>

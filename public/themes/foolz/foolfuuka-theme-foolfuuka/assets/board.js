@@ -992,7 +992,7 @@ jQuery(document).ready(function() {
 	});
 });
 
-// http://stackoverflow.com/a/3651124
+// modified http://stackoverflow.com/a/3651124
 $.fn.extend({
 	insertAtCaret: function(text){
 		var obj;
@@ -1008,26 +1008,20 @@ $.fn.extend({
 
 		if ($.browser.msie)
 		{
-			obj.focus();
 			reply = document.selection.createRange();
 			reply.text = text;
-			obj.focus();
 		}
 		else if ($.browser.mozilla || $.browser.webkit)
 		{
 			var insPos = obj.selectionStart, endPos = obj.selectionEnd;
-			var scrollTop = obj.scrollTop;
 
 			obj.value = obj.value.substring(0, insPos) + text + obj.value.substring(endPos, obj.value.length);
-			obj.focus();
 			obj.selectionStart = insPos + text.length;
 			obj.selectionEnd = insPos + text.length;
-			obj.scrollTop = scrollTop;
 		}
 		else
 		{
-			obj.value += myValue;
-			obj.focus();
+			obj.value += text;
 		}
 	}
 });

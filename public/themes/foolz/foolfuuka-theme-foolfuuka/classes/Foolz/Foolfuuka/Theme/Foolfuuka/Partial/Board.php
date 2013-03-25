@@ -60,7 +60,7 @@ class Board extends \Foolz\Theme\View
                     <div class="post_data">
 						<?php if ($op->getTitleProcessed() !== '') : ?><h2 class="post_title"><?= $op->getTitleProcessed() ?></h2><?php endif; ?>
 						<span class="post_poster_data">
-							<?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><span class="post_author"><?= $op->getNameProcessed() ?></span><span class="post_tripcode"><?= $op->getTripProcessed() ?></span><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
+							<?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><span class="post_author"><?= $op->getNameProcessed() ?></span><?= ($op->getNameProcessed() && $op->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $op->getTripProcessed() ?></span><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
 
 							<?php if ($op->getPosterHashProcessed()) : ?><span class="poster_hash">ID:<?= $op->getPosterHashProcessed() ?></span><?php endif; ?>
 							<?php if ($op->capcode != 'N') : ?>

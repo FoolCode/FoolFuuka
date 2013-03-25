@@ -720,6 +720,11 @@ body.theme_default.midnight {
     color:#000;
 }
 
+.theme_default.midnight article.thread .post_type_is_op,
+.theme_default.midnight article.thread .post_show_board {
+	color: #7e3434;
+}
+
 .theme_default article.thread h2.post_title {
     font-weight: bold;
     color: #0f0c5d;
@@ -788,6 +793,11 @@ body.theme_default.midnight {
     padding:2px 4px;
     margin: 5px 10px 0 3px;
     overflow:hidden;
+}
+
+.theme_default.midnight article.thread .report_reason {
+	background: #203357;
+	border: 1px solid #17399B;
 }
 
 .theme_default article.thread .ip_reporter {
@@ -927,6 +937,12 @@ body.theme_default.midnight {
     -webkit-box-shadow: 0px 0px 3px #333;
 }
 
+.theme_default.midnight #backlink {
+    box-shadow: 0px 0px 3px #818181;
+    -moz-box-shadow: 0px 0px 3px #818181;
+    -webkit-box-shadow: 0px 0px 3px #818181;
+}
+
 .theme_default #backlink .post {
     margin:0;
     max-width:none;
@@ -944,8 +960,16 @@ body.theme_default.midnight {
     color: black;
 }
 
+.theme_default.midnight article.thread .spoiler .greentext {
+	color: #999;
+}
+
 .theme_default article.thread .spoiler:hover .greentext {
     color: #789922;
+}
+
+.theme_default.midnight article.thread .spoiler:hover .greentext {
+    color: #8DEB8C;
 }
 
 .theme_default article.thread .backlink.op {
@@ -1003,7 +1027,6 @@ body.theme_default.midnight {
 .theme_default .thread_form form {
     margin-bottom: 0px;
 }
-
 
 .theme_default article.thread .thread_form_wrap {
     border: 2px solid #364041;
@@ -1116,7 +1139,6 @@ body.theme_default.midnight {
 .theme_default .thread_form .rules p {
     margin-bottom:0;
 }
-
 
 .theme_default .thread_form .rules li{
     line-height:14px;

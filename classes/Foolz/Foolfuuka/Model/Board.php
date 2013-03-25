@@ -103,13 +103,13 @@ class Board
 		{
 			if (method_exists($this, 'p_'.$this->method_fetching))
 			{
-				\Profiler::mark('Start Board::getcomments() with method '.$this->method_fetching);
-				\Profiler::mark_memory($this, 'Start Board::getcomments() with method '.$this->method_fetching);
+				\Profiler::mark('Start Board::getComments() with method '.$this->method_fetching);
+				\Profiler::mark_memory($this, 'Start Board::getComments() with method '.$this->method_fetching);
 
 				$this->{$this->method_fetching}();
 
-				\Profiler::mark('End Board::getcomments() with method '.$this->method_fetching);
-				\Profiler::mark_memory($this, 'End Board::getcomments() with method '.$this->method_fetching);
+				\Profiler::mark('End Board::getComments() with method '.$this->method_fetching);
+				\Profiler::mark_memory($this, 'End Board::getComments() with method '.$this->method_fetching);
 			}
 			else
 			{
@@ -673,7 +673,7 @@ class Board
 		// default variables
 		$this
 			->setMethodFetching('getThreadComments')
-			->setoptions(['type' => 'thread', 'realtime' => false]);
+			->setOptions(['type' => 'thread', 'realtime' => false]);
 
 		if ( ! ctype_digit((string) $num) || $num < 1)
 		{

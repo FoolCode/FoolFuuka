@@ -283,6 +283,11 @@ class Comment
 
 		foreach ($options as $key => $value)
 		{
+			if ($key == 'controller_method')
+			{
+				$this->_controller_method = $value;
+			}
+
 			$this->_options[$key] = $value;
 		}
 
@@ -743,12 +748,6 @@ class Comment
 					. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 			}
 		}
-
-		/*if ($this->_options['realtime'] === true)
-		{
-			return implode('<a href="' . \Uri::create([$data->board->shortname, $this->_controller_method, $this->thread_num]) . '#' . $build_url['hash'] . $data->num . '" '
-				. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
-		}*/
 
 		return implode('<a href="' . \Uri::create([$data->board->shortname, 'post', $data->num]) . '" '
 			. $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);

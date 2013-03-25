@@ -143,7 +143,7 @@ class Chan extends \Controller_Rest
 						'realtime' => true,
 						'controller_method' =>
 							ctype_digit((string) \Input::get('last_limit')) ? 'last/'.\Input::get('last_limit') : 'thread'
-				]);
+					]);
 
 				return $this->response($board->getComments(), 200);
 			}
@@ -155,7 +155,7 @@ class Chan extends \Controller_Rest
 					->setApi(['theme' => $this->_theme, 'board' => false])
 					->setOptions([
 						'type' => 'thread',
-				]);
+					]);
 
 				return $this->response($board->getComments(), 200);
 			}

@@ -457,7 +457,7 @@ class Media
 
 		if ($result)
 		{
-			return static::getByMediaId($radix, $result->media_id, $op);
+			return static::getByMediaId($radix, $result['media_id'], $op);
 		}
 
 		throw new MediaNotFoundException;
@@ -966,7 +966,7 @@ class Media
 					->update($radix->getTable('_images'))
 					->set('banned', true)
 					->where('media_id = :media_id')
-					->setParameter(':media_id', $media->media_id)
+					->setParameter(':media_id', $media['media_id'])
 					->execute();
 
 				$media->delete(true, true, true);
@@ -1030,6 +1030,7 @@ class Media
 			// we want the current media to work with the same filenames as previously stored
 			$this->media_id = $duplicate->media_id;
 			$this->media = $duplicate->media;
+			$this->media_orig = $duplicate->media;
 			$this->preview_op = $duplicate->preview_op;
 			$this->preview_reply = $duplicate->preview_reply;
 

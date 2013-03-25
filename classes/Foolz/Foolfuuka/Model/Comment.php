@@ -959,40 +959,8 @@ class Comment
 		// remove its image file
 		if (isset($this->media))
 		{
-			DC::qb()
-				->update($this->radix->getTable('_images'))
-				->set('total', 'total - 1')
-				->where('media_id = :media_id')
-				->setParameter(':media_id', $this->media->media_id)
-				->execute();
-
 			$this->media->delete();
 		}
-
-		$item = [
-			'day' => floor(($this->timestamp/86400)*86400),
-			'images' => (int) ($this->media !== null),
-			'sage' => (int) ($this->email === 'sage'),
-			'anons' => (int) ($this->name === $this->radix->anonymous_default_name && $this->trip === null),
-			'trips' => (int) ($this->trip !== null),
-			'names' => (int) ($this->name !== $this->radix->anonymous_default_name || $this->trip !== null)
-		];
-
-		DC::qb()
-			->update($this->radix->getTable('_daily'))
-			->set('images', 'images - :images')
-			->set('sage', 'sage - :sage')
-			->set('anons', 'anons - :anons')
-			->set('trips', 'trips - :trips')
-			->set('names', 'names - :names')
-			->where('day = :day')
-			->setParameter(':day', $item['day'])
-			->setParameter(':images', $item['images'])
-			->setParameter(':sage', $item['sage'])
-			->setParameter(':anons', $item['anons'])
-			->setParameter(':trips', $item['trips'])
-			->setParameter(':names', $item['names'])
-			->execute();
 
 		// if it's OP delete all other comments
 		if ($this->op)

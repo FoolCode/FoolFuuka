@@ -722,7 +722,7 @@ var backlinkify = function(elem, post_id, subnum)
 				// convert /post/ links to real urls
 				if (jQuery('#' + p_id).length)
 				{
-					jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/post/' + post_id);
+					jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/post/' + p_id);
 				}
 			}
 			else
@@ -748,7 +748,7 @@ var backlinkify = function(elem, post_id, subnum)
 			// convert /post/ links to real urls
 			if (jQuery('#' + p_id).length)
 			{
-				jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/last/' + backend_vars.last_limit + '/' + backend_vars.thread_id + '/#' + post_id);
+				jQuery(post).attr('href', backend_vars.site_url + board_shortname + '/last/' + backend_vars.last_limit + '/' + backend_vars.thread_id + '/#' + p_id);
 			}
 		}
 

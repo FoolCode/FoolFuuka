@@ -330,7 +330,11 @@ class Comment
 	{
 		if ($this->fourchan_date === false)
 		{
-			$this->fourchan_date = gmdate('n/j/y(D)G:i', $this->getOriginalTimestamp());
+			$fourtime = new \DateTime();
+			$fourtime->setTimestamp($this->getOriginalTimestamp());
+			$fourtime->setTimezone(new \DateTimeZone('America/New_York'));
+
+			$this->fourchan_date = $fourtime->format('n/j/y(D)G:i');
 		}
 
 		return $this->fourchan_date;

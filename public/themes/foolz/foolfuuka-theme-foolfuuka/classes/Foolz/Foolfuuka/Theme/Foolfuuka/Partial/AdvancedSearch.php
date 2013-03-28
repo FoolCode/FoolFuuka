@@ -126,8 +126,8 @@ class AdvancedSearch extends \Foolz\Theme\View
 					if ($radixes) :
 						?>
 						<div><h5><?= e(__('On these archives')) ?></h5>
-							<a href="#" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></a>
-							<a href="#" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></a>
+							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></button>
+							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></button>
 						</div>
 						<?php
 						foreach ($radixes as $r)
@@ -152,9 +152,10 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 					if ($radixes):
 						?>
-						<div><h5><?= e(__('On these boards')) ?></h5>
-							<a href="#" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></a>
-							<a href="#" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></a>
+						<div>
+							<h5><?= e(__('On these boards')) ?></h5>
+							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></button>
+							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></button>
 						</div>
 						<?php
 						foreach ($radixes as $r)
@@ -168,7 +169,10 @@ class AdvancedSearch extends \Foolz\Theme\View
 			<?php endif ?>
 
 			<div class="latest_searches">
-				<h5><?= e(__('Your latest searches')) ?></h5>
+				<div>
+					<h5><?= e(__('Your latest searches')) ?></h5>
+					<button type="button" data-function="clearLatestSearches" class="btn btn-mini pull-right"><?= e(__('Clear')) ?></button>
+				</div>
 				<ul>
 					<?php
 					if (isset($latest_searches) || $latest_searches = @json_decode(\Cookie::get('search_latest_5'), true))

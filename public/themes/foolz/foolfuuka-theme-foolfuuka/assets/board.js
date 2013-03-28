@@ -33,8 +33,7 @@ var bindFunctions = function()
 		checkAll: function(el, post, event)
 		{
 			var checkboxes = el.parent().parent().find('input[type=checkbox]');
-			checkboxes.each(function(id, element)
-			{
+			checkboxes.each(function(id, element) {
 				jQuery(element).attr('checked', 'checked');
 			});
 			el.parent().find('.uncheck').show();
@@ -44,8 +43,7 @@ var bindFunctions = function()
 		uncheckAll: function(el, post, event)
 		{
 			var checkboxes = el.parent().parent().find('input[type=checkbox]');
-			checkboxes.each(function(id, element)
-			{
+			checkboxes.each(function(id, element) {
 				jQuery(element).attr('checked', false);
 			});
 			el.parent().find('.check').show();
@@ -363,6 +361,7 @@ var bindFunctions = function()
 			var modal = jQuery("#post_tools_modal");
 			var foolfuuka_reply_password = getCookie('foolfuuka_reply_password');
 			modal.find(".title").html('Delete &raquo; Post No. ' + el.data("post-id"));
+			modal.find(".modal-error").html('');
 			modal.find(".modal-loading").hide();
 			modal.find(".modal-information").html('\
 			<span class="modal-label">Password</span>\n\
@@ -378,6 +377,7 @@ var bindFunctions = function()
 		{
 			var modal = jQuery("#post_tools_modal");
 			modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
+			modal.find(".modal-error").html('');
 			modal.find(".modal-loading").hide();
 			modal.find(".modal-information").html('\
 			<span class="modal-label">Post ID</span>\n\
@@ -393,6 +393,7 @@ var bindFunctions = function()
 		{
 			var modal = jQuery("#post_tools_modal");
 			modal.find(".title").html('Report &raquo; Media No.' + el.data("media-id"));
+			modal.find(".modal-error").html('');
 			modal.find(".modal-loading").hide();
 			modal.find(".modal-information").html('\
 			<span class="modal-label">Media ID</span>\n\
@@ -408,6 +409,7 @@ var bindFunctions = function()
 		{
 			var modal = jQuery("#post_tools_modal");
 			modal.find(".title").html('Ban user with IP ' + el.data("ip"));
+			modal.find(".modal-error").html('');
 			modal.find(".modal-loading").hide();
 			modal.find(".modal-information").html('\
 			<span class="modal-label">IP</span>\n\
@@ -490,6 +492,9 @@ var bindFunctions = function()
 
 				if (action == 'delete') {
 					jQuery('.doc_id_' + _doc_id).hide();
+				}
+				if (action == 'report') {
+					jQuery('.doc_id_' + _doc_id).find('.text').after('<div class="report_reason">You have successfully submitted a report for this post.</div>');
 				}
 			}, 'json');
 			return false;

@@ -130,11 +130,24 @@ class AdvancedSearch extends \Foolz\Theme\View
 						}
 					}
 
+					$uncheck = true;
+					if ( ! empty($boards))
+					{
+						foreach ($radixes as $r)
+						{
+							if ( ! in_array($r->shortname, $boards))
+							{
+								$uncheck = false;
+								break;
+							}
+						}
+					}
+
 					if ($radixes) :
 						?>
 						<div><h5><?= e(__('On these archives')) ?></h5>
-							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></button>
-							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></button>
+							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"<?= $uncheck ? ' style="display:none"' : '' ?>><?= e(__('Check all')) ?></button>
+							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"<?= $uncheck ? ' style="display:block"' : '' ?>><?= e(__('Uncheck all')) ?></button>
 						</div>
 						<?php
 						foreach ($radixes as $r)
@@ -157,12 +170,25 @@ class AdvancedSearch extends \Foolz\Theme\View
 						}
 					}
 
+					$uncheck = true;
+					if ( ! empty($boards))
+					{
+						foreach ($radixes as $r)
+						{
+							if (in_array($r->shortname, $boards))
+							{
+								$uncheck = false;
+								break;
+							}
+						}
+					}
+
 					if ($radixes):
 						?>
 						<div>
 							<h5><?= e(__('On these boards')) ?></h5>
-							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"><?= e(__('Check all')) ?></button>
-							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"><?= e(__('Uncheck all')) ?></button>
+							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"<?= $uncheck ? ' style="display:none"' : '' ?>><?= e(__('Check all')) ?></button>
+							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"<?= $uncheck ? ' style="display:block"' : '' ?>><?= e(__('Uncheck all')) ?></button>
 						</div>
 						<?php
 						foreach ($radixes as $r)

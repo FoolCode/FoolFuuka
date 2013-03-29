@@ -171,7 +171,7 @@ y.domain([0, d3.max(data_karma, function(d) { return d.y + d.y0 + 2; })]);
 	svg_karma.append("g")
 		.attr("class", "x axis")
 		.attr("transform", "translate(0," + h + ")")
-		.call(d3.svg.axis().scale(x).orient("bottom").ticks(d3.time.days));
+		.call(d3.svg.axis().scale(x).orient("bottom").ticks(d3.time.months));
 
 	svg_karma.append("g")
 		.attr("class", "y axis")

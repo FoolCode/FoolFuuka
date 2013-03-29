@@ -233,7 +233,7 @@ class Chan extends \Controller_Rest
 				return $this->response(['error' => $e->getMessage()], 200);
 			}
 
-			return $this->response(['success' => __('This post was reported.')], 200);
+			return $this->response(['success' => __('You have successfully submitted a report for this post.')], 200);
 		}
 
 		if (\Input::post('action') === 'report_media')

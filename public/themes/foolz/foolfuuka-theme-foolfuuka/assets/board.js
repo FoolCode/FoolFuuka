@@ -494,7 +494,7 @@ var bindFunctions = function()
 					jQuery('.doc_id_' + _doc_id).hide();
 				}
 				if (action == 'report') {
-					jQuery('.doc_id_' + _doc_id).find('.text').after('<div class="report_reason">You have successfully submitted a report for this post.</div>');
+					jQuery('.doc_id_' + _doc_id).find('.text:eq(0)').after('<div class="report_reason">' + result.success + '</div>');
 				}
 			}, 'json');
 			return false;

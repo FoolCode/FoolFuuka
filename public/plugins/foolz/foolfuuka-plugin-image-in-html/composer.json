@@ -2,6 +2,7 @@
 	"name": "foolz/foolfuuka-plugin-image-in-html",
 	"type": "foolz-foolfuuka-plugin",
 	"description": "Have more control by using an HTML page for displaying full images.",
+	"version": "1.0.0",
 	"keywords": ["fake", "mock"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",

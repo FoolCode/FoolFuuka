@@ -2,6 +2,7 @@
 	"name": "foolz/foolfuuka-plugin-comment-hostname",
 	"type": "foolz-foolfuuka-plugin",
 	"description": "Store the posters' hostname in database.",
+	"version": "1.0.0",
 	"keywords": ["fake", "mock"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",

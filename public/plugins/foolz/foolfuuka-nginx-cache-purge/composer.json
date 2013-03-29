@@ -2,6 +2,7 @@
 	"name": "foolz/foolfuuka-nginx-cache-purge",
 	"type": "foolz-foolfuuka-plugin",
 	"description": "Remove deleted images from the Nginx proxy cache when deleted locally. Requires Nginx compiled with ngx_cache_purge to work: https://github.com/FRiCKLE/ngx_cache_purge",
+	"version": "1.0.0",
 	"keywords": ["fake", "mock"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",

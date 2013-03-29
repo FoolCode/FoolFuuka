@@ -2,6 +2,7 @@
 	"name": "foolz/foolfuuka-plugin-geoip-region-lock",
 	"type": "foolz-foolfuuka-plugin",
 	"description": "Allow or disallow nations to reach the board or post comments. Requires the GeoIP PECL module.",
+	"version": "1.0.0",
 	"keywords": ["fake", "mock"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",

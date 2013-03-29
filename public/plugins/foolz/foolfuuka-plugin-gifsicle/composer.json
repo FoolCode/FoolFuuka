@@ -2,6 +2,7 @@
 	"name": "foolz/foolfuuka-plugin-gifsicle",
 	"type": "foolz-foolfuuka-plugin",
 	"description": "Speed up animated GIF creation at cost of quality with Gifsicle",
+	"version": "1.0.0",
 	"keywords": ["gifsicle", "gif", "animated gif"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",

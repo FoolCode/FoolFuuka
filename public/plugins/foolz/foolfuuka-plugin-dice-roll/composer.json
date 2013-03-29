@@ -2,6 +2,7 @@
 	"name": "foolz/foolfuuka-plugin-dice-roll",
 	"type": "foolz-foolfuuka-plugin",
 	"description": "Adds support for dice rolling on certain boards.",
+	"version": "1.0.0",
 	"keywords": ["fake", "mock"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",

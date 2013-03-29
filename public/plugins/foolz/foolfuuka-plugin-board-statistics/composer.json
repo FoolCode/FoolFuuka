@@ -2,6 +2,7 @@
 	"name": "foolz/foolfuuka-plugin-board-statistics",
 	"type": "foolz-foolfuuka-plugin",
 	"description": "Statistics for the boards, to keep live with a php daemon.",
+	"version": "1.0.0",
 	"keywords": ["fake", "mock"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",

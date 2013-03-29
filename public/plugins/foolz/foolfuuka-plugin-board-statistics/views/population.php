@@ -30,6 +30,7 @@ foreach ($data_array as $k => $t)
 
 <div id="graphs"></div>
 
+<script src="<?= $this->plugin->getAssetManager()->getAssetLink('d3/d3.v3.min.js') ?>" type="text/javascript"></script>
 <script>
 // d3.js
 var m = [20, 30, 30, 60],

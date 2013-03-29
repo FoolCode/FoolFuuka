@@ -6,6 +6,13 @@ use \Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
 
 class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 {
+	public function before()
+	{
+		$this->plugin = \Plugins::getPlugin('foolz/foolfuuka', 'foolz/foolfuuka-plugin-board-statistics');
+
+		parent::before();
+	}
+
 	/**
 	 * @param null $report
 	 */
@@ -96,6 +103,7 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 			$info = $stats['info'];
 			ob_start();
 			?>
+			<link href="<?= $this->plugin->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
 			<div style="margin: 20px auto; width:960px;">
 			<?php
 			include __DIR__.'/../../views/' . $stats['info']['interface'] . '.php';

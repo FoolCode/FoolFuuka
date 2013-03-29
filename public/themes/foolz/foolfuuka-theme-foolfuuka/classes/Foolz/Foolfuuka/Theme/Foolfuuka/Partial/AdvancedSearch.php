@@ -36,10 +36,10 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 		<div class="buttons clearfix">
 			<?= \Form::submit([
-			'class' => 'btn btn-inverse',
-			'value' => __('Search'),
-			'name' => 'submit_search',
-		]);
+				'class' => 'btn btn-inverse',
+				'value' => __('Search'),
+				'name' => 'submit_search',
+			]);
 			?>
 
 			<?= \Form::submit([
@@ -58,6 +58,13 @@ class AdvancedSearch extends \Foolz\Theme\View
 			?>
 			<?php endif; ?>
 
+			<?= \Form::reset([
+				'class' => 'btn btn-inverse pull-right',
+				'value' => __('Clear'),
+				'name' => 'reset',
+				'data-function' => 'clearSearch'
+			]);
+			?>
 		</div>
 
 			<?php $search_structure = \Search::structure(); ?>

@@ -161,7 +161,7 @@ var bindFunctions = function()
 						return false;
 					}
 
-					jQuery('.rules_box').show()
+					jQuery('.rules_box').show();
 					jQuery('.recaptcha_widget').hide();
 
 					reply_alert.html(data.success);
@@ -274,6 +274,22 @@ var bindFunctions = function()
 			}
 
 			return false;
+		},
+
+		clearSearch: function(el, post, event)
+		{
+			var form = jQuery('.advanced_search').find('form')
+			form.find(':input').not(':input[type=submit]').not(':input[type=reset]').val('');
+
+			// keep the first radio set
+			var done_names = [];
+			form.find('[type=radio]').each(function (idx) {
+				if (jQuery.inArray(jQuery(this).attr('name'), done_names))
+				{
+					this.attr('checked', true);
+					done_names.push(jQuery(this).attr('name'));
+				}
+			});
 		},
 
 		mod: function(el, post, event)

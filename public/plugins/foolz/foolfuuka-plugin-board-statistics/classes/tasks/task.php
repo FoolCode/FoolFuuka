@@ -99,7 +99,7 @@ class Task
 							}
 
 							// This statistics report has not reached its frequency EOL.
-							if (time() - strtotime($r['timestamp']) <= $a['frequency'])
+							if (time() - $r['timestamp'] <= $a['frequency'])
 							{
 								$skip = true;
 								continue;
@@ -111,7 +111,7 @@ class Task
 					// racing conditions with our cron.
 					if ($found === false)
 					{
-						BS::saveStat($board->id, $k, date('Y-m-d H:i:s', time() + 600), '');
+						BS::saveStat($board->id, $k, time() + 600, '');
 					}
 
 					// We were able to obtain a LOCK on the statistics report and has already reached the
@@ -119,7 +119,8 @@ class Task
 					if ($skip === false)
 					{
 						\Cli::write('* Processing...');
-						$process = 'process'.static::lowercaseToClassName($k);
+
+						$process = 'process'.$a['function'];
 						$result = BS::$process($board);
 
 						// This statistics report generates a graph via GNUPLOT.
@@ -129,32 +130,12 @@ class Task
 						}
 
 						// Save the statistics report in a JSON array.
-						BS::saveStat($board->id, $k, date('Y-m-d H:i:s'), $result);
+						BS::saveStat($board->id, $k, time(), $result);
 					}
 				}
 			}
 
 			sleep(10);
 		}
-	}
-
-	/**
-	 * Reformats a lowercase string to a class name by splitting on underscores and capitalizing
-	 *
-	 * @param  string  $class_name  The name of the class, lowercase and with words separated by underscore
-	 *
-	 * @return  string
-	 */
-	public static function lowercaseToClassName($class_name)
-	{
-		$pieces = explode('_', $class_name);
-
-		$result = '';
-		foreach ($pieces as $piece)
-		{
-			$result .= ucfirst($piece);
-		}
-
-		return $result;
 	}
 }

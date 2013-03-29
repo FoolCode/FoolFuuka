@@ -1,7 +1,8 @@
 <?php
-
 if ( ! defined('DOCROOT'))
+{
 	exit('No direct script access allowed');
+}
 ?>
 
 <?php $data_array = json_decode($data); ?>
@@ -24,7 +25,7 @@ if ( ! defined('DOCROOT'))
 		?>
 
 		<a href="<?= Uri::create([\Radix::getSelected()->shortname, 'search', 'image', $media->getSafeMediaHash()]) ?>">
-			<img  src="<?= $media->getThumbLink()  ?>" />
+			<img src="<?= $media->getThumbLink()  ?>" />
 		</a>
 	</div>
 <?php endforeach; ?>

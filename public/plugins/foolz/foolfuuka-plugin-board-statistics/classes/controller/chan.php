@@ -57,32 +57,32 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 
 			if (isset($stats['info']['frequency']))
 			{
-				$time_next = strtotime($stats['timestamp']) + $stats['info']['frequency'] - time();
+				$last_updated = time() - $stats['timestamp'];
 
-				if ($time_next < 0)
+				if ($last_updated < 0)
 				{
-					$time_next = __('now!');
+					$last_updated = __('now!');
 				}
-				elseif ($time_next < 60)
+				elseif ($last_updated < 60)
 				{
-					$time_next = $time_next.' ' .__('seconds');
+					$last_updated = $last_updated.' ' .__('seconds');
 				}
-				elseif ($time_next < 3600)
+				elseif ($last_updated < 3600)
 				{
-					$time_next = floor($time_next / 60).' '.__('minutes');
+					$last_updated = floor($last_updated / 60).' '.__('minutes');
 				}
-				elseif ($time_next < 86400)
+				elseif ($last_updated < 86400)
 				{
-					$time_next = floor($time_next / 3600).' '.__('hours');
+					$last_updated = floor($last_updated / 3600).' '.__('hours');
 				}
 				else
 				{
-					$time_next = floor($time_next / 86400).' '.__('days');
+					$last_updated = floor($last_updated / 86400).' '.__('days');
 				}
 
-				$section_title = sprintf(__('Statistics: %s (Next Update in %s)'),
+				$section_title = sprintf(__('Statistics: %s (Last Updated: %s ago)'),
 					$stats['info']['name'],
-					$time_next
+					$last_updated
 				);
 			}
 			else

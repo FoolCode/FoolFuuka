@@ -10,169 +10,55 @@ class BoardStatistics
 	{
 		return [
 			'availability' => [
-				'location' => 'availability',
 				'name' => __('Availability'),
 				'description' => __('Posts in last month by name and availability by time of day.'),
 				'frequency' => 60 * 60 * 5,
-				'interface' => 'availability'
+				'interface' => 'availability',
+				'function' => 'Availability'
 			],
-			'daily_activity' => [
-				'location' => 'daily_activity',
+			'daily-activity' => [
 				'name' => __('Daily Activity'),
 				'description' => __('Posts in last month by name and availability by time of day.'),
 				'frequency' => 60 * 60 * 6, // every 6 hours
-				'interface' => 'graph',
-				'gnuplot' => [
-					'title' => "'5-Minute Intervals'",
-					'style' => 'data fsteps',
-					'timefmt' => '"%s"',
-					'yrange' => '[ 0 : ]',
-					'xdata' => 'time',
-					'xrange' => '[ "{{X_START}}" : "{{X_END}}" ]',
-					'format' => 'x "%H:%M"',
-					'grid' => true,
-					'key' => 'left',
-					'plot' => [
-						"'{{INFILE}}' using 1:2 t 'Posts'  lt rgb '#008000' with filledcurve x1",
-						"'{{INFILE}}' using 1:3 t 'Images' lt rgb '#0000ff' with filledcurve x1",
-						"'{{INFILE}}' using 1:4 t 'Sages'  lt rgb '#ff0000' with filledcurve x1"
-					]
-				]
+				'interface' => 'daily_activity',
+				'function' => 'DailyActivity'
 			],
-			'daily_activity_archive' => [
-				'location' => 'daily_activity_archive',
-				'name' => __('Daily Activity "Archive"'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
-				'frequency' => 60 * 60, // every hour
-				'interface' => 'graph',
-				'gnuplot' => [
-					'title' => "'1-Hour Intervals'",
-					'timefmt' => '"%s"',
-					'yrange' => '[ 0 : ]',
-					'xdata' => 'time',
-					'xrange' => '[ "0" : "86400" ]',
-					'format' => 'x "%H:%M"',
-					'grid' => true,
-					'key' => 'left',
-					'boxwidth' => 3600,
-					'style' => 'fill solid border -1',
-					'plot' => [
-						"'{{INFILE}}' using 1:2 t 'Posts' lt rgb '#008000' with boxes",
-						"'{{INFILE}}' using 1:3 t 'Sages' lt rgb '#ff0000' with boxes"
-					]
-				]
-			],
-			'daily_activity_hourly' => [
-				'location' => 'daily_activity_hourly',
-				'name' => __('Daily Activity "Hourly"'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
-				'frequency' => 60 * 60, // every 6 hours
-				'interface' => 'graph',
-				'gnuplot' => [
-					'title' => "'1-Hour Intervals'",
-					'timefmt' => '"%s"',
-					'yrange' => '[ 0 : ]',
-					'xdata' => 'time',
-					'xrange' => '[ "0" : "86400" ]',
-					'format' => 'x "%H:%M"',
-					'grid' => true,
-					'key' => 'left',
-					'boxwidth' => 3600,
-					'style' => 'fill solid border -1',
-					'plot' => [
-						"'{{INFILE}}' using 1:2 t 'Posts'  lt rgb '#008000' with boxes",
-						"'{{INFILE}}' using 1:3 t 'Images' lt rgb '#0000ff' with boxes",
-						"'{{INFILE}}' using 1:4 t 'Sages'  lt rgb '#ff0000' with boxes"
-					]
-				]
-			],
-			'image_reposts' => [
-				'location' => 'image_reposts',
+			'image-reposts' => [
 				'name' => __('Image Reposts'),
 				'description' => __('Posts in last month by name and availability by time of day.'),
-				'interface' => 'image_reposts'
+				'interface' => 'image_reposts',
+				'function' => 'ImageReposts'
 			],
-			'karma' => [
-				'location' => 'karma',
-				'name' => __('Karma'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
-				'frequency' => 60 * 60 * 24 * 7, // every 7 days
-				'interface' => 'graph',
-				'gnuplot' => [
-					'title' => "'1-Day Intervals'",
-					'style' => 'data fsteps',
-					'timefmt' => '"%s"',
-					'yrange' => '[ 0 : ]',
-					'xdata' => 'time',
-					'xrange' => '[ "{{X_START}}" : "{{X_END}}" ]',
-					'format' => 'x "%m/%y"',
-					'grid' => true,
-					'key' => 'left',
-					'plot' => [
-						"'{{INFILE}}' using 1:2 t 'Posts'  lt rgb '#008000' with filledcurve x1",
-						"'{{INFILE}}' using 1:3 t 'Images' lt rgb '#0000ff' with filledcurve x1",
-						"'{{INFILE}}' using 1:4 t 'Sages'  lt rgb '#ff0000' with filledcurve x1"
-					]
-				]
-			],
-			'new_users' => [
-				'location' => 'new_users',
+			'new-users' => [
 				'name' => __('New Users'),
 				'description' => __('Posts in last month by name and availability by time of day.'),
-				'interface' => 'new_users'
+				'interface' => 'new_users',
+				'function' => 'NewUsers'
 			],
 			'population' => [
-				'location' => 'population',
 				'name' => __('Population'),
 				'description' => __('Posts in last month by name and availability by time of day.'),
 				'frequency' => 60 * 60 * 24, // every day
-				'interface' => 'graph',
-				'gnuplot' => [
-					'title' => "'Posters'",
-					'style' => 'data fsteps',
-					'timefmt' => '"%s"',
-					'yrange' => '[ 0 : ]',
-					'xdata' => 'time',
-					'xrange' => '[ "{{X_START}}" : "{{X_END}}" ]',
-					'format' => 'x "%m/%y"',
-					'grid' => true,
-					'key' => 'left',
-					'plot' => [
-						"'{{INFILE}}' using 1:4 t 'Anonymous'   lt rgb '#008000' with filledcurve x1",
-						"'{{INFILE}}' using 1:2 t 'Tripfriends' lt rgb '#0000ff' with filledcurve x1",
-						"'{{INFILE}}' using 1:3 t 'Namefags'    lt rgb '#ff0000' with filledcurve x1"
-					]
-				]
+				'interface' => 'population',
+				'function' => 'Population',
 			],
-			'post_count' => [
-				'location' => 'post_count',
+			'post-count' => [
 				'name' => __('Post Count'),
 				'description' => __('Posts in last month by name and availability by time of day.'),
-				'interface' => 'post_count'
+				'interface' => 'post_count',
+				'function' => 'PostCount',
 			],
-			'post_rate' => [
-				'location' => 'post_rate',
+			'post-rate' => [
 				'name' => __('Post Rate'),
 				'description' => __('Posts in last month by name and availability by time of day.'),
-				'interface' => 'post_rate'
+				'interface' => 'post_rate',
+				'function' => 'PostRate',
 			],
-			'post_rate_archive' => [
-				'location' => 'post_rate_archive',
-				'name' => __('Post Rate "Archive"'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
-				'interface' => 'post_rate'
-			],
-			'users_online' => [
-				'location' => 'users_online',
+			'users-online' => [
 				'name' => __('Users Online'),
 				'description' => __('Posts in last month by name and availability by time of day.'),
-				'interface' => 'users_online'
-			],
-			'users_online_internal' => [
-				'location' => 'users_online_internal',
-				'name' => __('Users Posting in Archive'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
-				'interface' => 'users_online'
+				'interface' => 'users_online',
+				'function' => 'UsersOnline'
 			]
 		];
 	}
@@ -209,7 +95,7 @@ class BoardStatistics
 			if ( ! isset($available[$stat]['frequency']))
 			{
 				// real time stat
-				$process_function = 'process' . static::lowercaseToClassName($stat);
+				$process_function = 'process'.$available[$stat]['function'];
 				$result = static::$process_function($selected_board);
 
 				return array('info' => $available[$stat], 'data' => json_encode($result));
@@ -221,7 +107,8 @@ class BoardStatistics
 					->from(DC::p('plugin_fu_board_statistics'), 'bs')
 					->where('board_id = :board_id')
 					->andWhere('name = :name')
-					->setParameters([':board_id' => $selected_board->id, ':name' => $stat])
+					->setParameter(':board_id', $selected_board->id)
+					->setParameter(':name', $stat)
 					->setFirstResult(0)
 					->setMaxResults(1)
 					->execute()
@@ -236,6 +123,7 @@ class BoardStatistics
 
 			return array('info' => $available[$stat], 'data' => $result[0]['data'], 'timestamp' => $result[0]['timestamp']);
 		}
+
 		return false;
 	}
 
@@ -246,7 +134,8 @@ class BoardStatistics
 			->from(DC::p('plugin_fu_board_statistics'), 'bs')
 			->where('board_id = :board_id')
 			->andWhere('name = :name')
-			->setParameters([':board_id' => $board_id, ':name' => $name])
+			->setParameter(':board_id', $board_id)
+			->setParameter(':name', $name)
 			->execute()
 			->fetchAll();
 
@@ -263,7 +152,8 @@ class BoardStatistics
 			->from(DC::p('plugin_fu_board_statistics'), 'bs')
 			->where('board_id = :board_id')
 			->andWhere('name = :name')
-			->setParameters([':board_id' => $board_id, ':name' => $name])
+			->setParameter(':board_id', $board_id)
+			->setParameter(':name', $name)
 			->execute()
 			->fetch()['count'];
 
@@ -285,28 +175,36 @@ class BoardStatistics
 				->andWhere('name = :name')
 				->set('timestamp', ':timestamp')
 				->set('data', ':data')
-				->setParameters([
-					':board_id' => $board_id,
-					':name' => $name,
-					':timestamp' => $timestamp,
-					':data' => json_encode($data)
-				])
+				->setParameter(':board_id', $board_id)
+				->setParameter(':name', $name)
+				->setParameter(':timestamp', $timestamp)
+				->setParameter(':data', json_encode($data))
 				->execute();
 		}
 	}
 
 	public static function processAvailability($board)
 	{
+		$datetime = new \DateTime();
+		$datetime->setTimestamp(time());
+
+		if ($board->archive)
+		{
+			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
+		}
+
+		$timestamp = $datetime->getTimestamp();
+
 		return DC::qb()
 			->select('
 				name, trip, COUNT(num) AS posts,
 				AVG(timestamp%86400) AS avg1,
 				STDDEV_POP(timestamp%86400) AS std1,
-				(AVG((timestamp+43200)%86400)+43200)%86400 avg2,
+				(AVG( (timestamp+43200) %86400) +43200)%86400 avg2,
 				STDDEV_POP((timestamp+43200)%86400) AS std2
 			')
 			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
-			->where('timestamp > '.(time() - 2592000))
+			->where('timestamp > '.($timestamp - 2592000))
 			->groupBy('name')
 			->addGroupBy('trip')
 			->having('count(*) > 4')
@@ -318,53 +216,56 @@ class BoardStatistics
 
 	public static function processDailyActivity($board)
 	{
-		return DC::qb()
+		$datetime = new \DateTime();
+		$datetime->setTimestamp(time());
+
+		if ($board->archive)
+		{
+			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
+		}
+
+		$timestamp = $datetime->getTimestamp();
+		$result = [];
+
+		$result['board'] = DC::qb()
 			->select('
-				(FLOOR(timestamp/300)%288)*300 AS time,
-				COUNT(timestamp),
-				COUNT(media_hash),
-				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE null END)
+				FLOOR(timestamp/300)*300 AS time,
+				COUNT(timestamp) AS posts,
+				COUNT(media_hash) AS images,
+				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE null END) AS sage
 			')
 			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
-			->where('timestamp > '.(time() - 86400))
+			->where('timestamp > '.($timestamp - 86400))
 			->groupBy('time')
 			->orderBy('time')
 			->execute()
 			->fetchAll();
-	}
 
-	public static function processDailyActivityArchive($board)
-	{
-		return DC::qb()
+		$result['ghost'] = DC::qb()
 			->select('
-				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time,
-				COUNT(timestamp),
-				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE null END)
+				FLOOR(timestamp/300)*300 AS time,
+				COUNT(timestamp) AS posts,
+				0 AS images,
+				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE null END) AS sage
 			')
 			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
-			->where('timestamp > '.(time() - 86400))
+			->where('timestamp > '.($timestamp - 86400))
 			->andWhere('subnum <> 0')
 			->groupBy('time')
 			->orderBy('time')
 			->execute()
 			->fetchAll();
-	}
 
-	public static function processDailyActivityHourly($board)
-	{
-		return DC::qb()
-			->select('
-				((FLOOR(timestamp/3600)%24)*3600)+1800 AS time,
-				COUNT(timestamp),
-				COUNT(media_hash),
-				COUNT(CASE email WHEN \'sage\' THEN 1 ELSE null END)
-			')
-			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
-			->where('timestamp > '.(time() - 86400))
-			->groupBy('time')
-			->orderBy('time')
+		$result['karma'] = DC::qb()
+			->select('day AS time, posts, images, sage')
+			->from($board->getTable('_daily'), 'bd')
+			->where('day > '.floor(($timestamp - 31536000) / 86400) * 86400)
+			->groupBy('day')
+			->orderBy('day')
 			->execute()
 			->fetchAll();
+
+		return $result;
 	}
 
 	public static function processImageReposts($board)
@@ -372,21 +273,10 @@ class BoardStatistics
 		return DC::qb()
 			->select('*')
 			->from($board->getTable( '_images'), 'bi')
+			->where('banned = 0')
 			->orderBy('total', 'desc')
 			->setFirstResult(0)
 			->setMaxResults(200)
-			->execute()
-			->fetchAll();
-	}
-
-	public static function processKarma($board)
-	{
-		return DC::qb()
-			->select('day AS time, posts, images, sage')
-			->from($board->getTable('_daily'), 'bd')
-			->where('day > '.floor((time() - 31536000) / 86400) * 86400)
-			->groupBy('day')
-			->orderBy('day')
 			->execute()
 			->fetchAll();
 	}
@@ -404,10 +294,20 @@ class BoardStatistics
 
 	public static function processPopulation($board)
 	{
+		$datetime = new \DateTime();
+		$datetime->setTimestamp(time());
+
+		if ($board->archive)
+		{
+			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
+		}
+
+		$timestamp = $datetime->getTimestamp();
+
 		return DC::qb()
 			->select('day AS time, trips, names, anons')
 			->from($board->getTable('_daily'), 'bd')
-			->where('day > '.floor((time() - 31536000) / 86400) * 86400)
+			->where('day > '.floor(($timestamp - 31536000) / 86400) * 86400)
 			->groupBy('day')
 			->orderBy('day')
 			->execute()
@@ -427,167 +327,69 @@ class BoardStatistics
 
 	public static function processPostRate($board)
 	{
-		return DC::qb()
-			->select('COUNT(timestamp), COUNT(timestamp)/60')
+		$datetime = new \DateTime();
+		$datetime->setTimestamp(time());
+
+		if ($board->archive)
+		{
+			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
+		}
+
+		$timestamp = $datetime->getTimestamp();
+		$result = [];
+
+		$result['board'] = DC::qb()
+			->select('COUNT(timestamp) AS last_hour, COUNT(timestamp)/60 AS per_minute')
 			->from($board->getTable(), 'b')
-			->where('timestamp > '.(time() - 3600))
+			->where('timestamp > '.($timestamp - 3600))
+			->andWhere('subnum = 0')
 			->execute()
 			->fetchAll();
-	}
 
-	public static function processPostRateArchive($board)
-	{
-		return DC::qb()
-			->select('COUNT(timestamp), COUNT(timestamp)/60')
+		$result['ghost'] = DC::qb()
+			->select('COUNT(timestamp) AS last_hour, COUNT(timestamp)/60 AS per_minute')
 			->from($board->getTable(), 'b')
-			->where('timestamp > '.(time() - 3600))
+			->where('timestamp > '.($timestamp - 3600))
 			->andWhere('subnum <> 0')
 			->execute()
 			->fetchAll();
+
+		return $result;
 	}
 
 	public static function processUsersOnline($board)
 	{
-		return DC::qb()
-			->select('name, trip, MAX(timestamp), num, subnum')
+		$datetime = new \DateTime();
+		$datetime->setTimestamp(time());
+
+		if ($board->archive)
+		{
+			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
+		}
+
+		$timestamp = $datetime->getTimestamp();
+		$result = [];
+
+		$result['board'] = DC::qb()
+			->select('name, trip, MAX(timestamp) AS timestamp, num, subnum')
 			->from($board->getTable(), 'b')
-			->where('timestamp > '.(time() - 1800))
+			->where('timestamp > '.($timestamp - 1800))
 			->groupBy('name')
 			->addGroupBy('trip')
 			->orderBy('MAX(timestamp)', 'desc')
 			->execute()
 			->fetchAll();
-	}
 
-	public static function processUsersOnlineInternal($board)
-	{
-		return DC::qb()
-			->select('name, trip, MAX(timestamp), num, subnum')
+		$result['ghost'] = DC::qb()
+			->select('name, trip, MAX(timestamp) AS timestamp, num, subnum')
 			->from($board->getTable(), 'b')
-			->where('poster_ip <> 0')
-			->andWhere('timestamp > '.(time() - 3600))
+			->where('subnum <> 0')
+			->andWhere('timestamp > '.($timestamp - 3600))
 			->groupBy('name')
 			->addGroupBy('trip')
 			->orderBy('MAX(timestamp)', 'desc')
 			->execute()
 			->fetchAll();
-	}
-
-	/**
-	 * Generate the INFILE, OUTFILE, TEMPLATE files used by GNUPLOT to create graphs.
-	 *
-	 * @param $board name of the board
-	 * @param $stat  name of the statistics generated
-	 * @param $data  input dataset array
-	 *
-	 * @return void
-	 */
-	public static function graphGnuplot($board, $stat, $data)
-	{
-		// Create all missing directory paths for statistics.
-		if ( ! file_exists(DOCROOT . 'foolfuuka/cache/'))
-		{
-			mkdir(DOCROOT . 'foolfuuka/cache/');
-		}
-		if ( ! file_exists(DOCROOT . 'foolfuuka/statistics/'))
-		{
-			mkdir(DOCROOT . 'foolfuuka/statistics/');
-		}
-		if ( ! file_exists(DOCROOT . 'foolfuuka/statistics/' . $board . '/'))
-		{
-			mkdir(DOCROOT . 'foolfuuka/statistics/' . $board . '/');
-		}
-
-		// Set PATH for INFILE, GNUFILE, and OUTFILE for read/write.
-		$INFILE = DOCROOT . 'foolfuuka/cache/statistics-' . $board . '-' . $stat . '.dat';
-		$GNUFILE = DOCROOT . 'foolfuuka/cache/statistics-' . $board . '-' . $stat . '.gnu';
-		$OUTFILE = DOCROOT . 'foolfuuka/statistics/' . $board . '/' . $stat . '.png';
-
-		// Obtain starting and ending data points for x range.
-		$X_START = ! empty($data) ? $data[0]['time'] : 0;
-		$X_END = ! empty($data) ? $data[count($data) - 1]['time'] : 0;
-
-		// Format and save the INFILE dataset for GNUPLOT.
-		$graph_data = array();
-		foreach ($data as $line)
-		{
-			$graph_data[] = implode("\t", $line);
-		}
-		$graph_data = implode("\n", $graph_data);
-		file_put_contents($INFILE, $graph_data);
-
-		// Set template variables for replacement.
-		$template_vars = array(
-			'{{INFILE}}',
-			'{{OUTFILE}}',
-			'{{X_START}}',
-			'{{X_END}}'
-		);
-		$template_vals = array(
-			$INFILE,
-			$OUTFILE,
-			$X_START,
-			$X_END
-		);
-
-		$template = str_replace($template_vars, $template_vals,
-			static::generateGnuplotTemplate($stat));
-		file_put_contents($GNUFILE, $template);
-
-		// Execute GNUPLOT with GNUFILE input.
-		$result = @exec('/usr/bin/gnuplot ' . $GNUFILE);
-		return $result;
-	}
-
-	public static function generateGnuplotTemplate($stat)
-	{
-		$stats = static::getAvailableStats();
-		$options = $stats[$stat]['gnuplot'];
-
-		$template = array();
-		$template[] = "set terminal png transparent size 800,600";
-		$template[] = "set output '{{OUTFILE}}'";
-		$template[] = "show terminal";
-
-		foreach ($options as $key => $value)
-		{
-			if ($value === true)
-			{
-				$template[] = "set {$key}";
-			}
-			else
-			{
-				if (is_array($value))
-				{
-					$value = implode(", ", $value);
-					$template[] = "{$key} {$value}";
-				}
-				else
-				{
-					$template[] = "set {$key} {$value}";
-				}
-			}
-		}
-
-		return implode("\n", $template);
-	}
-
-	/**
-	 * Reformats a lowercase string to a class name by splitting on underscores and capitalizing
-	 *
-	 * @param  string  $class_name  The name of the class, lowercase and with words separated by underscore
-	 *
-	 * @return  string
-	 */
-	public static function lowercaseToClassName($class_name)
-	{
-		$pieces = explode('_', $class_name);
-
-		$result = '';
-		foreach ($pieces as $piece)
-		{
-			$result .= ucfirst($piece);
-		}
 
 		return $result;
 	}

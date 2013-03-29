@@ -1,0 +1,10 @@
+.table th:nth-child(2), .table th:nth-child(3),
+.table td:nth-child(2), .table td:nth-child(3) {
+	text-align: center;
+}
+
+.axis path, .axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}

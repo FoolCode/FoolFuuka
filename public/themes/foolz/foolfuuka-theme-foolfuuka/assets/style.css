@@ -95,6 +95,12 @@ body.theme_default.midnight {
     color: black !important;
 }
 
+.theme_default .dropdown-menu li > a:hover,
+.theme_default .dropdown-menu .active > a,
+.theme_default .dropdown-menu .active > a:hover {
+    background:#6A836F
+}
+
 .theme_default.midnight .btn-inverse {
 	background: #4c5057;
 }

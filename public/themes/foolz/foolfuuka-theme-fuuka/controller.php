@@ -145,6 +145,11 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 		{
 			$data['capcode'] = $post['reply_postas'];
 		}
+		if (isset($post['recaptcha_challenge_field']) && isset($post['recaptcha_response_field']))
+		{
+			$data['recaptcha_challenge'] = $post['recaptcha_challenge_field'];
+			$data['recaptcha_response'] = $post['recaptcha_response_field'];
+		}
 
 		$media = null;
 

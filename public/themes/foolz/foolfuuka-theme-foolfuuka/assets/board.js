@@ -128,13 +128,13 @@ var bindFunctions = function()
 				cache: false,
 				xhr: function() {
 					var xhr = jQuery.ajaxSettings.xhr();
-					 if(xhr instanceof window.XMLHttpRequest) {
+					 if (xhr instanceof window.XMLHttpRequest) {
 						xhr.upload.addEventListener('progress', function(evt){
-							var progress_local = Math.ceil(evt.loaded/evt.total*100);
+							var progress_local = Math.ceil(evt.loaded / evt.total * 100);
 							if (evt.lengthComputable && progress_pos !== progress_local)
 							{
 								progress_pos = progress_local;
-								progress_el.css('width', (progress_pos) + '%')
+								progress_el.css('width', (progress_pos) + '%');
 							}
 						}, false);
 					}
@@ -577,12 +577,18 @@ var bindFunctions = function()
 	// variable for ajax backlinks that we can clear them if the mouse hovered out
 	var backlink_jqxhr;
 	var backlink_spin;
+	var timeout;
+	var posts_being_fetched = []; // posts that are being xhr'd right now
+	var show_post_board;
+	var show_post_num; // the number of the post that has to show in the xhr callback, when 0 don't run popups
 
 	// hover functions go here
 	jQuery("#main").on("mouseover mouseout", "article a[data-backlink]", function(event)
 	{
+
 		if (event.type == "mouseover")
 		{
+
 			var backlink = jQuery("#backlink");
 			var el = jQuery(this);
 
@@ -607,66 +613,79 @@ var bindFunctions = function()
 				backlink.css('display', 'block');
 				backlink.html(toClone.clone().show());
 			}
-			else if (typeof backend_vars.loaded_posts[el.data('post')] !== 'undefined')
+			else if (typeof backend_vars.loaded_posts[el.data('board') + ':' + el.data('post')] !== 'undefined')
 			{
-				if (backend_vars.loaded_posts[el.data('post')] === false)
+				// if we know the post doesn't exist
+				if (backend_vars.loaded_posts[el.data('board') + ':' + el.data('post')] === false)
 				{
 					shakeBacklink(el);
 					return false;
 				}
-				var data = backend_vars.loaded_posts[el.data('post')];
+				var data = backend_vars.loaded_posts[el.data('board') + ':' + el.data('post')];
 				backlink.html(data.formatted);
 				backlink.css('display', 'block');
 			}
 			else
 			{
-				backlink_spin = el;
-				backlink_spin.spin('small');
-				backlink_jqxhr = jQuery.ajax({
-					url: backend_vars.api_url + '_/api/chan/post/' ,
-					dataType: 'json',
-					type: 'GET',
-					cache: false,
-					data: {
-						board: el.data('board'),
-						num: el.data('post'),
-						theme: backend_vars.selected_theme
-					},
-					success: function(data){
-						backlink_spin.spin(false);
-						if (typeof data.error !== "undefined")
-						{
-							backend_vars.loaded_posts[el.data('post')] = false;
+				show_post_board = el.data('board');
+				show_post_num = el.data('post');
+
+				// avoid multiple connections
+				if (posts_being_fetched[el.data('board') + ':' + el.data('post')]) {
+					return false;
+				}
+
+				timeout = setTimeout(function() {
+					backlink_spin = el;
+					backlink_spin.spin('small');
+					backlink_jqxhr = jQuery.ajax({
+						url: backend_vars.api_url + '_/api/chan/post/' ,
+						dataType: 'json',
+						type: 'GET',
+						cache: false,
+						data: {
+							board: el.data('board'),
+							num: el.data('post'),
+							theme: backend_vars.selected_theme
+						},
+						success: function(data){
+							backlink_spin.spin(false);
+							if (typeof data.error !== "undefined")
+							{
+								backend_vars.loaded_posts[el.data('board') + ':' + el.data('post')] = false;
+								shakeBacklink(el);
+								return false;
+							}
+							backend_vars.loaded_posts[el.data('board') + ':' + el.data('post')] = data;
+
+							// avoid showing the post if the mouse is not there anymore
+							if (show_post_board === el.data('board') && show_post_num === el.data('post'))
+							{
+								backlink.html(data.formatted);
+								backlink.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+								backlink.css('display', 'block');
+								showBacklink(backlink, pos, height, width);
+							}
+						},
+						error: function() {
 							shakeBacklink(el);
-							return false;
+						},
+						complete: function() {
+							posts_being_fetched[el.data('board') + ':' + el.data('post')] = false;
 						}
-						backend_vars.loaded_posts[el.data('post')] = data;
-						backlink.html(data.formatted);
-						backlink.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
-						backlink.css('display', 'block');
-						showBacklink(backlink, pos, height, width);
-					},
-					error: function(jqXHR, textStatus, errorThrown){
-						if (textStatus !== 'abort')
-						{
-							shakeBacklink(el);
-						}
-						return false;
-					}
-				});
-				return false;
+					});
+					return false;
+				}, 50);
 			}
+
 			backlink.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
 			showBacklink(backlink, pos, height, width);
 		}
 		else
 		{
-			// kill the ajax call so the backlink doesn't appear
-			if(typeof backlink_jqxhr === 'object')
-			{
-				backlink_spin.spin(false);
-				backlink_jqxhr.abort()
-			}
+			show_post_board = false;
+			show_post_num = false;
+			clearTimeout(timeout);
 			jQuery("#backlink").css('display', 'none').html('');
 		}
 	});

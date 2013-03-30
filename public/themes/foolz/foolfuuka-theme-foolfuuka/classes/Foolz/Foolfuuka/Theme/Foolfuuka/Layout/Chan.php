@@ -220,11 +220,13 @@ class Chan extends \Foolz\Theme\View
 		<div role="main" id="main">
 			<?= $this->getBuilder()->isPartial('tools_new_thread_box') ? $this->getBuilder()->getPartial('tools_new_thread_box')->build() : ''; ?>
 
-			<?php if ($section_title) : ?>
-			<h3 class="section_title"><?= $section_title ?></h3>
-			<?php elseif (\Preferences::get('foolframe.theme.header_text')) : ?>
+			<?php if (\Preferences::get('foolframe.theme.header_text')) : ?>
 			<section class="section_title"><?= \Preferences::get('foolframe.theme.header_text') ?></section>
 			<?php endif; ?>
+			<?php if ($section_title) : ?>
+			<h3 class="section_title"><?= $section_title ?></h3>
+			<?php endif; ?>
+
 
 			<div class="search_box">
 				<?= $this->getBuilder()->isPartial('tools_advanced_search') ? $this->getBuilder()->getPartial('tools_advanced_search')->build() : ''; ?>

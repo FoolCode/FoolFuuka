@@ -35,6 +35,26 @@ foreach ($data_array as $k => $t)
 	array_pop($temp[$k]);
 	array_pop($temp[$k]);
 	array_pop($temp[$k]);
+
+	// create an empty nest data set
+	if (empty($temp[$k]))
+	{
+		$temp[$k][] = [
+			'group' => 'posts',
+			'time' => 0,
+			'count' => 0
+		];
+		$temp[$k][] = [
+			'group' => 'images',
+			'time' => 0,
+			'count' => 0
+		];
+		$temp[$k][] = [
+			'group' => 'sage',
+			'time' => 0,
+			'count' => 0
+		];
+	}
 }
 ?>
 

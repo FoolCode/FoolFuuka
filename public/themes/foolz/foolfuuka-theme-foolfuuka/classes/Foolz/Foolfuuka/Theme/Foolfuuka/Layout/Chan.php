@@ -340,7 +340,7 @@ class Chan extends \Foolz\Theme\View
 					<?php foreach (['default' => 'Default', 'midnight' => 'Midnight'] as $key => $name) : ?>
 					<li>
 						<a href="<?= \Uri::create(['theme', 'foolz/foolfuuka-theme-foolfuuka', $key]) ?>"><?= $name ?>
-							<?= ($key === \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style'))?' <i class="icon-ok"></i>':'' ?></a>
+							<?= (( ! \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style') && $key == 'default') || $key === \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style'))?' <i class="icon-ok"></i>':'' ?></a>
 					</li>
 					<?php endforeach; ?>
 				</ul>

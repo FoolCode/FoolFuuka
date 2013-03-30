@@ -343,7 +343,7 @@ class Chan extends \Foolz\Theme\View
 					<?php foreach (['yotsuba' => 'Yotsuba', 'yotsuba_b' => 'Yotsuba B'] as $key => $name) : ?>
 					<li>
 						<a href="<?= \Uri::create(['theme', 'foolz/foolfuuka-theme-yotsubatwo', $key]) ?>"><?= $name ?>
-							<?= ($key === \Cookie::get('theme_foolz/foolfuuka-theme-yotsubatwo_style'))?' <i class="icon-ok"></i>':'' ?></a>
+							<?= (( ! \Cookie::get('theme_foolz/foolfuuka-theme-yotsubatwo_style') && $key == 'yotsuba') || $key === \Cookie::get('theme_foolz/foolfuuka-theme-yotsubatwo_style'))?' <i class="icon-ok"></i>':'' ?></a>
 					</li>
 					<?php endforeach; ?>
 				</ul>

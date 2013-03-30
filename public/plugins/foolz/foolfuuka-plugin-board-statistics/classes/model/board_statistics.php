@@ -9,19 +9,19 @@ class BoardStatistics
 	public static function getStats()
 	{
 		return [
+			'activity' => [
+				'name' => __('Activity'),
+				'description' => __('Posts in last month by name and availability by time of day.'),
+				'frequency' => 60 * 60 * 6, // every 6 hours
+				'interface' => 'activity',
+				'function' => 'Activity'
+			],
 			'availability' => [
 				'name' => __('Availability'),
 				'description' => __('Posts in last month by name and availability by time of day.'),
 				'frequency' => 60 * 60 * 5,
 				'interface' => 'availability',
 				'function' => 'Availability'
-			],
-			'daily-activity' => [
-				'name' => __('Daily Activity'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
-				'frequency' => 60 * 60 * 6, // every 6 hours
-				'interface' => 'daily_activity',
-				'function' => 'DailyActivity'
 			],
 			'image-reposts' => [
 				'name' => __('Image Reposts'),
@@ -214,7 +214,7 @@ class BoardStatistics
 			->fetchAll();
 	}
 
-	public static function processDailyActivity($board)
+	public static function processActivity($board)
 	{
 		$datetime = new \DateTime();
 		$datetime->setTimestamp(time());
@@ -236,6 +236,7 @@ class BoardStatistics
 			')
 			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
 			->where('timestamp > '.($timestamp - 86400))
+			->andWhere('timestamp < '.($timestamp - 300))
 			->groupBy('time')
 			->orderBy('time')
 			->execute()
@@ -250,6 +251,7 @@ class BoardStatistics
 			')
 			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
 			->where('timestamp > '.($timestamp - 86400))
+			->andWhere('timestamp < '.($timestamp - 300))
 			->andWhere('subnum <> 0')
 			->groupBy('time')
 			->orderBy('time')
@@ -260,6 +262,7 @@ class BoardStatistics
 			->select('day AS time, posts, images, sage')
 			->from($board->getTable('_daily'), 'bd')
 			->where('day > '.floor(($timestamp - 31536000) / 86400) * 86400)
+			->andWhere('day > '.($timestamp - 86400))
 			->groupBy('day')
 			->orderBy('day')
 			->execute()

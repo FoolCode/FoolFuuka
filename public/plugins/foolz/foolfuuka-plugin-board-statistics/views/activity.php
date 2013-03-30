@@ -62,6 +62,10 @@ var stack = d3.layout.stack()
 	.order("reverse");
 var nest = d3.nest()
 	.key(function(d) { return d.group});
+var line = d3.svg.line()
+	.interpolate("basis")
+	.x(function(d) { return x(d.time); })
+	.y(function(d) { return y(d.y); });
 var area = d3.svg.area()
 	.interpolate("basis")
 	.x(function(d) { return x(d.time); })
@@ -104,10 +108,16 @@ y.domain([0, d3.max(data_board, function(d) { return d.y + d.y0 + 2; })]).range(
 		.enter().append("path")
 		.attr("class", "layer")
 		.attr("d", function(d) { return area(d.values); })
-		.style("stroke", function(d, i) { return color(i); })
-		.style("stroke-width","1px")
 		.style("fill", function(d, i) { return color(i); })
 		.attr("fill-opacity",".2");
+
+	svg_board.selectAll(".line")
+		.data(layers)
+		.enter().append("path")
+		.attr("class", "line")
+		.attr("stroke", function(d, i) { return color(i); })
+		.attr("d", function(d) { return line(d.values); })
+		.style("fill", "none");
 
 	svg_board.append("g")
 		.attr("class", "x axis")
@@ -139,10 +149,16 @@ y.domain([0, d3.max(data_ghost, function(d) { return d.y + d.y0 + 2; })]).range(
 		.enter().append("path")
 		.attr("class", "layer")
 		.attr("d", function(d) { return area(d.values); })
-		.style("stroke", function(d, i) { return color(i); })
-		.style("stroke-width","1px")
 		.style("fill", function(d, i) { return color(i); })
 		.attr("fill-opacity",".2");
+
+	svg_ghost.selectAll(".line")
+		.data(layers)
+		.enter().append("path")
+		.attr("class", "line")
+		.attr("stroke", function(d, i) { return color(i); })
+		.attr("d", function(d) { return line(d.values); })
+		.style("fill", "none");
 
 	svg_ghost.append("g")
 		.attr("class", "x axis")
@@ -174,10 +190,16 @@ y.domain([0, d3.max(data_karma, function(d) { return d.y + d.y0 + 2; })]);
 		.enter().append("path")
 		.attr("class", "layer")
 		.attr("d", function(d) { return area(d.values); })
-		.style("stroke", function(d, i) { return color(i); })
-		.style("stroke-width","1px")
 		.style("fill", function(d, i) { return color(i); })
 		.attr("fill-opacity",".2");
+
+	svg_karma.selectAll(".line")
+		.data(layers)
+		.enter().append("path")
+		.attr("class", "line")
+		.attr("stroke", function(d, i) { return color(i); })
+		.attr("d", function(d) { return line(d.values); })
+		.style("fill", "none");
 
 	svg_karma.append("g")
 		.attr("class", "x axis")
@@ -202,20 +224,6 @@ d3.selectAll("svg").each(function(d) {
 		.attr("x", 830)
 		.attr("y", 15)
 		.attr("width", 25).attr("height", 15)
-		.style("stroke", color(1))
-		.style("stroke-width","1px")
-		.style("fill", color(1))
-		.attr("fill-opacity",".2");
-
-	e.append("text")
-		.attr("x", 860)
-		.attr("y", 27.5)
-		.text("Images");
-
-	e.append("rect")
-		.attr("x", 830)
-		.attr("y", 40)
-		.attr("width", 25).attr("height", 15)
 		.style("stroke", color(0))
 		.style("stroke-width","1px")
 		.style("fill", color(0))
@@ -223,8 +231,22 @@ d3.selectAll("svg").each(function(d) {
 
 	e.append("text")
 		.attr("x", 860)
-		.attr("dy", 52.5)
+		.attr("y", 27.5)
 		.text("Posts");
+
+	e.append("rect")
+		.attr("x", 830)
+		.attr("y", 40)
+		.attr("width", 25).attr("height", 15)
+		.style("stroke", color(1))
+		.style("stroke-width","1px")
+		.style("fill", color(1))
+		.attr("fill-opacity",".2");
+
+	e.append("text")
+		.attr("x", 860)
+		.attr("dy", 52.5)
+		.text("Images");
 
 	e.append("rect")
 		.attr("x", 830)

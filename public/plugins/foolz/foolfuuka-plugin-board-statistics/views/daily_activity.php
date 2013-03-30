@@ -48,7 +48,7 @@ var color = d3.scale.ordinal()
 var xAxis = d3.svg.axis()
 	.scale(x)
 	.orient("bottom")
-	.ticks(d3.time.hours);
+	.ticks(d3.time.hours, 2);
 var yAxis = d3.svg.axis()
 	.scale(y)
 	.orient("left");
@@ -63,7 +63,7 @@ var nest = d3.nest()
 var area = d3.svg.area()
 	.interpolate("basis")
 	.x(function(d) { return x(d.time); })
-	.y0(function(d) { return y(d.y0); })
+	.y0(h)
 	.y1(function(d) { return y(d.y); });
 
 // data
@@ -102,7 +102,10 @@ y.domain([0, d3.max(data_board, function(d) { return d.y + d.y0 + 2; })]).range(
 		.enter().append("path")
 		.attr("class", "layer")
 		.attr("d", function(d) { return area(d.values); })
-		.style("fill", function(d, i) { return color(i); });
+		.style("stroke", function(d, i) { return color(i); })
+		.style("stroke-width","1px")
+		.style("fill", function(d, i) { return color(i); })
+		.attr("fill-opacity",".2");
 
 	svg_board.append("g")
 		.attr("class", "x axis")
@@ -116,7 +119,7 @@ y.domain([0, d3.max(data_board, function(d) { return d.y + d.y0 + 2; })]).range(
 	svg_board.append("text")
 		.attr("x", 10)
 		.attr("dy", 20)
-		.text("Activity (Board)")
+		.text("Activity (Past 24 Hours)")
 		.style("font-weight", "bold");
 
 var svg_ghost = d3.select("#graphs").append("svg")
@@ -134,7 +137,10 @@ y.domain([0, d3.max(data_ghost, function(d) { return d.y + d.y0 + 2; })]).range(
 		.enter().append("path")
 		.attr("class", "layer")
 		.attr("d", function(d) { return area(d.values); })
-		.style("fill", function(d, i) { return color(i); });
+		.style("stroke", function(d, i) { return color(i); })
+		.style("stroke-width","1px")
+		.style("fill", function(d, i) { return color(i); })
+		.attr("fill-opacity",".2");
 
 	svg_ghost.append("g")
 		.attr("class", "x axis")
@@ -148,7 +154,7 @@ y.domain([0, d3.max(data_ghost, function(d) { return d.y + d.y0 + 2; })]).range(
 	svg_ghost.append("text")
 		.attr("x", 10)
 		.attr("dy", 20)
-		.text("Activity (Ghost)")
+		.text("Activity in Ghost (Past 24 Hours)")
 		.style("font-weight", "bold");
 
 var svg_karma = d3.select("#graphs").append("svg")
@@ -166,7 +172,10 @@ y.domain([0, d3.max(data_karma, function(d) { return d.y + d.y0 + 2; })]);
 		.enter().append("path")
 		.attr("class", "layer")
 		.attr("d", function(d) { return area(d.values); })
-		.style("fill", function(d, i) { return color(i); });
+		.style("stroke", function(d, i) { return color(i); })
+		.style("stroke-width","1px")
+		.style("fill", function(d, i) { return color(i); })
+		.attr("fill-opacity",".2");
 
 	svg_karma.append("g")
 		.attr("class", "x axis")
@@ -180,7 +189,7 @@ y.domain([0, d3.max(data_karma, function(d) { return d.y + d.y0 + 2; })]);
 	svg_karma.append("text")
 		.attr("x", 10)
 		.attr("dy", 20)
-		.text("Karma")
+		.text("Activity (Past Year)")
 		.style("font-weight", "bold");
 
 // graph legend
@@ -191,7 +200,10 @@ d3.selectAll("svg").each(function(d) {
 		.attr("x", 830)
 		.attr("y", 15)
 		.attr("width", 25).attr("height", 15)
-		.style("fill", color(1));
+		.style("stroke", color(1))
+		.style("stroke-width","1px")
+		.style("fill", color(1))
+		.attr("fill-opacity",".2");
 
 	e.append("text")
 		.attr("x", 860)
@@ -202,7 +214,10 @@ d3.selectAll("svg").each(function(d) {
 		.attr("x", 830)
 		.attr("y", 40)
 		.attr("width", 25).attr("height", 15)
-		.style("fill", color(0));
+		.style("stroke", color(0))
+		.style("stroke-width","1px")
+		.style("fill", color(0))
+		.attr("fill-opacity",".2");
 
 	e.append("text")
 		.attr("x", 860)
@@ -213,7 +228,10 @@ d3.selectAll("svg").each(function(d) {
 		.attr("x", 830)
 		.attr("y", 65)
 		.attr("width", 25).attr("height", 15)
-		.style("fill", color(2));
+		.style("stroke", color(2))
+		.style("stroke-width","1px")
+		.style("fill", color(2))
+		.attr("fill-opacity",".2");
 
 	e.append("text")
 		.attr("x", 860)

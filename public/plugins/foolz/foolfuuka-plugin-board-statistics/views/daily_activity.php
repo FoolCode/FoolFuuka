@@ -10,6 +10,8 @@ $temp = [];
 
 foreach ($data_array as $k => $t)
 {
+	$temp[$k] = [];
+
 	foreach ($t as $kS => $tS)
 	{
 		$temp[$k][] = [
@@ -154,7 +156,7 @@ y.domain([0, d3.max(data_ghost, function(d) { return d.y + d.y0 + 2; })]).range(
 	svg_ghost.append("text")
 		.attr("x", 10)
 		.attr("dy", 20)
-		.text("Activity in Ghost (Past 24 Hours)")
+		.text("Ghost Activity (Past 24 Hours)")
 		.style("font-weight", "bold");
 
 var svg_karma = d3.select("#graphs").append("svg")

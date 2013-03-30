@@ -26,6 +26,11 @@ foreach ($data_array as $k => $t)
 		'count' => $t->trips
 	];
 }
+
+// manually truncate results
+array_pop($temp);
+array_pop($temp);
+array_pop($temp);
 ?>
 
 <div id="graphs"></div>
@@ -40,7 +45,7 @@ var x = d3.time.scale().range([0, w]);
 var y = d3.scale.linear().range([h, 0]);
 
 var color = d3.scale.ordinal()
-	.range(["#0000ff", "#ff0000", "#008000"]);
+	.range(["#008000", "#ff0000", "#0000ff"]);
 var xAxis = d3.svg.axis()
 	.scale(x)
 	.orient("bottom")
@@ -55,6 +60,10 @@ var stack = d3.layout.stack()
 	.y(function(d) { return d.count; });
 var nest = d3.nest()
 	.key(function(d) { return d.group});
+var line = d3.svg.line()
+	.interpolate("basis")
+	.x(function(d) { return x(d.time); })
+	.y(function(d) { return y(d.y); });
 var area = d3.svg.area()
 	.interpolate("basis")
 	.x(function(d) { return x(d.time); })
@@ -80,17 +89,21 @@ var layers = stack(nest.entries(data_board));
 x.domain(d3.extent(data_board, function(d) { return d.time; })).range([0, w]);
 y.domain([0, d3.max(data_board, function(d) { return d.y + d.y0 + 2; })]).range([h, 0]);
 
-console.log(layers);
-
 	svg_board.selectAll(".layer")
 		.data(layers)
 		.enter().append("path")
 		.attr("class", "layer")
 		.attr("d", function(d) { return area(d.values); })
-		.style("stroke", function(d, i) { return color(i); })
-		.style("stroke-width","1px")
 		.style("fill", function(d, i) { return color(i); })
 		.attr("fill-opacity",".2");
+
+	svg_board.selectAll(".line")
+		.data(layers)
+		.enter().append("path")
+		.attr("class", "line")
+		.attr("stroke", function(d, i) { return color(i); })
+		.attr("d", function(d) { return line(d.values); })
+		.style("fill", "none");
 
 	svg_board.append("g")
 		.attr("class", "x axis")
@@ -109,9 +122,9 @@ d3.selectAll("svg").each(function(d) {
 		.attr("x", 830)
 		.attr("y", 15)
 		.attr("width", 25).attr("height", 15)
-		.style("stroke", color(2))
+		.style("stroke", color(0))
 		.style("stroke-width","1px")
-		.style("fill", color(2))
+		.style("fill", color(0))
 		.attr("fill-opacity",".2");
 
 	e.append("text")
@@ -123,9 +136,9 @@ d3.selectAll("svg").each(function(d) {
 		.attr("x", 830)
 		.attr("y", 40)
 		.attr("width", 25).attr("height", 15)
-		.style("stroke", color(0))
+		.style("stroke", color(1))
 		.style("stroke-width","1px")
-		.style("fill", color(0))
+		.style("fill", color(1))
 		.attr("fill-opacity",".2");
 
 	e.append("text")
@@ -137,9 +150,9 @@ d3.selectAll("svg").each(function(d) {
 		.attr("x", 830)
 		.attr("y", 65)
 		.attr("width", 25).attr("height", 15)
-		.style("stroke", color(1))
+		.style("stroke", color(2))
 		.style("stroke-width","1px")
-		.style("fill", color(1))
+		.style("fill", color(2))
 		.attr("fill-opacity",".2");
 
 	e.append("text")

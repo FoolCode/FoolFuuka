@@ -30,6 +30,11 @@ foreach ($data_array as $k => $t)
 			'count' => $tS->sage
 		];
 	}
+
+	// manually truncate results
+	array_pop($temp[$k]);
+	array_pop($temp[$k]);
+	array_pop($temp[$k]);
 }
 ?>
 

@@ -1256,6 +1256,7 @@ class Radix
 	{
 		$tables = [
 			'',
+			'_deleted',
 			'_images',
 			'_threads',
 			'_users',

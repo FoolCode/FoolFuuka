@@ -16,6 +16,6 @@
 		}
 
 		\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Media::delete.call.before')
-			->setCall('Foolfuuka\\Plugins\\NginxCachePurge\\NginxCachePurge::beforeDeleteMedia');
+			->setCall('Foolz\Foolfuuka\Plugins\NginxCachePurge\Model\NginxCachePurge::beforeDeleteMedia');
 	});
 

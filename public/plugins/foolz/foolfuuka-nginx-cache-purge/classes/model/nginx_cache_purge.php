@@ -1,30 +1,32 @@
 <?php
 
-namespace Foolfuuka\Plugins\NginxCachePurge;
+namespace Foolz\Foolfuuka\Plugins\NginxCachePurge\Model;
 
-if ( ! defined('DOCROOT'))
-	exit('No direct script access allowed');
-
-class NginxCachePurge extends \Plugins
+class NginxCachePurge
 {
-
 	public static function beforeDeleteMedia($result)
 	{
 		$post = $result->getObject();
-		$params = $result->getParams();
-		$media = isset($params[0]) ? $params[0] : true;
-		$thumb = isset($params[1]) ? $params[1] : true;
-
 		$dir = [];
 
-		if ($media)
+		// purge full image
+		try
 		{
 			$dir['full'] = $post->getLink(false, true);
 		}
+		catch (\Foolz\Foolfuuka\Model\MediaException $e)
+		{
 
-		if ($thumb)
+		}
+
+		// purge thumbnail
+		try
 		{
 			$dir['thumb'] = $post->getLink(true, true);
+		}
+		catch (\Foolz\Foolfuuka\Model\MediaException $e)
+		{
+
 		}
 
 		$url_user_password = static::parseUrls();
@@ -39,15 +41,28 @@ class NginxCachePurge extends \Plugins
 					continue;
 				}
 
-				$options = ['driver' => 'curl'];
-				if (isset($item['password']))
+				$ch = curl_init();
+
+				if (isset($item['pass']))
 				{
-					$options['user'] = $item['user'];
-					$options['pass'] = $item['pass'];
-					$options['auth'] = 'any';
+					$options = [
+						CURLOPT_URL => $item['url'].parse_url($d, PHP_URL_PATH),
+						CURLOPT_RETURNTRANSFER => true,
+						CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+						CURLOPT_USERPWD => $item['user'].':'.$item['pass']
+					];
+				}
+				else
+				{
+					$options = [
+						CURLOPT_URL => $item['url'].parse_url($d, PHP_URL_PATH),
+						CURLOPT_RETURNTRANSFER => true
+					];
 				}
 
-				\Request::forge($item['url'] . parse_url($d, PHP_URL_PATH), $options)->execute();
+				curl_setopt_array($ch, $options);
+				curl_exec($ch);
+				curl_close($ch);
 			}
 		}
 
@@ -69,7 +84,7 @@ class NginxCachePurge extends \Plugins
 
 		foreach($lines as $key => $line)
 		{
-			$explode = explode(':', $line);
+			$explode = explode('::', $line);
 
 			if (count($explode) == 0)
 			{
@@ -77,7 +92,9 @@ class NginxCachePurge extends \Plugins
 			}
 
 			if (count($explode) > 1)
-				$lines_exploded[$key]['url'] = rtrim(array_shift($explode) . ':' . array_shift($explode), '/');
+			{
+				$lines_exploded[$key]['url'] = rtrim(array_shift($explode), '/');
+			}
 
 			if (count($explode) > 1)
 			{

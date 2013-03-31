@@ -562,47 +562,91 @@ class CommentInsert extends Comment
 
 		if ($this->ghost)
 		{
-			$num = '('.DC::qb()
-				->select('MAX(num)')
-				->from('('.
-					DC::qb()
-						->select('num')
-						->from($this->radix->getTable(), 'xr')
-						->where('thread_num = '.DC::forge()->quote($this->thread_num))
-						->getSQL()
-				.')', 'x')
-				->getSQL().')';
+			$num = '
+			(
+				SELECT MAX(num) AS num
+				FROM (
+					(
+						SELECT num
+						FROM '.$this->radix->getTable().' xr
+						WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+					)
+					UNION
+					(
+						SELECT num
+						FROM '.$this->radix->getTable('_deleted').' xrd
+						WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+					)
+				) x
+			)';
 
-			$subnum = '('.DC::qb()
-				->select('MAX(subnum)+1')
-				->from('('.
-					DC::qb()
-						->select('subnum')
-						->from($this->radix->getTable(), 'xxr')
-						->where('num = ('.
-							DC::qb()
-								->select('MAX(num)')
-								->from($this->radix->getTable(), 'xxxr')
-								->where('thread_num = '.DC::forge()->quote($this->thread_num))
-								->getSQL()
-						.')')
-						->getSQL()
-				.')', 'xx')
-				->getSQL().')';
+			$subnum = '
+			(
+				SELECT MAX(subnum) + 1 AS subnum
+				FROM (
+					(
+						SELECT subnum
+						FROM '.$this->radix->getTable().' xxr
+						WHERE num = (
+							SELECT MAX(num)
+							FROM (
+								(
+									SELECT num
+									FROM '.$this->radix->getTable().' xxxr
+									WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+								)
+								UNION
+								(
+									SELECT num
+									FROM '.$this->radix->getTable('_deleted').' xxxrd
+									WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+								)
+							) xxx
+						)
+					)
+					UNION
+					(
+						SELECT subnum
+						FROM '.$this->radix->getTable('_deleted').' xxdr
+						WHERE num = (
+							SELECT MAX(num)
+							FROM (
+								(
+									SELECT num
+									FROM '.$this->radix->getTable().' xxxr
+									WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+								)
+								UNION
+								(
+									SELECT num
+									FROM '.$this->radix->getTable('_deleted').' xxxdrd
+									WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+								)
+							) xxxd
+						)
+					)
+				) xx
+			)';
 
 			$thread_num = $this->thread_num;
 		}
 		else
 		{
-			$num = '('.DC::qb()
-				->select('COALESCE(MAX(num), 0)+1 AS num')
-				->from('('.
-					DC::qb()
-						->select('num')
-						->from($this->radix->getTable(), 'xxr')
-						->getSQL()
-				.')', 'x')
-				->getSQL().')';
+			$num = '
+			(
+				SELECT MAX(num) AS num
+				FROM (
+					(
+						SELECT COALESCE(MAX(num), 0) + 1 AS num
+						FROM '.$this->radix->getTable().' xr
+					)
+					UNION
+					(
+						SELECT COALESCE(MAX(num), 0) + 1 AS num
+						FROM '.$this->radix->getTable('_deleted').' xdr
+					)
+				) x
+			)';
 
 			$subnum = 0;
 
@@ -612,15 +656,21 @@ class CommentInsert extends Comment
 			}
 			else
 			{
-				$thread_num = '('.DC::qb()
-					->select('COALESCE(MAX(num), 0)+1 AS thread_num')
-					->from('('.
-						DC::qb()
-							->select('num')
-							->from($this->radix->getTable(), 'xxxr')
-							->getSQL()
-					.')', 'xx')
-					->getSQL().')';
+				$thread_num = '
+				(
+					SELECT MAX(thread_num) AS thread_num
+					FROM (
+						(
+							SELECT COALESCE(MAX(num), 0) + 1 as thread_num
+							FROM '.$this->radix->getTable().' xxr
+						)
+						UNION
+						(
+							SELECT COALESCE(MAX(num), 0) + 1 as thread_num
+							FROM '.$this->radix->getTable('_deleted').' xxdr
+						)
+					) xx
+				)';
 			}
 		}
 

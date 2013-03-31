@@ -931,6 +931,16 @@ class Comment
 
 		DC::forge()->beginTransaction();
 
+		// throw in the _deleted table
+		DC::forge()->executeUpdate(
+			'INSERT IGNORE INTO '.$this->radix->getTable('_deleted').' '.
+			DC::qb()
+				->select('*')
+				->from($this->radix->getTable(), 't')
+				->where('doc_id = '.DC::forge()->quote($this->doc_id))
+				->getSQL()
+		);
+
 		// remove message
 		DC::qb()
 			->delete($this->radix->getTable())
@@ -968,6 +978,16 @@ class Comment
 		// if it's OP delete all other comments
 		if ($this->op)
 		{
+			// throw in the _deleted table
+			DC::forge()->executeUpdate(
+				'INSERT INTO '.$this->radix->getTable('_deleted').' '.
+				DC::qb()
+					->select('*')
+					->from($this->radix->getTable(), 'b')
+					->where('thread_num = '.DC::forge()->quote($this->thread_num))
+					->getSQL()
+			);
+
 			DC::qb()
 				->delete($this->radix->getTable('_threads'))
 				->where('thread_num = :thread_num')

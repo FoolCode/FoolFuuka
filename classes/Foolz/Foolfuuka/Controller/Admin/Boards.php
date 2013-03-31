@@ -112,7 +112,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
-	function action_delete($type = false, $id = 0)
+	function action_delete($id = 0)
 	{
 		$board = \Radix::getById($id);
 		if ($board == false)
@@ -126,29 +126,20 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		}
 		elseif (\Input::post())
 		{
-			switch ($type)
-			{
-				case('board'):
-					$board->remove($id);
-					\Notices::setFlash('success', sprintf(__('The board %s has been deleted.'), $board->shortname));
-					\Response::redirect('admin/boards/manage');
-					break;
-			}
+			$board->remove($id);
+			\Notices::setFlash('success', sprintf(__('The board %s has been deleted.'), $board->shortname));
+			\Response::redirect('admin/boards/manage');
 		}
 
-		switch ($type)
-		{
-			case('board'):
-				$this->_views['function_title'] = __('Removing board:').' '.$board->shortname;
-				$data['alert_level'] = 'warning';
-				$data['message'] = __('Do you really want to remove the board and all its data?').
-					'<br/>'.
-					__('Notice: due to its size, you will have to remove the image directory manually. The directory will have the "_removed" suffix. You can remove all the leftover "_removed" directories with the following command:').
-					' <code>php index.php cli boards remove_leftover_dirs</code>';
+		$this->_views['function_title'] = __('Removing board:').' '.$board->shortname;
+		$data['alert_level'] = 'warning';
+		$data['message'] = __('Do you really want to remove the board and all its data?').
+			'<br/>'.
+			__('Notice: due to its size, you will have to remove the image directory manually. The directory will have the "_removed" suffix. You can remove all the leftover "_removed" directories with the following command:').
+			' <code>php index.php cli boards remove_leftover_dirs</code>';
 
-				$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/confirm', $data);
-				return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
-		}
+		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/confirm', $data);
+		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	function action_preferences()

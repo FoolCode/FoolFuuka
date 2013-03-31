@@ -61,8 +61,6 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 
 \Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate.foolz/foolfuuka-plugin-board-statistics')
 	->setCall(function($result) {
-		/* @var $schema \Doctrine\DBAL\Schema\Schema */
-		/* @var $table \Doctrine\DBAL\Schema\Table */
 		$schema = $result->getParam('schema');
 		$table = $schema->createTable(DC::p('plugin_fu_board_statistics'));
 		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')

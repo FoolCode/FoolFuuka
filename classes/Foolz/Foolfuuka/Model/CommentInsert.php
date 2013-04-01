@@ -128,10 +128,7 @@ class CommentInsert extends Comment
 			DC::qb()
 				->update($this->radix->getTable('_users'))
 				->set('postcount', 'postcount + 1')
-				->set('firstseen', ':firstseen')
 				->where('user_id = :user_id')
-				->setParameter(':firstseen',
-					$result['firstseen'] > $this->timestamp ? $result['firstseen'] : $this->timestamp)
 				->setParameter(':user_id', $result['user_id'])
 				->execute();
 		}

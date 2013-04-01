@@ -14,19 +14,29 @@ foreach ($data_array as $k => $t)
 
 	foreach ($t as $kS => $tS)
 	{
+		$timestamp = $tS->time;
+
+		if ($this->_radix->archive)
+		{
+			$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));
+			$utc = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('UTC'));
+			$diff = $newyork->diff($utc)->h;
+			$timestamp = $timestamp + ($diff * 60 * 60);
+		}
+
 		$temp[$k][] = [
 			'group' => 'posts',
-			'time' => $tS->time,
+			'time' => $timestamp,
 			'count' => $tS->posts
 		];
 		$temp[$k][] = [
 			'group' => 'images',
-			'time' => $tS->time,
+			'time' => $timestamp,
 			'count' => $tS->images
 		];
 		$temp[$k][] = [
 			'group' => 'sage',
-			'time' => $tS->time,
+			'time' => $timestamp,
 			'count' => $tS->sage
 		];
 	}

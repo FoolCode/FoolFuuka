@@ -10,19 +10,29 @@ $temp = [];
 
 foreach ($data_array as $k => $t)
 {
+	$timestamp = $tS->time;
+
+	if ($this->_radix->archive)
+	{
+		$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));
+		$utc = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('UTC'));
+		$diff = $newyork->diff($utc)->h;
+		$timestamp = $timestamp + ($diff * 60 * 60);
+	}
+
 	$temp[] = [
 		'group' => 'anons',
-		'time' => $t->time,
+		'time' => $timestamp,
 		'count' => $t->anons
 	];
 	$temp[] = [
 		'group' => 'names',
-		'time' => $t->time,
+		'time' => $timestamp,
 		'count' => $t->names
 	];
 	$temp[] = [
 		'group' => 'trips',
-		'time' => $t->time,
+		'time' => $timestamp,
 		'count' => $t->trips
 	];
 }

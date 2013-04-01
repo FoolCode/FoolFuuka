@@ -236,7 +236,6 @@ class BoardStatistics
 			')
 			->from($board->getTable(), 'b') // TODO FORCE INDEX(timestamp_index)
 			->where('timestamp > '.($timestamp - 86400))
-			->andWhere('timestamp < '.($timestamp - 300))
 			->groupBy('time')
 			->orderBy('time')
 			->execute()

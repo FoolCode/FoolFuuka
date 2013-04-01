@@ -128,7 +128,7 @@ class Chan extends \Foolz\Theme\View
 
 	public function getContent()
 	{
-		$disable_headers = $this->getBuilderParamManager()->getParam('disable_headers', false);
+		$pagination = $this->getBuilderParamManager()->getParam('pagination', false);
 		?>
 
 		<?= $this->getBuilder()->isPartial('tools_new_thread_box') ? $this->getBuilder()->getPartial('tools_new_thread_box')->build() : ''; ?>
@@ -137,79 +137,76 @@ class Chan extends \Foolz\Theme\View
 
 		<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_after_body_template')->execute(); ?>
 
-		<?php if ($disable_headers !== true) : ?>
-			<?php if (isset($pagination) && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
-				<table style="float: left;">
-					<tbody>
-						<tr>
-							<td colspan="7" class="theader"><?= __('Navigation') ?></td>
-						</tr>
-						<tr>
-							<td class="postblock"><?= __('View Posts') ?></td>
-							<td>
-								<?php if ($pagination['current_page'] == 1) : ?>
-									[<?= __('Prev') ?>]
-								<?php else : ?>
-									[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] - 1) ?>/"><?= __('Prev') ?></a>]
-								<?php endif; ?>
+		<?php if ($pagination !== false && !is_null($pagination['total']) && ($pagination['total'] >= 1)) : ?>
+			<table style="float: left;">
+				<tbody>
+					<tr>
+						<td colspan="7" class="theader"><?= __('Navigation') ?></td>
+					</tr>
+					<tr>
+						<td class="postblock"><?= __('View Posts') ?></td>
+						<td>
+							<?php if ($pagination['current_page'] == 1) : ?>
+								[<?= __('Prev') ?>]
+							<?php else : ?>
+								[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] - 1) ?>/"><?= __('Prev') ?></a>]
+							<?php endif; ?>
 
-								<?php
-								if ($pagination['total'] <= 15) :
-									for ($index = 1; $index <= $pagination['total']; $index++)
+							<?php
+							if ($pagination['total'] <= 15) :
+								for ($index = 1; $index <= $pagination['total']; $index++)
+								{
+									if (($pagination['current_page'] == $index))
+										echo '[<b>' . $index . '</b>]';
+									else
+										echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>]';
+								}
+							else :
+								if ($pagination['current_page'] < 15) :
+									for ($index = 1; $index <= 15; $index++)
 									{
 										if (($pagination['current_page'] == $index))
 											echo '[<b>' . $index . '</b>]';
 										else
 											echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>]';
 									}
+									echo '[...]';
 								else :
-									if ($pagination['current_page'] < 15) :
-										for ($index = 1; $index <= 15; $index++)
-										{
-											if (($pagination['current_page'] == $index))
-												echo '[<b>' . $index . '</b>]';
-											else
-												echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>]';
-										}
+									for ($index = 1; $index < 10; $index++)
+									{
+										if (($pagination['current_page'] == $index))
+											echo '[<b>' . $index . '</b>]';
+										else
+											echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>]';
+									}
+									echo '<li class="disabled"><span>...</span></li>';
+									for ($index = ((($pagination['current_page'] + 2) > $pagination['total'])
+										? ($pagination['current_page'] - 4) : ($pagination['current_page'] - 2)); $index <= ((($pagination['current_page'] + 2) > $pagination['total'])
+										? $pagination['total'] : ($pagination['current_page'] + 2)); $index++)
+									{
+										if (($pagination['current_page'] == $index))
+											echo '[<b>' . $index . '</b>]';
+										else
+											echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>]';
+									}
+									if (($pagination['current_page'] + 2) < $pagination['total'])
+									{
 										echo '[...]';
-									else :
-										for ($index = 1; $index < 10; $index++)
-										{
-											if (($pagination['current_page'] == $index))
-												echo '[<b>' . $index . '</b>]';
-											else
-												echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>]';
-										}
-										echo '<li class="disabled"><span>...</span></li>';
-										for ($index = ((($pagination['current_page'] + 2) > $pagination['total'])
-											? ($pagination['current_page'] - 4) : ($pagination['current_page'] - 2)); $index <= ((($pagination['current_page'] + 2) > $pagination['total'])
-											? $pagination['total'] : ($pagination['current_page'] + 2)); $index++)
-										{
-											if (($pagination['current_page'] == $index))
-												echo '[<b>' . $index . '</b>]';
-											else
-												echo '[<a href="' . $pagination['base_url'] . $index . '/">' . $index . '</a>]';
-										}
-										if (($pagination['current_page'] + 2) < $pagination['total'])
-										{
-											echo '[...]';
-										}
-									endif;
+									}
 								endif;
-								?>
+							endif;
+							?>
 
-								<?php if ($pagination['total'] == $pagination['current_page']) : ?>
-									[<?= __('Next') ?>]
-								<?php else : ?>
-									[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] + 1) ?>/"><?= __('Next') ?></a>]
-								<?php endif; ?>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			<?php endif; ?>
+							<?php if ($pagination['total'] == $pagination['current_page']) : ?>
+								[<?= __('Next') ?>]
+							<?php else : ?>
+								[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] + 1) ?>/"><?= __('Next') ?></a>]
+							<?php endif; ?>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		<?php endif;
-
 	}
 
 	public function getFooter()

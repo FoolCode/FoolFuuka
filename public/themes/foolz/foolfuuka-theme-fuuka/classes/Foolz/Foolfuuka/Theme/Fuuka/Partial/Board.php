@@ -13,7 +13,7 @@ class Board extends \Foolz\Theme\View
 		$board = $this->getParamManager()->getParam('board');
 		$thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
 
-		if (isset($thread_id))
+		if ($thread_id > 0)
 		{
 			echo \Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform'));
 			echo \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token());
@@ -76,7 +76,7 @@ class Board extends \Foolz\Theme\View
 					<?php if ($op->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span></span><?php endif; ?>
 				</label>
 
-				<?php if ( !isset($thread_id)) : ?>
+				<?php if ($thread_id == 0) : ?>
 					<a class="js" href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.<?= $op->num ?></a>
 				<?php else : ?>
 					<a class="js" href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
@@ -141,7 +141,7 @@ class Board extends \Foolz\Theme\View
 				}
 			?>
 
-			<?php if (isset($thread_id)) : ?>
+			<?php if ($thread_id > 0) : ?>
 			<?= $this->getBuilder()->isPartial('tools_reply_box') ? $this->getBuilder()->getPartial('tools_reply_box')->build() : '' ?>
 			<?php endif; ?>
 
@@ -150,7 +150,7 @@ class Board extends \Foolz\Theme\View
 		<?php endforeach; ?>
 		</div>
 
-		<?php if (isset($thread_id)) echo \Form::close(); ?>
+		<?php if ($thread_id > 0) echo \Form::close(); ?>
 	<?php
 	}
 }

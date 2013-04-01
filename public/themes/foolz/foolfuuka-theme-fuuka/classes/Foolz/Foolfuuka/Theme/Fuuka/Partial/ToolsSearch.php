@@ -7,6 +7,7 @@ class ToolsSearch extends \Foolz\Theme\View
 	public function toString()
 	{
 		$radix = $this->getBuilderParamManager()->getParam('radix');
+		$search = $this->getBuilderParamManager()->getParam('search', []);
 
 		if ( ! isset($radix) && \Preferences::get('foolfuuka.sphinx.global'))
 		{

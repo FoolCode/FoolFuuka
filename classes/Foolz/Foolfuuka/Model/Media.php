@@ -784,7 +784,14 @@ class Media
 
 			if ( ! $thumbnail)
 			{
-				$image = $this->media;
+				if ($this->radix->archive && $this->radix->media_threads == 0)
+				{
+					return null;
+				}
+				else
+				{
+					$image = $this->media;
+				}
 			}
 		}
 

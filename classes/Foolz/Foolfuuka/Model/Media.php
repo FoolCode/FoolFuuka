@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use \Foolz\Config\Config;
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 
 class MediaException extends \Exception {}
@@ -738,30 +739,53 @@ class Media
 			return $before;
 		}
 
-		// locate the image
-		if ($thumbnail && file_exists($this->getDir($thumbnail)) !== false)
+		if (Config::get('foolz/foolframe', 'config', 'media.filecheck') === true)
 		{
-			if ($this->op == 1)
+			// locate the image
+			if ($thumbnail && file_exists($this->getDir($thumbnail)) !== false)
 			{
-				$image = $this->preview_op ? : $this->preview_reply;
+				if ($this->op == 1)
+				{
+					$image = $this->preview_op ? : $this->preview_reply;
+				}
+				else
+				{
+					$image = $this->preview_reply ? : $this->preview_op;
+				}
 			}
-			else
+
+			// full image
+			if ( ! $thumbnail && file_exists($this->getDir(false)) !== false)
 			{
-				$image = $this->preview_reply ? : $this->preview_op;
+				$image = $this->media;
+			}
+
+			// fallback if we have the full image but not the thumbnail
+			if ($thumbnail && ! isset($image) && file_exists($this->getDir(false)))
+			{
+				$thumbnail = false;
+				$image = $this->media;
 			}
 		}
-
-		// full image
-		if ( ! $thumbnail && file_exists($this->getDir(false)) !== false)
+		else
 		{
-			$image = $this->media;
-		}
+			// locate the image
+			if ($thumbnail)
+			{
+				if ($this->op == 1)
+				{
+					$image = $this->preview_op ? : $this->preview_reply;
+				}
+				else
+				{
+					$image = $this->preview_reply ? : $this->preview_op;
+				}
+			}
 
-		// fallback if we have the full image but not the thumbnail
-		if ($thumbnail && ! isset($image) && file_exists($this->getDir(false)))
-		{
-			$thumbnail = false;
-			$image = $this->media;
+			if ( ! $thumbnail)
+			{
+				$image = $this->media;
+			}
 		}
 
 		if (isset($image))

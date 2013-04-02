@@ -187,7 +187,7 @@ class Board extends \Foolz\Theme\View
 		</article>
 		<?php endif; ?>
 			<?php endforeach; ?>
-        <article class="clearfix thread backlink_container">
+        <article class="clearfix backlink_container">
             <div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
         </article>
 	    <?php

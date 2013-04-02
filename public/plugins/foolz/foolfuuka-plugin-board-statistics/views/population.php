@@ -10,7 +10,7 @@ $temp = [];
 
 foreach ($data_array as $k => $t)
 {
-	$timestamp = $tS->time;
+	$timestamp = $t->time;
 
 	if ($this->_radix->archive)
 	{

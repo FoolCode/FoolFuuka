@@ -52,8 +52,8 @@ body.theme_default {
 }
 
 body.theme_default.midnight {
-	background:#222222;
-	color: #c5c8c6;
+    background:#222222;
+    color: #c5c8c6;
 }
 
 .theme_default ::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
@@ -83,7 +83,7 @@ body.theme_default.midnight {
 }
 
 .theme_default.midnight .btn-group {
-	color: #000;
+    color: #000;
 }
 
 .theme_default .btn-inverse {
@@ -102,7 +102,7 @@ body.theme_default.midnight {
 }
 
 .theme_default.midnight .btn-inverse {
-	background: #4c5057;
+    background: #4c5057;
 }
 
 .theme_default .btn-inverse:hover {
@@ -118,7 +118,7 @@ body.theme_default.midnight {
 
 .theme_default.midnight #footer {
     background:#000;
-	color: #c5c8c6;
+    color: #c5c8c6;
 }
 
 .theme_default #footer .footer_text {
@@ -225,7 +225,7 @@ body.theme_default.midnight {
 
 .theme_default.midnight .letters {
     background: #000;
-	color: #c5c8c6;
+    color: #c5c8c6;
 }
 
 .theme_default .letters a {
@@ -249,8 +249,8 @@ body.theme_default.midnight {
 }
 
 .theme_default.midnight .navbar-search .search-query {
-	border-bottom-color: rgba(126, 126, 126, 0.3);
-	border-right-color: rgba(255, 255, 255, 0.15);
+    border-bottom-color: rgba(126, 126, 126, 0.3);
+    border-right-color: rgba(255, 255, 255, 0.15);
 }
 
 /* individual: webkit */
@@ -728,7 +728,7 @@ body.theme_default.midnight {
 
 .theme_default.midnight article.thread .post_type_is_op,
 .theme_default.midnight article.thread .post_show_board {
-	color: #7e3434;
+    color: #7e3434;
 }
 
 .theme_default article.thread h2.post_title {
@@ -759,7 +759,7 @@ body.theme_default.midnight {
 }
 
 .theme_default article.thread .post_tripcode {
-	font-weight: normal;
+    font-weight: normal;
     color: #117743;
 }
 
@@ -802,8 +802,8 @@ body.theme_default.midnight {
 }
 
 .theme_default.midnight article.thread .report_reason {
-	background: #203357;
-	border: 1px solid #17399B;
+    background: #203357;
+    border: 1px solid #17399B;
 }
 
 .theme_default article.thread .ip_reporter {
@@ -837,6 +837,10 @@ body.theme_default.midnight {
 .theme_default article.thread article.post {
     margin: 0px 5px 3px 16px;
     word-break: break-word;
+}
+
+.theme_default article.thread article.stub {
+    margin: 0px 5px 3px 16px;
 }
 
 .theme_default .post_wrapper {
@@ -929,7 +933,7 @@ body.theme_default.midnight {
 }
 
 .theme_default.midnight .post.highlight .post_wrapper {
-	background: #1d1d21;
+    background: #1d1d21;
     border: 1px solid #111;
 }
 
@@ -967,7 +971,7 @@ body.theme_default.midnight {
 }
 
 .theme_default.midnight article.thread .spoiler .greentext {
-	color: #999;
+    color: #999;
 }
 
 .theme_default article.thread .spoiler:hover .greentext {
@@ -1090,9 +1094,9 @@ body.theme_default.midnight {
 .theme_default.midnight .thread_form input[type=file],
 .theme_default.midnight .thread_form input[type=password],
 .theme_default.midnight .thread_form.uneditable-input {
-	background-color: #1d1f21;
-	border: 1px solid #494949;
-	color: #e6e6e6;
+    background-color: #1d1f21;
+    border: 1px solid #494949;
+    color: #e6e6e6;
 }
 
 .theme_default .thread_form label {
@@ -1101,7 +1105,7 @@ body.theme_default.midnight {
 }
 
 .theme_default.midnight .thread_form label {
-	background-color: #1d1f21;
+    background-color: #1d1f21;
     color:#e6e6e6;
 }
 
@@ -1118,8 +1122,8 @@ body.theme_default.midnight {
 
 .theme_default.midnight .thread_form input[type=file],
 .theme_default.midnight .thread_form select {
-	background-color: #1d1f21;
-	border: 1px solid #494949;
+    background-color: #1d1f21;
+    border: 1px solid #494949;
 }
 
 .theme_default .thread_form input[type=file] {
@@ -1128,8 +1132,8 @@ body.theme_default.midnight {
 
 .theme_default.midnight .thread_form .input-append .add-on,
 .theme_default.midnight .thread_form .input-prepend .add-on {
-	border: 1px solid #494949;
-	text-shadow: none;
+    border: 1px solid #494949;
+    text-shadow: none;
 }
 
 .theme_default .thread_form .rules {
@@ -1396,4 +1400,34 @@ body.theme_default.midnight {
 
 .theme_default.midnight .paginate a {
     color: #000;
+}
+
+.theme_default .btn-toggle-post {
+    background-color: #f5f5f5;
+    border: 1px solid #bbbbbb;
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 10px;
+    line-height: 15px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.theme_default .stub {
+    display: none;
+}
+
+.theme_default .stub.thread {
+    padding: 25px 0;
+    margin: 0 15px;
+    border-top:1px solid #364041;
+    border-top:1px solid rgba(0,0,0,0.5);
+}
+
+.theme_default .stub.post {
+    margin: 0px 5px 3px 16px;
+}
+
+.theme_default .stub.thread:nth-of-type(2) {
+    border-top:none;
 }

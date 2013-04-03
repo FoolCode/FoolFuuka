@@ -37,7 +37,14 @@ class BoardComment extends \Foolz\Theme\View
 		$num = $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 
 		?>
+		<div class="stub post show_doc_id_<?= $p->doc_id ?>">
+				<button class="btn-toggle-post" data-function="showPost" data-board="<?= $p->radix->shortname ?>"  data-doc-id="<?= $p->doc_id ?>" data-thread-num="<?= $p->thread_num ?>"><i class="icon-plus"></i></button>
+				<?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($p->email) ?>"><?php endif; ?><span class="post_author"><?= $p->getNameProcessed() ?></span><?= ($p->getNameProcessed() && $p->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $p->getTripProcessed() ?></span><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?>
+		</div>
 		<article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if ( !is_null($p->media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>">
+			<div class="pull-left hide_post_stub">
+				<button class="btn-toggle-post" data-function="hidePost" data-board="<?= $p->radix->shortname ?>" data-doc-id="<?= $p->doc_id ?>"><i class="icon-minus"></i></button>
+			</div>
 			<div class="post_wrapper">
 				<?php if ($p->media !== null) : ?>
 				<div class="post_file">

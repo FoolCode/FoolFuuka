@@ -50,6 +50,22 @@ var bindFunctions = function()
 			el.hide();
 		},
 
+		hidePost: function(el, post, event)
+		{
+			var post = el.data("doc-id");
+
+			jQuery(".doc_id_" + post).hide();
+			jQuery(".show_doc_id_" + post).show();
+		},
+
+		showPost: function(el, post, event)
+		{
+			var post = el.data("doc-id");
+
+			jQuery(".doc_id_" + post).show();
+			jQuery(".show_doc_id_" + post).hide();
+		},
+
 		highlight: function(el, post, event)
 		{
 			if (post)
@@ -230,7 +246,7 @@ var bindFunctions = function()
 
 			if (! el.data('expanded'))
 			{
-				el.spin('small')
+				el.spin('small');
 				jQuery.ajax({
 					url: backend_vars.api_url + '_/api/chan/thread/',
 					dataType: 'json',
@@ -722,6 +738,8 @@ var showBacklink = function(backlink, pos, height, width)
 			right: 'auto'
 		});
 	}
+
+	backlink.find('.hide_post_stub').remove();
 
 	// for lazyload
 	var swap_image = backlink.find('[data-original]');

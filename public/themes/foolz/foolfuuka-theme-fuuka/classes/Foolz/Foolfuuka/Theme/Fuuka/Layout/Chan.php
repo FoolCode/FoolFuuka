@@ -36,7 +36,7 @@ class Chan extends \Foolz\Theme\View
 		<meta charset="utf-8">
 		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
 
-		<title><?= htmlspecialchars($this->getBuilder()->getProps()->getTitle()); ?></title>
+		<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
 		<?php $this->getStyles(); ?>
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

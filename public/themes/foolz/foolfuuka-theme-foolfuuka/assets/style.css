@@ -1427,7 +1427,3 @@ body.theme_default.midnight {
 .theme_default .stub.post {
     margin: 0px 5px 3px 16px;
 }
-
-.theme_default .stub.thread:nth-of-type(2) {
-    border-top:none;
-}

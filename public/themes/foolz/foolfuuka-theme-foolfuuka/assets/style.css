@@ -1413,17 +1413,21 @@ body.theme_default.midnight {
     vertical-align: middle;
 }
 
-.theme_default .stub {
+.theme_default div[class*="stub_doc_id_"] {
     display: none;
 }
 
-.theme_default .stub.thread {
+.theme_default .thread.stub {
     padding: 25px 0;
     margin: 0 15px;
     border-top:1px solid #364041;
     border-top:1px solid rgba(0,0,0,0.5);
 }
 
-.theme_default .stub.post {
+.theme_default .post.stub{
     margin: 0px 5px 3px 16px;
+}
+
+.theme_default .stub {
+    display: none;
 }

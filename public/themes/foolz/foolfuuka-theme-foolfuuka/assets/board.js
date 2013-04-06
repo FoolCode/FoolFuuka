@@ -59,7 +59,7 @@ var bindFunctions = function()
 			localStorage.setItem("hiddenBoardThreads/" + el.data("board"), JSON.stringify(hiddenBoardThreads));
 
 			jQuery(".doc_id_" + num).hide();
-			jQuery(".show_doc_id_" + num).show();
+			jQuery(".stub_doc_id_" + num).show();
 		},
 
 		showThread: function(el, post, event)
@@ -71,7 +71,7 @@ var bindFunctions = function()
 			localStorage.setItem("hiddenBoardThreads/" + el.data("board"), JSON.stringify(hiddenBoardThreads));
 
 			jQuery(".doc_id_" + num).show();
-			jQuery(".show_doc_id_" + num).hide();
+			jQuery(".stub_doc_id_" + num).hide();
 		},
 
 		hidePost: function(el, post, event)
@@ -83,7 +83,7 @@ var bindFunctions = function()
 			localStorage.setItem("hiddenBoardPosts/" + el.data("board"), JSON.stringify(hiddenBoardPosts));
 
 			jQuery(".doc_id_" + num).hide();
-			jQuery(".show_doc_id_" + num).show();
+			jQuery(".stub_doc_id_" + num).show();
 		},
 
 		showPost: function(el, post, event)
@@ -95,7 +95,7 @@ var bindFunctions = function()
 			localStorage.setItem("hiddenBoardPosts/" + el.data("board"), JSON.stringify(hiddenBoardPosts));
 
 			jQuery(".doc_id_" + num).show();
-			jQuery(".show_doc_id_" + num).hide();
+			jQuery(".stub_doc_id_" + num).hide();
 		},
 
 		highlight: function(el, post, event)
@@ -748,7 +748,7 @@ var hideThreads = function()
 		for (var num in hiddenBoardThreads)
 		{
 			jQuery(".doc_id_" + num).hide();
-			jQuery(".show_doc_id_" + num).show();
+			jQuery(".stub_doc_id_" + num).show();
 		}
 	}
 }
@@ -762,7 +762,7 @@ var hidePosts = function()
 		for (var num in hiddenBoardPosts)
 		{
 			jQuery(".doc_id_" + num).hide();
-			jQuery(".show_doc_id_" + num).show();
+			jQuery(".stub_doc_id_" + num).show();
 		}
 	}
 }

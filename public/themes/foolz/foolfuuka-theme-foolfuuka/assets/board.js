@@ -50,20 +50,52 @@ var bindFunctions = function()
 			el.hide();
 		},
 
+		hideThread: function(el, post, event)
+		{
+			var hiddenBoardThreads = JSON.parse(localStorage.getItem("hiddenBoardThreads/" + el.data("board"))) || {};
+			var num = el.data("doc-id");
+
+			hiddenBoardThreads[num] = true;
+			localStorage.setItem("hiddenBoardThreads/" + el.data("board"), JSON.stringify(hiddenBoardThreads));
+
+			jQuery(".doc_id_" + num).hide();
+			jQuery(".show_doc_id_" + num).show();
+		},
+
+		showThread: function(el, post, event)
+		{
+			var hiddenBoardThreads = JSON.parse(localStorage.getItem("hiddenBoardThreads/" + el.data("board"))) || {};
+			var num = el.data("doc-id");
+
+			delete hiddenBoardThreads[num];
+			localStorage.setItem("hiddenBoardThreads/" + el.data("board"), JSON.stringify(hiddenBoardThreads));
+
+			jQuery(".doc_id_" + num).show();
+			jQuery(".show_doc_id_" + num).hide();
+		},
+
 		hidePost: function(el, post, event)
 		{
-			var post = el.data("doc-id");
+			var hiddenBoardPosts = JSON.parse(localStorage.getItem("hiddenBoardPosts/" + el.data("board"))) || {};
+			var num = el.data("doc-id");
 
-			jQuery(".doc_id_" + post).hide();
-			jQuery(".show_doc_id_" + post).show();
+			hiddenBoardPosts[num] = true;
+			localStorage.setItem("hiddenBoardPosts/" + el.data("board"), JSON.stringify(hiddenBoardPosts));
+
+			jQuery(".doc_id_" + num).hide();
+			jQuery(".show_doc_id_" + num).show();
 		},
 
 		showPost: function(el, post, event)
 		{
-			var post = el.data("doc-id");
+			var hiddenBoardPosts = JSON.parse(localStorage.getItem("hiddenBoardPosts/" + el.data("board"))) || {};
+			var num = el.data("doc-id");
 
-			jQuery(".doc_id_" + post).show();
-			jQuery(".show_doc_id_" + post).hide();
+			delete hiddenBoardPosts[num];
+			localStorage.setItem("hiddenBoardPosts/" + el.data("board"), JSON.stringify(hiddenBoardPosts));
+
+			jQuery(".doc_id_" + num).show();
+			jQuery(".show_doc_id_" + num).hide();
 		},
 
 		highlight: function(el, post, event)
@@ -707,6 +739,34 @@ var bindFunctions = function()
 	});
 }
 
+var hideThreads = function()
+{
+	if (typeof backend_vars.board_shortname !== "undefined" && typeof backend_vars.thread_id === "undefined")
+	{
+		var hiddenBoardThreads = JSON.parse(localStorage.getItem("hiddenBoardThreads/" + backend_vars.board_shortname)) || {};
+
+		for (var num in hiddenBoardThreads)
+		{
+			jQuery(".doc_id_" + num).hide();
+			jQuery(".show_doc_id_" + num).show();
+		}
+	}
+}
+
+var hidePosts = function()
+{
+	if (typeof backend_vars.board_shortname !== "undefined")
+	{
+		var hiddenBoardPosts = JSON.parse(localStorage.getItem("hiddenBoardPosts/" + backend_vars.board_shortname)) || {};
+
+		for (var num in hiddenBoardPosts)
+		{
+			jQuery(".doc_id_" + num).hide();
+			jQuery(".show_doc_id_" + num).show();
+		}
+	}
+}
+
 var shakeBacklink = function(el)
 {
 	el.css({position:'relative'});
@@ -1037,6 +1097,8 @@ jQuery(document).ready(function() {
 	}
 
 	bindFunctions();
+	hideThreads();
+	hidePosts();
 
 	// localize and add 4chan tooltip where title
 	jQuery("article time").localize('ddd mmm dd yyyy HH:MM:ss').filter('[title]').tooltip({

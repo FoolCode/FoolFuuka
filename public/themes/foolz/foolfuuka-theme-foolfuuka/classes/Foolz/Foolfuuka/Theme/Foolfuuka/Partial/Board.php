@@ -19,7 +19,7 @@ class Board extends \Foolz\Theme\View
 				?>
 		<?php if (isset($post['omitted'])) : ?>
 		<div class="stub thread show_doc_id_<?= $op->doc_id ?>">
-			<button class="btn-toggle-post" data-function="showPost" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>"><i class="icon-plus"></i></button>
+			<button class="btn-toggle-post" data-function="showThread" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>"><i class="icon-plus"></i></button>
 			<?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><span class="post_author"><?= $op->getNameProcessed() ?></span><?= ($op->getNameProcessed() && $op->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $op->getTripProcessed() ?></span><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
 			(<?= ($post['omitted'] + 5).' '.__('replies') ?>)
 		</div>
@@ -27,7 +27,7 @@ class Board extends \Foolz\Theme\View
 		<article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>">
 				<?php if (isset($post['omitted'])) : ?>
 				<div class="pull-left hide_post_stub">
-					<button class="btn-toggle-post" data-function="hidePost" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>"><i class="icon-minus"></i></button>
+					<button class="btn-toggle-post" data-function="hideThread" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>"><i class="icon-minus"></i></button>
 				</div>
 				<?php endif; ?>
 				<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setParam('board', $op->radix)->execute(); ?>

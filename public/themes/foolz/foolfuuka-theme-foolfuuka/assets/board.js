@@ -678,7 +678,7 @@ var bindFunctions = function()
 							if (show_post_board === el.data('board') && show_post_num === el.data('post'))
 							{
 								backlink.html(data.formatted);
-								backlink.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+								backlink.find("time").localize('ddd mmm dd yyyy HH:MM:ss');
 								backlink.css('display', 'block');
 								showBacklink(backlink, pos, height, width);
 							}
@@ -694,7 +694,7 @@ var bindFunctions = function()
 				}, 50);
 			}
 
-			backlink.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+			backlink.find("time").localize('ddd mmm dd yyyy HH:MM:ss');
 			showBacklink(backlink, pos, height, width);
 		}
 		else
@@ -880,7 +880,7 @@ var insertPost = function(data, textStatus, jqXHR)
 					found_posts = true;
 					var post = jQuery(value.formatted);
 
-					post.find("time").localize('ddd mmm dd HH:MM:ss yyyy');
+					post.find("time").localize('ddd mmm dd yyyy HH:MM:ss');
 					post.find('[rel=tooltip]').tooltip({
 						placement: 'top',
 						delay: 200
@@ -1039,7 +1039,7 @@ jQuery(document).ready(function() {
 	bindFunctions();
 
 	// localize and add 4chan tooltip where title
-	jQuery("article time").localize('ddd mmm dd HH:MM:ss yyyy').filter('[title]').tooltip({
+	jQuery("article time").localize('ddd mmm dd yyyy HH:MM:ss').filter('[title]').tooltip({
 		placement: 'top',
 		delay: 300,
 		animation: false

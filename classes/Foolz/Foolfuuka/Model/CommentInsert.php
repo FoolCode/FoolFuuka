@@ -631,15 +631,15 @@ class CommentInsert extends Comment
 		{
 			$num = '
 			(
-				SELECT MAX(num) AS num
+				SELECT MAX(num) + 1 AS num
 				FROM (
 					(
-						SELECT COALESCE(MAX(num), 0) + 1 AS num
+						SELECT COALESCE(MAX(num), 0) AS num
 						FROM '.$this->radix->getTable().' xr
 					)
 					UNION
 					(
-						SELECT COALESCE(MAX(num), 0) + 1 AS num
+						SELECT COALESCE(MAX(num), 0) AS num
 						FROM '.$this->radix->getTable('_deleted').' xdr
 					)
 				) x
@@ -655,15 +655,15 @@ class CommentInsert extends Comment
 			{
 				$thread_num = '
 				(
-					SELECT MAX(thread_num) AS thread_num
+					SELECT MAX(thread_num) + 1 AS thread_num
 					FROM (
 						(
-							SELECT COALESCE(MAX(num), 0) + 1 as thread_num
+							SELECT COALESCE(MAX(num), 0) as thread_num
 							FROM '.$this->radix->getTable().' xxr
 						)
 						UNION
 						(
-							SELECT COALESCE(MAX(num), 0) + 1 as thread_num
+							SELECT COALESCE(MAX(num), 0) as thread_num
 							FROM '.$this->radix->getTable('_deleted').' xxdr
 						)
 					) xx

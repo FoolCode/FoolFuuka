@@ -865,7 +865,9 @@ class Comment
 			{
 				$pop = ($popup == true) ? " target=\"_blank\" " : "";
 
-				for ($i = 0; $i < count($matches['0']); $i++)
+				$total = count($matches['0']);
+
+				for ($i = 0; $i < $total; $i++)
 				{
 					$period = '';
 					if (preg_match("|\.$|", $matches['6'][$i]))
@@ -1152,6 +1154,6 @@ class Comment
 	 */
 	protected function p_processSecureTripcode($plain)
 	{
-		return substr(base64_encode(sha1($plain . base64_decode(\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'preferences.comment.secure_tripcode_salt')), true)), 0, 11);
+		return substr(base64_encode(sha1($plain . base64_decode(\Foolz\Config\Config::get('foolz/foolfuuka', 'config', 'comment.secure_tripcode_salt')), true)), 0, 11);
 	}
 }

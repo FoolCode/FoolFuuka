@@ -739,7 +739,9 @@ class Media
 			return $before;
 		}
 
-		if (Config::get('foolz/foolframe', 'config', 'media.filecheck') === true)
+		$image = null;
+
+		if (Config::get('foolz/foolfuuka', 'config', 'media.filecheck') === true)
 		{
 			// locate the image
 			if ($thumbnail && file_exists($this->getDir($thumbnail)) !== false)
@@ -761,7 +763,7 @@ class Media
 			}
 
 			// fallback if we have the full image but not the thumbnail
-			if ($thumbnail && ! isset($image) && file_exists($this->getDir(false)))
+			if ($thumbnail && $image === null && file_exists($this->getDir(false)))
 			{
 				$thumbnail = false;
 				$image = $this->media;
@@ -781,8 +783,7 @@ class Media
 					$image = $this->preview_reply ? : $this->preview_op;
 				}
 			}
-
-			if ( ! $thumbnail)
+			else
 			{
 				if ($this->radix->archive && $this->radix->media_threads == 0)
 				{
@@ -795,7 +796,7 @@ class Media
 			}
 		}
 
-		if (isset($image))
+		if ($image !== null)
 		{
 			$media_cdn = [];
 			if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' && \Preferences::get('foolfuuka.boards.media_balancers_https'))

@@ -85,7 +85,9 @@ class ToolsReplyBox extends \Foolz\Theme\View
 					echo \Form::submit($submit_array);
 					?>
 
+					<?php if ( ! $this->getBuilderParamManager()->getParam('disable_image_upload', false)) : ?>
 					[ <label><?php echo \Form::checkbox(['name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1]) ?> Spoiler Image?</label> ]
+					<?php endif; ?>
 				</td>
 			</tr>
 			<tr>
@@ -126,7 +128,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 					</noscript></td>
 			</tr>
 				<?php endif; ?>
-				<?php if ( ! isset($disable_image_upload) || !$disable_image_upload) : ?>
+				<?php if ( ! $this->getBuilderParamManager()->getParam('disable_image_upload', false)) : ?>
 			<tr>
 				<td><?= __('File') ?></td>
 				<td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']) ?></td>

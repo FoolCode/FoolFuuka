@@ -135,14 +135,17 @@ class ToolsReplyBox extends \Foolz\Theme\View
 
 							echo \Form::submit($submit_array);
 
-							$submit_array = [
-								'data-function' => 'comment',
-								'name' => 'reply_gattai_spoilered',
-								'value' => __('Submit Spoilered'),
-								'class' => 'btn',
-							];
+							if ( ! $this->getBuilderParamManager()->getParam('disable_image_upload', false))
+							{
+								$submit_array = [
+									'data-function' => 'comment',
+									'name' => 'reply_gattai_spoilered',
+									'value' => __('Submit Spoilered'),
+									'class' => 'btn',
+								];
 
-							echo \Form::submit($submit_array);
+								echo \Form::submit($submit_array);
+							}
 
 							echo \Form::reset(['class' => 'btn', 'name' => 'reset', 'value' => __('Reset')]);
 							?>

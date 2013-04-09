@@ -799,7 +799,7 @@ var showBacklink = function(backlink, pos, height, width)
 		});
 	}
 
-	backlink.find('.hide_post_stub').remove();
+	backlink.find('.stub').remove();
 
 	// for lazyload
 	var swap_image = backlink.find('[data-original]');

@@ -994,11 +994,12 @@ class Media
 			try
 			{
 				$media = \Media::getByMediaHash($radix, $this->media_hash);
+
 				DC::qb()
 					->update($radix->getTable('_images'))
 					->set('banned', true)
 					->where('media_id = :media_id')
-					->setParameter(':media_id', $media['media_id'])
+					->setParameter(':media_id', $media->media_id)
 					->execute();
 
 				$media->delete(true, true, true);

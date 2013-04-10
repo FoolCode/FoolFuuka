@@ -338,9 +338,9 @@ class CommentInsert extends Comment
 					$check_time = $check_time - ($diff * 60 * 60);
 				}
 
-				if ($check_time - $check['timestamp'] < 10 && $check_time - $check['timestamp'] > 0)
+				if ($check_time - $check['timestamp'] < $this->radix->cooldown_posting && $check_time - $check['timestamp'] > 0)
 				{
-					throw new CommentSendingTimeLimitException(__('You must wait up to 10 seconds to post again.'));
+					throw new CommentSendingTimeLimitException(__('You must wait up to %d seconds to post again.'));
 				}
 			}
 
@@ -400,13 +400,13 @@ class CommentInsert extends Comment
 			}
 
 			// check entire length of comment
-			if (mb_strlen($this->comment) > 4096)
+			if (mb_strlen($this->comment) > $this->radix->max_comment_characters_allowed)
 			{
 				throw new CommentSendingTooManyCharactersException(__('Your comment has too many characters'));
 			}
 
 			// check total numbers of lines in comment
-			if (count(explode("\n", $this->comment)) > 20)
+			if (count(explode("\n", $this->comment)) > $this->radix->max_comment_lines_allowed)
 			{
 				throw new CommentSendingTooManyLinesException(__('Your comment has too many lines.'));
 			}

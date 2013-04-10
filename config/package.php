@@ -85,6 +85,9 @@ return [
 			'min_image_repost_time' => 0,
 			'myisam_search' => false,
 			'anonymous_default_name' => 'Anonymous',
+			'max_comment_characters_allowed' => 4096,
+			'max_comment_lines_allowed' => 20,
+			'cooldown_posting' => 10
 		],
 
 		'boards' => [

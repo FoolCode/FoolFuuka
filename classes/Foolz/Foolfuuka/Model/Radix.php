@@ -199,7 +199,6 @@ class Radix
 						'label' => __('Image fetching workers'),
 						'help' => __('The number of workers that will fetch full images. Set to zero not to fetch them.'),
 						'placeholder' => 5,
-						'value' => 0,
 						'class' => 'span1',
 						'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
 					],
@@ -210,7 +209,6 @@ class Radix
 						'label' => __('Thumbnail fetching workers'),
 						'help' => __('The number of workers that will fetch thumbnails'),
 						'placeholder' => 5,
-						'value' => 5,
 						'class' => 'span1',
 						'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
 					],
@@ -221,7 +219,6 @@ class Radix
 						'label' => __('Thread fetching workers'),
 						'help' => __('The number of workers that fetch new threads'),
 						'placeholder' => 5,
-						'value' => 5,
 						'class' => 'span1',
 						'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
 					],
@@ -229,7 +226,6 @@ class Radix
 						'database' => true,
 						'boards_preferences' => true,
 						'type' => 'hidden',
-						'value' => 3,
 						'label' => __('Minutes to refresh the thread'),
 						'placeholder' => 3,
 						'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
@@ -357,6 +353,30 @@ class Radix
 				'type' => 'input',
 				'class' => 'span3',
 				'validation' => 'trim|required',
+			],
+			'max_comment_characters_allowed' => [
+				'database' => true,
+				'boards_preferences' => true,
+				'label' => __('The maximum number of characters allowed in the comment.'),
+				'type' => 'input',
+				'class' => 'span1',
+				'validation' => 'trim|required|valid_string[numeric]'
+			],
+			'max_comment_lines_allowed' => [
+				'database' => true,
+				'boards_preferences' => true,
+				'label' => __('The maximum number of lines allowed in the comment.'),
+				'type' => 'input',
+				'class' => 'span1',
+				'validation' => 'trim|required|valid_string[numeric]'
+			],
+			'cooldown_posting' => [
+				'database' => true,
+				'boards_preferences' => true,
+				'label' => __('This is the time users must wait between posts.'),
+				'type' => 'input',
+				'class' => 'span1',
+				'validation' => 'trim|required|valid_string[numeric]'
 			],
 			'transparent_spoiler' => [
 				'database' => true,
@@ -830,6 +850,12 @@ class Radix
 
 		foreach ($result as $item)
 		{
+			// don't process hidden boards
+			if ( ! \Auth::has_access('boards.see_hidden') && $item['hidden'] == 1)
+			{
+				continue;
+			}
+
 			$structure = static::structure($item);
 
 			$result_object[$item['id']] = new static();
@@ -891,18 +917,6 @@ class Radix
 			if (isset($result_object[$value['board_id']]))
 			{
 				$result_object[$value['board_id']]->{$value['name']} = $value['value'];
-			}
-		}
-
-		// unset the hidden boards
-		if ( ! \Auth::has_access('boards.see_hidden'))
-		{
-			foreach ($result_object as $key => $value)
-			{
-				if ($value->hidden)
-				{
-					unset($result_object[$key]);
-				}
 			}
 		}
 

@@ -1160,7 +1160,7 @@ class Chan extends \Controller
 		$val->add_field('name', __('Username'), 'max_length[64]');
 		$val->add_field('email', __('Email'), 'max_length[64]');
 		$val->add_field('title', __('Subject'), 'max_length[64]');
-		$val->add_field('comment', __('Comment'), 'min_length[3]|max_length[4096]');
+		$val->add_field('comment', __('Comment'), 'min_length[3]');
 		$val->add_field('delpass', __('Password'), 'required|min_length[3]|max_length[32]');
 
 		// leave the capcode check to the model

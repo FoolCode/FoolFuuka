@@ -87,7 +87,8 @@ return [
 			'anonymous_default_name' => 'Anonymous',
 			'max_comment_characters_allowed' => 4096,
 			'max_comment_lines_allowed' => 20,
-			'cooldown_posting' => 10
+			'cooldown_new_comment' => 10,
+			'cooldown_new_thread' => 300
 		],
 
 		'boards' => [

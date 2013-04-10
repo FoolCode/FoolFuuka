@@ -296,7 +296,7 @@ class CommentInsert extends Comment
 					->andWhere('r.op = :op')
 					->setParameters([
 						':poster_ip' => \Input::ip_decimal(),
-						':timestamp' => time() - 300,
+						':timestamp' => time() - $this->radix->cooldown_new_thread,
 						':op' => true
 					])
 					->setMaxResults(1)
@@ -305,7 +305,7 @@ class CommentInsert extends Comment
 
 				if ($check_op)
 				{
-					throw new CommentSendingTimeLimitException(__('You must wait up to 5 minutes to make another new thread.'));
+					throw new CommentSendingTimeLimitException(__('You must wait up to %d minutes to make another new thread.'));
 				}
 			}
 
@@ -338,7 +338,7 @@ class CommentInsert extends Comment
 					$check_time = $check_time - ($diff * 60 * 60);
 				}
 
-				if ($check_time - $check['timestamp'] < $this->radix->cooldown_posting && $check_time - $check['timestamp'] > 0)
+				if ($check_time - $check['timestamp'] < $this->radix->cooldown_new_comment && $check_time - $check['timestamp'] > 0)
 				{
 					throw new CommentSendingTimeLimitException(__('You must wait up to %d seconds to post again.'));
 				}

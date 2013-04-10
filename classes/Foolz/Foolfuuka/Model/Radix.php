@@ -370,10 +370,18 @@ class Radix
 				'class' => 'span1',
 				'validation' => 'trim|required|valid_string[numeric]'
 			],
-			'cooldown_posting' => [
+			'cooldown_new_comment' => [
 				'database' => true,
 				'boards_preferences' => true,
 				'label' => __('This is the time users must wait between posts.'),
+				'type' => 'input',
+				'class' => 'span1',
+				'validation' => 'trim|required|valid_string[numeric]'
+			],
+			'cooldown_new_thread' => [
+				'database' => true,
+				'boards_preferences' => true,
+				'label' => __('This is the time users must wait between new threads.'),
 				'type' => 'input',
 				'class' => 'span1',
 				'validation' => 'trim|required|valid_string[numeric]'

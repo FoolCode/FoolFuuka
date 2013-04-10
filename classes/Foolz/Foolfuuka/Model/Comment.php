@@ -1035,6 +1035,9 @@ class Comment
 			$time_ghost = null;
 			$time_ghost_bump = null;
 
+			$thread_replies = 0;
+			$thread_images = 0;
+
 			foreach ($posts as $post)
 			{
 				if ( ! $post['subnum'] && $time_last < $post['timestamp'])
@@ -1059,6 +1062,13 @@ class Comment
 						$time_ghost_bump = $post['timestamp'];
 					}
 				}
+
+				if ($post['media_id'] !== 0)
+				{
+					$thread_images++;
+				}
+
+				$thread_replies++;
 			}
 
 			if ($time_bump === null)
@@ -1066,19 +1076,23 @@ class Comment
 				$time_bump = $time_last;
 			}
 
-			// update the thread timers
+			// update the thread information
 			DC::qb()
 				->update($this->radix->getTable('_threads'))
 				->set('time_last', ':time_last')
 				->set('time_bump', ':time_bump')
 				->set('time_ghost', ':time_ghost')
 				->set('time_ghost_bump', ':time_ghost_bump')
+				->set('nreplies', ':nreplies')
+				->set('nimages', ':nimages')
 				->where('thread_num = :thread_num')
 				->setParameter(':time_last', $time_last)
 				->setParameter(':time_bump', $time_bump)
 				->setParameter(':time_ghost', $time_ghost)
 				->setParameter(':time_ghost_bump', $time_ghost_bump)
 				->setParameter(':thread_num', $this->thread_num)
+				->setParameter(':nreplies', $thread_replies)
+				->setParameter(':nimages', $thread_images)
 				->execute();
 		}
 

@@ -427,17 +427,12 @@ class Board
 		}
 
 		// populate arrays with posts
-		$threads_arr = [];
+		$results = [];
 		$sql_arr = [];
 
 		foreach ($threads as $thread)
 		{
-			$threads_arr[$thread['unq_thread_num']] = [
-				'replies' => $thread['nreplies'],
-				'images' => $thread['nimages']
-			];
-
-			$temp = DC::qb()
+			$sql_arr[] = '('.DC::qb()
 				->select('*')
 				->from($this->radix->getTable(), 'r')
 				->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -447,9 +442,13 @@ class Board
 				->addOrderBy('num', 'DESC')
 				->addOrderBy('subnum', 'DESC')
 				->setMaxResults($per_thread + 1)
-				->setFirstResult(0);
+				->setFirstResult(0)
+				->getSQL().')';
 
-			$sql_arr[] = '('.$temp->getSQL().')';
+			$results[$thread['thread_num']] = [
+				'omitted' => ($thread['nreplies'] - ($per_thread + 1)),
+				'images_omitted' => ($thread['nimages'] - 1)
+			];
 		}
 
 		$query_posts = DC::forge()
@@ -457,17 +456,8 @@ class Board
 			->fetchAll();
 
 		// populate posts_arr array
-		$results = [];
 		$this->comments_unsorted = Comment::fromArrayDeep($query_posts, $this->radix, $this->comment_options);
 		\Profiler::mark_memory($this->comments_unsorted, 'Board $this->comments_unsorted');
-
-		foreach ($threads as $thread)
-		{
-			$results[$thread['thread_num']] = [
-				'omitted' => ($thread['nreplies'] - ($per_thread + 1)),
-				'images_omitted' => ($thread['nimages'] - 1)
-			];
-		}
 
 		// populate results array and order posts
 		foreach ($this->comments_unsorted as $post)

@@ -258,8 +258,9 @@ class CommentInsert extends Comment
 			{
 				$thread = Board::forge()
 					->getThread($this->thread_num)
-					->setRadix($this->radix);
-				$thread->getComments();
+					->setRadix($this->radix)
+					->setMethodFetching('getThreadInformation');
+
 				$status = $thread->checkThreadStatus();
 			}
 			catch (BoardException $e)

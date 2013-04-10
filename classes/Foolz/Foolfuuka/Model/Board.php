@@ -827,7 +827,7 @@ class Board
 	 */
 	protected function p_checkThreadStatus()
 	{
-		if ($this->method_fetching !== 'getThreadComments')
+		if ($this->method_fetching !== 'getThreadComments' && $this->method_fetching !== 'getThreadInformation')
 		{
 			throw new BoardNotCompatibleMethodException;
 		}
@@ -838,33 +838,61 @@ class Board
 		$thread_last_bump = 0;
 		$counter = ['posts' => 0, 'images' => 0];
 
-		foreach ($this->comments_unsorted as $post)
+		if ($this->method_fetching === 'getThreadComments')
 		{
-			// we need to find if there's the OP in the list
-			// let's be strict, we want the $num to be the OP
-			if ($post->op == 1)
+			foreach ($this->comments_unsorted as $post)
+			{
+				// we need to find if there's the OP in the list
+				// let's be strict, we want the $num to be the OP
+				if ($post->op == 1)
+				{
+					$thread_op_present = true;
+				}
+
+				if ($post->subnum == 0 && $post->media !== null)
+				{
+					$counter['images']++;
+				}
+
+				if ($post->subnum > 0)
+				{
+					$ghost_post_present = true;
+				}
+
+				if ($post->subnum == 0 && $thread_last_bump < $post->timestamp)
+				{
+					$thread_last_bump = $post->timestamp;
+				}
+
+				$counter['posts']++;
+			}
+		}
+
+		if ($this->method_fetching === 'getThreadInformation')
+		{
+			extract($this->options);
+
+			$thread = DC::qb()
+				->select('*')
+				->from($this->radix->getTable('_threads'), 't')
+				->where('thread_num = :thread_num')
+				->setParameter(':thread_num', $num)
+				->execute()
+				->fetch();
+
+			if ($thread)
 			{
 				$thread_op_present = true;
 			}
-			else
-			{
-				$counter['posts']++;
-			}
 
-			if ($post->op == 0 && $post->subnum == 0 && $post->media !== null)
-			{
-				$counter['images']++;
-			}
-
-			if ($post->subnum > 0)
+			if ($thread['time_ghost'] !== null)
 			{
 				$ghost_post_present = true;
 			}
 
-			if ($post->subnum == 0 && $thread_last_bump < $post->timestamp)
-			{
-				$thread_last_bump = $post->timestamp;
-			}
+			$thread_last_bump = $thread['time_last'];
+
+			$counter = ['posts' => $thread['nreplies'], 'images' => $thread['nimages']];
 		}
 
 		// we didn't point to the thread OP, this is not a thread
@@ -887,12 +915,12 @@ class Board
 			$result['disable_image_upload'] = true;
 		}
 
-		if ($counter['posts'] >= $this->radix->max_posts_count)
+		if ($counter['posts'] > $this->radix->max_posts_count)
 		{
 			$result['dead'] = true;
 			$result['disable_image_upload'] = true;
 		}
-		elseif ($counter['images'] >= $this->radix->max_images_count)
+		elseif ($counter['images'] > $this->radix->max_images_count)
 		{
 			$result['disable_image_upload'] = true;
 		}

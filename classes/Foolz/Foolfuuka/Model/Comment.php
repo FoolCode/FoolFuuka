@@ -1090,9 +1090,9 @@ class Comment
 				->setParameter(':time_bump', $time_bump)
 				->setParameter(':time_ghost', $time_ghost)
 				->setParameter(':time_ghost_bump', $time_ghost_bump)
-				->setParameter(':thread_num', $this->thread_num)
 				->setParameter(':nreplies', $thread_replies)
 				->setParameter(':nimages', $thread_images)
+				->setParameter(':thread_num', $this->thread_num)
 				->execute();
 		}
 

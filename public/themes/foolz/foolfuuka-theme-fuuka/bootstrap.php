@@ -6,7 +6,7 @@ require __DIR__ . '/functions.php';
 	'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan' => __DIR__.'/controller.php',
 ]);
 
-\Foolz\Plugin\Event::forge('Fuel\Core\Router.parse_match.intercept')
+\Foolz\Plugin\Event::forge('Fuel\Core\Router::parse_match.intercept')
 	->setCall(function($result)
 	{
 		if ($result->getParam('controller') === 'Foolz\Foolfuuka\Controller\Chan')

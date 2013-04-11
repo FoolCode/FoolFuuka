@@ -27,6 +27,7 @@ class CommentInsert extends Comment
 	protected function insertTriggerDaily($is_retry = false)
 	{
 		DC::forge()->beginTransaction();
+
 		$item = [
 			'day' => (int) (floor($this->timestamp/86400)*86400),
 			'images' => (int) ($this->media !== null),
@@ -78,6 +79,7 @@ class CommentInsert extends Comment
 				->execute();
 
 		}
+
 		DC::forge()->commit();
 	}
 
@@ -139,6 +141,7 @@ class CommentInsert extends Comment
 	protected function insertTriggerThreads($is_retry = false)
 	{
 		DC::forge()->beginTransaction();
+
 		if ($this->op)
 		{
 			DC::forge()->insert($this->radix->getTable('_threads'), [
@@ -192,6 +195,7 @@ class CommentInsert extends Comment
 				->setParameter(':thread_num', $this->thread_num)
 				->execute();
 		}
+
 		DC::forge()->commit();
 	}
 
@@ -675,7 +679,9 @@ class CommentInsert extends Comment
 		$try_max = 3;
 		$try_count = 0;
 
-		while (true)
+		$commit = false;
+
+		while ($commit === false)
 		{
 			try
 			{
@@ -811,9 +817,13 @@ class CommentInsert extends Comment
 				$this->extra->insert();
 
 				DC::forge()->commit();
+
+				$commit = true;
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
 			{
+				DC::forge()->rollBack();
+
 				$try_count++;
 
 				if ($try_count > $try_max)
@@ -823,8 +833,6 @@ class CommentInsert extends Comment
 
 				continue;
 			}
-
-			break;
 		}
 
 		return $this;

@@ -21,12 +21,12 @@
 		{
 			\Foolfuuka\Plugins\Geoip_Region_Lock\GeoipRegionLock::block_country_view();
 
-			\Foolz\Plugin\Event::forge('foolfuuka.comment.insert.call.before')
+			\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.method')
 				->setCall('Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock::blockCountryComment')
 				->setPriority(4);
 		}
 
-		\Foolz\Plugin\Event::forge('foolfuuka.radix.structure.structure_alter')
+		\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Radix::structure.result')
 			->setCall(function($result){
 			$structure = $result->getParam('structure');
 

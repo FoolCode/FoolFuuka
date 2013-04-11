@@ -10,7 +10,7 @@ class Fool
 
 		$sections = ['database', 'boards'];
 
-		$sections = \Foolz\Plugin\Hook::forge('foolframe.task.fool.run.sections.alter')
+		$sections = \Foolz\Plugin\Hook::forge('Foolz\Foolframe\Task\Fool::run.result.sections')
 			->setParam('array', ['database', 'board'])
 			->execute()
 			->get(['database', 'board']);
@@ -23,7 +23,7 @@ class Fool
 		}
 		else
 		{
-			\Foolz\Plugin\Hook::forge('foolframe.task.fool.run.sections.call_help.'.$section)
+			\Foolz\Plugin\Hook::forge('Foolz\Foolframe\Task\Fool::run.call.method.help.'.$section)
 				->execute();
 		}
 
@@ -39,7 +39,7 @@ class Fool
 			}
 			else
 			{
-				$done = \Foolz\Plugin\Hook::forge('foolframe.task.fool.run.sections.call.'.$section)
+				$done = \Foolz\Plugin\Hook::forge('Foolz\Foolframe\Task\Fool::run.call.method.section.'.$section)
 					->setParam('parameters', $parameters)
 					->execute()
 					->get($parameters);

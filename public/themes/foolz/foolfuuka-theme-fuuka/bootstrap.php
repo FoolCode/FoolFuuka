@@ -18,7 +18,7 @@ require __DIR__ . '/functions.php';
 	});
 
 // use hooks for manipulating comments
-\Foolz\Plugin\Event::forge('foolfuuka.comment_model.processComment.greentext_result')
+\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Comment::processComment.result.greentext')
 	->setCall(function($result)
 	{
 		$html= '\\1<span class="greentext">\\2</span>\\3';;
@@ -26,7 +26,7 @@ require __DIR__ . '/functions.php';
 	})
 	->setPriority(8);
 
-\Foolz\Plugin\Event::forge('foolfuuka.comment_model.processInternalLinks.html_result')
+\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Comment::processInternalLinks.result.html')
 	->setCall(function($result)
 	{
 		$data = $result->getParam('data');
@@ -42,7 +42,7 @@ require __DIR__ . '/functions.php';
 	})
 	->setPriority(8);
 
-\Foolz\Plugin\Event::forge('foolfuuka.comment_model.processExternalLinks.html_result')
+\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Comment::processExternalLinks.result.html')
 	->setCall(function($result)
 	{
 		$data = $result->getParam('data');

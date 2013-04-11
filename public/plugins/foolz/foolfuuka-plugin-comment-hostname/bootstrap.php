@@ -5,7 +5,7 @@ use \Foolz\Inet\Inet;
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-comment-hostname')
 	->setCall(function($result) {
 
-		\Foolz\Plugin\Event::forge('foolfuuka.comment.insert.extra_json_array')
+		\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.result.extra_json_array')
 			->setCall(function($result){
 				$comment = $result->getObject();
 				if ($comment->poster_ip)
@@ -14,7 +14,7 @@ use \Foolz\Inet\Inet;
 				}
 			})->setPriority(3);
 
-		\Foolz\Plugin\Event::forge('foolfuuka\\model\\comment.cleanFields.call.before')
+		\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Comment::cleanFields.call.before.method.body')
 			->setCall(function($result){
 				$comment = $result->getObject();
 				if ( ! \Auth::has_access('maccess.mod'))

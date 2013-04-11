@@ -10,7 +10,7 @@
 		\Router::add('(?!(admin|_))(\w+)/image_html/(:any)', 'plugin/fu/image_in_html/chan/$2/image_html/$3', true);
 
 
-		\Foolz\Plugin\Event::forge('foolfuuka\\model\\media.getLink.call.before')
+		\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Media::getLink.call.before.body')
 			->setCall(function($result) {
 
 				$element = $result->getObject();

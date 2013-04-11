@@ -3,7 +3,7 @@
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-gifsicle')
 	->setCall(function($result) {
 
-		\Foolz\Plugin\Event::forge('foolfuuka.model.media.insert.resize')
+		\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Media\insert.result.create_thumbnail')
 			->setCall(function($result){
 
 				if ( ! $result instanceof \Foolz\Plugin\Void || strtolower($this->temp_extension) !== 'gif')

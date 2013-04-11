@@ -68,7 +68,7 @@ class Gallery extends \Foolz\Theme\View
 			<?php endif; ?>
 		    <div class="thread_tools_bottom">
 				<?php if (isset($p->nreplies)) : ?>
-				<?= __('Replies') ?> : <?= $p->nreplies ?> | <?= __('Images') ?>: <?= $p->nimages ?>
+				<?= __('Replies') ?> : <?= ($p->nreplies - 1) ?> | <?= __('Images') ?>: <?= ($p->nimages - 1) ?>
 				<?php endif; ?>
 				<?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" title="<?= htmlspecialchars(__('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
 				<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><span class="post_type"><img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" title="<?= htmlspecialchars(__('This post contains a spoiler image')) ?>"/></span><?php endif ?>

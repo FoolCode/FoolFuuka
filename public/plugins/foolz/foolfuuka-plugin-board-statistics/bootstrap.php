@@ -18,7 +18,7 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 				"content" => ["fu/board_statistics/manage" => ["level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart']]
 			]);
 
-			\Foolz\Plugin\Event::forge('foolframe.task.fool.run.sections.alter')
+			\Foolz\Plugin\Event::forge('Foolz\Foolframe\Task\Fool::run.result.sections')
 				->setCall(function($result) {
 					$array = $result->getParam('array');
 					$array[] = 'board_statistics';
@@ -26,10 +26,10 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 					$result->setParam('array', $array);
 				});
 
-			\Foolz\Plugin\Event::forge('foolframe.task.fool.run.sections.call_help.board_statistics')
+			\Foolz\Plugin\Event::forge('Foolz\Foolframe\Task\Fool::run.call.method.help.board_statistics')
 				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cliBoardStatisticsHelp');
 
-			\Foolz\Plugin\Event::forge('foolframe.task.fool.run.sections.call.board_statistics')
+			\Foolz\Plugin\Event::forge('Foolz\Foolframe\Task\Fool::run.call.method.section.board_statistics')
 				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cli_board_statistics');
 		}
 

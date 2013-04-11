@@ -440,7 +440,7 @@ class Radix
 			],
 		];
 
-		$structure = \Foolz\Plugin\Hook::forge('foolfuuka.radix.structure.structure_alter')
+		$structure = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Radix::structure.result')
 			->setParam('structure', $structure)
 			->execute()
 			->get($structure);
@@ -934,7 +934,7 @@ class Radix
 
 		// take them all and then filter/do whatever (we use this to split the boards through various subdomains)
 		// only public is affected! admins and mods will see all boards at all the time
-		static::$preloaded_radixes = \Foolz\Plugin\Hook::forge('foolfuuka.radix.preload.public.alter_result')
+		static::$preloaded_radixes = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Radix::preload.result.public')
 			->setParam('preloaded_radixes', static::$preloaded_radixes)
 			->execute()
 			->get(static::$preloaded_radixes);

@@ -15,7 +15,7 @@
 			]);
 		}
 
-		\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Media::delete.call.before')
+		\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Media::delete.call.before.method')
 			->setCall('Foolz\Foolfuuka\Plugins\NginxCachePurge\Model\NginxCachePurge::beforeDeleteMedia');
 	});
 

@@ -25,7 +25,7 @@ $theme_instance->setPublicDir(DOCROOT.'foolfuuka/');
 // set an ->enabled on the themes we want to use
 if (\Auth::has_access('maccess.admin'))
 {
-	\Foolz\Plugin\Event::forge('foolframe.model.system.environment.result')
+	\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\System::environment.result')
 		->setCall(function($result) {
 			$environment = $result->getParam('environment');
 

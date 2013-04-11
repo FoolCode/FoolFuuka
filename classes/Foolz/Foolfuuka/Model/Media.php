@@ -728,7 +728,7 @@ class Media
 	 */
 	public function getLink($thumbnail = false)
 	{
-		$before = \Foolz\Plugin\Hook::forge('foolfuuka\model\media.getLink.call.before')
+		$before = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::getLink.call.before.method.body')
 			->setObject($this)
 			->setParams(['thumbnail' => $thumbnail])
 			->execute()
@@ -1144,7 +1144,7 @@ class Media
 				mkdir($this->pathFromFilename(true, $is_op), 0777, true);
 			}
 
-			$return = \Foolz\Plugin\Hook::forge('foolfuuka.model.media.insert.resize')
+			$return = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::insert.result.create_thumbnail')
 				->setObject($this)
 				->setParams([
 					'thumb_width' => $thumb_width,

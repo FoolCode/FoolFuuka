@@ -18,7 +18,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 		return $this->latest($page, $options);
 	}
 
-	public function radixGallery($page = 1)
+	public function radix_gallery($page = 1)
 	{
 		throw new \HttpNotFoundException;
 	}

@@ -15,7 +15,7 @@ class Board extends \Foolz\Theme\View
 		foreach ($board->getComments() as $key => $post) :
 			if (isset($post['op'])) :
 				$op = $post['op'];
-				$num =  $op->num . ( $op->subnum ? '_' . $op->subnum : '' );
+				$num =  $op->num.($op->subnum ? '_'.$op->subnum : '');
 				?>
 		<?php if ($thread_id === 0) : ?>
 		<div class="thread stub stub_doc_id_<?= $op->doc_id ?>">

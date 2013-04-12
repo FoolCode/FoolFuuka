@@ -11,18 +11,25 @@ class Radix
 	use \Foolz\Plugin\PlugSuit;
 
 	/**
+	 * Array of key => value for radix configurations
+	 *
+	 * @var array
+	 */
+	protected $values = [];
+
+	/**
 	 * An array of all the preloaded boards
 	 *
 	 * @var  null|array
 	 */
-	private static $preloaded_radixes = null;
+	protected static $preloaded_radixes = null;
 
 	/**
 	 * The currently selected radix to use with get_selected_radix()
 	 *
 	 * @var  \Foolz\Foolfuuka\Model\Radix
 	 */
-	private static $selected_radix = null;
+	protected static $selected_radix = null;
 
 	/**
 	 * The structure of the radix table to be used with validation and form creator
@@ -486,6 +493,15 @@ class Radix
 		return $structure;
 	}
 
+	/**
+	 * Temporary fallback for old $radix->long_key
+	 *
+	 * @deprecated
+	 */
+	public function __get($name)
+	{
+		return $this->getValue($name);
+	}
 
 	/**
 	 * Clears the APC/memcached cache
@@ -926,7 +942,7 @@ class Radix
 			// in case of leftover values, it would try instantiating a new stdClass and that would trigger error
 			if (isset($result_object[$value['board_id']]))
 			{
-				$result_object[$value['board_id']]->{$value['name']} = $value['value'];
+				$result_object[$value['board_id']]->setValue($value['name'], $value['value']);
 			}
 		}
 
@@ -1097,6 +1113,38 @@ class Radix
 		return static::filterByType('archive', false);
 	}
 
+
+	/**
+	 * Get the config parameter of the radix by key
+	 *
+	 * @param  string  $key  The key associated to the key
+	 *
+	 * @return  mixed  The value associated to the key
+	 * @throws  \OutOfBoundsException If the key doesn't exist (this should be a typo, as default values are always set on preload)
+	 */
+	public function getValue($key)
+	{
+		if ( ! isset($this->values[$key]))
+		{
+			throw new \OutOfBoundsException;
+		}
+
+		return $this->values[$key];
+	}
+
+
+	/**
+	 * Bind a radix config value to a key
+	 *
+	 * @param  $key    The key to bind to
+	 * @param  $value  The value to bind
+	 */
+	public function setValue($key, $value)
+	{
+		$this->values[$key] = $value;
+	}
+
+
 	/**
 	 * Get the board table name with protexted identifiers
 	 *
@@ -1129,7 +1177,7 @@ class Radix
 		$schema = $sm->createSchema();
 
 		// create the main table also in _deleted flavour
-		foreach([0 => '', 1 => '_deleted'] as $key)
+		foreach(['', '_deleted'] as $key)
 		{
 			$table = $schema->createTable($this->getTable($key));
 			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')

@@ -856,6 +856,8 @@ class Radix
 			return false;
 		}
 
+		$result_object = [];
+
 		foreach ($result as $item)
 		{
 			// don't process hidden boards

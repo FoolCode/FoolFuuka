@@ -149,7 +149,7 @@ class Chan extends \Foolz\Theme\View
 							<?php if ($radix->archive && $radix->board_url != "") : ?>
 								<li>
 									<a href="<?= $radix->board_url ?>" style="padding-right:4px;">4chan <i
-											class="icon-share icon-white"></i></a>
+											class="icon-share icon-white text-small"></i></a>
 								</li>
 								<?php endif; ?>
 							<li style="padding-right:0px;">
@@ -165,17 +165,17 @@ class Chan extends \Foolz\Theme\View
 									<li>
 										<a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
 											<?= __('By Post') ?>
-											<?php if (\Cookie::get('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) !== 'by_thread') {
-											echo ' <i class="icon-ok"></i>';
-										} ?>
+											<?php if (\Cookie::get('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) !== 'by_thread') : ?>
+												<i class="icon-ok"></i>
+											<?php endif; ?>
 										</a>
 									</li>
 									<li>
 										<a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
 											<?= __('By Thread') ?>
-											<?php if (\Cookie::get('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) === 'by_thread') {
-											echo ' <i class="icon-ok"></i>';
-										} ?>
+											<?php if (\Cookie::get('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) === 'by_thread') : ?>
+												<i class="icon-ok"></i>
+											<?php endif; ?>
 										</a>
 									</li>
 								</ul>
@@ -323,12 +323,15 @@ class Chan extends \Foolz\Theme\View
 						?>
 						<li>
 							<a href="<?= \Uri::create(array('theme', $theme->getConfig('name'))) ?>">
-								<?= $theme->getConfig('extra.name') ?><?= ($theme === $this->getTheme())?' <i class="icon-ok"></i>':'' ?>
+								<?= $theme->getConfig('extra.name') ?>
+								<?php if ($theme === $this->getTheme()) : ?>
+									<i class="icon-ok"></i>
+								<?php endif; ?>
 							</a>
 						</li>
 						<?php endif;
 						endforeach;
-						endforeach; ?>
+					endforeach; ?>
 				</ul>
 			</div>
 		</div>
@@ -341,8 +344,12 @@ class Chan extends \Foolz\Theme\View
 				<ul class="dropdown-menu">
 					<?php foreach (['default' => 'Default', 'midnight' => 'Midnight'] as $key => $name) : ?>
 					<li>
-						<a href="<?= \Uri::create(['theme', 'foolz/foolfuuka-theme-foolfuuka', $key]) ?>"><?= $name ?>
-							<?= (( ! \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style') && $key == 'default') || $key === \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style'))?' <i class="icon-ok"></i>':'' ?></a>
+						<a href="<?= \Uri::create(['theme', 'foolz/foolfuuka-theme-foolfuuka', $key]) ?>">
+							<?= $name ?>
+							<?php if (( ! \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style') && $key == 'default') || $key === \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style')) : ?>
+								<i class="icon-ok"></i>
+							<?php endif; ?>
+						</a>
 					</li>
 					<?php endforeach; ?>
 				</ul>
@@ -358,7 +365,10 @@ class Chan extends \Foolz\Theme\View
 					<?php foreach (\Foolz\Config\Config::get('foolz/foolframe', 'package', 'preferences.lang.available') as $key => $lang) : ?>
 					<li>
 						<a href="<?= \Uri::create(array('_', 'language', $key)) ?>">
-							<?= $lang ?><?= ((! \Cookie::get('language') && $key == 'en_EN') || $key == \Cookie::get('language')) ? ' <i class="icon-ok"></i>' : '' ?>
+							<?= $lang ?>
+							<?php if ((! \Cookie::get('language') && $key == 'en_EN') || $key == \Cookie::get('language')) : ?>
+								<i class="icon-ok"></i>
+							<?php endif; ?>
 						</a>
 					</li>
 					<?php endforeach; ?>

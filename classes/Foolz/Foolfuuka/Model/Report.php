@@ -472,7 +472,7 @@ class Report
 	{
 		DC::qb()
 			->delete(DC::p('reports'))
-			->where('id', ':id')
+			->where('id = :id')
 			->setParameter(':id', $id)
 			->execute();
 

@@ -378,8 +378,8 @@ var bindFunctions = function()
 									height: backend_vars.images['missing_image_height']
 								});
 							break;
-						case 'remove_report':
-							jQuery('.doc_id_' + el.data('id')).removeClass('reported')
+						case 'delete_report':
+							el.closest('.report_reason').remove();
 							break;
 						case 'ban_user':
 							jQuery('.doc_id_' + el.data('id')).find('[data-action=ban_user]').text('Banned');

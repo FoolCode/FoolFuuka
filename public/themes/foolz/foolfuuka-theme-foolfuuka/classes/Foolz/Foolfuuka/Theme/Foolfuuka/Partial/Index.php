@@ -25,7 +25,7 @@ class Index extends \Foolz\Theme\View
 				foreach (\Radix::getArchives() as $key => $item)
 				{
 					$index_nav['archives']['elements'][] = array(
-						'href' => $item->href,
+						'href' => $item->getValue('href'),
 						'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
 					);
 				}
@@ -41,7 +41,7 @@ class Index extends \Foolz\Theme\View
 				foreach (\Radix::getBoards() as $key => $item)
 				{
 					$index_nav['boards']['elements'][] = array(
-						'href' => $item->href,
+						'href' => $item->getValue('href'),
 						'text' => '/' . $item->shortname . '/ <span class="help">' . $item->name . '</span>'
 					);
 				}

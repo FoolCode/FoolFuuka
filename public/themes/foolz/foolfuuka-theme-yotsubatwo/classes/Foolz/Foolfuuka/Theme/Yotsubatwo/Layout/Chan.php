@@ -79,7 +79,7 @@ class Chan extends \Foolz\Theme\View
 		$board_urls = [];
 		foreach (\Radix::getArchives() as $key => $item)
 		{
-			$board_urls[] = '<a href="'.$item->href.'">'.$item->shortname.'</a>';
+			$board_urls[] = '<a href="'.$item->getValue('href').'">'.$item->shortname.'</a>';
 		}
 
 		if ( ! empty($board_urls))
@@ -95,7 +95,7 @@ class Chan extends \Foolz\Theme\View
 		$board_urls = [];
 		foreach (\Radix::getBoards() as $key => $item)
 		{
-			$board_urls[] = '<a href="'.$item->href.'">'.$item->shortname.'</a>';
+			$board_urls[] = '<a href="'.$item->getValue('href').'">'.$item->shortname.'</a>';
 		}
 
 		if ( ! empty($board_urls))
@@ -125,7 +125,7 @@ class Chan extends \Foolz\Theme\View
 										echo '<li class="nav-header">'.__('Archives').'</li>';
 										foreach (\Radix::getArchives() as $key => $item)
 										{
-											echo '<li><a href="'.$item->href.'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
+											echo '<li><a href="'.$item->getValue('href').'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
 										}
 									}
 
@@ -139,7 +139,7 @@ class Chan extends \Foolz\Theme\View
 										echo '<li class="nav-header">'.__('Boards').'</li>';
 										foreach (\Radix::getBoards() as $key => $item)
 										{
-											echo '<li><a href="'.$item->href.'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
+											echo '<li><a href="'.$item->getValue('href').'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
 										}
 									}
 									?>

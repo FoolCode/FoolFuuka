@@ -916,6 +916,11 @@ class Radix
 				$result_object[$item['id']]->$k = $i;
 			}
 
+			// url values for commodity
+			$result_object[$item['id']]->setValue('formatted_title', ($item['name']) ?
+				'/'.$item['shortname'].'/ - '.$item['name'] : '/'.$item['shortname'].'/');
+			$result_object[$item['id']]->setValue('href', \Uri::create($item['shortname']));
+
 			// load the basic value of the preferences
 			foreach ($structure as $key => $arr)
 			{
@@ -965,11 +970,6 @@ class Radix
 				$result_object[$value['board_id']]->setValue($value['name'], $value['value']);
 			}
 		}
-
-		// url values for commodity
-		$result_object[$item['id']]->setValue('formatted_title', ($item['name']) ?
-			'/'.$item['shortname'].'/ - '.$item['name'] : '/'.$item['shortname'].'/');
-		$result_object[$item['id']]->setValue('href', \Uri::create($item['shortname']));
 
 		static::$preloaded_radixes = $result_object;
 		\Profiler::mark_memory(static::$preloaded_radixes, 'Radix static::$preloaded_radixes');

@@ -15,7 +15,7 @@ class Index extends \Foolz\Theme\View
 				$board_urls = array();
 				foreach (\Radix::getAll() as $key => $item)
 				{
-					array_push($board_urls, '<a href="' . $item->href . '" title="' . $item->name . '">/' . $item->shortname . '/</a>');
+					array_push($board_urls, '<a href="' . $item->getValue('href') . '" title="' . $item->name . '">/' . $item->shortname . '/</a>');
 				}
 				echo implode(' ', $board_urls);
 				?>

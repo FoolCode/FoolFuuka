@@ -63,7 +63,7 @@ class Chan extends \Foolz\Theme\View
 			$board_urls = array();
 			foreach (\Radix::getAll() as $key => $item)
 			{
-				$board_urls[] = '<a href="' . $item->href . '">' . $item->shortname . '</a>';
+				$board_urls[] = '<a href="' . $item->getValue('href') . '">' . $item->shortname . '</a>';
 			}
 
 			if ( ! empty($board_urls))

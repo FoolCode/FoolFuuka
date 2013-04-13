@@ -141,7 +141,7 @@ class Chan extends \Controller
 				$backend_vars = $this->param_manager->getParam('backend_vars');
 				$backend_vars['board_shortname'] = $this->_radix->shortname;
 				$this->param_manager->setParam('backend_vars', $backend_vars);
-				$this->builder->getProps()->addTitle($this->_radix->formatted_title);
+				$this->builder->getProps()->addTitle($this->_radix->getValue('formatted_title'));
 
 				$method = array_shift($params);
 
@@ -273,7 +273,7 @@ class Chan extends \Controller
 			? 'by_thread' : 'by_post';
 
 		$options = [
-			'per_page' => $this->_radix->threads_per_page,
+			'per_page' => $this->_radix->getValue('threads_per_page'),
 			'per_thread' => 5,
 			'order' => $order
 		];
@@ -284,7 +284,7 @@ class Chan extends \Controller
 	public function radix_ghost($page = 1)
 	{
 		$options = [
-			'per_page' => $this->_radix->threads_per_page,
+			'per_page' => $this->_radix->getValue('threads_per_page'),
 			'per_thread' => 5,
 			'order' => 'ghost'
 		];
@@ -612,7 +612,7 @@ class Chan extends \Controller
 
 		if ($this->_radix->archive)
 		{
-			$redirect  = ($this->_radix->images_url) ? : '//images.4chan.org/'.$this->_radix->shortname.'/src/';
+			$redirect  = ($this->_radix->getValue('images_url')) ? : '//images.4chan.org/'.$this->_radix->shortname.'/src/';
 			$redirect .= $filename.'.'.\Input::extension();
 		}
 

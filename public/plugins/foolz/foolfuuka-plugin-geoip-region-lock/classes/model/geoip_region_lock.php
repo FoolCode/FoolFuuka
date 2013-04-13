@@ -16,8 +16,8 @@ class GeoipRegionLock extends \Plugins
 		$allow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_comment');
 		$disallow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.disallow_comment');
 
-		$board_allow = trim($obj->board->plugin_geo_ip_region_lock_allow_comment, " ,");
-		$board_disallow = trim($obj->board->plugin_geo_ip_region_lock_disallow_comment, " ,");
+		$board_allow = trim($obj->board->getValue('plugin_geo_ip_region_lock_allow_comment'), " ,");
+		$board_disallow = trim($obj->board->getValue('plugin_geo_ip_region_lock_disallow_comment'), " ,");
 
 		// allow board settings to override global
 		if ($board_allow || $board_disallow)

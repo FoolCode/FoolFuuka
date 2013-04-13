@@ -118,7 +118,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 						echo \Form::textarea([
 							'name' => 'reply_chennodiscursus',
 							'id' => 'reply_chennodiscursus',
-							'placeholder' => (!$radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
+							'placeholder' => ( ! $radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
 							'rows' => 3,
 							'style' => 'height:132px; width:320px;'
 						]);
@@ -155,9 +155,9 @@ class ToolsReplyBox extends \Foolz\Theme\View
 					<div class="rules pull-left">
 						<div class="rules_box">
 							<?php
-							if ($radix->posting_rules)
+							if ($radix->getValue('posting_rules'))
 							{
-								echo \Markdown::parse($radix->posting_rules);
+								echo \Markdown::parse($radix->getValue('posting_rules'));
 							}
 							?>
 						</div>

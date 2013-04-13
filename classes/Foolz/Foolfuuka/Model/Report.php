@@ -415,7 +415,7 @@ class Report
 			}
 			else
 			{
-				$banned_string = __('It looks like you were banned on /'.$this->radix->shortname.'/.');
+				$banned_string = __('It looks like you were banned on /'.$new->radix->shortname.'/.');
 			}
 
 			if ($ban->length)
@@ -435,7 +435,7 @@ class Report
 			if ($ban->appeal_status == \Ban::APPEAL_NONE)
 			{
 				$banned_string .= ' '.\Str::tr(__('If you\'d like to appeal to your ban, go to the :appeal page.'),
-					['appeal' => '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'.__('appeal').'</a>']);
+					['appeal' => '<a href="'.\Uri::create($new->radix->shortname.'/appeal').'">'.__('appeal').'</a>']);
 			}
 			elseif ($ban->appeal_status == \Ban::APPEAL_PENDING)
 			{

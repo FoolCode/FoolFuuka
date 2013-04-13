@@ -51,7 +51,7 @@ class Gallery extends \Foolz\Theme\View
 		        </a>
 				<?php else: ?>
 		        <a href="<?= \Uri::create($radix->shortname . '/thread/' . $p->num) ?>" rel="noreferrer" target="_blank" class="thread_image_link"<?= ($p->media->getMediaLink())?' data-expand="true"':'' ?>>
-					<?php if ( ! \Auth::has_access('maccess.mod') && !$radix->transparent_spoiler && $p->media->spoiler) :?>
+					<?php if ( ! \Auth::has_access('maccess.mod') && ! $radix->getValue('transparent_spoiler') && $p->media->spoiler) :?>
 		            <div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 					<?php else : ?>
 		            <img src="<?= $p->media->getThumbLink() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" data-width="<?= $p->media->media_w ?>" data-height="<?= $p->media->media_h ?>" data-md5="<?= $p->media->media_hash ?>" class="thread_image<?= ($p->media->spoiler)?' is_spoiler_image':'' ?>" />

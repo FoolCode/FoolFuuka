@@ -478,7 +478,7 @@ class Media
 	{
 		\Upload::process([
 			'path' => APPPATH.'tmp/media_upload/',
-			'max_size' => \Auth::has_access('media.limitless_media') ? 9999 * 1024 * 1024 : $radix->max_image_size_kilobytes * 1024,
+			'max_size' => \Auth::has_access('media.limitless_media') ? 9999 * 1024 * 1024 : $radix->getValue('max_image_size_kilobytes') * 1024,
 			'randomize' => true,
 			'max_length' => 64,
 			'ext_whitelist' => ['jpg', 'jpeg', 'gif', 'png'],
@@ -530,7 +530,7 @@ class Media
 			{
 				throw new MediaUploadInvalidException(
 					\Str::tr(__('You uploaded a too big file. The maxmimum allowed filesize is :sizekb'),
-						['size' => $radix->max_image_size_kilobytes]));
+						['size' => $radix->getValue('max_image_size_kilobytes')]));
 			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_EXT_NOT_WHITELISTED))
@@ -785,7 +785,7 @@ class Media
 			}
 			else
 			{
-				if ($this->radix->archive && $this->radix->media_threads == 0)
+				if ($this->radix->archive && $this->radix->getValue('media_threads') == 0)
 				{
 					return null;
 				}
@@ -839,12 +839,12 @@ class Media
 	 */
 	public function getRemoteLink()
 	{
-		if ($this->radix->archive && ($this->radix->images_url === false || $this->radix->images_url !== ""))
+		if ($this->radix->archive && ($this->radix->getValue('images_url') === false || $this->radix->getValue('images_url') !== ""))
 		{
 			// ignore webkit and opera user agents
 			if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT']))
 			{
-				return $this->radix->images_url.$this->media_orig;
+				return $this->radix->getValue('images_url').$this->media_orig;
 			}
 
 			return \Uri::create([$this->radix->shortname, 'redirect']).$this->media_orig;
@@ -1042,7 +1042,8 @@ class Media
 			throw new MediaInsertDomainException(__('The image you uploaded is too small.'));
 		}
 
-		if ($getimagesize[0] > $this->radix->max_image_size_width || $getimagesize[1] > $this->radix->max_image_size_height)
+		if ($getimagesize[0] > $this->radix->getValue('max_image_size_width')
+			|| $getimagesize[1] > $this->radix->getValue('max_image_size_height'))
 		{
 			throw new MediaInsertDomainException(__('The dimensions of the image you uploaded are too large.'));
 		}
@@ -1067,10 +1068,10 @@ class Media
 			$this->preview_op = $duplicate->preview_op;
 			$this->preview_reply = $duplicate->preview_reply;
 
-			if ($this->radix->min_image_repost_time)
+			if ($this->radix->getValue('min_image_repost_time'))
 			{
 				// if it's -1 it means that image reposting is disabled, so this image shouldn't pass
-				if ($this->radix->min_image_repost_time == -1)
+				if ($this->radix->getValue('min_image_repost_time') == -1)
 				{
 					throw new MediaInsertRepostException(
 						__('This image has already been posted once. This board doesn\'t allow image reposting.')
@@ -1083,7 +1084,7 @@ class Media
 					->where('media_id = :media_id')
 					->andWhere('timestamp > :timestamp')
 					->setParameter('media_id', $duplicate->media_id)
-					->setParameter('timestamp', time() - $this->radix->min_image_repost_time)
+					->setParameter('timestamp', time() - $this->radix->getValue('min_image_repost_time'))
 					->setMaxResults(1)
 					->execute()
 					->fetch();
@@ -1130,13 +1131,13 @@ class Media
 
 		if ($do_thumb)
 		{
-			$thumb_width = $this->radix->thumbnail_reply_width;
-			$thumb_height = $this->radix->thumbnail_reply_height;
+			$thumb_width = $this->radix->getValue('thumbnail_reply_width');
+			$thumb_height = $this->radix->getValue('thumbnail_reply_height');
 
 			if ($is_op)
 			{
-				$thumb_width = $this->radix->thumbnail_op_width;
-				$thumb_height = $this->radix->thumbnail_op_height;
+				$thumb_width = $this->radix->getValue('thumbnail_op_width');
+				$thumb_height = $this->radix->getValue('thumbnail_op_height');
 			}
 
 			if ( ! file_exists($this->pathFromFilename(true, $is_op)))
@@ -1157,7 +1158,7 @@ class Media
 
 			if ($return instanceof \Foolz\Plugin\Void)
 			{
-				if ($this->radix->enable_animated_gif_thumbs && strtolower($this->temp_extension) === 'gif')
+				if ($this->radix->getValue('enable_animated_gif_thumbs') && strtolower($this->temp_extension) === 'gif')
 				{
 					exec("convert ".$full_path." -coalesce -treedepth 4 -colors 256 -quality 80 -background none ".
 						"-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true));

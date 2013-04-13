@@ -106,7 +106,7 @@ class Chan extends \Foolz\Theme\View
 			}
 		?></div>
 		<div style="min-height: 30px;">
-	        <h1><?= ($radix) ? $radix->formatted_title : '' ?></h1>
+	        <h1><?= ($radix) ? $radix->getValue('formatted_title') : '' ?></h1>
 			<?php if ($section_title !== false) : ?>
 	        <h2><?= $section_title ?></h2>
 			<?php elseif (\Preferences::get('foolframe.theme.header_text')) : ?>

@@ -146,9 +146,9 @@ class Chan extends \Foolz\Theme\View
 
 						<ul class="nav">
 							<?php if ($radix) : ?>
-							<?php if ($radix->archive && $radix->board_url != "") : ?>
+							<?php if ($radix->archive && $radix->getValue('board_url') != "") : ?>
 								<li>
-									<a href="<?= $radix->board_url ?>" style="padding-right:4px;">4chan <i
+									<a href="<?= $radix->getValue('board_url') ?>" style="padding-right:4px;">4chan <i
 											class="icon-share icon-white text-small"></i></a>
 								</li>
 								<?php endif; ?>

@@ -32,9 +32,9 @@ class CommentInsert extends Comment
 			'day' => (int) (floor($this->timestamp/86400)*86400),
 			'images' => (int) ($this->media !== null),
 			'sage' => (int) ($this->email === 'sage'),
-			'anons' => (int) ($this->name === $this->radix->anonymous_default_name && $this->trip === null),
+			'anons' => (int) ($this->name === $this->radix->getValue('anonymous_default_name') && $this->trip === null),
 			'trips' => (int) ($this->trip !== null),
-			'names' => (int) ($this->name !== $this->radix->anonymous_default_name || $this->trip !== null)
+			'names' => (int) ($this->name !== $this->radix->getValue('anonymous_default_name') || $this->trip !== null)
 		];
 
 		$result = DC::qb()
@@ -300,7 +300,7 @@ class CommentInsert extends Comment
 					->andWhere('r.op = :op')
 					->setParameters([
 						':poster_ip' => \Input::ip_decimal(),
-						':timestamp' => time() - $this->radix->cooldown_new_thread,
+						':timestamp' => time() - $this->radix->getValue('cooldown_new_thread'),
 						':op' => true
 					])
 					->setMaxResults(1)
@@ -342,7 +342,7 @@ class CommentInsert extends Comment
 					$check_time = $check_time - ($diff * 60 * 60);
 				}
 
-				if ($check_time - $check['timestamp'] < $this->radix->cooldown_new_comment && $check_time - $check['timestamp'] > 0)
+				if ($check_time - $check['timestamp'] < $this->radix->getValue('cooldown_new_comment') && $check_time - $check['timestamp'] > 0)
 				{
 					throw new CommentSendingTimeLimitException(__('You must wait up to %d seconds to post again.'));
 				}
@@ -404,13 +404,13 @@ class CommentInsert extends Comment
 			}
 
 			// check entire length of comment
-			if (mb_strlen($this->comment) > $this->radix->max_comment_characters_allowed)
+			if (mb_strlen($this->comment) > $this->radix->getValue('max_comment_characters_allowed'))
 			{
 				throw new CommentSendingTooManyCharactersException(__('Your comment has too many characters'));
 			}
 
 			// check total numbers of lines in comment
-			if (count(explode("\n", $this->comment)) > $this->radix->max_comment_lines_allowed)
+			if (count(explode("\n", $this->comment)) > $this->radix->getValue('max_comment_lines_allowed'))
 			{
 				throw new CommentSendingTooManyLinesException(__('Your comment has too many lines.'));
 			}
@@ -423,7 +423,7 @@ class CommentInsert extends Comment
 		// process comment name+trip
 		if ($this->name === '')
 		{
-			$this->name = $this->radix->anonymous_default_name;
+			$this->name = $this->radix->getValue('anonymous_default_name');
 			$this->trip = null;
 		}
 		else
@@ -495,7 +495,7 @@ class CommentInsert extends Comment
 			$this->poster_ip = \Input::ip_decimal();
 		}
 
-		if ($this->radix->enable_flags && function_exists('\\geoip_country_code_by_name'))
+		if ($this->radix->getValue('enable_flags') && function_exists('\\geoip_country_code_by_name'))
 		{
 			$this->poster_country = \geoip_country_code_by_name(\Foolz\Inet\Inet::dtop($this->poster_ip));
 		}
@@ -542,7 +542,7 @@ class CommentInsert extends Comment
 		}
 
 		// 2ch-style codes, only if enabled
-		if ($this->thread_num && $this->radix->enable_poster_hash)
+		if ($this->thread_num && $this->radix->getValue('enable_poster_hash'))
 		{
 			$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$this->thread_num),'id'),+3), 0, 8);
 		}
@@ -795,7 +795,7 @@ class CommentInsert extends Comment
 				}
 
 				// update poster_hash for non-ghost posts
-				if ($this->op && $this->radix->enable_poster_hash)
+				if ($this->op && $this->radix->getValue('enable_poster_hash'))
 				{
 					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment['thread_num']),'id'), 3), 0, 8);
 

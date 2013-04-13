@@ -915,17 +915,17 @@ class Board
 			$result['disable_image_upload'] = true;
 		}
 
-		if ($counter['posts'] > $this->radix->max_posts_count)
+		if ($counter['posts'] > $this->radix->getValue('max_posts_count'))
 		{
 			$result['dead'] = true;
 			$result['disable_image_upload'] = true;
 		}
-		elseif ($counter['images'] > $this->radix->max_images_count)
+		elseif ($counter['images'] > $this->radix->getValue('max_images_count'))
 		{
 			$result['disable_image_upload'] = true;
 		}
 
-		if ($this->radix->disable_ghost && $result['dead'])
+		if ($this->radix->getValue('disable_ghost') && $result['dead'])
 		{
 			$result['closed'] = true;
 		}

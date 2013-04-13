@@ -10,6 +10,30 @@ class Radix
 {
 	use \Foolz\Plugin\PlugSuit;
 
+	/*
+	 * Set of database fields
+	 */
+
+	public $id = 0;
+
+	public $name = '';
+
+	public $shortname = '';
+
+	public $archive = 0;
+
+	public $sphinx = 0;
+
+	public $hidden = 0;
+
+	public $hide_thumbnails = 0;
+
+	public $directory = 0;
+
+	public $max_indexed_id = 0;
+
+	public $max_ancient_id = 0;
+
 	/**
 	 * Array of key => value for radix configurations
 	 *
@@ -886,22 +910,18 @@ class Radix
 
 			$result_object[$item['id']] = new static();
 
+			// set the plain database data as keys
 			foreach ($item as $k => $i)
 			{
 				$result_object[$item['id']]->$k = $i;
 			}
-
-			$result_object[$item['id']]->formatted_title = ($item['name']) ?
-				'/'.$item['shortname'].'/ - '.$item['name'] : '/'.$item['shortname'].'/';
-
-			$result_object[$item['id']]->href = \Uri::create($item['shortname']);
 
 			// load the basic value of the preferences
 			foreach ($structure as $key => $arr)
 			{
 				if ( ! isset($result_object[$item['id']]->$key) && isset($arr['boards_preferences']))
 				{
-					$result_object[$item['id']]->$key = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key);
+					$result_object[$item['id']]->setValue($key, Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key));
 				}
 
 				foreach (['sub', 'sub_inverse'] as $sub)
@@ -912,7 +932,7 @@ class Radix
 						{
 							if ( ! isset($result_object[$item['id']]->$k) && isset($a['boards_preferences']))
 							{
-								$result_object[$item['id']]->$k = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$k);
+								$result_object[$item['id']]->setValue($k, Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$k));
 							}
 						}
 					}
@@ -945,6 +965,11 @@ class Radix
 				$result_object[$value['board_id']]->setValue($value['name'], $value['value']);
 			}
 		}
+
+		// url values for commodity
+		$result_object[$item['id']]->setValue('formatted_title', ($item['name']) ?
+			'/'.$item['shortname'].'/ - '.$item['name'] : '/'.$item['shortname'].'/');
+		$result_object[$item['id']]->setValue('href', \Uri::create($item['shortname']));
 
 		static::$preloaded_radixes = $result_object;
 		\Profiler::mark_memory(static::$preloaded_radixes, 'Radix static::$preloaded_radixes');

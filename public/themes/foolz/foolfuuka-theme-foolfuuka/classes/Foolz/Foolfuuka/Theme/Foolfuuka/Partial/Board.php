@@ -41,7 +41,7 @@ class Board extends \Foolz\Theme\View
                     </a>
 					<?php else : ?>
                     <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-						<?php if ( ! \Auth::has_access('maccess.mod') && !$op->radix->transparent_spoiler && $op->media->spoiler) :?>
+						<?php if ( ! \Auth::has_access('maccess.mod') && !$op->radix->getValue('transparent_spoiler') && $op->media->spoiler) :?>
                         <div class="spoiler_box"><span class="spoiler_box_text"><?= __('Spoiler') ?><span class="spoiler_box_text_help"><?= __('Click to view') ?></span></div>
 						<?php else : ?>
                         <img src="<?= $op->media->getThumbLink() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />

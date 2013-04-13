@@ -517,15 +517,6 @@ class Radix
 		return $structure;
 	}
 
-	/**
-	 * Temporary fallback for old $radix->long_key
-	 *
-	 * @deprecated
-	 */
-	public function __get($name)
-	{
-		return $this->getValue($name);
-	}
 
 	/**
 	 * Clears the APC/memcached cache

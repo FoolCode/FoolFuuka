@@ -1063,7 +1063,7 @@ class Comment
 					}
 				}
 
-				if ($post['media_id'] !== 0)
+				if ($post['media_id'] != 0)
 				{
 					$thread_images++;
 				}

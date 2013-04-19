@@ -72,6 +72,7 @@ return [
 		'themes' => [],
 
 		'radix' => [
+			'op_image_upload_necessity' => 'always',
 			'threads_per_page' => 10,
 			'thumbnail_op_width' => 250,
 			'thumbnail_op_height' => 250,

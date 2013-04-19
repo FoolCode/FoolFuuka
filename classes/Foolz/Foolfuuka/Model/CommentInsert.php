@@ -503,6 +503,13 @@ class CommentInsert extends Comment
 		// process comment media
 		if ($this->media !== null)
 		{
+			// if uploading an image with OP is prohibited
+
+			if ( ! $this->thread_num && $this->radix->getValue('op_image_upload_necessity') === 'never')
+			{
+				throw new CommentSendingException(__('You can\'t start a new thread with an image.'));
+			}
+
 			if ( ! $this->allow_media)
 			{
 				if ($this->ghost)
@@ -526,8 +533,8 @@ class CommentInsert extends Comment
 		}
 		else
 		{
-			// if no media is present and post is op, stop processing
-			if ( ! $this->thread_num)
+			// if the user is forced to upload an image when making a new thread
+			if ( ! $this->thread_num && $this->radix->getValue('op_image_upload_necessity') === 'always')
 			{
 				throw new CommentSendingThreadWithoutMediaException(__('You can\'t start a new thread without an image.'));
 			}

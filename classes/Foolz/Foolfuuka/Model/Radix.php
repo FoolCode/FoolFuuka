@@ -295,6 +295,14 @@ class Radix
 						'type' => 'paragraph',
 						'help' => __('Options for normal boards')
 					],
+					'op_image_upload_necessity' => [
+						'database' => true,
+						'boards_preferences' => true,
+						'help' => __('Do users have to upload an image when starting a new thread?'),
+						'type' => 'select',
+						'default_value' => 'always',
+						'options' => ['always' => __('Always'), 'optional' => __('Optional'), 'never' => __('Never')]
+					],
 					'thumbnail_op_width' => [
 						'database' => true,
 						'boards_preferences' => true,

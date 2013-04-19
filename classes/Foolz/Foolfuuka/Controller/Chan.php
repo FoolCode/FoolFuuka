@@ -346,7 +346,8 @@ class Chan extends \Controller
 					'page']),
 				'current_page' => $page,
 				'total' => $board->getPages()
-			]
+			],
+			'disable_image_upload' => $this->_radix->getValue('op_image_upload_necessity') === 'never',
 		]);
 
 		if ( ! $this->_radix->archive)

@@ -870,17 +870,6 @@ class Radix
 
 
 	/**
-	 * Temporary fallback for old $radix->setting
-	 *
-	 * @deprecated
-	 */
-	public function __isset($key)
-	{
-		return isset($this->values[$key]);
-	}
-
-
-	/**
 	 * Puts the table in readily available variables
 	 */
 	protected static function preload()
@@ -927,6 +916,9 @@ class Radix
 			foreach ($item as $k => $i)
 			{
 				$result_object[$item['id']]->$k = $i;
+
+				// we set it also in the values so we can just use it from there as commodity
+				$result_object[$item['id']]->setValue($k, $i);
 			}
 
 			// url values for commodity
@@ -1168,6 +1160,17 @@ class Radix
 		}
 
 		return $this->values[$key];
+	}
+
+
+	/**
+	 * Return all the values for the radix as an associative array
+	 *
+	 * @return  array  Associative array of key => value
+	 */
+	public function getAllValues()
+	{
+		return $this->values;
 	}
 
 

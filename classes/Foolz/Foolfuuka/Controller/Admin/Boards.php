@@ -71,7 +71,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			throw new \HttpNotFoundException;
 		}
 
-		$data['object'] = $board;
+		$data['object'] = (object) $board->getAllValues();
 
 		$this->_views['method_title'] = [__('Manage'), __('Edit'), $shortname];
 		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);

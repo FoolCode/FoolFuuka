@@ -169,7 +169,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 				<td></td>
 				<td>
 					<?php
-					echo \Markdown::parse($radix->getValue('posting_rules'));
+					echo \Foolz\Foolframe\Model\Markdown::parse($radix->getValue('posting_rules'));
 					?>
 				</td>
 			</tr>

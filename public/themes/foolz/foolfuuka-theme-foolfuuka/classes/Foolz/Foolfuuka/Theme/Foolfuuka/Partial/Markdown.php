@@ -33,7 +33,7 @@ class Markdown extends \Foolz\Theme\View
 		</style>
 
 		<div class="markdown">
-			<?= \Markdown::parse($content); ?>
+			<?= \Foolz\Foolframe\Model\Markdown::parse($content); ?>
 		</div>
 			<?php
 	}

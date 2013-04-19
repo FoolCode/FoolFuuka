@@ -920,7 +920,7 @@ class Board
 			$result['dead'] = true;
 			$result['disable_image_upload'] = true;
 		}
-		elseif ($counter['images'] > $this->radix->getValue('max_images_count'))
+		elseif ($counter['images'] >= $this->radix->getValue('max_images_count'))
 		{
 			$result['disable_image_upload'] = true;
 		}

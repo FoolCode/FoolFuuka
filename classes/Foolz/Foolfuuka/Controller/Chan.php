@@ -144,10 +144,11 @@ class Chan extends \Controller
 
 			$this->_radix = \Radix::setSelectedByShortname($method);
 
-			$this->cache_modifiers['radix_shortname'] = $this->_radix->shortname;
 
 			if ($this->_radix)
 			{
+				$this->cache_modifiers['radix_shortname'] = $this->_radix->shortname;
+
 				$this->param_manager->setParam('radix', $this->_radix);
 				$backend_vars = $this->param_manager->getParam('backend_vars');
 				$backend_vars['board_shortname'] = $this->_radix->shortname;

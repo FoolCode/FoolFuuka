@@ -309,7 +309,7 @@ class CommentInsert extends Comment
 
 				if ($check_op)
 				{
-					throw new CommentSendingTimeLimitException(__('You must wait up to %d minutes to make another new thread.'));
+					throw new CommentSendingTimeLimitException(_i('You must wait up to %d minutes to make another new thread.', ceil($this->radix->getValue('cooldown_new_thread') / 60)));
 				}
 			}
 
@@ -344,7 +344,7 @@ class CommentInsert extends Comment
 
 				if ($check_time - $check['timestamp'] < $this->radix->getValue('cooldown_new_comment') && $check_time - $check['timestamp'] > 0)
 				{
-					throw new CommentSendingTimeLimitException(__('You must wait up to %d seconds to post again.'));
+					throw new CommentSendingTimeLimitException(_i('You must wait up to %d seconds to post again.', $this->radix->getValue('cooldown_new_comment')));
 				}
 			}
 

@@ -50,7 +50,7 @@ class Chan extends \Controller_Rest
 			}
 		}
 
-		$this->cache_modifiers = $theme_name;
+		$this->cache_modifiers['theme_name'] = $theme_name;
 
 		// already done in the foolfuuka bootstrap
 		// $this->_theme->bootstrap();

@@ -48,9 +48,9 @@ class Chan extends \Controller_Rest
 				$theme_name = 'foolz/foolfuuka-theme-foolfuuka';
 				$this->_theme = $theme_instance->get('foolz', $theme_name);
 			}
-		}
 
-		$this->cache_modifiers['theme_name'] = $theme_name;
+			$this->cache_modifiers['theme_name'] = $theme_name;
+		}
 
 		// already done in the foolfuuka bootstrap
 		// $this->_theme->bootstrap();

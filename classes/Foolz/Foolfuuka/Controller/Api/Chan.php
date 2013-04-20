@@ -10,6 +10,13 @@ class Chan extends \Controller_Rest
 	protected $_theme = null;
 	protected $format = 'json';
 
+	/**
+	 * Modifiers that work as switch for page caching (ie: different theme, style etc.)
+	 *
+	 * @var  array
+	 */
+	protected $cache_modifiers = [];
+
 	public function before()
 	{
 		parent::before();
@@ -41,6 +48,8 @@ class Chan extends \Controller_Rest
 			}
 		}
 
+		$this->cache_modifiers = $theme_name;
+
 		// already done in the foolfuuka bootstrap
 		// $this->_theme->bootstrap();
 
@@ -50,7 +59,7 @@ class Chan extends \Controller_Rest
 			$uri = \Uri::base().'_'.
 				'/'.array_shift($segments).'/'.array_shift($segments).'/'.array_shift($segments).'/?';
 
-			echo count($segments);
+
 			foreach ($segments as $key => $segment)
 			{
 				if ($key % 2 == 0)
@@ -90,6 +99,8 @@ class Chan extends \Controller_Rest
 			//$this->response(['error' => __('The board you selected doesn\'t exist')], 404);
 			return false;
 		}
+
+		$this->cache_modifiers['radix_shortname'] = $this->_radix->shortname;
 
 		return true;
 	}
@@ -133,31 +144,83 @@ class Chan extends \Controller_Rest
 					return $this->response(['error' => __('The value for "latest_doc_id" is malformed.')], 404);
 				}
 
+				$options = [
+					'type' => 'from_doc_id',
+					'latest_doc_id' => $latest_doc_id,
+					'realtime' => true,
+					'controller_method' =>
+					ctype_digit((string) \Input::get('last_limit')) ? 'last/'.\Input::get('last_limit') : 'thread'
+				];
+
+				$this->cache_modifiers['thread_num'] = $num;
+				$this->cache_modifiers['options'] = $options;
+
+				if ( ! \Auth::has_access('maccess.mod'))
+				{
+					try
+					{
+						return Cache::item('foolfuuka.controller.api/chan.get_thread.apicache.'
+							.md5(serialize($this->cache_modifiers)))
+							->get();
+					}
+					catch (\OutOfBoundsException $e)
+					{}
+				}
+
 				$board = \Board::forge()
 					->getThread($num)
 					->setRadix($this->_radix)
 					->setApi(['theme' => $this->_theme, 'board' => false])
-					->setOptions([
-						'type' => 'from_doc_id',
-						'latest_doc_id' => $latest_doc_id,
-						'realtime' => true,
-						'controller_method' =>
-							ctype_digit((string) \Input::get('last_limit')) ? 'last/'.\Input::get('last_limit') : 'thread'
-					]);
+					->setOptions($options);
 
-				return $this->response($board->getComments(), 200);
+				$comments = $board->getComments();
+
+				if ( ! \Auth::has_access('maccess.mod'))
+				{
+					Cache::item('foolfuuka.controller.api/chan.get_thread.apicache.'
+						.md5(serialize($this->cache_modifiers)))
+						->set($comments, 3);
+				}
+
+				return $this->response($comments, 200);
 			}
 			else
 			{
+				$options = [
+					'type' => 'thread',
+				];
+
+				$this->cache_modifiers['thread_num'] = $num;
+				$this->cache_modifiers['options'] = $options;
+
+				if ( ! \Auth::has_access('maccess.mod'))
+				{
+					try
+					{
+						return Cache::item('foolfuuka.controller.api/chan.get_thread.apicache.'
+							.md5(serialize($this->cache_modifiers)))
+							->get();
+					}
+					catch (\OutOfBoundsException $e)
+					{}
+				}
+
 				$board = \Board::forge()
 					->getThread($num)
 					->setRadix($this->_radix)
 					->setApi(['theme' => $this->_theme, 'board' => false])
-					->setOptions([
-						'type' => 'thread',
-					]);
+					->setOptions($options);
 
-				return $this->response($board->getComments(), 200);
+				$comments = $board->getComments();
+
+				if ( ! \Auth::has_access('maccess.mod'))
+				{
+					Cache::item('foolfuuka.controller.api/chan.get_thread.apicache.'
+						.md5(serialize($this->cache_modifiers)))
+						->set($comments, 3);
+				}
+
+				return $this->response($comments, 200);
 			}
 
 		}
@@ -192,13 +255,36 @@ class Chan extends \Controller_Rest
 
 		try
 		{
+			$this->cache_modifiers['thread_num'] = $num;
+
+			if ( ! \Auth::has_access('maccess.mod'))
+			{
+				try
+				{
+					return Cache::item('foolfuuka.controller.api/chan.get_thread.apicache.'
+						.md5(serialize($this->cache_modifiers)))
+						->get();
+				}
+				catch (\OutOfBoundsException $e)
+				{}
+			}
+
 			$board = \Board::forge()
 				->getPost($num)
 				->setRadix($this->_radix)
 				->setApi(['board' => false, 'theme' => $this->_theme]);
 
+			$comment = current($board->getComments());
+
+			if ( ! \Auth::has_access('maccess.mod'))
+			{
+				Cache::item('foolfuuka.controller.api/chan.get_post.apicache.'
+					.md5(serialize($this->cache_modifiers)))
+					->set($comment, 30);
+			}
+
 			// no index for the single post
-			$this->response(current($board->getComments()), 200);
+			$this->response($comment, 200);
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e)
 		{

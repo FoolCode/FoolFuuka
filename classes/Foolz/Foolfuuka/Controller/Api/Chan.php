@@ -2,7 +2,9 @@
 
 namespace Foolz\Foolfuuka\Controller\Api;
 
-use Foolz\Inet\Inet;
+use \Foolz\Inet\Inet,
+	\Foolz\Cache\Cache;
+
 
 class Chan extends \Controller_Rest
 {

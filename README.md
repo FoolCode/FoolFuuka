@@ -20,33 +20,25 @@ Requirements
 Installation
 ------------
 
-#### Install Composer
-FoolFuuka utilizes [Composer](https://getcomposer.org/) to manage all dependencies used by the software. You will need to download a copy of `composer.phar` or update your existing `composer.phar` file with `php composer.phar selfupdate`.
+- Clone the [latest version](https://github.com/FoolCode/FoolFuuka-install) of the FoolFuuka Installer into a directory on your server
 
-#### Using the FoolFuuka Installer
-Once you have Composer installed, download the [latest version](https://github.com/FoolCode/FoolFuuka-install) of the FoolFuuka Installer and extract its contents into a directory on your server. Next, in the root of the FoolFuuka Installer folder, run the `php composer.phar install` command to install all of the dependencies required for FoolFuuka.
+	$ git clone https://github.com/FoolCode/FoolFuuka-install.git
+
+- In the root of the FoolFuuka-install folder, run `php composer.phar install -o` command to install all of the dependencies required for FoolFuuka
+
+- Set the `public` folder as the public directory of the webserver
+
+- Browse to the index page to begin the setup
 
 Update
 ------
 
-#### Via Composer
-It is recommended that all updates by applied with Composer to avoid encountering any dependency issues. In order to do this, run the `php composer.phar update` command in the root of your FoolFuuka Installer folder to begin the updating process. It should take at least a minute to finish the process.
+It is recommended that all updates by applied with Composer to avoid encountering any dependency issues. **Make sure you have a backup of the content before performing an update.**
 
-#### Via Git
-Since Composer relies on Git for the install and update process, it is possible to manually update each dependency and package to the latest stable version or development version. In order to do this, you will need to `cd` into the directory containing the package inside the vendor folder and use `git` commands to update it.
+- Take the site offline
 
-__THIS IS NOT RECOMMENDED.__
+- In the root directory of the FoolFuuka-install folder, run `git pull` to update the composer definitions
 
-##### List of Packages
+- In the root directory of the FoolFuuka-install folder, run `php composer.phar update` to update the code
 
-  - doctrine/common
-  - doctrine/dbal
-  - foolz/cache
-  - foolz/foolframe
-  - foolz/foolfuuka
-  - foolz/inet
-  - foolz/package
-  - foolz/plugin
-  - foolz/sphinxql-query-builder
-  - foolz/theme
-  - leafo/lessphp
+- Take the site back online

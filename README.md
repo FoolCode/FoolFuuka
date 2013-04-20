@@ -22,7 +22,7 @@ Installation
 
 - Clone the [latest version](https://github.com/FoolCode/FoolFuuka-install) of the FoolFuuka Installer into a directory on your server
 
-	$ git clone https://github.com/FoolCode/FoolFuuka-install.git
+		$ git clone https://github.com/FoolCode/FoolFuuka-install.git
 
 - In the root of the FoolFuuka-install folder, run `php composer.phar install -o` command to install all of the dependencies required for FoolFuuka
 

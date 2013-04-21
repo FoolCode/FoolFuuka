@@ -176,7 +176,8 @@ class Chan extends \Controller
 		$this->cache_modifiers = [
 			'theme' => $this->theme->getConfig('name'),
 			'theme_style' => \Cookie::get('theme_'.$this->theme->getConfig('name').'_style'),
-			'language' => \Cookie::get('language')
+			'language' => \Cookie::get('language'),
+			'search_cookie' => \Cookie::get('search_latest_5')
 		];
 
 		if (method_exists($this, 'action_'.$method))

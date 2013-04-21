@@ -177,7 +177,10 @@ class Chan extends \Controller
 			'theme' => $this->theme->getConfig('name'),
 			'theme_style' => \Cookie::get('theme_'.$this->theme->getConfig('name').'_style'),
 			'language' => \Cookie::get('language'),
-			'search_cookie' => \Cookie::get('search_latest_5')
+			'search_cookie' => \Cookie::get('search_latest_5'),
+			'pass' => \Cookie::get('reply_password'),
+			'name' => \Cookie::get('reply_name'),
+			'email' => \Cookie::get('reply_email')
 		];
 
 		if (method_exists($this, 'action_'.$method))

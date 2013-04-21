@@ -381,79 +381,102 @@ class Board
 		\Profiler::mark('Board::getLatestComments Start');
 		extract($this->options);
 
-		switch ($order)
+		try
 		{
-			case 'by_post':
-				$query = DC::qb()
-					->select('*, thread_num AS unq_thread_num')
-					->from($this->radix->getTable('_threads'), 'rt')
-					->orderBy('rt.time_bump', 'DESC')
-					->setMaxResults($per_page)
-					->setFirstResult(($page * $per_page) - $per_page);
-				break;
-
-			case 'by_thread':
-				$query = DC::qb()
-					->select('*, thread_num AS unq_thread_num')
-					->from($this->radix->getTable('_threads'), 'rt')
-					->orderBy('rt.thread_num', 'DESC')
-					->setMaxResults($per_page)
-					->setFirstResult(($page * $per_page) - $per_page);
-				break;
-
-			case 'ghost':
-				$query = DC::qb()
-					->select('*, thread_num AS unq_thread_num')
-					->from($this->radix->getTable('_threads'), 'rt')
-					->where('rt.time_ghost_bump IS NOT null')
-					->orderBy('rt.time_ghost_bump', 'DESC')
-					->setMaxResults($per_page)
-					->setFirstResult(($page * $per_page) - $per_page);
-				break;
+			// not archives, not ghosts, under 10 pages, 10 per page
+			if ( ! $this->radix->archive && $order !== 'ghost' && $page <= 10 && $per_page == 10)
+			{
+				list($results, $query_posts) = Cache::item('foolfuuka.model.board.getLatestComments.'
+					.$this->radix->shortname.'.'.$order.'.'.$page)->get();			}
+			else
+			{
+				// lots of cases we don't want to handle go dynamic
+				throw new \OutOfBoundsException;
+			}
 		}
-
-		$threads = $query
-			->execute()
-			->fetchAll();
-
-		if ( ! count($threads))
+		catch(\OutOfBoundsException $e)
 		{
-			$this->comments = [];
-			$this->comments_unsorted = [];
+			switch ($order)
+			{
+				case 'by_post':
+					$query = DC::qb()
+						->select('*, thread_num AS unq_thread_num')
+						->from($this->radix->getTable('_threads'), 'rt')
+						->orderBy('rt.time_bump', 'DESC')
+						->setMaxResults($per_page)
+						->setFirstResult(($page * $per_page) - $per_page);
+					break;
 
-			\Profiler::mark_memory($this, 'Board $this');
-			\Profiler::mark('Board::getLatestComments End Prematurely');
-			return $this;
+				case 'by_thread':
+					$query = DC::qb()
+						->select('*, thread_num AS unq_thread_num')
+						->from($this->radix->getTable('_threads'), 'rt')
+						->orderBy('rt.thread_num', 'DESC')
+						->setMaxResults($per_page)
+						->setFirstResult(($page * $per_page) - $per_page);
+					break;
+
+				case 'ghost':
+					$query = DC::qb()
+						->select('*, thread_num AS unq_thread_num')
+						->from($this->radix->getTable('_threads'), 'rt')
+						->where('rt.time_ghost_bump IS NOT null')
+						->orderBy('rt.time_ghost_bump', 'DESC')
+						->setMaxResults($per_page)
+						->setFirstResult(($page * $per_page) - $per_page);
+					break;
+			}
+
+			$threads = $query
+				->execute()
+				->fetchAll();
+
+			if ( ! count($threads))
+			{
+				$this->comments = [];
+				$this->comments_unsorted = [];
+
+				\Profiler::mark_memory($this, 'Board $this');
+				\Profiler::mark('Board::getLatestComments End Prematurely');
+				return $this;
+			}
+
+			// populate arrays with posts
+			$results = [];
+			$sql_arr = [];
+
+			foreach ($threads as $thread)
+			{
+				$sql_arr[] = '('.DC::qb()
+					->select('*')
+					->from($this->radix->getTable(), 'r')
+					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+					->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+					->where('r.thread_num = '.$thread['unq_thread_num'])
+					->orderBy('op', 'DESC')
+					->addOrderBy('num', 'DESC')
+					->addOrderBy('subnum', 'DESC')
+					->setMaxResults($per_thread + 1)
+					->setFirstResult(0)
+					->getSQL().')';
+
+				$results[$thread['thread_num']] = [
+					'omitted' => ($thread['nreplies'] - ($per_thread + 1)),
+					'images_omitted' => ($thread['nimages'] - 1)
+				];
+			}
+
+			$query_posts = DC::forge()
+				->executeQuery(implode(' UNION ', $sql_arr))
+				->fetchAll();
+
+			// not archives, not ghosts, under 10 pages, 10 per page
+			if ( ! $this->radix->archive && $order !== 'ghost' && $page <= 10 && $per_page == 10)
+			{
+				Cache::item('foolfuuka.model.board.getLatestComments.'
+					.$this->radix->shortname.'.'.$order.'.'.$page)->set([$results, $query_posts], 300);
+			}
 		}
-
-		// populate arrays with posts
-		$results = [];
-		$sql_arr = [];
-
-		foreach ($threads as $thread)
-		{
-			$sql_arr[] = '('.DC::qb()
-				->select('*')
-				->from($this->radix->getTable(), 'r')
-				->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-				->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
-				->where('r.thread_num = '.$thread['unq_thread_num'])
-				->orderBy('op', 'DESC')
-				->addOrderBy('num', 'DESC')
-				->addOrderBy('subnum', 'DESC')
-				->setMaxResults($per_thread + 1)
-				->setFirstResult(0)
-				->getSQL().')';
-
-			$results[$thread['thread_num']] = [
-				'omitted' => ($thread['nreplies'] - ($per_thread + 1)),
-				'images_omitted' => ($thread['nimages'] - 1)
-			];
-		}
-
-		$query_posts = DC::forge()
-			->executeQuery(implode(' UNION ', $sql_arr))
-			->fetchAll();
 
 		// populate posts_arr array
 		$this->comments_unsorted = Comment::fromArrayDeep($query_posts, $this->radix, $this->comment_options);

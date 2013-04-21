@@ -215,7 +215,9 @@ var bindFunctions = function()
 					reply_alert.html(data.success);
 					reply_alert.addClass('success'); // deals with showing the alert
 					jQuery("#reply_chennodiscursus").val("");
+					jQuery("#reply_nymphassword").val(getCookie('reply_password'));
 					file_el.replaceWith('<input type="file" name="file_image" id="file_image" size="16">');
+
 
 					// redirect in case of new threads
 					if (data_obj.reply_numero < 1)

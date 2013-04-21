@@ -70,16 +70,9 @@ class Chan extends \Controller
 		$this->param_manager = $this->builder->getParamManager();
 		$this->builder->createLayout('chan');
 
-		$pass = \Cookie::get('reply_password');
+		$pass = \Cookie::get('reply_password', '');
 		$name = \Cookie::get('reply_name');
 		$email = \Cookie::get('reply_email');
-
-		// get the password needed for the reply field
-		if ( ! $pass || strlen($pass) < 3)
-		{
-			$pass = \Str::random('alnum', 7);
-			\Cookie::set('reply_password', $pass, 60*60*24*30);
-		}
 
 		// KEEP THIS IN SYNC WITH THE ONE IN THE POSTS ADMIN PANEL
 		$to_bind = [
@@ -1241,6 +1234,12 @@ class Chan extends \Controller
 
 		if (isset($post['reply_nymphassword']))
 		{
+			// get the password needed for the reply field if it's not set yet
+			if ( ! $post['reply_nymphassword'] || strlen($post['reply_nymphassword']) < 3)
+			{
+				$post['reply_nymphassword'] = \Str::random('alnum', 7);
+			}
+
 			$data['delpass'] = $post['reply_nymphassword'];
 			\Cookie::set('reply_password', $data['delpass'], 60*60*24*30);
 		}

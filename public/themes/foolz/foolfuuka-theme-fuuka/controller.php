@@ -135,6 +135,12 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 		}
 		if (isset($post['delpass']))
 		{
+			// get the password needed for the reply field if it's not set yet
+			if ( ! $post['delpass'] || strlen($post['delpass']) < 3)
+			{
+				$post['delpass'] = \Str::random('alnum', 7);
+			}
+
 			$data['delpass'] = $post['delpass'];
 		}
 		if (isset($post['reply_spoiler']))

@@ -1103,7 +1103,7 @@ class Comment
 		Cache::item('foolfuuka.model.board.getThreadComments.thread.'
 			.md5(serialize([$this->radix->shortname, $this->thread_num])))->delete();
 
-		// clean up the 10 first pages of index that are cached
+		// clean up the 10 first pages of index and gallery that are cached
 		for ($i = 1; $i <= 10; $i++)
 		{
 			Cache::item('foolfuuka.model.board.getLatestComments.'
@@ -1111,6 +1111,9 @@ class Comment
 
 			Cache::item('foolfuuka.model.board.getLatestComments.'
 				.$this->radix->shortname.'.by_thread.'.$i)->delete();
+
+			Cache::item('foolfuuka.model.board.getThreadsComments.query.'
+				.$this->radix->shortname.'.'.$i)->delete();
 		}
 	}
 

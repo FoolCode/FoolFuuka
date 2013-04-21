@@ -386,7 +386,7 @@ class Board
 			// not archives, not ghosts, under 10 pages, 10 per page
 			if ( ! $this->radix->archive && $order !== 'ghost' && $page <= 10 && $per_page == 10)
 			{
-				list($results, $query_posts) = Cache::item('foolfuuka.model.board.getLatestComments.'
+				list($results, $query_posts) = Cache::item('foolfuuka.model.board.getLatestComments.query.'
 					.$this->radix->shortname.'.'.$order.'.'.$page)->get();			}
 			else
 			{
@@ -473,7 +473,7 @@ class Board
 			// not archives, not ghosts, under 10 pages, 10 per page
 			if ( ! $this->radix->archive && $order !== 'ghost' && $page <= 10 && $per_page == 10)
 			{
-				Cache::item('foolfuuka.model.board.getLatestComments.'
+				Cache::item('foolfuuka.model.board.getLatestComments.query.'
 					.$this->radix->shortname.'.'.$order.'.'.$page)->set([$results, $query_posts], 300);
 			}
 		}
@@ -597,22 +597,46 @@ class Board
 		\Profiler::mark('Board::getThreadsComments Start');
 		extract($this->options);
 
-		$inner_query = DC::qb()
-			->select('*, thread_num as unq_thread_num')
-			->from($this->radix->getTable('_threads'), 'rt')
-			->orderBy('rt.time_op', 'DESC')
-			->setMaxResults($per_page)
-			->setFirstResult(($page * $per_page) - $per_page)
-			->getSQL();
+		try
+		{
+			// not archives, not ghosts, under 10 pages, 10 per page
+			if ( ! $this->radix->archive && $page <= 10 && $per_page == 100)
+			{
+				$result = Cache::item('foolfuuka.model.board.getThreadsComments.query.'
+					.$this->radix->shortname.'.'.$page)->get();
+			}
+			else
+			{
+				// lots of cases we don't want to handle go dynamic
+				throw new \OutOfBoundsException;
+			}
+		}
+		catch(\OutOfBoundsException $e)
+		{
+			$inner_query = DC::qb()
+				->select('*, thread_num as unq_thread_num')
+				->from($this->radix->getTable('_threads'), 'rt')
+				->orderBy('rt.time_op', 'DESC')
+				->setMaxResults($per_page)
+				->setFirstResult(($page * $per_page) - $per_page)
+				->getSQL();
 
-		$result = DC::qb()
-			->select('*')
-			->from('('.$inner_query.')', 'g')
-			->join('g', $this->radix->getTable(), 'r', 'r.num = g.unq_thread_num AND r.subnum = 0')
-			->leftJoin('g', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-			->leftJoin('g', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
-			->execute()
-			->fetchAll();
+			$result = DC::qb()
+				->select('*')
+				->from('('.$inner_query.')', 'g')
+				->join('g', $this->radix->getTable(), 'r', 'r.num = g.unq_thread_num AND r.subnum = 0')
+				->leftJoin('g', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+				->leftJoin('g', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+				->execute()
+				->fetchAll();
+
+			// not archives, not ghosts, under 10 pages, 10 per page
+			if ( ! $this->radix->archive && $page <= 10 && $per_page == 100)
+			{
+				Cache::item('foolfuuka.model.board.getThreadsComments.query.'
+					.$this->radix->shortname.'.'.$page)->set($result, 300);
+			}
+		}
 
 		if ( ! count($result))
 		{

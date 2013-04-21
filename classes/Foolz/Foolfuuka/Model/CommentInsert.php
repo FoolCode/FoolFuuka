@@ -2,7 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use \Foolz\Foolframe\Model\DoctrineConnection as DC,
+	\Foolz\Cache\Cache;
 
 class CommentSendingException extends \Exception {}
 class CommentSendingDuplicateException extends CommentSendingException {}
@@ -824,6 +825,10 @@ class CommentInsert extends Comment
 				$this->extra->insert();
 
 				DC::forge()->commit();
+
+				// clean up some caches
+				Cache::item('foolfuuka.model.board.getThreadComments.thread.'
+					.md5(serialize([$this->radix->shortname, $this->thread_num])))->delete();
 
 				$commit = true;
 			}

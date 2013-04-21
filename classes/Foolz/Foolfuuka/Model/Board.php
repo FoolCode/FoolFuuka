@@ -693,7 +693,7 @@ class Board
 		switch ($type)
 		{
 			case 'from_doc_id':
-				$query = DC::qb()
+				$query_result = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'r')
 					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -703,11 +703,14 @@ class Board
 					->orderBy('num', 'ASC')
 					->addOrderBy('subnum', 'ASC')
 					->setParameter(':thread_num', $num)
-					->setParameter(':latest_doc_id', $latest_doc_id);
+					->setParameter(':latest_doc_id', $latest_doc_id)
+					->execute()
+					->fetchAll();
+
 				break;
 
 			case 'ghosts':
-				$query = DC::qb()
+				$query_result = DC::qb()
 					->select('*')
 					->from($this->radix->getTable(), 'r')
 					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -716,51 +719,129 @@ class Board
 					->where('subnum <> 0')
 					->orderBy('num', 'ASC')
 					->addOrderBy('subnum', 'ASC')
-					->setParameter(':thread_num', $num);
+					->setParameter(':thread_num', $num)
+					->execute()
+					->fetchAll();
+
 				break;
 
 			case 'last_x':
-				$subquery_first = DC::qb()
-					->select('*')
-					->from($this->radix->getTable(), 'xr')
-					->where('num = '.DC::forge()->quote($num))
-					->setMaxResults(1)
-					->getSQL();
-				$subquery_last = DC::qb()
-					->select('*')
-					->from($this->radix->getTable(), 'xrr')
-					->where('thread_num = '.DC::forge()->quote($num))
-					->orderBy('num', 'DESC')
-					->addOrderBy('subnum', 'DESC')
-					->setMaxResults($last_limit)
-					->getSQL();
-				$query = DC::qb()
-					->select('*')
-					->from('(('.$subquery_first.') UNION ('.$subquery_last.'))', 'r')
-					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-					->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
-					->orderBy('num', 'ASC')
-					->addOrderBy('subnum', 'ASC');
+
+				try
+				{
+					// we save some cache memory by only saving last_50, so it must always fail otherwise
+					if ($last_limit != 50)
+					{
+						throw new \OutOfBoundsException;
+					}
+
+					$query_result = Cache::item('foolfuuka.model.board.getThreadComments.last_50.'
+						.md5(serialize([$this->radix->shortname, $num])))->get();
+				}
+				catch (\OutOfBoundsException $e)
+				{
+					$subquery_first = DC::qb()
+						->select('*')
+						->from($this->radix->getTable(), 'xr')
+						->where('num = '.DC::forge()->quote($num))
+						->setMaxResults(1)
+						->getSQL();
+					$subquery_last = DC::qb()
+						->select('*')
+						->from($this->radix->getTable(), 'xrr')
+						->where('thread_num = '.DC::forge()->quote($num))
+						->orderBy('num', 'DESC')
+						->addOrderBy('subnum', 'DESC')
+						->setMaxResults($last_limit)
+						->getSQL();
+					$query_result = DC::qb()
+						->select('*')
+						->from('(('.$subquery_first.') UNION ('.$subquery_last.'))', 'r')
+						->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+						->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+						->orderBy('num', 'ASC')
+						->addOrderBy('subnum', 'ASC')
+						->execute()
+						->fetchAll();
+
+					// cache only if it's last_50
+					if ($last_limit == 50)
+					{
+						$cache_time = 300;
+						if ($this->radix->archive)
+						{
+							$cache_time = 30;
+
+							// over 7 days is old
+							$old = time() - 604800;
+
+							// set a very long cache time for archive threads older than a week, in case a ghost post will bump it
+							foreach ($query_result as $k => $r)
+							{
+								if ($r['timestamp'] < $old)
+								{
+									$cache_time = 300;
+									break;
+								}
+							}
+						}
+
+						Cache::item('foolfuuka.model.board.getThreadComments.last_50.'
+							.md5(serialize([$this->radix->shortname, $num])))->set($query_result, $cache_time);
+					}
+				}
 
 				$controller_method = 'last/'.$last_limit;
 				break;
 
 			case 'thread':
-				$query = DC::qb()
-					->select('*')
-					->from($this->radix->getTable(), 'r')
-					->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-					->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
-					->where('thread_num = :thread_num')
-					->orderBy('num', 'ASC')
-					->addOrderBy('subnum', 'ASC')
-					->setParameter(':thread_num', $num);
+
+				try
+				{
+					$query_result = Cache::item('foolfuuka.model.board.getThreadComments.thread.'
+						.md5(serialize([$this->radix->shortname, $num])))->get();
+				}
+				catch (\OutOfBoundsException $e)
+				{
+					$query_result = DC::qb()
+						->select('*')
+						->from($this->radix->getTable(), 'r')
+						->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+						->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
+						->where('thread_num = :thread_num')
+						->orderBy('num', 'ASC')
+						->addOrderBy('subnum', 'ASC')
+						->setParameter(':thread_num', $num)
+						->execute()
+						->fetchAll();
+
+					$cache_time = 300;
+					if ($this->radix->archive)
+					{
+						$cache_time = 30;
+
+						// over 7 days is old
+						$old = time() - 604800;
+
+						// set a very long cache time for archive threads older than a week, in case a ghost post will bump it
+						foreach ($query_result as $k => $r)
+						{
+							if ($r['timestamp'] < $old)
+							{
+								$cache_time = 300;
+								break;
+							}
+						}
+					}
+
+					Cache::item('foolfuuka.model.board.getThreadComments.thread.'
+						.md5(serialize([$this->radix->shortname, $num])))->set($query_result, $cache_time);
+				}
+
 				break;
 		}
 
-		$query_result = $query
-			->execute()
-			->fetchAll();
+
 
 		if ( ! count($query_result) && isset($latest_doc_id))
 		{

@@ -1043,8 +1043,11 @@ class Radix
 	 */
 	public static function getAll()
 	{
-		static::preload();
-
+		if ( ! static::$preloaded_radixes)
+		{
+			static::preload();
+		}
+		
 		return static::$preloaded_radixes;
 	}
 

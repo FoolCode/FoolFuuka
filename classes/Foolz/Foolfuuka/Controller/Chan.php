@@ -337,9 +337,9 @@ class Chan extends \Controller
 
 		if ( ! \Auth::has_access('maccess.mod'))
 		{
-			throw new \OutOfBoundsException;
 			try
 			{
+				throw new \OutOfBoundsException;
 				return Cache::item('foolfuuka.controller.chan.latest.pagecache.'
 					.md5(serialize($this->cache_modifiers)))
 					->get();

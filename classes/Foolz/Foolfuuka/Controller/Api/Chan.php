@@ -50,6 +50,7 @@ class Chan extends \Controller_Rest
 			}
 
 			$this->cache_modifiers['theme_name'] = $theme_name;
+			$this->cache_modifiers['https'] = ! isset($_SERVER['HTTPS']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'off');
 		}
 
 		// already done in the foolfuuka bootstrap

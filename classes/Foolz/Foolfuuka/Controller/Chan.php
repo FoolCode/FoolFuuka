@@ -173,7 +173,8 @@ class Chan extends \Controller
 			'search_cookie' => \Cookie::get('search_latest_5'),
 			'pass' => \Cookie::get('reply_password'),
 			'name' => \Cookie::get('reply_name'),
-			'email' => \Cookie::get('reply_email')
+			'email' => \Cookie::get('reply_email'),
+			'https' => ! isset($_SERVER['HTTPS']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'off')
 		];
 
 		if (method_exists($this, 'action_'.$method))

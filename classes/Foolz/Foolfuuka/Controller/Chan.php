@@ -2,8 +2,6 @@
 
 namespace Foolz\Foolfuuka\Controller;
 
-use \Foolz\Cache\Cache;
-
 class Chan extends \Controller
 {
 	/**
@@ -26,13 +24,6 @@ class Chan extends \Controller
 	 * @var  \Foolz\Theme\ParamManager
 	 */
 	protected $param_manager = null;
-
-	/**
-	 * Modifiers that work as switch for page caching (ie: different theme, style etc.)
-	 *
-	 * @var  array
-	 */
-	protected $cache_modifiers = [];
 
 	/**
 	 * The currently selected radix
@@ -140,8 +131,6 @@ class Chan extends \Controller
 
 			if ($this->_radix)
 			{
-				$this->cache_modifiers['radix_shortname'] = $this->_radix->shortname;
-
 				$this->param_manager->setParam('radix', $this->_radix);
 				$backend_vars = $this->param_manager->getParam('backend_vars');
 				$backend_vars['board_shortname'] = $this->_radix->shortname;
@@ -165,18 +154,6 @@ class Chan extends \Controller
 		$this->param_manager->setParam('radix', null);
 		$this->builder->getProps()->addTitle(\Preferences::get('foolfuuka.gen.website_title'));
 
-		// set a few basic cache modifiers
-		$this->cache_modifiers = [
-			'theme' => $this->theme->getConfig('name'),
-			'theme_style' => \Cookie::get('theme_'.$this->theme->getConfig('name').'_style'),
-			'language' => \Cookie::get('language'),
-			'search_cookie' => \Cookie::get('search_latest_5'),
-			'pass' => \Cookie::get('reply_password'),
-			'name' => \Cookie::get('reply_name'),
-			'email' => \Cookie::get('reply_email'),
-			'https' => ! isset($_SERVER['HTTPS']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'off')
-		];
-
 		if (method_exists($this, 'action_'.$method))
 		{
 			return call_user_func_array([$this, 'action_'.$method], $params);
@@ -187,28 +164,9 @@ class Chan extends \Controller
 
 	public function action_index()
 	{
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			try
-			{
-				return Cache::item('foolfuuka.controller.chan.action_index.pagecache.'
-					.md5(serialize($this->cache_modifiers)))
-					->get();
-			}
-			catch (\OutOfBoundsException $e)
-			{}
-		}
-
 		$this->param_manager->setParam('disable_headers', true);
 		$this->builder->createPartial('body', 'index');
 		$result = $this->builder->build();
-
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			Cache::item('foolfuuka.controller.chan.action_index.pagecache.'
-				.md5(serialize($this->cache_modifiers)))
-				->set($result, 60);
-		}
 
 		return $result;
 	}
@@ -334,21 +292,6 @@ class Chan extends \Controller
 	{
 		\Profiler::mark('Controller Chan::latest Start');
 
-		$this->cache_modifiers['options'] = $options;
-
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			try
-			{
-				throw new \OutOfBoundsException;
-				return Cache::item('foolfuuka.controller.chan.latest.pagecache.'
-					.md5(serialize($this->cache_modifiers)))
-					->get();
-			}
-			catch (\OutOfBoundsException $e)
-			{}
-		}
-
 		try
 		{
 			$board = \Board::forge()
@@ -413,13 +356,6 @@ class Chan extends \Controller
 		\Profiler::mark('Controller Chan::latest End');
 		$result = $this->builder->build();
 
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			Cache::item('foolfuuka.controller.chan.latest.pagecache.'
-				.md5(serialize($this->cache_modifiers)))
-				->set($result, 5);
-		}
-
 		return $result;
 	}
 
@@ -447,22 +383,6 @@ class Chan extends \Controller
 	{
 		\Profiler::mark('Controller Chan::thread Start');
 		$num = str_replace('S', '', $num);
-
-		$this->cache_modifiers['thread_num'] = $num;
-		$this->cache_modifiers['options'] = $options;
-
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			try
-			{
-				throw new \OutOfBoundsException;
-				return Cache::item('foolfuuka.controller.chan.thread.pagecache.'
-					.md5(serialize($this->cache_modifiers)))
-					->get();
-			}
-			catch (\OutOfBoundsException $e)
-			{}
-		}
 
 		try
 		{
@@ -539,41 +459,11 @@ class Chan extends \Controller
 		\Profiler::mark('Controller Chan::thread End');
 		$result = $this->builder->build();
 
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			// people with real time will grab further posts anyway
-			$cache_time = 5;
-
-			// older threads can be cached for a longer time, set this at 5 days
-			if (time() - $latest_timestamp > 432000)
-			{
-				$cache_time = 30;
-			}
-
-			Cache::item('foolfuuka.controller.chan.thread.pagecache.'
-				.md5(serialize($this->cache_modifiers)))
-				->set($result, $cache_time);
-		}
-
 		return $result;
 	}
 
 	public function radix_gallery($page = 1)
 	{
-		$this->cache_modifiers['page'] = $page;
-
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			try
-			{
-				return Cache::item('foolfuuka.controller.chan.radix_gallery.pagecache.'
-					.md5(serialize($this->cache_modifiers)))
-					->get();
-			}
-			catch (\OutOfBoundsException $e)
-			{}
-		}
-
 		try
 		{
 			$board = \Board::forge()
@@ -604,13 +494,6 @@ class Chan extends \Controller
 		]);
 
 		$result = $this->builder->build();
-
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			Cache::item('foolfuuka.controller.chan.radix_gallery.pagecache.'
-				.md5(serialize($this->cache_modifiers)))
-				->set($result, 10);
-		}
 
 		return $result;
 	}
@@ -942,21 +825,6 @@ class Chan extends \Controller
 			$search['poster_ip'] = \Foolz\Inet\Inet::ptod($search['poster_ip']);
 		}
 
-		$this->cache_modifiers['search'] = $search;
-		$this->cache_modifiers['cookie_array'] = $cookie_array;
-
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			try
-			{
-				return Cache::item('foolfuuka.controller.chan.radix_search.pagecache.'
-					.md5(serialize($this->cache_modifiers)))
-					->get();
-			}
-			catch (\OutOfBoundsException $e)
-			{}
-		}
-
 		try
 		{
 			$board = \Search::forge()
@@ -1095,13 +963,6 @@ class Chan extends \Controller
 		\Profiler::mark('Controller Chan::search End');
 
 		$result = $this->builder->build('board');
-
-		if ( ! \Auth::has_access('maccess.mod'))
-		{
-			Cache::item('foolfuuka.controller.chan.radix_search.pagecache.'
-				.md5(serialize($this->cache_modifiers)))
-				->set($result, 10);
-		}
 
 		return $result;
 	}

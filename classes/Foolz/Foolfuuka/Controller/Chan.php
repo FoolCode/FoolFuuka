@@ -340,6 +340,7 @@ class Chan extends \Controller
 		{
 			try
 			{
+				throw new \OutOfBoundsException;
 				return Cache::item('foolfuuka.controller.chan.latest.pagecache.'
 					.md5(serialize($this->cache_modifiers)))
 					->get();
@@ -454,6 +455,7 @@ class Chan extends \Controller
 		{
 			try
 			{
+				throw new \OutOfBoundsException;
 				return Cache::item('foolfuuka.controller.chan.thread.pagecache.'
 					.md5(serialize($this->cache_modifiers)))
 					->get();

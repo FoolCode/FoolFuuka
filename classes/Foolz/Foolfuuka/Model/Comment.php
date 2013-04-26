@@ -1106,10 +1106,10 @@ class Comment
 		// clean up the 10 first pages of index and gallery that are cached
 		for ($i = 1; $i <= 10; $i++)
 		{
-			Cache::item('foolfuuka.model.board.getLatestComments.'
+			Cache::item('foolfuuka.model.board.getLatestComments.query.'
 				.$this->radix->shortname.'.by_post.'.$i)->delete();
 
-			Cache::item('foolfuuka.model.board.getLatestComments.'
+			Cache::item('foolfuuka.model.board.getLatestComments.query.'
 				.$this->radix->shortname.'.by_thread.'.$i)->delete();
 
 			Cache::item('foolfuuka.model.board.getThreadsComments.query.'

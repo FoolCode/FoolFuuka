@@ -1231,125 +1231,143 @@ class Radix
 		// create the main table also in _deleted flavour
 		foreach(['', '_deleted'] as $key)
 		{
-			$table = $schema->createTable($this->getTable($key));
+			if ( ! $schema->hasTable($this->getTable($key)))
+			{
+				$table = $schema->createTable($this->getTable($key));
+				if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
+				{
+					$table->addOption('charset', $charset);
+					$table->addOption('collate', $collation);
+				}
+				$table->addColumn('doc_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+				$table->addColumn('media_id', 'integer', ['unsigned' => true, 'default' => 0]);
+				$table->addColumn('poster_ip', 'decimal', ['unsigned' => true, 'precision' => 39, 'scale' => 0, 'default' => 0]);
+				$table->addColumn('num', 'integer', ['unsigned' => true]);
+				$table->addColumn('subnum', 'integer', ['unsigned' => true]);
+				$table->addColumn('thread_num', 'integer', ['unsigned' => true, 'default' => 0]);
+				$table->addColumn('op', 'boolean', ['default' => 0]);
+				$table->addColumn('timestamp', 'integer', ['unsigned' => true]);
+				$table->addColumn('timestamp_expired', 'integer', ['unsigned' => true]);
+				$table->addColumn('preview_orig', 'string', ['length' => 20, 'notnull' => false]);
+				$table->addColumn('preview_w', 'smallint', ['unsigned' => true, 'default' => 0]);
+				$table->addColumn('preview_h', 'smallint', ['unsigned' => true, 'default' => 0]);
+				$table->addColumn('media_filename', 'text', ['length' => 65532, 'notnull' => false]);
+				$table->addColumn('media_w', 'smallint', ['unsigned' => true, 'default' => 0]);
+				$table->addColumn('media_h', 'smallint', ['unsigned' => true, 'default' => 0]);
+				$table->addColumn('media_size', 'integer', ['unsigned' => true, 'default' => 0]);
+				$table->addColumn('media_hash', 'string', ['length' => 25, 'notnull' => false]);
+				$table->addColumn('media_orig', 'string', ['length' => 20, 'notnull' => false]);
+				$table->addColumn('spoiler', 'boolean', ['default' => 0]);
+				$table->addColumn('deleted', 'boolean', ['default' => 0]);
+				$table->addColumn('capcode', 'string', ['length' => 1, 'default' => 'N']);
+				$table->addColumn('email', 'string', ['length' => 100, 'notnull' => false]);
+				$table->addColumn('name', 'string', ['length' => 100, 'notnull' => false]);
+				$table->addColumn('trip', 'string', ['length' => 25, 'notnull' => false]);
+				$table->addColumn('title', 'string', ['length' => 100, 'notnull' => false]);
+				$table->addColumn('comment', 'text', ['length' => 65532, 'notnull' => false]);
+				$table->addColumn('delpass', 'text', ['length' => 255, 'notnull' => false]);
+				$table->addColumn('sticky', 'boolean', ['default' => 0]);
+				$table->addColumn('poster_hash', 'string', ['length' => 8, 'notnull' => false]);
+				$table->addColumn('poster_country', 'string', ['length' => 2, 'notnull' => false]);
+				$table->addColumn('exif', 'text', ['length' => 65532, 'notnull' => false]);
+				$table->setPrimaryKey(['doc_id']);
+				$table->addUniqueIndex(['num', 'subnum'], 'num_subnum_index');
+				$table->addIndex(['thread_num', 'num', 'subnum'], 'thread_num_subnum_index');
+				$table->addIndex(['subnum'], 'subnum_index');
+				$table->addIndex(['op'], 'op_index');
+				$table->addIndex(['media_id'], 'media_id_index');
+				$table->addIndex(['media_hash'], 'media_hash_index');
+				$table->addIndex(['media_orig'], 'media_orig_index');
+				$table->addIndex(['name', 'trip'], 'name_trip_index');
+				$table->addIndex(['trip'], 'trip_index');
+				$table->addIndex(['email'], 'email_index');
+				$table->addIndex(['poster_ip'], 'poster_ip_index');
+				$table->addIndex(['timestamp'], 'timestamp_index');
+			}
+		}
+
+		if ( ! $schema->hasTable($this->getTable('_threads')))
+		{
+			$table_threads = $schema->createTable($this->getTable('_threads'));
 			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 			{
-				$table->addOption('charset', $charset);
-				$table->addOption('collate', $collation);
+				$table_threads->addOption('charset', $charset);
+				$table_threads->addOption('collate', $collation);
 			}
-			$table->addColumn('doc_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
-			$table->addColumn('media_id', 'integer', ['unsigned' => true, 'default' => 0]);
-			$table->addColumn('poster_ip', 'decimal', ['unsigned' => true, 'precision' => 39, 'scale' => 0, 'default' => 0]);
-			$table->addColumn('num', 'integer', ['unsigned' => true]);
-			$table->addColumn('subnum', 'integer', ['unsigned' => true]);
-			$table->addColumn('thread_num', 'integer', ['unsigned' => true, 'default' => 0]);
-			$table->addColumn('op', 'boolean', ['default' => 0]);
-			$table->addColumn('timestamp', 'integer', ['unsigned' => true]);
-			$table->addColumn('timestamp_expired', 'integer', ['unsigned' => true]);
-			$table->addColumn('preview_orig', 'string', ['length' => 20, 'notnull' => false]);
-			$table->addColumn('preview_w', 'smallint', ['unsigned' => true, 'default' => 0]);
-			$table->addColumn('preview_h', 'smallint', ['unsigned' => true, 'default' => 0]);
-			$table->addColumn('media_filename', 'text', ['length' => 65532, 'notnull' => false]);
-			$table->addColumn('media_w', 'smallint', ['unsigned' => true, 'default' => 0]);
-			$table->addColumn('media_h', 'smallint', ['unsigned' => true, 'default' => 0]);
-			$table->addColumn('media_size', 'integer', ['unsigned' => true, 'default' => 0]);
-			$table->addColumn('media_hash', 'string', ['length' => 25, 'notnull' => false]);
-			$table->addColumn('media_orig', 'string', ['length' => 20, 'notnull' => false]);
-			$table->addColumn('spoiler', 'boolean', ['default' => 0]);
-			$table->addColumn('deleted', 'boolean', ['default' => 0]);
-			$table->addColumn('capcode', 'string', ['length' => 1, 'default' => 'N']);
-			$table->addColumn('email', 'string', ['length' => 100, 'notnull' => false]);
-			$table->addColumn('name', 'string', ['length' => 100, 'notnull' => false]);
-			$table->addColumn('trip', 'string', ['length' => 25, 'notnull' => false]);
-			$table->addColumn('title', 'string', ['length' => 100, 'notnull' => false]);
-			$table->addColumn('comment', 'text', ['length' => 65532, 'notnull' => false]);
-			$table->addColumn('delpass', 'text', ['length' => 255, 'notnull' => false]);
-			$table->addColumn('sticky', 'boolean', ['default' => 0]);
-			$table->addColumn('poster_hash', 'string', ['length' => 8, 'notnull' => false]);
-			$table->addColumn('poster_country', 'string', ['length' => 2, 'notnull' => false]);
-			$table->addColumn('exif', 'text', ['length' => 65532, 'notnull' => false]);
-			$table->setPrimaryKey(['doc_id']);
-			$table->addUniqueIndex(['num', 'subnum'], 'num_subnum_index');
-			$table->addIndex(['thread_num', 'num', 'subnum'], 'thread_num_subnum_index');
-			$table->addIndex(['subnum'], 'subnum_index');
-			$table->addIndex(['op'], 'op_index');
-			$table->addIndex(['media_id'], 'media_id_index');
-			$table->addIndex(['media_hash'], 'media_hash_index');
-			$table->addIndex(['media_orig'], 'media_orig_index');
-			$table->addIndex(['name', 'trip'], 'name_trip_index');
-			$table->addIndex(['trip'], 'trip_index');
-			$table->addIndex(['email'], 'email_index');
-			$table->addIndex(['poster_ip'], 'poster_ip_index');
-			$table->addIndex(['timestamp'], 'timestamp_index');
+			$table_threads->addColumn('thread_num', 'integer', ['unsigned' => true]);
+			$table_threads->addColumn('time_op', 'integer', ['unsigned' => true]);
+			$table_threads->addColumn('time_last', 'integer', ['unsigned' => true]);
+			$table_threads->addColumn('time_bump', 'integer', ['unsigned' => true]);
+			$table_threads->addColumn('time_ghost', 'integer', ['unsigned' => true, 'notnull' => false, 'default' => 'null']);
+			$table_threads->addColumn('time_ghost_bump', 'integer', ['unsigned' => true, 'notnull' => false, 'default' => 'null']);
+			$table_threads->addColumn('nreplies', 'integer', ['unsigned' => true, 'default' => 0]);
+			$table_threads->addColumn('nimages', 'integer', ['unsigned' => true, 'default' => 0]);
+			$table_threads->setPrimaryKey(['thread_num']);
+			$table_threads->addIndex(['time_op'], 'time_op_index');
+			$table_threads->addIndex(['time_bump'], 'time_bump_index');
+			$table_threads->addIndex(['time_ghost_bump'], 'time_ghost_bump_index');
 		}
 
-		$table_threads = $schema->createTable($this->getTable('_threads'));
-		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		if ( ! $schema->hasTable($this->getTable('_users')))
 		{
-			$table_threads->addOption('charset', $charset);
-			$table_threads->addOption('collate', $collation);
+			$table_users = $schema->createTable($this->getTable('_users'));
+			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
+			{
+				$table_users->addOption('charset', $charset);
+				$table_users->addOption('collate', $collation);
+			}
+			$table_users->addColumn('user_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+			$table_users->addColumn('name', 'string', ['length' => 100, 'default' => '']);
+			$table_users->addColumn('trip', 'string', ['length' => 25, 'default' => '']);
+			$table_users->addColumn('firstseen', 'integer', ['unsigned' => true]);
+			$table_users->addColumn('postcount', 'integer', ['unsigned' => true]);
+			$table_users->setPrimaryKey(['user_id']);
+			$table_users->addUniqueIndex(['name', 'trip'], 'name_trip_index');
+			$table_users->addIndex(['firstseen'], 'firstseen_index');
+			$table_users->addIndex(['postcount'], 'postcount_index');
 		}
-		$table_threads->addColumn('thread_num', 'integer', ['unsigned' => true]);
-		$table_threads->addColumn('time_op', 'integer', ['unsigned' => true]);
-		$table_threads->addColumn('time_last', 'integer', ['unsigned' => true]);
-		$table_threads->addColumn('time_bump', 'integer', ['unsigned' => true]);
-		$table_threads->addColumn('time_ghost', 'integer', ['unsigned' => true, 'notnull' => false, 'default' => 'null']);
-		$table_threads->addColumn('time_ghost_bump', 'integer', ['unsigned' => true, 'notnull' => false, 'default' => 'null']);
-		$table_threads->addColumn('nreplies', 'integer', ['unsigned' => true, 'default' => 0]);
-		$table_threads->addColumn('nimages', 'integer', ['unsigned' => true, 'default' => 0]);
-		$table_threads->setPrimaryKey(['thread_num']);
-		$table_threads->addIndex(['time_op'], 'time_op_index');
-		$table_threads->addIndex(['time_bump'], 'time_bump_index');
-		$table_threads->addIndex(['time_ghost_bump'], 'time_ghost_bump_index');
 
-		$table_users = $schema->createTable($this->getTable('_users'));
-		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		if ( ! $schema->hasTable($this->getTable('_images')))
 		{
-			$table_users->addOption('charset', $charset);
-			$table_users->addOption('collate', $collation);
+			$table_images = $schema->createTable($this->getTable('_images'));
+			$table_images->addColumn('media_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+			$table_images->addColumn('media_hash', 'string', ['length' => 25]);
+			$table_images->addColumn('media', 'string', ['length' => 20, 'notnull' => false]);
+			$table_images->addColumn('preview_op', 'string', ['length' => 20, 'notnull' => false]);
+			$table_images->addColumn('preview_reply', 'string', ['length' => 20, 'notnull' => false]);
+			$table_images->addColumn('total', 'integer', ['unsigned' => true, 'default' => 0]);
+			$table_images->addColumn('banned', 'smallint', ['unsigned' => true, 'default' => 0]);
+			$table_images->setPrimaryKey(['media_id']);
+			$table_images->addUniqueIndex(['media_hash'], 'media_hash_index');
+			$table_images->addIndex(['total'], 'total_index');
+			$table_images->addIndex(['banned'], 'banned_index');
 		}
-		$table_users->addColumn('user_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
-		$table_users->addColumn('name', 'string', ['length' => 100, 'default' => '']);
-		$table_users->addColumn('trip', 'string', ['length' => 25, 'default' => '']);
-		$table_users->addColumn('firstseen', 'integer', ['unsigned' => true]);
-		$table_users->addColumn('postcount', 'integer', ['unsigned' => true]);
-		$table_users->setPrimaryKey(['user_id']);
-		$table_users->addUniqueIndex(['name', 'trip'], 'name_trip_index');
-		$table_users->addIndex(['firstseen'], 'firstseen_index');
-		$table_users->addIndex(['postcount'], 'postcount_index');
 
-		$table_images = $schema->createTable($this->getTable('_images'));
-		$table_images->addColumn('media_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
-		$table_images->addColumn('media_hash', 'string', ['length' => 25]);
-		$table_images->addColumn('media', 'string', ['length' => 20, 'notnull' => false]);
-		$table_images->addColumn('preview_op', 'string', ['length' => 20, 'notnull' => false]);
-		$table_images->addColumn('preview_reply', 'string', ['length' => 20, 'notnull' => false]);
-		$table_images->addColumn('total', 'integer', ['unsigned' => true, 'default' => 0]);
-		$table_images->addColumn('banned', 'smallint', ['unsigned' => true, 'default' => 0]);
-		$table_images->setPrimaryKey(['media_id']);
-		$table_images->addUniqueIndex(['media_hash'], 'media_hash_index');
-		$table_images->addIndex(['total'], 'total_index');
-		$table_images->addIndex(['banned'], 'banned_index');
-
-		$table_daily = $schema->createTable($this->getTable('_daily'));
-		$table_daily->addColumn('day', 'integer', ['unsigned' => true]);
-		$table_daily->addColumn('posts', 'integer', ['unsigned' => true]);
-		$table_daily->addColumn('images', 'integer', ['unsigned' => true]);
-		$table_daily->addColumn('sage', 'integer', ['unsigned' => true]);
-		$table_daily->addColumn('anons', 'integer', ['unsigned' => true]);
-		$table_daily->addColumn('trips', 'integer', ['unsigned' => true]);
-		$table_daily->addColumn('names', 'integer', ['unsigned' => true]);
-		$table_daily->setPrimaryKey(['day']);
-
-		$table_extra = $schema->createTable($this->getTable('_extra'));
-		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
+		if ( ! $schema->hasTable($this->getTable('_daily')))
 		{
-			$table_extra->addOption('charset', $charset);
-			$table_extra->addOption('collate', $collation);
+			$table_daily = $schema->createTable($this->getTable('_daily'));
+			$table_daily->addColumn('day', 'integer', ['unsigned' => true]);
+			$table_daily->addColumn('posts', 'integer', ['unsigned' => true]);
+			$table_daily->addColumn('images', 'integer', ['unsigned' => true]);
+			$table_daily->addColumn('sage', 'integer', ['unsigned' => true]);
+			$table_daily->addColumn('anons', 'integer', ['unsigned' => true]);
+			$table_daily->addColumn('trips', 'integer', ['unsigned' => true]);
+			$table_daily->addColumn('names', 'integer', ['unsigned' => true]);
+			$table_daily->setPrimaryKey(['day']);
 		}
-		$table_extra->addColumn('extra_id', 'integer', ['unsigned' => true]);
-		$table_extra->addColumn('json', 'text', ['length' => 65532, 'notnull' => false]);
-		$table_extra->setPrimaryKey(['extra_id']);
+
+		if ( ! $schema->hasTable($this->getTable('_extra')))
+		{
+			$table_extra = $schema->createTable($this->getTable('_extra'));
+			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
+			{
+				$table_extra->addOption('charset', $charset);
+				$table_extra->addOption('collate', $collation);
+			}
+			$table_extra->addColumn('extra_id', 'integer', ['unsigned' => true]);
+			$table_extra->addColumn('json', 'text', ['length' => 65532, 'notnull' => false]);
+			$table_extra->setPrimaryKey(['extra_id']);
+		}
 
 		DC::forge()->beginTransaction();
 

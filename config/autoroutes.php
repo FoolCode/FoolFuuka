@@ -1,8 +1,18 @@
 <?php
 
 return [
-	'_root_' => 'foolz/foolfuuka/chan/index',  // The default route
-	'_/api/chan/(:any)' => 'foolz/foolfuuka/api/chan/$1',
+	'/' => [
+		'_controller' => '\Foolz\Foolfuuka\Controller\Chan::index',
+	],
+	'/{radix}/' => [
+		'_controller' => '\Foolz\Foolfuuka\Controller\Chan::page',
+	],
+	'/{radix}/{_method}' => [
+		'_controller' => '\Foolz\Foolfuuka\Controller\Chan::*',
+		'_method' => 'page'
+	],
+	/*
+	'/_/api/chan/(:any)' => 'foolz/foolfuuka/api/chan/$1',
 	'_/advanced_search' => 'foolz/foolfuuka/chan/advanced_search',
 	'_/theme/(:any)' => 'foolz/foolfuuka/chan/theme/$1',
 	'_/language/(:any)' => 'foolz/foolfuuka/chan/language/$1',
@@ -19,4 +29,5 @@ return [
 	'(?!(admin|_))(\w+)/(:any)' => 'foolz/foolfuuka/chan/$2/$3',
 	'_/notfound/action404' => 'foolz/foolfuuka/chan/404', // we need to properly redirect the 404
 	'_404_'=> '_/notfound/action404',    // The main 404 route
+	*/
 ];

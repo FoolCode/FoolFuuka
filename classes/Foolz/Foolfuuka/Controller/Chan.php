@@ -2,7 +2,10 @@
 
 namespace Foolz\Foolfuuka\Controller;
 
-class Chan extends \Controller
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class Chan
 {
 	/**
 	 * The Theme object
@@ -32,10 +35,8 @@ class Chan extends \Controller
 	 */
 	protected $_radix = null;
 
-	public function before()
+	public function before(Request $request)
 	{
-		parent::before();
-
 		// this has already been forged in the foolfuuka bootstrap
 		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 
@@ -113,20 +114,21 @@ class Chan extends \Controller
 		$this->builder->createPartial('tools_advanced_search', 'advanced_search');
 	}
 
-	public function router($method, $params)
+	public function router(Request $request, $method)
 	{
-		$segments = \Uri::segments();
+		$segments_temp = array_filter(explode('/', $request->getPathInfo()), function ($el) { return $el !== ''; });
+		$segments = [];
 
-		if (isset($segments[0]) && $segments[0] === 'search')
+		foreach ($segments_temp as $s)
 		{
-			\Response::redirect(implode('/', array_merge(['_'], $segments)));
+			$segments[] = $s;
 		}
 
 		// the underscore function is never a board
 		if (isset($segments[0]) && $segments[0] !== '_')
 		{
 
-			$this->_radix = \Radix::setSelectedByShortname($method);
+			$this->_radix = \Radix::setSelectedByShortname($segments[0]);
 
 
 			if ($this->_radix)
@@ -137,12 +139,12 @@ class Chan extends \Controller
 				$this->param_manager->setParam('backend_vars', $backend_vars);
 				$this->builder->getProps()->addTitle($this->_radix->getValue('formatted_title'));
 
-				$method = array_shift($params);
+				//$method = array_shift($params);
 
 				// methods callable with a radix are prefixed with radix_
 				if (method_exists($this, 'radix_'.$method))
 				{
-					return call_user_func_array([$this, 'radix_'.$method], $params);
+					return [$this, 'radix_'.$method];//, $params);
 				}
 
 				// a board and no function means we're out of the street
@@ -156,7 +158,7 @@ class Chan extends \Controller
 
 		if (method_exists($this, 'action_'.$method))
 		{
-			return call_user_func_array([$this, 'action_'.$method], $params);
+			return [$this, 'action_'.$method];//, $params);
 		}
 
 		throw new \HttpNotFoundException;
@@ -168,7 +170,7 @@ class Chan extends \Controller
 		$this->builder->createPartial('body', 'index');
 		$result = $this->builder->build();
 
-		return $result;
+		return new Response($result);
 	}
 
 	public function action_404($error = null)
@@ -184,7 +186,7 @@ class Chan extends \Controller
 			'error' => $error === null ? __('We encountered an unexpected error.') : $error
 		]);
 
-		return \Response::forge($this->builder->build(), $code);
+		return new Response($this->builder->build(), $code);
 	}
 
 	protected function message($level = 'success', $message = null, $code = 200)
@@ -246,12 +248,12 @@ class Chan extends \Controller
 			->setParam('url', $url);
 		$this->builder->getProps()->addTitle(__('Changing Language'));
 
-		return \Response::forge($this->builder->build());
+		return new Response($this->builder->build());
 	}
 
 	public function action_opensearch()
 	{
-		return \Response::forge(\View::forge('foolz/foolfuuka::opensearch'));
+		return new Response(\View::forge('foolz/foolfuuka::opensearch'));
 	}
 
 	public function radix_page_mode($_mode = 'by_post')
@@ -354,9 +356,8 @@ class Chan extends \Controller
 
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::latest End');
-		$result = $this->builder->build();
 
-		return $result;
+		 return new Response($this->builder->build());
 	}
 
 	public function radix_thread($num = 0)

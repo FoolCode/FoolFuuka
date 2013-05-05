@@ -27,8 +27,6 @@ class CommentInsert extends Comment
 {
 	protected function insertTriggerDaily($is_retry = false)
 	{
-		DC::forge()->beginTransaction();
-
 		$item = [
 			'day' => (int) (floor($this->timestamp/86400)*86400),
 			'images' => (int) ($this->media !== null),
@@ -54,11 +52,7 @@ class CommentInsert extends Comment
 			}
 			catch(\Doctrine\DBAL\DBALException $e)
 			{
-				if ( ! $is_retry)
-				{
-					// maybe we're trying to insert on something just inserted
-					return $this->insertTriggerDaily(true);
-				}
+				throw new \Doctrine\DBAL\DBALException;
 			}
 		}
 		else
@@ -80,14 +74,10 @@ class CommentInsert extends Comment
 				->execute();
 
 		}
-
-		DC::forge()->commit();
 	}
 
 	protected function insertTriggerUsers($is_retry = false)
 	{
-		DC::forge()->beginTransaction();
-
 		$select = DC::qb()
 			->select('*')
 			->from($this->radix->getTable('_users'), 'u');
@@ -120,10 +110,7 @@ class CommentInsert extends Comment
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
 			{
-				if ( ! $is_retry)
-				{
-					return $this->insertTriggerUsers(true);
-				}
+				throw new \Doctrine\DBAL\DBALException;
 			}
 		}
 		else
@@ -135,14 +122,10 @@ class CommentInsert extends Comment
 				->setParameter(':user_id', $result['user_id'])
 				->execute();
 		}
-
-		DC::forge()->commit();
 	}
 
 	protected function insertTriggerThreads($is_retry = false)
 	{
-		DC::forge()->beginTransaction();
-
 		if ($this->op)
 		{
 			DC::forge()->insert($this->radix->getTable('_threads'), [
@@ -196,8 +179,6 @@ class CommentInsert extends Comment
 				->setParameter(':thread_num', $this->thread_num)
 				->execute();
 		}
-
-		DC::forge()->commit();
 	}
 
 	/**
@@ -758,7 +739,7 @@ class CommentInsert extends Comment
 					->andWhere('poster_ip = :poster_ip')
 					->andWhere('timestamp >= :timestamp')
 					->setParameters([
-						':comment' => DC::forge()->quote($this->comment),
+						':comment' => $this->comment,
 						':poster_ip' => \Input::ip_decimal(),
 						':timestamp' => $this->timestamp
 					])

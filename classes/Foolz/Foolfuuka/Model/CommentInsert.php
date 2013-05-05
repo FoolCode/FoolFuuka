@@ -828,6 +828,7 @@ class CommentInsert extends Comment
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
 			{
+				\Log::error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
 				DC::forge()->rollBack();
 
 				$try_count++;

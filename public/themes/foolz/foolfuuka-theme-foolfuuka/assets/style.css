@@ -1313,8 +1313,12 @@ body.theme_default.midnight {
 }
 
 .theme_default.midnight .spoiler {
-    color:#999;
-    background:#999
+    color:#e6e6e6;
+    background:#e6e6e6
+}
+
+.theme_default.midnight .spoiler:hover {
+    color:#000
 }
 
 .theme_default .spoiler:hover {

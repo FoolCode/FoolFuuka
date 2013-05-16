@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Controller\Admin;
 
+use Foolz\FoolFrame\Model\DoctrineConnection as DC;
+
 class Boards extends \Foolz\Foolframe\Controller\Admin
 {
 	public function before()
@@ -166,12 +168,16 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'help' => __('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
 		];
 
-		$form['foolfuuka.boards.db'] = [
-			'type' => 'input',
-			'label' => __('Boards database'),
-			'preferences' => true,
-			'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
-		];
+
+		if (DC::forge()->getDriver()->getName() != 'pdo_pgsql')
+		{
+			$form['foolfuuka.boards.db'] = [
+				'type' => 'input',
+				'label' => __('Boards database'),
+				'preferences' => true,
+				'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
+			];
+		}
 
 		$form['foolfuuka.boards.media_balancers'] = [
 			'type' => 'textarea',

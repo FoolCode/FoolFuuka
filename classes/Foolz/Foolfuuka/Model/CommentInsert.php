@@ -25,7 +25,7 @@ class CommentSendingDatabaseException extends CommentSendingException {}
 
 class CommentInsert extends Comment
 {
-	protected function insertTriggerDaily($is_retry = false)
+	protected function insertTriggerDaily()
 	{
 		$item = [
 			'day' => (int) (floor($this->timestamp/86400)*86400),
@@ -48,6 +48,7 @@ class CommentInsert extends Comment
 		{
 			try
 			{
+				$item['posts'] = 0;
 				DC::forge()->insert($this->radix->getTable('_daily'), $item);
 			}
 			catch(\Doctrine\DBAL\DBALException $e)
@@ -76,7 +77,7 @@ class CommentInsert extends Comment
 		}
 	}
 
-	protected function insertTriggerUsers($is_retry = false)
+	protected function insertTriggerUsers()
 	{
 		$select = DC::qb()
 			->select('*')
@@ -684,7 +685,7 @@ class CommentInsert extends Comment
 
 				$fields = [
 					'media_id' => $this->media->media_id ? $this->media->media_id : 0,
-					'op' => $this->op,
+					'op' => (int) $this->op,
 					'timestamp' => $this->timestamp,
 					'capcode' => $this->capcode,
 					'email' => $this->email,
@@ -693,7 +694,7 @@ class CommentInsert extends Comment
 					'title' => $this->title,
 					'comment' => $this->comment,
 					'delpass' => $this->delpass,
-					'spoiler' => $this->media->spoiler,
+					'spoiler' => (int) $this->media->spoiler,
 					'poster_ip' => $this->poster_ip,
 					'poster_hash' => $this->poster_hash,
 					'poster_country' => $this->poster_country,
@@ -707,6 +708,8 @@ class CommentInsert extends Comment
 					'media_hash' => $this->media->media_hash,
 					'media_orig' => $this->media->media_orig,
 					'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
+
+					'timestamp_expired' => 0
 				];
 
 				foreach ($fields as $key => $item)
@@ -729,7 +732,7 @@ class CommentInsert extends Comment
 					'VALUES ('.implode(', ', array_values($fields)).')'
 				);
 
-				$last_id = DC::forge()->lastInsertId();
+				$last_id = DC::forge()->lastInsertId($this->radix->getTable('_doc_id_seq'));
 
 				// check that it wasn't posted multiple times
 				$check_duplicate = DC::qb()
@@ -829,6 +832,7 @@ class CommentInsert extends Comment
 			catch (\Doctrine\DBAL\DBALException $e)
 			{
 				\Log::error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
+
 				DC::forge()->rollBack();
 
 				$try_count++;

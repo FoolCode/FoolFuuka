@@ -869,17 +869,6 @@ class Radix
 
 
 	/**
-	 * Temporary fallback for old $radix->setting
-	 *
-	 * @deprecated
-	 */
-	public function __get($key)
-	{
-		return $this->getValue($key);
-	}
-
-
-	/**
 	 * Puts the table in readily available variables
 	 */
 	protected static function preload()

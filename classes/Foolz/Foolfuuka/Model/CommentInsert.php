@@ -125,7 +125,7 @@ class CommentInsert extends Comment
 		}
 	}
 
-	protected function insertTriggerThreads($is_retry = false)
+	protected function insertTriggerThreads()
 	{
 		if ($this->op)
 		{

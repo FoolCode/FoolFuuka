@@ -2,15 +2,18 @@
 
 namespace Foolz\Foolfuuka\Controller\Admin;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 class Moderation extends \Foolz\Foolframe\Controller\Admin
 {
 
 	/**
 	 * Check that the user is an admin or a moderator and
 	 */
-	public function before()
+	public function before(Request $request)
 	{
-		parent::before();
+		parent::before($request);
 
 		if ( ! \Auth::has_access('comment.reports'))
 		{
@@ -97,7 +100,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			'theme' => $theme,
 			'reports' => $reports
 		]);
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 
@@ -117,7 +120,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			'page' => $page,
 			'page_url' => \Uri::create('admin/moderation/bans')
 		]);
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_appeals($page = 1)
@@ -136,7 +139,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			'page' => $page,
 			'page_url' => \Uri::create('admin/moderation/appeals')
 		]);
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_find_ban($ip = null)
@@ -170,7 +173,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 		}
 
 		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/moderation/bans', ['bans' => $bans]);
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_ban_manage($action, $id)
@@ -229,6 +232,6 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 		}
 
 		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/confirm', $data);
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 }

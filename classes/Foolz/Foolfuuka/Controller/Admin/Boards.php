@@ -3,12 +3,14 @@
 namespace Foolz\Foolfuuka\Controller\Admin;
 
 use Foolz\FoolFrame\Model\DoctrineConnection as DC;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Boards extends \Foolz\Foolframe\Controller\Admin
 {
-	public function before()
+	public function before(Request $request)
 	{
-		parent::before();
+		parent::before($request);
 
 		// determine if the user is allowed access to these methods
 		if ( ! \Auth::has_access('boards.edit'))
@@ -25,7 +27,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/boards/manage',
 			['boards' => \Radix::getAll()]);
 
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_board($shortname = null)
@@ -77,7 +79,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$this->_views['method_title'] = [__('Manage'), __('Edit'), $shortname];
 		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	function action_add()
@@ -111,7 +113,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$this->_views['method_title'] = [__('Manage'), __('Add')];
 		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
 
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	function action_delete($id = 0)
@@ -141,7 +143,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			' <code>php index.php cli boards remove_leftover_dirs</code>';
 
 		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/confirm', $data);
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	function action_preferences()
@@ -215,7 +217,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		// create a form
 		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	function action_search()
@@ -387,7 +389,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
 		$this->_views['main_content_view'] .= '<a href="'.\Uri::create('admin/boards/sphinx_config').'" class="btn">'.__('Generate Config').'</a>';
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 
 	public function action_sphinx_config()
@@ -412,6 +414,6 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$this->_views['method_title'] = [__('Search'), 'Sphinx', __('Configuration File'), __('Generate')];
 
 		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/boards/sphinx_config', $data);
-		return \Response::forge(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
 	}
 }

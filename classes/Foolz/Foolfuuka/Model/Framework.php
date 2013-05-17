@@ -72,6 +72,22 @@ class Framework
 			]
 		));
 
+		foreach(['boards', 'moderation'] as $location)
+		{
+			$framework->getRouteCollection()->add(
+				'foolfuuka.admin.'.$location, new Route(
+					'/admin/'.$location.'/{_suffix}',
+					[
+						'_suffix' => '',
+						'_controller' => '\Foolz\Foolfuuka\Controller\Admin\\'.ucfirst($location).'::*',
+					],
+					[
+						'_suffix' => '.*',
+					]
+				)
+			);
+		}
+
 
 		if (\Auth::has_access('comment.reports'))
 		{

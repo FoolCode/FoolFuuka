@@ -9,8 +9,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Framework
 {
+	/**
+	 * @var \Foolz\Foolframe\Model\Framework
+	 */
+	public $framework;
+
 	public function __construct(\Foolz\Foolframe\Model\Framework $framework)
 	{
+		$this->framework = $framework;
+
 		class_alias('Foolz\\Foolfuuka\\Model\\Ban', 'Ban');
 		class_alias('Foolz\\Foolfuuka\\Model\\Board', 'Board');
 		class_alias('Foolz\\Foolfuuka\\Model\\Comment', 'Comment');
@@ -24,70 +31,6 @@ class Framework
 		\Autoloader::add_classes([
 			'StringParser_BBCode' => __DIR__.'/../../../../packages/stringparser-bbcode/library/stringparser_bbcode.class.php',
 		]);
-
-		$framework->getRouteCollection()->add('foolfuuka.root', new Route(
-			'/',
-			['_controller' => '\Foolz\Foolfuuka\Controller\Chan::index']
-		));
-
-		$radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
-
-		foreach ($radix_all as $radix)
-		{
-			$framework->getRouteCollection()->add(
-				'foolfuuka.chan.radix.'.$radix->shortname, new Route(
-				'/'.$radix->shortname.'/{_suffix}',
-				[
-					'_suffix' => '',
-					'_controller' => '\Foolz\Foolfuuka\Controller\Chan::page',
-					'radix_shortname' => $radix->shortname
-				],
-				[
-					'_suffix' => '.*'
-				]
-			));
-		}
-
-		$framework->getRouteCollection()->add(
-			'foolfuuka.chan.api', new Route(
-			'/_/api/chan/{_suffix}',
-			[
-				'_suffix' => '',
-				'_controller' => '\Foolz\Foolfuuka\Controller\Api\Chan::*',
-			],
-			[
-				'_suffix' => '.*'
-			]
-		));
-
-		$framework->getRouteCollection()->add(
-			'foolfuuka.chan._', new Route(
-			'/_/{_suffix}',
-			[
-				'_suffix' => '',
-				'_controller' => '\Foolz\Foolfuuka\Controller\Chan::page',
-			],
-			[
-				'_suffix' => '.*'
-			]
-		));
-
-		foreach(['boards', 'moderation'] as $location)
-		{
-			$framework->getRouteCollection()->add(
-				'foolfuuka.admin.'.$location, new Route(
-					'/admin/'.$location.'/{_suffix}',
-					[
-						'_suffix' => '',
-						'_controller' => '\Foolz\Foolfuuka\Controller\Admin\\'.ucfirst($location).'::*',
-					],
-					[
-						'_suffix' => '.*',
-					]
-				)
-			);
-		}
-
 
 		if (\Auth::has_access('comment.reports'))
 		{
@@ -168,6 +111,72 @@ class Framework
 		}
 
 		$theme->bootstrap();
+	}
 
+	public function routes()
+	{
+		$this->framework->getRouteCollection()->add('foolfuuka.root', new Route(
+			'/',
+			['_controller' => '\Foolz\Foolfuuka\Controller\Chan::index']
+		));
+
+		$radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
+
+		foreach ($radix_all as $radix)
+		{
+			$this->framework->getRouteCollection()->add(
+				'foolfuuka.chan.radix.'.$radix->shortname, new Route(
+				'/'.$radix->shortname.'/{_suffix}',
+				[
+					'_default_suffix' => 'page',
+					'_suffix' => 'page',
+					'_controller' => '\Foolz\Foolfuuka\Controller\Chan::*',
+					'radix_shortname' => $radix->shortname
+				],
+				[
+					'_suffix' => '.*'
+				]
+			));
+		}
+
+		$this->framework->getRouteCollection()->add(
+			'foolfuuka.chan.api', new Route(
+			'/_/api/chan/{_suffix}',
+			[
+				'_suffix' => '',
+				'_controller' => '\Foolz\Foolfuuka\Controller\Api\Chan::*',
+			],
+			[
+				'_suffix' => '.*'
+			]
+		));
+
+		$this->framework->getRouteCollection()->add(
+			'foolfuuka.chan._', new Route(
+			'/_/{_suffix}',
+			[
+				'_suffix' => '',
+				'_controller' => '\Foolz\Foolfuuka\Controller\Chan::*',
+			],
+			[
+				'_suffix' => '.*'
+			]
+		));
+
+		foreach(['boards', 'moderation'] as $location)
+		{
+			$this->framework->getRouteCollection()->add(
+				'foolfuuka.admin.'.$location, new Route(
+					'/admin/'.$location.'/{_suffix}',
+					[
+						'_suffix' => '',
+						'_controller' => '\Foolz\Foolfuuka\Controller\Admin\\'.ucfirst($location).'::*',
+					],
+					[
+						'_suffix' => '.*',
+					]
+				)
+			);
+		}
 	}
 }

@@ -1,18 +1,21 @@
 <?php
 
-namespace Foolz\Foolframe\Controller\Admin\Plugins\FU;
+namespace Foolz\Foolframe\Controller\Admin\Plugins;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
 {
 
-	public function before()
+	public function before(Request $request)
 	{
 		if ( ! \Auth::has_access('maccess.admin'))
 		{
 			\Response::redirect('admin');
 		}
 
-		parent::before();
+		parent::before($request);
 
 		$this->_views['controller_title'] = __('GeoIP Region Lock');
 	}
@@ -104,6 +107,6 @@ class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
 
 		// create a form
 		$this->_views["main_content_view"] = \View::forge("foolz/foolframe::admin/form_creator", $data);
-		return \Response::forge(\View::forge("foolz/foolframe::admin/default", $this->_views));
+		return new Response(\View::forge("foolz/foolframe::admin/default", $this->_views));
 	}
 }

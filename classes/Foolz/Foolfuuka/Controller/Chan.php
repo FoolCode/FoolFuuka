@@ -126,10 +126,6 @@ class Chan
 			$backend_vars['board_shortname'] = $this->_radix->shortname;
 			$this->param_manager->setParam('backend_vars', $backend_vars);
 			$this->builder->getProps()->addTitle($this->_radix->getValue('formatted_title'));
-			if ($parameters !== [])
-			{
-				$method = array_shift($parameters);
-			}
 
 			// methods callable with a radix are prefixed with radix_
 			if (method_exists($this, 'radix_'.$method))
@@ -139,11 +135,6 @@ class Chan
 
 			// a board and no function means we're out of the street
 			return [$this, 'action_404', []];
-		}
-
-		if ($parameters !== [])
-		{
-			$method = array_shift($parameters);
 		}
 
 		$this->_radix = null;

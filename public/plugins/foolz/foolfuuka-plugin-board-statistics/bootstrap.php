@@ -1,11 +1,15 @@
 <?php
 
 use Foolz\Foolframe\Model\DoctrineConnection as DC;
+use Symfony\Component\Routing\Route;
 
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
 	->setCall(function($result) {
+		/* @var $framework \Foolz\Foolframe\Model\Framework */
+		$framework = $result->getParam('framework');
+
 		\Autoloader::add_classes([
-			'Foolz\Foolframe\Controller\Admin\Plugins\Fu\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
+			'Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
 			'Foolz\Foolfuuka\Controller\Chan\BoardStatistics' => __DIR__.'/classes/controller/chan.php',
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task' => __DIR__.'/classes/tasks/task.php'
@@ -15,8 +19,21 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 		if (\Auth::has_access('maccess.admin'))
 		{
 			\Plugins::registerSidebarElement('admin', 'plugins', [
-				"content" => ["fu/board_statistics/manage" => ["level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart']]
+				"content" => ["board_statistics/manage" => ["level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart']]
 			]);
+
+			$framework->getRouteCollection()->add(
+				'foolframe.plugin.board_statistics.admin', new \Symfony\Component\Routing\Route(
+					'/admin/plugins/board_statistics/{_suffix}',
+					[
+						'_suffix' => 'manage',
+						'_controller' => '\Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics::manage'
+					],
+					[
+						'_suffix' => '.*'
+					]
+				)
+			);
 
 			\Foolz\Plugin\Event::forge('Foolz\Foolframe\Task\Fool::run.result.sections')
 				->setCall(function($result) {
@@ -43,6 +60,23 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 					$result->setParam('nav', $top_nav);
 				}
 			})->setPriority(3);
+
+		$radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
+		foreach ($radix_all as $radix)
+		{
+			$framework->getRouteCollection()->add(
+				'foolfuuka.plugin.board_statistics.chan.radix.'.$radix->shortname, new Route(
+				'/'.$radix->shortname.'/statistics/{_suffix}',
+				[
+					'_suffix' => 'statistics',
+					'_controller' => '\Foolz\Foolfuuka\Controller\Chan\BoardStatistics::statistics',
+					'radix_shortname' => $radix->shortname
+				],
+				[
+					'_suffix' => '.*'
+				]
+			));
+		}
 
 		\Foolz\Plugin\Event::forge('Fuel\Core\Router::parse_match.intercept')
 			->setCall(function($result) {
@@ -74,6 +108,6 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 		$table->addColumn('timestamp', 'integer', ['unsigned' => true]);
 		$table->addColumn('data', 'text', ['length' => 65532]);
 		$table->setPrimaryKey(['id']);
-		$table->addUniqueIndex(['board_id', 'name'], 'board_id_name_index');
-		$table->addIndex(['timestamp'], 'timestamp_index');
+		$table->addUniqueIndex(['board_id', 'name'], DC::p('plugin_fu_board_statistics_board_id_name_index'));
+		$table->addIndex(['timestamp'], DC::p('plugin_fu_board_statistics_timestamp_index'));
 	});

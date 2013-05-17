@@ -49,7 +49,19 @@ class Framework
 		}
 
 		$framework->getRouteCollection()->add(
-			'foolfuuka.chan._.', new Route(
+			'foolfuuka.chan.api', new Route(
+			'/_/api/chan/{_suffix}',
+			[
+				'_suffix' => '',
+				'_controller' => '\Foolz\Foolfuuka\Controller\Api\Chan::*',
+			],
+			[
+				'_suffix' => '.*'
+			]
+		));
+
+		$framework->getRouteCollection()->add(
+			'foolfuuka.chan._', new Route(
 			'/_/{_suffix}',
 			[
 				'_suffix' => '',

@@ -3,17 +3,18 @@
 namespace Foolz\Foolfuuka\Controller\Api;
 
 use \Foolz\Inet\Inet;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
-class Chan extends \Controller_Rest
+class Chan
 {
 	protected $_radix = null;
 	protected $_theme = null;
 	protected $format = 'json';
 
-	public function before()
+	public function before(Request $request)
 	{
-		parent::before();
-
 		header('Access-Control-Allow-Origin: *');
 		header('Access-Control-Allow-Credentials: true');
 		header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -40,31 +41,33 @@ class Chan extends \Controller_Rest
 				$this->_theme = $theme_instance->get('foolz', $theme_name);
 			}
 		}
+	}
 
-		// already done in the foolfuuka bootstrap
-		// $this->_theme->bootstrap();
-
-		if ( ! \Input::get('board') && ! \Input::get('action') && ! \Input::post('board') && ! \Input::post('action'))
+	public function router(Request $request, $method, $parameters)
+	{
+		if (count($parameters) == 0)
 		{
-			$segments = \Uri::segments();
-			$uri = \Uri::base().'_'.
-				'/'.array_shift($segments).'/'.array_shift($segments).'/'.array_shift($segments).'/?';
-
-
-			foreach ($segments as $key => $segment)
-			{
-				if ($key % 2 == 0)
-				{
-					$uri .= urlencode($segment).'=';
-				}
-				else
-				{
-					$uri .= urlencode($segment).'&';
-				}
-			}
-
-			\Response::redirect($uri);
+			return [$this, 'get_404', []];
 		}
+
+		if ($request->getMethod() == 'GET')
+		{
+			return [$this, 'get_'.$parameters[0], []];
+		}
+
+		if ($request->getMethod() == 'POST')
+		{
+			return [$this, 'post_'.$parameters[0], []];
+		}
+	}
+
+	protected function response($data, $status = 200)
+	{
+		$response = new JsonResponse();
+		$response->setData($data);
+		$response->setStatusCode($status);
+
+		return $response;
 	}
 
 	/**
@@ -93,6 +96,11 @@ class Chan extends \Controller_Rest
 
 
 		return true;
+	}
+
+	public function get_404()
+	{
+		return $this->response('Invalid method.', 404);
 	}
 
 	/**

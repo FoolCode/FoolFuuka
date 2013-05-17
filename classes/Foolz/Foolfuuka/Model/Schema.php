@@ -52,7 +52,7 @@ class Schema
 		$boards->addColumn('sphinx', 'smallint', ['unsigned' => true, 'default' => 0]);
 		$boards->addColumn('hidden', 'smallint', ['unsigned' => true, 'default' => 0]);
 		$boards->addColumn('hide_thumbnails', 'smallint', ['unsigned' => true, 'default' => 0]);
-		$boards->addColumn('directory', 'text', ['length' => 65532]);
+		$boards->addColumn('directory', 'text', ['length' => 65532, 'notnull' => false]);
 		$boards->addColumn('max_indexed_id', 'integer', ['unsigned' => true, 'default' => 0]);
 		$boards->addColumn('max_ancient_id', 'integer', ['unsigned' => true, 'default' => 0]);
 		$boards->setPrimaryKey(['id']);

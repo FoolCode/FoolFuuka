@@ -965,7 +965,7 @@ class Media
 		{
 			DC::qb()
 				->update($this->radix->getTable('_images'))
-				->set('banned', true)
+				->set('banned', 1)
 				->where('media_id = :media_id')
 				->setParameter(':media_id', $this->media_id)
 				->execute();
@@ -997,7 +997,7 @@ class Media
 
 				DC::qb()
 					->update($radix->getTable('_images'))
-					->set('banned', true)
+					->set('banned', 1)
 					->where('media_id = :media_id')
 					->setParameter(':media_id', $media->media_id)
 					->execute();
@@ -1178,10 +1178,10 @@ class Media
 						'preview_op' => null,
 						'preview_reply' =>  null,
 						'total' => 1,
-						'banned' => false,
+						'banned' => 0,
 					]);
 
-				$this->media_id = DC::forge()->lastInsertId();
+				$this->media_id = DC::forge()->lastInsertId($this->radix->getTable('_images_doc_id_seq'));
 
 				throw new MediaThumbnailCreationException(__('The thumbnail failed to generate.'));
 			}
@@ -1224,10 +1224,10 @@ class Media
 					'preview_op' => $this->op ? $this->preview_orig : null,
 					'preview_reply' => ! $this->op ? $this->preview_orig : null,
 					'total' => 1,
-					'banned' => false,
+					'banned' => 0,
 				]);
 
-				$this->media_id = DC::forge()->lastInsertId();
+				$this->media_id = DC::forge()->lastInsertId($this->radix->getTable('_images_media_id_seq'));
 			}
 			else
 			{

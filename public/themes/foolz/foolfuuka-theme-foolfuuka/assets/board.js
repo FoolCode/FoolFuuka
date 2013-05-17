@@ -28,6 +28,8 @@ var bindFunctions = function()
 		});
 	}
 
+	var is_posting = false;
+
 	var clickCallbacks = {
 
 		checkAll: function(el, post, event)
@@ -122,6 +124,13 @@ var bindFunctions = function()
 			{
 				return true;
 			}
+
+			if (is_posting)
+			{
+				return false;
+			}
+
+			is_posting = true;
 
 			var originalText = el.attr('value');
 			var el_parent = el.parent();
@@ -236,6 +245,7 @@ var bindFunctions = function()
 				},
 				complete: function() {
 					// clear button's timeout, we can deal with the rest now
+					is_posting = false;
 					clearTimeout(buttonTimeout);
 					el.attr({'value': originalText});
 					el_parent.find('[name=reply_gattai]').removeAttr('disabled');

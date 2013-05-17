@@ -28,7 +28,7 @@ class Radix
 
 	public $hide_thumbnails = 0;
 
-	public $directory = 0;
+	public $directory = '';
 
 	public $max_indexed_id = 0;
 
@@ -673,9 +673,11 @@ class Radix
 		}
 		else
 		{
+			// @TODO maybe this unset could be avoided
+			unset($data['id']);
 			DC::forge()->beginTransaction();
 			DC::forge()->insert(DC::p('boards'), $data);
-			$id = DC::forge()->lastInsertId();
+			$id = DC::forge()->lastInsertId(DC::p('boards_id_seq'));
 
 
 			// save extra preferences
@@ -863,17 +865,6 @@ class Radix
 		}
 
 		return true;
-	}
-
-
-	/**
-	 * Temporary fallback for old $radix->setting
-	 *
-	 * @deprecated
-	 */
-	public function __get($key)
-	{
-		return $this->getValue($key);
 	}
 
 
@@ -1218,6 +1209,26 @@ class Radix
 	}
 
 	/**
+	 * Get the board index name for index creation (doesn't redirect to foreign database! must "use"!)
+	 *
+	 * @param   string  $suffix  board suffix like _images
+	 * @param   string  $index   board index like op_index
+	 *
+	 * @return  string  the table name with protected identifiers
+	 */
+	public function getIndex($suffix = '', $index = '')
+	{
+		if (DC::forge()->getDriver()->getName() == 'pdo_pgsql')
+		{
+			return DC::p('board_'.$this->shortname.$suffix.'_'.$index);
+		}
+		else
+		{
+			return $index;
+		}
+	}
+
+	/**
 	 * Creates the tables for the board
 	 */
 	public function createTables()
@@ -1271,18 +1282,18 @@ class Radix
 				$table->addColumn('poster_country', 'string', ['length' => 2, 'notnull' => false]);
 				$table->addColumn('exif', 'text', ['length' => 65532, 'notnull' => false]);
 				$table->setPrimaryKey(['doc_id']);
-				$table->addUniqueIndex(['num', 'subnum'], 'num_subnum_index');
-				$table->addIndex(['thread_num', 'num', 'subnum'], 'thread_num_subnum_index');
-				$table->addIndex(['subnum'], 'subnum_index');
-				$table->addIndex(['op'], 'op_index');
-				$table->addIndex(['media_id'], 'media_id_index');
-				$table->addIndex(['media_hash'], 'media_hash_index');
-				$table->addIndex(['media_orig'], 'media_orig_index');
-				$table->addIndex(['name', 'trip'], 'name_trip_index');
-				$table->addIndex(['trip'], 'trip_index');
-				$table->addIndex(['email'], 'email_index');
-				$table->addIndex(['poster_ip'], 'poster_ip_index');
-				$table->addIndex(['timestamp'], 'timestamp_index');
+				$table->addUniqueIndex(['num', 'subnum'], $this->getIndex($key, 'num_subnum_index'));
+				$table->addIndex(['thread_num', 'num', 'subnum'], $this->getIndex($key, 'thread_num_subnum_index'));
+				$table->addIndex(['subnum'], $this->getIndex($key, 'subnum_index'));
+				$table->addIndex(['op'], $this->getIndex($key, 'op_index'));
+				$table->addIndex(['media_id'], $this->getIndex($key, 'media_id_index'));
+				$table->addIndex(['media_hash'], $this->getIndex($key, 'media_hash_index'));
+				$table->addIndex(['media_orig'], $this->getIndex($key, 'media_orig_index'));
+				$table->addIndex(['name', 'trip'], $this->getIndex($key, 'name_trip_index'));
+				$table->addIndex(['trip'], $this->getIndex($key, 'trip_index'));
+				$table->addIndex(['email'], $this->getIndex($key, 'email_index'));
+				$table->addIndex(['poster_ip'], $this->getIndex($key, 'poster_ip_index'));
+				$table->addIndex(['timestamp'], $this->getIndex($key, 'timestamp_index'));
 			}
 		}
 
@@ -1303,9 +1314,9 @@ class Radix
 			$table_threads->addColumn('nreplies', 'integer', ['unsigned' => true, 'default' => 0]);
 			$table_threads->addColumn('nimages', 'integer', ['unsigned' => true, 'default' => 0]);
 			$table_threads->setPrimaryKey(['thread_num']);
-			$table_threads->addIndex(['time_op'], 'time_op_index');
-			$table_threads->addIndex(['time_bump'], 'time_bump_index');
-			$table_threads->addIndex(['time_ghost_bump'], 'time_ghost_bump_index');
+			$table_threads->addIndex(['time_op'], $this->getIndex('_threads', 'time_op_index'));
+			$table_threads->addIndex(['time_bump'], $this->getIndex('_threads', 'time_bump_index'));
+			$table_threads->addIndex(['time_ghost_bump'], $this->getIndex('_threads', 'time_ghost_bump_index'));
 		}
 
 		if ( ! $schema->hasTable($this->getTable('_users')))
@@ -1322,9 +1333,9 @@ class Radix
 			$table_users->addColumn('firstseen', 'integer', ['unsigned' => true]);
 			$table_users->addColumn('postcount', 'integer', ['unsigned' => true]);
 			$table_users->setPrimaryKey(['user_id']);
-			$table_users->addUniqueIndex(['name', 'trip'], 'name_trip_index');
-			$table_users->addIndex(['firstseen'], 'firstseen_index');
-			$table_users->addIndex(['postcount'], 'postcount_index');
+			$table_users->addUniqueIndex(['name', 'trip'], $this->getIndex('_users', 'name_trip_index'));
+			$table_users->addIndex(['firstseen'], $this->getIndex('_users', 'firstseen_index'));
+			$table_users->addIndex(['postcount'], $this->getIndex('_users', 'postcount_index'));
 		}
 
 		if ( ! $schema->hasTable($this->getTable('_images')))
@@ -1338,9 +1349,9 @@ class Radix
 			$table_images->addColumn('total', 'integer', ['unsigned' => true, 'default' => 0]);
 			$table_images->addColumn('banned', 'smallint', ['unsigned' => true, 'default' => 0]);
 			$table_images->setPrimaryKey(['media_id']);
-			$table_images->addUniqueIndex(['media_hash'], 'media_hash_index');
-			$table_images->addIndex(['total'], 'total_index');
-			$table_images->addIndex(['banned'], 'banned_index');
+			$table_images->addUniqueIndex(['media_hash'], $this->getIndex('_images', 'media_hash_index'));
+			$table_images->addIndex(['total'], $this->getIndex('_images', 'total_index'));
+			$table_images->addIndex(['banned'], $this->getIndex('_images', 'banned_index'));
 		}
 
 		if ( ! $schema->hasTable($this->getTable('_daily')))

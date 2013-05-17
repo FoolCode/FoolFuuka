@@ -25,10 +25,8 @@ class CommentSendingDatabaseException extends CommentSendingException {}
 
 class CommentInsert extends Comment
 {
-	protected function insertTriggerDaily($is_retry = false)
+	protected function insertTriggerDaily()
 	{
-		DC::forge()->beginTransaction();
-
 		$item = [
 			'day' => (int) (floor($this->timestamp/86400)*86400),
 			'images' => (int) ($this->media !== null),
@@ -50,15 +48,12 @@ class CommentInsert extends Comment
 		{
 			try
 			{
+				$item['posts'] = 0;
 				DC::forge()->insert($this->radix->getTable('_daily'), $item);
 			}
 			catch(\Doctrine\DBAL\DBALException $e)
 			{
-				if ( ! $is_retry)
-				{
-					// maybe we're trying to insert on something just inserted
-					return $this->insertTriggerDaily(true);
-				}
+				throw new \Doctrine\DBAL\DBALException;
 			}
 		}
 		else
@@ -80,14 +75,10 @@ class CommentInsert extends Comment
 				->execute();
 
 		}
-
-		DC::forge()->commit();
 	}
 
-	protected function insertTriggerUsers($is_retry = false)
+	protected function insertTriggerUsers()
 	{
-		DC::forge()->beginTransaction();
-
 		$select = DC::qb()
 			->select('*')
 			->from($this->radix->getTable('_users'), 'u');
@@ -120,10 +111,7 @@ class CommentInsert extends Comment
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
 			{
-				if ( ! $is_retry)
-				{
-					return $this->insertTriggerUsers(true);
-				}
+				throw new \Doctrine\DBAL\DBALException;
 			}
 		}
 		else
@@ -135,14 +123,10 @@ class CommentInsert extends Comment
 				->setParameter(':user_id', $result['user_id'])
 				->execute();
 		}
-
-		DC::forge()->commit();
 	}
 
-	protected function insertTriggerThreads($is_retry = false)
+	protected function insertTriggerThreads()
 	{
-		DC::forge()->beginTransaction();
-
 		if ($this->op)
 		{
 			DC::forge()->insert($this->radix->getTable('_threads'), [
@@ -196,8 +180,6 @@ class CommentInsert extends Comment
 				->setParameter(':thread_num', $this->thread_num)
 				->execute();
 		}
-
-		DC::forge()->commit();
 	}
 
 	/**
@@ -703,7 +685,7 @@ class CommentInsert extends Comment
 
 				$fields = [
 					'media_id' => $this->media->media_id ? $this->media->media_id : 0,
-					'op' => $this->op,
+					'op' => (int) $this->op,
 					'timestamp' => $this->timestamp,
 					'capcode' => $this->capcode,
 					'email' => $this->email,
@@ -712,7 +694,7 @@ class CommentInsert extends Comment
 					'title' => $this->title,
 					'comment' => $this->comment,
 					'delpass' => $this->delpass,
-					'spoiler' => $this->media->spoiler,
+					'spoiler' => (int) $this->media->spoiler,
 					'poster_ip' => $this->poster_ip,
 					'poster_hash' => $this->poster_hash,
 					'poster_country' => $this->poster_country,
@@ -726,6 +708,8 @@ class CommentInsert extends Comment
 					'media_hash' => $this->media->media_hash,
 					'media_orig' => $this->media->media_orig,
 					'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
+
+					'timestamp_expired' => 0
 				];
 
 				foreach ($fields as $key => $item)
@@ -748,7 +732,7 @@ class CommentInsert extends Comment
 					'VALUES ('.implode(', ', array_values($fields)).')'
 				);
 
-				$last_id = DC::forge()->lastInsertId();
+				$last_id = DC::forge()->lastInsertId($this->radix->getTable('_doc_id_seq'));
 
 				// check that it wasn't posted multiple times
 				$check_duplicate = DC::qb()
@@ -758,7 +742,7 @@ class CommentInsert extends Comment
 					->andWhere('poster_ip = :poster_ip')
 					->andWhere('timestamp >= :timestamp')
 					->setParameters([
-						':comment' => DC::forge()->quote($this->comment),
+						':comment' => $this->comment,
 						':poster_ip' => \Input::ip_decimal(),
 						':timestamp' => $this->timestamp
 					])
@@ -847,6 +831,8 @@ class CommentInsert extends Comment
 			}
 			catch (\Doctrine\DBAL\DBALException $e)
 			{
+				\Log::error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
+
 				DC::forge()->rollBack();
 
 				$try_count++;

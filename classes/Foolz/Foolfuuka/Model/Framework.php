@@ -35,7 +35,7 @@ class Framework
 		foreach ($radix_all as $radix)
 		{
 			$framework->getRouteCollection()->add(
-				'foolfuuka.chan.'.$radix->shortname.'.root', new Route(
+				'foolfuuka.chan.radix.'.$radix->shortname, new Route(
 				'/'.$radix->shortname.'/{_suffix}',
 				[
 					'_suffix' => '',
@@ -47,6 +47,19 @@ class Framework
 				]
 			));
 		}
+
+		$framework->getRouteCollection()->add(
+			'foolfuuka.chan._.', new Route(
+			'/_/{_suffix}',
+			[
+				'_suffix' => '',
+				'_controller' => '\Foolz\Foolfuuka\Controller\Chan::page',
+			],
+			[
+				'_suffix' => '.*'
+			]
+		));
+
 
 		if (\Auth::has_access('comment.reports'))
 		{

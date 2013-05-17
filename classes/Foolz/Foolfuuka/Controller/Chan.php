@@ -138,7 +138,12 @@ class Chan
 			}
 
 			// a board and no function means we're out of the street
-			throw new \HttpNotFoundException;
+			return [$this, 'action_404', []];
+		}
+
+		if ($parameters !== [])
+		{
+			$method = array_shift($parameters);
 		}
 
 		$this->_radix = null;
@@ -150,7 +155,7 @@ class Chan
 			return [$this, 'action_'.$method, $parameters];
 		}
 
-		throw new \HttpNotFoundException;
+		return [$this, 'action_404', []];
 	}
 
 	public function action_index()
@@ -736,7 +741,7 @@ class Chan
 			\Response::redirect(\Uri::create($redirect_url), 'location', 303);
 		}
 
-		$search = \Uri::uri_to_assoc(\Uri::segments(), 2, $modifiers);
+		$search = \Uri::uri_to_assoc(func_get_args(), 0, $modifiers);
 
 		$this->param_manager->setParam('search', $search);
 

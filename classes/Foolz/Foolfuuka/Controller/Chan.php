@@ -114,42 +114,31 @@ class Chan
 		$this->builder->createPartial('tools_advanced_search', 'advanced_search');
 	}
 
-	public function router(Request $request, $method)
+	public function router(Request $request, $method, $parameters)
 	{
-		$segments_temp = array_filter(explode('/', $request->getPathInfo()), function ($el) { return $el !== ''; });
-		$segments = [];
-
-		foreach ($segments_temp as $s)
+		// let's see if we hit a radix route
+		if ($request->attributes->get('radix_shortname') !== null)
 		{
-			$segments[] = $s;
-		}
-
-		// the underscore function is never a board
-		if (isset($segments[0]) && $segments[0] !== '_')
-		{
-
-			$this->_radix = \Radix::setSelectedByShortname($segments[0]);
-
-
-			if ($this->_radix)
+			// the radix for sure exists, we came here from the defined routes after all
+			$this->_radix = \Radix::setSelectedByShortname($request->attributes->get('radix_shortname'));
+			$this->param_manager->setParam('radix', $this->_radix);
+			$backend_vars = $this->param_manager->getParam('backend_vars');
+			$backend_vars['board_shortname'] = $this->_radix->shortname;
+			$this->param_manager->setParam('backend_vars', $backend_vars);
+			$this->builder->getProps()->addTitle($this->_radix->getValue('formatted_title'));
+			if ($parameters !== [])
 			{
-				$this->param_manager->setParam('radix', $this->_radix);
-				$backend_vars = $this->param_manager->getParam('backend_vars');
-				$backend_vars['board_shortname'] = $this->_radix->shortname;
-				$this->param_manager->setParam('backend_vars', $backend_vars);
-				$this->builder->getProps()->addTitle($this->_radix->getValue('formatted_title'));
-
-				//$method = array_shift($params);
-
-				// methods callable with a radix are prefixed with radix_
-				if (method_exists($this, 'radix_'.$method))
-				{
-					return [$this, 'radix_'.$method];//, $params);
-				}
-
-				// a board and no function means we're out of the street
-				throw new \HttpNotFoundException;
+				$method = array_shift($parameters);
 			}
+
+			// methods callable with a radix are prefixed with radix_
+			if (method_exists($this, 'radix_'.$method))
+			{
+				return [$this, 'radix_'.$method, $parameters];
+			}
+
+			// a board and no function means we're out of the street
+			throw new \HttpNotFoundException;
 		}
 
 		$this->_radix = null;
@@ -158,7 +147,7 @@ class Chan
 
 		if (method_exists($this, 'action_'.$method))
 		{
-			return [$this, 'action_'.$method];//, $params);
+			return [$this, 'action_'.$method, $parameters];
 		}
 
 		throw new \HttpNotFoundException;
@@ -198,7 +187,7 @@ class Chan
 				'message' => $message
 			]);
 
-		return \Response::forge($this->builder->build(), $code);
+		return new Response($this->builder->build(), $code);
 	}
 
 	public function action_theme($vendor = 'foolz', $theme = 'foolfuuka-theme-default', $style = '')
@@ -227,7 +216,7 @@ class Chan
 			->getParamManager()
 			->setParam('url', $url);
 		$this->builder->getProps()->addTitle(__('Redirecting'));
-		return \Response::forge($this->builder->build());
+		return new Response($this->builder->build());
 	}
 
 	public function action_language($theme = 'en_EN')
@@ -460,7 +449,7 @@ class Chan
 		\Profiler::mark('Controller Chan::thread End');
 		$result = $this->builder->build();
 
-		return $result;
+		return new Response($result);
 	}
 
 	public function radix_gallery($page = 1)
@@ -494,9 +483,7 @@ class Chan
 			]
 		]);
 
-		$result = $this->builder->build();
-
-		return $result;
+		return new Response($this->builder->build());
 	}
 
 	public function radix_post($num = 0)
@@ -543,7 +530,7 @@ class Chan
 			->getParamManager()
 			->setParam('url', $redirect);
 		$this->builder->getProps()->addTitle(__('Redirecting'));
-		return \Response::forge($this->builder->build());
+		return new Response($this->builder->build());
 	}
 
 	/**
@@ -627,7 +614,7 @@ class Chan
 			->setParam('url', $redirect);
 		$this->builder->getProps()->addTitle(__('Redirecting'));
 
-		return \Response::forge($this->builder->build());
+		return new Response($this->builder->build());
 	}
 
 	public function radix_advanced_search()
@@ -649,7 +636,7 @@ class Chan
 				->setParam('search', ['board' => [$this->_radix->shortname]]);
 		}
 
-		return \Response::forge($this->builder->build());
+		return new Response($this->builder->build());
 	}
 
 	public function action_search()
@@ -1028,7 +1015,7 @@ class Chan
 		$this->builder->createPartial('body', 'appeal')
 			->getParamManager()->setParam('title', $title);
 
-		return \Response::forge($this->builder->build());
+		return new Response($this->builder->build());
 	}
 
 	public function radix_submit()
@@ -1043,7 +1030,7 @@ class Chan
 		{
 			if (\Input::is_ajax())
 			{
-				return \Response::forge(
+				return new Response(
 					json_encode(['error' => __('The security token wasn\'t found. Try resubmitting.')]));
 			}
 
@@ -1144,7 +1131,7 @@ class Chan
 			{
 				if (\Input::is_ajax())
 				{
-					return \Response::forge(json_encode(['error' => $e->getMessage()]));
+					return new Response(json_encode(['error' => $e->getMessage()]));
 				}
 				else
 				{
@@ -1155,7 +1142,7 @@ class Chan
 			{
 				if (\Input::is_ajax())
 				{
-					return \Response::forge(json_encode(['error' => $e->getMessage()]));
+					return new Response(json_encode(['error' => $e->getMessage()]));
 				}
 				else
 				{
@@ -1201,7 +1188,7 @@ class Chan
 			{
 				if (\Input::is_ajax())
 				{
-					return \Response::forge(json_encode(['captcha' => true]));
+					return new Response(json_encode(['captcha' => true]));
 				}
 				else
 				{
@@ -1212,7 +1199,7 @@ class Chan
 			{
 				if (\Input::is_ajax())
 				{
-					return \Response::forge(json_encode(['error' => $e->getMessage()]));
+					return new Response(json_encode(['error' => $e->getMessage()]));
 				}
 				else
 				{
@@ -1224,7 +1211,7 @@ class Chan
 		{
 			if (\Input::is_ajax())
 			{
-				return \Response::forge(json_encode(['error' => implode(' ', $val->error())]));
+				return new Response(json_encode(['error' => implode(' ', $val->error())]));
 			}
 			else
 			{
@@ -1261,7 +1248,7 @@ class Chan
 					return $this->error(__('Unknown error.'));
 				}
 
-				return \Response::forge(json_encode(['success' => __('Message sent.')] + $comments));
+				return new Response(json_encode(['success' => __('Message sent.')] + $comments));
 			}
 			else
 			{
@@ -1270,7 +1257,7 @@ class Chan
 					'theme' => $this->theme],
 					['controller_method' => $limit ? 'last/'.$limit : 'thread']);
 
-				return \Response::forge(
+				return new Response(
 					json_encode([
 						'success' => __('Message sent.'),
 						'thread_num' => $comment->thread_num,
@@ -1285,7 +1272,7 @@ class Chan
 				->setParam('url', \Uri::create([$this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
 			$this->builder->getProps()->addTitle(__('Redirecting'));
 
-			return \Response::forge($this->builder->build());
+			return new Response($this->builder->build());
 		}
 	}
 }

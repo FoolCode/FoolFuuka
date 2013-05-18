@@ -1234,7 +1234,7 @@ class Radix
 	public function createTables()
 	{
 		$charset = 'utf8mb4';
-		$collation = 'utf8mb4_unicode_ci';
+		$collation = 'utf8mb4_general_ci';
 
 		$sm = DC::forge()->getSchemaManager();
 		$schema = $sm->createSchema();

@@ -120,6 +120,11 @@ class Framework
 			['_controller' => '\Foolz\Foolfuuka\Controller\Chan::index']
 		));
 
+		$this->framework->getRouteCollection()->add('404', new Route(
+			'',
+			['_controller' => '\Foolz\Foolfuuka\Controller\Chan::404']
+		));
+
 		$radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
 
 		foreach ($radix_all as $radix)

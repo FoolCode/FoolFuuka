@@ -1,1 +1,232 @@
-html{background:transparent}body.theme_default{background:#ffe url(images/fade.png) top center repeat-x}body.theme_default.yotsuba_b{background:#eef2ff url(images/fade-blue.png) top center repeat-x}.theme_default .letters{background:transparent;color:#333}.theme_default .navbar .navbar-inner{background:transparent;color:#333}.theme_default .navbar .nav>li>a{color:#333;text-shadow:none}.theme_default .navbar .nav>li>a:hover{color:#ddd;text-shadow:none}.theme_default .dropdown-menu li>a:hover,.theme_default .dropdown-menu .active>a,.theme_default .dropdown-menu .active>a:hover{background:#6a836f}.theme_default .container-fluid{background:transparent}.theme_default #footer{background:transparent;color:#333}.theme_default .btnr:first-child{margin:0}.theme_default .btnr:hover{border:1px solid #888;border:1px solid rgba(0,0,0,0.4);color:#000;text-decoration:none;cursor:pointer}.theme_default .btn-inverse{background:#d9bfb7;color:#fff!important}.theme_default .btn-inverse:hover{background:#b99fa7;color:#fff!important}.theme_default .search-dropdown.active{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.351),inset 0 -1px 0 rgba(0,0,0,0.102);-webkit-box-shadow:0 1px 3px rgba(0,0,0,0.351),inset 0 -1px 0 rgba(0,0,0,0.102);-moz-box-shadow:0 1px 3px rgba(0,0,0,0.351),inset 0 -1px 0 rgba(0,0,0,0.102)}.theme_default .search-dropdown .search-dropdown-menu{border-radius:0;-webkit-border-radius:0;-moz-border-radius:0}.theme_default .paginate{background:transparent}.theme_default article.thread{padding:25px 0;margin:0 15px;word-wrap:break-word;border-top:1px solid #9b9b9b;border-top:1px solid rgba(155,155,155,0.48)}.theme_default .post_wrapper{background:#f0e0d6;border:1px solid #d9bfb7;border-left:none;border-top:0}.theme_default post.post_ghost .post_wrapper{border:1px solid #baa49e;border-left:5px solid #a99fa7}.theme_default .post .post_file{margin:0}.theme_default #reply{font-size:12px;margin:20px auto}.theme_default #reply input,.theme_default #reply textarea{margin:0;border-radius:0;-webkit-border-radius:0;-moz-border-radius:0;padding:1px 2px;font-size:12px;display:inline}.theme_default #reply select,.theme_default #reply input[type=file]{height:24px;line-height:24px;margin-bottom:0}.theme_default #reply label{display:inline}.theme_default #reply input[type=text]{width:260px}.theme_default #reply input[type=password]{width:120px}.theme_default #reply .rules{font-size:10px}.theme_default #reply .rules li{line-height:12px}.theme_default article #reply{font-size:12px;margin:20px}.theme_default textarea{width:300px;height:100px}.theme_default table{border-spacing:1px;border-collapse:separate}.theme_default table>tbody>tr>td{padding:0;margin:0}.theme_default table>td:first-child{background-color:#ea8;color:black;font-weight:bold;border:1px solid #800;padding:0 5px;font-size:10pt}.theme_default table>tbody>tr.rules>td:first-child{background:transparent;border:0;padding:0}.theme_default article.backlink_container{padding:10px}.theme_default .divider{border-top:1px solid #9b9b9b;border-top:1px solid rgba(155,155,155,0.48)}.theme_default section.global_message{border:1px solid #f89;width:50%;text-align:center;margin:0 auto auto 20px;background:#c0feb9;padding:10px}.theme_default .navbar.navbar-fixed-top{border-bottom:1px solid #000}.theme_default .js_hook_realtimethread{font:bold 12px;border-top:1px solid #aaa;padding:5px;clear:both}.theme_default.yotsuba_b .navbar .nav>li>a:hover{color:#544cff;text-shadow:none}.theme_default.yotsuba_b .dropdown-menu li>a:hover,.theme_default.yotsuba_b .dropdown-menu .active>a,.theme_default.yotsuba_b .dropdown-menu .active>a:hover{background:#8181db}.theme_default.yotsuba_b .btn-inverse{background:#8181db}.theme_default.yotsuba_b .btn-inverse:hover{background:#5d68db}.theme_default.yotsuba_b .post_wrapper{background:#d6daf0;border:1px solid #b7c5d9;border-left:none;border-top:0}.theme_default.yotsuba_b .post.post_ghost .post_wrapper{border:1px solid #769bb3;border-left:5px solid #98e}.theme_default.yotsuba_b table>tbody>tr>td:first-child{background-color:#98e;color:black;font:bold 10pt;border:1px solid black;padding:0 5px}.theme_default .btnr,.btnr:visited{border:0;border:1px solid #ccc;border:1px solid rgba(0,0,0,0.1);font-family:inherit;font-size:inherit;font-size:11px;padding:0;padding:0 3px 1px;margin:0 0 0 3;margin:0 2px;position:static;position:relative;background:transparent;text-shadow:none;color:#333;line-height:11px;top:-1px}.navbar-search .search-query{box-shadow:none}
+html {
+  background: transparent;
+}
+body.theme_default {
+  background: #ffffee url(images/fade.png) top center repeat-x;
+}
+body.theme_default.yotsuba_b {
+  background: #eef2ff url(images/fade-blue.png) top center repeat-x;
+}
+.theme_default .letters {
+  background: transparent;
+  color: #333333;
+}
+.theme_default .navbar .navbar-inner {
+  background: transparent;
+  color: #333333;
+}
+.theme_default .navbar .nav > li > a {
+  color: #333333;
+  text-shadow: none;
+}
+.theme_default .navbar .nav > li > a:hover {
+  color: #dddddd;
+  text-shadow: none;
+}
+.theme_default .dropdown-menu li > a:hover,
+.theme_default .dropdown-menu .active > a,
+.theme_default .dropdown-menu .active > a:hover {
+  background: #6a836f;
+}
+.theme_default .container-fluid {
+  background: transparent;
+}
+.theme_default #footer {
+  background: transparent;
+  color: #333333;
+}
+.theme_default .btnr:first-child {
+  margin: 0;
+}
+.theme_default .btnr:hover {
+  border: 1px solid #888888;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.theme_default .btn-inverse {
+  background: #d9bfb7;
+  color: #ffffff !important;
+}
+.theme_default .btn-inverse:hover {
+  background: #b99fa7;
+  color: #ffffff !important;
+}
+.theme_default .search-dropdown.active {
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.351), inset 0 -1px 0 rgba(0, 0, 0, 0.102);
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.351), inset 0 -1px 0 rgba(0, 0, 0, 0.102);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.351), inset 0 -1px 0 rgba(0, 0, 0, 0.102);
+}
+.theme_default .search-dropdown .search-dropdown-menu {
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+}
+.theme_default .paginate {
+  background: transparent;
+}
+.theme_default article.thread {
+  padding: 25px 0;
+  margin: 0 15px;
+  word-wrap: break-word;
+  border-top: 1px solid #9b9b9b;
+  border-top: 1px solid rgba(155, 155, 155, 0.48);
+}
+.theme_default .post_wrapper {
+  background: #f0e0d6;
+  border: 1px solid #d9bfb7;
+  border-left: none;
+  border-top: none;
+}
+.theme_default post.post_ghost .post_wrapper {
+  border: 1px solid #baa49e;
+  border-left: 5px solid #a99fa7;
+}
+.theme_default .post .post_file {
+  margin: 0;
+}
+.theme_default #reply {
+  font-size: 12px;
+  margin: 20px auto;
+}
+.theme_default #reply input,
+.theme_default #reply textarea {
+  margin: 0;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  padding: 1px 2px;
+  font-size: 12px;
+  display: inline;
+}
+.theme_default #reply select,
+.theme_default #reply input[type=file] {
+  height: 24px;
+  line-height: 24px;
+  margin-bottom: 0;
+}
+.theme_default #reply label {
+  display: inline;
+}
+.theme_default #reply input[type=text] {
+  width: 260px;
+}
+.theme_default #reply input[type=password] {
+  width: 120px;
+}
+.theme_default #reply .rules {
+  font-size: 10px;
+}
+.theme_default #reply .rules li {
+  line-height: 12px;
+}
+.theme_default article #reply {
+  font-size: 12px;
+  margin: 20px;
+}
+.theme_default textarea {
+  width: 300px;
+  height: 100px;
+}
+.theme_default table {
+  border-spacing: 1px;
+  border-collapse: separate;
+}
+.theme_default table > tbody > tr > td {
+  padding: 0;
+  margin: 0;
+}
+.theme_default table > td:first-child {
+  background-color: #eeaa88;
+  color: black;
+  font-weight: bold;
+  border: 1px solid #880000;
+  padding: 0 5px;
+  font-size: 10pt;
+}
+.theme_default table > tbody > tr.rules > td:first-child {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.theme_default article.backlink_container {
+  padding: 10px;
+}
+.theme_default .divider {
+  border-top: 1px solid #9b9b9b;
+  border-top: 1px solid rgba(155, 155, 155, 0.48);
+}
+.theme_default section.global_message {
+  border: 1px solid #ff8899;
+  width: 50%;
+  text-align: center;
+  margin: 0 auto auto 20px;
+  background: #c0feb9;
+  padding: 10px;
+}
+.theme_default .navbar.navbar-fixed-top {
+  border-bottom: 1px solid #000000;
+}
+.theme_default .js_hook_realtimethread {
+  font: bold 12px;
+  border-top: 1px solid #aaaaaa;
+  padding: 5px;
+  clear: both;
+}
+.theme_default.yotsuba_b .navbar .nav > li > a:hover {
+  color: #544cff;
+  text-shadow: none;
+}
+.theme_default.yotsuba_b .dropdown-menu li > a:hover,
+.theme_default.yotsuba_b .dropdown-menu .active > a,
+.theme_default.yotsuba_b .dropdown-menu .active > a:hover {
+  background: #8181db;
+}
+.theme_default.yotsuba_b .btn-inverse {
+  background: #8181db;
+}
+.theme_default.yotsuba_b .btn-inverse:hover {
+  background: #5d68db;
+}
+.theme_default.yotsuba_b .post_wrapper {
+  background: #d6daf0;
+  border: 1px solid #b7c5d9;
+  border-left: none;
+  border-top: none;
+}
+.theme_default.yotsuba_b .post.post_ghost .post_wrapper {
+  border: 1px solid #769bb3;
+  border-left: 5px solid #9988ee;
+}
+.theme_default.yotsuba_b table > tbody > tr > td:first-child {
+  background-color: #9988ee;
+  color: black;
+  font: bold 10pt;
+  border: 1px solid black;
+  padding: 0 5px;
+}
+.theme_default .btnr,
+.btnr:visited {
+  border: none;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-family: inherit;
+  font-size: inherit;
+  font-size: 11px;
+  padding: 0;
+  padding: 0 3px 1px;
+  margin: 0 0 0 3;
+  margin: 0 2px;
+  position: static;
+  position: relative;
+  background: transparent;
+  text-shadow: none;
+  color: #333333;
+  line-height: 11px;
+  top: -1px;
+}
+.navbar-search .search-query {
+  box-shadow: none;
+}

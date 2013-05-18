@@ -1234,7 +1234,6 @@ class Radix
 	public function createTables()
 	{
 		$charset = 'utf8mb4';
-		$collation = 'utf8mb4_general_ci';
 
 		$sm = DC::forge()->getSchemaManager();
 		$schema = $sm->createSchema();
@@ -1248,7 +1247,6 @@ class Radix
 				if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 				{
 					$table->addOption('charset', $charset);
-					$table->addOption('collate', $collation);
 				}
 				$table->addColumn('doc_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 				$table->addColumn('media_id', 'integer', ['unsigned' => true, 'default' => 0]);
@@ -1303,7 +1301,6 @@ class Radix
 			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 			{
 				$table_threads->addOption('charset', $charset);
-				$table_threads->addOption('collate', $collation);
 			}
 			$table_threads->addColumn('thread_num', 'integer', ['unsigned' => true]);
 			$table_threads->addColumn('time_op', 'integer', ['unsigned' => true]);
@@ -1325,7 +1322,6 @@ class Radix
 			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 			{
 				$table_users->addOption('charset', $charset);
-				$table_users->addOption('collate', $collation);
 			}
 			$table_users->addColumn('user_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 			$table_users->addColumn('name', 'string', ['length' => 100, 'default' => '']);
@@ -1373,7 +1369,6 @@ class Radix
 			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 			{
 				$table_extra->addOption('charset', $charset);
-				$table_extra->addOption('collate', $collation);
 			}
 			$table_extra->addColumn('extra_id', 'integer', ['unsigned' => true]);
 			$table_extra->addColumn('json', 'text', ['length' => 65532, 'notnull' => false]);

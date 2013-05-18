@@ -66,7 +66,6 @@ use Foolz\Foolframe\Model\DoctrineConnection as DC;
 		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$table->addOption('charset', 'utf8mb4');
-			$table->addOption('collate', 'utf8mb4_general_ci');
 		}
 		$table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 		$table->addColumn('board_id', 'integer', ['unsigned' => true]);

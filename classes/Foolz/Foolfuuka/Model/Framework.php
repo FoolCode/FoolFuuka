@@ -38,7 +38,7 @@ class Framework
 		}
 
 		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
-		$theme_instance->addDir('foolz', VENDPATH.'foolz/foolfuuka/'.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
+		$theme_instance->addDir(VENDPATH.'foolz/foolfuuka/'.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
 		$theme_instance->setBaseUrl(\Uri::base().'foolfuuka/');
 		$theme_instance->setPublicDir(DOCROOT.'foolfuuka/');
 
@@ -60,7 +60,7 @@ class Framework
 					$result->setParam('environment', $environment)->set($environment);
 				})->setPriority(0);
 
-			foreach ($theme_instance->getAll('foolz') as $theme)
+			foreach ($theme_instance->getAll() as $theme)
 			{
 				$theme->enabled = true;
 			}
@@ -85,7 +85,7 @@ class Framework
 
 				try
 				{
-					$theme = $theme_instance->get('foolz', $key);
+					$theme = $theme_instance->get('foolfuuka', $key);
 					$theme->enabled = true;
 				}
 				catch (\OutOfBoundsException $e)
@@ -98,7 +98,7 @@ class Framework
 		try
 		{
 			$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
-			$theme = $theme_instance->get('foolz', $theme_name);
+			$theme = $theme_instance->get($theme_name);
 			if ( ! isset($theme->enabled) || ! $theme->enabled)
 			{
 				throw new \OutOfBoundsException;
@@ -107,7 +107,7 @@ class Framework
 		catch (\OutOfBoundsException $e)
 		{
 			$theme_name = 'foolz/foolfuuka-theme-foolfuuka';
-			$theme = $theme_instance->get('foolz', 'foolz/foolfuuka-theme-foolfuuka');
+			$theme = $theme_instance->get('foolz/foolfuuka-theme-foolfuuka');
 		}
 
 		$theme->bootstrap();

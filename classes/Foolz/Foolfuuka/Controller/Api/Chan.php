@@ -28,7 +28,7 @@ class Chan
 			try
 			{
 				$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
-				$theme = $theme_instance->get('foolz', $theme_name);
+				$theme = $theme_instance->get($theme_name);
 				if ( ! isset($theme->enabled) || ! $theme->enabled)
 				{
 					throw new \OutOfBoundsException;
@@ -38,7 +38,7 @@ class Chan
 			catch (\OutOfBoundsException $e)
 			{
 				$theme_name = 'foolz/foolfuuka-theme-foolfuuka';
-				$this->_theme = $theme_instance->get('foolz', $theme_name);
+				$this->_theme = $theme_instance->get($theme_name);
 			}
 		}
 	}

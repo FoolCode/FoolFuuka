@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolfuuka\Controller\Admin;
 
+use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,7 +21,19 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			\Response::redirect('admin');
 		}
 
-		$this->_views['controller_title'] = __('Moderation');
+		$this->param_manager->setParam('controller_title', __('Moderation'));
+	}
+
+	/**
+	 * Selects the theme. Can be overridden so other controllers can use their own admin components
+	 *
+	 * @param Loader $theme_instance
+	 */
+	public function setupTheme(Loader $theme_instance)
+	{
+		// we need to load more themes
+		$theme_instance->addDir(VENDPATH.'foolz/foolfuuka/public/themes-admin');
+		$this->theme = $theme_instance->get('foolz/foolfuuka-theme-admin');
 	}
 
 	/**
@@ -30,17 +43,13 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 	 */
 	public function action_reports()
 	{
-		$this->_views['method_title'] = [__('Manage'), __('Reports')];
+		$this->param_manager->setParam('method_title', [__('Manage'), __('Reports')]);
 
 		// this has already been forged in the foolfuuka bootstrap
 		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 
 		$theme_name = 'foolz/foolfuuka-theme-foolfuuka';
-		$this->theme = $theme = $theme_instance->get('foolz', 'foolz/foolfuuka-theme-foolfuuka');
-
-		/*
-		$theme->bind();
-		*/
+		$this->theme = $theme = $theme_instance->get('foolz/foolfuuka-theme-foolfuuka');
 
 		$reports = \Report::getAll();
 
@@ -95,18 +104,19 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			]
 		];
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/moderation/reports', [
-			'backend_vars' => $backend_vars,
-			'theme' => $theme,
-			'reports' => $reports
-		]);
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		$this->builder->createPartial('body', 'moderation/reports')
+			->getParamManager()->setParams([
+				'backend_vars' => $backend_vars,
+				'theme' => $theme,
+				'reports' => $reports
+			]);
+		return new Response($this->builder->build());
 	}
 
 
 	public function action_bans($page = 1)
 	{
-		$this->_views['method_title'] = [__('Manage'), __('Bans')];
+		$this->param_manager->setParam('method_title', [__('Manage'), __('Bans')]);
 
 		if ($page < 1 || ! ctype_digit((string) $page))
 		{
@@ -115,17 +125,19 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 
 		$bans = \Ban::getPagedBy('start', 'desc', $page);
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/moderation/bans', [
-			'bans' => $bans,
-			'page' => $page,
-			'page_url' => \Uri::create('admin/moderation/bans')
-		]);
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		$this->builder->createPartial('body', 'moderation/bans')
+			->getParamManager()->setParams([
+				'bans' => $bans,
+				'page' => $page,
+				'page_url' => \Uri::create('admin/moderation/bans')
+			]);
+
+		return new Response($this->builder->build());
 	}
 
 	public function action_appeals($page = 1)
 	{
-		$this->_views['method_title'] = [__('Manage'), __('Bans'), __('Appeals')];
+		$this->param_manager->setParam('method_title', [__('Manage'), __('Bans'), __('Appeals')]);
 
 		if ($page < 1 || ! ctype_digit((string) $page))
 		{
@@ -134,17 +146,19 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 
 		$bans = \Ban::getAppealsPagedBy('start', 'desc', $page);
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/moderation/bans', [
-			'bans' => $bans,
-			'page' => $page,
-			'page_url' => \Uri::create('admin/moderation/appeals')
-		]);
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		$this->builder->createPartial('body', 'moderation/bans')
+			->getParamManager()->setParams([
+				'bans' => $bans,
+				'page' => $page,
+				'page_url' => \Uri::create('admin/moderation/bans')
+			]);
+
+		return new Response($this->builder->build());
 	}
 
 	public function action_find_ban($ip = null)
 	{
-		$this->_views['method_title'] = [__('Manage'), __('Bans')];
+		$this->param_manager->setParam('method_title', [__('Manage'), __('Bans')]);
 
 		if (\Input::post('ip'))
 		{
@@ -156,7 +170,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			throw new \HttpNotFoundException;
 		}
 
-		$ip = trim($ip.'.'.\Input::extension());
+		$ip = trim($ip);
 
 		if ( ! filter_var($ip, FILTER_VALIDATE_IP))
 		{
@@ -172,8 +186,14 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			$bans = [];
 		}
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/moderation/bans', ['bans' => $bans]);
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		$this->builder->createPartial('body', 'moderation/bans')
+			->getParamManager()->setParams([
+				'bans' => $bans,
+				'page' => false,
+				'page_url' => \Uri::create('admin/moderation/bans')
+			]);
+
+		return new Response($this->builder->build());
 	}
 
 	public function action_ban_manage($action, $id)
@@ -231,7 +251,9 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 				throw new \HttpNotFoundException;
 		}
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/confirm', $data);
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		$this->builder->createPartial('body', 'confirm')
+			->getParamManager()->setParams($data);
+
+		return new Response($this->builder->build());
 	}
 }

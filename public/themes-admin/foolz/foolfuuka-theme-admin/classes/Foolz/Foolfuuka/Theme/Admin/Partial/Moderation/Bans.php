@@ -1,3 +1,12 @@
+<?php
+
+namespace Foolz\Foolfuuka\Theme\Admin\Partial\Moderation;
+
+class Bans extends \Foolz\Theme\View
+{
+	public function toString()
+	{
+		?>
 <div class="admin-container">
 	<div class="admin-container-header">
 		<?= __('Bans') ?>
@@ -23,7 +32,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($bans as $b) : ?>
+			<?php foreach ($this->getParamManager()->getParam('bans') as $b) : ?>
 			<tr>
 				<td><?= \Foolz\Inet\Inet::dtop($b->ip) ?><?= \Preferences::get('foolfuuka.sphinx.global') ?  '<br><small><a href="'.\Uri::create('_/search/poster_ip/'.\Foolz\Inet\Inet::dtop($b->ip)).'" target="_blank">'.__('Search posts').'</a></small>' : '' ?></td>
 				<td><?= $b->board_id ? '/'.\Radix::getById($b->board_id)->shortname.'/' : __('Global') ?></td>
@@ -49,14 +58,18 @@
 		</tbody>
 	</table>
 
-	<?php if (isset($page)) : ?>
+	<?php $page = $this->getParamManager()->getParam('page') ?>
+	<?php if ($page) : ?>
 	<div class="pagination">
 	  <ul>
 		<?php if ($page > 1) : ?>
-		<li class=""><a href="<?= $page_url.($page - 1) ?>"><?= __('Prev') ?></a></li>
+		<li class=""><a href="<?= $this->getParamManager()->getParam('page_url').($page - 1) ?>"><?= __('Prev') ?></a></li>
 		<?php endif; ?>
-		<li class=""><a href="<?= $page_url.($page + 1) ?>"><?= __('Next') ?></a></li>
+		<li class=""><a href="<?= $this->getParamManager()->getParam('page_url').($page + 1) ?>"><?= __('Next') ?></a></li>
 	  </ul>
 	</div>
 	<?php endif; ?>
 </div>
+<?php
+	}
+}

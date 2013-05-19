@@ -1,11 +1,8 @@
 <?php
 
-namespace Foolfuuka\Plugins\GeoipRegionLock;
+namespace Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model;
 
-if ( ! defined('DOCROOT'))
-	exit('No direct script access allowed');
-
-class GeoipRegionLock extends \Plugins
+class GeoipRegionLock
 {
 
 	public static function blockCountryComment($result)

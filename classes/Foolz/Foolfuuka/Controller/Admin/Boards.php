@@ -3,6 +3,7 @@
 namespace Foolz\Foolfuuka\Controller\Admin;
 
 use Foolz\FoolFrame\Model\DoctrineConnection as DC;
+use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,16 +19,28 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			\Response::redirect('admin');
 		}
 
-		$this->_views['controller_title'] = __('Boards');
+		$this->param_manager->setParam('controller_title', __('Boards'));
+	}
+
+	/**
+	 * Selects the theme. Can be overridden so other controllers can use their own admin components
+	 *
+	 * @param Loader $theme_instance
+	 */
+	public function setupTheme(Loader $theme_instance)
+	{
+		// we need to load more themes
+		$theme_instance->addDir(VENDPATH.'foolz/foolfuuka/public/themes-admin');
+		$this->theme = $theme_instance->get('foolz/foolfuuka-theme-admin');
 	}
 
 	public function action_manage()
 	{
-		$this->_views['method_title'] = __('Manage');
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/boards/manage',
-			['boards' => \Radix::getAll()]);
+		$this->param_manager->setParam('method_title', __('Manage'));
+		$this->builder->createPartial('body', 'boards/manage')
+			->getParamManager()->setParam('boards', \Radix::getAll());
 
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response($this->builder->build());
 	}
 
 	public function action_board($shortname = null)
@@ -77,9 +90,11 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$data['object'] = (object) $board->getAllValues();
 
-		$this->_views['method_title'] = [__('Manage'), __('Edit'), $shortname];
-		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		$this->param_manager->setParam('method_title', [__('Manage'), __('Edit'), $shortname]);
+		$this->builder->createPartial('body', 'form_creator')
+			->getParamManager()->setParams($data);
+
+		return new Response($this->builder->build());
 	}
 
 	function action_add()
@@ -110,10 +125,11 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$data['form']['open']['action'] = \Uri::create('admin/boards/add_new');
 
 		// panel for creating a new board
-		$this->_views['method_title'] = [__('Manage'), __('Add')];
-		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
+		$this->param_manager->setParam('method_title', [__('Manage'), __('Add')]);
+		$this->builder->createPartial('body', 'form_creator')
+			->getParamManager()->setParams($data);
 
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response($this->builder->build());
 	}
 
 	function action_delete($id = 0)
@@ -148,8 +164,6 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 	function action_preferences()
 	{
-		$this->_views['method_title'] = __('Preferences');
-
 		$form = [];
 
 		$form['open'] = [
@@ -216,8 +230,11 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$data['form'] = $form;
 
 		// create a form
-		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		$this->param_manager->setParam('method_title', __('Preferences'));
+		$this->builder->createPartial('body', 'form_creator')
+			->getParamManager()->setParams($data);
+
+		return new Response($this->builder->build());
 	}
 
 	function action_search()
@@ -387,9 +404,13 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		// create the form
 		$data['form'] = $form;
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/form_creator', $data);
-		$this->_views['main_content_view'] .= '<a href="'.\Uri::create('admin/boards/sphinx_config').'" class="btn">'.__('Generate Config').'</a>';
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		$this->param_manager->setParam('method_title', __('Preferences'));
+		$partial = $this->builder->createPartial('body', 'form_creator');
+		$partial->getParamManager()->setParams($data);
+		$built = $partial->build();
+		$partial->setBuilt($built.'<a href="'.\Uri::create('admin/boards/sphinx_config').'" class="btn">'.__('Generate Config').'</a>');
+
+		return new Response($this->builder->build());
 	}
 
 	public function action_sphinx_config()
@@ -411,9 +432,10 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$data['boards'] = \Radix::getAll();
 		$data['example'] = current($data['boards']);
 
-		$this->_views['method_title'] = [__('Search'), 'Sphinx', __('Configuration File'), __('Generate')];
+		$this->param_manager->setParam('method_title', [__('Search'), 'Sphinx', __('Configuration File'), __('Generate')]);
+		$this->builder->createPartial('body', 'boards/sphinx_config')
+			->getParamManager()->setParams($data);
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolfuuka::admin/boards/sphinx_config', $data);
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		return new Response($this->builder->build());
 	}
 }

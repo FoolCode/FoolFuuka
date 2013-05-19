@@ -399,7 +399,7 @@ class Comment
 
 	public static function process($string)
 	{
-		return e(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
+		return htmlentities(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
 	}
 
 

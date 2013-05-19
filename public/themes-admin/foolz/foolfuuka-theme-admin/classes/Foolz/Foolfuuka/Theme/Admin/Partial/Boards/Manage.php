@@ -1,3 +1,11 @@
+<?php
+
+namespace Foolz\Foolfuuka\Theme\Admin\Partial\Boards;
+
+class Manage extends \Foolz\Theme\View
+{
+	public function toString()
+	{ ?>
 <div class="admin-container">
 	<div class="admin-container-header">
 		<?= __('Boards') ?>
@@ -18,7 +26,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($boards as $board) : ?>
+			<?php foreach ($this->getParamManager()->getParam('boards') as $board) : ?>
 			<tr>
 				<td><?= $board->id ?></td>
 				<td>
@@ -48,3 +56,6 @@
 		</tbody>
 	</table>
 </div>
+<?php
+	}
+}

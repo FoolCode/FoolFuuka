@@ -1,3 +1,13 @@
+<?php
+
+namespace Foolz\Foolfuuka\Theme\Admin\Partial\Moderation;
+
+class Reports extends \Foolz\Theme\View
+{
+	public function toString()
+	{
+		extract($this->getParamManager()->getParams());
+		?>
 <link href="<?= $theme->getAssetManager()->getAssetLink('style.css') ?>"rel="stylesheet" type="text/css" />
 
 <script defer src="<?= $theme->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
@@ -81,3 +91,6 @@
 <script>
 	var backend_vars = <?= json_encode($backend_vars) ?>
 </script>
+<?php
+	}
+}

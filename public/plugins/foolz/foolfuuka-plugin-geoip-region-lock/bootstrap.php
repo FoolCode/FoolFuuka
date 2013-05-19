@@ -33,7 +33,7 @@
 
 		if ( ! \Auth::has_access('maccess.mod') && !(\Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user')))
 		{
-			\Foolfuuka\Plugins\GeoipRegionLock\GeoipRegionLock::block_country_view();
+			\Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock::blockCountryView();
 
 			\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.method')
 				->setCall('Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock::blockCountryComment')

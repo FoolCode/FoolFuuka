@@ -1,9 +1,9 @@
 {
-	"name": "foolz/foolfuuka-theme-fuuka",
-	"type": "foolz-foolfuuka-theme",
-	"description": "The fuuka FoolFuuka theme.",
-	"version": "1.0.0",
-	"keywords": ["theme", "default", "foolfuuka", "fuuka"],
+	"name": "foolz/foolfuuka-theme-admin",
+	"type": "foolz-foolfuuka-admin-theme",
+	"description": "The default FoolFrame admin theme.",
+	"version": "1.0.2",
+	"keywords": ["theme", "admin", "foolfuuka"],
 	"homepage": "http://www.foolz.us",
 	"license": "Apache-2.0",
 	"authors": [{"name": "foolz", "email": "support@foolz.us"}],
@@ -17,12 +17,11 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"Foolz\\Foolfuuka\\Theme\\Fuuka": "classes/"
+			"Foolz\\Foolfuuka\\Theme\\Admin": "classes/"
 		}
 	},
-
 	"extra": {
-		"name": "Fuuka",
-		"extends": "foolz/foolfuuka-theme-foolfuuka"
+		"name": "Admin",
+		"extends": "foolz/foolframe-theme-admin"
 	}
 }

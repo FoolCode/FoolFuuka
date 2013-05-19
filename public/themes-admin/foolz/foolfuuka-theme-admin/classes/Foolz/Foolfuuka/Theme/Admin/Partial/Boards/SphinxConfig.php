@@ -1,3 +1,14 @@
+<?php
+
+namespace Foolz\Foolfuuka\Theme\Admin\Partial\Boards;
+
+class SphinxConfig extends \Foolz\Theme\View
+{
+	public function toString()
+	{
+		extract($this->getParamManager()->getParams());
+		?>
+
 <div class="admin-container">
 	<div class="admin-container-header">
 		<?= __('Configuration File') ?>
@@ -452,3 +463,6 @@ searchd
 	});
 </script>
 <?php endif; ?>
+<?php
+	}
+}

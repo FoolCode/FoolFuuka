@@ -17,7 +17,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 
 		parent::before($request);
 
-		$this->_views['controller_title'] = __('Plugins');
+		$this->param_manager->setParam('controller_title', __('Plugins'));
 	}
 
 	protected function structure()
@@ -61,14 +61,16 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 
 	public function action_manage()
 	{
-		$this->_views['method_title'] = [__('FoolFuuka'), __("Board Statistics"),__('Manage')];
+		$this->param_manager->setParam('method_title', [__('FoolFuuka'), __("Board Statistics"),__('Manage')]);
 
 		$data['form'] = $this->structure();
 
 		\Preferences::submit_auto($data['form']);
 
 		// create a form
-		$this->_views["main_content_view"] = \View::forge("foolz/foolframe::admin/form_creator", $data);
-		return new Response(\View::forge("foolz/foolframe::admin/default", $this->_views));
+		$this->builder->createPartial('body', 'form_creator')
+			->getParamManager()->setParams($data);
+
+		return new Response($this->builder->build());
 	}
 }

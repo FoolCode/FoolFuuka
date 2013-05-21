@@ -9,7 +9,7 @@ class Dice
 	{
 		$data = $result->getObject();
 
-		if ($data->radix->getValue('plugin_dice_roll_enable') == 0)
+		if ( ! $data->radix->getValue('plugin_dice_roll_enable'))
 		{
 			return null;
 		}

@@ -45,19 +45,14 @@ class Chan
 
 	public function router(Request $request, $method, $parameters)
 	{
-		if (count($parameters) == 0)
-		{
-			return [$this, 'get_404', []];
-		}
-
 		if ($request->getMethod() == 'GET')
 		{
-			return [$this, 'get_'.$parameters[0], []];
+			return [$this, 'get_'.$method, []];
 		}
 
 		if ($request->getMethod() == 'POST')
 		{
-			return [$this, 'post_'.$parameters[0], []];
+			return [$this, 'post_'.$method, []];
 		}
 	}
 
@@ -100,7 +95,7 @@ class Chan
 
 	public function get_404()
 	{
-		return $this->response('Invalid method.', 404);
+		return $this->response(['error' => _('Invalid method.')], 404);
 	}
 
 	/**

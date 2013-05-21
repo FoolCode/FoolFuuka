@@ -871,7 +871,7 @@ class Radix
 	/**
 	 * Puts the table in readily available variables
 	 */
-	protected static function preload()
+	public static function preload()
 	{
 		\Profiler::mark('Radix::preload Start');
 
@@ -930,7 +930,7 @@ class Radix
 			{
 				if ( ! isset($result_object[$item['id']]->$key) && isset($arr['boards_preferences']))
 				{
-					$result_object[$item['id']]->setValue($key, Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key));
+					$result_object[$item['id']]->setValue($key, Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key, false));
 				}
 
 				foreach (['sub', 'sub_inverse'] as $sub)
@@ -941,7 +941,7 @@ class Radix
 						{
 							if ( ! isset($result_object[$item['id']]->$k) && isset($a['boards_preferences']))
 							{
-								$result_object[$item['id']]->setValue($k, Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$k));
+								$result_object[$item['id']]->setValue($k, Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$k, false));
 							}
 						}
 					}

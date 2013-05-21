@@ -77,20 +77,6 @@ use Symfony\Component\Routing\Route;
 				]
 			));
 		}
-
-		\Foolz\Plugin\Event::forge('Fuel\Core\Router::parse_match.intercept')
-			->setCall(function($result) {
-				if ($result->getParam('controller') === 'Foolz\Foolfuuka\Controller\Chan')
-				{
-					$method_params = $result->getParam('method_params');
-
-					if (isset($method_params[0]) && $method_params[0] === 'statistics')
-					{
-						$result->setParam('controller', 'Foolz\Foolfuuka\Controller\Chan\BoardStatistics');
-						$result->set(true);
-					}
-				}
-			})->setPriority(4);
 	});
 
 \Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate.foolz/foolfuuka-plugin-board-statistics')

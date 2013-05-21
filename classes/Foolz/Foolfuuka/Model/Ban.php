@@ -349,6 +349,7 @@ class Ban
 			// the user_id is an array of (FoolAuth,xyz)
 			$user_id = \Auth::get_user_id();
 			$new->creator_id = $user_id[1];
+			$new->appeal = '';
 
 			if (isset($old[$new->board_id]))
 			{
@@ -376,6 +377,7 @@ class Ban
 						'length' => $new->length,
 						'board_id' => $new->board_id,
 						'creator_id' => $new->creator_id,
+						'appeal' => $new->appeal
 					]);
 			}
 

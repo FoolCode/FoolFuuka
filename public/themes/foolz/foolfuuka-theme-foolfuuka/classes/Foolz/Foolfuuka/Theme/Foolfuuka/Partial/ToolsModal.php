@@ -14,7 +14,7 @@ class ToolsModal extends \Foolz\Theme\View
 			</div>
 			<div class="modal-body" style="text-align: center">
 				<div class="modal-error"></div>
-				<div class="modal-loading loading"><img src="<?= \Uri::base() ?>assets/js/images/loader-18.gif"/></div>
+				<div class="modal-loading loading"><img src="<?= $this->getAssetManager()->getAssetLink('images/loader-18.gif') ?>"/></div>
 				<div class="modal-information"></div>
 			</div>
 			<div class="modal-footer">

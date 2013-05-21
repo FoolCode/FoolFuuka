@@ -1,48 +1,51 @@
 <?php
 
-namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Model;
+namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Console;
 
 use \Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class Task
+class Console extends Command
 {
-
-	public static function cliBoardStatisticsHelp()
+	protected function configure()
 	{
-		\Cli::write('  --Board Statistics command list:');
-		\Cli::write('    cron                        Create statistics for all the boards in a loop');
-		\Cli::write('    cron [board_shortname]      Create statistics for the selected board');
+		$this
+			->setName('board_statistics:run')
+			->setDescription('Runs the database queries to feed the board statistics in an endless loop')
+			->addOption(
+				'radix',
+				null,
+				InputOption::VALUE_OPTIONAL,
+				__('Run the queries only for the requested board')
+			)
+		;
 	}
 
-
-	public static function cli_board_statistics($result)
+	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$parameters = $result->getParam('parameters');
-
-		switch ($parameters[0])
+		if (($radix = $input->getOption('radix')) !== null)
 		{
-			case 'cron':
-				if (isset($parameters[1]))
-				{
-					if (\Radix::getByShortname($parameters[1]) !== false)
-					{
-						static::board_statistics($parameters[1]);
-						return true;
-					}
-				}
-				else
-				{
-					static::board_statistics();
-				}
-				break;
-			default:
-				\Cli::write(__('Bad command.'));
-				return false;
+			if (\Radix::getByShortname($radix) !== false)
+			{
+				static::board_statistics($output, $radix);
+			}
+			else
+			{
+				$output->writeln('<error>'.__('Wrong radix (board short name) specified.').'</error>');
+			}
+		}
+		else
+		{
+			static::board_statistics($output);
 		}
 	}
 
-	public static function board_statistics($shortname = null)
+	public static function board_statistics($output, $shortname = null)
 	{
 		$boards = \Radix::getAll();
 
@@ -77,10 +80,10 @@ class Task
 				}
 
 				// Update all statistics for the specified board or current board.
-				\Cli::write($board->shortname . ' (' . $board->id . ')');
+				$output->writeln($board->shortname . ' (' . $board->id . ')');
 				foreach ($available as $k => $a)
 				{
-					\Cli::write('  ' . $k . ' ');
+					$output->writeln('  ' . $k . ' ');
 					$found = false;
 					$skip = false;
 
@@ -118,16 +121,10 @@ class Task
 					// targeted frequency time.
 					if ($skip === false)
 					{
-						\Cli::write('* Processing...');
+						$output->writeln('* Processing...');
 
 						$process = 'process'.$a['function'];
 						$result = BS::$process($board);
-
-						// This statistics report generates a graph via GNUPLOT.
-						if (isset($available[$k]['gnuplot']) && is_array($result) && ! empty($result))
-						{
-							BS::graphGnuplot($board->shortname, $k, $result);
-						}
 
 						// Save the statistics report in a JSON array.
 						BS::saveStat($board->id, $k, time(), $result);

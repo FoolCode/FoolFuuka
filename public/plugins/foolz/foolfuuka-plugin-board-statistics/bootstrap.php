@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Route;
 			'Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
 			'Foolz\Foolfuuka\Controller\Chan\BoardStatistics' => __DIR__.'/classes/controller/chan.php',
 			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
-			'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task' => __DIR__.'/classes/tasks/task.php'
+			'Foolz\Foolfuuka\Plugins\BoardStatistics\Console\Console' => __DIR__.'/classes/console/console.php'
 		]);
 
 		// don't add the admin panels if the user is not an admin
@@ -43,12 +43,20 @@ use Symfony\Component\Routing\Route;
 					$result->setParam('array', $array);
 				});
 
+			/*
 			\Foolz\Plugin\Event::forge('Foolz\Foolframe\Task\Fool::run.call.method.help.board_statistics')
 				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cliBoardStatisticsHelp');
 
 			\Foolz\Plugin\Event::forge('Foolz\Foolframe\Task\Fool::run.call.method.section.board_statistics')
 				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cli_board_statistics');
+			*/
 		}
+
+		\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Framework::handleConsole.add')
+			->setCall(function($result) {
+				$result->getParam('application')
+					->add(new \Foolz\Foolfuuka\Plugins\BoardStatistics\Console\Console);
+			});
 
 		\Foolz\Plugin\Event::forge('foolframe.themes.generic_top_nav_buttons')
 			->setCall(function($result) {

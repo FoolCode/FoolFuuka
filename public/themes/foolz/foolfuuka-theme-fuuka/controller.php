@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 class Chan extends \Foolz\Foolfuuka\Controller\Chan
 {
 	/**
@@ -20,7 +22,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
 	public function radix_gallery($page = 1)
 	{
-		throw new \HttpNotFoundException;
+		throw new NotFoundHttpException;
 	}
 
 	/**

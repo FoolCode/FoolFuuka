@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 class GeoipRegionLock
 {
 
@@ -81,7 +83,7 @@ class GeoipRegionLock
 					return null;
 			}
 
-			throw new HttpNotFoundException;
+			throw new NotFoundHttpException;
 		}
 
 		if ($disallow)
@@ -92,7 +94,7 @@ class GeoipRegionLock
 			{
 				if (strtolower(trim($disal)) == $country)
 				{
-					throw new HttpNotFoundException;
+					throw new NotFoundHttpException;
 				}
 			}
 		}

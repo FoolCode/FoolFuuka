@@ -6,6 +6,7 @@ use Foolz\FoolFrame\Model\DoctrineConnection as DC;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Boards extends \Foolz\Foolframe\Controller\Admin
 {
@@ -85,7 +86,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$board = \Radix::getByShortname($shortname);
 		if ($board === false)
 		{
-			throw new \HttpNotFoundException;
+			throw new NotFoundHttpException;
 		}
 
 		$data['object'] = (object) $board->getAllValues();
@@ -137,7 +138,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$board = \Radix::getById($id);
 		if ($board == false)
 		{
-			throw new \HttpNotFoundException;
+			throw new NotFoundHttpException;
 		}
 
 		if (\Input::post() && ! \Security::check_token())

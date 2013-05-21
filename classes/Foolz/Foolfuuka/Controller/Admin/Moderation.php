@@ -5,6 +5,7 @@ namespace Foolz\Foolfuuka\Controller\Admin;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Moderation extends \Foolz\Foolframe\Controller\Admin
 {
@@ -167,14 +168,14 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 
 		if ($ip === null)
 		{
-			throw new \HttpNotFoundException;
+			throw new NotFoundHttpException;
 		}
 
 		$ip = trim($ip);
 
 		if ( ! filter_var($ip, FILTER_VALIDATE_IP))
 		{
-			throw new \HttpNotFoundException;
+			throw new NotFoundHttpException;
 		}
 
 		try
@@ -204,7 +205,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 		}
 		catch (\Foolz\Foolfuuka\Model\BanException $e)
 		{
-			throw new \HttpNotFoundException;
+			throw new NotFoundHttpException;
 		}
 
 		if (\Input::post() && ! \Security::check_token())
@@ -229,7 +230,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 					break;
 
 				default:
-					throw new \HttpNotFoundException;
+					throw new NotFoundHttpException;
 			}
 		}
 
@@ -248,7 +249,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 				break;
 
 			default:
-				throw new \HttpNotFoundException;
+				throw new NotFoundHttpException;
 		}
 
 		$this->builder->createPartial('body', 'confirm')

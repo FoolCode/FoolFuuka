@@ -39,6 +39,7 @@ class Framework
 
 		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 		$theme_instance->addDir(VENDPATH.'foolz/foolfuuka/'.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
+		$theme_instance->addDir(VAPPPATH.'foolz/foolfuuka/themes/');
 		$theme_instance->setBaseUrl(\Uri::base().'foolfuuka/');
 		$theme_instance->setPublicDir(DOCROOT.'foolfuuka/');
 

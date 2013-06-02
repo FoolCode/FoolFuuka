@@ -1308,12 +1308,17 @@ class Radix
 			$table_threads->addColumn('time_bump', 'integer', ['unsigned' => true]);
 			$table_threads->addColumn('time_ghost', 'integer', ['unsigned' => true, 'notnull' => false, 'default' => 'null']);
 			$table_threads->addColumn('time_ghost_bump', 'integer', ['unsigned' => true, 'notnull' => false, 'default' => 'null']);
+			$table_threads->addColumn('time_last_modified', 'integer', ['unsigned' => true]);
 			$table_threads->addColumn('nreplies', 'integer', ['unsigned' => true, 'default' => 0]);
 			$table_threads->addColumn('nimages', 'integer', ['unsigned' => true, 'default' => 0]);
+			$table_threads->addColumn('sticky', 'boolean', ['default' => 0]);
+			$table_threads->addColumn('locked', 'boolean', ['default' => 0]);
 			$table_threads->setPrimaryKey(['thread_num']);
 			$table_threads->addIndex(['time_op'], $this->getIndex('_threads', 'time_op_index'));
 			$table_threads->addIndex(['time_bump'], $this->getIndex('_threads', 'time_bump_index'));
 			$table_threads->addIndex(['time_ghost_bump'], $this->getIndex('_threads', 'time_ghost_bump_index'));
+			$table_threads->addIndex(['sticky'], $this->getIndex('_threads', 'sticky_index'));
+			$table_threads->addIndex(['locked'], $this->getIndex('_threads', 'locked_index'));
 		}
 
 		if ( ! $schema->hasTable($this->getTable('_users')))

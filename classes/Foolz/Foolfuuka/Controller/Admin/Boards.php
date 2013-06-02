@@ -152,15 +152,17 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			\Response::redirect('admin/boards/manage');
 		}
 
-		$this->_views['function_title'] = __('Removing board:').' '.$board->shortname;
 		$data['alert_level'] = 'warning';
 		$data['message'] = __('Do you really want to remove the board and all its data?').
 			'<br/>'.
 			__('Notice: due to its size, you will have to remove the image directory manually. The directory will have the "_removed" suffix. You can remove all the leftover "_removed" directories with the following command:').
 			' <code>php index.php cli boards remove_leftover_dirs</code>';
 
-		$this->_views['main_content_view'] = \View::forge('foolz/foolframe::admin/confirm', $data);
-		return new Response(\View::forge('foolz/foolframe::admin/default', $this->_views));
+		$this->param_manager->setParam('method_title', __('Removing board:').' '.$board->shortname);
+		$this->builder->createPartial('body', 'confirm')
+			->getParamManager()->setParams($data);
+
+		return new Response($this->builder->build());
 	}
 
 	function action_preferences()

@@ -136,8 +136,11 @@ class CommentInsert extends Comment
 				'time_bump' => $this->timestamp,
 				'time_ghost' => null,
 				'time_ghost_bump' => null,
+				'time_last_modified' => $this->timestamp,
 				'nreplies' => 1,
-				'nimages' => ($this->media->media_id ? 1 : 0)
+				'nimages' => ($this->media->media_id ? 1 : 0),
+				'sticky' => 0,
+				'locked' => 0
 			]);
 		}
 		else
@@ -147,6 +150,7 @@ class CommentInsert extends Comment
 				$query = DC::qb()
 					->update($this->radix->getTable('_threads'))
 					->set('time_last', 'GREATEST(time_last, :time_last)')
+					->set('time_last_modified', 'GREATEST(time_last, :time_last)')
 					->set('nreplies', 'nreplies + 1')
 					->set('nimages', 'nimages + '. ($this->media->media_id ? 1 : 0))
 					->setParameter(':time_last', $this->timestamp);
@@ -164,6 +168,7 @@ class CommentInsert extends Comment
 				$query = DC::qb()
 					->update($this->radix->getTable('_threads'))
 					->set('time_ghost', 'COALESCE(time_ghost, :time_ghost)')
+					->set('time_last_modified', 'GREATEST(time_last, :time_ghost)')
 					->set('nreplies', 'nreplies + 1')
 					->setParameter(':time_ghost', $this->timestamp);
 
@@ -537,14 +542,8 @@ class CommentInsert extends Comment
 			$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$this->thread_num),'id'),+3), 0, 8);
 		}
 
-		if ($this->radix->archive)
-		{
-			// archives are in new york time
-			$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));
-			$utc = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('UTC'));
-			$diff = $newyork->diff($utc)->h;
-			$this->timestamp = $this->timestamp - ($diff * 60 * 60);
-		}
+
+		$this->timestamp = $this->getRadixTime($this->timestamp);
 
 		\Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.sql')
 			->setObject($this)

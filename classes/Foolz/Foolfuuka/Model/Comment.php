@@ -893,6 +893,34 @@ class Comment
 		return $str;
 	}
 
+	/**
+	 * Returns the timestamp fixed for the radix time
+	 *
+	 * @param int|null $time If a timestamp is supplied, it will calculate the time in relation to that moment
+	 *
+	 * @return int resulting timestamp
+	 */
+	public function getRadixTime($time = null)
+	{
+		if ($time === null)
+		{
+			$time = time();
+		}
+
+		if ($this->radix->archive)
+		{
+			// archives are in new york time
+			$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));
+			$utc = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('UTC'));
+			$diff = $newyork->diff($utc)->h;
+			return $time - ($diff * 60 * 60);
+		}
+		else
+		{
+			return $time;
+		}
+	}
+
 	public function cleanFields()
 	{
 		\Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Comment::cleanFields.call.before.body')
@@ -1084,6 +1112,7 @@ class Comment
 				->set('time_bump', ':time_bump')
 				->set('time_ghost', ':time_ghost')
 				->set('time_ghost_bump', ':time_ghost_bump')
+				->set('time_last_modified', ':time')
 				->set('nreplies', ':nreplies')
 				->set('nimages', ':nimages')
 				->where('thread_num = :thread_num')
@@ -1091,6 +1120,7 @@ class Comment
 				->setParameter(':time_bump', $time_bump)
 				->setParameter(':time_ghost', $time_ghost)
 				->setParameter(':time_ghost_bump', $time_ghost_bump)
+				->setParameter(':time', $this->getRadixTime())
 				->setParameter(':nreplies', $thread_replies)
 				->setParameter(':nimages', $thread_images)
 				->setParameter(':thread_num', $this->thread_num)

@@ -936,7 +936,7 @@ class Comment
 
 		// throw in the _deleted table
 		DC::forge()->executeUpdate(
-			'INSERT IGNORE INTO '.$this->radix->getTable('_deleted').' '.
+			'INSERT INTO '.$this->radix->getTable('_deleted').' '.
 			DC::qb()
 				->select('*')
 				->from($this->radix->getTable(), 't')

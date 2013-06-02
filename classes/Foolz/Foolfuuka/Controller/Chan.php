@@ -946,9 +946,7 @@ class Chan
 		\Profiler::mark_memory($this, 'Controller Chan $this');
 		\Profiler::mark('Controller Chan::search End');
 
-		$result = $this->builder->build('board');
-
-		return $result;
+		return new Response($this->builder->build('board'));
 	}
 
 	public function radix_appeal()

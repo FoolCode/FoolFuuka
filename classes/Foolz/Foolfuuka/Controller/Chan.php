@@ -658,7 +658,8 @@ class Chan
 		$modifiers = [
 			'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
 			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
-			'order', 'page'];
+			'order', 'page'
+		];
 
 		if (\Auth::has_access('comment.see_ip'));
 		{

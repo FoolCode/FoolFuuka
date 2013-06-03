@@ -153,6 +153,11 @@ class Chan
 
 				$comments = $board->getComments();
 
+				if ( ! count($comments))
+				{
+					$this->response([], 204);
+				}
+
 				return $this->response($comments, 200);
 			}
 			else
@@ -212,7 +217,7 @@ class Chan
 			$comment = current($board->getComments());
 
 			// no index for the single post
-			$this->response($comment, 200);
+			return $this->response($comment, 200);
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e)
 		{

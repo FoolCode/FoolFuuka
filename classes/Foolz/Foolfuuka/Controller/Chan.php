@@ -637,7 +637,7 @@ class Chan
 
 	public function action_search()
 	{
-		return $this->radix_search();
+		return call_user_func_array([$this, 'radix_search'], func_get_args());
 	}
 
 	public function radix_search()

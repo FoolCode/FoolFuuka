@@ -11,6 +11,7 @@ class Schema
 	public static function load(\Foolz\Foolframe\Model\SchemaManager $sm)
 	{
 		$charset = 'utf8mb4';
+		$collate = 'utf8mb4_unicode_ci';
 
 		$schema = $sm->getCodedSchema();
 
@@ -22,6 +23,7 @@ class Schema
 		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$banned_posters->addOption('charset', $charset);
+			$banned_posters->addOption('collate', $collate);
 		}
 		$banned_posters->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 		$banned_posters->addColumn('ip', 'decimal', ['unsigned' => true, 'precision' => 39, 'scale' => 0]);
@@ -41,6 +43,7 @@ class Schema
 		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$boards->addOption('charset', $charset);
+			$boards->addOption('collate', $collate);
 		}
 		$boards->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 		$boards->addColumn('shortname', 'string', ['length' => 32]);
@@ -59,6 +62,7 @@ class Schema
 		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$boards_preferences->addOption('charset', $charset);
+			$boards_preferences->addOption('collate', $collate);
 		}
 		$boards_preferences->addColumn('board_preference_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 		$boards_preferences->addColumn('board_id', 'integer', ['unsigned' => true]);
@@ -71,6 +75,7 @@ class Schema
 		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$reports->addOption('charset', $charset);
+			$reports->addOption('collate', $collate);
 		}
 		$reports->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 		$reports->addColumn('board_id', 'integer', ['unsigned' => true]);

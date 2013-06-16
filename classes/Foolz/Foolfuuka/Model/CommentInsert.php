@@ -381,7 +381,7 @@ class CommentInsert extends Comment
 			}
 
 			// load the spam list and check comment, name, title and email
-			$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents(DOCROOT.'assets/anti-spam/databases')));
+			$spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents(VENDPATH.'/foolz/foolfuuka/packages/anti-spam/databases/urls.dat')));
 			foreach($spam as $s)
 			{
 				if (strpos($this->comment, $s) !== false || strpos($this->name, $s) !== false

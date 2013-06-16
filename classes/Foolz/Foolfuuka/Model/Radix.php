@@ -1234,6 +1234,7 @@ class Radix
 	public function createTables()
 	{
 		$charset = 'utf8mb4';
+		$collate = 'utf8mb4_general_ci';
 
 		$sm = DC::forge()->getSchemaManager();
 		$schema = $sm->createSchema();
@@ -1247,6 +1248,7 @@ class Radix
 				if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 				{
 					$table->addOption('charset', $charset);
+					$table->addOption('collate', $collate);
 				}
 				$table->addColumn('doc_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 				$table->addColumn('media_id', 'integer', ['unsigned' => true, 'default' => 0]);
@@ -1301,6 +1303,7 @@ class Radix
 			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 			{
 				$table_threads->addOption('charset', $charset);
+				$table_threads->addOption('collate', $collate);
 			}
 			$table_threads->addColumn('thread_num', 'integer', ['unsigned' => true]);
 			$table_threads->addColumn('time_op', 'integer', ['unsigned' => true]);
@@ -1327,6 +1330,7 @@ class Radix
 			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 			{
 				$table_users->addOption('charset', $charset);
+				$table_users->addOption('collate', $collate);
 			}
 			$table_users->addColumn('user_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 			$table_users->addColumn('name', 'string', ['length' => 100, 'default' => '']);
@@ -1342,6 +1346,11 @@ class Radix
 		if ( ! $schema->hasTable($this->getTable('_images')))
 		{
 			$table_images = $schema->createTable($this->getTable('_images'));
+			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
+			{
+				$table_images->addOption('charset', 'utf8');
+				$table_images->addOption('collate', 'utf8_general_ci');
+			}
 			$table_images->addColumn('media_id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 			$table_images->addColumn('media_hash', 'string', ['length' => 25]);
 			$table_images->addColumn('media', 'string', ['length' => 20, 'notnull' => false]);
@@ -1358,6 +1367,11 @@ class Radix
 		if ( ! $schema->hasTable($this->getTable('_daily')))
 		{
 			$table_daily = $schema->createTable($this->getTable('_daily'));
+			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
+			{
+				$table_daily->addOption('charset', 'utf8');
+				$table_daily->addOption('collate', 'utf8_general_ci');
+			}
 			$table_daily->addColumn('day', 'integer', ['unsigned' => true]);
 			$table_daily->addColumn('posts', 'integer', ['unsigned' => true]);
 			$table_daily->addColumn('images', 'integer', ['unsigned' => true]);
@@ -1374,6 +1388,7 @@ class Radix
 			if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 			{
 				$table_extra->addOption('charset', $charset);
+				$table_extra->addOption('collate', $collate);
 			}
 			$table_extra->addColumn('extra_id', 'integer', ['unsigned' => true]);
 			$table_extra->addColumn('json', 'text', ['length' => 65532, 'notnull' => false]);

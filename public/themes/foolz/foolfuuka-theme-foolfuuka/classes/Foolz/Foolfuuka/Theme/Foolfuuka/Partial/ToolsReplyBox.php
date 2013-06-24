@@ -33,11 +33,11 @@ class ToolsReplyBox extends \Foolz\Theme\View
 
 					<div class="progress progress-info progress-striped active" style="height:8px; margin-top:0px; margin-bottom: 3px; background: #fff; width: 660px; opacity: 0;"><div class="bar" style="width: 0%"></div></div>
 
-					<?php /*<label class="comment_label" for="reply_chennodiscursus"><?= __('Comment') ?></label>*/ ?>
+					<?php /*<label class="comment_label" for="reply_chennodiscursus"><?= _i('Comment') ?></label>*/ ?>
 					<div class="pull-left">
 
 						<div class="input-prepend">
-							<label class="add-on" for="reply_talkingde"><?= __('Subject') ?></label><?php
+							<label class="add-on" for="reply_talkingde"><?= _i('Subject') ?></label><?php
 							echo \Form::input([
 								'name' => 'reply_talkingde',
 								'id' => 'reply_talkingde',
@@ -46,7 +46,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 						</div>
 
 						<div class="input-prepend">
-							<label class="add-on" for="reply_bokunonome"><?= __('Name') ?></label><?php
+							<label class="add-on" for="reply_bokunonome"><?= _i('Name') ?></label><?php
 							echo \Form::input([
 								'name' => 'name',
 								'id' => 'reply_name_yep',
@@ -62,7 +62,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 						</div>
 
 						<div class="input-prepend">
-							<label class="add-on" for="reply_elitterae"><?= __('E-mail') ?></label><?php
+							<label class="add-on" for="reply_elitterae"><?= _i('E-mail') ?></label><?php
 							echo \Form::input([
 								'name' => 'email',
 								'id' => 'reply_email_yep',
@@ -78,7 +78,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 						</div>
 
 						<div class="input-prepend">
-							<label class="add-on" for="reply_nymphassword"><?= __('Password') ?></label><?php
+							<label class="add-on" for="reply_nymphassword"><?= _i('Password') ?></label><?php
 							echo \Form::password([
 								'name' => 'reply_nymphassword',
 								'id' => 'reply_nymphassword',
@@ -90,19 +90,19 @@ class ToolsReplyBox extends \Foolz\Theme\View
 
 						<?php if ( ! $this->getBuilderParamManager()->getParam('disable_image_upload', false)) : ?>
 						<div class="input-prepend">
-							<label class="add-on" for="file_image"><?= __('File') ?></label><input type="file" name="file_image" id="file_image" />
+							<label class="add-on" for="file_image"><?= _i('File') ?></label><input type="file" name="file_image" id="file_image" />
 						</div>
 						<?php endif; ?>
 						<?php
-						$postas = ['N' => __('User')];
+						$postas = ['N' => _i('User')];
 
-						if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = __('Moderator');
-						if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = __('Administrator');
-						if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = __('Developer');
+						if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = _i('Moderator');
+						if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = _i('Administrator');
+						if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = _i('Developer');
 						if (count($postas) > 1) :
 							?>
 							<div class="input-prepend">
-								<label class="add-on" for="reply_postas"><?= __('Post As') ?></label>
+								<label class="add-on" for="reply_postas"><?= _i('Post As') ?></label>
 								<?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
 							</div>
 							<?php endif; ?>
@@ -118,7 +118,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 						echo \Form::textarea([
 							'name' => 'reply_chennodiscursus',
 							'id' => 'reply_chennodiscursus',
-							'placeholder' => ( ! $radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
+							'placeholder' => ( ! $radix->archive && isset($thread_dead) && $thread_dead) ? _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
 							'rows' => 3,
 							'style' => 'height:132px; width:320px;'
 						]);
@@ -129,7 +129,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 							$submit_array = [
 								'data-function' => 'comment',
 								'name' => 'reply_gattai',
-								'value' => __('Submit'),
+								'value' => _i('Submit'),
 								'class' => 'btn btn-primary',
 							];
 
@@ -140,14 +140,14 @@ class ToolsReplyBox extends \Foolz\Theme\View
 								$submit_array = [
 									'data-function' => 'comment',
 									'name' => 'reply_gattai_spoilered',
-									'value' => __('Submit Spoilered'),
+									'value' => _i('Submit Spoilered'),
 									'class' => 'btn',
 								];
 
 								echo \Form::submit($submit_array);
 							}
 
-							echo \Form::reset(['class' => 'btn', 'name' => 'reset', 'value' => __('Reset')]);
+							echo \Form::reset(['class' => 'btn', 'name' => 'reset', 'value' => _i('Reset')]);
 							?>
 						</div>
 					</div>
@@ -165,10 +165,10 @@ class ToolsReplyBox extends \Foolz\Theme\View
 						<?php if (\ReCaptcha::available()) : ?>
 
 						<div class="recaptcha_widget" style="display:none">
-							<div><p><?= e(__('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
+							<div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
 							<div id="recaptcha_image" style="background: #fff; border: 1px solid #ccc; padding: 3px 6px; margin: 4px 0;"></div>
 							<div class="input-prepend">
-								<label class="add-on" for="recaptcha_response_field"><?= e(__('Solution')) ?></label>
+								<label class="add-on" for="recaptcha_response_field"><?= e(_i('Solution')) ?></label>
 								<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
 							</div>
 							<div class="btn-group">

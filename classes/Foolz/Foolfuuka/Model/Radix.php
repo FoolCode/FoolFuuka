@@ -84,7 +84,7 @@ class Radix
 					{
 						return [
 							'error_code' => 'ID_NOT_FOUND',
-							'error' => __('Couldn\'t find the board with the submitted ID.'),
+							'error' => _i('Couldn\'t find the board with the submitted ID.'),
 							'critical' => true
 						];
 					}
@@ -95,18 +95,18 @@ class Radix
 			'name' => [
 				'database' => true,
 				'type' => 'input',
-				'label' => __('Name'),
-				'help' => __('Insert the name of the board normally shown as title.'),
-				'placeholder' => __('Required'),
+				'label' => _i('Name'),
+				'help' => _i('Insert the name of the board normally shown as title.'),
+				'placeholder' => _i('Required'),
 				'class' => 'span3',
 				'validation' => 'required|max_length[128]'
 			],
 			'shortname' => [
 				'database' => true,
 				'type' => 'input',
-				'label' => __('Shortname'),
-				'help' => __('Insert the shorter name of the board. Reserved: "admin".'),
-				'placeholder' => __('Req.'),
+				'label' => _i('Shortname'),
+				'help' => _i('Insert the shorter name of the board. Reserved: "admin".'),
+				'placeholder' => _i('Req.'),
 				'class' => 'span1',
 				'validation' => 'required|max_length[5]|valid_string[alpha,dashes,numeric]',
 				'validation_func' => function($input, $form_internal)
@@ -127,7 +127,7 @@ class Radix
 						{
 							return [
 								'error_code' => 'ID_NOT_FOUND',
-								'error' => __('Couldn\'t find the board with the submitted ID.')
+								'error' => _i('Couldn\'t find the board with the submitted ID.')
 							];
 						}
 
@@ -152,7 +152,7 @@ class Radix
 					{
 						return [
 							'error_code' => 'ALREADY_EXISTS',
-							'error' => __('The shortname is already used for another board.')
+							'error' => _i('The shortname is already used for another board.')
 						];
 					}
 				}
@@ -161,10 +161,10 @@ class Radix
 				'database' => true,
 				'boards_preferences' => true,
 				'type' => 'textarea',
-				'label' => __('General rules'),
-				'help' => __('Full board rules displayed in a separate page, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
+				'label' => _i('General rules'),
+				'help' => _i('Full board rules displayed in a separate page, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
 				'class' => 'span6',
-				'placeholder' => __('MarkDown goes here')
+				'placeholder' => _i('MarkDown goes here')
 			],
 			'separator-3' => [
 				'type' => 'separator'
@@ -173,16 +173,16 @@ class Radix
 				'database' => true,
 				'boards_preferences' => true,
 				'type' => 'textarea',
-				'label' => __('Posting rules'),
-				'help' => __('Posting rules displayed in the posting area, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
+				'label' => _i('Posting rules'),
+				'help' => _i('Posting rules displayed in the posting area, in <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">MarkDown</a> syntax. Will not display if left empty.'),
 				'class' => 'span6',
-				'placeholder' => __('MarkDown goes here')
+				'placeholder' => _i('MarkDown goes here')
 			],
 			'separator-1' => ['type' => 'separator'],
 			'threads_per_page' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'label' => __('Maximum number of threads to display in the index pages'),
+				'label' => _i('Maximum number of threads to display in the index pages'),
 				'type' => 'input',
 				'class' => 'span1',
 				'validation' => 'trim|required|valid_string[numeric]',
@@ -190,17 +190,17 @@ class Radix
 			'archive' => [
 				'database' => true,
 				'type' => 'checkbox',
-				'help' => __('Is this a 4chan archiving board?'),
+				'help' => _i('Is this a 4chan archiving board?'),
 				'sub' => [
 					'paragraph' => [
 						'type' => 'paragraph',
-						'help' => __('Options for archive boards')
+						'help' => _i('Options for archive boards')
 					],
 					'board_url' => [
 						'database' => true,
 						'boards_preferences' => true,
 						'type' => 'input',
-						'label' => __('URL to the 4chan board (facultative)'),
+						'label' => _i('URL to the 4chan board (facultative)'),
 						'placeholder' => 'http://boards.4chan.org/'.(is_object($radix) ? $radix->shortname : 'shortname').'/',
 						'class' => 'span4',
 						'validation' => 'trim|max_length[256]'
@@ -209,7 +209,7 @@ class Radix
 						'database' => true,
 						'boards_preferences' => true,
 						'type' => 'input',
-						'label' => __('URL to the board thumbnails (facultative)'),
+						'label' => _i('URL to the board thumbnails (facultative)'),
 						'placeholder' => 'http://0.thumbs.4chan.org/'.(is_object($radix) ? $radix->shortname : 'shortname').'/',
 						'class' => 'span4',
 						'validation' => 'trim|max_length[256]'
@@ -218,7 +218,7 @@ class Radix
 						'database' => true,
 						'boards_preferences' => true,
 						'type' => 'input',
-						'label' => __('URL to the board images (facultative)'),
+						'label' => _i('URL to the board images (facultative)'),
 						'placeholder' => 'http://images.4chan.org/'.(is_object($radix) ? $radix->shortname : 'shortname').'/',
 						'class' => 'span4',
 						'validation' => 'trim|max_length[256]'
@@ -227,8 +227,8 @@ class Radix
 						'database' => true,
 						'boards_preferences' => true,
 						'type' => 'input',
-						'label' => __('Image fetching workers'),
-						'help' => __('The number of workers that will fetch full images. Set to zero not to fetch them.'),
+						'label' => _i('Image fetching workers'),
+						'help' => _i('The number of workers that will fetch full images. Set to zero not to fetch them.'),
 						'placeholder' => 5,
 						'class' => 'span1',
 						'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
@@ -237,8 +237,8 @@ class Radix
 						'database' => true,
 						'boards_preferences' => true,
 						'type' => 'input',
-						'label' => __('Thumbnail fetching workers'),
-						'help' => __('The number of workers that will fetch thumbnails'),
+						'label' => _i('Thumbnail fetching workers'),
+						'help' => _i('The number of workers that will fetch thumbnails'),
 						'placeholder' => 5,
 						'class' => 'span1',
 						'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
@@ -247,8 +247,8 @@ class Radix
 						'database' => true,
 						'boards_preferences' => true,
 						'type' => 'input',
-						'label' => __('Thread fetching workers'),
-						'help' => __('The number of workers that fetch new threads'),
+						'label' => _i('Thread fetching workers'),
+						'help' => _i('The number of workers that fetch new threads'),
 						'placeholder' => 5,
 						'class' => 'span1',
 						'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
@@ -257,7 +257,7 @@ class Radix
 						'database' => true,
 						'boards_preferences' => true,
 						'type' => 'hidden',
-						'label' => __('Minutes to refresh the thread'),
+						'label' => _i('Minutes to refresh the thread'),
 						'placeholder' => 3,
 						'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
 					],
@@ -265,8 +265,8 @@ class Radix
 						'database' => true,
 						'boards_preferences' => true,
 						'type' => 'textarea',
-						'label' => __('Thread refresh rate'),
-						'help' => __('Array of refresh rates in seconds per page in JSON format'),
+						'label' => _i('Thread refresh rate'),
+						'help' => _i('Array of refresh rates in seconds per page in JSON format'),
 						'placeholder' => htmlspecialchars('[{"delay": 30, "pages": [0, 1, 2]},'.
 							'{"delay": 120, "pages": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},'.
 							'{"delay": 30, "pages": [13, 14, 15]}]'),
@@ -284,7 +284,7 @@ class Radix
 							{
 								return [
 									'error_code' => 'NOT_JSON',
-									'error' => __('The JSON inputted is not valid.')
+									'error' => _i('The JSON inputted is not valid.')
 								];
 							}
 						}
@@ -293,20 +293,20 @@ class Radix
 				'sub_inverse' => [
 					'paragraph' => [
 						'type' => 'paragraph',
-						'help' => __('Options for normal boards')
+						'help' => _i('Options for normal boards')
 					],
 					'op_image_upload_necessity' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'help' => __('Do users have to upload an image when starting a new thread?'),
+						'help' => _i('Do users have to upload an image when starting a new thread?'),
 						'type' => 'select',
 						'default_value' => 'always',
-						'options' => ['always' => __('Always'), 'optional' => __('Optional'), 'never' => __('Never')]
+						'options' => ['always' => _i('Always'), 'optional' => _i('Optional'), 'never' => _i('Never')]
 					],
 					'thumbnail_op_width' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('Opening post thumbnail maximum width after resizing'),
+						'label' => _i('Opening post thumbnail maximum width after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
@@ -314,7 +314,7 @@ class Radix
 					'thumbnail_op_height' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('Opening post thumbnail maximum height after resizing'),
+						'label' => _i('Opening post thumbnail maximum height after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
@@ -322,7 +322,7 @@ class Radix
 					'thumbnail_reply_width' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('Reply thumbnail maximum width after resizing'),
+						'label' => _i('Reply thumbnail maximum width after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
@@ -330,7 +330,7 @@ class Radix
 					'thumbnail_reply_height' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('Reply thumbnail maximum height after resizing'),
+						'label' => _i('Reply thumbnail maximum height after resizing'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
@@ -338,7 +338,7 @@ class Radix
 					'max_image_size_kilobytes' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('Full image maximum size in kilobytes'),
+						'label' => _i('Full image maximum size in kilobytes'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
@@ -346,7 +346,7 @@ class Radix
 					'max_image_size_width' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('Full image maximum width in pixels'),
+						'label' => _i('Full image maximum width in pixels'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
@@ -354,7 +354,7 @@ class Radix
 					'max_image_size_height' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('Full image maximum height in pixels'),
+						'label' => _i('Full image maximum height in pixels'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
@@ -362,7 +362,7 @@ class Radix
 					'max_posts_count' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('The maximum amount of posts before a thread "dies".'),
+						'label' => _i('The maximum amount of posts before a thread "dies".'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]',
@@ -370,7 +370,7 @@ class Radix
 					'max_images_count' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('The maximum amount of images in replies before posting more is prohibited'),
+						'label' => _i('The maximum amount of images in replies before posting more is prohibited'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|valid_string[numeric]',
@@ -378,7 +378,7 @@ class Radix
 					'min_image_repost_time' => [
 						'database' => true,
 						'boards_preferences' => true,
-						'label' => __('The minimum time in seconds to repost the same image (0 means no limit, -1 means never allowing a repost)'),
+						'label' => _i('The minimum time in seconds to repost the same image (0 means no limit, -1 means never allowing a repost)'),
 						'type' => 'input',
 						'class' => 'span1',
 						'validation' => 'trim|required|numeric_min[-2]',
@@ -388,7 +388,7 @@ class Radix
 			'anonymous_default_name' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'label' => __('The default name when an user doesn\'t enter a name'),
+				'label' => _i('The default name when an user doesn\'t enter a name'),
 				'type' => 'input',
 				'class' => 'span3',
 				'validation' => 'trim|required',
@@ -396,7 +396,7 @@ class Radix
 			'max_comment_characters_allowed' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'label' => __('The maximum number of characters allowed in the comment.'),
+				'label' => _i('The maximum number of characters allowed in the comment.'),
 				'type' => 'input',
 				'class' => 'span1',
 				'validation' => 'trim|required|valid_string[numeric]'
@@ -404,7 +404,7 @@ class Radix
 			'max_comment_lines_allowed' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'label' => __('The maximum number of lines allowed in the comment.'),
+				'label' => _i('The maximum number of lines allowed in the comment.'),
 				'type' => 'input',
 				'class' => 'span1',
 				'validation' => 'trim|required|valid_string[numeric]'
@@ -412,7 +412,7 @@ class Radix
 			'cooldown_new_comment' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'label' => __('This is the time users must wait between posts.'),
+				'label' => _i('This is the time users must wait between posts.'),
 				'type' => 'input',
 				'class' => 'span1',
 				'validation' => 'trim|required|valid_string[numeric]'
@@ -420,7 +420,7 @@ class Radix
 			'cooldown_new_thread' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'label' => __('This is the time users must wait between new threads.'),
+				'label' => _i('This is the time users must wait between new threads.'),
 				'type' => 'input',
 				'class' => 'span1',
 				'validation' => 'trim|required|valid_string[numeric]'
@@ -428,54 +428,54 @@ class Radix
 			'transparent_spoiler' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'help' => __('Should the image spoilers be semi-transparent? (mods and admins have it always on for moderation)'),
+				'help' => _i('Should the image spoilers be semi-transparent? (mods and admins have it always on for moderation)'),
 				'type' => 'checkbox',
 			],
 			'enable_flags' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'help' => __('Display flags? (needs GeoIP)'),
+				'help' => _i('Display flags? (needs GeoIP)'),
 				'type' => 'checkbox',
 			],
 			'enable_animated_gif_thumbs' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'help' => __('Enables the CPU-heavy animated gif thumbnail creation'),
+				'help' => _i('Enables the CPU-heavy animated gif thumbnail creation'),
 				'type' => 'checkbox',
 			],
 			'display_exif' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'help' => __('Show the EXIF data (EXIF data is saved in the database regardless)'),
+				'help' => _i('Show the EXIF data (EXIF data is saved in the database regardless)'),
 				'type' => 'checkbox',
 				'disabled' => 'disabled',
 			],
 			'enable_poster_hash' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'help' => __('Enable poster hashes, an IP-based code to temporarily distinguish Anonymous users'),
+				'help' => _i('Enable poster hashes, an IP-based code to temporarily distinguish Anonymous users'),
 				'type' => 'checkbox',
 			],
 			'disable_ghost' => [
 				'database' => true,
 				'boards_preferences' => true,
-				'help' => __('Don\'t allow ghost posting (disallows infinite replying)'),
+				'help' => _i('Don\'t allow ghost posting (disallows infinite replying)'),
 				'type' => 'checkbox',
 			],
 			'hide_thumbnails' => [
 				'database' => true,
 				'type' => 'checkbox',
-				'help' => __('Hide the thumbnails?')
+				'help' => _i('Hide the thumbnails?')
 			],
 			'sphinx' => [
 				'database' => true,
 				'type' => 'checkbox',
-				'help' => __('Use SphinxSearch as search engine?')
+				'help' => _i('Use SphinxSearch as search engine?')
 			],
 			'hidden' => [
 				'database' => true,
 				'type' => 'checkbox',
-				'help' => __('Hide the board from public access? (only admins and mods will be able to browse it)')
+				'help' => _i('Hide the board from public access? (only admins and mods will be able to browse it)')
 			],
 		];
 
@@ -489,7 +489,7 @@ class Radix
 			'submit' => [
 				'type' => 'submit',
 				'class' => 'btn-primary',
-				'value' => __('Submit')
+				'value' => _i('Submit')
 			],
 			'close' => ['type' => 'close']
 		]);

@@ -40,7 +40,7 @@ class GeoipRegionLock
 				}
 
 				$result->set([
-					'error' => __('Your nation has been blocked from posting.') .
+					'error' => _i('Your nation has been blocked from posting.') .
 						'<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
 				]);
 			}
@@ -54,7 +54,7 @@ class GeoipRegionLock
 					if (strtolower(trim($disal)) == $country)
 					{
 						$result->set([
-							'error' => __('Your nation has been blocked from posting.') .
+							'error' => _i('Your nation has been blocked from posting.') .
 								'<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
 						]);
 					}

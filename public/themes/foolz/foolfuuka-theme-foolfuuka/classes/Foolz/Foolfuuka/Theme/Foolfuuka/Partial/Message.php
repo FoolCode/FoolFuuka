@@ -11,7 +11,7 @@ class Message extends \Foolz\Theme\View
 
 		?>
 		<div class="alert alert-<?= $level ?>" style="margin:15%;">
-			<h4 class="alert-heading"><?= __('Message') ?></h4>
+			<h4 class="alert-heading"><?= _i('Message') ?></h4>
 			<?= $message ?>
 		</div>
 		<?php

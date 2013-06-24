@@ -50,7 +50,7 @@
 				'type' => 'input',
 				'class' => 'span3',
 				'label' => 'Nations allowed to post comments',
-				'help' => __('Comma separated list of GeoIP 2-letter nation codes.'),
+				'help' => _i('Comma separated list of GeoIP 2-letter nation codes.'),
 				'default_value' => false
 			];
 
@@ -60,7 +60,7 @@
 				'type' => 'input',
 				'class' => 'span3',
 				'label' => 'Nations disallowed to post comments',
-				'help' => __('Comma separated list of GeoIP 2-letter nation codes.'),
+				'help' => _i('Comma separated list of GeoIP 2-letter nation codes.'),
 				'default_value' => false
 			];
 			$result->setParam('structure', $structure)->set($structure);

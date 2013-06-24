@@ -300,7 +300,7 @@ class Board
 
 		if ($page < 1)
 		{
-			throw new BoardException(__('The page number is not valid.'));
+			throw new BoardException(_i('The page number is not valid.'));
 		}
 
 		$this->setoptions('page', $page);
@@ -714,7 +714,7 @@ class Board
 
 		if ( ! ctype_digit((string) $num) || $num < 1)
 		{
-			throw new BoardMalformedInputException(__('The thread number is invalid.'));
+			throw new BoardMalformedInputException(_i('The thread number is invalid.'));
 		}
 
 		$this->setOptions('num', $num);
@@ -897,7 +897,7 @@ class Board
 
 		if ( ! count($query_result))
 		{
-			throw new BoardThreadNotFoundException(__('There\'s no such a thread.'));
+			throw new BoardThreadNotFoundException(_i('There\'s no such a thread.'));
 		}
 
 		if ($this->api)
@@ -1027,7 +1027,7 @@ class Board
 		if ( ! $thread_op_present)
 		{
 			// this really should not happen here
-			throw new BoardThreadNotFoundException(__('The thread you were looking for can\'t be found.'));
+			throw new BoardThreadNotFoundException(_i('The thread you were looking for can\'t be found.'));
 		}
 
 		$result = [
@@ -1117,7 +1117,7 @@ class Board
 		}
 		else
 		{
-			throw new BoardMissingOptionsException(__('No posts found with the submitted options.'));
+			throw new BoardMissingOptionsException(_i('No posts found with the submitted options.'));
 		}
 
 		$result = $query
@@ -1128,7 +1128,7 @@ class Board
 
 		if ( ! count($result))
 		{
-			throw new BoardPostNotFoundException(__('Post not found.'));
+			throw new BoardPostNotFoundException(_i('Post not found.'));
 		}
 
 		if ($this->api)

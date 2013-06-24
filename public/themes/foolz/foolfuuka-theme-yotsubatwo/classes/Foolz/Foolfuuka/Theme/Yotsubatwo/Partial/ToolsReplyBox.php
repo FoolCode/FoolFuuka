@@ -33,7 +33,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 		<table id="reply">
 			<tbody>
 			<tr>
-				<td><?= __('Name') ?></td>
+				<td><?= _i('Name') ?></td>
 				<td><?php
 					echo \Form::input([
 						'name' => 'name',
@@ -49,7 +49,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 					?></td>
 			</tr>
 			<tr>
-				<td><?= __('E-mail') ?></td>
+				<td><?= _i('E-mail') ?></td>
 				<td><?php
 					echo \Form::input([
 						'name' => 'email',
@@ -65,7 +65,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 					?></td>
 			</tr>
 			<tr>
-				<td><?= __('Subject') ?></td>
+				<td><?= _i('Subject') ?></td>
 				<td>
 					<?php
 					echo \Form::input([
@@ -78,7 +78,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 					$submit_array = [
 						'data-function' => 'comment',
 						'name' => 'reply_gattai',
-						'value' => __('Submit'),
+						'value' => _i('Submit'),
 						'class' => 'btn',
 					];
 
@@ -91,7 +91,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
 				</td>
 			</tr>
 			<tr>
-				<td><?= __('Comment') ?></td>
+				<td><?= _i('Comment') ?></td>
 				<td><?php
 					echo \Form::textarea([
 						'name' => 'reply',
@@ -102,14 +102,14 @@ class ToolsReplyBox extends \Foolz\Theme\View
 					echo \Form::textarea([
 						'name' => 'reply_chennodiscursus',
 						'id' => 'reply_chennodiscursus',
-						'placeholder' => ( ! $radix->archive && isset($thread_dead) && $thread_dead) ? __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
+						'placeholder' => ( ! $radix->archive && isset($thread_dead) && $thread_dead) ? _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
 					]);
 					?></td>
 			</tr>
 				<?php if (\ReCaptcha::available()) : ?>
 			<tr class="recaptcha_widget" style="display:none">
-				<td><?= __('Verification') ?></td>
-				<td><div><p><?= e(__('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
+				<td><?= _i('Verification') ?></td>
+				<td><div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
 					<div id="recaptcha_image" style="background: #fff; border: 1px solid #ccc; padding: 3px 6px; margin: 4px 0;"></div>
 					<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
 					<div class="btn-group">
@@ -130,16 +130,16 @@ class ToolsReplyBox extends \Foolz\Theme\View
 				<?php endif; ?>
 				<?php if ( ! $this->getBuilderParamManager()->getParam('disable_image_upload', false)) : ?>
 			<tr>
-				<td><?= __('File') ?></td>
+				<td><?= _i('File') ?></td>
 				<td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']) ?></td>
 			</tr>
 			<tr>
-				<td><?= __('Progress') ?></td>
+				<td><?= _i('Progress') ?></td>
 				<td><div class="progress progress-info progress-striped active" style="width: 300px; margin-bottom: 2px"><div class="bar" style="width: 0%"></div></div></td>
 			</tr>
 				<?php endif; ?>
 			<tr>
-				<td><?= __('Password') ?></td>
+				<td><?= _i('Password') ?></td>
 				<td><?=  \Form::password([
 					'name' => 'reply_nymphassword',
 					'id' => 'reply_nymphassword',
@@ -151,15 +151,15 @@ class ToolsReplyBox extends \Foolz\Theme\View
 			</tr>
 
 				<?php
-				$postas = ['N' => __('User')];
+				$postas = ['N' => _i('User')];
 
-				if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = __('Moderator');
-				if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = __('Administrator');
-				if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = __('Developer');
+				if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = _i('Moderator');
+				if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = _i('Administrator');
+				if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = _i('Developer');
 				if (count($postas) > 1) :
 					?>
 				<tr>
-					<td><?= __('Post as') ?></td>
+					<td><?= _i('Post as') ?></td>
 					<td><?= \Form::select('reply_postas', 'User', $postas, array('id' => 'reply_postas')); ?></td>
 				</tr>
 					<?php endif; ?>

@@ -75,13 +75,13 @@ class Chan extends \Foolz\Theme\View
 		<?php
 			$board_urls = array();
 
-			$board_urls[] = '<a href="' . \Uri::base() . '">' . strtolower(__('Index')) . '</a>';
+			$board_urls[] = '<a href="' . \Uri::base() . '">' . strtolower(_i('Index')) . '</a>';
 			if ($radix)
 			{
-				$board_urls[] = '<a href="' . \Uri::create($radix->shortname) . '">' . strtolower(__('Top')) . '</a>';
-				$board_urls[] = '<a href="' . \Uri::create(array($radix->shortname, 'statistics')) . '">' . strtolower(__('Statistics')) . '</a>';
+				$board_urls[] = '<a href="' . \Uri::create($radix->shortname) . '">' . strtolower(_i('Top')) . '</a>';
+				$board_urls[] = '<a href="' . \Uri::create(array($radix->shortname, 'statistics')) . '">' . strtolower(_i('Statistics')) . '</a>';
 			}
-			$board_urls[] = '<a href="https://github.com/FoolCode/FoOlFuuka/issues">' . strtolower(__('Report Bug')) . '</a>';
+			$board_urls[] = '<a href="https://github.com/FoolCode/FoOlFuuka/issues">' . strtolower(_i('Report Bug')) . '</a>';
 
 			echo '[ ' . implode(' / ', $board_urls) . ' ]';
 		?>
@@ -141,15 +141,15 @@ class Chan extends \Foolz\Theme\View
 			<table style="float: left;">
 				<tbody>
 					<tr>
-						<td colspan="7" class="theader"><?= __('Navigation') ?></td>
+						<td colspan="7" class="theader"><?= _i('Navigation') ?></td>
 					</tr>
 					<tr>
-						<td class="postblock"><?= __('View Posts') ?></td>
+						<td class="postblock"><?= _i('View Posts') ?></td>
 						<td>
 							<?php if ($pagination['current_page'] == 1) : ?>
-								[<?= __('Prev') ?>]
+								[<?= _i('Prev') ?>]
 							<?php else : ?>
-								[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] - 1) ?>/"><?= __('Prev') ?></a>]
+								[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] - 1) ?>/"><?= _i('Prev') ?></a>]
 							<?php endif; ?>
 
 							<?php
@@ -198,9 +198,9 @@ class Chan extends \Foolz\Theme\View
 							?>
 
 							<?php if ($pagination['total'] == $pagination['current_page']) : ?>
-								[<?= __('Next') ?>]
+								[<?= _i('Next') ?>]
 							<?php else : ?>
-								[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] + 1) ?>/"><?= __('Next') ?></a>]
+								[<a href="<?= $pagination['base_url'] . ($pagination['current_page'] + 1) ?>/"><?= _i('Next') ?></a>]
 							<?php endif; ?>
 						</td>
 					</tr>

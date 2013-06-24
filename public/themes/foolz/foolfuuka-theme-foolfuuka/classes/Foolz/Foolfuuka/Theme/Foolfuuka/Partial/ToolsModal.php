@@ -18,8 +18,8 @@ class ToolsModal extends \Foolz\Theme\View
 				<div class="modal-information"></div>
 			</div>
 			<div class="modal-footer">
-				<input type="button" value="<?= htmlspecialchars(__('Submit')) ?>" href="#" class="btn btn-primary submitModal" data-function="submitModal" data-report="0" data-delete="0">
-				<input type="button" value="<?= htmlspecialchars(__('Cancel')) ?>" href="#" class="btn secondary closeModal" data-function="closeModal">
+				<input type="button" value="<?= htmlspecialchars(_i('Submit')) ?>" href="#" class="btn btn-primary submitModal" data-function="submitModal" data-report="0" data-delete="0">
+				<input type="button" value="<?= htmlspecialchars(_i('Cancel')) ?>" href="#" class="btn secondary closeModal" data-function="closeModal">
 			</div>
 		</div>
 		<?php

@@ -45,13 +45,13 @@ class BoardComment extends \Foolz\Theme\View
 							<span class="postertrip<?= ($p->capcode == 'M') ? ' mod' : '' ?><?= ($p->capcode == 'A') ? ' admin' : '' ?><?= ($p->capcode == 'D') ? ' developer' : '' ?>"><?= $p->getTripProcessed() ?></span>
 							<span class="poster_hash"><?php if ($p->getPosterHashProcessed()) : ?>ID:<?= $p->getPosterHashProcessed() ?><?php endif; ?></span>
 							<?php if ($p->capcode == 'M') : ?>
-		    <span class="postername mod">## <?= __('Mod') ?></span>
+		    <span class="postername mod">## <?= _i('Mod') ?></span>
 			<?php endif ?>
 							<?php if ($p->capcode == 'A') : ?>
-		    <span class="postername admin">## <?= __('Admin') ?></span>
+		    <span class="postername admin">## <?= _i('Admin') ?></span>
 			<?php endif ?>
 							<?php if ($p->capcode == 'D') : ?>
-		    <span class="postername admin">## <?= __('Developers') ?></span>
+		    <span class="postername admin">## <?= _i('Developers') ?></span>
 			<?php endif ?>
 							<?= gmdate('D d M H:i:s Y', $p->getOriginalTimestamp()) ?>
 							<?php if ($p->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
@@ -62,9 +62,9 @@ class BoardComment extends \Foolz\Theme\View
 						<a class="js" href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#' . $p->num . (($p->subnum > 0) ? '_' . $p->subnum : '') ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?>\n')"><?= $p->num . (($p->subnum > 0) ? ',' . $p->subnum : '') ?></a>
 						<?php endif; ?>
 
-						<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= __('This post was submitted as a "ghost" reply.') ?>"/><?php endif ?>
-						<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= __('The image in this post has been marked as a spoiler.') ?>"/><?php endif ?>
-						<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= __('This post was delete before its lifetime expired.') ?>"/><?php endif ?>
+						<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= _i('This post was submitted as a "ghost" reply.') ?>"/><?php endif ?>
+						<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= _i('The image in this post has been marked as a spoiler.') ?>"/><?php endif ?>
+						<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This post was delete before its lifetime expired.') ?>"/><?php endif ?>
 
 						<?php if (isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?= \Uri::create([$p->radix->shortname, 'thread', $p->thread_num]) . '#' . $p->num . (($p->subnum) ? '_' . $p->subnum : '') ?>">View</a>]<?php endif; ?>
 
@@ -72,12 +72,12 @@ class BoardComment extends \Foolz\Theme\View
 						<?php if ($p->media !== null) : ?>
 			<?php if ($p->media->getMediaStatus() !== 'banned') : ?>
 		        <span>
-								<?= __('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->getMediaFilenameProcessed(); ?>
+								<?= _i('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->getMediaFilenameProcessed(); ?>
 					<?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
 							</span>
 
 				<?php if ( ! $p->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
-		            [<a href="<?= \Uri::create($p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>"><?= __('View Same') ?></a>]
+		            [<a href="<?= \Uri::create($p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a>]
 		            [<a href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink() ?>">Google</a>]
 		            [<a href="http://iqdb.org/?url=<?= $p->media->getThumbLink() ?>">iqdb</a>]
 		            [<a href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink() ?>">SauceNAO</a>]
@@ -101,7 +101,7 @@ class BoardComment extends \Foolz\Theme\View
 				<?php endif; ?>
 			<?php endif; ?>
 						<div class="quoted-by" style="display: <?= $p->getBacklinks() ? 'block' : 'none' ?>">
-							<?= __('Quoted By:') ?> <?= $p->getBacklinks() ? implode(' ', $p->getBacklinks()) : '' ?>
+							<?= _i('Quoted By:') ?> <?= $p->getBacklinks() ? implode(' ', $p->getBacklinks()) : '' ?>
 		                </div>
 						<blockquote><p><?= $p->getCommentProcessed() ?></p></blockquote>
 					</td>

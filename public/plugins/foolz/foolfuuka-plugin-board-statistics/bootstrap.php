@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Route;
 		if (\Auth::has_access('maccess.admin'))
 		{
 			\Plugins::registerSidebarElement('admin', 'plugins', [
-				"content" => ["board_statistics/manage" => ["level" => "admin", "name" => __("Board Statistics"), "icon" => 'icon-bar-chart']]
+				"content" => ["board_statistics/manage" => ["level" => "admin", "name" => _i("Board Statistics"), "icon" => 'icon-bar-chart']]
 			]);
 
 			$framework->getRouteCollection()->add(
@@ -63,7 +63,7 @@ use Symfony\Component\Routing\Route;
 				$top_nav = $result->getParam('nav');
 				if (\Radix::getSelected())
 				{
-					$top_nav[] = ['href' => Uri::create([Radix::getSelected()->shortname, 'statistics']), 'text' => __('Stats')];
+					$top_nav[] = ['href' => Uri::create([Radix::getSelected()->shortname, 'statistics']), 'text' => _i('Stats')];
 					$result->set($top_nav);
 					$result->setParam('nav', $top_nav);
 				}

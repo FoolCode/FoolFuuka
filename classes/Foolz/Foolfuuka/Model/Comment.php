@@ -952,7 +952,7 @@ class Comment
 
 			if ($this->delpass !== $hashed)
 			{
-				throw new CommentDeleteWrongPassException(__('The password you inserted didn\'t match the deletion password.'));
+				throw new CommentDeleteWrongPassException(_i('The password you inserted didn\'t match the deletion password.'));
 			}
 		}
 

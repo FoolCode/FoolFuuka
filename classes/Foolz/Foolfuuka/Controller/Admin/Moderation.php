@@ -22,7 +22,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			\Response::redirect('admin');
 		}
 
-		$this->param_manager->setParam('controller_title', __('Moderation'));
+		$this->param_manager->setParam('controller_title', _i('Moderation'));
 	}
 
 	/**
@@ -44,7 +44,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 	 */
 	public function action_reports()
 	{
-		$this->param_manager->setParam('method_title', [__('Manage'), __('Reports')]);
+		$this->param_manager->setParam('method_title', [_i('Manage'), _i('Reports')]);
 
 		// this has already been forged in the foolfuuka bootstrap
 		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
@@ -99,9 +99,9 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 				'missing_image_height' => 150,
 			],
 			'gettext' => [
-				'submit_state' => __('Submitting'),
-				'thread_is_real_time' => __('This thread is being displayed in real time.'),
-				'update_now' => __('Update now')
+				'submit_state' => _i('Submitting'),
+				'thread_is_real_time' => _i('This thread is being displayed in real time.'),
+				'update_now' => _i('Update now')
 			]
 		];
 
@@ -117,7 +117,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 
 	public function action_bans($page = 1)
 	{
-		$this->param_manager->setParam('method_title', [__('Manage'), __('Bans')]);
+		$this->param_manager->setParam('method_title', [_i('Manage'), _i('Bans')]);
 
 		if ($page < 1 || ! ctype_digit((string) $page))
 		{
@@ -138,7 +138,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 
 	public function action_appeals($page = 1)
 	{
-		$this->param_manager->setParam('method_title', [__('Manage'), __('Bans'), __('Appeals')]);
+		$this->param_manager->setParam('method_title', [_i('Manage'), _i('Bans'), _i('Appeals')]);
 
 		if ($page < 1 || ! ctype_digit((string) $page))
 		{
@@ -159,7 +159,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 
 	public function action_find_ban($ip = null)
 	{
-		$this->param_manager->setParam('method_title', [__('Manage'), __('Bans')]);
+		$this->param_manager->setParam('method_title', [_i('Manage'), _i('Bans')]);
 
 		if (\Input::post('ip'))
 		{
@@ -210,7 +210,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 
 		if (\Input::post() && ! \Security::check_token())
 		{
-			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
+			\Notices::set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
 		}
 		elseif (\Input::post())
 		{
@@ -218,14 +218,13 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 			{
 				case 'unban':
 					$ban->delete();
-					\Notices::setFlash('success', \Str::tr(__('The poster with IP :ip has been unbanned.'),
-						['ip' => \Foolz\Inet\Inet::dtop($ban->ip)]));
+					\Notices::setFlash('success', _i('The poster with IP %s has been unbanned.', \Foolz\Inet\Inet::dtop($ban->ip)));
 					\Response::redirect('admin/moderation/bans');
 					break;
 
 				case 'reject_appeal':
 					$ban->appealReject();
-					\Notices::setFlash('success', \Str::tr(__('The appeal of the poster with IP :ip has been rejected.'), ['ip' => \Foolz\Inet\Inet::dtop($ban->ip)]));
+					\Notices::setFlash('success', _i('The appeal of the poster with IP %s has been rejected.', \Foolz\Inet\Inet::dtop($ban->ip)));
 					\Response::redirect('admin/moderation/bans');
 					break;
 
@@ -237,15 +236,15 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 		switch ($action)
 		{
 			case 'unban':
-				$this->_views['method_title'] = __('Unbanning').' '.\Foolz\Inet\Inet::dtop($ban->ip);
+				$this->_views['method_title'] = _i('Unbanning').' '.\Foolz\Inet\Inet::dtop($ban->ip);
 				$data['alert_level'] = 'warning';
-				$data['message'] = __('Do you want to unban this user?');
+				$data['message'] = _i('Do you want to unban this user?');
 				break;
 
 			case 'reject_appeal':
-				$this->_views['method_title'] = __('Rejecting appeal for').' '.\Foolz\Inet\Inet::dtop($ban->ip);
+				$this->_views['method_title'] = _i('Rejecting appeal for').' '.\Foolz\Inet\Inet::dtop($ban->ip);
 				$data['alert_level'] = 'warning';
-				$data['message'] = __('Do you want to reject the appeal of this user? He won\'t be able to appeal again.');
+				$data['message'] = _i('Do you want to reject the appeal of this user? He won\'t be able to appeal again.');
 				break;
 
 			default:

@@ -8,8 +8,8 @@ if ( ! defined('DOCROOT'))
 <table class="table table-hover">
 	<thead>
 		<tr>
-			<th class="span8"><?= __('Poster') ?></th>
-			<th class="span2"><?= __('Total Posts') ?></th>
+			<th class="span8"><?= _i('Poster') ?></th>
+			<th class="span2"><?= _i('Total Posts') ?></th>
 		</tr>
 	</thead>
 	<tbody>

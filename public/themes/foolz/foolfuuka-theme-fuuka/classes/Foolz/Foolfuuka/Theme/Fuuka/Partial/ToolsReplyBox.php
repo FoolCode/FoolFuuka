@@ -23,7 +23,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
             <tr>
                 <td class="subreply">
                     <div class="theader">
-						<?= __('Create New Thread') ?>
+						<?= _i('Create New Thread') ?>
                     </div>
 					<?php if (isset($reply_errors)) : ?>
                     <span style="color:red"><?= $reply_errors ?></span>
@@ -31,36 +31,36 @@ class ToolsReplyBox extends \Foolz\Theme\View
                     <table>
                         <tbody>
                         <tr>
-                            <td class="postblock"><?= __('Name') ?></td>
+                            <td class="postblock"><?= _i('Name') ?></td>
                             <td><?php echo \Form::input(['name' => 'NAMAE', 'size' => 63, 'value' => $user_name]) ?></td>
                         </tr>
                         <tr>
-                            <td class="postblock"><?= __('E-mail') ?></td>
+                            <td class="postblock"><?= _i('E-mail') ?></td>
                             <td><?php echo \Form::input(['name' => 'MERU', 'size' => 63, 'value' => $user_email]) ?></td>
                         </tr>
                         <tr>
-                            <td class="postblock"><?= __('Subject') ?></td>
+                            <td class="postblock"><?= _i('Subject') ?></td>
                             <td><?php echo \Form::input(['name' => 'subject', 'size' => 63]) ?></td>
                         </tr>
                         <tr>
-                            <td class="postblock"><?= __('Comment') ?></td>
+                            <td class="postblock"><?= _i('Comment') ?></td>
                             <td><?php echo \Form::textarea(['name' => 'KOMENTO', 'cols' => 48, 'rows' => 4]) ?></td>
                         </tr>
                         <tr>
-                            <td class="postblock"><?= __('File') ?></td>
+                            <td class="postblock"><?= _i('File') ?></td>
                             <td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']) ?></td>
                         </tr>
                         <tr>
-                            <td class="postblock"><?= __('Spoiler') ?></td>
+                            <td class="postblock"><?= _i('Spoiler') ?></td>
                             <td><?php echo \Form::checkbox(['name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1]) ?></td>
                         </tr>
                         <tr>
-                            <td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
+                            <td class="postblock"><?= _i('Password') ?> <a class="tooltip" href="#">[?] <span><?= _i('This is used for file and post deletion.') ?></span></a></td>
                             <td><?php echo \Form::password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]) ?></td>
                         </tr>
 							<?php if (\ReCaptcha::available()) : ?>
                         <tr id="recaptcha_widget">
-                            <td class="postblock"><?= __('Verification') ?><br/>(<?= __('Optional') ?>)</td>
+                            <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
                             <td>
                                 <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
                                 <noscript>
@@ -72,22 +72,22 @@ class ToolsReplyBox extends \Foolz\Theme\View
                         </tr>
 							<?php endif; ?>
 							<?php
-							$postas = ['N' => __('User')];
+							$postas = ['N' => _i('User')];
 
-							if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = __('Moderator');
-							if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = __('Moderator');
-							if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = __('Developer');
+							if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = _i('Moderator');
+							if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = _i('Moderator');
+							if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = _i('Developer');
 							if (count($postas) > 1) :
 								?>
                             <tr>
-                                <td class="postblock"><?= __('Post As') ?></td>
+                                <td class="postblock"><?= _i('Post As') ?></td>
                                 <td>
 									<?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
                                 </td>
                             </tr>
 								<?php endif; ?>
                         <tr>
-                            <td class="postblock"><?= __('Action') ?></td>
+                            <td class="postblock"><?= _i('Action') ?></td>
                             <td>
 								<?php
 								echo \Form::hidden('parent', 0);
@@ -117,47 +117,47 @@ class ToolsReplyBox extends \Foolz\Theme\View
             <td class="doubledash">&gt;&gt;</td>
             <td class="subreply">
                 <div class="theader">
-					<?= __('Reply to Thread') ?> <a class="tooltip-red" href="#">[?] <span><?= __("Don't expect anything heroic. This post will not be posted to any other board.") ?></span></a>
+					<?= _i('Reply to Thread') ?> <a class="tooltip-red" href="#">[?] <span><?= _i("Don't expect anything heroic. This post will not be posted to any other board.") ?></span></a>
                 </div>
 				<?php if (isset($reply_errors)) : ?>
                 <span style="color:red"><?= $reply_errors ?></span>
 				<?php endif; ?>
-                <span><?= ( ! \Radix::getSelected()->archive && isset($thread_dead) && $thread_dead) ? __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '' ?></span>
+                <span><?= ( ! \Radix::getSelected()->archive && isset($thread_dead) && $thread_dead) ? _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '' ?></span>
                 <table>
                     <tbody>
                     <tr>
-                        <td class="postblock"><?= __('Name') ?></td>
+                        <td class="postblock"><?= _i('Name') ?></td>
                         <td><?php echo \Form::input(['name' => 'NAMAE', 'size' => 63, 'value' => $user_name]); ?></td>
                     </tr>
                     <tr>
-                        <td class="postblock"><?= __('E-mail') ?></td>
+                        <td class="postblock"><?= _i('E-mail') ?></td>
                         <td><?php echo \Form::input(['name' => 'MERU', 'size' => 63, 'value' => $user_email]); ?></td>
                     </tr>
                     <tr>
-                        <td class="postblock"><?= __('Subject') ?></td>
+                        <td class="postblock"><?= _i('Subject') ?></td>
                         <td><?php echo \Form::input(['name' => 'subject', 'size' => 63]); ?></td>
                     </tr>
                     <tr>
-                        <td class="postblock"><?= __('Comment') ?></td>
+                        <td class="postblock"><?= _i('Comment') ?></td>
                         <td><?php echo \Form::textarea(['name' => 'KOMENTO', 'cols' => 48, 'rows' => 4]); ?></td>
                     </tr>
 						<?php if ( ! \Radix::getSelected()->archive) : ?>
                     <tr>
-                        <td class="postblock"><?= __('File') ?></td>
+                        <td class="postblock"><?= _i('File') ?></td>
                         <td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']); ?></td>
                     </tr>
                     <tr>
-                        <td class="postblock"><?= __('Spoiler') ?></td>
+                        <td class="postblock"><?= _i('Spoiler') ?></td>
                         <td><?php echo \Form::checkbox(['name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1]); ?></td>
                     </tr>
 						<?php endif; ?>
                     <tr>
-                        <td class="postblock"><?= __('Password') ?> <a class="tooltip" href="#">[?] <span><?= __('This is used for file and post deletion.') ?></span></a></td>
+                        <td class="postblock"><?= _i('Password') ?> <a class="tooltip" href="#">[?] <span><?= _i('This is used for file and post deletion.') ?></span></a></td>
                         <td><?php echo \Form::password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]); ?></td>
                     </tr>
 						<?php if (\ReCaptcha::available()) : ?>
                     <tr id="recaptcha_widget">
-                        <td class="postblock"><?= __('Verification') ?><br/>(<?= __('Optional') ?>)</td>
+                        <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
                         <td>
                             <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
                             <noscript>
@@ -169,22 +169,22 @@ class ToolsReplyBox extends \Foolz\Theme\View
                     </tr>
 						<?php endif; ?>
 						<?php
-						$postas = ['N' => __('User')];
+						$postas = ['N' => _i('User')];
 
-						if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = __('Moderator');
-						if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = __('Moderator');
-						if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = __('Developer');
+						if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = _i('Moderator');
+						if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = _i('Moderator');
+						if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = _i('Developer');
 						if (count($postas) > 1) :
 							?>
                         <tr>
-                            <td class="postblock"><?= __('Post As') ?></td>
+                            <td class="postblock"><?= _i('Post As') ?></td>
                             <td>
 								<?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
                             </td>
                         </tr>
 							<?php endif; ?>
                     <tr>
-                        <td class="postblock"><?= __('Action') ?></td>
+                        <td class="postblock"><?= _i('Action') ?></td>
                         <td>
 							<?php
 							echo \Form::hidden('parent', $thread_id);

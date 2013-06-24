@@ -403,7 +403,7 @@ class Media
 			return new Media($result, $radix, $op);
 		}
 
-		throw new MediaNotFoundException(__('The image could not be found.'));
+		throw new MediaNotFoundException(_i('The image could not be found.'));
 	}
 
 	/**
@@ -487,12 +487,12 @@ class Media
 
 		if (count(\Upload::get_files()) === 0)
 		{
-			throw new MediaUploadNoFileException(__('You must upload an image or your image was too large.'));
+			throw new MediaUploadNoFileException(_i('You must upload an image or your image was too large.'));
 		}
 
 		if (count(\Upload::get_files()) !== 1)
 		{
-			throw new MediaUploadMultipleNotAllowedException(__('You can\'t upload multiple images.'));
+			throw new MediaUploadMultipleNotAllowedException(_i('You can\'t upload multiple images.'));
 		}
 
 		if (\Upload::is_valid())
@@ -508,47 +508,47 @@ class Media
 			if (in_array($file['errors'], UPLOAD_ERR_INI_SIZE))
 			{
 				throw new MediaUploadInvalidException(
-					__('The server is misconfigured: the FoolFuuka upload size should be lower than PHP\'s upload limit.'));
+					_i('The server is misconfigured: the FoolFuuka upload size should be lower than PHP\'s upload limit.'));
 			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_PARTIAL))
 			{
-				throw new MediaUploadInvalidException(__('You uploaded the file partially.'));
+				throw new MediaUploadInvalidException(_i('You uploaded the file partially.'));
 			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_CANT_WRITE))
 			{
-				throw new MediaUploadInvalidException(__('The image couldn\'t be saved on the disk.'));
+				throw new MediaUploadInvalidException(_i('The image couldn\'t be saved on the disk.'));
 			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_EXTENSION))
 			{
-				throw new MediaUploadInvalidException(__('A PHP extension broke and made processing the image impossible.'));
+				throw new MediaUploadInvalidException(_i('A PHP extension broke and made processing the image impossible.'));
 			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_MAX_SIZE))
 			{
 				throw new MediaUploadInvalidException(
-					\Str::tr(__('You uploaded a too big file. The maxmimum allowed filesize is :sizekb'),
-						['size' => $radix->getValue('max_image_size_kilobytes')]));
+					_i('You uploaded a too big file. The maxmimum allowed filesize is %s',
+						$radix->getValue('max_image_size_kilobytes')));
 			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_EXT_NOT_WHITELISTED))
 			{
-				throw new MediaUploadInvalidException(__('You uploaded a file with an invalid extension.'));
+				throw new MediaUploadInvalidException(_i('You uploaded a file with an invalid extension.'));
 			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_MAX_FILENAME_LENGTH))
 			{
-				throw new MediaUploadInvalidException(__('You uploaded a file with a too long filename.'));
+				throw new MediaUploadInvalidException(_i('You uploaded a file with a too long filename.'));
 			}
 
 			if (in_array($file['errors'], UPLOAD_ERR_MOVE_FAILED))
 			{
-				throw new MediaUploadInvalidException(__('Your uploaded file couldn\'t me moved on the server.'));
+				throw new MediaUploadInvalidException(_i('Your uploaded file couldn\'t me moved on the server.'));
 			}
 
-			throw new MediaUploadInvalidException(__('Unexpected upload error.'));
+			throw new MediaUploadInvalidException(_i('Unexpected upload error.'));
 		}
 
 		$media = [
@@ -1033,19 +1033,19 @@ class Media
 
 		if ( ! $getimagesize)
 		{
-			throw new MediaInsertInvalidFormatException(__('The file you uploaded is not an image.'));
+			throw new MediaInsertInvalidFormatException(_i('The file you uploaded is not an image.'));
 		}
 
 		// if width and height are lower than 25 reject the image
 		if ($getimagesize[0] < 25 || $getimagesize[1] < 25)
 		{
-			throw new MediaInsertDomainException(__('The image you uploaded is too small.'));
+			throw new MediaInsertDomainException(_i('The image you uploaded is too small.'));
 		}
 
 		if ($getimagesize[0] > $this->radix->getValue('max_image_size_width')
 			|| $getimagesize[1] > $this->radix->getValue('max_image_size_height'))
 		{
-			throw new MediaInsertDomainException(__('The dimensions of the image you uploaded are too large.'));
+			throw new MediaInsertDomainException(_i('The dimensions of the image you uploaded are too large.'));
 		}
 
 		$this->media_w = $getimagesize[0];
@@ -1074,7 +1074,7 @@ class Media
 				if ($this->radix->getValue('min_image_repost_time') == -1)
 				{
 					throw new MediaInsertRepostException(
-						__('This image has already been posted once. This board doesn\'t allow image reposting.')
+						_i('This image has already been posted once. This board doesn\'t allow image reposting.')
 					);
 				}
 
@@ -1095,13 +1095,11 @@ class Media
 					$remain = $datetime->diff(new \DateTime());
 
 					throw new MediaInsertRepostException(
-						\Str::tr(
-							__('This image has been posted recently. You will be able to post it again in :time.'),
-							['time' =>
-								 ($remain->d > 0 ? $remain->d.' '.__('day(s)') : '').' '
-								.($remain->h > 0 ? $remain->h.' '.__('hour(s)') : '').' '
-								.($remain->i > 0 ? $remain->i.' '.__('minute(s)') : '').' '
-								.($remain->s > 0 ? $remain->s.' '.__('second(s)') : '')]
+						_i('This image has been posted recently. You will be able to post it again in %s.',
+							 ($remain->d > 0 ? $remain->d.' '._i('day(s)') : '').' '
+							.($remain->h > 0 ? $remain->h.' '._i('hour(s)') : '').' '
+							.($remain->i > 0 ? $remain->i.' '._i('minute(s)') : '').' '
+							.($remain->s > 0 ? $remain->s.' '._i('second(s)') : '')
 						)
 					);
 				}
@@ -1183,7 +1181,7 @@ class Media
 
 				$this->media_id = DC::forge()->lastInsertId($this->radix->getTable('_images_doc_id_seq'));
 
-				throw new MediaThumbnailCreationException(__('The thumbnail failed to generate.'));
+				throw new MediaThumbnailCreationException(_i('The thumbnail failed to generate.'));
 			}
 
 			$thumb_getimagesize = getimagesize($this->pathFromFilename(true, $is_op, true));

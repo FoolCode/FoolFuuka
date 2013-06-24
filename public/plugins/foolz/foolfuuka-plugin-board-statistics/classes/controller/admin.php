@@ -17,7 +17,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 
 		parent::before($request);
 
-		$this->param_manager->setParam('controller_title', __('Plugins'));
+		$this->param_manager->setParam('controller_title', _i('Plugins'));
 	}
 
 	protected function structure()
@@ -29,7 +29,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 			'foolfuuka.plugins.board_statistics.enabled' => [
 				'type' => 'checkbox_array',
 				'label' => 'Enabled statistics',
-				'help' => __('Select the statistics to enable. Some might be too slow to process, so you should disable them. Some statistics don\'t use extra processing power so they are enabled by default.'),
+				'help' => _i('Select the statistics to enable. Some might be too slow to process, so you should disable them. Some statistics don\'t use extra processing power so they are enabled by default.'),
 				'checkboxes' => []
 			],
 			'separator-2' => [
@@ -38,7 +38,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 			'submit' => [
 				'type' => 'submit',
 				'class' => 'btn-primary',
-				'value' => __('Submit')
+				'value' => _i('Submit')
 			],
 			'close' => [
 				'type' => 'close'
@@ -50,7 +50,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 			$arr['foolfuuka.plugins.board_statistics.enabled']['checkboxes'][] = [
 				'type' => 'checkbox',
 				'label' => $key,
-				'help' => sprintf(__('Enable %s statistics'), $stat['name']),
+				'help' => sprintf(_i('Enable %s statistics'), $stat['name']),
 				'array_key' => $key,
 				'preferences' => true,
 			];
@@ -61,7 +61,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 
 	public function action_manage()
 	{
-		$this->param_manager->setParam('method_title', [__('FoolFuuka'), __("Board Statistics"),__('Manage')]);
+		$this->param_manager->setParam('method_title', [_i('FoolFuuka'), _i("Board Statistics"),_i('Manage')]);
 
 		$data['form'] = $this->structure();
 

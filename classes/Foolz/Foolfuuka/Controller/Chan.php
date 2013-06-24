@@ -123,10 +123,10 @@ class Chan
 					'missing_image_height' => 150,
 				],
 				'gettext' => [
-					'submit_state' => __('Submitting'),
-					'thread_is_real_time' => __('This thread is being displayed in real time.'),
-					'update_now' => __('Update now'),
-					'ghost_mode' => __('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.')
+					'submit_state' => _i('Submitting'),
+					'thread_is_real_time' => _i('This thread is being displayed in real time.'),
+					'update_now' => _i('Update now'),
+					'ghost_mode' => _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.')
 				]
 			]
 		];
@@ -184,7 +184,7 @@ class Chan
 
 	public function action_404($error = null)
 	{
-		return $this->error($error === null ? __('Page not found. You can use the search if you were looking for something!') : $error, 404);
+		return $this->error($error === null ? _i('Page not found. You can use the search if you were looking for something!') : $error, 404);
 	}
 
 	protected function error($error = null, $code = 200)
@@ -192,7 +192,7 @@ class Chan
 		$this->builder->createPartial('body', 'error')
 			->getParamManager()
 			->setParams([
-			'error' => $error === null ? __('We encountered an unexpected error.') : $error
+			'error' => $error === null ? _i('We encountered an unexpected error.') : $error
 		]);
 
 		return new Response($this->builder->build(), $code);
@@ -212,7 +212,7 @@ class Chan
 
 	public function action_theme($vendor = 'foolz', $theme = 'foolfuuka-theme-default', $style = '')
 	{
-		$this->builder->getProps()->addTitle(__('Changing Theme Settings'));
+		$this->builder->getProps()->addTitle(_i('Changing Theme Settings'));
 
 		$theme = $vendor.'/'.$theme.'/'.$style;
 
@@ -230,7 +230,7 @@ class Chan
 		$this->builder->createLayout('redirect')
 			->getParamManager()
 			->setParam('url', $url);
-		$this->builder->getProps()->addTitle(__('Redirecting'));
+		$this->builder->getProps()->addTitle(_i('Redirecting'));
 
 		return new Response($this->builder->build());
 	}
@@ -251,7 +251,7 @@ class Chan
 		$this->builder->createLayout('redirect')
 			->getParamManager()
 			->setParam('url', $url);
-		$this->builder->getProps()->addTitle(__('Changing Language'));
+		$this->builder->getProps()->addTitle(_i('Changing Language'));
 
 		return new Response($this->builder->build());
 	}
@@ -322,18 +322,18 @@ class Chan
 			switch($options['order'])
 			{
 				case 'by_post':
-					$order_string = __('Threads by latest replies');
+					$order_string = _i('Threads by latest replies');
 					break;
 				case 'by_thread':
-					$order_string = __('Threads by creation');
+					$order_string = _i('Threads by creation');
 					break;
 				case 'ghost':
-					$order_string = __('Threads by latest ghost replies');
+					$order_string = _i('Threads by latest ghost replies');
 					break;
 			}
 
-			$this->builder->getProps()->addTitle(__('Page').' '.$page);
-			$this->param_manager->setParam('section_title', $order_string.' - '.__('Page').' '.$page);
+			$this->builder->getProps()->addTitle(_i('Page').' '.$page);
+			$this->param_manager->setParam('section_title', $order_string.' - '._i('Page').' '.$page);
 		}
 
 		$this->builder->createPartial('body', 'board')
@@ -426,7 +426,7 @@ class Chan
 			return $this->error();
 		}
 
-		$this->builder->getProps()->addTitle(__('Thread').' #'.$num);
+		$this->builder->getProps()->addTitle(_i('Thread').' #'.$num);
 		$this->param_manager->setParams([
 			'thread_id' => $num,
 			'is_thread' => true,
@@ -525,11 +525,11 @@ class Chan
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardMalformedInputException $e)
 		{
-			return $this->error(__('The post number you submitted is invalid.'));
+			return $this->error(_i('The post number you submitted is invalid.'));
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e)
 		{
-			return $this->error(__('The post you are looking for does not exist.'));
+			return $this->error(_i('The post you are looking for does not exist.'));
 		}
 
 		// it always returns an array
@@ -545,7 +545,7 @@ class Chan
 		$this->builder->createLayout('redirect')
 			->getParamManager()
 			->setParam('url', $redirect);
-		$this->builder->getProps()->addTitle(__('Redirecting'));
+		$this->builder->getProps()->addTitle(_i('Redirecting'));
 		return new Response($this->builder->build());
 	}
 
@@ -564,7 +564,7 @@ class Chan
 		$imploded_uri = rawurldecode(implode('/', $uri));
 		if (mb_strlen($imploded_uri) < 22)
 		{
-			return $this->error(__('Your image hash is malformed.'));
+			return $this->error(_i('Your image hash is malformed.'));
 		}
 
 		// obtain actual media hash (non-urlsafe)
@@ -593,7 +593,7 @@ class Chan
 		if ( ! in_array(\Input::extension(), ['gif', 'jpg', 'png', 'pdf']) || ! ctype_digit((string) substr($filename,
 		0, 13)))
 		{
-			return $this->action_404(__('The filename submitted is not compatible with the system.'));
+			return $this->action_404(_i('The filename submitted is not compatible with the system.'));
 		}
 
 		try
@@ -602,7 +602,7 @@ class Chan
 		}
 		catch (\Foolz\Foolfuuka\Model\MediaException $e)
 		{
-			return $this->action_404(__('The image was never in our databases.'));
+			return $this->action_404(_i('The image was never in our databases.'));
 		}
 
 		if ($media->getMediaLink())
@@ -628,7 +628,7 @@ class Chan
 		$this->builder->createLayout('redirect')
 			->getParamManager()
 			->setParam('url', $redirect);
-		$this->builder->getProps()->addTitle(__('Redirecting'));
+		$this->builder->getProps()->addTitle(_i('Redirecting'));
 
 		return new Response($this->builder->build());
 	}
@@ -643,7 +643,7 @@ class Chan
 		$this->builder->createPartial('body', 'advanced_search')
 			->getParamManager()
 			->setParam('search_structure', \Search::structure());
-		$this->builder->getParamManager()->setParam('section_title', __('Advanced search'));
+		$this->builder->getParamManager()->setParam('section_title', _i('Advanced search'));
 
 		if ($this->_radix !== null)
 		{
@@ -824,7 +824,7 @@ class Chan
 		{
 			if ( ! filter_var($search['poster_ip'], FILTER_VALIDATE_IP))
 			{
-				return $this->error(__('The poster IP you inserted is not a valid IP address.'));
+				return $this->error(_i('The poster IP you inserted is not a valid IP address.'));
 			}
 
 			$search['poster_ip'] = \Foolz\Inet\Inet::ptod($search['poster_ip']);
@@ -852,67 +852,67 @@ class Chan
 
 		if ($search['text'])
 			array_push($title,
-				sprintf(__('that contain &lsquo;%s&rsquo;'),
+				sprintf(_i('that contain &lsquo;%s&rsquo;'),
 					e($search['text'])));
 		if ($search['subject'])
 			array_push($title,
-				sprintf(__('with the subject &lsquo;%s&rsquo;'),
+				sprintf(_i('with the subject &lsquo;%s&rsquo;'),
 					e($search['subject'])));
 		if ($search['username'])
 			array_push($title,
-				sprintf(__('with the username &lsquo;%s&rsquo;'),
+				sprintf(_i('with the username &lsquo;%s&rsquo;'),
 					e($search['username'])));
 		if ($search['tripcode'])
 			array_push($title,
-				sprintf(__('with the tripcode &lsquo;%s&rsquo;'),
+				sprintf(_i('with the tripcode &lsquo;%s&rsquo;'),
 					e($search['tripcode'])));
 		if ($search['filename'])
 			array_push($title,
-				sprintf(__('with the filename &lsquo;%s&rsquo;'),
+				sprintf(_i('with the filename &lsquo;%s&rsquo;'),
 					e($search['filename'])));
 		if ($search['image'])
 		{
 			array_push($title,
-				sprintf(__('with the image hash &lsquo;%s&rsquo;'),
+				sprintf(_i('with the image hash &lsquo;%s&rsquo;'),
 					e($search['image'])));
 		}
 		if ($search['deleted'] == 'deleted')
-			array_push($title, __('that have been deleted'));
+			array_push($title, _i('that have been deleted'));
 		if ($search['deleted'] == 'not-deleted')
-			array_push($title, __('that has not been deleted'));
+			array_push($title, _i('that has not been deleted'));
 		if ($search['ghost'] == 'only')
-			array_push($title, __('that are by ghosts'));
+			array_push($title, _i('that are by ghosts'));
 		if ($search['ghost'] == 'none')
-			array_push($title, __('that are not by ghosts'));
+			array_push($title, _i('that are not by ghosts'));
 		if ($search['type'] == 'op')
-			array_push($title, __('that are only OP posts'));
+			array_push($title, _i('that are only OP posts'));
 		if ($search['type'] == 'posts')
-			array_push($title, __('that are only non-OP posts'));
+			array_push($title, _i('that are only non-OP posts'));
 		if ($search['filter'] == 'image')
-			array_push($title, __('that do not contain images'));
+			array_push($title, _i('that do not contain images'));
 		if ($search['filter'] == 'text')
-			array_push($title, __('that only contain images'));
+			array_push($title, _i('that only contain images'));
 		if ($search['capcode'] == 'user')
-			array_push($title, __('that were made by users'));
+			array_push($title, _i('that were made by users'));
 		if ($search['capcode'] == 'mod')
-			array_push($title, __('that were made by mods'));
+			array_push($title, _i('that were made by mods'));
 		if ($search['capcode'] == 'admin')
-			array_push($title, __('that were made by admins'));
+			array_push($title, _i('that were made by admins'));
 		if ($search['start'])
-			array_push($title, sprintf(__('posts after %s'), e($search['start'])));
+			array_push($title, sprintf(_i('posts after %s'), e($search['start'])));
 		if ($search['end'])
-			array_push($title, sprintf(__('posts before %s'), e($search['end'])));
+			array_push($title, sprintf(_i('posts before %s'), e($search['end'])));
 		if ($search['order'] == 'asc')
-			array_push($title, __('in ascending order'));
+			array_push($title, _i('in ascending order'));
 
 		if ( ! empty($title))
 		{
-			$title = sprintf(__('Searching for posts %s.'),
-				implode(' ' . __('and') . ' ', $title));
+			$title = sprintf(_i('Searching for posts %s.'),
+				implode(' ' . _i('and') . ' ', $title));
 		}
 		else
 		{
-			$title = __('Displaying all posts with no filters applied.');
+			$title = _i('Displaying all posts with no filters applied.');
 		}
 
 		if ($this->_radix)
@@ -978,51 +978,50 @@ class Chan
 		}
 		catch (\Foolz\Foolfuuka\Model\BanException $e)
 		{
-			return $this->error(__('It doesn\'t look like you\'re banned.'));
+			return $this->error(_i('It doesn\'t look like you\'re banned.'));
 		}
 
 		// check for a global ban
 		if (isset($bans[0]))
 		{
-			$title = __('Appealing to a global ban.');
+			$title = _i('Appealing to a global ban.');
 			$ban = $bans[0];
 		}
 		elseif (isset($bans[$this->_radix->id]))
 		{
-			$title = \Str::tr(__('Appealing to a ban on :board'), ['board' => '/'.$this->_radix->shortname
-			.'/']);
+			$title = _i('Appealing to a ban on %s', '/'.$this->_radix->shortname.'/');
 			$ban = $bans[$this->_radix->id];
 		}
 		else
 		{
-			return $this->error(__('It doesn\'t look like you\'re banned on this board.'));
+			return $this->error(_i('It doesn\'t look like you\'re banned on this board.'));
 		}
 
 		if ($ban->appeal_status === \Ban::APPEAL_PENDING)
 		{
-			return $this->message('success', __('Your appeal is pending administrator review. Check again later.'));
+			return $this->message('success', _i('Your appeal is pending administrator review. Check again later.'));
 		}
 
 		if ($ban->appeal_status === \Ban::APPEAL_REJECTED)
 		{
-			return $this->message('error', __('Your appeal has been rejected.'));
+			return $this->message('error', _i('Your appeal has been rejected.'));
 		}
 
 		if (\Input::post('appeal'))
 		{
 			if ( ! \Security::check_token())
 			{
-				return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
+				return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
 			}
 			else
 			{
 				$val = \Validation::forge();
-				$val->add_field('appeal', __('Appeal'), 'required|trim|min_length[3]|max_length[4096]');
+				$val->add_field('appeal', _i('Appeal'), 'required|trim|min_length[3]|max_length[4096]');
 
 				if ($val->run())
 				{
 					$ban->appeal($val->input('appeal'));
-					return $this->message('success', __('Your appeal has been submitted!'));
+					return $this->message('success', _i('Your appeal has been submitted!'));
 				}
 			}
 		}
@@ -1038,7 +1037,7 @@ class Chan
 		// adapter
 		if ( ! \Input::post())
 		{
-			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
+			return $this->error(_i('You aren\'t sending the required fields for creating a new message.'));
 		}
 
 		if ( ! \Security::check_token())
@@ -1046,10 +1045,10 @@ class Chan
 			if (\Input::is_ajax())
 			{
 				return new Response(
-					json_encode(['error' => __('The security token wasn\'t found. Try resubmitting.')]));
+					json_encode(['error' => _i('The security token wasn\'t found. Try resubmitting.')]));
 			}
 
-			return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
+			return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
 		}
 
 		// Determine if the invalid post fields are populated by bots.
@@ -1173,12 +1172,12 @@ class Chan
 	{
 		// some beginners' validation, while through validation will happen in the Comment model
 		$val = \Validation::forge();
-		$val->add_field('thread_num', __('Thread Number'), 'required');
-		$val->add_field('name', __('Username'), 'max_length[64]');
-		$val->add_field('email', __('Email'), 'max_length[64]');
-		$val->add_field('title', __('Subject'), 'max_length[64]');
-		$val->add_field('comment', __('Comment'), 'min_length[3]');
-		$val->add_field('delpass', __('Password'), 'required|min_length[3]|max_length[32]');
+		$val->add_field('thread_num', _i('Thread Number'), 'required');
+		$val->add_field('name', _i('Username'), 'max_length[64]');
+		$val->add_field('email', _i('Email'), 'max_length[64]');
+		$val->add_field('title', _i('Subject'), 'max_length[64]');
+		$val->add_field('comment', _i('Comment'), 'min_length[3]');
+		$val->add_field('delpass', _i('Password'), 'required|min_length[3]|max_length[32]');
 
 		// leave the capcode check to the model
 
@@ -1207,7 +1206,7 @@ class Chan
 				}
 				else
 				{
-					return $this->error(__('Your message looked like spam. Make sure you have JavaScript enabled to display the reCAPTCHA to submit the comment.'));
+					return $this->error(_i('Your message looked like spam. Make sure you have JavaScript enabled to display the reCAPTCHA to submit the comment.'));
 				}
 			}
 			catch (\Foolz\Foolfuuka\Model\CommentSendingException $e)
@@ -1256,14 +1255,14 @@ class Chan
 				}
 				catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
 				{
-					return $this->error(__('Thread not found.'));
+					return $this->error(_i('Thread not found.'));
 				}
 				catch (\Foolz\Foolfuuka\Model\BoardException $e)
 				{
-					return $this->error(__('Unknown error.'));
+					return $this->error(_i('Unknown error.'));
 				}
 
-				return new Response(json_encode(['success' => __('Message sent.')] + $comments));
+				return new Response(json_encode(['success' => _i('Message sent.')] + $comments));
 			}
 			else
 			{
@@ -1274,7 +1273,7 @@ class Chan
 
 				return new Response(
 					json_encode([
-						'success' => __('Message sent.'),
+						'success' => _i('Message sent.'),
 						'thread_num' => $comment->thread_num,
 						$comment->thread_num => ['posts' => [$comment_api]],
 					]));
@@ -1285,7 +1284,7 @@ class Chan
 			$this->builder->createLayout('redirect')
 				->getParamManager()
 				->setParam('url', \Uri::create([$this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
-			$this->builder->getProps()->addTitle(__('Redirecting'));
+			$this->builder->getProps()->addTitle(_i('Redirecting'));
 
 			return new Response($this->builder->build());
 		}

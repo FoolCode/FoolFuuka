@@ -81,7 +81,7 @@ class Chan extends \Foolz\Theme\View
 
 		if ( ! empty($board_urls))
 		{
-			echo sprintf(__('Archives: [ %s ]'), implode(' / ', $board_urls));
+			echo sprintf(_i('Archives: [ %s ]'), implode(' / ', $board_urls));
 		}
 
 		if (\Radix::getArchives() && \Radix::getBoards())
@@ -97,7 +97,7 @@ class Chan extends \Foolz\Theme\View
 
 		if ( ! empty($board_urls))
 		{
-			echo sprintf(__('Boards: [ %s ]'), implode(' / ', $board_urls));
+			echo sprintf(_i('Boards: [ %s ]'), implode(' / ', $board_urls));
 		}
 		?></div>
 		<?php endif; ?>
@@ -113,13 +113,13 @@ class Chan extends \Foolz\Theme\View
 									<b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
-									<?= '<li><a href="'.\Uri::base().'">'.__('Index').'</a></li>'; ?>
-									<?= (\Auth::has_access('maccess.mod')) ? '<li><a href="'.\Uri::create('admin').'">'.__('Control Panel').'</a></li>' : '' ?>
+									<?= '<li><a href="'.\Uri::base().'">'._i('Index').'</a></li>'; ?>
+									<?= (\Auth::has_access('maccess.mod')) ? '<li><a href="'.\Uri::create('admin').'">'._i('Control Panel').'</a></li>' : '' ?>
 									<li class="divider"></li>
 									<?php
 									if (\Radix::getArchives())
 									{
-										echo '<li class="nav-header">'.__('Archives').'</li>';
+										echo '<li class="nav-header">'._i('Archives').'</li>';
 										foreach (\Radix::getArchives() as $key => $item)
 										{
 
@@ -134,7 +134,7 @@ class Chan extends \Foolz\Theme\View
 											echo '<li class="divider"></li>';
 										}
 
-										echo '<li class="nav-header">'.__('Boards').'</li>';
+										echo '<li class="nav-header">'._i('Boards').'</li>';
 										foreach (\Radix::getBoards() as $key => $item)
 										{
 											echo '<li><a href="'.$item->getValue('href').'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
@@ -155,7 +155,7 @@ class Chan extends \Foolz\Theme\View
 								<?php endif; ?>
 							<li style="padding-right:0px;">
 								<a href="<?= \Uri::create(array($radix->shortname)) ?>"
-								   style="padding-right:4px;"><?= __('Index') ?></a>
+								   style="padding-right:4px;"><?= _i('Index') ?></a>
 							</li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown"
@@ -165,7 +165,7 @@ class Chan extends \Foolz\Theme\View
 								<ul class="dropdown-menu" style="margin-left:-9px">
 									<li>
 										<a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
-											<?= __('By Post') ?>
+											<?= _i('By Post') ?>
 											<?php if (\Cookie::get('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) !== 'by_thread') : ?>
 												<i class="icon-ok"></i>
 											<?php endif; ?>
@@ -173,7 +173,7 @@ class Chan extends \Foolz\Theme\View
 									</li>
 									<li>
 										<a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
-											<?= __('By Thread') ?>
+											<?= _i('By Thread') ?>
 											<?php if (\Cookie::get('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) === 'by_thread') : ?>
 												<i class="icon-ok"></i>
 											<?php endif; ?>
@@ -186,13 +186,13 @@ class Chan extends \Foolz\Theme\View
 							$top_nav = array();
 							if ($radix)
 							{
-								$top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'ghost')), 'text' => __('Ghost'));
-								$top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'gallery')), 'text' => __('Gallery'));
+								$top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'ghost')), 'text' => _i('Ghost'));
+								$top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'gallery')), 'text' => _i('Gallery'));
 							}
 
 							if (\Auth::has_access('comment.reports'))
 							{
-								$top_nav[] = array('href' => \Uri::create(array('admin', 'moderation', 'reports')), 'text' => __('Reports').(\Report::count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.\Report::count().'</span>' : ''));
+								$top_nav[] = array('href' => \Uri::create(array('admin', 'moderation', 'reports')), 'text' => _i('Reports').(\Report::count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.\Report::count().'</span>' : ''));
 							}
 
 							$top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
@@ -243,10 +243,10 @@ class Chan extends \Foolz\Theme\View
 			<div class="paginate">
 				<ul>
 					<?php if ($pagination['current_page'] == 1) : ?>
-					<li class="prev disabled"><a href="#">&larr;  <?= __('Previous') ?></a></li>
+					<li class="prev disabled"><a href="#">&larr;  <?= _i('Previous') ?></a></li>
 					<?php else : ?>
 					<li class="prev"><a
-							href="<?= $pagination['base_url'].($pagination['current_page'] - 1); ?>/">&larr; <?= __('Previous') ?></a>
+							href="<?= $pagination['base_url'].($pagination['current_page'] - 1); ?>/">&larr; <?= _i('Previous') ?></a>
 					</li>
 					<?php endif; ?>
 
@@ -288,10 +288,10 @@ class Chan extends \Foolz\Theme\View
 					?>
 
 					<?php if ($pagination['total'] == $pagination['current_page']) : ?>
-					<li class="next disabled"><a href="#"><?= __('Next') ?> &rarr;</a></li>
+					<li class="next disabled"><a href="#"><?= _i('Next') ?> &rarr;</a></li>
 					<?php else : ?>
 					<li class="next"><a
-							href="<?= $pagination['base_url'].($pagination['current_page'] + 1); ?>/"><?= __('Next') ?> &rarr;</a>
+							href="<?= $pagination['base_url'].($pagination['current_page'] + 1); ?>/"><?= _i('Next') ?> &rarr;</a>
 					</li>
 					<?php endif; ?>
 				</ul>
@@ -315,7 +315,7 @@ class Chan extends \Foolz\Theme\View
 		<div class="pull-right">
 			<div class="btn-group dropup pull-right">
 				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
-					<?= __('Change Theme') ?> <span class="caret"></span>
+					<?= _i('Change Theme') ?> <span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
 					<?php foreach($this->getTheme()->getLoader()->getListWithStyles() as $key => $theme) :
@@ -338,7 +338,7 @@ class Chan extends \Foolz\Theme\View
 		<div class="pull-right">
 			<div class="btn-group dropup pull-right">
 				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
-					<?= __('Change Language') ?> <span class="caret"></span>
+					<?= _i('Change Language') ?> <span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
 					<?php foreach (\Foolz\Config\Config::get('foolz/foolframe', 'package', 'preferences.lang.available') as $key => $lang) : ?>
@@ -352,7 +352,7 @@ class Chan extends \Foolz\Theme\View
 					</li>
 					<?php endforeach; ?>
 					<li class="divider"></li>
-					<li><a href="//archive.foolz.us/_/articles/translate/"><?= __('Add a Translation') ?></a></li>
+					<li><a href="//archive.foolz.us/_/articles/translate/"><?= _i('Add a Translation') ?></a></li>
 				</ul>
 			</div>
 		</div>

@@ -27,8 +27,8 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 			$stats = BS::getAvailableStats();
 
 			// Set template variables required to build the HTML.
-			$this->builder->getProps()->addTitle(__('Statistics'));
-			$this->param_manager->setParam('section_title', __('Statistics'));
+			$this->builder->getProps()->addTitle(_i('Statistics'));
+			$this->param_manager->setParam('section_title', _i('Statistics'));
 
 			ob_start();
 			?>
@@ -59,10 +59,10 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 
 			if ( ! is_array($stats))
 			{
-				return $this->error(__('Statistic currently not available.'));
+				return $this->error(_i('Statistic currently not available.'));
 			}
 
-			$this->builder->getProps()->addTitle(__('Statistics') . ': ' . $stats['info']['name']);
+			$this->builder->getProps()->addTitle(_i('Statistics') . ': ' . $stats['info']['name']);
 
 			if (isset($stats['info']['frequency']))
 			{
@@ -70,33 +70,33 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 
 				if ($last_updated < 0)
 				{
-					$last_updated = __('now!');
+					$last_updated = _i('now!');
 				}
 				elseif ($last_updated < 60)
 				{
-					$last_updated = $last_updated.' ' .__('seconds');
+					$last_updated = $last_updated.' ' ._i('seconds');
 				}
 				elseif ($last_updated < 3600)
 				{
-					$last_updated = floor($last_updated / 60).' '.__('minutes');
+					$last_updated = floor($last_updated / 60).' '._i('minutes');
 				}
 				elseif ($last_updated < 86400)
 				{
-					$last_updated = floor($last_updated / 3600).' '.__('hours');
+					$last_updated = floor($last_updated / 3600).' '._i('hours');
 				}
 				else
 				{
-					$last_updated = floor($last_updated / 86400).' '.__('days');
+					$last_updated = floor($last_updated / 86400).' '._i('days');
 				}
 
-				$section_title = sprintf(__('Statistics: %s (Last Updated: %s ago)'),
+				$section_title = sprintf(_i('Statistics: %s (Last Updated: %s ago)'),
 					$stats['info']['name'],
 					$last_updated
 				);
 			}
 			else
 			{
-				$section_title = sprintf(__('Statistics: %s'), $stats['info']['name']);
+				$section_title = sprintf(_i('Statistics: %s'), $stats['info']['name']);
 			}
 
 			$this->param_manager->setParam('section_title', $section_title);

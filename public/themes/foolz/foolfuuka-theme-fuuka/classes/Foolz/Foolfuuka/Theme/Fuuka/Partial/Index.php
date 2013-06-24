@@ -9,7 +9,7 @@ class Index extends \Foolz\Theme\View
 		?>
 		<div id="content">
 			<h1><?= \Preferences::get('foolframe.gen.website_title'); ?></h1>
-			<h2><?= __('Choose a Board:'); ?></h2>
+			<h2><?= _i('Choose a Board:'); ?></h2>
 			<p>
 				<?php
 				$board_urls = array();

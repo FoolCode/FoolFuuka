@@ -326,7 +326,7 @@ class Report
 			}
 			catch (MediaNotFoundException $e)
 			{
-				throw new ReportMediaNotFoundException(__('The media file you are reporting could not be found.'));
+				throw new ReportMediaNotFoundException(_i('The media file you are reporting could not be found.'));
 			}
 
 			$new->media_id = (int) $id;
@@ -343,7 +343,7 @@ class Report
 			}
 			catch (BoardException $e)
 			{
-				throw new ReportCommentNotFoundException(__('The post you are reporting could not be found.'));
+				throw new ReportCommentNotFoundException(_i('The post you are reporting could not be found.'));
 			}
 
 			$new->doc_id =  (int) $id;
@@ -351,12 +351,12 @@ class Report
 
 		if (trim($reason) === null)
 		{
-			throw new ReportReasonNullException(__('A reason must be included with your report.'));
+			throw new ReportReasonNullException(_i('A reason must be included with your report.'));
 		}
 
 		if (mb_strlen($reason) > 2048)
 		{
-			throw new ReportReasonTooLongException(__('The reason for you report was too long.'));
+			throw new ReportReasonTooLongException(_i('The reason for you report was too long.'));
 		}
 
 		$new->reason = $reason;
@@ -383,7 +383,7 @@ class Report
 
 		if ($row['count'] > 25)
 		{
-			throw new ReportSentTooManyException(__('You have submitted too many reports within an hour.'));
+			throw new ReportSentTooManyException(_i('You have submitted too many reports within an hour.'));
 		}
 
 		$reported = DC::qb()
@@ -404,42 +404,42 @@ class Report
 
 		if ($reported['count'] > 0)
 		{
-			throw new ReportSubmitterBannedException(__('You can only submit one report per post.'));
+			throw new ReportSubmitterBannedException(_i('You can only submit one report per post.'));
 		}
 
 		if ($ban = \Ban::isBanned(\Input::ip_decimal(), $new->radix))
 		{
 			if ($ban->board_id == 0)
 			{
-				$banned_string = __('It looks like you were banned on all boards.');
+				$banned_string = _i('It looks like you were banned on all boards.');
 			}
 			else
 			{
-				$banned_string = __('It looks like you were banned on /'.$new->radix->shortname.'/.');
+				$banned_string = _i('It looks like you were banned on /'.$new->radix->shortname.'/.');
 			}
 
 			if ($ban->length)
 			{
-				$banned_string .= ' '.__('This ban will last until:').' '.date(DATE_COOKIE, $ban->start + $ban->length).'.';
+				$banned_string .= ' '._i('This ban will last until:').' '.date(DATE_COOKIE, $ban->start + $ban->length).'.';
 			}
 			else
 			{
-				$banned_string .= ' '.__('This ban will last forever.');
+				$banned_string .= ' '._i('This ban will last forever.');
 			}
 
 			if ($ban->reason)
 			{
-				$banned_string .= ' '.__('The reason for this ban is:').' «'.$ban->reason.'».';
+				$banned_string .= ' '._i('The reason for this ban is:').' «'.$ban->reason.'».';
 			}
 
 			if ($ban->appeal_status == \Ban::APPEAL_NONE)
 			{
-				$banned_string .= ' '.\Str::tr(__('If you\'d like to appeal to your ban, go to the :appeal page.'),
-					['appeal' => '<a href="'.\Uri::create($new->radix->shortname.'/appeal').'">'.__('appeal').'</a>']);
+				$banned_string .= ' '._i('If you\'d like to appeal to your ban, go to the :appeal page.',
+					'<a href="'.\Uri::create($new->radix->shortname.'/appeal').'">'._i('appeal').'</a>');
 			}
 			elseif ($ban->appeal_status == \Ban::APPEAL_PENDING)
 			{
-				$banned_string .= ' '.__('Your appeal is pending.');
+				$banned_string .= ' '._i('Your appeal is pending.');
 			}
 
 			throw new ReportSubmitterBannedException($banned_string);
@@ -507,7 +507,7 @@ class Report
 			}
 			else
 			{
-				throw new ReportMediaNotFoundException(__('The reported media file could not be found.'));
+				throw new ReportMediaNotFoundException(_i('The reported media file could not be found.'));
 			}
 		}
 
@@ -522,7 +522,7 @@ class Report
 		}
 		catch (BoardException $e)
 		{
-			throw new ReportCommentNotFoundException(__('The reported post could not be found.'));
+			throw new ReportCommentNotFoundException(_i('The reported post could not be found.'));
 		}
 
 		return $this->comment;

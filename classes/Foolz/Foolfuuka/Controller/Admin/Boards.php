@@ -20,7 +20,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			\Response::redirect('admin');
 		}
 
-		$this->param_manager->setParam('controller_title', __('Boards'));
+		$this->param_manager->setParam('controller_title', _i('Boards'));
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 	public function action_manage()
 	{
-		$this->param_manager->setParam('method_title', __('Manage'));
+		$this->param_manager->setParam('method_title', _i('Manage'));
 		$this->builder->createPartial('body', 'boards/manage')
 			->getParamManager()->setParam('boards', \Radix::getAll());
 
@@ -50,7 +50,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		if (\Input::post() && ! \Security::check_token())
 		{
-			\Notices::set('warning', __('The security token was not found. Please try again.'));
+			\Notices::set('warning', _i('The security token was not found. Please try again.'));
 		}
 		elseif (\Input::post())
 		{
@@ -67,18 +67,18 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 				if (is_null($shortname))
 				{
-					\Notices::setFlash('success', __('New board created!'));
+					\Notices::setFlash('success', _i('New board created!'));
 					\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 				}
 				elseif ($shortname != $result['success']['shortname'])
 				{
 					// case in which letter was changed
-					\Notices::setFlash('success', __('Board information updated.'));
+					\Notices::setFlash('success', _i('Board information updated.'));
 					\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 				}
 				else
 				{
-					\Notices::set('success', __('Board information updated.'));
+					\Notices::set('success', _i('Board information updated.'));
 				}
 			}
 		}
@@ -91,7 +91,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$data['object'] = (object) $board->getAllValues();
 
-		$this->param_manager->setParam('method_title', [__('Manage'), __('Edit'), $shortname]);
+		$this->param_manager->setParam('method_title', [_i('Manage'), _i('Edit'), $shortname]);
 		$this->builder->createPartial('body', 'form_creator')
 			->getParamManager()->setParams($data);
 
@@ -104,7 +104,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		if (\Input::post() && ! \Security::check_token())
 		{
-			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
+			\Notices::set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
 		}
 		elseif (\Input::post())
 		{
@@ -117,7 +117,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			{
 				// it's actually fully checked, we just have to throw it in DB
 				\Radix::save($result['success']);
-				\Notices::setFlash('success', __('New board created!'));
+				\Notices::setFlash('success', _i('New board created!'));
 				\Response::redirect('admin/boards/board/'.$result['success']['shortname']);
 			}
 		}
@@ -126,7 +126,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$data['form']['open']['action'] = \Uri::create('admin/boards/add_new');
 
 		// panel for creating a new board
-		$this->param_manager->setParam('method_title', [__('Manage'), __('Add')]);
+		$this->param_manager->setParam('method_title', [_i('Manage'), _i('Add')]);
 		$this->builder->createPartial('body', 'form_creator')
 			->getParamManager()->setParams($data);
 
@@ -143,22 +143,22 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		if (\Input::post() && ! \Security::check_token())
 		{
-			\Notices::set('warning', __('The security token wasn\'t found. Try resubmitting.'));
+			\Notices::set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
 		}
 		elseif (\Input::post())
 		{
 			$board->remove($id);
-			\Notices::setFlash('success', sprintf(__('The board %s has been deleted.'), $board->shortname));
+			\Notices::setFlash('success', sprintf(_i('The board %s has been deleted.'), $board->shortname));
 			\Response::redirect('admin/boards/manage');
 		}
 
 		$data['alert_level'] = 'warning';
-		$data['message'] = __('Do you really want to remove the board and all its data?').
+		$data['message'] = _i('Do you really want to remove the board and all its data?').
 			'<br/>'.
-			__('Notice: due to its size, you will have to remove the image directory manually. The directory will have the "_removed" suffix. You can remove all the leftover "_removed" directories with the following command:').
+			_i('Notice: due to its size, you will have to remove the image directory manually. The directory will have the "_removed" suffix. You can remove all the leftover "_removed" directories with the following command:').
 			' <code>php index.php cli boards remove_leftover_dirs</code>';
 
-		$this->param_manager->setParam('method_title', __('Removing board:').' '.$board->shortname);
+		$this->param_manager->setParam('method_title', _i('Removing board:').' '.$board->shortname);
 		$this->builder->createPartial('body', 'confirm')
 			->getParamManager()->setParams($data);
 
@@ -175,16 +175,16 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$form['foolfuuka.boards.directory'] = [
 			'type' => 'input',
-			'label' => __('Boards directory'),
+			'label' => _i('Boards directory'),
 			'preferences' => true,
-			'help' => __('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
+			'help' => _i('Overrides the default path to the boards directory (Example: /var/www/foolfuuka/boards)')
 		];
 
 		$form['foolfuuka.boards.url'] = [
 			'type' => 'input',
-			'label' => __('Boards URL'),
+			'label' => _i('Boards URL'),
 			'preferences' => true,
-			'help' => __('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
+			'help' => _i('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
 		];
 
 
@@ -192,25 +192,25 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		{
 			$form['foolfuuka.boards.db'] = [
 				'type' => 'input',
-				'label' => __('Boards database'),
+				'label' => _i('Boards database'),
 				'preferences' => true,
-				'help' => __('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
+				'help' => _i('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
 			];
 		}
 
 		$form['foolfuuka.boards.media_balancers'] = [
 			'type' => 'textarea',
-			'label' => __('Media load balancers'),
+			'label' => _i('Media load balancers'),
 			'preferences' => true,
-			'help' => __('Facultative. One per line the URLs where your images are reachable.'),
+			'help' => _i('Facultative. One per line the URLs where your images are reachable.'),
 			'class' => 'span6'
 		];
 
 		$form['foolfuuka.boards.media_balancers_https'] = [
 			'type' => 'textarea',
-			'label' => __('HTTPS media load balancers'),
+			'label' => _i('HTTPS media load balancers'),
 			'preferences' => true,
-			'help' => __('Facultative. One per line the URLs where your images are reachable. This is used when the site is loaded via HTTPS protocol, and if empty it will fall back to HTTP media load balancers.'),
+			'help' => _i('Facultative. One per line the URLs where your images are reachable. This is used when the site is loaded via HTTPS protocol, and if empty it will fall back to HTTP media load balancers.'),
 			'class' => 'span6'
 		];
 
@@ -220,7 +220,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$form['submit'] = [
 			'type' => 'submit',
-			'value' => __('Submit'),
+			'value' => _i('Submit'),
 			'class' => 'btn btn-primary'
 		];
 
@@ -233,7 +233,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$data['form'] = $form;
 
 		// create a form
-		$this->param_manager->setParam('method_title', __('Preferences'));
+		$this->param_manager->setParam('method_title', _i('Preferences'));
 		$this->builder->createPartial('body', 'form_creator')
 			->getParamManager()->setParams($data);
 
@@ -242,7 +242,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 	function action_search()
 	{
-		$this->_views['method_title'] = __('Search');
+		$this->_views['method_title'] = _i('Search');
 
 		$form = [];
 
@@ -255,14 +255,14 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'label' => 'Global SphinxSearch',
 			'placeholder' => 'FoOlFuuka',
 			'preferences' => true,
-			'help' => __('Activate Sphinx globally (enables crossboard search)')
+			'help' => _i('Activate Sphinx globally (enables crossboard search)')
 		];
 
 		$form['foolfuuka.sphinx.listen'] = [
 			'type' => 'input',
 			'label' => 'Listen (Sphinx)',
 			'preferences' => true,
-			'help' => __('Set the address and port to your Sphinx instance.'),
+			'help' => _i('Set the address and port to your Sphinx instance.'),
 			'class' => 'span2',
 			'validation' => 'trim|max_length[48]',
 			'validation_func' => function($input, $form)
@@ -271,7 +271,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 					{
 						return [
 							'error_code' => 'MISSING_COLON',
-							'error' => __('The Sphinx listening address and port aren\'t formatted correctly.')
+							'error' => _i('The Sphinx listening address and port aren\'t formatted correctly.')
 						];
 					}
 
@@ -281,7 +281,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 					{
 						return [
 							'error_code' => 'WRONG_COLON_NUMBER',
-							'error' => __('The Sphinx listening address and port aren\'t formatted correctly.')
+							'error' => _i('The Sphinx listening address and port aren\'t formatted correctly.')
 						];
 					}
 
@@ -289,7 +289,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 					{
 						return [
 							'error_code' => 'PORT_NOT_A_NUMBER',
-							'error' => __('The port specified isn\'t a valid number.')
+							'error' => _i('The port specified isn\'t a valid number.')
 						];
 					}
 /*
@@ -303,7 +303,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 					{
 						return [
 							'warning_code' => 'CONNECTION_NOT_ESTABLISHED',
-							'warning' => __('The Sphinx server couldn\'t be contacted at the specified address and port.')
+							'warning' => _i('The Sphinx server couldn\'t be contacted at the specified address and port.')
 						];
 					}
 */
@@ -316,7 +316,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'label' => 'Listen (MySQL)',
 			'preferences' => true,
 			'validation' => 'trim|max_length[48]',
-			'help' => __('Set the address and port to your MySQL instance.'),
+			'help' => _i('Set the address and port to your MySQL instance.'),
 			'class' => 'span2'
 		];
 
@@ -326,7 +326,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'placeholder' => 0,
 			'preferences' => true,
 			'validation' => 'trim',
-			'help' => __('Set the MySQL client connection flags to enable compression, SSL, or secure connection.'),
+			'help' => _i('Set the MySQL client connection flags to enable compression, SSL, or secure connection.'),
 			'class' => 'span2'
 		];
 
@@ -334,7 +334,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'type' => 'input',
 			'label' => 'Working Directory',
 			'preferences' => true,
-			'help' => __('Set the working directory to your Sphinx working directory.'),
+			'help' => _i('Set the working directory to your Sphinx working directory.'),
 			'class' => 'span3',
 			'validation' => 'trim',
 			'validation_func' => function($input, $form)
@@ -343,7 +343,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 				{
 					return [
 						'warning_code' => 'SPHINX_WORKING_DIR_NOT_FOUND',
-						'warning' => __('Couldn\'t find the Sphinx working directory.')
+						'warning' => _i('Couldn\'t find the Sphinx working directory.')
 					];
 				}
 
@@ -355,7 +355,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'type' => 'input',
 			'label' => 'Minimum Word Length',
 			'preferences' => true,
-			'help' => __('Set the minimum word length indexed by Sphinx.'),
+			'help' => _i('Set the minimum word length indexed by Sphinx.'),
 			'class' => 'span1',
 			'validation' => 'trim'
 		];
@@ -364,7 +364,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'type' => 'input',
 			'label' => 'Memory Limit',
 			'preferences' => true,
-			'help' => __('Set the memory limit for the Sphinx instance in MegaBytes.'),
+			'help' => _i('Set the memory limit for the Sphinx instance in MegaBytes.'),
 			'class' => 'span1'
 		];
 
@@ -374,7 +374,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'placeholder' => 0,
 			'validation' => 'trim',
 			'preferences' => true,
-			'help' => __('Set the maximum number of children to fork for searchd.'),
+			'help' => _i('Set the maximum number of children to fork for searchd.'),
 			'class' => 'span1'
 		];
 
@@ -384,7 +384,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 			'placeholder' => 5000,
 			'validation' => 'trim',
 			'preferences' => true,
-			'help' => __('Set the maximum amount of matches the search daemon keeps in RAM for each index and results returned to the client.'),
+			'help' => _i('Set the maximum amount of matches the search daemon keeps in RAM for each index and results returned to the client.'),
 			'class' => 'span1'
 		];
 
@@ -394,7 +394,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
 		$form['submit'] = [
 			'type' => 'submit',
-			'value' => __('Save'),
+			'value' => _i('Save'),
 			'class' => 'btn btn-primary'
 		];
 
@@ -407,11 +407,11 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		// create the form
 		$data['form'] = $form;
 
-		$this->param_manager->setParam('method_title', __('Preferences'));
+		$this->param_manager->setParam('method_title', _i('Preferences'));
 		$partial = $this->builder->createPartial('body', 'form_creator');
 		$partial->getParamManager()->setParams($data);
 		$built = $partial->build();
-		$partial->setBuilt($built.'<a href="'.\Uri::create('admin/boards/sphinx_config').'" class="btn">'.__('Generate Config').'</a>');
+		$partial->setBuilt($built.'<a href="'.\Uri::create('admin/boards/sphinx_config').'" class="btn">'._i('Generate Config').'</a>');
 
 		return new Response($this->builder->build());
 	}
@@ -435,7 +435,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 		$data['boards'] = \Radix::getAll();
 		$data['example'] = current($data['boards']);
 
-		$this->param_manager->setParam('method_title', [__('Search'), 'Sphinx', __('Configuration File'), __('Generate')]);
+		$this->param_manager->setParam('method_title', [_i('Search'), 'Sphinx', _i('Configuration File'), _i('Generate')]);
 		$this->builder->createPartial('body', 'boards/sphinx_config')
 			->getParamManager()->setParams($data);
 

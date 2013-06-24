@@ -6,7 +6,7 @@ class Fool
 {
 	public function run()
 	{
-		\Cli::write('--'.__('FoolFuuka module management.'));
+		\Cli::write('--'._i('FoolFuuka module management.'));
 
 		$sections = ['database', 'boards'];
 
@@ -15,7 +15,7 @@ class Fool
 			->execute()
 			->get(['database', 'board']);
 
-		$section = \Cli::prompt('  '.__('Select the section.'), $sections);
+		$section = \Cli::prompt('  '._i('Select the section.'), $sections);
 
 		if (method_exists($this, 'cli_'.$section.'_help'))
 		{
@@ -31,7 +31,7 @@ class Fool
 		while (! $done)
 		{
 			$done = true;
-			$result = \Cli::prompt(__('Choose the method to run'));
+			$result = \Cli::prompt(_i('Choose the method to run'));
 			$parameters = explode(' ', $result);
 			if (method_exists($this, 'cli_'.$section))
 			{
@@ -46,12 +46,12 @@ class Fool
 			}
 		}
 
-		\Cli::write(__('Goodbye.'));
+		\Cli::write(_i('Goodbye.'));
 	}
 
 	public function cliDatabaseHelp()
 	{
-		\Cli::write('  --'.__('FoolFrame database management commands'));
+		\Cli::write('  --'._i('FoolFrame database management commands'));
 
 		\Cli::write('    create_search <board_shortname>             Creates the _search table necessary if you don\'t have SphinxSearch');
 		\Cli::write('    drop_search <board_shortname>               Drops the _search table, good idea if you don\'t need it anymore after implementing SphinxSearch');
@@ -73,13 +73,13 @@ class Fool
 			case 'recreate_triggers':
 				if ( ! isset($parameters[1]))
 				{
-					\Cli::write(__('Missing parameter.'));
+					\Cli::write(_i('Missing parameter.'));
 					return false;
 				}
 				$board = \Radix::getByShortname($parameters[1]);
 				if ( ! $board)
 				{
-					\Cli::write(__('Board doesn\'t exist.'));
+					\Cli::write(_i('Board doesn\'t exist.'));
 					return false;
 				}
 				if ($parameters[0] == 'create_search')
@@ -104,7 +104,7 @@ class Fool
 					$board = \Radix::getByShortname($parameters[1]);
 					if ( !$board)
 					{
-						\Cli::write(__('Board doesn\'t exist.'));
+						\Cli::write(_i('Board doesn\'t exist.'));
 						return false;
 					}
 				}
@@ -118,7 +118,7 @@ class Fool
 			 */
 
 			default:
-				\Cli::write(__('Bad command.'));
+				\Cli::write(_i('Bad command.'));
 				return false;
 		}
 
@@ -127,7 +127,7 @@ class Fool
 
 	public function cliBoardsHelp()
 	{
-		\Cli::write('  --'.__('FoolFrame board management commands'));
+		\Cli::write('  --'._i('FoolFrame board management commands'));
 
 		\Cli::write('    set <board> <name> <value>        Changes a setting for the board, no <value> means null (ATTN: no value validation)');
 		\Cli::write('    mass_set <set> <name> <value>     Changes a setting for every board, no <value> means null (ATTN: no value validation)');
@@ -142,17 +142,17 @@ class Fool
 			case 'set':
 				if ( ! isset($parameters[1]))
 				{
-					\Cli::write(__('Missing parameter.'));
+					\Cli::write(_i('Missing parameter.'));
 					return false;
 				}
 				$board = \Radix::getByShortname($parameters[1]);
 				if ( ! $board)
 				{
-					\Cli::write(__('Board doesn\'t exist.'));
+					\Cli::write(_i('Board doesn\'t exist.'));
 				}
 				if ( ! isset($parameters[1]))
 				{
-					\Cli::write(__('Your request is missing parameters: <name>'));
+					\Cli::write(_i('Your request is missing parameters: <name>'));
 					return false;
 				}
 				$parameters[3] = isset($parameters[3])?$parameters[3]:null;
@@ -162,7 +162,7 @@ class Fool
 			case 'mass_set':
 				if ( ! isset($parameters[1]) || !in_array($parameters[1], ['archives', 'boards', 'all']))
 				{
-					\Cli::write(__("You must choose between 'archives', 'boards', or 'all'."));
+					\Cli::write(_i("You must choose between 'archives', 'boards', or 'all'."));
 					return false;
 				}
 				if ($parameters[1] == 'all')
@@ -176,7 +176,7 @@ class Fool
 
 				if ( ! isset($parameters[2]))
 				{
-					\Cli::write(__('Your request is missing parameters: <name>'));
+					\Cli::write(_i('Your request is missing parameters: <name>'));
 					return false;
 				}
 				$parameters[3] = isset($parameters[3])?$parameters[3]:null;
@@ -190,7 +190,7 @@ class Fool
 				break;
 
 			default:
-				\Cli::write(__('Bad command.'));
+				\Cli::write(_i('Bad command.'));
 				return false;
 		}
 	}

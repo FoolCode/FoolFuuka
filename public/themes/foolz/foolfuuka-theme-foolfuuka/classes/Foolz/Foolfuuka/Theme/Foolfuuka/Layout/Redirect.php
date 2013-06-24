@@ -21,7 +21,7 @@ class Redirect extends \Foolz\Theme\View
 	<script type="text/javascript">
 		window.location.href = '<?= $url ?>';
 	</script>
-		<?= sprintf(__('Attempting to redirect to %s.'), '<a href="'.$url.'" rel="noreferrer">'.$url.'</a>') ?>
+		<?= sprintf(_i('Attempting to redirect to %s.'), '<a href="'.$url.'" rel="noreferrer">'.$url.'</a>') ?>
 	</body>
 </html><?php
 	}

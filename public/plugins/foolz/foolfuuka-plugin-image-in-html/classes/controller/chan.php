@@ -13,7 +13,7 @@ class ControllerPluginFuImageInHtmlChan extends \Foolfuuka\Controller_Chan
 		// Check if $filename is valid.
 		if ( ! in_array(\Input::extension(), ['gif', 'jpg', 'png']) || ! ctype_digit(substr($filename, 0, 13)))
 		{
-			return $this->action_404(__('The filename submitted is not compatible with the system.'));
+			return $this->action_404(_i('The filename submitted is not compatible with the system.'));
 		}
 
 		try
@@ -22,7 +22,7 @@ class ControllerPluginFuImageInHtmlChan extends \Foolfuuka\Controller_Chan
 		}
 		catch (\Foolz\Foolfuuka\Model\MediaException $e)
 		{
-			return $this->action_404(__('The image was not found.'));
+			return $this->action_404(_i('The image was not found.'));
 		}
 
 		if ($media->media_link !== null)
@@ -32,11 +32,11 @@ class ControllerPluginFuImageInHtmlChan extends \Foolfuuka\Controller_Chan
 			<article class="full_image">
 				<a href="<?= $media->getLink(false, true) ?>"><img src="<?= $media->getLink(false, true) ?>"></a>
 				<nav>
-					<?php if ($media->total) : ?><a href="<?= \Uri::create($this->_radix->shortname.'/search/image/'.$media->safe_media_hash) ?>" class="btnr parent"><?= __('View Same') ?></a><?php endif; ?>
+					<?php if ($media->total) : ?><a href="<?= \Uri::create($this->_radix->shortname.'/search/image/'.$media->safe_media_hash) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?>
 					<a href="http://google.com/searchbyimage?image_url=<?= $media->thumb_link ?>" target="_blank" class="btnr parent">Google</a>
 					<a href="http://iqdb.org/?url=<?= $media->thumb_link ?>" target="_blank" class="btnr parent">iqdb</a>
 					<a href="http://saucenao.ci'd om/search.php?url=<?= $media->thumb_link ?>" target="_blank" class="btnr parent">SauceNAO</a>
-					<a href="#" class="btnr parent" style="background-color: #EF8B77; color: #fff" data-media-id="<?= $media->media_id ?>" data-board="<?= htmlspecialchars($this->_radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="reportMedia"><?= __('Report') ?></a>
+					<a href="#" class="btnr parent" style="background-color: #EF8B77; color: #fff" data-media-id="<?= $media->media_id ?>" data-board="<?= htmlspecialchars($this->_radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="reportMedia"><?= _i('Report') ?></a>
 				</nav>
 			</article>
 			<style>
@@ -74,7 +74,7 @@ class ControllerPluginFuImageInHtmlChan extends \Foolfuuka\Controller_Chan
 			<?php
 			$content = ob_get_clean();
 
-			$this->_theme->bind('section_title', \Str::tr(__('Displaying image :image_filename'), ['image_filename' => $media->media]));
+			$this->_theme->bind('section_title', _i('Displaying image %s', $media->media));
 
 			try
 			{

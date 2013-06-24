@@ -148,7 +148,7 @@ class Ban
 
 		if ( ! $result)
 		{
-			throw new BanNotFoundException(__('The ban could not be found.'));
+			throw new BanNotFoundException(_i('The ban could not be found.'));
 		}
 
 		return static::fromArray($result);
@@ -174,7 +174,7 @@ class Ban
 
 		if ( ! count($result))
 		{
-			throw new BanNotFoundException(__('The ban could not be found.'));
+			throw new BanNotFoundException(_i('The ban could not be found.'));
 		}
 
 		return static::fromArrayDeep($result);
@@ -304,24 +304,24 @@ class Ban
 			{
 				if ( ! in_array($id, $valid_board_ids))
 				{
-					throw new BanException(__('You entered a non-existent board ID.'));
+					throw new BanException(_i('You entered a non-existent board ID.'));
 				}
 			}
 		}
 
 		if ( ! ctype_digit((string) $ip_decimal))
 		{
-			throw new BanException(__('You entered an invalid IP.'));
+			throw new BanException(_i('You entered an invalid IP.'));
 		}
 
 		if (mb_strlen($reason) > 10000)
 		{
-			throw new BanException(__('You entered a too long reason for the ban.'));
+			throw new BanException(_i('You entered a too long reason for the ban.'));
 		}
 
 		if ( ! ctype_digit($length))
 		{
-			throw new BanException(__('You entered an invalid length for the ban.'));
+			throw new BanException(_i('You entered an invalid length for the ban.'));
 		}
 
 		$time = time();

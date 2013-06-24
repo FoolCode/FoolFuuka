@@ -79,13 +79,13 @@ class Chan
 
 		if ( ! $board)
 		{
-			//$this->response(['error' => __('You didn\'t select a board')], 404);
+			//$this->response(['error' => _i('You didn\'t select a board')], 404);
 			return false;
 		}
 
 		if ( ! $this->_radix = \Radix::setSelectedByShortname($board))
 		{
-			//$this->response(['error' => __('The board you selected doesn\'t exist')], 404);
+			//$this->response(['error' => _i('The board you selected doesn\'t exist')], 404);
 			return false;
 		}
 
@@ -95,7 +95,7 @@ class Chan
 
 	public function get_404()
 	{
-		return $this->response(['error' => _('Invalid method.')], 404);
+		return $this->response(['error' => _i('Invalid Method.')], 404);
 	}
 
 	/**
@@ -109,7 +109,7 @@ class Chan
 	{
 		if ( ! $this->check_board())
 		{
-			return $this->response(['error' => __('No board selected.')], 404);
+			return $this->response(['error' => _i('No board selected.')], 404);
 		}
 
 		$num = \Input::get('num');
@@ -117,12 +117,12 @@ class Chan
 
 		if ( ! $num)
 		{
-			return $this->response(['error' => __('The "num" parameter is missing.')], 404);
+			return $this->response(['error' => _i('The "num" parameter is missing.')], 404);
 		}
 
 		if ( ! ctype_digit((string) $num))
 		{
-			return $this->response(['error' => __('The value for "num" is invalid.')], 404);
+			return $this->response(['error' => _i('The value for "num" is invalid.')], 404);
 		}
 
 		$num = intval($num);
@@ -134,7 +134,7 @@ class Chan
 			{
 				if ( ! ctype_digit((string) $latest_doc_id))
 				{
-					return $this->response(['error' => __('The value for "latest_doc_id" is malformed.')], 404);
+					return $this->response(['error' => _i('The value for "latest_doc_id" is malformed.')], 404);
 				}
 
 				$options = [
@@ -180,11 +180,11 @@ class Chan
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
 		{
-			return $this->response(['error' => __('Thread not found.')], 200);
+			return $this->response(['error' => _i('Thread not found.')], 200);
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
-			return $this->response(['error' => __('Encountered an unknown error.')], 500);
+			return $this->response(['error' => _i('Encountered an unknown error.')], 500);
 		}
 	}
 
@@ -192,19 +192,19 @@ class Chan
 	{
 		if ( ! $this->check_board())
 		{
-			return $this->response(['error' => __('No board was selected.')], 404);
+			return $this->response(['error' => _i('No board was selected.')], 404);
 		}
 
 		$num = \Input::get('num');
 
 		if ( ! $num)
 		{
-			return $this->response(['error' => __('The "num" parameter is missing.')], 404);
+			return $this->response(['error' => _i('The "num" parameter is missing.')], 404);
 		}
 
 		if ( ! \Board::isValidPostNumber($num))
 		{
-			return $this->response(['error' => __('The value for "num" is invalid.')], 404);
+			return $this->response(['error' => _i('The value for "num" is invalid.')], 404);
 		}
 
 		try
@@ -221,7 +221,7 @@ class Chan
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e)
 		{
-			return $this->response(['error' => __('Post not found.')], 200);
+			return $this->response(['error' => _i('Post not found.')], 200);
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
@@ -233,12 +233,12 @@ class Chan
 	{
 		if ( ! \Security::check_token())
 		{
-			return $this->response(['error' => __('The security token was not found. Please try again.')]);
+			return $this->response(['error' => _i('The security token was not found. Please try again.')]);
 		}
 
 		if ( ! $this->check_board())
 		{
-			return $this->response(['error' => __('No board was selected.')], 404);
+			return $this->response(['error' => _i('No board was selected.')], 404);
 		}
 
 		if (\Input::post('action') === 'report')
@@ -252,7 +252,7 @@ class Chan
 				return $this->response(['error' => $e->getMessage()], 200);
 			}
 
-			return $this->response(['success' => __('You have successfully submitted a report for this post.')], 200);
+			return $this->response(['success' => _i('You have successfully submitted a report for this post.')], 200);
 		}
 
 		if (\Input::post('action') === 'report_media')
@@ -266,7 +266,7 @@ class Chan
 				return $this->response(['error' => $e->getMessage()], 200);
 			}
 
-			return $this->response(['success' => __('This media was reported.')], 200);
+			return $this->response(['success' => _i('This media was reported.')], 200);
 		}
 
 		if (\Input::post('action') === 'delete')
@@ -292,7 +292,7 @@ class Chan
 				return $this->response(['error' => $e->getMessage()], 200);
 			}
 
-			return $this->response(['success' => __('This post was deleted.')], 200);
+			return $this->response(['success' => _i('This post was deleted.')], 200);
 		}
 	}
 
@@ -300,17 +300,17 @@ class Chan
 	{
 		if ( ! \Security::check_token())
 		{
-			return $this->response(['error' => __('The security token was not found. Please try again.')]);
+			return $this->response(['error' => _i('The security token was not found. Please try again.')]);
 		}
 
 		if ( ! \Auth::has_access('comment.mod_capcode'))
 		{
-			return $this->response(['error' => __('Access Denied.')], 403);
+			return $this->response(['error' => _i('Access Denied.')], 403);
 		}
 
 		if ( ! $this->check_board())
 		{
-			return $this->response(['error' => __('No board was selected.')], 404);
+			return $this->response(['error' => _i('No board was selected.')], 404);
 		}
 
 		if (\Input::post('action') === 'delete_report')
@@ -324,7 +324,7 @@ class Chan
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('The report was deleted.')], 200);
+			return $this->response(['success' => _i('The report was deleted.')], 200);
 		}
 
 		if (\Input::post('action') === 'delete_post')
@@ -345,7 +345,7 @@ class Chan
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('This post was deleted.')], 200);
+			return $this->response(['success' => _i('This post was deleted.')], 200);
 		}
 
 		if (\Input::post('action') === 'delete_image')
@@ -359,7 +359,7 @@ class Chan
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('This image was deleted.')], 200);
+			return $this->response(['success' => _i('This image was deleted.')], 200);
 		}
 
 		if (\Input::post('action') === 'ban_image_local' || \Input::post('action') === 'ban_image_global')
@@ -379,7 +379,7 @@ class Chan
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('This image was banned.')], 200);
+			return $this->response(['success' => _i('This image was banned.')], 200);
 		}
 
 		if (\Input::post('action') === 'ban_user')
@@ -397,7 +397,7 @@ class Chan
 				return $this->response(['error' => $e->getMessage()], 404);
 			}
 
-			return $this->response(['success' => __('This user was banned.')], 200);
+			return $this->response(['success' => _i('This user was banned.')], 200);
 		}
 	}
 }

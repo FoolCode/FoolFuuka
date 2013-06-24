@@ -10,53 +10,53 @@ class BoardStatistics
 	{
 		return [
 			'activity' => [
-				'name' => __('Activity'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
+				'name' => _i('Activity'),
+				'description' => _i('Posts in last month by name and availability by time of day.'),
 				'frequency' => 60 * 60 * 6, // every 6 hours
 				'interface' => 'activity',
 				'function' => 'Activity'
 			],
 			'availability' => [
-				'name' => __('Availability'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
+				'name' => _i('Availability'),
+				'description' => _i('Posts in last month by name and availability by time of day.'),
 				'frequency' => 60 * 60 * 5,
 				'interface' => 'availability',
 				'function' => 'Availability'
 			],
 			'image-reposts' => [
-				'name' => __('Image Reposts'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
+				'name' => _i('Image Reposts'),
+				'description' => _i('Posts in last month by name and availability by time of day.'),
 				'interface' => 'image_reposts',
 				'function' => 'ImageReposts'
 			],
 			'new-users' => [
-				'name' => __('New Users'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
+				'name' => _i('New Users'),
+				'description' => _i('Posts in last month by name and availability by time of day.'),
 				'interface' => 'new_users',
 				'function' => 'NewUsers'
 			],
 			'population' => [
-				'name' => __('Population'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
+				'name' => _i('Population'),
+				'description' => _i('Posts in last month by name and availability by time of day.'),
 				'frequency' => 60 * 60 * 24, // every day
 				'interface' => 'population',
 				'function' => 'Population',
 			],
 			'post-count' => [
-				'name' => __('Post Count'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
+				'name' => _i('Post Count'),
+				'description' => _i('Posts in last month by name and availability by time of day.'),
 				'interface' => 'post_count',
 				'function' => 'PostCount',
 			],
 			'post-rate' => [
-				'name' => __('Post Rate'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
+				'name' => _i('Post Rate'),
+				'description' => _i('Posts in last month by name and availability by time of day.'),
 				'interface' => 'post_rate',
 				'function' => 'PostRate',
 			],
 			'users-online' => [
-				'name' => __('Users Online'),
-				'description' => __('Posts in last month by name and availability by time of day.'),
+				'name' => _i('Users Online'),
+				'description' => _i('Posts in last month by name and availability by time of day.'),
 				'interface' => 'users_online',
 				'function' => 'UsersOnline'
 			]

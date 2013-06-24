@@ -8,9 +8,9 @@ if ( ! defined('DOCROOT'))
 <table class="table table-hover">
 	<thead>
 		<tr>
-			<th><?= __('Poster') ?></th>
-			<th style="text-align:center"><?= __('Total Posts') ?></th>
-			<th style="text-align:center"><?= __('Availability') ?></th>
+			<th><?= _i('Poster') ?></th>
+			<th style="text-align:center"><?= _i('Total Posts') ?></th>
+			<th style="text-align:center"><?= _i('Availability') ?></th>
 		</tr>
 	</thead>
 	<tbody>

@@ -18,7 +18,7 @@
 					'database' => true,
 					'boards_preferences' => true,
 					'type' => 'checkbox',
-					'help' => __('Enable dice roll?')
+					'help' => _i('Enable dice roll?')
 				];
 				$result->setParam('structure', $structure)->set($structure);
 			})->setPriority(4);

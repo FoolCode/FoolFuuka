@@ -208,35 +208,35 @@ class CommentInsert extends Comment
 			{
 				if ($ban->board_id == 0)
 				{
-					$banned_string = __('It looks like you were banned on all boards.');
+					$banned_string = _i('It looks like you were banned on all boards.');
 				}
 				else
 				{
-					$banned_string = __('It looks like you were banned on /'.$this->radix->shortname.'/.');
+					$banned_string = _i('It looks like you were banned on /'.$this->radix->shortname.'/.');
 				}
 
 				if ($ban->length)
 				{
-					$banned_string .= ' '.__('This ban will last until:').' '.date(DATE_COOKIE, $ban->start + $ban->length).'.';
+					$banned_string .= ' '._i('This ban will last until:').' '.date(DATE_COOKIE, $ban->start + $ban->length).'.';
 				}
 				else
 				{
-					$banned_string .= ' '.__('This ban will last forever.');
+					$banned_string .= ' '._i('This ban will last forever.');
 				}
 
 				if ($ban->reason)
 				{
-					$banned_string .= ' '.__('The reason for this ban is:').' «'.$ban->reason.'».';
+					$banned_string .= ' '._i('The reason for this ban is:').' «'.$ban->reason.'».';
 				}
 
 				if ($ban->appeal_status == \Ban::APPEAL_NONE)
 				{
-					$banned_string .= ' '.\Str::tr(__('If you\'d like to appeal to your ban, go to the :appeal page.'),
-						['appeal' => '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'.__('appeal').'</a>']);
+					$banned_string .= ' '._i('If you\'d like to appeal to your ban, go to the %s page.',
+						'<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'._i('Appeal').'</a>');
 				}
 				elseif ($ban->appeal_status == \Ban::APPEAL_PENDING)
 				{
-					$banned_string .= ' '.__('Your appeal is pending.');
+					$banned_string .= ' '._i('Your appeal is pending.');
 				}
 
 				throw new CommentSendingBannedException($banned_string);
@@ -262,7 +262,7 @@ class CommentInsert extends Comment
 
 			if ($status['closed'])
 			{
-				throw new CommentSendingThreadClosedException(__('The thread is closed.'));
+				throw new CommentSendingThreadClosedException(_i('The thread is closed.'));
 			}
 
 			$this->ghost = $status['dead'];
@@ -316,7 +316,7 @@ class CommentInsert extends Comment
 			{
 				if ($this->comment !== null && $check['comment'] === $this->comment)
 				{
-					throw new CommentSendingSameCommentException(__('You\'re sending the same comment as the last time'));
+					throw new CommentSendingSameCommentException(_i('You\'re sending the same comment as the last time'));
 				}
 
 				$check_time = $this->getRadixTime();
@@ -331,7 +331,7 @@ class CommentInsert extends Comment
 			$comment_parsed = $this->processComment();
 			if ($this->comment !== '' && $comment_parsed === '')
 			{
-				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
+				throw new CommentSendingDisplaysEmptyException(_i('This comment would display empty.'));
 			}
 
 			// clean up to reset eventual auto-built entries
@@ -347,7 +347,7 @@ class CommentInsert extends Comment
 
 				if ( ! $recaptcha)
 				{
-					throw new CommentSendingWrongCaptchaException(__('Incorrect CAPTCHA solution.'));
+					throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution.'));
 				}
 			}
 			elseif (\ReCaptcha::available()) // if there wasn't a recaptcha input, let's go with heavier checks
@@ -378,20 +378,20 @@ class CommentInsert extends Comment
 				if (strpos($this->comment, $s) !== false || strpos($this->name, $s) !== false
 					|| strpos($this->title, $s) !== false || strpos($this->email, $s) !== false)
 				{
-					throw new CommentSendingSpamException(__('Your post has undesidered content.'));
+					throw new CommentSendingSpamException(_i('Your post has undesidered content.'));
 				}
 			}
 
 			// check entire length of comment
 			if (mb_strlen($this->comment) > $this->radix->getValue('max_comment_characters_allowed'))
 			{
-				throw new CommentSendingTooManyCharactersException(__('Your comment has too many characters'));
+				throw new CommentSendingTooManyCharactersException(_i('Your comment has too many characters'));
 			}
 
 			// check total numbers of lines in comment
 			if (count(explode("\n", $this->comment)) > $this->radix->getValue('max_comment_lines_allowed'))
 			{
-				throw new CommentSendingTooManyLinesException(__('Your comment has too many lines.'));
+				throw new CommentSendingTooManyLinesException(_i('Your comment has too many lines.'));
 			}
 		}
 
@@ -425,7 +425,7 @@ class CommentInsert extends Comment
 		// process comment password
 		if ($this->delpass === '')
 		{
-			throw new CommentSendingNoDelPassException(__('You must submit a deletion password.'));
+			throw new CommentSendingNoDelPassException(_i('You must submit a deletion password.'));
 		}
 
 		if ( ! class_exists('PHPSecLib\\Crypt_Hash', false))
@@ -457,7 +457,7 @@ class CommentInsert extends Comment
 
 			if ( ! in_array($this->capcode, $allowed_capcodes))
 			{
-				throw new CommentSendingUnallowedCapcodeException(__('You\'re not allowed to use this capcode.'));
+				throw new CommentSendingUnallowedCapcodeException(_i('You\'re not allowed to use this capcode.'));
 			}
 		}
 		else
@@ -486,18 +486,18 @@ class CommentInsert extends Comment
 
 			if ( ! $this->thread_num && $this->radix->getValue('op_image_upload_necessity') === 'never')
 			{
-				throw new CommentSendingException(__('You can\'t start a new thread with an image.'));
+				throw new CommentSendingException(_i('You can\'t start a new thread with an image.'));
 			}
 
 			if ( ! $this->allow_media)
 			{
 				if ($this->ghost)
 				{
-					throw new CommentSendingImageInGhostException(__('You can\'t post images when the thread is in ghost mode.'));
+					throw new CommentSendingImageInGhostException(_i('You can\'t post images when the thread is in ghost mode.'));
 				}
 				else
 				{
-					throw new CommentSendingException(__('This thread has reached its image limit.'));
+					throw new CommentSendingException(_i('This thread has reached its image limit.'));
 				}
 			}
 
@@ -515,13 +515,13 @@ class CommentInsert extends Comment
 			// if the user is forced to upload an image when making a new thread
 			if ( ! $this->thread_num && $this->radix->getValue('op_image_upload_necessity') === 'always')
 			{
-				throw new CommentSendingThreadWithoutMediaException(__('You can\'t start a new thread without an image.'));
+				throw new CommentSendingThreadWithoutMediaException(_i('You can\'t start a new thread without an image.'));
 			}
 
 			// in case of no media, check comment field again for null
 			if ($this->comment === null)
 			{
-				throw new CommentSendingDisplaysEmptyException(__('This comment would display empty.'));
+				throw new CommentSendingDisplaysEmptyException(_i('This comment would display empty.'));
 			}
 
 			$this->media = Media::forgeEmpty($this->radix);
@@ -742,7 +742,7 @@ class CommentInsert extends Comment
 				if (count($check_duplicate) > 1)
 				{
 					DC::forge()->rollBack();
-					throw new CommentSendingDuplicateException(__('You are sending the same post twice.'));
+					throw new CommentSendingDuplicateException(_i('You are sending the same post twice.'));
 				}
 
 				$comment = DC::qb()
@@ -829,7 +829,7 @@ class CommentInsert extends Comment
 
 				if ($try_count > $try_max)
 				{
-					throw new CommentSendingDatabaseException(__('Something went wrong when inserting the post in the database. Try again.'));
+					throw new CommentSendingDatabaseException(_i('Something went wrong when inserting the post in the database. Try again.'));
 				}
 
 				continue;

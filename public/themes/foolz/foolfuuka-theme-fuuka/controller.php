@@ -33,12 +33,12 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 		// adapter
 		if ( ! \Input::post())
 		{
-			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
+			return $this->error(_i('You aren\'t sending the required fields for creating a new message.'));
 		}
 
 		if ( ! \Security::check_token())
 		{
-			return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
+			return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
 		}
 
 		if (\Input::post('reply_delete'))
@@ -69,7 +69,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 			$this->builder->createLayout('redirect')
 				->getParamManager()
 				->setParam('url', \Uri::create([$this->_radix->shortname, 'thread', $comment->thread_num]));
-			$this->builder->getProps()->addTitle(__('Redirecting'));
+			$this->builder->getProps()->addTitle(_i('Redirecting'));
 
 			return \Response::forge($this->builder->build());
 		}
@@ -92,7 +92,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 			$this->builder->createLayout('redirect')
 				->getParamManager()
 				->setParam('url', \Uri::create($this->_radix->shortname.'/thread/'.\Input::post('parent')));
-			$this->builder->getProps()->addTitle(__('Redirecting'));
+			$this->builder->getProps()->addTitle(_i('Redirecting'));
 
 			return \Response::forge($this->builder->build());
 		}

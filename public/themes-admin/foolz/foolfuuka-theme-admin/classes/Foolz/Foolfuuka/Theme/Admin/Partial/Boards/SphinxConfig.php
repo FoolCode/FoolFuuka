@@ -11,14 +11,14 @@ class SphinxConfig extends \Foolz\Theme\View
 
 <div class="admin-container">
 	<div class="admin-container-header">
-		<?= __('Configuration File') ?>
+		<?= _i('Configuration File') ?>
 	</div>
 
 
 <?php if ($example === false) : ?>
-	<i class="icon-exclamation-sign text-error"></i> <?= __('Error: You do not have any boards created. Please make one before generating a configuration file again.') ?>
+	<i class="icon-exclamation-sign text-error"></i> <?= _i('Error: You do not have any boards created. Please make one before generating a configuration file again.') ?>
 <?php else : ?>
-	<i class="icon-warning-sign text-warning"></i> <?= __('Notice: Due to security concerns, the database connection values have been left empty.') ?>
+	<i class="icon-warning-sign text-warning"></i> <?= _i('Notice: Due to security concerns, the database connection values have been left empty.') ?>
 
 	<hr/>
 

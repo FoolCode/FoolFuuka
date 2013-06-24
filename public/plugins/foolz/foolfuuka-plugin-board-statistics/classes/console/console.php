@@ -21,7 +21,7 @@ class Console extends Command
 				'radix',
 				null,
 				InputOption::VALUE_OPTIONAL,
-				__('Run the queries only for the requested board')
+				_i('Run the queries only for the requested board')
 			)
 		;
 	}
@@ -36,7 +36,7 @@ class Console extends Command
 			}
 			else
 			{
-				$output->writeln('<error>'.__('Wrong radix (board short name) specified.').'</error>');
+				$output->writeln('<error>'._i('Wrong radix (board short name) specified.').'</error>');
 			}
 		}
 		else

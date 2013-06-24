@@ -24,118 +24,118 @@ class Search extends Board
 		return [
 			[
 				'type' => 'input',
-				'label' => __('Comment'),
+				'label' => _i('Comment'),
 				'name' => 'text'
 			],
 			[
 				'type' => 'input',
-				'label' => __('Subject'),
+				'label' => _i('Subject'),
 				'name' => 'subject'
 			],
 			[
 				'type' => 'input',
-				'label' => __('Username'),
+				'label' => _i('Username'),
 				'name' => 'username'
 			],
 			[
 				'type' => 'input',
-				'label' => __('Tripcode'),
+				'label' => _i('Tripcode'),
 				'name' => 'tripcode'
 			],
 			[
 				'type' => 'input',
-				'label' => __('Email'),
+				'label' => _i('Email'),
 				'name' => 'email'
 			],
 			[
 				'type' => 'input',
-				'label' => __('Filename'),
+				'label' => _i('Filename'),
 				'name' => 'filename'
 			],
 			[
 				'type' => 'input',
-				'label' => __('Image hash'),
-				'placeholder' => __('Drop your image here'),
+				'label' => _i('Image hash'),
+				'placeholder' => _i('Drop your image here'),
 				'name' => 'image'
 			],
 			[
 				'type' => 'date',
-				'label' => __('Date Start'),
+				'label' => _i('Date Start'),
 				'name' => 'start',
 				'placeholder' => 'YYYY-MM-DD'
 			],
 			[
 				'type' => 'date',
-				'label' => __('Date End'),
+				'label' => _i('Date End'),
 				'name' => 'end',
 				'placeholder' => 'YYYY-MM-DD'
 			],
 			[
 				'type' => 'input',
-				'label' => __('Poster IP'),
+				'label' => _i('Poster IP'),
 				'name' => 'poster_ip',
 				'access' => 'comment.see_ip'
 			],
 
 			[
 				'type' => 'radio',
-				'label' => __('Deleted posts'),
+				'label' => _i('Deleted posts'),
 				'name' => 'deleted',
 				'elements' => [
-					['value' => false, 'text' => __('All')],
-					['value' => 'deleted', 'text' => __('Only Deleted Posts')],
-					['value' => 'not-deleted', 'text' => __('Only Non-Deleted Posts')]
+					['value' => false, 'text' => _i('All')],
+					['value' => 'deleted', 'text' => _i('Only Deleted Posts')],
+					['value' => 'not-deleted', 'text' => _i('Only Non-Deleted Posts')]
 				]
 			],
 			[
 				'type' => 'radio',
-				'label' => __('Ghost posts'),
+				'label' => _i('Ghost posts'),
 				'name' => 'ghost',
 				'elements' => [
-					['value' => false, 'text' => __('All')],
-					['value' => 'only', 'text' => __('Only Ghost Posts')],
-					['value' => 'none', 'text' => __('Only Non-Ghost Posts')]
+					['value' => false, 'text' => _i('All')],
+					['value' => 'only', 'text' => _i('Only Ghost Posts')],
+					['value' => 'none', 'text' => _i('Only Non-Ghost Posts')]
 				]
 			],
 			[
 				'type' => 'radio',
-				'label' => __('Show posts'),
+				'label' => _i('Show posts'),
 				'name' => 'filter',
 				'elements' => [
-					['value' => false, 'text' => __('All')],
-					['value' => 'text', 'text' => __('Only With Images')],
-					['value' => 'image', 'text' => __('Only Without Images')]
+					['value' => false, 'text' => _i('All')],
+					['value' => 'text', 'text' => _i('Only With Images')],
+					['value' => 'image', 'text' => _i('Only Without Images')]
 				]
 			],
 			[
 				'type' => 'radio',
-				'label' => __('Results'),
+				'label' => _i('Results'),
 				'name' => 'type',
 				'elements' => [
-					['value' => false, 'text' => __('All')],
-					['value' => 'op', 'text' => __('Only Opening Posts')],
-					['value' => 'posts', 'text' => __('Only Reply Posts')]
+					['value' => false, 'text' => _i('All')],
+					['value' => 'op', 'text' => _i('Only Opening Posts')],
+					['value' => 'posts', 'text' => _i('Only Reply Posts')]
 				]
 			],
 			[
 				'type' => 'radio',
-				'label' => __('Capcode'),
+				'label' => _i('Capcode'),
 				'name' => 'capcode',
 				'elements' => [
-					['value' => false, 'text' => __('All')],
-					['value' => 'user', 'text' => __('Only User Posts')],
-					['value' => 'mod', 'text' => __('Only Moderator Posts')],
-					['value' => 'admin', 'text' => __('Only Admin Posts')],
-					['value' => 'dev', 'text' => __('Only Developer Posts')]
+					['value' => false, 'text' => _i('All')],
+					['value' => 'user', 'text' => _i('Only User Posts')],
+					['value' => 'mod', 'text' => _i('Only Moderator Posts')],
+					['value' => 'admin', 'text' => _i('Only Admin Posts')],
+					['value' => 'dev', 'text' => _i('Only Developer Posts')]
 				]
 			],
 			[
 				'type' => 'radio',
-				'label' => __('Order'),
+				'label' => _i('Order'),
 				'name' => 'order',
 				'elements' => [
-					['value' => false, 'text' => __('Latest Posts First')],
-					['value' => 'asc', 'text' => __('Oldest Posts First')]
+					['value' => false, 'text' => _i('Latest Posts First')],
+					['value' => 'asc', 'text' => _i('Oldest Posts First')]
 				]
 			]
 		];
@@ -230,7 +230,7 @@ class Search extends Board
 					$this->comments = [];
 
 					\Profiler::mark('Board::getSearchComments Ended Prematurely');
-					throw new SearchEmptyResultException(__('No results found.'));
+					throw new SearchEmptyResultException(_i('No results found.'));
 				}
 
 				$args['image'] = $media->media_id;
@@ -240,7 +240,7 @@ class Search extends Board
 		if ($this->radix === null && ! \Preferences::get('foolfuuka.sphinx.global'))
 		{
 			// global search requires sphinx
-			throw new SearchRequiresSphinxException(__('Sorry, this action requires the Sphinx to be installed and running.'));
+			throw new SearchRequiresSphinxException(_i('Sorry, this action requires the Sphinx to be installed and running.'));
 		}
 		elseif (($this->radix === null && \Preferences::get('foolfuuka.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx))
 		{
@@ -257,7 +257,7 @@ class Search extends Board
 			}
 			catch (\Foolz\SphinxQL\ConnectionException $e)
 			{
-				throw new SearchSphinxOfflineException(__('The search backend is currently unavailable.'));
+				throw new SearchSphinxOfflineException(_i('The search backend is currently unavailable.'));
 			}
 
 			// determine if all boards will be used for search or not
@@ -461,7 +461,7 @@ class Search extends Board
 			catch(\Foolz\SphinxQL\DatabaseException $e)
 			{
 				\Log::error('Search Error: '.$e->getMessage());
-				throw new SearchInvalidException(__(''));
+				throw new SearchInvalidException(_i(''));
 			}
 
 			// no results found
@@ -470,7 +470,7 @@ class Search extends Board
 				$this->comments_unsorted = [];
 				$this->comments = [];
 
-				throw new SearchEmptyResultException(__('No results found.'));
+				throw new SearchEmptyResultException(_i('No results found.'));
 			}
 
 			$sphinx_meta = SphinxQL::forge()->meta();
@@ -498,7 +498,7 @@ class Search extends Board
 		else
 		{
 			// this is not implemented yet, would require some sort of MySQL search
-			throw new SearchRequiresSphinxException(__('Sorry, this board does not have search enabled.'));
+			throw new SearchRequiresSphinxException(_i('Sorry, this board does not have search enabled.'));
 		}
 
 		// process results

@@ -29,7 +29,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 			'name' => 'text',
 			'id' => 'search_form_comment',
 			'value' => (isset($search['text'])) ? rawurldecode($search['text']) : '',
-			'placeholder' => ($search_radix  !== '_') ? __('Search or insert post number') : __('Search through all the boards'),
+			'placeholder' => ($search_radix  !== '_') ? _i('Search or insert post number') : _i('Search through all the boards'),
 		]);
 			?>
 		</div>
@@ -37,14 +37,14 @@ class AdvancedSearch extends \Foolz\Theme\View
 		<div class="buttons clearfix">
 			<?= \Form::submit([
 				'class' => 'btn btn-inverse',
-				'value' => __('Search'),
+				'value' => _i('Search'),
 				'name' => 'submit_search',
 			]);
 			?>
 
 			<?= \Form::submit([
 			'class' => 'btn btn-inverse',
-			'value' => __('Search on all boards'),
+			'value' => _i('Search on all boards'),
 			'name' => 'submit_search_global',
 		]);
 			?>
@@ -52,7 +52,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 			<?php if (isset($radix)) : ?>
 			<?= \Form::submit([
 				'class' => 'btn btn-inverse',
-				'value' => __('Go to post number'),
+				'value' => _i('Go to post number'),
 				'name' => 'submit_post',
 			]);
 			?>
@@ -60,7 +60,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 			<?= \Form::reset([
 				'class' => 'btn btn-inverse pull-right',
-				'value' => __('Clear'),
+				'value' => _i('Clear'),
 				'name' => 'reset',
 				'data-function' => 'clearSearch'
 			]);
@@ -145,9 +145,9 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 					if ($radixes) :
 						?>
-						<div><h5><?= e(__('On these archives')) ?></h5>
-							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"<?= $uncheck ? ' style="display:none"' : '' ?>><?= e(__('Check all')) ?></button>
-							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"<?= $uncheck ? ' style="display:block"' : '' ?>><?= e(__('Uncheck all')) ?></button>
+						<div><h5><?= e(_i('On these archives')) ?></h5>
+							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"<?= $uncheck ? ' style="display:none"' : '' ?>><?= e(_i('Check all')) ?></button>
+							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"<?= $uncheck ? ' style="display:block"' : '' ?>><?= e(_i('Uncheck all')) ?></button>
 						</div>
 						<?php
 						foreach ($radixes as $r)
@@ -186,9 +186,9 @@ class AdvancedSearch extends \Foolz\Theme\View
 					if ($radixes):
 						?>
 						<div>
-							<h5><?= e(__('On these boards')) ?></h5>
-							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"<?= $uncheck ? ' style="display:none"' : '' ?>><?= e(__('Check all')) ?></button>
-							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"<?= $uncheck ? ' style="display:block"' : '' ?>><?= e(__('Uncheck all')) ?></button>
+							<h5><?= e(_i('On these boards')) ?></h5>
+							<button type="button" data-function="checkAll" class="btn btn-mini pull-right check"<?= $uncheck ? ' style="display:none"' : '' ?>><?= e(_i('Check all')) ?></button>
+							<button type="button" data-function="uncheckAll" class="btn btn-mini pull-right uncheck"<?= $uncheck ? ' style="display:block"' : '' ?>><?= e(_i('Uncheck all')) ?></button>
 						</div>
 						<?php
 						foreach ($radixes as $r)
@@ -203,8 +203,8 @@ class AdvancedSearch extends \Foolz\Theme\View
 
 			<div class="latest_searches">
 				<div>
-					<h5><?= e(__('Your latest searches')) ?></h5>
-					<button type="button" data-function="clearLatestSearches" class="btn btn-mini pull-right"><?= e(__('Clear')) ?></button>
+					<h5><?= e(_i('Your latest searches')) ?></h5>
+					<button type="button" data-function="clearLatestSearches" class="btn btn-mini pull-right"><?= e(_i('Clear')) ?></button>
 				</div>
 				<ul>
 					<?php

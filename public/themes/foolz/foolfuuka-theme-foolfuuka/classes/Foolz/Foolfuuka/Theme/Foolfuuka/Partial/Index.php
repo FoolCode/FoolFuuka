@@ -18,7 +18,7 @@ class Index extends \Foolz\Theme\View
 			if (\Radix::getArchives())
 			{
 				$index_nav['archives'] = array(
-					'title' => __('Archives'),
+					'title' => _i('Archives'),
 					'elements' => array()
 				);
 
@@ -34,7 +34,7 @@ class Index extends \Foolz\Theme\View
 			if (\Radix::getBoards())
 			{
 				$index_nav['boards'] = array(
-					'title' => __('Boards'),
+					'title' => _i('Boards'),
 					'elements' => array()
 				);
 

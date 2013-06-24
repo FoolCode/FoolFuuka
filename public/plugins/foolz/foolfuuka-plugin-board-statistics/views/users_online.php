@@ -7,13 +7,13 @@ if ( ! defined('DOCROOT'))
 
 <?php $data_array = json_decode($data); ?>
 
-<h4><?= __('Board') ?>:</h4>
+<h4><?= _i('Board') ?>:</h4>
 <table class="table table-hover">
 	<thead>
 		<tr>
-			<th class="span6"><?= __('Poster') ?></th>
-			<th class="span2"><?= __('Last Seen') ?></th>
-			<th class="span2"><?= __('Latest Post') ?></th>
+			<th class="span6"><?= _i('Poster') ?></th>
+			<th class="span2"><?= _i('Last Seen') ?></th>
+			<th class="span2"><?= _i('Latest Post') ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -48,13 +48,13 @@ if ( ! defined('DOCROOT'))
 </table>
 
 <?php if (count($data_array->ghost)) : ?>
-<h4><?= __('Ghost') ?>:</h4>
+<h4><?= _i('Ghost') ?>:</h4>
 <table class="table table-hover">
 	<thead>
 		<tr>
-			<th class="span6"><?= __('Poster') ?></th>
-			<th class="span2"><?= __('Last Seen') ?></th>
-			<th class="span2"><?= __('Latest Post') ?></th>
+			<th class="span6"><?= _i('Poster') ?></th>
+			<th class="span2"><?= _i('Last Seen') ?></th>
+			<th class="span2"><?= _i('Latest Post') ?></th>
 		</tr>
 	</thead>
 	<tbody>

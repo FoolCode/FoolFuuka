@@ -10,7 +10,7 @@ class Error extends \Foolz\Theme\View
 
 		?>
 	    <div class="alert" style="margin:15%;">
-	        <h4 class="alert-heading"><?= __('Error!') ?></h4>
+	        <h4 class="alert-heading"><?= _i('Error!') ?></h4>
 			<?= $error ?>
 	    </div>
 		<?php

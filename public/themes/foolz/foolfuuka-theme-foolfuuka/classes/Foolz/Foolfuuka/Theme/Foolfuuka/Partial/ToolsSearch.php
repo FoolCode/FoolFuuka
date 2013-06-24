@@ -35,7 +35,7 @@ class ToolsSearch extends \Foolz\Theme\View
 			'name' => 'text',
 			'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : '',
 			'class' => 'search-query',
-			'placeholder' => ($search_radix  !== '_') ? __('Search or insert post number') : __('Search through all the boards')
+			'placeholder' => ($search_radix  !== '_') ? _i('Search or insert post number') : _i('Search through all the boards')
 		]); ?>
 		</li>
 		<?= \Form::close() ?>

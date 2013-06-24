@@ -295,11 +295,9 @@ class Comment
 		// format 4chan archive timestamp
 		if ($this->radix->archive)
 		{
-			// archives are in new york time
-			$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));
-			$utc = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('UTC'));
-			$diff = $newyork->diff($utc)->h;
-			$this->timestamp = $this->timestamp + ($diff * 60 * 60);
+			$datetime = new \DateTime(date('Y-m-d H:i:s', $this->timestamp), new \DateTimeZone('America/New_York'));
+			$datetime->setTimezone(new \DateTimeZone('UTC'));
+			$this->timestamp = $datetime->getTimestamp() + $datetime->getOffset();
 		}
 
 		if ($this->_options['clean'])
@@ -331,8 +329,7 @@ class Comment
 	{
 		if ($this->fourchan_date === false)
 		{
-			$fourtime = new \DateTime();
-			$fourtime->setTimestamp($this->getOriginalTimestamp());
+			$fourtime = new \DateTime('@'.$this->getOriginalTimestamp());
 			$fourtime->setTimezone(new \DateTimeZone('America/New_York'));
 
 			$this->fourchan_date = $fourtime->format('n/j/y(D)G:i');
@@ -909,11 +906,10 @@ class Comment
 
 		if ($this->radix->archive)
 		{
-			// archives are in new york time
-			$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));
-			$utc = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('UTC'));
-			$diff = $newyork->diff($utc)->h;
-			return $time - ($diff * 60 * 60);
+			$datetime = new \DateTime(date('Y-m-d H:i:s', $time), new \DateTimeZone('UTC'));
+			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
+
+			return $datetime->getTimestamp() + $datetime->getOffset();
 		}
 		else
 		{

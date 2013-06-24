@@ -319,16 +319,7 @@ class CommentInsert extends Comment
 					throw new CommentSendingSameCommentException(__('You\'re sending the same comment as the last time'));
 				}
 
-				$check_time = time();
-
-				if ($this->radix->archive)
-				{
-					// archives are in new york time
-					$newyork = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('America/New_York'));
-					$utc = new \DateTime(date('Y-m-d H:i:s', time()), new \DateTimeZone('UTC'));
-					$diff = $newyork->diff($utc)->h;
-					$check_time = $check_time - ($diff * 60 * 60);
-				}
+				$check_time = $this->getRadixTime();
 
 				if ($check_time - $check['timestamp'] < $this->radix->getValue('cooldown_new_comment') && $check_time - $check['timestamp'] > 0)
 				{

@@ -185,15 +185,14 @@ class BoardStatistics
 
 	public static function processAvailability($board)
 	{
-		$datetime = new \DateTime();
-		$datetime->setTimestamp(time());
+		$datetime = new \DateTime('@'.time());
 
 		if ($board->archive)
 		{
 			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
 		}
 
-		$timestamp = $datetime->getTimestamp();
+		$timestamp = $datetime->getTimestamp() + $datetime->getOffset();
 
 		return DC::qb()
 			->select('
@@ -216,15 +215,14 @@ class BoardStatistics
 
 	public static function processActivity($board)
 	{
-		$datetime = new \DateTime();
-		$datetime->setTimestamp(time());
+		$datetime = new \DateTime('@'.time());
 
 		if ($board->archive)
 		{
 			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
 		}
 
-		$timestamp = $datetime->getTimestamp();
+		$timestamp = $datetime->getTimestamp() + $datetime->getOffset();
 		$result = [];
 
 		$result['board'] = DC::qb()
@@ -294,15 +292,14 @@ class BoardStatistics
 
 	public static function processPopulation($board)
 	{
-		$datetime = new \DateTime();
-		$datetime->setTimestamp(time());
+		$datetime = new \DateTime('@'.time());
 
 		if ($board->archive)
 		{
 			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
 		}
 
-		$timestamp = $datetime->getTimestamp();
+		$timestamp = $datetime->getTimestamp() + $datetime->getOffset();
 
 		return DC::qb()
 			->select('day AS time, trips, names, anons')
@@ -327,15 +324,14 @@ class BoardStatistics
 
 	public static function processPostRate($board)
 	{
-		$datetime = new \DateTime();
-		$datetime->setTimestamp(time());
+		$datetime = new \DateTime('@'.time());
 
 		if ($board->archive)
 		{
 			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
 		}
 
-		$timestamp = $datetime->getTimestamp();
+		$timestamp = $datetime->getTimestamp() + $datetime->getOffset();
 		$result = [];
 
 		$result['board'] = DC::qb()
@@ -359,15 +355,14 @@ class BoardStatistics
 
 	public static function processUsersOnline($board)
 	{
-		$datetime = new \DateTime();
-		$datetime->setTimestamp(time());
+		$datetime = new \DateTime('@'.time());
 
 		if ($board->archive)
 		{
 			$datetime->setTimezone(new \DateTimeZone('America/New_York'));
 		}
 
-		$timestamp = $datetime->getTimestamp();
+		$timestamp = $datetime->getTimestamp() + $datetime->getOffset();
 		$result = [];
 
 		$result['board'] = DC::qb()

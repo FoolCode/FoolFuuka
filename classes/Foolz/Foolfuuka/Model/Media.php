@@ -4,6 +4,7 @@ namespace Foolz\Foolfuuka\Model;
 
 use \Foolz\Config\Config;
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use \Foolz\Cache\Cache;
 
 class MediaException extends \Exception {}
 class MediaNotFoundException extends MediaException {}
@@ -315,19 +316,18 @@ class Media
 			{
 				try
 				{
-					$imgsize = \Cache::get('foolfuuka.media.call.spoiler_size.'.$this->radix->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'));
+					$imgsize = Cache::item('foolfuuka.media.call.spoiler_size.'.$this->radix->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'))->get();
 					$this->preview_w = $imgsize[0];
 					$this->preview_h = $imgsize[1];
 				}
-				catch (\CacheNotFoundException $e)
+				catch (\OutOfBoundsException $e)
 				{
 					$imgpath = $this->getDir(true);
 					if ($imgpath !== null)
 					{
-						$imgsize = false;
 						$imgsize = @getimagesize($imgpath);
 
-						\Cache::set('foolfuuka.media.call.spoiler_size.'.$this->radix->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'), $imgsize, 86400);
+						Cache::item('foolfuuka.media.call.spoiler_size.'.$this->radix->id.'.'.$this->media_id.'.'.($this->op ? 'op':'reply'))->set($imgsize, 86400);
 
 						if ($imgsize !== false)
 						{

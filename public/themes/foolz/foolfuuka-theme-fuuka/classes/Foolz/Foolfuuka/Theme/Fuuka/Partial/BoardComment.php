@@ -53,7 +53,7 @@ class BoardComment extends \Foolz\Theme\View
 							<?php if ($p->capcode == 'D') : ?>
 		    <span class="postername admin">## <?= __('Developers') ?></span>
 			<?php endif ?>
-							<?= gmdate('D M d H:i:s Y', $p->getOriginalTimestamp()) ?>
+							<?= gmdate('D d M H:i:s Y', $p->getOriginalTimestamp()) ?>
 							<?php if ($p->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span></span><?php endif; ?>
 						</label>
 						<?php if ( ! $this->getBuilderParamManager()->getParam('thread_id', 0)) : ?>

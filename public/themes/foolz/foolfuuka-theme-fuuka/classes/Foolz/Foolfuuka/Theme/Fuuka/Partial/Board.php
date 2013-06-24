@@ -72,7 +72,7 @@ class Board extends \Foolz\Theme\View
 					<?php if ($op->capcode == 'D') : ?>
 						<span class="postername admin">## <?= __('Developer') ?></span>
 					<?php endif; ?>
-					<?= gmdate('D M d H:i:s Y', $op->getOriginalTimestamp()) ?>
+					<?= gmdate('D d M H:i:s Y', $op->getOriginalTimestamp()) ?>
 					<?php if ($op->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span></span><?php endif; ?>
 				</label>
 

@@ -1053,8 +1053,7 @@ class Comment
 				->from($this->radix->getTable(), 't')
 				->join('t', $this->radix->getTable('_threads'), 'u', 't.thread_num = u.thread_num')
 				->where('t.thread_num = :thread_num')
-				->getSQL()
-				.' '.DC::forge()->getDatabasePlatform()->getForUpdateSQL();
+				->getSQL();
 
 			$posts = DC::forge()->executeQuery($sql, [':thread_num' => $this->thread_num])
 				->fetchAll();

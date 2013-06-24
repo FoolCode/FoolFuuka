@@ -64,7 +64,8 @@ class BoardComment extends \Foolz\Theme\View
 
 						<?php if ($p->subnum > 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/communicate-icon.png'); ?>" alt="[INTERNAL]" title="<?= _i('This post was submitted as a "ghost" reply.') ?>"/><?php endif ?>
 						<?php if (isset($p->media) && $p->media->spoiler == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= _i('The image in this post has been marked as a spoiler.') ?>"/><?php endif ?>
-						<?php if ($p->deleted == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This post was delete before its lifetime expired.') ?>"/><?php endif ?>
+						<?php if ($p->deleted == 1 && $p->timestamp_expired == 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This post was deleted before its lifetime expired.') ?>"/><?php endif ?>
+						<?php if ($p->deleted == 1 && $p->timestamp_expired != 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This post was deleted on %s.', gmdate('M d, Y \a\t H:i:s e', $p->timestamp_expired)) ?>"/><?php endif ?>
 
 						<?php if (isset($modifiers['post_show_view_button'])) : ?>[<a class="btnr" href="<?= \Uri::create([$p->radix->shortname, 'thread', $p->thread_num]) . '#' . $p->num . (($p->subnum) ? '_' . $p->subnum : '') ?>">View</a>]<?php endif; ?>
 

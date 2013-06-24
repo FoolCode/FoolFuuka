@@ -23,6 +23,10 @@
 
 	"extra": {
 		"name": "Yotsubatwo",
-		"extends": "foolz/foolfuuka-theme-foolfuuka"
+		"extends": "foolz/foolfuuka-theme-foolfuuka",
+		"styles": {
+			"yotsuba": "Yotsuba",
+			"yotsuba-b": "Yotsuba B"
+		}
 	}
 }

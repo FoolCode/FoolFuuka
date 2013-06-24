@@ -17,7 +17,7 @@ class Chan extends \Foolz\Theme\View
 
 	public function getSelectedThemeClass()
 	{
-		return 'theme_default'.(\Cookie::get('theme_foolz/foolfuuka-theme-yotsubatwo_style') == 'yotsuba_b' ? ' yotsuba_b' : '');
+		return 'theme_default'.($this->getBuilder()->getStyle() == 'yotsuba-b' ? ' yotsuba_b' : '');
 	}
 
 	public function getStyles()
@@ -319,41 +319,19 @@ class Chan extends \Foolz\Theme\View
 					<?= __('Change Theme') ?> <span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<?php foreach($this->getTheme()->getLoader()->getAll() as $dir) :
-						foreach ($dir as $theme) :
-							if (isset($theme->enabled) && $theme->enabled) :
-								?>
-								<li>
-									<a href="<?= \Uri::create(array('theme', $theme->getConfig('name'))) ?>">
-										<?= $theme->getConfig('extra.name') ?>
-										<?php if ($theme === $this->getTheme()) : ?>
-											<i class="icon-ok"></i>
-										<?php endif; ?>
-									</a>
-								</li>
-							<?php endif;
-						endforeach;
+					<?php foreach($this->getTheme()->getLoader()->getListWithStyles() as $key => $theme) :
+						if (isset($theme['object']->enabled) && $theme['object']->enabled) :
+							?>
+							<li>
+								<a href="<?= \Uri::create(array('_', 'theme', $key)) ?>">
+									<?= $theme['string'] ?>
+									<?php if ($theme['object'] === $this->getTheme() && $theme['style'] == $this->getBuilder()->getStyle()) : ?>
+										<i class="icon-ok"></i>
+									<?php endif; ?>
+								</a>
+							</li>
+						<?php endif;
 					endforeach; ?>
-				</ul>
-			</div>
-		</div>
-
-		<div class="pull-right">
-			<div class="btn-group dropup pull-right">
-				<a href="#" class="btn btn-inverse btn-mini dropdown-toggle" data-toggle="dropdown">
-					<?= __('Change Style') ?> <span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
-					<?php foreach (['yotsuba' => 'Yotsuba', 'yotsuba_b' => 'Yotsuba B'] as $key => $name) : ?>
-					<li>
-						<a href="<?= \Uri::create(['theme', 'foolz/foolfuuka-theme-yotsubatwo', $key]) ?>">
-							<?= $name ?>
-							<?php if (( ! \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style') && $key == 'default') || $key === \Cookie::get('theme_foolz/foolfuuka-theme-foolfuuka_style')) : ?>
-								<i class="icon-ok"></i>
-							<?php endif; ?>
-						</a>
-					</li>
-					<?php endforeach; ?>
 				</ul>
 			</div>
 		</div>
@@ -413,7 +391,7 @@ class Chan extends \Foolz\Theme\View
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="<?= \Uri::base().'assets/js/jquery.js' ?>"><\/script>')</script>
-	<script defer src="<?= \Uri::base().'assets/bootstrap2/js/bootstrap.min.js?v=' ?>"></script>
+	<script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('bootstrap.min.js') ?>"></script>
 	<script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
 	<script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('board.js') ?>"></script>
 

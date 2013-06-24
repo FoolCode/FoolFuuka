@@ -21,6 +21,10 @@
 		}
 	},
 	"extra": {
-		"name" : "FoolFuuka"
+		"name" : "FoolFuuka",
+		"styles": {
+			"default": "Default",
+			"midnight": "Midnight"
+		}
 	}
 }

@@ -238,12 +238,10 @@ class Chan extends \Foolz\Theme\View
 
 				<?php
 					$theme_links = array();
-					foreach($this->getTheme()->getLoader()->getAll() as $dir) :
-						foreach ($dir as $theme) :
-							if (isset($theme->enabled) && $theme->enabled) :
-								$theme_links[] = '<a href="' . \Uri::create(array('theme', $theme->getConfig('name'))) . '">' . $theme->getConfig('extra.name') . '</a>';
-								endif;
-						endforeach;
+					foreach($this->getTheme()->getLoader()->getListWithStyles() as $key => $theme) :
+						if (isset($theme['object']->enabled) && $theme['object']->enabled) :
+							$theme_links[] = '<a href="' . \Uri::create(array('_', 'theme', $key)) . '">' . $theme['string'] . '</a>';
+						endif;
 					endforeach;
 
 					echo 'Theme [ ' . implode(' / ', $theme_links) . ' ]';

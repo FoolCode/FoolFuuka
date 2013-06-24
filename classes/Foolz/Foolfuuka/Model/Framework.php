@@ -86,20 +86,27 @@ class Framework
 
 				try
 				{
-					$theme = $theme_instance->get('foolfuuka', $key);
+					$theme = $theme_instance->get($key);
 					$theme->enabled = true;
 				}
 				catch (\OutOfBoundsException $e)
-				{
-
-				}
+				{}
 			}
 		}
 
 		try
 		{
 			$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
+			$theme_name_exploded = explode('/', $theme_name);
+
+			// must get rid of the style
+			if (count($theme_name_exploded) >= 2)
+			{
+				$theme_name = $theme_name_exploded[0].'/'.$theme_name_exploded[1];
+			}
+
 			$theme = $theme_instance->get($theme_name);
+
 			if ( ! isset($theme->enabled) || ! $theme->enabled)
 			{
 				throw new \OutOfBoundsException;
@@ -107,7 +114,6 @@ class Framework
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			$theme_name = 'foolz/foolfuuka-theme-foolfuuka';
 			$theme = $theme_instance->get('foolz/foolfuuka-theme-foolfuuka');
 		}
 

@@ -40,9 +40,21 @@ class Chan
 		// this has already been forged in the foolfuuka bootstrap
 		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 
+		$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
+
+
+
+
 		try
 		{
 			$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
+
+			$theme_name_exploded = explode('/', $theme_name);
+			if (count($theme_name_exploded) >=2)
+			{
+				$theme_name = $theme_name_exploded[0].'/'.$theme_name_exploded[1];
+			}
+
 			$theme = $theme_instance->get($theme_name);
 			if ( ! isset($theme->enabled) || ! $theme->enabled)
 			{
@@ -61,6 +73,18 @@ class Chan
 		$this->builder = $this->theme->createBuilder();
 		$this->param_manager = $this->builder->getParamManager();
 		$this->builder->createLayout('chan');
+
+		if (count($theme_name_exploded) == 3)
+		{
+			try
+			{
+				$this->builder->setStyle($theme_name_exploded[2]);
+			}
+			catch (\OutOfBoundsException $e)
+			{
+				// just let it go with default on getStyle()
+			}
+		}
 
 		$pass = \Cookie::get('reply_password', '');
 		$name = \Cookie::get('reply_name');
@@ -190,14 +214,9 @@ class Chan
 	{
 		$this->builder->getProps()->addTitle(__('Changing Theme Settings'));
 
-		$theme = $vendor.'/'.$theme;
+		$theme = $vendor.'/'.$theme.'/'.$style;
 
 		\Cookie::set('theme', $theme, 31536000, '/');
-
-		if ($style !== '')
-		{
-			\Cookie::set('theme_' . $theme . '_style', $style, 31536000, '/');
-		}
 
 		if (\Input::referrer())
 		{
@@ -212,6 +231,7 @@ class Chan
 			->getParamManager()
 			->setParam('url', $url);
 		$this->builder->getProps()->addTitle(__('Redirecting'));
+
 		return new Response($this->builder->build());
 	}
 

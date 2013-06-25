@@ -676,9 +676,8 @@ class Chan
 
 		// Check all allowed search modifiers and apply only these
 		$modifiers = [
-			'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode',
-			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end',
-			'order', 'page'
+			'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid',
+			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'page'
 		];
 
 		if (\Auth::has_access('comment.see_ip'));

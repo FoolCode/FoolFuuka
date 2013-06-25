@@ -49,6 +49,17 @@ class Search extends Board
 			],
 			[
 				'type' => 'input',
+				'label' => _i('Unique ID'),
+				'name' => 'uid',
+			],
+			[
+				'type' => 'input',
+				'label' => _i('Poster IP'),
+				'name' => 'poster_ip',
+				'access' => 'comment.see_ip'
+			],
+			[
+				'type' => 'input',
 				'label' => _i('Filename'),
 				'name' => 'filename'
 			],
@@ -70,13 +81,6 @@ class Search extends Board
 				'name' => 'end',
 				'placeholder' => 'YYYY-MM-DD'
 			],
-			[
-				'type' => 'input',
-				'label' => _i('Poster IP'),
-				'name' => 'poster_ip',
-				'access' => 'comment.see_ip'
-			],
-
 			[
 				'type' => 'radio',
 				'label' => _i('Deleted posts'),
@@ -177,7 +181,7 @@ class Search extends Board
 		extract($this->options);
 
 		// set all empty fields to null
-		$search_fields = ['boards', 'subject', 'text', 'username', 'tripcode', 'email', 'capcode', 'poster_ip',
+		$search_fields = ['boards', 'subject', 'text', 'username', 'tripcode', 'email', 'capcode', 'uid', 'poster_ip',
 			'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order'];
 
 		foreach ($search_fields as $field)
@@ -338,6 +342,11 @@ class Search extends Board
 				{
 					$query->where('cap', ord('D'));
 				}
+			}
+
+			if ($args['uid'] !== null)
+			{
+				$query->match('pid', $args['uid']);
 			}
 
 			if (\Auth::has_access('comment.see_ip') && $args['poster_ip'] !== null)

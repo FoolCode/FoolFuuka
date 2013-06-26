@@ -653,184 +653,144 @@ class CommentInsert extends Comment
 			}
 		}
 
-		$try_max = 3;
-		$try_count = 0;
-
-		$commit = false;
-
-		while ($commit === false)
+		try
 		{
-			try
+			DC::forge()->beginTransaction();
+
+			$query_fields = [
+				'num' => $num,
+				'subnum' => $subnum,
+				'thread_num' => $thread_num,
+			];
+
+			$fields = [
+				'media_id' => $this->media->media_id ? $this->media->media_id : 0,
+				'op' => (int) $this->op,
+				'timestamp' => $this->timestamp,
+				'capcode' => $this->capcode,
+				'email' => $this->email,
+				'name' => $this->name,
+				'trip' => $this->trip,
+				'title' => $this->title,
+				'comment' => $this->comment,
+				'delpass' => $this->delpass,
+				'spoiler' => (int) $this->media->spoiler,
+				'poster_ip' => $this->poster_ip,
+				'poster_hash' => $this->poster_hash,
+				'poster_country' => $this->poster_country,
+				'preview_orig' => $this->media->preview_orig,
+				'preview_w' => $this->media->preview_w,
+				'preview_h' => $this->media->preview_h,
+				'media_filename' => $this->media->media_filename,
+				'media_w' => $this->media->media_w,
+				'media_h' => $this->media->media_h,
+				'media_size' => $this->media->media_size,
+				'media_hash' => $this->media->media_hash,
+				'media_orig' => $this->media->media_orig,
+				'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
+
+				'timestamp_expired' => 0
+			];
+
+			foreach ($fields as $key => $item)
 			{
-				DC::forge()->beginTransaction();
-
-				$query_fields = [
-					'num' => $num,
-					'subnum' => $subnum,
-					'thread_num' => $thread_num,
-				];
-
-				$fields = [
-					'media_id' => $this->media->media_id ? $this->media->media_id : 0,
-					'op' => (int) $this->op,
-					'timestamp' => $this->timestamp,
-					'capcode' => $this->capcode,
-					'email' => $this->email,
-					'name' => $this->name,
-					'trip' => $this->trip,
-					'title' => $this->title,
-					'comment' => $this->comment,
-					'delpass' => $this->delpass,
-					'spoiler' => (int) $this->media->spoiler,
-					'poster_ip' => $this->poster_ip,
-					'poster_hash' => $this->poster_hash,
-					'poster_country' => $this->poster_country,
-					'preview_orig' => $this->media->preview_orig,
-					'preview_w' => $this->media->preview_w,
-					'preview_h' => $this->media->preview_h,
-					'media_filename' => $this->media->media_filename,
-					'media_w' => $this->media->media_w,
-					'media_h' => $this->media->media_h,
-					'media_size' => $this->media->media_size,
-					'media_hash' => $this->media->media_hash,
-					'media_orig' => $this->media->media_orig,
-					'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
-
-					'timestamp_expired' => 0
-				];
-
-				foreach ($fields as $key => $item)
+				if ($item === null)
 				{
-					if ($item === null)
-					{
-						$fields[$key] = 'null';
-					}
-					else
-					{
-						$fields[$key] = DC::forge()->quote($item);
-					}
+					$fields[$key] = 'null';
 				}
-
-				$fields = $query_fields + $fields;
-
-				DC::forge()->executeUpdate(
-					'INSERT INTO '.$this->radix->getTable().
-					'('.implode(', ', array_keys($fields)).')'.
-					'VALUES ('.implode(', ', array_values($fields)).')'
-				);
-
-				$last_id = DC::forge()->lastInsertId($this->radix->getTable('_doc_id_seq'));
-
-				// check that it wasn't posted multiple times
-				$check_duplicate = DC::qb()
-					->select('*')
-					->from($this->radix->getTable(), 'r')
-					->where('comment = :comment')
-					->andWhere('poster_ip = :poster_ip')
-					->andWhere('timestamp >= :timestamp')
-					->setParameters([
-						':comment' => $this->comment,
-						':poster_ip' => \Input::ip_decimal(),
-						':timestamp' => $this->timestamp
-					])
-					->execute()
-					->fetchAll();
-
-				if (count($check_duplicate) > 1)
+				else
 				{
-					DC::forge()->rollBack();
-					throw new CommentSendingDuplicateException(_i('You are sending the same post twice.'));
+					$fields[$key] = DC::forge()->quote($item);
 				}
+			}
 
-				$comment = DC::qb()
-					->select('*')
-					->from($this->radix->getTable(), 'r')
+			$fields = $query_fields + $fields;
+
+			DC::forge()->executeUpdate(
+				'INSERT INTO '.$this->radix->getTable().
+					' ('.implode(', ', array_keys($fields)).') VALUES ('.implode(', ', array_values($fields)).')'
+			);
+
+			$last_id = DC::forge()->lastInsertId($this->radix->getTable('_doc_id_seq'));
+
+			$comment = DC::qb()
+				->select('*')
+				->from($this->radix->getTable(), 'r')
+				->where('doc_id = :doc_id')
+				->setParameter(':doc_id', $last_id)
+				->execute()
+				->fetchAll();
+
+			$comment = current($comment);
+
+			$media_fields = Media::getFields();
+			// refresh the current comment object with the one finalized fetched from DB
+			foreach ($comment as $key => $item)
+			{
+				if (in_array($key, $media_fields))
+				{
+					$this->media->$key = $item;
+				}
+				else
+				{
+					$this->$key = $item;
+				}
+			}
+
+			if ( ! $this->radix->archive)
+			{
+				$this->insertTriggerThreads();
+				$this->insertTriggerDaily();
+				$this->insertTriggerUsers();
+			}
+
+			// update poster_hash for op posts
+			if ($this->op && $this->radix->getValue('enable_poster_hash'))
+			{
+				$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment['thread_num']),'id'), 3), 0, 8);
+
+				DC::qb()
+					->update($this->radix->getTable(), 'ph')
+					->set('poster_hash', DC::forge()->quote($this->poster_hash))
 					->where('doc_id = :doc_id')
-					->setParameter(':doc_id', $last_id)
-					->execute()
-					->fetchAll();
-
-				$comment = current($comment);
-
-				$media_fields = Media::getFields();
-				// refresh the current comment object with the one finalized fetched from DB
-				foreach ($comment as $key => $item)
-				{
-					if (in_array($key, $media_fields))
-					{
-						$this->media->$key = $item;
-					}
-					else
-					{
-						$this->$key = $item;
-					}
-				}
-
-				if ( ! $this->radix->archive)
-				{
-					$this->insertTriggerThreads();
-					$this->insertTriggerDaily();
-					$this->insertTriggerUsers();
-				}
-
-				// update poster_hash for non-ghost posts
-				if ($this->op && $this->radix->getValue('enable_poster_hash'))
-				{
-					$this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment['thread_num']),'id'), 3), 0, 8);
-
-					DC::qb()
-						->update($this->radix->getTable(), 'ph')
-						->set('poster_hash', DC::forge()->quote($this->poster_hash))
-						->where('doc_id = :doc_id')
-						->setParameter(':doc_id', $comment['doc_id'])
-						->execute();
-				}
-
-				// set data for extra fields
-				\Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.result.extra_json_array')
-					->setObject($this)
+					->setParameter(':doc_id', $comment['doc_id'])
 					->execute();
-
-				// insert the extra row DURING A TRANSACTION
-				$this->extra->extra_id = $last_id;
-				$this->extra->insert();
-
-				DC::forge()->commit();
-
-				// clean up some caches
-				Cache::item('foolfuuka.model.board.getThreadComments.thread.'
-					.md5(serialize([$this->radix->shortname, $this->thread_num])))->delete();
-
-				// clean up the 10 first pages of index and gallery that are cached
-				for ($i = 1; $i <= 10; $i++)
-				{
-					Cache::item('foolfuuka.model.board.getLatestComments.query.'
-						.$this->radix->shortname.'.by_post.'.$i)->delete();
-
-					Cache::item('foolfuuka.model.board.getLatestComments.query.'
-						.$this->radix->shortname.'.by_thread.'.$i)->delete();
-
-					Cache::item('foolfuuka.model.board.getThreadsComments.query.'
-						.$this->radix->shortname.'.'.$i)->delete();
-				}
-
-				$commit = true;
 			}
-			catch (\Doctrine\DBAL\DBALException $e)
+
+			// set data for extra fields
+			\Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.result.extra_json_array')
+				->setObject($this)
+				->execute();
+
+			// insert the extra row DURING A TRANSACTION
+			$this->extra->extra_id = $last_id;
+			$this->extra->insert();
+
+			DC::forge()->commit();
+
+			// clean up some caches
+			Cache::item('foolfuuka.model.board.getThreadComments.thread.'
+				.md5(serialize([$this->radix->shortname, $this->thread_num])))->delete();
+
+			// clean up the 10 first pages of index and gallery that are cached
+			for ($i = 1; $i <= 10; $i++)
 			{
-				\Log::error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
+				Cache::item('foolfuuka.model.board.getLatestComments.query.'
+					.$this->radix->shortname.'.by_post.'.$i)->delete();
 
-				DC::forge()->rollBack();
+				Cache::item('foolfuuka.model.board.getLatestComments.query.'
+					.$this->radix->shortname.'.by_thread.'.$i)->delete();
 
-				$try_count++;
-
-				if ($try_count > $try_max)
-				{
-					throw new CommentSendingDatabaseException(_i('Something went wrong when inserting the post in the database. Try again.'));
-				}
-
-				continue;
+				Cache::item('foolfuuka.model.board.getThreadsComments.query.'
+					.$this->radix->shortname.'.'.$i)->delete();
 			}
+		}
+		catch (\Doctrine\DBAL\DBALException $e)
+		{
+			\Log::error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
+			DC::forge()->rollBack();
+
+			throw new CommentSendingDatabaseException(_i('Something went wrong when inserting the post in the database. Try again.'));
 		}
 
 		return $this;

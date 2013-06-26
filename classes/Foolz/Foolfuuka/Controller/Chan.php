@@ -408,11 +408,11 @@ class Chan
 
 			// get the current status of the thread
 			$thread_status = $board->getThreadStatus();
+			$last_modified = $thread_status['last_modified'];
 
-			$last_modified = new \DateTime('@'.$thread_status['last_modified']);
-
-			$response->setLastModified($last_modified);
-			$response->setPublic();
+			$response->headers->addCacheControlDirective('must-revalidate', true);
+			$response->setLastModified(new \DateTime('@'.$last_modified))
+				->setMaxAge(0);
 
 			if ($response->isNotModified($this->request))
 			{

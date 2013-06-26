@@ -29,6 +29,13 @@ class Chan
 	protected $param_manager = null;
 
 	/**
+	 *  The Request object
+	 *
+	 * @var \Request
+	 */
+	protected $request = null;
+
+	/**
 	 * The currently selected radix
 	 *
 	 * @var  \Foolz\Foolfuuka\Model\Radix|null
@@ -41,9 +48,6 @@ class Chan
 		$theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 
 		$theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
-
-
-
 
 		try
 		{
@@ -140,6 +144,9 @@ class Chan
 
 	public function router(Request $request, $method, $parameters)
 	{
+		// store the request object for custom response
+		$this->request = $request;
+
 		// let's see if we hit a radix route
 		if ($request->attributes->get('radix_shortname') !== null)
 		{
@@ -390,6 +397,8 @@ class Chan
 		\Profiler::mark('Controller Chan::thread Start');
 		$num = str_replace('S', '', $num);
 
+		$response = new Response();
+
 		try
 		{
 			$board = \Board::forge()
@@ -397,13 +406,26 @@ class Chan
 				->setRadix($this->_radix)
 				->setOptions($options);
 
+			// get the current status of the thread
+			$thread_status = $board->getThreadStatus();
+
+			$last_modified = new \DateTime('@'.$thread_status['last_modified']);
+
+			$response->setLastModified($last_modified);
+			$response->setPublic();
+
+			if ($response->isNotModified($this->request))
+			{
+				return $response;
+			}
+
 			// execute in case there's more exceptions to handle
 			$thread = $board->getComments();
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
 		{
 			\Profiler::mark('Controller Chan::thread End Prematurely');
-			return $this->radix_post($num);
+			return $this->error($e->getMessage());
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardException $e)
 		{
@@ -414,17 +436,6 @@ class Chan
 		// get the latest doc_id and latest timestamp for realtime stuff
 		$latest_doc_id = $board->getHighest('doc_id')->doc_id;
 		$latest_timestamp = $board->getHighest('timestamp')->timestamp;
-
-		// check if we can determine if posting is disabled
-		try
-		{
-			$thread_status = $board->checkThreadStatus();
-		}
-		catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
-		{
-			\Profiler::mark('Controller Chan::thread End Prematurely');
-			return $this->error();
-		}
 
 		$this->builder->getProps()->addTitle(_i('Thread').' #'.$num);
 		$this->param_manager->setParams([
@@ -465,7 +476,9 @@ class Chan
 		\Profiler::mark('Controller Chan::thread End');
 		$result = $this->builder->build();
 
-		return new Response($result);
+		$response->setContent($result);
+
+		return $response;
 	}
 
 	public function radix_gallery($page = 1)
@@ -546,6 +559,7 @@ class Chan
 			->getParamManager()
 			->setParam('url', $redirect);
 		$this->builder->getProps()->addTitle(_i('Redirecting'));
+
 		return new Response($this->builder->build());
 	}
 

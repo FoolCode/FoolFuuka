@@ -303,7 +303,7 @@ class Board
 			throw new BoardException(_i('The page number is not valid.'));
 		}
 
-		$this->setoptions('page', $page);
+		$this->setOptions('page', $page);
 
 		return $this;
 	}
@@ -953,102 +953,55 @@ class Board
 	 * @throws  BoardNotCompatibleMethodException  If the specified fetching method is not "getThreadComments"
 	 * @throws  BoardThreadNotFoundException       If the thread was not found
 	 */
-	protected function p_checkThreadStatus()
+	protected function p_getThreadStatus()
 	{
-		if ($this->method_fetching !== 'getThreadComments' && $this->method_fetching !== 'getThreadInformation')
+		if ($this->method_fetching !== 'getThreadComments')
 		{
 			throw new BoardNotCompatibleMethodException;
 		}
 
+		extract($this->options);
+
+		$thread = DC::qb()
+			->select('*')
+			->from($this->radix->getTable('_threads'), 't')
+			->where('thread_num = :thread_num')
+			->setParameter(':thread_num', $num)
+			->execute()
+			->fetch();
+
+		if ( ! $thread) {
+			throw new BoardThreadNotFoundException(_i('The thread you were looking for does not exist.'));
+		}
+
 		// define variables to override
-		$thread_op_present = false;
 		$ghost_post_present = false;
-		$thread_last_bump = 0;
-		$counter = ['posts' => 0, 'images' => 0];
 
-		if ($this->method_fetching === 'getThreadComments')
+		if ($thread['time_ghost'] !== null)
 		{
-			foreach ($this->comments_unsorted as $post)
-			{
-				// we need to find if there's the OP in the list
-				// let's be strict, we want the $num to be the OP
-				if ($post->op == 1)
-				{
-					$thread_op_present = true;
-				}
-
-				if ($post->subnum == 0 && $post->media !== null)
-				{
-					$counter['images']++;
-				}
-
-				if ($post->subnum > 0)
-				{
-					$ghost_post_present = true;
-				}
-
-				if ($post->subnum == 0 && $thread_last_bump < $post->timestamp)
-				{
-					$thread_last_bump = $post->timestamp;
-				}
-
-				$counter['posts']++;
-			}
-		}
-
-		if ($this->method_fetching === 'getThreadInformation')
-		{
-			extract($this->options);
-
-			$thread = DC::qb()
-				->select('*')
-				->from($this->radix->getTable('_threads'), 't')
-				->where('thread_num = :thread_num')
-				->setParameter(':thread_num', $num)
-				->execute()
-				->fetch();
-
-			if ($thread)
-			{
-				$thread_op_present = true;
-			}
-
-			if ($thread['time_ghost'] !== null)
-			{
-				$ghost_post_present = true;
-			}
-
-			$thread_last_bump = $thread['time_last'];
-
-			$counter = ['posts' => $thread['nreplies'], 'images' => $thread['nimages']];
-		}
-
-		// we didn't point to the thread OP, this is not a thread
-		if ( ! $thread_op_present)
-		{
-			// this really should not happen here
-			throw new BoardThreadNotFoundException(_i('The thread you were looking for can\'t be found.'));
+			$ghost_post_present = true;
 		}
 
 		$result = [
-			'closed' => false,
+			'closed' => (bool) $thread['locked'],
 			'dead' => (bool) $this->radix->archive,
 			'disable_image_upload' => (bool) $this->radix->archive,
+			'last_modified' => $thread['time_last_modified']
 		];
 
 		// time check
-		if (time() - $thread_last_bump > 432000 || $ghost_post_present)
+		if (time() - $thread['time_last'] > 432000 || $ghost_post_present)
 		{
 			$result['dead'] = true;
 			$result['disable_image_upload'] = true;
 		}
 
-		if ($counter['posts'] > $this->radix->getValue('max_posts_count'))
+		if ($thread['nreplies'] > $this->radix->getValue('max_posts_count'))
 		{
 			$result['dead'] = true;
 			$result['disable_image_upload'] = true;
 		}
-		elseif ($counter['images'] >= $this->radix->getValue('max_images_count'))
+		elseif ($thread['nimages'] >= $this->radix->getValue('max_images_count'))
 		{
 			$result['disable_image_upload'] = true;
 		}

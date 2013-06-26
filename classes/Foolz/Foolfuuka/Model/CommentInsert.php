@@ -73,7 +73,6 @@ class CommentInsert extends Comment
 				->setParameter(':trips', $item['trips'])
 				->setParameter(':names', $item['names'])
 				->execute();
-
 		}
 	}
 
@@ -161,7 +160,6 @@ class CommentInsert extends Comment
 						->set('time_bump', 'GREATEST(time_bump, :time_bump)')
 						->setParameter(':time_bump', $this->timestamp);
 				}
-
 			}
 			else
 			{
@@ -250,10 +248,9 @@ class CommentInsert extends Comment
 			{
 				$thread = Board::forge()
 					->getThread($this->thread_num)
-					->setRadix($this->radix)
-					->setMethodFetching('getThreadInformation');
+					->setRadix($this->radix);
 
-				$status = $thread->checkThreadStatus();
+				$status = $thread->getThreadStatus();
 			}
 			catch (BoardException $e)
 			{

@@ -142,7 +142,7 @@ class Chan
 					'latest_doc_id' => $latest_doc_id,
 					'realtime' => true,
 					'controller_method' =>
-					ctype_digit((string) \Input::get('last_limit')) ? 'last/'.\Input::get('last_limit') : 'thread'
+						ctype_digit((string) \Input::get('last_limit')) ? 'last/'.\Input::get('last_limit') : 'thread'
 				];
 
 				$board = \Board::forge()

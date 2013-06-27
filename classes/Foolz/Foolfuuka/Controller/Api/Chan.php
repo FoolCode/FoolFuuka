@@ -204,7 +204,8 @@ class Chan
 			$board = \Search::forge()
 				->getSearch($search)
 				->setRadix($this->_radix)
-				->setPage($search['page'] ? $search['page'] : 1);
+				->setPage($search['page'] ? $search['page'] : 1)
+				->setApi(['theme' => $this->_theme, 'board' => false]);
 
 			$comments = $board->getComments();
 

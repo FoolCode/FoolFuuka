@@ -12,6 +12,7 @@ class Chan
 	protected $_radix = null;
 	protected $_theme = null;
 	protected $format = 'json';
+	protected $request = null;
 
 	public function before(Request $request)
 	{
@@ -43,8 +44,11 @@ class Chan
 		}
 	}
 
-	public function router(Request $request, $method, $parameters)
+	public function router(Request $request, $method)
 	{
+		// store the request object for custom response
+		$this->request = $request;
+
 		if ($request->getMethod() == 'GET')
 		{
 			return [$this, 'get_'.$method, []];
@@ -89,13 +93,131 @@ class Chan
 			return false;
 		}
 
-
 		return true;
 	}
 
 	public function get_404()
 	{
 		return $this->response(['error' => _i('Invalid Method.')], 404);
+	}
+
+	public function get_index()
+	{
+		if ( ! $this->check_board())
+		{
+			return $this->response(['error' => _i('No board selected.')], 404);
+		}
+
+		$page = \Input::get('page');
+
+		if ( ! $page)
+		{
+			return $this->response(['error' => _i('The "page" parameter is missing.')], 404);
+		}
+
+		if ( ! ctype_digit((string) $page))
+		{
+			return $this->response(['error' => _i('The value for "page" is invalid.')], 404);
+		}
+
+		$page = intval($page);
+
+		try
+		{
+			$options = [
+				'per_page' => $this->_radix->getValue('threads_per_page'),
+				'per_thread' => 5,
+				'order' => 'by_thread'
+			];
+
+			$board = \Board::forge()
+				->getLatest()
+				->setRadix($this->_radix)
+				->setPage($page)
+				->setApi(['theme' => $this->_theme, 'board' => false])
+				->setOptions($options);
+
+			$comments = $board->getComments();
+
+			return $this->response($comments, 200);
+		}
+		catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
+		{
+			return $this->response(['error' => _i('Thread not found.')], 200);
+		}
+		catch (\Foolz\Foolfuuka\Model\BoardException $e)
+		{
+			return $this->response(['error' => _i('Encountered an unknown error.')], 500);
+		}
+	}
+
+	public function get_search()
+	{
+		// check all allowed search modifiers and apply only these
+		$modifiers = [
+			'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid',
+			'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'page'
+		];
+
+		if (\Auth::has_access('comment.see_ip'));
+		{
+			$modifiers[] = 'poster_ip';
+		}
+
+		$search = [];
+
+		foreach ($modifiers as $modifier)
+		{
+			$search[$modifier] = \Input::get($modifier);
+		}
+
+		foreach ($search as $key => $value)
+		{
+			if (in_array($key, $modifiers) && $value !== null)
+			{
+				$search[$key] = trim(rawurldecode($value));
+			}
+		}
+
+		if ($search['boards'] !== null)
+		{
+			$search['boards'] = explode('.', $search['boards']);
+		}
+
+		if ($search['image'] !== null)
+		{
+			$search['image'] = base64_encode(\Media::urlsafe_b64decode($search['image']));
+		}
+
+		if ($search['poster_ip'] !== null)
+		{
+			if ( ! filter_var($search['poster_ip'], FILTER_VALIDATE_IP))
+			{
+				return $this->error(_i('The poster IP you inserted is not a valid IP address.'));
+			}
+
+			$search['poster_ip'] = \Foolz\Inet\Inet::ptod($search['poster_ip']);
+		}
+
+		try
+		{
+			$board = \Search::forge()
+				->getSearch($search)
+				->setRadix($this->_radix)
+				->setPage($search['page'] ? $search['page'] : 1);
+
+			$comments = $board->getComments();
+
+			return $this->response($comments, 200);
+		}
+		catch (\Foolz\Foolfuuka\Model\SearchException $e)
+		{
+			return $this->response(['error' => $e->getMessage()], 200);
+		}
+		catch (\Foolz\Foolfuuka\Model\BoardException $e)
+		{
+			return $this->response(['error' => $e->getMessage()], 500);
+		}
 	}
 
 	/**
@@ -172,11 +294,24 @@ class Chan
 					->setApi(['theme' => $this->_theme, 'board' => false])
 					->setOptions($options);
 
-				$comments = $board->getComments();
+				$thread_status = $board->getThreadStatus();
+				$last_modified = $thread_status['last_modified'];
 
-				return $this->response($comments, 200);
+				$response = new JsonResponse();
+				$response->headers->addCacheControlDirective('must-revalidate', true);
+				$response->setLastModified(new \DateTime('@'.$last_modified))
+					->setMaxAge(0);
+
+				if ($response->isNotModified($this->request))
+				{
+					return $response;
+				}
+
+				$response->setData($board->getComments());
+				$response->setStatusCode(200);
+
+				return $response;
 			}
-
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e)
 		{
@@ -216,8 +351,23 @@ class Chan
 
 			$comment = current($board->getComments());
 
+			$last_modified = $comment->timestamp_expired ?: $comment->timestamp;
+
+			$response = new JsonResponse();
+			$response->headers->addCacheControlDirective('must-revalidate', true);
+				$response->setLastModified(new \DateTime('@'.$last_modified))
+					->setMaxAge(0);
+
+			if ($response->isNotModified($this->request))
+			{
+				return $response;
+			}
+
 			// no index for the single post
-			return $this->response($comment, 200);
+			$response->setData($comment);
+			$response->setStatusCode(200);
+
+			return $response;
 		}
 		catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e)
 		{

@@ -371,8 +371,6 @@ class BoardStatistics
 			->where('timestamp > '.($timestamp - 1800))
 			->groupBy('name')
 			->addGroupBy('trip')
-			->addGroupBy('num')
-			->addGroupBy('subnum')
 			->orderBy('MAX(timestamp)', 'desc')
 			->execute()
 			->fetchAll();
@@ -384,8 +382,6 @@ class BoardStatistics
 			->andWhere('timestamp > '.($timestamp - 3600))
 			->groupBy('name')
 			->addGroupBy('trip')
-			->addGroupBy('num')
-			->addGroupBy('subnum')
 			->orderBy('MAX(timestamp)', 'desc')
 			->execute()
 			->fetchAll();

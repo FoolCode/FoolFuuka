@@ -460,8 +460,9 @@ class Board
 					->setFirstResult(0)
 					->getSQL().')';
 
+				$omitted = ($thread['nreplies'] - ($per_thread + 1));
 				$results[$thread['thread_num']] = [
-					'omitted' => ($thread['nreplies'] - ($per_thread + 1)),
+					'omitted' => $omitted > 0 ? $omitted : 0,
 					'images_omitted' => ($thread['nimages'] - 1)
 				];
 			}
@@ -479,7 +480,15 @@ class Board
 		}
 
 		// populate posts_arr array
-		$this->comments_unsorted = Comment::fromArrayDeep($query_posts, $this->radix, $this->comment_options);
+		if ($this->api)
+		{
+			$this->comments_unsorted = Comment::fromArrayDeepApi($query_posts, $this->radix, $this->api, $this->comment_options);
+		}
+		else
+		{
+			$this->comments_unsorted = Comment::fromArrayDeep($query_posts, $this->radix, $this->comment_options);
+		}
+
 		\Profiler::mark_memory($this->comments_unsorted, 'Board $this->comments_unsorted');
 
 		// populate results array and order posts
@@ -888,8 +897,6 @@ class Board
 				break;
 		}
 
-
-
 		if ( ! count($query_result) && isset($latest_doc_id))
 		{
 			return $this->comments = $this->comments_unsorted = [];
@@ -908,7 +915,6 @@ class Board
 					'backlinks_hash_only_url' => true,
 					'controller_method' => $controller_method
 				] + $this->comment_options);
-
 		}
 		else
 		{
@@ -976,17 +982,25 @@ class Board
 
 		// define variables to override
 		$ghost_post_present = false;
+		$last_modified = $thread['time_last_modified'];
 
 		if ($thread['time_ghost'] !== null)
 		{
 			$ghost_post_present = true;
 		}
 
+		if ($this->radix->archive)
+		{
+			$timestamp = new \DateTime(date('Y-m-d H:i:s', $last_modified), new \DateTimeZone('America/New_York'));
+			$timestamp->setTimezone(new \DateTimeZone('UTC'));
+			$last_modified = $timestamp->getTimestamp() + $timestamp->getOffset();
+		}
+
 		$result = [
 			'closed' => (bool) $thread['locked'],
 			'dead' => (bool) $this->radix->archive,
 			'disable_image_upload' => (bool) $this->radix->archive,
-			'last_modified' => $thread['time_last_modified']
+			'last_modified' => $last_modified
 		];
 
 		// time check

@@ -236,6 +236,9 @@ class Comment
 		// remove radix data
 		unset($comment->extra->radix);
 
+		// remove extra radix data
+		unset($comment->current_board_for_prc);
+
 		// we don't have captcha in use in api
 		unset($comment->recaptcha_challenge, $comment->recaptcha_response);
 

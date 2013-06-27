@@ -205,7 +205,7 @@ class Chan
 				->getSearch($search)
 				->setRadix($this->_radix)
 				->setPage($search['page'] ? $search['page'] : 1)
-				->setApi(['theme' => $this->_theme, 'board' => false]);
+				->setApi(['theme' => $this->_theme, 'board' => true]);
 
 			$comments = $board->getComments();
 

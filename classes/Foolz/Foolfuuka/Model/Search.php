@@ -515,7 +515,14 @@ class Search extends Board
 		{
 			$board = ($this->radix !== null ? $this->radix : \Radix::getById($post['board_id']));
 
-			$this->comments_unsorted[] = new \Comment($post, $board);
+			if ($this->api)
+			{
+				$this->comments_unsorted[] = \Comment::forgeForApi($post, $board, $this->api, $this->comment_options);
+			}
+			else
+			{
+				$this->comments_unsorted[] = new \Comment($post, $board);
+			}
 		}
 
 		$this->comments[0]['posts'] = $this->comments_unsorted;

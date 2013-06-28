@@ -947,7 +947,7 @@ class Comment
 	 *
 	 * @return array|bool
 	 */
-	protected function p_delete($password = null, $force = false)
+	protected function p_delete($password = null, $force = false, $thread = false)
 	{
 		if ( ! \Auth::has_access('comment.passwordless_deletion') && $force !== true)
 		{
@@ -962,194 +962,175 @@ class Comment
 
 			if ($this->delpass !== $hashed)
 			{
-				throw new CommentDeleteWrongPassException(_i('The password you inserted didn\'t match the deletion password.'));
+				throw new CommentDeleteWrongPassException(_i('You did not provide the correct deletion password.'));
 			}
 		}
 
-		DC::forge()->beginTransaction();
-
-		// throw in the _deleted table
-		DC::forge()->executeUpdate(
-			'INSERT INTO '.$this->radix->getTable('_deleted').' '.
-			DC::qb()
-				->select('*')
-				->from($this->radix->getTable(), 't')
-				->where('doc_id = '.DC::forge()->quote($this->doc_id))
-				->getSQL()
-		);
-
-		// remove message
-		DC::qb()
-			->delete($this->radix->getTable())
-			->where('doc_id = :doc_id')
-			->setParameter(':doc_id', $this->doc_id)
-			->execute();
-
-		// remove its extras
-		DC::qb()
-			->delete($this->radix->getTable('_extra'))
-			->where('extra_id = :doc_id')
-			->setParameter(':doc_id', $this->doc_id)
-			->execute();
-
-		// remove message moderation
-		$reports_affected = DC::qb()
-			->delete(DC::p('reports'))
-			->where('board_id = :board_id')
-			->andWhere('doc_id = :doc_id')
-			->setParameter(':board_id', $this->radix->id)
-			->setParameter(':doc_id', $this->doc_id)
-			->execute();
-
-		if ($reports_affected > 0)
+		try
 		{
-			\Report::clearCache();
-		}
+			DC::forge()->beginTransaction();
 
-		// remove its image file
-		if (isset($this->media))
-		{
-			$this->media->delete();
-		}
 
-		// if it's OP delete all other comments
-		if ($this->op)
-		{
-			// throw in the _deleted table
-			DC::forge()->executeUpdate(
+
+			// throw into _deleted table
+			$lol = DC::forge()->executeUpdate(
 				'INSERT INTO '.$this->radix->getTable('_deleted').' '.
-				DC::qb()
-					->select('*')
-					->from($this->radix->getTable(), 'b')
-					->where('thread_num = '.DC::forge()->quote($this->thread_num))
-					->getSQL()
+					DC::qb()
+						->select('*')
+						->from($this->radix->getTable(), 't')
+						->where('doc_id = '.DC::forge()->quote($this->doc_id))
+						->getSQL()
 			);
 
+			// delete post
 			DC::qb()
-				->delete($this->radix->getTable('_threads'))
-				->where('thread_num = :thread_num')
-				->setParameter(':thread_num', $this->thread_num)
+				->delete($this->radix->getTable())
+				->where('doc_id = :doc_id')
+				->setParameter(':doc_id', $this->doc_id)
 				->execute();
 
-			$replies = DC::qb()
-				->select('doc_id')
-				->from($this->radix->getTable(), 'b')
-				->where('thread_num = :thread_num')
-				->setParameter(':thread_num', $this->thread_num)
-				->execute()
-				->fetchAll();
-
-			foreach ($replies as $reply)
-			{
-				$comments = \Board::forge()
-					->getPost()
-					->setOptions('doc_id', $reply['doc_id'])
-					->setRadix($this->radix)
-					->getComments();
-
-				$comment = current($comments);
-				$comment->delete(null, true);
-			}
-		}
-		else
-		{
-			// To ensure consistency we LOCK the ROW with FOR UPDATE clause (in a crude way, but it should work)
-			$sql = DC::qb()
-				->select('*')
-				->from($this->radix->getTable(), 't')
-				->join('t', $this->radix->getTable('_threads'), 'u', 't.thread_num = u.thread_num')
-				->where('t.thread_num = :thread_num')
-				->getSQL();
-
-			$posts = DC::forge()->executeQuery($sql, [':thread_num' => $this->thread_num])
-				->fetchAll();
-
-			$time_last = null;
-			$time_bump = null;
-			$time_ghost = null;
-			$time_ghost_bump = null;
-
-			$thread_replies = 0;
-			$thread_images = 0;
-
-			foreach ($posts as $post)
-			{
-				if ( ! $post['subnum'] && $time_last < $post['timestamp'])
-				{
-					$time_last = $post['timestamp'];
-				}
-
-				if ( ! $post['subnum'] && $time_bump < $post['timestamp'] && $post['email'] !== 'sage')
-				{
-					$time_bump = $post['timestamp'];
-				}
-
-				if ($post['subnum'] > 0)
-				{
-					if ($time_ghost === null || $time_ghost > $post['timestamp'])
-					{
-						$time_ghost = $post['timestamp'];
-					}
-
-					if ($time_ghost_bump === null || $time_ghost_bump < $post['timestamp'])
-					{
-						$time_ghost_bump = $post['timestamp'];
-					}
-				}
-
-				if ($post['media_id'] != 0)
-				{
-					$thread_images++;
-				}
-
-				$thread_replies++;
-			}
-
-			if ($time_bump === null)
-			{
-				$time_bump = $time_last;
-			}
-
-			// update the thread information
+			// remove any extra data
 			DC::qb()
-				->update($this->radix->getTable('_threads'))
-				->set('time_last', ':time_last')
-				->set('time_bump', ':time_bump')
-				->set('time_ghost', ':time_ghost')
-				->set('time_ghost_bump', ':time_ghost_bump')
-				->set('time_last_modified', ':time')
-				->set('nreplies', ':nreplies')
-				->set('nimages', ':nimages')
-				->where('thread_num = :thread_num')
-				->setParameter(':time_last', $time_last)
-				->setParameter(':time_bump', $time_bump)
-				->setParameter(':time_ghost', $time_ghost)
-				->setParameter(':time_ghost_bump', $time_ghost_bump)
-				->setParameter(':time', $this->getRadixTime())
-				->setParameter(':nreplies', $thread_replies)
-				->setParameter(':nimages', $thread_images)
-				->setParameter(':thread_num', $this->thread_num)
+				->delete($this->radix->getTable('_extra'))
+				->where('extra_id = :doc_id')
+				->setParameter(':doc_id', $this->doc_id)
 				->execute();
+
+			// purge reports
+			DC::qb()
+				->delete(DC::p('reports'))
+				->where('board_id = :board_id')
+				->andWhere('doc_id = :doc_id')
+				->setParameter(':board_id', $this->radix->id)
+				->setParameter(':doc_id', $this->doc_id)
+				->execute();
+
+			// clear cache
+			\Report::clearCache();
+
+			// remove image file
+			if (isset($this->media))
+			{
+				$this->media->delete();
+			}
+
+			// if this is OP, delete replies too
+			if ($this->op)
+			{
+				// delete thread data
+				DC::qb()
+					->delete($this->radix->getTable('_threads'))
+					->where('thread_num = :thread_num')
+					->setParameter(':thread_num', $this->thread_num)
+					->execute();
+
+				// process each comment
+				$comments = DC::qb()
+					->select('doc_id')
+					->from($this->radix->getTable(), 'b')
+					->where('thread_num = :thread_num')
+					->setParameter(':thread_num', $this->thread_num)
+					->execute()
+					->fetchAll();
+
+				foreach ($comments as $comment)
+				{
+					$post = \Board::forge()
+						->getPost()
+						->setOptions('doc_id', $comment['doc_id'])
+						->setRadix($this->radix)
+						->getComments();
+
+					$post = current($post);
+					$post->delete(null, true, true);
+				}
+			}
+			else
+			{
+				// if this is not triggered by a thread deletion, update the thread table
+				if ($thread === false && ! $this->radix->archive)
+				{
+					$time_last = '
+					(
+						COALESCE(GREATEST(
+							time_op,
+							(
+								SELECT MAX(timestamp) FROM '.$this->radix->getTable().' xr
+								WHERE thread_num = '.DC::forge()->quote($this->thread_num).' AND subnum = 0
+							)
+						), time_op)
+					)';
+
+					$time_bump = '
+					(
+						COALESCE(GREATEST(
+							time_op,
+							(
+								SELECT MAX(timestamp) FROM '.$this->radix->getTable().' xr
+								WHERE thread_num = '.DC::forge()->quote($this->thread_num).' AND subnum = 0
+									AND (email <> \'sage\' OR email IS NULL)
+							)
+						), time_op)
+					)';
+
+					$time_ghost = '
+					(
+						SELECT MAX(timestamp) FROM '.$this->radix->getTable().' xr
+						WHERE thread_num = '.DC::forge()->quote($this->thread_num).' AND subnum <> 0
+					)';
+
+					$time_ghost_bump = '
+					(
+						SELECT MAX(timestamp) FROM '.$this->radix->getTable().' xr
+						WHERE thread_num = '.DC::forge()->quote($this->thread_num).' AND subnum <> 0
+							AND (email <> \'sage\' OR email IS NULL)
+					)';
+
+					// update thread information
+					DC::qb()
+						->update($this->radix->getTable('_threads'))
+						->set('time_last', $time_last)
+						->set('time_bump', $time_bump)
+						->set('time_ghost', $time_ghost)
+						->set('time_ghost_bump', $time_ghost_bump)
+						->set('time_last_modified', ':time')
+						->set('nreplies', 'nimages - 1')
+						->set('nimages', 'nimages - 1')
+						->where('thread_num = :thread_num')
+						->setParameter(':time', $this->getRadixTime())
+						->setParameter(':thread_num', $this->thread_num)
+						->execute();
+				}
+			}
+
+			DC::forge()->commit();
+
+			// clean up some caches
+			Cache::item('foolfuuka.model.board.getThreadComments.thread.'
+				.md5(serialize([$this->radix->shortname, $this->thread_num])))->delete();
+
+			// clean up the 10 first pages of index and gallery that are cached
+			for ($i = 1; $i <= 10; $i++)
+			{
+				Cache::item('foolfuuka.model.board.getLatestComments.query.'
+					.$this->radix->shortname.'.by_post.'.$i)->delete();
+
+				Cache::item('foolfuuka.model.board.getLatestComments.query.'
+					.$this->radix->shortname.'.by_thread.'.$i)->delete();
+
+				Cache::item('foolfuuka.model.board.getThreadsComments.query.'
+					.$this->radix->shortname.'.'.$i)->delete();
+			}
 		}
-
-		DC::forge()->commit();
-
-		// clean up some caches
-		Cache::item('foolfuuka.model.board.getThreadComments.thread.'
-			.md5(serialize([$this->radix->shortname, $this->thread_num])))->delete();
-
-		// clean up the 10 first pages of index and gallery that are cached
-		for ($i = 1; $i <= 10; $i++)
+		catch (\Doctrine\DBAL\DBALException $e)
 		{
-			Cache::item('foolfuuka.model.board.getLatestComments.query.'
-				.$this->radix->shortname.'.by_post.'.$i)->delete();
+			\Log::error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
+			DC::forge()->rollBack();
 
-			Cache::item('foolfuuka.model.board.getLatestComments.query.'
-				.$this->radix->shortname.'.by_thread.'.$i)->delete();
-
-			Cache::item('foolfuuka.model.board.getThreadsComments.query.'
-				.$this->radix->shortname.'.'.$i)->delete();
+			throw new CommentSendingDatabaseException(_i('Something went wrong when deleting the post in the database. Try again.'));
 		}
+
+		return $this;
 	}
 
 	/**

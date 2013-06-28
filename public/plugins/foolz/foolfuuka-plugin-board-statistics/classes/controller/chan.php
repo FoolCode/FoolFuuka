@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Controller\Chan;
 
-use \Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
+use Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -10,7 +10,7 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 {
 	public function before(Request $request)
 	{
-		$this->plugin = \Plugins::getPlugin('foolz/foolfuuka', 'foolz/foolfuuka-plugin-board-statistics');
+		$this->plugin = \Plugins::getPlugin('foolz/foolfuuka-plugin-board-statistics');
 
 		parent::before($request);
 	}

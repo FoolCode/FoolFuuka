@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Route;
 			]);
 
 			$framework->getRouteCollection()->add(
-				'foolframe.plugin.board_statistics.admin', new \Symfony\Component\Routing\Route(
+				'foolframe.plugin.board_statistics.admin', new Route(
 					'/admin/plugins/board_statistics/{_suffix}',
 					[
 						'_suffix' => 'manage',
@@ -34,22 +34,6 @@ use Symfony\Component\Routing\Route;
 					]
 				)
 			);
-
-			\Foolz\Plugin\Event::forge('Foolz\Foolframe\Task\Fool::run.result.sections')
-				->setCall(function($result) {
-					$array = $result->getParam('array');
-					$array[] = 'board_statistics';
-					$result->set($array);
-					$result->setParam('array', $array);
-				});
-
-			/*
-			\Foolz\Plugin\Event::forge('Foolz\Foolframe\Task\Fool::run.call.method.help.board_statistics')
-				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cliBoardStatisticsHelp');
-
-			\Foolz\Plugin\Event::forge('Foolz\Foolframe\Task\Fool::run.call.method.section.board_statistics')
-				->setCall('Foolz\Foolfuuka\Plugins\BoardStatistics\Model\Task::cli_board_statistics');
-			*/
 		}
 
 		\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Framework::handleConsole.add')
@@ -76,7 +60,7 @@ use Symfony\Component\Routing\Route;
 				'foolfuuka.plugin.board_statistics.chan.radix.'.$radix->shortname, new Route(
 				'/'.$radix->shortname.'/statistics/{_suffix}',
 				[
-					'_suffix' => 'statistics',
+					'_suffix' => '',
 					'_controller' => '\Foolz\Foolfuuka\Controller\Chan\BoardStatistics::statistics',
 					'radix_shortname' => $radix->shortname
 				],
@@ -94,7 +78,7 @@ use Symfony\Component\Routing\Route;
 		if (DC::forge()->getDriver()->getName() == 'pdo_mysql')
 		{
 			$table->addOption('charset', 'utf8mb4');
-			$table->addOption('charset', 'utf8mb4_general_ci');
+			$table->addOption('collate', 'utf8mb4_general_ci');
 		}
 		$table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
 		$table->addColumn('board_id', 'integer', ['unsigned' => true]);

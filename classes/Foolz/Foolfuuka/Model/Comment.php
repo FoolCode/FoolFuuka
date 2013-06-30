@@ -300,7 +300,7 @@ class Comment
         }
 
         if ($this->poster_country !== null) {
-            $this->poster_country_name = \Foolz\Config\Config::get('foolz/foolfuuka', 'geoip_codes', 'codes.'.strtoupper($this->poster_country));
+            $this->poster_country_name = \Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'geoip_codes', 'codes.'.strtoupper($this->poster_country));
         }
 
         $num = $this->num.($this->subnum ? ','.$this->subnum : '');
@@ -871,7 +871,7 @@ class Comment
 
             $hasher = new \PHPSecLib\Crypt_Hash();
 
-            $hashed = base64_encode($hasher->pbkdf2($password, \Foolz\Config\Config::get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
+            $hashed = base64_encode($hasher->pbkdf2($password, \Foolz\Foolframe\Model\Config::get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
 
             if ($this->delpass !== $hashed) {
                 throw new CommentDeleteWrongPassException(_i('You did not provide the correct deletion password.'));
@@ -1100,6 +1100,6 @@ class Comment
      */
     protected function p_processSecureTripcode($plain)
     {
-        return substr(base64_encode(sha1($plain . base64_decode(\Foolz\Config\Config::get('foolz/foolfuuka', 'config', 'comment.secure_tripcode_salt')), true)), 0, 11);
+        return substr(base64_encode(sha1($plain . base64_decode(\Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'config', 'comment.secure_tripcode_salt')), true)), 0, 11);
     }
 }

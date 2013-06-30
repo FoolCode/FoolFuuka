@@ -3,7 +3,7 @@
 namespace Foolz\Foolfuuka\Model;
 
 use \Foolz\Cache\Cache;
-use \Foolz\Config\Config;
+use \Foolz\Foolframe\Model\Config;
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 use \Foolz\Plugin\PlugSuit;
 

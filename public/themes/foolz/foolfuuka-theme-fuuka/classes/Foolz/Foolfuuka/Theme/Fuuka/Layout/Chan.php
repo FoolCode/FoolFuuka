@@ -34,7 +34,7 @@ class Chan extends \Foolz\Theme\View
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
+        <meta name="generator" content="<?= \Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
 
         <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
         <?php $this->getStyles(); ?>

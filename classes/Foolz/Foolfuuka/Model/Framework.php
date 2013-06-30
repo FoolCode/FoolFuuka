@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use Foolz\Config\Config;
+use Foolz\Foolframe\Model\Config;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +37,7 @@ class Framework
         }
 
         $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
-        $theme_instance->addDir(VENDPATH.'foolz/foolfuuka/'.\Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
+        $theme_instance->addDir(VENDPATH.'foolz/foolfuuka/'.\Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
         $theme_instance->addDir(VAPPPATH.'foolz/foolfuuka/themes/');
         $theme_instance->setBaseUrl(\Uri::base().'foolfuuka/');
         $theme_instance->setPublicDir(DOCROOT.'foolfuuka/');
@@ -48,7 +48,7 @@ class Framework
                 ->setCall(function($result) {
                     $environment = $result->getParam('environment');
 
-                    foreach (\Foolz\Config\Config::get('foolz/foolfuuka', 'environment') as $section => $data) {
+                    foreach (\Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'environment') as $section => $data) {
                         foreach ($data as $k => $i) {
                             array_push($environment[$section]['data'], $i);
                         }

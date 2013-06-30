@@ -4,30 +4,30 @@ namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
 
 class ToolsReplyBox extends \Foolz\Theme\View
 {
-	public function toString()
-	{
-		$backend_vars = $this->getBuilderParamManager()->getParam('backend_vars');
-		$radix = $this->getBuilderParamManager()->getParam('radix');
-		$user_name = $this->getBuilderParamManager()->getParam('user_name');
-		$user_pass = $this->getBuilderParamManager()->getParam('user_pass');
-		$user_email = $this->getBuilderParamManager()->getParam('user_email');
-		$thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
-		$reply_errors = $this->getBuilderParamManager()->getParam('reply_errors', false);
+    public function toString()
+    {
+        $backend_vars = $this->getBuilderParamManager()->getParam('backend_vars');
+        $radix = $this->getBuilderParamManager()->getParam('radix');
+        $user_name = $this->getBuilderParamManager()->getParam('user_name');
+        $user_pass = $this->getBuilderParamManager()->getParam('user_pass');
+        $user_email = $this->getBuilderParamManager()->getParam('user_email');
+        $thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
+        $reply_errors = $this->getBuilderParamManager()->getParam('reply_errors', false);
 
-		if ( ! $thread_id && ! $radix->archive) : ?>
-			<?= \Form::open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform']) ?>
-			<?= \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
-			<?= isset($backend_vars['last_limit']) ? \Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
+        if (!$thread_id && !$radix->archive) : ?>
+            <?= \Form::open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform']) ?>
+            <?= \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
+            <?= isset($backend_vars['last_limit']) ? \Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
         <table style="margin-left: auto; margin-right: auto">
             <tbody>
             <tr>
                 <td class="subreply">
                     <div class="theader">
-						<?= _i('Create New Thread') ?>
+                        <?= _i('Create New Thread') ?>
                     </div>
-					<?php if (isset($reply_errors)) : ?>
+                    <?php if (isset($reply_errors)) : ?>
                     <span style="color:red"><?= $reply_errors ?></span>
-					<?php endif; ?>
+                    <?php endif; ?>
                     <table>
                         <tbody>
                         <tr>
@@ -58,7 +58,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
                             <td class="postblock"><?= _i('Password') ?> <a class="tooltip" href="#">[?] <span><?= _i('This is used for file and post deletion.') ?></span></a></td>
                             <td><?php echo \Form::password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]) ?></td>
                         </tr>
-							<?php if (\ReCaptcha::available()) : ?>
+                            <?php if (\ReCaptcha::available()) : ?>
                         <tr id="recaptcha_widget">
                             <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
                             <td>
@@ -70,33 +70,33 @@ class ToolsReplyBox extends \Foolz\Theme\View
                                 </noscript>
                             </td>
                         </tr>
-							<?php endif; ?>
-							<?php
-							$postas = ['N' => _i('User')];
+                            <?php endif; ?>
+                            <?php
+                            $postas = ['N' => _i('User')];
 
-							if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = _i('Moderator');
-							if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = _i('Moderator');
-							if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = _i('Developer');
-							if (count($postas) > 1) :
-								?>
+                            if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = _i('Moderator');
+                            if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = _i('Moderator');
+                            if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = _i('Developer');
+                            if (count($postas) > 1) :
+                                ?>
                             <tr>
                                 <td class="postblock"><?= _i('Post As') ?></td>
                                 <td>
-									<?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
+                                    <?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
                                 </td>
                             </tr>
-								<?php endif; ?>
+                                <?php endif; ?>
                         <tr>
                             <td class="postblock"><?= _i('Action') ?></td>
                             <td>
-								<?php
-								echo \Form::hidden('parent', 0);
-								echo \Form::hidden('MAX_FILE_SIZE', 3072);
-								echo \Form::submit([
-									'name' => 'reply_action',
-									'value' => 'Submit'
-								]);
-								?>
+                                <?php
+                                echo \Form::hidden('parent', 0);
+                                echo \Form::hidden('MAX_FILE_SIZE', 3072);
+                                echo \Form::submit([
+                                    'name' => 'reply_action',
+                                    'value' => 'Submit'
+                                ]);
+                                ?>
                             </td>
                         </tr>
                         </tbody>
@@ -105,24 +105,24 @@ class ToolsReplyBox extends \Foolz\Theme\View
             </tr>
             </tbody>
         </table>
-			<?= \Form::close() ?>
+            <?= \Form::close() ?>
 
         <hr/>
-		<?php endif; ?>
+        <?php endif; ?>
 
-	<?php if ($thread_id) : ?>
+    <?php if ($thread_id) : ?>
     <table>
         <tbody>
         <tr>
             <td class="doubledash">&gt;&gt;</td>
             <td class="subreply">
                 <div class="theader">
-					<?= _i('Reply to Thread') ?> <a class="tooltip-red" href="#">[?] <span><?= _i("Don't expect anything heroic. This post will not be posted to any other board.") ?></span></a>
+                    <?= _i('Reply to Thread') ?> <a class="tooltip-red" href="#">[?] <span><?= _i("Don't expect anything heroic. This post will not be posted to any other board.") ?></span></a>
                 </div>
-				<?php if (isset($reply_errors)) : ?>
+                <?php if (isset($reply_errors)) : ?>
                 <span style="color:red"><?= $reply_errors ?></span>
-				<?php endif; ?>
-                <span><?= ( ! \Radix::getSelected()->archive && isset($thread_dead) && $thread_dead) ? _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '' ?></span>
+                <?php endif; ?>
+                <span><?= (!\Radix::getSelected()->archive && isset($thread_dead) && $thread_dead) ? _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '' ?></span>
                 <table>
                     <tbody>
                     <tr>
@@ -141,7 +141,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
                         <td class="postblock"><?= _i('Comment') ?></td>
                         <td><?php echo \Form::textarea(['name' => 'KOMENTO', 'cols' => 48, 'rows' => 4]); ?></td>
                     </tr>
-						<?php if ( ! \Radix::getSelected()->archive) : ?>
+                        <?php if (!\Radix::getSelected()->archive) : ?>
                     <tr>
                         <td class="postblock"><?= _i('File') ?></td>
                         <td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']); ?></td>
@@ -150,12 +150,12 @@ class ToolsReplyBox extends \Foolz\Theme\View
                         <td class="postblock"><?= _i('Spoiler') ?></td>
                         <td><?php echo \Form::checkbox(['name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1]); ?></td>
                     </tr>
-						<?php endif; ?>
+                        <?php endif; ?>
                     <tr>
                         <td class="postblock"><?= _i('Password') ?> <a class="tooltip" href="#">[?] <span><?= _i('This is used for file and post deletion.') ?></span></a></td>
                         <td><?php echo \Form::password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]); ?></td>
                     </tr>
-						<?php if (\ReCaptcha::available()) : ?>
+                        <?php if (\ReCaptcha::available()) : ?>
                     <tr id="recaptcha_widget">
                         <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
                         <td>
@@ -167,41 +167,41 @@ class ToolsReplyBox extends \Foolz\Theme\View
                             </noscript>
                         </td>
                     </tr>
-						<?php endif; ?>
-						<?php
-						$postas = ['N' => _i('User')];
+                        <?php endif; ?>
+                        <?php
+                        $postas = ['N' => _i('User')];
 
-						if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = _i('Moderator');
-						if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = _i('Moderator');
-						if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = _i('Developer');
-						if (count($postas) > 1) :
-							?>
+                        if (\Auth::has_access('comment.mod_capcode')) $postas['M'] = _i('Moderator');
+                        if (\Auth::has_access('comment.admin_capcode')) $postas['A'] = _i('Moderator');
+                        if (\Auth::has_access('comment.dev_capcode')) $postas['D'] = _i('Developer');
+                        if (count($postas) > 1) :
+                            ?>
                         <tr>
                             <td class="postblock"><?= _i('Post As') ?></td>
                             <td>
-								<?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
+                                <?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
                             </td>
                         </tr>
-							<?php endif; ?>
+                            <?php endif; ?>
                     <tr>
                         <td class="postblock"><?= _i('Action') ?></td>
                         <td>
-							<?php
-							echo \Form::hidden('parent', $thread_id);
-							echo \Form::hidden('MAX_FILE_SIZE', 3072);
-							echo \Form::submit([
-								'name' => 'reply_action',
-								'value' => 'Submit'
-							]);
-							echo \Form::submit([
-								'name' => 'reply_delete',
-								'value' => 'Delete Selected Posts'
-							]);
-							echo \Form::submit([
-								'name' => 'reply_report',
-								'value' => 'Report Selected Posts'
-							]);
-							?>
+                            <?php
+                            echo \Form::hidden('parent', $thread_id);
+                            echo \Form::hidden('MAX_FILE_SIZE', 3072);
+                            echo \Form::submit([
+                                'name' => 'reply_action',
+                                'value' => 'Submit'
+                            ]);
+                            echo \Form::submit([
+                                'name' => 'reply_delete',
+                                'value' => 'Delete Selected Posts'
+                            ]);
+                            echo \Form::submit([
+                                'name' => 'reply_report',
+                                'value' => 'Report Selected Posts'
+                            ]);
+                            ?>
                         </td>
                     </tr>
                     </tbody>
@@ -210,6 +210,6 @@ class ToolsReplyBox extends \Foolz\Theme\View
         </tr>
         </tbody>
     </table>
-	<?php endif;
-	}
+    <?php endif;
+    }
 }

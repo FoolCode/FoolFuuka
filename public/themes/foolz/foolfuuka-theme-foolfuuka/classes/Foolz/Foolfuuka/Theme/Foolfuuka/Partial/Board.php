@@ -7,204 +7,203 @@ use Foolz\Foolframe\Model\Preferences;
 
 class Board extends \Foolz\Theme\View
 {
-	public function toString()
-	{
-		$board = $this->getParamManager()->getParam('board');
-		$thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
+    public function toString()
+    {
+        $board = $this->getParamManager()->getParam('board');
+        $thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
 
-		foreach ($board->getComments() as $key => $post) :
-			if (isset($post['op'])) :
-				$op = $post['op'];
-				$num =  $op->num.($op->subnum ? '_'.$op->subnum : '');
-				?>
-		<?php if ($thread_id === 0) : ?>
-		<div class="thread stub stub_doc_id_<?= $op->doc_id ?>">
-			<button class="btn-toggle-post" data-function="showThread" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>"><i class="icon-plus"></i></button>
-			<?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><span class="post_author"><?= $op->getNameProcessed() ?></span><?= ($op->getNameProcessed() && $op->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $op->getTripProcessed() ?></span><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
-			(<?= ($post['omitted'] + 5).' '._i('replies') ?>)
-		</div>
-		<?php endif; ?>
-		<article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>">
-				<?php if ($thread_id === 0) : ?>
-				<div class="stub pull-left">
-					<button class="btn-toggle-post" data-function="hideThread" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>"><i class="icon-minus"></i></button>
-				</div>
-				<?php endif; ?>
-				<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setParam('board', $op->radix)->execute(); ?>
-				<?php if ($op->media !== null) : ?>
+        foreach ($board->getComments() as $key => $post) :
+            if (isset($post['op'])) :
+                $op = $post['op'];
+                $num =  $op->num.($op->subnum ? '_'.$op->subnum : '');
+                ?>
+        <?php if ($thread_id === 0) : ?>
+        <div class="thread stub stub_doc_id_<?= $op->doc_id ?>">
+            <button class="btn-toggle-post" data-function="showThread" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>"><i class="icon-plus"></i></button>
+            <?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><span class="post_author"><?= $op->getNameProcessed() ?></span><?= ($op->getNameProcessed() && $op->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $op->getTripProcessed() ?></span><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
+            (<?= ($post['omitted'] + 5).' '._i('replies') ?>)
+        </div>
+        <?php endif; ?>
+        <article id="<?= $num ?>" class="clearfix thread doc_id_<?= $op->doc_id ?> board_<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>" data-thread-num="<?= $op->thread_num ?>">
+                <?php if ($thread_id === 0) : ?>
+                <div class="stub pull-left">
+                    <button class="btn-toggle-post" data-function="hideThread" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>"><i class="icon-minus"></i></button>
+                </div>
+                <?php endif; ?>
+                <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setParam('board', $op->radix)->execute(); ?>
+                <?php if ($op->media !== null) : ?>
                 <div class="thread_image_box">
-					<?php if ($op->media->getMediaStatus() === 'banned') : ?>
+                    <?php if ($op->media->getMediaStatus() === 'banned') : ?>
                     <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png')?>" width="150" height="150" />
-					<?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
+                    <?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
                     <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
                         <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
                     </a>
-					<?php else : ?>
+                    <?php else : ?>
                     <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-						<?php if ( ! \Auth::has_access('maccess.mod') && !$op->radix->getValue('transparent_spoiler') && $op->media->spoiler) :?>
+                        <?php if (!\Auth::has_access('maccess.mod') && !$op->radix->getValue('transparent_spoiler') && $op->media->spoiler) :?>
                         <div class="spoiler_box"><span class="spoiler_box_text"><?= _i('Spoiler') ?><span class="spoiler_box_text_help"><?= _i('Click to view') ?></span></div>
-						<?php else : ?>
+                        <?php else : ?>
                         <img src="<?= $op->media->getThumbLink() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
-						<?php endif; ?>
+                        <?php endif; ?>
                     </a>
-					<?php endif; ?>
-					<?php if ($op->media->getMediaStatus() !== 'banned') : ?>
+                    <?php endif; ?>
+                    <?php if ($op->media->getMediaStatus() !== 'banned') : ?>
                     <div class="post_file" style="padding-left: 2px;<?php if ($op->media->preview_w > 149) echo 'max-width:'.$op->media->preview_w .'px;'; ?>">
-						<?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed(); ?>
+                        <?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed(); ?>
                     </div>
-					<?php endif; ?>
+                    <?php endif; ?>
                     <div class="post_file_controls">
-						<?php if ($op->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
-						<?php if ( !$op->radix->hide_thumbnails || \Auth::has_access('maccess.mod')) : ?>
-							<?php if ($op->media->total > 1) : ?><a href="<?= \Uri::create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a
+                        <?php if ($op->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
+                        <?php if ( !$op->radix->hide_thumbnails || \Auth::has_access('maccess.mod')) : ?>
+                            <?php if ($op->media->total > 1) : ?><a href="<?= \Uri::create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a
                                 href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink() ?>" target="_blank"
                                 class="btnr parent">Google</a><a
                                 href="http://iqdb.org/?url=<?= $op->media->getThumbLink() ?>" target="_blank"
                                 class="btnr parent">iqdb</a><a
                                 href="http://saucenao.com/search.php?url=<?= $op->media->getThumbLink() ?>" target="_blank"
                                 class="btnr parent">SauceNAO</a>
-							<?php endif; ?>
-						<?php endif; ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
-				<?php endif; ?>
+                <?php endif; ?>
                 <header>
                     <div class="post_data">
-						<?php if ($op->getTitleProcessed() !== '') : ?><h2 class="post_title"><?= $op->getTitleProcessed() ?></h2><?php endif; ?>
-						<span class="post_poster_data">
-							<?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><span class="post_author"><?= $op->getNameProcessed() ?></span><?= ($op->getNameProcessed() && $op->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $op->getTripProcessed() ?></span><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
+                        <?php if ($op->getTitleProcessed() !== '') : ?><h2 class="post_title"><?= $op->getTitleProcessed() ?></h2><?php endif; ?>
+                        <span class="post_poster_data">
+                            <?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><span class="post_author"><?= $op->getNameProcessed() ?></span><?= ($op->getNameProcessed() && $op->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $op->getTripProcessed() ?></span><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
 
-							<?php if ($op->getPosterHashProcessed()) : ?><span class="poster_hash">ID:<?= $op->getPosterHashProcessed() ?></span><?php endif; ?>
-							<?php if ($op->capcode != 'N') : ?>
-							<?php if ($op->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= _i('Mod') ?></span><?php endif ?>
-							<?php if ($op->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= _i('Admin') ?></span><?php endif ?>
-							<?php if ($op->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= _i('Developer') ?></span><?php endif ?>
-							<?php endif; ?>
-						</span>
+                            <?php if ($op->getPosterHashProcessed()) : ?><span class="poster_hash">ID:<?= $op->getPosterHashProcessed() ?></span><?php endif; ?>
+                            <?php if ($op->capcode != 'N') : ?>
+                            <?php if ($op->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= _i('Mod') ?></span><?php endif ?>
+                            <?php if ($op->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= _i('Admin') ?></span><?php endif ?>
+                            <?php if ($op->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= _i('Developer') ?></span><?php endif ?>
+                            <?php endif; ?>
+                        </span>
                         <span class="time_wrap">
-							<time datetime="<?= gmdate(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($op->radix->archive) : ?> title="<?= _i('4chan Time') . ': ' . $op->getFourchanDate() ?>"<?php endif; ?>><?= gmdate('D d M H:i:s Y', $op->timestamp) ?></time>
-						</span>
+                            <time datetime="<?= gmdate(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($op->radix->archive) : ?> title="<?= _i('4chan Time') . ': ' . $op->getFourchanDate() ?>"<?php endif; ?>><?= gmdate('D d M H:i:s Y', $op->timestamp) ?></time>
+                        </span>
                         <a href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
 
-						<span class="post_type">
-							<?php if ($op->poster_country !== null) : ?><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span><?php endif; ?>
-							<?php if (isset($op->media) && $op->media->spoiler == 1) : ?><i class="icon-eye-close" title="<?= htmlspecialchars(_i('The image in this post has been marked as a spoiler.')) ?>"></i><?php endif ?>
-							<?php if ($op->deleted == 1 && $op->timestamp_expired == 0) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This post was deleted before its lifetime expired.')) ?>"></i><?php endif ?>
-							<?php if ($op->deleted == 1 && $op->timestamp_expired != 0) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This post was deleted on %s.', gmdate('M d, Y \a\t H:i:s e', $op->timestamp_expired))) ?>"></i><?php endif ?>
-						</span>
+                        <span class="post_type">
+                            <?php if ($op->poster_country !== null) : ?><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span><?php endif; ?>
+                            <?php if (isset($op->media) && $op->media->spoiler == 1) : ?><i class="icon-eye-close" title="<?= htmlspecialchars(_i('The image in this post has been marked as a spoiler.')) ?>"></i><?php endif ?>
+                            <?php if ($op->deleted == 1 && $op->timestamp_expired == 0) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This post was deleted before its lifetime expired.')) ?>"></i><?php endif ?>
+                            <?php if ($op->deleted == 1 && $op->timestamp_expired != 0) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This post was deleted on %s.', gmdate('M d, Y \a\t H:i:s e', $op->timestamp_expired))) ?>"></i><?php endif ?>
+                        </span>
 
                         <span class="post_controls">
-				<a href="<?= \Uri::create(array($op->radix->shortname, 'thread', $num)) ?>" class="btnr parent"><?= _i('View') ?></a><a href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= _i('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . \Uri::create($op->radix->shortname . '/last/50/' . $num) . '" class="btnr parent">' . _i('Last 50') . '</a>' : '' ?><?= ($op->radix->archive) ? '<a href="//boards.4chan.org/' . $op->radix->shortname . '/res/' . $num . '" class="btnr parent">' . _i('Original') . '</a>' : '' ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if (\Auth::has_access('maccess.mod') || !$op->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
-			</span>
+                <a href="<?= \Uri::create(array($op->radix->shortname, 'thread', $num)) ?>" class="btnr parent"><?= _i('View') ?></a><a href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= _i('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . \Uri::create($op->radix->shortname . '/last/50/' . $num) . '" class="btnr parent">' . _i('Last 50') . '</a>' : '' ?><?= ($op->radix->archive) ? '<a href="//boards.4chan.org/' . $op->radix->shortname . '/res/' . $num . '" class="btnr parent">' . _i('Original') . '</a>' : '' ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if (\Auth::has_access('maccess.mod') || !$op->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
+            </span>
 
                         <div class="backlink_list"<?= $op->getBacklinks() ? ' style="display:block"' : '' ?>>
-							<?= _i('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= $op->getBacklinks() ? implode(' ', $op->getBacklinks()) : '' ?></span>
+                            <?= _i('Quoted By:') ?> <span class="post_backlink" data-post="<?= $num ?>"><?= $op->getBacklinks() ? implode(' ', $op->getBacklinks()) : '' ?></span>
                         </div>
 
-						<?php if (\Auth::has_access('maccess.mod')) : ?>
+                        <?php if (\Auth::has_access('maccess.mod')) : ?>
                         <div class="btn-group" style="clear:both; padding:5px 0 0 0;">
                             <button class="btn btn-mini" data-function="activateModeration"><?= _i('Mod') ?><?php if ($op->poster_ip) echo ' ' .Inet::dtop($op->poster_ip) ?></button>
                         </div>
                         <div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 0;">
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="delete_post"><?= _i('Delete Thread') ?></button>
-							<?php if ( !is_null($op->media)) : ?>
+                            <?php if ( !is_null($op->media)) : ?>
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->media->media_id ?>" data-doc-id="<?= $op->doc_id ?>" data-action="delete_image"><?= _i('Delete Image') ?></button>
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->media->media_id ?>" data-doc-id="<?= $op->doc_id ?>" data-action="ban_image_local"><?= _i('Ban Image') ?></button>
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->media->media_id ?>" data-doc-id="<?= $op->doc_id ?>" data-action="ban_image_global"><?= _i('Ban Image Globally') ?></button>
-							<?php endif; ?>
-							<?php if ($op->poster_ip) : ?>
+                            <?php endif; ?>
+                            <?php if ($op->poster_ip) : ?>
                             <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $op->radix->shortname ?>" data-ip="<?= Inet::dtop($op->poster_ip) ?>" data-action="ban_user"><?= _i('Ban IP:') . ' ' . Inet::dtop($op->poster_ip) ?></button>
                             <button class="btn btn-mini" data-function="searchUser" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= \Uri::create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= _i('Search IP') ?></button>
-							<?php if (Preferences::get('foolfuuka.sphinx.global')) : ?>
+                            <?php if (Preferences::get('foolfuuka.sphinx.global')) : ?>
                                 <button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= \Uri::create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= _i('Search IP Globally') ?></button>
-								<?php endif; ?>
-							<?php endif; ?>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </div>
-						<?php endif; ?>
+                        <?php endif; ?>
                     </div>
                 </header>
 
                 <div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $op->getCommentProcessed())) echo ' shift-jis'; ?>">
-					<?= $op->getCommentProcessed() ?>
+                    <?= $op->getCommentProcessed() ?>
                 </div>
                 <div class="thread_tools_bottom">
-					<?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
-		<span class="omitted">
-			<a style="display:inline-block" href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) ?>" data-function="expandThread" data-thread-num="<?= $op->thread_num ?>"><i class="icon icon-resize-full"></i></a>
+                    <?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
+        <span class="omitted">
+            <a style="display:inline-block" href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) ?>" data-function="expandThread" data-thread-num="<?= $op->thread_num ?>"><i class="icon icon-resize-full"></i></a>
                     <span class="omitted_text">
-				<span class="omitted_posts"><?= $post['omitted'] ?></span> <?= _n('post', 'posts', $post['omitted']) ?>
-						<?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>
-						<?= _i('and') ?> <span class="omitted_images"><?= $post['images_omitted'] ?></span> <?= _n('image', 'images', $post['images_omitted']) ?>
-						<?php endif; ?>
-						<?= _n('omitted', 'omitted', $post['omitted'] + $post['images_omitted']) ?>
-		</span>
-					<?php endif; ?>
+                <span class="omitted_posts"><?= $post['omitted'] ?></span> <?= _n('post', 'posts', $post['omitted']) ?>
+                        <?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>
+                        <?= _i('and') ?> <span class="omitted_images"><?= $post['images_omitted'] ?></span> <?= _n('image', 'images', $post['images_omitted']) ?>
+                        <?php endif; ?>
+                        <?= _n('omitted', 'omitted', $post['omitted'] + $post['images_omitted']) ?>
+        </span>
+                    <?php endif; ?>
                 </div>
 
-				<?php if ($op->getReports()) : ?>
-				<?php foreach ($op->getReports() as $report) : ?>
+                <?php if ($op->getReports()) : ?>
+                <?php foreach ($op->getReports() as $report) : ?>
                     <div class="report_reason"><?= '<strong>' . _i('Reported Reason:') . '</strong> ' . $report->getReasonProcessed() ?>
                         <br/>
                         <div class="ip_reporter">
                             <strong><?= _i('Info:') ?></strong>
-							<?= Inet::dtop($report->ip_reporter) ?>, <?= _i('Type:') ?> <?= $report->media_id !== null ? _i('media') : _i('post')?>, <?= _i('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?>
+                            <?= Inet::dtop($report->ip_reporter) ?>, <?= _i('Type:') ?> <?= $report->media_id !== null ? _i('media') : _i('post')?>, <?= _i('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?>
                             <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-action="delete_report"><?= _i('Delete Report') ?></button>
                         </div>
                     </div>
-					<?php endforeach ?>
-				<?php endif; ?>
-				<?php elseif (isset($post['posts'])): ?>
-		<article class="clearfix thread">
-					<?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_headless_open')->setParam('board', array(isset($radix) ? $radix : null))->execute(); ?>
-				<?php endif; ?>
+                    <?php endforeach ?>
+                <?php endif; ?>
+                <?php elseif (isset($post['posts'])): ?>
+        <article class="clearfix thread">
+                    <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_headless_open')->setParam('board', array(isset($radix) ? $radix : null))->execute(); ?>
+                <?php endif; ?>
 
             <aside class="posts">
-				<?php
-				if (isset($post['posts'])) :
-					$post_counter = 0;
-					$image_counter = 0;
+                <?php
+                if (isset($post['posts'])) :
+                    $post_counter = 0;
+                    $image_counter = 0;
 
-					$board_comment_view = $this->getBuilder()->createPartial('post', 'board_comment');
+                    $board_comment_view = $this->getBuilder()->createPartial('post', 'board_comment');
 
-					foreach ($post['posts'] as $p)
-					{
-						$post_counter++;
-						if ($p->media !== null)
-							$image_counter++;
+                    foreach ($post['posts'] as $p) {
+                        $post_counter++;
+                        if ($p->media !== null)
+                            $image_counter++;
 
-						if ($image_counter == 150)
-							$modifiers['lazyload'] = TRUE;
+                        if ($image_counter == 150)
+                            $modifiers['lazyload'] = TRUE;
 
-						if ($p->thread_num == 0)
-							$p->thread_num = $p->num;
+                        if ($p->thread_num == 0)
+                            $p->thread_num = $p->num;
 
-						$board_comment_view->getParamManager()->setParams([
-							'p' => $p,
-							'modifiers' => $this->getBuilderParamManager()->getParam('modifiers', false),
-							'post_counter' => $post_counter,
-							'image_counter' => $image_counter
-						]);
+                        $board_comment_view->getParamManager()->setParams([
+                            'p' => $p,
+                            'modifiers' => $this->getBuilderParamManager()->getParam('modifiers', false),
+                            'post_counter' => $post_counter,
+                            'image_counter' => $image_counter
+                        ]);
 
-						// refreshes the string
-						$board_comment_view->doBuild();
+                        // refreshes the string
+                        $board_comment_view->doBuild();
 
-						echo $board_comment_view->build();
-					}
+                        echo $board_comment_view->build();
+                    }
 
-				endif; ?>
+                endif; ?>
             </aside>
 
-			<?php if ($thread_id !== 0) : ?>
+            <?php if ($thread_id !== 0) : ?>
             <div class="js_hook_realtimethread"></div>
-			<?= $this->getBuilder()->isPartial('tools_reply_box') ? $this->getBuilder()->getPartial('tools_reply_box')->build() : '' ?>
-			<?php endif; ?>
-			<?php if (isset($post['op']) || isset($post['posts'])) : ?>
-		</article>
-		<?php endif; ?>
-			<?php endforeach; ?>
+            <?= $this->getBuilder()->isPartial('tools_reply_box') ? $this->getBuilder()->getPartial('tools_reply_box')->build() : '' ?>
+            <?php endif; ?>
+            <?php if (isset($post['op']) || isset($post['posts'])) : ?>
+        </article>
+        <?php endif; ?>
+            <?php endforeach; ?>
         <article class="clearfix thread backlink_container">
             <div id="backlink" style="position: absolute; top: 0; left: 0; z-index: 5;"></div>
         </article>
-	    <?php
-	}
+        <?php
+    }
 }

@@ -4,23 +4,22 @@ namespace Foolz\Foolfuuka\Theme\Admin\Partial\Boards;
 
 class SphinxConfig extends \Foolz\Theme\View
 {
-	public function toString()
-	{
-		extract($this->getParamManager()->getParams());
-		?>
+    public function toString()
+    {
+        extract($this->getParamManager()->getParams());
+        ?>
 
 <div class="admin-container">
-	<div class="admin-container-header">
-		<?= _i('Configuration File') ?>
-	</div>
-
+    <div class="admin-container-header">
+        <?= _i('Configuration File') ?>
+    </div>
 
 <?php if ($example === false) : ?>
-	<i class="icon-exclamation-sign text-error"></i> <?= _i('Error: You do not have any boards created. Please make one before generating a configuration file again.') ?>
+    <i class="icon-exclamation-sign text-error"></i> <?= _i('Error: You do not have any boards created. Please make one before generating a configuration file again.') ?>
 <?php else : ?>
-	<i class="icon-warning-sign text-warning"></i> <?= _i('Notice: Due to security concerns, the database connection values have been left empty.') ?>
+    <i class="icon-warning-sign text-warning"></i> <?= _i('Notice: Due to security concerns, the database connection values have been left empty.') ?>
 
-	<hr/>
+    <hr/>
 
 <textarea class="input-block-level" rows="30" id="sphinx-config">
 ###########################################
@@ -36,7 +35,6 @@ source main
   sql_db   =
   sql_port =
   mysql_connect_flags = <?= $mysql['flag'] ?>
-
 
   sql_query_pre  = SET NAMES utf8mb4
 
@@ -66,7 +64,6 @@ source main
   sql_query_post_index =
   sql_query_info       =
 }
-
 
 <?php foreach ($boards as $key => $board) : ?>
 # /<?= $board->shortname ?>/
@@ -111,7 +108,6 @@ index main
   morphology   = none
   charset_type = utf-8
   min_word_len = <?= $sphinx['min_word_len'] ?>
-
 
   # optional, default value depends on charset_type
   #
@@ -179,7 +175,6 @@ index main
   html_strip        = 0
 }
 
-
 <?php foreach ($boards as $key => $board) : ?>
 # /<?= $board->shortname ?>/
 index <?= $board->shortname.'_main' ?> : main
@@ -212,25 +207,20 @@ indexer
   # optional, default is 32M, max is 2047M, recommended is 256M to 1024M
   mem_limit             = <?= $sphinx['mem_limit'] ?>
 
-
-
   # maximum IO calls per second (for I/O throttling)
   # optional, default is 0 (unlimited)
   #
   # max_iops            = 40
-
 
   # maximum IO call size, bytes (for I/O throttling)
   # optional, default is 0 (unlimited)
   #
   # max_iosize          = 1048576
 
-
   # maximum xmlpipe2 field length, bytes
   # optional, default is 2M
   #
   max_xmlpipe2_field    = 4M
-
 
   # write buffer size, bytes
   # several (currently up to 4) buffers will be allocated
@@ -239,13 +229,11 @@ indexer
   #
   write_buffer          = 8M
 
-
   # maximum file field adaptive buffer size
   # optional, default is 8M, minimum is 1M
   #
   max_file_field_buffer = 32M
 }
-
 
 #############################################################################
 ## searchd settings
@@ -285,7 +273,6 @@ searchd
   # maximum amount of children to fork (concurrent searches to run)
   # optional, default is 0 (unlimited)
   max_children    = <?= $sphinx['max_children'] ?>
-
 
   # PID file, searchd process ID file name
   # mandatory
@@ -458,11 +445,11 @@ searchd
 </div>
 
 <script type="text/javascript">
-	jQuery('#sphinx-config').click(function() {
-		jQuery(this).select();
-	});
+    jQuery('#sphinx-config').click(function() {
+        jQuery(this).select();
+    });
 </script>
 <?php endif; ?>
 <?php
-	}
+    }
 }

@@ -7,98 +7,85 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class GeoipRegionLock
 {
 
-	public static function blockCountryComment($result)
-	{
-		$obj = $result->getObject();
+    public static function blockCountryComment($result)
+    {
+        $obj = $result->getObject();
 
-		// globally allowed and disallowed
-		$allow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_comment');
-		$disallow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.disallow_comment');
+        // globally allowed and disallowed
+        $allow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_comment');
+        $disallow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.disallow_comment');
 
-		$board_allow = trim($obj->board->getValue('plugin_geo_ip_region_lock_allow_comment'), " ,");
-		$board_disallow = trim($obj->board->getValue('plugin_geo_ip_region_lock_disallow_comment'), " ,");
+        $board_allow = trim($obj->board->getValue('plugin_geo_ip_region_lock_allow_comment'), " ,");
+        $board_disallow = trim($obj->board->getValue('plugin_geo_ip_region_lock_disallow_comment'), " ,");
 
-		// allow board settings to override global
-		if ($board_allow || $board_disallow)
-		{
-			$allow = $board_allow;
-			$disallow = $board_disallow;
-		}
+        // allow board settings to override global
+        if ($board_allow || $board_disallow) {
+            $allow = $board_allow;
+            $disallow = $board_disallow;
+        }
 
-		if ($allow || $disallow)
-		{
-			$country = strtolower(\geoip_country_code_by_name(\Input::ip_decimal()));
+        if ($allow || $disallow) {
+            $country = strtolower(\geoip_country_code_by_name(\Input::ip_decimal()));
 
-			if ($allow)
-			{
-				$allow = array_filter(explode(',', $allow));
+            if ($allow) {
+                $allow = array_filter(explode(',', $allow));
 
-				foreach($allow as $al)
-				{
-					if (strtolower(trim($al)) == $country)
-						return;
-				}
+                foreach($allow as $al) {
+                    if (strtolower(trim($al)) == $country)
+                        return;
+                }
 
-				$result->set([
-					'error' => _i('Your nation has been blocked from posting.') .
-						'<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
-				]);
-			}
+                $result->set([
+                    'error' => _i('Your nation has been blocked from posting.') .
+                        '<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
+                ]);
+            }
 
-			if ($disallow)
-			{
-				$disallow = array_filter(explode(',', $disallow));
+            if ($disallow) {
+                $disallow = array_filter(explode(',', $disallow));
 
-				foreach ($disallow as $disal)
-				{
-					if (strtolower(trim($disal)) == $country)
-					{
-						$result->set([
-							'error' => _i('Your nation has been blocked from posting.') .
-								'<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
-						]);
-					}
-				}
-			}
-		}
-	}
+                foreach ($disallow as $disal) {
+                    if (strtolower(trim($disal)) == $country) {
+                        $result->set([
+                            'error' => _i('Your nation has been blocked from posting.') .
+                                '<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
+                        ]);
+                    }
+                }
+            }
+        }
+    }
 
-	public static function blockCountryView()
-	{
-		$allow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_view');
-		$disallow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.disallow_view');
+    public static function blockCountryView()
+    {
+        $allow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_view');
+        $disallow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.disallow_view');
 
-		if ($allow || $disallow)
-		{
-			$country = strtolower(\geoip_country_code_by_name(\Input::ip_decimal()));
-		}
+        if ($allow || $disallow) {
+            $country = strtolower(\geoip_country_code_by_name(\Input::ip_decimal()));
+        }
 
-		if ($allow)
-		{
-			$allow = explode(',', $allow);
+        if ($allow) {
+            $allow = explode(',', $allow);
 
-			foreach($allow as $al)
-			{
-				if (strtolower(trim($al)) == $country)
-					return null;
-			}
+            foreach($allow as $al) {
+                if (strtolower(trim($al)) == $country)
+                    return null;
+            }
 
-			throw new NotFoundHttpException;
-		}
+            throw new NotFoundHttpException;
+        }
 
-		if ($disallow)
-		{
-			$disallow = explode(',', $disallow);
+        if ($disallow) {
+            $disallow = explode(',', $disallow);
 
-			foreach ($disallow as $disal)
-			{
-				if (strtolower(trim($disal)) == $country)
-				{
-					throw new NotFoundHttpException;
-				}
-			}
-		}
+            foreach ($disallow as $disal) {
+                if (strtolower(trim($disal)) == $country) {
+                    throw new NotFoundHttpException;
+                }
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

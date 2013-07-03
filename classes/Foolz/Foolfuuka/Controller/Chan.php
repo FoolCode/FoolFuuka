@@ -950,8 +950,7 @@ class Chan
 
         if (!\Security::check_token()) {
             if (\Input::is_ajax()) {
-                return new Response(
-                    json_encode(['error' => _i('The security token wasn\'t found. Try resubmitting.')]));
+                return $this->response->setData(['error' => _i('The security token wasn\'t found. Try resubmitting.')]);
             }
 
             return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
@@ -1032,13 +1031,13 @@ class Chan
                 $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
             } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
                 if (\Input::is_ajax()) {
-                    return new Response(json_encode(['error' => $e->getMessage()]));
+                    return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
                 }
             } catch (\Foolz\Foolfuuka\Model\MediaUploadException $e) {
                 if (\Input::is_ajax()) {
-                    return new Response(json_encode(['error' => $e->getMessage()]));
+                    return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
                 }
@@ -1076,27 +1075,28 @@ class Chan
                 $comment->insert();
             } catch (\Foolz\Foolfuuka\Model\CommentSendingRequestCaptchaException $e) {
                 if (\Input::is_ajax()) {
-                    return new Response(json_encode(['captcha' => true]));
+                    return $this->response->setData(['captcha' => true]);
                 } else {
                     return $this->error(_i('Your message looked like spam. Make sure you have JavaScript enabled to display the reCAPTCHA to submit the comment.'));
                 }
             } catch (\Foolz\Foolfuuka\Model\CommentSendingException $e) {
                 if (\Input::is_ajax()) {
-                    return new Response(json_encode(['error' => $e->getMessage()]));
+                    return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
                 }
             }
         } else {
             if (\Input::is_ajax()) {
-                return new Response(json_encode(['error' => implode(' ', $val->error())]));
+                return $this->response->setData(['error' => implode(' ', $val->error())]);
             } else {
                 return $this->error(implode(' ', $val->error()));
             }
         }
 
-        if (\Input::is_ajax()) {
+        if ($this->request->isXmlHttpRequest()) {
             $latest_doc_id = \Input::post('latest_doc_id');
+
             if ($latest_doc_id && ctype_digit((string) $latest_doc_id)) {
                 try {
                     $board = \Board::forge()
@@ -1117,19 +1117,18 @@ class Chan
                     return $this->error(_i('Unknown error.'));
                 }
 
-                return new Response(json_encode(['success' => _i('Message sent.')] + $comments));
+                $this->response->setData(['success' => _i('Message sent.')] + $comments);
             } else {
                 $comment_api = \Comment::forgeForApi($comment, $this->_radix, [
                     'board' => false,
                     'theme' => $this->theme],
                     ['controller_method' => $limit ? 'last/'.$limit : 'thread']);
 
-                return new Response(
-                    json_encode([
+                $this->response->setData([
                         'success' => _i('Message sent.'),
                         'thread_num' => $comment->thread_num,
                         $comment->thread_num => ['posts' => [$comment_api]],
-                    ]));
+                    ]);
             }
         } else {
             $this->builder->createLayout('redirect')
@@ -1137,7 +1136,9 @@ class Chan
                 ->setParam('url', \Uri::create([$this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
-            return new Response($this->builder->build());
+            $this->respose->setContent($this->builder->build());
         }
+
+        return $this->response;
     }
 }

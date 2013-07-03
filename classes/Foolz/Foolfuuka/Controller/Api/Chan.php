@@ -56,6 +56,13 @@ class Chan
         }
     }
 
+    public function setLastModified($timestamp = 0, $max_age = 0)
+    {
+        $this->response->headers->addCacheControlDirective('must-revalidate', true);
+        $this->response->setLastModified(new \DateTime('@'.$timestamp));
+        $this->response->setMaxAge($max_age);
+    }
+
     /**
      * Commodity to check that the shortname is not wrong and return a coherent error
      */

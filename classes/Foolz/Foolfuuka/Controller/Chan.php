@@ -762,7 +762,7 @@ class Chan
             $search['image'] = base64_encode(\Media::urlsafe_b64decode($search['image']));
         }
 
-        if ($search['poster_ip'] !== null) {
+        if (\Auth::has_access('comment.see_ip') && $search['poster_ip'] !== null) {
             if (!filter_var($search['poster_ip'], FILTER_VALIDATE_IP)) {
                 return $this->error(_i('The poster IP you inserted is not a valid IP address.'));
             }

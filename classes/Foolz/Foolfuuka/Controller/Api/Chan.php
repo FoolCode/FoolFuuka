@@ -264,7 +264,7 @@ class Chan
                 $this->setLastModified($last_modified);
 
                 if (!$this->response->isNotModified($this->request)) {
-                    $response->setData($board->getComments());
+                    $this->response->setData($board->getComments());
                 }
             }
         } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
@@ -305,7 +305,7 @@ class Chan
             $this->setLastModified($last_modified);
 
             if (!$this->response->isNotModified($this->request)) {
-                $response->setData($comment);
+                $this->response->setData($comment);
             }
         } catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e) {
             return $this->response->setData(['error' => _i('Post not found.')]);

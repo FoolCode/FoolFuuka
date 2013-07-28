@@ -2,6 +2,9 @@
 
 namespace Foolz\Foolfuuka\Controller;
 
+use Foolz\Foolfuuka\Theme\Foolfuuka\Layout\Redirect;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,9 +34,16 @@ class Chan
     /**
      *  The Request object
      *
-     * @var \Request
+     * @var \Symfony\Component\HttpFoundation\Request
      */
     protected $request = null;
+
+    /**
+     * The Response object
+     *
+     * @var \Symfony\Component\HttpFoundation\Response
+     */
+    protected $response = null;
 
     /**
      * The currently selected radix
@@ -135,7 +145,13 @@ class Chan
 
     public function router(Request $request, $method, $parameters)
     {
-        // store the request object for custom response
+        // create response object, store request object
+        if ($request->isXmlHttpRequest()) {
+            $this->response = new JsonResponse();
+        } else {
+            $this->response = new Response();
+        }
+
         $this->request = $request;
 
         // let's see if we hit a radix route
@@ -168,13 +184,19 @@ class Chan
         return [$this, 'action_404', []];
     }
 
+    public function setLastModified($timestamp = 0, $max_age = 0)
+    {
+        $this->response->headers->addCacheControlDirective('must-revalidate', true);
+        $this->response->setLastModified(new \DateTime('@'.$timestamp));
+        $this->response->setMaxAge($max_age);
+    }
+
     public function action_index()
     {
         $this->param_manager->setParam('disable_headers', true);
         $this->builder->createPartial('body', 'index');
-        $result = $this->builder->build();
 
-        return new Response($result);
+        return $this->response->setContent($this->builder->build());
     }
 
     public function action_404($error = null)
@@ -186,11 +208,9 @@ class Chan
     {
         $this->builder->createPartial('body', 'error')
             ->getParamManager()
-            ->setParams([
-            'error' => $error === null ? _i('We encountered an unexpected error.') : $error
-        ]);
+            ->setParams(['error' => $error === null ? _i('We encountered an unexpected error.') : $error]);
 
-        return new Response($this->builder->build(), $code);
+        return $this->response->setContent($this->builder->build())->setStatusCode($code);
     }
 
     protected function message($level = 'success', $message = null, $code = 200)
@@ -202,7 +222,7 @@ class Chan
                 'message' => $message
             ]);
 
-        return new Response($this->builder->build(), $code);
+        return $this->response->setContent($this->builder->build())->setStatusCode($code);
     }
 
     public function action_theme($vendor = 'foolz', $theme = 'foolfuuka-theme-default', $style = '')
@@ -224,7 +244,7 @@ class Chan
             ->setParam('url', $url);
         $this->builder->getProps()->addTitle(_i('Redirecting'));
 
-        return new Response($this->builder->build());
+        return $this->response->setContent($this->builder->build());
     }
 
     public function action_language($theme = 'en_EN')
@@ -242,12 +262,12 @@ class Chan
             ->setParam('url', $url);
         $this->builder->getProps()->addTitle(_i('Changing Language'));
 
-        return new Response($this->builder->build());
+        return $this->response->setContent($this->builder->build());
     }
 
     public function action_opensearch()
     {
-        return new Response(\View::forge('foolz/foolfuuka::opensearch'));
+        return $this->response->setContent(\View::forge('foolz/foolfuuka::opensearch'));
     }
 
     public function radix_page_mode($_mode = 'by_post')
@@ -256,7 +276,7 @@ class Chan
         $type = $this->_radix->archive ? 'archive' : 'board';
         \Cookie::set('default_theme_page_mode_'.$type, $mode);
 
-        \Response::redirect($this->_radix->shortname);
+        return new RedirectResponse(\Uri::create($this->_radix->shortname));
     }
 
     public function radix_page($page = 1)
@@ -300,6 +320,7 @@ class Chan
             $board->getCount();
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
             \Profiler::mark('Controller Chan::latest End Prematurely');
+
             return $this->error($e->getMessage());
         }
 
@@ -345,7 +366,7 @@ class Chan
         \Profiler::mark_memory($this, 'Controller Chan $this');
         \Profiler::mark('Controller Chan::latest End');
 
-         return new Response($this->builder->build());
+         return $this->response->setContent($this->builder->build());
     }
 
     public function radix_thread($num = 0)
@@ -372,8 +393,6 @@ class Chan
         \Profiler::mark('Controller Chan::thread Start');
         $num = str_replace('S', '', $num);
 
-        $response = new Response();
-
         try {
             $board = \Board::forge()
                 ->getThread($num)
@@ -384,16 +403,54 @@ class Chan
             $thread_status = $board->getThreadStatus();
             $last_modified = $thread_status['last_modified'];
 
-            $response->headers->addCacheControlDirective('must-revalidate', true);
-            $response->setLastModified(new \DateTime('@'.$last_modified))
-                ->setMaxAge(0);
+            $this->setLastModified($last_modified);
 
-            if ($response->isNotModified($this->request)) {
-                return $response;
+            if (!$this->response->isNotModified($this->request)) {
+                // execute in case there's more exceptions to handle
+                $thread = $board->getComments();
+
+                // get the latest doc_id and latest timestamp for realtime stuff
+                $latest_doc_id = $board->getHighest('doc_id')->doc_id;
+                $latest_timestamp = $board->getHighest('timestamp')->timestamp;
+
+                $this->builder->getProps()->addTitle(_i('Thread').' #'.$num);
+                $this->param_manager->setParams([
+                    'thread_id' => $num,
+                    'is_thread' => true,
+                    'disable_image_upload' => $thread_status['disable_image_upload'],
+                    'thread_dead' => $thread_status['dead'],
+                    'latest_doc_id' => $latest_doc_id,
+                    'latest_timestamp' => $latest_timestamp,
+                    'thread_op_data' => $thread[$num]['op']
+                ]);
+
+                $this->builder->createPartial('body', 'board')
+                    ->getParamManager()
+                    ->setParams([
+                        'board' => $board,
+                    ]);
+
+                $backend_vars = $this->param_manager->getParam('backend_vars');
+                $backend_vars['thread_id'] = $num;
+                $backend_vars['latest_timestamp'] = $latest_timestamp;
+                $backend_vars['latest_doc_id'] = $latest_doc_id;
+                $backend_vars['board_shortname'] = $this->_radix->shortname;
+
+                if (isset($options['last_limit']) && $options['last_limit']) {
+                    $backend_vars['last_limit'] = $options['last_limit'];
+                }
+
+                $this->param_manager->setParam('backend_vars', $backend_vars);
+
+                if (!$thread_status['closed']) {
+                    $this->builder->createPartial('tools_reply_box', 'tools_reply_box');
+                }
+
+                \Profiler::mark_memory($this, 'Controller Chan $this');
+                \Profiler::mark('Controller Chan::thread End');
+
+                $this->response->setContent($this->builder->build());
             }
-
-            // execute in case there's more exceptions to handle
-            $thread = $board->getComments();
         } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
             \Profiler::mark('Controller Chan::thread End Prematurely');
             return $this->error($e->getMessage());
@@ -402,50 +459,7 @@ class Chan
             return $this->error($e->getMessage());
         }
 
-        // get the latest doc_id and latest timestamp for realtime stuff
-        $latest_doc_id = $board->getHighest('doc_id')->doc_id;
-        $latest_timestamp = $board->getHighest('timestamp')->timestamp;
-
-        $this->builder->getProps()->addTitle(_i('Thread').' #'.$num);
-        $this->param_manager->setParams([
-            'thread_id' => $num,
-            'is_thread' => true,
-            'disable_image_upload' => $thread_status['disable_image_upload'],
-            'thread_dead' => $thread_status['dead'],
-            'latest_doc_id' => $latest_doc_id,
-            'latest_timestamp' => $latest_timestamp,
-            'thread_op_data' => $thread[$num]['op']
-        ]);
-
-        $this->builder->createPartial('body', 'board')
-            ->getParamManager()
-            ->setParams([
-                'board' => $board,
-            ]);
-
-        $backend_vars = $this->param_manager->getParam('backend_vars');
-        $backend_vars['thread_id'] = $num;
-        $backend_vars['latest_timestamp'] = $latest_timestamp;
-        $backend_vars['latest_doc_id'] = $latest_doc_id;
-        $backend_vars['board_shortname'] = $this->_radix->shortname;
-
-        if (isset($options['last_limit']) && $options['last_limit']) {
-            $backend_vars['last_limit'] = $options['last_limit'];
-        }
-
-        $this->param_manager->setParam('backend_vars', $backend_vars);
-
-        if (!$thread_status['closed']) {
-            $this->builder->createPartial('tools_reply_box', 'tools_reply_box');
-        }
-
-        \Profiler::mark_memory($this, 'Controller Chan $this');
-        \Profiler::mark('Controller Chan::thread End');
-        $result = $this->builder->build();
-
-        $response->setContent($result);
-
-        return $response;
+        return $this->response;
     }
 
     public function radix_gallery($page = 1)
@@ -458,25 +472,25 @@ class Chan
                 ->setOptions('per_page', 100);
 
             $comments = $board->getComments();
+
+            $this->builder->createPartial('body', 'gallery')
+                ->getParamManager()
+                ->setParams([
+                    'board' => $board
+                ]);
+
+            $this->param_manager->setParams([
+                'pagination' => [
+                    'base_url' => \Uri::create([$this->_radix->shortname, 'gallery']),
+                    'current_page' => $page,
+                    'total' => $board->getPages()
+                ]
+            ]);
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
             return $this->error($e->getMessage());
         }
 
-        $this->builder->createPartial('body', 'gallery')
-            ->getParamManager()
-            ->setParams([
-                'board' => $board
-            ]);
-
-        $this->param_manager->setParams([
-            'pagination' => [
-                'base_url' => \Uri::create([$this->_radix->shortname, 'gallery']),
-                'current_page' => $page,
-                'total' => $board->getPages()
-            ]
-        ]);
-
-        return new Response($this->builder->build());
+        return $this->response->setContent($this->builder->build());
     }
 
     public function radix_post($num = 0)
@@ -487,8 +501,7 @@ class Chan
                 preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', \Input::post('post') ? : $num, $post);
                 unset($post[0]);
 
-                \Response::redirect(\Uri::create([$this->_radix->shortname, 'post', implode('_', $post)]),
-                'location', 301);
+                return new RedirectResponse(\Uri::create([$this->_radix->shortname, 'post', implode('_', $post)]));
             }
 
             $board = \Board::forge()
@@ -497,27 +510,27 @@ class Chan
                 ->setOptions('num', $num);
 
             $comments = $board->getComments();
+
+            // it always returns an array
+            $comment = current($comments);
+
+            $redirect =  \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/');
+
+            if (!$comment->op) {
+                $redirect .= '#'.$comment->num.($comment->subnum ? '_'.$comment->subnum :'');
+            }
+
+            $this->builder->createLayout('redirect')
+                ->getParamManager()
+                ->setParam('url', $redirect);
+            $this->builder->getProps()->addTitle(_i('Redirecting'));
         } catch (\Foolz\Foolfuuka\Model\BoardMalformedInputException $e) {
             return $this->error(_i('The post number you submitted is invalid.'));
         } catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e) {
             return $this->error(_i('The post you are looking for does not exist.'));
         }
 
-        // it always returns an array
-        $comment = current($comments);
-
-        $redirect =  \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/');
-
-        if (!$comment->op) {
-            $redirect .= '#'.$comment->num.($comment->subnum ? '_'.$comment->subnum :'');
-        }
-
-        $this->builder->createLayout('redirect')
-            ->getParamManager()
-            ->setParam('url', $redirect);
-        $this->builder->getProps()->addTitle(_i('Redirecting'));
-
-        return new Response($this->builder->build());
+        return $this->response->setContent($this->builder->build());
     }
 
     /**
@@ -593,7 +606,7 @@ class Chan
             ->setParam('url', $redirect);
         $this->builder->getProps()->addTitle(_i('Redirecting'));
 
-        return new Response($this->builder->build());
+        return $this->response->setContent($this->builder->build());
     }
 
     public function radix_advanced_search()
@@ -614,7 +627,7 @@ class Chan
                 ->setParam('search', ['board' => [$this->_radix->shortname]]);
         }
 
-        return new Response($this->builder->build());
+        return $this->response->setContent($this->builder->build());
     }
 
     public function action_search()
@@ -749,7 +762,7 @@ class Chan
             $search['image'] = base64_encode(\Media::urlsafe_b64decode($search['image']));
         }
 
-        if ($search['poster_ip'] !== null) {
+        if (\Auth::has_access('comment.see_ip') && $search['poster_ip'] !== null) {
             if (!filter_var($search['poster_ip'], FILTER_VALIDATE_IP)) {
                 return $this->error(_i('The poster IP you inserted is not a valid IP address.'));
             }
@@ -878,7 +891,7 @@ class Chan
         \Profiler::mark_memory($this, 'Controller Chan $this');
         \Profiler::mark('Controller Chan::search End');
 
-        return new Response($this->builder->build('board'));
+        return $this->response->setContent($this->builder->build('board'));
     }
 
     public function radix_appeal()
@@ -925,7 +938,7 @@ class Chan
         $this->builder->createPartial('body', 'appeal')
             ->getParamManager()->setParam('title', $title);
 
-        return new Response($this->builder->build());
+        return $this->response->setContent($this->builder->build());
     }
 
     public function radix_submit()
@@ -937,8 +950,7 @@ class Chan
 
         if (!\Security::check_token()) {
             if (\Input::is_ajax()) {
-                return new Response(
-                    json_encode(['error' => _i('The security token wasn\'t found. Try resubmitting.')]));
+                return $this->response->setData(['error' => _i('The security token wasn\'t found. Try resubmitting.')]);
             }
 
             return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
@@ -1019,13 +1031,13 @@ class Chan
                 $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
             } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
                 if (\Input::is_ajax()) {
-                    return new Response(json_encode(['error' => $e->getMessage()]));
+                    return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
                 }
             } catch (\Foolz\Foolfuuka\Model\MediaUploadException $e) {
                 if (\Input::is_ajax()) {
-                    return new Response(json_encode(['error' => $e->getMessage()]));
+                    return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
                 }
@@ -1063,27 +1075,28 @@ class Chan
                 $comment->insert();
             } catch (\Foolz\Foolfuuka\Model\CommentSendingRequestCaptchaException $e) {
                 if (\Input::is_ajax()) {
-                    return new Response(json_encode(['captcha' => true]));
+                    return $this->response->setData(['captcha' => true]);
                 } else {
                     return $this->error(_i('Your message looked like spam. Make sure you have JavaScript enabled to display the reCAPTCHA to submit the comment.'));
                 }
             } catch (\Foolz\Foolfuuka\Model\CommentSendingException $e) {
                 if (\Input::is_ajax()) {
-                    return new Response(json_encode(['error' => $e->getMessage()]));
+                    return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
                 }
             }
         } else {
             if (\Input::is_ajax()) {
-                return new Response(json_encode(['error' => implode(' ', $val->error())]));
+                return $this->response->setData(['error' => implode(' ', $val->error())]);
             } else {
                 return $this->error(implode(' ', $val->error()));
             }
         }
 
-        if (\Input::is_ajax()) {
+        if ($this->request->isXmlHttpRequest()) {
             $latest_doc_id = \Input::post('latest_doc_id');
+
             if ($latest_doc_id && ctype_digit((string) $latest_doc_id)) {
                 try {
                     $board = \Board::forge()
@@ -1104,19 +1117,18 @@ class Chan
                     return $this->error(_i('Unknown error.'));
                 }
 
-                return new Response(json_encode(['success' => _i('Message sent.')] + $comments));
+                $this->response->setData(['success' => _i('Message sent.')] + $comments);
             } else {
                 $comment_api = \Comment::forgeForApi($comment, $this->_radix, [
                     'board' => false,
                     'theme' => $this->theme],
                     ['controller_method' => $limit ? 'last/'.$limit : 'thread']);
 
-                return new Response(
-                    json_encode([
+                $this->response->setData([
                         'success' => _i('Message sent.'),
                         'thread_num' => $comment->thread_num,
                         $comment->thread_num => ['posts' => [$comment_api]],
-                    ]));
+                    ]);
             }
         } else {
             $this->builder->createLayout('redirect')
@@ -1124,7 +1136,9 @@ class Chan
                 ->setParam('url', \Uri::create([$this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
-            return new Response($this->builder->build());
+            $this->respose->setContent($this->builder->build());
         }
+
+        return $this->response;
     }
 }

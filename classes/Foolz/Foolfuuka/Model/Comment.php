@@ -881,8 +881,6 @@ class Comment
         try {
             DC::forge()->beginTransaction();
 
-
-
             // throw into _deleted table
             $lol = DC::forge()->executeUpdate(
                 'INSERT INTO '.$this->radix->getTable('_deleted').' '.

@@ -23,8 +23,8 @@ class Chan extends \Foolz\Theme\View
     public function getStyles()
     {
         ?>
-        <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
-        <link href="<?= $this->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css"/>
+        <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css">
+        <link href="<?= $this->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css">
         <?php
     }
 
@@ -33,34 +33,30 @@ class Chan extends \Foolz\Theme\View
         $radix = $this->getBuilderParamManager()->getParam('radix');
 
         ?><!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="generator" content="<?= \Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
-        <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
-        <link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('foolframe.gen.website_title') ?>'/>
-        <?php if ($radix) : ?>
-        <link href="<?= \Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS"/>
-        <link href="<?= \Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom"/>
-        <?php endif; ?>
-        <link href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css"/>
-        <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>" rel="stylesheet" type="text/css"/>
-        <!--[if lt IE 8]>
-        <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>" rel="stylesheet" type="text/css"/>
-        <![endif]-->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="<?= \Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>">
+    <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
+    <link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('foolframe.gen.website_title') ?>'>
+    <link href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css">
+    <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>" rel="stylesheet" type="text/css">
+    <!--[if lt IE 8]>
+        <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>" rel="stylesheet" type="text/css">
+    <![endif]-->
 
-        <?php $this->getStyles(); ?>
+    <?php $this->getStyles(); ?>
 
-        <!--[if lt IE 9]>
+    <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-        <?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
-        <link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('foolframe.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>"/>
-        <?php endif; ?>
+    <![endif]-->
+    <?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
+        <link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('foolframe.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>">
+    <?php endif; ?>
 
-        <?= \Preferences::get('foolframe.theme.header_code'); ?>
+     <?= \Preferences::get('foolframe.theme.header_code'); ?>
 
-    </head>
+ </head>
         <?php
     }
 
@@ -360,17 +356,13 @@ class Chan extends \Foolz\Theme\View
         ?>
     </footer>
 
-    <script>
-        var backend_vars = <?= json_encode($this->getBuilderParamManager()->getParam('backend_vars')) ?>;
-    </script>
-
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="<?= $this->getAssetManager()->getAssetLink('assets/js/jquery.js') ?>"><\/script>')</script>
-    <script defer src="<?= $this->getAssetManager()->getAssetLink('bootstrap.min.js') ?>"></script>
-    <script defer src="<?= $this->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
-    <script defer src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>"></script>
-    <?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
     <script>
+        window.jQuery || document.write('<script src="<?= $this->getAssetManager()->getAssetLink('assets/js/jquery.js') ?>"><\/script>');
+
+        var backend_vars = <?= json_encode($this->getBuilderParamManager()->getParam('backend_vars')) ?>;
+
+        <?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
         var _gaq = [
             ['_setAccount', '<?= \Preferences::get('foolframe.theme.google_analytics') ?>'],
             ['_trackPageview'],
@@ -381,16 +373,20 @@ class Chan extends \Foolz\Theme\View
             g.src = ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
             s.parentNode.insertBefore(g, s)
         }(document, 'script'));
+        <?php endif; ?>
     </script>
-    <?php endif; ?>
+    <script src="<?= $this->getAssetManager()->getAssetLink('bootstrap.min.js') ?>"></script>
+    <script src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>"></script>
+    <script src="<?= $this->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
 
     <!--[if lt IE 7 ]>
-    <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-    <script defer>window.attachEvent('onload', function () { CFInstall.check({mode:'overlay'}) })</script>
+        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+        <script>window.attachEvent('onload', function () { CFInstall.check({mode:'overlay'}) })</script>
     <![endif]-->
-        <?= \Preferences::get('foolframe.theme.footer_code'); ?>
-    </body>
-    </html>
+
+    <?= \Preferences::get('foolframe.theme.footer_code'); ?>
+</body>
+</html>
     <?php
     }
 }

@@ -3,6 +3,7 @@
 namespace Foolz\Foolfuuka\Controller\Admin;
 
 use Foolz\FoolFrame\Model\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Validation;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,7 +51,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         if (\Input::post() && !\Security::check_token()) {
             \Notices::set('warning', _i('The security token was not found. Please try again.'));
         } elseif (\Input::post()) {
-            $result = \Validation::form_validate($data['form']);
+            $result = Validation::form_validate($data['form']);
 
             if (isset($result['error'])) {
                 \Notices::set('warning', $result['error']);

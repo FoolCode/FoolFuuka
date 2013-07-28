@@ -2,7 +2,7 @@
 
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-lock')
     ->setCall(function($result) {
-        /* @var $framework \Foolz\Foolframe\Model\Framework */
+        /* @var $framework \Foolz\Foolframe\Model\Context */
         $framework = $result->getParam('framework');
 
         \Autoloader::add_classes([

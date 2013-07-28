@@ -7,8 +7,10 @@ use \Foolz\Foolframe\Model\Config;
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 use \Foolz\Plugin\PlugSuit;
 
-class Radix
-{
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class Radix {
 
     /*
      * Set of database fields
@@ -96,7 +98,7 @@ class Radix
                 'help' => _i('Insert the name of the board normally shown as title.'),
                 'placeholder' => _i('Required'),
                 'class' => 'span3',
-                'validation' => 'required|max_length[128]'
+                'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 128])]
             ],
             'shortname' => [
                 'database' => true,
@@ -105,7 +107,7 @@ class Radix
                 'help' => _i('Insert the shorter name of the board. Reserved: "admin".'),
                 'placeholder' => _i('Req.'),
                 'class' => 'span1',
-                'validation' => 'required|max_length[5]|valid_string[alpha,dashes,numeric]',
+                'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 5])],
                 'validation_func' => function($input, $form_internal) {
                     // if we're working on the same object
                     if (isset($input['id'])) {
@@ -130,6 +132,13 @@ class Radix
                             // no change
                             return ['success' => true];
                         }
+                    }
+
+                    if (!preg_match('/^\w+$/', $input['shortname'], $matches)) {
+                        return [
+                            'error_code' => 'INVALID SHORTNAME',
+                            'error' => _i('The shortname is must be composed of letters, numbers and underscores.')
+                        ];
                     }
 
                     $row = DC::qb()
@@ -177,7 +186,7 @@ class Radix
                 'label' => _i('Maximum number of threads to display in the index pages'),
                 'type' => 'input',
                 'class' => 'span1',
-                'validation' => 'trim|required|valid_string[numeric]',
+                'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
             ],
             'archive' => [
                 'database' => true,
@@ -195,7 +204,7 @@ class Radix
                         'label' => _i('URL to the 4chan board (facultative)'),
                         'placeholder' => 'http://boards.4chan.org/'.(is_object($radix) ? $radix->shortname : 'shortname').'/',
                         'class' => 'span4',
-                        'validation' => 'trim|max_length[256]'
+                        'validation' => [new Assert\Length(['max' => 256])]
                     ],
                     'thumbs_url' => [
                         'database' => true,
@@ -204,7 +213,7 @@ class Radix
                         'label' => _i('URL to the board thumbnails (facultative)'),
                         'placeholder' => 'http://0.thumbs.4chan.org/'.(is_object($radix) ? $radix->shortname : 'shortname').'/',
                         'class' => 'span4',
-                        'validation' => 'trim|max_length[256]'
+                        'validation' => [new Assert\Length(['max' => 256])]
                     ],
                     'images_url' => [
                         'database' => true,
@@ -213,70 +222,7 @@ class Radix
                         'label' => _i('URL to the board images (facultative)'),
                         'placeholder' => 'http://images.4chan.org/'.(is_object($radix) ? $radix->shortname : 'shortname').'/',
                         'class' => 'span4',
-                        'validation' => 'trim|max_length[256]'
-                    ],
-                    'media_threads' => [
-                        'database' => true,
-                        'boards_preferences' => true,
-                        'type' => 'input',
-                        'label' => _i('Image fetching workers'),
-                        'help' => _i('The number of workers that will fetch full images. Set to zero not to fetch them.'),
-                        'placeholder' => 5,
-                        'class' => 'span1',
-                        'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
-                    ],
-                    'thumb_threads' => [
-                        'database' => true,
-                        'boards_preferences' => true,
-                        'type' => 'input',
-                        'label' => _i('Thumbnail fetching workers'),
-                        'help' => _i('The number of workers that will fetch thumbnails'),
-                        'placeholder' => 5,
-                        'class' => 'span1',
-                        'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
-                    ],
-                    'new_threads_threads' => [
-                        'database' => true,
-                        'boards_preferences' => true,
-                        'type' => 'input',
-                        'label' => _i('Thread fetching workers'),
-                        'help' => _i('The number of workers that fetch new threads'),
-                        'placeholder' => 5,
-                        'class' => 'span1',
-                        'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
-                    ],
-                    'thread_refresh_rate' => [
-                        'database' => true,
-                        'boards_preferences' => true,
-                        'type' => 'hidden',
-                        'label' => _i('Minutes to refresh the thread'),
-                        'placeholder' => 3,
-                        'validation' => 'trim|valid_string[numeric]|numeric_max[32]'
-                    ],
-                    'page_settings' => [
-                        'database' => true,
-                        'boards_preferences' => true,
-                        'type' => 'textarea',
-                        'label' => _i('Thread refresh rate'),
-                        'help' => _i('Array of refresh rates in seconds per page in JSON format'),
-                        'placeholder' => htmlspecialchars('[{"delay": 30, "pages": [0, 1, 2]},'.
-                            '{"delay": 120, "pages": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},'.
-                            '{"delay": 30, "pages": [13, 14, 15]}]'),
-                        'class' => 'span4',
-                        'style' => 'height:70px;',
-                        'validation_func' => function($input, $form_internal) {
-                            if ($input['page_settings'] === '') {
-                                return true;
-                            }
-
-                            $json = @json_decode($input['page_settings']);
-                            if (is_null($json)) {
-                                return [
-                                    'error_code' => 'NOT_JSON',
-                                    'error' => _i('The JSON inputted is not valid.')
-                                ];
-                            }
-                        }
+                        'validation' => [new Assert\Length(['max' => 256])]
                     ]
                 ],
                 'sub_inverse' => [
@@ -298,7 +244,7 @@ class Radix
                         'label' => _i('Opening post thumbnail maximum width after resizing'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
+                        'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
                     ],
                     'thumbnail_op_height' => [
                         'database' => true,
@@ -306,7 +252,7 @@ class Radix
                         'label' => _i('Opening post thumbnail maximum height after resizing'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
+                        'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
                     ],
                     'thumbnail_reply_width' => [
                         'database' => true,
@@ -314,7 +260,7 @@ class Radix
                         'label' => _i('Reply thumbnail maximum width after resizing'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
+                        'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
                     ],
                     'thumbnail_reply_height' => [
                         'database' => true,
@@ -322,7 +268,7 @@ class Radix
                         'label' => _i('Reply thumbnail maximum height after resizing'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
+                        'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
                     ],
                     'max_image_size_kilobytes' => [
                         'database' => true,
@@ -330,7 +276,7 @@ class Radix
                         'label' => _i('Full image maximum size in kilobytes'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
+                        'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
                     ],
                     'max_image_size_width' => [
                         'database' => true,
@@ -338,7 +284,7 @@ class Radix
                         'label' => _i('Full image maximum width in pixels'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
+                        'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
                     ],
                     'max_image_size_height' => [
                         'database' => true,
@@ -346,7 +292,7 @@ class Radix
                         'label' => _i('Full image maximum height in pixels'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|valid_string[numeric]|numeric_min[25]',
+                        'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
                     ],
                     'max_posts_count' => [
                         'database' => true,
@@ -354,7 +300,7 @@ class Radix
                         'label' => _i('The maximum amount of posts before a thread "dies".'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|valid_string[numeric]',
+                        'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
                     ],
                     'max_images_count' => [
                         'database' => true,
@@ -362,7 +308,7 @@ class Radix
                         'label' => _i('The maximum amount of images in replies before posting more is prohibited'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|valid_string[numeric]',
+                        'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
                     ],
                     'min_image_repost_time' => [
                         'database' => true,
@@ -370,7 +316,7 @@ class Radix
                         'label' => _i('The minimum time in seconds to repost the same image (0 means no limit, -1 means never allowing a repost)'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => 'trim|required|numeric_min[-2]',
+                        'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => -2])],
                     ]
                 ]
             ],
@@ -380,7 +326,7 @@ class Radix
                 'label' => _i('The default name when an user doesn\'t enter a name'),
                 'type' => 'input',
                 'class' => 'span3',
-                'validation' => 'trim|required',
+                'validation' => [new Assert\NotBlank()]
             ],
             'max_comment_characters_allowed' => [
                 'database' => true,
@@ -388,7 +334,7 @@ class Radix
                 'label' => _i('The maximum number of characters allowed in the comment.'),
                 'type' => 'input',
                 'class' => 'span1',
-                'validation' => 'trim|required|valid_string[numeric]'
+                'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
             ],
             'max_comment_lines_allowed' => [
                 'database' => true,
@@ -396,7 +342,7 @@ class Radix
                 'label' => _i('The maximum number of lines allowed in the comment.'),
                 'type' => 'input',
                 'class' => 'span1',
-                'validation' => 'trim|required|valid_string[numeric]'
+                'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
             ],
             'cooldown_new_comment' => [
                 'database' => true,
@@ -404,7 +350,7 @@ class Radix
                 'label' => _i('This is the time users must wait between posts.'),
                 'type' => 'input',
                 'class' => 'span1',
-                'validation' => 'trim|required|valid_string[numeric]'
+                'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
             ],
             'cooldown_new_thread' => [
                 'database' => true,
@@ -412,7 +358,7 @@ class Radix
                 'label' => _i('This is the time users must wait between new threads.'),
                 'type' => 'input',
                 'class' => 'span1',
-                'validation' => 'trim|required|valid_string[numeric]'
+                'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
             ],
             'transparent_spoiler' => [
                 'database' => true,

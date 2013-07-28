@@ -4,6 +4,9 @@ namespace Foolz\Foolfuuka\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 class Chan
 {
@@ -1038,14 +1041,17 @@ class Chan
     public function submit($data, $media)
     {
         // some beginners' validation, while through validation will happen in the Comment model
-        $val = \Validation::forge();
-        $val->add_field('thread_num', _i('Thread Number'), 'required');
-        $val->add_field('name', _i('Username'), 'max_length[64]');
-        $val->add_field('email', _i('Email'), 'max_length[64]');
-        $val->add_field('title', _i('Subject'), 'max_length[64]');
-        $val->add_field('comment', _i('Comment'), 'min_length[3]');
-        $val->add_field('delpass', _i('Password'), 'required|min_length[3]|max_length[32]');
+        $validator = Validation::createValidator();
+        $constraint = new Assert\Collection([
+            'thread_num' => new Assert\NotBlank(),
+            'name' => new Assert\Length(['max' => '64']),
+            'email' => new Assert\Length(['max' => '64']),
+            'title' => new Assert\Length(['max' => '64']),
+            'comment' => new Assert\Length(['min' => '3']),
+            'delpass' => new Assert\Length(['min' => 3, 'max' => 32])
+        ]);
 
+        $constraint->allowExtraFields = true;
         // leave the capcode check to the model
 
         // this is for redirecting, not for the database
@@ -1055,7 +1061,9 @@ class Chan
             unset($data['last_limit']);
         }
 
-        if ($val->run($data)) {
+        $violations = $validator->validateValue($data, $constraint);
+
+        if (!$violations->count()) {
             try {
                 $data['poster_ip'] = \Input::ip_decimal();
                 $comment = new \Foolz\Foolfuuka\Model\CommentInsert($data, $this->_radix, ['clean' => false]);
@@ -1075,10 +1083,15 @@ class Chan
                 }
             }
         } else {
+            $error = '';
+            foreach ($violations as $violation) {
+                $error = $violation->getMessage().' ';
+            }
+
             if (\Input::is_ajax()) {
-                return new Response(json_encode(['error' => implode(' ', $val->error())]));
+                return new Response(json_encode(['error' => $error]));
             } else {
-                return $this->error(implode(' ', $val->error()));
+                return $this->error(implode(' ', $error));
             }
         }
 

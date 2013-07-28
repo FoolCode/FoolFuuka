@@ -7,16 +7,16 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class Framework
+class Context
 {
     /**
-     * @var \Foolz\Foolframe\Model\Framework
+     * @var \Foolz\Foolframe\Model\Context
      */
-    public $framework;
+    public $context;
 
-    public function __construct(\Foolz\Foolframe\Model\Framework $framework)
+    public function __construct(\Foolz\Foolframe\Model\Context $context)
     {
-        $this->framework = $framework;
+        $this->context = $context;
 
         class_alias('Foolz\\Foolfuuka\\Model\\Ban', 'Ban');
         class_alias('Foolz\\Foolfuuka\\Model\\Board', 'Board');
@@ -102,12 +102,12 @@ class Framework
 
     public function routes()
     {
-        $this->framework->getRouteCollection()->add('foolfuuka.root', new Route(
+        $this->context->getRouteCollection()->add('foolfuuka.root', new Route(
             '/',
             ['_controller' => '\Foolz\Foolfuuka\Controller\Chan::index']
         ));
 
-        $this->framework->getRouteCollection()->add('404', new Route(
+        $this->context->getRouteCollection()->add('404', new Route(
             '',
             ['_controller' => '\Foolz\Foolfuuka\Controller\Chan::404']
         ));
@@ -115,7 +115,7 @@ class Framework
         $radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
 
         foreach ($radix_all as $radix) {
-            $this->framework->getRouteCollection()->add(
+            $this->context->getRouteCollection()->add(
                 'foolfuuka.chan.radix.'.$radix->shortname, new Route(
                 '/'.$radix->shortname.'/{_suffix}',
                 [
@@ -130,7 +130,7 @@ class Framework
             ));
         }
 
-        $this->framework->getRouteCollection()->add(
+        $this->context->getRouteCollection()->add(
             'foolfuuka.chan.api', new Route(
             '/_/api/chan/{_suffix}',
             [
@@ -142,7 +142,7 @@ class Framework
             ]
         ));
 
-        $this->framework->getRouteCollection()->add(
+        $this->context->getRouteCollection()->add(
             'foolfuuka.chan._', new Route(
             '/_/{_suffix}',
             [
@@ -155,7 +155,7 @@ class Framework
         ));
 
         foreach(['boards', 'moderation'] as $location) {
-            $this->framework->getRouteCollection()->add(
+            $this->context->getRouteCollection()->add(
                 'foolfuuka.admin.'.$location, new Route(
                     '/admin/'.$location.'/{_suffix}',
                     [

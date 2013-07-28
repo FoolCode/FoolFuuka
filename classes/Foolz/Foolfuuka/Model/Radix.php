@@ -1077,6 +1077,21 @@ class Radix
     }
 
     /**
+     * Returns the database prefix for the boards
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+        // if the value really doesn't exist in the db
+        if (\Preferences::get('foolfuuka.boards.prefix', null, true) === null) {
+            return DC::getPrefix().'board_';
+        }
+
+        return \Preferences::get('foolfuuka.boards.prefix');
+    }
+
+    /**
      * Get the board table name with protexted identifiers
      *
      * @param   string  $suffix  board suffix like _images
@@ -1087,9 +1102,9 @@ class Radix
     {
         if (\Preferences::get('foolfuuka.boards.db')) {
             return DC::forge()->quoteIdentifier(\Preferences::get('foolfuuka.boards.db'))
-                .'.'.DC::forge()->quoteIdentifier($this->shortname.$suffix);
+                .'.'.DC::forge()->quoteIdentifier($this->getPrefix().$this->shortname.$suffix);
         } else {
-            return DC::forge()->quoteIdentifier(DC::p('board_'.$this->shortname.$suffix));
+            return DC::forge()->quoteIdentifier($this->getPrefix().$this->shortname.$suffix);
         }
     }
 
@@ -1104,7 +1119,7 @@ class Radix
     public function getIndex($suffix = '', $index = '')
     {
         if (DC::forge()->getDriver()->getName() == 'pdo_pgsql') {
-            return DC::p('board_'.$this->shortname.$suffix.'_'.$index);
+            return $this->getPrefix().$this->shortname.$suffix.'_'.$index;
         } else {
             return $index;
         }
@@ -1118,14 +1133,17 @@ class Radix
         $charset = 'utf8mb4';
         $collate = 'utf8mb4_general_ci';
 
-        $sm = DC::forge()->getSchemaManager();
+        $sm = DC::forge('radix_creation', 'default', [
+            'dbname' => \Preferences::get('foolfuuka.boards.db'),
+            'prefix' => ''
+        ])->getSchemaManager();
         $schema = $sm->createSchema();
 
         // create the main table also in _deleted flavour
         foreach(['', '_deleted'] as $key) {
-            if (!$schema->hasTable($this->getTable($key))) {
-                $table = $schema->createTable($this->getTable($key));
-                if (DC::forge()->getDriver()->getName() == 'pdo_mysql') {
+            if (!$schema->hasTable($this->getPrefix().$this->shortname.$key)) {
+                $table = $schema->createTable($this->getPrefix().$this->shortname.$key);
+                if (DC::forge('radix_creation')->getDriver()->getName() == 'pdo_mysql') {
                     $table->addOption('charset', $charset);
                     $table->addOption('collate', $collate);
                 }
@@ -1176,9 +1194,9 @@ class Radix
             }
         }
 
-        if (!$schema->hasTable($this->getTable('_threads'))) {
-            $table_threads = $schema->createTable($this->getTable('_threads'));
-            if (DC::forge()->getDriver()->getName() == 'pdo_mysql') {
+        if (!$schema->hasTable($this->getPrefix().$this->shortname.'_threads')) {
+            $table_threads = $schema->createTable($this->getPrefix().$this->shortname.'_threads');
+            if (DC::forge('radix_creation')->getDriver()->getName() == 'pdo_mysql') {
                 $table_threads->addOption('charset', $charset);
                 $table_threads->addOption('collate', $collate);
             }
@@ -1201,9 +1219,9 @@ class Radix
             $table_threads->addIndex(['locked'], $this->getIndex('_threads', 'locked_index'));
         }
 
-        if (!$schema->hasTable($this->getTable('_users'))) {
-            $table_users = $schema->createTable($this->getTable('_users'));
-            if (DC::forge()->getDriver()->getName() == 'pdo_mysql') {
+        if (!$schema->hasTable($this->getPrefix().$this->shortname.'_users')) {
+            $table_users = $schema->createTable($this->getPrefix().$this->shortname.'_users');
+            if (DC::forge('radix_creation')->getDriver()->getName() == 'pdo_mysql') {
                 $table_users->addOption('charset', $charset);
                 $table_users->addOption('collate', $collate);
             }
@@ -1218,9 +1236,9 @@ class Radix
             $table_users->addIndex(['postcount'], $this->getIndex('_users', 'postcount_index'));
         }
 
-        if (!$schema->hasTable($this->getTable('_images'))) {
-            $table_images = $schema->createTable($this->getTable('_images'));
-            if (DC::forge()->getDriver()->getName() == 'pdo_mysql') {
+        if (!$schema->hasTable($this->getPrefix().$this->shortname.'_images')) {
+            $table_images = $schema->createTable($this->getPrefix().$this->shortname.'_images');
+            if (DC::forge('radix_creation')->getDriver()->getName() == 'pdo_mysql') {
                 $table_images->addOption('charset', 'utf8');
                 $table_images->addOption('collate', 'utf8_general_ci');
             }
@@ -1237,9 +1255,9 @@ class Radix
             $table_images->addIndex(['banned'], $this->getIndex('_images', 'banned_index'));
         }
 
-        if (!$schema->hasTable($this->getTable('_daily'))) {
-            $table_daily = $schema->createTable($this->getTable('_daily'));
-            if (DC::forge()->getDriver()->getName() == 'pdo_mysql') {
+        if (!$schema->hasTable($this->getPrefix().$this->shortname.'_daily')) {
+            $table_daily = $schema->createTable($this->getPrefix().$this->shortname.'_daily');
+            if (DC::forge('radix_creation')->getDriver()->getName() == 'pdo_mysql') {
                 $table_daily->addOption('charset', 'utf8');
                 $table_daily->addOption('collate', 'utf8_general_ci');
             }
@@ -1253,9 +1271,9 @@ class Radix
             $table_daily->setPrimaryKey(['day']);
         }
 
-        if (!$schema->hasTable($this->getTable('_extra'))) {
-            $table_extra = $schema->createTable($this->getTable('_extra'));
-            if (DC::forge()->getDriver()->getName() == 'pdo_mysql') {
+        if (!$schema->hasTable($this->getPrefix().$this->shortname.'_extra')) {
+            $table_extra = $schema->createTable($this->getPrefix().$this->shortname.'_extra');
+            if (DC::forge('radix_creation')->getDriver()->getName() == 'pdo_mysql') {
                 $table_extra->addOption('charset', $charset);
                 $table_extra->addOption('collate', $collate);
             }
@@ -1264,10 +1282,10 @@ class Radix
             $table_extra->setPrimaryKey(['extra_id']);
         }
 
-        DC::forge()->beginTransaction();
+        DC::forge('radix_creation')->beginTransaction();
 
         foreach ($schema->getMigrateFromSql($sm->createSchema(), $sm->getDatabasePlatform()) as $query) {
-            DC::forge()->query($query);
+            DC::forge('radix_creation')->query($query);
         }
 
         $md5_array = DC::qb()
@@ -1278,10 +1296,10 @@ class Radix
 
         // in a transaction multiple inserts are almost like a single one
         foreach ($md5_array as $item) {
-            DC::forge()->insert($this->getTable('_images'), ['md5' => $item['md5'], 'banned' => 1]);
+            DC::forge('radix_creation')->insert($this->getTable('_images'), ['md5' => $item['md5'], 'banned' => 1]);
         }
 
-        DC::forge()->commit();
+        DC::forge('radix_creation')->commit();
     }
 
     /**

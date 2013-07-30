@@ -1082,8 +1082,6 @@ class Chan
 
         $violations = Validation::validateValues($data, $constraints, $labels);
 
-        die($violations->toHtml());
-
         if (!$violations->count()) {
             try {
                 $data['poster_ip'] = \Input::ip_decimal();
@@ -1104,16 +1102,10 @@ class Chan
                 }
             }
         } else {
-            $error = [];
-            foreach ($violations as $violation) {
-                $error[] = $violation->getPropertyPath();
-                $error[] = $violation->getMessage();
-            }
-
             if (\Input::is_ajax()) {
-                return $this->response->setData(['error' => implode(' ', $error)]);
+                return $this->response->setData(['error' => $violations->toHtml()]);
             } else {
-                return $this->error(implode(' ', $error));
+                return $this->error(implode(' ', $violations->toHtml()));
             }
         }
 

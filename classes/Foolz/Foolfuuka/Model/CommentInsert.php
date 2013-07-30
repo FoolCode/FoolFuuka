@@ -130,7 +130,7 @@ class CommentInsert extends Comment
                 $query = DC::qb()
                     ->update($this->radix->getTable('_threads'))
                     ->set('time_last', 'GREATEST(time_last, :time_last)')
-                    ->set('time_last_modified', 'GREATEST(time_last, :time_last)')
+                    ->set('time_last_modified', 'GREATEST(time_last_modified, :time_last)')
                     ->set('nreplies', 'nreplies + 1')
                     ->set('nimages', 'nimages + '. ($this->media->media_id ? 1 : 0))
                     ->setParameter(':time_last', $this->timestamp);
@@ -144,7 +144,7 @@ class CommentInsert extends Comment
                 $query = DC::qb()
                     ->update($this->radix->getTable('_threads'))
                     ->set('time_ghost', 'COALESCE(time_ghost, :time_ghost)')
-                    ->set('time_last_modified', 'GREATEST(time_last, :time_ghost)')
+                    ->set('time_last_modified', 'GREATEST(time_last_modified, :time_ghost)')
                     ->set('nreplies', 'nreplies + 1')
                     ->setParameter(':time_ghost', $this->timestamp);
 

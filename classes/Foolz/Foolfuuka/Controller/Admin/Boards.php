@@ -165,13 +165,25 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'help' => _i('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
         ];
 
-        if (DC::forge()->getDriver()->getName() != 'pdo_pgsql') {
+        if (!DC::forge()->getDriver()->getName() != 'pdo_pgsql') {
             $form['foolfuuka.boards.db'] = [
                 'type' => 'input',
                 'label' => _i('Boards database'),
                 'preferences' => true,
                 'help' => _i('Overrides the default database. You should point it to your Asagi database if you have a separate one.')
             ];
+
+            $form['foolfuuka.boards.prefix'] = [
+                'type' => 'input',
+                'label' => _i('Boards prefix'),
+                'preferences' => true,
+                'help' => _i('Overrides the default prefix (which would be "'.DC::p('').'board_"). Asagi doesn\'t use a prefix by default.')
+            ];
+
+            // it REALLY must never have been set
+            if (\Preferences::get('foolfuuka.boards.prefix', null, true) === null) {
+                $form['foolfuuka.boards.prefix']['value'] = DC::p('').'board_';
+            }
         }
 
         $form['foolfuuka.boards.media_balancers'] = [

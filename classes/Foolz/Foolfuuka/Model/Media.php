@@ -972,7 +972,7 @@ class Media
             $this->preview_op = $duplicate->preview_op;
             $this->preview_reply = $duplicate->preview_reply;
 
-            if ($this->radix->getValue('min_image_repost_time')) {
+            if (!\Auth::has_access('comment.limitless_comment') && $this->radix->getValue('min_image_repost_time')) {
                 // if it's -1 it means that image reposting is disabled, so this image shouldn't pass
                 if ($this->radix->getValue('min_image_repost_time') == -1) {
                     throw new MediaInsertRepostException(
@@ -983,6 +983,7 @@ class Media
                 // we don't have to worry about archives with weird timestamps, we can't post images there
                 $duplicate_entry = DC::qb()
                     ->select('COUNT(*) as count, MAX(timestamp) as max_timestamp')
+                    ->from($this->radix->getTable(), 'r')
                     ->where('media_id = :media_id')
                     ->andWhere('timestamp > :timestamp')
                     ->setParameter('media_id', $duplicate->media_id)
@@ -992,7 +993,7 @@ class Media
                     ->fetch();
 
                 if ($duplicate_entry['count']) {
-                    $datetime = new \DateTime(date('Y-m-d H:i:s', $duplicate_entry['max_timestamp'] + $this->radix->min_image_repost_time));
+                    $datetime = new \DateTime(date('Y-m-d H:i:s', $duplicate_entry['max_timestamp'] + $this->radix->getValue('min_image_repost_time')));
                     $remain = $datetime->diff(new \DateTime());
 
                     throw new MediaInsertRepostException(

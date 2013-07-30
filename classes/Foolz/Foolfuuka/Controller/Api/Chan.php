@@ -12,7 +12,9 @@ class Chan
     protected $_radix = null;
     protected $_theme = null;
     protected $format = 'json';
+
     protected $request = null;
+    protected $response = null;
 
     public function before(Request $request)
     {
@@ -41,7 +43,8 @@ class Chan
 
     public function router(Request $request, $method)
     {
-        // store the request object for custom response
+        // create response object, store request object
+        $this->response = new JsonResponse();
         $this->request = $request;
 
         if ($request->getMethod() == 'GET') {
@@ -53,13 +56,11 @@ class Chan
         }
     }
 
-    protected function response($data, $status = 200)
+    public function setLastModified($timestamp = 0, $max_age = 0)
     {
-        $response = new JsonResponse();
-        $response->setData($data);
-        $response->setStatusCode($status);
-
-        return $response;
+        $this->response->headers->addCacheControlDirective('must-revalidate', true);
+        $this->response->setLastModified(new \DateTime('@'.$timestamp));
+        $this->response->setMaxAge($max_age);
     }
 
     /**
@@ -74,12 +75,12 @@ class Chan
         }
 
         if (!$board) {
-            //$this->response(['error' => _i('You didn\'t select a board')], 404);
+            //$this->response->setData(['error' => _i('You didn\'t select a board')]);
             return false;
         }
 
         if (!$this->_radix = \Radix::setSelectedByShortname($board)) {
-            //$this->response(['error' => _i('The board you selected doesn\'t exist')], 404);
+            //$this->response->setData(['error' => _i('The board you selected doesn\'t exist')]);
             return false;
         }
 
@@ -88,23 +89,23 @@ class Chan
 
     public function get_404()
     {
-        return $this->response(['error' => _i('Invalid Method.')], 404);
+        return $this->response->setData(['error' => _i('Invalid Method.')])->setStatusCode(404);
     }
 
     public function get_index()
     {
         if (!$this->check_board()) {
-            return $this->response(['error' => _i('No board selected.')], 404);
+            return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(404);
         }
 
         $page = \Input::get('page');
 
         if (!$page) {
-            return $this->response(['error' => _i('The "page" parameter is missing.')], 404);
+            return $this->response->setData(['error' => _i('The "page" parameter is missing.')])->setStatusCode(404);
         }
 
         if (!ctype_digit((string) $page)) {
-            return $this->response(['error' => _i('The value for "page" is invalid.')], 404);
+            return $this->response->setData(['error' => _i('The value for "page" is invalid.')])->setStatusCode(404);
         }
 
         $page = intval($page);
@@ -123,14 +124,14 @@ class Chan
                 ->setApi(['theme' => $this->_theme, 'board' => false])
                 ->setOptions($options);
 
-            $comments = $board->getComments();
-
-            return $this->response($comments, 200);
+            $this->response->setData($board->getComments());
         } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
-            return $this->response(['error' => _i('Thread not found.')], 200);
+            return $this->response->setData(['error' => _i('Thread not found.')]);
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
-            return $this->response(['error' => _i('Encountered an unknown error.')], 500);
+            return $this->response->setData(['error' => _i('Encountered an unknown error.')])->setStatusCode(500);
         }
+
+        return $this->response;
     }
 
     public function get_search()
@@ -182,12 +183,14 @@ class Chan
 
             $comments = $board->getComments();
 
-            return $this->response($comments, 200);
+            $this->response->setData($comments);
         } catch (\Foolz\Foolfuuka\Model\SearchException $e) {
-            return $this->response(['error' => $e->getMessage()], 200);
+            return $this->response->setData(['error' => $e->getMessage()]);
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
-            return $this->response(['error' => $e->getMessage()], 500);
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
         }
+
+        return $this->response;
     }
 
     /**
@@ -200,18 +203,18 @@ class Chan
     public function get_thread()
     {
         if (!$this->check_board()) {
-            return $this->response(['error' => _i('No board selected.')], 404);
+            return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(404);
         }
 
         $num = \Input::get('num');
         $latest_doc_id = \Input::get('latest_doc_id');
 
         if (!$num) {
-            return $this->response(['error' => _i('The "num" parameter is missing.')], 404);
+            return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(404);
         }
 
         if (!ctype_digit((string) $num)) {
-            return $this->response(['error' => _i('The value for "num" is invalid.')], 404);
+            return $this->response->setData(['error' => _i('The value for "num" is invalid.')])->setStatusCode(404);
         }
 
         $num = intval($num);
@@ -220,7 +223,7 @@ class Chan
             // build an array if we have more specifications
             if ($latest_doc_id) {
                 if (!ctype_digit((string) $latest_doc_id)) {
-                    return $this->response(['error' => _i('The value for "latest_doc_id" is malformed.')], 404);
+                    return $this->response->setData(['error' => _i('The value for "latest_doc_id" is malformed.')])->setStatusCode(404);
                 }
 
                 $options = [
@@ -240,10 +243,10 @@ class Chan
                 $comments = $board->getComments();
 
                 if (!count($comments)) {
-                    $this->response([], 204);
+                    $this->response->setData([])->setStatusCode(204);
                 }
 
-                return $this->response($comments, 200);
+                $this->response->setData($comments);
             } else {
                 $options = [
                     'type' => 'thread',
@@ -258,41 +261,35 @@ class Chan
                 $thread_status = $board->getThreadStatus();
                 $last_modified = $thread_status['last_modified'];
 
-                $response = new JsonResponse();
-                $response->headers->addCacheControlDirective('must-revalidate', true);
-                $response->setLastModified(new \DateTime('@'.$last_modified))
-                    ->setMaxAge(0);
+                $this->setLastModified($last_modified);
 
-                if ($response->isNotModified($this->request)) {
-                    return $response;
+                if (!$this->response->isNotModified($this->request)) {
+                    $this->response->setData($board->getComments());
                 }
-
-                $response->setData($board->getComments());
-                $response->setStatusCode(200);
-
-                return $response;
             }
         } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
-            return $this->response(['error' => _i('Thread not found.')], 200);
+            return $this->response->setData(['error' => _i('Thread not found.')]);
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
-            return $this->response(['error' => _i('Encountered an unknown error.')], 500);
+            return $this->response->setData(['error' => _i('Encountered an unknown error.')])->setStatusCode(500);
         }
+
+        return $this->response;
     }
 
     public function get_post()
     {
         if (!$this->check_board()) {
-            return $this->response(['error' => _i('No board was selected.')], 404);
+            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(404);
         }
 
         $num = \Input::get('num');
 
         if (!$num) {
-            return $this->response(['error' => _i('The "num" parameter is missing.')], 404);
+            return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(404);
         }
 
         if (!\Board::isValidPostNumber($num)) {
-            return $this->response(['error' => _i('The value for "num" is invalid.')], 404);
+            return $this->response->setData(['error' => _i('The value for "num" is invalid.')])->setStatusCode(404);
         }
 
         try {
@@ -305,55 +302,48 @@ class Chan
 
             $last_modified = $comment->timestamp_expired ?: $comment->timestamp;
 
-            $response = new JsonResponse();
-            $response->headers->addCacheControlDirective('must-revalidate', true);
-                $response->setLastModified(new \DateTime('@'.$last_modified))
-                    ->setMaxAge(0);
+            $this->setLastModified($last_modified);
 
-            if ($response->isNotModified($this->request)) {
-                return $response;
+            if (!$this->response->isNotModified($this->request)) {
+                $this->response->setData($comment);
             }
-
-            // no index for the single post
-            $response->setData($comment);
-            $response->setStatusCode(200);
-
-            return $response;
         } catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e) {
-            return $this->response(['error' => _i('Post not found.')], 200);
+            return $this->response->setData(['error' => _i('Post not found.')]);
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
-            return $this->response(['error' => $e->getMessage()], 404);
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
         }
+
+        return $this->response;
     }
 
     public function post_user_actions()
     {
         if (!\Security::check_token()) {
-            return $this->response(['error' => _i('The security token was not found. Please try again.')]);
+            return $this->response->setData(['error' => _i('The security token was not found. Please try again.')]);
         }
 
         if (!$this->check_board()) {
-            return $this->response(['error' => _i('No board was selected.')], 404);
+            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(404);
         }
 
         if (\Input::post('action') === 'report') {
             try {
                 \Report::add($this->_radix, \Input::post('doc_id'), \Input::post('reason'));
             } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
-                return $this->response(['error' => $e->getMessage()], 200);
+                return $this->response->setData(['error' => $e->getMessage()]);
             }
 
-            return $this->response(['success' => _i('You have successfully submitted a report for this post.')], 200);
+            return $this->response->setData(['success' => _i('You have successfully submitted a report for this post.')]);
         }
 
         if (\Input::post('action') === 'report_media') {
             try {
                 \Report::add($this->_radix, \Input::post('media_id'), \Input::post('reason'), null, 'media_id');
             } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
-                return $this->response(['error' => $e->getMessage()], 200);
+                return $this->response->setData(['error' => $e->getMessage()]);
             }
 
-            return $this->response(['success' => _i('This media was reported.')], 200);
+            return $this->response->setData(['success' => _i('This media was reported.')]);
         }
 
         if (\Input::post('action') === 'delete') {
@@ -368,37 +358,37 @@ class Chan
                 $comment = current($comments);
                 $comment->delete(\Input::post('password'));
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
-                return $this->response(['error' => $e->getMessage()], 200);
+                return $this->response->setData(['error' => $e->getMessage()]);
             } catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e) {
-                return $this->response(['error' => $e->getMessage()], 200);
+                return $this->response->setData(['error' => $e->getMessage()]);
             }
 
-            return $this->response(['success' => _i('This post was deleted.')], 200);
+            return $this->response->setData(['success' => _i('This post was deleted.')]);
         }
     }
 
     public function post_mod_actions()
     {
         if (!\Security::check_token()) {
-            return $this->response(['error' => _i('The security token was not found. Please try again.')]);
+            return $this->response->setData(['error' => _i('The security token was not found. Please try again.')]);
         }
 
         if (!\Auth::has_access('comment.mod_capcode')) {
-            return $this->response(['error' => _i('Access Denied.')], 403);
+            return $this->response->setData(['error' => _i('Access Denied.')])->setStatusCode(403);
         }
 
         if (!$this->check_board()) {
-            return $this->response(['error' => _i('No board was selected.')], 404);
+            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(404);
         }
 
         if (\Input::post('action') === 'delete_report') {
             try {
                 \Report::delete(\Input::post('id'));
             } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
-                return $this->response(['error' => $e->getMessage()], 404);
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }
 
-            return $this->response(['success' => _i('The report was deleted.')], 200);
+            return $this->response->setData(['success' => _i('The report was deleted.')]);
         }
 
         if (\Input::post('action') === 'delete_post') {
@@ -412,20 +402,20 @@ class Chan
                 $comment = current($comments);
                 $comment->delete();
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
-                return $this->response(['error' => $e->getMessage()], 404);
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }
 
-            return $this->response(['success' => _i('This post was deleted.')], 200);
+            return $this->response->setData(['success' => _i('This post was deleted.')]);
         }
 
         if (\Input::post('action') === 'delete_image') {
             try {
                 \Media::getByMediaId($this->_radix, \Input::post('id'))->delete(true, true, true);
             } catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e) {
-                return $this->response(['error' => $e->getMessage()], 404);
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }
 
-            return $this->response(['success' => _i('This image was deleted.')], 200);
+            return $this->response->setData(['success' => _i('This image was deleted.')]);
         }
 
         if (\Input::post('action') === 'ban_image_local' || \Input::post('action') === 'ban_image_global') {
@@ -437,10 +427,10 @@ class Chan
             try {
                 \Media::getByMediaId($this->_radix, \Input::post('id'))->ban($global);
             } catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e) {
-                return $this->response(['error' => $e->getMessage()], 404);
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }
 
-            return $this->response(['success' => _i('This image was banned.')], 200);
+            return $this->response->setData(['success' => _i('This image was banned.')]);
         }
 
         if (\Input::post('action') === 'ban_user') {
@@ -451,10 +441,10 @@ class Chan
                     \Input::post('board_ban') === 'global' ? array() : array($this->_radix->id)
                 );
             } catch (\Foolz\Foolfuuka\Model\BanException $e) {
-                return $this->response(['error' => $e->getMessage()], 404);
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }
 
-            return $this->response(['success' => _i('This user was banned.')], 200);
+            return $this->response->setData(['success' => _i('This user was banned.')]);
         }
     }
 }

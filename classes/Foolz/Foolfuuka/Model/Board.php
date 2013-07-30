@@ -848,18 +848,14 @@ class Board
                 ] + $this->comment_options);
         }
 
-        // process entire thread and store in $result array
-        $result = [];
-
-        foreach ($this->comments_unsorted as $post) {
+        foreach ($this->comments_unsorted as $key => $post) {
             if ($post->op == 0) {
-                $result[$post->thread_num]['posts'][$post->num.(($post->subnum == 0) ? '' : '_'.$post->subnum)] = $post;
+                $this->comments[$post->thread_num]['posts']
+                    [$post->num.(($post->subnum == 0) ? '' : '_'.$post->subnum)] = &$this->comments_unsorted[$key];
             } else {
-                $result[$post->num]['op'] = $post;
+                $this->comments[$post->num]['op'] = &$this->comments_unsorted[$key];
             }
         }
-
-        $this->comments = $result;
 
         \Profiler::mark_memory($this->comments, 'Board $this->comments');
         \Profiler::mark_memory($this, 'Board $this');

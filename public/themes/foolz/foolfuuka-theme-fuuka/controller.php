@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Chan extends \Foolz\Foolfuuka\Controller\Chan
@@ -39,6 +40,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
             return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
         }
 
+        die('here');
         if (\Input::post('reply_delete')) {
             foreach (\Input::post('delete') as $idx => $doc_id) {
                 try {
@@ -62,7 +64,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
                 ->setParam('url', \Uri::create([$this->_radix->shortname, 'thread', $comment->thread_num]));
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
-            return \Response::forge($this->builder->build());
+            return new Response($this->builder->build());
         }
 
         if (\Input::post('reply_report')) {
@@ -80,7 +82,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
                 ->setParam('url', \Uri::create($this->_radix->shortname.'/thread/'.\Input::post('parent')));
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
-            return \Response::forge($this->builder->build());
+            return new Response($this->builder->build());
         }
 
         // Determine if the invalid post fields are populated by bots.

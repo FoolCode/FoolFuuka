@@ -131,22 +131,24 @@ class Comment
     public $extra = null;
 
 
-    public static function fromArrayDeep($posts, $radix, $options = [])
+    public static function fromArrayDeep(&$posts, $radix, $options = [])
     {
-        $array = [];
-        foreach ($posts as $post) {
-            $array[] = new static($post, $radix, $options);
+        $array = new \SplFixedArray(count($posts));
+        foreach ($posts as $key => $post) {
+            $array[$key] = new static($post, $radix, $options);
+            unset($posts[$key]);
         }
 
         return $array;
     }
 
 
-    public static function fromArrayDeepApi($posts, $radix, $api, $options = [])
+    public static function fromArrayDeepApi(&$posts, $radix, $api, $options = [])
     {
-        $array = [];
-        foreach ($posts as $post) {
-            $array[] = static::forgeForApi($post, $radix, $api, $options);
+        $array = new \SplFixedArray(count($posts));
+        foreach ($posts as $key => $post) {
+            $array[$key] = static::forgeForApi($post, $radix, $api, $options);
+            unset($posts[$key]);
         }
 
         return $array;

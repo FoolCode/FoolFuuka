@@ -165,7 +165,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'help' => _i('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
         ];
 
-        if (!DC::forge()->getDriver()->getName() != 'pdo_pgsql') {
+        if (DC::forge()->getDriver()->getName() != 'pdo_pgsql') {
             $form['foolfuuka.boards.db'] = [
                 'type' => 'input',
                 'label' => _i('Boards database'),

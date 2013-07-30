@@ -57,8 +57,6 @@ class Chan
         // this has already been forged in the foolfuuka bootstrap
         $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 
-        $theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
-
         try {
             $theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
 
@@ -186,8 +184,12 @@ class Chan
 
     public function setLastModified($timestamp = 0, $max_age = 0)
     {
+        $time = new \DateTime('@'.$timestamp);
+        $etag = md5($this->builder->getTheme()->getDir().$this->builder->getStyle().'|'.$timestamp.'|'.$max_age);
+
         $this->response->headers->addCacheControlDirective('must-revalidate', true);
-        $this->response->setLastModified(new \DateTime('@'.$timestamp));
+        $this->response->setLastModified($time);
+        $this->response->setEtag($etag);
         $this->response->setMaxAge($max_age);
     }
 

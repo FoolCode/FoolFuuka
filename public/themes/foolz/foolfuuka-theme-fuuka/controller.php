@@ -40,7 +40,6 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
             return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
         }
 
-        die('here');
         if (\Input::post('reply_delete')) {
             foreach (\Input::post('delete') as $idx => $doc_id) {
                 try {

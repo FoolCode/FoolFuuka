@@ -938,7 +938,7 @@ class Chan
                     ->validate(\Input::post());
 
                 if (!$validator->getViolations()->count()) {
-                    $ban->appeal($val->input('appeal'));
+                    $ban->appeal($validator->getFinalValues()['appeal']);
                     return $this->message('success', _i('Your appeal has been submitted!'));
                 }
             }
@@ -1067,7 +1067,7 @@ class Chan
             ->add('title', _i('Title'), [new Assert\Length(['max' => 64])])
             ->add('comment', _i('Comment'), [new Assert\Length(['min' => 3])])
             ->add('delpass', _i('Deletion pass'), [new Assert\Length(['min' => 3, 'max' => 32])])
-            ->validate($data)
+            ->validate($data);
 
         // this is for redirecting, not for the database
         $limit = false;

@@ -2,7 +2,8 @@
 
 namespace Foolz\Foolfuuka\Controller;
 
-use Foolz\Foolframe\Model\Validation;
+use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
+use Foolz\Foolframe\Model\Validation\Validator;
 use Foolz\Foolfuuka\Theme\Foolfuuka\Layout\Redirect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -930,10 +931,13 @@ class Chan
             if (!\Security::check_token()) {
                 return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
             } else {
-                $val = \Validation::forge();
-                $val->add_field('appeal', _i('Appeal'), 'required|trim|min_length[3]|max_length[4096]');
+                $validator = new Validator();
+                $validator
+                    ->add('appeal', _i('Appeal'),
+                        [new Trim(), new Assert\NotBlank(), new Assert\Length(['min' => 3, 'max' => 4096])])
+                    ->validate(\Input::post());
 
-                if ($val->run()) {
+                if (!$validator->getViolations()->count()) {
                     $ban->appeal($val->input('appeal'));
                     return $this->message('success', _i('Your appeal has been submitted!'));
                 }
@@ -1055,23 +1059,15 @@ class Chan
     public function submit($data, $media)
     {
         // some beginners' validation, while through validation will happen in the Comment model
-        $constraints = [
-            'thread_num' => new Assert\NotBlank(),
-            'name' => new Assert\Length(['max' => '64']),
-            'email' => new Assert\Length(['max' => '64']),
-            'title' => new Assert\Length(['max' => '64']),
-            'comment' => new Assert\Length(['min' => '3']),
-            'delpass' => new Assert\Length(['min' => 3, 'max' => 32])
-        ];
-
-        $labels = [
-            'thread_num' => _i('Thread Number'),
-            'name' => _i('Name'),
-            'email' => _i('Email'),
-            'title' => _i('Title'),
-            'comment' => _i('Comment'),
-            'delpass' => _i('Deletion pass'),
-        ];
+        $validator = new Validator();
+        $validator
+            ->add('thread_num', _i('Thread Number'), [new Assert\NotBlank()])
+            ->add('name', _i('Name'), [new Assert\Length(['max' => 64])])
+            ->add('email', _i('Email'), [new Assert\Length(['max' => 64])])
+            ->add('title', _i('Title'), [new Assert\Length(['max' => 64])])
+            ->add('comment', _i('Comment'), [new Assert\Length(['min' => 3])])
+            ->add('delpass', _i('Deletion pass'), [new Assert\Length(['min' => 3, 'max' => 32])])
+            ->validate($data)
 
         // this is for redirecting, not for the database
         $limit = false;
@@ -1080,9 +1076,8 @@ class Chan
             unset($data['last_limit']);
         }
 
-        $violations = Validation::validateValues($data, $constraints, $labels);
 
-        if (!$violations->count()) {
+        if (!$validator->getViolations()->count()) {
             try {
                 $data['poster_ip'] = \Input::ip_decimal();
                 $comment = new \Foolz\Foolfuuka\Model\CommentInsert($data, $this->_radix, ['clean' => false]);
@@ -1103,9 +1098,9 @@ class Chan
             }
         } else {
             if (\Input::is_ajax()) {
-                return $this->response->setData(['error' => $violations->toHtml()]);
+                return $this->response->setData(['error' => $validator->getViolations()->getText()]);
             } else {
-                return $this->error(implode(' ', $violations->toHtml()));
+                return $this->error($validator->getViolations()->getHtml());
             }
         }
 

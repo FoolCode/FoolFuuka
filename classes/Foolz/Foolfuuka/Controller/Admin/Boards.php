@@ -3,11 +3,14 @@
 namespace Foolz\Foolfuuka\Controller\Admin;
 
 use Foolz\FoolFrame\Model\DoctrineConnection as DC;
-use Foolz\Foolframe\Model\Validation;
+use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
+use Foolz\Foolframe\Model\Validation\Validator;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 class Boards extends \Foolz\Foolframe\Controller\Admin
 {
@@ -51,7 +54,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         if (\Input::post() && !\Security::check_token()) {
             \Notices::set('warning', _i('The security token was not found. Please try again.'));
         } elseif (\Input::post()) {
-            $result = Validation::form_validate($data['form']);
+            $result = Validator::form_validate($data['form']);
 
             if (isset($result['error'])) {
                 \Notices::set('warning', $result['error']);
@@ -93,7 +96,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         if (\Input::post() && !\Security::check_token()) {
             \Notices::set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
         } elseif (\Input::post()) {
-            $result = \Validation::form_validate($data['form']);
+            $result = Validator::form_validate($data['form']);
             if (isset($result['error'])) {
                 \Notices::set('warning', $result['error']);
             } else {
@@ -241,7 +244,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         $form['foolfuuka.sphinx.global'] = [
             'type' => 'checkbox',
             'label' => 'Global SphinxSearch',
-            'placeholder' => 'FoOlFuuka',
+            'placeholder' => 'FoolFuuka',
             'preferences' => true,
             'help' => _i('Activate Sphinx globally (enables crossboard search)')
         ];
@@ -252,7 +255,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'preferences' => true,
             'help' => _i('Set the address and port to your Sphinx instance.'),
             'class' => 'span2',
-            'validation' => 'trim|max_length[48]',
+            'validation' => [new Trim(), new Assert\Length(['max' => 48])],
             'validation_func' => function($input, $form) {
                     if (strpos($input['foolfuuka.sphinx.listen'], ':') === false) {
                         return [
@@ -296,7 +299,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'input',
             'label' => 'Listen (MySQL)',
             'preferences' => true,
-            'validation' => 'trim|max_length[48]',
+            'validation' => [new Trim(), new Assert\Length(['max' => 48])],
             'help' => _i('Set the address and port to your MySQL instance.'),
             'class' => 'span2'
         ];
@@ -306,7 +309,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'label' => 'Connection Flags (MySQL)',
             'placeholder' => 0,
             'preferences' => true,
-            'validation' => 'trim',
+            'validation' => [new Trim()],
             'help' => _i('Set the MySQL client connection flags to enable compression, SSL, or secure connection.'),
             'class' => 'span2'
         ];
@@ -317,7 +320,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'preferences' => true,
             'help' => _i('Set the working directory to your Sphinx working directory.'),
             'class' => 'span3',
-            'validation' => 'trim',
+            'validation' => [new Trim()],
             'validation_func' => function($input, $form) {
                 if (!file_exists($input['foolfuuka.sphinx.dir'])) {
                     return [
@@ -336,7 +339,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'preferences' => true,
             'help' => _i('Set the minimum word length indexed by Sphinx.'),
             'class' => 'span1',
-            'validation' => 'trim'
+            'validation' => [new Trim()]
         ];
 
         $form['foolfuuka.sphinx.mem_limit'] = [
@@ -351,7 +354,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'input',
             'label' => 'Max Children',
             'placeholder' => 0,
-            'validation' => 'trim',
+            'validation' => [new Trim()],
             'preferences' => true,
             'help' => _i('Set the maximum number of children to fork for searchd.'),
             'class' => 'span1'
@@ -361,7 +364,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'input',
             'label' => 'Max Matches',
             'placeholder' => 5000,
-            'validation' => 'trim',
+            'validation' => [new Trim()],
             'preferences' => true,
             'help' => _i('Set the maximum amount of matches the search daemon keeps in RAM for each index and results returned to the client.'),
             'class' => 'span1'

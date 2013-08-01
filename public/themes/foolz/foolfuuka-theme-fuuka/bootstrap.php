@@ -6,11 +6,11 @@ require __DIR__ . '/functions.php';
     'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan' => __DIR__.'/controller.php',
 ]);
 
-\Foolz\Plugin\Event::forge('Fuel\Core\Router::parse_match.intercept')
+\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Content::routes.collection')
     ->setCall(function($result) {
-        if ($result->getParam('controller') === 'Foolz\Foolfuuka\Controller\Chan') {
+        if ($result->getParam('controller') === '\Foolz\Foolfuuka\Controller\Chan::*') {
             // reroute everything that goes to Chan through the custom Chan controller
-            $result->setParam('controller', 'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan');
+            $result->setParam('controller', 'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan::*');
             $result->set(true);
         }
     });

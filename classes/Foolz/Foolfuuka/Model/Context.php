@@ -112,6 +112,14 @@ class Context
             ['_controller' => '\Foolz\Foolfuuka\Controller\Chan::404']
         ));
 
+        $route = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Content::routes.collection')
+            ->setParams([
+                'default_suffix' => 'page',
+                'suffix' => 'page',
+                'controller' => '\Foolz\Foolfuuka\Controller\Chan::*'
+            ])
+            ->execute();
+
         $radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
 
         foreach ($radix_all as $radix) {
@@ -119,9 +127,9 @@ class Context
                 'foolfuuka.chan.radix.'.$radix->shortname, new Route(
                 '/'.$radix->shortname.'/{_suffix}',
                 [
-                    '_default_suffix' => 'page',
-                    '_suffix' => 'page',
-                    '_controller' => '\Foolz\Foolfuuka\Controller\Chan::*',
+                    '_default_suffix' => $route->getParam('default_suffix'),
+                    '_suffix' => $route->getParam('suffix'),
+                    '_controller' => $route->getParam('controller'),
                     'radix_shortname' => $radix->shortname
                 ],
                 [

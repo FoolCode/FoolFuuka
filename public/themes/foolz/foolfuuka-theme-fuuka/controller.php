@@ -104,9 +104,11 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
         }
         if (isset($post['NAMAE'])) {
             $data['name'] = $post['NAMAE'];
+            \Cookie::set('reply_name', $data['name'], 60*60*24*30);
         }
         if (isset($post['MERU'])) {
             $data['email'] = $post['MERU'];
+            \Cookie::set('reply_email', $data['email'], 60*60*24*30);
         }
         if (isset($post['subject'])) {
             $data['title'] = $post['subject'];

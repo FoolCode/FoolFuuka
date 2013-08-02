@@ -273,7 +273,9 @@ class Chan
 
     public function action_opensearch()
     {
-        return $this->response->setContent(\View::forge('foolz/foolfuuka::opensearch'));
+        $this->builder->createLayout('open_search');
+
+        return $this->response->setContent($this->builder->build());
     }
 
     public function radix_page_mode($_mode = 'by_post')

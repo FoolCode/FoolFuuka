@@ -46,8 +46,8 @@ class Chan extends Common
     {
         // create response object, store request object
         $this->response = new JsonResponse();
-        $this->request = $request;
 
+        $request = $this->getRequest();
         if ($request->getMethod() == 'GET') {
             return [$this, 'get_'.$method, []];
         }

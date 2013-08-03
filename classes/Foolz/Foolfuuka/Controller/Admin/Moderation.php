@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolfuuka\Controller\Admin;
 
+use Foolz\Inet\Inet;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,7 +10,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Moderation extends \Foolz\Foolframe\Controller\Admin
 {
-
     /**
      * Check that the user is an admin or a moderator and
      */
@@ -76,20 +76,20 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             'user_name' => $name,
             'user_email' => $email,
             'user_pass' => $pass,
-            'site_url'  => \Uri::base(),
-            'default_url'  => \Uri::base(),
-            'archive_url'  => \Uri::base(),
-            'system_url'  => \Uri::base(),
-            'api_url'   => \Uri::base(),
-            'cookie_domain' => \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolframe', 'config', 'config.cookie_domain'),
-            'cookie_prefix' => \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolframe', 'config', 'config.cookie_prefix'),
+            'site_url'  => $this->uri->base(),
+            'default_url'  => $this->uri->base(),
+            'archive_url'  => $this->uri->base(),
+            'system_url'  => $this->uri->base(),
+            'api_url'   => $this->uri->base(),
+            'cookie_domain' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_domain'),
+            'cookie_prefix' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_prefix'),
             'selected_theme' => $theme_name,
             'csrf_token_key' => \Config::get('security.csrf_token_key'),
             'images' => [
-                'banned_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
+                'banned_image' => $this->uri->base().$this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
                 'banned_image_width' => 150,
                 'banned_image_height' => 150,
-                'missing_image' => \Uri::base().$this->theme->getAssetManager()->getAssetLink('images/missing-image.jpg'),
+                'missing_image' => $this->uri->base().$this->theme->getAssetManager()->getAssetLink('images/missing-image.jpg'),
                 'missing_image_width' => 150,
                 'missing_image_height' => 150,
             ],
@@ -123,7 +123,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             ->getParamManager()->setParams([
                 'bans' => $bans,
                 'page' => $page,
-                'page_url' => \Uri::create('admin/moderation/bans')
+                'page_url' => $this->uri->create('admin/moderation/bans')
             ]);
 
         return new Response($this->builder->build());
@@ -143,7 +143,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             ->getParamManager()->setParams([
                 'bans' => $bans,
                 'page' => $page,
-                'page_url' => \Uri::create('admin/moderation/bans')
+                'page_url' => $this->uri->create('admin/moderation/bans')
             ]);
 
         return new Response($this->builder->build());
@@ -153,8 +153,8 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
     {
         $this->param_manager->setParam('method_title', [_i('Manage'), _i('Bans')]);
 
-        if (\Input::post('ip')) {
-            \Response::redirect('admin/moderation/find_ban/'.trim(\Input::post('ip')));
+        if ($this->getPost('ip')) {
+            return $this->redirect('admin/moderation/find_ban/'.trim($this->getPost('ip')));
         }
 
         if ($ip === null) {
@@ -168,7 +168,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
         }
 
         try {
-            $bans = \Ban::getByIp(\Foolz\Inet\Inet::ptod($ip));
+            $bans = \Ban::getByIp(Inet::ptod($ip));
         } catch (\Foolz\Foolfuuka\Model\BanException $e) {
             $bans = [];
         }
@@ -177,7 +177,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             ->getParamManager()->setParams([
                 'bans' => $bans,
                 'page' => false,
-                'page_url' => \Uri::create('admin/moderation/bans')
+                'page_url' => $this->uri->create('admin/moderation/bans')
             ]);
 
         return new Response($this->builder->build());
@@ -191,20 +191,20 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             throw new NotFoundHttpException;
         }
 
-        if (\Input::post() && !\Security::check_token()) {
-            \Notices::set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
-        } elseif (\Input::post()) {
+        if ($this->getPost() && !\Security::check_token()) {
+            $this->notices->set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
+        } elseif ($this->getPost()) {
             switch ($action) {
                 case 'unban':
                     $ban->delete();
-                    \Notices::setFlash('success', _i('The poster with IP %s has been unbanned.', \Foolz\Inet\Inet::dtop($ban->ip)));
-                    \Response::redirect('admin/moderation/bans');
+                    $this->notices->setFlash('success', _i('The poster with IP %s has been unbanned.', Inet::dtop($ban->ip)));
+                    return $this->redirect('admin/moderation/bans');
                     break;
 
                 case 'reject_appeal':
                     $ban->appealReject();
-                    \Notices::setFlash('success', _i('The appeal of the poster with IP %s has been rejected.', \Foolz\Inet\Inet::dtop($ban->ip)));
-                    \Response::redirect('admin/moderation/bans');
+                    $this->notices->setFlash('success', _i('The appeal of the poster with IP %s has been rejected.', Inet::dtop($ban->ip)));
+                    return $this->redirect('admin/moderation/bans');
                     break;
 
                 default:
@@ -214,13 +214,13 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 
         switch ($action) {
             case 'unban':
-                $this->_views['method_title'] = _i('Unbanning').' '.\Foolz\Inet\Inet::dtop($ban->ip);
+                $this->_views['method_title'] = _i('Unbanning').' '. Inet::dtop($ban->ip);
                 $data['alert_level'] = 'warning';
                 $data['message'] = _i('Do you want to unban this user?');
                 break;
 
             case 'reject_appeal':
-                $this->_views['method_title'] = _i('Rejecting appeal for').' '.\Foolz\Inet\Inet::dtop($ban->ip);
+                $this->_views['method_title'] = _i('Rejecting appeal for').' '. Inet::dtop($ban->ip);
                 $data['alert_level'] = 'warning';
                 $data['message'] = _i('Do you want to reject the appeal of this user? He won\'t be able to appeal again.');
                 break;

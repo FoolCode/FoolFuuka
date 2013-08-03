@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Controller\Admin;
 
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\DoctrineConnection;
 use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
 use Foolz\Foolframe\Model\Validation\Validator;
 use Foolz\Theme\Loader;
@@ -51,26 +51,26 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
     {
         $data['form'] = \Radix::structure();
 
-        if (\Input::post() && !\Security::check_token()) {
-            \Notices::set('warning', _i('The security token was not found. Please try again.'));
-        } elseif (\Input::post()) {
+        if ($this->getPost() && !\Security::check_token()) {
+            $this->notices->set('warning', _i('The security token was not found. Please try again.'));
+        } elseif ($this->getPost()) {
             $result = Validator::formValidate($data['form']);
 
             if (isset($result['error'])) {
-                \Notices::set('warning', $result['error']);
+                $this->notices->set('warning', $result['error']);
             } else {
                 // it's actually fully checked, we just have to throw it in DB
                 \Radix::save($result['success']);
 
                 if (is_null($shortname)) {
-                    \Notices::setFlash('success', _i('New board created!'));
-                    \Response::redirect('admin/boards/board/'.$result['success']['shortname']);
+                    $this->notices->setFlash('success', _i('New board created!'));
+                    return $this->redirect('admin/boards/board/'.$result['success']['shortname']);
                 } elseif ($shortname != $result['success']['shortname']) {
                     // case in which letter was changed
-                    \Notices::setFlash('success', _i('Board information updated.'));
-                    \Response::redirect('admin/boards/board/'.$result['success']['shortname']);
+                    $this->notices->setFlash('success', _i('Board information updated.'));
+                    return $this->redirect('admin/boards/board/'.$result['success']['shortname']);
                 } else {
-                    \Notices::set('success', _i('Board information updated.'));
+                    $this->notices->set('success', _i('Board information updated.'));
                 }
             }
         }
@@ -93,22 +93,22 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
     {
         $data['form'] = \Radix::structure();
 
-        if (\Input::post() && !\Security::check_token()) {
-            \Notices::set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
-        } elseif (\Input::post()) {
+        if ($this->getPost() && !\Security::check_token()) {
+            $this->notices->set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
+        } elseif ($this->getPost()) {
             $result = Validator::formValidate($data['form']);
             if (isset($result['error'])) {
-                \Notices::set('warning', $result['error']);
+                $this->notices->set('warning', $result['error']);
             } else {
                 // it's actually fully checked, we just have to throw it in DB
                 \Radix::save($result['success']);
-                \Notices::setFlash('success', _i('New board created!'));
-                \Response::redirect('admin/boards/board/'.$result['success']['shortname']);
+                $this->notices->setFlash('success', _i('New board created!'));
+                return $this->redirect('admin/boards/board/'.$result['success']['shortname']);
             }
         }
 
         // the actual POST is in the board() function
-        $data['form']['open']['action'] = \Uri::create('admin/boards/add_new');
+        $data['form']['open']['action'] = $this->uri->create('admin/boards/add_new');
 
         // panel for creating a new board
         $this->param_manager->setParam('method_title', [_i('Manage'), _i('Add')]);
@@ -125,12 +125,12 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             throw new NotFoundHttpException;
         }
 
-        if (\Input::post() && !\Security::check_token()) {
-            \Notices::set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
-        } elseif (\Input::post()) {
+        if ($this->getPost() && !\Security::check_token()) {
+            $this->notices->set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
+        } elseif ($this->getPost()) {
             $board->remove($id);
-            \Notices::setFlash('success', sprintf(_i('The board %s has been deleted.'), $board->shortname));
-            \Response::redirect('admin/boards/manage');
+            $this->notices->setFlash('success', sprintf(_i('The board %s has been deleted.'), $board->shortname));
+            return $this->redirect('admin/boards/manage');
         }
 
         $data['alert_level'] = 'warning';
@@ -148,6 +148,9 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
     function action_preferences()
     {
+        /** @var DoctrineConnection $dc */
+        $dc = $this->getContext()->getService('doctrine');
+
         $form = [];
 
         $form['open'] = [
@@ -168,7 +171,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'help' => _i('Overrides the default url to the boards folder (Example: http://foolfuuka.site.com/there/boards)')
         ];
 
-        if (DC::forge()->getDriver()->getName() != 'pdo_pgsql') {
+        if ($dc->getConnection()->getDriver()->getName() != 'pdo_pgsql') {
             $form['foolfuuka.boards.db'] = [
                 'type' => 'input',
                 'label' => _i('Boards database'),
@@ -180,12 +183,12 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
                 'type' => 'input',
                 'label' => _i('Boards prefix'),
                 'preferences' => true,
-                'help' => _i('Overrides the default prefix (which would be "'.DC::p('').'board_"). Asagi doesn\'t use a prefix by default.')
+                'help' => _i('Overrides the default prefix (which would be "'.$dc->p('').'board_"). Asagi doesn\'t use a prefix by default.')
             ];
 
             // it REALLY must never have been set
-            if (\Preferences::get('foolfuuka.boards.prefix', null, true) === null) {
-                $form['foolfuuka.boards.prefix']['value'] = DC::p('').'board_';
+            if ($this->preferences->get('foolfuuka.boards.prefix', null, true) === null) {
+                $form['foolfuuka.boards.prefix']['value'] = $dc->p('').'board_';
             }
         }
 
@@ -219,7 +222,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'close'
         ];
 
-        \Preferences::submit_auto($form);
+        $this->preferences->submit_auto($form);
 
         $data['form'] = $form;
 
@@ -384,7 +387,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'close'
         ];
 
-        \Preferences::submit_auto($form);
+        $this->preferences->submit_auto($form);
 
         // create the form
         $data['form'] = $form;
@@ -393,7 +396,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         $partial = $this->builder->createPartial('body', 'form_creator');
         $partial->getParamManager()->setParams($data);
         $built = $partial->build();
-        $partial->setBuilt($built.'<a href="'.\Uri::create('admin/boards/sphinx_config').'" class="btn">'._i('Generate Config').'</a>');
+        $partial->setBuilt($built.'<a href="'.$this->uri->create('admin/boards/sphinx_config').'" class="btn">'._i('Generate Config').'</a>');
 
         return new Response($this->builder->build());
     }
@@ -403,15 +406,15 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         $data = [];
 
         $data['mysql'] = [
-            'flag' => \Preferences::get('foolfuuka.sphinx.mysql.hostname', '0')
+            'flag' => $this->preferences->get('foolfuuka.sphinx.mysql.hostname', '0')
         ];
 
         $data['sphinx'] = [
-            'working_directory' => \Preferences::get('foolfuuka.sphinx.dir', '/usr/local/sphinx'),
-            'mem_limit' => \Preferences::get('foolfuuka.sphinx.mem_limit', '1024M'),
-            'min_word_len' => \Preferences::get('foolfuuka.sphinx.min_word_len', 1),
-            'max_children' => \Preferences::get('foolfuuka.sphinx.max_children', 0),
-            'max_matches' => \Preferences::get('foolfuuka.sphinx.max_matches', 5000)
+            'working_directory' => $this->preferences->get('foolfuuka.sphinx.dir', '/usr/local/sphinx'),
+            'mem_limit' => $this->preferences->get('foolfuuka.sphinx.mem_limit', '1024M'),
+            'min_word_len' => $this->preferences->get('foolfuuka.sphinx.min_word_len', 1),
+            'max_children' => $this->preferences->get('foolfuuka.sphinx.max_children', 0),
+            'max_matches' => $this->preferences->get('foolfuuka.sphinx.max_matches', 5000)
         ];
 
         $data['boards'] = \Radix::getAll();

@@ -22,6 +22,4 @@
                 ];
                 $result->setParam('structure', $structure)->set($structure);
             })->setPriority(4);
-
-        \Foolz\Foolfuuka\Model\Radix::preload();
     });

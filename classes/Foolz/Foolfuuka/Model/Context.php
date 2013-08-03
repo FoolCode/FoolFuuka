@@ -2,12 +2,14 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use Foolz\Foolframe\Model\Config;
+use Foolz\Foolframe\Model\ContextInterface;
+use Foolz\Foolframe\Model\Legacy\Config;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouteCollection;
 
-class Context
+class Context implements ContextInterface
 {
     /**
      * @var \Foolz\Foolframe\Model\Context
@@ -35,9 +37,12 @@ class Context
         if (\Auth::has_access('comment.reports')) {
             \Foolz\Foolfuuka\Model\Report::preload();
         }
+    }
 
+    public function handleWeb(Request $request)
+    {
         $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
-        $theme_instance->addDir(VENDPATH.'foolz/foolfuuka/'.\Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
+        $theme_instance->addDir(VENDPATH.'foolz/foolfuuka/'. \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
         $theme_instance->addDir(VAPPPATH.'foolz/foolfuuka/themes/');
         $theme_instance->setBaseUrl(\Uri::base().'foolfuuka/');
         $theme_instance->setPublicDir(DOCROOT.'foolfuuka/');
@@ -48,7 +53,7 @@ class Context
                 ->setCall(function($result) {
                     $environment = $result->getParam('environment');
 
-                    foreach (\Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'environment') as $section => $data) {
+                    foreach (\Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'environment') as $section => $data) {
                         foreach ($data as $k => $i) {
                             array_push($environment[$section]['data'], $i);
                         }
@@ -100,14 +105,14 @@ class Context
         $theme->bootstrap();
     }
 
-    public function routes()
+    public function loadRoutes(RouteCollection $route_collection)
     {
-        $this->context->getRouteCollection()->add('foolfuuka.root', new Route(
+        $route_collection->add('foolfuuka.root', new Route(
             '/',
             ['_controller' => '\Foolz\Foolfuuka\Controller\Chan::index']
         ));
 
-        $this->context->getRouteCollection()->add('404', new Route(
+        $route_collection->add('404', new Route(
             '',
             ['_controller' => '\Foolz\Foolfuuka\Controller\Chan::404']
         ));
@@ -123,7 +128,7 @@ class Context
         $radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
 
         foreach ($radix_all as $radix) {
-            $this->context->getRouteCollection()->add(
+            $route_collection->add(
                 'foolfuuka.chan.radix.'.$radix->shortname, new Route(
                 '/'.$radix->shortname.'/{_suffix}',
                 [
@@ -138,7 +143,7 @@ class Context
             ));
         }
 
-        $this->context->getRouteCollection()->add(
+        $route_collection->add(
             'foolfuuka.chan.api', new Route(
             '/_/api/chan/{_suffix}',
             [
@@ -150,7 +155,7 @@ class Context
             ]
         ));
 
-        $this->context->getRouteCollection()->add(
+        $route_collection->add(
             'foolfuuka.chan._', new Route(
             '/_/{_suffix}',
             [
@@ -163,7 +168,7 @@ class Context
         ));
 
         foreach(['boards', 'moderation'] as $location) {
-            $this->context->getRouteCollection()->add(
+            $route_collection->add(
                 'foolfuuka.admin.'.$location, new Route(
                     '/admin/'.$location.'/{_suffix}',
                     [
@@ -176,5 +181,10 @@ class Context
                 )
             );
         }
+    }
+
+    public function handleConsole()
+    {
+        // no actions
     }
 }

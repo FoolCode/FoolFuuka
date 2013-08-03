@@ -4,7 +4,7 @@ return [
     'software' => [
         [
             'title' => _i('FoolFuuka Version'),
-            'value' => \Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'main.version'),
+            'value' => \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.version'),
             'alert' => [
                 'type' => 'info',
                 'condition' => true,

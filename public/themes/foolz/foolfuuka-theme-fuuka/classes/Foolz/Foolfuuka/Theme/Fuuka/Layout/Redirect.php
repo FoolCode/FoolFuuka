@@ -14,7 +14,7 @@ class Redirect extends \Foolz\Theme\View
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="generator" content="<?= \Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
+    <meta name="generator" content="<?= \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
 
     <title><?= htmlspecialchars($this->getBuilder()->getProps()->getTitle()); ?></title>
     <style type="text/css">

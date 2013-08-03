@@ -51,21 +51,25 @@ use Symfony\Component\Routing\Route;
                 }
             })->setPriority(3);
 
-        $radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
-        foreach ($radix_all as $radix) {
-            $framework->getRouteCollection()->add(
-                'foolfuuka.plugin.board_statistics.chan.radix.'.$radix->shortname, new Route(
-                '/'.$radix->shortname.'/statistics/{_suffix}',
-                [
-                    '_suffix' => '',
-                    '_controller' => '\Foolz\Foolfuuka\Controller\Chan\BoardStatistics::statistics',
-                    'radix_shortname' => $radix->shortname
-                ],
-                [
-                    '_suffix' => '.*'
-                ]
-            ));
-        }
+        \Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Context.handleWeb.route_collection')
+            ->setCall(function($result) {
+                $radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
+
+                foreach ($radix_all as $radix) {
+                    $this->getRouteCollection()->add(
+                        'foolfuuka.plugin.board_statistics.chan.radix.'.$radix->shortname, new Route(
+                        '/'.$radix->shortname.'/statistics/{_suffix}',
+                        [
+                            '_suffix' => '',
+                            '_controller' => '\Foolz\Foolfuuka\Controller\Chan\BoardStatistics::statistics',
+                            'radix_shortname' => $radix->shortname
+                        ],
+                        [
+                            '_suffix' => '.*'
+                        ]
+                    ));
+                }
+            });
     });
 
 \Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate.foolz/foolfuuka-plugin-board-statistics')

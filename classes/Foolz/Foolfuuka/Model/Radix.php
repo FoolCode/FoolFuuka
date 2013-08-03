@@ -3,7 +3,7 @@
 namespace Foolz\Foolfuuka\Model;
 
 use \Foolz\Cache\Cache;
-use \Foolz\Foolframe\Model\Config;
+use Foolz\Foolframe\Model\Legacy\Config;
 use \Foolz\Foolframe\Model\DoctrineConnection as DC;
 use \Foolz\Plugin\PlugSuit;
 
@@ -430,7 +430,7 @@ class Radix {
         ]);
 
         foreach ($structure as $key => $item) {
-            $default = Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key);
+            $default = \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key);
 
             if ($default !== null) {
                 $structure[$key]['default_value'] = $default;
@@ -785,7 +785,7 @@ class Radix {
             // load the basic value of the preferences
             foreach ($structure as $key => $arr) {
                 if (!isset($result_object[$item['id']]->$key) && isset($arr['boards_preferences'])) {
-                    $result_object[$item['id']]->setValue($key, Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key, false));
+                    $result_object[$item['id']]->setValue($key, \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'preferences.radix.'.$key, false));
                 }
 
                 foreach (['sub', 'sub_inverse'] as $sub) {

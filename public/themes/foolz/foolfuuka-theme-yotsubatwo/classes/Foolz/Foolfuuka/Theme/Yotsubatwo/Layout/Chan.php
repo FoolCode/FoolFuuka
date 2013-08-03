@@ -37,7 +37,7 @@ class Chan extends \Foolz\Theme\View
     <html>
     <head>
         <meta charset="utf-8">
-        <meta name="generator" content="<?= \Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
+        <meta name="generator" content="<?= \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
 
         <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
         <link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('foolframe.gen.website_title') ?>'/>
@@ -291,8 +291,8 @@ class Chan extends \Foolz\Theme\View
     {
         ?>
     <footer id="footer">
-        <a href="http://github.com/FoolCode/FoOlFuuka"><?= \Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'main.name') ?>
-            Imageboard <?= \Foolz\Foolframe\Model\Config::get('foolz/foolfuuka', 'package', 'main.version') ?></a>
+        <a href="http://github.com/FoolCode/FoOlFuuka"><?= \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.name') ?>
+            Imageboard <?= \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.version') ?></a>
         - <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
 
         <div class="pull-right">
@@ -324,7 +324,7 @@ class Chan extends \Foolz\Theme\View
                     <?= _i('Change Language') ?> <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <?php foreach (\Foolz\Foolframe\Model\Config::get('foolz/foolframe', 'package', 'preferences.lang.available') as $key => $lang) : ?>
+                    <?php foreach (\Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolframe', 'package', 'preferences.lang.available') as $key => $lang) : ?>
                     <li>
                         <a href="<?= \Uri::create(['_', 'language', $key]) ?>">
                             <?= $lang ?>

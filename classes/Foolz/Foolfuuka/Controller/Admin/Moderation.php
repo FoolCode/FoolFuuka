@@ -13,13 +13,13 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
     /**
      * Check that the user is an admin or a moderator and
      */
-    public function before(Request $request)
+    public function before()
     {
-        parent::before($request);
-
         if (!\Auth::has_access('comment.reports')) {
-            \Response::redirect('admin');
+            return $this->redirectToLogin();
         }
+
+        parent::before();
 
         $this->param_manager->setParam('controller_title', _i('Moderation'));
     }

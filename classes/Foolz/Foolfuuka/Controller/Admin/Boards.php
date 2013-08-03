@@ -14,14 +14,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Boards extends \Foolz\Foolframe\Controller\Admin
 {
-    public function before(Request $request)
+    public function before()
     {
-        parent::before($request);
-
         // determine if the user is allowed access to these methods
         if (!\Auth::has_access('boards.edit')) {
-            \Response::redirect('admin');
+            return $this->redirectToLogin();
         }
+
+        parent::before();
 
         $this->param_manager->setParam('controller_title', _i('Boards'));
     }

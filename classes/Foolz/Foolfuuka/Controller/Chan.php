@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolfuuka\Controller;
 
+use Foolz\Foolframe\Controller\Common;
 use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
 use Foolz\Foolframe\Model\Validation\Validator;
 use Foolz\Foolfuuka\Theme\Foolfuuka\Layout\Redirect;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-class Chan
+class Chan extends Common
 {
     /**
      * The Theme object
@@ -56,7 +57,7 @@ class Chan
      */
     protected $_radix = null;
 
-    public function before(Request $request)
+    public function before()
     {
         // this has already been forged in the foolfuuka bootstrap
         $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
@@ -145,8 +146,10 @@ class Chan
         $this->builder->createPartial('tools_advanced_search', 'advanced_search');
     }
 
-    public function router(Request $request, $method, $parameters)
+    public function router($method, $parameters)
     {
+        $request = $this->getRequest();
+
         // create response object, store request object
         if ($request->isXmlHttpRequest()) {
             $this->response = new JsonResponse();

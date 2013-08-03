@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
 
 /**
  * Thrown when there's no results from database or the value domain hasn't been respected

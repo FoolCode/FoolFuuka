@@ -66,7 +66,7 @@ class Context implements ContextInterface
                 $theme->enabled = true;
             }
         } else {
-            if ($themes_enabled = \Foolz\Foolframe\Model\Preferences::get('foolfuuka.theme.active_themes')) {
+            if ($themes_enabled = \Foolz\Foolframe\Model\Legacy\Preferences::get('foolfuuka.theme.active_themes')) {
                 $themes_enabled = unserialize($themes_enabled);
             } else {
                 $themes_enabled = ['foolz/foolfuuka-theme-foolfuuka' => 1];

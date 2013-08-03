@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Controller\Admin;
 
-use Foolz\FoolFrame\Model\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
 use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
 use Foolz\Foolframe\Model\Validation\Validator;
 use Foolz\Theme\Loader;
@@ -54,7 +54,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         if (\Input::post() && !\Security::check_token()) {
             \Notices::set('warning', _i('The security token was not found. Please try again.'));
         } elseif (\Input::post()) {
-            $result = Validator::form_validate($data['form']);
+            $result = Validator::formValidate($data['form']);
 
             if (isset($result['error'])) {
                 \Notices::set('warning', $result['error']);
@@ -96,7 +96,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         if (\Input::post() && !\Security::check_token()) {
             \Notices::set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
         } elseif (\Input::post()) {
-            $result = Validator::form_validate($data['form']);
+            $result = Validator::formValidate($data['form']);
             if (isset($result['error'])) {
                 \Notices::set('warning', $result['error']);
             } else {

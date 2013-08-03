@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-use Foolz\Foolframe\Model\Preferences;
+use Foolz\Foolframe\Model\Legacy\Preferences;
 
 class Index extends \Foolz\Theme\View
 {

@@ -3,7 +3,7 @@
 namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
 
 use Foolz\Inet\Inet;
-use Foolz\Foolframe\Model\Preferences;
+use Foolz\Foolframe\Model\Legacy\Preferences;
 
 class Board extends \Foolz\Theme\View
 {

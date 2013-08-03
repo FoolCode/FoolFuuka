@@ -4,7 +4,7 @@ namespace Foolz\Foolfuuka\Model;
 
 use Foolz\SphinxQL\SphinxQL;
 use Foolz\SphinxQL\Connection as SphinxConnnection;
-use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
 
 class SearchException extends \Exception {}
 class SearchRequiresSphinxException extends SearchException {}

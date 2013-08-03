@@ -3,7 +3,7 @@
 namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Foolframe\Model\Legacy\Config;
-use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
 use \Foolz\Cache\Cache;
 
 class MediaException extends \Exception {}

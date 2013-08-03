@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Model;
 
-use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
 
 class BoardStatistics
 {

@@ -3,7 +3,7 @@
 namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Console;
 
 use \Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
-use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

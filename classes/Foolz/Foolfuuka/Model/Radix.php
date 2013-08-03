@@ -4,7 +4,7 @@ namespace Foolz\Foolfuuka\Model;
 
 use \Foolz\Cache\Cache;
 use Foolz\Foolframe\Model\Legacy\Config;
-use \Foolz\Foolframe\Model\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
 use \Foolz\Plugin\PlugSuit;
 
 use Symfony\Component\Validator\Validation;

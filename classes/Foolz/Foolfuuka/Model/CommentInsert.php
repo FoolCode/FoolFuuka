@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use \Foolz\Foolframe\Model\DoctrineConnection as DC,
+use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC,
     \Foolz\Cache\Cache;
 
 class CommentSendingException extends \Exception {}

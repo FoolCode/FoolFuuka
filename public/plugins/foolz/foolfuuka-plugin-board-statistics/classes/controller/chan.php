@@ -8,11 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 {
-    public function before(Request $request)
+    public function before()
     {
         $this->plugin = \Plugins::getPlugin('foolz/foolfuuka-plugin-board-statistics');
 
-        parent::before($request);
+        parent::before();
     }
 
     /**

@@ -42,7 +42,7 @@ class Chan extends Common
         }
     }
 
-    public function router(Request $request, $method)
+    public function router($method)
     {
         // create response object, store request object
         $this->response = new JsonResponse();

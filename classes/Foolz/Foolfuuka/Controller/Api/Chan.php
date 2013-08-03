@@ -2,12 +2,13 @@
 
 namespace Foolz\Foolfuuka\Controller\Api;
 
+use Foolz\Foolframe\Controller\Common;
 use \Foolz\Inet\Inet;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
-class Chan
+class Chan extends Common
 {
     protected $_radix = null;
     protected $_theme = null;
@@ -16,7 +17,7 @@ class Chan
     protected $request = null;
     protected $response = null;
 
-    public function before(Request $request)
+    public function before()
     {
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Credentials: true');

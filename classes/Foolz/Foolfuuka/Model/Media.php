@@ -459,14 +459,18 @@ class Media
      */
     protected static function p_forgeFromUpload(\Foolz\Foolfuuka\Model\Radix $radix)
     {
-        \Upload::process([
-            'path' => APPPATH.'tmp/media_upload/',
-            'max_size' => \Auth::has_access('media.limitless_media') ? 9999 * 1024 * 1024 : $radix->getValue('max_image_size_kilobytes') * 1024,
-            'randomize' => true,
-            'max_length' => 64,
-            'ext_whitelist' => ['jpg', 'jpeg', 'gif', 'png'],
-            'mime_whitelist' => ['image/jpeg', 'image/png', 'image/gif']
-        ]);
+        $config = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::upload.config')
+            ->setParams([
+                'path' => APPPATH.'tmp/media_upload/',
+                'max_size' => \Auth::has_access('media.limitless_media') ? 0 : $radix->getValue('max_image_size_kilobytes') * 1024,
+                'randomize' => true,
+                'max_length' => 64,
+                'ext_whitelist' => ['jpg', 'jpeg', 'gif', 'png'],
+                'mime_whitelist' => ['image/jpeg', 'image/png', 'image/gif']
+            ])
+            ->execute();
+
+        \Upload::process($config->getParams());
 
         if (count(\Upload::get_files()) === 0) {
             throw new MediaUploadNoFileException(_i('You must upload an image or your image was too large.'));

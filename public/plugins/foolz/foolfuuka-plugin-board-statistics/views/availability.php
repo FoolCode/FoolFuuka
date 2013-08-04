@@ -1,9 +1,3 @@
-<?php
-if (!defined('DOCROOT')) {
-    exit('No direct script access allowed');
-}
-?>
-
 <table class="table table-hover">
     <thead>
         <tr>
@@ -26,7 +20,7 @@ if (!defined('DOCROOT')) {
                     array_push($params, 'tripcode/' . urlencode($d->trip));
                 }
 
-                $poster_link = \Uri::create($params);
+                $poster_link = $this->uri->create($params);
 
                 $values = (($d->std2 < $d->std1) ? [$d->avg2 - $d->std2, $d->avg2 + $d->std2] : [$d->avg1 - $d->std1, $d->avg1 + $d->std1]);
                 $val_st = ($values[0] + 86400) % 86400;

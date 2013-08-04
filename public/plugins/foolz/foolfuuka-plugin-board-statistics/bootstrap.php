@@ -1,12 +1,16 @@
 <?php
 
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
+use Doctrine\DBAL\Schema\Schema;
+use Foolz\Foolframe\Model\Context;
+use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\Foolframe\Model\Uri;
+use Foolz\Plugin\Event;
 use Symfony\Component\Routing\Route;
 
-\Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
+Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
     ->setCall(function($result) {
-        /* @var $framework \Foolz\Foolframe\Model\Context */
-        $framework = $result->getParam('framework');
+        /* @var $context \Foolz\Foolframe\Model\Context */
+        $context = $result->getParam('context');
 
         \Autoloader::add_classes([
             'Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
@@ -15,13 +19,17 @@ use Symfony\Component\Routing\Route;
             'Foolz\Foolfuuka\Plugins\BoardStatistics\Console\Console' => __DIR__.'/classes/console/console.php'
         ]);
 
+        $context->getContainer()
+            ->register('foolfuuka-plugin.board_statistics', 'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics')
+            ->addArgument($context);
+
         // don't add the admin panels if the user is not an admin
         if (\Auth::has_access('maccess.admin')) {
             \Plugins::registerSidebarElement('admin', 'plugins', [
                 "content" => ["board_statistics/manage" => ["level" => "admin", "name" => _i("Board Statistics"), "icon" => 'icon-bar-chart']]
             ]);
 
-            $framework->getRouteCollection()->add(
+            $context->getRouteCollection()->add(
                 'foolframe.plugin.board_statistics.admin', new Route(
                     '/admin/plugins/board_statistics/{_suffix}',
                     [
@@ -35,23 +43,26 @@ use Symfony\Component\Routing\Route;
             );
         }
 
-        \Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Framework::handleConsole.add')
-            ->setCall(function($result) {
+        Event::forge('Foolz\Foolframe\Model\Framework::handleConsole.add')
+            ->setCall(function($result) use ($context) {
                 $result->getParam('application')
-                    ->add(new \Foolz\Foolfuuka\Plugins\BoardStatistics\Console\Console);
+                    ->add(new \Foolz\Foolfuuka\Plugins\BoardStatistics\Console\Console($context));
             });
 
-        \Foolz\Plugin\Event::forge('foolframe.themes.generic_top_nav_buttons')
-            ->setCall(function($result) {
+        Event::forge('foolframe.themes.generic_top_nav_buttons')
+            ->setCall(function($result) use ($context) {
+                /** @var Uri $uri */
+                $uri = $context->getService('uri');
+
                 $top_nav = $result->getParam('nav');
                 if (\Radix::getSelected()) {
-                    $top_nav[] = ['href' => Uri::create([Radix::getSelected()->shortname, 'statistics']), 'text' => _i('Stats')];
+                    $top_nav[] = ['href' => $uri->create([Radix::getSelected()->shortname, 'statistics']), 'text' => _i('Stats')];
                     $result->set($top_nav);
                     $result->setParam('nav', $top_nav);
                 }
             })->setPriority(3);
 
-        \Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Context.handleWeb.route_collection')
+        Event::forge('Foolz\Foolframe\Model\Context.handleWeb.route_collection')
             ->setCall(function($result) {
                 $radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
 
@@ -72,11 +83,17 @@ use Symfony\Component\Routing\Route;
             });
     });
 
-\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate.foolz/foolfuuka-plugin-board-statistics')
+Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate.foolz/foolfuuka-plugin-board-statistics')
     ->setCall(function($result) {
+        /** @var Context $context */
+        $context = $result->getParam('context');
+        /** @var DoctrineConnection $dc */
+        $dc = $context->getService('doctrine');
+
+        /** @var Schema $schema */
         $schema = $result->getParam('schema');
-        $table = $schema->createTable(DC::p('plugin_fu_board_statistics'));
-        if (DC::forge()->getDriver()->getName() == 'pdo_mysql') {
+        $table = $schema->createTable($dc->p('plugin_fu_board_statistics'));
+        if ($dc->getConnection()->getDriver()->getName() == 'pdo_mysql') {
             $table->addOption('charset', 'utf8mb4');
             $table->addOption('collate', 'utf8mb4_general_ci');
         }
@@ -86,6 +103,6 @@ use Symfony\Component\Routing\Route;
         $table->addColumn('timestamp', 'integer', ['unsigned' => true]);
         $table->addColumn('data', 'text', ['length' => 65532]);
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['board_id', 'name'], DC::p('plugin_fu_board_statistics_board_id_name_index'));
-        $table->addIndex(['timestamp'], DC::p('plugin_fu_board_statistics_timestamp_index'));
+        $table->addUniqueIndex(['board_id', 'name'], $dc->p('plugin_fu_board_statistics_board_id_name_index'));
+        $table->addIndex(['timestamp'], $dc->p('plugin_fu_board_statistics_timestamp_index'));
     });

@@ -222,7 +222,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'close'
         ];
 
-        $this->preferences->submit_auto($form);
+        $this->preferences->submit_auto($form, $this->getPost());
 
         $data['form'] = $form;
 
@@ -387,7 +387,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'close'
         ];
 
-        $this->preferences->submit_auto($form);
+        $this->preferences->submit_auto($form, $this->getPost());
 
         // create the form
         $data['form'] = $form;

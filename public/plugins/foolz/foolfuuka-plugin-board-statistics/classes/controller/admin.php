@@ -8,13 +8,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 {
+    /**
+     * @var BS
+     */
+    protected $board_stats;
+
     public function before()
     {
         if (!\Auth::has_access('maccess.admin')) {
-            \Response::redirect('admin');
+            $this->redirectToAdmin();
         }
 
         parent::before();
+
+        $this->board_stats = $this->getContext()->getService('foolfuuka-plugin.board_statistics');
 
         $this->param_manager->setParam('controller_title', _i('Plugins'));
     }
@@ -44,7 +51,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
             ],
         ];
 
-        foreach(BS::getStats() as $key => $stat) {
+        foreach($this->board_stats->getStats() as $key => $stat) {
             $arr['foolfuuka.plugins.board_statistics.enabled']['checkboxes'][] = [
                 'type' => 'checkbox',
                 'label' => $key,
@@ -63,7 +70,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 
         $data['form'] = $this->structure();
 
-        \Preferences::submit_auto($data['form']);
+        $this->preferences->submit_auto($data['form'], $this->getPost());
 
         // create a form
         $this->builder->createPartial('body', 'form_creator')

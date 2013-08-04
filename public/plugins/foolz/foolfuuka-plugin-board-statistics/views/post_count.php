@@ -1,9 +1,3 @@
-<?php
-if (!defined('DOCROOT')) {
-    exit('No direct script access allowed');
-}
-?>
-
 <table class="table table-hover">
     <thead>
         <tr>
@@ -24,7 +18,7 @@ if (!defined('DOCROOT')) {
                 if ($d['trip']) {
                     array_push($params, 'tripcode/' . urlencode($d['trip']));
                 }
-                $poster_link = Uri::create($params);
+                $poster_link = $this->uri->create($params);
                 ?>
                 <a href="<?= $poster_link ?>">
                     <span class="poster_name"><?= $d['name'] ?></span> <span class="poster_trip"><?= $d['trip'] ?></span>

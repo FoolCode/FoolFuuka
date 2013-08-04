@@ -1,9 +1,3 @@
-<?php
-if (!defined('DOCROOT')) {
-    exit('No direct script access allowed');
-}
-?>
-
 <?php $data_array = json_decode($data); ?>
 <?php foreach ($data_array as $key => $item) : ?>
     <div class="image_reposts_image">
@@ -23,7 +17,7 @@ if (!defined('DOCROOT')) {
             $media->op = true;
         ?>
 
-        <a href="<?= Uri::create([\Radix::getSelected()->shortname, 'search', 'image', $media->getSafeMediaHash()]) ?>">
+        <a href="<?= $this->uri->create([\Radix::getSelected()->shortname, 'search', 'image', $media->getSafeMediaHash()]) ?>">
             <img src="<?= $media->getThumbLink()  ?>" />
         </a>
     </div>

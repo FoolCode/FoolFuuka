@@ -2,11 +2,32 @@
 
 namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Model;
 
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Context;
+use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\Foolframe\Model\Model;
+use Foolz\Foolframe\Model\Preferences;
 
-class BoardStatistics
+class BoardStatistics extends Model
 {
-    public static function getStats()
+    /**
+     * @var DoctrineConnection
+     */
+    protected $dc;
+
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
+
+    public function __construct(Context $context)
+    {
+        parent::__construct($context);
+
+        $this->dc = $context->getService('doctrine');
+        $this->preferences = $context->getService('preferences');
+    }
+
+    public function getStats()
     {
         return [
             'activity' => [
@@ -63,11 +84,11 @@ class BoardStatistics
         ];
     }
 
-    public static function getAvailableStats()
+    public function getAvailableStats()
     {
-        $stats = static::getStats();
+        $stats = $this->getStats();
         // this variable is going to be a serialized array
-        $enabled = \Preferences::get('foolfuuka.plugins.board_statistics.enabled');
+        $enabled = $this->preferences->get('foolfuuka.plugins.board_statistics.enabled');
 
         if (!$enabled) {
             return array();
@@ -83,21 +104,21 @@ class BoardStatistics
         return $stats;
     }
 
-    public static function checkAvailableStats($stat, $selected_board)
+    public function checkAvailableStats($stat, $selected_board)
     {
-        $available = static::getAvailableStats();
+        $available = $this->getAvailableStats();
 
         if (isset($available[$stat])) {
             if (!isset($available[$stat]['frequency'])) {
                 // real time stat
                 $process_function = 'process'.$available[$stat]['function'];
-                $result = static::$process_function($selected_board);
+                $result = $this->$process_function($selected_board);
 
                 return array('info' => $available[$stat], 'data' => json_encode($result));
             } else {
-                $result = DC::qb()
+                $result = $this->dc->qb()
                     ->select('*')
-                    ->from(DC::p('plugin_fu_board_statistics'), 'bs')
+                    ->from($this->dc->p('plugin_fu_board_statistics'), 'bs')
                     ->where('board_id = :board_id')
                     ->andWhere('name = :name')
                     ->setParameter(':board_id', $selected_board->id)
@@ -119,11 +140,11 @@ class BoardStatistics
         return false;
     }
 
-    public static function getStat($board_id, $name)
+    public function getStat($board_id, $name)
     {
-        $stat = DC::qb()
+        $stat = $this->dc->qb()
             ->select('*')
-            ->from(DC::p('plugin_fu_board_statistics'), 'bs')
+            ->from($this->dc->p('plugin_fu_board_statistics'), 'bs')
             ->where('board_id = :board_id')
             ->andWhere('name = :name')
             ->setParameter(':board_id', $board_id)
@@ -137,11 +158,11 @@ class BoardStatistics
         return $stat[0];
     }
 
-    public static function saveStat($board_id, $name, $timestamp, $data = '')
+    public function saveStat($board_id, $name, $timestamp, $data = '')
     {
-        $count = DC::qb()
+        $count = $this->dc->qb()
             ->select('COUNT(*) as count')
-            ->from(DC::p('plugin_fu_board_statistics'), 'bs')
+            ->from($this->dc->p('plugin_fu_board_statistics'), 'bs')
             ->where('board_id = :board_id')
             ->andWhere('name = :name')
             ->setParameter(':board_id', $board_id)
@@ -150,16 +171,16 @@ class BoardStatistics
             ->fetch()['count'];
 
         if (!$count) {
-            DC::forge()
-                ->insert(DC::p('plugin_fu_board_statistics'), [
+            $this->dc->getConnection()
+                ->insert($this->dc->p('plugin_fu_board_statistics'), [
                     'board_id' => $board_id,
                     'name' => $name,
                     'timestamp' => $timestamp,
                     'data' =>json_encode($data)
                 ]);
         } else {
-            DC::qb()
-                ->update(DC::p('plugin_fu_board_statistics'))
+            $this->dc->qb()
+                ->update($this->dc->p('plugin_fu_board_statistics'))
                 ->where('board_id = :board_id')
                 ->andWhere('name = :name')
                 ->set('timestamp', ':timestamp')
@@ -172,7 +193,7 @@ class BoardStatistics
         }
     }
 
-    public static function processAvailability($board)
+    public function processAvailability($board)
     {
         $datetime = new \DateTime('@'.time());
 
@@ -182,7 +203,7 @@ class BoardStatistics
 
         $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
 
-        return DC::qb()
+        return $this->dc->qb()
             ->select('
                 name, trip, COUNT(num) AS posts,
                 AVG(timestamp%86400) AS avg1,
@@ -201,7 +222,7 @@ class BoardStatistics
             ->fetchAll();
     }
 
-    public static function processActivity($board)
+    public function processActivity($board)
     {
         $datetime = new \DateTime('@'.time());
 
@@ -212,7 +233,7 @@ class BoardStatistics
         $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
         $result = [];
 
-        $result['board'] = DC::qb()
+        $result['board'] = $this->dc->qb()
             ->select('
                 FLOOR(timestamp/300)*300 AS time,
                 COUNT(timestamp) AS posts,
@@ -226,7 +247,7 @@ class BoardStatistics
             ->execute()
             ->fetchAll();
 
-        $result['ghost'] = DC::qb()
+        $result['ghost'] = $this->dc->qb()
             ->select('
                 FLOOR(timestamp/300)*300 AS time,
                 COUNT(timestamp) AS posts,
@@ -241,7 +262,7 @@ class BoardStatistics
             ->execute()
             ->fetchAll();
 
-        $result['karma'] = DC::qb()
+        $result['karma'] = $this->dc->qb()
             ->select('day AS time, posts, images, sage')
             ->from($board->getTable('_daily'), 'bd')
             ->where('day > '.floor(($timestamp - 31536000) / 86400) * 86400)
@@ -253,9 +274,9 @@ class BoardStatistics
         return $result;
     }
 
-    public static function processImageReposts($board)
+    public function processImageReposts($board)
     {
-        return DC::qb()
+        return $this->dc->qb()
             ->select('*')
             ->from($board->getTable( '_images'), 'bi')
             ->where('banned = 0')
@@ -266,9 +287,9 @@ class BoardStatistics
             ->fetchAll();
     }
 
-    public static function processNewUsers($board)
+    public function processNewUsers($board)
     {
-        return DC::qb()
+        return $this->dc->qb()
             ->select('name, trip, firstseen, postcount')
             ->from($board->getTable('_users'), 'bu')
             ->where('postcount > 30')
@@ -277,7 +298,7 @@ class BoardStatistics
             ->fetchAll();
     }
 
-    public static function processPopulation($board)
+    public function processPopulation($board)
     {
         $datetime = new \DateTime('@'.time());
 
@@ -287,7 +308,7 @@ class BoardStatistics
 
         $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
 
-        return DC::qb()
+        return $this->dc->qb()
             ->select('day AS time, trips, names, anons')
             ->from($board->getTable('_daily'), 'bd')
             ->where('day > '.floor(($timestamp - 31536000) / 86400) * 86400)
@@ -297,9 +318,9 @@ class BoardStatistics
             ->fetchAll();
     }
 
-    public static function processPostCount($board)
+    public function processPostCount($board)
     {
-        return DC::qb()
+        return $this->dc->qb()
             ->select('name, trip, postcount')
             ->from($board->getTable('_users'), 'bu')
             ->orderBy('postcount', 'desc')
@@ -308,7 +329,7 @@ class BoardStatistics
             ->fetchAll();
     }
 
-    public static function processPostRate($board)
+    public function processPostRate($board)
     {
         $datetime = new \DateTime('@'.time());
 
@@ -319,7 +340,7 @@ class BoardStatistics
         $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
         $result = [];
 
-        $result['board'] = DC::qb()
+        $result['board'] = $this->dc->qb()
             ->select('COUNT(timestamp) AS last_hour, COUNT(timestamp)/60 AS per_minute')
             ->from($board->getTable(), 'b')
             ->where('timestamp > '.($timestamp - 3600))
@@ -327,7 +348,7 @@ class BoardStatistics
             ->execute()
             ->fetchAll();
 
-        $result['ghost'] = DC::qb()
+        $result['ghost'] = $this->dc->qb()
             ->select('COUNT(timestamp) AS last_hour, COUNT(timestamp)/60 AS per_minute')
             ->from($board->getTable(), 'b')
             ->where('timestamp > '.($timestamp - 3600))
@@ -338,7 +359,7 @@ class BoardStatistics
         return $result;
     }
 
-    public static function processUsersOnline($board)
+    public function processUsersOnline($board)
     {
         $datetime = new \DateTime('@'.time());
 
@@ -349,7 +370,7 @@ class BoardStatistics
         $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
         $result = [];
 
-        $result['board'] = DC::qb()
+        $result['board'] = $this->dc->qb()
             ->select('name, trip, MAX(timestamp) AS timestamp, num, subnum')
             ->from($board->getTable(), 'b')
             ->where('timestamp > '.($timestamp - 1800))
@@ -359,7 +380,7 @@ class BoardStatistics
             ->execute()
             ->fetchAll();
 
-        $result['ghost'] = DC::qb()
+        $result['ghost'] = $this->dc->qb()
             ->select('name, trip, MAX(timestamp) AS timestamp, num, subnum')
             ->from($board->getTable(), 'b')
             ->where('subnum <> 0')

@@ -1,9 +1,3 @@
-<?php
-if (!defined('DOCROOT')) {
-    exit('No direct script access allowed');
-}
-?>
-
 <?php $data_array = json_decode($data, true); ?>
 <table class="table table-hover">
     <thead>

@@ -2,8 +2,9 @@
 
 namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Console;
 
-use \Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Context;
+use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,6 +13,28 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Console extends Command
 {
+    /**
+     * @var \Foolz\Foolframe\Model\Context
+     */
+    protected $context;
+
+    /**
+     * @var DoctrineConnection
+     */
+    protected $dc;
+
+    /**
+     * @var BS
+     */
+    protected $board_stats;
+
+    public function __construct(Context $context)
+    {
+        $this->context = $context;
+        $this->dc = $context->getService('doctrine');
+        $this->board_stats = $context->getService('foolfuuka-plugin.board_statistics');
+    }
+
     protected function configure()
     {
         $this
@@ -30,26 +53,26 @@ class Console extends Command
     {
         if (($radix = $input->getOption('radix')) !== null) {
             if (\Radix::getByShortname($radix) !== false) {
-                static::board_statistics($output, $radix);
+                $this->board_statistics($output, $radix);
             } else {
                 $output->writeln('<error>'._i('Wrong radix (board short name) specified.').'</error>');
             }
         } else {
-            static::board_statistics($output);
+            $this->board_statistics($output);
         }
     }
 
-    public static function board_statistics($output, $shortname = null)
+    public function board_statistics($output, $shortname = null)
     {
         $boards = \Radix::getAll();
 
-        $available = BS::getAvailableStats();
+        $available = $this->board_stats->getAvailableStats();
 
         while(true) {
             // Obtain all of the statistics already stored on the database to check for update frequency.
-            $stats = DC::qb()
+            $stats = $this->dc->qb()
                 ->select('board_id, name, timestamp')
-                ->from(DC::p('plugin_fu_board_statistics'), 'bs')
+                ->from($this->dc->p('plugin_fu_board_statistics'), 'bs')
                 ->orderBy('timestamp', 'desc')
                 ->execute()
                 ->fetchAll();
@@ -97,7 +120,7 @@ class Console extends Command
 
                     // racing conditions with our cron.
                     if ($found === false) {
-                        BS::saveStat($board->id, $k, time() + 600, '');
+                       $this->board_stats->saveStat($board->id, $k, time() + 600, '');
                     }
 
                     // We were able to obtain a LOCK on the statistics report and has already reached the
@@ -106,10 +129,10 @@ class Console extends Command
                         $output->writeln('* Processing...');
 
                         $process = 'process'.$a['function'];
-                        $result = BS::$process($board);
+                        $result = $this->board_stats->$process($board);
 
                         // Save the statistics report in a JSON array.
-                        BS::saveStat($board->id, $k, time(), $result);
+                        $this->board_stats->saveStat($board->id, $k, time(), $result);
                     }
                 }
             }

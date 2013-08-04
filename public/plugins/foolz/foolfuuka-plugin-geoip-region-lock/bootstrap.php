@@ -1,9 +1,12 @@
 <?php
 
-\Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-lock')
+use Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock;
+use Foolz\Plugin\Event;
+
+Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-lock')
     ->setCall(function($result) {
-        /* @var $framework \Foolz\Foolframe\Model\Context */
-        $framework = $result->getParam('framework');
+        /* @var $context \Foolz\Foolframe\Model\Context */
+        $context = $result->getParam('context');
 
         \Autoloader::add_classes([
             'Foolz\Foolframe\Controller\Admin\Plugins\GeoipRegionLock' => __DIR__.'/classes/controller/admin.php',
@@ -12,7 +15,7 @@
 
         // don't add the admin panels if the user is not an admin
         if (\Auth::has_access('maccess.admin')) {
-            $framework->getRouteCollection()->add(
+            $context->getRouteCollection()->add(
                 'foolframe.plugin.geoip_region_lock.admin', new \Symfony\Component\Routing\Route(
                     '/admin/plugins/geoip_region_lock/{_suffix}',
                     [
@@ -30,15 +33,28 @@
             ]);
         }
 
-        if (!\Auth::has_access('maccess.mod') && !(\Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user'))) {
-            \Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock::blockCountryView();
+        $preferences = $context->getService('preferences');
 
-            \Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.method')
+        $context->getContainer()
+            ->register('foolfuuka-plugin.geoip_region_lock')
+            ->addArgument($context);
+
+        /** @var GeoipRegionLock $object */
+        $object = $context->getService('foolfuuka-plugin.geoip_region_lock');
+
+        if (!\Auth::has_access('maccess.mod') && !($preferences->get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user'))) {
+            Event::forge('Foolz\Foolframe\Model\Context.handleWeb.override_response')
+                ->setCall(function($response) use ($context, $object) {
+                    $object->blockCountryView($response->getParam('request'), $response);
+                })
+                ->setPriority(2);
+
+            Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.method')
                 ->setCall('Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock::blockCountryComment')
                 ->setPriority(4);
         }
 
-        \Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Radix::structure.result')
+        Event::forge('Foolz\Foolfuuka\Model\Radix::structure.result')
             ->setCall(function($result){
             $structure = $result->getParam('structure');
 

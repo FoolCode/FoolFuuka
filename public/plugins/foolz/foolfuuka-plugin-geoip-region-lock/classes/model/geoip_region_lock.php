@@ -2,18 +2,28 @@
 
 namespace Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model;
 
+use Foolz\Foolframe\Model\Context;
+use Foolz\Foolframe\Model\Model;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GeoipRegionLock
+class GeoipRegionLock extends Model
 {
+    public function __construct(Context $context)
+    {
+        parent::__construct($context);
 
-    public static function blockCountryComment($result)
+        $this->preferences = $context->getService('preferences');
+    }
+
+    public function blockCountryComment($result)
     {
         $obj = $result->getObject();
 
         // globally allowed and disallowed
-        $allow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_comment');
-        $disallow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.disallow_comment');
+        $allow = $this->preferences->get('foolfuuka.plugins.geoip_region_lock.allow_comment');
+        $disallow = $this->preferences->get('foolfuuka.plugins.geoip_region_lock.disallow_comment');
 
         $board_allow = trim($obj->board->getValue('plugin_geo_ip_region_lock_allow_comment'), " ,");
         $board_disallow = trim($obj->board->getValue('plugin_geo_ip_region_lock_disallow_comment'), " ,");
@@ -25,7 +35,8 @@ class GeoipRegionLock
         }
 
         if ($allow || $disallow) {
-            $country = strtolower(\geoip_country_code_by_name(\Input::ip_decimal()));
+            // @todo get client ip
+            $country = strtolower(\geoip_country_code_by_name($request->getClientIp()));
 
             if ($allow) {
                 $allow = array_filter(explode(',', $allow));
@@ -56,13 +67,13 @@ class GeoipRegionLock
         }
     }
 
-    public static function blockCountryView()
+    public function blockCountryView(Request $request, $result)
     {
-        $allow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.allow_view');
-        $disallow = \Preferences::get('foolfuuka.plugins.geoip_region_lock.disallow_view');
+        $allow = $this->preferences->get('foolfuuka.plugins.geoip_region_lock.allow_view');
+        $disallow = $this->preferences->get('foolfuuka.plugins.geoip_region_lock.disallow_view');
 
         if ($allow || $disallow) {
-            $country = strtolower(\geoip_country_code_by_name(\Input::ip_decimal()));
+            $country = strtolower(\geoip_country_code_by_name($request->getClientIp()));
         }
 
         if ($allow) {
@@ -73,7 +84,8 @@ class GeoipRegionLock
                     return null;
             }
 
-            throw new NotFoundHttpException;
+            $result->set(new Response(_i('Not available in your country.'), 403));
+            return;
         }
 
         if ($disallow) {
@@ -81,6 +93,7 @@ class GeoipRegionLock
 
             foreach ($disallow as $disal) {
                 if (strtolower(trim($disal)) == $country) {
+                    $result->set(new Response(_i('Not available in your country.'), 403));
                     throw new NotFoundHttpException;
                 }
             }

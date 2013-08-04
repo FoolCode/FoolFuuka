@@ -1,9 +1,3 @@
-<?php
-if (!defined('DOCROOT')) {
-    exit('No direct script access allowed');
-}
-?>
-
 <?php $data_array = json_decode($data); ?>
 
 <h4><?= _i('Board') ?>:</h4>
@@ -27,7 +21,7 @@ if (!defined('DOCROOT')) {
                 if ($d->trip) {
                     array_push($params, 'tripcode/' . urlencode($d->trip));
                 }
-                $poster_link = \Uri::create($params);
+                $poster_link = $this->uri->create($params);
                 ?>
                 <a href="<?= $poster_link ?>">
                     <span class="poster_name"><?php echo $d->name ?></span> <span class="poster_trip"><?php echo $d->trip ?></span>
@@ -35,7 +29,7 @@ if (!defined('DOCROOT')) {
             </td>
             <td><?= date('D M d H:i:s Y', $d->timestamp) ?></td>
             <td>
-                <a href="<?= \Uri::create([\Radix::getSelected()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : '')]) ?>">
+                <a href="<?= $this->uri->create([\Radix::getSelected()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : '')]) ?>">
                     &gt;&gt;<?= $d->num . ($d->subnum ? ',' . $d->subnum : '') ?>
                 </a>
             </td>
@@ -66,7 +60,7 @@ if (!defined('DOCROOT')) {
                 if ($d->trip) {
                     array_push($params, 'tripcode/' . urlencode($d->trip));
                 }
-                $poster_link = \Uri::create($params);
+                $poster_link = $this->uri->create($params);
                 ?>
                 <a href="<?= $poster_link ?>">
                     <span class="poster_name"><?php echo $d->name ?></span> <span class="poster_trip"><?php echo $d->trip ?></span>
@@ -74,7 +68,7 @@ if (!defined('DOCROOT')) {
             </td>
             <td><?= date('D M d H:i:s Y', $d->timestamp) ?></td>
             <td>
-                <a href="<?= \Uri::create([\Radix::getSelected()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : '')]) ?>">
+                <a href="<?= $this->uri->create([\Radix::getSelected()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : '')]) ?>">
                     &gt;&gt;<?= $d->num . ($d->subnum ? ',' . $d->subnum : '') ?>
                 </a>
             </td>

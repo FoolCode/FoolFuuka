@@ -2,9 +2,25 @@
 
 namespace Foolz\Foolfuuka\Plugins\NginxCachePurge\Model;
 
-class NginxCachePurge
+use Foolz\Foolframe\Model\Context;
+use Foolz\Foolframe\Model\Model;
+use Foolz\Foolframe\Model\Preferences;
+
+class NginxCachePurge extends Model
 {
-    public static function beforeDeleteMedia($result)
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
+
+    public function __construct(Context $context)
+    {
+        parent::__construct($context);
+
+        $this->preferences = $context->getService('preferences');
+    }
+
+    public function beforeDeleteMedia($result)
     {
         $post = $result->getObject();
         $dir = [];
@@ -57,9 +73,9 @@ class NginxCachePurge
         return;
     }
 
-    public static function parseUrls()
+    public function parseUrls()
     {
-        $text = \Preferences::get('foolfuuka.plugins.nginx_cache_purge.urls');
+        $text = $this->preferences->get('foolfuuka.plugins.nginx_cache_purge.urls');
 
         if (!$text) {
             return [];

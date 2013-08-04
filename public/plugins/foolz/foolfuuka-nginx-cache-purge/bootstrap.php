@@ -1,5 +1,7 @@
 <?php
 
+use Foolz\Foolframe\Model\Context;
+
 \Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-nginx-cache-purge')
     ->setCall(function($result) {
         \Autoloader::add_classes([
@@ -7,9 +9,16 @@
             'Foolz\Foolfuuka\Plugins\NginxCachePurge\Model\NginxCachePurge' =>__DIR__.'/classes/model/nginx_cache_purge.php'
         ]);
 
+        /** @var Context $context */
+        $context = $result->getParam('context');
+
+        $context->getContainer()
+            ->register('foolfuuka-plugin.nginx_purge_cache', 'Foolz\Foolfuuka\Plugins\NginxCachePurge\Model\NginxCachePurge')
+            ->addArgument($context);
+
         // don't add the admin panels if the user is not an admin
         if (\Auth::has_access('maccess.admin')) {
-            $result->getParam('framework')->getRouteCollection()->add(
+            $context->getRouteCollection()->add(
                 'foolfuuka.plugin.nginx_cache_purge.admin', new \Symfony\Component\Routing\Route(
                     '/admin/plugins/nginx_cache_purge/{_suffix}',
                     [
@@ -28,5 +37,7 @@
         }
 
         \Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Media::delete.call.before.method')
-            ->setCall('Foolz\Foolfuuka\Plugins\NginxCachePurge\Model\NginxCachePurge::beforeDeleteMedia');
+            ->setCall(function($result) use ($context) {
+                $context->getService('foolfuuka-plugin.nginx_purge_cache')->beforeDeleteMedia($result);
+            });
     });

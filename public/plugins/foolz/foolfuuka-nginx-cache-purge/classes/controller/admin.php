@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolframe\Controller\Admin\Plugins;
 
+use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -10,7 +11,7 @@ class NginxCachePurge extends \Foolz\Foolframe\Controller\Admin
     public function before()
     {
         if (!\Auth::has_access('maccess.admin')) {
-            \Response::redirect('admin');
+            return $this->redirectToAdmin();
         }
 
         parent::before();
@@ -33,7 +34,7 @@ class NginxCachePurge extends \Foolz\Foolframe\Controller\Admin
 http://1-cdn-archive.yourdomain.org/purge/
 http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
                 'class' => 'span8',
-                'validation' => 'trim'
+                'validation' => [new Trim()]
             ],
             'separator-2' => [
                 'type' => 'separator-short'
@@ -55,7 +56,7 @@ http://2-cdn-archive.yourdomain.org/purge/:username2:password</pre>',
 
         $data['form'] = $this->structure();
 
-        \Preferences::submit_auto($data['form']);
+        $this->preferences->submit_auto($data['form'], $this->getPost());
 
         // create a form
         $this->builder->createPartial('body', 'form_creator')

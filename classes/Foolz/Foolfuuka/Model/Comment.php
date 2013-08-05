@@ -999,7 +999,7 @@ class Comment
                         ->set('time_ghost', $time_ghost)
                         ->set('time_ghost_bump', $time_ghost_bump)
                         ->set('time_last_modified', ':time')
-                        ->set('nreplies', 'nimages - 1')
+                        ->set('nreplies', 'nreplies - 1')
                         ->set('nimages', 'nimages - 1')
                         ->where('thread_num = :thread_num')
                         ->setParameter(':time', $this->getRadixTime())

@@ -1000,7 +1000,7 @@ class Comment
                         ->set('time_ghost_bump', $time_ghost_bump)
                         ->set('time_last_modified', ':time')
                         ->set('nreplies', 'nreplies - 1')
-                        ->set('nimages', 'nimages - 1')
+                        ->set('nimages', (isset($this->media) ? 'nimages - 1' : 'nimages'))
                         ->where('thread_num = :thread_num')
                         ->setParameter(':time', $this->getRadixTime())
                         ->setParameter(':thread_num', $this->thread_num)

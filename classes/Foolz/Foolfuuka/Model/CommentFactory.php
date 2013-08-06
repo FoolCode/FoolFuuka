@@ -105,7 +105,7 @@ class CommentFactory extends Model
                  'thumb_link' => 'getThumbLink'
              ] as $var => $method)
             {
-                $comment->media->$method();
+                $comment->media->$method($api['request']);
             }
 
             unset($comment->media->radix);

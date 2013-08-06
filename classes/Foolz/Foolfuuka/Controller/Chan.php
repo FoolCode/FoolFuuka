@@ -1168,7 +1168,7 @@ class Chan extends Common
                     $board = Board::forge($this->getContext())
                         ->getThread($comment->thread_num)
                         ->setRadix($this->radix)
-                        ->setApi(['theme' => $this->builder, 'board' => false])
+                        ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                         ->setOptions([
                             'type' => 'from_doc_id',
                             'latest_doc_id' => $latest_doc_id,
@@ -1186,7 +1186,7 @@ class Chan extends Common
                 $this->response->setData(['success' => _i('Message sent.')] + $comments);
             } else {
                 $comment_api = $this->comment_factory->forgeForApi($comment, $this->radix,
-                    ['board' => false, 'theme' => $this->builder],
+                    ['request' => $this->getRequest(), 'board' => false, 'theme' => $this->builder],
                     ['controller_method' => $limit ? 'last/'.$limit : 'thread']);
 
                 $this->response->setData([

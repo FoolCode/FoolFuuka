@@ -216,7 +216,7 @@ class Chan extends Common
                 ->getLatest()
                 ->setRadix($this->radix)
                 ->setPage($page)
-                ->setApi(['theme' => $this->builder, 'board' => false])
+                ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                 ->setOptions($options);
 
             $this->response->setData($board->getComments());
@@ -274,7 +274,7 @@ class Chan extends Common
                 ->getSearch($search)
                 ->setRadix($this->radix)
                 ->setPage($search['page'] ? $search['page'] : 1)
-                ->setApi(['theme' => $this->builder, 'board' => true]);
+                ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => true]);
 
             $comments = $board->getComments();
 
@@ -332,7 +332,7 @@ class Chan extends Common
                 $board = Board::forge($this->getContext())
                     ->getThread($num)
                     ->setRadix($this->radix)
-                    ->setApi(['theme' => $this->builder, 'board' => false])
+                    ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                     ->setOptions($options);
 
                 $comments = $board->getComments();
@@ -350,7 +350,7 @@ class Chan extends Common
                 $board = Board::forge($this->getContext())
                     ->getThread($num)
                     ->setRadix($this->radix)
-                    ->setApi(['theme' => $this->builder, 'board' => false])
+                    ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                     ->setOptions($options);
 
                 $thread_status = $board->getThreadStatus();
@@ -391,7 +391,7 @@ class Chan extends Common
             $board = Board::forge($this->getContext())
                 ->getPost($num)
                 ->setRadix($this->radix)
-                ->setApi(['board' => false, 'theme' => $this->builder]);
+                ->setApi(['request' => $this->getRequest(), 'board' => false, 'theme' => $this->builder]);
 
             $comment = current($board->getComments());
 

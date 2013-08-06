@@ -455,16 +455,16 @@ class Search extends Board
 
             foreach ($search as $doc => $result) {
                 $board = $this->radix_coll->getById($result['board']);
-                $sql[] = $this->db->qb()
+                $sql[] = $this->dc->qb()
                     ->select('*, '.$result['board'].' AS board_id')
                     ->from($board->getTable(), 'r')
                     ->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
                     ->leftJoin('r', $board->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
-                    ->where('doc_id = '.$this->db->getConnection()->quote($result['id']))
+                    ->where('doc_id = '.$this->dc->getConnection()->quote($result['id']))
                     ->getSQL();
             }
 
-            $result = $this->db->getConnection()
+            $result = $this->dc->getConnection()
                 ->executeQuery(implode(' UNION ', $sql))
                 ->fetchAll();
         } else {
@@ -474,12 +474,12 @@ class Search extends Board
 
         // process results
         foreach ($result as $post) {
-            $board = ($this->radix !== null ? $this->radix : \Radix::getById($post['board_id']));
+            $board = ($this->radix !== null ? $this->radix : $this->radix_coll->getById($post['board_id']));
 
             if ($this->api) {
-                $this->comments_unsorted[] = \Comment::forgeForApi($post, $board, $this->api, $this->comment_options);
+                $this->comments_unsorted[] = $this->comment_factory->forgeForApi($post, $board, $this->api, $this->comment_options);
             } else {
-                $this->comments_unsorted[] = new \Comment($post, $board);
+                $this->comments_unsorted[] = new Comment($this->getContext(), $post, $board);
             }
         }
 

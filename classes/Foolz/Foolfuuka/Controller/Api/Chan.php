@@ -3,22 +3,110 @@
 namespace Foolz\Foolfuuka\Controller\Api;
 
 use Foolz\Foolframe\Controller\Common;
-use \Foolz\Inet\Inet;
+use Foolz\Foolframe\Model\Config;
+use Foolz\Foolframe\Model\Preferences;
+use Foolz\Foolframe\Model\Uri;
+use Foolz\Foolfuuka\Model\BanFactory;
+use Foolz\Foolfuuka\Model\Board;
+use Foolz\Foolfuuka\Model\CommentFactory;
+use Foolz\Foolfuuka\Model\Media;
+use Foolz\Foolfuuka\Model\MediaFactory;
+use Foolz\Foolfuuka\Model\Radix;
+use Foolz\Foolfuuka\Model\RadixCollection;
+use Foolz\Foolfuuka\Model\ReportCollection;
+use Foolz\Foolfuuka\Model\Search;
+use Foolz\Inet\Inet;
+use Foolz\Profiler\Profiler;
+use Foolz\Theme\Builder;
+use Foolz\Theme\Theme;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 class Chan extends Common
 {
-    protected $_radix = null;
-    protected $_theme = null;
-    protected $format = 'json';
+    /**
+     * @var Radix
+     */
+    protected $radix;
 
+    /**
+     * @var Theme
+     */
+    protected $theme;
+
+    /**
+     * @var Builder
+     */
+    protected $builder = null;
+
+    /**
+     * @var Request
+     */
     protected $request = null;
+
+    /**
+     * @var Response
+     */
     protected $response = null;
+
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
+
+    /**
+     * @var Uri
+     */
+    protected $uri;
+
+    /**
+     * @var Profiler
+     */
+    protected $profiler;
+
+    /**
+     * @var RadixCollection
+     */
+    protected $radix_coll;
+
+    /**
+     * @var MediaFactory
+     */
+    protected $media_factory;
+
+    /**
+     * @var CommentFactory
+     */
+    protected $comment_factory;
+
+    /**
+     * @var BanFactory
+     */
+    protected $ban_factory;
+
+    /**
+     * @var ReportCollection
+     */
+    protected $report_coll;
 
     public function before()
     {
+        $this->config = $this->getContext()->getService('config');
+        $this->preferences = $this->getContext()->getService('preferences');
+        $this->uri = $this->getContext()->getService('uri');
+        $this->profiler = $this->getContext()->getService('profiler');
+        $this->radix_coll = $this->getContext()->getService('foolfuuka.radix_collection');
+        $this->media_factory = $this->getContext()->getService('foolfuuka.media_factory');
+        $this->comment_factory = $this->getContext()->getService('foolfuuka.comment_factory');
+        $this->ban_factory = $this->getContext()->getService('foolfuuka.ban_factory');
+        $this->report_coll = $this->getContext()->getService('foolfuuka.report_collection');
+
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -27,18 +115,24 @@ class Chan extends Common
         // this has already been forged in the foolfuuka bootstrap
         $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 
-        if (\Input::get('theme')) {
+        if ($this->getQuery('theme')) {
             try {
-                $theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
+                $theme_name = $this->getQuery('theme', $this->getCookie('theme')) ? : $this->preferences->get('foolfuuka.theme.default');
                 $theme = $theme_instance->get($theme_name);
                 if (!isset($theme->enabled) || !$theme->enabled) {
                     throw new \OutOfBoundsException;
                 }
-                $this->_theme = $theme;
+                $this->theme = $theme;
             } catch (\OutOfBoundsException $e) {
                 $theme_name = 'foolz/foolfuuka-theme-foolfuuka';
-                $this->_theme = $theme_instance->get($theme_name);
+                $this->theme = $theme_instance->get($theme_name);
             }
+
+            $this->builder = $this->theme->createBuilder();
+            $this->builder->getParamManager()->setParams([
+                'context' => $this->getContext(),
+                'request' => $this->getRequest()
+            ]);
         }
     }
 
@@ -69,10 +163,10 @@ class Chan extends Common
      */
     protected function check_board()
     {
-        $board = \Input::get('board');
+        $board = $this->getQuery('board');
 
         if (!$board) {
-            $board = \Input::post('board');
+            $board = $this->getPost('board');
         }
 
         if (!$board) {
@@ -80,7 +174,7 @@ class Chan extends Common
             return false;
         }
 
-        if (!$this->_radix = \Radix::setSelectedByShortname($board)) {
+        if (!$this->radix = $this->radix_coll->getByShortname($board)) {
             //$this->response->setData(['error' => _i('The board you selected doesn\'t exist')]);
             return false;
         }
@@ -99,7 +193,7 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(404);
         }
 
-        $page = \Input::get('page');
+        $page = $this->getQuery('page');
 
         if (!$page) {
             return $this->response->setData(['error' => _i('The "page" parameter is missing.')])->setStatusCode(404);
@@ -113,16 +207,16 @@ class Chan extends Common
 
         try {
             $options = [
-                'per_page' => $this->_radix->getValue('threads_per_page'),
+                'per_page' => $this->radix->getValue('threads_per_page'),
                 'per_thread' => 5,
                 'order' => 'by_thread'
             ];
 
-            $board = \Board::forge()
+            $board = Board::forge($this->getContext())
                 ->getLatest()
-                ->setRadix($this->_radix)
+                ->setRadix($this->radix)
                 ->setPage($page)
-                ->setApi(['theme' => $this->_theme, 'board' => false])
+                ->setApi(['theme' => $this->builder, 'board' => false])
                 ->setOptions($options);
 
             $this->response->setData($board->getComments());
@@ -150,7 +244,7 @@ class Chan extends Common
         $search = [];
 
         foreach ($modifiers as $modifier) {
-            $search[$modifier] = \Input::get($modifier);
+            $search[$modifier] = $this->getQuery($modifier);
         }
 
         foreach ($search as $key => $value) {
@@ -164,7 +258,7 @@ class Chan extends Common
         }
 
         if ($search['image'] !== null) {
-            $search['image'] = base64_encode(\Media::urlsafe_b64decode($search['image']));
+            $search['image'] = base64_encode(Media::urlsafe_b64decode($search['image']));
         }
 
         if ($search['poster_ip'] !== null) {
@@ -172,15 +266,15 @@ class Chan extends Common
                 return $this->error(_i('The poster IP you inserted is not a valid IP address.'));
             }
 
-            $search['poster_ip'] = \Foolz\Inet\Inet::ptod($search['poster_ip']);
+            $search['poster_ip'] = Inet::ptod($search['poster_ip']);
         }
 
         try {
-            $board = \Search::forge()
+            $board = Search::forge($this->getContext())
                 ->getSearch($search)
-                ->setRadix($this->_radix)
+                ->setRadix($this->radix)
                 ->setPage($search['page'] ? $search['page'] : 1)
-                ->setApi(['theme' => $this->_theme, 'board' => true]);
+                ->setApi(['theme' => $this->builder, 'board' => true]);
 
             $comments = $board->getComments();
 
@@ -207,8 +301,8 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(404);
         }
 
-        $num = \Input::get('num');
-        $latest_doc_id = \Input::get('latest_doc_id');
+        $num = $this->getQuery('num');
+        $latest_doc_id = $this->getQuery('latest_doc_id');
 
         if (!$num) {
             return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(404);
@@ -232,13 +326,13 @@ class Chan extends Common
                     'latest_doc_id' => $latest_doc_id,
                     'realtime' => true,
                     'controller_method' =>
-                        ctype_digit((string) \Input::get('last_limit')) ? 'last/'.\Input::get('last_limit') : 'thread'
+                        ctype_digit((string) $this->getQuery('last_limit')) ? 'last/'.$this->getQuery('last_limit') : 'thread'
                 ];
 
-                $board = \Board::forge()
+                $board = Board::forge($this->getContext())
                     ->getThread($num)
-                    ->setRadix($this->_radix)
-                    ->setApi(['theme' => $this->_theme, 'board' => false])
+                    ->setRadix($this->radix)
+                    ->setApi(['theme' => $this->builder, 'board' => false])
                     ->setOptions($options);
 
                 $comments = $board->getComments();
@@ -253,10 +347,10 @@ class Chan extends Common
                     'type' => 'thread',
                 ];
 
-                $board = \Board::forge()
+                $board = Board::forge($this->getContext())
                     ->getThread($num)
-                    ->setRadix($this->_radix)
-                    ->setApi(['theme' => $this->_theme, 'board' => false])
+                    ->setRadix($this->radix)
+                    ->setApi(['theme' => $this->builder, 'board' => false])
                     ->setOptions($options);
 
                 $thread_status = $board->getThreadStatus();
@@ -283,21 +377,21 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(404);
         }
 
-        $num = \Input::get('num');
+        $num = $this->getQuery('num');
 
         if (!$num) {
             return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(404);
         }
 
-        if (!\Board::isValidPostNumber($num)) {
+        if (!Board::isValidPostNumber($num)) {
             return $this->response->setData(['error' => _i('The value for "num" is invalid.')])->setStatusCode(404);
         }
 
         try {
-            $board = \Board::forge()
+            $board = Board::forge($this->getContext())
                 ->getPost($num)
-                ->setRadix($this->_radix)
-                ->setApi(['board' => false, 'theme' => $this->_theme]);
+                ->setRadix($this->radix)
+                ->setApi(['board' => false, 'theme' => $this->builder]);
 
             $comment = current($board->getComments());
 
@@ -327,9 +421,9 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(404);
         }
 
-        if (\Input::post('action') === 'report') {
+        if ($this->getPost('action') === 'report') {
             try {
-                \Report::add($this->_radix, \Input::post('doc_id'), \Input::post('reason'));
+                $this->report_coll->add($this->radix, $this->getPost('doc_id'), $this->getPost('reason'));
             } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
                 return $this->response->setData(['error' => $e->getMessage()]);
             }
@@ -337,9 +431,9 @@ class Chan extends Common
             return $this->response->setData(['success' => _i('You have successfully submitted a report for this post.')]);
         }
 
-        if (\Input::post('action') === 'report_media') {
+        if ($this->getPost('action') === 'report_media') {
             try {
-                \Report::add($this->_radix, \Input::post('media_id'), \Input::post('reason'), null, 'media_id');
+                $this->report_coll->add($this->radix, $this->getPost('media_id'), $this->getPost('reason'), null, 'media_id');
             } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
                 return $this->response->setData(['error' => $e->getMessage()]);
             }
@@ -347,17 +441,17 @@ class Chan extends Common
             return $this->response->setData(['success' => _i('This media was reported.')]);
         }
 
-        if (\Input::post('action') === 'delete') {
+        if ($this->getPost('action') === 'delete') {
             try {
-                $comments = \Board::forge()
+                $comments = Board::forge($this->getContext())
                     ->getPost()
-                    ->setOptions('doc_id', \Input::post('doc_id'))
+                    ->setOptions('doc_id', $this->getPost('doc_id'))
                     ->setCommentOptions('clean', false)
-                    ->setRadix($this->_radix)
+                    ->setRadix($this->radix)
                     ->getComments();
 
                 $comment = current($comments);
-                $comment->delete(\Input::post('password'));
+                $comment->delete($this->getPost('password'));
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
                 return $this->response->setData(['error' => $e->getMessage()]);
             } catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e) {
@@ -382,9 +476,9 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(404);
         }
 
-        if (\Input::post('action') === 'delete_report') {
+        if ($this->getPost('action') === 'delete_report') {
             try {
-                \Report::delete(\Input::post('id'));
+                $this->report_coll->delete($this->getPost('id'));
             } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }
@@ -392,12 +486,12 @@ class Chan extends Common
             return $this->response->setData(['success' => _i('The report was deleted.')]);
         }
 
-        if (\Input::post('action') === 'delete_post') {
+        if ($this->getPost('action') === 'delete_post') {
             try {
-                $comments = \Board::forge()
+                $comments = Board::forge($this->getContext())
                     ->getPost()
-                    ->setOptions('doc_id', \Input::post('id'))
-                    ->setRadix($this->_radix)
+                    ->setOptions('doc_id', $this->getPost('id'))
+                    ->setRadix($this->radix)
                     ->getComments();
 
                 $comment = current($comments);
@@ -409,9 +503,9 @@ class Chan extends Common
             return $this->response->setData(['success' => _i('This post was deleted.')]);
         }
 
-        if (\Input::post('action') === 'delete_image') {
+        if ($this->getPost('action') === 'delete_image') {
             try {
-                \Media::getByMediaId($this->_radix, \Input::post('id'))->delete(true, true, true);
+                $this->media_factory->getByMediaId($this->radix, $this->getPost('id'))->delete(true, true, true);
             } catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }
@@ -419,14 +513,14 @@ class Chan extends Common
             return $this->response->setData(['success' => _i('This image was deleted.')]);
         }
 
-        if (\Input::post('action') === 'ban_image_local' || \Input::post('action') === 'ban_image_global') {
+        if ($this->getPost('action') === 'ban_image_local' || $this->getPost('action') === 'ban_image_global') {
             $global = false;
-            if (\Input::post('action') === 'ban_image_global') {
+            if ($this->getPost('action') === 'ban_image_global') {
                 $global = true;
             }
 
             try {
-                \Media::getByMediaId($this->_radix, \Input::post('id'))->ban($global);
+                $this->media_factory->getByMediaId($this->radix, $this->getPost('id'))->ban($global);
             } catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }
@@ -434,12 +528,12 @@ class Chan extends Common
             return $this->response->setData(['success' => _i('This image was banned.')]);
         }
 
-        if (\Input::post('action') === 'ban_user') {
+        if ($this->getPost('action') === 'ban_user') {
             try {
-                \Ban::add(\Foolz\Inet\Inet::ptod(\Input::post('ip')),
-                    \Input::post('reason'),
-                    \Input::post('length'),
-                    \Input::post('board_ban') === 'global' ? array() : array($this->_radix->id)
+                $this->ban_factory->add(Inet::ptod($this->getPost('ip')),
+                    $this->getPost('reason'),
+                    $this->getPost('length'),
+                    $this->getPost('board_ban') === 'global' ? array() : array($this->radix->id)
                 );
             } catch (\Foolz\Foolfuuka\Model\BanException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);

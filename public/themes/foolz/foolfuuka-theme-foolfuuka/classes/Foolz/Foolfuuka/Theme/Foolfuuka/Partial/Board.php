@@ -5,7 +5,7 @@ namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 use Foolz\Inet\Inet;
 use Foolz\Foolframe\Model\Legacy\Preferences;
 
-class Board extends \Foolz\Theme\View
+class Board extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {
@@ -36,15 +36,15 @@ class Board extends \Foolz\Theme\View
                     <?php if ($op->media->getMediaStatus() === 'banned') : ?>
                     <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png')?>" width="150" height="150" />
                     <?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
-                    <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+                    <a href="<?= ($op->media->getMediaLink($this->getRequest())) ? $op->media->getMediaLink($this->getRequest()) : $op->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
                         <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
                     </a>
                     <?php else : ?>
-                    <a href="<?= ($op->media->getMediaLink()) ? $op->media->getMediaLink() : $op->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+                    <a href="<?= ($op->media->getMediaLink($this->getRequest())) ? $op->media->getMediaLink($this->getRequest()) : $op->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
                         <?php if (!\Auth::has_access('maccess.mod') && !$op->radix->getValue('transparent_spoiler') && $op->media->spoiler) :?>
                         <div class="spoiler_box"><span class="spoiler_box_text"><?= _i('Spoiler') ?><span class="spoiler_box_text_help"><?= _i('Click to view') ?></span></div>
                         <?php else : ?>
-                        <img src="<?= $op->media->getThumbLink() ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
+                        <img src="<?= $op->media->getThumbLink($this->getRequest()) ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thread_image<?= ($op->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $op->media->media_hash ?>" />
                         <?php endif; ?>
                     </a>
                     <?php endif; ?>
@@ -56,12 +56,12 @@ class Board extends \Foolz\Theme\View
                     <div class="post_file_controls">
                         <?php if ($op->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
                         <?php if ( !$op->radix->hide_thumbnails || \Auth::has_access('maccess.mod')) : ?>
-                            <?php if ($op->media->total > 1) : ?><a href="<?= \Uri::create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a
-                                href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink() ?>" target="_blank"
+                            <?php if ($op->media->total > 1) : ?><a href="<?= $this->getUri()->create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a
+                                href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                 class="btnr parent">Google</a><a
-                                href="http://iqdb.org/?url=<?= $op->media->getThumbLink() ?>" target="_blank"
+                                href="http://iqdb.org/?url=<?= $op->media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                 class="btnr parent">iqdb</a><a
-                                href="http://saucenao.com/search.php?url=<?= $op->media->getThumbLink() ?>" target="_blank"
+                                href="http://saucenao.com/search.php?url=<?= $op->media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                 class="btnr parent">SauceNAO</a>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -84,7 +84,7 @@ class Board extends \Foolz\Theme\View
                         <span class="time_wrap">
                             <time datetime="<?= gmdate(DATE_W3C, $op->timestamp) ?>" class="show_time" <?php if ($op->radix->archive) : ?> title="<?= _i('4chan Time') . ': ' . $op->getFourchanDate() ?>"<?php endif; ?>><?= gmdate('D d M H:i:s Y', $op->timestamp) ?></time>
                         </span>
-                        <a href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
+                        <a href="<?= $this->getUri()->create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= $this->getUri()->create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) . '#q' . $num ?>" data-post="<?= $num ?>" data-function="quote"><?= $num ?></a>
 
                         <span class="post_type">
                             <?php if ($op->poster_country !== null) : ?><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span><?php endif; ?>
@@ -94,7 +94,7 @@ class Board extends \Foolz\Theme\View
                         </span>
 
                         <span class="post_controls">
-                <a href="<?= \Uri::create(array($op->radix->shortname, 'thread', $num)) ?>" class="btnr parent"><?= _i('View') ?></a><a href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= _i('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . \Uri::create($op->radix->shortname . '/last/50/' . $num) . '" class="btnr parent">' . _i('Last 50') . '</a>' : '' ?><?= ($op->radix->archive) ? '<a href="//boards.4chan.org/' . $op->radix->shortname . '/res/' . $num . '" class="btnr parent">' . _i('Original') . '</a>' : '' ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if (\Auth::has_access('maccess.mod') || !$op->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
+                <a href="<?= $this->getUri()->create(array($op->radix->shortname, 'thread', $num)) ?>" class="btnr parent"><?= _i('View') ?></a><a href="<?= $this->getUri()->create(array($op->radix->shortname, $op->_controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= _i('Reply') ?></a><?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<a href="' . $this->getUri()->create($op->radix->shortname . '/last/50/' . $num) . '" class="btnr parent">' . _i('Last 50') . '</a>' : '' ?><?= ($op->radix->archive) ? '<a href="//boards.4chan.org/' . $op->radix->shortname . '/res/' . $num . '" class="btnr parent">' . _i('Original') . '</a>' : '' ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if (\Auth::has_access('maccess.mod') || !$op->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
             </span>
 
                         <div class="backlink_list"<?= $op->getBacklinks() ? ' style="display:block"' : '' ?>>
@@ -114,9 +114,9 @@ class Board extends \Foolz\Theme\View
                             <?php endif; ?>
                             <?php if ($op->poster_ip) : ?>
                             <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $op->radix->shortname ?>" data-ip="<?= Inet::dtop($op->poster_ip) ?>" data-action="ban_user"><?= _i('Ban IP:') . ' ' . Inet::dtop($op->poster_ip) ?></button>
-                            <button class="btn btn-mini" data-function="searchUser" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= \Uri::create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= _i('Search IP') ?></button>
+                            <button class="btn btn-mini" data-function="searchUser" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= $this->getUri()->create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= _i('Search IP') ?></button>
                             <?php if (Preferences::get('foolfuuka.sphinx.global')) : ?>
-                                <button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= \Uri::create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= _i('Search IP Globally') ?></button>
+                                <button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= $this->getUri()->create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= _i('Search IP Globally') ?></button>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </div>
@@ -130,7 +130,7 @@ class Board extends \Foolz\Theme\View
                 <div class="thread_tools_bottom">
                     <?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
         <span class="omitted">
-            <a style="display:inline-block" href="<?= \Uri::create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) ?>" data-function="expandThread" data-thread-num="<?= $op->thread_num ?>"><i class="icon icon-resize-full"></i></a>
+            <a style="display:inline-block" href="<?= $this->getUri()->create(array($op->radix->shortname, $op->_controller_method, $op->thread_num)) ?>" data-function="expandThread" data-thread-num="<?= $op->thread_num ?>"><i class="icon icon-resize-full"></i></a>
                     <span class="omitted_text">
                 <span class="omitted_posts"><?= $post['omitted'] ?></span> <?= _n('post', 'posts', $post['omitted']) ?>
                         <?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>

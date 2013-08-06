@@ -4,6 +4,7 @@ namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Foolframe\Model\ContextInterface;
 use Foolz\Foolframe\Model\Legacy\Config;
+use Foolz\Plugin\Event;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,26 +35,46 @@ class Context implements ContextInterface
             'StringParser_BBCode' => __DIR__.'/../../../../packages/stringparser-bbcode/library/stringparser_bbcode.class.php',
         ]);
 
-        if (\Auth::has_access('comment.reports')) {
-            \Foolz\Foolfuuka\Model\Report::preload();
-        }
+        $context->getContainer()
+            ->register('foolfuuka.radix_collection', 'Foolz\Foolfuuka\Model\RadixCollection')
+            ->addArgument($context);
+
+        $context->getContainer()
+            ->register('foolfuuka.comment_factory', 'Foolz\Foolfuuka\Model\CommentFactory')
+            ->addArgument($context);
+
+        $context->getContainer()
+            ->register('foolfuuka.media_factory', 'Foolz\Foolfuuka\Model\MediaFactory')
+            ->addArgument($context);
+
+        $context->getContainer()
+            ->register('foolfuuka.ban_factory', 'Foolz\Foolfuuka\Model\BanFactory')
+            ->addArgument($context);
+
+        $context->getContainer()
+            ->register('foolfuuka.report_collection', 'Foolz\Foolfuuka\Model\ReportCollection')
+            ->addArgument($context);
     }
 
     public function handleWeb(Request $request)
     {
+        $preferences = $this->context->getService('preferences');
+        $config = $this->context->getService('config');
+        $uri = $this->context->getService('uri');
+
         $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
-        $theme_instance->addDir(VENDPATH.'foolz/foolfuuka/'. \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'directories.themes'));
+        $theme_instance->addDir(VENDPATH.'foolz/foolfuuka/'.$config->get('foolz/foolfuuka', 'package', 'directories.themes'));
         $theme_instance->addDir(VAPPPATH.'foolz/foolfuuka/themes/');
-        $theme_instance->setBaseUrl(\Uri::base().'foolfuuka/');
+        $theme_instance->setBaseUrl($uri->base().'foolfuuka/');
         $theme_instance->setPublicDir(DOCROOT.'foolfuuka/');
 
         // set an ->enabled on the themes we want to use
         if (\Auth::has_access('maccess.admin')) {
-            \Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\System::environment.result')
-                ->setCall(function($result) {
+            Event::forge('Foolz\Foolframe\Model\System::environment.result')
+                ->setCall(function($result) use ($config) {
                     $environment = $result->getParam('environment');
 
-                    foreach (\Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'environment') as $section => $data) {
+                    foreach ($config->get('foolz/foolfuuka', 'environment') as $section => $data) {
                         foreach ($data as $k => $i) {
                             array_push($environment[$section]['data'], $i);
                         }
@@ -66,7 +87,7 @@ class Context implements ContextInterface
                 $theme->enabled = true;
             }
         } else {
-            if ($themes_enabled = \Foolz\Foolframe\Model\Legacy\Preferences::get('foolfuuka.theme.active_themes')) {
+            if ($themes_enabled = $preferences->get('foolfuuka.theme.active_themes')) {
                 $themes_enabled = unserialize($themes_enabled);
             } else {
                 $themes_enabled = ['foolz/foolfuuka-theme-foolfuuka' => 1];
@@ -85,7 +106,7 @@ class Context implements ContextInterface
         }
 
         try {
-            $theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
+            $theme_name = $request->query->get('theme', $request->cookies->get($this->context->getService('config')->get('foolz/foolframe', 'config', 'config.cookie_prefix').'theme')) ? : $preferences->get('foolfuuka.theme.default');
             $theme_name_exploded = explode('/', $theme_name);
 
             // must get rid of the style
@@ -125,7 +146,9 @@ class Context implements ContextInterface
             ])
             ->execute();
 
-        $radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
+
+        /** @var Radix[] $radix_all */
+        $radix_all = $this->context->getService('foolfuuka.radix_collection')->getAll();
 
         foreach ($radix_all as $radix) {
             $route_collection->add(

@@ -2,9 +2,15 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use Foolz\Foolframe\Model\DoctrineConnection;
 use Foolz\Foolframe\Model\Legacy\Config;
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
-use \Foolz\Cache\Cache;
+use Foolz\Cache\Cache;
+use Foolz\Foolframe\Model\Model;
+use Foolz\Foolframe\Model\Context;
+use Foolz\Foolframe\Model\Preferences;
+use Foolz\Foolframe\Model\Uri;
+use Foolz\Plugin\PlugSuit;
+use Symfony\Component\HttpFoundation\Request;
 
 class MediaException extends \Exception {}
 class MediaNotFoundException extends MediaException {}
@@ -26,9 +32,9 @@ class MediaThumbnailCreationException extends MediaInsertException {}
 /**
  * Manages Media files and database
  */
-class Media
+class Media extends Model
 {
-    use \Foolz\Plugin\PlugSuit;
+    use PlugSuit;
 
     /**
      * If the media is referred to an opening post
@@ -159,7 +165,7 @@ class Media
     /**
      * The radix object for the media
      *
-     * @var \Foolz\Foolfuuka\Model\Radix
+     * @var Radix
      */
     public $radix = null;
 
@@ -227,6 +233,36 @@ class Media
     public $media_filename_processed = false;
 
     /**
+     * @var DoctrineConnection
+     */
+    protected $dc;
+
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
+
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * @var Uri
+     */
+    protected $uri;
+
+    /**
+     * @var RadixCollection
+     */
+    protected $radix_coll;
+
+    /**
+     * @var MediaFactory
+     */
+    protected $media_factory;
+
+    /**
      * The array of fields that are part of the database
      *
      * @var  array
@@ -275,7 +311,7 @@ class Media
      * Returns static::$fields
      *
      * @see static::fields
-     * @return type
+     * @return array
      */
     public static function getFields()
     {
@@ -286,11 +322,19 @@ class Media
      * Takes the data from a Comment to forge a Media object
      *
      * @param  object|array                  $comment  An array or object, the construct will use its keys to create a Media object
-     * @param  \Foolz\Foolfuuka\Model\Radix  $radix    The Radix in which the Media can be found
+     * @param  Radix $radix    The Radix in which the Media can be found
      * @param  boolean                       $op       If this media is referred to an opening post
      */
-    public function __construct($comment, \Foolz\Foolfuuka\Model\Radix $radix, $op = false)
+    public function __construct(Context $context, $comment, Radix $radix, $op = false)
     {
+        parent::__construct($context);
+        $this->dc = $context->getService('doctrine');
+        $this->preferences = $context->getService('preferences');
+        $this->config = $context->getService('config');
+        $this->uri = $context->getService('uri');
+        $this->radix_coll = $context->getService('foolfuuka.radix_collection');
+        $this->media_factory = $context->getService('foolfuuka.media_factory');
+
         $this->radix = $radix;
 
         foreach ($comment as $key => $item) {
@@ -350,192 +394,7 @@ class Media
         }
     }
 
-    /**
-     * Creates an empty Media object
-     *
-     * @param  \Foolz\Foolfuuka\Model\Radix  $radix  The Radix the Media will refer to
-     *
-     * @return \Foolz\Foolfuuka\Model\Media  An empty Media object, with all the values unset
-     */
-    public static function forgeEmpty(\Foolz\Foolfuuka\Model\Radix $radix)
-    {
-        $media = new \stdClass();
-        return new Media($media, $radix);
-    }
 
-    /**
-     * Return a Media object by a chosen column
-     *
-     * @param  \Foolz\Foolfuuka\Model\Radix  $radix  The Radix where the Media can be found
-     * @param  string                        $where  The database column to match on
-     * @param  string                        $value  The value searched for
-     * @param  boolean                       $op     If the object is for an opening post
-     *
-     * @return  \Foolz\Foolfuuka\Model\Media  The searched object
-     * @throws  MediaNotFoundException        If the media has not been found
-     */
-    protected static function p_getBy(\Foolz\Foolfuuka\Model\Radix $radix, $where, $value, $op = true)
-    {
-        $result = DC::qb()
-            ->select('*')
-            ->from($radix->getTable('_images'), 'ri')
-            ->where(DC::forge()->quoteIdentifier($where).' = '.DC::forge()->quote($value))
-            ->execute()
-            ->fetch();
-
-        if ($result) {
-            return new Media($result, $radix, $op);
-        }
-
-        throw new MediaNotFoundException(_i('The image could not be found.'));
-    }
-
-    /**
-     * Return a Media object by the media_id column
-     *
-     * @param  \Foolz\Foolfuuka\Model\Radix  $radix  The Radix where the Media can be found
-     * @param  string                        $value  The media ID
-     * @param  boolean                       $op     If the object is for an opening post
-     *
-     * @return  \Foolz\Foolfuuka\Model\Media  The searched object
-     * @throws  MediaNotFoundException        If the media has not been found
-     */
-    protected static function p_getByMediaId(\Foolz\Foolfuuka\Model\Radix $radix, $value, $op = false)
-    {
-        return static::getBy($radix, 'media_id', $value, $op);
-    }
-
-    /**
-     * Return a Media object by the media_hash column
-     *
-     * @param  \Foolz\Foolfuuka\Model\Radix  $radix  The Radix where the Media can be found
-     * @param  string                        $value  The media hash
-     * @param  boolean                       $op     If the object is for an opening post
-     *
-     * @return  \Foolz\Foolfuuka\Model\Media  The searched object
-     * @throws  MediaNotFoundException        If the media has not been found
-     */
-    protected static function p_getByMediaHash(\Foolz\Foolfuuka\Model\Radix $radix, $value, $op = false)
-    {
-        return static::getBy($radix, 'media_hash', $value, $op);
-    }
-
-    /**
-     * Return a Media object by the media_hash column
-     *
-     * @param  \Foolz\Foolfuuka\Model\Radix  $radix  The Radix where the Media can be found
-     * @param  string                        $value  The filename
-     * @param  boolean                       $op     If the object is for an opening post
-     *
-     * @return  \Foolz\Foolfuuka\Model\Media  The searched object
-     * @throws  MediaNotFoundException        If the media has not been found
-     */
-    protected static function p_getByFilename(\Foolz\Foolfuuka\Model\Radix $radix, $filename, $op = false)
-    {
-        $result = DC::qb()
-            ->select('media_id')
-            ->from($radix->getTable(), 'r')
-            ->where('r.media_orig = :media_orig')
-            ->setParameter(':media_orig', $filename)
-            ->execute()
-            ->fetch();
-
-        if ($result) {
-            return static::getByMediaId($radix, $result['media_id'], $op);
-        }
-
-        throw new MediaNotFoundException;
-    }
-
-    /**
-     * Takes an uploaded file and makes an object. It doesn't do the ->insert()
-     *
-     * @param  \Foolz\Foolfuuka\Model\Radix  $radix  The Radix where this Media belongs
-     *
-     * @return  \Foolz\Foolfuuka\Model\Media            A new Media object with the upload data
-     * @throws  MediaUploadNoFileException              If there's no file uploaded
-     * @throws  MediaUploadMultipleNotAllowedException  If there's multiple uploads
-     * @throws  MediaUploadInvalidException             If the file format is not allowed
-     */
-    protected static function p_forgeFromUpload(\Foolz\Foolfuuka\Model\Radix $radix)
-    {
-        $config = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::upload.config')
-            ->setParams([
-                'path' => APPPATH.'tmp/media_upload/',
-                'max_size' => \Auth::has_access('media.limitless_media') ? 0 : $radix->getValue('max_image_size_kilobytes') * 1024,
-                'randomize' => true,
-                'max_length' => 64,
-                'ext_whitelist' => ['jpg', 'jpeg', 'gif', 'png'],
-                'mime_whitelist' => ['image/jpeg', 'image/png', 'image/gif']
-            ])
-            ->execute();
-
-        \Upload::process($config->getParams());
-
-        if (count(\Upload::get_files()) === 0) {
-            throw new MediaUploadNoFileException(_i('You must upload an image or your image was too large.'));
-        }
-
-        if (count(\Upload::get_files()) !== 1) {
-            throw new MediaUploadMultipleNotAllowedException(_i('You can\'t upload multiple images.'));
-        }
-
-        if (\Upload::is_valid()) {
-            // save them according to the config
-            \Upload::save();
-        }
-
-        $file = \Upload::get_files(0);
-
-        if (!\Upload::is_valid()) {
-            if (in_array($file['errors'], UPLOAD_ERR_INI_SIZE)) {
-                throw new MediaUploadInvalidException(
-                    _i('The server is misconfigured: the FoolFuuka upload size should be lower than PHP\'s upload limit.'));
-            }
-
-            if (in_array($file['errors'], UPLOAD_ERR_PARTIAL)) {
-                throw new MediaUploadInvalidException(_i('You uploaded the file partially.'));
-            }
-
-            if (in_array($file['errors'], UPLOAD_ERR_CANT_WRITE)) {
-                throw new MediaUploadInvalidException(_i('The image couldn\'t be saved on the disk.'));
-            }
-
-            if (in_array($file['errors'], UPLOAD_ERR_EXTENSION)) {
-                throw new MediaUploadInvalidException(_i('A PHP extension broke and made processing the image impossible.'));
-            }
-
-            if (in_array($file['errors'], UPLOAD_ERR_MAX_SIZE)) {
-                throw new MediaUploadInvalidException(
-                    _i('You uploaded a too big file. The maxmimum allowed filesize is %s',
-                        $radix->getValue('max_image_size_kilobytes')));
-            }
-
-            if (in_array($file['errors'], UPLOAD_ERR_EXT_NOT_WHITELISTED)) {
-                throw new MediaUploadInvalidException(_i('You uploaded a file with an invalid extension.'));
-            }
-
-            if (in_array($file['errors'], UPLOAD_ERR_MAX_FILENAME_LENGTH)) {
-                throw new MediaUploadInvalidException(_i('You uploaded a file with a too long filename.'));
-            }
-
-            if (in_array($file['errors'], UPLOAD_ERR_MOVE_FAILED)) {
-                throw new MediaUploadInvalidException(_i('Your uploaded file couldn\'t me moved on the server.'));
-            }
-
-            throw new MediaUploadInvalidException(_i('Unexpected upload error.'));
-        }
-
-        $media = [
-            'media_filename' => $file['name'],
-            'media_size' => $file['size'],
-            'temp_path' => $file['saved_to'],
-            'temp_filename' => $file['saved_as'],
-            'temp_extension' => $file['extension']
-        ];
-
-        return new Media($media, $radix);
-    }
 
     /**
      * Returns the media_status and caches the result
@@ -572,10 +431,10 @@ class Media
      *
      * @return  string|null
      */
-    public function getRemoteMediaLink()
+    public function getRemoteMediaLink(Request $request)
     {
         if ($this->remote_media_link === false) {
-            $this->remote_media_link = $this->getRemoteLink();
+            $this->remote_media_link = $this->getRemoteLink($request);
         }
 
         return $this->remote_media_link;
@@ -588,10 +447,10 @@ class Media
      *
      * @return  string
      */
-    public function getMediaLink()
+    public function getMediaLink(Request $request)
     {
         if ($this->media_link === false) {
-            $this->media_link = $this->getLink(false);
+            $this->media_link = $this->getLink($request, false);
         }
 
         return $this->media_link;
@@ -604,10 +463,10 @@ class Media
      *
      * @return  string
      */
-    public function getThumbLink()
+    public function getThumbLink(Request $request)
     {
         if ($this->thumb_link === false) {
-            $this->thumb_link = $this->getLink(true);
+            $this->thumb_link = $this->getLink($request, true);
         }
 
         return $this->thumb_link;
@@ -628,7 +487,7 @@ class Media
     /**
      * Returns the filename escaped for HTML display and caches the result
      *
-     * @return type
+     * @return string
      */
     public function getMediaFilenameProcessed()
     {
@@ -671,7 +530,7 @@ class Media
             return null;
         }
 
-        return \Preferences::get('foolfuuka.boards.directory').'/'.$this->radix->shortname.'/'
+        return $this->preferences->get('foolfuuka.boards.directory').'/'.$this->radix->shortname.'/'
             .($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
     }
 
@@ -682,7 +541,7 @@ class Media
      *
      * @return  null|string  Null if not available, string of the url if available
      */
-    public function getLink($thumbnail = false)
+    public function getLink(Request $request, $thumbnail = false)
     {
         $before = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::getLink.call.before.method.body')
             ->setObject($this)
@@ -696,7 +555,7 @@ class Media
 
         $image = null;
 
-        if (Config::get('foolz/foolfuuka', 'config', 'media.filecheck') === true) {
+        if ($this->config->get('foolz/foolfuuka', 'config', 'media.filecheck') === true) {
             // locate the image
             if ($thumbnail && file_exists($this->getDir($thumbnail)) !== false) {
                 if ($this->op == 1) {
@@ -735,12 +594,12 @@ class Media
 
         if ($image !== null) {
             $media_cdn = [];
-            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' && \Preferences::get('foolfuuka.boards.media_balancers_https')) {
-                $balancers = \Preferences::get('foolfuuka.boards.media_balancers_https');
+            if ($request->isSecure() && $this->preferences->get('foolfuuka.boards.media_balancers_https')) {
+                $balancers = $this->preferences->get('foolfuuka.boards.media_balancers_https');
             }
 
-            if (!isset($balancers) && \Preferences::get('foolfuuka.boards.media_balancers')) {
-                $balancers = \Preferences::get('foolfuuka.boards.media_balancers');
+            if (!isset($balancers) && $this->preferences->get('foolfuuka.boards.media_balancers')) {
+                $balancers = $this->preferences->get('foolfuuka.boards.media_balancers');
             }
 
             if (isset($balancers)) {
@@ -752,7 +611,7 @@ class Media
                     .($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
             }
 
-            return \Preferences::get('foolfuuka.boards.url').'/'.$this->radix->shortname.'/'
+            return $this->preferences->get('foolfuuka.boards.url').'/'.$this->radix->shortname.'/'
                 .($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
         }
 
@@ -768,18 +627,20 @@ class Media
      *
      * @return  null|string  remote URL of local URL if not compatible with remote URL (see getLink() for return values)
      */
-    public function getRemoteLink()
+    public function getRemoteLink(Request $request)
     {
-        if ($this->radix->archive && ($this->radix->getValue('images_url') === false || $this->radix->getValue('images_url') !== "")) {
+        if ($this->radix->archive && ($this->radix->getValue('images_url') === false
+                || $this->radix->getValue('images_url') !== "")) {
             // ignore webkit and opera user agents
-            if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/(opera|webkit)/i', $_SERVER['HTTP_USER_AGENT'])) {
+            $ua = $request->headers->get('User-Agent');
+            if ($ua && preg_match('/(opera|webkit)/i', $ua)) {
                 return $this->radix->getValue('images_url').$this->media_orig;
             }
 
-            return \Uri::create([$this->radix->shortname, 'redirect']).$this->media_orig;
+            return $this->uri->create([$this->radix->shortname, 'redirect']).$this->media_orig;
         } else {
             if (file_exists($this->getDir()) !== false) {
-                return $this->getLink();
+                return $this->getLink($request);
             }
         }
     }
@@ -879,7 +740,7 @@ class Media
     public function p_ban($global = false)
     {
         if ($global === false) {
-            DC::qb()
+            $this->dc->qb()
                 ->update($this->radix->getTable('_images'))
                 ->set('banned', 1)
                 ->where('media_id = :media_id')
@@ -890,7 +751,7 @@ class Media
             return;
         }
 
-        $result = DC::qb()
+        $result = $this->dc->qb()
             ->select('COUNT(*) as count')
             ->from($this->radix->getTable('_images'), 'ri')
             ->where('media_hash = :md5')
@@ -899,16 +760,16 @@ class Media
             ->fetch();
 
         if (!$result['count']) {
-            DC::forge()
+            $this->dc->getConnection()
                 ->insert('banned_md5', ['md5' => $this->media_hash])
                 ->execute();
         }
 
-        foreach (\Radix::getAll() as $radix) {
+        foreach ($this->radix_coll->getAll() as $radix) {
             try {
-                $media = \Media::getByMediaHash($radix, $this->media_hash);
+                $media = $this->media_factory->getByMediaHash($radix, $this->media_hash);
 
-                DC::qb()
+                $this->dc->qb()
                     ->update($radix->getTable('_images'))
                     ->set('banned', 1)
                     ->where('media_id = :media_id')
@@ -917,7 +778,7 @@ class Media
 
                 $media->delete(true, true, true);
             } catch (MediaNotFoundException $e) {
-                DC::forge()
+                $this->dc->getConnection()
                     ->insert($radix->getTable('_images'), ['media_hash' => $this->media_hash, 'banned' => 1]);
             }
         }
@@ -967,7 +828,7 @@ class Media
         $do_full = true;
 
         try {
-            $duplicate = static::getByMediaHash($this->radix, $this->media_hash);
+            $duplicate = $this->media_factory->getByMediaHash($this->radix, $this->media_hash);
 
             // we want the current media to work with the same filenames as previously stored
             $this->media_id = $duplicate->media_id;
@@ -985,7 +846,7 @@ class Media
                 }
 
                 // we don't have to worry about archives with weird timestamps, we can't post images there
-                $duplicate_entry = DC::qb()
+                $duplicate_entry = $this->dc->qb()
                     ->select('COUNT(*) as count, MAX(timestamp) as max_timestamp')
                     ->from($this->radix->getTable(), 'r')
                     ->where('media_id = :media_id')
@@ -1064,7 +925,7 @@ class Media
             }
 
             if (!file_exists($this->pathFromFilename(true, $is_op, true))) {
-                DC::forge()->insert($this->radix->getTable('_images'), [
+                $this->dc->getConnection()->insert($this->radix->getTable('_images'), [
                         'media_hash' => $this->media_hash,
                         'media' => $this->media_orig,
                         'preview_op' => null,
@@ -1073,7 +934,7 @@ class Media
                         'banned' => 0,
                     ]);
 
-                $this->media_id = DC::forge()->lastInsertId($this->radix->getTable('_images_doc_id_seq'));
+                $this->media_id = $this->dc->getConnection()->lastInsertId($this->radix->getTable('_images_doc_id_seq'));
 
                 throw new MediaThumbnailCreationException(_i('The thumbnail failed to generate.'));
             }
@@ -1104,7 +965,7 @@ class Media
             }
 
             if (!$this->media_id) {
-                DC::forge()->insert($this->radix->getTable('_images'), [
+                $this->dc->getConnection()->insert($this->radix->getTable('_images'), [
                     'media_hash' => $this->media_hash,
                     'media' => $this->media_orig,
                     'preview_op' => $this->op ? $this->preview_orig : null,
@@ -1113,9 +974,9 @@ class Media
                     'banned' => 0,
                 ]);
 
-                $this->media_id = DC::forge()->lastInsertId($this->radix->getTable('_images_media_id_seq'));
+                $this->media_id = $this->dc->getConnection()->lastInsertId($this->radix->getTable('_images_media_id_seq'));
             } else {
-                $query = DC::qb()
+                $query = $this->dc->qb()
                     ->update($this->radix->getTable('_images'));
                 if ($this->media === null) {
                     $query->set('media', ':media_orig')
@@ -1150,7 +1011,7 @@ class Media
      */
     public function p_pathFromFilename($thumbnail = false, $is_op = false, $with_filename = false)
     {
-        $dir = \Preferences::get('foolfuuka.boards.directory').'/'.$this->radix->shortname.'/'.
+        $dir = $this->preferences->get('foolfuuka.boards.directory').'/'.$this->radix->shortname.'/'.
             ($thumbnail ? 'thumb' : 'image').'/';
 
         // we first check if we have media/preview_op/preview_reply available to reuse the value

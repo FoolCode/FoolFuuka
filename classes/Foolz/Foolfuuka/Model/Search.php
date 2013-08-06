@@ -2,9 +2,12 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use Foolz\Foolframe\Model\Logger;
+use Foolz\Foolframe\Model\Preferences;
+use Foolz\Inet\Inet;
 use Foolz\SphinxQL\SphinxQL;
 use Foolz\SphinxQL\Connection as SphinxConnnection;
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\Context;
 
 class SearchException extends \Exception {}
 class SearchRequiresSphinxException extends SearchException {}
@@ -14,6 +17,36 @@ class SearchEmptyResultException extends SearchException {}
 
 class Search extends Board
 {
+    /**
+     * @var Logger
+     */
+    protected $logger;
+    
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
+
+    /**
+     * @var RadixCollection
+     */
+    protected $radix_coll;
+
+    /**
+     * @var MediaFactory
+     */
+    protected $media_factory;
+
+    public function __construct(Context $context)
+    {
+        parent::__construct($context);
+
+        $this->logger = $context->getService('logger');
+        $this->preferences = $context->getService('preferences');
+        $this->radix_coll = $context->getService('foolfuuka.radix_collection');
+        $this->media_factory = $context->getService('foolfuuka.media_factory');
+    }
+
     /**
      * Returns the structure for the search form
      *
@@ -177,7 +210,7 @@ class Search extends Board
      */
     protected function p_getSearchComments()
     {
-        \Profiler::mark('Board::getSearchComments Start');
+        $this->profiler->log('Board::getSearchComments Start');
         extract($this->options);
 
         // set all empty fields to null
@@ -195,7 +228,7 @@ class Search extends Board
 
         if ($args['boards'] !== null) {
             foreach ($args['boards'] as $board) {
-                $b = \Radix::getByShortname($board);
+                $b = $this->radix_coll->getByShortname($board);
                 if ($b) {
                     $boards[] = $b;
                 }
@@ -204,7 +237,7 @@ class Search extends Board
 
         // search all boards if none selected
         if (count($boards) == 0) {
-            $boards = \Radix::getAll();
+            $boards = $this->radix_coll->getAll();
         }
 
         // if image is set, get either the media_hash or media_id
@@ -216,12 +249,12 @@ class Search extends Board
             // if board is set, retrieve media_id
             if ($this->radix !== null) {
                 try {
-                    $media = \Media::getByMediaHash($this->radix, $args['image']);
+                    $media = $this->media_factory->getByMediaHash($this->radix, $args['image']);
                 } catch (MediaNotFoundException $e) {
                     $this->comments_unsorted = [];
                     $this->comments = [];
 
-                    \Profiler::mark('Board::getSearchComments Ended Prematurely');
+                    $this->profiler->log('Board::getSearchComments Ended Prematurely');
                     throw new SearchEmptyResultException(_i('No results found.'));
                 }
 
@@ -229,12 +262,12 @@ class Search extends Board
             }
         }
 
-        if ($this->radix === null && !\Preferences::get('foolfuuka.sphinx.global')) {
+        if ($this->radix === null && !$this->preferences->get('foolfuuka.sphinx.global')) {
             // global search requires sphinx
             throw new SearchRequiresSphinxException(_i('Sorry, this action requires the Sphinx to be installed and running.'));
-        } elseif (($this->radix === null && \Preferences::get('foolfuuka.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx)) {
+        } elseif (($this->radix === null && $this->preferences->get('foolfuuka.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx)) {
             // configure sphinx connection params
-            $sphinx = explode(':', \Preferences::get('foolfuuka.sphinx.listen'));
+            $sphinx = explode(':', $this->preferences->get('foolfuuka.sphinx.listen'));
             $conn = new SphinxConnnection();
             $conn->setConnectionParams($sphinx[0], $sphinx[1]);
             $conn->silenceConnectionWarning(true);
@@ -312,7 +345,7 @@ class Search extends Board
             }
 
             if (\Auth::has_access('comment.see_ip') && $args['poster_ip'] !== null) {
-                $query->where('pip', (int) \Foolz\Inet\Inet::ptod($args['poster_ip']));
+                $query->where('pip', (int) Inet::ptod($args['poster_ip']));
             }
 
             if ($args['filename'] !== null) {
@@ -395,14 +428,14 @@ class Search extends Board
             // set sphinx options
             $query->limit($limit)
                 ->offset((($page * $limit) - $limit) >= 5000 ? 4999 : ($page * $limit) - $limit)
-                ->option('max_matches', \Preferences::get('foolfuuka.sphinx.max_matches', 5000))
+                ->option('max_matches', $this->preferences->get('foolfuuka.sphinx.max_matches', 5000))
                 ->option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
 
             // submit query
             try {
                 $search = $query->execute();
             } catch(\Foolz\SphinxQL\DatabaseException $e) {
-                \Log::error('Search Error: '.$e->getMessage());
+                $this->logger->error('Search Error: '.$e->getMessage());
                 throw new SearchInvalidException(_i(''));
             }
 
@@ -421,17 +454,17 @@ class Search extends Board
             $sql = [];
 
             foreach ($search as $doc => $result) {
-                $board = \Radix::getById($result['board']);
-                $sql[] = DC::qb()
+                $board = $this->radix_coll->getById($result['board']);
+                $sql[] = $this->db->qb()
                     ->select('*, '.$result['board'].' AS board_id')
                     ->from($board->getTable(), 'r')
                     ->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
                     ->leftJoin('r', $board->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
-                    ->where('doc_id = '.DC::forge()->quote($result['id']))
+                    ->where('doc_id = '.$this->db->getConnection()->quote($result['id']))
                     ->getSQL();
             }
 
-            $result = DC::forge()
+            $result = $this->db->getConnection()
                 ->executeQuery(implode(' UNION ', $sql))
                 ->fetchAll();
         } else {

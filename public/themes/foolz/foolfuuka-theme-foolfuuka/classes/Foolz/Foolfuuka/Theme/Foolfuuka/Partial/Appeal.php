@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-class Appeal extends \Foolz\Theme\View
+class Appeal extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {

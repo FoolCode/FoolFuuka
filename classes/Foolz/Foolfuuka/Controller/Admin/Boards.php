@@ -5,6 +5,7 @@ namespace Foolz\Foolfuuka\Controller\Admin;
 use Foolz\Foolframe\Model\DoctrineConnection;
 use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
 use Foolz\Foolframe\Model\Validation\Validator;
+use Foolz\Foolfuuka\Model\RadixCollection;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Boards extends \Foolz\Foolframe\Controller\Admin
 {
+    /**
+     * @var RadixCollection
+     */
+    protected $radix_coll;
+
     public function before()
     {
         // determine if the user is allowed access to these methods
@@ -22,6 +28,8 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         }
 
         parent::before();
+
+        $this->radix_coll = $this->getContext()->getService('foolfuuka.radix_collection');
 
         $this->param_manager->setParam('controller_title', _i('Boards'));
     }
@@ -42,14 +50,14 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
     {
         $this->param_manager->setParam('method_title', _i('Manage'));
         $this->builder->createPartial('body', 'boards/manage')
-            ->getParamManager()->setParam('boards', \Radix::getAll());
+            ->getParamManager()->setParam('boards', $this->radix_coll->getAll());
 
         return new Response($this->builder->build());
     }
 
     public function action_board($shortname = null)
     {
-        $data['form'] = \Radix::structure();
+        $data['form'] = $this->radix_coll->structure();
 
         if ($this->getPost() && !\Security::check_token()) {
             $this->notices->set('warning', _i('The security token was not found. Please try again.'));
@@ -60,7 +68,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
                 $this->notices->set('warning', $result['error']);
             } else {
                 // it's actually fully checked, we just have to throw it in DB
-                \Radix::save($result['success']);
+                $this->radix_coll->save($result['success']);
 
                 if (is_null($shortname)) {
                     $this->notices->setFlash('success', _i('New board created!'));
@@ -75,7 +83,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             }
         }
 
-        $board = \Radix::getByShortname($shortname);
+        $board = $this->radix_coll->getByShortname($shortname);
         if ($board === false) {
             throw new NotFoundHttpException;
         }
@@ -91,7 +99,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
     function action_add()
     {
-        $data['form'] = \Radix::structure();
+        $data['form'] = $this->radix_coll->structure();
 
         if ($this->getPost() && !\Security::check_token()) {
             $this->notices->set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
@@ -101,7 +109,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
                 $this->notices->set('warning', $result['error']);
             } else {
                 // it's actually fully checked, we just have to throw it in DB
-                \Radix::save($result['success']);
+                $this->radix_coll->save($result['success']);
                 $this->notices->setFlash('success', _i('New board created!'));
                 return $this->redirect('admin/boards/board/'.$result['success']['shortname']);
             }
@@ -120,7 +128,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
     function action_delete($id = 0)
     {
-        $board = \Radix::getById($id);
+        $board = $this->radix_coll->getById($id);
         if ($board == false) {
             throw new NotFoundHttpException;
         }
@@ -417,7 +425,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'max_matches' => $this->preferences->get('foolfuuka.sphinx.max_matches', 5000)
         ];
 
-        $data['boards'] = \Radix::getAll();
+        $data['boards'] = $this->radix_coll->getAll();
         $data['example'] = current($data['boards']);
 
         $this->param_manager->setParam('method_title', [_i('Search'), 'Sphinx', _i('Configuration File'), _i('Generate')]);

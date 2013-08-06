@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
+use Foolz\Foolfuuka\Model\Board;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -15,7 +16,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
         $options = [
             'per_page' => 24,
             'per_thread' => 5,
-            'order' => ($this->_radix->archive ? 'by_thread' : 'by_post')
+            'order' => ($this->radix->archive ? 'by_thread' : 'by_post')
         ];
 
         return $this->latest($page, $options);
@@ -32,7 +33,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
     public function radix_submit()
     {
         // adapter
-        if (!\Input::post()) {
+        if (!$this->getPost()) {
             return $this->error(_i('You aren\'t sending the required fields for creating a new message.'));
         }
 
@@ -40,17 +41,17 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
             return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
         }
 
-        if (\Input::post('reply_delete')) {
-            foreach (\Input::post('delete') as $idx => $doc_id) {
+        if ($this->getPost('reply_delete')) {
+            foreach ($this->getPost('delete') as $idx => $doc_id) {
                 try {
-                    $comments = \Board::forge()
+                    $comments = Board::forge($this->getContext())
                         ->getPost()
                         ->setOptions('doc_id', $doc_id)
-                        ->setRadix($this->_radix)
+                        ->setRadix($this->radix)
                         ->getComments();
 
                     $comment = current($comments);
-                    $comment->delete(\Input::post('delpass'));
+                    $comment->delete($this->getPost('delpass'));
                 } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
                     return $this->error($e->getMessage(), 404);
                 } catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e) {
@@ -60,17 +61,18 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
             $this->builder->createLayout('redirect')
                 ->getParamManager()
-                ->setParam('url', \Uri::create([$this->_radix->shortname, 'thread', $comment->thread_num]));
+                ->setParam('url', $this->getUri()->create([$this->radix->shortname, 'thread', $comment->thread_num]));
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
             return new Response($this->builder->build());
         }
 
-        if (\Input::post('reply_report')) {
+        if ($this->getPost('reply_report')) {
 
-            foreach (\Input::post('delete') as $idx => $doc_id) {
+            foreach ($this->getPost('delete') as $idx => $doc_id) {
                 try {
-                    \Report::add($this->_radix, $doc_id, \Input::post('KOMENTO'));
+                    $this->getContext()->getService('foolfuuka.report_collection')
+                        ->add($this->radix, $doc_id, $this->getPost('KOMENTO'));
                 } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
                     return $this->error($e->getMessage(), 404);
                 }
@@ -78,7 +80,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
             $this->builder->createLayout('redirect')
                 ->getParamManager()
-                ->setParam('url', \Uri::create($this->_radix->shortname.'/thread/'.\Input::post('parent')));
+                ->setParam('url', $this->getUri()->create($this->radix->shortname.'/thread/'.$this->getPost('parent')));
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
             return new Response($this->builder->build());
@@ -97,7 +99,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
         $data = [];
 
-        $post = \Input::post();
+        $post = $this->getPost();
 
         if (isset($post['parent'])) {
             $data['thread_num'] = $post['parent'];
@@ -139,7 +141,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
         if (count(\Upload::get_files())) {
             try {
-                $media = \Media::forgeFromUpload($this->_radix);
+                $media = $this->media_factory->forgeFromUpload($this->radix);
                 $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
             } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
                 $media = null;

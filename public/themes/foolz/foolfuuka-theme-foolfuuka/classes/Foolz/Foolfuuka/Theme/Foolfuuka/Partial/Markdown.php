@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-class Markdown extends \Foolz\Theme\View
+class Markdown extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {

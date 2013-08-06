@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Admin\Partial\Boards;
 
-class SphinxConfig extends \Foolz\Theme\View
+class SphinxConfig extends \Foolz\Foolframe\View\View
 {
     public function toString()
     {

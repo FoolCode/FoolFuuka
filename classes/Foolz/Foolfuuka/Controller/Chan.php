@@ -3,9 +3,23 @@
 namespace Foolz\Foolfuuka\Controller;
 
 use Foolz\Foolframe\Controller\Common;
+use Foolz\Foolframe\Model\Config;
+use Foolz\Foolframe\Model\Preferences;
+use Foolz\Foolframe\Model\Uri;
 use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
 use Foolz\Foolframe\Model\Validation\Validator;
-use Foolz\Foolfuuka\Theme\Foolfuuka\Layout\Redirect;
+use Foolz\Foolframe\Model\Cookie;
+use Foolz\Foolfuuka\Model\Ban;
+use Foolz\Foolfuuka\Model\Board;
+use Foolz\Foolfuuka\Model\CommentFactory;
+use Foolz\Foolfuuka\Model\CommentInsert;
+use Foolz\Foolfuuka\Model\Media;
+use Foolz\Foolfuuka\Model\MediaFactory;
+use Foolz\Foolfuuka\Model\Radix;
+use Foolz\Foolfuuka\Model\RadixCollection;
+use Foolz\Foolfuuka\Model\Search;
+use Foolz\Inet\Inet;
+use Foolz\Profiler\Profiler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,17 +67,60 @@ class Chan extends Common
     /**
      * The currently selected radix
      *
-     * @var  \Foolz\Foolfuuka\Model\Radix|null
+     * @var  Radix|null
      */
-    protected $_radix = null;
+    protected $radix = null;
+
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
+
+    /**
+     * @var Uri
+     */
+    protected $uri;
+
+    /**
+     * @var Profiler
+     */
+    protected $profiler;
+
+    /**
+     * @var RadixCollection
+     */
+    protected $radix_coll;
+
+    /**
+     * @var MediaFactory
+     */
+    protected $media_factory;
+
+    /**
+     * @var CommentFactory
+     */
+    protected $comment_factory;
 
     public function before()
     {
+        $this->config = $this->getContext()->getService('config');
+        $this->preferences = $this->getContext()->getService('preferences');
+        $this->uri = $this->getContext()->getService('uri');
+        $this->profiler = $this->getContext()->getService('profiler');
+        $this->radix_coll = $this->getContext()->getService('foolfuuka.radix_collection');
+        $this->media_factory = $this->getContext()->getService('foolfuuka.media_factory');
+        $this->comment_factory = $this->getContext()->getService('foolfuuka.comment_factory');
+
         // this has already been forged in the foolfuuka bootstrap
         $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 
         try {
-            $theme_name = \Input::get('theme', \Cookie::get('theme')) ? : \Preferences::get('foolfuuka.theme.default');
+            $theme_name = $this->getQuery('theme', $this->getCookie('theme')) ? : $this->preferences->get('foolfuuka.theme.default');
 
             $theme_name_exploded = explode('/', $theme_name);
             if (count($theme_name_exploded) >=2) {
@@ -94,12 +151,14 @@ class Chan extends Common
             }
         }
 
-        $pass = \Cookie::get('reply_password', '');
-        $name = \Cookie::get('reply_name');
-        $email = \Cookie::get('reply_email');
+        $pass = $this->getCookie('reply_password', '');
+        $name = $this->getCookie('reply_name');
+        $email = $this->getCookie('reply_email');
 
         // KEEP THIS IN SYNC WITH THE ONE IN THE POSTS ADMIN PANEL
         $to_bind = [
+            'context' => $this->getContext(),
+            'request' => $this->getRequest(),
             'user_name' => $name,
             'user_email' => $email,
             'user_pass' => $pass,
@@ -113,13 +172,13 @@ class Chan extends Common
                 'user_name' => $name,
                 'user_email' => $email,
                 'user_pass' => $pass,
-                'site_url'  => \Uri::base(),
-                'default_url'  => \Uri::base(),
-                'archive_url'  => \Uri::base(),
-                'system_url'  => \Uri::base(),
-                'api_url'   => \Uri::base(),
-                'cookie_domain' => \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolframe', 'config', 'config.cookie_domain'),
-                'cookie_prefix' => \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolframe', 'config', 'config.cookie_prefix'),
+                'site_url'  => $this->uri->base(),
+                'default_url'  => $this->uri->base(),
+                'archive_url'  => $this->uri->base(),
+                'system_url'  => $this->uri->base(),
+                'api_url'   => $this->uri->base(),
+                'cookie_domain' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_domain'),
+                'cookie_prefix' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_prefix'),
                 'selected_theme' => $theme_name,
                 'csrf_token_key' => \Config::get('security.csrf_token_key'),
                 'images' => [
@@ -162,12 +221,12 @@ class Chan extends Common
         // let's see if we hit a radix route
         if ($request->attributes->get('radix_shortname') !== null) {
             // the radix for sure exists, we came here from the defined routes after all
-            $this->_radix = \Radix::setSelectedByShortname($request->attributes->get('radix_shortname'));
-            $this->param_manager->setParam('radix', $this->_radix);
+            $this->radix = $this->radix_coll->getByShortname($request->attributes->get('radix_shortname'));
+            $this->param_manager->setParam('radix', $this->radix);
             $backend_vars = $this->param_manager->getParam('backend_vars');
-            $backend_vars['board_shortname'] = $this->_radix->shortname;
+            $backend_vars['board_shortname'] = $this->radix->shortname;
             $this->param_manager->setParam('backend_vars', $backend_vars);
-            $this->builder->getProps()->addTitle($this->_radix->getValue('formatted_title'));
+            $this->builder->getProps()->addTitle($this->radix->getValue('formatted_title'));
 
             // methods callable with a radix are prefixed with radix_
             if (method_exists($this, 'radix_'.$method)) {
@@ -178,9 +237,9 @@ class Chan extends Common
             return [$this, 'action_404', []];
         }
 
-        $this->_radix = null;
+        $this->radix = null;
         $this->param_manager->setParam('radix', null);
-        $this->builder->getProps()->addTitle(\Preferences::get('foolfuuka.gen.website_title'));
+        $this->builder->getProps()->addTitle($this->preferences->get('foolfuuka.gen.website_title'));
 
         if (method_exists($this, 'action_'.$method)) {
             return [$this, 'action_'.$method, $parameters];
@@ -240,12 +299,12 @@ class Chan extends Common
 
         $theme = $vendor.'/'.$theme.'/'.$style;
 
-        \Cookie::set('theme', $theme, 31536000, '/');
+        $this->response->headers->setCookie(new Cookie($this->getContext(), 'theme', $theme, 31536000));
 
-        if (\Input::referrer()) {
-            $url = \Input::referrer();
+        if ($this->getRequest()->headers->get('referer')) {
+            $url = $this->getRequest()->headers->get('referer');
         } else {
-            $url = \Uri::base();
+            $url = $this->uri->base();
         }
 
         $this->builder->createLayout('redirect')
@@ -256,14 +315,14 @@ class Chan extends Common
         return $this->response->setContent($this->builder->build());
     }
 
-    public function action_language($theme = 'en_EN')
+    public function action_language($language = 'en_EN')
     {
-        \Cookie::set('language', $theme, 31536000);
+        $this->response->headers->setCookie(new Cookie($this->getContext(), 'language', $language, 31536000));
 
-        if (\Input::referrer()) {
-            $url = \Input::referrer();
+        if ($this->getRequest()->headers->get('referer')) {
+            $url = $this->getRequest()->headers->get('referer');
         } else {
-            $url = \Uri::base();
+            $url = $this->uri->base();
         }
 
         $this->builder->createLayout('redirect')
@@ -284,19 +343,19 @@ class Chan extends Common
     public function radix_page_mode($_mode = 'by_post')
     {
         $mode = $_mode === 'by_thread' ? 'by_thread' : 'by_post';
-        $type = $this->_radix->archive ? 'archive' : 'board';
-        \Cookie::set('default_theme_page_mode_'.$type, $mode);
+        $type = $this->radix->archive ? 'archive' : 'board';
+        $this->response->headers->setCookie(new Cookie($this->getContext(), 'default_theme_page_mode_'.$type, $mode));
 
-        return new RedirectResponse(\Uri::create($this->_radix->shortname));
+        return new RedirectResponse($this->uri->create($this->radix->shortname));
     }
 
     public function radix_page($page = 1)
     {
-        $order = \Cookie::get('default_theme_page_mode_'. ($this->_radix->archive ? 'archive' : 'board')) === 'by_thread'
+        $order = $this->getCookie('default_theme_page_mode_'. ($this->radix->archive ? 'archive' : 'board')) === 'by_thread'
             ? 'by_thread' : 'by_post';
 
         $options = [
-            'per_page' => $this->_radix->getValue('threads_per_page'),
+            'per_page' => $this->radix->getValue('threads_per_page'),
             'per_thread' => 5,
             'order' => $order
         ];
@@ -307,7 +366,7 @@ class Chan extends Common
     public function radix_ghost($page = 1)
     {
         $options = [
-            'per_page' => $this->_radix->getValue('threads_per_page'),
+            'per_page' => $this->radix->getValue('threads_per_page'),
             'per_thread' => 5,
             'order' => 'ghost'
         ];
@@ -317,12 +376,12 @@ class Chan extends Common
 
     protected function latest($page = 1, $options = [])
     {
-        \Profiler::mark('Controller Chan::latest Start');
+        $this->profiler->log('Controller Chan::latest Start');
 
         try {
-            $board = \Board::forge()
+            $board = Board::forge($this->getContext())
                 ->getLatest()
-                ->setRadix($this->_radix)
+                ->setRadix($this->radix)
                 ->setPage($page)
                 ->setOptions($options);
 
@@ -330,7 +389,7 @@ class Chan extends Common
             $board->getComments();
             $board->getCount();
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
-            \Profiler::mark('Controller Chan::latest End Prematurely');
+            $this->profiler->log('Controller Chan::latest End Prematurely');
 
             return $this->error($e->getMessage());
         }
@@ -362,22 +421,22 @@ class Chan extends Common
             'is_page' => true,
             'order' => $options['order'],
             'pagination' => [
-                'base_url' => \Uri::create([$this->_radix->shortname, $options['order'] === 'ghost' ? 'ghost' :
+                'base_url' => $this->uri->create([$this->radix->shortname, $options['order'] === 'ghost' ? 'ghost' :
                     'page']),
                 'current_page' => $page,
                 'total' => $board->getPages()
             ],
-            'disable_image_upload' => $this->_radix->getValue('op_image_upload_necessity') === 'never'
+            'disable_image_upload' => $this->radix->getValue('op_image_upload_necessity') === 'never'
         ]);
 
-        if (!$this->_radix->archive) {
+        if (!$this->radix->archive) {
             $this->builder->createPartial('tools_new_thread_box', 'tools_reply_box');
         }
 
-        \Profiler::mark_memory($this, 'Controller Chan $this');
-        \Profiler::mark('Controller Chan::latest End');
+        $this->profiler->logMem('Controller Chan $this', $this);
+        $this->profiler->log('Controller Chan::latest End');
 
-         return $this->response->setContent($this->builder->build());
+        return $this->response->setContent($this->builder->build());
     }
 
     public function radix_thread($num = 0)
@@ -387,7 +446,7 @@ class Chan extends Common
 
     public function radix_last50($num = 0)
     {
-        \Response::redirect($this->_radix->shortname.'/last/50/'.$num);
+        return new RedirectResponse($this->uri->create($this->radix->shortname.'/last/50/'.$num));;
     }
 
     public function radix_last($limit = 0, $num = 0)
@@ -401,13 +460,13 @@ class Chan extends Common
 
     protected function thread($num = 0, $options = [])
     {
-        \Profiler::mark('Controller Chan::thread Start');
+        $this->profiler->log('Controller Chan::thread Start');
         $num = str_replace('S', '', $num);
 
         try {
-            $board = \Board::forge()
+            $board = Board::forge($this->getContext())
                 ->getThread($num)
-                ->setRadix($this->_radix)
+                ->setRadix($this->radix)
                 ->setOptions($options);
 
             // get the current status of the thread
@@ -445,7 +504,7 @@ class Chan extends Common
                 $backend_vars['thread_id'] = $num;
                 $backend_vars['latest_timestamp'] = $latest_timestamp;
                 $backend_vars['latest_doc_id'] = $latest_doc_id;
-                $backend_vars['board_shortname'] = $this->_radix->shortname;
+                $backend_vars['board_shortname'] = $this->radix->shortname;
 
                 if (isset($options['last_limit']) && $options['last_limit']) {
                     $backend_vars['last_limit'] = $options['last_limit'];
@@ -457,16 +516,16 @@ class Chan extends Common
                     $this->builder->createPartial('tools_reply_box', 'tools_reply_box');
                 }
 
-                \Profiler::mark_memory($this, 'Controller Chan $this');
-                \Profiler::mark('Controller Chan::thread End');
+                $this->profiler->logMem('Controller Chan $this', $this);
+                $this->profiler->log('Controller Chan::thread End');
 
                 $this->response->setContent($this->builder->build());
             }
         } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
-            \Profiler::mark('Controller Chan::thread End Prematurely');
+            $this->profiler->log('Controller Chan::thread End Prematurely');
             return $this->error($e->getMessage());
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
-            \Profiler::mark('Controller Chan::thread End Prematurely');
+            $this->profiler->log('Controller Chan::thread End Prematurely');
             return $this->error($e->getMessage());
         }
 
@@ -476,9 +535,9 @@ class Chan extends Common
     public function radix_gallery($page = 1)
     {
         try {
-            $board = \Board::forge()
+            $board = Board::forge($this->getContext())
                 ->getThreads()
-                ->setRadix($this->_radix)
+                ->setRadix($this->radix)
                 ->setPage($page)
                 ->setOptions('per_page', 100);
 
@@ -492,7 +551,7 @@ class Chan extends Common
 
             $this->param_manager->setParams([
                 'pagination' => [
-                    'base_url' => \Uri::create([$this->_radix->shortname, 'gallery']),
+                    'base_url' => $this->uri->create([$this->radix->shortname, 'gallery']),
                     'current_page' => $page,
                     'total' => $board->getPages()
                 ]
@@ -507,17 +566,17 @@ class Chan extends Common
     public function radix_post($num = 0)
     {
         try {
-            if (\Input::post('post') || !\Board::isValidPostNumber($num)) {
+            if ($this->getPost('post') || !Board::isValidPostNumber($num)) {
                 // obtain post number and unset search string
-                preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', \Input::post('post') ? : $num, $post);
+                preg_match('/(?:^|\/)(\d+)(?:[_,]([0-9]*))?/', $this->getPost('post') ? : $num, $post);
                 unset($post[0]);
 
-                return new RedirectResponse(\Uri::create([$this->_radix->shortname, 'post', implode('_', $post)]));
+                return new RedirectResponse($this->uri->create([$this->radix->shortname, 'post', implode('_', $post)]));
             }
 
-            $board = \Board::forge()
+            $board = Board::forge($this->getContext())
                 ->getPost()
-                ->setRadix($this->_radix)
+                ->setRadix($this->radix)
                 ->setOptions('num', $num);
 
             $comments = $board->getComments();
@@ -525,7 +584,7 @@ class Chan extends Common
             // it always returns an array
             $comment = current($comments);
 
-            $redirect =  \Uri::create($this->_radix->shortname.'/thread/'.$comment->thread_num.'/');
+            $redirect =  $this->uri->create($this->radix->shortname.'/thread/'.$comment->thread_num.'/');
 
             if (!$comment->op) {
                 $redirect .= '#'.$comment->num.($comment->subnum ? '_'.$comment->subnum :'');
@@ -552,7 +611,7 @@ class Chan extends Common
     public function radix_image()
     {
         // support non-urlsafe hash
-        $uri = \Uri::segments();
+        $uri = $this->uri->segments();
         array_shift($uri);
         array_shift($uri);
 
@@ -564,7 +623,7 @@ class Chan extends Common
         // obtain actual media hash (non-urlsafe)
         $hash = mb_substr($imploded_uri, 0, 22);
         if (strpos($hash, '/') !== false || strpos($hash, '+') !== false) {
-            $hash = \Media::urlsafe_b64encode(\Media::urlsafe_b64decode($hash));
+            $hash = Media::urlsafe_b64encode(Media::urlsafe_b64decode($hash));
         }
 
         // Obtain the PAGE from URI.
@@ -575,21 +634,14 @@ class Chan extends Common
 
         // Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
         $page = intval($page);
-        return \Response::redirect(\Uri::create([
-            $this->_radix->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page]), 'location', 301);
+        return new RedirectResponse($this->uri->create([
+            $this->radix->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page]), 'location', 301);
     }
 
     public function radix_full_image($filename)
     {
-        // Check if $filename is valid.
-        if (!in_array(\Input::extension(), ['gif', 'jpg', 'png', 'pdf']) || !ctype_digit((string) substr($filename,
-        0, 13)))
-        {
-            return $this->action_404(_i('The filename submitted is not compatible with the system.'));
-        }
-
         try {
-            $media = \Media::getByFilename($this->_radix, $filename.'.'.\Input::extension());
+            $media = $this->media_factory->getByFilename($this->radix, $filename);
         } catch (\Foolz\Foolfuuka\Model\MediaException $e) {
             return $this->action_404(_i('The image was never in our databases.'));
         }
@@ -598,18 +650,17 @@ class Chan extends Common
             return \Response::redirect($media->getMediaLink(), 'location', 303);
         }
 
-        return \Response::redirect(
-            \Uri::create([$this->_radix->shortname, 'search', 'image', rawurlencode(substr($media->media_hash, 0,
-                -2))]), 'location', 404);
+        return new RedirectResponse(
+            $this->uri->create([$this->radix->shortname, 'search', 'image', rawurlencode(substr($media->media_hash, 0,
+                -2))]), 404);
     }
 
     public function radix_redirect($filename = null)
     {
-        $redirect  = \Uri::create([$this->_radix->shortname]);
+        $redirect  = $this->uri->create([$this->radix->shortname]);
 
-        if ($this->_radix->archive) {
-            $redirect  = ($this->_radix->getValue('images_url')) ? : '//images.4chan.org/'.$this->_radix->shortname.'/src/';
-            $redirect .= $filename.'.'.\Input::extension();
+        if ($this->radix->archive) {
+            $redirect  = ($this->radix->getValue('images_url')) ? : '//images.4chan.org/'.$this->radix->shortname.'/src/';
         }
 
         $this->builder->createLayout('redirect')
@@ -629,13 +680,13 @@ class Chan extends Common
     {
         $this->builder->createPartial('body', 'advanced_search')
             ->getParamManager()
-            ->setParam('search_structure', \Search::structure());
+            ->setParam('search_structure', Search::structure());
         $this->builder->getParamManager()->setParam('section_title', _i('Advanced search'));
 
-        if ($this->_radix !== null) {
+        if ($this->radix !== null) {
             $this->builder->getPartial('body')
                 ->getParamManager()
-                ->setParam('search', ['board' => [$this->_radix->shortname]]);
+                ->setParam('search', ['board' => [$this->radix->shortname]]);
         }
 
         return $this->response->setContent($this->builder->build());
@@ -648,13 +699,13 @@ class Chan extends Common
 
     public function radix_search()
     {
-        if (\Input::post('submit_search_global')) {
-            $this->_radix = null;
+        if ($this->getPost('submit_search_global')) {
+            $this->radix = null;
         }
 
-        $text = \Input::post('text');
+        $text = $this->getPost('text');
 
-        if ($this->_radix !== null && \Input::post('submit_post')) {
+        if ($this->radix !== null && $this->getPost('submit_post')) {
             return $this->radix_post(str_replace(',', '_', $text));
         }
 
@@ -670,58 +721,58 @@ class Chan extends Common
         }
 
         // GET -> URL Redirection to provide URL presentable for sharing links.
-        if (\Input::post()) {
-            if ($this->_radix !== null) {
-                $redirect_url = [$this->_radix->shortname, 'search'];
+        if ($this->getPost()) {
+            if ($this->radix !== null) {
+                $redirect_url = [$this->radix->shortname, 'search'];
             } else {
                 $redirect_url = ['_', 'search'];
             }
 
             foreach ($modifiers as $modifier) {
-                if (\Input::post($modifier)) {
+                if ($this->getPost($modifier)) {
                     if ($modifier === 'image') {
                         array_push($redirect_url, $modifier);
                         array_push($redirect_url,
-                            rawurlencode(\Media::urlsafe_b64encode(\Media::urlsafe_b64decode(\Input::post($modifier))))
+                            rawurlencode(Media::urlsafe_b64encode(Media::urlsafe_b64decode($this->getPost($modifier))))
                         );
                     } elseif ($modifier === 'boards') {
-                        if (\Input::post('submit_search_global')) {
+                        if ($this->getPost('submit_search_global')) {
 
-                        } elseif (count(\Input::post($modifier)) == 1) {
-                            $boards = \Input::post($modifier);
+                        } elseif (count($this->getPost($modifier)) == 1) {
+                            $boards = $this->getPost($modifier);
                             $redirect_url[0] = $boards[0];
-                        } elseif (count(\Input::post($modifier)) > 1) {
+                        } elseif (count($this->getPost($modifier)) > 1) {
                             $redirect_url[0] = '_';
 
                             // avoid setting this if we're just searching on all the boards
                             $sphinx_boards = [];
-                            foreach (\Radix::getAll() as $k => $b) {
+                            foreach ($this->radix_coll->getAll() as $k => $b) {
                                 if ($b->sphinx) {
                                     $sphinx_boards[] = $b;
                                 }
                             }
 
-                            if (count($sphinx_boards) !== count(\Input::post($modifier))) {
+                            if (count($sphinx_boards) !== count($this->getPost($modifier))) {
                                 array_push($redirect_url, $modifier);
-                                array_push($redirect_url, rawurlencode(implode('.', \Input::post($modifier))));
+                                array_push($redirect_url, rawurlencode(implode('.', $this->getPost($modifier))));
                             }
                         }
                     } else {
                         array_push($redirect_url, $modifier);
-                        array_push($redirect_url, rawurlencode(\Input::post($modifier)));
+                        array_push($redirect_url, rawurlencode($this->getPost($modifier)));
                     }
                 }
             }
 
-            \Response::redirect(\Uri::create($redirect_url), 'location', 303);
+            return new RedirectResponse($this->uri->create($redirect_url), 303);
         }
 
-        $search = \Uri::uri_to_assoc(func_get_args(), 0, $modifiers);
+        $search = $this->uri->uri_to_assoc(func_get_args(), 0, $modifiers);
 
         $this->param_manager->setParam('search', $search);
 
         // latest searches system
-        if (!is_array($cookie_array = @json_decode(\Cookie::get('search_latest_5'), true))) {
+        if (!is_array($cookie_array = @json_decode($this->getCookie('search_latest_5'), true))) {
             $cookie_array = [];
         }
 
@@ -736,7 +787,7 @@ class Chan extends Common
 
         $search_opts = array_filter($search);
 
-        $search_opts['board'] = $this->_radix !== null ? $this->_radix->shortname : false;
+        $search_opts['board'] = $this->radix !== null ? $this->radix->shortname : false;
         unset($search_opts['page']);
 
         // if it's already in the latest searches, remove the previous entry
@@ -757,7 +808,9 @@ class Chan extends Common
             ->getParamManager()
             ->setParam('latest_searches', $cookie_array);
 
-        \Cookie::set('search_latest_5', json_encode($cookie_array), 60 * 60 * 24 * 30);
+        $this->response->headers->setCookie(
+            new Cookie($this->getContext(), 'search_latest_5', json_encode($cookie_array), 60 * 60 * 24 * 30)
+        );
 
         foreach ($search as $key => $value) {
             if ($value !== null) {
@@ -770,7 +823,7 @@ class Chan extends Common
         }
 
         if ($search['image'] !== null) {
-            $search['image'] = base64_encode(\Media::urlsafe_b64decode($search['image']));
+            $search['image'] = base64_encode(Media::urlsafe_b64decode($search['image']));
         }
 
         if (\Auth::has_access('comment.see_ip') && $search['poster_ip'] !== null) {
@@ -778,13 +831,13 @@ class Chan extends Common
                 return $this->error(_i('The poster IP you inserted is not a valid IP address.'));
             }
 
-            $search['poster_ip'] = \Foolz\Inet\Inet::ptod($search['poster_ip']);
+            $search['poster_ip'] = Inet::ptod($search['poster_ip']);
         }
 
         try {
-            $board = \Search::forge()
+            $board = Search::forge($this->getContext())
                 ->getSearch($search)
-                ->setRadix($this->_radix)
+                ->setRadix($this->radix)
                 ->setPage($search['page'] ? $search['page'] : 1);
             $board->getComments();
         } catch (\Foolz\Foolfuuka\Model\SearchException $e) {
@@ -857,7 +910,7 @@ class Chan extends Common
             $title = _i('Displaying all posts with no filters applied.');
         }
 
-        if ($this->_radix) {
+        if ($this->radix) {
             $this->builder->getProps()->addTitle($title);
         } else {
             $this->builder->getProps()->addTitle('Global Search &raquo; '.$title);
@@ -870,7 +923,7 @@ class Chan extends Common
         $pagination = $search;
         unset($pagination['page']);
         $pagination_arr = [];
-        $pagination_arr[] = $this->_radix !== null ?$this->_radix->shortname : '_';
+        $pagination_arr[] = $this->radix !== null ?$this->radix->shortname : '_';
         $pagination_arr[] = 'search';
         foreach ($pagination as $key => $item) {
             if ($item || $item === 0) {
@@ -880,7 +933,7 @@ class Chan extends Common
                 }
 
                 if ($key == 'poster_ip') {
-                    $item = \Foolz\Inet\Inet::dtop($item);
+                    $item = Inet::dtop($item);
                 }
 
                 $pagination_arr[] = rawurlencode($item);
@@ -889,18 +942,18 @@ class Chan extends Common
 
         $pagination_arr[] = 'page';
         $this->param_manager->setParam('pagination', [
-            'base_url' => \Uri::create($pagination_arr),
+            'base_url' => $this->uri->create($pagination_arr),
             'current_page' => $search['page'] ? : 1,
             'total' => floor($board->getCount()/25+1),
         ]);
 
         $this->param_manager->setParam('modifiers', [
-            'post_show_board_name' => $this->_radix === null,
+            'post_show_board_name' => $this->radix === null,
             'post_show_view_button' => true
         ]);
 
-        \Profiler::mark_memory($this, 'Controller Chan $this');
-        \Profiler::mark('Controller Chan::search End');
+        $this->profiler->logMem('Controller Chan $this', $this);
+        $this->profiler->log('Controller Chan::search End');
 
         return $this->response->setContent($this->builder->build('board'));
     }
@@ -908,7 +961,7 @@ class Chan extends Common
     public function radix_appeal()
     {
         try {
-            $bans = \Ban::getByIp(\Input::ip_decimal());
+            $bans = Ban::getByIp(Inet::ptod($this->getRequest()->getClientIp()));
         } catch (\Foolz\Foolfuuka\Model\BanException $e) {
             return $this->error(_i('It doesn\'t look like you\'re banned.'));
         }
@@ -917,22 +970,22 @@ class Chan extends Common
         if (isset($bans[0])) {
             $title = _i('Appealing to a global ban.');
             $ban = $bans[0];
-        } elseif (isset($bans[$this->_radix->id])) {
-            $title = _i('Appealing to a ban on %s', '/'.$this->_radix->shortname.'/');
-            $ban = $bans[$this->_radix->id];
+        } elseif (isset($bans[$this->radix->id])) {
+            $title = _i('Appealing to a ban on %s', '/'.$this->radix->shortname.'/');
+            $ban = $bans[$this->radix->id];
         } else {
             return $this->error(_i('It doesn\'t look like you\'re banned on this board.'));
         }
 
-        if ($ban->appeal_status === \Ban::APPEAL_PENDING) {
+        if ($ban->appeal_status === Ban::APPEAL_PENDING) {
             return $this->message('success', _i('Your appeal is pending administrator review. Check again later.'));
         }
 
-        if ($ban->appeal_status === \Ban::APPEAL_REJECTED) {
+        if ($ban->appeal_status === Ban::APPEAL_REJECTED) {
             return $this->message('error', _i('Your appeal has been rejected.'));
         }
 
-        if (\Input::post('appeal')) {
+        if ($this->getPost('appeal')) {
             if (!\Security::check_token()) {
                 return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
             } else {
@@ -940,7 +993,7 @@ class Chan extends Common
                 $validator
                     ->add('appeal', _i('Appeal'),
                         [new Trim(), new Assert\NotBlank(), new Assert\Length(['min' => 3, 'max' => 4096])])
-                    ->validate(\Input::post());
+                    ->validate($this->getPost());
 
                 if (!$validator->getViolations()->count()) {
                     $ban->appeal($validator->getFinalValues()['appeal']);
@@ -958,12 +1011,12 @@ class Chan extends Common
     public function radix_submit()
     {
         // adapter
-        if (!\Input::post()) {
+        if (!$this->getPost()) {
             return $this->error(_i('You aren\'t sending the required fields for creating a new message.'));
         }
 
         if (!\Security::check_token()) {
-            if (\Input::is_ajax()) {
+            if ($this->getRequest()->isXmlHttpRequest()) {
                 return $this->response->setData(['error' => _i('The security token wasn\'t found. Try resubmitting.')]);
             }
 
@@ -985,7 +1038,7 @@ class Chan extends Common
 
         $data = [];
 
-        $post = \Input::post();
+        $post = $this->getPost();
 
         if (isset($post['reply_numero'])) {
             $data['thread_num'] = $post['reply_numero'];
@@ -993,12 +1046,12 @@ class Chan extends Common
 
         if (isset($post['reply_bokunonome'])) {
             $data['name'] = $post['reply_bokunonome'];
-            \Cookie::set('reply_name', $data['name'], 60*60*24*30);
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_name', $data['name'], 60*60*24*30));
         }
 
         if (isset($post['reply_elitterae'])) {
             $data['email'] = $post['reply_elitterae'];
-            \Cookie::set('reply_email', $data['email'], 60*60*24*30);
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_email', $data['email'], 60*60*24*30));
         }
 
         if (isset($post['reply_talkingde'])) {
@@ -1016,7 +1069,7 @@ class Chan extends Common
             }
 
             $data['delpass'] = $post['reply_nymphassword'];
-            \Cookie::set('reply_password', $data['delpass'], 60*60*24*30);
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_password', $data['delpass'], 60*60*24*30));
         }
 
         if (isset($post['reply_gattai_spoilered']) || isset($post['reply_spoiler'])) {
@@ -1036,21 +1089,20 @@ class Chan extends Common
             $data['recaptcha_response'] = $post['recaptcha_response_field'];
         }
 
-
         $media = null;
 
         if (count(\Upload::get_files())) {
             try {
-                $media = \Media::forgeFromUpload($this->_radix);
+                $media = $this->media_factory->forgeFromUpload($this->radix);
                 $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
             } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
-                if (\Input::is_ajax()) {
+                if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
                 }
             } catch (\Foolz\Foolfuuka\Model\MediaUploadException $e) {
-                if (\Input::is_ajax()) {
+                if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
@@ -1081,28 +1133,27 @@ class Chan extends Common
             unset($data['last_limit']);
         }
 
-
         if (!$validator->getViolations()->count()) {
             try {
-                $data['poster_ip'] = \Input::ip_decimal();
-                $comment = new \Foolz\Foolfuuka\Model\CommentInsert($data, $this->_radix, ['clean' => false]);
+                $data['poster_ip'] = Inet::ptod($this->getRequest()->getClientIp());
+                $comment = new CommentInsert($this->getContext(), $data, $this->radix, ['clean' => false]);
                 $comment->media = $media;
                 $comment->insert();
             } catch (\Foolz\Foolfuuka\Model\CommentSendingRequestCaptchaException $e) {
-                if (\Input::is_ajax()) {
+                if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['captcha' => true]);
                 } else {
                     return $this->error(_i('Your message looked like spam. Make sure you have JavaScript enabled to display the reCAPTCHA to submit the comment.'));
                 }
             } catch (\Foolz\Foolfuuka\Model\CommentSendingException $e) {
-                if (\Input::is_ajax()) {
+                if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
                 }
             }
         } else {
-            if (\Input::is_ajax()) {
+            if ($this->getRequest()->isXmlHttpRequest()) {
                 return $this->response->setData(['error' => $validator->getViolations()->getText()]);
             } else {
                 return $this->error($validator->getViolations()->getHtml());
@@ -1110,14 +1161,14 @@ class Chan extends Common
         }
 
         if ($this->request->isXmlHttpRequest()) {
-            $latest_doc_id = \Input::post('latest_doc_id');
+            $latest_doc_id = $this->getPost('latest_doc_id');
 
             if ($latest_doc_id && ctype_digit((string) $latest_doc_id)) {
                 try {
-                    $board = \Board::forge()
+                    $board = Board::forge($this->getContext())
                         ->getThread($comment->thread_num)
-                        ->setRadix($this->_radix)
-                        ->setApi(['theme' => $this->theme, 'board' => false])
+                        ->setRadix($this->radix)
+                        ->setApi(['theme' => $this->builder, 'board' => false])
                         ->setOptions([
                             'type' => 'from_doc_id',
                             'latest_doc_id' => $latest_doc_id,
@@ -1134,9 +1185,8 @@ class Chan extends Common
 
                 $this->response->setData(['success' => _i('Message sent.')] + $comments);
             } else {
-                $comment_api = \Comment::forgeForApi($comment, $this->_radix, [
-                    'board' => false,
-                    'theme' => $this->theme],
+                $comment_api = $this->comment_factory->forgeForApi($comment, $this->radix,
+                    ['board' => false, 'theme' => $this->builder],
                     ['controller_method' => $limit ? 'last/'.$limit : 'thread']);
 
                 $this->response->setData([
@@ -1148,7 +1198,7 @@ class Chan extends Common
         } else {
             $this->builder->createLayout('redirect')
                 ->getParamManager()
-                ->setParam('url', \Uri::create([$this->_radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
+                ->setParam('url', $this->uri->create([$this->radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
             $this->response->setContent($this->builder->build());

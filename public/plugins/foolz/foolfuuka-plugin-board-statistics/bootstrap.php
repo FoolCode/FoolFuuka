@@ -4,6 +4,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\DoctrineConnection;
 use Foolz\Foolframe\Model\Uri;
+use Foolz\Foolfuuka\Model\RadixCollection;
 use Foolz\Plugin\Event;
 use Symfony\Component\Routing\Route;
 
@@ -50,21 +51,20 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statisti
             });
 
         Event::forge('foolframe.themes.generic_top_nav_buttons')
-            ->setCall(function($result) use ($context) {
-                /** @var Uri $uri */
-                $uri = $context->getService('uri');
-
+            ->setCall(function($result) {
                 $top_nav = $result->getParam('nav');
-                if (\Radix::getSelected()) {
-                    $top_nav[] = ['href' => $uri->create([Radix::getSelected()->shortname, 'statistics']), 'text' => _i('Stats')];
+                if ($this->getRadix()) {
+                    $top_nav[] = ['href' => $this->getUri()->create([$this->getRadix()->shortname, 'statistics']), 'text' => _i('Stats')];
                     $result->set($top_nav);
                     $result->setParam('nav', $top_nav);
                 }
             })->setPriority(3);
 
         Event::forge('Foolz\Foolframe\Model\Context.handleWeb.route_collection')
-            ->setCall(function($result) {
-                $radix_all = \Foolz\Foolfuuka\Model\Radix::getAll();
+            ->setCall(function($result) use ($context) {
+                /** @var RadixCollection $radix_coll */
+                $radix_coll = $context->getService('foolfuuka.radix_collection');
+                $radix_all = $radix_coll->getAll();
 
                 foreach ($radix_all as $radix) {
                     $this->getRouteCollection()->add(

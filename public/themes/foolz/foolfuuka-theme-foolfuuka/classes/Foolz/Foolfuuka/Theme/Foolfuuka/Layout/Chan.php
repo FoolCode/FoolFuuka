@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Layout;
 
-class Chan extends \Foolz\Theme\View
+class Chan extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {
@@ -36,9 +36,9 @@ class Chan extends \Foolz\Theme\View
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="generator" content="<?= \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>">
+    <meta name="generator" content="<?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name').' '.$this->getConfig()->get('foolz/foolfuuka', 'package', 'main.version') ?>">
     <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
-    <link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('foolframe.gen.website_title') ?>'>
+    <link href='<?= $this->getUri()->base() ?>' rel='index' title='<?= $this->getPreferences()->get('foolframe.gen.website_title') ?>'>
     <link href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css">
     <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>" rel="stylesheet" type="text/css">
     <!--[if lt IE 8]>
@@ -50,11 +50,11 @@ class Chan extends \Foolz\Theme\View
     <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
-        <link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('foolframe.gen.website_title'); ?> " href="<?= \Uri::create('_/opensearch') ?>">
+    <?php if ($this->getPreferences()->get('foolfuuka.sphinx.global')) : ?>
+        <link rel="search" type="application/opensearchdescription+xml" title="<?= $this->getPreferences()->get('foolframe.gen.website_title'); ?> " href="<?= $this->getUri()->create('_/opensearch') ?>">
     <?php endif; ?>
 
-     <?= \Preferences::get('foolframe.theme.header_code'); ?>
+     <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
 
  </head>
         <?php
@@ -70,21 +70,21 @@ class Chan extends \Foolz\Theme\View
     <?php if ($disable_headers !== true) : ?>
     <div class="letters"><?php
         $board_urls = [];
-        foreach (\Radix::getArchives() as $key => $item) {
-            $board_urls[] = '<a href="'.$item->getValue('href').'">'.$item->shortname.'</a>';
+        foreach ($this->getRadixColl()->getArchives() as $key => $item) {
+            $board_urls[] = '<a href="'.$this->getUri()->create($item->shortname).'">'.$item->shortname.'</a>';
         }
 
         if (!empty($board_urls)) {
             echo sprintf(_i('Archives: [ %s ]'), implode(' / ', $board_urls));
         }
 
-        if (\Radix::getArchives() && \Radix::getBoards()) {
+        if ($this->getRadixColl()->getArchives() && $this->getRadixColl()->getBoards()) {
             echo ' ';
         }
 
         $board_urls = [];
-        foreach (\Radix::getBoards() as $key => $item) {
-            $board_urls[] = '<a href="'.$item->getValue('href').'">'.$item->shortname.'</a>';
+        foreach ($this->getRadixColl()->getBoards() as $key => $item) {
+            $board_urls[] = '<a href="'.$this->getUri()->create($item->shortname).'">'.$item->shortname.'</a>';
         }
 
         if (!empty($board_urls)) {
@@ -98,32 +98,32 @@ class Chan extends \Foolz\Theme\View
                     <div class="container">
                         <ul class="nav">
                             <li class="dropdown">
-                                <a href="<?= \Uri::base() ?>" id="brand" class="brand dropdown-toggle"
+                                <a href="<?= $this->getUri()->base() ?>" id="brand" class="brand dropdown-toggle"
                                    data-toggle="dropdown">
-                                    <?= ($radix) ? '/'.$radix->shortname.'/'.' - '.$radix->name : \Preferences::get('foolframe.gen.website_title') ?>
+                                    <?= ($radix) ? '/'.$radix->shortname.'/'.' - '.$radix->name : $this->getPreferences()->get('foolframe.gen.website_title') ?>
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <?= '<li><a href="'.\Uri::base().'">'._i('Index').'</a></li>'; ?>
-                                    <?= (\Auth::has_access('maccess.mod')) ? '<li><a href="'.\Uri::create('admin').'">'._i('Control Panel').'</a></li>' : '' ?>
+                                    <?= '<li><a href="'.$this->getUri()->base().'">'._i('Index').'</a></li>'; ?>
+                                    <?= (\Auth::has_access('maccess.mod')) ? '<li><a href="'.$this->getUri()->create('admin').'">'._i('Control Panel').'</a></li>' : '' ?>
                                     <li class="divider"></li>
                                     <?php
-                                    if (\Radix::getArchives()) {
+                                    if ($this->getRadixColl()->getArchives()) {
                                         echo '<li class="nav-header">'._i('Archives').'</li>';
-                                        foreach (\Radix::getArchives() as $key => $item) {
+                                        foreach ($this->getRadixColl()->getArchives() as $key => $item) {
 
-                                            echo '<li><a href="'.$item->getValue('href').'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
+                                            echo '<li><a href="'.$this->getUri()->create($item->shortname).'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
                                         }
                                     }
 
-                                    if (\Radix::getBoards()) {
-                                        if (\Radix::getArchives()) {
+                                    if ($this->getRadixColl()->getBoards()) {
+                                        if ($this->getRadixColl()->getArchives()) {
                                             echo '<li class="divider"></li>';
                                         }
 
                                         echo '<li class="nav-header">'._i('Boards').'</li>';
-                                        foreach (\Radix::getBoards() as $key => $item) {
-                                            echo '<li><a href="'.$item->getValue('href').'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
+                                        foreach ($this->getRadixColl()->getBoards() as $key => $item) {
+                                            echo '<li><a href="'.$this->getUri()->create($item->shortname).'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
                                         }
                                     }
                                     ?>
@@ -140,7 +140,7 @@ class Chan extends \Foolz\Theme\View
                                 </li>
                                 <?php endif; ?>
                             <li style="padding-right:0px;">
-                                <a href="<?= \Uri::create(array($radix->shortname)) ?>"
+                                <a href="<?= $this->getUri()->create(array($radix->shortname)) ?>"
                                    style="padding-right:4px;"><?= _i('Index') ?></a>
                             </li>
                             <li class="dropdown">
@@ -150,17 +150,17 @@ class Chan extends \Foolz\Theme\View
                                 </a>
                                 <ul class="dropdown-menu" style="margin-left:-9px">
                                     <li>
-                                        <a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
+                                        <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
                                             <?= _i('By Post') ?>
-                                            <?php if (\Cookie::get('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) !== 'by_thread') : ?>
+                                            <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) !== 'by_thread') : ?>
                                                 <i class="icon-ok"></i>
                                             <?php endif; ?>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="<?= \Uri::create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
+                                        <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
                                             <?= _i('By Thread') ?>
-                                            <?php if (\Cookie::get('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) === 'by_thread') : ?>
+                                            <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) === 'by_thread') : ?>
                                                 <i class="icon-ok"></i>
                                             <?php endif; ?>
                                         </a>
@@ -171,16 +171,16 @@ class Chan extends \Foolz\Theme\View
                             <?php
                             $top_nav = array();
                             if ($radix) {
-                                $top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'ghost')), 'text' => _i('Ghost'));
-                                $top_nav[] = array('href' => \Uri::create(array($radix->shortname, 'gallery')), 'text' => _i('Gallery'));
+                                $top_nav[] = array('href' => $this->getUri()->create(array($radix->shortname, 'ghost')), 'text' => _i('Ghost'));
+                                $top_nav[] = array('href' => $this->getUri()->create(array($radix->shortname, 'gallery')), 'text' => _i('Gallery'));
                             }
 
                             if (\Auth::has_access('comment.reports')) {
-                                $top_nav[] = array('href' => \Uri::create(array('admin', 'moderation', 'reports')), 'text' => _i('Reports').(\Report::count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.\Report::count().'</span>' : ''));
+                                $top_nav[] = array('href' => $this->getUri()->create(array('admin', 'moderation', 'reports')), 'text' => _i('Reports').($this->getReportColl()->count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.$this->getReportColl()->count().'</span>' : ''));
                             }
 
-                            $top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
-                            $top_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+                            $top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setObject($this)->setParam('nav', $top_nav)->execute()->get($top_nav);
+                            $top_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_top_nav_buttons')->setObject($this)->setParam('nav', $top_nav)->execute()->get($top_nav);
 
                             foreach ($top_nav as $nav) {
                                 echo '<li><a href="'.$nav['href'].'">'.$nav['text'].'</a></li>';
@@ -204,8 +204,8 @@ class Chan extends \Foolz\Theme\View
         <div role="main" id="main">
             <?= $this->getBuilder()->isPartial('tools_new_thread_box') ? $this->getBuilder()->getPartial('tools_new_thread_box')->build() : ''; ?>
 
-            <?php if (\Preferences::get('foolframe.theme.header_text')) : ?>
-            <section class="section_title"><?= \Preferences::get('foolframe.theme.header_text') ?></section>
+            <?php if ($this->getPreferences()->get('foolframe.theme.header_text')) : ?>
+            <section class="section_title"><?= $this->getPreferences()->get('foolframe.theme.header_text') ?></section>
             <?php endif; ?>
             <?php if ($section_title) : ?>
             <h3 class="section_title"><?= $section_title ?></h3>
@@ -217,7 +217,7 @@ class Chan extends \Foolz\Theme\View
 
             <?= $this->getBuilder()->getPartial('body')->build(); ?>
 
-            <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_body_template')->execute(); ?>
+            <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_body_template')->setObject($this)->execute(); ?>
 
             <?= $this->getBuilder()->getPartial('tools_modal')->build(); ?>
 
@@ -285,8 +285,8 @@ class Chan extends \Foolz\Theme\View
     {
         ?>
     <footer id="footer">
-        <a href="http://github.com/FoolCode/FoOlFuuka"><?= \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.name') ?>
-            Imageboard <?= \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.version') ?></a>
+        <a href="http://github.com/FoolCode/FoOlFuuka"><?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name') ?>
+            Imageboard <?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.version') ?></a>
         - <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
 
         <div class="pull-right">
@@ -299,7 +299,7 @@ class Chan extends \Foolz\Theme\View
                         if (isset($theme['object']->enabled) && $theme['object']->enabled) :
                         ?>
                         <li>
-                            <a href="<?= \Uri::create(array('_', 'theme', $key)) ?>">
+                            <a href="<?= $this->getUri()->create(array('_', 'theme', $key)) ?>">
                                 <?= $theme['string'] ?>
                                 <?php if ($theme['object'] === $this->getTheme() && $theme['style'] == $this->getBuilder()->getStyle()) : ?>
                                     <i class="icon-ok"></i>
@@ -318,11 +318,11 @@ class Chan extends \Foolz\Theme\View
                     <?= _i('Change Language') ?> <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <?php foreach (\Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolframe', 'package', 'preferences.lang.available') as $key => $lang) : ?>
+                    <?php foreach ($this->getConfig()->get('foolz/foolframe', 'package', 'preferences.lang.available') as $key => $lang) : ?>
                     <li>
-                        <a href="<?= \Uri::create(array('_', 'language', $key)) ?>">
+                        <a href="<?= $this->getUri()->create(array('_', 'language', $key)) ?>">
                             <?= $lang ?>
-                            <?php if ((! \Cookie::get('language') && $key == 'en_EN') || $key == \Cookie::get('language')) : ?>
+                            <?php if ((!$this->getCookie('language') && $key == 'en_EN') || $key == $this->getCookie('language')) : ?>
                                 <i class="icon-ok"></i>
                             <?php endif; ?>
                         </a>
@@ -336,8 +336,8 @@ class Chan extends \Foolz\Theme\View
 
         <?php
         $bottom_nav = array();
-        $bottom_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
-        $bottom_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+        $bottom_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_bottom_nav_buttons')->setObject($this)->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+        $bottom_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_bottom_nav_buttons')->setObject($this)->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
         if (!empty($bottom_nav)) {
             echo '<div class="pull-right" style="margin-right: 15px;">';
@@ -350,8 +350,8 @@ class Chan extends \Foolz\Theme\View
             echo '</div>';
         }
 
-        if (\Preferences::get('foolframe.theme.footer_text')) {
-            echo '<section class="footer_text">'.\Preferences::get('foolframe.theme.footer_text').'</section>';
+        if ($this->getPreferences()->get('foolframe.theme.footer_text')) {
+            echo '<section class="footer_text">'.$this->getPreferences()->get('foolframe.theme.footer_text').'</section>';
         }
         ?>
     </footer>
@@ -362,9 +362,9 @@ class Chan extends \Foolz\Theme\View
 
         var backend_vars = <?= json_encode($this->getBuilderParamManager()->getParam('backend_vars')) ?>;
 
-        <?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
+        <?php if ($this->getPreferences()->get('foolframe.theme.google_analytics')) : ?>
         var _gaq = [
-            ['_setAccount', '<?= \Preferences::get('foolframe.theme.google_analytics') ?>'],
+            ['_setAccount', '<?= $this->getPreferences()->get('foolframe.theme.google_analytics') ?>'],
             ['_trackPageview'],
             ['_trackPageLoadTime']
         ];
@@ -384,7 +384,7 @@ class Chan extends \Foolz\Theme\View
         <script>window.attachEvent('onload', function () { CFInstall.check({mode:'overlay'}) })</script>
     <![endif]-->
 
-    <?= \Preferences::get('foolframe.theme.footer_code'); ?>
+    <?= $this->getPreferences()->get('foolframe.theme.footer_code'); ?>
 </body>
 </html>
     <?php

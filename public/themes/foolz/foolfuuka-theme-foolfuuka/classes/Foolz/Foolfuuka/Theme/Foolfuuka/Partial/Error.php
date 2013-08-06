@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-class Error extends \Foolz\Theme\View
+class Error extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {

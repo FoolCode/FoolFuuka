@@ -2,8 +2,12 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
-use \Foolz\Cache\Cache;
+use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\Cache\Cache;
+use Foolz\Foolframe\Model\Model;
+use Foolz\Foolframe\Model\Context;
+use Foolz\Plugin\PlugSuit;
+use Foolz\Profiler\Profiler;
 
 class BoardException extends \Exception {}
 class BoardThreadNotFoundException extends BoardException {}
@@ -15,9 +19,9 @@ class BoardMissingOptionsException extends BoardException {}
 /**
  * Deals with all the data in the board tables
  */
-class Board
+class Board extends Model
 {
-    use \Foolz\Plugin\PlugSuit;
+    use PlugSuit;
 
     /**
      * Array of Comment sorted for output
@@ -71,7 +75,7 @@ class Board
     /**
      * The selected Radix
      *
-     * @var  \Foolz\Foolfuuka\Model\Radix
+     * @var  Radix
      */
     protected $radix = null;
 
@@ -83,13 +87,37 @@ class Board
     protected $api = null;
 
     /**
+     * @var DoctrineConnection
+     */
+    protected $dc;
+
+    /**
+     * @var Profiler
+     */
+    protected $profiler;
+
+    /**
+     * @var CommentFactory
+     */
+    protected $comment_factory;
+
+    public function __construct(Context $context)
+    {
+        parent::__construct($context);
+
+        $this->dc = $context->getService('doctrine');
+        $this->profiler = $context->getService('profiler');
+        $this->comment_factory = $context->getService('foolfuuka.comment_factory');
+    }
+
+    /**
      * Creates a new instance of Comment
      *
      * @return  \Foolz\Foolfuuka\Model\Comment
      */
-    public static function forge()
+    public static function forge($context)
     {
-        return new static();
+        return new static($context);
     }
 
     /**
@@ -101,13 +129,13 @@ class Board
     {
         if ($this->comments === null) {
             if (method_exists($this, 'p_'.$this->method_fetching)) {
-                \Profiler::mark('Start Board::getComments() with method '.$this->method_fetching);
-                \Profiler::mark_memory($this, 'Start Board::getComments() with method '.$this->method_fetching);
+                $this->profiler->log('Start Board::getComments() with method '.$this->method_fetching);
+                $this->profiler->logMem('Start Board::getComments() with method '.$this->method_fetching, $this);
 
                 $this->{$this->method_fetching}();
 
-                \Profiler::mark('End Board::getComments() with method '.$this->method_fetching);
-                \Profiler::mark_memory($this, 'End Board::getComments() with method '.$this->method_fetching);
+                $this->profiler->log('End Board::getComments() with method '.$this->method_fetching);
+                $this->profiler->logMem('End Board::getComments() with method '.$this->method_fetching, $this);
             } else {
                 $this->comments = false;
             }
@@ -125,13 +153,13 @@ class Board
     {
         if ($this->total_count === null) {
             if (method_exists($this, 'p_'.$this->method_counting)) {
-                \Profiler::mark('Start Board::getCount() with method '.$this->method_counting);
-                \Profiler::mark_memory($this, 'Start Board::getCount() with method '.$this->method_counting);
+                $this->profiler->log('Start Board::getCount() with method '.$this->method_counting);
+                $this->profiler->logMem('Start Board::getCount() with method '.$this->method_counting, $this);
 
                 $this->{$this->method_counting}();
 
-                \Profiler::mark('End Board::getCount() with method '.$this->method_counting);
-                \Profiler::mark_memory($this, 'End Board::getCount() with method '.$this->method_counting);
+                $this->profiler->log('End Board::getCount() with method '.$this->method_counting);
+                $this->profiler->logMem('End Board::getCount() with method '.$this->method_counting, $this);
             } else {
                 $this->total_count = false;
             }
@@ -247,11 +275,11 @@ class Board
     /**
      * Sets the Radix object
      *
-     * @param  \Foolz\Foolfuuka\Model\Radix  $radix  The Radix object pertaining this Board
+     * @param  Radix $radix  The Radix object pertaining this Board
      *
      * @return  \Foolz\Foolfuuka\Model\Board  The current object
      */
-    protected function p_setRadix(\Foolz\Foolfuuka\Model\Radix $radix = null)
+    protected function p_setRadix(Radix $radix = null)
     {
         $this->radix = $radix;
 
@@ -358,7 +386,7 @@ class Board
      */
     protected function p_getLatestComments()
     {
-        \Profiler::mark('Board::getLatestComments Start');
+        $this->profiler->log('Board::getLatestComments Start');
         extract($this->options);
 
         try {
@@ -372,7 +400,7 @@ class Board
         } catch(\OutOfBoundsException $e) {
             switch ($order) {
                 case 'by_post':
-                    $query = DC::qb()
+                    $query = $this->dc->qb()
                         ->select('*, thread_num AS unq_thread_num')
                         ->from($this->radix->getTable('_threads'), 'rt')
                         ->orderBy('rt.time_bump', 'DESC')
@@ -381,7 +409,7 @@ class Board
                     break;
 
                 case 'by_thread':
-                    $query = DC::qb()
+                    $query = $this->dc->qb()
                         ->select('*, thread_num AS unq_thread_num')
                         ->from($this->radix->getTable('_threads'), 'rt')
                         ->orderBy('rt.thread_num', 'DESC')
@@ -390,7 +418,7 @@ class Board
                     break;
 
                 case 'ghost':
-                    $query = DC::qb()
+                    $query = $this->dc->qb()
                         ->select('*, thread_num AS unq_thread_num')
                         ->from($this->radix->getTable('_threads'), 'rt')
                         ->where('rt.time_ghost_bump IS NOT null')
@@ -408,8 +436,8 @@ class Board
                 $this->comments = [];
                 $this->comments_unsorted = [];
 
-                \Profiler::mark_memory($this, 'Board $this');
-                \Profiler::mark('Board::getLatestComments End Prematurely');
+                $this->profiler->logMem('Board $this', $this);
+                $this->profiler->log('Board::getLatestComments End Prematurely');
                 return $this;
             }
 
@@ -418,7 +446,7 @@ class Board
             $sql_arr = [];
 
             foreach ($threads as $thread) {
-                $sql_arr[] = '('.DC::qb()
+                $sql_arr[] = '('.$this->dc->qb()
                     ->select('*')
                     ->from($this->radix->getTable(), 'r')
                     ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -438,7 +466,7 @@ class Board
                 ];
             }
 
-            $query_posts = DC::forge()
+            $query_posts = $this->dc->getConnection()
                 ->executeQuery(implode(' UNION ', $sql_arr))
                 ->fetchAll();
 
@@ -451,12 +479,12 @@ class Board
 
         // populate posts_arr array
         if ($this->api) {
-            $this->comments_unsorted = Comment::fromArrayDeepApi($query_posts, $this->radix, $this->api, $this->comment_options);
+            $this->comments_unsorted = $this->comment_factory->fromArrayDeepApi($query_posts, $this->radix, $this->api, $this->comment_options);
         } else {
-            $this->comments_unsorted = Comment::fromArrayDeep($query_posts, $this->radix, $this->comment_options);
+            $this->comments_unsorted = $this->comment_factory->fromArrayDeep($query_posts, $this->radix, $this->comment_options);
         }
 
-        \Profiler::mark_memory($this->comments_unsorted, 'Board $this->comments_unsorted');
+        $this->profiler->logMem('Board $this->comments_unsorted', $this->comments_unsorted);
 
         // populate results array and order posts
         foreach ($this->comments_unsorted as $post) {
@@ -477,9 +505,9 @@ class Board
 
         $this->comments = $results;
 
-        \Profiler::mark_memory($this->comments, 'Board $this->comments');
-        \Profiler::mark_memory($this, 'Board $this');
-        \Profiler::mark('Board::getLatestComments End');
+        $this->profiler->logMem('Board $this->comments', $this->comments);
+        $this->profiler->logMem('Board $this', $this);
+        $this->profiler->log('Board::getLatestComments End');
         return $this;
     }
 
@@ -490,7 +518,7 @@ class Board
      */
     protected function p_getLatestCount()
     {
-        \Profiler::mark('Board::getLatestCount Start');
+        $this->profiler->log('Board::getLatestCount Start');
         extract($this->options);
 
         $type_cache = 'thread_num';
@@ -507,13 +535,13 @@ class Board
                 // these two are the same
                 case 'by_post':
                 case 'by_thread':
-                    $query_threads = DC::qb()
+                    $query_threads = $this->dc->qb()
                         ->select('COUNT(thread_num) AS threads')
                         ->from($this->radix->getTable('_threads'), 'rt');
                     break;
 
                 case 'ghost':
-                    $query_threads = DC::qb()
+                    $query_threads = $this->dc->qb()
                         ->select('COUNT(thread_num) AS threads')
                         ->from($this->radix->getTable('_threads'), 'rt')
                         ->where('rt.time_ghost_bump IS NOT null');
@@ -528,8 +556,8 @@ class Board
             Cache::item('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$type_cache)->set($this->total_count, 300);
         }
 
-        \Profiler::mark_memory($this, 'Board $this');
-        \Profiler::mark('Board::getLatestCount End');
+        $this->profiler->logMem('Board $this', $this);
+        $this->profiler->log('Board::getLatestCount End');
         return $this;
     }
 
@@ -559,7 +587,7 @@ class Board
      */
     protected function p_getThreadsComments()
     {
-        \Profiler::mark('Board::getThreadsComments Start');
+        $this->profiler->log('Board::getThreadsComments Start');
         extract($this->options);
 
         try {
@@ -572,7 +600,7 @@ class Board
                 throw new \OutOfBoundsException;
             }
         } catch(\OutOfBoundsException $e) {
-            $inner_query = DC::qb()
+            $inner_query = $this->dc->qb()
                 ->select('*, thread_num as unq_thread_num')
                 ->from($this->radix->getTable('_threads'), 'rt')
                 ->orderBy('rt.time_op', 'DESC')
@@ -580,7 +608,7 @@ class Board
                 ->setFirstResult(($page * $per_page) - $per_page)
                 ->getSQL();
 
-            $result = DC::qb()
+            $result = $this->dc->qb()
                 ->select('*')
                 ->from('('.$inner_query.')', 'g')
                 ->join('g', $this->radix->getTable(), 'r', 'r.num = g.unq_thread_num AND r.subnum = 0')
@@ -600,22 +628,22 @@ class Board
             $this->comments = [];
             $this->comments_unsorted = [];
 
-            \Profiler::mark_memory($this, 'Board $this');
-            \Profiler::mark('Board::get_threadscomments End Prematurely');
+            $this->profiler->logMem('Board $this', $this);
+            $this->profiler->log('Board::get_threadscomments End Prematurely');
             return $this;
         }
 
         if ($this->api) {
-            $this->comments_unsorted = Comment::fromArrayDeepApi($result, $this->radix, $this->api, $this->comment_options);
+            $this->comments_unsorted = $this->comment_factory->fromArrayDeepApi($result, $this->radix, $this->api, $this->comment_options);
         } else {
-            $this->comments_unsorted = Comment::fromArrayDeep($result, $this->radix, $this->comment_options);
+            $this->comments_unsorted = $this->comment_factory->fromArrayDeep($result, $this->radix, $this->comment_options);
         }
 
         $this->comments = $this->comments_unsorted;
 
-        \Profiler::mark_memory($this->comments, 'Board $this->comments');
-        \Profiler::mark_memory($this, 'Board $this');
-        \Profiler::mark('Board::getThreadsComments End');
+        $this->profiler->logMem('Board $this->comments', $this->comments);
+        $this->profiler->logMem('Board $this', $this);
+        $this->profiler->log('Board::getThreadsComments End');
 
         return $this;
     }
@@ -632,7 +660,7 @@ class Board
         try {
             $this->total_count = Cache::item('Foolz_Foolfuuka_Model_Board.getThreadsCount.result')->get();
         } catch (\OutOfBoundsException $e) {
-            $result = DC::qb()
+            $result = $this->dc->qb()
                 ->select('COUNT(thread_num) AS threads')
                 ->from($this->radix->getTable('_threads'), 'rt')
                 ->execute()
@@ -680,7 +708,7 @@ class Board
      */
     protected function p_getThreadComments()
     {
-        \Profiler::mark('Board::getThreadComments Start');
+        $this->profiler->log('Board::getThreadComments Start');
 
         $controller_method = 'thread';
 
@@ -689,7 +717,7 @@ class Board
         // determine type
         switch ($type) {
             case 'from_doc_id':
-                $query_result = DC::qb()
+                $query_result = $this->dc->qb()
                     ->select('*')
                     ->from($this->radix->getTable(), 'r')
                     ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -706,7 +734,7 @@ class Board
                 break;
 
             case 'ghosts':
-                $query_result = DC::qb()
+                $query_result = $this->dc->qb()
                     ->select('*')
                     ->from($this->radix->getTable(), 'r')
                     ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -732,21 +760,21 @@ class Board
                     $query_result = Cache::item('foolfuuka.model.board.getThreadComments.last_50.'
                         .md5(serialize([$this->radix->shortname, $num])))->get();
                 } catch (\OutOfBoundsException $e) {
-                    $subquery_first = DC::qb()
+                    $subquery_first = $this->dc->qb()
                         ->select('*')
                         ->from($this->radix->getTable(), 'xr')
-                        ->where('num = '.DC::forge()->quote($num))
+                        ->where('num = '.$this->dc->getConnection()->quote($num))
                         ->setMaxResults(1)
                         ->getSQL();
-                    $subquery_last = DC::qb()
+                    $subquery_last = $this->dc->qb()
                         ->select('*')
                         ->from($this->radix->getTable(), 'xrr')
-                        ->where('thread_num = '.DC::forge()->quote($num))
+                        ->where('thread_num = '.$this->dc->getConnection()->quote($num))
                         ->orderBy('num', 'DESC')
                         ->addOrderBy('subnum', 'DESC')
                         ->setMaxResults($last_limit)
                         ->getSQL();
-                    $query_result = DC::qb()
+                    $query_result = $this->dc->qb()
                         ->select('*')
                         ->from('(('.$subquery_first.') UNION ('.$subquery_last.'))', 'r')
                         ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -788,7 +816,7 @@ class Board
                     $query_result = Cache::item('foolfuuka.model.board.getThreadComments.thread.'
                         .md5(serialize([$this->radix->shortname, $num])))->get();
                 } catch (\OutOfBoundsException $e) {
-                    $query_result = DC::qb()
+                    $query_result = $this->dc->qb()
                         ->select('*')
                         ->from($this->radix->getTable(), 'r')
                         ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
@@ -833,14 +861,14 @@ class Board
 
         if ($this->api) {
             $this->comments_unsorted =
-                Comment::fromArrayDeepApi($query_result, $this->radix, $this->api, [
+                $this->comment_factory->fromArrayDeepApi($query_result, $this->radix, $this->api, [
                     'realtime' => $realtime,
                     'backlinks_hash_only_url' => true,
                     'controller_method' => $controller_method
                 ] + $this->comment_options);
         } else {
             $this->comments_unsorted =
-                Comment::fromArrayDeep($query_result, $this->radix, [
+                $this->comment_factory->fromArrayDeep($query_result, $this->radix, [
                     'realtime' => $realtime,
                     'backlinks_hash_only_url' => true,
                     'prefetch_backlinks' => true,
@@ -857,9 +885,9 @@ class Board
             }
         }
 
-        \Profiler::mark_memory($this->comments, 'Board $this->comments');
-        \Profiler::mark_memory($this, 'Board $this');
-        \Profiler::mark('Board::getThreadComments End');
+        $this->profiler->logMem('Board $this->comments', $this->comments);
+        $this->profiler->logMem('Board $this', $this);
+        $this->profiler->log('Board::getThreadComments End');
 
         return $this;
     }
@@ -880,7 +908,7 @@ class Board
 
         extract($this->options);
 
-        $thread = DC::qb()
+        $thread = $this->dc->qb()
             ->select('*')
             ->from($this->radix->getTable('_threads'), 't')
             ->where('thread_num = :thread_num')
@@ -965,7 +993,7 @@ class Board
     {
         extract($this->options);
 
-        $query = DC::qb()
+        $query = $this->dc->qb()
             ->select('*')
             ->from($this->radix->getTable(), 'r');
 
@@ -996,9 +1024,9 @@ class Board
         }
 
         if ($this->api) {
-            $this->comments_unsorted = Comment::fromArrayDeepApi($result, $this->radix, $this->api, $this->comment_options);
+            $this->comments_unsorted = $this->comment_factory->fromArrayDeepApi($result, $this->radix, $this->api, $this->comment_options);
         } else {
-            $this->comments_unsorted = Comment::fromArrayDeep($result, $this->radix, $this->comment_options);
+            $this->comments_unsorted = $this->comment_factory->fromArrayDeep($result, $this->radix, $this->comment_options);
         }
 
         foreach ($this->comments_unsorted as $comment) {

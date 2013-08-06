@@ -6,7 +6,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 {
     public function radix_page($page = 1)
     {
-        $order = \Cookie::get('default_theme_page_mode_'. ($this->_radix->archive ? 'archive' : 'board')) === 'by_thread'
+        $order = $this->getCookie('default_theme_page_mode_'. ($this->radix->archive ? 'archive' : 'board')) === 'by_thread'
             ? 'by_thread' : 'by_post';
 
         $options = [

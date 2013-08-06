@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-class ToolsSearch extends \Foolz\Theme\View
+class ToolsSearch extends \Foolz\Foolfuuka\View\View
 {
 
     public function toString()
@@ -10,7 +10,7 @@ class ToolsSearch extends \Foolz\Theme\View
         $radix = $this->getBuilderParamManager()->getParam('radix');
         $search = $this->getBuilderParamManager()->getParam('search', []);
 
-        if (is_null($radix) && \Preferences::get('foolfuuka.sphinx.global')) {
+        if (is_null($radix) && $this->getPreferences()->get('foolfuuka.sphinx.global')) {
             // search can work also without a radix selected
             $search_radix = '_';
         } elseif (!is_null($radix)) {
@@ -23,7 +23,7 @@ class ToolsSearch extends \Foolz\Theme\View
         <?= \Form::open([
             'class' => 'navbar-search',
             'method' => 'POST',
-            'action' => \Uri::create($search_radix.'/search')
+            'action' => $this->getUri()->create($search_radix.'/search')
         ]);
         ?>
 

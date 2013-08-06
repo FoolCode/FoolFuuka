@@ -3,25 +3,9 @@
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
 use Foolz\Inet\Inet;
-use Foolz\Foolframe\Model\Legacy\Preferences;
 
-class BoardComment extends \Foolz\Theme\View
+class BoardComment extends \Foolz\Foolfuuka\View\View
 {
-    public static $permissions = null;
-
-    public function __construct()
-    {
-        if (static::$permissions === null) {
-            static::$permissions = [
-                'maccess.mod' => \Auth::has_access('maccess.mod'),
-                'media.see_hidden' => \Auth::has_access('media.see_hidden'),
-                'media.see_banned' => \Auth::has_access('media.see_banned'),
-                'comment.passwordless_deletion' => \Auth::has_access('comment.passwordless_deletion'),
-                'foolfuuka.sphinx.global' => \Preferences::get('foolfuuka.sphinx.global')
-            ];
-        }
-    }
-
     public function toString()
     {
         $p = $this->getParamManager()->getParam('p');
@@ -29,8 +13,6 @@ class BoardComment extends \Foolz\Theme\View
         if ($this->getParamManager()->getParam('modifiers', false)) {
             $modifiers = $this->getParamManager()->getParam('modifiers');
         }
-
-        $perm = static::$permissions;
 
         $num = $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 
@@ -47,16 +29,16 @@ class BoardComment extends \Foolz\Theme\View
                 <?php if ($p->media !== null) : ?>
                 <div class="post_file">
                     <span class="post_file_controls">
-                    <?php if ($p->media->getMediaStatus() !== 'banned' || $perm['media.see_hidden']) : ?>
-                        <?php if ( !$p->radix->hide_thumbnails || $perm['media.see_hidden']) : ?>
-                        <?php if ($p->media->total > 1) : ?><a href="<?= \Uri::create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $p->radix->shortname) . '/search/image/' . $p->media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a
-                            href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">Google</a><a
-                            href="http://iqdb.org/?url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">iqdb</a><a
-                            href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink() ?>" target="_blank" class="btnr parent">SauceNAO</a>
+                    <?php if ($p->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_hidden')) : ?>
+                        <?php if ( !$p->radix->hide_thumbnails || \Auth::has_access('media.see_hidden')) : ?>
+                        <?php if ($p->media->total > 1) : ?><a href="<?= $this->getUri()->create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $p->radix->shortname) . '/search/image/' . $p->media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a
+                            href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">Google</a><a
+                            href="http://iqdb.org/?url=<?= $p->media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">iqdb</a><a
+                            href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">SauceNAO</a>
                         <?php endif; ?>
                     <?php endif ?>
                     </span>
-                    <?php if ($p->media->getMediaStatus() !== 'banned' || $perm['media.see_banned']) : ?>
+                    <?php if ($p->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
                     <?php if (mb_strlen($p->media->getMediaFilenameProcessed()) > 38) : ?>
                         <span class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p->media->media_filename) ?>">
                             <?= mb_substr($p->media->getMediaFilenameProcessed(), 0, 32) . ' (...)' . mb_substr($p->media->getMediaFilenameProcessed(), mb_strrpos($p->media->getMediaFilenameProcessed(), '.')) . ', ' ?>
@@ -74,22 +56,22 @@ class BoardComment extends \Foolz\Theme\View
                     <?php if ($p->media->getMediaStatus() === 'banned') : ?>
                         <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
                     <?php elseif ($p->media->getMediaStatus() !== 'normal'): ?>
-                        <a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+                        <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
                             <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
                         </a>
                     <?php else: ?>
-                        <a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-                            <?php if (!$perm['maccess.mod'] && !$p->radix->getValue('transparent_spoiler') && $p->media->spoiler) :?>
+                        <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+                            <?php if (!\Auth::has_access('maccess.mod') && !$p->radix->getValue('transparent_spoiler') && $p->media->spoiler) :?>
                             <div class="spoiler_box"><span class="spoiler_box_text"><?= _i('Spoiler') ?><span class="spoiler_box_text_help"><?= _i('Click to view') ?></span></div>
                             <?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == true) : ?>
-                            <img src="<?= \Uri::base() . $this->getAssetManager()->getAssetLink('images/transparent_pixel.png') ?>" data-original="<?= $p->media->getThumbLink() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+                            <img src="<?= $this->getUri()->base() . $this->getAssetManager()->getAssetLink('images/transparent_pixel.png') ?>" data-original="<?= $p->media->getThumbLink($this->getRequest()) ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
                             <noscript>
-                                <a href="<?= ($p->media->getMediaLink()) ? $p->media->getMediaLink() : $p->media->getRemoteMediaLink() ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-                                    <img src="<?= $p->media->getThumbLink() ?>" style="margin-left: -<?= $p->media->preview_w ?>px" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+                                <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+                                    <img src="<?= $p->media->getThumbLink($this->getRequest()) ?>" style="margin-left: -<?= $p->media->preview_w ?>px" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
                                 </a>
                             </noscript>
                             <?php else : ?>
-                            <img src="<?= $p->media->getThumbLink() ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
+                            <img src="<?= $p->media->getThumbLink($this->getRequest()) ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
                             <?php endif; ?>
                         </a>
                     <?php endif; ?>
@@ -115,7 +97,7 @@ class BoardComment extends \Foolz\Theme\View
                         <span class="time_wrap">
                             <time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>" <?php if ($p->radix->archive) : ?> title="<?= _i('4chan Time') . ': ' . $p->getFourchanDate() ?>"<?php endif; ?>><?= gmdate('D d M Y H:i:s', $p->timestamp) ?></time>
                         </span>
-                        <a href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= \Uri::create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
+                        <a href="<?= $this->getUri()->create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= $this->getUri()->create([$p->radix->shortname, $p->_controller_method, $p->thread_num]) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
 
                         <span class="post_type">
                             <?php if ($p->poster_country !== null) : ?><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span><?php endif; ?>
@@ -126,7 +108,7 @@ class BoardComment extends \Foolz\Theme\View
                         </span>
 
                         <span class="post_controls">
-                            <?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= \Uri::create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if ($p->subnum > 0 || $perm['comment.passwordless_deletion'] || !$p->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
+                            <?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= $this->getUri()->create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if ($p->subnum > 0 || \Auth::has_access('comment.passwordless_deletion') || !$p->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
                         </span>
                     </div>
                 </header>
@@ -136,12 +118,12 @@ class BoardComment extends \Foolz\Theme\View
                 <div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $p->getCommentProcessed())) echo ' shift-jis'; ?>">
                     <?= $p->getCommentProcessed() ?>
                 </div>
-                <?php if ($perm['maccess.mod']) : ?>
+                <?php if (\Auth::has_access('maccess.mod')) : ?>
                 <div class="btn-group" style="clear:both; padding:5px 0 0 0;">
                     <button class="btn btn-mini" data-function="activateModeration"><?= _i('Mod') ?><?php if ($p->poster_ip) echo ' ' .Inet::dtop($p->poster_ip) ?></button>
                 </div>
                 <div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">
-                    <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-board-url="<?= \Uri::create([$p->radix->shortname]) ?>" data-id="<?= $p->doc_id ?>" data-action="delete_post"><?= _i('Delete Post') ?></button>
+                    <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-board-url="<?= $this->getUri()->create([$p->radix->shortname]) ?>" data-id="<?= $p->doc_id ?>" data-action="delete_post"><?= _i('Delete Post') ?></button>
                     <?php if ( !is_null($p->media)) : ?>
                         <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="delete_image"><?= _i('Delete Image') ?></button>
                         <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="ban_image_local"><?= _i('Ban Image') ?></button>
@@ -150,7 +132,7 @@ class BoardComment extends \Foolz\Theme\View
                     <?php if ($p->poster_ip) : ?>
                         <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $p->radix->shortname ?>" data-ip="<?= Inet::dtop($p->poster_ip) ?>" data-action="ban_user"><?= _i('Ban IP:') . ' ' . Inet::dtop($p->poster_ip) ?></button>
                         <button class="btn btn-mini" data-function="searchUser" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= Inet::dtop($p->poster_ip) ?>"><?= _i('Search IP') ?></button>
-                        <?php if ($perm['foolfuuka.sphinx.global']) : ?>
+                        <?php if ($this->getPreferences()->get('foolfuuka.sphinx.global')) : ?>
                             <button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= Inet::dtop($p->poster_ip) ?>"><?= _i('Search IP Globally') ?></button>
                         <?php endif; ?>
                     <?php endif; ?>

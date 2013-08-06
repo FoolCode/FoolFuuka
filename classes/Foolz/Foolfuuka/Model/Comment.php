@@ -2,29 +2,23 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC,
-    \Foolz\Cache\Cache;
+use Foolz\Foolframe\Model\Config;
+use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\Cache\Cache;
+use Foolz\Foolframe\Model\Context;
+use Foolz\Foolframe\Model\Logger;
+use Foolz\Foolframe\Model\Model;
+use Foolz\Foolframe\Model\Uri;
+use Foolz\Plugin\Hook;
+use Foolz\Plugin\PlugSuit;
+use Foolz\Theme\Builder;
 
 class CommentException extends \Exception {}
 class CommentDeleteWrongPassException extends CommentException {}
 
-class Comment
+class Comment extends Model
 {
-    use \Foolz\Plugin\PlugSuit;
-
-    /**
-     * Array of post numbers found in the database
-     *
-     * @var  array
-     */
-    protected static $_posts = [];
-
-    /**
-     * Array of backlinks found in the posts
-     *
-     * @var  array
-     */
-    public static $_backlinks_arr = [];
+    use PlugSuit;
 
     /**
      * If the backlinks must be full URLs or just the hash
@@ -63,6 +57,46 @@ class Comment
     protected static $_bbcode_parser = null;
 
     /**
+     * @var DoctrineConnection
+     */
+    protected $dc;
+    
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
+     * @var Uri
+     */
+    protected $uri;
+
+    /**
+     * @var CommentFactory
+     */
+    protected $comment_factory;
+
+    /**
+     * @var MediaFactory
+     */
+    protected $media_factory;
+
+    /**
+     * @var RadixCollection
+     */
+    protected $radix_coll;
+
+    /**
+     * @var ReportCollection
+     */
+    protected $report_coll;
+
+    /**
      * Switches
      *
      * @var  array
@@ -79,7 +113,7 @@ class Comment
      *
      * @var  array
      */
-    protected $_forced_entries = [
+    public $_forced_entries = [
         'title_processed' => 'getTitleProcessed',
         'name_processed' => 'getNameProcessed',
         'email_processed' => 'getEmailProcessed',
@@ -130,118 +164,19 @@ class Comment
     public $media = null;
     public $extra = null;
 
-
-    public static function fromArrayDeep(&$posts, $radix, $options = [])
+    public function __construct(Context $context, $post, $board, $options = [])
     {
-        $array = new \SplFixedArray(count($posts));
-        foreach ($posts as $key => $post) {
-            $array[$key] = new static($post, $radix, $options);
-            unset($posts[$key]);
-        }
+        parent::__construct($context);
 
-        return $array;
-    }
+        $this->dc = $context->getService('doctrine');
+        $this->config = $context->getService('config');
+        $this->logger = $context->getService('logger');
+        $this->uri = $context->getService('uri');
+        $this->comment_factory = $context->getService('foolfuuka.comment_factory');
+        $this->media_factory = $context->getService('foolfuuka.media_factory');
+        $this->radix_coll = $context->getService('foolfuuka.radix_collection');
+        $this->report_coll = $context->getService('foolfuuka.report_collection');
 
-
-    public static function fromArrayDeepApi(&$posts, $radix, $api, $options = [])
-    {
-        $array = new \SplFixedArray(count($posts));
-        foreach ($posts as $key => $post) {
-            $array[$key] = static::forgeForApi($post, $radix, $api, $options);
-            unset($posts[$key]);
-        }
-
-        return $array;
-    }
-
-    public static function forgeForApi($post, $radix, $api, $options = [])
-    {
-        $comment = new static($post, $radix, $options);
-
-        $fields = $comment->_forced_entries;
-
-        if (isset($api['theme']) && $api['theme'] !== null) {
-            $comment->_theme = $api['theme'];
-            $fields[] = 'getFormatted';
-        }
-
-        foreach ($fields as $var => $method) {
-            $comment->$method();
-        }
-
-        // also spawn media variables
-        if ($comment->media !== null) {
-            // if we come across a banned image we set all the data to null. Normal users must not see this data.
-            if (($comment->media->banned && !\Auth::has_access('media.see_banned'))
-                || ($comment->media->radix->hide_thumbnails && !\Auth::has_access('media.see_hidden')))
-            {
-                $banned = [
-                    'media_id' => 0,
-                    'spoiler' => false,
-                    'preview_orig' => null,
-                    'preview_w' => 0,
-                    'preview_h' => 0,
-                    'media_filename' => null,
-                    'media_w' => 0,
-                    'media_h' => 0,
-                    'media_size' => 0,
-                    'media_hash' => null,
-                    'media_orig' => null,
-                    'exif' => null,
-                    'total' => 0,
-                    'banned' => 0,
-                    'media' => null,
-                    'preview_op' => null,
-                    'preview_reply' => null,
-
-                    // optionals
-                    'safe_media_hash' => null,
-                    'remote_media_link' => null,
-                    'media_link' => null,
-                    'thumb_link' => null,
-                ];
-
-                foreach ($banned as $key => $item) {
-                    $comment->media->$key = $item;
-                }
-            }
-
-            // startup variables and put them also in the lower level for compatibility with older 4chan X
-            foreach ([
-                'safe_media_hash' => 'getSafeMediaHash',
-                'media_filename_processed' => 'getMediaFilenameProcessed',
-                'media_link' => 'getMediaLink',
-                'remote_media_link' => 'getRemoteMediaLink',
-                'thumb_link' => 'getThumbLink'
-            ] as $var => $method)
-            {
-                $comment->media->$method();
-            }
-
-            unset($comment->media->radix);
-        }
-
-        if (isset($api['board']) && !$api['board']) {
-            unset($comment->radix);
-        }
-
-        // remove controller method
-        unset($comment->_controller_method);
-
-        // remove radix data
-        unset($comment->extra->radix);
-
-        // remove extra radix data
-        unset($comment->current_board_for_prc);
-
-        // we don't have captcha in use in api
-        unset($comment->recaptcha_challenge, $comment->recaptcha_response);
-
-        return $comment;
-    }
-
-    public function __construct($post, $board, $options = [])
-    {
         $this->radix = $board;
 
         $media_fields = Media::getFields();
@@ -264,12 +199,12 @@ class Comment
         }
 
         if ($do_media && isset($media->media_id) && $media->media_id > 0) {
-            $this->media = new Media($media, $this->radix, $this->op);
+            $this->media = new Media($this->getContext(), $media, $this->radix, $this->op);
         } else {
             $this->media = null;
         }
 
-        $this->extra = Extra::forge($extra, $this->radix);
+        $this->extra = new Extra($this->getContext(), $extra, $this->radix);
 
         foreach ($options as $key => $value) {
             if ($key == 'controller_method') {
@@ -302,11 +237,11 @@ class Comment
         }
 
         if ($this->poster_country !== null) {
-            $this->poster_country_name = \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'geoip_codes', 'codes.'.strtoupper($this->poster_country));
+            $this->poster_country_name = $this->config->get('foolz/foolfuuka', 'geoip_codes', 'codes.'.strtoupper($this->poster_country));
         }
 
         $num = $this->num.($this->subnum ? ','.$this->subnum : '');
-        static::$_posts[$this->thread_num][] = $num;
+        $this->comment_factory->_posts[$this->thread_num][] = $num;
     }
 
     public function getOriginalTimestamp()
@@ -357,10 +292,10 @@ class Comment
     {
         if ($this->reports === false) {
             if (\Auth::has_access('comment.reports')) {
-                $reports = \Report::getByDocId($this->radix, $this->doc_id);
+                $reports = $this->report_coll->getByDocId($this->radix, $this->doc_id);
 
                 if ($this->media) {
-                    $reports += \Report::getByMediaId($this->radix, $this->media->media_id);
+                    $reports += $this->report_coll->getByMediaId($this->radix, $this->media->media_id);
                 }
 
                 $this->reports = $reports;
@@ -450,7 +385,7 @@ class Comment
         $find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
         $html = '\\1<span class="greentext">\\2</span>\\3';
 
-        $html = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Comment::processComment.result.greentext')
+        $html = Hook::forge('Foolz\Foolfuuka\Model\Comment::processComment.result.greentext')
             ->setParam('html', $html)
             ->execute()
             ->get($html);
@@ -580,7 +515,7 @@ class Comment
 
         // if $special == true, add special bbcode
         if ($special_code === true) {
-            /* @todo put this into theme bootstrap
+            /* @todo put this into form bootstrap
             if ($CI->theme->get_selected_theme() == 'fuuka') {
                 $bbcode->addCode('moot', 'simple_replace', null,
                     ['start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'),
@@ -657,41 +592,41 @@ class Comment
             'attr_backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $current_p_num_u . '"',
         ];
 
-        $build_url = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Comment::processInternalLinks.result.html')
+        $build_url = Hook::forge('Foolz\Foolfuuka\Model\Comment::processInternalLinks.result.html')
             ->setObject($this)
             ->setParam('data', $data)
             ->setParam('build_url', $build_url)
             ->execute()
             ->get($build_url);
 
-        static::$_backlinks_arr[$data->num][$current_p_num_u] = implode(
-            '<a href="' . \Uri::create([$data->board->shortname, $this->_controller_method, $data->post->thread_num]) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
+        $this->comment_factory->_backlinks_arr[$data->num][$current_p_num_u] = implode(
+            '<a href="' . $this->uri->create([$data->board->shortname, $this->_controller_method, $data->post->thread_num]) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
             $build_url['attr_backlink'] . '>&gt;&gt;' . $current_p_num_c . '</a>'
         , $build_url['tags']);
 
-        if (array_key_exists($num, static::$_posts)) {
+        if (array_key_exists($num, $this->comment_factory->_posts)) {
             if ($this->_backlinks_hash_only_url) {
                 return implode('<a href="#' . $build_url['hash'] . $data->num . '" '
                     . $build_url['attr_op'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
             }
 
-            return implode('<a href="' . \Uri::create([$data->board->shortname, $this->_controller_method, $num]) . '#' . $data->num . '" '
+            return implode('<a href="' . $this->uri->create([$data->board->shortname, $this->_controller_method, $num]) . '#' . $data->num . '" '
                 . $build_url['attr_op'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
         }
 
-        foreach (static::$_posts as $key => $thread) {
+        foreach ($this->comment_factory->_posts as $key => $thread) {
             if (in_array($num, $thread)) {
                 if ($this->_backlinks_hash_only_url) {
                     return implode('<a href="#' . $build_url['hash'] . $data->num . '" '
                         . $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
                 }
 
-                return implode('<a href="' . \Uri::create([$data->board->shortname, $this->_controller_method, $key]) . '#' . $build_url['hash'] . $data->num . '" '
+                return implode('<a href="' . $this->uri->create([$data->board->shortname, $this->_controller_method, $key]) . '#' . $build_url['hash'] . $data->num . '" '
                     . $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
             }
         }
 
-        return implode('<a href="' . \Uri::create([$data->board->shortname, 'post', $data->num]) . '" '
+        return implode('<a href="' . $this->uri->create([$data->board->shortname, 'post', $data->num]) . '" '
             . $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
 
         // return un-altered
@@ -702,9 +637,9 @@ class Comment
     {
         $num = $this->subnum ? $this->num.'_'.$this->subnum : $this->num;
 
-        if (isset(static::$_backlinks_arr[$num])) {
-            ksort(static::$_backlinks_arr[$num], SORT_STRING);
-            return static::$_backlinks_arr[$num];
+        if (isset($this->comment_factory->_backlinks_arr[$num])) {
+            ksort($this->comment_factory->_backlinks_arr[$num], SORT_STRING);
+            return $this->comment_factory->_backlinks_arr[$num];
         }
 
         return [];
@@ -723,7 +658,7 @@ class Comment
         $data = new \stdClass();
         $data->link = $matches[2];
         $data->shortname = $matches[3];
-        $data->board = \Radix::getByShortname($data->shortname);
+        $data->board = $this->radix_coll->getByShortname($data->shortname);
         $data->query = $matches[4];
 
         $build_href = [
@@ -740,7 +675,7 @@ class Comment
                 .(($data->board)?$data->board->shortname:$data->shortname).'" data-post="'.$data->query.'"'
         ];
 
-        $build_href = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Comment::processExternalLinks.result.html')
+        $build_href = Hook::forge('Foolz\Foolfuuka\Model\Comment::processExternalLinks.result.html')
             ->setObject($this)
             ->setParam('data', $data)
             ->setParam('build_href', $build_href)
@@ -756,11 +691,11 @@ class Comment
         }
 
         if ($data->query) {
-            return implode('<a href="'.\Uri::create([$data->board->shortname, 'post', $data->query]).'"'
+            return implode('<a href="'.$this->uri->create([$data->board->shortname, 'post', $data->query]).'"'
                 .$build_href['attributes'].$build_href['backlink_attr'].'>&gt;&gt;&gt;'.$data->link.'</a>', $build_href['tags']);
         }
 
-        return implode('<a href="' . \Uri::create($data->board->shortname) . '">&gt;&gt;&gt;' . $data->link . '</a>', $build_href['tags']);
+        return implode('<a href="' . $this->uri->create($data->board->shortname) . '">&gt;&gt;&gt;' . $data->link . '</a>', $build_href['tags']);
     }
 
     /**
@@ -772,7 +707,8 @@ class Comment
      */
     public function buildComment($params = [])
     {
-        $builder = $this->_theme->createBuilder();
+        /** @var Builder $builder */
+        $builder = $this->_theme;
         $partial = $builder->createPartial('board_comment', 'board_comment');
         $partial->getParamManager()
             ->setParam('p', $this)
@@ -847,7 +783,7 @@ class Comment
 
     public function cleanFields()
     {
-        \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Comment::cleanFields.call.before.body')
+        Hook::forge('Foolz\Foolfuuka\Model\Comment::cleanFields.call.before.body')
             ->setObject($this)
             ->execute();
 
@@ -873,7 +809,7 @@ class Comment
 
             $hasher = new \PHPSecLib\Crypt_Hash();
 
-            $hashed = base64_encode($hasher->pbkdf2($password, \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
+            $hashed = base64_encode($hasher->pbkdf2($password, $this->config->get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
 
             if ($this->delpass !== $hashed) {
                 throw new CommentDeleteWrongPassException(_i('You did not provide the correct deletion password.'));
@@ -881,35 +817,35 @@ class Comment
         }
 
         try {
-            DC::forge()->beginTransaction();
+            $this->dc->getConnection()->beginTransaction();
 
             // throw into _deleted table
-            $lol = DC::forge()->executeUpdate(
+            $this->dc->getConnection()->executeUpdate(
                 'INSERT INTO '.$this->radix->getTable('_deleted').' '.
-                    DC::qb()
+                    $this->dc->qb()
                         ->select('*')
                         ->from($this->radix->getTable(), 't')
-                        ->where('doc_id = '.DC::forge()->quote($this->doc_id))
+                        ->where('doc_id = '.$this->dc->getConnection()->quote($this->doc_id))
                         ->getSQL()
             );
 
             // delete post
-            DC::qb()
+            $this->dc->qb()
                 ->delete($this->radix->getTable())
                 ->where('doc_id = :doc_id')
                 ->setParameter(':doc_id', $this->doc_id)
                 ->execute();
 
             // remove any extra data
-            DC::qb()
+            $this->dc->qb()
                 ->delete($this->radix->getTable('_extra'))
                 ->where('extra_id = :doc_id')
                 ->setParameter(':doc_id', $this->doc_id)
                 ->execute();
 
             // purge reports
-            DC::qb()
-                ->delete(DC::p('reports'))
+            $this->dc->qb()
+                ->delete($this->dc->p('reports'))
                 ->where('board_id = :board_id')
                 ->andWhere('doc_id = :doc_id')
                 ->setParameter(':board_id', $this->radix->id)
@@ -917,7 +853,7 @@ class Comment
                 ->execute();
 
             // clear cache
-            \Report::clearCache();
+            $this->radix_coll->clearCache();
 
             // remove image file
             if (isset($this->media)) {
@@ -927,14 +863,14 @@ class Comment
             // if this is OP, delete replies too
             if ($this->op) {
                 // delete thread data
-                DC::qb()
+                $this->dc->qb()
                     ->delete($this->radix->getTable('_threads'))
                     ->where('thread_num = :thread_num')
                     ->setParameter(':thread_num', $this->thread_num)
                     ->execute();
 
                 // process each comment
-                $comments = DC::qb()
+                $comments = $this->dc->qb()
                     ->select('doc_id')
                     ->from($this->radix->getTable(), 'b')
                     ->where('thread_num = :thread_num')
@@ -943,7 +879,7 @@ class Comment
                     ->fetchAll();
 
                 foreach ($comments as $comment) {
-                    $post = \Board::forge()
+                    $post = Board::forge($this->getContext())
                         ->getPost()
                         ->setOptions('doc_id', $comment['doc_id'])
                         ->setRadix($this->radix)
@@ -961,7 +897,7 @@ class Comment
                             time_op,
                             (
                                 SELECT MAX(timestamp) FROM '.$this->radix->getTable().' xr
-                                WHERE thread_num = '.DC::forge()->quote($this->thread_num).' AND subnum = 0
+                                WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).' AND subnum = 0
                             )
                         ), time_op)
                     )';
@@ -972,7 +908,7 @@ class Comment
                             time_op,
                             (
                                 SELECT MAX(timestamp) FROM '.$this->radix->getTable().' xr
-                                WHERE thread_num = '.DC::forge()->quote($this->thread_num).' AND subnum = 0
+                                WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).' AND subnum = 0
                                     AND (email <> \'sage\' OR email IS NULL)
                             )
                         ), time_op)
@@ -981,18 +917,18 @@ class Comment
                     $time_ghost = '
                     (
                         SELECT MAX(timestamp) FROM '.$this->radix->getTable().' xr
-                        WHERE thread_num = '.DC::forge()->quote($this->thread_num).' AND subnum <> 0
+                        WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).' AND subnum <> 0
                     )';
 
                     $time_ghost_bump = '
                     (
                         SELECT MAX(timestamp) FROM '.$this->radix->getTable().' xr
-                        WHERE thread_num = '.DC::forge()->quote($this->thread_num).' AND subnum <> 0
+                        WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).' AND subnum <> 0
                             AND (email <> \'sage\' OR email IS NULL)
                     )';
 
                     // update thread information
-                    DC::qb()
+                    $this->dc->qb()
                         ->update($this->radix->getTable('_threads'))
                         ->set('time_last', $time_last)
                         ->set('time_bump', $time_bump)
@@ -1008,7 +944,7 @@ class Comment
                 }
             }
 
-            DC::forge()->commit();
+            $this->dc->getConnection()->commit();
 
             // clean up some caches
             Cache::item('foolfuuka.model.board.getThreadComments.thread.'
@@ -1026,8 +962,8 @@ class Comment
                     .$this->radix->shortname.'.'.$i)->delete();
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
-            \Log::error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
-            DC::forge()->rollBack();
+            $this->logger->error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
+            $this->dc->getConnection()->rollBack();
 
             throw new CommentSendingDatabaseException(_i('Something went wrong when deleting the post in the database. Try again.'));
         }
@@ -1056,12 +992,12 @@ class Comment
             preg_match("'^(.*?)(?:#+(.*))?$'", $matches[3], $matches_trip);
 
             if (count($matches_trip) > 1) {
-                $normal_trip = static::processTripcode($matches_trip[1]);
+                $normal_trip = $this->processTripcode($matches_trip[1]);
                 $normal_trip = $normal_trip ? '!'.$normal_trip : '';
             }
 
             if (count($matches_trip) > 2) {
-                $secure_trip = '!!'.static::processSecureTripcode($matches_trip[2]);
+                $secure_trip = '!!'.$this->processSecureTripcode($matches_trip[2]);
             }
         }
 
@@ -1077,7 +1013,7 @@ class Comment
      * @param string $plain the word to generate the tripcode from
      * @return string the processed tripcode
      */
-    protected static function p_processTripcode($plain)
+    protected function p_processTripcode($plain)
     {
         if (trim($plain) == '') {
             return '';
@@ -1100,6 +1036,6 @@ class Comment
      */
     protected function p_processSecureTripcode($plain)
     {
-        return substr(base64_encode(sha1($plain . base64_decode(\Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'config', 'comment.secure_tripcode_salt')), true)), 0, 11);
+        return substr(base64_encode(sha1($plain . base64_decode($this->config->get('foolz/foolfuuka', 'config', 'comment.secure_tripcode_salt')), true)), 0, 11);
     }
 }

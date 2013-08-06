@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-class Message extends \Foolz\Theme\View
+class Message extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {

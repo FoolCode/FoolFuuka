@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-class Plugin extends \Foolz\Theme\View
+class Plugin extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {

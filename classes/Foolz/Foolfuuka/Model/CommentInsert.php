@@ -2,8 +2,8 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC,
-    \Foolz\Cache\Cache;
+use Foolz\Cache\Cache;
+use Foolz\Inet\Inet;
 
 class CommentSendingException extends \Exception {}
 class CommentSendingDuplicateException extends CommentSendingException {}
@@ -36,7 +36,7 @@ class CommentInsert extends Comment
             'names' => (int) ($this->name !== $this->radix->getValue('anonymous_default_name') || $this->trip !== null)
         ];
 
-        $result = DC::qb()
+        $result = $this->dc->qb()
             ->select('*')
             ->from($this->radix->getTable('_daily'), 'd')
             ->where('day = :day')
@@ -47,12 +47,12 @@ class CommentInsert extends Comment
         if ($result === false) {
             try {
                 $item['posts'] = 0;
-                DC::forge()->insert($this->radix->getTable('_daily'), $item);
+                $this->dc->getConnection()->insert($this->radix->getTable('_daily'), $item);
             } catch(\Doctrine\DBAL\DBALException $e) {
                 throw new \Doctrine\DBAL\DBALException;
             }
         } else {
-            DC::qb()
+            $this->dc->qb()
                 ->update($this->radix->getTable('_daily'))
                 ->set('images', 'images + :images')
                 ->set('sage', 'sage + :sage')
@@ -72,7 +72,7 @@ class CommentInsert extends Comment
 
     protected function insertTriggerUsers()
     {
-        $select = DC::qb()
+        $select = $this->dc->qb()
             ->select('*')
             ->from($this->radix->getTable('_users'), 'u');
 
@@ -90,7 +90,7 @@ class CommentInsert extends Comment
 
         if ($result === false) {
             try {
-                DC::forge()->insert($this->radix->getTable('_users'), [
+                $this->dc->getConnection()->insert($this->radix->getTable('_users'), [
                     'name' => (string) $this->name,
                     'trip' => (string) $this->trip,
                     'firstseen' => $this->timestamp,
@@ -100,7 +100,7 @@ class CommentInsert extends Comment
                 throw new \Doctrine\DBAL\DBALException;
             }
         } else {
-            DC::qb()
+            $this->dc->qb()
                 ->update($this->radix->getTable('_users'))
                 ->set('postcount', 'postcount + 1')
                 ->where('user_id = :user_id')
@@ -112,7 +112,7 @@ class CommentInsert extends Comment
     protected function insertTriggerThreads()
     {
         if ($this->op) {
-            DC::forge()->insert($this->radix->getTable('_threads'), [
+            $this->dc->getConnection()->insert($this->radix->getTable('_threads'), [
                 'thread_num' => $this->num,
                 'time_op' => $this->timestamp,
                 'time_last' => $this->timestamp,
@@ -127,7 +127,7 @@ class CommentInsert extends Comment
             ]);
         } else {
             if (!$this->subnum) {
-                $query = DC::qb()
+                $query = $this->dc->qb()
                     ->update($this->radix->getTable('_threads'))
                     ->set('time_last', 'GREATEST(time_last, :time_last)')
                     ->set('time_last_modified', 'GREATEST(time_last_modified, :time_last)')
@@ -141,7 +141,7 @@ class CommentInsert extends Comment
                         ->setParameter(':time_bump', $this->timestamp);
                 }
             } else {
-                $query = DC::qb()
+                $query = $this->dc->qb()
                     ->update($this->radix->getTable('_threads'))
                     ->set('time_ghost', 'COALESCE(time_ghost, :time_ghost)')
                     ->set('time_last_modified', 'GREATEST(time_last_modified, :time_ghost)')
@@ -178,7 +178,7 @@ class CommentInsert extends Comment
         // some users don't need to be limited, in here go all the ban and posting limitators
         if (!\Auth::has_access('comment.limitless_comment')) {
             // check if the user is banned
-            if ($ban = \Ban::isBanned(\Input::ip_decimal(), $this->radix)) {
+            if ($ban = Ban::isBanned($this->poster_ip, $this->radix)) {
                 if ($ban->board_id == 0) {
                     $banned_string = _i('It looks like you were banned on all boards.');
                 } else {
@@ -195,10 +195,10 @@ class CommentInsert extends Comment
                     $banned_string .= ' '._i('The reason for this ban is:').' «'.$ban->reason.'».';
                 }
 
-                if ($ban->appeal_status == \Ban::APPEAL_NONE) {
+                if ($ban->appeal_status == Ban::APPEAL_NONE) {
                     $banned_string .= ' '._i('If you\'d like to appeal to your ban, go to the %s page.',
                         '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'._i('Appeal').'</a>');
-                } elseif ($ban->appeal_status == \Ban::APPEAL_PENDING) {
+                } elseif ($ban->appeal_status == Ban::APPEAL_PENDING) {
                     $banned_string .= ' '._i('Your appeal is pending.');
                 }
 
@@ -209,7 +209,7 @@ class CommentInsert extends Comment
         // check if it's a thread and its status
         if ($this->thread_num > 0) {
             try {
-                $thread = Board::forge()
+                $thread = Board::forge($this->getContext())
                     ->getThread($this->thread_num)
                     ->setRadix($this->radix);
 
@@ -234,14 +234,14 @@ class CommentInsert extends Comment
         if (!\Auth::has_access('comment.limitless_comment')) {
             if ($this->thread_num < 1) {
                 // one can create a new thread only once every 5 minutes
-                $check_op = DC::qb()
+                $check_op = $this->dc->qb()
                     ->select('*')
                     ->from($this->radix->getTable(), 'r')
                     ->where('r.poster_ip = :poster_ip')
                     ->andWhere('r.timestamp > :timestamp')
                     ->andWhere('r.op = :op')
                     ->setParameters([
-                        ':poster_ip' => \Input::ip_decimal(),
+                        ':poster_ip' => $this->poster_ip,
                         ':timestamp' => time() - $this->radix->getValue('cooldown_new_thread'),
                         ':op' => true
                     ])
@@ -255,13 +255,13 @@ class CommentInsert extends Comment
             }
 
             // check the latest posts by the user to see if he's posting the same message or if he's posting too fast
-            $check = DC::qb()
+            $check = $this->dc->qb()
                 ->select('*')
                 ->from($this->radix->getTable(), 'r')
                 ->where('poster_ip = :poster_ip')
                 ->orderBy('timestamp', 'DESC')
                 ->setMaxResults(1)
-                ->setParameter(':poster_ip', \Input::ip_decimal())
+                ->setParameter(':poster_ip', $this->poster_ip)
                 ->execute()
                 ->fetch();
 
@@ -290,7 +290,7 @@ class CommentInsert extends Comment
 
             if ($this->recaptcha_challenge && $this->recaptcha_response && \ReCaptcha::available()) {
                 $recaptcha = \ReCaptcha::instance()
-                    ->check_answer(\Input::ip(), $this->recaptcha_challenge, $this->recaptcha_response);
+                    ->check_answer($this->poster_ip, $this->recaptcha_challenge, $this->recaptcha_response);
 
                 if (!$recaptcha) {
                     throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution.'));
@@ -364,7 +364,7 @@ class CommentInsert extends Comment
         }
 
         $hasher = new \PHPSecLib\Crypt_Hash();
-        $this->delpass = base64_encode($hasher->pbkdf2($this->delpass, \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
+        $this->delpass = base64_encode($hasher->pbkdf2($this->delpass, $this->config->get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
 
         if ($this->capcode != '') {
             $allowed_capcodes = ['N'];
@@ -392,12 +392,8 @@ class CommentInsert extends Comment
         $this->timestamp = substr($microtime, 0, 10);
         $this->op = (bool) ! $this->thread_num;
 
-        if ($this->poster_ip === null) {
-            $this->poster_ip = \Input::ip_decimal();
-        }
-
         if ($this->radix->getValue('enable_flags') && function_exists('\\geoip_country_code_by_name')) {
-            $this->poster_country = \geoip_country_code_by_name(\Foolz\Inet\Inet::dtop($this->poster_ip));
+            $this->poster_country = \geoip_country_code_by_name(Inet::dtop($this->poster_ip));
         }
 
         // process comment media
@@ -432,12 +428,12 @@ class CommentInsert extends Comment
                 throw new CommentSendingDisplaysEmptyException(_i('This comment would display empty.'));
             }
 
-            $this->media = Media::forgeEmpty($this->radix);
+            $this->media = $this->media_factory->forgeEmpty($this->radix);
         }
 
         // 2ch-style codes, only if enabled
         if ($this->thread_num && $this->radix->getValue('enable_poster_hash')) {
-            $this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$this->thread_num),'id'),+3), 0, 8);
+            $this->poster_hash = substr(substr(crypt(md5($this->poster_ip.'id'.$this->thread_num),'id'),+3), 0, 8);
         }
 
         $this->timestamp = $this->getRadixTime($this->timestamp);
@@ -456,13 +452,13 @@ class CommentInsert extends Comment
                     (
                         SELECT num
                         FROM '.$this->radix->getTable().' xr
-                        WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+                        WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
                     )
                     UNION
                     (
                         SELECT num
                         FROM '.$this->radix->getTable('_deleted').' xrd
-                        WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+                        WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
                     )
                 ) x
             )';
@@ -480,13 +476,13 @@ class CommentInsert extends Comment
                                 (
                                     SELECT num
                                     FROM '.$this->radix->getTable().' xxxr
-                                    WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
                                 )
                                 UNION
                                 (
                                     SELECT num
                                     FROM '.$this->radix->getTable('_deleted').' xxxrd
-                                    WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
                                 )
                             ) xxx
                         )
@@ -501,13 +497,13 @@ class CommentInsert extends Comment
                                 (
                                     SELECT num
                                     FROM '.$this->radix->getTable().' xxxr
-                                    WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
                                 )
                                 UNION
                                 (
                                     SELECT num
                                     FROM '.$this->radix->getTable('_deleted').' xxxdrd
-                                    WHERE thread_num = '.DC::forge()->quote($this->thread_num).'
+                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
                                 )
                             ) xxxd
                         )
@@ -536,7 +532,7 @@ class CommentInsert extends Comment
             $subnum = 0;
 
             if ($this->thread_num > 0) {
-                $thread_num = DC::forge()->quote($this->thread_num);
+                $thread_num = $this->dc->getConnection()->quote($this->thread_num);
             } else {
                 $thread_num = '
                 (
@@ -557,7 +553,7 @@ class CommentInsert extends Comment
         }
 
         try {
-            DC::forge()->beginTransaction();
+            $this->dc->getConnection()->beginTransaction();
 
             $query_fields = [
                 'num' => $num,
@@ -598,20 +594,20 @@ class CommentInsert extends Comment
                 if ($item === null) {
                     $fields[$key] = 'null';
                 } else {
-                    $fields[$key] = DC::forge()->quote($item);
+                    $fields[$key] = $this->dc->getConnection()->quote($item);
                 }
             }
 
             $fields = $query_fields + $fields;
 
-            DC::forge()->executeUpdate(
+            $this->dc->getConnection()->executeUpdate(
                 'INSERT INTO '.$this->radix->getTable().
                     ' ('.implode(', ', array_keys($fields)).') VALUES ('.implode(', ', array_values($fields)).')'
             );
 
-            $last_id = DC::forge()->lastInsertId($this->radix->getTable('_doc_id_seq'));
+            $last_id = $this->dc->getConnection()->lastInsertId($this->radix->getTable('_doc_id_seq'));
 
-            $comment = DC::qb()
+            $comment = $this->dc->qb()
                 ->select('*')
                 ->from($this->radix->getTable(), 'r')
                 ->where('doc_id = :doc_id')
@@ -639,11 +635,11 @@ class CommentInsert extends Comment
 
             // update poster_hash for op posts
             if ($this->op && $this->radix->getValue('enable_poster_hash')) {
-                $this->poster_hash = substr(substr(crypt(md5(\Input::ip_decimal().'id'.$comment['thread_num']),'id'), 3), 0, 8);
+                $this->poster_hash = substr(substr(crypt(md5($this->poster_ip.'id'.$comment['thread_num']),'id'), 3), 0, 8);
 
-                DC::qb()
+                $this->dc->qb()
                     ->update($this->radix->getTable(), 'ph')
-                    ->set('poster_hash', DC::forge()->quote($this->poster_hash))
+                    ->set('poster_hash', $this->dc->getConnection()->quote($this->poster_hash))
                     ->where('doc_id = :doc_id')
                     ->setParameter(':doc_id', $comment['doc_id'])
                     ->execute();
@@ -658,7 +654,7 @@ class CommentInsert extends Comment
             $this->extra->extra_id = $last_id;
             $this->extra->insert();
 
-            DC::forge()->commit();
+            $this->dc->getConnection()->commit();
 
             // clean up some caches
             Cache::item('foolfuuka.model.board.getThreadComments.thread.'
@@ -676,8 +672,8 @@ class CommentInsert extends Comment
                     .$this->radix->shortname.'.'.$i)->delete();
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
-            \Log::error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
-            DC::forge()->rollBack();
+            $this->logger->error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
+            $this->dc->getConnection()->rollBack();
 
             throw new CommentSendingDatabaseException(_i('Something went wrong when inserting the post in the database. Try again.'));
         }

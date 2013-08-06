@@ -2,6 +2,9 @@
 
 namespace Foolz\Foolfuuka\Controller\Admin;
 
+use Foolz\Foolfuuka\Model\BanFactory;
+use Foolz\Foolfuuka\Model\RadixCollection;
+use Foolz\Foolfuuka\Model\ReportCollection;
 use Foolz\Inet\Inet;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,6 +13,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Moderation extends \Foolz\Foolframe\Controller\Admin
 {
+    /**
+     * @var RadixCollection
+     */
+    protected $radic_coll;
+
+    /**
+     * @var ReportCollection
+     */
+    protected $report_coll;
+
+    /**
+     * @var BanFactory
+     */
+    protected $ban_factory;
+
     /**
      * Check that the user is an admin or a moderator and
      */
@@ -20,6 +38,10 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
         }
 
         parent::before();
+
+        $this->radix_coll = $this->getContext()->getService('foolfuuka.radix_collection');
+        $this->report_coll = $this->getContext()->getService('foolfuuka.report_collection');
+        $this->ban_factory = $this->getContext()->getService('foolfuuka.ban_factory');
 
         $this->param_manager->setParam('controller_title', _i('Moderation'));
     }
@@ -51,7 +73,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
         $theme_name = 'foolz/foolfuuka-theme-foolfuuka';
         $this->theme = $theme = $theme_instance->get('foolz/foolfuuka-theme-foolfuuka');
 
-        $reports = \Report::getAll();
+        $reports = $this->report_coll->getAll();
 
         foreach ($reports as $key => $report) {
             foreach ($reports as $k => $r) {
@@ -61,21 +83,10 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             }
         }
 
-        $pass = \Cookie::get('reply_password');
-        $name = \Cookie::get('reply_name');
-        $email = \Cookie::get('reply_email');
-
-        // get the password needed for the reply field
-        if (!$pass || $pass < 3) {
-            $pass = \Str::random('alnum', 7);
-            \Cookie::set('reply_password', $pass, 60*60*24*30);
-        }
-
         // KEEP THIS IN SYNC WITH THE ONE IN THE CHAN CONTROLLER
         $backend_vars = [
-            'user_name' => $name,
-            'user_email' => $email,
-            'user_pass' => $pass,
+            'context' => $this->getContext(),
+            'request' => $this->getRequest(),
             'site_url'  => $this->uri->base(),
             'default_url'  => $this->uri->base(),
             'archive_url'  => $this->uri->base(),
@@ -117,7 +128,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             $page = 1;
         }
 
-        $bans = \Ban::getPagedBy('start', 'desc', $page);
+        $bans = $this->ban_factory->getPagedBy('start', 'desc', $page);
 
         $this->builder->createPartial('body', 'moderation/bans')
             ->getParamManager()->setParams([
@@ -137,7 +148,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             $page = 1;
         }
 
-        $bans = \Ban::getAppealsPagedBy('start', 'desc', $page);
+        $bans = $this->ban_factory->getAppealsPagedBy('start', 'desc', $page);
 
         $this->builder->createPartial('body', 'moderation/bans')
             ->getParamManager()->setParams([
@@ -168,7 +179,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
         }
 
         try {
-            $bans = \Ban::getByIp(Inet::ptod($ip));
+            $bans = $this->ban_factory->getByIp(Inet::ptod($ip));
         } catch (\Foolz\Foolfuuka\Model\BanException $e) {
             $bans = [];
         }
@@ -186,7 +197,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
     public function action_ban_manage($action, $id)
     {
         try {
-            $ban = \Ban::getById($id);
+            $ban = $this->ban_factory->getById($id);
         } catch (\Foolz\Foolfuuka\Model\BanException $e) {
             throw new NotFoundHttpException;
         }

@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Admin\Partial\Moderation;
 
-class Reports extends \Foolz\Theme\View
+class Reports extends \Foolz\Foolframe\View\View
 {
     public function toString()
     {

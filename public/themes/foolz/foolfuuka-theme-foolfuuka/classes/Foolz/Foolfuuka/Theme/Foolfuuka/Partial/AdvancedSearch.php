@@ -2,14 +2,14 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-class AdvancedSearch extends \Foolz\Theme\View
+class AdvancedSearch extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {
         $radix = $this->getBuilderParamManager()->getParam('radix');
         $search = $this->getBuilderParamManager()->getParam('search', []);
 
-        if (!isset($radix) && \Preferences::get('foolfuuka.sphinx.global')) {
+        if (!isset($radix) && $this->getPreferences()->get('foolfuuka.sphinx.global')) {
             // search can work also without a radix selected
             $search_radix = '_';
         } elseif (isset($radix)) {
@@ -19,7 +19,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 
         <?php if (isset($search_radix)) : ?>
         <div class="advanced_search clearfix">
-            <?= \Form::open(['method' => 'POST', 'action' => \Uri::create($search_radix.'/search')]); ?>
+            <?= \Form::open(['method' => 'POST', 'action' => $this->getUri()->create($search_radix.'/search')]); ?>
 
         <div class="comment_wrap">
             <?= \Form::input([
@@ -112,7 +112,7 @@ class AdvancedSearch extends \Foolz\Theme\View
                 ?>
                 <div>
                     <?php
-                    $radixes = \Radix::getArchives();
+                    $radixes = $this->getRadixColl()->getArchives();
 
                     foreach($radixes as $key => $r) {
                         if (!$r->sphinx) {
@@ -146,7 +146,7 @@ class AdvancedSearch extends \Foolz\Theme\View
 
                 <div style="clear:left; padding-top: 10px">
                     <?php
-                    $radixes = \Radix::getBoards();
+                    $radixes = $this->getRadixColl()->getBoards();
 
                     foreach($radixes as $key => $r) {
                         if (!$r->sphinx) {
@@ -188,7 +188,7 @@ class AdvancedSearch extends \Foolz\Theme\View
                 </div>
                 <ul>
                     <?php
-                    if (isset($latest_searches) || $latest_searches = @json_decode(\Cookie::get('search_latest_5'), true)) {
+                    if (isset($latest_searches) || $latest_searches = @json_decode($this->getCookie('search_latest_5'), true)) {
                         // sanitization
                         foreach($latest_searches as $item) {
                             // all subitems must be array, all must have 'radix'
@@ -221,7 +221,7 @@ class AdvancedSearch extends \Foolz\Theme\View
                                 $uri .= $k.'/'.$i.'/';
                             }
 
-                            echo '<li title="' . strip_tags($text . $extra_text_br) . '" class="latest_search"><a href="' . \Uri::create($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
+                            echo '<li title="' . strip_tags($text . $extra_text_br) . '" class="latest_search"><a href="' . $this->getUri()->create($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
                         }
                     }
                     ?>

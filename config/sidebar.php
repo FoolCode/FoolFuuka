@@ -34,7 +34,7 @@ return [
                     'level' => 'mod',
                     'name' => _i('Reports'),
                     'icon' => 'icon-tag',
-                    'notification' => \Report::count()
+                //    'notification' => \Report::count()
                 ],
                 'bans' => [
                     'level' => 'mod',

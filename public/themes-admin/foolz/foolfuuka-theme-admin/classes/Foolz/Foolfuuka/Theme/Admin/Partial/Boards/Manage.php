@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Admin\Partial\Boards;
 
-class Manage extends \Foolz\Theme\View
+class Manage extends \Foolz\Foolframe\View\View
 {
     public function toString()
     { ?>
@@ -12,7 +12,7 @@ class Manage extends \Foolz\Theme\View
     </div>
 
     <div class="pull-right">
-        <a class="btn btn-success btn-mini" href="<?= \Uri::create('/admin/boards/add/') ?>">
+        <a class="btn btn-success btn-mini" href="<?= $this->getUri()->create('/admin/boards/add/') ?>">
             <i class="icon-plus" style="color: #FFFFFF"></i> <?= _i('Add Board') ?>
         </a>
     </div>
@@ -30,13 +30,13 @@ class Manage extends \Foolz\Theme\View
             <tr>
                 <td><?= $board->id ?></td>
                 <td>
-                    <a href="<?= \Uri::create('admin/boards/board/'.$board->shortname) ?>">/<?= $board->shortname ?>/</a>
+                    <a href="<?= $this->getUri()->create('admin/boards/board/'.$board->shortname) ?>">/<?= $board->shortname ?>/</a>
                 </td>
                 <td>
-                    <a href="<?= \Uri::create('admin/boards/board/'.$board->shortname) ?>"><?= $board->name ?></a>
+                    <a href="<?= $this->getUri()->create('admin/boards/board/'.$board->shortname) ?>"><?= $board->name ?></a>
 
                     <div class="btn-group pull-right">
-                        <a class="btn btn-mini btn-primary" href="<?= \Uri::create('admin/boards/board/'.$board->shortname) ?>">
+                        <a class="btn btn-mini btn-primary" href="<?= $this->getUri()->create('admin/boards/board/'.$board->shortname) ?>">
                             <?= _i('Edit') ?>
                         </a>
 
@@ -46,7 +46,7 @@ class Manage extends \Foolz\Theme\View
 
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="<?= \Uri::create('admin/boards/delete/'.$board->id) ?>"><?= _i('Delete') ?></a>
+                                <a href="<?= $this->getUri()->create('admin/boards/delete/'.$board->id) ?>"><?= _i('Delete') ?></a>
                             </li>
                         </ul>
                     </div>

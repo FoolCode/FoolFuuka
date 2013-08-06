@@ -2,14 +2,14 @@
 
 namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
 
-class ToolsSearch extends \Foolz\Theme\View
+class ToolsSearch extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {
         $radix = $this->getBuilderParamManager()->getParam('radix');
         $search = $this->getBuilderParamManager()->getParam('search', []);
 
-        if (!isset($radix) && \Preferences::get('foolfuuka.sphinx.global')) {
+        if (!isset($radix) && $this->getPreferences()->get('foolfuuka.sphinx.global')) {
             // search can work also without a radix selected
             $search_radix = '_';
         } elseif (isset($radix)) {
@@ -21,7 +21,7 @@ class ToolsSearch extends \Foolz\Theme\View
         <?php if (isset($search_radix)) : ?>
         <div style="overflow:hidden;">
             <!--- Search Input -->
-            <?php echo \Form::open(\Uri::create($search_radix.'/search')); ?>
+            <?php echo \Form::open($this->getUri()->create($search_radix.'/search')); ?>
             <div id="simple-search" class="postspan" style="float:left">
                 <?= _i('Text Search') ?>
                 [<a class="tooltip" href="#">?<span>Place a <tt>|</tt> in between expressions to get one of them in results, e.g. <tt>tripcode|email</tt> to locate posts that contain either the word tripcode or email in them.<br />Place a <tt>-</tt> before a word to exclude posts containing the word: <tt>-tripcode</tt><br />Place quotes around phrases to find pages containing the phrase: <tt>"I am a filthy tripcode user"</tt></span></a>]
@@ -41,12 +41,12 @@ class ToolsSearch extends \Foolz\Theme\View
                     'value' => 'Go'
                 ]);
                 ?>
-                <a href="<?php echo \Uri::create($search_radix.'/search') ?>" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ <?= _i('Advanced') ?> ]</a>
+                <a href="<?php echo $this->getUri()->create($search_radix.'/search') ?>" onclick="javascript:toggle('advanced-search');toggle('simple-search');return false;">[ <?= _i('Advanced') ?> ]</a>
             </div>
             <?php echo \Form::close(); ?>
 
             <!--- Advanced Search Input -->
-            <?php echo \Form::open(\Uri::create($search_radix.'/search')); ?>
+            <?php echo \Form::open($this->getUri()->create($search_radix.'/search')); ?>
             <div id="advanced-search" class="postspan" style="float:left;display:none">
                 <table style="float:left">
                     <tbody>
@@ -210,7 +210,7 @@ class ToolsSearch extends \Foolz\Theme\View
                                     'name' => 'submit_search'
                                 ]);
 
-                                if (\Preferences::get('foolfuuka.sphinx.global')) :
+                                if ($this->getPreferences()->get('foolfuuka.sphinx.global')) :
                                     echo \Form::submit([
                                         'value' => 'Global Search',
                                         'name' => 'submit_search_global'
@@ -225,9 +225,9 @@ class ToolsSearch extends \Foolz\Theme\View
             </div>
             <?php echo \Form::close(); ?>
 
-        <?php if (\Radix::getSelected()) : ?>
+        <?php if ($this->getRadix()) : ?>
             <!--- Post Input -->
-            <?php echo \Form::open(\Radix::getSelected()->shortname . '/post'); ?>
+            <?php echo \Form::open($this->getRadix()->shortname . '/post'); ?>
             <div class="postspan" style="float:left">
                 <?= _i('View Post') ?>
 
@@ -250,7 +250,7 @@ class ToolsSearch extends \Foolz\Theme\View
             <?php echo \Form::close(); ?>
 
             <!--- Page Input -->
-            <?php echo \Form::open(\Radix::getSelected()->shortname . '/page'); ?>
+            <?php echo \Form::open($this->getRadix()->shortname . '/page'); ?>
             <div class="postspan" style="float:left">
                 <?= _i('View Page') ?>
 
@@ -267,13 +267,13 @@ class ToolsSearch extends \Foolz\Theme\View
                 echo \Form::submit([
                     'name' => 'submit',
                     'value' => 'View',
-                    'onclick' => 'location.href=\'' . \Uri::create(\Radix::getSelected()->shortname . '/page/') . '\' + this.form.page.value + \'/\'; return false;'
+                    'onclick' => 'location.href=\'' . $this->getUri()->create($this->getRadix()->shortname . '/page/') . '\' + this.form.page.value + \'/\'; return false;'
                 ]);
                 ?>
 
                 <a class="tooltip" href="#">[?]<span><?= _i('In Ghost Mode, only threads that contain ghost posts will be listed.') ?></span></a>
 
-                <input type="button" value="View in Ghost Mode" onclick="location.href='<?php echo \Uri::create(\Radix::getSelected()->shortname . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
+                <input type="button" value="View in Ghost Mode" onclick="location.href='<?php echo $this->getUri()->create($this->getRadix()->shortname . '/ghost') ?>' + this.form.page.value + '/'; return false;" />
             </div>
             <?php echo \Form::close(); ?>
         <?php endif; ?>

@@ -57,7 +57,7 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
                     <ul>
                         <?php foreach ($stats as $key => $stat) : ?>
                             <li>
-                                <a href="<?php echo $this->uri->create([$this->_radix->shortname, 'statistics', $key]) ?>"
+                                <a href="<?php echo $this->uri->create([$this->radix->shortname, 'statistics', $key]) ?>"
                                    title="<?php echo htmlspecialchars($stat['name']) ?>"><?php echo $stat['name'] ?></a>
                             </li>
                         <?php endforeach; ?>
@@ -73,7 +73,7 @@ class BoardStatistics extends \Foolz\Foolfuuka\Controller\Chan
 
             return new Response($this->builder->build());
         } else {
-            $stats = $this->board_stats->checkAvailableStats($report, $this->_radix);
+            $stats = $this->board_stats->checkAvailableStats($report, $this->radix);
 
             if (!is_array($stats)) {
                 return $this->error(_i('Statistic currently not available.'));

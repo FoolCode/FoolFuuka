@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
 
-class ToolsReplyBox extends \Foolz\Theme\View
+class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {
@@ -122,7 +122,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
                 <?php if (isset($reply_errors)) : ?>
                 <span style="color:red"><?= $reply_errors ?></span>
                 <?php endif; ?>
-                <span><?= (!\Radix::getSelected()->archive && isset($thread_dead) && $thread_dead) ? _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '' ?></span>
+                <span><?= (!$this->getRadix()->archive && isset($thread_dead) && $thread_dead) ? _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '' ?></span>
                 <table>
                     <tbody>
                     <tr>
@@ -141,7 +141,7 @@ class ToolsReplyBox extends \Foolz\Theme\View
                         <td class="postblock"><?= _i('Comment') ?></td>
                         <td><?php echo \Form::textarea(['name' => 'KOMENTO', 'cols' => 48, 'rows' => 4]); ?></td>
                     </tr>
-                        <?php if (!\Radix::getSelected()->archive) : ?>
+                        <?php if (!$this->getRadix()->archive) : ?>
                     <tr>
                         <td class="postblock"><?= _i('File') ?></td>
                         <td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']); ?></td>

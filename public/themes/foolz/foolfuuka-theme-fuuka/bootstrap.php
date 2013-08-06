@@ -1,17 +1,29 @@
 <?php
 
+use Symfony\Component\Routing\Route;
+
 require __DIR__ . '/functions.php';
 
 \Autoloader::add_classes([
     'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan' => __DIR__.'/controller.php',
 ]);
 
-\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Content::routes.collection')
+\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Context.handleWeb.contextes_handled')
     ->setCall(function($result) {
-        if ($result->getParam('controller') === '\Foolz\Foolfuuka\Controller\Chan::*') {
-            // reroute everything that goes to Chan through the custom Chan controller
-            $result->setParam('controller', 'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan::*');
-            $result->set(true);
+        foreach ($this->getService('foolfuuka.radix_collection')->getAll() as $radix) {
+            $this->getRouteCollection()->add(
+                'foolfuuka.chan.radix.'.$radix->shortname, new Route(
+                '/'.$radix->shortname.'/{_suffix}',
+                [
+                    '_default_suffix' => 'page',
+                    '_suffix' => 'page',
+                    '_controller' => '\Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan::*',
+                    'radix_shortname' => $radix->shortname
+                ],
+                [
+                    '_suffix' => '.*'
+                ]
+            ));
         }
     });
 

@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-class ToolsModal extends \Foolz\Theme\View
+class ToolsModal extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {

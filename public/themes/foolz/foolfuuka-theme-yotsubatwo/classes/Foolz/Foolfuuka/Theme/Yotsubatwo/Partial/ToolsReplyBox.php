@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Yotsubatwo\Partial;
 
-class ToolsReplyBox extends \Foolz\Theme\View
+class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {

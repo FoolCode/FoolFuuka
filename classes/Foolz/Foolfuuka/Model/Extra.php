@@ -2,14 +2,17 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use Foolz\Foolframe\Model\Legacy\DoctrineConnection as DC;
+use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\Foolframe\Model\Model;
+use Foolz\Foolframe\Model\Context;
+use Foolz\Plugin\Hook;
 
 class ExtraException extends \Exception {}
 
 /**
  * Manages Extra data appended to Comments
  */
-class Extra
+class Extra extends Model
 {
     use \Foolz\Plugin\PlugSuit;
 
@@ -35,6 +38,11 @@ class Extra
     public $json_array = null;
 
     /**
+     * @var DoctrineConnection
+     */
+    protected $dc;
+
+    /**
      * The fields of the Extra object
      *
      * @var  array
@@ -52,12 +60,33 @@ class Extra
      */
     public $radix = null;
 
+    public function __construct(Context $context, $comment, $radix)
+    {
+        parent::__construct($context);
+
+        $this->dc = $context->getService('doctrine');
+
+        $this->radix = $radix;
+
+        foreach ($comment as $key => $item) {
+            if (in_array($key, $this->getFields())) {
+                if ($key === 'json') {
+                    $this->json_array = json_decode($item, true);
+                } else {
+                    $this->$key = $item;
+                }
+            }
+        }
+
+        unset($this->json);
+    }
+
     /**
      * When called it refreshes the fields with the additions by plugins
      */
-    public static function setFields()
+    public function setFields()
     {
-        static::$fields = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Extra::forge.call.before.add_column')
+        static::$fields = Hook::forge('Foolz\Foolfuuka\Model\Extra::forge.call.before.add_column')
             ->setParam('fields', static::$fields)
             ->execute()
             ->get(static::$fields);
@@ -74,40 +103,12 @@ class Extra
     }
 
     /**
-     * Creates a new Extra object
-     *
-     * @param  object                        $comment  An object with the data for the Extra object
-     * @param  \Foolz\Foolfuuka\Model\Radix  $radix    The Radix the Comment resides on
-     *
-     * @return \Foolz\Foolfuuka\Model\Extra  The newly created object
-     */
-    public static function forge($comment, $radix)
-    {
-        $new = new static();
-
-        $new->radix = $radix;
-
-        foreach ($comment as $key => $item) {
-            if (in_array($key, static::getFields())) {
-                if ($key === 'json') {
-                    $new->json_array = json_decode($item, true);
-                } else {
-                    $new->$key = $item;
-                }
-            }
-        }
-
-        unset($new->json);
-        return $new;
-    }
-
-    /**
      * Inserts the Extra in the database only if there's any data in it
      */
     public function insert()
     {
         if (!empty($this->json_array)) {
-            DC::forge()->insert($this->radix->getTable('_extra'), [
+            $this->dc->getConnection()->insert($this->radix->getTable('_extra'), [
                 'extra_id' => $this->extra_id,
                 'json' => ! empty($this->json_array) ? json_encode($this->json_array) : null
             ]);

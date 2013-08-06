@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Fuuka\Layout;
 
-class Chan extends \Foolz\Theme\View
+class Chan extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {
@@ -34,17 +34,17 @@ class Chan extends \Foolz\Theme\View
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="generator" content="<?= \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.name').' '. \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>" />
+        <meta name="generator" content="<?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name').' '. $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.version') ?>" />
 
         <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
         <?php $this->getStyles(); ?>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>" type="text/javascript"></script>
-        <?php if (\Preferences::get('foolfuuka.sphinx.global')) : ?>
-            <link rel="search" type="application/opensearchdescription+xml" title="<?= \Preferences::get('foolframe.gen.website_title') ?> " href="<?= \Uri::create('_/opensearch') ?>" />
+        <?php if ($this->getPreferences()->get('foolfuuka.sphinx.global')) : ?>
+            <link rel="search" type="application/opensearchdescription+xml" title="<?= $this->getPreferences()->get('foolframe.gen.website_title') ?> " href="<?= $this->getUri()->create('_/opensearch') ?>" />
         <?php endif; ?>
-        <?= \Preferences::get('foolframe.theme.header_code') ?>
+        <?= $this->getPreferences()->get('foolframe.theme.header_code') ?>
     </head>
         <?php
 
@@ -61,8 +61,8 @@ class Chan extends \Foolz\Theme\View
     <?php if ($disable_headers !== true) : ?>
         <div><?php
             $board_urls = array();
-            foreach (\Radix::getAll() as $key => $item) {
-                $board_urls[] = '<a href="' . $item->getValue('href') . '">' . $item->shortname . '</a>';
+            foreach ($this->getRadixColl()->getAll() as $key => $item) {
+                $board_urls[] = '<a href="' . $this->getUri()->create($item->shortname) . '">' . $item->shortname . '</a>';
             }
 
             if (!empty($board_urls)) {
@@ -73,10 +73,10 @@ class Chan extends \Foolz\Theme\View
         <?php
             $board_urls = array();
 
-            $board_urls[] = '<a href="' . \Uri::base() . '">' . strtolower(_i('Index')) . '</a>';
+            $board_urls[] = '<a href="' . $this->getUri()->base() . '">' . strtolower(_i('Index')) . '</a>';
             if ($radix) {
-                $board_urls[] = '<a href="' . \Uri::create($radix->shortname) . '">' . strtolower(_i('Top')) . '</a>';
-                $board_urls[] = '<a href="' . \Uri::create(array($radix->shortname, 'statistics')) . '">' . strtolower(_i('Statistics')) . '</a>';
+                $board_urls[] = '<a href="' . $this->getUri()->create($radix->shortname) . '">' . strtolower(_i('Top')) . '</a>';
+                $board_urls[] = '<a href="' . $this->getUri()->create(array($radix->shortname, 'statistics')) . '">' . strtolower(_i('Statistics')) . '</a>';
             }
             $board_urls[] = '<a href="https://github.com/FoolCode/FoOlFuuka/issues">' . strtolower(_i('Report Bug')) . '</a>';
 
@@ -85,8 +85,8 @@ class Chan extends \Foolz\Theme\View
 
         <?php
             $top_nav = array();
-            $top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
-            $top_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_top_nav_buttons')->setParam('nav', $top_nav)->execute()->get($top_nav);
+            $top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setObject($this)->setParam('nav', $top_nav)->execute()->get($top_nav);
+            $top_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_top_nav_buttons')->setObject($this)->setParam('nav', $top_nav)->execute()->get($top_nav);
 
             if (!empty($top_nav)) {
                 echo '[ ';
@@ -103,8 +103,8 @@ class Chan extends \Foolz\Theme\View
             <h1><?= ($radix) ? $radix->getValue('formatted_title') : '' ?></h1>
             <?php if ($section_title !== false) : ?>
             <h2><?= $section_title ?></h2>
-            <?php elseif (\Preferences::get('foolframe.theme.header_text')) : ?>
-            <div><?= \Preferences::get('foolframe.theme.header_text') ?></div>
+            <?php elseif ($this->getPreferences()->get('foolframe.theme.header_text')) : ?>
+            <div><?= $this->getPreferences()->get('foolframe.theme.header_text') ?></div>
             <?php endif; ?>
 
             <hr />
@@ -207,8 +207,8 @@ class Chan extends \Foolz\Theme\View
             <div style="float: right;">
                 <?php
                     $bottom_nav = array();
-                    $bottom_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
-                    $bottom_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_bottom_nav_buttons')->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+                    $bottom_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_bottom_nav_buttons')->setObject($this)->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
+                    $bottom_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.fuuka_bottom_nav_buttons')->setObject($this)->setParam('nav', $bottom_nav)->execute()->get($bottom_nav);
 
                     if (!empty($bottom_nav)) {
                         echo '[ ';
@@ -226,7 +226,7 @@ class Chan extends \Foolz\Theme\View
                     $theme_links = array();
                     foreach($this->getTheme()->getLoader()->getListWithStyles() as $key => $theme) :
                         if (isset($theme['object']->enabled) && $theme['object']->enabled) :
-                            $theme_links[] = '<a href="' . \Uri::create(array('_', 'theme', $key)) . '">' . $theme['string'] . '</a>';
+                            $theme_links[] = '<a href="' . $this->getUri()->create(array('_', 'theme', $key)) . '">' . $theme['string'] . '</a>';
                         endif;
                     endforeach;
 
@@ -236,8 +236,8 @@ class Chan extends \Foolz\Theme\View
         <?php endif; ?>
 
         <?php
-            if (\Preferences::get('foolframe.theme.footer_text')) {
-                echo '<div style="clear: both;">' . \Preferences::get('foolframe.theme.footer_text') . '</div>';
+            if ($this->getPreferences()->get('foolframe.theme.footer_text')) {
+                echo '<div style="clear: both;">' . $this->getPreferences()->get('foolframe.theme.footer_text') . '</div>';
             }
         ?>
 
@@ -245,16 +245,16 @@ class Chan extends \Foolz\Theme\View
             var backend_vars = <?= json_encode($this->getBuilderParamManager()->getParam('backend_vars')) ?>;
         </script>
 
-        <?php if (\Preferences::get('foolframe.theme.google_analytics')) : ?>
+        <?php if ($this->getPreferences()->get('foolframe.theme.google_analytics')) : ?>
             <script>
-                var _gaq=[['_setAccount','<?= \Preferences::get('foolframe.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
+                var _gaq=[['_setAccount','<?= $this->getPreferences()->get('foolframe.theme.google_analytics') ?>'],['_trackPageview'],['_trackPageLoadTime']];
                 (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
                     g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
                     s.parentNode.insertBefore(g,s)}(document,'script'));
             </script>
         <?php endif; ?>
 
-        <?= \Preferences::get('foolframe.theme.footer_code') ?>
+        <?= $this->getPreferences()->get('foolframe.theme.footer_code') ?>
     </body>
 </html>
     <?php

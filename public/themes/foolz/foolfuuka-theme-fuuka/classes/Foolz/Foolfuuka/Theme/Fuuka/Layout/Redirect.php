@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Fuuka\Layout;
 
-class Redirect extends \Foolz\Theme\View
+class Redirect extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
     {

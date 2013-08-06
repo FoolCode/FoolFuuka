@@ -108,6 +108,7 @@ class CommentFactory extends Model
                 $comment->media->$method($api['request']);
             }
 
+
             unset($comment->media->radix);
         }
 

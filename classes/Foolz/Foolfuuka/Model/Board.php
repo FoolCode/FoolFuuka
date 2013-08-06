@@ -130,12 +130,14 @@ class Board extends Model
         if ($this->comments === null) {
             if (method_exists($this, 'p_'.$this->method_fetching)) {
                 $this->profiler->log('Start Board::getComments() with method '.$this->method_fetching);
-                $this->profiler->logMem('Start Board::getComments() with method '.$this->method_fetching, $this);
+                if (!$this->api)
+                    $this->profiler->logMem('Start Board::getComments() with method '.$this->method_fetching, $this);
 
                 $this->{$this->method_fetching}();
 
                 $this->profiler->log('End Board::getComments() with method '.$this->method_fetching);
-                $this->profiler->logMem('End Board::getComments() with method '.$this->method_fetching, $this);
+                if (!$this->api)
+                    $this->profiler->logMem('End Board::getComments() with method '.$this->method_fetching, $this);
             } else {
                 $this->comments = false;
             }
@@ -154,12 +156,14 @@ class Board extends Model
         if ($this->total_count === null) {
             if (method_exists($this, 'p_'.$this->method_counting)) {
                 $this->profiler->log('Start Board::getCount() with method '.$this->method_counting);
-                $this->profiler->logMem('Start Board::getCount() with method '.$this->method_counting, $this);
+                if (!$this->api)
+                    $this->profiler->logMem('Start Board::getCount() with method '.$this->method_counting, $this);
 
                 $this->{$this->method_counting}();
 
                 $this->profiler->log('End Board::getCount() with method '.$this->method_counting);
-                $this->profiler->logMem('End Board::getCount() with method '.$this->method_counting, $this);
+                if (!$this->api)
+                    $this->profiler->logMem('End Board::getCount() with method '.$this->method_counting, $this);
             } else {
                 $this->total_count = false;
             }

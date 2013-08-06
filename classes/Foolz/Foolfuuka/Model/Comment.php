@@ -174,6 +174,7 @@ class Comment extends Model
         $this->uri = $context->getService('uri');
         $this->comment_factory = $context->getService('foolfuuka.comment_factory');
         $this->media_factory = $context->getService('foolfuuka.media_factory');
+        $this->ban_factory = $context->getService('foolfuuka.ban_factory');
         $this->radix_coll = $context->getService('foolfuuka.radix_collection');
         $this->report_coll = $context->getService('foolfuuka.report_collection');
 

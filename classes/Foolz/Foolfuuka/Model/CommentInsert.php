@@ -178,7 +178,7 @@ class CommentInsert extends Comment
         // some users don't need to be limited, in here go all the ban and posting limitators
         if (!\Auth::has_access('comment.limitless_comment')) {
             // check if the user is banned
-            if ($ban = Ban::isBanned($this->poster_ip, $this->radix)) {
+            if ($ban = $this->ban_factory->isBanned($this->poster_ip, $this->radix)) {
                 if ($ban->board_id == 0) {
                     $banned_string = _i('It looks like you were banned on all boards.');
                 } else {
@@ -197,7 +197,7 @@ class CommentInsert extends Comment
 
                 if ($ban->appeal_status == Ban::APPEAL_NONE) {
                     $banned_string .= ' '._i('If you\'d like to appeal to your ban, go to the %s page.',
-                        '<a href="'.\Uri::create($this->radix->shortname.'/appeal').'">'._i('Appeal').'</a>');
+                        '<a href="'.$this->uri->create($this->radix->shortname.'/appeal').'">'._i('Appeal').'</a>');
                 } elseif ($ban->appeal_status == Ban::APPEAL_PENDING) {
                     $banned_string .= ' '._i('Your appeal is pending.');
                 }

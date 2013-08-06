@@ -889,8 +889,10 @@ class Board extends Model
             }
         }
 
-        $this->profiler->logMem('Board $this->comments', $this->comments);
-        $this->profiler->logMem('Board $this', $this);
+        if (!$this->api) {
+            $this->profiler->logMem('Board $this->comments', $this->comments);
+            $this->profiler->logMem('Board $this', $this);
+        }
         $this->profiler->log('Board::getThreadComments End');
 
         return $this;

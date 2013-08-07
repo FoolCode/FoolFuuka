@@ -29,7 +29,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                 <?php if ($p->media !== null) : ?>
                 <div class="post_file">
                     <span class="post_file_controls">
-                    <?php if ($p->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_hidden')) : ?>
+                    <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned' || \Auth::has_access('media.see_hidden')) : ?>
                         <?php if ( !$p->radix->hide_thumbnails || \Auth::has_access('media.see_hidden')) : ?>
                         <?php if ($p->media->total > 1) : ?><a href="<?= $this->getUri()->create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $p->radix->shortname) . '/search/image/' . $p->media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a
                             href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">Google</a><a
@@ -38,7 +38,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                         <?php endif; ?>
                     <?php endif ?>
                     </span>
-                    <?php if ($p->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
+                    <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
                     <?php if (mb_strlen($p->media->getMediaFilenameProcessed()) > 38) : ?>
                         <span class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p->media->media_filename) ?>">
                             <?= mb_substr($p->media->getMediaFilenameProcessed(), 0, 32) . ' (...)' . mb_substr($p->media->getMediaFilenameProcessed(), mb_strrpos($p->media->getMediaFilenameProcessed(), '.')) . ', ' ?>
@@ -53,9 +53,9 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                     <?php endif; ?>
                 </div>
                 <div class="thread_image_box">
-                    <?php if ($p->media->getMediaStatus() === 'banned') : ?>
+                    <?php if ($p->media->getMediaStatus($this->getRequest()) === 'banned') : ?>
                         <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
-                    <?php elseif ($p->media->getMediaStatus() !== 'normal'): ?>
+                    <?php elseif ($p->media->getMediaStatus($this->getRequest()) !== 'normal'): ?>
                         <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
                             <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
                         </a>

@@ -394,22 +394,6 @@ class Media extends Model
         }
     }
 
-
-
-    /**
-     * Returns the media_status and caches the result
-     *
-     * @return  string
-     */
-    public function getMediaStatus()
-    {
-        if ($this->media_status === false) {
-            $this->media_link = $this->getLink(false);
-        }
-
-        return $this->media_status;
-    }
-
     /**
      * Returns the safe media hash and caches the result
      *
@@ -422,6 +406,20 @@ class Media extends Model
         }
 
         return $this->safe_media_hash;
+    }
+
+    /**
+     * Returns the media_status and caches the result
+     *
+     * @return  string
+     */
+    public function getMediaStatus(Request $request)
+    {
+        if ($this->media_status === false) {
+            $this->media_link = $this->getLink($request, false);
+        }
+
+        return $this->media_status;
     }
 
     /**
@@ -506,7 +504,7 @@ class Media extends Model
      *
      * @return  null|string  Null if a dir can't be created, string if successful
      */
-    public function getDir($thumbnail = false, $strict = false)
+    public function getDir($thumbnail = false, $strict = false, $relative = false)
     {
         if ($thumbnail === true) {
             if ($this->op) {
@@ -530,7 +528,7 @@ class Media extends Model
             return null;
         }
 
-        return $this->preferences->get('foolfuuka.boards.directory').'/'.$this->radix->shortname.'/'
+        return ($relative ? '' : $this->preferences->get('foolfuuka.boards.directory')).'/'.$this->radix->shortname.'/'
             .($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
     }
 

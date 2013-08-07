@@ -29,7 +29,7 @@ class Board extends \Foolz\Foolfuuka\View\View
         ?>
             <div id="<?= $op->num ?>">
                 <?php if ($op->media !== null) : ?>
-                    <?php if ($op->media->getMediaStatus() !== 'banned') : ?>
+                    <?php if ($op->media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
                     <span><?= _i('File:') . ' ' . \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed() ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
                         <?php if ( !$op->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
                             [<a href="<?= $this->getUri()->create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a>]
@@ -39,9 +39,9 @@ class Board extends \Foolz\Foolfuuka\View\View
                         <?php endif; ?>
                     <br />
                     <?php endif; ?>
-                    <?php if ($op->media->getMediaStatus() === 'banned') : ?>
+                    <?php if ($op->media->getMediaStatus($this->getRequest()) === 'banned') : ?>
                         <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
-                    <?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
+                    <?php elseif ($op->media->getMediaStatus($this->getRequest()) !== 'normal') : ?>
                         <a href="<?= ($op->media->getMediaLink($this->getRequest())) ? $op->media->getMediaLink($this->getRequest()) : $op->media->getRemoteMediaLink($this->getRequest()) ?>" rel="noreferrer">
                             <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
                         </a>

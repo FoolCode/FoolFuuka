@@ -43,9 +43,9 @@ class Gallery extends \Foolz\Foolfuuka\View\View
             </header>
             <?php if ($p->media !== null) : ?>
             <div class="thread_image_box" title="<?= $p->getCommentProcessed() ? htmlspecialchars(strip_tags($p->getCommentProcessed())) : '' ?>">
-                <?php if ($p->media->getMediaStatus() === 'banned') : ?>
+                <?php if ($p->media->getMediaStatus($this->getRequest()) === 'banned') : ?>
                 <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
-                <?php elseif ($p->media->getMediaStatus() !== 'normal') : ?>
+                <?php elseif ($p->media->getMediaStatus($this->getRequest()) !== 'normal') : ?>
                 <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
                     <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
                 </a>
@@ -58,7 +58,7 @@ class Gallery extends \Foolz\Foolfuuka\View\View
                     <?php endif; ?>
                 </a>
                 <?php endif; ?>
-                <?php if ($p->media->getMediaStatus() !== 'banned'  || \Auth::has_access('media.see_banned')) : ?>
+                <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned'  || \Auth::has_access('media.see_banned')) : ?>
                 <div class="post_file" style="padding-left: 2px"><?= \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->media_filename ?></div>
                 <div class="post_file_controls">
                     <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" class="btnr" target="_blank">Full</a><?php if ($p->media->total > 1) : ?><a href="<?= $this->getUri()->create($radix->shortname . '/search/image/' . urlencode(substr($p->media->media_hash, 0, -2))) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a target="_blank" href="http://iqdb.org/?url=<?= $p->media->getThumbLink($this->getRequest()) ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink($this->getRequest()) ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink($this->getRequest()) ?>" class="btnr parent">Google</a>

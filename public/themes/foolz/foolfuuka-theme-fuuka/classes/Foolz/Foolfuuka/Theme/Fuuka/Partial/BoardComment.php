@@ -53,7 +53,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
 
                         <br/>
                         <?php if ($p->media !== null) : ?>
-            <?php if ($p->media->getMediaStatus() !== 'banned') : ?>
+            <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
                 <span>
                                 <?= _i('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->getMediaFilenameProcessed(); ?>
                     <?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
@@ -67,9 +67,9 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                     <?php endif; ?>
                 <br />
                 <?php endif; ?>
-            <?php if ($p->media->getMediaStatus() === 'banned') : ?>
+            <?php if ($p->media->getMediaStatus($this->getRequest()) === 'banned') : ?>
                 <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" class="thumb"/>
-                <?php elseif ($p->media->getMediaStatus() !== 'normal'): ?>
+                <?php elseif ($p->media->getMediaStatus($this->getRequest()) !== 'normal'): ?>
                 <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" rel="noreferrer">
                     <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" class="thumb"/>
                 </a>

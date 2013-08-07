@@ -33,9 +33,9 @@ class Board extends \Foolz\Foolfuuka\View\View
                 <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setParam('board', $op->radix)->execute(); ?>
                 <?php if ($op->media !== null) : ?>
                 <div class="thread_image_box">
-                    <?php if ($op->media->getMediaStatus() === 'banned') : ?>
+                    <?php if ($op->media->getMediaStatus($this->getRequest()) === 'banned') : ?>
                     <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png')?>" width="150" height="150" />
-                    <?php elseif ($op->media->getMediaStatus() !== 'normal') : ?>
+                    <?php elseif ($op->media->getMediaStatus($this->getRequest()) !== 'normal') : ?>
                     <a href="<?= ($op->media->getMediaLink($this->getRequest())) ? $op->media->getMediaLink($this->getRequest()) : $op->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
                         <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
                     </a>
@@ -48,13 +48,13 @@ class Board extends \Foolz\Foolfuuka\View\View
                         <?php endif; ?>
                     </a>
                     <?php endif; ?>
-                    <?php if ($op->media->getMediaStatus() !== 'banned') : ?>
+                    <?php if ($op->media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
                     <div class="post_file" style="padding-left: 2px;<?php if ($op->media->preview_w > 149) echo 'max-width:'.$op->media->preview_w .'px;'; ?>">
                         <?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed(); ?>
                     </div>
                     <?php endif; ?>
                     <div class="post_file_controls">
-                        <?php if ($op->media->getMediaStatus() !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
+                        <?php if ($op->media->getMediaStatus($this->getRequest()) !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
                         <?php if ( !$op->radix->hide_thumbnails || \Auth::has_access('maccess.mod')) : ?>
                             <?php if ($op->media->total > 1) : ?><a href="<?= $this->getUri()->create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a
                                 href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink($this->getRequest()) ?>" target="_blank"

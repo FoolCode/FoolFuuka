@@ -5,6 +5,7 @@ namespace Foolz\Foolfuuka\Plugins\NginxCachePurge\Model;
 use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\Model;
 use Foolz\Foolframe\Model\Preferences;
+use Foolz\Foolfuuka\Model\Media;
 
 class NginxCachePurge extends Model
 {
@@ -22,24 +23,25 @@ class NginxCachePurge extends Model
 
     public function beforeDeleteMedia($result)
     {
+        /** @var Media $post */
         $post = $result->getObject();
         $dir = [];
 
         // purge full image
         try {
-            $dir['full'] = $post->getLink(false, true);
+            $dir['full'] = $post->getDir(false, true, true);
         } catch (\Foolz\Foolfuuka\Model\MediaException $e) {
 
         }
 
         // purge thumbnail
         try {
-            $dir['thumb'] = $post->getLink(true, true);
+            $dir['thumb'] = $post->getDir(true, true, true);
         } catch (\Foolz\Foolfuuka\Model\MediaException $e) {
 
         }
 
-        $url_user_password = static::parseUrls();
+        $url_user_password = $this->parseUrls();
 
         foreach ($url_user_password as $item) {
             foreach ($dir as $d) {
@@ -52,14 +54,14 @@ class NginxCachePurge extends Model
 
                 if (isset($item['pass'])) {
                     $options = [
-                        CURLOPT_URL => $item['url'].parse_url($d, PHP_URL_PATH),
+                        CURLOPT_URL => $item['url'].$d,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
                         CURLOPT_USERPWD => $item['user'].':'.$item['pass']
                     ];
                 } else {
                     $options = [
-                        CURLOPT_URL => $item['url'].parse_url($d, PHP_URL_PATH),
+                        CURLOPT_URL => $item['url'].$d,
                         CURLOPT_RETURNTRANSFER => true
                     ];
                 }

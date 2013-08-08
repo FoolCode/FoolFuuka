@@ -102,8 +102,8 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                         <span class="post_type">
                             <?php if ($p->poster_country !== null) : ?><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span><?php endif; ?>
                             <?php if ($p->subnum > 0)   : ?><i class="icon-comment-alt" title="<?= htmlspecialchars(_i('This post was submitted as a "ghost" reply.')) ?>"></i><?php endif ?>
-                            <?php if (isset($p->media) && $p->media->spoiler == 1) : ?><i class="icon-eye-close" title="<?= htmlspecialchars(_i('The image in this post has been marked as a spoiler.')) ?>"></i><?php endif ?>
-                            <?php if ($p->deleted == 1 && $p->timestamp_expired == 0) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This post was deleted before its lifetime expired.')) ?>"></i><?php endif ?>
+                            <?php if (isset($p->media) && $p->media->spoiler == 1) : ?><i class="icon-eye-close" title="<?= htmlspecialchars(_i('The image in this post has been marked spoiler.')) ?>"></i><?php endif ?>
+                            <?php if ($p->deleted == 1 && $p->timestamp_expired == 0) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This post was prematurely deleted.')) ?>"></i><?php endif ?>
                             <?php if ($p->deleted == 1 && $p->timestamp_expired != 0) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This post was deleted on %s.', gmdate('M d, Y \a\t H:i:s e', $p->timestamp_expired))) ?>"></i><?php endif ?>
                         </span>
 

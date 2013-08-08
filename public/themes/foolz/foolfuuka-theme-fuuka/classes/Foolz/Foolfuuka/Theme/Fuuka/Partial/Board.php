@@ -81,8 +81,8 @@ class Board extends \Foolz\Foolfuuka\View\View
                     <a class="js" href="<?= $this->getUri()->create(array($op->radix->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
                 <?php endif; ?>
 
-                <?php if (isset($op->media) && $op->media->spoiler == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= _i('The image in this post has been marked as a spoiler.') ?>"/><?php endif; ?>
-                <?php if ($op->deleted == 1 && $op->timestamp_expired == 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This post was deleted before its lifetime expired.') ?>"/><?php endif ?>
+                <?php if (isset($op->media) && $op->media->spoiler == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= _i('The image in this post has been marked spoiler.') ?>"/><?php endif; ?>
+                <?php if ($op->deleted == 1 && $op->timestamp_expired == 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This post was prematurely deleted.') ?>"/><?php endif ?>
                 <?php if ($op->deleted == 1 && $op->timestamp_expired != 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This post was deleted on %s.', gmdate('M d, Y \a\t H:i:s e', $op->timestamp_expired)) ?>"/><?php endif ?>
 
                 [<a href="<?= $this->getUri()->create(array($op->radix->shortname, 'thread', $op->num)) ?>"><?= _i('Reply') ?></a>]

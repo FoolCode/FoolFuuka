@@ -657,10 +657,10 @@ class Chan extends Common
 
     public function radix_redirect($filename = null)
     {
-        $redirect  = $this->uri->create([$this->radix->shortname]);
+        $redirect  = $this->uri->create([$this->radix->shortname]).$filename;
 
         if ($this->radix->archive) {
-            $redirect  = ($this->radix->getValue('images_url')) ? : '//images.4chan.org/'.$this->radix->shortname.'/src/';
+            $redirect  = ($this->radix->getValue('images_url') ? : '//images.4chan.org/'.$this->radix->shortname.'/src/').$filename;
         }
 
         $this->builder->createLayout('redirect')

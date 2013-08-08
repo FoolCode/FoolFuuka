@@ -14,14 +14,10 @@ class Redirect extends \Foolz\Foolfuuka\View\View
 <html>
     <head>
         <title><?= htmlspecialchars($this->getBuilder()->getProps()->getTitle()); ?></title>
-        <meta http-equiv="Refresh" content="0; url=<?= $url ?>"/>
+        <meta http-equiv="Refresh" content="0; url=<?= $url ?>">
     </head>
     <body>
-    <!-- If the meta-refresh does not work, we will attempt to redirect with JavaScript. -->
-    <script type="text/javascript">
-        window.location.href = '<?= $url ?>';
-    </script>
-        <?= sprintf(_i('Attempting to redirect to %s.'), '<a href="'.$url.'" rel="noreferrer">'.$url.'</a>') ?>
+        <?= _i('You are being redirected to %s.', $url) ?>
     </body>
 </html><?php
     }

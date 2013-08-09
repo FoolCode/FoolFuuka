@@ -136,7 +136,22 @@ class Chan extends Common
         // create response object, store request object
         $this->response = new JsonResponse();
 
-        $this->response->headers->set('Access-Control-Allow-Origin', '*');
+        // check if we have origin
+        $origin = $this->getRequest()->headers->get('Origin');
+        if ($origin) {
+            if (0 === strpos($origin, 'chrome-extension://')) {
+                // if it's a chrome extension we give it special service
+                $this->response->headers->set('Access-Control-Allow-Origin', 'chrome-extension://');
+            } else {
+                // if it's an url, make sure it's part of the accepted origins
+                $accepted_origins = ['boards.4chan.org'];
+                $origin_host = parse_url($origin, PHP_URL_HOST);
+                if (in_array($origin_host, $accepted_origins)) {
+                    $this->response->headers->set('Access-Control-Allow-Origin', $origin);
+                }
+            }
+        }
+
         $this->response->headers->set('Access-Control-Allow-Credentials', 'true');
         $this->response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         $this->response->headers->set('Access-Control-Max-Age', '604800');

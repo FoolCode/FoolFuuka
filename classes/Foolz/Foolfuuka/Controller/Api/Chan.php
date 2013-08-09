@@ -107,11 +107,6 @@ class Chan extends Common
         $this->ban_factory = $this->getContext()->getService('foolfuuka.ban_factory');
         $this->report_coll = $this->getContext()->getService('foolfuuka.report_collection');
 
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-        header('Access-Control-Max-Age: 604800');
-
         // this has already been forged in the foolfuuka bootstrap
         $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
 
@@ -140,6 +135,11 @@ class Chan extends Common
     {
         // create response object, store request object
         $this->response = new JsonResponse();
+
+        $this->response->headers->set('Access-Control-Allow-Origin', '*');
+        $this->response->headers->set('Access-Control-Allow-Credentials', 'true');
+        $this->response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        $this->response->headers->set('Access-Control-Max-Age', '604800');
 
         $request = $this->getRequest();
         if ($request->getMethod() == 'GET') {

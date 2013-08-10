@@ -92,7 +92,7 @@ class RadixCollection extends Model
                 'database' => true,
                 'type' => 'input',
                 'label' => _i('Name'),
-                'help' => _i('Insert the name of the board normally shown as title.'),
+                'help' => _i('Insert the title of the board.'),
                 'placeholder' => _i('Required'),
                 'class' => 'span3',
                 'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 128])]
@@ -101,7 +101,7 @@ class RadixCollection extends Model
                 'database' => true,
                 'type' => 'input',
                 'label' => _i('Shortname'),
-                'help' => _i('Insert the shorter name of the board. Reserved: "admin".'),
+                'help' => _i('Insert the shortname for the board. Reserved: "admin". '),
                 'placeholder' => _i('Req.'),
                 'class' => 'span1',
                 'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 5])],
@@ -230,7 +230,7 @@ class RadixCollection extends Model
                     'op_image_upload_necessity' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'help' => _i('Do users have to upload an image when starting a new thread?'),
+                        'help' => _i('Select if users have to upload an image when starting a new thread?'),
                         'type' => 'select',
                         'default_value' => 'always',
                         'options' => ['always' => _i('Always'), 'optional' => _i('Optional'), 'never' => _i('Never')]
@@ -238,7 +238,7 @@ class RadixCollection extends Model
                     'thumbnail_op_width' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('Opening post thumbnail maximum width after resizing'),
+                        'label' => _i('Opening post thumbnails maximum width in pixels.'),
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
@@ -246,7 +246,7 @@ class RadixCollection extends Model
                     'thumbnail_op_height' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('Opening post thumbnail maximum height after resizing'),
+                        'label' => _i('Opening post thumbnails maximum height in pixels.'),
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
@@ -254,7 +254,7 @@ class RadixCollection extends Model
                     'thumbnail_reply_width' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('Reply thumbnail maximum width after resizing'),
+                        'label' => _i('Reply thumbnails maximum width in pixels.'),
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
@@ -262,7 +262,7 @@ class RadixCollection extends Model
                     'thumbnail_reply_height' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('Reply thumbnail maximum height after resizing'),
+                        'label' => _i('Reply thumbnails maximum height in pixels.'),
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
@@ -270,7 +270,7 @@ class RadixCollection extends Model
                     'max_image_size_kilobytes' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('Full image maximum size in kilobytes'),
+                        'label' => _i('Full image maximum size in kilobytes.'),
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
@@ -278,7 +278,7 @@ class RadixCollection extends Model
                     'max_image_size_width' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('Full image maximum width in pixels'),
+                        'label' => _i('Full image maximum width in pixels.'),
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
@@ -286,7 +286,7 @@ class RadixCollection extends Model
                     'max_image_size_height' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('Full image maximum height in pixels'),
+                        'label' => _i('Full image maximum height in pixels.'),
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
@@ -294,7 +294,7 @@ class RadixCollection extends Model
                     'max_posts_count' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('The maximum amount of posts before a thread "dies".'),
+                        'label' => _i('The maximum replies for each thread.'),
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => 25])],
@@ -302,7 +302,15 @@ class RadixCollection extends Model
                     'max_images_count' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('The maximum amount of images in replies before posting more is prohibited'),
+                        'label' => _i('The maximum image replies for each thread.'),
+                        'type' => 'input',
+                        'class' => 'span1',
+                        'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
+                    ],
+                    'cooldown_new_thread' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('The minimum delay to start new threads for each user in seconds.'),
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
@@ -310,17 +318,18 @@ class RadixCollection extends Model
                     'min_image_repost_time' => [
                         'database' => true,
                         'boards_preferences' => true,
-                        'label' => _i('The minimum time in seconds to repost the same image (0 means no limit, -1 means never allowing a repost)'),
+                        'label' => _i('The minimum delay between posting the same image in seconds.<br>(0 means no limit, -1 means never allowing a repost)'),
+                       //this would probably look better under the text box.
                         'type' => 'input',
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\GreaterThan(['value' => -2])],
-                    ]
+                    ],
                 ]
             ],
             'anonymous_default_name' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'label' => _i('The default name when an user doesn\'t enter a name'),
+                'label' => _i('The default name if a user doesn\'t enter a name.'),
                 'type' => 'input',
                 'class' => 'span3',
                 'validation' => [new Assert\NotBlank()]
@@ -328,7 +337,7 @@ class RadixCollection extends Model
             'max_comment_characters_allowed' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'label' => _i('The maximum number of characters allowed in the comment.'),
+                'label' => _i('The maximum number of characters allowed in the post.'),
                 'type' => 'input',
                 'class' => 'span1',
                 'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
@@ -336,7 +345,7 @@ class RadixCollection extends Model
             'max_comment_lines_allowed' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'label' => _i('The maximum number of lines allowed in the comment.'),
+                'label' => _i('The maximum number of lines in the post.'),
                 'type' => 'input',
                 'class' => 'span1',
                 'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
@@ -344,15 +353,7 @@ class RadixCollection extends Model
             'cooldown_new_comment' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'label' => _i('This is the time users must wait between posts.'),
-                'type' => 'input',
-                'class' => 'span1',
-                'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
-            ],
-            'cooldown_new_thread' => [
-                'database' => true,
-                'boards_preferences' => true,
-                'label' => _i('This is the time users must wait between new threads.'),
+                'label' => _i('The minimum delay between posts for each user in seconds.'),
                 'type' => 'input',
                 'class' => 'span1',
                 'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
@@ -360,54 +361,54 @@ class RadixCollection extends Model
             'transparent_spoiler' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'help' => _i('Should the image spoilers be semi-transparent? (mods and admins have it always on for moderation)'),
+                'help' => _i('Spoilers images to be semi-transparent. (Mods and Admins are not affected)'),
                 'type' => 'checkbox',
             ],
             'enable_flags' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'help' => _i('Display flags? (needs GeoIP)'),
+                'help' => _i('Display country flags of posters? (<a href="http://www.maxmind.com/en/geolocation_landing" target="_blank">Required GeoIP</a>)'),
                 'type' => 'checkbox',
             ],
             'enable_animated_gif_thumbs' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'help' => _i('Enables the CPU-heavy animated gif thumbnail creation'),
+                'help' => _i('Enable animated gif’s thumbnail creation. (CPU-heavy)'),
                 'type' => 'checkbox',
             ],
             'display_exif' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'help' => _i('Show the EXIF data (EXIF data is saved in the database regardless)'),
+                'help' => _i('Display EXIF data from images. (EXIF data is always stored in the database)'),
                 'type' => 'checkbox',
                 'disabled' => 'disabled',
             ],
             'enable_poster_hash' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'help' => _i('Enable poster hashes, an IP-based code to temporarily distinguish Anonymous users'),
+                'help' => _i('Enable an IP-based code to poster hashes. (Temporarily distinguish Anonymous users)'),
                 'type' => 'checkbox',
             ],
             'disable_ghost' => [
                 'database' => true,
                 'boards_preferences' => true,
-                'help' => _i('Don\'t allow ghost posting (disallows infinite replying)'),
+                'help' => _i('Disable ghost replies.'),
                 'type' => 'checkbox',
             ],
             'hide_thumbnails' => [
                 'database' => true,
                 'type' => 'checkbox',
-                'help' => _i('Hide the thumbnails?')
+                'help' => _i('Disable thumbnails.')
             ],
             'sphinx' => [
                 'database' => true,
                 'type' => 'checkbox',
-                'help' => _i('Use SphinxSearch as search engine?')
+                'help' => _i('Use SphinxSearch as search engine.')
             ],
             'hidden' => [
                 'database' => true,
                 'type' => 'checkbox',
-                'help' => _i('Hide the board from public access? (only admins and mods will be able to browse it)')
+                'help' => _i('Hide the board from public access. (Mods and Admins are not affected)')
             ],
         ];
 

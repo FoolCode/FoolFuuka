@@ -636,7 +636,6 @@ var bindFunctions = function()
 
 	// variable for ajax backlinks that we can clear them if the mouse hovered out
 	var backlink_jqxhr;
-	var backlink_spin;
 	var timeout;
 	var posts_being_fetched = []; // posts that are being xhr'd right now
 	var show_post_board;
@@ -696,7 +695,7 @@ var bindFunctions = function()
 				}
 
 				timeout = setTimeout(function() {
-					backlink_spin = el;
+					var backlink_spin = el;
 					backlink_spin.spin('small');
 					backlink_jqxhr = jQuery.ajax({
 						url: backend_vars.api_url + '_/api/chan/post/' ,

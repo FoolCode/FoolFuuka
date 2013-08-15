@@ -29,8 +29,8 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                 <?php if ($p->media !== null) : ?>
                 <div class="post_file">
                     <span class="post_file_controls">
-                    <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned' || \Auth::has_access('media.see_hidden')) : ?>
-                        <?php if ( !$p->radix->hide_thumbnails || \Auth::has_access('media.see_hidden')) : ?>
+                    <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_hidden')) : ?>
+                        <?php if ( !$p->radix->hide_thumbnails || $this->getAuth()->hasAccess('media.see_hidden')) : ?>
                         <?php if ($p->media->total > 1) : ?><a href="<?= $this->getUri()->create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $p->radix->shortname) . '/search/image/' . $p->media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a
                             href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">Google</a><a
                             href="http://iqdb.org/?url=<?= $p->media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">iqdb</a><a
@@ -38,7 +38,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                         <?php endif; ?>
                     <?php endif ?>
                     </span>
-                    <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned' || \Auth::has_access('media.see_banned')) : ?>
+                    <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_banned')) : ?>
                     <?php if (mb_strlen($p->media->getMediaFilenameProcessed()) > 38) : ?>
                         <span class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p->media->media_filename) ?>">
                             <?= mb_substr($p->media->getMediaFilenameProcessed(), 0, 32) . ' (...)' . mb_substr($p->media->getMediaFilenameProcessed(), mb_strrpos($p->media->getMediaFilenameProcessed(), '.')) . ', ' ?>
@@ -61,7 +61,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                         </a>
                     <?php else: ?>
                         <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-                            <?php if (!\Auth::has_access('maccess.mod') && !$p->radix->getValue('transparent_spoiler') && $p->media->spoiler) :?>
+                            <?php if (!$this->getAuth()->hasAccess('maccess.mod') && !$p->radix->getValue('transparent_spoiler') && $p->media->spoiler) :?>
                             <div class="spoiler_box"><span class="spoiler_box_text"><?= _i('Spoiler') ?><span class="spoiler_box_text_help"><?= _i('Click to view') ?></span></div>
                             <?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == true) : ?>
                             <img src="<?= $this->getUri()->base() . $this->getAssetManager()->getAssetLink('images/transparent_pixel.png') ?>" data-original="<?= $p->media->getThumbLink($this->getRequest()) ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="lazyload post_image<?= ($p->media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p->media->media_hash ?>" />
@@ -108,7 +108,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                         </span>
 
                         <span class="post_controls">
-                            <?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= $this->getUri()->create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if ($p->subnum > 0 || \Auth::has_access('comment.passwordless_deletion') || !$p->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
+                            <?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= $this->getUri()->create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if ($p->subnum > 0 || $this->getAuth()->hasAccess('comment.passwordless_deletion') || !$p->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
                         </span>
                     </div>
                 </header>
@@ -118,7 +118,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                 <div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $p->getCommentProcessed())) echo ' shift-jis'; ?>">
                     <?= $p->getCommentProcessed() ?>
                 </div>
-                <?php if (\Auth::has_access('maccess.mod')) : ?>
+                <?php if ($this->getAuth()->hasAccess('maccess.mod')) : ?>
                 <div class="btn-group" style="clear:both; padding:5px 0 0 0;">
                     <button class="btn btn-mini" data-function="activateModeration"><?= _i('Mod') ?><?php if ($p->poster_ip) echo ' ' .Inet::dtop($p->poster_ip) ?></button>
                 </div>

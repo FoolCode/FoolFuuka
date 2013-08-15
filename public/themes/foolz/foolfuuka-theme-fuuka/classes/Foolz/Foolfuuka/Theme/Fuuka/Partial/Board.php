@@ -31,7 +31,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                 <?php if ($op->media !== null) : ?>
                     <?php if ($op->media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
                     <span><?= _i('File:') . ' ' . \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed() ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
-                        <?php if ( !$op->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
+                        <?php if ( !$op->radix->hide_thumbnails || $this->getAuth()->hasAccess('maccess.mod')) : ?>
                             [<a href="<?= $this->getUri()->create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a>]
                             [<a href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink($this->getRequest()) ?>">Google</a>]
                             [<a href="http://iqdb.org/?url=<?= $op->media->getThumbLink($this->getRequest()) ?>">iqdb</a>]
@@ -47,7 +47,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                         </a>
                     <?php else: ?>
                         <a href="<?= ($op->media->getMediaLink($this->getRequest())) ? $op->media->getMediaLink($this->getRequest()) : $op->media->getRemoteMediaLink($this->getRequest()) ?>" rel="noreferrer">
-                            <?php if (!\Auth::has_access('maccess.mod') && $op->media->spoiler) : ?>
+                            <?php if (!$this->getAuth()->hasAccess('maccess.mod') && $op->media->spoiler) : ?>
                             <img src="<?= $this->getAssetManager()->getAssetLink('images/spoiler.png') ?>" width="100" height="100" class="thumb" alt="[SPOILER]" />
                             <?php else: ?>
                             <img src="<?= $op->media->getThumbLink($this->getRequest()) ?>" width="<?= $op->media->preview_w ?>" height="<?= $op->media->preview_h ?>" class="thumb" alt="<?= $op->num ?>" />

@@ -10,13 +10,14 @@ class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
 
     public function before()
     {
-        if (!\Auth::has_access('maccess.admin')) {
-            \Response::redirect('admin');
-        }
-
         parent::before();
 
         $this->param_manager->setParam('controller_title', _i('GeoIP Region Lock'));
+    }
+
+    public function security()
+    {
+        return $this->getAuth()->hasAccess('maccess.admin');
     }
 
     public function action_manage()

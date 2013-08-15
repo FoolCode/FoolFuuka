@@ -59,7 +59,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                     <?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
                             </span>
 
-                <?php if (!$p->radix->hide_thumbnails || Auth::has_access('maccess.mod')) : ?>
+                <?php if (!$p->radix->hide_thumbnails || $this->getAuth()->hasAccess('maccess.mod')) : ?>
                     [<a href="<?= $this->getUri()->create($p->radix->shortname . '/search/image/' . $p->media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a>]
                     [<a href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink($this->getRequest()) ?>">Google</a>]
                     [<a href="http://iqdb.org/?url=<?= $p->media->getThumbLink($this->getRequest()) ?>">iqdb</a>]
@@ -75,7 +75,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                 </a>
                 <?php else: ?>
                 <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" rel="noreferrer">
-                    <?php if (!\Auth::has_access('maccess.mod') && $p->media->spoiler) : ?>
+                    <?php if (!$this->getAuth()->hasAccess('maccess.mod') && $p->media->spoiler) : ?>
                     <img src="<?= $this->getAssetManager()->getAssetLink('images/spoiler.png') ?>" width="100" height="100" class="thumb" alt="[SPOILER]" />
                     <?php else: ?>
                     <img src="<?= $p->media->getThumbLink($this->getRequest()) ?>" alt="<?= $p->num ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" class="thumb" />

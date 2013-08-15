@@ -1,5 +1,6 @@
 <?php
 
+use Foolz\Foolframe\Model\Auth;
 use Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock;
 use Foolz\Plugin\Event;
 
@@ -13,8 +14,11 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-l
             'Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock' =>__DIR__.'/classes/model/geoip_region_lock.php'
         ]);
 
+        /** @var Auth $auth */
+        $auth = $context->getService('auth');
+
         // don't add the admin panels if the user is not an admin
-        if (\Auth::has_access('maccess.admin')) {
+        if ($auth->hasAccess('maccess.admin')) {
             $context->getRouteCollection()->add(
                 'foolframe.plugin.geoip_region_lock.admin', new \Symfony\Component\Routing\Route(
                     '/admin/plugins/geoip_region_lock/{_suffix}',
@@ -42,7 +46,7 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-l
         /** @var GeoipRegionLock $object */
         $object = $context->getService('foolfuuka-plugin.geoip_region_lock');
 
-        if (!\Auth::has_access('maccess.mod') && !($preferences->get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && \Auth::has_access('access.user'))) {
+        if (!$auth->hasAccess('maccess.mod') && !($preferences->get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && $auth->hasAccess('access.user'))) {
             Event::forge('Foolz\Foolframe\Model\Context.handleWeb.override_response')
                 ->setCall(function($response) use ($context, $object) {
                     $object->blockCountryView($response->getParam('request'), $response);

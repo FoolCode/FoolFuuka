@@ -69,7 +69,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
         <div class="column">
             <?php
             foreach ($search_structure as $element) {
-                if (isset($element['access']) && !\Auth::has_access($element['access'])) {
+                if (isset($element['access']) && !$this->getAuth()->hasAccess($element['access'])) {
                     continue;
                 }
 
@@ -231,7 +231,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
         <div class="column checkboxes"><table class="table"><tbody>
             <?php
             foreach ($search_structure as $element) :
-                if (isset($element['access']) && !\Auth::has_access($element['access'])) {
+                if (isset($element['access']) && !$this->getAuth()->hasAccess($element['access'])) {
                     continue;
                 }
 

@@ -377,7 +377,7 @@ class Media extends Model
         // we set them even for admins
         if ($this->banned) {
             $this->media_status = static::STATUS_BANNED;
-        } elseif ($this->radix->hide_thumbnails && !\Auth::has_access('media.see_hidden')) {
+        } elseif ($this->radix->hide_thumbnails && !$this->getAuth()->hasAccess('media.see_hidden')) {
             $this->media_status = static::STATUS_FORBIDDEN;
         } else {
             $this->media_status = static::STATUS_NORMAL;
@@ -696,7 +696,7 @@ class Media extends Model
     public function p_delete($full = true, $thumb = true, $purge = false)
     {
         // delete media file only if there is only one image OR the image is banned
-        if ($this->total == 1 || $this->banned == 1 || (\Auth::has_access('comment.passwordless_deletion') && $purge)) {
+        if ($this->total == 1 || $this->banned == 1 || ($this->getAuth()->hasAccess('comment.passwordless_deletion') && $purge)) {
             if ($full === true) {
                 $media_file = $this->getDir();
 
@@ -835,7 +835,7 @@ class Media extends Model
             $this->preview_op = $duplicate->preview_op;
             $this->preview_reply = $duplicate->preview_reply;
 
-            if (!\Auth::has_access('comment.limitless_comment') && $this->radix->getValue('min_image_repost_time')) {
+            if (!$this->getAuth()->hasAccess('comment.limitless_comment') && $this->radix->getValue('min_image_repost_time')) {
                 // if it's -1 it means that image reposting is disabled, so this image shouldn't pass
                 if ($this->radix->getValue('min_image_repost_time') == -1) {
                     throw new MediaInsertRepostException(

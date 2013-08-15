@@ -22,16 +22,16 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
 
     public function before()
     {
-        // determine if the user is allowed access to these methods
-        if (!\Auth::has_access('boards.edit')) {
-            return $this->redirectToLogin();
-        }
-
         parent::before();
 
         $this->radix_coll = $this->getContext()->getService('foolfuuka.radix_collection');
 
         $this->param_manager->setParam('controller_title', _i('Boards'));
+    }
+
+    public function security()
+    {
+        return $this->getAuth()->hasAccess('boards.edit');
     }
 
     /**

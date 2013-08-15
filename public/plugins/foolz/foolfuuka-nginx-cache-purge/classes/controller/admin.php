@@ -10,13 +10,14 @@ class NginxCachePurge extends \Foolz\Foolframe\Controller\Admin
 {
     public function before()
     {
-        if (!\Auth::has_access('maccess.admin')) {
-            return $this->redirectToAdmin();
-        }
-
         parent::before();
 
         $this->param_manager->setParam('controller_title', 'Nginx Cache Purge');
+    }
+
+    public function security()
+    {
+        return $this->getAuth()->hasAccess('maccess.admin');
     }
 
     function structure()

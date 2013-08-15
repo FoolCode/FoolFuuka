@@ -176,7 +176,7 @@ class CommentInsert extends Comment
         $this->allow_media = true;
 
         // some users don't need to be limited, in here go all the ban and posting limitators
-        if (!\Auth::has_access('comment.limitless_comment')) {
+        if (!$this->getAuth()->hasAccess('comment.limitless_comment')) {
             // check if the user is banned
             if ($ban = $this->ban_factory->isBanned($this->poster_ip, $this->radix)) {
                 if ($ban->board_id == 0) {
@@ -231,7 +231,7 @@ class CommentInsert extends Comment
         }
 
         // some users don't need to be limited, in here go all the ban and posting limitators
-        if (!\Auth::has_access('comment.limitless_comment')) {
+        if (!$this->getAuth()->hasAccess('comment.limitless_comment')) {
             if ($this->thread_num < 1) {
                 // one can create a new thread only once every 5 minutes
                 $check_op = $this->dc->qb()
@@ -369,15 +369,15 @@ class CommentInsert extends Comment
         if ($this->capcode != '') {
             $allowed_capcodes = ['N'];
 
-            if (\Auth::has_access('comment.mod_capcode')) {
+            if ($this->getAuth()->hasAccess('comment.mod_capcode')) {
                 $allowed_capcodes[] = 'M';
             }
 
-            if (\Auth::has_access('comment.admin_capcode')) {
+            if ($this->getAuth()->hasAccess('comment.admin_capcode')) {
                 $allowed_capcodes[] = 'A';
             }
 
-            if (\Auth::has_access('comment.dev_capcode')) {
+            if ($this->getAuth()->hasAccess('comment.dev_capcode')) {
                 $allowed_capcodes[] = 'D';
             }
 

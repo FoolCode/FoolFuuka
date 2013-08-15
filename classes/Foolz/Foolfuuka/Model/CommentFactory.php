@@ -62,8 +62,8 @@ class CommentFactory extends Model
         // also spawn media variables
         if ($comment->media !== null) {
             // if we come across a banned image we set all the data to null. Normal users must not see this data.
-            if (($comment->media->banned && !\Auth::has_access('media.see_banned'))
-                || ($comment->media->radix->hide_thumbnails && !\Auth::has_access('media.see_hidden')))
+            if (($comment->media->banned && !$this->getAuth()->hasAccess('media.see_banned'))
+                || ($comment->media->radix->hide_thumbnails && !$this->getAuth()->hasAccess('media.see_hidden')))
             {
                 $banned = [
                     'media_id' => 0,

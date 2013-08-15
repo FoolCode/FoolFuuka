@@ -25,7 +25,7 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statisti
             ->addArgument($context);
 
         // don't add the admin panels if the user is not an admin
-        if (\Auth::has_access('maccess.admin')) {
+        if ($context->getService('auth')->hasAccess('maccess.admin')) {
             \Plugins::registerSidebarElement('admin', 'plugins', [
                 "content" => ["board_statistics/manage" => ["level" => "admin", "name" => _i("Board Statistics"), "icon" => 'icon-bar-chart']]
             ]);

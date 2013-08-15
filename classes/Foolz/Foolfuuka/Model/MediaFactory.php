@@ -130,7 +130,7 @@ class MediaFactory extends Model
         $config = Hook::forge('Foolz\Foolfuuka\Model\Media::upload.config')
             ->setParams([
                 'path' => APPPATH.'tmp/media_upload/',
-                'max_size' => \Auth::has_access('media.limitless_media') ? 0 : $radix->getValue('max_image_size_kilobytes') * 1024,
+                'max_size' => $this->getAuth()->hasAccess('media.limitless_media') ? 0 : $radix->getValue('max_image_size_kilobytes') * 1024,
                 'randomize' => true,
                 'max_length' => 64,
                 'ext_whitelist' => ['jpg', 'jpeg', 'gif', 'png'],

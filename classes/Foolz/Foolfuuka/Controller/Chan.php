@@ -715,7 +715,7 @@ class Chan extends Common
             'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'page'
         ];
 
-        if (\Auth::has_access('comment.see_ip')) {;
+        if ($this->getAuth()->hasAccess('comment.see_ip')) {;
             $modifiers[] = 'poster_ip';
             $modifiers[] = 'deletion_mode';
         }
@@ -826,7 +826,7 @@ class Chan extends Common
             $search['image'] = base64_encode(Media::urlsafe_b64decode($search['image']));
         }
 
-        if (\Auth::has_access('comment.see_ip') && $search['poster_ip'] !== null) {
+        if ($this->getAuth()->hasAccess('comment.see_ip') && $search['poster_ip'] !== null) {
             if (!filter_var($search['poster_ip'], FILTER_VALIDATE_IP)) {
                 return $this->error(_i('The poster IP you inserted is not a valid IP address.'));
             }

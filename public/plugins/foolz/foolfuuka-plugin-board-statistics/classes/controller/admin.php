@@ -15,15 +15,16 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 
     public function before()
     {
-        if (!\Auth::has_access('maccess.admin')) {
-            $this->redirectToAdmin();
-        }
-
         parent::before();
 
         $this->board_stats = $this->getContext()->getService('foolfuuka-plugin.board_statistics');
 
         $this->param_manager->setParam('controller_title', _i('Plugins'));
+    }
+
+    public function security()
+    {
+        return $this->getAuth()->hasAccess('maccess.admin');
     }
 
     protected function structure()

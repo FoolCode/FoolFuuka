@@ -105,7 +105,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
                                 </a>
                                 <ul class="dropdown-menu">
                                     <?= '<li><a href="'.$this->getUri()->base().'">'._i('Index').'</a></li>'; ?>
-                                    <?= (\Auth::has_access('maccess.mod')) ? '<li><a href="'.$this->getUri()->create('admin').'">'._i('Control Panel').'</a></li>' : '' ?>
+                                    <?= ($this->getAuth()->hasAccess('maccess.mod')) ? '<li><a href="'.$this->getUri()->create('admin').'">'._i('Control Panel').'</a></li>' : '' ?>
                                     <li class="divider"></li>
                                     <?php
                                     if ($this->getRadixColl()->getArchives()) {
@@ -175,7 +175,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
                                 $top_nav[] = array('href' => $this->getUri()->create(array($radix->shortname, 'gallery')), 'text' => _i('Gallery'));
                             }
 
-                            if (\Auth::has_access('comment.reports')) {
+                            if ($this->getAuth()->hasAccess('comment.reports')) {
                                 $top_nav[] = array('href' => $this->getUri()->create(array('admin', 'moderation', 'reports')), 'text' => _i('Reports').($this->getReportColl()->count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.$this->getReportColl()->count().'</span>' : ''));
                             }
 

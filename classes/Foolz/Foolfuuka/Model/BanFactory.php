@@ -257,9 +257,7 @@ class BanFactory extends Model
             $new->start = $time;
             $new->length = $length;
             $new->board_id = $board_id;
-            // the user_id is an array of (FoolAuth,xyz)
-            $user_id = \Auth::get_user_id();
-            $new->creator_id = $user_id[1];
+            $new->creator_id = $this->getAuth()->getUser()->getId();
             $new->appeal = '';
 
             if (isset($old[$new->board_id])) {

@@ -33,10 +33,6 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
      */
     public function before()
     {
-        if (!\Auth::has_access('comment.reports')) {
-            return $this->redirectToLogin();
-        }
-
         parent::before();
 
         $this->radix_coll = $this->getContext()->getService('foolfuuka.radix_collection');
@@ -44,6 +40,11 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
         $this->ban_factory = $this->getContext()->getService('foolfuuka.ban_factory');
 
         $this->param_manager->setParam('controller_title', _i('Moderation'));
+    }
+
+    public function security()
+    {
+        return $this->getAuth()->hasAccess('comment.reports');
     }
 
     /**

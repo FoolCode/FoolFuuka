@@ -292,7 +292,7 @@ class Comment extends Model
     public function getReports()
     {
         if ($this->reports === false) {
-            if (\Auth::has_access('comment.reports')) {
+            if ($this->getAuth()->hasAccess('comment.reports')) {
                 $reports = $this->report_coll->getByDocId($this->radix, $this->doc_id);
 
                 if ($this->media) {
@@ -788,7 +788,7 @@ class Comment extends Model
             ->setObject($this)
             ->execute();
 
-        if (!\Auth::has_access('comment.see_ip')) {
+        if (!$this->getAuth()->hasAccess('comment.see_ip')) {
             unset($this->poster_ip);
         }
 
@@ -803,7 +803,7 @@ class Comment extends Model
      */
     protected function p_delete($password = null, $force = false, $thread = false)
     {
-        if (!\Auth::has_access('comment.passwordless_deletion') && $force !== true) {
+        if (!$this->getAuth()->hasAccess('comment.passwordless_deletion') && $force !== true) {
             if (!class_exists('PHPSecLib\\Crypt_Hash', false)) {
                 import('phpseclib/Crypt/Hash', 'vendor');
             }

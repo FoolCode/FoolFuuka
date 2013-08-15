@@ -716,7 +716,7 @@ class RadixCollection extends Model
 
         foreach ($result as $item) {
             // don't process hidden boards
-            if (!\Auth::has_access('boards.see_hidden') && $item['hidden'] == 1) {
+            if (!$this->getAuth()->hasAccess('boards.see_hidden') && $item['hidden'] == 1) {
                 continue;
             }
 

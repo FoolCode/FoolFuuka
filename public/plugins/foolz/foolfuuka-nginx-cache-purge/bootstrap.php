@@ -17,7 +17,7 @@ use Foolz\Foolframe\Model\Context;
             ->addArgument($context);
 
         // don't add the admin panels if the user is not an admin
-        if (\Auth::has_access('maccess.admin')) {
+        if ($context->getService('auth')->hasAccess('maccess.admin')) {
             $context->getRouteCollection()->add(
                 'foolfuuka.plugin.nginx_cache_purge.admin', new \Symfony\Component\Routing\Route(
                     '/admin/plugins/nginx_cache_purge/{_suffix}',

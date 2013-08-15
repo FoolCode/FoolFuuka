@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use Foolz\Foolframe\Model\Auth;
 use Foolz\Foolframe\Model\ContextInterface;
 use Foolz\Foolframe\Model\Legacy\Config;
 use Foolz\Plugin\Event;
@@ -69,7 +70,9 @@ class Context implements ContextInterface
         $theme_instance->setPublicDir(DOCROOT.'foolfuuka/');
 
         // set an ->enabled on the themes we want to use
-        if (\Auth::has_access('maccess.admin')) {
+        /** @var Auth $auth */
+        $auth = $this->context->getService('auth');
+        if ($auth->hasAccess('maccess.admin')) {
             Event::forge('Foolz\Foolframe\Model\System::environment.result')
                 ->setCall(function($result) use ($config) {
                     $environment = $result->getParam('environment');
@@ -94,7 +97,7 @@ class Context implements ContextInterface
             }
 
             foreach ($themes_enabled as $key => $item) {
-                if (!$item && !\Auth::has_access('maccess.admin')) {
+                if (!$item && !$auth->hasAccess('maccess.admin')) {
                     continue;
                 }
 

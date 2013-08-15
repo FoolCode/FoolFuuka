@@ -251,7 +251,7 @@ class Chan extends Common
             'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'page'
         ];
 
-        if (\Auth::has_access('comment.see_ip')) {;
+        if ($this->getAuth()->hasAccess('comment.see_ip')) {;
             $modifiers[] = 'poster_ip';
         }
 
@@ -482,7 +482,7 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('The security token was not found. Please try again.')]);
         }
 
-        if (!\Auth::has_access('comment.mod_capcode')) {
+        if (!$this->getAuth()->hasAccess('comment.mod_capcode')) {
             return $this->response->setData(['error' => _i('Access Denied.')])->setStatusCode(403);
         }
 

@@ -344,7 +344,7 @@ class Search extends Board
                 $query->match('pid', $args['uid']);
             }
 
-            if (\Auth::has_access('comment.see_ip') && $args['poster_ip'] !== null) {
+            if ($this->getAuth()->hasAccess('comment.see_ip') && $args['poster_ip'] !== null) {
                 $query->where('pip', (int) Inet::ptod($args['poster_ip']));
             }
 

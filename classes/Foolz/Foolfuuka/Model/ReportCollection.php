@@ -215,7 +215,7 @@ class ReportCollection extends Model
      * @throws  ReportAlreadySubmittedException If the reporter’s IP has already submitted a report for the post.
      * @throws  ReportSubmitterBannedException  If the reporter’s IP has been banned.
      */
-    public function p_add($radix, $id, $reason, $ip_reporter = null, $mode = 'doc_id')
+    public function p_add($radix, $id, $reason, $ip_reporter, $mode = 'doc_id')
     {
         $new = new Report($this->getContext());
         $new->radix = $radix;

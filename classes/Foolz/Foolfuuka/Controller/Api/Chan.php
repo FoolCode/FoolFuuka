@@ -437,7 +437,12 @@ class Chan extends Common
 
         if ($this->getPost('action') === 'report') {
             try {
-                $this->report_coll->add($this->radix, $this->getPost('doc_id'), $this->getPost('reason'));
+                $this->report_coll->add(
+                    $this->radix,
+                    $this->getPost('doc_id'),
+                    $this->getPost('reason'),
+                    Inet::ptod($this->getRequest()->getClientIp())
+                );
             } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
                 return $this->response->setData(['error' => $e->getMessage()]);
             }
@@ -445,6 +450,7 @@ class Chan extends Common
             return $this->response->setData(['success' => _i('You have successfully submitted a report for this post.')]);
         }
 
+        /*
         if ($this->getPost('action') === 'report_media') {
             try {
                 $this->report_coll->add($this->radix, $this->getPost('media_id'), $this->getPost('reason'), null, 'media_id');
@@ -454,6 +460,7 @@ class Chan extends Common
 
             return $this->response->setData(['success' => _i('This media was reported.')]);
         }
+        */
 
         if ($this->getPost('action') === 'delete') {
             try {

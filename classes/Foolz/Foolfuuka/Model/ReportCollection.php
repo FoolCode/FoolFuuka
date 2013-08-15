@@ -275,11 +275,11 @@ class ReportCollection extends Model
             ->where('board_id = :board_id')
             ->andWhere('ip_reporter = :ip_reporter')
             ->andWhere('doc_id = :doc_id')
-            ->orWhere('media_id = :media_id')
+        //    ->orWhere('media_id = :media_id')
             ->setParameters([
                 ':board_id' => $new->board_id,
                 ':doc_id' => $new->doc_id,
-                ':media_id' => $new->media_id,
+        //        ':media_id' => $new->media_id,
                 ':ip_reporter' => $new->ip_reporter
             ])
             ->execute()

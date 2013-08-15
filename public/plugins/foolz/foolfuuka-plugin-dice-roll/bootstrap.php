@@ -1,17 +1,19 @@
 <?php
 
-\Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-dice-roll')
+use Foolz\Plugin\Event;
+
+Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-dice-roll')
     ->setCall(function($result) {
 
         \Autoloader::add_classes([
             'Foolz\Foolfuuka\Plugins\DiceRoll\Model\Dice' => __DIR__.'/classes/model/dice.php'
         ]);
 
-        \Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.after.input_checks')
+        Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.after.input_checks')
             ->setCall('Foolz\Foolfuuka\Plugins\DiceRoll\Model\Dice::roll')
             ->setPriority(4);
 
-        \Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Radix::structure.result')
+        Event::forge('Foolz\Foolfuuka\Model\Radix::structure.result')
             ->setCall(function($result) {
                 $structure = $result->getParam('structure');
                 $structure['plugin_dice_roll_enable'] = [

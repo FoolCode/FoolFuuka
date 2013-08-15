@@ -24,41 +24,44 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statisti
             ->register('foolfuuka-plugin.board_statistics', 'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics')
             ->addArgument($context);
 
-        // don't add the admin panels if the user is not an admin
-        if ($context->getService('auth')->hasAccess('maccess.admin')) {
-            \Plugins::registerSidebarElement('admin', 'plugins', [
-                "content" => ["board_statistics/manage" => ["level" => "admin", "name" => _i("Board Statistics"), "icon" => 'icon-bar-chart']]
-            ]);
+        Event::forge('Foolz\Foolframe\Model\Context.handleWeb.has_request')
+            ->setCall(function($result) use ($context) {
+                // don't add the admin panels if the user is not an admin
+                if ($context->getService('auth')->hasAccess('maccess.admin')) {
+                    \Plugins::registerSidebarElement('admin', 'plugins', [
+                        "content" => ["board_statistics/manage" => ["level" => "admin", "name" => _i("Board Statistics"), "icon" => 'icon-bar-chart']]
+                    ]);
 
-            $context->getRouteCollection()->add(
-                'foolframe.plugin.board_statistics.admin', new Route(
-                    '/admin/plugins/board_statistics/{_suffix}',
-                    [
-                        '_suffix' => 'manage',
-                        '_controller' => '\Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics::manage'
-                    ],
-                    [
-                        '_suffix' => '.*'
-                    ]
-                )
-            );
-        }
+                    $context->getRouteCollection()->add(
+                        'foolframe.plugin.board_statistics.admin', new Route(
+                            '/admin/plugins/board_statistics/{_suffix}',
+                            [
+                                '_suffix' => 'manage',
+                                '_controller' => '\Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics::manage'
+                            ],
+                            [
+                                '_suffix' => '.*'
+                            ]
+                        )
+                    );
+                }
+
+                Event::forge('foolframe.themes.generic_top_nav_buttons')
+                    ->setCall(function($result) {
+                        $top_nav = $result->getParam('nav');
+                        if ($this->getRadix()) {
+                            $top_nav[] = ['href' => $this->getUri()->create([$this->getRadix()->shortname, 'statistics']), 'text' => _i('Stats')];
+                            $result->set($top_nav);
+                            $result->setParam('nav', $top_nav);
+                        }
+                    })->setPriority(3);
+            });
 
         Event::forge('Foolz\Foolframe\Model\Framework::handleConsole.add')
             ->setCall(function($result) use ($context) {
                 $result->getParam('application')
                     ->add(new \Foolz\Foolfuuka\Plugins\BoardStatistics\Console\Console($context));
             });
-
-        Event::forge('foolframe.themes.generic_top_nav_buttons')
-            ->setCall(function($result) {
-                $top_nav = $result->getParam('nav');
-                if ($this->getRadix()) {
-                    $top_nav[] = ['href' => $this->getUri()->create([$this->getRadix()->shortname, 'statistics']), 'text' => _i('Stats')];
-                    $result->set($top_nav);
-                    $result->setParam('nav', $top_nav);
-                }
-            })->setPriority(3);
 
         Event::forge('Foolz\Foolframe\Model\Context.handleWeb.route_collection')
             ->setCall(function($result) use ($context) {

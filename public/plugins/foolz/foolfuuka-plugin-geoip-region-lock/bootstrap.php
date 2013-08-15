@@ -14,49 +14,53 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-l
             'Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock' =>__DIR__.'/classes/model/geoip_region_lock.php'
         ]);
 
-        /** @var Auth $auth */
-        $auth = $context->getService('auth');
+        Event::forge('Foolz\Foolframe\Model\Context.handleWeb.has_request')
+            ->setCall(function($result) use ($context) {
+                // don't add the admin panels if the user is not an admin
+                /** @var Auth $auth */
+                $auth = $context->getService('auth');
+                if ($auth->hasAccess('maccess.admin')) {
+                    $context->getRouteCollection()->add(
+                        'foolframe.plugin.geoip_region_lock.admin', new \Symfony\Component\Routing\Route(
+                            '/admin/plugins/geoip_region_lock/{_suffix}',
+                            [
+                                '_suffix' => 'manage',
+                                '_controller' => '\Foolz\Foolframe\Controller\Admin\Plugins\GeoipRegionLock::manage'
+                            ],
+                            [
+                                '_suffix' => '.*'
+                            ]
+                        )
+                    );
 
-        // don't add the admin panels if the user is not an admin
-        if ($auth->hasAccess('maccess.admin')) {
-            $context->getRouteCollection()->add(
-                'foolframe.plugin.geoip_region_lock.admin', new \Symfony\Component\Routing\Route(
-                    '/admin/plugins/geoip_region_lock/{_suffix}',
-                    [
-                        '_suffix' => 'manage',
-                        '_controller' => '\Foolz\Foolframe\Controller\Admin\Plugins\GeoipRegionLock::manage'
-                    ],
-                    [
-                        '_suffix' => '.*'
-                    ]
-                )
-            );
+                    \Plugins::registerSidebarElement('admin', 'plugins', [
+                        "content" => ["geoip_region_lock/manage" => ["level" => "admin", "name" => 'GeoIP Region Lock', "icon" => 'icon-flag']]
+                    ]);
+                }
 
-            \Plugins::registerSidebarElement('admin', 'plugins', [
-                "content" => ["geoip_region_lock/manage" => ["level" => "admin", "name" => 'GeoIP Region Lock', "icon" => 'icon-flag']]
-            ]);
-        }
+                $preferences = $context->getService('preferences');
 
-        $preferences = $context->getService('preferences');
+                $context->getContainer()
+                    ->register('foolfuuka-plugin.geoip_region_lock')
+                    ->addArgument($context);
 
-        $context->getContainer()
-            ->register('foolfuuka-plugin.geoip_region_lock')
-            ->addArgument($context);
+                /** @var GeoipRegionLock $object */
+                $object = $context->getService('foolfuuka-plugin.geoip_region_lock');
 
-        /** @var GeoipRegionLock $object */
-        $object = $context->getService('foolfuuka-plugin.geoip_region_lock');
+                if (!$auth->hasAccess('maccess.mod') && !($preferences->get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && $auth->hasAccess('access.user'))) {
+                    Event::forge('Foolz\Foolframe\Model\Context.handleWeb.override_response')
+                        ->setCall(function($response) use ($context, $object) {
+                            $object->blockCountryView($response->getParam('request'), $response);
+                        })
+                        ->setPriority(2);
 
-        if (!$auth->hasAccess('maccess.mod') && !($preferences->get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && $auth->hasAccess('access.user'))) {
-            Event::forge('Foolz\Foolframe\Model\Context.handleWeb.override_response')
-                ->setCall(function($response) use ($context, $object) {
-                    $object->blockCountryView($response->getParam('request'), $response);
-                })
-                ->setPriority(2);
+                    Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.method')
+                        ->setCall('Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock::blockCountryComment')
+                        ->setPriority(4);
+                }
+            });
 
-            Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.method')
-                ->setCall('Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock::blockCountryComment')
-                ->setPriority(4);
-        }
+
 
         Event::forge('Foolz\Foolfuuka\Model\Radix::structure.result')
             ->setCall(function($result){

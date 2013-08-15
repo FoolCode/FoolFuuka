@@ -10,6 +10,7 @@ use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
 use Foolz\Foolframe\Model\Validation\Validator;
 use Foolz\Foolframe\Model\Cookie;
 use Foolz\Foolfuuka\Model\Ban;
+use Foolz\Foolfuuka\Model\BanFactory;
 use Foolz\Foolfuuka\Model\Board;
 use Foolz\Foolfuuka\Model\CommentFactory;
 use Foolz\Foolfuuka\Model\CommentInsert;
@@ -961,7 +962,9 @@ class Chan extends Common
     public function radix_appeal()
     {
         try {
-            $bans = Ban::getByIp(Inet::ptod($this->getRequest()->getClientIp()));
+            /** @var BanFactory $ban_factory */
+            $ban_factory = $this->getContext()->getService('foolfuuka.ban_factory');
+            $bans = $ban_factory->getByIp(Inet::ptod($this->getRequest()->getClientIp()));
         } catch (\Foolz\Foolfuuka\Model\BanException $e) {
             return $this->error(_i('It doesn\'t look like you\'re banned.'));
         }

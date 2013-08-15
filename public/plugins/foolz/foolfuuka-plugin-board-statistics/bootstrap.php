@@ -24,7 +24,7 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statisti
             ->register('foolfuuka-plugin.board_statistics', 'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics')
             ->addArgument($context);
 
-        Event::forge('Foolz\Foolframe\Model\Context.handleWeb.has_request')
+        Event::forge('Foolz\Foolframe\Model\Context.handleWeb.has_auth')
             ->setCall(function($result) use ($context) {
                 // don't add the admin panels if the user is not an admin
                 if ($context->getService('auth')->hasAccess('maccess.admin')) {

@@ -1125,9 +1125,11 @@ class Chan extends Common
             ->add('name', _i('Name'), [new Assert\Length(['max' => 64])])
             ->add('email', _i('Email'), [new Assert\Length(['max' => 64])])
             ->add('title', _i('Title'), [new Assert\Length(['max' => 64])])
-            ->add('comment', _i('Comment'), [new Assert\Length(['min' => 3])])
-            ->add('delpass', _i('Deletion pass'), [new Assert\Length(['min' => 3, 'max' => 32])])
-            ->validate($data);
+            ->add('delpass', _i('Deletion pass'), [new Assert\Length(['min' => 3, 'max' => 32])]);
+
+        if ($media === null) {
+            $validator->add('comment', _i('Comment'), [new Assert\NotBlank(), new Assert\Length(['min' => 3])]);
+        }
 
         // this is for redirecting, not for the database
         $limit = false;
@@ -1136,6 +1138,7 @@ class Chan extends Common
             unset($data['last_limit']);
         }
 
+        $validator->validate($data);
         if (!$validator->getViolations()->count()) {
             try {
                 $data['poster_ip'] = Inet::ptod($this->getRequest()->getClientIp());

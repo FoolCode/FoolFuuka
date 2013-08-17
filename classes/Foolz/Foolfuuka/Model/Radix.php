@@ -207,8 +207,8 @@ class Radix extends Model
     public function createTables()
     {
         $config = $this->config->get('foolz/foolframe', 'db', 'default');
-        $config['dbname'] = $this->preferences->get('foolfuuka.boards.db');
-        $config['prefix'] = '';
+        $config['dbname'] = $this->preferences->get('foolfuuka.boards.db') ?: $config['dbname'];
+        $config['prefix'] = $this->preferences->get("foolfuuka.boards.prefix");
         $conn = new DoctrineConnection($this->getContext(), $config);
 
         $charset = 'utf8mb4';

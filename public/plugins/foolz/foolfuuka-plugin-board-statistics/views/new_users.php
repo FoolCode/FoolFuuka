@@ -12,7 +12,7 @@
         <tr>
             <td>
                 <?php
-                $params = [\Radix::getSelected()->shortname, 'search'];
+                $params = [$this->radix->shortname, 'search'];
                 if ($d['name']) {
                     array_push($params, 'username/' . urlencode($d['name']));
                 }

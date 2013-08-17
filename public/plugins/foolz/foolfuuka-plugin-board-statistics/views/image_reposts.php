@@ -6,7 +6,7 @@
         </div>
 
         <?php
-            $media = \Media::forgeEmpty(\Radix::getSelected());
+            $media = $this->media_factory->forgeEmpty($this->radix);
             $media->media_id = $item->media_id;
             $media->media_hash = $item->media_hash;
             $media->media = $item->media;
@@ -17,8 +17,8 @@
             $media->op = true;
         ?>
 
-        <a href="<?= $this->uri->create([\Radix::getSelected()->shortname, 'search', 'image', $media->getSafeMediaHash()]) ?>">
-            <img src="<?= $media->getThumbLink()  ?>" />
+        <a href="<?= $this->uri->create([$this->radix->shortname, 'search', 'image', $media->getSafeMediaHash()]) ?>">
+            <img src="<?= $media->getThumbLink($this->getRequest())  ?>" />
         </a>
     </div>
 <?php endforeach; ?>

@@ -14,7 +14,7 @@
         <tr>
             <td>
                 <?php
-                $params = [\Radix::getSelected()->shortname, 'search'];
+                $params = [$this->radix->shortname, 'search'];
                 if ($d->name) {
                     array_push($params, 'username/' . urlencode($d->name));
                 }
@@ -29,7 +29,7 @@
             </td>
             <td><?= date('D M d H:i:s Y', $d->timestamp) ?></td>
             <td>
-                <a href="<?= $this->uri->create([\Radix::getSelected()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : '')]) ?>">
+                <a href="<?= $this->uri->create([$this->radix->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : '')]) ?>">
                     &gt;&gt;<?= $d->num . ($d->subnum ? ',' . $d->subnum : '') ?>
                 </a>
             </td>
@@ -53,7 +53,7 @@
         <tr>
             <td>
                 <?php
-                $params = [\Radix::getSelected()->shortname, 'search'];
+                $params = [$this->radix->shortname, 'search'];
                 if ($d->name) {
                     array_push($params, 'username/' . urlencode($d->name));
                 }
@@ -68,7 +68,7 @@
             </td>
             <td><?= date('D M d H:i:s Y', $d->timestamp) ?></td>
             <td>
-                <a href="<?= $this->uri->create([\Radix::getSelected()->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : '')]) ?>">
+                <a href="<?= $this->uri->create([$this->radix->shortname, 'post', $d->num . ($d->subnum ? '_' . $d->subnum : '')]) ?>">
                     &gt;&gt;<?= $d->num . ($d->subnum ? ',' . $d->subnum : '') ?>
                 </a>
             </td>

@@ -10,7 +10,7 @@ $temp = [];
 foreach ($data_array as $k => $t) {
     $timestamp = $t->time;
 
-    if ($this->_radix->archive) {
+    if ($this->radix->archive) {
         $datetime = new \DateTime(date('Y-m-d H:i:s', $timestamp), new \DateTimeZone('America/New_York'));
         $datetime->setTimezone(new \DateTimeZone('UTC'));
         $timestamp = $datetime->getTimestamp() + $datetime->getOffset();

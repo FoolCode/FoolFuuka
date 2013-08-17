@@ -25,15 +25,22 @@ class Reports extends \Foolz\Foolframe\View\View
     <article class="thread clearfix">
         <?php
         foreach ($reports as $key => $report) {
+            $builder = $theme->createBuilder();
+            $builder->getParamManager()
+                ->setParam('context', $this->getContext())
+                ->setParam('request', $this->getRequest());
+
             // TODO clean up so we don't just edit stuff here
             /** @var $r \Foolz\Foolfuuka\Model\Comment */
             $r = $report->getComment();
-            $r->_theme = $theme;
+            $r->_theme = $builder;
+
             echo $r->getFormatted([
                 'modifiers' => [
                     'post_show_board_name' => true,
                     'post_show_view_button' => true
-            ]]);
+                ]
+            ]);
         }
         ?>
     </article>

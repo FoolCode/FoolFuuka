@@ -60,7 +60,7 @@ class Comment extends Model
      * @var DoctrineConnection
      */
     protected $dc;
-    
+
     /**
      * @var Config
      */

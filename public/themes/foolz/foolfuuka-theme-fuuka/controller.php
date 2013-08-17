@@ -3,6 +3,7 @@
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
 use Foolz\Foolfuuka\Model\Board;
+use Foolz\Inet\Inet;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -61,7 +62,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
             $this->builder->createLayout('redirect')
                 ->getParamManager()
-                ->setParam('url', $this->getUri()->create([$this->radix->shortname, 'thread', $comment->thread_num]));
+                ->setParam('url', $this->uri->create([$this->radix->shortname, 'thread', $comment->thread_num]));
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
             return new Response($this->builder->build());
@@ -72,7 +73,12 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
             foreach ($this->getPost('delete') as $idx => $doc_id) {
                 try {
                     $this->getContext()->getService('foolfuuka.report_collection')
-                        ->add($this->radix, $doc_id, $this->getPost('KOMENTO'));
+                        ->add(
+                            $this->radix,
+                            $doc_id,
+                            $this->getPost('KOMENTO'),
+                            Inet::ptod($this->getRequest()->getClientIp())
+                        );
                 } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
                     return $this->error($e->getMessage(), 404);
                 }
@@ -80,7 +86,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
             $this->builder->createLayout('redirect')
                 ->getParamManager()
-                ->setParam('url', $this->getUri()->create($this->radix->shortname.'/thread/'.$this->getPost('parent')));
+                ->setParam('url', $this->uri->create($this->radix->shortname.'/thread/'.$this->getPost('parent')));
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
             return new Response($this->builder->build());

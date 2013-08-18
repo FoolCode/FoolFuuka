@@ -719,41 +719,20 @@ class Comment extends Model
     }
 
     /**
-     * This function is grabbed from Codeigniter Framework on which
-     * the original FoOlFuuka was coded on: http://codeigniter.com
-     * The function is modified tu support multiple subdomains and https
+     * Returns a string with all text links transformed into clickable links
      *
-     * @param type $str
-     * @param type $type
-     * @param type $popup
-     * @return type
+     * @param string $str
+     * @param string $type
+     * @param boolean $popup
+     *
+     * @return string
      */
     public static function autoLinkify($str, $type = 'both', $popup = false)
     {
         if ($type != 'email') {
-            if (preg_match_all("#(^|\s|\(|\])((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $str, $matches)) {
-                $pop = ($popup == true) ? " target=\"_blank\" " : "";
+            $target = ($popup == true) ? ' target="_blank"' : '';
 
-                $total = count($matches['0']);
-
-                for ($i = 0; $i < $total; $i++) {
-                    $period = '';
-                    if (preg_match("|\.$|", $matches['6'][$i])) {
-                        $period = '.';
-                        $matches['6'][$i] = substr($matches['6'][$i], 0, -1);
-                    }
-
-                    $str = str_replace($matches['0'][$i],
-                        $matches['1'][$i] . '<a href="http' .
-                        $matches['4'][$i] . '://' .
-                        $matches['5'][$i] .
-                        preg_replace('/[[\/\!]*?[^\[\]]*?]/si', '', $matches['6'][$i]) . '"' . $pop . '>http' .
-                        $matches['4'][$i] . '://' .
-                        $matches['5'][$i] .
-                        $matches['6'][$i] . '</a>' .
-                        $period, $str);
-                }
-            }
+            $str = preg_replace("#(((http(s?)://)|(www\.))(\w+[^\s\)\<]+))#i", '<a href="$1"'.$target.'>$0</a>', $str);
         }
 
         return $str;

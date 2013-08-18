@@ -732,7 +732,7 @@ class Comment extends Model
         if ($type != 'email') {
             $target = ($popup == true) ? ' target="_blank"' : '';
 
-            $str = preg_replace("#((^|\s|\(|\])(((http(s?)://)|(www\.))(\w+[^\s\)\<]+)))#i", ' <a href="$3"'.$target.'>$3</a>', $str);
+            $str = preg_replace("#((^|\s|\(|\])(((http(s?)://)|(www\.))(\w+[^\s\)\<]+)))#i", '$2<a href="$3"'.$target.'>$3</a>', $str);
         }
 
         return $str;

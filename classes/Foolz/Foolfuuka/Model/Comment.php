@@ -161,6 +161,9 @@ class Comment extends Model
     public $poster_hash = null;
     public $poster_country = null;
 
+    public $sticky = false;
+    public $locked = false;
+
     public $media = null;
     public $extra = null;
 

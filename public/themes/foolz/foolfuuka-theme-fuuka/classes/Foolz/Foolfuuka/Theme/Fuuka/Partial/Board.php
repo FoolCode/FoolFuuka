@@ -81,9 +81,11 @@ class Board extends \Foolz\Foolfuuka\View\View
                     <a class="js" href="<?= $this->getUri()->create(array($op->radix->shortname, $op->_controller_method, $op->num)).'#'.$op->num ?>">No.</a><a class="js" href="javascript:replyQuote('>><?= $op->num ?>\n')"><?= $op->num ?></a>
                 <?php endif; ?>
 
-                <?php if (isset($op->media) && $op->media->spoiler == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= _i('The image in this post has been marked spoiler.') ?>"/><?php endif; ?>
-                <?php if ($op->deleted == 1 && $op->timestamp_expired == 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This post was prematurely deleted.') ?>"/><?php endif ?>
-                <?php if ($op->deleted == 1 && $op->timestamp_expired != 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This post was deleted on %s.', gmdate('M d, Y \a\t H:i:s e', $op->timestamp_expired)) ?>"/><?php endif ?>
+                <?php if (isset($op->media) && $op->media->spoiler == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" alt="[SPOILER]" title="<?= _i('The image in this post has been marked spoiler.') ?>"><?php endif; ?>
+                <?php if ($op->deleted == 1 && $op->timestamp_expired == 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This thread was prematurely deleted.') ?>"><?php endif ?>
+                <?php if ($op->deleted == 1 && $op->timestamp_expired != 0) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" alt="[DELETED]" title="<?= _i('This thread was deleted on %s.', gmdate('M d, Y \a\t H:i:s e', $op->timestamp_expired)) ?>"><?php endif ?>
+                <?php if ($op->sticky == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/sticky-icon.png') ?>" alt="[STICKY]" title="<?= _i('This thread has been stickied.') ?>"><?php endif; ?>
+                <?php if ($op->locked == 1) : ?><img class="inline" src="<?= $this->getAssetManager()->getAssetLink('images/icons/locked-icon.png') ?>" alt="[LOCKED]" title="<?= _i('This thread has been locked.') ?>"><?php endif; ?>
 
                 [<a href="<?= $this->getUri()->create(array($op->radix->shortname, 'thread', $op->num)) ?>"><?= _i('Reply') ?></a>]
                 <?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= $this->getUri()->create($op->radix->shortname . '/last/50/' . $op->num) ?>"><?= _i('Last 50') ?></a>]<?php endif; ?>

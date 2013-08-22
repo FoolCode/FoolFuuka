@@ -647,8 +647,8 @@ class Chan extends Common
             return $this->action_404(_i('The image was never in our databases.'));
         }
 
-        if ($media->getMediaLink()) {
-            return \Response::redirect($media->getMediaLink(), 'location', 303);
+        if ($media->getMediaLink($this->getRequest())) {
+            return new RedirectResponse($media->getMediaLink($this->getRequest()), 303);
         }
 
         return new RedirectResponse(

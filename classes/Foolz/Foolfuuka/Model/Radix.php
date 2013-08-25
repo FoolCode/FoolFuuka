@@ -253,6 +253,7 @@ class Radix extends Model
                 $table->addColumn('comment', 'text', ['length' => 65532, 'notnull' => false]);
                 $table->addColumn('delpass', 'text', ['length' => 255, 'notnull' => false]);
                 $table->addColumn('sticky', 'boolean', ['default' => 0]);
+                $table->addColumn('locked', 'boolean', ['default' => 0]);
                 $table->addColumn('poster_hash', 'string', ['length' => 8, 'notnull' => false]);
                 $table->addColumn('poster_country', 'string', ['length' => 2, 'notnull' => false]);
                 $table->addColumn('exif', 'text', ['length' => 65532, 'notnull' => false]);

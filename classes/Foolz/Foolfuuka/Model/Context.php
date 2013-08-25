@@ -6,6 +6,7 @@ use Foolz\Foolframe\Model\Auth;
 use Foolz\Foolframe\Model\ContextInterface;
 use Foolz\Foolframe\Model\Legacy\Config;
 use Foolz\Plugin\Event;
+use Foolz\Plugin\Hook;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -131,6 +132,11 @@ class Context implements ContextInterface
 
     public function loadRoutes(RouteCollection $route_collection)
     {
+        Hook::forge('Foolz\Foolfuuka\Model\Context.loadRoutes.before')
+            ->setObject($this)
+            ->setParam('route_collection', $route_collection)
+            ->execute();
+
         $route_collection->add('foolfuuka.root', new Route(
             '/',
             ['_controller' => '\Foolz\Foolfuuka\Controller\Chan::index']
@@ -207,6 +213,11 @@ class Context implements ContextInterface
                 )
             );
         }
+
+        Hook::forge('Foolz\Foolfuuka\Model\Context.loadRoutes.after')
+            ->setObject($this)
+            ->setParam('route_collection', $route_collection)
+            ->execute();
     }
 
     public function handleConsole()

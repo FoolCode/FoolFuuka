@@ -8,10 +8,10 @@ require __DIR__ . '/functions.php';
     'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan' => __DIR__.'/controller.php',
 ]);
 
-\Foolz\Plugin\Event::forge('Foolz\Foolframe\Model\Context.handleWeb.contextes_handled')
+\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Context.loadRoutes.after')
     ->setCall(function($result) {
-        foreach ($this->getService('foolfuuka.radix_collection')->getAll() as $radix) {
-            $this->getRouteCollection()->add(
+        foreach ($this->context->getService('foolfuuka.radix_collection')->getAll() as $radix) {
+            $this->context->getRouteCollection()->add(
                 'foolfuuka.chan.radix.'.$radix->shortname, new Route(
                 '/'.$radix->shortname.'/{_suffix}',
                 [

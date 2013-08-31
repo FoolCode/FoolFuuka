@@ -446,12 +446,14 @@ class Comment extends Model
             // literal bbcode
             $lit_find = [
                 "'\[banned:lit\]'i", "'\[/banned:lit\]'i",
-                "'\[moot:lit\]'i", "'\[/moot:lit\]'i"
+                "'\[moot:lit\]'i", "'\[/moot:lit\]'i",
+                "'\[code:lit\]'i", "'\[/code:lit\]'i"
             ];
 
             $lit_html = [
                 '[banned]', '[/banned]',
-                '[moot]', '[/moot]'
+                '[moot]', '[/moot]',
+                '[code]', '[/code]'
             ];
 
             $comment = preg_replace($lit_find, $lit_html, $comment);

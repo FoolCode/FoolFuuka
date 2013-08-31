@@ -442,21 +442,7 @@ class Comment extends Model
             $admin_html = '<span class="banned">\\1</span>';
 
             $comment = preg_replace($admin_find, $admin_html, $comment);
-
-            // literal bbcode
-            $lit_find = [
-                "'\[banned:lit\]'i", "'\[/banned:lit\]'i",
-                "'\[moot:lit\]'i", "'\[/moot:lit\]'i",
-                "'\[code:lit\]'i", "'\[/code:lit\]'i"
-            ];
-
-            $lit_html = [
-                '[banned]', '[/banned]',
-                '[moot]', '[/moot]',
-                '[code]', '[/code]'
-            ];
-
-            $comment = preg_replace($lit_find, $lit_html, $comment);
+            $comment = preg_replace("'\[(/?(banned|moot|spoiler|code)):lit\]'i", "[$1]", $comment);
         }
 
         $comment = nl2br(trim($comment));

@@ -441,7 +441,8 @@ class StringParser_BBCode extends StringParser
                 $this->_status = $status;
                 break;
             case 1:
-                $this->_charactersSearch = array (']', ' = "', '="', ' = \'', '=\'', ' = ', '=', ': ', ':', ' ');
+                //$this->_charactersSearch = array (']', ' = "', '="', ' = \'', '=\'', ' = ', '=', ': ', ':', ' ');
+                $this->_charactersSearch = array (']', ' = "', '="', ' = \'', '=\'', ' = ', '=', ' ');
                 $this->_status = $status;
                 break;
             case 2:

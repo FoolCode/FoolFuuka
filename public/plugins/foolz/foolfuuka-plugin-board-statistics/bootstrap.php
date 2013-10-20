@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Route;
 
 Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
     ->setCall(function($result) {
+
         /* @var $context \Foolz\Foolframe\Model\Context */
         $context = $result->getParam('context');
 
@@ -57,7 +58,7 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statisti
                     })->setPriority(3);
             });
 
-        Event::forge('Foolz\Foolframe\Model\Framework::handleConsole.add')
+        Event::forge('Foolz\Foolframe\Model\Context::handleConsole.add')
             ->setCall(function($result) use ($context) {
                 $result->getParam('application')
                     ->add(new \Foolz\Foolfuuka\Plugins\BoardStatistics\Console\Console($context));

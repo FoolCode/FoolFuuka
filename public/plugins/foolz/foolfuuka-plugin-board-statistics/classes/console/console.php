@@ -4,6 +4,7 @@ namespace Foolz\Foolfuuka\Plugins\BoardStatistics\Console;
 
 use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\Foolfuuka\Model\RadixCollection;
 use Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,11 +29,18 @@ class Console extends Command
      */
     protected $board_stats;
 
+    /**
+     * @var RadixCollection
+     */
+    protected $radix_coll;
+
     public function __construct(Context $context)
     {
         $this->context = $context;
         $this->dc = $context->getService('doctrine');
+        $this->radix_coll = $context->getService('foolfuuka.radix_collection');
         $this->board_stats = $context->getService('foolfuuka-plugin.board_statistics');
+        parent::__construct();
     }
 
     protected function configure()
@@ -52,7 +60,7 @@ class Console extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (($radix = $input->getOption('radix')) !== null) {
-            if (\Radix::getByShortname($radix) !== false) {
+            if ($this->radix_coll->getByShortname($radix) !== false) {
                 $this->board_statistics($output, $radix);
             } else {
                 $output->writeln('<error>'._i('Wrong radix (board short name) specified.').'</error>');
@@ -64,7 +72,7 @@ class Console extends Command
 
     public function board_statistics($output, $shortname = null)
     {
-        $boards = \Radix::getAll();
+        $boards = $this->radix_coll->getAll();
 
         $available = $this->board_stats->getAvailableStats();
 

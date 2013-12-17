@@ -38,7 +38,7 @@ class Chan extends \Foolz\Theme\View
 		<meta charset="utf-8">
 		<meta name="generator" content="<?= \Foolz\Config\Config::get('foolz/foolfuuka', 'package', 'main.name').' '.\Config::get('foolz/foolfuuka', 'package', 'main.version') ?>"/>
 		<title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
-		<link href='<?= \Uri::base() ?>' rel='index' title='<?= \Preferences::get('foolframe.gen.website_title') ?>'/>
+		<link href="<?= \Uri::base() ?>" rel="index" title="<?= \Preferences::get('foolframe.gen.website_title') ?>"/>
 		<?php if ($radix) : ?>
 		<link href="<?= \Uri::create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS"/>
 		<link href="<?= \Uri::create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom"/>

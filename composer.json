@@ -11,6 +11,6 @@
 
 	},
 	"autoload": {
-		"psr-4": {"Foolz\\Foolfuuka": "src/"}
+		"psr-4": {"Foolz\\Foolfuuka\\": "src/"}
 	}
 }

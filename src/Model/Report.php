@@ -2,7 +2,6 @@
 
 namespace Foolz\Foolfuuka\Model;
 
-use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\DoctrineConnection;
 use Foolz\Foolframe\Model\Model;
 use Foolz\Plugin\PlugSuit;
@@ -140,7 +139,7 @@ class Report extends Model
      */
     protected $radix_coll;
 
-    public function __construct(Context $context)
+    public function __construct(\Foolz\Foolframe\Model\Context $context)
     {
         parent::__construct($context);
 

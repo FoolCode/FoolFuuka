@@ -173,7 +173,7 @@ class Comment extends Model
     public $media = null;
     public $extra = null;
 
-    public function __construct(Context $context, $post, $board, $options = [])
+    public function __construct(\Foolz\Foolframe\Model\Context $context, $post, $board, $options = [])
     {
         parent::__construct($context);
 

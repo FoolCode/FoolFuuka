@@ -3,7 +3,6 @@
 namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Context;
 use Foolz\Plugin\Hook;
 use Foolz\Plugin\Plugsuit;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -13,7 +12,7 @@ class MediaFactory extends Model
 {
     use Plugsuit;
 
-    public function __construct(Context $context)
+    public function __construct(\Foolz\Foolframe\Model\Context $context)
     {
         parent::__construct($context);
 

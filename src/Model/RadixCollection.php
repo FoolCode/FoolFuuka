@@ -6,10 +6,8 @@ use Foolz\Cache\Cache;
 use Foolz\Foolframe\Model\Config;
 use Foolz\Foolframe\Model\DoctrineConnection;
 use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\Preferences;
 use Foolz\Profiler\Profiler;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class RadixCollection extends Model
@@ -40,8 +38,8 @@ class RadixCollection extends Model
      * @var Profiler
      */
     protected $profiler;
-    
-    public function __construct(Context $context)
+
+    public function __construct(\Foolz\Foolframe\Model\Context $context)
     {
         parent::__construct($context);
 
@@ -61,7 +59,7 @@ class RadixCollection extends Model
     public function structure($radix = null)
     {
         $dc = $this->dc;
-        
+
         $structure = [
             'open' => ['type' => 'open'],
             'id' => [

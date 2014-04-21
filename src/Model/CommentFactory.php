@@ -3,7 +3,6 @@
 namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Context;
 
 class CommentFactory extends Model
 {

@@ -6,7 +6,6 @@ use Foolz\Foolframe\Model\Config;
 use Foolz\Foolframe\Model\DoctrineConnection;
 use Foolz\Cache\Cache;
 use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\Preferences;
 use Foolz\Foolframe\Model\Uri;
 use Foolz\Plugin\PlugSuit;
@@ -312,7 +311,7 @@ class Media extends Model
      * @param  Radix $radix    The Radix in which the Media can be found
      * @param  boolean                       $op       If this media is referred to an opening post
      */
-    public function __construct(Context $context, $comment, Radix $radix, $op = false)
+    public function __construct(\Foolz\Foolframe\Model\Context $context, $comment, Radix $radix, $op = false)
     {
         parent::__construct($context);
         $this->dc = $context->getService('doctrine');

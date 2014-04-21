@@ -4,7 +4,6 @@ namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Foolframe\Model\DoctrineConnection;
 use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Context;
 use Foolz\Plugin\Hook;
 
 class ExtraException extends \Exception {}
@@ -60,7 +59,7 @@ class Extra extends Model
      */
     public $radix = null;
 
-    public function __construct(Context $context, $comment, $radix)
+    public function __construct(\Foolz\Foolframe\Model\Context $context, $comment, $radix)
     {
         parent::__construct($context);
 

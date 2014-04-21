@@ -3,7 +3,6 @@
 namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Context;
 
 /**
  * Thrown when there's no results from database or the value domain hasn't been respected
@@ -90,13 +89,13 @@ class Ban extends Model
     const APPEAL_PENDING = 1;
     const APPEAL_REJECTED = 2;
 
-    public function __construct(Context $context)
+    public function __construct(\Foolz\Foolframe\Model\Context $context)
     {
         parent::__construct($context);
-        
+
         $this->dc = $context->getService('doctrine');
     }
-    
+
     /**
      * Remove the entry for a ban (unban)
      *

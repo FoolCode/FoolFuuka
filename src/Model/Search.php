@@ -7,7 +7,6 @@ use Foolz\Foolframe\Model\Preferences;
 use Foolz\Inet\Inet;
 use Foolz\SphinxQL\SphinxQL;
 use Foolz\SphinxQL\Connection as SphinxConnnection;
-use Foolz\Foolframe\Model\Context;
 
 class SearchException extends \Exception {}
 class SearchRequiresSphinxException extends SearchException {}
@@ -21,7 +20,7 @@ class Search extends Board
      * @var Logger
      */
     protected $logger;
-    
+
     /**
      * @var Preferences
      */
@@ -37,7 +36,7 @@ class Search extends Board
      */
     protected $media_factory;
 
-    public function __construct(Context $context)
+    public function __construct(\Foolz\Foolframe\Model\Context $context)
     {
         parent::__construct($context);
 

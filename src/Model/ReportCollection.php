@@ -5,7 +5,6 @@ namespace Foolz\Foolfuuka\Model;
 use Foolz\Cache\Cache;
 use Foolz\Foolframe\Model\DoctrineConnection;
 use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\Uri;
 use Foolz\Plugin\PlugSuit;
 
@@ -46,7 +45,7 @@ class ReportCollection extends Model
      */
     protected $ban_factory;
 
-    public function __construct(Context $context)
+    public function __construct(\Foolz\Foolframe\Model\Context $context)
     {
         parent::__construct($context);
 

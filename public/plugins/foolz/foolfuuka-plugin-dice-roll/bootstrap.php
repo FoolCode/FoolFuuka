@@ -1,6 +1,7 @@
 <?php
 
 use Foolz\Foolframe\Model\Autoloader;
+use Foolz\Foolframe\Model\Context;
 use Foolz\Plugin\Event;
 
 Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-dice-roll')

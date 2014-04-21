@@ -179,7 +179,7 @@ class Comment extends Model
 
         $this->dc = $context->getService('doctrine');
         $this->config = $context->getService('config');
-        $this->config = $context->getService('preferences');
+        $this->preferences = $context->getService('preferences');
         $this->logger = $context->getService('logger');
         $this->uri = $context->getService('uri');
         $this->comment_factory = $context->getService('foolfuuka.comment_factory');

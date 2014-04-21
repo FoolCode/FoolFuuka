@@ -8,6 +8,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
     {
         $radix = $this->getBuilderParamManager()->getParam('radix');
         $search = $this->getBuilderParamManager()->getParam('search', []);
+
         $form = $this->getForm();
 
         if (!isset($radix) && $this->getPreferences()->get('foolfuuka.sphinx.global')) {
@@ -231,6 +232,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
         </div>
         <div class="column checkboxes"><table class="table"><tbody>
             <?php
+
             foreach ($search_structure as $element) :
                 if (isset($element['access']) && !$this->getAuth()->hasAccess($element['access'])) {
                     continue;
@@ -240,7 +242,11 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                 <tr><td><?= e($element['label']) ?></td><td>
                     <?php foreach ($element['elements'] as $el) : ?>
                     <label>
-                        <?= $form->radio($element['name'], $el['value'] ? : '', isset($search[$element['name']]) && $el['value'] === $search[$element['name']]) ?>
+                        <?= $form->radio(
+                            $element['name'],
+                            $el['value'] ? : '',
+                            (isset($search[$element['name']]) && $el['value'] === $search[$element['name']]) || (!isset($search[$element['name']]) && $el['value'] === false)
+                        ) ?>
                         <?= e($el['text']); ?>
                     </label>
                     <?php endforeach; ?>

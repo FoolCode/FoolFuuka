@@ -55,7 +55,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                         <?php if ($p->media !== null) : ?>
             <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
                 <span>
-                                <?= _i('File:') . ' ' . \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->getMediaFilenameProcessed(); ?>
+                                <?= _i('File:') . ' ' . \Rych\ByteSize\ByteSize::formatBinary($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->getMediaFilenameProcessed(); ?>
                     <?= '<!-- ' . substr($p->media->media_hash, 0, -2) . '-->' ?>
                             </span>
 

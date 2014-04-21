@@ -2,11 +2,8 @@
 
 use Symfony\Component\Routing\Route;
 
-require __DIR__ . '/functions.php';
-
-\Autoloader::add_classes([
-    'Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan' => __DIR__.'/controller.php',
-]);
+require_once __DIR__ . '/functions.php';
+require_once __DIR__.'/controller.php';
 
 \Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Context.loadRoutes.after')
     ->setCall(function($result) {

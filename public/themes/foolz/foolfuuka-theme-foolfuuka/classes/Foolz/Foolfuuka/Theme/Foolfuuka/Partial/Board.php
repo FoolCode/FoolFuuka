@@ -4,6 +4,7 @@ namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
 use Foolz\Inet\Inet;
 use Foolz\Foolframe\Model\Legacy\Preferences;
+use Rych\ByteSize\ByteSize;
 
 class Board extends \Foolz\Foolfuuka\View\View
 {
@@ -50,7 +51,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                     <?php endif; ?>
                     <?php if ($op->media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
                     <div class="post_file" style="padding-left: 2px;<?php if ($op->media->preview_w > 149) echo 'max-width:'.$op->media->preview_w .'px;'; ?>">
-                        <?= \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed(); ?>
+                        <?= ByteSize::formatBinary($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed(); ?>
                     </div>
                     <?php endif; ?>
                     <div class="post_file_controls">
@@ -117,7 +118,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                             <?php if ($op->poster_ip) : ?>
                             <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $op->radix->shortname ?>" data-ip="<?= Inet::dtop($op->poster_ip) ?>" data-action="ban_user"><?= _i('Ban IP:') . ' ' . Inet::dtop($op->poster_ip) ?></button>
                             <button class="btn btn-mini" data-function="searchUser" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= $this->getUri()->create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= _i('Search IP') ?></button>
-                            <?php if (Preferences::get('foolfuuka.sphinx.global')) : ?>
+                            <?php if ($this->getPreferences()->get('foolfuuka.sphinx.global')) : ?>
                                 <button class="btn btn-mini" data-function="searchUserGlobal" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= $this->getUri()->create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= _i('Search IP Globally') ?></button>
                                 <?php endif; ?>
                             <?php endif; ?>

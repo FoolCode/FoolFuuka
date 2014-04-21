@@ -33,9 +33,7 @@ class Context implements ContextInterface
         class_alias('Foolz\\Foolfuuka\\Model\\Report', 'Report');
         class_alias('Foolz\\Foolfuuka\\Model\\Search', 'Search');
 
-        \Autoloader::add_classes([
-            'StringParser_BBCode' => __DIR__.'/../../../../packages/stringparser-bbcode/library/stringparser_bbcode.class.php',
-        ]);
+        require_once __DIR__.'/../../packages/stringparser-bbcode/library/stringparser_bbcode.class.php';
 
         $context->getContainer()
             ->register('foolfuuka.radix_collection', 'Foolz\Foolfuuka\Model\RadixCollection')

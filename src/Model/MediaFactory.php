@@ -6,6 +6,8 @@ use Foolz\Foolframe\Model\Model;
 use Foolz\Foolframe\Model\Context;
 use Foolz\Plugin\Hook;
 use Foolz\Plugin\Plugsuit;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 
 class MediaFactory extends Model
 {
@@ -125,83 +127,72 @@ class MediaFactory extends Model
      * @throws  MediaUploadMultipleNotAllowedException  If there's multiple uploads
      * @throws  MediaUploadInvalidException             If the file format is not allowed
      */
-    protected function p_forgeFromUpload(Radix $radix)
+    protected function p_forgeFromUpload(Request $request, Radix $radix)
     {
         $config = Hook::forge('Foolz\Foolfuuka\Model\Media::upload.config')
             ->setParams([
-                'path' => APPPATH.'tmp/media_upload/',
-                'max_size' => $this->getAuth()->hasAccess('media.limitless_media') ? 0 : $radix->getValue('max_image_size_kilobytes') * 1024,
-                'randomize' => true,
-                'max_length' => 64,
                 'ext_whitelist' => ['jpg', 'jpeg', 'gif', 'png'],
                 'mime_whitelist' => ['image/jpeg', 'image/png', 'image/gif']
             ])
-            ->execute();
+            ->execute()
+            ->getParams();
 
-        \Upload::process($config->getParams());
-
-        if (count(\Upload::get_files()) === 0) {
+        if (!$request->files->count())
+        {
             throw new MediaUploadNoFileException(_i('You must upload an image or your image was too large.'));
         }
 
-        if (count(\Upload::get_files()) !== 1) {
+        if ($request->files->count() !== 1) {
             throw new MediaUploadMultipleNotAllowedException(_i('You can\'t upload multiple images.'));
         }
 
-        if (\Upload::is_valid()) {
-            // save them according to the config
-            \Upload::save();
-        }
+        /** @var UploadedFile[] $files */
+        $files = $request->files->all();
 
-        $file = \Upload::get_files(0);
+        $max_size = $radix->getValue('max_image_size_kilobytes') * 1024;
 
-        if (!\Upload::is_valid()) {
-            if (in_array($file['errors'], UPLOAD_ERR_INI_SIZE)) {
-                throw new MediaUploadInvalidException(
-                    _i('The server is misconfigured: the FoolFuuka upload size should be lower than PHP\'s upload limit.'));
+        foreach ($files as $file) {
+            if (!$file->isValid()) {
+
+                if ($file->getError() === UPLOAD_ERR_INI_SIZE) {
+                    throw new MediaUploadInvalidException(
+                        _i('The server is misconfigured: the FoolFuuka upload size should be lower than PHP\'s upload limit.'));
+                }
+
+                if ($file->getError() === UPLOAD_ERR_PARTIAL) {
+                    throw new MediaUploadInvalidException(_i('You uploaded the file partially.'));
+                }
+
+                if ($file->getError() === UPLOAD_ERR_CANT_WRITE) {
+                    throw new MediaUploadInvalidException(_i('The image couldn\'t be saved on the disk.'));
+                }
+
+                if ($file->getError() === UPLOAD_ERR_EXTENSION) {
+                    throw new MediaUploadInvalidException(_i('A PHP extension broke and made processing the image impossible.'));
+                }
+
+                throw new MediaUploadInvalidException(_i('Unexpected upload error.'));
             }
 
-            if (in_array($file['errors'], UPLOAD_ERR_PARTIAL)) {
-                throw new MediaUploadInvalidException(_i('You uploaded the file partially.'));
+            if (mb_strlen($file->getFilename()) > 64) {
+                throw new MediaUploadInvalidException(_i('You uploaded a file with a too long filename.'));
             }
 
-            if (in_array($file['errors'], UPLOAD_ERR_CANT_WRITE)) {
-                throw new MediaUploadInvalidException(_i('The image couldn\'t be saved on the disk.'));
+            if (!in_array(strtolower($file->getClientOriginalExtension()), $config['ext_whitelist'])) {
+                throw new MediaUploadInvalidException(_i('You uploaded a file with an invalid extension.'));
             }
 
-            if (in_array($file['errors'], UPLOAD_ERR_EXTENSION)) {
-                throw new MediaUploadInvalidException(_i('A PHP extension broke and made processing the image impossible.'));
+            if (!in_array(strtolower($file->getMimeType()), $config['mime_whitelist'])) {
+                throw new MediaUploadInvalidException(_i('You uploaded a file with an invalid mime type.'));
             }
 
-            if (in_array($file['errors'], UPLOAD_ERR_MAX_SIZE)) {
+            if ($file->getClientSize() > $max_size || !$this->getAuth()->hasAccess('media.limitless_media')) {
                 throw new MediaUploadInvalidException(
                     _i('You uploaded a too big file. The maxmimum allowed filesize is %s',
                         $radix->getValue('max_image_size_kilobytes')));
             }
-
-            if (in_array($file['errors'], UPLOAD_ERR_EXT_NOT_WHITELISTED)) {
-                throw new MediaUploadInvalidException(_i('You uploaded a file with an invalid extension.'));
-            }
-
-            if (in_array($file['errors'], UPLOAD_ERR_MAX_FILENAME_LENGTH)) {
-                throw new MediaUploadInvalidException(_i('You uploaded a file with a too long filename.'));
-            }
-
-            if (in_array($file['errors'], UPLOAD_ERR_MOVE_FAILED)) {
-                throw new MediaUploadInvalidException(_i('Your uploaded file couldn\'t me moved on the server.'));
-            }
-
-            throw new MediaUploadInvalidException(_i('Unexpected upload error.'));
         }
 
-        $media = [
-            'media_filename' => $file['name'],
-            'media_size' => $file['size'],
-            'temp_path' => $file['saved_to'],
-            'temp_filename' => $file['saved_as'],
-            'temp_extension' => $file['extension']
-        ];
-
-        return new Media($this->getContext(), $media, $radix);
+        return new Media($this->getContext(), ['temp_file' => $files['file_image']], $radix);
     }
 }

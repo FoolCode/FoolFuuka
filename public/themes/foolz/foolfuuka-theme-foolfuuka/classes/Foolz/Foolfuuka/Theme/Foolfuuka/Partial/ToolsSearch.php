@@ -9,6 +9,7 @@ class ToolsSearch extends \Foolz\Foolfuuka\View\View
     {
         $radix = $this->getBuilderParamManager()->getParam('radix');
         $search = $this->getBuilderParamManager()->getParam('search', []);
+        $form = $this->getForm();
 
         if (is_null($radix) && $this->getPreferences()->get('foolfuuka.sphinx.global')) {
             // search can work also without a radix selected
@@ -20,7 +21,7 @@ class ToolsSearch extends \Foolz\Foolfuuka\View\View
         if (isset($search_radix)) : ?>
 
         <ul class="nav pull-right">
-        <?= \Form::open([
+        <?= $form->open([
             'class' => 'navbar-search',
             'method' => 'POST',
             'action' => $this->getUri()->create($search_radix.'/search')
@@ -28,14 +29,14 @@ class ToolsSearch extends \Foolz\Foolfuuka\View\View
         ?>
 
         <li>
-        <?= \Form::input([
+        <?= $form->input([
             'name' => 'text',
             'value' => (isset($search["text"])) ? rawurldecode($search["text"]) : '',
             'class' => 'search-query',
             'placeholder' => ($search_radix  !== '_') ? _i('Search or insert post number') : _i('Search through all the boards')
         ]); ?>
         </li>
-        <?= \Form::close() ?>
+        <?= $form->close() ?>
         </ul>
         <?php endif;
     }

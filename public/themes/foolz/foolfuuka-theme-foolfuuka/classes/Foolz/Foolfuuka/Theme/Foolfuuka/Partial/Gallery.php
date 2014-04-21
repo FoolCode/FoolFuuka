@@ -59,7 +59,7 @@ class Gallery extends \Foolz\Foolfuuka\View\View
                 </a>
                 <?php endif; ?>
                 <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned'  || $this->getAuth()->hasAccess('media.see_banned')) : ?>
-                <div class="post_file" style="padding-left: 2px"><?= \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->media_filename ?></div>
+                <div class="post_file" style="padding-left: 2px"><?= \Rych\ByteSize\ByteSize::formatBinary($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->media_filename ?></div>
                 <div class="post_file_controls">
                     <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" class="btnr" target="_blank">Full</a><?php if ($p->media->total > 1) : ?><a href="<?= $this->getUri()->create($radix->shortname . '/search/image/' . urlencode(substr($p->media->media_hash, 0, -2))) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a target="_blank" href="http://iqdb.org/?url=<?= $p->media->getThumbLink($this->getRequest()) ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink($this->getRequest()) ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink($this->getRequest()) ?>" class="btnr parent">Google</a>
                 </div>

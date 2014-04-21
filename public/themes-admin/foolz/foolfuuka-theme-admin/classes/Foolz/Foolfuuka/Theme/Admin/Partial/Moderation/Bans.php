@@ -11,6 +11,7 @@ class Bans extends \Foolz\Foolframe\View\View
     {
         $users = $this->getContext()->getService('users');
         $radix_coll = $this->getContext()->getService('foolfuuka.radix_collection');
+        $form = $this->getForm();
 
         ?>
 <div class="admin-container">
@@ -19,11 +20,11 @@ class Bans extends \Foolz\Foolframe\View\View
     </div>
 
     <div class="pull-right">
-        <?= \Form::open('admin/moderation/find_ban') ?>
+        <?= $form->open(['action' => 'admin/moderation/find_ban']) ?>
         <div class="input-prepend">
-            <label class="add-on" for="form_ip">Search by IP</label><?= \Form::input('ip'); ?>
+            <label class="add-on" for="form_ip">Search by IP</label><?= $form->input('ip'); ?>
         </div>
-        <?= \Form::close() ?>
+        <?= $form->close() ?>
     </div>
 
     <table class="table table-hover table-condensed">

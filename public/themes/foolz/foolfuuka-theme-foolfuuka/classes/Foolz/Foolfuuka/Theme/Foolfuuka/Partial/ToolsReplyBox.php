@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
+use Foolz\Foolframe\Model\Markdown;
+
 class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
@@ -13,22 +15,15 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
         $user_email = $this->getBuilderParamManager()->getParam('user_email');
         $thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
         $reply_errors = $this->getBuilderParamManager()->getParam('reply_errors', false);
-
-        if (\ReCaptcha::available()) : ?>
-        <script>
-            var RecaptchaOptions = {
-                theme : 'custom',
-                custom_theme_widget: 'recaptcha_widget'
-            };
-        </script>
-        <?php endif; ?>
+        $form = $this->getForm();
+        ?>
 
         <div id="reply" class="thread_form_wrap clearfix">
             <section class="thread_form clearfix">
-                <?= \Form::open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit']) ?>
-                <?= \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
-                <?= \Form::hidden('reply_numero', $thread_id, ['id' => 'reply_numero']) ?>
-                <?= isset($backend_vars['last_limit']) ? \Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
+                <?= $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit']) ?>
+                <?= $form->hidden('csrf_token', $this->getSecurity()->getCsrfToken()); ?>
+                <?= $form->hidden('reply_numero', $thread_id, ['id' => 'reply_numero']) ?>
+                <?= isset($backend_vars['last_limit']) ? $form->hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
                 <fieldset>
 
                     <div class="progress progress-info progress-striped active" style="height:8px; margin-top:0px; margin-bottom: 3px; background: #fff; width: 660px; opacity: 0;"><div class="bar" style="width: 0%"></div></div>
@@ -38,7 +33,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
 
                         <div class="input-prepend">
                             <label class="add-on" for="reply_talkingde"><?= _i('Subject') ?></label><?php
-                            echo \Form::input([
+                            echo $form->input([
                                 'name' => 'reply_talkingde',
                                 'id' => 'reply_talkingde',
                             ]);
@@ -47,13 +42,13 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
 
                         <div class="input-prepend">
                             <label class="add-on" for="reply_bokunonome"><?= _i('Name') ?></label><?php
-                            echo \Form::input([
+                            echo $form->input([
                                 'name' => 'name',
                                 'id' => 'reply_name_yep',
                                 'style' => 'display:none'
                             ]);
 
-                            echo \Form::input([
+                            echo $form->input([
                                 'name' => 'reply_bokunonome',
                                 'id' => 'reply_bokunonome',
                                 'value' => $user_name
@@ -63,13 +58,13 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
 
                         <div class="input-prepend">
                             <label class="add-on" for="reply_elitterae"><?= _i('E-mail') ?></label><?php
-                            echo \Form::input([
+                            echo $form->input([
                                 'name' => 'email',
                                 'id' => 'reply_email_yep',
                                 'style' => 'display:none'
                             ]);
 
-                            echo \Form::input([
+                            echo $form->input([
                                 'name' => 'reply_elitterae',
                                 'id' => 'reply_elitterae',
                                 'value' => $user_email
@@ -79,7 +74,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
 
                         <div class="input-prepend">
                             <label class="add-on" for="reply_nymphassword"><?= _i('Password') ?></label><?php
-                            echo \Form::password([
+                            echo $form->password([
                                 'name' => 'reply_nymphassword',
                                 'id' => 'reply_nymphassword',
                                 'value' => $user_pass,
@@ -103,19 +98,19 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                             ?>
                             <div class="input-prepend">
                                 <label class="add-on" for="reply_postas"><?= _i('Post As') ?></label>
-                                <?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
+                                <?= $form->select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
                             </div>
                             <?php endif; ?>
                     </div>
 
                     <div class="input-append pull-left">
                         <?php
-                        echo \Form::textarea([
+                        echo $form->textarea([
                             'name' => 'reply',
                             'id' => 'reply_comment_yep',
                             'style' => 'display:none'
                         ]);
-                        echo \Form::textarea([
+                        echo $form->textarea([
                             'name' => 'reply_chennodiscursus',
                             'id' => 'reply_chennodiscursus',
                             'placeholder' => (!$radix->archive && isset($thread_dead) && $thread_dead) ? _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
@@ -133,7 +128,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                                 'class' => 'btn btn-primary',
                             ];
 
-                            echo \Form::submit($submit_array);
+                            echo $form->submit($submit_array);
 
                             if (!$this->getBuilderParamManager()->getParam('disable_image_upload', false)) {
                                 $submit_array = [
@@ -143,10 +138,10 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                                     'class' => 'btn',
                                 ];
 
-                                echo \Form::submit($submit_array);
+                                echo $form->submit($submit_array);
                             }
 
-                            echo \Form::reset(['class' => 'btn', 'name' => 'reset', 'value' => _i('Reset')]);
+                            echo $form->reset(['class' => 'btn', 'name' => 'reset', 'value' => _i('Reset')]);
                             ?>
                         </div>
                     </div>
@@ -155,12 +150,19 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                         <div class="rules_box">
                             <?php
                             if ($radix->getValue('posting_rules')) {
-                                echo \Foolz\Foolframe\Model\Markdown::parse($radix->getValue('posting_rules'));
+                                echo Markdown::parse($radix->getValue('posting_rules'));
                             }
                             ?>
                         </div>
 
-                        <?php if (\ReCaptcha::available()) : ?>
+                        <?php if ($this->getPreferences()->get('recaptcha.public_key', false)) : ?>
+
+                        <script>
+                            var RecaptchaOptions = {
+                                theme : 'custom',
+                                custom_theme_widget: 'recaptcha_widget'
+                            };
+                        </script>
 
                         <div class="recaptcha_widget" style="display:none">
                             <div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
@@ -177,9 +179,9 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                             </div>
                         </div>
 
-                        <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
+                        <script type="xtxt/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('recaptcha.public_key') ?>"></script>
                         <noscript>
-                            <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= \Config::get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br>
+                            <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br>
                             <textarea name="recaptcha_challenge_field" rows="3" cols="40">
                             </textarea>
                             <input type="hidden" name="recaptcha_response_field"  value="manual_challenge">
@@ -193,7 +195,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                     <span style="color:red"><?= $reply_errors ?></span>
                     <?php endif; ?>
                 </fieldset>
-                <?= \Form::close() ?>
+                <?= $form->close() ?>
             </section>
         </div>
         <?php

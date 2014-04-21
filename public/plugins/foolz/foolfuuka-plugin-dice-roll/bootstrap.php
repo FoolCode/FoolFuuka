@@ -1,13 +1,17 @@
 <?php
 
+use Foolz\Foolframe\Model\Autoloader;
 use Foolz\Plugin\Event;
 
 Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-dice-roll')
     ->setCall(function($result) {
 
-        \Autoloader::add_classes([
-            'Foolz\Foolfuuka\Plugins\DiceRoll\Model\Dice' => __DIR__.'/classes/model/dice.php'
-        ]);
+        /* @var Context $context */
+        $context = $result->getParam('context');
+        /** @var Autoloader $autoloader */
+        $autoloader = $context->getService('autoloader');
+
+        $autoloader->addClass('Foolz\Foolfuuka\Plugins\DiceRoll\Model\Dice', __DIR__.'/classes/model/dice.php');
 
         Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.after.input_checks')
             ->setCall('Foolz\Foolfuuka\Plugins\DiceRoll\Model\Dice::roll')

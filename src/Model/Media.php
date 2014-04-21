@@ -2,14 +2,15 @@
 
 namespace Foolz\Foolfuuka\Model;
 
+use Foolz\Foolframe\Model\Config;
 use Foolz\Foolframe\Model\DoctrineConnection;
-use Foolz\Foolframe\Model\Legacy\Config;
 use Foolz\Cache\Cache;
 use Foolz\Foolframe\Model\Model;
 use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\Preferences;
 use Foolz\Foolframe\Model\Uri;
 use Foolz\Plugin\PlugSuit;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class MediaException extends \Exception {}
@@ -170,25 +171,11 @@ class Media extends Model
     public $radix = null;
 
     /**
-     * The temporary path for the uploaded file
-     *
-     * @var  string
-     */
-    public $temp_path = null;
-
-    /**
      * The temporary filename for the uploaded file
      *
-     * @var  string
+     * @var  UploadedFile
      */
-    public $temp_filename = null;
-
-    /**
-     * The temporary extension for the uploaded file
-     *
-     * @var  string
-     */
-    public $temp_extension = null;
+    public $temp_file = null;
 
     /**
      * Caches media_status value
@@ -381,16 +368,6 @@ class Media extends Model
             $this->media_status = static::STATUS_FORBIDDEN;
         } else {
             $this->media_status = static::STATUS_NORMAL;
-        }
-    }
-
-    /**
-     * Checks if there's a file stored in the cache and gets rid of it
-     */
-    public function __destruct()
-    {
-        if ($this->temp_filename !== null && file_exists($this->temp_path.$this->temp_filename)) {
-            unlink($this->temp_path.$this->temp_filename);
         }
     }
 
@@ -796,8 +773,11 @@ class Media extends Model
      */
     public function p_insert($microtime, $is_op)
     {
+        $file = $this->temp_file;
+        $this->media_size = $file->getClientSize();
+        $this->media_filename = $file->getClientOriginalName();
+        $full_path = $file->getPathname();
         $this->op = $is_op;
-        $full_path = $this->temp_path.$this->temp_filename;
 
         $getimagesize = getimagesize($full_path);
 
@@ -818,8 +798,8 @@ class Media extends Model
 
         $this->media_w = $getimagesize[0];
         $this->media_h = $getimagesize[1];
-        $this->media_orig = $microtime.'.'.strtolower($this->temp_extension);
-        $this->preview_orig = $microtime.'s.'.strtolower($this->temp_extension);
+        $this->media_orig = $microtime.'.'.strtolower($file->getClientOriginalExtension());
+        $this->preview_orig = $microtime.'s.'.strtolower($file->getClientOriginalExtension());
         $this->media_hash = base64_encode(pack("H*", md5(file_get_contents($full_path))));
 
         $do_thumb = true;
@@ -913,7 +893,7 @@ class Media extends Model
                 ->get();
 
             if ($return instanceof \Foolz\Plugin\Void) {
-                if ($this->radix->getValue('enable_animated_gif_thumbs') && strtolower($this->temp_extension) === 'gif') {
+                if ($this->radix->getValue('enable_animated_gif_thumbs') && strtolower($file->getClientOriginalExtension()) === 'gif') {
                     exec("convert ".$full_path." -coalesce -treedepth 4 -colors 256 -quality 80 -background none ".
                         "-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true));
                 } else {
@@ -949,7 +929,7 @@ class Media extends Model
                 copy($full_path, $this->pathFromFilename(false, false, true));
             }
 
-            if (function_exists('exif_read_data') && in_array(strtolower($this->temp_extension), ['jpg', 'jpeg', 'tiff'])) {
+            if (function_exists('exif_read_data') && in_array(strtolower($file->getClientOriginalExtension()), ['jpg', 'jpeg', 'tiff'])) {
                 $media_data = null;
                 getimagesize($full_path, $media_data);
 

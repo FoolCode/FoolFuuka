@@ -59,7 +59,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
     {
         $data['form'] = $this->radix_coll->structure();
 
-        if ($this->getPost() && !\Security::check_token()) {
+        if ($this->getPost() && !$this->checkCsrfToken()) {
             $this->notices->set('warning', _i('The security token was not found. Please try again.'));
         } elseif ($this->getPost()) {
             $result = Validator::formValidate($data['form']);
@@ -101,7 +101,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
     {
         $data['form'] = $this->radix_coll->structure();
 
-        if ($this->getPost() && !\Security::check_token()) {
+        if ($this->getPost() && !$this->checkCsrfToken()) {
             $this->notices->set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
         } elseif ($this->getPost()) {
             $result = Validator::formValidate($data['form']);
@@ -133,7 +133,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             throw new NotFoundHttpException;
         }
 
-        if ($this->getPost() && !\Security::check_token()) {
+        if ($this->getPost() && !$this->checkCsrfToken()) {
             $this->notices->set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
         } elseif ($this->getPost()) {
             $board->remove($id);
@@ -230,7 +230,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'close'
         ];
 
-        $this->preferences->submit_auto($form, $this->getPost());
+        $this->preferences->submit_auto($this->getRequest(), $form, $this->getPost());
 
         $data['form'] = $form;
 
@@ -395,7 +395,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'close'
         ];
 
-        $this->preferences->submit_auto($form, $this->getPost());
+        $this->preferences->submit_auto($this->getRequest(), $form, $this->getPost());
 
         // create the form
         $data['form'] = $form;

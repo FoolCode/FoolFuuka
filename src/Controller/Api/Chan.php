@@ -427,7 +427,7 @@ class Chan extends Common
 
     public function post_user_actions()
     {
-        if (!\Security::check_token()) {
+        if (!$this->checkCsrfToken()) {
             return $this->response->setData(['error' => _i('The security token was not found. Please try again.')]);
         }
 
@@ -485,7 +485,7 @@ class Chan extends Common
 
     public function post_mod_actions()
     {
-        if (!\Security::check_token()) {
+        if (!$this->checkCsrfToken()) {
             return $this->response->setData(['error' => _i('The security token was not found. Please try again.')]);
         }
 

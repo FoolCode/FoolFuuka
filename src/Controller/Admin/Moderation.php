@@ -96,7 +96,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             'cookie_domain' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_domain'),
             'cookie_prefix' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_prefix'),
             'selected_theme' => $theme_name,
-            'csrf_token_key' => \Config::get('security.csrf_token_key'),
+            'csrf_token_key' => 'csrf_token',
             'images' => [
                 'banned_image' => $this->uri->base().$this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
                 'banned_image_width' => 150,
@@ -203,7 +203,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
             throw new NotFoundHttpException;
         }
 
-        if ($this->getPost() && !\Security::check_token()) {
+        if ($this->getPost() && !$this->checkCsrfToken()) {
             $this->notices->set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
         } elseif ($this->getPost()) {
             switch ($action) {

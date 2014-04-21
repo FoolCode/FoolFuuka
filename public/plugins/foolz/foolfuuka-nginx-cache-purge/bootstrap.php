@@ -1,17 +1,21 @@
 <?php
 
+use Foolz\Foolframe\Model\Autoloader;
 use Foolz\Foolframe\Model\Context;
+use Foolz\Foolframe\Model\Plugins;
 use Foolz\Plugin\Event;
 
 Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-nginx-cache-purge')
     ->setCall(function($result) {
-        \Autoloader::add_classes([
+        /* @var Context $context */
+        $context = $result->getParam('context');
+        /** @var Autoloader $autoloader */
+        $autoloader = $context->getService('autoloader');
+
+        $autoloader->addClassMap([
             'Foolz\Foolframe\Controller\Admin\Plugins\NginxCachePurge' => __DIR__.'/classes/controller/admin.php',
             'Foolz\Foolfuuka\Plugins\NginxCachePurge\Model\NginxCachePurge' =>__DIR__.'/classes/model/nginx_cache_purge.php'
         ]);
-
-        /** @var Context $context */
-        $context = $result->getParam('context');
 
         $context->getContainer()
             ->register('foolfuuka-plugin.nginx_purge_cache', 'Foolz\Foolfuuka\Plugins\NginxCachePurge\Model\NginxCachePurge')
@@ -34,7 +38,7 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-nginx-cache-purge')
                             )
                         );
 
-                        \Plugins::registerSidebarElement('admin', 'plugins', [
+                        Plugins::registerSidebarElement('admin', 'plugins', [
                             "content" => ["nginx_cache_purge/manage" => ["level" => "admin", "name" => 'Nginx Cache Purge', "icon" => 'icon-leaf']]
                         ]);
                     }

@@ -1,7 +1,9 @@
 <?php
 
 return [
-    'software' => [
+    /*
+     * TODO find a way to display this programmatically
+     * 'software' => [
         [
             'title' => _i('FoolFuuka Version'),
             'value' => \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.version'),
@@ -12,7 +14,7 @@ return [
                 'string' => _i('There is a new version of the software available for download.')
             ]
         ]
-    ],
+    ], */
 
     'php-extensions' => [
         [

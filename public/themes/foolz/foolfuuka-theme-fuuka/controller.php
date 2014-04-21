@@ -38,7 +38,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
             return $this->error(_i('You aren\'t sending the required fields for creating a new message.'));
         }
 
-        if (!\Security::check_token()) {
+        if (!$this->checkCsrfToken()) {
             return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
         }
 

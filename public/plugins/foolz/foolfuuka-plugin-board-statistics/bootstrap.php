@@ -1,8 +1,10 @@
 <?php
 
 use Doctrine\DBAL\Schema\Schema;
+use Foolz\Foolframe\Model\Autoloader;
 use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\Foolframe\Model\Plugins;
 use Foolz\Foolframe\Model\Uri;
 use Foolz\Foolfuuka\Model\RadixCollection;
 use Foolz\Plugin\Event;
@@ -11,10 +13,12 @@ use Symfony\Component\Routing\Route;
 Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
     ->setCall(function($result) {
 
-        /* @var $context \Foolz\Foolframe\Model\Context */
+        /* @var Context $context */
         $context = $result->getParam('context');
+        /** @var Autoloader $autoloader */
+        $autoloader = $context->getService('autoloader');
 
-        \Autoloader::add_classes([
+        $autoloader->addClassMap([
             'Foolz\Foolframe\Controller\Admin\Plugins\BoardStatistics' => __DIR__.'/classes/controller/admin.php',
             'Foolz\Foolfuuka\Controller\Chan\BoardStatistics' => __DIR__.'/classes/controller/chan.php',
             'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics' => __DIR__.'/classes/model/board_statistics.php',
@@ -29,7 +33,7 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statisti
             ->setCall(function($result) use ($context) {
                 // don't add the admin panels if the user is not an admin
                 if ($context->getService('auth')->hasAccess('maccess.admin')) {
-                    \Plugins::registerSidebarElement('admin', 'plugins', [
+                    Plugins::registerSidebarElement('admin', 'plugins', [
                         "content" => ["board_statistics/manage" => ["level" => "admin", "name" => _i("Board Statistics"), "icon" => 'icon-bar-chart']]
                     ]);
 

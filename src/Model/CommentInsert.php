@@ -4,6 +4,7 @@ namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Cache\Cache;
 use Foolz\Inet\Inet;
+use Neutron\ReCaptcha\ReCaptcha;
 
 class CommentSendingException extends \Exception {}
 class CommentSendingDuplicateException extends CommentSendingException {}
@@ -288,14 +289,20 @@ class CommentInsert extends Comment
                 unset($this->$field);
             }
 
-            if ($this->recaptcha_challenge && $this->recaptcha_response && \ReCaptcha::available()) {
-                $recaptcha = \ReCaptcha::instance()
-                    ->check_answer($this->poster_ip, $this->recaptcha_challenge, $this->recaptcha_response);
+            if ($this->recaptcha_challenge && $this->recaptcha_response && $this->preferences->get('recaptcha.public_key', false)) {
 
-                if (!$recaptcha) {
+                $recaptcha = ReCaptcha::create($this->preferences->get('recaptcha.public_key'), $this->preferences->get('recaptcha.private_key'));
+                $recaptcha_result = $recaptcha->checkAnswer(
+                    Inet::dtop($this->poster_ip),
+                    $this->recaptcha_challenge,
+                    $this->recaptcha_response
+                );
+
+                if (!$recaptcha_result->isValid()) {
                     throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution.'));
                 }
-            } elseif (\ReCaptcha::available()) { // if there wasn't a recaptcha input, let's go with heavier checks
+
+            } elseif ($this->preferences->get('recaptcha.public_key')) { // if there wasn't a recaptcha input, let's go with heavier checks
                 // 3+ links is suspect
                 if (substr_count($this->comment, 'http') > 2) {
                     throw new CommentSendingRequestCaptchaException;
@@ -359,12 +366,11 @@ class CommentInsert extends Comment
             throw new CommentSendingNoDelPassException(_i('You must submit a deletion password.'));
         }
 
-        if (!class_exists('PHPSecLib\\Crypt_Hash', false)) {
-            import('phpseclib/Crypt/Hash', 'vendor');
+        $pass = password_hash($this->delpass, PASSWORD_BCRYPT, ['cost' => 10]);
+        if ($this->delpass === false) {
+            throw new \RuntimeException('Password hashing failed');
         }
-
-        $hasher = new \PHPSecLib\Crypt_Hash();
-        $this->delpass = base64_encode($hasher->pbkdf2($this->delpass, $this->config->get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
+        $this->delpass = $pass;
 
         if ($this->capcode != '') {
             $allowed_capcodes = ['N'];

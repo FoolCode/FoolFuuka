@@ -8,6 +8,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
     {
         $radix = $this->getBuilderParamManager()->getParam('radix');
         $search = $this->getBuilderParamManager()->getParam('search', []);
+        $form = $this->getForm();
 
         if (!isset($radix) && $this->getPreferences()->get('foolfuuka.sphinx.global')) {
             // search can work also without a radix selected
@@ -19,10 +20,10 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
 
         <?php if (isset($search_radix)) : ?>
         <div class="advanced_search clearfix">
-            <?= \Form::open(['method' => 'POST', 'action' => $this->getUri()->create($search_radix.'/search')]); ?>
+            <?= $form->open(['method' => 'POST', 'action' => $this->getUri()->create($search_radix.'/search')]); ?>
 
         <div class="comment_wrap">
-            <?= \Form::input([
+            <?= $form->input([
             'name' => 'text',
             'id' => 'search_form_comment',
             'value' => (isset($search['text'])) ? rawurldecode($search['text']) : '',
@@ -32,14 +33,14 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
         </div>
 
         <div class="buttons clearfix">
-            <?= \Form::submit([
+            <?= $form->submit([
                 'class' => 'btn btn-inverse',
                 'value' => _i('Search'),
                 'name' => 'submit_search',
             ]);
             ?>
 
-            <?= \Form::submit([
+            <?= $form->submit([
             'class' => 'btn btn-inverse',
             'value' => _i('Search on all boards'),
             'name' => 'submit_search_global',
@@ -47,7 +48,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
             ?>
 
             <?php if (isset($radix)) : ?>
-            <?= \Form::submit([
+            <?= $form->submit([
                 'class' => 'btn btn-inverse',
                 'value' => _i('Go to post number'),
                 'name' => 'submit_post',
@@ -55,7 +56,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
             ?>
             <?php endif; ?>
 
-            <?= \Form::reset([
+            <?= $form->reset([
                 'class' => 'btn btn-inverse pull-right',
                 'value' => _i('Clear'),
                 'name' => 'reset',
@@ -80,7 +81,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
 
                     echo '<div class="input-prepend">';
                     echo '<label class="add-on" for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
-                    echo \Form::input([
+                    echo $form->input([
                         'name' => $element['name'],
                         'id' => 'search_form_'.$element['name'],
                         'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : '',
@@ -92,7 +93,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                 if ($element['type'] === 'date') {
                     echo '<div class="input-prepend">';
                     echo '<label class="add-on" for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
-                    echo \Form::input(
+                    echo $form->input(
                         ['type' => 'date',
                             'name' => $element['name'],
                             'placeholder' => 'YYYY-MM-DD',
@@ -138,7 +139,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                         </div>
                         <?php
                         foreach ($radixes as $r) {
-                            echo '<label>'.\Form::checkbox('boards[]', $r->shortname, in_array($r->shortname, $boards) || empty($boards)).' /'.e($r->shortname).'/</label>';
+                            echo '<label>'.$form->checkbox('boards[]', $r->shortname, in_array($r->shortname, $boards) || empty($boards)).' /'.e($r->shortname).'/</label>';
                         }
                         ?>
                         <?php endif; ?>
@@ -173,7 +174,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                         </div>
                         <?php
                         foreach ($radixes as $r) {
-                            echo '<label>'.\Form::checkbox('boards[]', $r->shortname, in_array($r->shortname, $boards) || empty($boards)).' /'.e($r->shortname).'/</label>';
+                            echo '<label>'.$form->checkbox('boards[]', $r->shortname, in_array($r->shortname, $boards) || empty($boards)).' /'.e($r->shortname).'/</label>';
                         }
                         ?>
                         <?php endif; ?>
@@ -239,7 +240,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                 <tr><td><?= e($element['label']) ?></td><td>
                     <?php foreach ($element['elements'] as $el) : ?>
                     <label>
-                        <?= \Form::radio($element['name'], $el['value'] ? : '', isset($search[$element['name']]) && $el['value'] === $search[$element['name']]) ?>
+                        <?= $form->radio($element['name'], $el['value'] ? : '', isset($search[$element['name']]) && $el['value'] === $search[$element['name']]) ?>
                         <?= e($el['text']); ?>
                     </label>
                     <?php endforeach; ?>
@@ -249,7 +250,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
             endforeach; ?>
         </tbody></table></div>
 
-            <?= \Form::close() ?>
+            <?= $form->close() ?>
 
         </div>
         <?php endif;

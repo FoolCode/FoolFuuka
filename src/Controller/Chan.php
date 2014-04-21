@@ -181,7 +181,7 @@ class Chan extends Common
                 'cookie_domain' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_domain'),
                 'cookie_prefix' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_prefix'),
                 'selected_theme' => $theme_name,
-                'csrf_token_key' => \Config::get('security.csrf_token_key'),
+                'csrf_token_key' => 'csrf_token',
                 'images' => [
                     'banned_image' => $this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
                     'banned_image_width' => 150,
@@ -989,7 +989,7 @@ class Chan extends Common
         }
 
         if ($this->getPost('appeal')) {
-            if (!\Security::check_token()) {
+            if (!$this->checkCsrfToken()) {
                 return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
             } else {
                 $validator = new Validator();
@@ -1018,7 +1018,7 @@ class Chan extends Common
             return $this->error(_i('You aren\'t sending the required fields for creating a new message.'));
         }
 
-        if (!\Security::check_token()) {
+        if (!$this->checkCsrfToken()) {
             if ($this->getRequest()->isXmlHttpRequest()) {
                 return $this->response->setData(['error' => _i('The security token wasn\'t found. Try resubmitting.')]);
             }
@@ -1094,9 +1094,9 @@ class Chan extends Common
 
         $media = null;
 
-        if (count(\Upload::get_files())) {
+        if ($this->getRequest()->files->count()) {
             try {
-                $media = $this->media_factory->forgeFromUpload($this->radix);
+                $media = $this->media_factory->forgeFromUpload($this->getRequest(), $this->radix);
                 $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
             } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
@@ -1127,6 +1127,7 @@ class Chan extends Common
             ->add('title', _i('Title'), [new Assert\Length(['max' => 64])])
             ->add('delpass', _i('Deletion pass'), [new Assert\Length(['min' => 3, 'max' => 32])]);
 
+        // no empty posts without images
         if ($media === null) {
             $validator->add('comment', _i('Comment'), [new Assert\NotBlank(), new Assert\Length(['min' => 3])]);
         }

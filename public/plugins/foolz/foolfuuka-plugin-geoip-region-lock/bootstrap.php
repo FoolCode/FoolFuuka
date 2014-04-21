@@ -1,15 +1,18 @@
 <?php
 
 use Foolz\Foolframe\Model\Auth;
+use Foolz\Foolframe\Model\Autoloader;
 use Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock;
 use Foolz\Plugin\Event;
 
 Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-lock')
     ->setCall(function($result) {
-        /* @var $context \Foolz\Foolframe\Model\Context */
+        /* @var Context $context */
         $context = $result->getParam('context');
+        /** @var Autoloader $autoloader */
+        $autoloader = $context->getService('autoloader');
 
-        \Autoloader::add_classes([
+        $autoloader->addClassMap([
             'Foolz\Foolframe\Controller\Admin\Plugins\GeoipRegionLock' => __DIR__.'/classes/controller/admin.php',
             'Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock' =>__DIR__.'/classes/model/geoip_region_lock.php'
         ]);

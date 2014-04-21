@@ -2,8 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
 
-use Foolz\Inet\Inet;
-use Foolz\Foolframe\Model\Legacy\Preferences;
+use Rych\ByteSize\ByteSize;
 
 class Board extends \Foolz\Foolfuuka\View\View
 {
@@ -12,12 +11,13 @@ class Board extends \Foolz\Foolfuuka\View\View
         $radix = $this->getBuilderParamManager()->getParam('radix');
         $board = $this->getParamManager()->getParam('board');
         $thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
+        $form = $this->getForm();
 
         if ($thread_id > 0) {
-            echo \Form::open(array('enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform'));
-            echo \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token());
-            echo \Form::hidden('id', 'postform');
-            echo isset($backend_vars['last_limit']) ? Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '';
+            echo $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform']);
+            //echo $form->hidden('csrf_token', $this->getSecurity()->getCsrfToken());
+            echo $form->hidden('id', 'postform');
+            echo isset($backend_vars['last_limit']) ? $form->hidden('reply_last_limit', $backend_vars['last_limit'])  : '';
         }
         ?>
 
@@ -30,7 +30,7 @@ class Board extends \Foolz\Foolfuuka\View\View
             <div id="<?= $op->num ?>">
                 <?php if ($op->media !== null) : ?>
                     <?php if ($op->media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
-                    <span><?= _i('File:') . ' ' . \Num::format_bytes($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed() ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
+                    <span><?= _i('File:') . ' ' . ByteSize::formatBinary($op->media->media_size, 0) . ', ' . $op->media->media_w . 'x' . $op->media->media_h . ', ' . $op->media->getMediaFilenameProcessed() ?> <?= '<!-- ' . substr($op->media->media_hash, 0, -2) . '-->' ?></span>
                         <?php if ( !$op->radix->hide_thumbnails || $this->getAuth()->hasAccess('maccess.mod')) : ?>
                             [<a href="<?= $this->getUri()->create($op->radix->shortname . '/search/image/' . $op->media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a>]
                             [<a href="http://google.com/searchbyimage?image_url=<?= $op->media->getThumbLink($this->getRequest()) ?>">Google</a>]
@@ -149,7 +149,7 @@ class Board extends \Foolz\Foolfuuka\View\View
         <?php endforeach; ?>
         </div>
 
-        <?php if ($thread_id > 0) echo \Form::close(); ?>
+        <?php if ($thread_id > 0) echo $form->close(); ?>
     <?php
     }
 }

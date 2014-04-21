@@ -48,7 +48,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                     <?php endif; ?>
 
                     <span class="post_file_metadata">
-                        <?= \Num::format_bytes($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h ?>
+                        <?= \Rych\ByteSize\ByteSize::formatBinary($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h ?>
                     </span>
                     <?php endif; ?>
                 </div>

@@ -13,11 +13,12 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
         $user_email = $this->getBuilderParamManager()->getParam('user_email');
         $thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
         $reply_errors = $this->getBuilderParamManager()->getParam('reply_errors', false);
+        $form = $this->getForm();
 
         if (!$thread_id && !$radix->archive) : ?>
-            <?= \Form::open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform']) ?>
-            <?= \Form::hidden(\Config::get('security.csrf_token_key'), \Security::fetch_token()); ?>
-            <?= isset($backend_vars['last_limit']) ? \Form::hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
+            <?= $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform']) ?>
+            <?= $form->hidden('csrf_token', $this->getSecurity()->getCsrfToken()); ?>
+            <?= isset($backend_vars['last_limit']) ? $form->hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
         <table style="margin-left: auto; margin-right: auto">
             <tbody>
             <tr>
@@ -32,39 +33,39 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                         <tbody>
                         <tr>
                             <td class="postblock"><?= _i('Name') ?></td>
-                            <td><?php echo \Form::input(['name' => 'NAMAE', 'size' => 63, 'value' => $user_name]) ?></td>
+                            <td><?php echo $form->input(['name' => 'NAMAE', 'size' => 63, 'value' => $user_name]) ?></td>
                         </tr>
                         <tr>
                             <td class="postblock"><?= _i('E-mail') ?></td>
-                            <td><?php echo \Form::input(['name' => 'MERU', 'size' => 63, 'value' => $user_email]) ?></td>
+                            <td><?php echo $form->input(['name' => 'MERU', 'size' => 63, 'value' => $user_email]) ?></td>
                         </tr>
                         <tr>
                             <td class="postblock"><?= _i('Subject') ?></td>
-                            <td><?php echo \Form::input(['name' => 'subject', 'size' => 63]) ?></td>
+                            <td><?php echo $form->input(['name' => 'subject', 'size' => 63]) ?></td>
                         </tr>
                         <tr>
                             <td class="postblock"><?= _i('Comment') ?></td>
-                            <td><?php echo \Form::textarea(['name' => 'KOMENTO', 'cols' => 48, 'rows' => 4]) ?></td>
+                            <td><?php echo $form->textarea(['name' => 'KOMENTO', 'cols' => 48, 'rows' => 4]) ?></td>
                         </tr>
                         <tr>
                             <td class="postblock"><?= _i('File') ?></td>
-                            <td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']) ?></td>
+                            <td><?php echo $form->file(['name' => 'file_image', 'id' => 'file_image']) ?></td>
                         </tr>
                         <tr>
                             <td class="postblock"><?= _i('Spoiler') ?></td>
-                            <td><?php echo \Form::checkbox(['name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1]) ?></td>
+                            <td><?php echo $form->checkbox(['name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1]) ?></td>
                         </tr>
                         <tr>
                             <td class="postblock"><?= _i('Password') ?> <a class="tooltip" href="#">[?] <span><?= _i('This is used for file and post deletion.') ?></span></a></td>
-                            <td><?php echo \Form::password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]) ?></td>
+                            <td><?php echo $form->password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]) ?></td>
                         </tr>
-                            <?php if (\ReCaptcha::available()) : ?>
+                            <?php if ($this->getPreferences()->get('recaptcha.public_key', false)) : ?>
                         <tr id="recaptcha_widget">
                             <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
                             <td>
-                                <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
+                                <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('recaptcha.public_key') ?>"></script>
                                 <noscript>
-                                    <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= \Config::get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br/>
+                                    <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br/>
                                     <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
                                     <input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
                                 </noscript>
@@ -82,7 +83,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                             <tr>
                                 <td class="postblock"><?= _i('Post As') ?></td>
                                 <td>
-                                    <?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
+                                    <?= $form->select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
                                 </td>
                             </tr>
                                 <?php endif; ?>
@@ -90,9 +91,9 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                             <td class="postblock"><?= _i('Action') ?></td>
                             <td>
                                 <?php
-                                echo \Form::hidden('parent', 0);
-                                echo \Form::hidden('MAX_FILE_SIZE', 3072);
-                                echo \Form::submit([
+                                echo $form->hidden('parent', 0);
+                                echo $form->hidden('MAX_FILE_SIZE', 3072);
+                                echo $form->submit([
                                     'name' => 'reply_action',
                                     'value' => 'Submit'
                                 ]);
@@ -105,7 +106,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
             </tr>
             </tbody>
         </table>
-            <?= \Form::close() ?>
+            <?= $form->close() ?>
 
         <hr/>
         <?php endif; ?>
@@ -127,35 +128,35 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                     <tbody>
                     <tr>
                         <td class="postblock"><?= _i('Name') ?></td>
-                        <td><?php echo \Form::input(['name' => 'NAMAE', 'size' => 63, 'value' => $user_name]); ?></td>
+                        <td><?php echo $form->input(['name' => 'NAMAE', 'size' => 63, 'value' => $user_name]); ?></td>
                     </tr>
                     <tr>
                         <td class="postblock"><?= _i('E-mail') ?></td>
-                        <td><?php echo \Form::input(['name' => 'MERU', 'size' => 63, 'value' => $user_email]); ?></td>
+                        <td><?php echo $form->input(['name' => 'MERU', 'size' => 63, 'value' => $user_email]); ?></td>
                     </tr>
                     <tr>
                         <td class="postblock"><?= _i('Subject') ?></td>
-                        <td><?php echo \Form::input(['name' => 'subject', 'size' => 63]); ?></td>
+                        <td><?php echo $form->input(['name' => 'subject', 'size' => 63]); ?></td>
                     </tr>
                     <tr>
                         <td class="postblock"><?= _i('Comment') ?></td>
-                        <td><?php echo \Form::textarea(['name' => 'KOMENTO', 'cols' => 48, 'rows' => 4]); ?></td>
+                        <td><?php echo $form->textarea(['name' => 'KOMENTO', 'cols' => 48, 'rows' => 4]); ?></td>
                     </tr>
                         <?php if (!$this->getRadix()->archive) : ?>
                     <tr>
                         <td class="postblock"><?= _i('File') ?></td>
-                        <td><?php echo \Form::file(['name' => 'file_image', 'id' => 'file_image']); ?></td>
+                        <td><?php echo $form->file(['name' => 'file_image', 'id' => 'file_image']); ?></td>
                     </tr>
                     <tr>
                         <td class="postblock"><?= _i('Spoiler') ?></td>
-                        <td><?php echo \Form::checkbox(['name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1]); ?></td>
+                        <td><?php echo $form->checkbox(['name' => 'reply_spoiler', 'id' => 'reply_spoiler', 'value' => 1]); ?></td>
                     </tr>
                         <?php endif; ?>
                     <tr>
                         <td class="postblock"><?= _i('Password') ?> <a class="tooltip" href="#">[?] <span><?= _i('This is used for file and post deletion.') ?></span></a></td>
-                        <td><?php echo \Form::password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]); ?></td>
+                        <td><?php echo $form->password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]); ?></td>
                     </tr>
-                        <?php if (\ReCaptcha::available()) : ?>
+                        <?php if ($this->getPreferences()->get('recaptcha.public_key', false)) : ?>
                     <tr id="recaptcha_widget">
                         <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
                         <td>
@@ -179,7 +180,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                         <tr>
                             <td class="postblock"><?= _i('Post As') ?></td>
                             <td>
-                                <?= \Form::select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
+                                <?= $form->select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
                             </td>
                         </tr>
                             <?php endif; ?>
@@ -187,17 +188,17 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                         <td class="postblock"><?= _i('Action') ?></td>
                         <td>
                             <?php
-                            echo \Form::hidden('parent', $thread_id);
-                            echo \Form::hidden('MAX_FILE_SIZE', 3072);
-                            echo \Form::submit([
+                            echo $form->hidden('parent', $thread_id);
+                            echo $form->hidden('MAX_FILE_SIZE', 3072);
+                            echo $form->submit([
                                 'name' => 'reply_action',
                                 'value' => 'Submit'
                             ]);
-                            echo \Form::submit([
+                            echo $form->submit([
                                 'name' => 'reply_delete',
                                 'value' => 'Delete Selected Posts'
                             ]);
-                            echo \Form::submit([
+                            echo $form->submit([
                                 'name' => 'reply_report',
                                 'value' => 'Report Selected Posts'
                             ]);

@@ -71,7 +71,7 @@ class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 
         $data['form'] = $this->structure();
 
-        $this->preferences->submit_auto($data['form'], $this->getPost());
+        $this->preferences->submit_auto($this->getRequest(), $data['form'], $this->getPost());
 
         // create a form
         $this->builder->createPartial('body', 'form_creator')

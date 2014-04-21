@@ -8,6 +8,7 @@ use Foolz\Cache\Cache;
 use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\Logger;
 use Foolz\Foolframe\Model\Model;
+use Foolz\Foolframe\Model\Preferences;
 use Foolz\Foolframe\Model\Uri;
 use Foolz\Plugin\Hook;
 use Foolz\Plugin\PlugSuit;
@@ -75,6 +76,11 @@ class Comment extends Model
      * @var Uri
      */
     protected $uri;
+
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
 
     /**
      * @var CommentFactory
@@ -173,6 +179,7 @@ class Comment extends Model
 
         $this->dc = $context->getService('doctrine');
         $this->config = $context->getService('config');
+        $this->config = $context->getService('preferences');
         $this->logger = $context->getService('logger');
         $this->uri = $context->getService('uri');
         $this->comment_factory = $context->getService('foolfuuka.comment_factory');
@@ -774,15 +781,7 @@ class Comment extends Model
     protected function p_delete($password = null, $force = false, $thread = false)
     {
         if (!$this->getAuth()->hasAccess('comment.passwordless_deletion') && $force !== true) {
-            if (!class_exists('PHPSecLib\\Crypt_Hash', false)) {
-                import('phpseclib/Crypt/Hash', 'vendor');
-            }
-
-            $hasher = new \PHPSecLib\Crypt_Hash();
-
-            $hashed = base64_encode($hasher->pbkdf2($password, $this->config->get('foolz/foolframe', 'foolauth', 'salt'), 10000, 32));
-
-            if ($this->delpass !== $hashed) {
+            if (!password_verify($password, $this->delpass)) {
                 throw new CommentDeleteWrongPassException(_i('You did not provide the correct deletion password.'));
             }
         }

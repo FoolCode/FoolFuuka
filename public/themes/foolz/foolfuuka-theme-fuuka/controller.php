@@ -2,6 +2,7 @@
 
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
+use Foolz\Foolframe\Model\Util;
 use Foolz\Foolfuuka\Model\Board;
 use Foolz\Inet\Inet;
 use Symfony\Component\HttpFoundation\Response;
@@ -127,7 +128,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
         if (isset($post['delpass'])) {
             // get the password needed for the reply field if it's not set yet
             if (!$post['delpass'] || strlen($post['delpass']) < 3) {
-                $post['delpass'] = \Str::random('alnum', 7);
+                $post['delpass'] = Util::randomString(7);
             }
 
             $data['delpass'] = $post['delpass'];

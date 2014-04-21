@@ -6,6 +6,7 @@ use Foolz\Foolframe\Controller\Common;
 use Foolz\Foolframe\Model\Config;
 use Foolz\Foolframe\Model\Preferences;
 use Foolz\Foolframe\Model\Uri;
+use Foolz\Foolframe\Model\Util;
 use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
 use Foolz\Foolframe\Model\Validation\Validator;
 use Foolz\Foolframe\Model\Cookie;
@@ -23,7 +24,6 @@ use Foolz\Inet\Inet;
 use Foolz\Profiler\Profiler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -1068,7 +1068,7 @@ class Chan extends Common
         if (isset($post['reply_nymphassword'])) {
             // get the password needed for the reply field if it's not set yet
             if (!$post['reply_nymphassword'] || strlen($post['reply_nymphassword']) < 3) {
-                $post['reply_nymphassword'] = \Str::random('alnum', 7);
+                $post['reply_nymphassword'] = Util::randomString(7);
             }
 
             $data['delpass'] = $post['reply_nymphassword'];

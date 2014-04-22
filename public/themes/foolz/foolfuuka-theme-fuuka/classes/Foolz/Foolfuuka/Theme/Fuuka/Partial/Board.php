@@ -89,7 +89,7 @@ class Board extends \Foolz\Foolfuuka\View\View
 
                 [<a href="<?= $this->getUri()->create(array($op->radix->shortname, 'thread', $op->num)) ?>"><?= _i('Reply') ?></a>]
                 <?php if (isset($post['omitted']) && $post['omitted'] > 50) : ?> [<a href="<?= $this->getUri()->create($op->radix->shortname . '/last/50/' . $op->num) ?>"><?= _i('Last 50') ?></a>]<?php endif; ?>
-                <?php if ($op->radix->archive) : ?> [<a href="//boards.4chan.org/<?= $op->radix->shortname . '/res/' . $op->num ?>"><?= _i('Original') ?></a>]<?php endif; ?>
+                <?php if ($op->radix->archive) : ?> [<a href="//boards.4chan.org/<?= $op->radix->shortname . '/thread/' . $op->num ?>"><?= _i('Original') ?></a>]<?php endif; ?>
 
                 <div class="quoted-by" style="display: <?= $op->getBacklinks() ? 'block' : 'none' ?>">
                     <?= _i('Quoted By:') ?> <?= $op->getBacklinks() ? implode(' ', $op->getBacklinks()) : '' ?>

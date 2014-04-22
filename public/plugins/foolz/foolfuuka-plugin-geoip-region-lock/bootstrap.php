@@ -36,9 +36,14 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-l
                         )
                     );
 
-                    \Plugins::registerSidebarElement('admin', 'plugins', [
-                        "content" => ["geoip_region_lock/manage" => ["level" => "admin", "name" => 'GeoIP Region Lock', "icon" => 'icon-flag']]
-                    ]);
+                    Event::forge('Foolz\Foolframe\Controller\Admin.before.sidebar.add')
+                        ->setCall(function($result) {
+                            $sidebar = $result->getParam('sidebar');
+                            $sidebar[]['plugins'] = [
+                                "content" => ["geoip_region_lock/manage" => ["level" => "admin", "name" => 'GeoIP Region Lock', "icon" => 'icon-flag']]
+                            ];
+                            $result->setParam('sidebar', $sidebar);
+                        });
                 }
 
                 $preferences = $context->getService('preferences');

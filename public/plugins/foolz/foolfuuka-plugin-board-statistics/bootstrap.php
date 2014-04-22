@@ -33,9 +33,14 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statisti
             ->setCall(function($result) use ($context) {
                 // don't add the admin panels if the user is not an admin
                 if ($context->getService('auth')->hasAccess('maccess.admin')) {
-                    Plugins::registerSidebarElement('admin', 'plugins', [
-                        "content" => ["board_statistics/manage" => ["level" => "admin", "name" => _i("Board Statistics"), "icon" => 'icon-bar-chart']]
-                    ]);
+                    Event::forge('Foolz\Foolframe\Controller\Admin.before.sidebar.add')
+                        ->setCall(function($result) {
+                            $sidebar = $result->getParam('sidebar');
+                            $sidebar[]['plugins'] = [
+                                "content" => ["board_statistics/manage" => ["level" => "admin", "name" => _i("Board Statistics"), "icon" => 'icon-bar-chart']]
+                            ];
+                            $result->setParam('sidebar', $sidebar);
+                        });
 
                     $context->getRouteCollection()->add(
                         'foolframe.plugin.board_statistics.admin', new Route(

@@ -38,9 +38,14 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-nginx-cache-purge')
                             )
                         );
 
-                        Plugins::registerSidebarElement('admin', 'plugins', [
-                            "content" => ["nginx_cache_purge/manage" => ["level" => "admin", "name" => 'Nginx Cache Purge', "icon" => 'icon-leaf']]
-                        ]);
+                        Event::forge('Foolz\Foolframe\Controller\Admin.before.sidebar.add')
+                            ->setCall(function($result) {
+                                $sidebar = $result->getParam('sidebar');
+                                $sidebar[]['plugins'] = [
+                                    "content" => ["nginx_cache_purge/manage" => ["level" => "admin", "name" => 'Nginx Cache Purge', "icon" => 'icon-leaf']]
+                                ];
+                                $result->setParam('sidebar', $sidebar);
+                            });
                     }
             });
 

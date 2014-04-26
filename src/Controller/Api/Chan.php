@@ -8,6 +8,7 @@ use Foolz\Foolframe\Model\Preferences;
 use Foolz\Foolframe\Model\Uri;
 use Foolz\Foolfuuka\Model\BanFactory;
 use Foolz\Foolfuuka\Model\Board;
+use Foolz\Foolfuuka\Model\Comment;
 use Foolz\Foolfuuka\Model\CommentFactory;
 use Foolz\Foolfuuka\Model\Media;
 use Foolz\Foolfuuka\Model\MediaFactory;
@@ -95,6 +96,16 @@ class Chan extends Common
      */
     protected $report_coll;
 
+    /**
+     * @var Comment
+     */
+    protected $comment_obj;
+
+    /**
+     * @var Media
+     */
+    protected $media_obj;
+
     public function before()
     {
         $this->config = $this->getContext()->getService('config');
@@ -129,6 +140,10 @@ class Chan extends Common
                 'request' => $this->getRequest()
             ]);
         }
+
+        // convenience objects for saving some RAM
+        $this->comment_obj = new Comment($this->getContext());
+        $this->media_obj = new Media($this->getContext());
     }
 
     public function router($method)
@@ -196,11 +211,50 @@ class Chan extends Common
         return true;
     }
 
+    public function apify($bulk, $controller_method = 'thread')
+    {
+        $this->comment_obj->setBulk($bulk);
+        $comment_force = [
+            'getTitleProcessed',
+            'getNameProcessed',
+            'getEmailProcessed',
+            'getTripProcessed',
+            'getPosterHashProcessed',
+            'getOriginalTimestamp',
+            'getFourchanDate',
+            'getCommentSanitized',
+            'getCommentProcessed', // this is necessary also to get backlinks parsed
+            'getPosterCountryNameProcessed'
+        ];
+
+        foreach ($comment_force as $key => $value) {
+            $this->comment_obj->$value();
+        }
+
+        $m = null;
+        if ($bulk->media !== null) {
+            $this->media_obj->setBulk($bulk);
+            $m = $this->media_obj;
+        }
+
+        if ($this->builder) {
+            $this->builder->getParamManager()->setParam('controller_method', 'thread');
+            $partial = $this->builder->createPartial('board_comment', 'board_comment');
+            $partial->getParamManager()
+                ->setParam('p', $this->comment_obj)
+                ->setParam('p_media', $m);
+
+            $bulk->comment->formatted = $partial->build();
+            $partial->clearBuilt();
+        }
+    }
+
     public function get_404()
     {
         return $this->response->setData(['error' => _i('Invalid Method.')])->setStatusCode(404);
     }
 
+    /*
     public function get_index()
     {
         if (!$this->check_board()) {
@@ -242,7 +296,9 @@ class Chan extends Common
 
         return $this->response;
     }
+    */
 
+    /*
     public function get_search()
     {
         // check all allowed search modifiers and apply only these
@@ -301,6 +357,7 @@ class Chan extends Common
 
         return $this->response;
     }
+    */
 
     /**
      * Returns a thread
@@ -330,32 +387,31 @@ class Chan extends Common
 
         try {
             // build an array if we have more specifications
-            if ($latest_doc_id) {
+            if ($latest_doc_id > 0) {
                 if (!ctype_digit((string) $latest_doc_id)) {
                     return $this->response->setData(['error' => _i('The value for "latest_doc_id" is malformed.')])->setStatusCode(404);
                 }
 
-                $options = [
-                    'type' => 'from_doc_id',
-                    'latest_doc_id' => $latest_doc_id,
-                    'realtime' => true,
-                    'controller_method' =>
-                        ctype_digit((string) $this->getQuery('last_limit')) ? 'last/'.$this->getQuery('last_limit') : 'thread'
-                ];
-
                 $board = Board::forge($this->getContext())
                     ->getThread($num)
                     ->setRadix($this->radix)
-                    ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
-                    ->setOptions($options);
+                    ->setOptions([
+                        'type' => 'from_doc_id',
+                        'latest_doc_id' => $latest_doc_id
+                    ]);
+
+                foreach ($board->getCommentsUnsorted() as $comment) {
+                    $this->apify($comment, ctype_digit((string) $this->getQuery('last_limit')) ? 'last/'.$this->getQuery('last_limit') : 'thread');
+                }
 
                 $comments = $board->getComments();
 
                 if (!count($comments)) {
                     $this->response->setData([])->setStatusCode(204);
+                } else {
+                    $this->response->setData($comments);
                 }
 
-                $this->response->setData($comments);
             } else {
                 $options = [
                     'type' => 'thread',
@@ -364,7 +420,6 @@ class Chan extends Common
                 $board = Board::forge($this->getContext())
                     ->getThread($num)
                     ->setRadix($this->radix)
-                    ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                     ->setOptions($options);
 
                 $thread_status = $board->getThreadStatus();
@@ -373,6 +428,11 @@ class Chan extends Common
                 $this->setLastModified($last_modified);
 
                 if (!$this->response->isNotModified($this->request)) {
+                    $bulks = $board->getCommentsUnsorted();
+                    foreach ($bulks as $bulk) {
+                        $this->apify($bulk, ctype_digit((string) $this->getQuery('last_limit')) ? 'last/'.$this->getQuery('last_limit') : 'thread');
+                    }
+
                     $this->response->setData($board->getComments());
                 }
             }
@@ -404,12 +464,13 @@ class Chan extends Common
         try {
             $board = Board::forge($this->getContext())
                 ->getPost($num)
-                ->setRadix($this->radix)
-                ->setApi(['request' => $this->getRequest(), 'board' => false, 'theme' => $this->builder]);
+                ->setRadix($this->radix);
 
             $comment = current($board->getComments());
 
-            $last_modified = $comment->timestamp_expired ?: $comment->timestamp;
+            $this->apify($comment);
+
+            $last_modified = $comment->comment->timestamp_expired ?: $comment->comment->timestamp;
 
             $this->setLastModified($last_modified);
 

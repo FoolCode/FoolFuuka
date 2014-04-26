@@ -26,15 +26,20 @@ class CommentSendingDatabaseException extends CommentSendingException {}
 
 class CommentInsert extends Comment
 {
+    public $recaptcha_challenge = null;
+    public $recaptcha_response = null;
+    public $ghost = false;
+    public $allow_media = false;
+
     protected function insertTriggerDaily()
     {
         $item = [
-            'day' => (int) (floor($this->timestamp/86400)*86400),
-            'images' => (int) ($this->media !== null),
-            'sage' => (int) ($this->email === 'sage'),
-            'anons' => (int) ($this->name === $this->radix->getValue('anonymous_default_name') && $this->trip === null),
-            'trips' => (int) ($this->trip !== null),
-            'names' => (int) ($this->name !== $this->radix->getValue('anonymous_default_name') || $this->trip !== null)
+            'day' => (int) (floor($this->comment->timestamp/86400)*86400),
+            'images' => (int) ($this->bulk->media !== null),
+            'sage' => (int) ($this->comment->email === 'sage'),
+            'anons' => (int) ($this->comment->name === $this->radix->getValue('anonymous_default_name') && $this->comment->trip === null),
+            'trips' => (int) ($this->comment->trip !== null),
+            'names' => (int) ($this->comment->name !== $this->radix->getValue('anonymous_default_name') || $this->comment->trip !== null)
         ];
 
         $result = $this->dc->qb()
@@ -77,12 +82,12 @@ class CommentInsert extends Comment
             ->select('*')
             ->from($this->radix->getTable('_users'), 'u');
 
-        if ($this->trip !== null) {
+        if ($this->comment->trip !== null) {
             $select->where('trip = :trip')
-                ->setParameter(':trip', $this->trip);
+                ->setParameter(':trip', $this->comment->trip);
         } else {
             $select->where('name = :name')
-                ->setParameter(':name', $this->name);
+                ->setParameter(':name', $this->comment->name);
         }
 
         $result = $select
@@ -92,9 +97,9 @@ class CommentInsert extends Comment
         if ($result === false) {
             try {
                 $this->dc->getConnection()->insert($this->radix->getTable('_users'), [
-                    'name' => (string) $this->name,
-                    'trip' => (string) $this->trip,
-                    'firstseen' => $this->timestamp,
+                    'name' => (string) $this->comment->name,
+                    'trip' => (string) $this->comment->trip,
+                    'firstseen' => $this->comment->timestamp,
                     'postcount' => 1
                 ]);
             } catch (\Doctrine\DBAL\DBALException $e) {
@@ -112,34 +117,34 @@ class CommentInsert extends Comment
 
     protected function insertTriggerThreads()
     {
-        if ($this->op) {
+        if ($this->comment->op) {
             $this->dc->getConnection()->insert($this->radix->getTable('_threads'), [
-                'thread_num' => $this->num,
-                'time_op' => $this->timestamp,
-                'time_last' => $this->timestamp,
-                'time_bump' => $this->timestamp,
+                'thread_num' => $this->comment->num,
+                'time_op' => $this->comment->timestamp,
+                'time_last' => $this->comment->timestamp,
+                'time_bump' => $this->comment->timestamp,
                 'time_ghost' => null,
                 'time_ghost_bump' => null,
-                'time_last_modified' => $this->timestamp,
+                'time_last_modified' => $this->comment->timestamp,
                 'nreplies' => 1,
                 'nimages' => ($this->media->media_id ? 1 : 0),
                 'sticky' => 0,
                 'locked' => 0
             ]);
         } else {
-            if (!$this->subnum) {
+            if (!$this->comment->subnum) {
                 $query = $this->dc->qb()
                     ->update($this->radix->getTable('_threads'))
                     ->set('time_last', 'GREATEST(time_last, :time_last)')
                     ->set('time_last_modified', 'GREATEST(time_last_modified, :time_last)')
                     ->set('nreplies', 'nreplies + 1')
                     ->set('nimages', 'nimages + '. ($this->media->media_id ? 1 : 0))
-                    ->setParameter(':time_last', $this->timestamp);
+                    ->setParameter(':time_last', $this->comment->timestamp);
 
-                if ($this->email !== 'sage') {
+                if ($this->comment->email !== 'sage') {
                     $query
                         ->set('time_bump', 'GREATEST(time_bump, :time_bump)')
-                        ->setParameter(':time_bump', $this->timestamp);
+                        ->setParameter(':time_bump', $this->comment->timestamp);
                 }
             } else {
                 $query = $this->dc->qb()
@@ -147,18 +152,18 @@ class CommentInsert extends Comment
                     ->set('time_ghost', 'COALESCE(time_ghost, :time_ghost)')
                     ->set('time_last_modified', 'GREATEST(time_last_modified, :time_ghost)')
                     ->set('nreplies', 'nreplies + 1')
-                    ->setParameter(':time_ghost', $this->timestamp);
+                    ->setParameter(':time_ghost', $this->comment->timestamp);
 
                 if ($this->email !== 'sage') {
                     $query
                         ->set('time_ghost_bump', 'GREATEST(COALESCE(time_ghost_bump, 0), :time_ghost_bump)')
-                        ->setParameter(':time_ghost_bump', $this->timestamp);
+                        ->setParameter(':time_ghost_bump', $this->comment->timestamp);
                 }
             }
 
             $query
                 ->where('thread_num = :thread_num')
-                ->setParameter(':thread_num', $this->thread_num)
+                ->setParameter(':thread_num', $this->comment->thread_num)
                 ->execute();
         }
     }
@@ -171,7 +176,7 @@ class CommentInsert extends Comment
      * @param array $options modifiers
      * @return array error key with explanation to show to user, or success and post row
      */
-    protected function p_insert()
+    protected function p_insert(Media $media = null)
     {
         $this->ghost = false;
         $this->allow_media = true;
@@ -179,7 +184,7 @@ class CommentInsert extends Comment
         // some users don't need to be limited, in here go all the ban and posting limitators
         if (!$this->getAuth()->hasAccess('comment.limitless_comment')) {
             // check if the user is banned
-            if ($ban = $this->ban_factory->isBanned($this->poster_ip, $this->radix)) {
+            if ($ban = $this->ban_factory->isBanned($this->comment->poster_ip, $this->radix)) {
                 if ($ban->board_id == 0) {
                     $banned_string = _i('It looks like you were banned on all boards.');
                 } else {
@@ -208,10 +213,10 @@ class CommentInsert extends Comment
         }
 
         // check if it's a thread and its status
-        if ($this->thread_num > 0) {
+        if ($this->comment->thread_num > 0) {
             try {
                 $thread = Board::forge($this->getContext())
-                    ->getThread($this->thread_num)
+                    ->getThread($this->comment->thread_num)
                     ->setRadix($this->radix);
 
                 $status = $thread->getThreadStatus();
@@ -227,13 +232,15 @@ class CommentInsert extends Comment
             $this->allow_media = ! $status['disable_image_upload'];
         }
 
-        foreach(['name', 'email', 'title', 'delpass', 'comment', 'capcode'] as $key) {
-            $this->$key = trim((string) $this->$key);
+        foreach(['name', 'email', 'title', 'comment', 'capcode'] as $key) {
+            $this->comment->$key = trim((string) $this->comment->$key);
         }
+
+        $this->comment->setDelpass(trim((string) $this->comment->getDelPass()));
 
         // some users don't need to be limited, in here go all the ban and posting limitators
         if (!$this->getAuth()->hasAccess('comment.limitless_comment')) {
-            if ($this->thread_num < 1) {
+            if ($this->comment->thread_num < 1) {
                 // one can create a new thread only once every 5 minutes
                 $check_op = $this->dc->qb()
                     ->select('*')
@@ -242,7 +249,7 @@ class CommentInsert extends Comment
                     ->andWhere('r.timestamp > :timestamp')
                     ->andWhere('r.op = :op')
                     ->setParameters([
-                        ':poster_ip' => $this->poster_ip,
+                        ':poster_ip' => $this->comment->poster_ip,
                         ':timestamp' => time() - $this->radix->getValue('cooldown_new_thread'),
                         ':op' => true
                     ])
@@ -262,12 +269,12 @@ class CommentInsert extends Comment
                 ->where('poster_ip = :poster_ip')
                 ->orderBy('timestamp', 'DESC')
                 ->setMaxResults(1)
-                ->setParameter(':poster_ip', $this->poster_ip)
+                ->setParameter(':poster_ip', $this->comment->poster_ip)
                 ->execute()
                 ->fetch();
 
             if ($check) {
-                if ($this->comment !== null && $check['comment'] === $this->comment) {
+                if ($this->comment->comment !== null && $check['comment'] === $this->comment->comment) {
                     throw new CommentSendingSameCommentException(_i('You\'re sending the same comment as the last time'));
                 }
 
@@ -280,20 +287,18 @@ class CommentInsert extends Comment
 
             // we want to know if the comment will display empty, and in case we won't let it pass
             $comment_parsed = $this->processComment();
-            if ($this->comment !== '' && $comment_parsed === '') {
+            if ($this->comment->comment !== '' && $comment_parsed === '') {
                 throw new CommentSendingDisplaysEmptyException(_i('This comment would display empty.'));
             }
 
             // clean up to reset eventual auto-built entries
-            foreach ($this->_forced_entries as $field) {
-                unset($this->$field);
-            }
+            $this->comment->clean();
 
             if ($this->recaptcha_challenge && $this->recaptcha_response && $this->preferences->get('recaptcha.public_key', false)) {
 
                 $recaptcha = ReCaptcha::create($this->preferences->get('recaptcha.public_key'), $this->preferences->get('recaptcha.private_key'));
                 $recaptcha_result = $recaptcha->checkAnswer(
-                    Inet::dtop($this->poster_ip),
+                    Inet::dtop($this->comment->poster_ip),
                     $this->recaptcha_challenge,
                     $this->recaptcha_response
                 );
@@ -304,12 +309,12 @@ class CommentInsert extends Comment
 
             } elseif ($this->preferences->get('recaptcha.public_key')) { // if there wasn't a recaptcha input, let's go with heavier checks
                 // 3+ links is suspect
-                if (substr_count($this->comment, 'http') > 2) {
+                if (substr_count($this->comment->comment, 'http') > 2) {
                     throw new CommentSendingRequestCaptchaException;
                 }
 
                 // bots usually fill all the fields
-                if ($this->comment && $this->title && $this->email) {
+                if ($this->comment->comment && $this->comment->title && $this->comment->email) {
                     throw new CommentSendingRequestCaptchaException;
                 }
 
@@ -322,20 +327,20 @@ class CommentInsert extends Comment
             // load the spam list and check comment, name, title and email
             $spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents(VENDPATH.'/foolz/foolfuuka/packages/anti-spam/databases/urls.dat')));
             foreach($spam as $s) {
-                if (strpos($this->comment, $s) !== false || strpos($this->name, $s) !== false
-                    || strpos($this->title, $s) !== false || strpos($this->email, $s) !== false)
+                if (strpos($this->comment->comment, $s) !== false || strpos($this->comment->name, $s) !== false
+                    || strpos($this->comment->title, $s) !== false || strpos($this->comment->email, $s) !== false)
                 {
                     throw new CommentSendingSpamException(_i('Your post has undesidered content.'));
                 }
             }
 
             // check entire length of comment
-            if (mb_strlen($this->comment) > $this->radix->getValue('max_comment_characters_allowed')) {
+            if (mb_strlen($this->comment->comment) > $this->radix->getValue('max_comment_characters_allowed')) {
                 throw new CommentSendingTooManyCharactersException(_i('Your comment has too many characters'));
             }
 
             // check total numbers of lines in comment
-            if (count(explode("\n", $this->comment)) > $this->radix->getValue('max_comment_lines_allowed')) {
+            if (count(explode("\n", $this->comment->comment)) > $this->radix->getValue('max_comment_lines_allowed')) {
                 throw new CommentSendingTooManyLinesException(_i('Your comment has too many lines.'));
             }
         }
@@ -345,34 +350,34 @@ class CommentInsert extends Comment
             ->execute();
 
         // process comment name+trip
-        if ($this->name === '') {
-            $this->name = $this->radix->getValue('anonymous_default_name');
-            $this->trip = null;
+        if ($this->comment->name === '') {
+            $this->comment->name = $this->radix->getValue('anonymous_default_name');
+            $this->comment->trip = null;
         } else {
             $this->processName();
-            if ($this->trip === '') {
-                $this->trip = null;
+            if ($this->comment->trip === '') {
+                $this->comment->trip = null;
             }
         }
 
-        foreach (['email', 'title', 'delpass', 'comment'] as $key) {
-            if ($this->$key === '') {
-                $this->$key = null;
+        foreach (['email', 'title', 'comment'] as $key) {
+            if ($this->comment->$key === '') {
+                $this->comment->$key = null;
             }
         }
 
         // process comment password
-        if ($this->delpass === '') {
+        if ($this->comment->getDelpass() === '') {
             throw new CommentSendingNoDelPassException(_i('You must submit a deletion password.'));
         }
 
-        $pass = password_hash($this->delpass, PASSWORD_BCRYPT, ['cost' => 10]);
-        if ($this->delpass === false) {
+        $pass = password_hash($this->comment->getDelpass(), PASSWORD_BCRYPT, ['cost' => 10]);
+        if ($this->comment->getDelpass() === false) {
             throw new \RuntimeException('Password hashing failed');
         }
-        $this->delpass = $pass;
+        $this->comment->setDelpass($pass);
 
-        if ($this->capcode != '') {
+        if ($this->comment->capcode != '') {
             $allowed_capcodes = ['N'];
 
             if ($this->getAuth()->hasAccess('comment.mod_capcode')) {
@@ -387,26 +392,26 @@ class CommentInsert extends Comment
                 $allowed_capcodes[] = 'D';
             }
 
-            if (!in_array($this->capcode, $allowed_capcodes)) {
+            if (!in_array($this->comment->capcode, $allowed_capcodes)) {
                 throw new CommentSendingUnallowedCapcodeException(_i('You\'re not allowed to use this capcode.'));
             }
         } else {
-            $this->capcode = 'N';
+            $this->comment->capcode = 'N';
         }
 
         $microtime = str_replace('.', '', (string) microtime(true));
-        $this->timestamp = substr($microtime, 0, 10);
-        $this->op = (bool) ! $this->thread_num;
+        $this->comment->timestamp = substr($microtime, 0, 10);
+        $this->comment->op = (bool) ! $this->comment->thread_num;
 
         if ($this->radix->getValue('enable_flags') && function_exists('\\geoip_country_code_by_name')) {
-            $this->poster_country = \geoip_country_code_by_name(Inet::dtop($this->poster_ip));
+            $this->comment->poster_country = \geoip_country_code_by_name(Inet::dtop($this->comment->poster_ip));
         }
 
         // process comment media
-        if ($this->media !== null) {
+        if ($media !== null) {
             // if uploading an image with OP is prohibited
 
-            if (!$this->thread_num && $this->radix->getValue('op_image_upload_necessity') === 'never') {
+            if (!$this->comment->thread_num && $this->radix->getValue('op_image_upload_necessity') === 'never') {
                 throw new CommentSendingException(_i('You can\'t start a new thread with an image.'));
             }
 
@@ -419,30 +424,31 @@ class CommentInsert extends Comment
             }
 
             try {
-                $this->media->insert($microtime, $this->op);
+                $media->insert($microtime, $this->op);
+                $this->media = $media->media;
             } catch (MediaInsertException $e) {
                 throw new CommentSendingException($e->getMessage());
             }
         } else {
             // if the user is forced to upload an image when making a new thread
-            if (!$this->thread_num && $this->radix->getValue('op_image_upload_necessity') === 'always') {
+            if (!$this->comment->thread_num && $this->radix->getValue('op_image_upload_necessity') === 'always') {
                 throw new CommentSendingThreadWithoutMediaException(_i('You can\'t start a new thread without an image.'));
             }
 
             // in case of no media, check comment field again for null
-            if ($this->comment === null) {
+            if ($this->comment->comment === null) {
                 throw new CommentSendingDisplaysEmptyException(_i('This comment would display empty.'));
             }
 
-            $this->media = $this->media_factory->forgeEmpty($this->radix);
+            $this->media = $this->bulk->media = new MediaData();
         }
 
         // 2ch-style codes, only if enabled
-        if ($this->thread_num && $this->radix->getValue('enable_poster_hash')) {
-            $this->poster_hash = substr(substr(crypt(md5($this->poster_ip.'id'.$this->thread_num),'id'),+3), 0, 8);
+        if ($this->comment->thread_num && $this->radix->getValue('enable_poster_hash')) {
+            $this->comment->poster_hash = substr(substr(crypt(md5($this->comment->poster_ip.'id'.$this->comment->thread_num),'id'),+3), 0, 8);
         }
 
-        $this->timestamp = $this->getRadixTime($this->timestamp);
+        $this->comment->timestamp = $this->getRadixTime($this->comment->timestamp);
 
         \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.sql')
             ->setObject($this)
@@ -458,13 +464,13 @@ class CommentInsert extends Comment
                     (
                         SELECT num
                         FROM '.$this->radix->getTable().' xr
-                        WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
+                        WHERE thread_num = '.$this->dc->getConnection()->quote($this->comment->thread_num).'
                     )
                     UNION
                     (
                         SELECT num
                         FROM '.$this->radix->getTable('_deleted').' xrd
-                        WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
+                        WHERE thread_num = '.$this->dc->getConnection()->quote($this->comment->thread_num).'
                     )
                 ) x
             )';
@@ -482,13 +488,13 @@ class CommentInsert extends Comment
                                 (
                                     SELECT num
                                     FROM '.$this->radix->getTable().' xxxr
-                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
+                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->comment->thread_num).'
                                 )
                                 UNION
                                 (
                                     SELECT num
                                     FROM '.$this->radix->getTable('_deleted').' xxxrd
-                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
+                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->comment->thread_num).'
                                 )
                             ) xxx
                         )
@@ -503,13 +509,13 @@ class CommentInsert extends Comment
                                 (
                                     SELECT num
                                     FROM '.$this->radix->getTable().' xxxr
-                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
+                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->comment->thread_num).'
                                 )
                                 UNION
                                 (
                                     SELECT num
                                     FROM '.$this->radix->getTable('_deleted').' xxxdrd
-                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->thread_num).'
+                                    WHERE thread_num = '.$this->dc->getConnection()->quote($this->comment->thread_num).'
                                 )
                             ) xxxd
                         )
@@ -517,7 +523,7 @@ class CommentInsert extends Comment
                 ) xx
             )';
 
-            $thread_num = $this->thread_num;
+            $thread_num = $this->comment->thread_num;
         } else {
             $num = '
             (
@@ -537,8 +543,8 @@ class CommentInsert extends Comment
 
             $subnum = 0;
 
-            if ($this->thread_num > 0) {
-                $thread_num = $this->dc->getConnection()->quote($this->thread_num);
+            if ($this->comment->thread_num > 0) {
+                $thread_num = $this->dc->getConnection()->quote($this->comment->thread_num);
             } else {
                 $thread_num = '
                 (
@@ -570,18 +576,18 @@ class CommentInsert extends Comment
             $fields = [
                 'media_id' => $this->media->media_id ? $this->media->media_id : 0,
                 'op' => (int) $this->op,
-                'timestamp' => $this->timestamp,
-                'capcode' => $this->capcode,
-                'email' => $this->email,
-                'name' => $this->name,
-                'trip' => $this->trip,
-                'title' => $this->title,
-                'comment' => $this->comment,
-                'delpass' => $this->delpass,
+                'timestamp' => $this->comment->timestamp,
+                'capcode' => $this->comment->capcode,
+                'email' => $this->comment->email,
+                'name' => $this->comment->name,
+                'trip' => $this->comment->trip,
+                'title' => $this->comment->title,
+                'comment' => $this->comment->comment,
+                'delpass' => $this->comment->getDelpass(),
                 'spoiler' => (int) $this->media->spoiler,
-                'poster_ip' => $this->poster_ip,
-                'poster_hash' => $this->poster_hash,
-                'poster_country' => $this->poster_country,
+                'poster_ip' => $this->comment->poster_ip,
+                'poster_hash' => $this->comment->poster_hash,
+                'poster_country' => $this->comment->poster_country,
                 'preview_orig' => $this->media->preview_orig,
                 'preview_w' => $this->media->preview_w,
                 'preview_h' => $this->media->preview_h,
@@ -621,17 +627,7 @@ class CommentInsert extends Comment
                 ->execute()
                 ->fetchAll();
 
-            $comment = current($comment);
-
-            $media_fields = Media::getFields();
-            // refresh the current comment object with the one finalized fetched from DB
-            foreach ($comment as $key => $item) {
-                if (in_array($key, $media_fields)) {
-                    $this->media->$key = $item;
-                } else {
-                    $this->$key = $item;
-                }
-            }
+            $this->bulk->import($comment[0], $this->radix);
 
             if (!$this->radix->archive) {
                 $this->insertTriggerThreads();
@@ -640,12 +636,12 @@ class CommentInsert extends Comment
             }
 
             // update poster_hash for op posts
-            if ($this->op && $this->radix->getValue('enable_poster_hash')) {
-                $this->poster_hash = substr(substr(crypt(md5($this->poster_ip.'id'.$comment['thread_num']),'id'), 3), 0, 8);
+            if ($this->comment->op && $this->radix->getValue('enable_poster_hash')) {
+                $this->comment->poster_hash = substr(substr(crypt(md5($this->comment->poster_ip.'id'.$comment['thread_num']),'id'), 3), 0, 8);
 
                 $this->dc->qb()
                     ->update($this->radix->getTable(), 'ph')
-                    ->set('poster_hash', $this->dc->getConnection()->quote($this->poster_hash))
+                    ->set('poster_hash', $this->dc->getConnection()->quote($this->comment->poster_hash))
                     ->where('doc_id = :doc_id')
                     ->setParameter(':doc_id', $comment['doc_id'])
                     ->execute();
@@ -657,14 +653,14 @@ class CommentInsert extends Comment
                 ->execute();
 
             // insert the extra row DURING A TRANSACTION
-            $this->extra->extra_id = $last_id;
-            $this->extra->insert();
+            //$this->extra->extra_id = $last_id;
+            //$this->extra->insert();
 
             $this->dc->getConnection()->commit();
 
             // clean up some caches
             Cache::item('foolfuuka.model.board.getThreadComments.thread.'
-                .md5(serialize([$this->radix->shortname, $this->thread_num])))->delete();
+                .md5(serialize([$this->radix->shortname, $this->comment->thread_num])))->delete();
 
             // clean up the 10 first pages of index and gallery that are cached
             for ($i = 1; $i <= 10; $i++) {
@@ -678,6 +674,7 @@ class CommentInsert extends Comment
                     .$this->radix->shortname.'.'.$i)->delete();
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
+            die($e->getMessage());
             $this->logger->error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();
 

@@ -25,14 +25,14 @@ class Board extends Model
     /**
      * Array of Comment sorted for output
      *
-     * @var  \Foolz\Foolfuuka\Model\Comment[]
+     * @var  CommentBulk[]
      */
     protected $comments = null;
 
     /**
      * Array of Comment in a plain array
      *
-     * @var  \Foolz\Foolfuuka\Model\Comment[]
+     * @var  CommentBulk[]
      */
     protected $comments_unsorted = null;
 
@@ -146,6 +146,17 @@ class Board extends Model
     }
 
     /**
+     * Returns the comments in a plain array, and executes the query if not already executed
+     *
+     * @return  \Foolz\Foolfuuka\Model\Comment[]  The array of comment objects
+     */
+    protected function p_getCommentsUnsorted()
+    {
+        $this->getComments();
+        return $this->comments_unsorted;
+    }
+
+    /**
      * Returns the count without LIMIT, and executes the query if not already executed
      *
      * @return  int  The count
@@ -192,9 +203,9 @@ class Board extends Model
     {
         $temp = $this->comments_unsorted[0];
 
-        foreach ($this->comments_unsorted as $comment) {
-            if ($temp->$key < $comment->$key) {
-                $temp = $comment;
+        foreach ($this->comments_unsorted as $bulk) {
+            if ($temp->comment->$key < $bulk->comment->$key) {
+                $temp = $bulk;
             }
         }
 
@@ -327,7 +338,7 @@ class Board extends Model
     /**
      * Checks if the string is a valid post number
      *
-     * @param  $str  The string to test on
+     * @param  string  $str  The string to test on
      *
      * @return  boolean  True if the post number is valid, false otherwise
      */
@@ -480,29 +491,28 @@ class Board extends Model
             }
         }
 
-        // populate posts_arr array
-        if ($this->api) {
-            $this->comments_unsorted = $this->comment_factory->fromArrayDeepApi($query_posts, $this->radix, $this->api, $this->comment_options);
-        } else {
-            $this->comments_unsorted = $this->comment_factory->fromArrayDeep($query_posts, $this->radix, $this->comment_options);
+        foreach ($query_posts as $post) {
+            $data = new CommentBulk();
+            $data->import($post, $this->radix);
+            $this->comments_unsorted[] = $data;
         }
 
         $this->profiler->logMem('Board $this->comments_unsorted', $this->comments_unsorted);
 
         // populate results array and order posts
-        foreach ($this->comments_unsorted as $post) {
-            if ($post->op == 0) {
-                if ($post->media !== null && $post->media->preview_orig) {
-                    $results[$post->thread_num]['images_omitted']--;
+        foreach ($this->comments_unsorted as $bulk) {
+            if ($bulk->comment->op == 0) {
+                if ($bulk->media !== null && $bulk->media->preview_orig) {
+                    $results[$bulk->comment->thread_num]['images_omitted']--;
                 }
 
-                if (!isset($results[$post->thread_num]['posts'])) {
-                    $results[$post->thread_num]['posts'] = [];
+                if (!isset($results[$bulk->comment->thread_num]['posts'])) {
+                    $results[$bulk->comment->thread_num]['posts'] = [];
                 }
 
-                array_unshift($results[$post->thread_num]['posts'], $post);
+                array_unshift($results[$bulk->comment->thread_num]['posts'], $bulk);
             } else {
-                $results[$post->thread_num]['op'] = $post;
+                $results[$bulk->comment->thread_num]['op'] = $bulk;
             }
         }
 
@@ -636,10 +646,10 @@ class Board extends Model
             return $this;
         }
 
-        if ($this->api) {
-            $this->comments_unsorted = $this->comment_factory->fromArrayDeepApi($result, $this->radix, $this->api, $this->comment_options);
-        } else {
-            $this->comments_unsorted = $this->comment_factory->fromArrayDeep($result, $this->radix, $this->comment_options);
+        foreach ($result as $post) {
+            $data = new CommentBulk();
+            $data->import($post, $this->radix);
+            $this->comments_unsorted[] = $data;
         }
 
         $this->comments = $this->comments_unsorted;
@@ -862,36 +872,23 @@ class Board extends Model
             throw new BoardThreadNotFoundException(_i('There\'s no such a thread.'));
         }
 
-        if ($this->api) {
-            $this->comments_unsorted =
-                $this->comment_factory->fromArrayDeepApi($query_result, $this->radix, $this->api, [
-                    'realtime' => $realtime,
-                    'backlinks_hash_only_url' => true,
-                    'controller_method' => $controller_method
-                ] + $this->comment_options);
-        } else {
-            $this->comments_unsorted =
-                $this->comment_factory->fromArrayDeep($query_result, $this->radix, [
-                    'realtime' => $realtime,
-                    'backlinks_hash_only_url' => true,
-                    'prefetch_backlinks' => true,
-                    'controller_method' => $controller_method
-                ] + $this->comment_options);
+        foreach ($query_result as $bulk) {
+            $data = new CommentBulk();
+            $data->import($bulk, $this->radix);
+            $this->comments_unsorted[] = $data;
         }
 
-        foreach ($this->comments_unsorted as $key => $post) {
-            if ($post->op == 0) {
-                $this->comments[$post->thread_num]['posts']
-                    [$post->num.(($post->subnum == 0) ? '' : '_'.$post->subnum)] = &$this->comments_unsorted[$key];
+        foreach ($this->comments_unsorted as $key => $bulk) {
+            if ($bulk->comment->op == 0) {
+                $this->comments[$bulk->comment->thread_num]['posts']
+                    [$bulk->comment->num.(($bulk->comment->subnum == 0) ? '' : '_'.$bulk->comment->subnum)] = &$this->comments_unsorted[$key];
             } else {
-                $this->comments[$post->num]['op'] = &$this->comments_unsorted[$key];
+                $this->comments[$bulk->comment->num]['op'] = &$this->comments_unsorted[$key];
             }
         }
 
-        if (!$this->api) {
-            $this->profiler->logMem('Board $this->comments', $this->comments);
-            $this->profiler->logMem('Board $this', $this);
-        }
+        $this->profiler->logMem('Board $this->comments', $this->comments);
+        $this->profiler->logMem('Board $this', $this);
         $this->profiler->log('Board::getThreadComments End');
 
         return $this;
@@ -1028,14 +1025,14 @@ class Board extends Model
             throw new BoardPostNotFoundException(_i('Post not found.'));
         }
 
-        if ($this->api) {
-            $this->comments_unsorted = $this->comment_factory->fromArrayDeepApi($result, $this->radix, $this->api, $this->comment_options);
-        } else {
-            $this->comments_unsorted = $this->comment_factory->fromArrayDeep($result, $this->radix, $this->comment_options);
+        foreach ($result as $bulk) {
+            $data = new CommentBulk();
+            $data->import($bulk, $this->radix);
+            $this->comments_unsorted[] = $data;
         }
 
         foreach ($this->comments_unsorted as $comment) {
-            $this->comments[$comment->num.($comment->subnum ? '_'.$comment->subnum : '')] = $comment;
+            $this->comments[$comment->comment->num.($comment->comment->subnum ? '_'.$comment->comment->subnum : '')] = $comment;
         }
 
         return $this;

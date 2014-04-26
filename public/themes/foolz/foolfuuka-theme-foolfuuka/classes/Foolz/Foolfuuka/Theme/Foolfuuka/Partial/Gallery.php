@@ -2,8 +2,8 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
-use Foolz\Inet\Inet;
-use Foolz\Foolframe\Model\Legacy\Preferences;
+use Foolz\Foolfuuka\Model\Comment;
+use Foolz\Foolfuuka\Model\Media;
 
 class Gallery extends \Foolz\Foolfuuka\View\View
 {
@@ -16,7 +16,14 @@ class Gallery extends \Foolz\Foolfuuka\View\View
         <div id="thread_o_matic" class="clearfix">
         <?php
         $separator = 0;
-        foreach ($board->getComments() as $k => $p) :
+        foreach ($board->getComments() as $k => $p_bulk) :
+            $p = new Comment($this->getContext(), $p_bulk);
+            if ($p_bulk->media !== null) {
+                $p_media = new Media($this->getContext(), $p_bulk);
+            } else {
+                $p_media = null;
+            }
+
             $separator++;
             ?>
         <article id="<?= $p->num ?>" class="thread doc_id_<?= $p->doc_id ?>">
@@ -41,27 +48,27 @@ class Gallery extends \Foolz\Foolfuuka\View\View
                     <span class="post_controls"><a href="<?= $this->getUri()->create($radix->shortname . '/thread/' . $p->num) ?>" class="btnr parent"><?= _i('View') ?></a><a href="<?= $this->getUri()->create($radix->shortname . '/thread/' . $p->num) . '#reply' ?>" class="btnr parent"><?= _i('Reply') ?></a><?= (isset($p->count_all) && $p->count_all > 50) ? '<a href="' . $this->getUri()->create($radix->shortname . '/last50/' . $p->num) . '" class="btnr parent">' . _i('Last 50') . '</a>' : '' ?><?php if ($radix->archive == 1) : ?><a href="http://boards.4chan.org/<?= $radix->shortname . '/res/' . $p->num ?>" class="btnr parent"><?= _i('Original') ?></a><?php endif; ?><a href="<?= $this->getUri()->create($radix->shortname . '/report/' . $p->doc_id) ?>" class="btnr parent" data-function="report" data-post="<?= $p->doc_id ?>" data-post-id="<?= $p->num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true"><?= _i('Report') ?></a><?php if ($this->getAuth()->hasAccess('maccess.mod')) : ?><a href="<?= $this->getUri()->create($radix->shortname . '/delete/' . $p->doc_id) ?>" class="btnr parent" data-function="delete" data-post="<?= $p->doc_id ?>" data-post-id="<?= $p->num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true"><?= _i('Delete') ?></a><?php endif; ?></span>
                 </div>
             </header>
-            <?php if ($p->media !== null) : ?>
+            <?php if ($p_media !== null) : ?>
             <div class="thread_image_box" title="<?= $p->getCommentProcessed() ? htmlspecialchars(strip_tags($p->getCommentProcessed())) : '' ?>">
-                <?php if ($p->media->getMediaStatus($this->getRequest()) === 'banned') : ?>
+                <?php if ($p_media->getMediaStatus($this->getRequest()) === 'banned') : ?>
                 <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
-                <?php elseif ($p->media->getMediaStatus($this->getRequest()) !== 'normal') : ?>
-                <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
+                <?php elseif ($p_media->getMediaStatus($this->getRequest()) !== 'normal') : ?>
+                <a href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
                     <img src="<?= $this->getAssetManager()->getAssetLink('images/missing-image.jpg') ?>" width="150" height="150" />
                 </a>
                 <?php else: ?>
-                <a href="<?= $this->getUri()->create($radix->shortname . '/thread/' . $p->num) ?>" rel="noreferrer" target="_blank" class="thread_image_link"<?= ($p->media->getMediaLink($this->getRequest()))?' data-expand="true"':'' ?>>
-                    <?php if (!$this->getAuth()->hasAccess('maccess.mod') && !$radix->getValue('transparent_spoiler') && $p->media->spoiler) :?>
+                <a href="<?= $this->getUri()->create($radix->shortname . '/thread/' . $p->num) ?>" rel="noreferrer" target="_blank" class="thread_image_link"<?= ($p_media->getMediaLink($this->getRequest()))?' data-expand="true"':'' ?>>
+                    <?php if (!$this->getAuth()->hasAccess('maccess.mod') && !$radix->getValue('transparent_spoiler') && $p_media->spoiler) :?>
                     <div class="spoiler_box"><span class="spoiler_box_text"><?= _i('Spoiler') ?><span class="spoiler_box_text_help"><?= _i('Click to view') ?></span></div>
                     <?php else : ?>
-                    <img src="<?= $p->media->getThumbLink($this->getRequest()) ?>" width="<?= $p->media->preview_w ?>" height="<?= $p->media->preview_h ?>" data-width="<?= $p->media->media_w ?>" data-height="<?= $p->media->media_h ?>" data-md5="<?= $p->media->media_hash ?>" class="thread_image<?= ($p->media->spoiler)?' is_spoiler_image':'' ?>" />
+                    <img src="<?= $p_media->getThumbLink($this->getRequest()) ?>" width="<?= $p_media->preview_w ?>" height="<?= $p_media->preview_h ?>" data-width="<?= $p_media->media_w ?>" data-height="<?= $p_media->media_h ?>" data-md5="<?= $p_media->media_hash ?>" class="thread_image<?= ($p_media->spoiler)?' is_spoiler_image':'' ?>" />
                     <?php endif; ?>
                 </a>
                 <?php endif; ?>
-                <?php if ($p->media->getMediaStatus($this->getRequest()) !== 'banned'  || $this->getAuth()->hasAccess('media.see_banned')) : ?>
-                <div class="post_file" style="padding-left: 2px"><?= \Rych\ByteSize\ByteSize::formatBinary($p->media->media_size, 0) . ', ' . $p->media->media_w . 'x' . $p->media->media_h . ', ' . $p->media->media_filename ?></div>
+                <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned'  || $this->getAuth()->hasAccess('media.see_banned')) : ?>
+                <div class="post_file" style="padding-left: 2px"><?= \Rych\ByteSize\ByteSize::formatBinary($p_media->media_size, 0) . ', ' . $p_media->media_w . 'x' . $p_media->media_h . ', ' . $p_media->media_filename ?></div>
                 <div class="post_file_controls">
-                    <a href="<?= ($p->media->getMediaLink($this->getRequest())) ? $p->media->getMediaLink($this->getRequest()) : $p->media->getRemoteMediaLink($this->getRequest()) ?>" class="btnr" target="_blank">Full</a><?php if ($p->media->total > 1) : ?><a href="<?= $this->getUri()->create($radix->shortname . '/search/image/' . urlencode(substr($p->media->media_hash, 0, -2))) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a target="_blank" href="http://iqdb.org/?url=<?= $p->media->getThumbLink($this->getRequest()) ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p->media->getThumbLink($this->getRequest()) ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p->media->getThumbLink($this->getRequest()) ?>" class="btnr parent">Google</a>
+                    <a href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" class="btnr" target="_blank">Full</a><?php if ($p_media->total > 1) : ?><a href="<?= $this->getUri()->create($radix->shortname . '/search/image/' . urlencode(substr($p_media->media_hash, 0, -2))) ?>" class="btnr parent"><?= _i('View Same') ?></a><?php endif; ?><a target="_blank" href="http://iqdb.org/?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" class="btnr parent">iqdb</a><a target="_blank" href="http://saucenao.com/search.php?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" class="btnr parent">SauceNAO</a><a target="_blank" href="http://google.com/searchbyimage?image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" class="btnr parent">Google</a>
                 </div>
                 <?php endif; ?>
             </div>
@@ -71,7 +78,7 @@ class Gallery extends \Foolz\Foolfuuka\View\View
                 <?= _i('Replies') ?> : <?= ($p->nreplies - 1) ?> | <?= _i('Images') ?>: <?= ($p->nimages - 1) ?>
                 <?php endif; ?>
                 <?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" title="<?= htmlspecialchars(_i('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
-                <?php if (isset($p->media) && $p->media->spoiler == 1) : ?><span class="post_type"><img src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" title="<?= htmlspecialchars(_i('This post contains a spoiler image')) ?>"/></span><?php endif ?>
+                <?php if (isset($p_media) && $p_media->spoiler == 1) : ?><span class="post_type"><img src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" title="<?= htmlspecialchars(_i('This post contains a spoiler image')) ?>"/></span><?php endif ?>
             </div>
         </article>
         <?php

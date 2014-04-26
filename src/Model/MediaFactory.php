@@ -40,7 +40,7 @@ class MediaFactory extends Model
      * @param  string                        $value  The value searched for
      * @param  boolean                       $op     If the object is for an opening post
      *
-     * @return  \Foolz\Foolfuuka\Model\Media  The searched object
+     * @return  \Foolz\Foolfuuka\Model\MediaData  The searched object
      * @throws  MediaNotFoundException        If the media has not been found
      */
     protected function p_getBy(Radix $radix, $where, $value, $op = true)
@@ -53,7 +53,9 @@ class MediaFactory extends Model
             ->fetch();
 
         if ($result) {
-            return new Media($this->getContext(), $result, $radix, $op);
+            $md = new MediaData();
+            $md->import($result);
+            return $md;
         }
 
         throw new MediaNotFoundException(_i('The image could not be found.'));
@@ -96,10 +98,10 @@ class MediaFactory extends Model
      * @param  string                        $value  The filename
      * @param  boolean                       $op     If the object is for an opening post
      *
-     * @return  \Foolz\Foolfuuka\Model\Media  The searched object
+     * @return  \Foolz\Foolfuuka\Model\MediaData  The searched object
      * @throws  MediaNotFoundException        If the media has not been found
      */
-    protected function p_getByFilename(Radix $radix, $filename, $op = false)
+    protected function p_getByFilename(Radix $radix, $filename)
     {
         $result = $this->dc->qb()
             ->select('media_id')
@@ -110,7 +112,9 @@ class MediaFactory extends Model
             ->fetch();
 
         if ($result) {
-            return $this->getByMediaId($radix, $result['media_id'], $op);
+            $md = new MediaData();
+            $md->import($result['media_id']);
+            return $md;
         }
 
         throw new MediaNotFoundException;
@@ -192,6 +196,9 @@ class MediaFactory extends Model
             }
         }
 
-        return new Media($this->getContext(), ['temp_file' => $files['file_image']], $radix);
+        $media = new Media($this->getContext());
+        $media->setTempFile($radix, $files['file_image']);
+
+        return $media;
     }
 }

@@ -13,6 +13,8 @@ use Foolz\Foolframe\Model\Cookie;
 use Foolz\Foolfuuka\Model\Ban;
 use Foolz\Foolfuuka\Model\BanFactory;
 use Foolz\Foolfuuka\Model\Board;
+use Foolz\Foolfuuka\Model\Comment;
+use Foolz\Foolfuuka\Model\CommentBulk;
 use Foolz\Foolfuuka\Model\CommentFactory;
 use Foolz\Foolfuuka\Model\CommentInsert;
 use Foolz\Foolfuuka\Model\Media;
@@ -481,8 +483,8 @@ class Chan extends Common
                 $thread = $board->getComments();
 
                 // get the latest doc_id and latest timestamp for realtime stuff
-                $latest_doc_id = $board->getHighest('doc_id')->doc_id;
-                $latest_timestamp = $board->getHighest('timestamp')->timestamp;
+                $latest_doc_id = $board->getHighest('doc_id')->comment->doc_id;
+                $latest_timestamp = $board->getHighest('timestamp')->comment->timestamp;
 
                 $this->builder->getProps()->addTitle(_i('Thread').' #'.$num);
                 $this->param_manager->setParams([
@@ -1143,9 +1145,10 @@ class Chan extends Common
         if (!$validator->getViolations()->count()) {
             try {
                 $data['poster_ip'] = Inet::ptod($this->getRequest()->getClientIp());
-                $comment = new CommentInsert($this->getContext(), $data, $this->radix, ['clean' => false]);
-                $comment->media = $media;
-                $comment->insert();
+                $bulk = new CommentBulk();
+                $bulk->import($data, $this->radix);
+                $comment = new CommentInsert($this->getContext(), $bulk);
+                $comment->insert($media);
             } catch (\Foolz\Foolfuuka\Model\CommentSendingRequestCaptchaException $e) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['captcha' => true]);
@@ -1178,9 +1181,7 @@ class Chan extends Common
                         ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                         ->setOptions([
                             'type' => 'from_doc_id',
-                            'latest_doc_id' => $latest_doc_id,
-                            'realtime' => true,
-                            'controller_method' => $limit ? 'last/'.$limit : 'thread'
+                            'latest_doc_id' => $latest_doc_id
                         ]);
 
                     $comments = $board->getComments();
@@ -1190,22 +1191,54 @@ class Chan extends Common
                     return $this->error(_i('Unknown error.'));
                 }
 
+                $comment_obj = new Comment($this->getContext());
+                $media_obj = new Media($this->getContext());
+                $m = null;
+                foreach($board->getCommentsUnsorted() as $bulk) {
+                    $comment_obj->setBulk($bulk, $this->radix);
+                    if ($bulk->media) {
+                        $media_obj->setBulk($bulk, $this->radix);
+                        $m = $media_obj;
+                    } else {
+                        $m = null;
+                    }
+
+                    if ($this->builder) {
+                        $this->param_manager->setParam('controller_method', $limit ? 'last/'.$limit : 'thread');
+                        $partial = $this->builder->createPartial('board_comment', 'board_comment');
+                        $partial->getParamManager()
+                            ->setParam('p', $comment_obj)
+                            ->setParam('p_media', $m);
+
+                        $bulk->comment->formatted = $partial->build();
+                        $partial->clearBuilt();
+                    }
+                }
+
                 $this->response->setData(['success' => _i('Message sent.')] + $comments);
             } else {
-                $comment_api = $this->comment_factory->forgeForApi($comment, $this->radix,
-                    ['request' => $this->getRequest(), 'board' => false, 'theme' => $this->builder],
-                    ['controller_method' => $limit ? 'last/'.$limit : 'thread']);
+
+                if ($this->builder) {
+                    $this->param_manager->setParam('controller_method', $limit ? 'last/'.$limit : 'thread');
+                    $partial = $this->builder->createPartial('board_comment', 'board_comment');
+                    $partial->getParamManager()
+                        ->setParam('p', $comment->comment)
+                        ->setParam('p_media', $comment->media);
+
+                    $bulk->comment->formatted = $partial->build();
+                    $partial->clearBuilt();
+                }
 
                 $this->response->setData([
                         'success' => _i('Message sent.'),
-                        'thread_num' => $comment->thread_num,
-                        $comment->thread_num => ['posts' => [$comment_api]],
+                        'thread_num' => $comment->comment->thread_num,
+                        $comment->comment->thread_num => ['posts' => [$comment->bulk]],
                     ]);
             }
         } else {
             $this->builder->createLayout('redirect')
                 ->getParamManager()
-                ->setParam('url', $this->uri->create([$this->radix->shortname, ! $limit ? 'thread' : 'last/'.$limit,	$comment->thread_num]).'#'.$comment->num);
+                ->setParam('url', $this->uri->create([$this->radix->shortname, ! $limit ? 'thread' : 'last/'.$limit, $comment->comment->thread_num]).'#'.$comment->comment->num);
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
             $this->response->setContent($this->builder->build());

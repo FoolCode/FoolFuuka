@@ -5,6 +5,7 @@ namespace Foolz\Foolfuuka\Model;
 use Foolz\Foolframe\Model\Logger;
 use Foolz\Foolframe\Model\Preferences;
 use Foolz\Inet\Inet;
+use Foolz\SphinxQL\Helper;
 use Foolz\SphinxQL\SphinxQL;
 use Foolz\SphinxQL\Connection as SphinxConnnection;
 
@@ -446,7 +447,7 @@ class Search extends Board
                 throw new SearchEmptyResultException(_i('No results found.'));
             }
 
-            $sphinx_meta = SphinxQL::forge()->meta();
+            $sphinx_meta = Helper::pairsToAssoc(Helper::create($conn)->showMeta()->execute());
             $this->total_count = $sphinx_meta['total'];
 
             // populate sql array for full records
@@ -472,14 +473,12 @@ class Search extends Board
         }
 
         // process results
-        foreach ($result as $post) {
-            $board = ($this->radix !== null ? $this->radix : $this->radix_coll->getById($post['board_id']));
-
-            if ($this->api) {
-                $this->comments_unsorted[] = $this->comment_factory->forgeForApi($post, $board, $this->api, $this->comment_options);
-            } else {
-                $this->comments_unsorted[] = new Comment($this->getContext(), $post, $board);
-            }
+        foreach ($result as $key => $row) {
+            $board = ($this->radix !== null ? $this->radix : $this->radix_coll->getById($row['board_id']));
+            $bulk = new CommentBulk();
+            $bulk->import($row, $board);
+            $this->comments_unsorted[] = $bulk;
+            unset($result[$key]);
         }
 
         $this->comments[0]['posts'] = $this->comments_unsorted;

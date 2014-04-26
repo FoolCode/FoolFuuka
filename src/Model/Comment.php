@@ -196,7 +196,7 @@ class Comment extends Model
             $this->comment->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment->comment);
         }
 
-        return $this->comment->omment_sanitized;
+        return $this->comment->comment_sanitized;
     }
 
     public function getCommentProcessed()

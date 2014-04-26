@@ -177,7 +177,7 @@ class MediaFactory extends Model
                 throw new MediaUploadInvalidException(_i('Unexpected upload error.'));
             }
 
-            if (mb_strlen($file->getFilename()) > 64) {
+            if (mb_strlen($file->getFilename(), 'utf-8') > 64) {
                 throw new MediaUploadInvalidException(_i('You uploaded a file with a too long filename.'));
             }
 

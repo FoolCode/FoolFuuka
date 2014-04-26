@@ -308,7 +308,7 @@ class Search extends Board
             }
 
             if ($args['text'] !== null) {
-                if (mb_strlen($args['text']) < 1) {
+                if (mb_strlen($args['text'], 'utf-8') < 1) {
                     return [];
                 }
 

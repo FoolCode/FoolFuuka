@@ -46,7 +46,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                     <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_banned')) : ?>
                     <?php if (mb_strlen($p_media->getMediaFilenameProcessed()) > 38) : ?>
                         <span class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p_media->media_filename) ?>">
-                            <?= mb_substr($p_media->getMediaFilenameProcessed(), 0, 32) . ' (...)' . mb_substr($p_media->getMediaFilenameProcessed(), mb_strrpos($p_media->getMediaFilenameProcessed(), '.')) . ', ' ?>
+                            <?= mb_substr($p_media->getMediaFilenameProcessed(), 0, 32, 'utf-8') . ' (...)' . mb_substr($p_media->getMediaFilenameProcessed(), mb_strrpos($p_media->getMediaFilenameProcessed(), '.', 'utf-8'), null, 'utf-8') . ', ' ?>
                         </span>
                     <?php else: ?>
                         <?= $p_media->getMediaFilenameProcessed() . ', ' ?>

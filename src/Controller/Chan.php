@@ -619,20 +619,20 @@ class Chan extends Common
         array_shift($uri);
 
         $imploded_uri = rawurldecode(implode('/', $uri));
-        if (mb_strlen($imploded_uri) < 22) {
+        if (mb_strlen($imploded_uri, 'utf-8') < 22) {
             return $this->error(_i('Your image hash is malformed.'));
         }
 
         // obtain actual media hash (non-urlsafe)
-        $hash = mb_substr($imploded_uri, 0, 22);
+        $hash = mb_substr($imploded_uri, 0, 22, 'utf-8');
         if (strpos($hash, '/') !== false || strpos($hash, '+') !== false) {
             $hash = Media::urlsafe_b64encode(Media::urlsafe_b64decode($hash));
         }
 
         // Obtain the PAGE from URI.
         $page = 1;
-        if (mb_strlen($imploded_uri) > 28) {
-            $page = substr($imploded_uri, 28);
+        if (mb_strlen($imploded_uri, 'utf-8') > 28) {
+            $page = mb_substr($imploded_uri, 28, null, 'utf-8');
         }
 
         // Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
@@ -1029,15 +1029,15 @@ class Chan extends Common
         }
 
         // Determine if the invalid post fields are populated by bots.
-        if (isset($post['name']) && mb_strlen($post['name']) > 0) {
+        if (isset($post['name']) && mb_strlen($post['name'], 'utf-8') > 0) {
             return $this->error();
         }
 
-        if (isset($post['reply']) && mb_strlen($post['reply']) > 0) {
+        if (isset($post['reply']) && mb_strlen($post['reply'], 'utf-8') > 0) {
             return $this->error();
         }
 
-        if (isset($post['email']) && mb_strlen($post['email']) > 0) {
+        if (isset($post['email']) && mb_strlen($post['email'], 'utf-8') > 0) {
             return $this->error();
         }
 

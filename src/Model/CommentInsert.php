@@ -335,7 +335,7 @@ class CommentInsert extends Comment
             }
 
             // check entire length of comment
-            if (mb_strlen($this->comment->comment) > $this->radix->getValue('max_comment_characters_allowed')) {
+            if (mb_strlen($this->comment->comment, 'utf-8') > $this->radix->getValue('max_comment_characters_allowed')) {
                 throw new CommentSendingTooManyCharactersException(_i('Your comment has too many characters'));
             }
 

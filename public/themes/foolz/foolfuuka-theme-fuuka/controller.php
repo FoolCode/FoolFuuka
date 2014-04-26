@@ -94,13 +94,13 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
         }
 
         // Determine if the invalid post fields are populated by bots.
-        if (isset($post['name']) && mb_strlen($post['name']) > 0) {
+        if (isset($post['name']) && mb_strlen($post['name'], 'utf-8') > 0) {
             return $this->error();
         }
-        if (isset($post['reply']) && mb_strlen($post['reply']) > 0) {
+        if (isset($post['reply']) && mb_strlen($post['reply'], 'utf-8') > 0) {
             return $this->error();
         }
-        if (isset($post['email']) && mb_strlen($post['email']) > 0) {
+        if (isset($post['email']) && mb_strlen($post['email'], 'utf-8') > 0) {
             return $this->error();
         }
 

@@ -175,7 +175,7 @@ class Comment extends Model
 
     public function getOriginalTimestamp()
     {
-        return $this->timestamp;
+        return $this->comment->timestamp;
     }
 
     public function getFourchanDate()
@@ -187,7 +187,7 @@ class Comment extends Model
             $this->comment->fourchan_date = $fourtime->format('n/j/y(D)G:i');
         }
 
-        return $this->fourchan_date;
+        return $this->comment->fourchan_date;
     }
 
     public function getCommentSanitized()
@@ -196,7 +196,7 @@ class Comment extends Model
             $this->comment->comment_sanitized = @iconv('UTF-8', 'UTF-8//IGNORE', $this->comment->comment);
         }
 
-        return $this->comment_sanitized;
+        return $this->comment->omment_sanitized;
     }
 
     public function getCommentProcessed()
@@ -266,7 +266,7 @@ class Comment extends Model
             $this->comment->email_processed = static::process($this->comment->email);
         }
 
-        return $this->email_processed;
+        return $this->comment->email_processed;
     }
 
     public function getTripProcessed()
@@ -275,7 +275,7 @@ class Comment extends Model
             $this->comment->trip_processed = static::process($this->comment->trip);
         }
 
-        return $this->trip_processed;
+        return $this->comment->trip_processed;
     }
 
     public function getPosterHashProcessed()
@@ -284,7 +284,7 @@ class Comment extends Model
             $this->comment->poster_hash_processed = static::process($this->comment->poster_hash);
         }
 
-        return $this->poster_hash_processed;
+        return $this->comment->poster_hash_processed;
     }
 
     public function getPosterCountryNameProcessed()
@@ -326,19 +326,19 @@ class Comment extends Model
         ];
 
         // remove moot's special formatting
-        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[0]) == 0) {
+        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[0]) == 0, null, , 'utf-8') {
             $comment = str_replace($special[0], '', $comment);
 
-            if (mb_substr($comment, -6, 6) == '</div>') {
-                $comment = mb_substr($comment, 0, mb_strlen($comment) - 6);
+            if (mb_substr($comment, -6, 6, 'utf-8') == '</div>') {
+                $comment = mb_substr($comment, 0, mb_strlen($comment, 'utf-8') - 6, 'utf-8');
             }
         }
 
-        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[1]) == 0) {
+        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[1], 'utf-8') == 0) {
             $comment = str_replace($special[1], '', $comment);
 
-            if (mb_substr($comment, -10, 10) == '[/spoiler]') {
-                $comment = mb_substr($comment, 0, mb_strlen($comment) - 10);
+            if (mb_substr($comment, -10, 10, 'utf-8') == '[/spoiler]') {
+                $comment = mb_substr($comment, 0, mb_strlen($comment, 'utf-8') - 10, 'utf-8');
             }
         }
 

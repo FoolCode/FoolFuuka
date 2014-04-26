@@ -246,7 +246,7 @@ class ReportCollection extends Model
             throw new ReportReasonNullException(_i('A reason must be included with your report.'));
         }
 
-        if (mb_strlen($reason) > 2048) {
+        if (mb_strlen($reason, 'utf-8') > 2048) {
             throw new ReportReasonTooLongException(_i('The reason for you report was too long.'));
         }
 

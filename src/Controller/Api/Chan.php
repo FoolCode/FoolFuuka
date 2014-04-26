@@ -15,7 +15,6 @@ use Foolz\Foolfuuka\Model\MediaFactory;
 use Foolz\Foolfuuka\Model\Radix;
 use Foolz\Foolfuuka\Model\RadixCollection;
 use Foolz\Foolfuuka\Model\ReportCollection;
-use Foolz\Foolfuuka\Model\Search;
 use Foolz\Inet\Inet;
 use Foolz\Profiler\Profiler;
 use Foolz\Theme\Builder;

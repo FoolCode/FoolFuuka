@@ -230,7 +230,7 @@ class BanFactory extends Model
             throw new BanException(_i('You entered an invalid IP.'));
         }
 
-        if (mb_strlen($reason) > 10000) {
+        if (mb_strlen($reason, 'utf-8') > 10000) {
             throw new BanException(_i('You entered a too long reason for the ban.'));
         }
 

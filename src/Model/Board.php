@@ -872,11 +872,14 @@ class Board extends Model
             throw new BoardThreadNotFoundException(_i('There\'s no such a thread.'));
         }
 
-        foreach ($query_result as $bulk) {
+        foreach ($query_result as $key => $row) {
             $data = new CommentBulk();
-            $data->import($bulk, $this->radix);
+            $data->import($row, $this->radix);
+            unset($query_result[$key]);
             $this->comments_unsorted[] = $data;
         }
+
+        unset($query_result);
 
         foreach ($this->comments_unsorted as $key => $bulk) {
             if ($bulk->comment->op == 0) {

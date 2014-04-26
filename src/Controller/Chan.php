@@ -27,6 +27,7 @@ use Foolz\Profiler\Profiler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -479,6 +480,8 @@ class Chan extends Common
             $this->setLastModified($last_modified);
 
             if (!$this->response->isNotModified($this->request)) {
+                $this->response = new StreamedResponse();
+
                 // execute in case there's more exceptions to handle
                 $thread = $board->getComments();
 
@@ -522,7 +525,9 @@ class Chan extends Common
                 $this->profiler->logMem('Controller Chan $this', $this);
                 $this->profiler->log('Controller Chan::thread End');
 
-                $this->response->setContent($this->builder->build());
+                $this->response->setCallback(function() {
+                    $this->builder->stream();
+                });
             }
         } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
             $this->profiler->log('Controller Chan::thread End Prematurely');

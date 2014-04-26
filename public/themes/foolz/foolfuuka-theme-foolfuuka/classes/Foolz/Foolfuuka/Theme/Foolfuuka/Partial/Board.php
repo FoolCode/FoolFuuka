@@ -183,6 +183,18 @@ class Board extends \Foolz\Foolfuuka\View\View
                     $comment = new Comment($this->getContext());
                     $media_obj = new Media($this->getContext());
 
+                    $search = array(
+                        '/\>[^\S ]+/s',  // strip whitespaces after tags, except space
+                        '/[^\S ]+\</s',  // strip whitespaces before tags, except space
+                        '/(\s)+/s'       // shorten multiple whitespace sequences
+                    );
+
+                    $replace = array(
+                        '>',
+                        '<',
+                        '\\1'
+                    );
+
                     foreach ($post['posts'] as $p) {
                         /** @var CommentBulk $p */
 
@@ -214,7 +226,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                         // refreshes the string
                         $board_comment_view->doBuild();
 
-                        echo $board_comment_view->build();
+                        echo preg_replace($search, $replace, $board_comment_view->build());
 
                         // remove extra strings from the objects
                         $board_comment_view->clearBuilt();
@@ -222,6 +234,8 @@ class Board extends \Foolz\Foolfuuka\View\View
                         if ($p->media !== null) {
                             $p->media->clean();
                         }
+
+                        $this->flush();
                     }
 
                 endif; ?>

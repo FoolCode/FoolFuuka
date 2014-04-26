@@ -10,9 +10,13 @@ class Chan extends \Foolz\Foolfuuka\View\View
         header('imagetoolbar: false');
 
         $this->getHeader();
+        $this->flush();
         $this->getNav();
+        $this->flush();
         $this->getContent();
+        $this->flush();
         $this->getFooter();
+        $this->flush();
     }
 
     public function getSelectedThemeClass()

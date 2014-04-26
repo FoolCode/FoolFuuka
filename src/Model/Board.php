@@ -491,11 +491,14 @@ class Board extends Model
             }
         }
 
-        foreach ($query_posts as $post) {
+        foreach ($query_posts as $key => $row) {
             $data = new CommentBulk();
-            $data->import($post, $this->radix);
+            $data->import($row, $this->radix);
+            unset($query_posts[$key]);
             $this->comments_unsorted[] = $data;
         }
+
+        unset($query_posts);
 
         $this->profiler->logMem('Board $this->comments_unsorted', $this->comments_unsorted);
 
@@ -646,11 +649,14 @@ class Board extends Model
             return $this;
         }
 
-        foreach ($result as $post) {
+        foreach ($result as $key => $row) {
             $data = new CommentBulk();
-            $data->import($post, $this->radix);
+            $data->import($row, $this->radix);
+            unset($result[$key]);
             $this->comments_unsorted[] = $data;
         }
+
+        unset($result);
 
         $this->comments = $this->comments_unsorted;
 

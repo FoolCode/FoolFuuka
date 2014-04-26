@@ -389,6 +389,8 @@ class Chan extends \Foolz\Foolfuuka\View\View
     <![endif]-->
 
     <?= $this->getPreferences()->get('foolframe.theme.footer_code'); ?>
+
+    <?= $this->getBuilder()->isStreaming() ? $this->getContext()->getService('profiler')->getHtml() : '' ?>
 </body>
 </html>
     <?php

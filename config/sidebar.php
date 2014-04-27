@@ -30,12 +30,6 @@ return [
             'level' => 'mod',
             'default' => 'reports',
             'content' => [
-                'reports' => [
-                    'level' => 'mod',
-                    'name' => _i('Reports'),
-                    'icon' => 'icon-tag',
-                //    'notification' => \Report::count()
-                ],
                 'bans' => [
                     'level' => 'mod',
                     'name' => _i('Bans'),

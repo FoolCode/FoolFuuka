@@ -16,7 +16,7 @@ class Board extends \Foolz\Foolfuuka\View\View
         $controller_method = $this->getBuilderParamManager()->getParam('controller_method', 'thread');
         $thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
 
-        foreach ($board->getComments() as $key => $post) :
+        foreach ($board as $key => $post) :
             if (isset($post['op'])) :
                 $op_bulk = $post['op'];
                 $op = new Comment($this->getContext(), $op_bulk);

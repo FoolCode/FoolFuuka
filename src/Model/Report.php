@@ -139,12 +139,18 @@ class Report extends Model
      */
     protected $radix_coll;
 
+    /**
+     * @var ReportCollection
+     */
+    protected $report_coll;
+
     public function __construct(\Foolz\Foolframe\Model\Context $context)
     {
         parent::__construct($context);
 
         $this->dc = $context->getService('doctrine');
         $this->radix_coll = $context->getService('foolfuuka.radix_collection');
+        $this->radix_coll = $context->getService('foolfuuka.report_collection');
     }
 
     /**
@@ -160,7 +166,7 @@ class Report extends Model
     /**
      * Returns the Comment by doc_id or the first Comment found with a matching media_id
      *
-     * @return  \Foolz\Foolfuuka\Model\Comment
+     * @return  null|\Foolz\Foolfuuka\Model\CommentBulk
      * @throws  \Foolz\Foolfuuka\Model\ReportMediaNotFoundException
      * @throws  \Foolz\Foolfuuka\Model\ReportCommentNotFoundException
      */
@@ -180,7 +186,8 @@ class Report extends Model
             if ($doc_id_res !== null) {
                 $this->doc_id = $doc_id_res->doc_id;
             } else {
-                throw new ReportMediaNotFoundException(_i('The reported media file could not be found.'));
+                $this->report_coll->delete($this->id);
+                return null;
             }
         }
 
@@ -192,7 +199,8 @@ class Report extends Model
                 ->getComments();
             $this->comment = current($comments);
         } catch (BoardException $e) {
-            throw new ReportCommentNotFoundException(_i('The reported post could not be found.'));
+            $this->report_coll->delete($this->id);
+            return null;
         }
 
         return $this->comment;

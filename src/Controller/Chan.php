@@ -21,6 +21,7 @@ use Foolz\Foolfuuka\Model\Media;
 use Foolz\Foolfuuka\Model\MediaFactory;
 use Foolz\Foolfuuka\Model\Radix;
 use Foolz\Foolfuuka\Model\RadixCollection;
+use Foolz\Foolfuuka\Model\Report;
 use Foolz\Foolfuuka\Model\Search;
 use Foolz\Inet\Inet;
 use Foolz\Profiler\Profiler;
@@ -417,7 +418,7 @@ class Chan extends Common
 
         $this->builder->createPartial('body', 'board')
             ->getParamManager()->setParams([
-                'board' => $board,
+                'board' => $board->getComments(),
                 'posts_per_thread' => $options['per_thread'] - 1
             ]);
 
@@ -503,7 +504,7 @@ class Chan extends Common
                 $this->builder->createPartial('body', 'board')
                     ->getParamManager()
                     ->setParams([
-                        'board' => $board,
+                        'board' => $board->getComments(),
                     ]);
 
                 $backend_vars = $this->param_manager->getParam('backend_vars');
@@ -554,7 +555,7 @@ class Chan extends Common
             $this->builder->createPartial('body', 'gallery')
                 ->getParamManager()
                 ->setParams([
-                    'board' => $board
+                    'board' => $board->getComments()
                 ]);
 
             $this->param_manager->setParams([
@@ -607,6 +608,33 @@ class Chan extends Common
         } catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e) {
             return $this->error(_i('The post you are looking for does not exist.'));
         }
+
+        return $this->response->setContent($this->builder->build());
+    }
+
+    public function action_reports()
+    {
+        if (!$this->getAuth()->hasAccess('comment.reports')) {
+            return $this->action_404();
+        }
+
+        $this->param_manager->setParam('section_title', _i('Reports'));
+
+        /** @var Report[] $reports */
+        $reports = $this->getContext()->getService('foolfuuka.report_collection')->getAll();
+
+        $results = [];
+        foreach ($reports as $report) {
+            if (($result = $report->getComment()) !== null) {
+                $results[]['posts'][] = $result;
+            }
+        }
+
+        $this->builder->createPartial('body', 'board')
+            ->getParamManager()
+            ->setParams([
+                'board' => $results,
+            ]);
 
         return $this->response->setContent($this->builder->build());
     }

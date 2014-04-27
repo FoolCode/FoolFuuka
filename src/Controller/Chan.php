@@ -958,7 +958,7 @@ class Chan extends Common
 
         $this->param_manager->setParam('section_title', $title);
         $main_partial = $this->builder->createPartial('body', 'board');
-        $main_partial->getParamManager()->setParam('board', $board);
+        $main_partial->getParamManager()->setParam('board', $board->getComments());
 
         $pagination = $search;
         unset($pagination['page']);

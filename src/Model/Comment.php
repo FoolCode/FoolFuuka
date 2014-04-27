@@ -105,9 +105,9 @@ class Comment extends Model
     public $media;
 
     /**
-     * @var Report[]
+     * @var null|Report[]
      */
-    public $reports;
+    public $reports = null;
 
     public function __get($key)
     {
@@ -219,7 +219,7 @@ class Comment extends Model
 
     public function getReports()
     {
-        if ($this->reports === false) {
+        if ($this->reports === null) {
             if ($this->getAuth()->hasAccess('comment.reports')) {
                 $reports = $this->report_coll->getByDocId($this->radix, $this->comment->doc_id);
 

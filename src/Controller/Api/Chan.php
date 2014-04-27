@@ -533,6 +533,7 @@ class Chan extends Common
                     ->getComments();
 
                 $comment = current($comments);
+                $comment = new Comment($this->getContext(), $comment);
                 $comment->delete($this->getPost('password'));
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
                 return $this->response->setData(['error' => $e->getMessage()]);

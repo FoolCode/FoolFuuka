@@ -82,7 +82,7 @@ class Comment extends Model
     /**
      * @var string
      */
-    public $controller_method;
+    public $controller_method = 'thread';
 
     /**
      * @var CommentBulk

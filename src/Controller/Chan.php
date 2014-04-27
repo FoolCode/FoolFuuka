@@ -1197,6 +1197,7 @@ class Chan extends Common
                 }
 
                 $comment_obj = new Comment($this->getContext());
+                $comment_obj->setControllerMethod($limit ? 'last/'.$limit : 'thread');
                 $media_obj = new Media($this->getContext());
                 $m = null;
                 foreach($board->getCommentsUnsorted() as $bulk) {

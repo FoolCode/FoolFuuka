@@ -373,6 +373,23 @@ class Board extends Model
     }
 
     /**
+     * Loops over the unsorted comments to fetch all the backlinks
+     */
+    protected function loadBacklinks()
+    {
+        $c = new Comment($this->getContext());
+
+        foreach ($this->comments_unsorted as $bulk) {
+            $c->setBulk($bulk);
+            $comment = htmlentities($bulk->comment->comment, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
+            preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i",
+                [$c, 'processInternalLinks'], $comment);
+            preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
+                [$c, 'processExternalLinks'], $comment);
+        }
+    }
+
+    /**
      * Sets the board to the "latest" mode, to create index pages with a couple of the last posts per thread
      * Options: page, per_page, order[by_post, by_thread, ghost]
      *
@@ -499,6 +516,8 @@ class Board extends Model
         }
 
         unset($query_posts);
+
+        $this->loadBacklinks();
 
         $this->profiler->logMem('Board $this->comments_unsorted', $this->comments_unsorted);
 
@@ -657,6 +676,8 @@ class Board extends Model
         }
 
         unset($result);
+
+        $this->loadBacklinks();
 
         $this->comments = $this->comments_unsorted;
 
@@ -884,6 +905,8 @@ class Board extends Model
             unset($query_result[$key]);
             $this->comments_unsorted[] = $data;
         }
+
+        $this->loadBacklinks();
 
         unset($query_result);
 

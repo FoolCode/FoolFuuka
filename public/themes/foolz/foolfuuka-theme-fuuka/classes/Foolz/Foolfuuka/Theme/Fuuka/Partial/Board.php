@@ -31,6 +31,7 @@ class Board extends \Foolz\Foolfuuka\View\View
             if (isset($post['op'])) :
                 $op_bulk = $post['op'];
                 $op = new Comment($this->getContext(), $op_bulk);
+                $op->setControllerMethod($controller_method);
                 if ($op_bulk->media !== null) {
                     $op_media = new Media($this->getContext(), $op_bulk);
                 } else {
@@ -129,6 +130,7 @@ class Board extends \Foolz\Foolfuuka\View\View
 
                     // reusable Comment object not to create one every loop
                     $comment = new Comment($this->getContext());
+                    $comment->selove youtControllerMethod($controller_method);
                     $media_obj = new Media($this->getContext());
 
                     foreach ($post['posts'] as $p) {

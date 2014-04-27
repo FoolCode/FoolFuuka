@@ -62,7 +62,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         if ($this->getPost() && !$this->checkCsrfToken()) {
             $this->notices->set('warning', _i('The security token was not found. Please try again.'));
         } elseif ($this->getPost()) {
-            $result = Validator::formValidate($data['form']);
+            $result = Validator::formValidate($data['form'], $this->getPost());
 
             if (isset($result['error'])) {
                 $this->notices->set('warning', $result['error']);
@@ -104,7 +104,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
         if ($this->getPost() && !$this->checkCsrfToken()) {
             $this->notices->set('warning', _i('The security token wasn\'t found. Try resubmitting.'));
         } elseif ($this->getPost()) {
-            $result = Validator::formValidate($data['form']);
+            $result = Validator::formValidate($data['form'], $this->getPost());
             if (isset($result['error'])) {
                 $this->notices->set('warning', $result['error']);
             } else {

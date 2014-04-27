@@ -2,7 +2,9 @@
 
 namespace Foolz\Foolframe\Controller\Admin\Plugins;
 
-use Symfony\Component\HttpFoundation\Request;
+use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
+use GeoIp2\Database\Reader;
+use MaxMind\Db\Reader\InvalidDatabaseException;
 use Symfony\Component\HttpFoundation\Response;
 
 class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
@@ -20,7 +22,7 @@ class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
         return $this->getAuth()->hasAccess('maccess.admin');
     }
 
-    public function action_manage()
+    private function structure()
     {
         $this->param_manager->setParam('method_title', 'Manage');
 
@@ -39,7 +41,7 @@ class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
             'label' => _i('Countries allowed to post'),
             'type' => 'textarea',
             'preferences' => true,
-            'validation' => 'trim',
+            'validation' => [new Trim()],
             'class' => 'span6',
             'style' => 'height:60px',
             'help' => _i('Comma separated list of GeoIP 2-letter nation codes.') . ' ' . _i('If you allow a nation, all other nations won\'t be able to comment.'),
@@ -49,7 +51,7 @@ class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
             'label' => _i('Countries disallowed to post'),
             'type' => 'textarea',
             'preferences' => true,
-            'validation' => 'trim',
+            'validation' => [new Trim()],
             'class' => 'span6',
             'style' => 'height:60px',
             'help' => _i('Comma separated list of GeoIP 2-letter nation codes.') . ' ' . _i('Disallowed nations won\'t be able to comment.'),
@@ -59,7 +61,7 @@ class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
             'label' => _i('Countries allowed to view the site'),
             'type' => 'textarea',
             'preferences' => true,
-            'validation' => 'trim',
+            'validation' => [new Trim()],
             'class' => 'span6',
             'style' => 'height:60px',
             'help' => _i('Comma separated list of GeoIP 2-letter nation codes.') . ' ' . _i('If you allow a nation, all other nations won\'t be able to reach the interface.'),
@@ -69,7 +71,7 @@ class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
             'label' => _i('Countries disallowed to view the site.'),
             'type' => 'textarea',
             'preferences' => true,
-            'validation' => 'trim',
+            'validation' => [new Trim()],
             'class' => 'span6',
             'style' => 'height:60px',
             'help' => _i('Comma separated list of GeoIP 2-letter nation codes.') . ' ' . _i('Disallowed nations won\'t be able to reach the interface.'),
@@ -101,8 +103,17 @@ class GeoipRegionLock extends \Foolz\Foolframe\Controller\Admin
         ];
 
         $data['form'] = $form;
+        return $form;
+    }
 
-        \Preferences::submit_auto($data['form']);
+    public function action_manage()
+    {
+        $this->param_manager->setParam('method_title', 'Manage');
+
+        $data = [];
+        $data['form'] = $this->structure();
+
+        $this->preferences->submit_auto($this->getRequest(), $data['form'], $this->getPost());
 
         // create a form
         $this->builder->createPartial('body', 'form_creator')

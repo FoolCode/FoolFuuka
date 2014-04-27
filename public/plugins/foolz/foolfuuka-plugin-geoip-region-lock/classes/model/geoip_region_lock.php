@@ -4,7 +4,11 @@ namespace Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model;
 
 use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\Model;
-use Symfony\Component\HttpFoundation\Request;
+use Foolz\Foolfuuka\Model\CommentSendingException;
+use Foolz\Inet\Inet;
+use Foolz\Plugin\Result;
+use GeoIp2\Database\Reader;
+use GeoIp2\Exception\AddressNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -17,7 +21,7 @@ class GeoipRegionLock extends Model
         $this->preferences = $context->getService('preferences');
     }
 
-    public function blockCountryComment($result)
+    public function blockCountryComment(Result $result)
     {
         $obj = $result->getObject();
 
@@ -35,21 +39,29 @@ class GeoipRegionLock extends Model
         }
 
         if ($allow || $disallow) {
-            // @todo get client ip
-            $country = strtolower(\geoip_country_code_by_name($request->getClientIp()));
+            $ip = Inet::dtop($obj->poster_ip);
+
+            $reader = new Reader($this->preferences->get('foolframe.maxmind.geoip2_db_path'));
+
+            $country = null;
+
+            try {
+                $record = $reader->country($ip);
+                $country = strtolower($record->country->isoCode);
+            } catch(AddressNotFoundException $e) {
+                $country = 'xx';
+            }
 
             if ($allow) {
                 $allow = array_filter(explode(',', $allow));
 
                 foreach($allow as $al) {
-                    if (strtolower(trim($al)) == $country)
+                    if (strtolower(trim($al)) === $country)
                         return;
                 }
 
-                $result->set([
-                    'error' => _i('Your nation has been blocked from posting.') .
-                        '<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
-                ]);
+                throw new CommentSendingException(_i('Your nation has been blocked from posting.').
+                    '<br/><br/>This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com/');
             }
 
             if ($disallow) {
@@ -57,18 +69,18 @@ class GeoipRegionLock extends Model
 
                 foreach ($disallow as $disal) {
                     if (strtolower(trim($disal)) == $country) {
-                        $result->set([
-                            'error' => _i('Your nation has been blocked from posting.') .
-                                '<br/><br/>This product includes GeoLite data created by MaxMind, available from http://www.maxmind.com/'
-                        ]);
+                        throw new CommentSendingException(_i('Your nation has been blocked from posting.').
+                            '<br/><br/>This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com/');
                     }
                 }
             }
         }
     }
 
-    public function blockCountryView(Request $request, $result)
+    public function blockCountryView(Result $result)
     {
+        $result->getParam('request');
+
         $allow = $this->preferences->get('foolfuuka.plugins.geoip_region_lock.allow_view');
         $disallow = $this->preferences->get('foolfuuka.plugins.geoip_region_lock.disallow_view');
 

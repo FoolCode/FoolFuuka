@@ -4,6 +4,8 @@ namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Cache\Cache;
 use Foolz\Inet\Inet;
+use GeoIp2\Database\Reader;
+use GeoIp2\Exception\AddressNotFoundException;
 use Neutron\ReCaptcha\ReCaptcha;
 
 class CommentSendingException extends \Exception {}
@@ -403,8 +405,15 @@ class CommentInsert extends Comment
         $this->comment->timestamp = substr($microtime, 0, 10);
         $this->comment->op = (bool) ! $this->comment->thread_num;
 
-        if ($this->radix->getValue('enable_flags') && function_exists('\\geoip_country_code_by_name')) {
-            $this->comment->poster_country = \geoip_country_code_by_name(Inet::dtop($this->comment->poster_ip));
+        if ($this->radix->getValue('enable_flags')) {
+            $reader = new Reader($this->preferences->get('foolframe.maxmind.geoip2_db_path'));
+
+            try {
+                $record = $reader->country(Inet::dtop($this->comment->poster_ip));
+                $this->comment->poster_country = strtolower($record->country->isoCode);
+            } catch(AddressNotFoundException $e) {
+                $this->comment->poster_country = 'xx';
+            }
         }
 
         // process comment media

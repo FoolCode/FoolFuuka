@@ -2,12 +2,14 @@
 
 use Foolz\Foolframe\Model\Auth;
 use Foolz\Foolframe\Model\Autoloader;
+use Foolz\Foolframe\Model\Context;
 use Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock;
 use Foolz\Plugin\Event;
+use Foolz\Plugin\Result;
 
 Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-lock')
-    ->setCall(function($result) {
-        /* @var Context $context */
+    ->setCall(function(Result $result) {
+        /* @var $context Context */
         $context = $result->getParam('context');
         /** @var Autoloader $autoloader */
         $autoloader = $context->getService('autoloader');
@@ -49,7 +51,7 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-l
                 $preferences = $context->getService('preferences');
 
                 $context->getContainer()
-                    ->register('foolfuuka-plugin.geoip_region_lock')
+                    ->register('foolfuuka-plugin.geoip_region_lock', 'Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock')
                     ->addArgument($context);
 
                 /** @var GeoipRegionLock $object */
@@ -57,13 +59,15 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-l
 
                 if (!$auth->hasAccess('maccess.mod') && !($preferences->get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && $auth->hasAccess('access.user'))) {
                     Event::forge('Foolz\Foolframe\Model\Context.handleWeb.override_response')
-                        ->setCall(function($response) use ($context, $object) {
-                            $object->blockCountryView($response->getParam('request'), $response);
+                        ->setCall(function(Result $result) use ($context, $object) {
+                            $object->blockCountryView($result);
                         })
                         ->setPriority(2);
 
                     Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.method')
-                        ->setCall('Foolfuuka\\Plugins\\GeoipRegionLock\\GeoipRegionLock::blockCountryComment')
+                        ->setCall(function(Result $result) use ($context, $object) {
+                            $object->blockCountryComment($result);
+                        })
                         ->setPriority(4);
                 }
             });
@@ -71,7 +75,7 @@ Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-l
 
 
         Event::forge('Foolz\Foolfuuka\Model\Radix::structure.result')
-            ->setCall(function($result){
+            ->setCall(function(Result $result){
             $structure = $result->getParam('structure');
 
             $structure['plugin_geo_ip_region_lock_allow_comment'] = [

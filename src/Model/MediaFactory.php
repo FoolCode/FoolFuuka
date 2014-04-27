@@ -96,7 +96,6 @@ class MediaFactory extends Model
      *
      * @param  Radix $radix  The Radix where the Media can be found
      * @param  string                        $value  The filename
-     * @param  boolean                       $op     If the object is for an opening post
      *
      * @return  \Foolz\Foolfuuka\Model\MediaData  The searched object
      * @throws  MediaNotFoundException        If the media has not been found
@@ -104,17 +103,19 @@ class MediaFactory extends Model
     protected function p_getByFilename(Radix $radix, $filename)
     {
         $result = $this->dc->qb()
-            ->select('media_id')
+            ->select('*')
             ->from($radix->getTable(), 'r')
+            ->leftJoin('r', $radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+            ->leftJoin('r', $radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
             ->where('r.media_orig = :media_orig')
             ->setParameter(':media_orig', $filename)
             ->execute()
             ->fetch();
 
         if ($result) {
-            $md = new MediaData();
-            $md->import($result['media_id']);
-            return $md;
+            $bulk = new CommentBulk();
+            $bulk->import($result, $radix);
+            return $bulk;
         }
 
         throw new MediaNotFoundException;

@@ -681,11 +681,12 @@ class Chan extends Common
     public function radix_full_image($filename)
     {
         try {
-            $media = $this->media_factory->getByFilename($this->radix, $filename);
+            $bulk = $this->media_factory->getByFilename($this->radix, $filename);
         } catch (\Foolz\Foolfuuka\Model\MediaException $e) {
             return $this->action_404(_i('The image was never in our databases.'));
         }
 
+        $media = new Media($this->getContext(), $bulk);
         if ($media->getMediaLink($this->getRequest())) {
             return new RedirectResponse($media->getMediaLink($this->getRequest()), 303);
         }

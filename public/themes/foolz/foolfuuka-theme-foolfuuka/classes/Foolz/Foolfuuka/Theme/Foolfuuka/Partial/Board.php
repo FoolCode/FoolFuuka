@@ -167,7 +167,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                     </div>
                     <?php endforeach ?>
                 <?php endif; ?>
-                <?php elseif (isset($post['posts'])): ?>
+                <?php elseif (isset($post['posts'])) : ?>
         <article class="clearfix thread">
                     <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_headless_open')->setParam('board', array(isset($radix) ? $radix : null))->execute(); ?>
                 <?php endif; ?>

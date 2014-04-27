@@ -626,7 +626,7 @@ class Chan extends Common
         $results = [];
         foreach ($reports as $report) {
             if (($result = $report->getComment()) !== null) {
-                $results[]['posts'][] = $result;
+                $results[0]['posts'][] = $result;
             }
         }
 
@@ -634,6 +634,10 @@ class Chan extends Common
             ->getParamManager()
             ->setParams([
                 'board' => $results,
+                'modifiers' => [
+                    'post_show_board_name' => true,
+                    'post_show_view_button' => true
+                ]
             ]);
 
         return $this->response->setContent($this->builder->build());

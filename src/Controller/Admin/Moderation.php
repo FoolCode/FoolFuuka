@@ -59,68 +59,6 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
         $this->theme = $theme_instance->get('foolz/foolfuuka-theme-admin');
     }
 
-    /**
-     * Lists the post moderation
-     *
-     * @return  Response
-     */
-    public function action_reports()
-    {
-        $this->param_manager->setParam('method_title', [_i('Manage'), _i('Reports')]);
-
-        // this has already been forged in the foolfuuka bootstrap
-        $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
-
-        $theme_name = 'foolz/foolfuuka-theme-foolfuuka';
-        $this->theme = $theme = $theme_instance->get('foolz/foolfuuka-theme-foolfuuka');
-
-        $reports = $this->report_coll->getAll();
-
-        foreach ($reports as $key => $report) {
-            foreach ($reports as $k => $r) {
-                if ($key < $k && $report->doc_id === $r->doc_id && $report->board_id === $r->board_id) {
-                    unset($reports[$k]);
-                }
-            }
-        }
-
-        // KEEP THIS IN SYNC WITH THE ONE IN THE CHAN CONTROLLER
-        $backend_vars = [
-            'context' => $this->getContext(),
-            'request' => $this->getRequest(),
-            'site_url'  => $this->uri->base(),
-            'default_url'  => $this->uri->base(),
-            'archive_url'  => $this->uri->base(),
-            'system_url'  => $this->uri->base(),
-            'api_url'   => $this->uri->base(),
-            'cookie_domain' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_domain'),
-            'cookie_prefix' => $this->config->get('foolz/foolframe', 'config', 'config.cookie_prefix'),
-            'selected_theme' => $theme_name,
-            'csrf_token_key' => 'csrf_token',
-            'images' => [
-                'banned_image' => $this->uri->base().$this->theme->getAssetManager()->getAssetLink('images/banned-image.png'),
-                'banned_image_width' => 150,
-                'banned_image_height' => 150,
-                'missing_image' => $this->uri->base().$this->theme->getAssetManager()->getAssetLink('images/missing-image.jpg'),
-                'missing_image_width' => 150,
-                'missing_image_height' => 150,
-            ],
-            'gettext' => [
-                'submit_state' => _i('Submitting'),
-                'thread_is_real_time' => _i('This thread is being displayed in real time.'),
-                'update_now' => _i('Update now')
-            ]
-        ];
-
-        $this->builder->createPartial('body', 'moderation/reports')
-            ->getParamManager()->setParams([
-                'backend_vars' => $backend_vars,
-                'theme' => $theme,
-                'reports' => $reports
-            ]);
-        return new Response($this->builder->build());
-    }
-
     public function action_bans($page = 1)
     {
         $this->param_manager->setParam('method_title', [_i('Manage'), _i('Bans')]);

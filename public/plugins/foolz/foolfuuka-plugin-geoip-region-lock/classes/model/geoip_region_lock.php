@@ -4,6 +4,7 @@ namespace Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model;
 
 use Foolz\Foolframe\Model\Context;
 use Foolz\Foolframe\Model\Model;
+use Foolz\Foolfuuka\Model\Comment;
 use Foolz\Foolfuuka\Model\CommentSendingException;
 use Foolz\Inet\Inet;
 use Foolz\Plugin\Result;
@@ -23,14 +24,15 @@ class GeoipRegionLock extends Model
 
     public function blockCountryComment(Result $result)
     {
+        /** @var Comment $obj */
         $obj = $result->getObject();
 
         // globally allowed and disallowed
         $allow = $this->preferences->get('foolfuuka.plugins.geoip_region_lock.allow_comment');
         $disallow = $this->preferences->get('foolfuuka.plugins.geoip_region_lock.disallow_comment');
 
-        $board_allow = trim($obj->board->getValue('plugin_geo_ip_region_lock_allow_comment'), " ,");
-        $board_disallow = trim($obj->board->getValue('plugin_geo_ip_region_lock_disallow_comment'), " ,");
+        $board_allow = trim($obj->radix->getValue('plugin_geo_ip_region_lock_allow_comment'), " ,");
+        $board_disallow = trim($obj->radix->getValue('plugin_geo_ip_region_lock_disallow_comment'), " ,");
 
         // allow board settings to override global
         if ($board_allow || $board_disallow) {
@@ -39,7 +41,7 @@ class GeoipRegionLock extends Model
         }
 
         if ($allow || $disallow) {
-            $ip = Inet::dtop($obj->poster_ip);
+            $ip = Inet::dtop($obj->comment->poster_ip);
 
             $reader = new Reader($this->preferences->get('foolframe.maxmind.geoip2_db_path'));
 

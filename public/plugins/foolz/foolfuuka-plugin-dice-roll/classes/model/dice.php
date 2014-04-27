@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Plugins\DiceRoll\Model;
 
+use Foolz\Foolfuuka\Model\Comment;
+
 class Dice
 {
 
@@ -13,8 +15,9 @@ class Dice
             return null;
         }
 
-        if ($data->email !== false || $data->email != '') {
-            if (preg_match('/dice[ +](\d+)[ d+](\d+)(([ +-]+?)(-?\d+))?/', $data->email, $result)) {
+        /** @var Comment $data */
+        if ($data->comment->email !== false || $data->comment->email != '') {
+            if (preg_match('/dice[ +](\d+)[ d+](\d+)(([ +-]+?)(-?\d+))?/', $data->comment->email, $result)) {
                 $modifier = '';
 
                 $dice = [
@@ -47,7 +50,7 @@ class Dice
                 }
 
                 $output = '[b]rolled ' . implode(', ', $dice['num']) . $modifier . ' = ' . $dice['sum'] . '[/b]';
-                $data->comment = trim($output . "\n\n" . $data->comment);
+                $data->comment->comment = trim($output . "\n\n" . $data->comment->comment);
             }
         }
 

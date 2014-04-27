@@ -16,7 +16,7 @@ class Gallery extends \Foolz\Foolfuuka\View\View
         <div id="thread_o_matic" class="clearfix">
         <?php
         $separator = 0;
-        foreach ($board->getComments() as $k => $p_bulk) :
+        foreach ($board as $k => $p_bulk) :
             $p = new Comment($this->getContext(), $p_bulk);
             if ($p_bulk->media !== null) {
                 $p_media = new Media($this->getContext(), $p_bulk);

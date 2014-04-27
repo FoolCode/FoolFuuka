@@ -381,6 +381,7 @@ class Chan extends Common
 
     protected function latest($page = 1, $options = [])
     {
+        $this->response = new StreamedResponse();
         $this->profiler->log('Controller Chan::latest Start');
 
         try {
@@ -441,7 +442,11 @@ class Chan extends Common
         $this->profiler->logMem('Controller Chan $this', $this);
         $this->profiler->log('Controller Chan::latest End');
 
-        return $this->response->setContent($this->builder->build());
+        $this->response->setCallback(function() {
+            $this->builder->stream();
+        });
+
+        return $this->response;
     }
 
     public function radix_thread($num = 0)
@@ -478,11 +483,10 @@ class Chan extends Common
             $thread_status = $board->getThreadStatus();
             $last_modified = $thread_status['last_modified'];
 
+            $this->response = new StreamedResponse();
             $this->setLastModified($last_modified);
 
             if (!$this->response->isNotModified($this->request)) {
-                $this->response = new StreamedResponse();
-
                 // execute in case there's more exceptions to handle
                 $thread = $board->getComments();
 
@@ -543,6 +547,8 @@ class Chan extends Common
 
     public function radix_gallery($page = 1)
     {
+        $this->response = new StreamedResponse();
+
         try {
             $board = Board::forge($this->getContext())
                 ->getThreads()
@@ -569,7 +575,11 @@ class Chan extends Common
             return $this->error($e->getMessage());
         }
 
-        return $this->response->setContent($this->builder->build());
+        $this->response->setCallback(function() {
+            $this->builder->stream();
+        });
+
+        return $this->response;
     }
 
     public function radix_post($num = 0)
@@ -618,6 +628,8 @@ class Chan extends Common
             return $this->action_404();
         }
 
+        $this->response = new StreamedResponse();
+
         $this->param_manager->setParam('section_title', _i('Reports'));
 
         /** @var Report[] $reports */
@@ -640,7 +652,11 @@ class Chan extends Common
                 ]
             ]);
 
-        return $this->response->setContent($this->builder->build());
+        $this->response->setCallback(function() {
+            $this->builder->stream();
+        });
+
+        return $this->response;
     }
 
     /**
@@ -740,6 +756,8 @@ class Chan extends Common
 
     public function radix_search()
     {
+        $this->response = new StreamedResponse();
+
         if ($this->getPost('submit_search_global')) {
             $this->radix = null;
         }
@@ -996,7 +1014,11 @@ class Chan extends Common
         $this->profiler->logMem('Controller Chan $this', $this);
         $this->profiler->log('Controller Chan::search End');
 
-        return $this->response->setContent($this->builder->build('board'));
+        $this->response->setCallback(function() {
+            $this->builder->stream();
+        });
+
+        return $this->response;
     }
 
     public function radix_appeal()

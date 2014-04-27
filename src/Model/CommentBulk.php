@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: woxxy
- * Date: 26/04/14
- * Time: 00:18
- */
 
 namespace Foolz\Foolfuuka\Model;
 
 
 class CommentBulk implements \JsonSerializable
 {
-
     /**
      * @var Radix
      */
@@ -27,6 +20,27 @@ class CommentBulk implements \JsonSerializable
      */
     public $media = null;
 
+    /**
+     * @param Radix $radix
+     * @param CommentData $comment
+     * @param MediaData $media
+     * @return static
+     */
+    public static function forge(Radix $radix, CommentData $comment = null, MediaData $media = null)
+    {
+        $new = new static();
+        $new->radix = $radix;
+        $new->comment = $comment;
+        $new->media = $media;
+
+        return $new;
+    }
+
+    /**
+     * Implements \JsonSerializable interface
+     *
+     * @return array|mixed
+     */
     public function jsonSerialize()
     {
         $array = $this->comment->export();
@@ -40,9 +54,16 @@ class CommentBulk implements \JsonSerializable
         } else {
             $array['media'] = null;
         }
+
         return $array;
     }
 
+    /**
+     * Imports from an array the keys that match the properties of the data objects
+     *
+     * @param array $data
+     * @param Radix $radix
+     */
     public function import(array $data, Radix $radix)
     {
         $this->radix = $radix;
@@ -56,6 +77,9 @@ class CommentBulk implements \JsonSerializable
         }
     }
 
+    /**
+     * Cleans all the generated fields of the data obkects
+     */
     public function clean()
     {
         $this->comment->clean();
@@ -64,6 +88,9 @@ class CommentBulk implements \JsonSerializable
         }
     }
 
+    /**
+     * @return Radix
+     */
     public function getRadix()
     {
         return $this->radix;

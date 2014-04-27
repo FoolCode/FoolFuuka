@@ -195,7 +195,11 @@ class Media extends Model
         $this->radix = $bulk->getRadix();
         $this->bulk = $bulk;
         $this->media = $bulk->media;
-        $this->op = $bulk->comment->op;
+
+        // some cases we don't have a comment attached, like banning/deleting
+        if (isset($this->comment)) {
+            $this->op = $bulk->comment->op;
+        }
 
         if ($this->radix->archive) {
             // archive entries for media_filename are already encoded and we risk overencoding

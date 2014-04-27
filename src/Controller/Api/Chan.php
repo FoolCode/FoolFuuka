@@ -9,6 +9,7 @@ use Foolz\Foolframe\Model\Uri;
 use Foolz\Foolfuuka\Model\BanFactory;
 use Foolz\Foolfuuka\Model\Board;
 use Foolz\Foolfuuka\Model\Comment;
+use Foolz\Foolfuuka\Model\CommentBulk;
 use Foolz\Foolfuuka\Model\CommentFactory;
 use Foolz\Foolfuuka\Model\Media;
 use Foolz\Foolfuuka\Model\MediaFactory;
@@ -576,6 +577,7 @@ class Chan extends Common
                     ->getComments();
 
                 $comment = current($comments);
+                $comment = new Comment($this->getContext(), $comment);
                 $comment->delete();
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
@@ -586,7 +588,9 @@ class Chan extends Common
 
         if ($this->getPost('action') === 'delete_image') {
             try {
-                $this->media_factory->getByMediaId($this->radix, $this->getPost('id'))->delete(true, true, true);
+                $media = $this->media_factory->getByMediaId($this->radix, $this->getPost('id'));
+                $media = new Media($this->getContext(), CommentBulk::forge($this->radix, null, $media));
+                $media->delete(true, true, true);
             } catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }
@@ -601,7 +605,9 @@ class Chan extends Common
             }
 
             try {
-                $this->media_factory->getByMediaId($this->radix, $this->getPost('id'))->ban($global);
+                $media = $this->media_factory->getByMediaId($this->radix, $this->getPost('id'));
+                $media = new Media($this->getContext(), CommentBulk::forge($this->radix, null, $media));
+                $media->ban($global);
             } catch (\Foolz\Foolfuuka\Model\MediaNotFoundException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             }

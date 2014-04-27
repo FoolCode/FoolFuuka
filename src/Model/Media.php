@@ -197,7 +197,7 @@ class Media extends Model
         $this->media = $bulk->media;
 
         // some cases we don't have a comment attached, like banning/deleting
-        if (isset($this->comment)) {
+        if (isset($bulk->comment)) {
             $this->op = $bulk->comment->op;
         }
 

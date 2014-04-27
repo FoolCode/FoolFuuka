@@ -603,10 +603,10 @@ class Chan extends Common
             // it always returns an array
             $comment = current($comments);
 
-            $redirect =  $this->uri->create($this->radix->shortname.'/thread/'.$comment->thread_num.'/');
+            $redirect =  $this->uri->create($this->radix->shortname.'/thread/'.$comment->comment->thread_num.'/');
 
             if (!$comment->op) {
-                $redirect .= '#'.$comment->num.($comment->subnum ? '_'.$comment->subnum :'');
+                $redirect .= '#'.$comment->comment->num.($comment->comment->subnum ? '_'.$comment->comment->subnum :'');
             }
 
             $this->builder->createLayout('redirect')

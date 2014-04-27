@@ -328,7 +328,7 @@ class Comment extends Model
         ];
 
         // remove moot's special formatting
-        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[0], 'utf-8') == 0) {
+        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[0], null, 'utf-8') == 0) {
             $comment = str_replace($special[0], '', $comment);
 
             if (mb_substr($comment, -6, 6, 'utf-8') == '</div>') {
@@ -336,7 +336,7 @@ class Comment extends Model
             }
         }
 
-        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[1], 'utf-8') == 0) {
+        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[1], null, 'utf-8') == 0) {
             $comment = str_replace($special[1], '', $comment);
 
             if (mb_substr($comment, -10, 10, 'utf-8') == '[/spoiler]') {

@@ -56,6 +56,14 @@ class CommentBulk implements \JsonSerializable
         }
     }
 
+    public function clean()
+    {
+        $this->comment->clean();
+        if ($this->media !== null) {
+            $this->media->clean();
+        }
+    }
+
     public function getRadix()
     {
         return $this->radix;

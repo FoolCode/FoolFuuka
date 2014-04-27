@@ -304,9 +304,11 @@ class Comment extends Model
      * Processes the comment, strips annoying data from moot, converts BBCode,
      * converts > to greentext, >> to internal link, and >>> to external link
      *
+     * @param bool $process_backlinks_only If only the backlink parsing must be run
+     *
      * @return string the processed comment
      */
-    public function processComment()
+    public function processComment($process_backlinks_only = false)
     {
         // default variables
         $find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
@@ -350,6 +352,10 @@ class Comment extends Model
 
         $comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
             [$this, 'processExternalLinks'], $comment);
+
+        if ($process_backlinks_only) {
+            return '';
+        }
 
         $comment = preg_replace($find, $html, $comment);
         $comment = static::parseBbcode($comment, ($this->radix->archive && !$this->comment->subnum));

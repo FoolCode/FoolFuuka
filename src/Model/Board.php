@@ -133,6 +133,7 @@ class Board extends Model
                     $this->profiler->logMem('Start Board::getComments() with method '.$this->method_fetching, $this);
 
                 $this->{$this->method_fetching}();
+                $this->loadBacklinks();
 
                 $this->profiler->log('End Board::getComments() with method '.$this->method_fetching);
                 if (!$this->api)
@@ -381,11 +382,8 @@ class Board extends Model
 
         foreach ($this->comments_unsorted as $bulk) {
             $c->setBulk($bulk);
-            $comment = htmlentities($bulk->comment->comment, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
-            preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i",
-                [$c, 'processInternalLinks'], $comment);
-            preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
-                [$c, 'processExternalLinks'], $comment);
+            $c->processComment(true);
+            $bulk->clean();
         }
     }
 
@@ -516,8 +514,6 @@ class Board extends Model
         }
 
         unset($query_posts);
-
-        $this->loadBacklinks();
 
         $this->profiler->logMem('Board $this->comments_unsorted', $this->comments_unsorted);
 
@@ -676,8 +672,6 @@ class Board extends Model
         }
 
         unset($result);
-
-        $this->loadBacklinks();
 
         $this->comments = $this->comments_unsorted;
 
@@ -905,8 +899,6 @@ class Board extends Model
             unset($query_result[$key]);
             $this->comments_unsorted[] = $data;
         }
-
-        $this->loadBacklinks();
 
         unset($query_result);
 

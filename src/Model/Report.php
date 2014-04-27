@@ -150,7 +150,7 @@ class Report extends Model
 
         $this->dc = $context->getService('doctrine');
         $this->radix_coll = $context->getService('foolfuuka.radix_collection');
-        $this->radix_coll = $context->getService('foolfuuka.report_collection');
+        $this->report_coll = $context->getService('foolfuuka.report_collection');
     }
 
     /**

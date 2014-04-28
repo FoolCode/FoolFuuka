@@ -483,10 +483,12 @@ class Chan extends Common
             $thread_status = $board->getThreadStatus();
             $last_modified = $thread_status['last_modified'];
 
-            $this->response = new StreamedResponse();
             $this->setLastModified($last_modified);
 
             if (!$this->response->isNotModified($this->request)) {
+                $this->response = new StreamedResponse();
+                $this->setLastModified($last_modified);
+
                 // execute in case there's more exceptions to handle
                 $thread = $board->getComments();
 

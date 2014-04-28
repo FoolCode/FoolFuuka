@@ -190,7 +190,7 @@ class MediaFactory extends Model
                 throw new MediaUploadInvalidException(_i('You uploaded a file with an invalid mime type.'));
             }
 
-            if ($file->getClientSize() > $max_size || !$this->getAuth()->hasAccess('media.limitless_media')) {
+            if ($file->getClientSize() > $max_size && !$this->getAuth()->hasAccess('media.limitless_media')) {
                 throw new MediaUploadInvalidException(
                     _i('You uploaded a too big file. The maxmimum allowed filesize is %s',
                         $radix->getValue('max_image_size_kilobytes')));

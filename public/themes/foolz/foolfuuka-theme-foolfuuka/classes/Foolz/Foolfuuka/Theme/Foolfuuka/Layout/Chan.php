@@ -390,7 +390,13 @@ class Chan extends \Foolz\Foolfuuka\View\View
 
     <?= $this->getPreferences()->get('foolframe.theme.footer_code'); ?>
 
-    <?= $this->getBuilder()->isStreaming() ? $this->getContext()->getService('profiler')->getHtml() : '' ?>
+    <?php
+        if ($this->getBuilder()->isStreaming()) {
+            $profiler = $this->getContext()->getService('profiler');
+            $profiler->log('Generating profiler HTML in streamed response');
+            echo $profiler->getHtml();
+        }
+    ?>
 </body>
 </html>
     <?php

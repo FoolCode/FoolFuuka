@@ -605,7 +605,7 @@ class Chan extends Common
 
             $redirect =  $this->uri->create($this->radix->shortname.'/thread/'.$comment->comment->thread_num.'/');
 
-            if (!$comment->op) {
+            if (!$comment->comment->op) {
                 $redirect .= '#'.$comment->comment->num.($comment->comment->subnum ? '_'.$comment->comment->subnum :'');
             }
 

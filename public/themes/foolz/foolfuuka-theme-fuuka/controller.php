@@ -2,17 +2,15 @@
 
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
+use Foolz\Foolframe\Model\Cookie;
 use Foolz\Foolframe\Model\Util;
 use Foolz\Foolfuuka\Model\Board;
+use Foolz\Foolfuuka\Model\Comment;
 use Foolz\Inet\Inet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Chan extends \Foolz\Foolfuuka\Controller\Chan
 {
-    /**
-     * @param int $page
-     */
     public function radix_page($page = 1)
     {
         $options = [
@@ -26,7 +24,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
     public function radix_gallery($page = 1)
     {
-        throw new NotFoundHttpException;
+        return $this->action_404();
     }
 
     /**
@@ -53,6 +51,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
                         ->getComments();
 
                     $comment = current($comments);
+                    $comment = new Comment($this->getContext(), $comment);
                     $comment->delete($this->getPost('delpass'));
                 } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
                     return $this->error($e->getMessage(), 404);
@@ -63,7 +62,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
             $this->builder->createLayout('redirect')
                 ->getParamManager()
-                ->setParam('url', $this->uri->create([$this->radix->shortname, 'thread', $comment->thread_num]));
+                ->setParam('url', $this->uri->create([$this->radix->shortname, 'thread', $comment->comment->thread_num]));
             $this->builder->getProps()->addTitle(_i('Redirecting'));
 
             return new Response($this->builder->build());
@@ -113,11 +112,11 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
         }
         if (isset($post['NAMAE'])) {
             $data['name'] = $post['NAMAE'];
-            \Cookie::set('reply_name', $data['name'], 60*60*24*30);
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_name', $data['name'], 60*60*24*30));
         }
         if (isset($post['MERU'])) {
             $data['email'] = $post['MERU'];
-            \Cookie::set('reply_email', $data['email'], 60*60*24*30);
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_email', $data['email'], 60*60*24*30));
         }
         if (isset($post['subject'])) {
             $data['title'] = $post['subject'];
@@ -146,9 +145,9 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
 
         $media = null;
 
-        if (count(\Upload::get_files())) {
+        if ($this->getRequest()->files->count()) {
             try {
-                $media = $this->media_factory->forgeFromUpload($this->radix);
+                $media = $this->media_factory->forgeFromUpload($this->getRequest(), $this->radix);
                 $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
             } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
                 $media = null;

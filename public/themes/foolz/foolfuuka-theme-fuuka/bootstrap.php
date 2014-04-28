@@ -7,8 +7,9 @@ require_once __DIR__.'/controller.php';
 
 \Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Context.loadRoutes.after')
     ->setCall(function($result) {
-        foreach ($this->context->getService('foolfuuka.radix_collection')->getAll() as $radix) {
-            $this->context->getRouteCollection()->add(
+        $obj = $result->getObject();
+        foreach ($obj->context->getService('foolfuuka.radix_collection')->getAll() as $radix) {
+            $obj->context->getRouteCollection()->add(
                 'foolfuuka.chan.radix.'.$radix->shortname, new Route(
                 '/'.$radix->shortname.'/{_suffix}',
                 [

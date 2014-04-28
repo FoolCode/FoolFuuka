@@ -65,7 +65,7 @@ class Chan extends Common
     /**
      * The Response object
      *
-     * @var \Symfony\Component\HttpFoundation\Response
+     * @var Response|StreamedResponse
      */
     protected $response = null;
 
@@ -283,7 +283,16 @@ class Chan extends Common
             ->getParamManager()
             ->setParams(['error' => $error === null ? _i('We encountered an unexpected error.') : $error]);
 
-        return $this->response->setContent($this->builder->build())->setStatusCode($code);
+        $this->response->setStatusCode($code);
+        if ($this->response instanceof StreamedResponse) {
+            $this->response->setCallback(function() {
+                $this->builder->stream();
+            });
+        } else {
+            $this->response->setContent($this->builder->build());
+        }
+
+        return $this->response;;
     }
 
     protected function message($level = 'success', $message = null, $code = 200)

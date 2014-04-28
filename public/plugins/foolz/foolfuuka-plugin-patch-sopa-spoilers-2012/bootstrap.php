@@ -6,6 +6,7 @@ use Foolz\Foolfuuka\Model\Comment;
     ->setCall(function($result) {
         $event = new \Foolz\Plugin\Event('Foolz\Foolfuuka\Model\Comment.processComment.call.before');
         $event->setCall(function($result) {
+            return;
             /** @var Comment $post */
             $post = $result->getObject();
 

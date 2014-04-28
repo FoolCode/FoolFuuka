@@ -433,7 +433,7 @@ class CommentInsert extends Comment
             }
 
             try {
-                $media->insert($microtime, $this->op);
+                $media->insert($microtime, $this->comment->op);
                 $this->media = $media->media;
             } catch (MediaInsertException $e) {
                 throw new CommentSendingException($e->getMessage());
@@ -646,13 +646,13 @@ class CommentInsert extends Comment
 
             // update poster_hash for op posts
             if ($this->comment->op && $this->radix->getValue('enable_poster_hash')) {
-                $this->comment->poster_hash = substr(substr(crypt(md5($this->comment->poster_ip.'id'.$comment['thread_num']),'id'), 3), 0, 8);
+                $this->comment->poster_hash = substr(substr(crypt(md5($this->comment->poster_ip.'id'.$this->comment->thread_num),'id'), 3), 0, 8);
 
                 $this->dc->qb()
                     ->update($this->radix->getTable(), 'ph')
                     ->set('poster_hash', $this->dc->getConnection()->quote($this->comment->poster_hash))
                     ->where('doc_id = :doc_id')
-                    ->setParameter(':doc_id', $comment['doc_id'])
+                    ->setParameter(':doc_id', $this->comment->doc_id)
                     ->execute();
             }
 
@@ -683,7 +683,6 @@ class CommentInsert extends Comment
                     .$this->radix->shortname.'.'.$i)->delete();
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
-            die($e->getMessage());
             $this->logger->error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();
 

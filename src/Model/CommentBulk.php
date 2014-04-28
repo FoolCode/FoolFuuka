@@ -68,11 +68,15 @@ class CommentBulk implements \JsonSerializable
     {
         $this->radix = $radix;
 
-        $this->comment = new CommentData();
+        if ($this->comment === null) {
+            $this->comment = new CommentData();
+        }
         $this->comment->import($data);
 
         if (isset($data['media_id'])) {
-            $this->media = new MediaData();
+            if ($this->media === null) {
+                $this->media = new MediaData();
+            }
             $this->media->import($data);
         }
     }

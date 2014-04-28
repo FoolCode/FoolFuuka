@@ -1238,7 +1238,7 @@ class Chan extends Common
             if ($latest_doc_id && ctype_digit((string) $latest_doc_id)) {
                 try {
                     $board = Board::forge($this->getContext())
-                        ->getThread($comment->thread_num)
+                        ->getThread($comment->comment->thread_num)
                         ->setRadix($this->radix)
                         ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                         ->setOptions([
@@ -1285,8 +1285,8 @@ class Chan extends Common
                     $this->param_manager->setParam('controller_method', $limit ? 'last/'.$limit : 'thread');
                     $partial = $this->builder->createPartial('board_comment', 'board_comment');
                     $partial->getParamManager()
-                        ->setParam('p', $comment->comment)
-                        ->setParam('p_media', $comment->media);
+                        ->setParam('p', new Comment($this->getContext(), $comment->bulk))
+                        ->setParam('p_media', new Media($this->getContext(), $comment->bulk));
 
                     $bulk->comment->formatted = $partial->build();
                     $partial->clearBuilt();

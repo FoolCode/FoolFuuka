@@ -677,14 +677,14 @@ class Media extends Model
         $do_full = true;
 
         try {
-            $duplicate = $this->media_factory->getByMediaHash($this->radix, $this->media_hash);
-
+            $duplicate = CommentBulk::forge($this->radix, null, $this->media_factory->getByMediaHash($this->radix, $this->media->media_hash));
+            $duplicate = new Media($this->getContext(), $duplicate);
             // we want the current media to work with the same filenames as previously stored
-            $this->media->media_id = $duplicate->media_id;
-            $this->media->media = $duplicate->media;
-            $this->media->media_orig = $duplicate->media;
-            $this->media->preview_op = $duplicate->preview_op;
-            $this->media->preview_reply = $duplicate->preview_reply;
+            $this->media->media_id = $duplicate->media->media_id;
+            $this->media->media = $duplicate->media->media;
+            $this->media->media_orig = $duplicate->media->media;
+            $this->media->preview_op = $duplicate->media->preview_op;
+            $this->media->preview_reply = $duplicate->media->preview_reply;
 
             if (!$this->getAuth()->hasAccess('comment.limitless_comment') && $this->radix->getValue('min_image_repost_time')) {
                 // if it's -1 it means that image reposting is disabled, so this image shouldn't pass
@@ -700,7 +700,7 @@ class Media extends Model
                     ->from($this->radix->getTable(), 'r')
                     ->where('media_id = :media_id')
                     ->andWhere('timestamp > :timestamp')
-                    ->setParameter('media_id', $duplicate->media_id)
+                    ->setParameter('media_id', $duplicate->media->media_id)
                     ->setParameter('timestamp', time() - $this->radix->getValue('min_image_repost_time'))
                     ->setMaxResults(1)
                     ->execute()
@@ -763,28 +763,18 @@ class Media extends Model
                 ->execute()
                 ->get();
 
+
             if ($return instanceof \Foolz\Plugin\Void) {
                 if ($this->radix->getValue('enable_animated_gif_thumbs') && strtolower($file->getClientOriginalExtension()) === 'gif') {
-                    exec("convert ".$full_path." -coalesce -treedepth 4 -colors 256 -quality 80 -background none ".
+                    exec("/usr/local/bin/convert ".$full_path." -coalesce -treedepth 4 -colors 256 -quality 80 -background none ".
                         "-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true));
                 } else {
-                    exec("convert ".$full_path."[0] -quality 80 -background none ".
-                        "-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true));
+                    exec("/usr/local/bin/convert ".$file->getClientOriginalExtension().":".$full_path."[0] -quality 80 -background none ".
+                        "-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true), $output);
                 }
             }
 
             if (!file_exists($this->pathFromFilename(true, $is_op, true))) {
-                $this->dc->getConnection()->insert($this->radix->getTable('_images'), [
-                        'media_hash' => $this->media->media_hash,
-                        'media' => $this->media->media_orig,
-                        'preview_op' => null,
-                        'preview_reply' =>  null,
-                        'total' => 1,
-                        'banned' => 0,
-                    ]);
-
-                $this->media->media_id = $this->dc->getConnection()->lastInsertId($this->radix->getTable('_images_doc_id_seq'));
-
                 throw new MediaThumbnailCreationException(_i('The thumbnail failed to generate.'));
             }
 
@@ -846,6 +836,7 @@ class Media extends Model
                     ->execute();
             }
         }
+
         return $this;
     }
 

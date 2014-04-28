@@ -766,11 +766,13 @@ class Media extends Model
 
             if ($return instanceof \Foolz\Plugin\Void) {
                 if ($this->radix->getValue('enable_animated_gif_thumbs') && strtolower($file->getClientOriginalExtension()) === 'gif') {
-                    exec("/usr/local/bin/convert ".$full_path." -coalesce -treedepth 4 -colors 256 -quality 80 -background none ".
+                    exec(str_replace(' ', '\\ ', $this->preferences->get('foolframe.imagick.convert_path')).
+                        " ".$full_path." -coalesce -treedepth 4 -colors 256 -quality 80 -background none ".
                         "-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true));
                 } else {
-                    exec("/usr/local/bin/convert ".$file->getClientOriginalExtension().":".$full_path."[0] -quality 80 -background none ".
-                        "-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true), $output);
+                    exec(str_replace(' ', '\\ ', $this->preferences->get('foolframe.imagick.convert_path')).
+                        " ".$full_path."[0] -quality 80 -background none ".
+                        "-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true));
                 }
             }
 

@@ -1,8 +1,6 @@
 <?php
 
-\Autoloader::add_classes([
-    'Foolz\Foolfuuka\Themes\Yotsubatwo\Controller\Chan' => __DIR__.'/controller.php'
-]);
+require_once __DIR__.'/controller.php';
 
 \Foolz\Plugin\Event::forge('Fuel\Core\Router::parse_match.intercept')
     ->setCall(function($result) {

@@ -155,7 +155,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                             ?>
                         </div>
 
-                        <?php if ($this->getPreferences()->get('recaptcha.public_key', false)) : ?>
+                        <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
 
                         <script>
                             var RecaptchaOptions = {
@@ -179,9 +179,9 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                             </div>
                         </div>
 
-                        <script type="xtxt/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('recaptcha.public_key') ?>"></script>
+                        <script type="xtxt/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>"></script>
                         <noscript>
-                            <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br>
+                            <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>" height="300" width="500" frameborder="0"></iframe><br>
                             <textarea name="recaptcha_challenge_field" rows="3" cols="40">
                             </textarea>
                             <input type="hidden" name="recaptcha_response_field"  value="manual_challenge">

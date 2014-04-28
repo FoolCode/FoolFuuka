@@ -59,13 +59,13 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                             <td class="postblock"><?= _i('Password') ?> <a class="tooltip" href="#">[?] <span><?= _i('This is used for file and post deletion.') ?></span></a></td>
                             <td><?php echo $form->password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]) ?></td>
                         </tr>
-                            <?php if ($this->getPreferences()->get('recaptcha.public_key', false)) : ?>
+                            <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
                         <tr id="recaptcha_widget">
                             <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
                             <td>
-                                <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('recaptcha.public_key') ?>"></script>
+                                <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>"></script>
                                 <noscript>
-                                    <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br/>
+                                    <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>" height="300" width="500" frameborder="0"></iframe><br/>
                                     <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
                                     <input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
                                 </noscript>
@@ -156,13 +156,13 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                         <td class="postblock"><?= _i('Password') ?> <a class="tooltip" href="#">[?] <span><?= _i('This is used for file and post deletion.') ?></span></a></td>
                         <td><?php echo $form->password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]); ?></td>
                     </tr>
-                        <?php if ($this->getPreferences()->get('recaptcha.public_key', false)) : ?>
+                        <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
                     <tr id="recaptcha_widget">
                         <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
                         <td>
-                            <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= \Config::get('recaptcha.public_key') ?>"></script>
+                            <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= \Config::get('foolframe.auth.recaptcha_public') ?>"></script>
                             <noscript>
-                                <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= \Config::get('recaptcha.public_key') ?>" height="300" width="500" frameborder="0"></iframe><br/>
+                                <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= \Config::get('foolframe.auth.recaptcha_public') ?>" height="300" width="500" frameborder="0"></iframe><br/>
                                 <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
                                 <input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
                             </noscript>

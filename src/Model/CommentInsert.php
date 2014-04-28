@@ -296,9 +296,9 @@ class CommentInsert extends Comment
             // clean up to reset eventual auto-built entries
             $this->comment->clean();
 
-            if ($this->recaptcha_challenge && $this->recaptcha_response && $this->preferences->get('recaptcha.public_key', false)) {
+            if ($this->recaptcha_challenge && $this->recaptcha_response && $this->preferences->get('foolframe.auth.recaptcha_public', false)) {
 
-                $recaptcha = ReCaptcha::create($this->preferences->get('recaptcha.public_key'), $this->preferences->get('recaptcha.private_key'));
+                $recaptcha = ReCaptcha::create($this->preferences->get('foolframe.auth.recaptcha_public'), $this->preferences->get('foolframe.auth.recaptcha_private'));
                 $recaptcha_result = $recaptcha->checkAnswer(
                     Inet::dtop($this->comment->poster_ip),
                     $this->recaptcha_challenge,
@@ -309,7 +309,7 @@ class CommentInsert extends Comment
                     throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution.'));
                 }
 
-            } elseif ($this->preferences->get('recaptcha.public_key')) { // if there wasn't a recaptcha input, let's go with heavier checks
+            } elseif ($this->preferences->get('foolframe.auth.recaptcha_public')) { // if there wasn't a recaptcha input, let's go with heavier checks
                 // 3+ links is suspect
                 if (substr_count($this->comment->comment, 'http') > 2) {
                     throw new CommentSendingRequestCaptchaException;

@@ -344,9 +344,9 @@ var bindFunctions = function()
 			// keep the first radio set
 			var done_names = [];
 			form.find('[type=radio]').each(function (idx) {
-				if (jQuery.inArray(jQuery(this).attr('name'), done_names))
+				if (!jQuery.inArray(jQuery(this).attr('name'), done_names))
 				{
-					this.attr('checked', true);
+					jQuery(this).attr('checked', true);
 					done_names.push(jQuery(this).attr('name'));
 				}
 			});
@@ -636,7 +636,6 @@ var bindFunctions = function()
 
 	// variable for ajax backlinks that we can clear them if the mouse hovered out
 	var backlink_jqxhr;
-	var backlink_spin;
 	var timeout;
 	var posts_being_fetched = []; // posts that are being xhr'd right now
 	var show_post_board;
@@ -696,7 +695,7 @@ var bindFunctions = function()
 				}
 
 				timeout = setTimeout(function() {
-					backlink_spin = el;
+					var backlink_spin = el;
 					backlink_spin.spin('small');
 					backlink_jqxhr = jQuery.ajax({
 						url: backend_vars.api_url + '_/api/chan/post/' ,
@@ -722,7 +721,7 @@ var bindFunctions = function()
 							if (show_post_board === el.data('board') && show_post_num === el.data('post'))
 							{
 								backlink.html(data.formatted);
-								backlink.find("time").localize('ddd mmm dd yyyy HH:MM:ss');
+								backlink.find("time").localize('ddd dd mmm yyyy HH:MM:ss');
 								backlink.css('display', 'block');
 								showBacklink(backlink, pos, height, width);
 							}
@@ -738,7 +737,7 @@ var bindFunctions = function()
 				}, 50);
 			}
 
-			backlink.find("time").localize('ddd mmm dd yyyy HH:MM:ss');
+			backlink.find("time").localize('ddd dd mmm yyyy HH:MM:ss');
 			showBacklink(backlink, pos, height, width);
 		}
 		else
@@ -952,7 +951,7 @@ var insertPost = function(data, textStatus, jqXHR)
 					found_posts = true;
 					var post = jQuery(value.formatted);
 
-					post.find("time").localize('ddd mmm dd yyyy HH:MM:ss');
+					post.find("time").localize('ddd dd mmm yyyy HH:MM:ss');
 					post.find('[rel=tooltip]').tooltip({
 						placement: 'top',
 						delay: 200
@@ -1113,7 +1112,7 @@ jQuery(document).ready(function() {
 	hidePosts();
 
 	// localize and add 4chan tooltip where title
-	jQuery("article time").localize('ddd mmm dd yyyy HH:MM:ss').filter('[title]').tooltip({
+	jQuery("article time").localize('ddd dd mmm yyyy HH:MM:ss').filter('[title]').tooltip({
 		placement: 'top',
 		delay: 300,
 		animation: false

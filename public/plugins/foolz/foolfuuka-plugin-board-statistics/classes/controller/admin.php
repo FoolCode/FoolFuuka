@@ -1,72 +1,82 @@
 <?php
 
-namespace Foolz\Foolframe\Controller\Admin\Plugins\FU;
+namespace Foolz\Foolframe\Controller\Admin\Plugins;
 
 use \Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics as BS;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class BoardStatistics extends \Foolz\Foolframe\Controller\Admin
 {
-	public function before()
-	{
-		if ( ! \Auth::has_access('maccess.admin'))
-		{
-			\Response::redirect('admin');
-		}
+    /**
+     * @var BS
+     */
+    protected $board_stats;
 
-		parent::before();
+    public function before()
+    {
+        parent::before();
 
-		$this->_views['controller_title'] = __('Plugins');
-	}
+        $this->board_stats = $this->getContext()->getService('foolfuuka-plugin.board_statistics');
 
-	protected function structure()
-	{
-		$arr = [
-			'open' => [
-				'type' => 'open',
-			],
-			'foolfuuka.plugins.board_statistics.enabled' => [
-				'type' => 'checkbox_array',
-				'label' => 'Enabled statistics',
-				'help' => __('Select the statistics to enable. Some might be too slow to process, so you should disable them. Some statistics don\'t use extra processing power so they are enabled by default.'),
-				'checkboxes' => []
-			],
-			'separator-2' => [
-				'type' => 'separator-short'
-			],
-			'submit' => [
-				'type' => 'submit',
-				'class' => 'btn-primary',
-				'value' => __('Submit')
-			],
-			'close' => [
-				'type' => 'close'
-			],
-		];
+        $this->param_manager->setParam('controller_title', _i('Plugins'));
+    }
 
-		foreach(BS::getStats() as $key => $stat)
-		{
-			$arr['foolfuuka.plugins.board_statistics.enabled']['checkboxes'][] = [
-				'type' => 'checkbox',
-				'label' => $key,
-				'help' => sprintf(__('Enable %s statistics'), $stat['name']),
-				'array_key' => $key,
-				'preferences' => true,
-			];
-		}
+    public function security()
+    {
+        return $this->getAuth()->hasAccess('maccess.admin');
+    }
 
-		return $arr;
-	}
+    protected function structure()
+    {
+        $arr = [
+            'open' => [
+                'type' => 'open',
+            ],
+            'foolfuuka.plugins.board_statistics.enabled' => [
+                'type' => 'checkbox_array',
+                'label' => 'Enabled statistics',
+                'help' => _i('Select the statistics to enable. Some might be too slow to process, so you should disable them. Some statistics don\'t use extra processing power so they are enabled by default.'),
+                'checkboxes' => []
+            ],
+            'separator-2' => [
+                'type' => 'separator-short'
+            ],
+            'submit' => [
+                'type' => 'submit',
+                'class' => 'btn-primary',
+                'value' => _i('Submit')
+            ],
+            'close' => [
+                'type' => 'close'
+            ],
+        ];
 
-	public function action_manage()
-	{
-		$this->_views['method_title'] = [__('FoolFuuka'), __("Board Statistics"),__('Manage')];
+        foreach($this->board_stats->getStats() as $key => $stat) {
+            $arr['foolfuuka.plugins.board_statistics.enabled']['checkboxes'][] = [
+                'type' => 'checkbox',
+                'label' => $key,
+                'help' => sprintf(_i('Enable %s statistics'), $stat['name']),
+                'array_key' => $key,
+                'preferences' => true,
+            ];
+        }
 
-		$data['form'] = $this->structure();
+        return $arr;
+    }
 
-		\Preferences::submit_auto($data['form']);
+    public function action_manage()
+    {
+        $this->param_manager->setParam('method_title', [_i('FoolFuuka'), _i("Board Statistics"),_i('Manage')]);
 
-		// create a form
-		$this->_views["main_content_view"] = \View::forge("foolz/foolframe::admin/form_creator", $data);
-		return \Response::forge(\View::forge("foolz/foolframe::admin/default", $this->_views));
-	}
+        $data['form'] = $this->structure();
+
+        $this->preferences->submit_auto($this->getRequest(), $data['form'], $this->getPost());
+
+        // create a form
+        $this->builder->createPartial('body', 'form_creator')
+            ->getParamManager()->setParams($data);
+
+        return new Response($this->builder->build());
+    }
 }

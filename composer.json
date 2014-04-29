@@ -11,6 +11,9 @@
 
 	},
 	"autoload": {
-		"psr-0": {"Foolz\\Foolfuuka": "classes/"}
+		"psr-4": {"Foolz\\Foolfuuka\\": "src/"},
+    "classmap": [
+      "packages/stringparser-bbcode/library/stringparser_bbcode.class.php"
+    ]
 	}
 }

@@ -1,26 +1,30 @@
 {
-	"name": "foolz/foolfuuka-theme-foolfuuka",
-	"type": "foolz-foolfuuka-theme",
-	"description": "The default FoolFuuka theme.",
-	"version": "1.0.16",
-	"keywords": ["theme", "default", "foolfuuka"],
-	"homepage": "http://www.foolz.us",
-	"license": "Apache-2.0",
-	"authors": [{"name": "foolz", "email": "support@foolz.us"}],
-	"support": {
-		"email": "support@foolz.us",
-		"irc": "irc://irc.irchighway.net/fooldriver"
-	},
-	"require": {
-		"php": ">=5.4.0",
-		"foolz/theme": "dev"
-	},
-	"autoload": {
-		"psr-0": {
-			"Foolz\\Foolfuuka\\Theme\\Foolfuuka": "classes/"
-		}
-	},
-	"extra": {
-		"name" : "FoolFuuka"
-	}
+    "name": "foolz/foolfuuka-theme-foolfuuka",
+    "type": "foolz-foolfuuka-theme",
+    "description": "The default FoolFuuka theme.",
+    "version": "1.0.20",
+    "keywords": ["theme", "default", "foolfuuka"],
+    "homepage": "http://www.foolz.us",
+    "license": "Apache-2.0",
+    "authors": [{"name": "foolz", "email": "support@foolz.us"}],
+    "support": {
+        "email": "support@foolz.us",
+        "irc": "irc://irc.irchighway.net/fooldriver"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "foolz/theme": "dev"
+    },
+    "autoload": {
+        "psr-0": {
+            "Foolz\\Foolfuuka\\Theme\\Foolfuuka": "classes/"
+        }
+    },
+    "extra": {
+        "name" : "FoolFuuka",
+        "styles": {
+            "default": "Default",
+            "midnight": "Midnight"
+        }
+    }
 }

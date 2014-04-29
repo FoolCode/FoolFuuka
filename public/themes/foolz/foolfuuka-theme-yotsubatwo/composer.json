@@ -1,28 +1,32 @@
 {
-	"name": "foolz/foolfuuka-theme-yotsubatwo",
-	"type": "foolz-foolfuuka-theme",
-	"description": "The YotsubaTwo FoolFuuka theme.",
-	"version": "1.0.0",
-	"keywords": ["theme", "default", "foolfuuka", "yotsubatwo"],
-	"homepage": "http://www.foolz.us",
-	"license": "Apache-2.0",
-	"authors": [{"name": "foolz", "email": "support@foolz.us"}],
-	"support": {
-		"email": "support@foolz.us",
-		"irc": "irc://irc.irchighway.net/fooldriver"
-	},
-	"require": {
-		"php": ">=5.4.0",
-		"foolz/theme": "dev"
-	},
-	"autoload": {
-		"psr-0": {
-			"Foolz\\Foolfuuka\\Theme\\Yotsubatwo": "classes/"
-		}
-	},
+    "name": "foolz/foolfuuka-theme-yotsubatwo",
+    "type": "foolz-foolfuuka-theme",
+    "description": "The YotsubaTwo FoolFuuka theme.",
+    "version": "1.0.0",
+    "keywords": ["theme", "default", "foolfuuka", "yotsubatwo"],
+    "homepage": "http://www.foolz.us",
+    "license": "Apache-2.0",
+    "authors": [{"name": "foolz", "email": "support@foolz.us"}],
+    "support": {
+        "email": "support@foolz.us",
+        "irc": "irc://irc.irchighway.net/fooldriver"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "foolz/theme": "dev"
+    },
+    "autoload": {
+        "psr-0": {
+            "Foolz\\Foolfuuka\\Theme\\Yotsubatwo": "classes/"
+        }
+    },
 
-	"extra": {
-		"name": "Yotsubatwo",
-		"extends": "foolz/foolfuuka-theme-foolfuuka"
-	}
+    "extra": {
+        "name": "Yotsubatwo",
+        "extends": "foolz/foolfuuka-theme-foolfuuka",
+        "styles": {
+            "yotsuba": "Yotsuba",
+            "yotsuba-b": "Yotsuba B"
+        }
+    }
 }

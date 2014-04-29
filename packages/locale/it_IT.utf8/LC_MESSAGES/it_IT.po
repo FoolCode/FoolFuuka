@@ -1,0 +1,2906 @@
+# 
+# Translators:
+# Enzo Woxxy <woxxy@foolrulez.org>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: FoOlFuuka\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-06-01 14:57+0100\n"
+"PO-Revision-Date: 2012-06-01 15:39+0000\n"
+"Last-Translator: Enzo Woxxy <woxxy@foolrulez.org>\n"
+"Language-Team: Italian (Italy) (http://www.transifex.net/projects/p/foolfuuka/language/it_IT/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: it_IT\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: __;gettext;gettext_noop\n"
+"X-Poedit-SearchPath-0: ../..\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ../../application/controllers/chan.php:518
+msgid ""
+"Page not found. You can use the search if you were looking for something!"
+msgstr "Pagina non trovata. Puoi usare la ricerca se stai cercando qualcosa!"
+
+#: ../../application/controllers/chan.php:576
+#: ../../application/controllers/chan.php:580
+msgid "Page"
+msgstr "Pagina"
+
+#: ../../application/controllers/chan.php:580
+msgid "Latest by Thread"
+msgstr "Più recenti per thread"
+
+#: ../../application/controllers/chan.php:639
+#: ../../application/controllers/chan.php:642
+msgid "Ghost Page"
+msgstr "Pagina limbo"
+
+#: ../../application/controllers/chan.php:677
+msgid "Gallery"
+msgstr "Galleria"
+
+#: ../../application/controllers/chan.php:681
+msgid "Gallery: Showing Latest Submitted Images"
+msgstr "Galleria: le ultime immagini sottomesse"
+
+#: ../../application/controllers/chan.php:683
+msgid "By Thread"
+msgstr "Per Thread"
+
+#: ../../application/controllers/chan.php:687
+msgid "Gallery: Showing Latest Created Threads"
+msgstr "Galleria: gli ultimi thread sottomessi"
+
+#: ../../application/controllers/chan.php:689
+msgid "By Image"
+msgstr "Per Immagine"
+
+#: ../../application/controllers/chan.php:791
+#: ../../application/controllers/chan.php:909
+msgid "Thread"
+msgstr "Thread"
+
+#: ../../application/controllers/chan.php:912
+msgid "Showing the last 50 posts for Thread No."
+msgstr "Mostrando gli ultimi 50 messaggi per il thread numero"
+
+#: ../../application/controllers/chan.php:1057
+#: ../../application/controllers/chan.php:1239
+#: ../../application/controllers/chan.php:1532
+#: ../../application/controllers/chan.php:1582
+#: ../../application/controllers/chan.php:1619
+#: ../../application/controllers/chan.php:1644
+#: ../../application/controllers/chan.php:1677
+#: ../../application/controllers/chan.php:1702
+#: ../../application/controllers/chan.php:1727
+#: ../../application/controllers/chan.php:1767
+#: ../../application/controllers/chan.php:1795
+msgid "Error"
+msgstr "Errore"
+
+#: ../../application/controllers/chan.php:1060
+msgid "There is no record of the specified image in our database."
+msgstr "Non c'è traccia dell'immagine cercata nel nostro database."
+
+#: ../../application/controllers/chan.php:1071
+msgid "Image Pruned"
+msgstr "Immagine rimossa"
+
+#: ../../application/controllers/chan.php:1074
+msgid "Error 404: The image has been pruned from the server."
+msgstr "Errore 404: L'immagine è stata rimossa dal server."
+
+#: ../../application/controllers/chan.php:1120
+msgid "Searched text"
+msgstr "Testo ricercato"
+
+#: ../../application/controllers/chan.php:1262
+#, php-format
+msgid "that contain &lsquo;%s&rsquo;"
+msgstr "che contiene &lsquo;%s&rsquo;"
+
+#: ../../application/controllers/chan.php:1266
+#, php-format
+msgid "with the subject &lsquo;%s&rsquo;"
+msgstr "col soggetto &lsquo;%s&rsquo;"
+
+#: ../../application/controllers/chan.php:1270
+#, php-format
+msgid "with the username &lsquo;%s&rsquo;"
+msgstr "col nome utente &lsquo;%s&rsquo;"
+
+#: ../../application/controllers/chan.php:1274
+#, php-format
+msgid "with the tripcode &lsquo;%s&rsquo;"
+msgstr "col tripcode &lsquo;%s&rsquo;"
+
+#: ../../application/controllers/chan.php:1278
+#, php-format
+msgid "with the filename &lsquo;%s&rsquo;"
+msgstr "col filename &lsquo;%s&rsquo;"
+
+#: ../../application/controllers/chan.php:1286
+#: ../../application/controllers/chan.php:1293
+#, php-format
+msgid "with the image hash &lsquo;%s&rsquo;"
+msgstr "con l'hash immagine &lsquo;%s&rsquo;"
+
+#: ../../application/controllers/chan.php:1298
+msgid "that have been deleted"
+msgstr "che sono stati cancellati"
+
+#: ../../application/controllers/chan.php:1300
+msgid "that has not been deleted"
+msgstr "che non sono stati cancellati"
+
+#: ../../application/controllers/chan.php:1302
+msgid "that are by ghosts"
+msgstr "da parte degli spettri"
+
+#: ../../application/controllers/chan.php:1304
+msgid "that are not by ghosts"
+msgstr "non da parte degli spettri"
+
+#: ../../application/controllers/chan.php:1306
+msgid "that are only OP posts"
+msgstr "che sono solo OP"
+
+#: ../../application/controllers/chan.php:1308
+msgid "that are only non-OP posts"
+msgstr "che non sono OP"
+
+#: ../../application/controllers/chan.php:1310
+msgid "that do not contain images"
+msgstr "che non contengono immagini"
+
+#: ../../application/controllers/chan.php:1312
+msgid "that only contain images"
+msgstr "che contengono immagini"
+
+#: ../../application/controllers/chan.php:1314
+msgid "that were made by users"
+msgstr "che sono stati scritti da utenti"
+
+#: ../../application/controllers/chan.php:1316
+msgid "that were made by mods"
+msgstr "che sono stati scritti da mods"
+
+#: ../../application/controllers/chan.php:1318
+msgid "that were made by admins"
+msgstr "che sono stati scritti da admins"
+
+#: ../../application/controllers/chan.php:1320
+#, php-format
+msgid "posts after %s"
+msgstr "messaggi dopo il %s"
+
+#: ../../application/controllers/chan.php:1322
+#, php-format
+msgid "posts before %s"
+msgstr "messaggi dopo il %s"
+
+#: ../../application/controllers/chan.php:1324
+msgid "in ascending order"
+msgstr "in ordine crescente"
+
+#: ../../application/controllers/chan.php:1327
+#, php-format
+msgid "Searching for posts %s."
+msgstr "Cercando per messaggi %s."
+
+#: ../../application/controllers/chan.php:1328
+msgid "and"
+msgstr "e"
+
+#: ../../application/controllers/chan.php:1332
+msgid "Displaying all posts with no filters applied."
+msgstr "Mostro tutti i messaggi senza applicare filtri."
+
+#: ../../application/controllers/chan.php:1386
+msgid "Global Search"
+msgstr "Ricerca globale"
+
+#: ../../application/controllers/chan.php:1576
+#: ../../application/controllers/chan.php:1585
+#: ../../application/controllers/chan.php:1615
+#: ../../application/controllers/chan.php:1622
+msgid "This thread does not exist."
+msgstr "Questo thread non esiste."
+
+#: ../../application/controllers/chan.php:1640
+#: ../../application/controllers/chan.php:1647
+msgid "This thread is closed."
+msgstr "Questo thread è chiuso."
+
+#: ../../application/controllers/chan.php:1673
+#: ../../application/controllers/chan.php:1680
+msgid "You are required to upload an image when posting a new thread."
+msgstr "Devi inviare un'immagine quando crei un nuovo thread."
+
+#: ../../application/controllers/chan.php:1698
+#: ../../application/controllers/chan.php:1705
+msgid "You are required to write a comment when no image upload is present."
+msgstr "Devi scrivere un commento quando non è possibile uploadare un'immagine."
+
+#: ../../application/controllers/chan.php:1723
+#: ../../application/controllers/chan.php:1730
+msgid "The posting of images has been disabled for this thread."
+msgstr "L'invio delle immagini è stato disabilitato per questo thread."
+
+#: ../../application/controllers/cli.php:17
+#, php-format
+msgid "Welcome to {{FOOL_NAME}} version %s"
+msgstr ""
+
+#: ../../application/controllers/cli.php:18
+msgid ""
+"Write \"php index.php cli help\" to display all the available command line "
+"functions."
+msgstr ""
+
+#: ../../application/controllers/cli.php:27
+msgid "Your request is missing parameters."
+msgstr "La tua richiesta ha parametri mancanti."
+
+#: ../../application/controllers/cli.php:30
+msgid "Your request is missing parameters: add the board shortname."
+msgstr "La tua richiesta ha parametri mancanti: aggiungi il nome breve della board."
+
+#: ../../application/controllers/cli.php:33
+msgid "The board you selected doesn't exist."
+msgstr "La board selezionata non esiste."
+
+#: ../../application/controllers/cli.php:70
+msgid ""
+"Write \"php index.php cli database help\" for displaying the available "
+"commands for database manipulation."
+msgstr ""
+
+#: ../../application/controllers/functions.php:19
+msgid "Changing Theme"
+msgstr "Cambio il tema"
+
+#: ../../application/controllers/functions.php:32
+msgid "Changing Language"
+msgstr "Cambio la Lingua"
+
+#: ../../application/controllers/install.php:18
+msgid "{{FOOL_NAME}} Installation"
+msgstr ""
+
+#: ../../application/controllers/install.php:44
+#: ../../application/controllers/install.php:162
+msgid "Database type"
+msgstr "Tipo di database"
+
+#: ../../application/controllers/install.php:48
+msgid ""
+"The type of database you're going to use. There's only one option currently."
+msgstr "Il tipo di database che userai. Al momento c'è una sola opzione."
+
+#: ../../application/controllers/install.php:52
+#: ../../application/controllers/install.php:163
+msgid "Database hostname"
+msgstr "L'hostname del database"
+
+#: ../../application/controllers/install.php:57
+#, php-format
+msgid ""
+"The hostname of the server hosting the database. 99.8% of times is localhost"
+msgstr "L'hostname del server su cui risiede il database. Il 99.8% delle volte è localhost"
+
+#: ../../application/controllers/install.php:61
+#: ../../application/controllers/install.php:164
+msgid "Database name"
+msgstr "Nome del database"
+
+#: ../../application/controllers/install.php:65
+msgid "The name of the database"
+msgstr "Il nome del database"
+
+#: ../../application/controllers/install.php:69
+#: ../../application/controllers/install.php:165
+msgid "Database username"
+msgstr "Nome utente del database"
+
+#: ../../application/controllers/install.php:74
+msgid "The username of the user with permissions to the database"
+msgstr "Il nome dell'utente con permessi sul database"
+
+#: ../../application/controllers/install.php:78
+#: ../../application/controllers/install.php:166
+msgid "Database password"
+msgstr "Password del database"
+
+#: ../../application/controllers/install.php:82
+msgid "The password of the user with permissions to the database"
+msgstr "La password dell'utente con i permessi sul database"
+
+#: ../../application/controllers/install.php:86
+#: ../../application/controllers/install.php:167
+msgid "Database prefix"
+msgstr "Il prefisso"
+
+#: ../../application/controllers/install.php:89
+msgid ""
+"Add a database prefix to avoid collisions, in example if you have other "
+"software using the same database"
+msgstr "Aggiungi un prefisso database per evitare collesioni, in esempio se tu avesi altro software che usa lo stesso database"
+
+#: ../../application/controllers/install.php:97
+#: ../../application/controllers/install.php:168
+msgid "Administrator username"
+msgstr "Nome utente dell'amministratore"
+
+#: ../../application/controllers/install.php:101
+msgid "The username of the administrator's account"
+msgstr "Nome utente dell'account amministratore"
+
+#: ../../application/controllers/install.php:105
+#: ../../application/controllers/install.php:170
+msgid "Administrator password"
+msgstr "Password dell'amministratore"
+
+#: ../../application/controllers/install.php:109
+msgid "The password of the administrator's account"
+msgstr "Password dell'account dell'amministratore"
+
+#: ../../application/controllers/install.php:113
+#: ../../application/controllers/install.php:172
+msgid "Administrator email"
+msgstr "Email dell'amministratore"
+
+#: ../../application/controllers/install.php:117
+msgid "The email of the administrator's account"
+msgstr "L'email dell'account dell'amministratore"
+
+#: ../../application/controllers/install.php:201
+msgid "Connection with database not established: check the database fields."
+msgstr "Non è stato possibile connettersi col database: controlla i campi per il database."
+
+#: ../../application/controllers/install.php:281
+msgid "{{FOOL_NAME}} has installed successfully. You can proceed logging in."
+msgstr ""
+
+#: ../../application/controllers/install.php:298
+msgid ""
+"You need at least PHP version {{FOOL_REQUIREMENT_PHP}} to run {{FOOL_NAME}}."
+" This means you have a many years old version. It is suggested to upgrade to"
+" a more recent version of PHP to avoid security issues with your server in "
+"general."
+msgstr ""
+
+#: ../../application/controllers/install.php:306
+#, php-format
+msgid ""
+"The file %s was removed. The installation can't continue without that file. "
+"You can find it in the {{FOOL_NAME}} download."
+msgstr ""
+
+#: ../../application/controllers/install.php:315
+#, php-format
+msgid ""
+"The %s directory needs to be writable. Use this command in your shell if "
+"possible: %s or change its permissions recursively to 777 with your own FTP "
+"software. You won't be able to install or run {{FOOL_NAME}} without this."
+msgstr ""
+
+#: ../../application/controllers/install.php:325
+#, php-format
+msgid ""
+"The %s directory needs to be writable as well. Use this command in your "
+"shell if possible: %s or change its permissions recursively to 777 with your"
+" own FTP software. You won't be able to install or run {{FOOL_NAME}} without"
+" this."
+msgstr ""
+
+#: ../../application/controllers/install.php:354
+#, php-format
+msgid ""
+"The %s directory would be better if writable, in order to deliver automatic "
+"updates. Use this command in your shell if possible: %s"
+msgstr "Sarebbe meglio che la cartella %s fosse scrivibile, in modo da poter effettuare gli aggiornamenti automatici. Usa questo comando nella tuo terminale se ti è possibile: %s"
+
+#: ../../application/controllers/install.php:358
+#, php-format
+msgid ""
+"The %s directory would be better if writable, in order to deliver automatic "
+"updates.<br/>It was impossible to determine the user running PHP. Use this "
+"command in your shell if possible: %s where www-data is an example (usually "
+"it's www-data or Apache)"
+msgstr "La directory %s deve essere scrivibile, in modo da poter usufruire degli aggiornamenti automatici.<br/>Non è stato possibile determinare quale utente esegua PHP. Usa quest comando nella tua riga di comando se ti è possibile: %s dove www-data è un esempio (solitamente è www-data o Apache)"
+
+#: ../../application/controllers/install.php:361
+msgid ""
+"If you can't do the above, after the installation you will be given a "
+"textfile to paste in config.php. More info after submitting."
+msgstr "Se non puoi eseguire il passo precedente, ti verrà mostrato a schermo il testo da incollare nel file config.php. Otterrai più informazioni dopo aver inviato i dati."
+
+#: ../../application/controllers/install.php:369
+msgid ""
+"If you made any changes, just refresh this page to recheck the directory "
+"permissions."
+msgstr "Se hai fatto alcun cambiamento, ricarica questa pagina per ricontrollare i permessi della directory."
+
+#: ../../application/controllers/admin/auth.php:26
+msgid "Authorization"
+msgstr "Autorizzazione"
+
+#: ../../application/controllers/admin/auth.php:33
+msgid "Message"
+msgstr "Messaggio"
+
+#: ../../application/controllers/admin/auth.php:112
+msgid "Login"
+msgstr "Login"
+
+#: ../../application/controllers/admin/auth.php:211
+msgid "Register"
+msgstr "Registrati"
+
+#: ../../application/controllers/admin/auth.php:249
+msgid "Resend activation email"
+msgstr "Reinvia l'email di attivazione"
+
+#: ../../application/controllers/admin/auth.php:311
+msgid "Forgot password"
+msgstr "Password dimenticata"
+
+#: ../../application/controllers/admin/auth.php:359
+msgid "Reset password"
+msgstr "Resetta password"
+
+#: ../../application/controllers/admin/auth.php:392
+msgid "Change password"
+msgstr "Cambia password"
+
+#: ../../application/controllers/admin/auth.php:431
+msgid "Change email"
+msgstr "Cambia email"
+
+#: ../../application/controllers/admin/auth.php:484
+msgid "Unregister"
+msgstr "Elimina account"
+
+#: ../../application/controllers/admin/boards.php:20
+msgid "Boards"
+msgstr "Board"
+
+#: ../../application/controllers/admin/boards.php:32
+msgid "Manage boards"
+msgstr "Gestisci board"
+
+#: ../../application/controllers/admin/boards.php:60
+#: ../../application/controllers/admin/boards.php:130
+msgid "New board created!"
+msgstr "La nuova board è stata creata!"
+
+#: ../../application/controllers/admin/boards.php:66
+#: ../../application/controllers/admin/boards.php:71
+msgid "Board information updated."
+msgstr "Le informazioni per la board sono state aggiornate."
+
+#: ../../application/controllers/admin/boards.php:84
+msgid "Editing board:"
+msgstr "Modificando la board:"
+
+#: ../../application/controllers/admin/boards.php:93
+msgid "Create search table"
+msgstr "Crea la database table per la ricerca"
+
+#: ../../application/controllers/admin/boards.php:94
+msgid ""
+"This board doesn't have the search table. You can create it by follwing this"
+" button."
+msgstr "Questa board non ha un database table per la ricerca. Puoi crearla seguendo questo bottone."
+
+#: ../../application/controllers/admin/boards.php:104
+msgid "Remove search table"
+msgstr "Rimuovi il database table per le ricerche"
+
+#: ../../application/controllers/admin/boards.php:105
+msgid ""
+"You are using Sphinx Search for this board, so you can remove the search "
+"table."
+msgstr "Stai usando Sphinx Search per questa board, quindi puoi rimuovere il database table per le ricerche."
+
+#: ../../application/controllers/admin/boards.php:139
+msgid "Creating a new board"
+msgstr "Creando una nuova board"
+
+#: ../../application/controllers/admin/boards.php:164
+#, php-format
+msgid "Failed to create the search table for the board %s."
+msgstr "Non è stato possibile creare un database table per la ricerca per la board %s."
+
+#: ../../application/controllers/admin/boards.php:170
+#, php-format
+msgid "The search table for the board %s has been created."
+msgstr "Il database table per la ricerca per la board %s è stata creata."
+
+#: ../../application/controllers/admin/boards.php:178
+#, php-format
+msgid "Failed to remove the search table for the board %s."
+msgstr "Non è stato possibile rimuovere il database table per la ricerca per la board %s."
+
+#: ../../application/controllers/admin/boards.php:184
+#, php-format
+msgid "The search table for the board %s has been removed."
+msgstr "Il database table per la ricerca per la board %s è stata rimossa."
+
+#: ../../application/controllers/admin/boards.php:194
+msgid "Creating search table for board:"
+msgstr "Creando un database table per la ricerca per la board:"
+
+#: ../../application/controllers/admin/boards.php:197
+msgid "Do you want to create the search table for this board?"
+msgstr "Vuoi creare un database table per la ricerca per questa baord?"
+
+#: ../../application/controllers/admin/boards.php:198
+msgid ""
+"Creating the search table can take time if you have a board with even just "
+"100.000 entries."
+msgstr "Creare la tabella di ricerca può richiedere molto tempo se hai una board anche con solo 100.000 messaggi."
+
+#: ../../application/controllers/admin/boards.php:200
+msgid ""
+"Normally, even if the page times out, the database will keep building it."
+msgstr "Di solito, anche se le pagine vanno in time-out, il database continuerà a ricostruirlo."
+
+#: ../../application/controllers/admin/boards.php:202
+msgid ""
+"To make sure your search table is fully created, you can execute the "
+"following via the command line of your server."
+msgstr "Per essere sicuro che la tabella di ricerca è creata nella sua completezza, puoi eseguire ciò che segue sulla riga di comando sul tuo server."
+
+#: ../../application/controllers/admin/boards.php:206
+msgid ""
+"For very large boards, past a few millions of entries, this would could "
+"hours: you should use SphinxSearch instead, or anyway you should use the "
+"command line."
+msgstr "Per board molto grandi, anche solo oltre alcuni milioni di messaggi, questo potrebbe metterci ore: dovresti piuttosto usare SphinxSearch, o in ogni caso dovresti usare la riga di comando."
+
+#: ../../application/controllers/admin/boards.php:214
+msgid "Removing search table for board:"
+msgstr "Rimuovo la tabella delle ricerche per la board:"
+
+#: ../../application/controllers/admin/boards.php:217
+msgid "Do you want to remove the search table for this board?"
+msgstr "Vuoi rimuovere la tabella delle ricerche per questa board?"
+
+#: ../../application/controllers/admin/boards.php:218
+msgid ""
+"The search table can be created at any time, though it can take a while to "
+"create if the board is large."
+msgstr "La tavola per le "
+
+#: ../../application/controllers/admin/boards.php:241
+#, php-format
+msgid "Failed to delete the board %s."
+msgstr "Non è stato possibile rimuovere la board %s."
+
+#: ../../application/controllers/admin/boards.php:246
+#, php-format
+msgid "The board %s has been deleted."
+msgstr "La board %s è stata rimossa."
+
+#: ../../application/controllers/admin/boards.php:255
+msgid "Removing board:"
+msgstr "Rimuovendo la board:"
+
+#: ../../application/controllers/admin/boards.php:257
+msgid "Do you really want to remove the board and all its data?"
+msgstr "Vuoi davvero rimuovere la board e tutti i relativi dati?"
+
+#: ../../application/controllers/admin/boards.php:259
+msgid ""
+"Notice: due to its size, you will have to remove the image folder manually. "
+"The folder will have the \"removed_\" prefix."
+msgstr "Attenzione: a causa della sua dimensione, dovrai rimuovere la cartella delle immagini manualmente. La cartella avrà il prefisso \"removed_\"."
+
+#: ../../application/controllers/admin/boards.php:271
+#: ../../application/controllers/admin/preferences.php:19
+#: ../../application/controllers/admin/system.php:54
+#: ../../application/controllers/admin/system.php:101
+msgid "Preferences"
+msgstr "Preferenze"
+
+#: ../../application/controllers/admin/boards.php:281
+msgid "Boards directory"
+msgstr "Directory delle board"
+
+#: ../../application/controllers/admin/boards.php:283
+msgid ""
+"Overrides the default path to the boards directory (Example: "
+"/var/www/foolfuuka/boards)"
+msgstr "Rimpiazza la directory di default delle board (Esempio: /var/www/foolfuuka/boards)"
+
+#: ../../application/controllers/admin/boards.php:288
+msgid "Boards URL"
+msgstr "URL delle board"
+
+#: ../../application/controllers/admin/boards.php:290
+msgid ""
+"Overrides the default url to the boards folder (Example: "
+"http://foolfuuka.site.com/there/boards)"
+msgstr "Rimpiazza l'URL di default della directory della board (Esempio: http://foolfuuka.site.com/there/board)"
+
+#: ../../application/controllers/admin/boards.php:295
+#: ../../application/controllers/admin/boards.php:302
+msgid "Boards database"
+msgstr "Database delle board"
+
+#: ../../application/controllers/admin/boards.php:297
+#: ../../application/controllers/admin/boards.php:304
+msgid ""
+"Overrides the default database. You should point it to your Asagi database "
+"if you have a separate one."
+msgstr "Rimpiazza il database di default. Dovresti puntarlo al database di Asagi se ne hai uno separato."
+
+#: ../../application/controllers/admin/boards.php:309
+msgid "Media load balancers"
+msgstr ""
+
+#: ../../application/controllers/admin/boards.php:311
+msgid "Facultative. One per line the URLs where your images are reachable."
+msgstr ""
+
+#: ../../application/controllers/admin/boards.php:317
+msgid "HTTPS media load balancers"
+msgstr ""
+
+#: ../../application/controllers/admin/boards.php:319
+msgid ""
+"Facultative. One per line the URLs where your images are reachable. This is "
+"used when the site is loaded via HTTPS protocol, and if empty it will fall "
+"back to HTTP media load balancers."
+msgstr ""
+
+#: ../../application/controllers/admin/boards.php:329
+#: ../../application/controllers/admin/boards.php:541
+#: ../../application/controllers/admin/preferences.php:173
+#: ../../application/controllers/admin/preferences.php:243
+#: ../../application/controllers/admin/preferences.php:316
+#: ../../application/controllers/admin/system.php:93
+msgid "Submit"
+msgstr "Invia"
+
+#: ../../application/controllers/admin/boards.php:355
+msgid "Downloaded and installed the latest version of Asagi."
+msgstr "Ho scaricato ed installato l'ultima versione di Asagi."
+
+#: ../../application/controllers/admin/boards.php:361
+msgid "Asagi has been removed."
+msgstr "Asagi è stato rimosso."
+
+#: ../../application/controllers/admin/boards.php:367
+msgid "Settings updated."
+msgstr "Settaggi aggiornati."
+
+#: ../../application/controllers/admin/boards.php:373
+msgid "Ran Asagi."
+msgstr "Asagi è partito."
+
+#: ../../application/controllers/admin/boards.php:379
+msgid "Stopped Asagi."
+msgstr "Asagi è stato interrotto."
+
+#: ../../application/controllers/admin/boards.php:385
+msgid "Enabled Asagi autorun."
+msgstr "Partenza automatica di Asagi abilitata."
+
+#: ../../application/controllers/admin/boards.php:391
+msgid "Disabled Asagi autorun."
+msgstr "Partenza automatica di Asagi disabilitata."
+
+#: ../../application/controllers/admin/boards.php:396
+msgid "Asagi"
+msgstr "Asagi"
+
+#: ../../application/controllers/admin/boards.php:404
+msgid "Asagi installation"
+msgstr "Installazione di Asagi"
+
+#: ../../application/controllers/admin/boards.php:427
+msgid "Activate Sphinx globally (enables crossboard search)"
+msgstr "Attiva Sphinx globalmente (abilita la ricerca tra board)"
+
+#: ../../application/controllers/admin/boards.php:435
+msgid "Set the address and port to your Sphinx instance."
+msgstr "Inserisci l'indirizzo e la porta di Sphinx."
+
+#: ../../application/controllers/admin/boards.php:444
+#: ../../application/controllers/admin/boards.php:454
+msgid "The Sphinx listening address and port aren't formatted correctly."
+msgstr "La formattazione dell'indirizzo e la porta di Sphinx non è corretta."
+
+#: ../../application/controllers/admin/boards.php:462
+msgid "The port specified isn't a valid number."
+msgstr "La porta specificata non è un numero valido."
+
+#: ../../application/controllers/admin/boards.php:475
+msgid ""
+"The Sphinx server couldn't be contacted at the specified address and port."
+msgstr "Il server Sphinx non è potuto essere contattato all'indirizzo e porta specificati."
+
+#: ../../application/controllers/admin/boards.php:489
+msgid "Set the address and port to your MySQL instance."
+msgstr "Inserisci l'indirizzo e la porta di MySQL."
+
+#: ../../application/controllers/admin/boards.php:498
+msgid "Set the working directory to your Sphinx working directory."
+msgstr "Inserisci la directory di lavoro di Sphinx."
+
+#: ../../application/controllers/admin/boards.php:507
+msgid "Couldn't find the Sphinx working directory."
+msgstr "La directory di lavoro di Sphinx non è stata trovata."
+
+#: ../../application/controllers/admin/boards.php:520
+msgid "Set the minimum word length indexed by Sphinx."
+msgstr "Inserisci la minima lunghezza delle parole che Sphinx deve indicizzare."
+
+#: ../../application/controllers/admin/boards.php:531
+msgid "Set the memory limit for the Sphinx instance in MegaBytes."
+msgstr "Inserisci il limite della memoria di Sphinx in MegaByte"
+
+#: ../../application/controllers/admin/database.php:20
+msgid "Database"
+msgstr "Database"
+
+#: ../../application/controllers/admin/database.php:48
+#: ../../application/controllers/admin/system.php:136
+msgid "Upgrade"
+msgstr "Aggiorna"
+
+#: ../../application/controllers/admin/database.php:74
+msgid "Successfully updated the database."
+msgstr "Hai aggiornato il database con successo."
+
+#: ../../application/controllers/admin/members.php:14
+msgid "Members"
+msgstr "Membri"
+
+#: ../../application/controllers/admin/members.php:40
+#: ../../application/controllers/admin/plugins_admin.php:25
+msgid "Manage"
+msgstr "Gestisci"
+
+#: ../../application/controllers/admin/members.php:69
+msgid "User profile saved!"
+msgstr "Profilo utente salvato!"
+
+#: ../../application/controllers/admin/members.php:80
+msgid "Editing user:"
+msgstr "Modificando l'utente:"
+
+#: ../../application/controllers/admin/plugins_admin.php:17
+msgid "Plugins"
+msgstr "Plugins"
+
+#: ../../application/controllers/admin/plugins_admin.php:49
+msgid "The plugin couldn't be enabled."
+msgstr "Non è stato possibile abilitare il plugin."
+
+#: ../../application/controllers/admin/plugins_admin.php:54
+#, php-format
+msgid "The %s plugin is now enabled."
+msgstr "Il plugin %s è stato abilitato."
+
+#: ../../application/controllers/admin/plugins_admin.php:63
+msgid "The plugin couldn't be disabled."
+msgstr "Non è stato possibile disabilitare il plugin."
+
+#: ../../application/controllers/admin/plugins_admin.php:68
+#, php-format
+msgid "The %s plugin is now disabled."
+msgstr "Il plugin %s è stato disabilitato."
+
+#: ../../application/controllers/admin/plugins_admin.php:79
+#, php-format
+msgid "The %splugin couldn't be removed."
+msgstr "Non è stato possibile rimuovere il plugin %s."
+
+#: ../../application/controllers/admin/plugins_admin.php:84
+#, php-format
+msgid "The %s plugin was removed."
+msgstr "Il plugin %s è stato rimosso."
+
+#: ../../application/controllers/admin/posts.php:18
+msgid "Posts"
+msgstr "Messaggi"
+
+#: ../../application/controllers/admin/posts.php:35
+msgid "Reports"
+msgstr "Segnalazioni"
+
+#: ../../application/controllers/admin/posts.php:64
+msgid "Access to reports outside the administrative panel is denied."
+msgstr "Non è possibile accedere alle segnalazioni dall'esterno del pannello di amministrazione."
+
+#: ../../application/controllers/admin/posts.php:154
+msgid "Failed to remove the report from the database."
+msgstr "Non è stato possibile rimuovere la segnalazione dal database."
+
+#: ../../application/controllers/admin/posts.php:159
+msgid "The report has been removed from the database."
+msgstr "La segnalazione è stata rimossa dal database."
+
+#: ../../application/controllers/admin/preferences.php:39
+msgid "Theme"
+msgstr "Tema"
+
+#: ../../application/controllers/admin/preferences.php:55
+msgid "Sets the title of your site."
+msgstr "Scegli il titolo del tuo sito."
+
+#: ../../application/controllers/admin/preferences.php:66
+msgid "Sets the title displayed in the index page."
+msgstr ""
+
+#: ../../application/controllers/admin/preferences.php:71
+msgid "Default language"
+msgstr "Lingua di Default"
+
+#: ../../application/controllers/admin/preferences.php:72
+msgid "The language the users will see as they reach your site."
+msgstr "La lingua che i tuoi utenti vedranno quando arrivano sul tuo sito."
+
+#: ../../application/controllers/admin/preferences.php:91
+#, php-format
+msgid "Enable %s theme"
+msgstr "Abilita il tema %s"
+
+#: ../../application/controllers/admin/preferences.php:101
+msgid "Active themes"
+msgstr "Temi attivi"
+
+#: ../../application/controllers/admin/preferences.php:102
+msgid ""
+"Choose the themes to make available to the users. Admins are able to access "
+"any of them even if disabled."
+msgstr "Scegli quali temi vuoi rendere disponibili per gli utenti. Gli amministratori sono in grado di accedere ad ogni tema anche se sono disabilitati."
+
+#: ../../application/controllers/admin/preferences.php:115
+msgid "Default theme"
+msgstr "Tema di default"
+
+#: ../../application/controllers/admin/preferences.php:116
+msgid "The theme the users will see as they reach your site."
+msgstr "Il tema che i tuoi utenti vedranno quando arrivano sul sito per la prima volta."
+
+#: ../../application/controllers/admin/preferences.php:124
+msgid "Google Analytics code"
+msgstr "Codice Google Analytics"
+
+#: ../../application/controllers/admin/preferences.php:127
+msgid "Insert your Google Analytics code to get statistics."
+msgstr "Inserisci il tuo codice Google Analytics per ottenere le statistiche."
+
+#: ../../application/controllers/admin/preferences.php:137
+msgid "Header Text (\"notices\")"
+msgstr "Testo nel header (annunci)"
+
+#: ../../application/controllers/admin/preferences.php:139
+msgid "Inserts the text above in the header, below the nagivation links."
+msgstr "Inserisce il testo nel header, sotto i link di navigazione."
+
+#: ../../application/controllers/admin/preferences.php:145
+msgid "Header Code"
+msgstr "Codice nel header"
+
+#: ../../application/controllers/admin/preferences.php:147
+msgid "This will insert the HTML code inside the &lt;HEAD&gt;."
+msgstr "Questo inserirà il codice HTML nella porzione &lt;HEAD&gt;."
+
+#: ../../application/controllers/admin/preferences.php:153
+msgid "Footer Text"
+msgstr "Testo nel footer"
+
+#: ../../application/controllers/admin/preferences.php:155
+msgid "Credits in the footer and similar."
+msgstr "Crediti nel footer e simili"
+
+#: ../../application/controllers/admin/preferences.php:161
+msgid "Footer Code"
+msgstr "Codice nel footer"
+
+#: ../../application/controllers/admin/preferences.php:163
+msgid "This will insert the HTML code above after the &lt;BODY&gt;."
+msgstr "Questo inserirà il codice HTML nella porzione &lt;BODY&gt;."
+
+#: ../../application/controllers/admin/preferences.php:199
+msgid "Advertising"
+msgstr "Pubblicità"
+
+#: ../../application/controllers/admin/preferences.php:209
+msgid "Top banner"
+msgstr "Banner in alto"
+
+#: ../../application/controllers/admin/preferences.php:210
+#: ../../application/controllers/admin/preferences.php:225
+msgid "Insert the HTML code provided by your advertiser."
+msgstr "Inserisci il codice fornito per mostrare la pubblicità."
+
+#: ../../application/controllers/admin/preferences.php:219
+msgid "Enable top banner"
+msgstr "Abilita il banner in alto"
+
+#: ../../application/controllers/admin/preferences.php:224
+msgid "Bottom banner"
+msgstr "Banner in basso"
+
+#: ../../application/controllers/admin/preferences.php:234
+msgid "Enable bottom banner"
+msgstr "Abilita il banner in basso"
+
+#: ../../application/controllers/admin/preferences.php:264
+msgid "Registration"
+msgstr "Registrazione"
+
+#: ../../application/controllers/admin/preferences.php:275
+msgid "Disable New User Registrations"
+msgstr "Disabilita la registrazione di nuovi utenti"
+
+#: ../../application/controllers/admin/preferences.php:280
+msgid "Disable Email Activation"
+msgstr "Disabilita l'attivazione via email"
+
+#: ../../application/controllers/admin/preferences.php:289
+msgid ""
+"In order to use reCAPTCHA&trade; you need to sign up for the service at <a "
+"href=\"http://www.google.com/recaptcha\">reCAPTCHA&trade;</a>, which will "
+"provide you with a public and a private key."
+msgstr "Per usare reCAPTCHA&trade; devi registrarti al servizio <a href=\"http://www.google.com/recaptcha\">reCAPTCHA&trade;</a>, che ti fornirà una chiave pubblica ed una privata."
+
+#: ../../application/controllers/admin/preferences.php:294
+msgid "reCaptcha&trade; Public Key"
+msgstr "Chiave Pubblica reCaptcha&trade;"
+
+#: ../../application/controllers/admin/preferences.php:296
+msgid "Insert the public key provided by reCAPTCHA&trade;."
+msgstr "Inserisci la chiave pubblica fornita da reCaptcha&trade;"
+
+#: ../../application/controllers/admin/preferences.php:303
+msgid "reCaptcha&trade; Secret Key"
+msgstr "Chiave Segreta reCaptcha&trade;"
+
+#: ../../application/controllers/admin/preferences.php:305
+msgid "Insert the private key provided by reCAPTCHA&trade;."
+msgstr "Inserisci la chiave privata fornita da reCaptcha&trade;"
+
+#: ../../application/controllers/admin/system.php:22
+msgid "System"
+msgstr "Sistema"
+
+#: ../../application/controllers/admin/system.php:40
+#: ../../application/controllers/admin/system.php:44
+msgid "Information"
+msgstr "Informazioni"
+
+#: ../../application/controllers/admin/system.php:61
+msgid "Found and Working"
+msgstr "Trovato e Funzionante"
+
+#: ../../application/controllers/admin/system.php:67
+msgid "Not Available"
+msgstr "Non disponibile"
+
+#: ../../application/controllers/admin/system.php:67
+msgid ""
+"You must have Safe Mode turned off and the exec() function enabled to allow "
+"ImageMagick to process your images. Please check the information panel for "
+"more details."
+msgstr "Devi avere Safe Mode off e la funzione exec() abilitata per essere in grado di suare ImageMagick per processare le immagini. Controlla il pannello delle informazioni per ottenere ulteriori dettagli."
+
+#: ../../application/controllers/admin/system.php:67
+#: ../../application/controllers/admin/system.php:69
+#: ../../application/controllers/admin/system.php:72
+msgid "Disabled Functions"
+msgstr "Funzioni Disabilitate"
+
+#: ../../application/controllers/admin/system.php:69
+msgid "Not Found"
+msgstr "Non Trovato"
+
+#: ../../application/controllers/admin/system.php:69
+msgid ""
+"You must provide the correct path to the \"convert\" binary on your system. "
+"This is typically located under /usr/bin (Linux), /opt/local/bin (Mac OSX) "
+"or the installation directory (Windows)."
+msgstr "Devi inserire la directory dell'eseguibile \"convert\" sul tuo sistema. Questa è solitamente  sotto /usr/bin (Linux), /opt/local/bin (Mac OSX) o nella directory di installazione (Windows)."
+
+#: ../../application/controllers/admin/system.php:71
+msgid "Not Working"
+msgstr "Non Funzionante"
+
+#: ../../application/controllers/admin/system.php:71
+#, php-format
+msgid ""
+"There has been an error encountered when testing your ImageMagick "
+"installation. To manually check for errors, access your server via shell or "
+"command line and type: %s"
+msgstr "C'è stato un errore durante il controllo della tua installazione di ImageMagick. Per controllare manualmente gli errori, accedi al tuo server via riga di comando e scrivi: %s"
+
+#: ../../application/controllers/admin/system.php:81
+msgid "Path to ImageMagick"
+msgstr "Directory di ImageMagick"
+
+#: ../../application/controllers/admin/system.php:84
+msgid "The location of your ImageMagick \"convert\" executable"
+msgstr "La directory dell'eseguibile \"convert\" di ImageMagick"
+
+#: ../../application/controllers/admin/system.php:126
+msgid "Upgrade failed: check file permissions."
+msgstr "Aggiornamento fallito: controlla i permessi dei file"
+
+#: ../../application/controllers/admin/system.php:130
+msgid "Upgrade successful"
+msgstr "Aggiornamento completato"
+
+#: ../../application/controllers/api/chan_api.php:31
+#: ../../application/controllers/api/chan_api.php:100
+#: ../../application/controllers/api/chan_api.php:306
+msgid "Faulty page value"
+msgstr "Valore page errato"
+
+#: ../../application/controllers/api/chan_api.php:35
+#: ../../application/controllers/api/chan_api.php:104
+#: ../../application/controllers/api/chan_api.php:310
+msgid "Can't go over page 500"
+msgstr "Non puoi andare oltre pagina 500"
+
+#: ../../application/controllers/api/chan_api.php:52
+#: ../../application/controllers/api/chan_api.php:121
+#: ../../application/controllers/api/chan_api.php:327
+msgid "Faulty per_page value"
+msgstr "Valore per_page errato"
+
+#: ../../application/controllers/api/chan_api.php:56
+#: ../../application/controllers/api/chan_api.php:125
+msgid "Can't return more than 50 threads"
+msgstr "Non è possibile restituire oltre 50 thread"
+
+#: ../../application/controllers/api/chan_api.php:80
+#: ../../application/controllers/api/chan_api.php:150
+msgid "Threads could not be found"
+msgstr "Non è stato possibile trovare thread"
+
+#: ../../application/controllers/api/chan_api.php:168
+#: ../../application/controllers/api/chan_api.php:228
+#: ../../application/controllers/api/chan_api.php:262
+msgid "You have to select a thread number"
+msgstr "Devi scegliere un numero thread"
+
+#: ../../application/controllers/api/chan_api.php:174
+#: ../../application/controllers/api/chan_api.php:234
+#: ../../application/controllers/api/chan_api.php:268
+msgid "Faulty thread number"
+msgstr "Numero thread errato"
+
+#: ../../application/controllers/api/chan_api.php:186
+msgid "Your latest_doc_id is malformed"
+msgstr "Il tuo valore latest_doc_id è malformato"
+
+#: ../../application/controllers/api/chan_api.php:217
+#: ../../application/controllers/api/chan_api.php:293
+msgid "Thread could not be found"
+msgstr "Non è stato possibile trovare il thread"
+
+#: ../../application/controllers/api/chan_api.php:244
+#: ../../application/controllers/api/chan_api.php:248
+msgid "Post could not be found"
+msgstr "Il messaggio non è stato trovato"
+
+#: ../../application/controllers/api/chan_api.php:331
+msgid "Can't return more than 3000 ghost posts"
+msgstr "Non è possibile restituire più di 3000 messaggi fantasma"
+
+#: ../../application/controllers/api/chan_api.php:354
+msgid "Ghost posts could not be found"
+msgstr "Non è stato possibile trovare messaggi fantasma"
+
+#: ../../application/helpers/options_helper.php:180
+#: ../../application/helpers/options_helper.php:187
+msgid "The system is under maintenance. Be back later."
+msgstr "Il sistema è in manuntenzione. Torna più tardi."
+
+#: ../../application/libraries/Admin_Controller.php:87
+msgid "Add board"
+msgstr "Aggiungi board"
+
+#: ../../application/libraries/Admin_Controller.php:88
+msgid "Sphinx Search"
+msgstr "Sphinx Search"
+
+#: ../../application/libraries/Admin_Controller.php:89
+msgid "Asagi Fetcher"
+msgstr "Asagi Fetcher"
+
+#: ../../application/libraries/Admin_Controller.php:104
+msgid "Account"
+msgstr "Account"
+
+#: ../../application/libraries/Admin_Controller.php:108
+msgid "Change Email"
+msgstr "Cambia Email"
+
+#: ../../application/libraries/Admin_Controller.php:109
+msgid "Change Password"
+msgstr "Cambia Password"
+
+#: ../../application/libraries/Admin_Controller.php:120
+msgid "Member List"
+msgstr "Lista Membri"
+
+#: ../../application/libraries/Admin_Controller.php:143
+msgid "New"
+msgstr "Nuovo"
+
+#: ../../application/libraries/Admin_Controller.php:162
+msgid "Bug tracker"
+msgstr "Bug tracker"
+
+#: ../../application/libraries/API_Controller.php:38
+msgid "You didn't select a board"
+msgstr "Non hai selezionato una board"
+
+#: ../../application/libraries/API_Controller.php:46
+msgid "The board you selected doesn't exist"
+msgstr "La board che hai selezionato non esiste"
+
+#: ../../application/libraries/MY_Controller.php:163
+msgid "Submitting"
+msgstr "Invio"
+
+#: ../../application/libraries/MY_Controller.php:164
+msgid "This thread is being displayed in real time."
+msgstr "Questo thread viene mostrato in tempo reale"
+
+#: ../../application/libraries/MY_Controller.php:165
+msgid "Update now"
+msgstr "Aggiorna ora"
+
+#: ../../application/libraries/MY_Controller.php:178
+msgid "You're not allowed to perform this action"
+msgstr "Non hai il permesso di procedere con questa azione"
+
+#: ../../application/libraries/MY_Controller.php:184
+msgid "Missing arguments"
+msgstr "Argomenti mancanti"
+
+#: ../../application/libraries/MY_Controller.php:194
+msgid "Invalid action"
+msgstr "Azione non valida"
+
+#: ../../application/libraries/MY_Controller.php:206
+msgid "Post not found"
+msgstr "Messaggio non trovato"
+
+#: ../../application/libraries/Public_Controller.php:49
+msgid "No themes enabled!"
+msgstr "Non ci sono temi abilitati!"
+
+#: ../../application/models/asagi_model.php:88
+msgid "The Asagi ZIP file couldn't be downloaded."
+msgstr "Non è stato possibile scaricare il file ZIP di Asagi."
+
+#: ../../application/models/post_model.php:548
+msgid "The file you submitted doesn't seem to be an image."
+msgstr "Il file che hai inviato non pare essere un'immagine."
+
+#: ../../application/models/post_model.php:554
+msgid "The image you submitted is too small."
+msgstr "L'immagine che hai inviato è troppo piccola"
+
+#: ../../application/models/post_model.php:590
+msgid ""
+"This image has already been posted once. This board doesn't allow image "
+"reposting"
+msgstr "Questa immagine è già stata inviata una volta. Questa board non permette di inviare la stessa immagine due volte."
+
+#: ../../application/models/post_model.php:604
+#, php-format
+msgid "You must wait up to %s hours to repost this image."
+msgstr "Devi aspettare fino a %s ore per inviare questa immagine un'altra volta!"
+
+#: ../../application/models/post_model.php:1210
+msgid "Sorry, global search requires SphinxSearch."
+msgstr "Mi dispiace, la ricerca globale necessita di SphinxSearch."
+
+#: ../../application/models/post_model.php:1220
+msgid ""
+"The search backend is currently not online. Try later or contact us in case "
+"it's offline for too long."
+msgstr "Il motore di ricerca non è correntemente online. Riprova più tardi o contattaci se è offline troppo a lungo."
+
+#: ../../application/models/post_model.php:2396
+msgid ""
+"Your IP has been identified as a spam proxy. Please try a different IP or "
+"remove the proxy to post."
+msgstr "Il tuo IP è stato identificato come uno spam proxy. Prova un altro IP o disabilita il proxy per mandare il messaggio."
+
+#: ../../application/models/post_model.php:2423
+msgid "You are banned from posting"
+msgstr "Sei bannato dal mandare messaggi"
+
+#: ../../application/models/post_model.php:2444
+msgid "You're posting again the same comment as the last time!"
+msgstr "Stai mandando lo stesso messaggio dell'ultima volta!"
+
+#: ../../application/models/post_model.php:2528
+msgid "Your comment has contains words that aren't allowed."
+msgstr "Il tuo commento contiene parole che non sono permesse."
+
+#: ../../application/models/post_model.php:2565
+msgid "An image is required for creating threads."
+msgstr "E' necessario inviare un'immagine per creare un thread."
+
+#: ../../application/models/post_model.php:2574
+msgid "The filetype you are attempting to upload is not allowed."
+msgstr "Il tipo di file che stai provando ad inviare non è tra quelli consentiti."
+
+#: ../../application/models/post_model.php:2580
+msgid ""
+"The image you are attempting to upload is larger than the permitted size."
+msgstr "L'immagine che stai provando ad inviare è più grande della dimensione consentita."
+
+#: ../../application/models/post_model.php:2596
+msgid "Sorry, this thread has reached its maximum amount of image replies."
+msgstr "Questo thread ha raggiunto il massimo numero di messaggi con immagine."
+
+#: ../../application/models/post_model.php:2607
+msgid "Your image upload is not a valid image file."
+msgstr "L'immagine che hai inviato non è un'immagine valida."
+
+#: ../../application/models/post_model.php:2624
+msgid "Your image upload has been flagged as inappropriate."
+msgstr "L'immagine che hai inviato è segnata come inappropriata."
+
+#: ../../application/models/post_model.php:2631
+msgid "Your post contains contents that is marked as spam."
+msgstr "Il tuo messaggio contiene parole che sono considerate spam."
+
+#: ../../application/models/post_model.php:2637
+msgid "Your post was too long."
+msgstr "Il tuo messaggio era troppo lungo."
+
+#: ../../application/models/post_model.php:2643
+msgid "Your post had too many lines."
+msgstr "Il tuo messaggio conteneva troppe linee."
+
+#: ../../application/models/post_model.php:2681
+msgid "This post is already being processed..."
+msgstr "Questo messaggio è già in fase di invio..."
+
+#: ../../application/models/post_model.php:2759
+#: ../../application/models/post_model.php:2877
+msgid "You already posted this."
+msgstr "Hai già inviato questo."
+
+#: ../../application/models/post_model.php:2780
+msgid "Your image was invalid."
+msgstr "L'immagine non era valida."
+
+#: ../../application/models/post_model.php:2933
+msgid "There's no such a post to be deleted."
+msgstr "Non c'è un tale messaggio da cancellare."
+
+#: ../../application/models/post_model.php:2948
+msgid "The password you inserted did not match the post's deletion password."
+msgstr "La password che hai inserito non combacia con quella per cancellare il messaggio."
+
+#: ../../application/models/post_model.php:2955
+msgid "Unable to delete thumbnail for post."
+msgstr "Non è stato possibile cancellare l'immagine del messaggio."
+
+#: ../../application/models/post_model.php:2981
+msgid "Unable to delete post."
+msgstr "Non è stato possibile cancellare il messaggio."
+
+#: ../../application/models/post_model.php:3005
+msgid "Unable to delete thumbnail for thread replies."
+msgstr "Non è stato possibile cancellare le immagini per le risposte al thread."
+
+#: ../../application/models/preferences_model.php:81
+msgid "Preferences updated."
+msgstr "Preferenze aggiornate"
+
+#: ../../application/models/profile_model.php:26
+msgid "User ID"
+msgstr "ID utente"
+
+#: ../../application/models/profile_model.php:27
+msgid "The ID of the user"
+msgstr "L'ID dell'utente"
+
+#: ../../application/models/profile_model.php:39
+msgid "Non-admin user can't to change the data of another user."
+msgstr "Un user che non è amministratore non può cambiare i dati di un altro utente."
+
+#: ../../application/models/profile_model.php:50
+msgid "Couldn't find the user with the submitted ID."
+msgstr "Non è stato possibile trovare l'utente con l'ID inviato."
+
+#: ../../application/models/profile_model.php:67
+msgid "Group"
+msgstr "Gruppo"
+
+#: ../../application/models/profile_model.php:68
+msgid "Choose the permission level of the member"
+msgstr "Scegli il livello di permesso del membro"
+
+#: ../../application/models/profile_model.php:70
+msgid "Administrator"
+msgstr "Amministratore"
+
+#: ../../application/models/profile_model.php:71
+msgid "Moderator"
+msgstr "Moderatore"
+
+#: ../../application/models/profile_model.php:72
+msgid "Member"
+msgstr "Membro"
+
+#: ../../application/models/profile_model.php:81
+msgid "Display Name"
+msgstr "Nome pubblico"
+
+#: ../../application/models/profile_model.php:82
+msgid "A name that is publicly shown beside the username"
+msgstr "Un nome che è visualizzato pubblicamente di fianco al nome utente"
+
+#: ../../application/models/profile_model.php:91
+msgid "Twitter"
+msgstr "Twitter"
+
+#: ../../application/models/profile_model.php:92
+msgid "The twitter nickname"
+msgstr "Il nickname su Twitter"
+
+#: ../../application/models/profile_model.php:101
+msgid "Bio"
+msgstr "Bio"
+
+#: ../../application/models/profile_model.php:102
+msgid "A short description of the user"
+msgstr "Una corta descrizione dell'utente"
+
+#: ../../application/models/radix_model.php:47
+#: ../../application/models/report_model.php:69
+msgid "Couldn't find the board with the submitted ID."
+msgstr "Non è stato possibile trovare la board con l'ID inviato"
+
+#: ../../application/models/radix_model.php:58
+msgid "Name"
+msgstr "Nome"
+
+#: ../../application/models/radix_model.php:59
+msgid "Insert the name of the board normally shown as title."
+msgstr "Inserisci il nome della board normalmente visualizzata come titolo."
+
+#: ../../application/models/radix_model.php:60
+msgid "Required"
+msgstr "Obbligatorio"
+
+#: ../../application/models/radix_model.php:67
+msgid "Shortname"
+msgstr "Nome corto"
+
+#: ../../application/models/radix_model.php:68
+msgid "Insert the shorter name of the board. Reserved: \"api\", \"cli\", \"admin\"."
+msgstr "Inserisci il nome corto della board. Riservati: \"api\", \"cli\", \"admin\"."
+
+#: ../../application/models/radix_model.php:69
+msgid "Req."
+msgstr "Obbl."
+
+#: ../../application/models/radix_model.php:84
+msgid ""
+"You can't use the protected shortnames unless you activate the system "
+"subdomain feature. The protected shortnames are:"
+msgstr "Non puoi usare nomi corti protetti se non attivi il sistema subdomain. I nomi protetti sono:"
+
+#: ../../application/models/radix_model.php:110
+msgid "The shortname is already used for another board."
+msgstr "Il nome corto è già stato usato da un altra board."
+
+#: ../../application/models/radix_model.php:119
+msgid "General rules"
+msgstr "Regole generali"
+
+#: ../../application/models/radix_model.php:120
+msgid ""
+"Full board rules displayed in a separate page, in <a "
+"href=\"http://daringfireball.net/projects/markdown/basics\" "
+"target=\"_blank\">MarkDown</a> syntax. Will not display if left empty."
+msgstr "Regole della board complete mostrate in una pagina a parte, in sintassi <a href=\"http://daringfireball.net/projects/markdown/basics\" target=\"_blank\">MarkDown</a>. Non verrà mostrata se lasciato vuoto."
+
+#: ../../application/models/radix_model.php:122
+#: ../../application/models/radix_model.php:134
+msgid "MarkDown goes here"
+msgstr "Inserisci MarkDown"
+
+#: ../../application/models/radix_model.php:131
+msgid "Posting rules"
+msgstr "Regole per i commenti"
+
+#: ../../application/models/radix_model.php:132
+msgid ""
+"Posting rules displayed in the posting area, in <a "
+"href=\"http://daringfireball.net/projects/markdown/basics\" "
+"target=\"_blank\">MarkDown</a> syntax. Will not display if left empty."
+msgstr "Regole per i commenti mostrate nel form dei messaggi, in sintassi <a href=\"http://daringfireball.net/projects/markdown/basics\" target=\"_blank\">MarkDown</a>. Non verranno mostrate mostrata se vuota."
+
+#: ../../application/models/radix_model.php:142
+msgid "Maximum number of threads to display in the index pages"
+msgstr "Massimo numero di thread da visualizzare nell'indice"
+
+#: ../../application/models/radix_model.php:151
+msgid "Is this a 4chan archiving board?"
+msgstr "E' un archivio 4chan?"
+
+#: ../../application/models/radix_model.php:155
+msgid "Options for archive boards"
+msgstr "Opzioni per le board archivio"
+
+#: ../../application/models/radix_model.php:161
+msgid "URL to the 4chan board (facultative)"
+msgstr "URL alla board 4chan (facoltativo)"
+
+#: ../../application/models/radix_model.php:170
+msgid "URL to the board thumbnails (facultative)"
+msgstr "URL alle thumbnail (facoltativo)"
+
+#: ../../application/models/radix_model.php:179
+msgid "URL to the board images (facultative)"
+msgstr "URL alle immagini (facoltativo)"
+
+#: ../../application/models/radix_model.php:188
+msgid "Image fetching workers"
+msgstr "Worker per recuperare le immagini"
+
+#: ../../application/models/radix_model.php:189
+msgid ""
+"The number of workers that will fetch full images. Set to zero not to fetch "
+"them."
+msgstr "Il numero di worker che recuperano le immagini. Se settato a zero le immagini non verranno raccolte."
+
+#: ../../application/models/radix_model.php:199
+msgid "Thumbnail fetching workers"
+msgstr "Worker per recuperare i thumbnail"
+
+#: ../../application/models/radix_model.php:200
+msgid "The number of workers that will fetch thumbnails"
+msgstr "Il numero di worker che recuperano i thumbnail"
+
+#: ../../application/models/radix_model.php:210
+msgid "Thread fetching workers"
+msgstr "Worker per recuperare i thread"
+
+#: ../../application/models/radix_model.php:211
+msgid "The number of workers that fetch new threads"
+msgstr "Il numero di worker che aggiornano i thread"
+
+#: ../../application/models/radix_model.php:222
+msgid "Minutes to refresh the thread"
+msgstr "Minuti per aggiornare un thread"
+
+#: ../../application/models/radix_model.php:230
+msgid "Thread refresh rate"
+msgstr "Rato di aggiornamento thread"
+
+#: ../../application/models/radix_model.php:231
+msgid "Array of refresh rates in seconds per page in JSON format"
+msgstr "Array di frequenze di refresch in secondi per pagina in formato JSON"
+
+#: ../../application/models/radix_model.php:244
+msgid "The JSON inputted is not valid."
+msgstr "Il JSON inserito non è valido."
+
+#: ../../application/models/radix_model.php:253
+msgid "Options for normal boards"
+msgstr "Opzioni per board classiche"
+
+#: ../../application/models/radix_model.php:258
+msgid "Opening post thumbnail maximum width after resizing"
+msgstr "Massima larghezza del thumbnail del primo messaggio dopo la riduzione"
+
+#: ../../application/models/radix_model.php:267
+msgid "Opening post thumbnail maximum height after resizing"
+msgstr "Massima altezza del thumbnail del primo messaggio dopo la riduzione"
+
+#: ../../application/models/radix_model.php:276
+msgid "Reply thumbnail maximum width after resizing"
+msgstr "Massima larghezza del thumbnail di una risposta dopo la riduzione"
+
+#: ../../application/models/radix_model.php:285
+msgid "Reply thumbnail maximum height after resizing"
+msgstr "Massima altezza del thumbnail di una risposta dopo la riduzione"
+
+#: ../../application/models/radix_model.php:294
+msgid "Full image maximum size in kilobytes"
+msgstr "La massima dimensione dell'immagine in kilobytes"
+
+#: ../../application/models/radix_model.php:303
+msgid "Full image maximum width in pixels"
+msgstr "La massima larghezza dell'immagine in pixel"
+
+#: ../../application/models/radix_model.php:312
+msgid "Full image maximum height in pixels"
+msgstr "La massima altezza dell'immagine in pixel"
+
+#: ../../application/models/radix_model.php:321
+msgid "The maximum amount of posts before a thread \"dies\""
+msgstr "Il massimo numero di messaggi prima che un thread \"muoia\""
+
+#: ../../application/models/radix_model.php:330
+msgid ""
+"The maximum amount of images in replies before posting more is prohibited"
+msgstr "Il massimo numero di immagini prima che sia proibito inviarne altre"
+
+#: ../../application/models/radix_model.php:339
+msgid ""
+"The minimum time in hours to repost the same image (0 means no limit, -1 "
+"means never allowing a repost)"
+msgstr "Il minimo numero di ore prima che un'immagine possa essere inviata di nuovo (0 vuol dire nessun limite, -1 vuol dire che non è possibile inviare due volte la stessa immagine)"
+
+#: ../../application/models/radix_model.php:350
+msgid "Show the EXIF data (EXIF data is saved in the database regardless)"
+msgstr "Mostra i dati EXIF (i dati exif sono in ogni caso salvati nel database)"
+
+#: ../../application/models/radix_model.php:357
+msgid ""
+"Enable poster hashes, an IP-based code to temporarily distinguish Anonymous "
+"users"
+msgstr "Abilita il poster hash, un codice basato sull IP per distinguere temporaneamente gli utenti anonimi"
+
+#: ../../application/models/radix_model.php:363
+msgid "Don't allow ghost posting (disallows infinite replying)"
+msgstr "Non permettere messaggi fantasma (non permette di rispondere all'infinito)"
+
+#: ../../application/models/radix_model.php:369
+msgid "Hide the thumbnails?"
+msgstr "Nascondere le thumbnail?"
+
+#: ../../application/models/radix_model.php:375
+msgid "Hide the thumbnails for 24 hours? (for moderation purposes)"
+msgstr "Nascondere le thumbnail per 24 ore? (per moderarle)"
+
+#: ../../application/models/radix_model.php:380
+msgid "Use SphinxSearch as search engine?"
+msgstr "Usare SphinxSearch come motore di ricerca?"
+
+#: ../../application/models/radix_model.php:385
+msgid ""
+"Hide the board from public access? (only admins and mods will be able to "
+"browse it)"
+msgstr "Nascondi la board da accesso pubblico? (sono gli admin ed i mod potranno raggiungerla)"
+
+#: ../../application/models/radix_model.php:1330
+msgid ""
+"Your MySQL installation doesn't support multibyte characters. Update MySQL "
+"to version 5.5 or higher."
+msgstr ""
+
+#: ../../application/models/radix_model.php:1347
+#, php-format
+msgid "Converting %s to utfmb4"
+msgstr ""
+
+#: ../../application/models/radix_model.php:1352
+msgid "The tables have all been converted to utf8mb4"
+msgstr ""
+
+#: ../../application/models/report_model.php:24
+msgid "Board shortname"
+msgstr "Nome corto della board"
+
+#: ../../application/models/report_model.php:39
+msgid "Couldn't find the board with the submitted shortname."
+msgstr "Non è stato possibile trovare la board con il nome corto inviato."
+
+#: ../../application/models/report_model.php:46
+msgid "Board ID"
+msgstr "ID board"
+
+#: ../../application/models/report_model.php:55
+msgid "You didn't send a board ID."
+msgstr "Non hai inviato un board ID."
+
+#: ../../application/models/report_model.php:81
+msgid "Post number"
+msgstr "Numero messaggio"
+
+#: ../../application/models/report_model.php:93
+msgid "Couldn't find the post with the submitted post number."
+msgstr "Non è stato possibile trovare il messaggio con numero inviato."
+
+#: ../../application/models/report_model.php:103
+msgid "Post ID"
+msgstr "ID messaggio"
+
+#: ../../application/models/report_model.php:112
+msgid "You didn't send a post ID."
+msgstr "Non hai mandato un ID messaggio."
+
+#: ../../application/models/report_model.php:125
+msgid "Couldn't find the post with the submitted doc_id."
+msgstr "Non è stato possibile trovare il messaggio col doc_id inviato."
+
+#: ../../application/models/report_model.php:139
+msgid "Reason"
+msgstr "Motivo"
+
+#: ../../application/models/upgrade2_model.php:74
+msgid ""
+"We're currently upgrading {{FOOL_NAME}}. This process usually takes few "
+"seconds or a couple minutes, check back soon!"
+msgstr ""
+
+#: ../../application/models/upgrade_model.php:36
+msgid ""
+"FoOlPod server could not be contacted: impossible to check for new versions."
+msgstr "Non è stato possibile contattare il server FoOlPod: impossibile controllare per nuove versioni."
+
+#: ../../application/models/upgrade_model.php:189
+msgid ""
+"Can't get the update file from FoOlPod. It might be a momentary problem, or "
+"a problem with your server security configuration. Browse <a "
+"href=\"http://foolrulez.com/pod/human\">http://foolrulez.com/pod/human</a> "
+"to check if it's a known issue."
+msgstr "Non è stato possibile aggiornare il file da FoOlPod. Potrebbe essere un problema momentaneo, o un problema con la configurazione del tuo server. Segui <a href=\"http://foolrulez.com/pod/human\">http://foolrulez.com/pod/human</a> per controllare se è un problema comune."
+
+#: ../../application/models/upgrade_model.php:253
+#, php-format
+msgid ""
+"If you can't do the above, you can follow the manual upgrade instructons at "
+"%sthis link%s."
+msgstr "Se non puoi fare ciò che precede, puoi seguire le istruzioni per l'aggiornamento manuale a %squesto link%s."
+
+#: ../../application/views/admin/confirm.php:12
+msgid "Confirm"
+msgstr "Conferma"
+
+#: ../../application/views/admin/confirm.php:15
+msgid "Go back"
+msgstr "Torna indietro"
+
+#: ../../application/views/admin/default.php:7
+#: ../../application/views/admin/navbar.php:10
+msgid "Control Panel"
+msgstr "Pannello di controllo"
+
+#: ../../application/views/admin/default.php:73
+msgid "New upgrade available:"
+msgstr "Nuovo aggiornamento disponibile:"
+
+#: ../../application/views/admin/navbar.php:34
+msgid "Your Profile"
+msgstr "Il tuo profilo"
+
+#: ../../application/views/admin/navbar.php:39
+msgid "Logout"
+msgstr "Logout"
+
+#: ../../application/views/admin/auth/change_email_form.php:19
+msgid "Password"
+msgstr "Password"
+
+#: ../../application/views/admin/auth/change_email_form.php:25
+msgid "New email address"
+msgstr "Nuovo indirizzo email"
+
+#: ../../application/views/admin/auth/change_email_form.php:34
+msgid "Send confirmation email"
+msgstr "Invia l'email di conferma"
+
+#: ../../application/views/admin/auth/change_password_form.php:27
+msgid "Old Password"
+msgstr "Vecchia password"
+
+#: ../../application/views/admin/auth/change_password_form.php:31
+#: ../../application/views/admin/auth/reset_password_form.php:18
+msgid "New Password"
+msgstr "Nuova password"
+
+#: ../../application/views/admin/auth/change_password_form.php:35
+#: ../../application/views/admin/auth/reset_password_form.php:22
+msgid "Confirm New Password"
+msgstr "Conferma la nuova password"
+
+#: ../../application/views/admin/auth/forgot_password_form.php:13
+#: ../../application/views/admin/auth/login_form.php:13
+msgid "Email or username"
+msgstr "Email o nome utente"
+
+#: ../../application/views/admin/auth/forgot_password_form.php:36
+msgid "Get a new password"
+msgstr "Ottieni una nuova password"
+
+#: ../../application/views/admin/auth/forgot_password_form.php:41
+#: ../../application/views/admin/auth/register_form.php:115
+msgid "Back to login"
+msgstr "Torna al login"
+
+#: ../../application/views/admin/auth/login_form.php:21
+msgid "Email"
+msgstr "Email"
+
+#: ../../application/views/admin/auth/login_form.php:71
+#: ../../application/views/admin/auth/register_form.php:80
+msgid "Get another CAPTCHA"
+msgstr "Ottieni un altro CAPTCHA"
+
+#: ../../application/views/admin/auth/login_form.php:72
+#: ../../application/views/admin/auth/register_form.php:81
+msgid "Get an audio CAPTCHA"
+msgstr "Ottieni un audio CAPTCHA"
+
+#: ../../application/views/admin/auth/login_form.php:73
+#: ../../application/views/admin/auth/register_form.php:82
+msgid "Get an image CAPTCHA"
+msgstr "Ottieni un'immagine CAPTCHA"
+
+#: ../../application/views/admin/auth/login_form.php:76
+#: ../../application/views/admin/auth/register_form.php:85
+msgid "Enter the words above"
+msgstr "Asagi Fetcher"
+
+#: ../../application/views/admin/auth/login_form.php:77
+#: ../../application/views/admin/auth/register_form.php:86
+msgid "Enter the numbers you hear"
+msgstr "Inserisci i numeri che senti"
+
+#: ../../application/views/admin/auth/login_form.php:92
+#: ../../application/views/admin/auth/register_form.php:101
+msgid "Enter the letters above"
+msgstr "Inserisci le lettere qui sopra"
+
+#: ../../application/views/admin/auth/login_form.php:103
+msgid "Remember me"
+msgstr "Ricordati di me"
+
+#: ../../application/views/admin/auth/register_form.php:12
+#: ../../application/views/admin/auth/register_form.php:21
+#: ../../application/views/admin/auth/register_form.php:29
+#: ../../application/views/admin/auth/register_form.php:37
+#: ../../application/views/admin/auth/register_form.php:43
+msgid "required"
+msgstr "obbligatorio"
+
+#: ../../application/views/admin/auth/register_form.php:48
+msgid "Username"
+msgstr "Nome utente"
+
+#: ../../application/views/admin/auth/register_form.php:55
+#: ../../application/views/admin/auth/send_again_form.php:13
+msgid "Email Address"
+msgstr "Indirizzo Email"
+
+#: ../../application/views/admin/auth/register_form.php:67
+msgid "Confirm Password"
+msgstr "Conferma Password"
+
+#: ../../application/views/admin/auth/send_again_form.php:24
+msgid "Send"
+msgstr "Invia"
+
+#: ../../application/views/admin/auth/send_again_form.php:29
+msgid "Back to login (you must be activated)"
+msgstr "Torna al login (devi essere attivato)"
+
+#: ../../application/views/admin/auth/unregister_form.php:21
+msgid "Delete account"
+msgstr "Cancella account"
+
+#: ../../application/views/admin/boards/asagi.php:9
+msgid "Run"
+msgstr "Avvia"
+
+#: ../../application/views/admin/boards/asagi.php:10
+msgid "Kill"
+msgstr "Ferma"
+
+#: ../../application/views/admin/boards/asagi.php:12
+msgid "Enable autorun"
+msgstr "Abilita autorun"
+
+#: ../../application/views/admin/boards/asagi.php:14
+msgid "Disable autorun"
+msgstr "Disabilita autorun"
+
+#: ../../application/views/admin/boards/asagi.php:16
+msgid "Upgrade/Reinstall"
+msgstr "Aggiorna/Reinstalla"
+
+#: ../../application/views/admin/boards/asagi.php:17
+#: ../../application/views/admin/plugins/manage.php:11
+#: ../../application/views/admin/plugins/manage.php:32
+msgid "Remove"
+msgstr "Rimuovi"
+
+#: ../../application/views/admin/boards/asagi.php:22
+msgid "Running Asagi manually"
+msgstr "Avvia Asagi manualmente"
+
+#: ../../application/views/admin/boards/asagi.php:23
+msgid "You can run it on your server by typing in your command line:"
+msgstr "Puoi avviarlo sul tuo server scrivendo nella tua riga di comando:"
+
+#: ../../application/views/admin/boards/asagi.php:25
+msgid ""
+"But this would run it only once and would stop once you close the terminal. "
+"Use it to test if it's working fine."
+msgstr "Ma questo verrebbe eseguito solo una volta e terminerebbe quando lasci il terminale. Usalo per testare che funzioni."
+
+#: ../../application/views/admin/boards/asagi.php:29
+msgid ""
+"If you're on Linux, to have Asagi running as daemon (without your terminal needing to be open), you can use GNU Screen that creates a virtual terminal that will stay alive even if you close the window. \n"
+"You can usually install this on Debian/Ubuntu by typing <code>apt-get install screen</code> in your terminal. \n"
+"You can then type the following string in your terminal to have Asagi running under GNU Screen:"
+msgstr ""
+
+#: ../../application/views/admin/boards/asagi.php:35
+msgid ""
+"Then press CTRL+A and then CTRL+D to detach the screen. You can go back to "
+"it by writing:"
+msgstr ""
+
+#: ../../application/views/admin/boards/asagi.php:38
+msgid "License"
+msgstr "Licenza"
+
+#: ../../application/views/admin/boards/asagi.php:39
+msgid ""
+"Asagi is released under the GNU General Public License, version 2, or later."
+msgstr "Asagi è pubblicato sotto licenza GNU General Public License, versione 2, o superiore."
+
+#: ../../application/views/admin/boards/asagi.php:39
+msgid "Click here to read the full license."
+msgstr "Clicca qui per leggere la licenza completa."
+
+#: ../../application/views/admin/boards/asagi_install.php:5
+msgid ""
+"\n"
+"Asagi is the Open Source (GPLv3) 4chan data fetcher coded by Eksopl. It can dump the threads, images and thumbnails from the Yotsuba boards in 4chan into your server for easy consumption.\n"
+"\n"
+"If you're interested in using FoOlFuuka as a 4chan archive, you need to download, setup and run Asagi.\n"
+"\n"
+"We can do the downloading and the setup, and all that is left to you is running it since we can't reliably run it off the web interface. FoOlFuuka will keep the settings of Asagi updated for you, so you can manage your archives through the boards manager.\n"
+"\n"
+"Requirements: Java installed on your server.\n"
+msgstr ""
+
+#: ../../application/views/admin/boards/asagi_install.php:19
+msgid "Install"
+msgstr "Installa"
+
+#: ../../application/views/admin/boards/manage.php:15
+msgid "Board"
+msgstr "Board"
+
+#: ../../application/views/admin/boards/manage.php:17
+msgid "Quick functions"
+msgstr "Funzioni veloci"
+
+#: ../../application/views/admin/boards/manage.php:34
+#: ../../application/views/admin/boards/manage.php:42
+msgid "Edit"
+msgstr "Modifica"
+
+#: ../../application/views/admin/boards/manage.php:48
+msgid "Delete"
+msgstr "Elimina"
+
+#: ../../application/views/admin/database/upgrade.php:6
+msgid "Update database"
+msgstr "Aggiorna database"
+
+#: ../../application/views/admin/database/upgrade.php:8
+msgid ""
+"There's a newer version of the database available. Just update it by "
+"clicking on the update button."
+msgstr "C'p una nuova versione del database disponibile. Aggiornalo cliccando sul bottone di aggiornamento."
+
+#: ../../application/views/admin/database/upgrade.php:10
+#, php-format
+msgid ""
+"In case you're using a very large installation of {{FOOL_NAME}}, to avoid "
+"timeouts while updating the database, you can use the command line, and "
+"enter this: %s"
+msgstr ""
+
+#: ../../application/views/admin/database/upgrade.php:16
+msgid "Do you really want to upgrade your database?"
+msgstr "Vuoi davvero aggiornare il tuo database?"
+
+#: ../../application/views/admin/members/manage.php:6
+msgid "ID"
+msgstr "ID"
+
+#: ../../application/views/admin/members/manage.php:8
+msgid "Display name"
+msgstr "Nome pubblico"
+
+#: ../../application/views/admin/members/manage.php:11
+msgid "Last seen"
+msgstr "Ultima visita"
+
+#: ../../application/views/admin/plugins/manage.php:8
+msgid "Plugin name"
+msgstr "Nome plugin"
+
+#: ../../application/views/admin/plugins/manage.php:9
+msgid "Description"
+msgstr "Descrizione"
+
+#: ../../application/views/admin/plugins/manage.php:10
+msgid "Status"
+msgstr "Stato"
+
+#: ../../application/views/admin/plugins/manage.php:24
+msgid "Disable"
+msgstr "Disabilita"
+
+#: ../../application/views/admin/plugins/manage.php:25
+msgid "Enable"
+msgstr "Abilita"
+
+#: ../../application/views/admin/system/information.php:11
+msgid "Server Information"
+msgstr "Informazioni Server"
+
+#: ../../application/views/admin/system/information.php:15
+msgid "Web Server Software"
+msgstr "Software Web Server"
+
+#: ../../application/views/admin/system/information.php:17
+msgid "The web server that is currently running to serve your content."
+msgstr "Il web server che invia i tuoi contenuti"
+
+#: ../../application/views/admin/system/information.php:21
+msgid "PHP Version"
+msgstr "Versione PHP"
+
+#: ../../application/views/admin/system/information.php:23
+msgid "The version of the currently running PHP parser."
+msgstr "La versione del parser PHP correntemente in uso."
+
+#: ../../application/views/admin/system/information.php:26
+msgid "Old PHP version"
+msgstr "Versione PHP datata"
+
+#: ../../application/views/admin/system/information.php:27
+msgid "To run {{FOOL_NAME}}, you need at least PHP  version 5.2.0."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:27
+#: ../../application/views/admin/system/information.php:57
+#: ../../application/views/admin/system/information.php:89
+#: ../../application/views/admin/system/information.php:101
+#: ../../application/views/admin/system/information.php:113
+#: ../../application/views/admin/system/information.php:125
+#: ../../application/views/admin/system/information.php:137
+#: ../../application/views/admin/system/information.php:149
+#: ../../application/views/admin/system/information.php:161
+msgid "Suggested"
+msgstr "Suggerito"
+
+#: ../../application/views/admin/system/information.php:38
+msgid "Nginx Upload Size"
+msgstr "Dimensioni Upload Nginx"
+
+#: ../../application/views/admin/system/information.php:39
+msgid "This value cannot be checked via PHP."
+msgstr "Questo valore non può essere controllato via PHP."
+
+#: ../../application/views/admin/system/information.php:40
+msgid ""
+"The Nginx web server has its own internal upload limit variable. If you are "
+"receiving upload errors, and your PHP configuration looks fine, check this "
+"variable in your Nginx configuration file."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:40
+#: ../../application/views/admin/system/information.php:85
+#: ../../application/views/admin/system/information.php:97
+#: ../../application/views/admin/system/information.php:109
+#: ../../application/views/admin/system/information.php:121
+#: ../../application/views/admin/system/information.php:133
+#: ../../application/views/admin/system/information.php:145
+#: ../../application/views/admin/system/information.php:157
+msgid "Variable"
+msgstr "Variabile"
+
+#: ../../application/views/admin/system/information.php:46
+msgid "Software Information"
+msgstr "Informazioni Software"
+
+#: ../../application/views/admin/system/information.php:50
+msgid "{{FOOL_NAME}} Version"
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:52
+msgid ""
+"The version of {{FOOL_NAME}} that you are currently running on your server."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:55
+#: ../../application/views/admin/system/information.php:56
+msgid "New Version Available"
+msgstr "Nuova Versione Disponibile"
+
+#: ../../application/views/admin/system/information.php:57
+msgid ""
+"Upgrading {{FOOL_NAME}} ensures that you have the most secure, stable and "
+"feature enhanced release."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:63
+msgid "Environment"
+msgstr "Condizioni"
+
+#: ../../application/views/admin/system/information.php:65
+msgid "The environment {{FOOL_NAME}} is currently running as on the server."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:72
+msgid "PHP Configuration"
+msgstr "Configurazione PHP"
+
+#: ../../application/views/admin/system/information.php:73
+msgid "PHP settings can be easily changed by editing your php.ini file."
+msgstr "I settaggi PHP possono essere facilmente cambiati modificando il tuo file php.ini "
+
+#: ../../application/views/admin/system/information.php:77
+msgid "php.ini Location"
+msgstr "Locazione php.ini"
+
+#: ../../application/views/admin/system/information.php:79
+msgid ""
+"This is the location of the file to edit to change the following variables."
+msgstr "Questa è la locazione del file da modificare per cambiare i valori delle seguenti variabili."
+
+#: ../../application/views/admin/system/information.php:83
+#: ../../application/views/admin/system/information.php:88
+msgid "Safe Mode"
+msgstr "Safe Mode"
+
+#: ../../application/views/admin/system/information.php:84
+#: ../../application/views/admin/system/information.php:96
+msgid "On"
+msgstr "Attivo"
+
+#: ../../application/views/admin/system/information.php:84
+#: ../../application/views/admin/system/information.php:96
+msgid "Off"
+msgstr "Disattivato"
+
+#: ../../application/views/admin/system/information.php:85
+msgid ""
+"The PHP safe mode is an attempt to solve the shared-server security problems"
+" and disables many important PHP functions. This is mainly used by shared "
+"hosting services to avoid implementing correct security fixes for shared-"
+"server environments."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:89
+msgid ""
+"Safe Mode has been enabled on your PHP installation. This setting has "
+"nothing to do with security, and it's used by shared server hosts to limit "
+"your actions. This variable should be turned off for {{FOOL_NAME}} to "
+"function correctly."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:95
+msgid "Allow URL fopen"
+msgstr "Permetti URL fopen"
+
+#: ../../application/views/admin/system/information.php:97
+msgid ""
+"This function allows PHP to use URL-aware fopen wrappers to access remote "
+"files via FTP or HTTP protocol."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:100
+#: ../../application/views/admin/system/information.php:120
+#: ../../application/views/admin/system/information.php:124
+msgid "Disabled"
+msgstr "Disabilitato"
+
+#: ../../application/views/admin/system/information.php:101
+msgid ""
+"Your PHP configuration currently has URL-aware fopen wrappers disabled. This"
+" affects {{FOOL_NAME}} functions that require accessing remote files in case"
+" cURL is not installed on the system. If it is possible, this variable "
+"should be enabled with cURL installed as well."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:107
+msgid "Max Execution Time"
+msgstr "Massimo Tempo Esecuzione"
+
+#: ../../application/views/admin/system/information.php:109
+msgid ""
+"This is the maximum time in seconds a script is allowed to run before it is "
+"terminated by the parser."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:112
+#: ../../application/views/admin/system/information.php:136
+#: ../../application/views/admin/system/information.php:148
+#: ../../application/views/admin/system/information.php:160
+msgid "Low Value"
+msgstr "Valore Basso"
+
+#: ../../application/views/admin/system/information.php:113
+msgid ""
+"Your current value for max execution time is low. This option affects "
+"functions that require large amounts of processing time, such as processing "
+"images. If your server doesn't have a powerful processor or you're "
+"processing large amounts of images, this value must be set as high as the "
+"total processing time taken to complete the function."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:119
+msgid "File Uploads"
+msgstr "Upload File"
+
+#: ../../application/views/admin/system/information.php:120
+msgid "Enabled"
+msgstr "Abilitato"
+
+#: ../../application/views/admin/system/information.php:121
+msgid "This states whether or not to allow HTTP file uploads."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:125
+msgid ""
+"Your PHP configuration currently has file uploads disabled. This variable "
+"must be enabled or {{FOOL_NAME}} will not operate correctly."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:131
+msgid "Max POST Size"
+msgstr "Massima Dimensione POST"
+
+#: ../../application/views/admin/system/information.php:133
+msgid "This is max size of post data allowed."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:137
+msgid ""
+"Your current value for POST size is low. This variable should generally be "
+"set at a higher value to accomodate and ensure that all of your chapters "
+"will be uploaded."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:143
+msgid "Max Upload Size"
+msgstr "Massima Dimensione Upload"
+
+#: ../../application/views/admin/system/information.php:145
+msgid "This is the maximum size allowed for an uploaded file."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:149
+msgid ""
+"Your current value for max upload size is low. This variable should "
+"generally be set at a higher value to accommodate and allow your largest "
+"chapter to be uploaded."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:155
+msgid "Max File Uploads"
+msgstr "Massimo Numero File in Upload"
+
+#: ../../application/views/admin/system/information.php:157
+msgid ""
+"This is the maximum number of files allowed to be uploaded simultaneously."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:161
+msgid ""
+"Your current value for max file uploads is low. This variable should "
+"generally be set at a higher value than the number of pages your chapters "
+"may have."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:171
+msgid "Extensions"
+msgstr "Estensioni"
+
+#: ../../application/views/admin/system/information.php:176
+#: ../../application/views/admin/system/information.php:181
+#: ../../application/views/admin/system/information.php:187
+msgid "Installed"
+msgstr "Installato"
+
+#: ../../application/views/admin/system/information.php:176
+#: ../../application/views/admin/system/information.php:187
+msgid "Not Installed"
+msgstr "Non installato"
+
+#: ../../application/views/admin/system/information.php:177
+msgid ""
+"This is a library used to communicate with different types of servers with "
+"many types of protocols."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:181
+msgid "Missing"
+msgstr "Mancante"
+
+#: ../../application/views/admin/system/information.php:182
+msgid "This is a library used to dynamically create images and thumbnails."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:188
+msgid ""
+"This is a library used to dynamically create, edit, compose or convert "
+"images."
+msgstr ""
+
+#: ../../application/views/admin/system/information.php:188
+msgid "Optional"
+msgstr "Opzionale"
+
+#: ../../application/views/admin/system/upgrade.php:7
+msgid "Current Version"
+msgstr "Versione Corrente"
+
+#: ../../application/views/admin/system/upgrade.php:8
+msgid "Latest Version Available"
+msgstr "Ultima Versione Disponibile"
+
+#: ../../application/views/admin/system/upgrade.php:8
+msgid "You have the latest version of {{FOOL_NAME}}."
+msgstr ""
+
+#: ../../application/views/admin/system/upgrade.php:16
+msgid "Upgrade or reinstall"
+msgstr "Aggiorna o reinstalla"
+
+#: ../../application/views/admin/system/upgrade.php:29
+msgid "Changelog"
+msgstr "Changelog"
+
+#: ../../application/views/install/default.php:7
+msgid "{{FOOL_NAME}}"
+msgstr "{{FOOL_NAME}}"
+
+#: ../../application/views/install/index.php:5
+msgid ""
+"This is all the needed information to install and run {{FOOL_NAME}}. Don't "
+"worry: you can change this information later in case you need it changed."
+msgstr ""
+
+#: ../../application/views/install/manual_config.php:6
+#, php-format
+msgid ""
+"The installation was unable to automatically create the config.php file. "
+"You'll have to create %s and paste all the following inside the file. When "
+"done, just press on the button on the bottom to be redirected to your "
+"{{FOOL_NAME}} installation."
+msgstr ""
+
+#: ../../application/views/install/manual_config.php:28
+msgid "Done"
+msgstr "Fatto"
+
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:56
+msgid "SSL Tools"
+msgstr "Strumenti SSL"
+
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:65
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:74
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:83
+msgid "SSL"
+msgstr "SSL"
+
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:94
+msgid ""
+"Does the server have SSL available (does your site support https:// "
+"protocol)?"
+msgstr ""
+
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:99
+msgid "Redirect the logged in users to the SSL version of the site"
+msgstr ""
+
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:104
+msgid "Redirect every user to the SSL version of the site"
+msgstr ""
+
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:109
+msgid ""
+"Set a cookie for users that browsed the site with https:// so they get "
+"redirected to the https:// version of the site"
+msgstr ""
+
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:114
+msgid "Show a link to SSL in the header if the user is browsing in http://"
+msgstr ""
+
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools.php:119
+msgid "Show a link to SSL in the footer if the user is browsing in http://"
+msgstr ""
+
+#: ../../content/plugins/FF_SSL_Tools/FF_SSL_Tools_info.php:15
+msgid "Adds a panel to control useful tools if you have SSL available"
+msgstr ""
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:40
+msgid "Couldn't find the article with the submitted ID."
+msgstr "Non è stato possibile trovare l'articolo con l'ID inviato."
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:52
+msgid "The title of your article"
+msgstr "Il titolo del tuo articolo"
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:60
+msgid "Slug"
+msgstr "Slug"
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:61
+msgid ""
+"Insert the short name of the article to use in the url. Only alphanumeric "
+"and dashes."
+msgstr ""
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:90
+msgid "The slug is already used for another board."
+msgstr ""
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:100
+msgid "If you set this, the article link will actually be an outlink."
+msgstr ""
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:107
+#: ../../content/plugins/FS_Articles/FS_Articles.php:276
+msgid "Article"
+msgstr "Articolo"
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:108
+msgid "The content of your article, in MarkDown"
+msgstr ""
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:116
+#: ../../content/plugins/FS_Articles/FS_Articles.php:117
+msgid "Display the article link on the top of the page"
+msgstr ""
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:122
+#: ../../content/plugins/FS_Articles/FS_Articles.php:123
+msgid "Display the article link on the bottom of the page"
+msgstr ""
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:160
+#: ../../content/plugins/FS_Articles/FS_Articles.php:168
+#: ../../content/plugins/FS_Articles/FS_Articles.php:186
+#: ../../content/plugins/FS_Articles/FS_Articles.php:283
+#: ../../content/plugins/FS_Articles/FS_Articles.php:360
+#: ../../content/plugins/FS_Articles/FS_Articles.php:462
+msgid "Articles"
+msgstr "Articoli"
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:194
+#: ../../content/plugins/FS_Articles/FS_Articles.php:280
+msgid "New article"
+msgstr "Nuovo articolo"
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:252
+msgid "New article created!"
+msgstr "Nuovo articolo creato!"
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:258
+#: ../../content/plugins/FS_Articles/FS_Articles.php:263
+msgid "Article information updated."
+msgstr "Informazioni dell'articolo aggiornate."
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:356
+msgid "The article was removed"
+msgstr "L'articolo è stato rimosso"
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:361
+msgid "Removing article:"
+msgstr "Rimovendo l'articolo:"
+
+#: ../../content/plugins/FS_Articles/FS_Articles.php:363
+msgid "Do you really want to remove the article?"
+msgstr "Vuoi davvero rimuovere l'articolo?"
+
+#: ../../content/plugins/FS_Articles/FS_Articles_info.php:15
+msgid "Enable support for custom pages in MarkDown and custom links."
+msgstr "Abilita il supporto per pagine personalizzate in MarkDown e link personalizzati."
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:38
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:139
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:142
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:182
+msgid "Statistics"
+msgstr "Statistiche"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:45
+msgid "Stats"
+msgstr "Statistiche"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:78
+msgid ""
+"Select the statistics to enable. Some might be too slow to process, so you "
+"should disable them. Some statistics don't use extra processing power so "
+"they are enabled by default."
+msgstr ""
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:99
+#, php-format
+msgid "Enable %s statistics"
+msgstr ""
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:111
+msgid "Board Statistics"
+msgstr "Statistiche Board"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:186
+#, php-format
+msgid "Statistics: %s (Next Update in %s)"
+msgstr "Statistiche: %s (Prossimo aggiornamento in %s)"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:193
+#, php-format
+msgid "Statistics: %s"
+msgstr "Statistiche: %s"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:228
+#: ../../content/plugins/FU_Board_Statistics/views/availability.php:11
+msgid "Availability"
+msgstr "Disponibilità"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:229
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:236
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:259
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:282
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:306
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:312
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:335
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:341
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:364
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:370
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:376
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:382
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:388
+msgid "Posts in last month by name and availability by time of day."
+msgstr "Messaggi nell'ultimo mese per nome e disponibilità durante il giorno"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:235
+msgid "Daily Activity"
+msgstr "Attività Giornaliera"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:258
+msgid "Daily Activity \"Archive\""
+msgstr "Attività Giornaliera \"Archivio\""
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:281
+msgid "Daily Activity \"Hourly\""
+msgstr "Attività Giornaliera \"per Ora\""
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:305
+msgid "Image Reposts"
+msgstr "Immagini Più Inviate"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:311
+msgid "Karma"
+msgstr "Karma"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:334
+msgid "New Users"
+msgstr "Nuovi Utenti"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:340
+msgid "Population"
+msgstr "Popolazione"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:363
+msgid "Post Count"
+msgstr "Conto Messaggi"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:369
+msgid "Post Rate"
+msgstr "Frequenza Messaggi"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:375
+msgid "Post Rate \"Archive\""
+msgstr "Frequenza Messaggi \"Archivio\""
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:381
+msgid "Users Online"
+msgstr "Utenti Online"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics.php:387
+msgid "Users Posting in Archive"
+msgstr "Utenti nell'Archivio"
+
+#: ../../content/plugins/FU_Board_Statistics/FU_Board_Statistics_info.php:15
+msgid "Statistics for the boards, to keep live with a php daemon."
+msgstr ""
+
+#: ../../content/plugins/FU_Board_Statistics/views/availability.php:9
+#: ../../content/plugins/FU_Board_Statistics/views/new_users.php:18
+#: ../../content/plugins/FU_Board_Statistics/views/post_count.php:9
+#: ../../content/plugins/FU_Board_Statistics/views/users_online.php:10
+msgid "Poster"
+msgstr "Poster"
+
+#: ../../content/plugins/FU_Board_Statistics/views/availability.php:10
+#: ../../content/plugins/FU_Board_Statistics/views/new_users.php:20
+#: ../../content/plugins/FU_Board_Statistics/views/post_count.php:10
+msgid "Total Posts"
+msgstr "Totale Messaggi"
+
+#: ../../content/plugins/FU_Board_Statistics/views/new_users.php:19
+msgid "First Seen"
+msgstr "Primo Incontro"
+
+#: ../../content/plugins/FU_Board_Statistics/views/post_rate.php:10
+msgid "Posts within Last Hour"
+msgstr "Messaggi nell'Ultima Ora"
+
+#: ../../content/plugins/FU_Board_Statistics/views/post_rate.php:11
+msgid "Posts per Minute"
+msgstr "Messaggi al Minuto"
+
+#: ../../content/plugins/FU_Board_Statistics/views/users_online.php:11
+msgid "Last Seen"
+msgstr "Ultimo Incontro"
+
+#: ../../content/plugins/FU_Board_Statistics/views/users_online.php:12
+msgid "Latest Post"
+msgstr "Ultimo Messaggo"
+
+#: ../../content/plugins/FU_Gifsicle/FU_Gifsicle_info.php:15
+msgid ""
+"Adds support for gifsicle for creating better optimized animated GIF "
+"thumbnails"
+msgstr ""
+
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:25
+msgid "Cache cleaning URLs"
+msgstr ""
+
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:26
+msgid ""
+"Insert the URLs that Nginx Cache Purge will have to contact and their "
+"eventual Basic Auth passwords. Make sure you \"allow\" only the IP from this"
+" server on the Nginx Cache Purge configuration block. The following is the "
+"format:"
+msgstr ""
+
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:55
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge.php:66
+msgid "Nginx Cache Purge"
+msgstr ""
+
+#: ../../content/plugins/FU_Nginx_Cache_Purge/FU_Nginx_Cache_Purge_info.php:16
+#, php-format
+msgid ""
+"Remove deleted images from the Nginx proxy cache when deleted locally. "
+"Requires Nginx compiled with %s to work."
+msgstr ""
+
+#: ../../content/themes/default/views/board.php:27
+#: ../../content/themes/default/views/board_comment.php:20
+#: ../../content/themes/default/views/gallery.php:36
+msgid "View Same"
+msgstr "Trova Identici"
+
+#: ../../content/themes/default/views/board.php:48
+#: ../../content/themes/default/views/board.php:77
+#: ../../content/themes/default/views/board_comment.php:62
+#: ../../content/themes/default/views/board_comment.php:98
+#: ../../content/themes/default/views/gallery.php:19
+msgid "Mod"
+msgstr "Mod"
+
+#: ../../content/themes/default/views/board.php:51
+#: ../../content/themes/default/views/board_comment.php:65
+#: ../../content/themes/default/views/gallery.php:22
+msgid "Global Mod"
+msgstr "Mod Globale"
+
+#: ../../content/themes/default/views/board.php:54
+#: ../../content/themes/default/views/board_comment.php:68
+#: ../../content/themes/default/views/gallery.php:25
+msgid "Admin"
+msgstr "Admin"
+
+#: ../../content/themes/default/views/board.php:59
+#: ../../content/themes/default/views/board_comment.php:73
+msgid "4chan time"
+msgstr "Orario 4chan"
+
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/board_comment.php:79
+#: ../../content/themes/default/views/gallery.php:29
+msgid "View"
+msgstr "Vedi"
+
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/gallery.php:29
+msgid "Reply"
+msgstr "Rispondi"
+
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/gallery.php:29
+msgid "Last 50"
+msgstr "Ultimi 50"
+
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/gallery.php:29
+msgid "Original"
+msgstr "Originale"
+
+#: ../../content/themes/default/views/board.php:65
+#: ../../content/themes/default/views/board_comment.php:79
+#: ../../content/themes/default/views/gallery.php:29
+msgid "Report"
+msgstr "Segnala"
+
+#: ../../content/themes/default/views/board.php:68
+#: ../../content/themes/default/views/gallery.php:43
+msgid "This post was deleted from 4chan manually"
+msgstr "Questo messaggio è stato cancellato da 4chan manualmente"
+
+#: ../../content/themes/default/views/board.php:69
+#: ../../content/themes/default/views/board_comment.php:83
+#: ../../content/themes/default/views/gallery.php:44
+msgid "This post contains a spoiler image"
+msgstr "Questo messaggio contiene un'immagine con spoiler"
+
+#: ../../content/themes/default/views/board.php:72
+#: ../../content/themes/default/views/board_comment.php:89
+msgid "Quoted by:"
+msgstr "Citato da:"
+
+#: ../../content/themes/default/views/board.php:82
+#: ../../content/themes/default/views/board_comment.php:103
+msgid "Remove image"
+msgstr "Rimuovi immagine"
+
+#: ../../content/themes/default/views/board.php:83
+#: ../../content/themes/default/views/board_comment.php:104
+msgid "Ban image"
+msgstr "Banna immagine"
+
+#: ../../content/themes/default/views/board.php:86
+#: ../../content/themes/default/views/board_comment.php:107
+msgid "Ban user:"
+msgstr "Banna utente:"
+
+#: ../../content/themes/default/views/board.php:89
+#: ../../content/themes/default/views/board_comment.php:110
+msgid "Remove report"
+msgstr "Rimuovi segnalazione"
+
+#: ../../content/themes/default/views/board.php:101
+msgid "posts"
+msgstr "messaggi"
+
+#: ../../content/themes/default/views/board.php:101
+msgid "omitted"
+msgstr "omessi"
+
+#: ../../content/themes/default/views/board.php:105
+#: ../../content/themes/default/views/board_comment.php:116
+msgid "Report reason:"
+msgstr "Motivazione segnalazione:"
+
+#: ../../content/themes/default/views/board_comment.php:82
+msgid "This post was deleted from 4chan"
+msgstr "Questo messaggio è stato cancellato da 4chan"
+
+#: ../../content/themes/default/views/board_comment.php:84
+msgid "This post was made in the archive"
+msgstr "Questo messaggio è stato creato nell'archivio"
+
+#: ../../content/themes/default/views/error.php:7
+msgid "Error!"
+msgstr "Errore!"
+
+#: ../../content/themes/default/views/index.php:15
+msgid "Archives"
+msgstr "Archivi"
+
+#: ../../content/themes/default/views/tools_reply_box.php:18
+#: ../../content/themes/default/views/tools_search.php:246
+msgid "Subject"
+msgstr "Soggetto"
+
+#: ../../content/themes/default/views/tools_reply_box.php:27
+msgid "Comment"
+msgstr "Commento"
+
+#: ../../content/themes/default/views/tools_reply_box.php:48
+#: ../../content/themes/default/views/tools_search.php:255
+msgid "E-mail"
+msgstr "E-mail"
+
+#: ../../content/themes/default/views/tools_reply_box.php:65
+msgid "File"
+msgstr "File"
+
+#: ../../content/themes/default/views/tools_reply_box.php:83
+msgid "Post as"
+msgstr "Invia come"
+
+#: ../../content/themes/default/views/tools_reply_box.php:84
+msgid "User"
+msgstr "Utente"
+
+#: ../../content/themes/default/views/tools_reply_box.php:135
+msgid "Submit spoilered"
+msgstr "Invia con spoiler"
+
+#: ../../content/themes/default/views/tools_reply_box.php:146
+msgid "Reset"
+msgstr "Reset"
+
+#: ../../content/themes/default/views/tools_search.php:29
+msgid "Search or insert post no. or thread URL"
+msgstr "Cerca o inserisci num. msg. o URL thread"
+
+#: ../../content/themes/default/views/tools_search.php:38
+msgid "Undefined"
+msgstr "Non definito"
+
+#: ../../content/themes/default/views/tools_search.php:47
+msgid "Search"
+msgstr "Cerca"
+
+#: ../../content/themes/default/views/tools_search.php:64
+msgid "Go to post"
+msgstr "Vai al messaggio"
+
+#: ../../content/themes/default/views/tools_search.php:77
+msgid "Filters:"
+msgstr "Filtri:"
+
+#: ../../content/themes/default/views/tools_search.php:83
+#: ../../content/themes/default/views/tools_search.php:110
+#: ../../content/themes/default/views/tools_search.php:137
+#: ../../content/themes/default/views/tools_search.php:164
+#: ../../content/themes/default/views/tools_search.php:192
+msgid "All"
+msgstr "Tutti"
+
+#: ../../content/themes/default/views/tools_search.php:91
+msgid "Only Deleted"
+msgstr "Solo Cancellati"
+
+#: ../../content/themes/default/views/tools_search.php:99
+msgid "Only Non-Deleted"
+msgstr "Solo Non Cancellati"
+
+#: ../../content/themes/default/views/tools_search.php:118
+msgid "Only Ghost"
+msgstr "Solo Fantasma"
+
+#: ../../content/themes/default/views/tools_search.php:126
+msgid "Only Original"
+msgstr "Solo Originale"
+
+#: ../../content/themes/default/views/tools_search.php:145
+msgid "Only with image"
+msgstr "Solo con immagine"
+
+#: ../../content/themes/default/views/tools_search.php:153
+msgid "Only without image"
+msgstr "Solo senza immagine"
+
+#: ../../content/themes/default/views/tools_search.php:172
+msgid "Thread OPs Only"
+msgstr "Solo OP"
+
+#: ../../content/themes/default/views/tools_search.php:180
+msgid "Replies Only"
+msgstr "Solo risposte"
+
+#: ../../content/themes/default/views/tools_search.php:201
+msgid "Only by Users"
+msgstr "Solo da Utenti"
+
+#: ../../content/themes/default/views/tools_search.php:209
+msgid "Only by Mods"
+msgstr "Solo da Mod"
+
+#: ../../content/themes/default/views/tools_search.php:217
+msgid "Only by Admins"
+msgstr "Solo da Admin"
+
+#: ../../content/themes/default/views/tools_search.php:231
+msgid "New First"
+msgstr "Nuovi Prima"
+
+#: ../../content/themes/default/views/tools_search.php:239
+msgid "Old First"
+msgstr "Vecchi Prima"
+
+#: ../../content/themes/default/views/tools_search.php:252
+msgid "Tripcode"
+msgstr "Tripcode"
+
+#: ../../content/themes/default/views/tools_search.php:258
+msgid "Filename"
+msgstr "Filename"
+
+#: ../../content/themes/default/views/tools_search.php:261
+msgid "Date start"
+msgstr "Data inizio"
+
+#: ../../content/themes/default/views/tools_search.php:275
+msgid "Date end"
+msgstr "Data fine"
+
+#: ../../content/themes/default/views/tools_search.php:289
+msgid "Image hash"
+msgstr "Hash immagine"
+
+#: ../../content/themes/default/views/tools_search.php:292
+msgid "You can drag and drop an image on the field above"
+msgstr "Puoi trascinare un'immagine nel campo sovrastante"
+
+#: ../../content/themes/default/views/tools_search.php:295
+msgid "Your latest searches:"
+msgstr "Le tue ultime ricerche:"
+
+#: ../../content/themes/default/views/tools_search.php:296
+msgid "Clear"
+msgstr "Cancella"
+
+#: ../../content/themes/default/views/layouts/chan.php:134
+msgid "Index"
+msgstr "Indice"
+
+#: ../../content/themes/default/views/layouts/chan.php:143
+msgid "By post"
+msgstr "Per messaggio"
+
+#: ../../content/themes/default/views/layouts/chan.php:151
+msgid "By thread"
+msgstr "Per thread"
+
+#: ../../content/themes/default/views/layouts/chan.php:164
+msgid "Ghost"
+msgstr "Fantasma"
+
+#: ../../content/themes/default/views/layouts/chan.php:261
+msgid "Change theme"
+msgstr "Cambia tema"
+
+#: ../../content/themes/default/views/layouts/chan.php:277
+msgid "Change language"
+msgstr "Cambia lingua"
+
+#: ../../content/themes/default/views/layouts/chan.php:285
+msgid "Add a translation"
+msgstr "Aggiungi una traduzione"
+
+#: ../../content/themes/fuuka/theme_plugin.php:355
+#: ../../content/themes/fuuka/theme_plugin.php:384
+#: ../../content/themes/fuuka/theme_plugin.php:413
+msgid "Redirecting..."
+msgstr "Reindirizzo..."
+
+#: ../../content/themes/fuuka/views/index.php:7
+msgid "Welcome on the 4chan Archiver \"FoOlFuuka\""
+msgstr "Benvenuto all'Archivio 4chan \"FoOlFuuka\""
+
+#: ../../content/themes/fuuka/views/index.php:8
+msgid "Choose a 4chan board:"
+msgstr "Scegli una board 4chan:"
+
+#: ../../content/themes/yotsuba/views/index.php:8
+msgid "We are hosting these boards:"
+msgstr "Noi ospitiamo queste board:"

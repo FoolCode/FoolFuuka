@@ -767,8 +767,6 @@ class Chan extends Common
 
     public function radix_search()
     {
-        $this->response = new StreamedResponse();
-
         if ($this->getPost('submit_search_global')) {
             $this->radix = null;
         }
@@ -778,6 +776,8 @@ class Chan extends Common
         if ($this->radix !== null && $this->getPost('submit_post')) {
             return $this->radix_post(str_replace(',', '_', $text));
         }
+
+        $this->response = new StreamedResponse();
 
         // Check all allowed search modifiers and apply only these
         $modifiers = [

@@ -9,7 +9,7 @@ return [
         /**
          * Version for autoupgrades
          */
-        'version' => '1.7.0-dev-1',
+        'version' => '2.0.0-dev-0',
 
         /**
          * Display name for the module
@@ -82,7 +82,6 @@ return [
             'max_posts_count' => 400,
             'max_images_count' => 250,
             'min_image_repost_time' => 0,
-            'myisam_search' => false,
             'anonymous_default_name' => 'Anonymous',
             'max_comment_characters_allowed' => 4096,
             'max_comment_lines_allowed' => 20,

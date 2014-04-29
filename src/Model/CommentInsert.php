@@ -173,13 +173,34 @@ class CommentInsert extends Comment
     /**
      * Send the comment and attached media to database
      *
-     * @param object $board
-     * @param array $data the comment data
-     * @param array $options modifiers
+     * @param Media $media
+     * @param array $data extra data
+     * @throws CommentSendingDatabaseException
+     * @throws CommentSendingBannedException
+     * @throws CommentSendingThreadWithoutMediaException
+     * @throws CommentSendingSpamException
+     * @throws CommentSendingImageInGhostException
+     * @throws CommentSendingNoDelPassException
+     * @throws CommentSendingThreadClosedException
+     * @throws CommentSendingRequestCaptchaException
+     * @throws CommentSendingTimeLimitException
+     * @throws CommentSendingException
+     * @throws CommentSendingTooManyCharactersException
+     * @throws \RuntimeException
+     * @throws CommentSendingDisplaysEmptyException
+     * @throws CommentSendingTooManyLinesException
+     * @throws CommentSendingSameCommentException
+     * @throws CommentSendingWrongCaptchaException
+     * @throws CommentSendingUnallowedCapcodeException
      * @return array error key with explanation to show to user, or success and post row
      */
-    protected function p_insert(Media $media = null)
+    protected function p_insert(Media $media = null, $data = [])
     {
+        if (isset($data['recaptcha_challenge'])) {
+            $this->recaptcha_challenge = $data['recaptcha_challenge'];
+            $this->recaptcha_response = $data['recaptcha_response'];
+        }
+
         $this->ghost = false;
         $this->allow_media = true;
 

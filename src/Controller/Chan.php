@@ -1219,7 +1219,7 @@ class Chan extends Common
                 $bulk = new CommentBulk();
                 $bulk->import($data, $this->radix);
                 $comment = new CommentInsert($this->getContext(), $bulk);
-                $comment->insert($media);
+                $comment->insert($media, $data);
             } catch (\Foolz\Foolfuuka\Model\CommentSendingRequestCaptchaException $e) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['captcha' => true]);

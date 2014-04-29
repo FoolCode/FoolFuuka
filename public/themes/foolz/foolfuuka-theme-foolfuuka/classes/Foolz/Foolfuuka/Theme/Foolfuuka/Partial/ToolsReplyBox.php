@@ -179,7 +179,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                             </div>
                         </div>
 
-                        <script type="xtxt/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>"></script>
+                        <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>"></script>
                         <noscript>
                             <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>" height="300" width="500" frameborder="0"></iframe><br>
                             <textarea name="recaptcha_challenge_field" rows="3" cols="40">

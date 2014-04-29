@@ -192,19 +192,14 @@ class Chan extends Common
      */
     protected function check_board()
     {
-        $board = $this->getQuery('board');
+        $board = $this->getQuery('board', $board = $this->getPost('board', null));
 
-        if (!$board) {
-            $board = $this->getPost('board');
-        }
 
-        if (!$board) {
-            //$this->response->setData(['error' => _i('You didn\'t select a board')]);
+        if ($board === null) {
             return false;
         }
 
         if (!$this->radix = $this->radix_coll->getByShortname($board)) {
-            //$this->response->setData(['error' => _i('The board you selected doesn\'t exist')]);
             return false;
         }
 
@@ -238,7 +233,7 @@ class Chan extends Common
         }
 
         if ($this->builder) {
-            $this->builder->getParamManager()->setParam('controller_method', 'thread');
+            $this->builder->getParamManager()->setParam('controller_method', $controller_method);
             $partial = $this->builder->createPartial('board_comment', 'board_comment');
             $partial->getParamManager()
                 ->setParam('p', $this->comment_obj)

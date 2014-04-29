@@ -10,7 +10,7 @@ $data_array = json_decode($data); ?>
 
         <?php
             $bulk = new CommentBulk();
-            $bulk->import($item, $this->radix);
+            $bulk->import((array) $item, $this->radix);
             $media = new Media($this->getContext(), $bulk);
             $media->op = true;
         ?>

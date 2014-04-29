@@ -192,8 +192,7 @@ class Chan extends Common
      */
     protected function check_board()
     {
-        $board = $this->getQuery('board', $board = $this->getPost('board', null));
-
+        $board = $this->getQuery('board', $this->getPost('board', null));
 
         if ($board === null) {
             return false;

@@ -218,7 +218,13 @@ class RadixCollection extends Model
                         'placeholder' => 'http://images.4chan.org/'.(is_object($radix) ? $radix->shortname : 'shortname').'/',
                         'class' => 'span4',
                         'validation' => [new Assert\Length(['max' => 256])]
-                    ]
+                    ],
+                    'archive_full_images' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'help' => _i('Is the archive storing full images?'),
+                        'type' => 'checkbox',
+                    ],
                 ],
                 'sub_inverse' => [
                     'paragraph' => [

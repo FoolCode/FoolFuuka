@@ -430,7 +430,7 @@ class Media extends Model
                     $image = $this->media->preview_reply ? : $this->media->preview_op;
                 }
             } else {
-                if ($this->radix->archive && $this->radix->getValue('media_threads') == 0) {
+                if ($this->radix->archive && !$this->radix->getValue('archive_full_images')) {
                     return null;
                 } else {
                     $image = $this->media->media;

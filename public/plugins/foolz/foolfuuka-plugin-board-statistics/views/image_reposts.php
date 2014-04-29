@@ -1,19 +1,17 @@
-<?php $data_array = json_decode($data); ?>
+<?php use Foolz\Foolfuuka\Model\CommentBulk;
+use Foolz\Foolfuuka\Model\Media;
+
+$data_array = json_decode($data); ?>
 <?php foreach ($data_array as $key => $item) : ?>
     <div class="image_reposts_image">
         <div class="image_reposts_number">
-            <strong>#<?php echo $key+1 ?></strong> - Reposts: <?php echo $item->total ?>
+            <strong>#<?= $key+1 ?></strong> - Reposts: <?= $item->total ?>
         </div>
 
         <?php
-            $media = $this->media_factory->forgeEmpty($this->radix);
-            $media->media_id = $item->media_id;
-            $media->media_hash = $item->media_hash;
-            $media->media = $item->media;
-            $media->preview_op = $item->preview_op;
-            $media->preview_reply = $item->preview_reply;
-            $media->total = $item->total;
-            $media->banned = $item->banned;
+            $bulk = new CommentBulk();
+            $bulk->import($item, $this->radix);
+            $media = new Media($this->getContext(), $bulk);
             $media->op = true;
         ?>
 

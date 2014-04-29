@@ -366,10 +366,10 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(404);
         }
 
-        $num = $this->getQuery('num');
-        $latest_doc_id = $this->getQuery('latest_doc_id');
+        $num = $this->getQuery('num', null);
+        $latest_doc_id = $this->getQuery('latest_doc_id', null);
 
-        if (!$num) {
+        if ($num !== null) {
             return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(404);
         }
 
@@ -381,7 +381,7 @@ class Chan extends Common
 
         try {
             // build an array if we have more specifications
-            if ($latest_doc_id > 0) {
+            if ($latest_doc_id !== null && $latest_doc_id > 0) {
                 if (!ctype_digit((string) $latest_doc_id)) {
                     return $this->response->setData(['error' => _i('The value for "latest_doc_id" is malformed.')])->setStatusCode(404);
                 }

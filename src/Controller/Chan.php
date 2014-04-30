@@ -702,7 +702,7 @@ class Chan extends Common
         // Fetch the POSTS with same media hash and generate the IMAGEPOSTS.
         $page = intval($page);
         return new RedirectResponse($this->uri->create([
-            $this->radix->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page]), 'location', 301);
+            $this->radix->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page]), 301);
     }
 
     public function radix_full_image($filename = null)

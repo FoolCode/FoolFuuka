@@ -954,7 +954,7 @@ class Board extends Model
         if ($this->radix->archive) {
             $timestamp = new \DateTime(date('Y-m-d H:i:s', $last_modified), new \DateTimeZone('America/New_York'));
             $timestamp->setTimezone(new \DateTimeZone('UTC'));
-            $last_modified = $timestamp->getTimestamp() + $timestamp->getOffset();
+            $last_modified = strtotime($timestamp->format('Y-m-d H:i:s'));
         }
 
         $result = [

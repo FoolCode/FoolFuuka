@@ -13,7 +13,7 @@ foreach ($data_array as $k => $t) {
     if ($this->radix->archive) {
         $datetime = new \DateTime(date('Y-m-d H:i:s', $timestamp), new \DateTimeZone('America/New_York'));
         $datetime->setTimezone(new \DateTimeZone('UTC'));
-        $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
+        $timestamp = strtotime($datetime->format('Y-m-d H:i:s'));
     }
 
     $temp[] = [

@@ -201,7 +201,7 @@ class BoardStatistics extends Model
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
         }
 
-        $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
+        $timestamp = strtotime($datetime->format('Y-m-d H:i:s'));
 
         return $this->dc->qb()
             ->select('
@@ -230,7 +230,7 @@ class BoardStatistics extends Model
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
         }
 
-        $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
+        $timestamp = strtotime($datetime->format('Y-m-d H:i:s'));
         $result = [];
 
         $result['board'] = $this->dc->qb()
@@ -306,7 +306,7 @@ class BoardStatistics extends Model
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
         }
 
-        $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
+        $timestamp = strtotime($datetime->format('Y-m-d H:i:s'));
 
         return $this->dc->qb()
             ->select('day AS time, trips, names, anons')
@@ -337,7 +337,7 @@ class BoardStatistics extends Model
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
         }
 
-        $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
+        $timestamp = strtotime($datetime->format('Y-m-d H:i:s'));
         $result = [];
 
         $result['board'] = $this->dc->qb()
@@ -367,7 +367,7 @@ class BoardStatistics extends Model
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
         }
 
-        $timestamp = $datetime->getTimestamp() + $datetime->getOffset();
+        $timestamp = strtotime($datetime->format('Y-m-d H:i:s'));
         $result = [];
 
         $result['board'] = $this->dc->qb()

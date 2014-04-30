@@ -151,12 +151,12 @@ class Comment extends Model
         if ($this->radix->archive && !$this->comment->isArchiveTimezone()) {
             $timestamp = new \DateTime(date('Y-m-d H:i:s', $this->comment->timestamp), new \DateTimeZone('America/New_York'));
             $timestamp->setTimezone(new \DateTimeZone('UTC'));
-            $this->comment->timestamp = $timestamp->getTimestamp() + $timestamp->getOffset();
+            $this->comment->timestamp = strtotime($timestamp->format('Y-m-d H:i:s'));
 
             if ($this->comment->timestamp_expired > 0) {
                 $timestamp_expired = new \DateTime(date('Y-m-d H:i:s', $this->comment->timestamp_expired), new \DateTimeZone('America/New_York'));
                 $timestamp_expired->setTimezone(new \DateTimeZone('UTC'));
-                $this->comment->timestamp_expired = $timestamp_expired->getTimestamp() + $timestamp_expired->getOffset();
+                $this->comment->timestamp_expired = strtotime($timestamp_expired->format('Y-m-d H:i:s'));
             }
 
             $this->comment->setArchiveTimezone(true);
@@ -655,7 +655,7 @@ class Comment extends Model
             $datetime = new \DateTime(date('Y-m-d H:i:s', $time), new \DateTimeZone('UTC'));
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
 
-            return $datetime->getTimestamp() + $datetime->getOffset();
+            return strtotime($datetime->format('Y-m-d H:i:s'));
         } else {
             return $time;
         }

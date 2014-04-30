@@ -42,7 +42,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                     <button class="btn-toggle-post" data-function="hideThread" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>"><i class="icon-minus"></i></button>
                 </div>
                 <?php endif; ?>
-                <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setParam('board', $op->radix)->execute(); ?>
+                <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setObject($this)->setParam('board', $op->radix)->execute(); ?>
                 <?php if ($op_media !== null) : ?>
                 <div class="thread_image_box">
                     <?php if ($op_media->getMediaStatus($this->getRequest()) === 'banned') : ?>
@@ -169,7 +169,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                 <?php endif; ?>
                 <?php elseif (isset($post['posts'])) : ?>
         <article class="clearfix thread">
-                    <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_headless_open')->setParam('board', array(isset($radix) ? $radix : null))->execute(); ?>
+                    <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_headless_open')->setObject($this)->setParam('board', array(isset($radix) ? $radix : null))->execute(); ?>
                 <?php endif; ?>
 
             <aside class="posts">

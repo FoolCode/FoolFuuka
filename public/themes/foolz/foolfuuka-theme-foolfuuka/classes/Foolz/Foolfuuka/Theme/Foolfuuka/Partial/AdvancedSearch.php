@@ -220,7 +220,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                                     $extra_text_br .= '<br/><span class="options">[' . e($k) . '] ' . e(urldecode($i)) . ' </span>';
                                 }
 
-                                $uri .= $k.'/'.urlencode($i).'/';
+                                $uri .= $k.'/'.$i.'/';
                             }
 
                             echo '<li title="' . strip_tags($text . $extra_text_br) . '" class="latest_search"><a href="' . htmlspecialchars($this->getUri()->create($uri)) . '">' . $text . ' ' . $extra_text . '</a></li>';

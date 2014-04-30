@@ -369,7 +369,7 @@ class Chan extends Common
         $num = $this->getQuery('num', null);
         $latest_doc_id = $this->getQuery('latest_doc_id', null);
 
-        if ($num !== null) {
+        if ($num === null) {
             return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(404);
         }
 

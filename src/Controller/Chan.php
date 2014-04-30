@@ -705,8 +705,12 @@ class Chan extends Common
             $this->radix->shortname, 'search', 'image', $hash, 'order', 'desc', 'page', $page]), 'location', 301);
     }
 
-    public function radix_full_image($filename)
+    public function radix_full_image($filename = null)
     {
+        if ($filename === null) {
+            return $this->action_404();
+        }
+
         try {
             $bulk = $this->media_factory->getByFilename($this->radix, $filename);
         } catch (\Foolz\Foolfuuka\Model\MediaException $e) {

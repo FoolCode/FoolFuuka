@@ -465,7 +465,7 @@ class Chan extends Common
 
     public function radix_last50($num = 0)
     {
-        return new RedirectResponse($this->uri->create($this->radix->shortname.'/last/50/'.$num));;
+        return new RedirectResponse($this->uri->create($this->radix->shortname.'/last/50/'.$num));
     }
 
     public function radix_last($limit = 0, $num = 0)

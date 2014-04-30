@@ -158,6 +158,8 @@ class Comment extends Model
                 $timestamp_expired->setTimezone(new \DateTimeZone('UTC'));
                 $this->comment->timestamp_expired = $timestamp_expired->getTimestamp() + $timestamp_expired->getOffset();
             }
+
+            $this->comment->setArchiveTimezone(true);
         }
 
         if ($this->comment->poster_country !== null) {

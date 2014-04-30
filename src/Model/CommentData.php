@@ -38,6 +38,8 @@ class CommentData extends Data
     public $poster_country_name = false;
     public $poster_country_name_processed = false;
 
+    private $archive_timezone = false;
+
     /**
      * @param $delpass
      */
@@ -54,11 +56,27 @@ class CommentData extends Data
         return $this->delpass;
     }
 
+    /**
+     * @param $bool
+     */
+    public function setArchiveTimezone($bool)
+    {
+        $this->archive_timezone = $bool;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isArchiveTimezone()
+    {
+        return $this->archive_timezone;
+    }
+
     public function export()
     {
         $result = [];
         foreach ($this as $key => $value) {
-            if ($key !== 'delpass') {
+            if ($key !== 'delpass' && $key !== 'archive_timezone') {
                 $result[$key] = $value;
             }
         }

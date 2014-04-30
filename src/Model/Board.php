@@ -744,8 +744,6 @@ class Board extends Model
     {
         $this->profiler->log('Board::getThreadComments Start');
 
-        $controller_method = 'thread';
-
         extract($this->options);
 
         // determine type
@@ -841,7 +839,6 @@ class Board extends Model
                     }
                 }
 
-                $controller_method = 'last/'.$last_limit;
                 break;
 
             case 'thread':

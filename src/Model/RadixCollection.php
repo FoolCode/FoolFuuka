@@ -786,6 +786,7 @@ class RadixCollection extends Model
         // take them all and then filter/do whatever (we use this to split the boards through various subdomains)
         // only public is affected! admins and mods will see all boards at all the time
         $this->preloaded_radixes = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Radix::preload.result.public')
+            ->setObject($this)
             ->setParam('preloaded_radixes', $this->preloaded_radixes)
             ->execute()
             ->get($this->preloaded_radixes);

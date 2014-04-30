@@ -208,7 +208,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                             $text = ($latest_search['board'] === false) ? '<strong>global:</strong> ' : '/<strong>' . e($latest_search['board']) . '</strong>/: ';
                             unset($latest_search['board']);
 
-                            if (isset($latest_search['order']) && $latest_search['order'] == 'desc') {
+                            if (isset($latest_search['order']) && $latest_search['order'] === 'desc') {
                                 unset($latest_search['order']);
                             }
 
@@ -220,10 +220,10 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                                     $extra_text_br .= '<br/><span class="options">[' . e($k) . '] ' . e(urldecode($i)) . ' </span>';
                                 }
 
-                                $uri .= $k.'/'.$i.'/';
+                                $uri .= $k.'/'.urlencode($i).'/';
                             }
 
-                            echo '<li title="' . strip_tags($text . $extra_text_br) . '" class="latest_search"><a href="' . $this->getUri()->create($uri) . '">' . $text . ' ' . $extra_text . '</a></li>';
+                            echo '<li title="' . strip_tags($text . $extra_text_br) . '" class="latest_search"><a href="' . htmlspecialchars($this->getUri()->create($uri)) . '">' . $text . ' ' . $extra_text . '</a></li>';
                         }
                     }
                     ?>

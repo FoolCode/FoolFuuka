@@ -223,7 +223,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
 
             <?= $this->getBuilder()->getPartial('body')->build(); ?>
 
-            <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_body_template')->execute(); ?>
+            <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_body_template')->setObject($this)->execute(); ?>
 
             <?= $this->getBuilder()->getPartial('tools_modal')->build(); ?>
 

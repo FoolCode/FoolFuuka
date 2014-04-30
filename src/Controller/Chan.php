@@ -720,7 +720,7 @@ class Chan extends Common
 
         return new RedirectResponse(
             $this->uri->create([$this->radix->shortname, 'search', 'image', rawurlencode(substr($media->media_hash, 0,
-                -2))]), 404);
+                -2))]));
     }
 
     public function radix_redirect($filename = null)

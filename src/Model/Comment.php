@@ -148,7 +148,7 @@ class Comment extends Model
         $this->reports = null;
 
         // format 4chan archive timestamp
-        if ($this->radix->archive) {
+        if ($this->radix->archive && !$this->comment->isArchiveTimezone()) {
             $timestamp = new \DateTime(date('Y-m-d H:i:s', $this->comment->timestamp), new \DateTimeZone('America/New_York'));
             $timestamp->setTimezone(new \DateTimeZone('UTC'));
             $this->comment->timestamp = $timestamp->getTimestamp() + $timestamp->getOffset();

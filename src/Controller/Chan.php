@@ -1177,7 +1177,7 @@ class Chan extends Common
         if ($this->getRequest()->files->count()) {
             try {
                 $media = $this->media_factory->forgeFromUpload($this->getRequest(), $this->radix);
-                $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
+                $media->media->spoiler = isset($data['spoiler']) && $data['spoiler'];
             } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['error' => $e->getMessage()]);

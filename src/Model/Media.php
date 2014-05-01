@@ -614,6 +614,7 @@ class Media extends Model
         foreach ($this->radix_coll->getAll() as $radix) {
             try {
                 $media = $this->media_factory->getByMediaHash($radix, $this->media->media_hash);
+                $media = new Media($this->getContext(), CommentBulk::forge($this->radix, null, $media));
 
                 $this->dc->qb()
                     ->update($radix->getTable('_images'))

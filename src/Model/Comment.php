@@ -746,6 +746,7 @@ class Comment extends Model
                         ->getComments();
 
                     $post = current($post);
+                    $post = new Comment($this->getContext(), CommentBulk::forge($this->radix, $post));
                     $post->delete(null, true, true);
                 }
             } else {

@@ -519,7 +519,7 @@ class Comment extends Model
             ->execute()
             ->get($build_url);
 
-        $this->comment_factory->_backlinks_arr[$data->num][$current_p_num_u] = ['build_url' => $build_url, 'data' => $data, 'cureent_p_num_c' => $current_p_num_c];
+        $this->comment_factory->_backlinks_arr[$data->num][$current_p_num_u] = ['build_url' => $build_url, 'data' => $data, 'current_p_num_c' => $current_p_num_c];
 
         if (array_key_exists($num, $this->comment_factory->_posts)) {
             return implode('<a href="' . $this->uri->create([$data->board->shortname, $this->controller_method, $num]) . '#' . $data->num . '" '

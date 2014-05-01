@@ -519,7 +519,7 @@ class Comment extends Model
             ->execute()
             ->get($build_url);
 
-        $this->comment_factory->_backlinks_arr[$data->num][$current_p_num_u] = $build_url;
+        $this->comment_factory->_backlinks_arr[$data->num][$current_p_num_u] = ['build_url' => $build_url, 'data' => $data];
 
         if (array_key_exists($num, $this->comment_factory->_posts)) {
             return implode('<a href="' . $this->uri->create([$data->board->shortname, $this->controller_method, $num]) . '#' . $data->num . '" '
@@ -545,7 +545,9 @@ class Comment extends Model
         if (isset($this->comment_factory->_backlinks_arr[$num])) {
             ksort($this->comment_factory->_backlinks_arr[$num], SORT_STRING);
             $array = [];
-            foreach ($this->comment_factory->_backlinks_arr[$num] as $current_p_num_c => $build_url) {
+            foreach ($this->comment_factory->_backlinks_arr[$num] as $current_p_num_c => $value) {
+                $build_url = $value['build_url'];
+                $data = $value['data'];
                 $array[] = implode(
                     '<a href="' . $this->uri->create([$data->board->shortname, $this->controller_method, $data->post->thread_num]) . '#' . $build_url['hash'] . $current_p_num_u . '" ' .
                     $build_url['attr_backlink'] . '>&gt;&gt;' . $current_p_num_c . '</a>', $build_url['tags']

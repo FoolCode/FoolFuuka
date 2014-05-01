@@ -529,7 +529,6 @@ class Comment extends Model
         foreach ($this->comment_factory->_posts as $key => $thread) {
                 return implode('<a href="' . $this->uri->create([$data->board->shortname, $this->controller_method, $key]) . '#' . $build_url['hash'] . $data->num . '" '
                     . $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
-            }
         }
 
         return implode('<a href="' . $this->uri->create([$data->board->shortname, 'post', $data->num]) . '" '

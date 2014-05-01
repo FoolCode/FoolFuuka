@@ -529,7 +529,7 @@ class Chan extends Common
                 $backend_vars['board_shortname'] = $this->radix->shortname;
 
                 if (isset($options['last_limit']) && $options['last_limit']) {
-                    $this->param_manager->setParams('controller_method', 'last/'.$options['last_limit']);
+                    $this->param_manager->setParam('controller_method', 'last/'.$options['last_limit']);
                     $backend_vars['last_limit'] = $options['last_limit'];
                 }
 

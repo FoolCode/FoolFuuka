@@ -539,7 +539,7 @@ class Comment extends Model
     }
 
     public function getBacklinks()
-    {
+    { return [];
         $num = $this->subnum ? $this->num.'_'.$this->subnum : $this->num;
 
         if (isset($this->comment_factory->_backlinks_arr[$num])) {

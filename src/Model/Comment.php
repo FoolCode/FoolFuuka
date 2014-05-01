@@ -545,7 +545,7 @@ class Comment extends Model
         if (isset($this->comment_factory->_backlinks_arr[$num])) {
             ksort($this->comment_factory->_backlinks_arr[$num], SORT_STRING);
             $array = [];
-            foreach ($this->comment_factory->_backlinks_arr[$num] as $current_p_num_c => $value) {
+            foreach ($this->comment_factory->_backlinks_arr[$num] as $current_p_num_u => $value) {
                 $build_url = $value['build_url'];
                 $data = $value['data'];
                 $current_p_num_c = $value['current_p_num_c'];

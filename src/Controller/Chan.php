@@ -292,7 +292,7 @@ class Chan extends Common
             $this->response->setContent($this->builder->build());
         }
 
-        return $this->response;;
+        return $this->response;
     }
 
     protected function message($level = 'success', $message = null, $code = 200)
@@ -549,7 +549,7 @@ class Chan extends Common
             }
         } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
             $this->profiler->log('Controller Chan::thread End Prematurely');
-            return $this->error($e->getMessage());
+            return $this->error($e->getMessage(), 404);
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
             $this->profiler->log('Controller Chan::thread End Prematurely');
             return $this->error($e->getMessage());

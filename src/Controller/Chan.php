@@ -358,9 +358,10 @@ class Chan extends Common
     {
         $mode = $_mode === 'by_thread' ? 'by_thread' : 'by_post';
         $type = $this->radix->archive ? 'archive' : 'board';
+        $this->response = new RedirectResponse($this->uri->create($this->radix->shortname));
         $this->response->headers->setCookie(new Cookie($this->getContext(), 'default_theme_page_mode_'.$type, $mode));
 
-        return new RedirectResponse($this->uri->create($this->radix->shortname));
+        return $this->response;
     }
 
     public function radix_page($page = 1)

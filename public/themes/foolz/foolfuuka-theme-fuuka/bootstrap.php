@@ -55,7 +55,8 @@ require_once __DIR__.'/controller.php';
             'tags' => ['open' =>'<span class="unkfunc">', 'close' => '</span>'],
             'short_link' => '//boards.4chan.org/'.$data->shortname.'/',
             'query_link' => '//boards.4chan.org/'.$data->shortname.'/res/'.$data->query,
-            'backlink_attr' => 'class="backlink"'
+            'backlink_attr' => 'class="backlink"',
+            'attributes' => ''
         ];
 
         $result->setParam('build_url', $html)->set($html);

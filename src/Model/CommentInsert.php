@@ -677,15 +677,6 @@ class CommentInsert extends Comment
                     ->execute();
             }
 
-            // set data for extra fields
-            \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.result.extra_json_array')
-                ->setObject($this)
-                ->execute();
-
-            // insert the extra row DURING A TRANSACTION
-            //$this->extra->extra_id = $last_id;
-            //$this->extra->insert();
-
             $this->dc->getConnection()->commit();
 
             // clean up some caches

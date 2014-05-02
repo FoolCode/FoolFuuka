@@ -27,7 +27,6 @@ class Context implements ContextInterface
         class_alias('Foolz\\Foolfuuka\\Model\\Board', 'Board');
         class_alias('Foolz\\Foolfuuka\\Model\\Comment', 'Comment');
         class_alias('Foolz\\Foolfuuka\\Model\\CommentInsert', 'CommentInsert');
-        class_alias('Foolz\\Foolfuuka\\Model\\Extra', 'Extra');
         class_alias('Foolz\\Foolfuuka\\Model\\Media', 'Media');
         class_alias('Foolz\\Foolfuuka\\Model\\Radix', 'Radix');
         class_alias('Foolz\\Foolfuuka\\Model\\Report', 'Report');

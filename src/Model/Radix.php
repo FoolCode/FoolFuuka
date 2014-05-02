@@ -347,17 +347,6 @@ class Radix extends Model
             $table_daily->setPrimaryKey(['day']);
         }
 
-        if (!$schema->hasTable($this->getPrefix() . $this->shortname . '_extra')) {
-            $table_extra = $schema->createTable($this->getPrefix() . $this->shortname . '_extra');
-            if ($conn->getConnection()->getDriver()->getName() == 'pdo_mysql') {
-                $table_extra->addOption('charset', $charset);
-                $table_extra->addOption('collate', $collate);
-            }
-            $table_extra->addColumn('extra_id', 'integer', ['unsigned' => true]);
-            $table_extra->addColumn('json', 'text', ['length' => 65532, 'notnull' => false]);
-            $table_extra->setPrimaryKey(['extra_id']);
-        }
-
         $conn->getConnection()->beginTransaction();
 
         foreach ($schema->getMigrateFromSql($sm->createSchema(), $sm->getDatabasePlatform()) as $query) {
@@ -389,8 +378,7 @@ class Radix extends Model
             '_images',
             '_threads',
             '_users',
-            '_daily',
-            '_extra'
+            '_daily'
         ];
 
         $sm = $this->dc->getConnection()->getSchemaManager();

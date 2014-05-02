@@ -479,7 +479,6 @@ class Board extends Model
                     ->select('*')
                     ->from($this->radix->getTable(), 'r')
                     ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-                    ->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
                     ->where('r.thread_num = '.$thread['unq_thread_num'])
                     ->orderBy('op', 'DESC')
                     ->addOrderBy('num', 'DESC')
@@ -644,7 +643,6 @@ class Board extends Model
                 ->from('('.$inner_query.')', 'g')
                 ->join('g', $this->radix->getTable(), 'r', 'r.num = g.unq_thread_num AND r.subnum = 0')
                 ->leftJoin('g', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-                ->leftJoin('g', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
                 ->execute()
                 ->fetchAll();
 
@@ -753,7 +751,6 @@ class Board extends Model
                     ->select('*')
                     ->from($this->radix->getTable(), 'r')
                     ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-                    ->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
                     ->where('thread_num = :thread_num')
                     ->andWhere('doc_id > :latest_doc_id')
                     ->orderBy('num', 'ASC')
@@ -770,7 +767,6 @@ class Board extends Model
                     ->select('*')
                     ->from($this->radix->getTable(), 'r')
                     ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-                    ->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
                     ->where('thread_num = :thread_num')
                     ->where('subnum <> 0')
                     ->orderBy('num', 'ASC')
@@ -810,7 +806,6 @@ class Board extends Model
                         ->select('*')
                         ->from('(('.$subquery_first.') UNION ('.$subquery_last.'))', 'r')
                         ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-                        ->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
                         ->orderBy('num', 'ASC')
                         ->addOrderBy('subnum', 'ASC')
                         ->execute()
@@ -851,7 +846,6 @@ class Board extends Model
                         ->select('*')
                         ->from($this->radix->getTable(), 'r')
                         ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-                        ->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
                         ->where('thread_num = :thread_num')
                         ->orderBy('num', 'ASC')
                         ->addOrderBy('subnum', 'ASC')
@@ -1038,7 +1032,6 @@ class Board extends Model
 
         $result = $query
             ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-            ->leftJoin('r', $this->radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
             ->execute()
             ->fetchAll();
 

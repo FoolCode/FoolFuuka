@@ -695,13 +695,6 @@ class Comment extends Model
                 ->setParameter(':doc_id', $this->comment->doc_id)
                 ->execute();
 
-            // remove any extra data
-            $this->dc->qb()
-                ->delete($this->radix->getTable('_extra'))
-                ->where('extra_id = :doc_id')
-                ->setParameter(':doc_id', $this->comment->doc_id)
-                ->execute();
-
             // purge reports
             $this->dc->qb()
                 ->delete($this->dc->p('reports'))

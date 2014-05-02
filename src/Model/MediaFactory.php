@@ -106,7 +106,6 @@ class MediaFactory extends Model
             ->select('*')
             ->from($radix->getTable(), 'r')
             ->leftJoin('r', $radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-            ->leftJoin('r', $radix->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
             ->where('r.media_orig = :media_orig')
             ->setParameter(':media_orig', $filename)
             ->execute()

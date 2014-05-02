@@ -459,7 +459,6 @@ class Search extends Board
                     ->select('*, '.$result['board'].' AS board_id')
                     ->from($board->getTable(), 'r')
                     ->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-                    ->leftJoin('r', $board->getTable('_extra'), 'ex', 'ex.extra_id = r.doc_id')
                     ->where('doc_id = '.$this->dc->getConnection()->quote($result['id']))
                     ->getSQL();
             }

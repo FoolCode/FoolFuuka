@@ -843,7 +843,7 @@ class Chan extends Common
             return new RedirectResponse($this->uri->create($redirect_url), 303);
         }
 
-        $search = $this->uri->uri_to_assoc(func_get_args(), 0, $modifiers);
+        $search = $this->uri->uri_to_assoc($this->request->getPathInfo(), 1, $modifiers);
 
         $this->param_manager->setParam('search', $search);
 

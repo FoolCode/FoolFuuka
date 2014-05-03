@@ -91,7 +91,7 @@ return [
 
         'boards' => [
             'directory' => DOCROOT.'foolfuuka/boards/',
-            'url' => /*\Uri::base().*/'foolfuuka/boards/'
+            'url' => '/foolfuuka/boards/'
         ]
     ]
 ];

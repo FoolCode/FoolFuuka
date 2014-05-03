@@ -378,6 +378,10 @@ class Board extends Model
      */
     protected function loadBacklinks()
     {
+        if ($this->comments_unsorted === null) {
+            return;
+        }
+
         $c = new Comment($this->getContext());
 
         foreach ($this->comments_unsorted as $bulk) {

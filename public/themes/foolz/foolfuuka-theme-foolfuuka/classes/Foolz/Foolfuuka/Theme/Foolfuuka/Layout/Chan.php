@@ -369,6 +369,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
         <?php if ($this->getPreferences()->get('foolframe.theme.google_analytics')) : ?>
         var _gaq = [
             ['_setAccount', '<?= $this->getPreferences()->get('foolframe.theme.google_analytics') ?>'],
+            ['_setCustomVar', 1, 'HTTPS', ('https:' == location.protocol ? 'Yes' : 'No'), 1],
             ['_trackPageview'],
             ['_trackPageLoadTime']
         ];

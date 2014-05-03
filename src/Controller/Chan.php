@@ -960,6 +960,8 @@ class Chan extends Common
             array_push($title, _i('that are by ghosts'));
         if ($search['ghost'] == 'none')
             array_push($title, _i('that are not by ghosts'));
+        if ($search['type'] == 'sticky')
+            array_push($title, _i('that were stickied'));
         if ($search['type'] == 'op')
             array_push($title, _i('that are only OP posts'));
         if ($search['type'] == 'posts')

@@ -116,6 +116,16 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
+                'label' => _i('Show posts'),
+                'name' => 'filter',
+                'elements' => [
+                    ['value' => false, 'text' => _i('All')],
+                    ['value' => 'text', 'text' => _i('Only With Images')],
+                    ['value' => 'image', 'text' => _i('Only Without Images')]
+                ]
+            ],
+            [
+                'type' => 'radio',
                 'label' => _i('Deleted posts'),
                 'name' => 'deleted',
                 'elements' => [
@@ -136,20 +146,11 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
-                'label' => _i('Show posts'),
-                'name' => 'filter',
-                'elements' => [
-                    ['value' => false, 'text' => _i('All')],
-                    ['value' => 'text', 'text' => _i('Only With Images')],
-                    ['value' => 'image', 'text' => _i('Only Without Images')]
-                ]
-            ],
-            [
-                'type' => 'radio',
                 'label' => _i('Results'),
                 'name' => 'type',
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
+                    ['value' => 'sticky', 'text' => _i('Only Sticky Threads')],
                     ['value' => 'op', 'text' => _i('Only Opening Posts')],
                     ['value' => 'posts', 'text' => _i('Only Reply Posts')]
                 ]
@@ -391,6 +392,10 @@ class Search extends Board
             }
 
             if ($args['type'] !== null) {
+                if ($args['type'] == 'sticky') {
+                    $query->where('is_sticky', 1);
+                }
+
                 if ($args['type'] == 'op') {
                     $query->where('is_op', 1);
                 }

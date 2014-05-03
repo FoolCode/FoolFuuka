@@ -6,7 +6,7 @@ use Foolz\Plugin\Event;
 
 class HHVM_NginxCache
 {
-    public static function run()
+    public function run()
     {
         Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-nginx-cache-purge')
             ->setCall(function ($result) {
@@ -61,4 +61,4 @@ class HHVM_NginxCache
     }
 }
 
-HHVM_NginxCache::run();
+(new HHVM_NginxCache())->run();

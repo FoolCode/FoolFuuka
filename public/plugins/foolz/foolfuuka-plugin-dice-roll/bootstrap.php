@@ -6,7 +6,7 @@ use Foolz\Plugin\Event;
 
 class HHVM_Dice
 {
-    public static function run()
+    public function run()
     {
         Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-dice-roll')
             ->setCall(function($result) {
@@ -37,4 +37,4 @@ class HHVM_Dice
     }
 }
 
-HHVM_Dice::run();
+(new HHVM_Dice())->run();

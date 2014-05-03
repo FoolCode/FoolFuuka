@@ -12,8 +12,7 @@ use Symfony\Component\Routing\Route;
 
 class HHVM_BS
 {
-
-    public static function run()
+    public function run()
     {
 
 
@@ -132,4 +131,4 @@ class HHVM_BS
 }
 
 
-HHVM_BS::run();
+(new HHVM_BS())->run();

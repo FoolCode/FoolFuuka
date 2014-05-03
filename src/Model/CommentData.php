@@ -26,6 +26,9 @@ class CommentData extends Data
     public $locked = false;
     public $deleted = false;
 
+    public $nreplies = null;
+    public $nimages = null;
+
     public $fourchan_date = false;
     public $comment_sanitized = false;
     public $comment_processed = false;

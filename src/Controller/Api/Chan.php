@@ -221,14 +221,27 @@ class Chan extends Common
             'getPosterCountryNameProcessed'
         ];
 
-        foreach ($comment_force as $key => $value) {
+        foreach ($comment_force as $value) {
             $this->comment_obj->$value();
         }
 
         $m = null;
         if ($bulk->media !== null) {
+            $media_force = [
+                'getMediaFilenameProcessed',
+                'getMediaLink',
+                'getThumbLink',
+                'getRemoteMediaLink',
+                'getMediaStatus',
+                'getSafeMediaHash'
+            ];
+
             $this->media_obj->setBulk($bulk);
             $m = $this->media_obj;
+
+            foreach ($media_force as $value) {
+                $this->media_obj->$value();
+            }
         }
 
         if ($this->builder) {

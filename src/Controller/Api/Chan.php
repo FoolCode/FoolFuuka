@@ -240,7 +240,7 @@ class Chan extends Common
             $m = $this->media_obj;
 
             foreach ($media_force as $value) {
-                $this->media_obj->$value();
+                $this->media_obj->$value($this->getRequest());
             }
         }
 

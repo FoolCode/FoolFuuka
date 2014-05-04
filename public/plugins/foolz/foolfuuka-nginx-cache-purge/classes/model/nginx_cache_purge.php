@@ -41,9 +41,9 @@ class NginxCachePurge extends Model
 
         }
 
-        $url_user_password = $this->parseUrls();
+        $urls = $this->parseUrls();
 
-        foreach ($url_user_password as $item) {
+        foreach ($urls as $item) {
             foreach ($dir as $d) {
                 // getLink gives null on failure
                 if ($d === null) {
@@ -51,19 +51,16 @@ class NginxCachePurge extends Model
                 }
 
                 $ch = curl_init();
+                $options = [
+                    CURLOPT_URL => $item['url'].$d,
+                    CURLOPT_RETURNTRANSFER => true
+                ];
 
                 if (isset($item['pass'])) {
-                    $options = [
-                        CURLOPT_URL => $item['url'].$d,
-                        CURLOPT_RETURNTRANSFER => true,
+                    $options = $options + [
                         CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
                         CURLOPT_USERPWD => $item['user'].':'.$item['pass']
-                    ];
-                } else {
-                    $options = [
-                        CURLOPT_URL => $item['url'].$d,
-                        CURLOPT_RETURNTRANSFER => true
-                    ];
+                    ]);
                 }
 
                 curl_setopt_array($ch, $options);
@@ -94,13 +91,13 @@ class NginxCachePurge extends Model
                 continue;
             }
 
-            if (count($explode) > 1) {
+            if (count($explode) >= 1) {
                 $lines_exploded[$key]['url'] = rtrim(array_shift($explode), '/');
             }
 
-            if (count($explode) > 1) {
+            if (count($explode) >= 1) {
                 $lines_exploded[$key]['user'] = array_shift($explode);
-                $lines_exploded[$key]['pass'] = implode(':', $explode);
+                $lines_exploded[$key]['pass'] = array_shift($explode);
             }
         }
 

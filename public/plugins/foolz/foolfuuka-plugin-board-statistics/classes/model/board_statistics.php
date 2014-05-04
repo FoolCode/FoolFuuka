@@ -195,7 +195,7 @@ class BoardStatistics extends Model
 
     public function processAvailability($board)
     {
-        $datetime = new \DateTime('@'.time());
+        $datetime = new \DateTime('@'.time(), new \DateTimeZone('UTC'));
 
         if ($board->archive) {
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
@@ -224,7 +224,7 @@ class BoardStatistics extends Model
 
     public function processActivity($board)
     {
-        $datetime = new \DateTime('@'.time());
+        $datetime = new \DateTime('@'.time(), new \DateTimeZone('UTC'));
 
         if ($board->archive) {
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
@@ -300,7 +300,7 @@ class BoardStatistics extends Model
 
     public function processPopulation($board)
     {
-        $datetime = new \DateTime('@'.time());
+        $datetime = new \DateTime('@'.time(), new \DateTimeZone('UTC'));
 
         if ($board->archive) {
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
@@ -331,7 +331,7 @@ class BoardStatistics extends Model
 
     public function processPostRate($board)
     {
-        $datetime = new \DateTime('@'.time());
+        $datetime = new \DateTime('@'.time(), new \DateTimeZone('UTC'));
 
         if ($board->archive) {
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));
@@ -361,7 +361,7 @@ class BoardStatistics extends Model
 
     public function processUsersOnline($board)
     {
-        $datetime = new \DateTime('@'.time());
+        $datetime = new \DateTime('@'.time(), new \DateTimeZone('UTC'));
 
         if ($board->archive) {
             $datetime->setTimezone(new \DateTimeZone('America/New_York'));

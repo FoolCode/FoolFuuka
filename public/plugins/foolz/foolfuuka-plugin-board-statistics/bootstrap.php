@@ -14,11 +14,8 @@ class HHVM_BS
 {
     public function run()
     {
-
-
         Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
             ->setCall(function ($result) {
-
                 /* @var Context $context */
                 $context = $result->getParam('context');
                 /** @var Autoloader $autoloader */

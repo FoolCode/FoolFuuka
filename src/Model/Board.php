@@ -633,7 +633,7 @@ class Board extends Model
                 // lots of cases we don't want to handle go dynamic
                 throw new \OutOfBoundsException;
             }
-        } catch(\OutOfBoundsException $e) {
+        } catch (\OutOfBoundsException $e) {
             $inner_query = $this->dc->qb()
                 ->select('*, thread_num as unq_thread_num')
                 ->from($this->radix->getTable('_threads'), 'rt')

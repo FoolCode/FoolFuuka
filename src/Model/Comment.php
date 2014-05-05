@@ -701,8 +701,32 @@ class Comment extends Model
 
             // remove image file
             if (isset($this->media)) {
-                $media = new Media($this->getContext(), $this->bulk);
-                $media->delete();
+                $media_sql = $this->dc->qb()
+                    ->select('COUNT(*)')
+                    ->from($this->radix->getTable(), 't')
+                    ->where('media_id = :media_id')
+                    ->setParameter(':media_id', $this->media->media_id)
+                    ->getSQL();
+
+                $this->dc->qb()
+                    ->update($this->radix->getTable('_images'))
+                    ->set('total', '('.$media_sql.')')
+                    ->where('media_id = :media_id')
+                    ->setParameter(':media_id', $this->media->media_id)
+                    ->execute();
+
+                $has_image = $this->dc->qb()
+                    ->select('total')
+                    ->from($this->radix->getTable('_images'), 'ti')
+                    ->where('media_id = :media_id')
+                    ->setParameter(':media_id', $this->media->media_id)
+                    ->execute()
+                    ->fetch();
+
+                if (!$has_image || !$has_image['total']) {
+                    $media = new Media($this->getContext(), $this->bulk);
+                    $media->delete();
+                }
             }
 
             // if this is OP, delete replies too

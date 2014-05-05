@@ -521,9 +521,10 @@ class Comment extends Model
 
         $this->comment_factory->backlinks_arr[$data->num][$current_p_num_u] = ['build_url' => $build_url, 'data' => $data, 'current_p_num_c' => $current_p_num_c];
 
-        if (array_key_exists($num, $this->comment_factory->posts)) {
+        if (isset($this->comment_factory->posts[$this->comment->thread_num]) && in_array($num, $this->comment_factory->posts[$this->comment->thread_num])) {
             return implode('<a href="'.$this->uri->create([$data->board->shortname, $this->controller_method, $num]).'#'.$data->num.'" '
-                . $build_url['attr_op'].'>&gt;&gt;'.$num.'</a>', $build_url['tags']);
+                .(array_key_exists($num, $this->comment_factory->posts) ? $build_url['attr_op'] : $build_url['attr'])
+                .'>&gt;&gt;'.$num.'</a>', $build_url['tags']);
         }
 
         return implode('<a href="'.$this->uri->create([$data->board->shortname, 'post', $data->num]).'" '

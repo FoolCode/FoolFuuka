@@ -782,7 +782,7 @@ class Comment extends Model
                         ->set('time_ghost_bump', $time_ghost_bump)
                         ->set('time_last_modified', ':time')
                         ->set('nreplies', 'nreplies - 1')
-                        ->set('nimages', ($this->media === null ? 'nimages - 1' : 'nimages'))
+                        ->set('nimages', ($this->media === null ? 'nimages' : 'nimages - 1'))
                         ->where('thread_num = :thread_num')
                         ->setParameter(':time', $this->getRadixTime())
                         ->setParameter(':thread_num', $this->comment->thread_num)

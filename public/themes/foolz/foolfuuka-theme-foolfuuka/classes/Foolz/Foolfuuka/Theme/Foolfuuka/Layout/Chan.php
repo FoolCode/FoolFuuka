@@ -42,7 +42,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
     <meta charset="utf-8">
     <meta name="generator" content="<?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name').' '.$this->getConfig()->get('foolz/foolfuuka', 'package', 'main.version') ?>">
     <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
-    <link href='<?= $this->getUri()->base() ?>' rel='index' title='<?= $this->getPreferences()->get('foolframe.gen.website_title') ?>'>
+    <link href="<?= $this->getUri()->base() ?>" rel="index" title="<?= $this->getPreferences()->get('foolframe.gen.website_title') ?>">
     <link href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css">
     <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>" rel="stylesheet" type="text/css">
     <!--[if lt IE 8]>

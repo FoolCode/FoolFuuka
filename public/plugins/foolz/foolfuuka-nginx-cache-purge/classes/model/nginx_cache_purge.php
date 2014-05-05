@@ -60,7 +60,7 @@ class NginxCachePurge extends Model
                     $options = $options + [
                         CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
                         CURLOPT_USERPWD => $item['user'].':'.$item['pass']
-                    ]);
+                    ];
                 }
 
                 curl_setopt_array($ch, $options);

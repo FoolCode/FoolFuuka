@@ -167,7 +167,7 @@ class Comment extends Model
         }
 
         $num = $this->comment->num.($this->comment->subnum ? ','.$this->comment->subnum : '');
-        $this->comment_factory->_posts[$this->comment->thread_num][] = $num;
+        $this->comment_factory->posts[$this->comment->thread_num][] = $num;
     }
 
     public function setControllerMethod($string)
@@ -519,33 +519,25 @@ class Comment extends Model
             ->execute()
             ->get($build_url);
 
-        $this->comment_factory->_backlinks_arr[$data->num][$current_p_num_u] = ['build_url' => $build_url, 'data' => $data, 'current_p_num_c' => $current_p_num_c];
+        $this->comment_factory->backlinks_arr[$data->num][$current_p_num_u] = ['build_url' => $build_url, 'data' => $data, 'current_p_num_c' => $current_p_num_c];
 
-        if (array_key_exists($num, $this->comment_factory->_posts)) {
-            return implode('<a href="' . $this->uri->create([$data->board->shortname, $this->controller_method, $num]) . '#' . $data->num . '" '
-                . $build_url['attr_op'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
+        if (array_key_exists($num, $this->comment_factory->posts)) {
+            return implode('<a href="'.$this->uri->create([$data->board->shortname, $this->controller_method, $num]).'#'.$data->num.'" '
+                . $build_url['attr_op'].'>&gt;&gt;'.$num.'</a>', $build_url['tags']);
         }
 
-        foreach ($this->comment_factory->_posts as $key => $thread) {
-            return implode('<a href="' . $this->uri->create([$data->board->shortname, $this->controller_method, $key]) . '#' . $build_url['hash'] . $data->num . '" '
-                . $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
-        }
-
-        return implode('<a href="' . $this->uri->create([$data->board->shortname, 'post', $data->num]) . '" '
-            . $build_url['attr'] . '>&gt;&gt;' . $num . '</a>', $build_url['tags']);
-
-        // return un-altered
-        return $matches[0];
+        return implode('<a href="'.$this->uri->create([$data->board->shortname, 'post', $data->num]).'" '
+            .$build_url['attr'].'>&gt;&gt;'.$num.'</a>', $build_url['tags']);
     }
 
     public function getBacklinks()
     {
         $num = $this->subnum ? $this->num.'_'.$this->subnum : $this->num;
 
-        if (isset($this->comment_factory->_backlinks_arr[$num])) {
-            ksort($this->comment_factory->_backlinks_arr[$num], SORT_STRING);
+        if (isset($this->comment_factory->backlinks_arr[$num])) {
+            ksort($this->comment_factory->backlinks_arr[$num], SORT_STRING);
             $array = [];
-            foreach ($this->comment_factory->_backlinks_arr[$num] as $current_p_num_u => $value) {
+            foreach ($this->comment_factory->backlinks_arr[$num] as $current_p_num_u => $value) {
                 $build_url = $value['build_url'];
                 $data = $value['data'];
                 $current_p_num_c = $value['current_p_num_c'];

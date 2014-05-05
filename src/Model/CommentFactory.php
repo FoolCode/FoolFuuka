@@ -11,12 +11,12 @@ class CommentFactory extends Model
      *
      * @var  array
      */
-    public $_posts = [];
+    public $posts = [];
 
     /**
      * Array of backlinks found in the posts
      *
      * @var  array
      */
-    public $_backlinks_arr = [];
+    public $backlinks_arr = [];
 }

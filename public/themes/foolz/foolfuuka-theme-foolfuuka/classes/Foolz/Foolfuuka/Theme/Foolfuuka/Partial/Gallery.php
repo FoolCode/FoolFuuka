@@ -75,7 +75,7 @@ class Gallery extends \Foolz\Foolfuuka\View\View
             <?php endif; ?>
             <div class="thread_tools_bottom">
                 <?php if (isset($p->comment->nreplies)) : ?>
-                <?= _i('Replies') ?> : <?= ($p->nreplies - 1) ?> | <?= _i('Images') ?>: <?= ($p->nimages - 1) ?>
+                <?= _i('Replies') ?> : <?= ($p->nreplies - 1) ?> | <?= _i('Images') ?>: <?= ($p->nimages - ($p_media !== null ? 1 : 0)) ?>
                 <?php endif; ?>
                 <?php if ($p->deleted == 1) : ?><span class="post_type"><img src="<?= $this->getAssetManager()->getAssetLink('images/icons/file-delete-icon.png'); ?>" title="<?= htmlspecialchars(_i('This post was deleted from 4chan manually')) ?>"/></span><?php endif ?>
                 <?php if (isset($p_media) && $p_media->spoiler == 1) : ?><span class="post_type"><img src="<?= $this->getAssetManager()->getAssetLink('images/icons/spoiler-icon.png'); ?>" title="<?= htmlspecialchars(_i('This post contains a spoiler image')) ?>"/></span><?php endif ?>

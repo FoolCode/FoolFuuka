@@ -87,10 +87,10 @@ class Board extends \Foolz\Foolfuuka\View\View
                             <?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><span class="post_author"><?= $op->getNameProcessed() ?></span><?= ($op->getNameProcessed() && $op->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $op->getTripProcessed() ?></span><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
 
                             <?php if ($op->getPosterHashProcessed()) : ?><span class="poster_hash">ID:<?= $op->getPosterHashProcessed() ?></span><?php endif; ?>
-                            <?php if ($op->capcode != 'N') : ?>
-                            <?php if ($op->capcode == 'M') : ?><span class="post_level post_level_moderator">## <?= _i('Mod') ?></span><?php endif ?>
-                            <?php if ($op->capcode == 'A') : ?><span class="post_level post_level_administrator">## <?= _i('Admin') ?></span><?php endif ?>
-                            <?php if ($op->capcode == 'D') : ?><span class="post_level post_level_developer">## <?= _i('Developer') ?></span><?php endif ?>
+                            <?php if ($op->capcode !== 'N') : ?>
+                            <?php if ($op->capcode === 'M') : ?><span class="post_level post_level_moderator">## <?= _i('Mod') ?></span><?php endif ?>
+                            <?php if ($op->capcode === 'A') : ?><span class="post_level post_level_administrator">## <?= _i('Admin') ?></span><?php endif ?>
+                            <?php if ($op->capcode === 'D') : ?><span class="post_level post_level_developer">## <?= _i('Developer') ?></span><?php endif ?>
                             <?php endif; ?>
                         </span>
                         <span class="time_wrap">
@@ -100,11 +100,11 @@ class Board extends \Foolz\Foolfuuka\View\View
 
                         <span class="post_type">
                             <?php if ($op->poster_country !== null) : ?><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span><?php endif; ?>
-                            <?php if (isset($op_media) && $op_media->spoiler == 1) : ?><i class="icon-eye-close" title="<?= htmlspecialchars(_i('The image in this post has been marked spoiler.')) ?>"></i><?php endif ?>
-                            <?php if ($op->deleted == 1 && $op->timestamp_expired == 0) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This thread was prematurely deleted.')) ?>"></i><?php endif ?>
-                            <?php if ($op->deleted == 1 && $op->timestamp_expired != 0) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This thread was deleted on %s.', gmdate('M d, Y \a\t H:i:s e', $op->timestamp_expired))) ?>"></i><?php endif ?>
-                            <?php if ($op->sticky == 1) : ?><i class="icon-pushpin" title="<?= _i('This thread has been stickied.') ?>"></i><?php endif; ?>
-                            <?php if ($op->locked == 1) : ?><i class="icon-lock" title="<?= _i('This thread has been locked.') ?>"></i><?php endif; ?>
+                            <?php if (isset($op_media) && $op_media->spoiler) : ?><i class="icon-eye-close" title="<?= htmlspecialchars(_i('The image in this post has been marked spoiler.')) ?>"></i><?php endif ?>
+                            <?php if ($op->deleted && !$op->timestamp_expired) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This thread was prematurely deleted.')) ?>"></i><?php endif ?>
+                            <?php if ($op->deleted && $op->timestamp_expired) : ?><i class="icon-trash" title="<?= htmlspecialchars(_i('This thread was deleted on %s.', gmdate('M d, Y \a\t H:i:s e', $op->timestamp_expired))) ?>"></i><?php endif ?>
+                            <?php if ($op->sticky) : ?><i class="icon-pushpin" title="<?= _i('This thread has been stickied.') ?>"></i><?php endif; ?>
+                            <?php if ($op->locked) : ?><i class="icon-lock" title="<?= _i('This thread has been locked.') ?>"></i><?php endif; ?>
                         </span>
 
                         <span class="post_controls">

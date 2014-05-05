@@ -767,13 +767,13 @@ class Media extends Model
 
             if ($return instanceof \Foolz\Plugin\Void) {
                 if ($this->radix->getValue('enable_animated_gif_thumbs') && strtolower($file->getClientOriginalExtension()) === 'gif') {
-                    exec(str_replace(' ', '\\ ', $this->preferences->get('foolframe.imagick.convert_path')).
-                        " ".$full_path." -coalesce -treedepth 4 -colors 256 -quality 80 -background none ".
-                        "-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true));
+                    exec(str_replace(' ', '\\ ', $this->preferences->get('foolframe.imagick.convert_path')) .
+                        " " . $full_path . " -coalesce -treedepth 4 -colors 256 -quality 80 -background none " .
+                        "-resize \"" . $thumb_width . "x" . $thumb_height . ">\" " . $this->pathFromFilename(true, $is_op, true));
                 } else {
-                    exec(str_replace(' ', '\\ ', $this->preferences->get('foolframe.imagick.convert_path')).
-                        " ".$full_path."[0] -quality 80 -background none ".
-                        "-resize \"".$thumb_width."x".$thumb_height.">\" ".$this->pathFromFilename(true, $is_op, true));
+                    exec(str_replace(' ', '\\ ', $this->preferences->get('foolframe.imagick.convert_path')) .
+                        " " . $full_path . "[0] -quality 80 -background none " .
+                        "-resize \"" . $thumb_width . "x" . $thumb_height . ">\" " . $this->pathFromFilename(true, $is_op, true));
                 }
             }
 
@@ -792,52 +792,59 @@ class Media extends Model
 
                 copy($full_path, $this->pathFromFilename(false, false, true));
             }
+        }
+        if (function_exists('exif_read_data') && in_array(strtolower($file->getClientOriginalExtension()), ['jpg', 'jpeg', 'tiff'])) {
+            $media_data = null;
+            getimagesize($full_path, $media_data);
 
-            if (function_exists('exif_read_data') && in_array(strtolower($file->getClientOriginalExtension()), ['jpg', 'jpeg', 'tiff'])) {
-                $media_data = null;
-                getimagesize($full_path, $media_data);
+            if (!isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0) {
+                $exif = exif_read_data($full_path);
 
-                if (!isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0) {
-                    $exif = exif_read_data($full_path);
-
-                    if ($exif !== false) {
-                        $this->media->exif = $exif;
-                    }
+                if ($exif !== false) {
+                    $this->media->exif = $exif;
                 }
             }
+        }
 
-            if (!$this->media->media_id) {
-                $this->dc->getConnection()->insert($this->radix->getTable('_images'), [
-                    'media_hash' => $this->media->media_hash,
-                    'media' => $this->media->media_orig,
-                    'preview_op' => $this->op ? $this->media->preview_orig : null,
-                    'preview_reply' => ! $this->op ? $this->media->preview_orig : null,
-                    'total' => 1,
-                    'banned' => 0,
-                ]);
+        if (!$this->media->media_id) {
+            $this->dc->getConnection()->insert($this->radix->getTable('_images'), [
+                'media_hash' => $this->media->media_hash,
+                'media' => $this->media->media_orig,
+                'preview_op' => $this->op ? $this->media->preview_orig : null,
+                'preview_reply' => ! $this->op ? $this->media->preview_orig : null,
+                'total' => 1,
+                'banned' => 0,
+            ]);
 
-                $this->media->media_id = $this->dc->getConnection()->lastInsertId($this->radix->getTable('_images_media_id_seq'));
-            } else {
-                $query = $this->dc->qb()
-                    ->update($this->radix->getTable('_images'));
-                if ($this->media === null) {
-                    $query->set('media', ':media_orig')
-                        ->setParameter(':media_orig', $this->media->preview_orig);
-                }
-                if ($this->op && $this->media->preview_op === null) {
-                    $query->set('preview_op', ':preview_orig')
-                    ->setParameter(':preview_orig', $this->media->preview_orig);
-                }
-                if (!$this->op && $this->media->preview_reply === null) {
-                    $query->set('preview_reply', ':preview_orig')
-                    ->setParameter(':preview_orig', $this->media->preview_orig);
-                }
-                $query->set('total', 'total + 1');
+            $this->media->media_id = $this->dc->getConnection()->lastInsertId($this->radix->getTable('_images_media_id_seq'));
+        } else {
+            $media_sql = $this->dc->qb()
+                ->select('COUNT(*)')
+                ->from($this->radix->getTable(), 't')
+                ->where('media_id = :media_id')
+                ->setParameter(':media_id', $this->media->media_id)
+                ->getSQL();
 
-                $query->where('media_id = :media_id')
-                    ->setParameter(':media_id', $this->media->media_id)
-                    ->execute();
+            $query = $this->dc->qb()
+                ->update($this->radix->getTable('_images'));
+            if ($this->media === null) {
+                $query->set('media', ':media_orig')
+                    ->setParameter(':media_orig', $this->media->preview_orig);
             }
+            if ($this->op && $this->media->preview_op === null) {
+                $query->set('preview_op', ':preview_orig')
+                ->setParameter(':preview_orig', $this->media->preview_orig);
+            }
+            if (!$this->op && $this->media->preview_reply === null) {
+                $query->set('preview_reply', ':preview_orig')
+                ->setParameter(':preview_orig', $this->media->preview_orig);
+            }
+
+            $query->set('total', '('.$media_sql.')');
+
+            $query->where('media_id = :media_id')
+                ->setParameter(':media_id', $this->media->media_id)
+                ->execute();
         }
 
         return $this;

@@ -291,7 +291,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
     {
         ?>
     <footer id="footer">
-        <a href="http://github.com/FoolCode/FoOlFuuka"><?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name') ?>
+        <a href="https://github.com/FoolCode/FoolFuuka"><?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name') ?>
             Imageboard <?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.version') ?></a>
         - <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
 

@@ -244,7 +244,7 @@ class Chan extends Common
 
         $this->radix = null;
         $this->param_manager->setParam('radix', null);
-        $this->builder->getProps()->addTitle($this->preferences->get('foolfuuka.gen.website_title'));
+        $this->builder->getProps()->addTitle($this->preferences->get('foolframe.gen.website_title', $this->preferences->get('foolfuuka.gen.website_title')));
 
         if (method_exists($this, 'action_'.$method)) {
             return [$this, 'action_'.$method, $parameters];

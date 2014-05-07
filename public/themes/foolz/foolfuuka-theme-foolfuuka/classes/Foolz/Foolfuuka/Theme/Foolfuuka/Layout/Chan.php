@@ -55,7 +55,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <?php if ($this->getPreferences()->get('foolfuuka.sphinx.global')) : ?>
-        <link rel="search" type="application/opensearchdescription+xml" title="<?= $this->getPreferences()->get('foolframe.gen.website_title'); ?> " href="<?= $this->getUri()->create('_/opensearch') ?>">
+        <link rel="search" type="application/opensearchdescription+xml" title="<?= $this->getPreferences()->get('foolframe.gen.website_title'); ?>" href="<?= $this->getUri()->create('_/opensearch') ?>">
     <?php endif; ?>
 
      <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
@@ -289,7 +289,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
     {
         ?>
     <footer id="footer">
-        <a href="http://github.com/FoolCode/FoOlFuuka"><?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name') ?>
+        <a href="https://github.com/FoolCode/FoolFuuka"><?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name') ?>
             Imageboard <?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.version') ?></a>
         - <a href="http://github.com/eksopl/asagi" target="_blank">Asagi Fetcher</a>
 

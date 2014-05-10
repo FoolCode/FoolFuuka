@@ -27,8 +27,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
     public function getStyles()
     {
         ?>
-        <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css">
-        <link href="<?= $this->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css">
+        <link href="<?= $this->getAssetManager()->getAssetLink('css/style.css') ?>" rel="stylesheet" type="text/css">
         <?php
     }
 
@@ -36,18 +35,14 @@ class Chan extends \Foolz\Foolfuuka\View\View
     {
         $radix = $this->getBuilderParamManager()->getParam('radix');
 
-        ?><!DOCTYPE html>
+        ?>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="generator" content="<?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name').' '.$this->getConfig()->get('foolz/foolfuuka', 'package', 'main.version') ?>">
     <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
     <link href="<?= $this->getUri()->base() ?>" rel="index" title="<?= $this->getPreferences()->get('foolframe.gen.website_title') ?>">
-    <link href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css">
-    <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>" rel="stylesheet" type="text/css">
-    <!--[if lt IE 8]>
-        <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>" rel="stylesheet" type="text/css">
-    <![endif]-->
 
     <?php $this->getStyles(); ?>
 
@@ -58,9 +53,9 @@ class Chan extends \Foolz\Foolfuuka\View\View
         <link rel="search" type="application/opensearchdescription+xml" title="<?= $this->getPreferences()->get('foolframe.gen.website_title'); ?> " href="<?= $this->getUri()->create('_/opensearch') ?>">
     <?php endif; ?>
 
-     <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
+    <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
 
- </head>
+</head>
         <?php
     }
 
@@ -70,11 +65,11 @@ class Chan extends \Foolz\Foolfuuka\View\View
         $disable_headers = $this->getBuilderParamManager()->getParam('disable_headers', false);
 
         ?>
-    <body class="<?= $this->getSelectedThemeClass(); ?>">
-    <?php if ($disable_headers !== true) : ?>
+<body class="<?= $this->getSelectedThemeClass(); ?>">
+<?php if ($disable_headers !== true) : ?>
     <div class="letters"><?php
         $board_urls = [];
-        foreach ($this->getRadixColl()->getArchives() as $key => $item) {
+        foreach ($this->getRadixColl()->getArchives() as $item) {
             $board_urls[] = '<a href="'.$this->getUri()->create($item->shortname).'">'.$item->shortname.'</a>';
         }
 
@@ -94,108 +89,115 @@ class Chan extends \Foolz\Foolfuuka\View\View
         if (!empty($board_urls)) {
             echo sprintf(_i('Boards: [ %s ]'), implode(' / ', $board_urls));
         }
-        ?></div>
-        <?php endif; ?>
-        <div class="container-fluid">
-            <div class="navbar navbar-fixed-top navbar-inverse">
-                <div class="navbar-inner">
-                    <div class="container">
-                        <ul class="nav">
-                            <li class="dropdown">
-                                <a href="<?= $this->getUri()->base() ?>" id="brand" class="brand dropdown-toggle"
-                                   data-toggle="dropdown">
-                                    <?= ($radix) ? '/'.$radix->shortname.'/'.' - '.$radix->name : $this->getPreferences()->get('foolframe.gen.website_title') ?>
-                                    <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <?= '<li><a href="'.$this->getUri()->base().'">'._i('Index').'</a></li>'; ?>
-                                    <?= ($this->getAuth()->hasAccess('maccess.mod')) ? '<li><a href="'.$this->getUri()->create('admin').'">'._i('Control Panel').'</a></li>' : '' ?>
-                                    <li class="divider"></li>
-                                    <?php
-                                    if ($this->getRadixColl()->getArchives()) {
-                                        echo '<li class="nav-header">'._i('Archives').'</li>';
-                                        foreach ($this->getRadixColl()->getArchives() as $key => $item) {
+        ?>
+    </div>
+<?php endif; ?>
+    <div class="container-fluid">
 
-                                            echo '<li><a href="'.$this->getUri()->create($item->shortname).'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
-                                        }
-                                    }
+        <nav class="navbar">
 
-                                    if ($this->getRadixColl()->getBoards()) {
-                                        if ($this->getRadixColl()->getArchives()) {
-                                            echo '<li class="divider"></li>';
-                                        }
+        </nav>
 
-                                        echo '<li class="nav-header">'._i('Boards').'</li>';
-                                        foreach ($this->getRadixColl()->getBoards() as $key => $item) {
-                                            echo '<li><a href="'.$this->getUri()->create($item->shortname).'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
-                                        }
-                                    }
-                                    ?>
-                                </ul>
-                            </li>
-                        </ul>
+    <?php if (false) : ?>
 
-                        <ul class="nav">
-                            <?php if ($radix) : ?>
-                            <?php if ($radix->archive && $radix->getValue('board_url') != "") : ?>
-                                <li>
-                                    <a href="<?= $radix->getValue('board_url') ?>" style="padding-right:4px;">4chan <i
-                                            class="icon-share icon-white text-small"></i></a>
-                                </li>
-                                <?php endif; ?>
-                            <li style="padding-right:0px;">
-                                <a href="<?= $this->getUri()->create(array($radix->shortname)) ?>"
-                                   style="padding-right:4px;"><?= _i('Index') ?></a>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                                   style="padding-left:2px; padding-right:4px;">
-                                    <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu" style="margin-left:-9px">
-                                    <li>
-                                        <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
-                                            <?= _i('By Post') ?>
-                                            <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) !== 'by_thread') : ?>
-                                                <i class="icon-ok"></i>
-                                            <?php endif; ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
-                                            <?= _i('By Thread') ?>
-                                            <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) === 'by_thread') : ?>
-                                                <i class="icon-ok"></i>
-                                            <?php endif; ?>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <?php endif; ?>
+        <nav class="navbar">
+            <div class="container-fluid">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="<?= $this->getUri()->base() ?>" id="brand" class="brand dropdown-toggle"
+                           data-toggle="dropdown">
+                            <?= ($radix) ? '/'.$radix->shortname.'/'.' - '.$radix->name : $this->getPreferences()->get('foolframe.gen.website_title') ?>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <?= '<li><a href="'.$this->getUri()->base().'">'._i('Index').'</a></li>'; ?>
+                            <?= ($this->getAuth()->hasAccess('maccess.mod')) ? '<li><a href="'.$this->getUri()->create('admin').'">'._i('Control Panel').'</a></li>' : '' ?>
+                            <li class="divider"></li>
                             <?php
-                            $top_nav = array();
-                            if ($radix) {
-                                $top_nav[] = array('href' => $this->getUri()->create(array($radix->shortname, 'ghost')), 'text' => _i('Ghost'));
-                                $top_nav[] = array('href' => $this->getUri()->create(array($radix->shortname, 'gallery')), 'text' => _i('Gallery'));
+                            if ($this->getRadixColl()->getArchives()) {
+                                echo '<li class="nav-header">'._i('Archives').'</li>';
+                                foreach ($this->getRadixColl()->getArchives() as $key => $item) {
+
+                                    echo '<li><a href="'.$this->getUri()->create($item->shortname).'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
+                                }
                             }
 
-                            if ($this->getAuth()->hasAccess('comment.reports')) {
-                                $top_nav[] = array('href' => $this->getUri()->create(array('_', 'reports')), 'text' => _i('Reports').($this->getReportColl()->count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.$this->getReportColl()->count().'</span>' : ''));
-                            }
+                            if ($this->getRadixColl()->getBoards()) {
+                                if ($this->getRadixColl()->getArchives()) {
+                                    echo '<li class="divider"></li>';
+                                }
 
-                            $top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setObject($this)->setParam('nav', $top_nav)->execute()->get($top_nav);
-                            $top_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_top_nav_buttons')->setObject($this)->setParam('nav', $top_nav)->execute()->get($top_nav);
-
-                            foreach ($top_nav as $nav) {
-                                echo '<li><a href="'.$nav['href'].'">'.$nav['text'].'</a></li>';
+                                echo '<li class="nav-header">'._i('Boards').'</li>';
+                                foreach ($this->getRadixColl()->getBoards() as $key => $item) {
+                                    echo '<li><a href="'.$this->getUri()->create($item->shortname).'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
+                                }
                             }
                             ?>
                         </ul>
+                    </li>
+                </ul>
 
-                        <?= $this->getBuilder()->getPartial('tools_search')->build(); ?>
-                    </div>
-                </div>
+                <ul class="nav">
+                    <?php if ($radix) : ?>
+                    <?php if ($radix->archive && $radix->getValue('board_url') != "") : ?>
+                        <li>
+                            <a href="<?= $radix->getValue('board_url') ?>" style="padding-right:4px;">4chan <i
+                                    class="icon-share icon-white text-small"></i></a>
+                        </li>
+                        <?php endif; ?>
+                    <li style="padding-right:0px;">
+                        <a href="<?= $this->getUri()->create(array($radix->shortname)) ?>"
+                           style="padding-right:4px;"><?= _i('Index') ?></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                           style="padding-left:2px; padding-right:4px;">
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu" style="margin-left:-9px">
+                            <li>
+                                <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
+                                    <?= _i('By Post') ?>
+                                    <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) !== 'by_thread') : ?>
+                                        <i class="icon-ok"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
+                                    <?= _i('By Thread') ?>
+                                    <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) === 'by_thread') : ?>
+                                        <i class="icon-ok"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <?php endif; ?>
+                    <?php
+                    $top_nav = array();
+                    if ($radix) {
+                        $top_nav[] = array('href' => $this->getUri()->create(array($radix->shortname, 'ghost')), 'text' => _i('Ghost'));
+                        $top_nav[] = array('href' => $this->getUri()->create(array($radix->shortname, 'gallery')), 'text' => _i('Gallery'));
+                    }
+
+                    if ($this->getAuth()->hasAccess('comment.reports')) {
+                        $top_nav[] = array('href' => $this->getUri()->create(array('_', 'reports')), 'text' => _i('Reports').($this->getReportColl()->count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.$this->getReportColl()->count().'</span>' : ''));
+                    }
+
+                    $top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setObject($this)->setParam('nav', $top_nav)->execute()->get($top_nav);
+                    $top_nav = \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_top_nav_buttons')->setObject($this)->setParam('nav', $top_nav)->execute()->get($top_nav);
+
+                    foreach ($top_nav as $nav) {
+                        echo '<li><a href="'.$nav['href'].'">'.$nav['text'].'</a></li>';
+                    }
+                    ?>
+                </ul>
+
+                <?= $this->getBuilder()->getPartial('tools_search')->build(); ?>
             </div>
+        </nav>
+    <?php endif; ?>
         <?php
     }
 
@@ -380,9 +382,9 @@ class Chan extends \Foolz\Foolfuuka\View\View
         }(document, 'script'));
         <?php endif; ?>
     </script>
-    <script src="<?= $this->getAssetManager()->getAssetLink('bootstrap.min.js') ?>"></script>
-    <script src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>"></script>
-    <script src="<?= $this->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
+
+    <script src="<?= $this->getAssetManager()->getAssetLink('js/board.js') ?>"></script>
+    <script src="<?= $this->getAssetManager()->getAssetLink('js/plugins.js') ?>"></script>
 
     <!--[if lt IE 7 ]>
         <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>

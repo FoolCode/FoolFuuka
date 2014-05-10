@@ -671,15 +671,26 @@ class Comment extends Model
         try {
             $this->dc->getConnection()->beginTransaction();
 
-            // throw into _deleted table
-            $this->dc->getConnection()->executeUpdate(
-                'INSERT INTO '.$this->radix->getTable('_deleted').' '.
+            // check that the post isn't already in deleted
+            $has_deleted = $this->dc->qb()
+                ->select('COUNT(*)')
+                ->from($this->radix->getTable('_deleted'), 'd')
+                ->where('doc_id = :doc_id')
+                ->setParameter(':doc_id', $this->comment->doc_id)
+                ->execute()
+                ->fetch();
+
+            if (!$has_deleted) {
+                // throw into _deleted table
+                $this->dc->getConnection()->executeUpdate(
+                    'INSERT INTO '.$this->radix->getTable('_deleted').' '.
                     $this->dc->qb()
                         ->select('*')
                         ->from($this->radix->getTable(), 't')
                         ->where('doc_id = '.$this->dc->getConnection()->quote($this->comment->doc_id))
                         ->getSQL()
-            );
+                );
+            }
 
             // delete post
             $this->dc->qb()

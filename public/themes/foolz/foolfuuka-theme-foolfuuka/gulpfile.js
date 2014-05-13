@@ -2,6 +2,7 @@ var es = require('event-stream'),
     gulp = require('gulp'),
     rimraf = require('gulp-rimraf'),
     less = require('gulp-less'),
+    browserify = require('gulp-browserify'),
     runSequence = require('run-sequence'),
     composer = require('./composer.json');
 
@@ -18,12 +19,17 @@ gulp.task('less', function() {
   return gulp.src('assets-src/less/style.less').pipe(less()).pipe(gulp.dest('assets/css'));
 });
 
-gulp.task('copy', ['clean'], function() {
+gulp.task('copy', function() {
   return es.merge(
     gulp.src('assets-src/font-awesome/fonts/**').pipe(gulp.dest('assets/fonts/')),
-    gulp.src('assets-src/images/**').pipe(gulp.dest('assets/images/')),
-    gulp.src('assets-src/js/**').pipe(gulp.dest('assets/js/'))
+    gulp.src('assets-src/images/**').pipe(gulp.dest('assets/images/'))
   );
+});
+
+gulp.task('browserify', function() {
+  return gulp.src('assets-src/js/app.js')
+    .pipe(browserify())
+    .pipe(gulp.dest('assets/js/'))
 });
 
 gulp.task('copy:dev', function() {
@@ -36,9 +42,10 @@ gulp.task('default', function(cb) {
 });
 
 gulp.task('dev', function(cb) {
-  runSequence(['clean', 'clean:dev'], ['less', 'copy'], 'copy:dev', cb);
+  runSequence(['clean', 'clean:dev'], ['less', 'copy', 'browserify'], 'copy:dev', cb);
 });
 
 gulp.task('watch', function() {
-  return gulp.watch('assets-src/less/**', ['dev']);
+  gulp.watch('assets-src/less/**', ['dev']);
+  gulp.watch('assets-src/js/**', ['dev']);
 });

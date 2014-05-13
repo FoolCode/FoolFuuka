@@ -206,7 +206,6 @@ class Chan extends Common
         $this->param_manager->setParams($to_bind);
 
         $this->builder->createPartial('tools_modal', 'tools_modal');
-        $this->builder->createPartial('tools_search', 'tools_search');
         $this->builder->createPartial('tools_advanced_search', 'advanced_search');
     }
 

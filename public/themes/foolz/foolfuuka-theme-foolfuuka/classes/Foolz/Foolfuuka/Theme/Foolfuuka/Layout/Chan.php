@@ -94,28 +94,43 @@ class Chan extends \Foolz\Foolfuuka\View\View
 <?php endif; ?>
     <div class="container-fluid">
 
-        <nav class="navbar">
-
-        </nav>
-
-    <?php if (false) : ?>
-
-        <nav class="navbar">
-            <div class="container-fluid">
-                <ul class="nav">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="<?= $this->getUri()->create(array($radix->shortname)) ?>          "><?= ($radix) ? '/'.$radix->shortname.'/'.' - '.$radix->name : $this->getPreferences()->get('foolframe.gen.website_title') ?></a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <?php if (true || $radix->archive && $radix->getValue('board_url')) : ?>
+                    <li>
+                        <a href="<?= $radix->getValue('board_url') ?>" style="padding-right:4px;">4chan <i class="fa fa-external-link"></i></a>
+                    </li>
+                    <?php endif; ?>
                     <li class="dropdown">
-                        <a href="<?= $this->getUri()->base() ?>" id="brand" class="brand dropdown-toggle"
-                           data-toggle="dropdown">
-                            <?= ($radix) ? '/'.$radix->shortname.'/'.' - '.$radix->name : $this->getPreferences()->get('foolframe.gen.website_title') ?>
-                            <b class="caret"></b>
-                        </a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <?= '<li><a href="'.$this->getUri()->base().'">'._i('Index').'</a></li>'; ?>
+                            <?= '<li><a href="'.$this->getUri()->base().'">'._i('Homepage').'</a></li>'; ?>
                             <?= ($this->getAuth()->hasAccess('maccess.mod')) ? '<li><a href="'.$this->getUri()->create('admin').'">'._i('Control Panel').'</a></li>' : '' ?>
-                            <li class="divider"></li>
+                            <li role="presentation" class="divider"></li>
+                            <li>
+                                <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
+                                    <?= _i('Index by Post') ?>
+                                    <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) !== 'by_thread') : ?>
+                                        <i class="icon-ok"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
+                                    <?= _i('Index by Thread') ?>
+                                    <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) === 'by_thread') : ?>
+                                        <i class="icon-ok"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
+                            <li role="presentation" class="divider"></li>
                             <?php
                             if ($this->getRadixColl()->getArchives()) {
-                                echo '<li class="nav-header">'._i('Archives').'</li>';
+                                echo '<li role="presentation" class="dropdown-header">'._i('Archives').'</li>';
                                 foreach ($this->getRadixColl()->getArchives() as $key => $item) {
 
                                     echo '<li><a href="'.$this->getUri()->create($item->shortname).'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
@@ -127,7 +142,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
                                     echo '<li class="divider"></li>';
                                 }
 
-                                echo '<li class="nav-header">'._i('Boards').'</li>';
+                                echo '<li role="presentation" class="dropdown-header">'._i('Boards').'</li>';
                                 foreach ($this->getRadixColl()->getBoards() as $key => $item) {
                                     echo '<li><a href="'.$this->getUri()->create($item->shortname).'">/'.$item->shortname.'/ - '.$item->name.'</a></li>';
                                 }
@@ -135,45 +150,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
                             ?>
                         </ul>
                     </li>
-                </ul>
 
-                <ul class="nav">
-                    <?php if ($radix) : ?>
-                    <?php if ($radix->archive && $radix->getValue('board_url') != "") : ?>
-                        <li>
-                            <a href="<?= $radix->getValue('board_url') ?>" style="padding-right:4px;">4chan <i
-                                    class="icon-share icon-white text-small"></i></a>
-                        </li>
-                        <?php endif; ?>
-                    <li style="padding-right:0px;">
-                        <a href="<?= $this->getUri()->create(array($radix->shortname)) ?>"
-                           style="padding-right:4px;"><?= _i('Index') ?></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                           style="padding-left:2px; padding-right:4px;">
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu" style="margin-left:-9px">
-                            <li>
-                                <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_post')) ?>">
-                                    <?= _i('By Post') ?>
-                                    <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) !== 'by_thread') : ?>
-                                        <i class="icon-ok"></i>
-                                    <?php endif; ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<?= $this->getUri()->create(array($radix->shortname, 'page_mode', 'by_thread')) ?>">
-                                    <?= _i('By Thread') ?>
-                                    <?php if ($this->getCookie('default_theme_page_mode_'.($radix->archive ? 'archive' : 'board')) === 'by_thread') : ?>
-                                        <i class="icon-ok"></i>
-                                    <?php endif; ?>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <?php endif; ?>
                     <?php
                     $top_nav = array();
                     if ($radix) {
@@ -193,11 +170,10 @@ class Chan extends \Foolz\Foolfuuka\View\View
                     }
                     ?>
                 </ul>
-
-                <?= $this->getBuilder()->getPartial('tools_search')->build(); ?>
+                <a class="btn btn-default navbar-btn navbar-right" href="<?= $this->getUri()->create([$radix->shortname ?: '_', 'advanced_search']) ?>">Press S to Search <i class="fa fa-search"></i></a>
             </div>
+
         </nav>
-    <?php endif; ?>
         <?php
     }
 
@@ -362,10 +338,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
         ?>
     </footer>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>
-        window.jQuery || document.write('<script src="<?= $this->getAssetManager()->getAssetLink('assets/js/jquery.js') ?>"><\/script>');
-
         var backend_vars = <?= json_encode($this->getBuilderParamManager()->getParam('backend_vars')) ?>;
 
         <?php if ($this->getPreferences()->get('foolframe.theme.google_analytics')) : ?>
@@ -383,13 +356,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
         <?php endif; ?>
     </script>
 
-    <script src="<?= $this->getAssetManager()->getAssetLink('js/board.js') ?>"></script>
-    <script src="<?= $this->getAssetManager()->getAssetLink('js/plugins.js') ?>"></script>
-
-    <!--[if lt IE 7 ]>
-        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-        <script>window.attachEvent('onload', function () { CFInstall.check({mode:'overlay'}) })</script>
-    <![endif]-->
+    <script src="<?= $this->getAssetManager()->getAssetLink('js/app.js') ?>"></script>
 
     <?= $this->getPreferences()->get('foolframe.theme.footer_code'); ?>
 

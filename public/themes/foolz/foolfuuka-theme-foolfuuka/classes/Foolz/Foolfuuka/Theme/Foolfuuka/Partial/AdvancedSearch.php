@@ -2,6 +2,8 @@
 
 namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
 
+use Foolz\Foolfuuka\Model\Search;
+
 class AdvancedSearch extends \Foolz\Foolfuuka\View\View
 {
     public function toString()
@@ -20,53 +22,55 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
         ?>
 
         <?php if (isset($search_radix)) : ?>
-        <div class="advanced_search clearfix">
-            <?= $form->open(['method' => 'POST', 'action' => $this->getUri()->create($search_radix.'/search')]); ?>
+        <div id="search-advanced">
+            <?= $form->open([
+                'method' => 'POST',
+                'action' => $this->getUri()->create($search_radix.'/search'),
+                'role'=> 'form'
+            ]); ?>
 
-        <div class="comment_wrap">
+            <div class="buttons">
+                <?= $form->submit([
+                    'class' => 'btn btn-primary btn-xs',
+                    'value' => _i('Search'),
+                    'name' => 'submit_search',
+                ]);
+                ?>
+
+                <?= $form->submit([
+                    'class' => 'btn btn-primary btn-xs',
+                    'value' => _i('Search on all boards'),
+                    'name' => 'submit_search_global',
+                ]);
+                ?>
+
+                <?php if (isset($radix)) : ?>
+                    <?= $form->submit([
+                        'class' => 'btn btn-primary btn-xs',
+                        'value' => _i('Go to post number'),
+                        'name' => 'submit_post',
+                    ]);
+                    ?>
+                <?php endif; ?>
+
+                <?= $form->reset([
+                    'class' => 'btn btn-info btn-xs',
+                    'value' => _i('Clear'),
+                    'name' => 'reset',
+                    'data-function' => 'clearSearch'
+                ]);
+                ?>
+            </div>
+
             <?= $form->input([
-            'name' => 'text',
-            'id' => 'search_form_comment',
-            'value' => (isset($search['text'])) ? rawurldecode($search['text']) : '',
-            'placeholder' => ($search_radix  !== '_') ? _i('Search or insert post number') : _i('Search through all the boards'),
-        ]);
-            ?>
-        </div>
-
-        <div class="buttons clearfix">
-            <?= $form->submit([
-                'class' => 'btn btn-inverse',
-                'value' => _i('Search'),
-                'name' => 'submit_search',
-            ]);
+                    'name' => 'text',
+                    'class' => 'form-control search-comment',
+                    'value' => (isset($search['text'])) ? rawurldecode($search['text']) : '',
+                    'placeholder' => ($search_radix  !== '_') ? _i('Search or insert post number') : _i('Search through all the boards'),
+                ]);
             ?>
 
-            <?= $form->submit([
-            'class' => 'btn btn-inverse',
-            'value' => _i('Search on all boards'),
-            'name' => 'submit_search_global',
-        ]);
-            ?>
-
-            <?php if (isset($radix)) : ?>
-            <?= $form->submit([
-                'class' => 'btn btn-inverse',
-                'value' => _i('Go to post number'),
-                'name' => 'submit_post',
-            ]);
-            ?>
-            <?php endif; ?>
-
-            <?= $form->reset([
-                'class' => 'btn btn-inverse pull-right',
-                'value' => _i('Clear'),
-                'name' => 'reset',
-                'data-function' => 'clearSearch'
-            ]);
-            ?>
-        </div>
-
-            <?php $search_structure = \Search::structure(); ?>
+            <?php $search_structure = Search::structure(); ?>
 
         <div class="column">
             <?php
@@ -80,28 +84,29 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                         continue;
                     }
 
-                    echo '<div class="input-prepend">';
-                    echo '<label class="add-on" for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
+                    echo '<div class="input">';
+                    echo '<label for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
                     echo $form->input([
                         'name' => $element['name'],
                         'id' => 'search_form_'.$element['name'],
                         'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : '',
                         'placeholder' => (isset($element['placeholder'])) ? $element['placeholder'] : '',
+                        'class' => 'form-control input-sm'
                     ]);
                     echo '</div>';
                 }
 
                 if ($element['type'] === 'date') {
-                    echo '<div class="input-prepend">';
-                    echo '<label class="add-on" for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
-                    echo $form->input(
-                        ['type' => 'date',
-                            'name' => $element['name'],
-                            'placeholder' => 'YYYY-MM-DD',
-                            'autocomplete' => 'off',
-                            'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : ''
-                        ]
-                    );
+                    echo '<div class="input">';
+                    echo '<label for="search_form_'.$element['name'].'">'.e($element['label']).'</label>';
+                    echo $form->input([
+                        'type' => 'date',
+                        'name' => $element['name'],
+                        'placeholder' => 'YYYY-MM-DD',
+                        'autocomplete' => 'off',
+                        'value' => (isset($search[$element['name']])) ? rawurldecode($search[$element['name']]) : '',
+                        'class' => 'form-control input-sm'
+                    ]);
                     echo '</div>';
                 }
             }
@@ -186,7 +191,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
             <div class="latest_searches">
                 <div>
                     <h5><?= e(_i('Your latest searches')) ?></h5>
-                    <button type="button" data-function="clearLatestSearches" class="btn btn-mini pull-right"><?= e(_i('Clear')) ?></button>
+                    <button type="button" data-function="clearLatestSearches" class="btn btn-xs btn-default pull-right"><?= e(_i('Clear')) ?></button>
                 </div>
                 <ul>
                     <?php
@@ -239,7 +244,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                 }
 
                 if ($element['type'] === 'radio') : ?>
-                <tr><td><?= e($element['label']) ?></td><td>
+                <tr><td>
                     <?php foreach ($element['elements'] as $el) : ?>
                     <label>
                         <?= $form->radio(
@@ -247,7 +252,7 @@ class AdvancedSearch extends \Foolz\Foolfuuka\View\View
                             $el['value'] ? : '',
                             (isset($search[$element['name']]) && $el['value'] === $search[$element['name']]) || (!isset($search[$element['name']]) && $el['value'] === false)
                         ) ?>
-                        <?= e($el['text']); ?>
+                        <?= e($el['text']); ?><br>
                     </label>
                     <?php endforeach; ?>
                 </td></tr>

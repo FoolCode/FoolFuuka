@@ -5,7 +5,7 @@ body {
 .letters {
   background: @ff-dark-green;
   color: @ff-light-text;
-  padding: 0.2em;
+  padding: 0.2em 0.4em;
   font-size: 0.8em;
 
   a {
@@ -17,6 +17,62 @@ body {
   }
 }
 
-.navbar {
-  background: @ff-dark-green;
+.container-fluid {
+  padding: 0;
+}
+
+.navbar-default {
+  border-left: none;
+  border-right: none;
+}
+
+#search-advanced {
+  z-index: 100;
+  background: #fff;
+  border: 3px solid @ff-dark-green;
+  border-radius: 4px;
+  position: fixed;
+  width: auto;
+  top: 5px;
+  right: 10px;
+  padding: 5px;
+
+  h5 {
+    font-size: 0.9em;
+    line-height: 1em;
+    margin-top: 3px;
+    border-bottom: 1px solid #bbb;
+    float:left;
+  }
+
+  .column {
+    display:inline-block;
+    width: 180px;
+    padding: 5px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    vertical-align:top;
+
+    &.checkboxes {
+      width: 160px;
+    }
+
+    .input-sm {
+      height: 20px;
+      padding: 3px 6px;
+      font-size: 10px;
+      line-height: 1.2;
+      border-radius: 2px;
+    }
+  }
+
+  label {
+    font-size: 0.8em;
+    display: inline;
+    font-weight: normal;
+  }
+
+  .search-comment {
+    margin: 5px 0;
+  }
 }

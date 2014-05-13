@@ -5,3 +5,34 @@
 @ff-light-text-hover: #ffffff;
 
 
+// Basics of a navbar
+@navbar-height:                    40px;
+@navbar-margin-bottom:             @line-height-computed;
+@navbar-border-radius:             0;
+@navbar-padding-horizontal:        floor((@grid-gutter-width / 2));
+@navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);
+@navbar-collapse-max-height:       340px;
+
+@navbar-default-color:             @ff-light-text;
+@navbar-default-bg:                @ff-dark-green;
+@navbar-default-border:            darken(@navbar-default-bg, 6.5%);
+
+// Navbar links
+@navbar-default-link-color:                @ff-light-text;
+@navbar-default-link-hover-color:          @ff-light-text-hover;
+@navbar-default-link-hover-bg:             transparent;
+@navbar-default-link-active-color:         @ff-light-text;
+@navbar-default-link-active-bg:            darken(@navbar-default-bg, 6.5%);
+@navbar-default-link-disabled-color:       darken(@ff-light-text, 10%);
+@navbar-default-link-disabled-bg:          transparent;
+
+// Navbar brand label
+@navbar-default-brand-color:               @ff-light-text;
+@navbar-default-brand-hover-color:         @ff-light-text-hover;
+@navbar-default-brand-hover-bg:            transparent;
+
+// Navbar toggle
+@navbar-default-toggle-hover-bg:           #ddd;
+@navbar-default-toggle-icon-bar-bg:        #888;
+@navbar-default-toggle-border-color:       #ddd;
+

@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "author": "Foolz <support@foolz.us>",
   "description": "The default FoolFuuka theme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "event-stream": "^3.1.5",
     "gulp": "^3.6.2",
+    "gulp-browserify": "^0.5.0",
     "gulp-clean": "^0.2.4",
     "gulp-less": "^1.2.3",
     "gulp-rimraf": "^0.1.0",
+    "jquery": "^2.1.1",
     "run-sequence": "^0.3.6"
   }
 }

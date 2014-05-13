@@ -27,7 +27,7 @@
                 $val_ed = ($values[1] + 86400) % 86400;
                 ?>
                 <a href="<?= $poster_link ?>">
-                    <span class="poster_name"><?= e($d->name) ?></span> <span class="poster_trip"><?= e($d->trip) ?></span>
+                    <span class="poster_name"><?= htmlentities($d->name) ?></span> <span class="poster_trip"><?= htmlentities($d->trip) ?></span>
                 </a>
             </td>
             <td style="text-align:center"><?= $d->posts ?></td>

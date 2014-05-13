@@ -1,8 +1,4 @@
 <?php
-if (!defined('DOCROOT')) {
-    exit('No direct script access allowed');
-}
-
 $data_array = json_decode($data);
 
 $temp = [];

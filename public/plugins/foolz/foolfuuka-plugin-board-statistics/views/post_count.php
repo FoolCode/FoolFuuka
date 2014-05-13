@@ -21,7 +21,7 @@
                 $poster_link = $this->uri->create($params);
                 ?>
                 <a href="<?= $poster_link ?>">
-                    <span class="poster_name"><?= $d['name'] ?></span> <span class="poster_trip"><?= $d['trip'] ?></span>
+                    <span class="poster_name"><?= htmlentities($d['name']) ?></span> <span class="poster_trip"><?= htmlentities($d['trip']) ?></span>
                 </a>
             </td>
             <td><?= $d['postcount'] ?></td>

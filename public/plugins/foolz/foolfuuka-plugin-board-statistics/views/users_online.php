@@ -24,7 +24,7 @@
                 $poster_link = $this->uri->create($params);
                 ?>
                 <a href="<?= $poster_link ?>">
-                    <span class="poster_name"><?php echo $d->name ?></span> <span class="poster_trip"><?php echo $d->trip ?></span>
+                    <span class="poster_name"><?= htmlentities($d->name) ?></span> <span class="poster_trip"><?= htmlentities($d->trip) ?></span>
                 </a>
             </td>
             <td><?= date('D M d H:i:s Y', $d->timestamp) ?></td>
@@ -63,7 +63,7 @@
                 $poster_link = $this->uri->create($params);
                 ?>
                 <a href="<?= $poster_link ?>">
-                    <span class="poster_name"><?php echo $d->name ?></span> <span class="poster_trip"><?php echo $d->trip ?></span>
+                    <span class="poster_name"><?= htmlentities($d->name) ?></span> <span class="poster_trip"><?= htmlentities($d->trip) ?></span>
                 </a>
             </td>
             <td><?= date('D M d H:i:s Y', $d->timestamp) ?></td>

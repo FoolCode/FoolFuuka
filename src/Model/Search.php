@@ -476,13 +476,19 @@ class Search extends Board
             throw new SearchRequiresSphinxException(_i('Sorry, this board does not have search enabled.'));
         }
 
-        // process results
-        foreach ($result as $key => $row) {
-            $board = ($this->radix !== null ? $this->radix : $this->radix_coll->getById($row['board_id']));
-            $bulk = new CommentBulk();
-            $bulk->import($row, $board);
-            $this->comments_unsorted[] = $bulk;
-            unset($result[$key]);
+        // no results found IN DATABASE, but we might still get a search count from Sphinx
+        if (!count($result)) {
+            $this->comments_unsorted = [];
+            $this->comments = [];
+        } else {
+            // process results
+            foreach ($result as $key => $row) {
+                $board = ($this->radix !== null ? $this->radix : $this->radix_coll->getById($row['board_id']));
+                $bulk = new CommentBulk();
+                $bulk->import($row, $board);
+                $this->comments_unsorted[] = $bulk;
+                unset($result[$key]);
+            }
         }
 
         $this->comments[0]['posts'] = $this->comments_unsorted;

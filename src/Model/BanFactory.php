@@ -57,7 +57,7 @@ class BanFactory extends Model
         foreach ($array as $item) {
             // use the board_id as key
             $obj = $this->fromArray($item);
-            $new[$obj->board_id] = $obj;
+            $new[] = $obj;
         }
 
         return $new;

@@ -43,8 +43,8 @@ class Bans extends \Foolz\Foolframe\View\View
             <tr>
                 <td><?= Inet::dtop($b->ip) ?><?= $this->getPreferences()->get('foolfuuka.sphinx.global') ?  '<br><small><a href="'.$this->getUri()->create('_/search/poster_ip/'. Inet::dtop($b->ip)).'" target="_blank">'._i('Search posts').'</a></small>' : '' ?></td>
                 <td><?= $b->board_id ? '/'.$radix_coll->getById($b->board_id)->shortname.'/' : _i('Global') ?></td>
-                <td><?= e($b->reason) ?><br><small><?= _i('By:').' '.e($users->getUserBy('id', $b->creator_id)->username) ?></small></td>
-                <td><?= e($b->appeal) ?><br><small><?= _i('Status:').' '.($b->appeal_status == Ban::APPEAL_PENDING ? _i('pending') : '').($b->appeal_status == Ban::APPEAL_REJECTED ? _i('rejected') : '').($b->appeal_status == Ban::APPEAL_NONE ? _i('none') : '') ?></small></td>
+                <td><?= htmlentities($b->reason) ?><br><small><?= _i('By:').' '.htmlentities($users->getUserBy('id', $b->creator_id)->username) ?></small></td>
+                <td><?= htmlentities($b->appeal) ?><br><small><?= _i('Status:').' '.($b->appeal_status == Ban::APPEAL_PENDING ? _i('pending') : '').($b->appeal_status == Ban::APPEAL_REJECTED ? _i('rejected') : '').($b->appeal_status == Ban::APPEAL_NONE ? _i('none') : '') ?></small></td>
                 <td><?= date('d-M-y H:i:s T', $b->start) ?>, <?= $b->length ? ($b->length / 24 / 60 / 60).' '._i('Day(s)') : _i('Forever') ?><br><small><?= _i('Status:').' '.(!$b->length || time() < $b->start + $b->length ? _i('ongoing'): _i('expired')) ?></small></td>
                 <td>
                     <div class="btn-group">

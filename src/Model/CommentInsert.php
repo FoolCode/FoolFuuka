@@ -595,8 +595,6 @@ class CommentInsert extends Comment
         }
 
         try {
-            $this->dc->getConnection()->beginTransaction();
-
             $query_fields = [
                 'num' => $num,
                 'subnum' => $subnum,
@@ -641,6 +639,8 @@ class CommentInsert extends Comment
             }
 
             $fields = $query_fields + $fields;
+
+            $this->dc->getConnection()->beginTransaction();
 
             $this->dc->getConnection()->executeUpdate(
                 'INSERT INTO '.$this->radix->getTable().

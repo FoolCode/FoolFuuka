@@ -102,7 +102,7 @@ class RadixCollection extends Model
                 'help' => _i('Insert the shortname for the board. Reserved: "admin". '),
                 'placeholder' => _i('Req.'),
                 'class' => 'span1',
-                'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 5])],
+                'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 32])],
                 'validation_func' => function($input, $form_internal) use ($dc) {
                     // if we're working on the same object
                     if (isset($input['id'])) {

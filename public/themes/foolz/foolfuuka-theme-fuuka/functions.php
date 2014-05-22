@@ -3,24 +3,23 @@
 // Fuuka's Code
 function fuuka_title($message)
 {
-	switch ($message)
-	{
-		case 1:
-			return 'Can\'t let you do that, Star Fox!';
-			break;
+    switch ($message) {
+        case 1:
+            return 'Can\'t let you do that, Star Fox!';
+            break;
 
-		case 2:
-			return 'That was /b/ Quality! Please die in a fire~';
-			break;
+        case 2:
+            return 'That was /b/ Quality! Please die in a fire~';
+            break;
 
-		default:
-			return 'That was VIP quality!';
-	}
+        default:
+            return 'That was VIP quality!';
+    }
 }
 
 function fuuka_message()
 {
-	$messages = ['　　　人　　　　　
+    $messages = ['　　　人　　　　　
 　　（＿_）　　　　
 　 （＿＿）　　　
 　（ ＿＿ ）　　　　
@@ -166,7 +165,7 @@ i 　乂-‐　－! i　 Don\'t think, feel and you\'ll be in your room.
 　　　　 （　´_ゝ`）　/　　 ⌒i
 　　　　／　　　＼　 　　　|　|
 　　　 /　　 　/￣￣￣￣/　|
-　 ＿__(__ﾆつ/　 　　　　 / .| .|＿＿＿＿
+　 ＿_i(__ﾆつ/　 　　　　 / .| .|＿＿＿＿
 　 　　　 ＼/＿＿＿＿/　（u　⊃', '. /　 | /　 / /　 ／　 /　／／ / ﾊ.　　　　ヽ　　　 ヽ. ＼
 /\' 丁|\'　　ｉ　l ／　　 /／／　〃/　 ＼￣ ＼!　　　　 |＼|
 ＼/ j|　　,レ\'　＿ ／ ／./／/./　 ＿　＼　 |＼.　｜ |／
@@ -1806,5 +1805,5 @@ i 　乂-‐　－! i 　Sorry, I was mistaken. We don\'t actually have
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 　CAUTION!!　　　CAUTION!!　　　CAUTION!!　　　CAUTION!!　　　
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━'];
-	return $messages[array_rand($messages, 1)];
+    return $messages[array_rand($messages, 1)];
 }

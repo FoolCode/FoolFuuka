@@ -1,0 +1,4164 @@
+#
+# Translators:
+#   <ayaa7_@hotmail.com>, 2012.
+#   <eksopl@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: FoOlFuuka\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-08-27 14:24+0100\n"
+"PO-Revision-Date: 2012-08-27 14:30+0100\n"
+"Last-Translator: Woxxy <woxxy@foolz.us>\n"
+"Language-Team: Portuguese (Portugal) (http://www.transifex.net/projects/p/"
+"foolfuuka/language/pt_PT/)\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: __;gettext;gettext_noop\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: ../..\n"
+
+#: ../../../fuel/app/classes/controller/admin.php:70
+#: ../../../fuel/app/classes/controller/admin/account.php:13
+msgid "Account"
+msgstr "Conta"
+
+#: ../../../fuel/app/classes/controller/admin.php:74
+#: ../../../fuel/app/classes/controller/admin/account.php:659
+#: ../../../fuel/app/views/admin/navbar.php:24
+#, fuzzy
+msgid "Profile"
+msgstr "O seu perfil"
+
+#: ../../../fuel/app/classes/controller/admin.php:75
+msgid "Change Email"
+msgstr "Mudar email"
+
+#: ../../../fuel/app/classes/controller/admin.php:76
+#: ../../../fuel/app/classes/controller/admin/account.php:306
+msgid "Change Password"
+msgstr "Mudar senha"
+
+#: ../../../fuel/app/classes/controller/admin.php:77
+#: ../../../fuel/app/classes/controller/admin/account.php:421
+#, fuzzy
+msgid "Delete Account"
+msgstr "Apagar conta"
+
+#: ../../../fuel/app/classes/controller/admin.php:82
+#: ../../../fuel/app/classes/controller/admin/users.php:15
+#: ../../../fuel/app/classes/controller/admin/users.php:188
+#, fuzzy
+msgid "Users"
+msgstr "Utilizador"
+
+#: ../../../fuel/app/classes/controller/admin.php:87
+#: ../../../fuel/app/classes/controller/admin.php:120
+#: ../../../fuel/app/classes/controller/admin/plugins.php:25
+#: ../../../fuel/app/classes/controller/admin/users.php:33
+#: ../../../fuel/app/modules/foolfuuka/config/sidebar.php:13
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:149
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/admin.php:63
+msgid "Manage"
+msgstr "Gerir"
+
+#: ../../../fuel/app/classes/controller/admin.php:92
+#: ../../../fuel/app/classes/controller/admin.php:108
+#: ../../../fuel/app/classes/controller/admin/preferences.php:16
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:275
+#: ../../../fuel/app/modules/foolfuuka/config/sidebar.php:16
+msgid "Preferences"
+msgstr "Preferências"
+
+#: ../../../fuel/app/classes/controller/admin.php:96
+#: ../../../fuel/app/classes/controller/admin/preferences.php:22
+msgid "Theme"
+msgstr "Tema"
+
+#: ../../../fuel/app/classes/controller/admin.php:97
+#: ../../../fuel/app/classes/controller/admin/preferences.php:248
+msgid "Registration"
+msgstr "Registo"
+
+#: ../../../fuel/app/classes/controller/admin.php:98
+#: ../../../fuel/app/classes/controller/admin/preferences.php:183
+msgid "Advertising"
+msgstr "Publicidade"
+
+#: ../../../fuel/app/classes/controller/admin.php:103
+msgid "System"
+msgstr "Sistema"
+
+#: ../../../fuel/app/classes/controller/admin.php:107
+msgid "Information"
+msgstr "Informação"
+
+#: ../../../fuel/app/classes/controller/admin.php:109
+msgid "Upgrade"
+msgstr "Actualizar"
+
+#: ../../../fuel/app/classes/controller/admin.php:110
+msgid "New"
+msgstr "Novo"
+
+#: ../../../fuel/app/classes/controller/admin.php:116
+#: ../../../fuel/app/classes/controller/admin/plugins.php:16
+msgid "Plugins"
+msgstr "Plugins"
+
+#: ../../../fuel/app/classes/controller/admin.php:129
+msgid "Bug tracker"
+msgstr "Submeter bug"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:29
+#: ../../../fuel/app/classes/controller/admin/account.php:107
+#: ../../../fuel/app/classes/controller/admin/account.php:215
+#: ../../../fuel/app/classes/controller/admin/account.php:249
+#: ../../../fuel/app/classes/controller/admin/account.php:299
+#: ../../../fuel/app/classes/controller/admin/account.php:342
+#: ../../../fuel/app/classes/controller/admin/account.php:453
+#: ../../../fuel/app/classes/controller/admin/account.php:633
+#: ../../../fuel/app/classes/controller/admin/plugins.php:35
+#: ../../../fuel/app/classes/controller/admin/users.php:162
+#: ../../../fuel/app/classes/model/preferences.php:153
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:774
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:777
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:50
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:124
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:163
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:239
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:175
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:224
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:200
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:266
+msgid "The security token wasn't found. Try resubmitting."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:48
+msgid "You have entered an invalid username and/or password. Please try again."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:54
+msgid ""
+"After :number failed login attempts, this account has been locked. In order "
+"to unlock your account, you are required to use the \"forget password\" "
+"system."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:59
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:26
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:37
+#: ../../../fuel/app/views/admin/navbar.php:42
+#: ../../../fuel/app/views/admin/account/change_password.php:28
+#: ../../../fuel/app/views/admin/account/login.php:34
+msgid "Login"
+msgstr "Login"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:113
+#: ../../../fuel/app/classes/controller/admin/users.php:81
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:838
+#: ../../../fuel/app/modules/install/classes/controller/install.php:70
+#: ../../../fuel/app/modules/install/classes/controller/install.php:120
+#: ../../../fuel/app/modules/install/views/create_admin.php:9
+#: ../../../fuel/app/modules/install/views/database_setup.php:25
+#: ../../../fuel/app/views/admin/account/login.php:5
+#: ../../../fuel/app/views/admin/account/register.php:6
+#: ../../../fuel/app/views/admin/users/manage.php:5
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:144
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:60
+msgid "Username"
+msgstr "Username"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:114
+#: ../../../fuel/app/classes/controller/admin/account.php:220
+#: ../../../fuel/app/classes/controller/admin/account.php:348
+#: ../../../fuel/app/classes/controller/admin/users.php:90
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:839
+#: ../../../fuel/app/modules/install/classes/controller/install.php:121
+#: ../../../fuel/app/modules/install/views/create_admin.php:17
+#: ../../../fuel/app/views/admin/users/manage.php:8
+msgid "Email"
+msgstr "Email"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:115
+#: ../../../fuel/app/classes/controller/admin/account.php:254
+#: ../../../fuel/app/classes/controller/admin/account.php:347
+#: ../../../fuel/app/classes/controller/admin/account.php:458
+#: ../../../fuel/app/classes/controller/admin/users.php:99
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:842
+#: ../../../fuel/app/modules/install/classes/controller/install.php:71
+#: ../../../fuel/app/modules/install/classes/controller/install.php:122
+#: ../../../fuel/app/modules/install/views/create_admin.php:25
+#: ../../../fuel/app/modules/install/views/database_setup.php:33
+#: ../../../fuel/app/views/admin/account/change_password.php:10
+#: ../../../fuel/app/views/admin/account/delete.php:10
+#: ../../../fuel/app/views/admin/account/login.php:15
+#: ../../../fuel/app/views/admin/account/register.php:27
+#: ../../../fuel/app/views/admin/account/request_change_email.php:18
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:90
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:68
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:44
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:129
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:98
+msgid "Password"
+msgstr "Senha"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:116
+#: ../../../fuel/app/classes/controller/admin/account.php:255
+#: ../../../fuel/app/modules/install/classes/controller/install.php:123
+#, fuzzy
+msgid "Confirm password"
+msgstr "Confirmar senha"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:129
+#: ../../../fuel/app/classes/controller/admin/account.php:159
+msgid "Congratulations! You have successfully registered."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:135
+msgid "Account Activation"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:164
+msgid ""
+"Congratulations! You have successfully registered. Please check your email "
+"to activate your account."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:174
+msgid "The reCAPTCHA code entered does not match the one displayed."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:181
+#: ../../../fuel/app/views/admin/account/login.php:38
+#: ../../../fuel/app/views/admin/account/register.php:56
+msgid "Register"
+msgstr "Registo"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:197
+msgid ""
+"Your account has been activated. You are now able to login and access the "
+"control panel."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:201
+msgid ""
+"It appears that you are accessing an invalid link or that your activation "
+"key has expired. If your account has not been activated in the last 48 "
+"hours, you will need to re-register the account again."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:234
+#: ../../../fuel/app/classes/controller/admin/account.php:286
+#: ../../../fuel/app/views/admin/account/login.php:36
+#, fuzzy
+msgid "Forgot Password"
+msgstr "Esqueci-me da senha"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:268
+#: ../../../fuel/app/classes/controller/admin/account.php:283
+#: ../../../fuel/app/classes/controller/admin/account.php:333
+#: ../../../fuel/app/classes/controller/admin/account.php:439
+msgid ""
+"It appears that you are accessing an invalid link or that your activation "
+"key has expired."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:316
+#: ../../../fuel/app/classes/controller/admin/account.php:373
+#, fuzzy
+msgid "Change Email Address"
+msgstr "Endereço de email"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:328
+msgid "You have activated and verified your new email address successfully."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:360
+#: ../../../fuel/app/classes/controller/admin/account.php:470
+msgid "The password entered is incorrect."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:365
+msgid ""
+"The email address is already associated with another username. Please enter "
+"another email address."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:392
+msgid ""
+"An email has been sent to verify your new email address. The activation link "
+"included will only work for the next 24 hours.."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:398
+#: ../../../fuel/app/classes/controller/admin/account.php:502
+#: ../../../fuel/app/classes/controller/admin/account.php:562
+msgid ""
+"An error was encountered and the system was unable to send the verification "
+"email. Please try again later."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:427
+msgid ""
+"You must log in to the system in order to delete your acction with this "
+"verification link."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:435
+#, fuzzy
+msgid "Your account has been deleted from the system."
+msgstr "A denúncia foi removida da base de dados."
+
+#: ../../../fuel/app/classes/controller/admin/account.php:478
+#, fuzzy
+msgid "Account Deletion"
+msgstr "Conta"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:497
+msgid ""
+"An email has been sent to verify the deletion of your account. The "
+"verification link included will only work for the next 15 minutes."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:530
+msgid ""
+"The email address provided does not exist in the system. Please check and "
+"verify that it is correct."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:538
+msgid "New Password"
+msgstr "Nova senha"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:557
+msgid ""
+"An email has been sent to verify that you wish to change your password. The "
+"verification link included will only work for the next 15 minutes."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:581
+#: ../../../fuel/app/classes/controller/admin/users.php:66
+msgid "You can customize your account here."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:587
+msgid ""
+"Your avatar is automatically fetched from :gravatar, based on your "
+"registration email."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:594
+msgid "Display Name"
+msgstr "Nome de apresentação"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:596
+#: ../../../fuel/app/classes/controller/admin/users.php:129
+msgid "Alternative name in place of login username"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:606
+#: ../../../fuel/app/classes/controller/admin/users.php:111
+msgid "Some details about you"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/account.php:615
+#: ../../../fuel/app/classes/controller/admin/users.php:120
+#, fuzzy
+msgid "Your twitter nickname"
+msgstr "Nick do Twitter"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:622
+#: ../../../fuel/app/classes/controller/admin/preferences.php:161
+#: ../../../fuel/app/classes/controller/admin/preferences.php:227
+#: ../../../fuel/app/classes/controller/admin/preferences.php:300
+#: ../../../fuel/app/classes/controller/admin/users.php:151
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:326
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:498
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:415
+#: ../../../fuel/app/views/admin/account/forgot_password.php:20
+#: ../../../fuel/app/views/admin/account/request_change_email.php:28
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:138
+#: ../../../public/foolframe/plugins/ssl_tools/classes/controller/admin/ssl_tools.php:72
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:64
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/admin.php:39
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:100
+#: ../../../public/foolfuuka/plugins/nginx_cache_purge/classes/controller/admin/nginx_cache_purge.php:46
+#: ../../../public/foolfuuka/themes/default/views/captcha_confirm.php:17
+#: ../../../public/foolfuuka/themes/default/views/tools_modal.php:25
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:117
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:53
+msgid "Submit"
+msgstr "Submeter"
+
+#: ../../../fuel/app/classes/controller/admin/account.php:650
+msgid "Your profile has been updated."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/plugins.php:62
+#, fuzzy
+msgid "The plugin :slug couldn't be enabled."
+msgstr "O plugin não pôde ser activado."
+
+#: ../../../fuel/app/classes/controller/admin/plugins.php:68
+#, fuzzy
+msgid "The :slug plugin is now enabled."
+msgstr "O plugin %s foi activado."
+
+#: ../../../fuel/app/classes/controller/admin/plugins.php:79
+#, fuzzy
+msgid "The :slug plugin couldn't be enabled."
+msgstr "O plugin não pôde ser activado."
+
+#: ../../../fuel/app/classes/controller/admin/plugins.php:85
+#, fuzzy
+msgid "The :slug plugin is now disabled."
+msgstr "O plugin %s foi desactivado."
+
+#: ../../../fuel/app/classes/controller/admin/plugins.php:96
+#, fuzzy
+msgid "The :slug plugin couldn't be removed."
+msgstr "O plugin %s não pôde ser removido."
+
+#: ../../../fuel/app/classes/controller/admin/plugins.php:101
+#, fuzzy
+msgid "The :slug plugin was removed."
+msgstr "O plugin %s foi removido."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:37
+msgid "Sets the title of your site."
+msgstr "O título do site."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:47
+msgid "Sets the title displayed in the index page."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:80
+#, php-format
+msgid "Enable %s theme"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:90
+msgid "Active themes"
+msgstr "Temas activos"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:91
+msgid ""
+"Choose the themes to make available to the users for :module. Admins are "
+"able to access any of them even if disabled."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:104
+#, fuzzy
+msgid "Default theme for :module"
+msgstr "Tema predefinido"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:105
+#, fuzzy
+msgid "The theme the users will see as they reach :module."
+msgstr "O tema que os utilizadores vêem ao chegar ao site."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:112
+msgid "Google Analytics code"
+msgstr "Código do Google Analytics"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:115
+msgid "Insert your Google Analytics code to get statistics."
+msgstr "Inserir o código do Google Analytics para obter estatísticas."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:125
+msgid "Header Text (\"notices\")"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:127
+msgid "Inserts the text above in the header, below the nagivation links."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:133
+msgid "Header Code"
+msgstr "Código de cabeçalho"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:135
+msgid "This will insert the HTML code inside the &lt;HEAD&gt;."
+msgstr "Isto vai inserir o código HTML dentro do &amp;lt;HEAD&amp;gt;."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:141
+msgid "Footer Text"
+msgstr "Texto de rodapé"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:143
+msgid "Credits in the footer and similar."
+msgstr "Créditos e semelhantes no rodapé."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:149
+msgid "Footer Code"
+msgstr "Código de rodapé"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:151
+msgid "This will insert the HTML code above after the &lt;BODY&gt;."
+msgstr "Isto irá inserir o código HTML por cima do &lt;BODY&gt;."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:193
+msgid "Top banner"
+msgstr "Banner de topo"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:194
+#: ../../../fuel/app/classes/controller/admin/preferences.php:209
+msgid "Insert the HTML code provided by your advertiser."
+msgstr "Insira o código HTML dado pelo anunciante."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:203
+msgid "Enable top banner"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:208
+msgid "Bottom banner"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:218
+msgid "Enable bottom banner"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:259
+msgid "Disable New User Registrations"
+msgstr "Desactivar o registo de novos utilizadores"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:264
+msgid "Disable Email Activation"
+msgstr "Desactivar a activação por email"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:273
+msgid ""
+"In order to use reCAPTCHA&trade; you need to sign up for the service at <a "
+"href=\"http://www.google.com/recaptcha\">reCAPTCHA&trade;</a>, which will "
+"provide you with a public and a private key."
+msgstr ""
+"Para que possa usar o serviço reCAPTCHA&trade;, tem de se registar em <a "
+"href=\"http://www.google.com/recaptcha\">reCAPTCHA&trade;</a>, que lhe irá "
+"fornecer uma chave pública e outra privada."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:278
+msgid "reCaptcha&trade; Public Key"
+msgstr "Chave pública reCaptcha&trade;"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:280
+msgid "Insert the public key provided by reCAPTCHA&trade;."
+msgstr "Insira a chave pública (public key) fornecida pelo reCAPTCHA&trade;."
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:287
+#, fuzzy
+msgid "reCaptcha&trade; Prvate Key"
+msgstr "Chave privada reCaptcha&trade;"
+
+#: ../../../fuel/app/classes/controller/admin/preferences.php:289
+msgid "Insert the private key provided by reCAPTCHA&trade;."
+msgstr "Insira a chave privada fornecida pelo reCAPTCHA&trade;."
+
+#: ../../../fuel/app/classes/controller/admin/users.php:72
+msgid ""
+"The avatar is automatically fetched from :gravatar, based on the user's "
+"registration email."
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/users.php:83
+#, fuzzy
+msgid "Change the username"
+msgstr "Mudar tema"
+
+#: ../../../fuel/app/classes/controller/admin/users.php:92
+#, fuzzy
+msgid "Change the email"
+msgstr "Mudar email"
+
+#: ../../../fuel/app/classes/controller/admin/users.php:101
+msgid "Change the password (leave empty to not change it)"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/users.php:139
+msgid "Change the group of the user"
+msgstr ""
+
+#: ../../../fuel/app/classes/controller/admin/users.php:179
+#: ../../../fuel/app/classes/model/preferences.php:177
+msgid "Preferences updated."
+msgstr "Preferências actualizadas."
+
+#: ../../../fuel/app/classes/controller/admin/users.php:189
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:105
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:78
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:48
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:137
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:113
+msgid "User"
+msgstr "Utilizador"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:59
+msgid "Submitting"
+msgstr "A submeter"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:60
+msgid "This thread is being displayed in real time."
+msgstr "Este tópico está a ser apresentado em tempo real."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:61
+msgid "Update now"
+msgstr "Actualizar"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:136
+msgid ""
+"Page not found. You can use the search if you were looking for something!"
+msgstr ""
+"Página não encontrada. Pode utilizar a pesquisa se estava à procura de algo!"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:145
+msgid "We encountered an unexpected error."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:153
+#, fuzzy
+msgid "Changing Theme Settings"
+msgstr "A mudar o tema"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:240
+msgid "Threads by latest replies"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:243
+msgid "Threads by creation"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:246
+msgid "Threads by latest ghost replies"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:250
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:251
+msgid "Page"
+msgstr "Página"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:337
+msgid "Thread"
+msgstr "Tópico"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:397
+#, fuzzy
+msgid "The post number you submitted is invalid."
+msgstr "O JSON inserido não é válido."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:401
+#, fuzzy
+msgid "The post you are looking for does not exist."
+msgstr "A board que seleccionou não existe."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:414
+#, fuzzy
+msgid "Redirecting"
+msgstr "A redireccionar..."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:435
+#, fuzzy
+msgid "Your image hash is malformed."
+msgstr "O latest_doc_id está malformado"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:484
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:70
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:116
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:148
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:162
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:187
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:205
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:223
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:256
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:279
+msgid "Error"
+msgstr "Erro"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:487
+msgid "There is no record of the specified image in our database."
+msgstr "Não existe registo na imagem especificada na base de dados."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:498
+msgid "Image Pruned"
+msgstr "Imagem removida"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:501
+msgid "Error 404: The image has been pruned from the server."
+msgstr "Erro 404: A imagem foi removida do servidor."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:647
+#, php-format
+msgid "that contain &lsquo;%s&rsquo;"
+msgstr "que contenham &lsquo;%s&rsquo;"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:651
+#, php-format
+msgid "with the subject &lsquo;%s&rsquo;"
+msgstr "com o assunto &lsquo;%s&rsquo;"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:655
+#, php-format
+msgid "with the username &lsquo;%s&rsquo;"
+msgstr "com o username &lsquo;%s&rsquo;"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:659
+#, php-format
+msgid "with the tripcode &lsquo;%s&rsquo;"
+msgstr "com o tripcode &lsquo;%s&rsquo;"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:663
+#, php-format
+msgid "with the filename &lsquo;%s&rsquo;"
+msgstr "com o nome de ficheiro &lsquo;%s&rsquo;"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:671
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:678
+#, php-format
+msgid "with the image hash &lsquo;%s&rsquo;"
+msgstr "com a hash de imagem &lsquo;%s&rsquo;"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:683
+msgid "that have been deleted"
+msgstr "que foram apagados"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:685
+msgid "that has not been deleted"
+msgstr "que não foram apagados"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:687
+msgid "that are by ghosts"
+msgstr "que foram feitos por fantasmas"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:689
+msgid "that are not by ghosts"
+msgstr "que não foram feitos por fantasmas"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:691
+msgid "that are only OP posts"
+msgstr "somente posts de OP"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:693
+msgid "that are only non-OP posts"
+msgstr "somente posts não OP"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:695
+msgid "that do not contain images"
+msgstr "que não contenham imagens"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:697
+msgid "that only contain images"
+msgstr "que contenham imagens"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:699
+msgid "that were made by users"
+msgstr "feitos por utilizadores"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:701
+msgid "that were made by mods"
+msgstr "feitos por moderadores"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:703
+msgid "that were made by admins"
+msgstr "feitos por admins"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:705
+#, php-format
+msgid "posts after %s"
+msgstr "posts depois de %s"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:707
+#, php-format
+msgid "posts before %s"
+msgstr "posts antes de %s"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:709
+msgid "in ascending order"
+msgstr "em ordem ascendente"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:712
+#, php-format
+msgid "Searching for posts %s."
+msgstr "A pesquisar por posts %s."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:713
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/board.php:82
+#: ../../../public/foolfuuka/themes/default/views/board.php:115
+msgid "and"
+msgstr "e"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:717
+msgid "Displaying all posts with no filters applied."
+msgstr "A mostrar todos os posts sem filtros aplicados."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:766
+msgid "You aren't sending the required fields for creating a new message."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:837
+#, fuzzy
+msgid "Thread Number"
+msgstr "Número de tópico inválido"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:840
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:54
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:14
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:140
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:28
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:111
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:54
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:41
+msgid "Subject"
+msgstr "Assunto"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:841
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:69
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:23
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:32
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:115
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:69
+msgid "Comment"
+msgstr "Comentário"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/chan.php:875
+#, fuzzy
+msgid "Message sent."
+msgstr "Mensagem"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:20
+#: ../../../fuel/app/modules/foolfuuka/config/sidebar.php:8
+#: ../../../fuel/app/views/admin/navbar.php:13
+#: ../../../public/foolfuuka/themes/default/views/index.php:31
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:99
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:99
+msgid "Boards"
+msgstr "Boards"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:65
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:137
+msgid "New board created!"
+msgstr "Nova board criada!"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:71
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:76
+msgid "Board information updated."
+msgstr "Informação da board actualizada."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:89
+msgid "Editing board:"
+msgstr "A editar board:"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:97
+msgid "Create search table"
+msgstr "Criar tabela de pesquisa"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:98
+msgid ""
+"This board doesn't have the search table. You can create it by follwing this "
+"button."
+msgstr ""
+"Esta board não tem a tabela de pesquisa. Pode criá-la utilizando este botão."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:108
+msgid "Remove search table"
+msgstr "Remover tabela de pesquisa"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:109
+msgid ""
+"You are using Sphinx Search for this board, so you can remove the search "
+"table."
+msgstr ""
+"Está a utilizar Sphinx Search para esta board, por isso pode remover a "
+"tabela de pesquisa."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:146
+msgid "Creating a new board"
+msgstr "A criar uma nova board"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:172
+#, php-format
+msgid "Failed to create the search table for the board %s."
+msgstr "Falha ao criar a tabela de pesquisa para a board %s."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:177
+#, php-format
+msgid "The search table for the board %s has been created."
+msgstr "A tabela de pesquisa para a board %s foi criada."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:185
+#, php-format
+msgid "Failed to remove the search table for the board %s."
+msgstr "Falha ao remover a tabela de pesquisa para a board %s."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:190
+#, php-format
+msgid "The search table for the board %s has been removed."
+msgstr "A tabela de pesquisa para a board %s foi removida."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:200
+msgid "Creating search table for board:"
+msgstr "A criar a tabela de pesquisa para a board:"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:203
+msgid "Do you want to create the search table for this board?"
+msgstr "Deseja criar a tabela de pesquisa para esta board?"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:204
+msgid ""
+"Creating the search table can take time if you have a board with even just "
+"100.000 entries."
+msgstr ""
+"Criar a tabela de pesquisa pode demorar bastante tempo, mesmo numa board com "
+"100000 entradas."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:206
+msgid ""
+"Normally, even if the page times out, the database will keep building it."
+msgstr ""
+"Normalmente, mesmo se a página expirar, a base de dados irá continuar a "
+"construí-la."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:208
+msgid ""
+"To make sure your search table is fully created, you can execute the "
+"following via the command line of your server."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:209
+msgid ""
+"For very large boards, past a few millions of entries, this would could "
+"hours: you should use SphinxSearch instead, or anyway you should use the "
+"command line."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:215
+msgid "Removing search table for board:"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:218
+msgid "Do you want to remove the search table for this board?"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:219
+msgid ""
+"The search table can be created at any time, though it can take a while to "
+"create if the board is large."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:248
+#, php-format
+msgid "Failed to delete the board %s."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:251
+#, php-format
+msgid "The board %s has been deleted."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:260
+msgid "Removing board:"
+msgstr "A remover a board:"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:262
+msgid "Do you really want to remove the board and all its data?"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:264
+#, fuzzy
+msgid ""
+"Notice: due to its size, you will have to remove the image directory "
+"manually. The directory will have the \"_removed\" suffix. You can remove "
+"all the leftover \"_removed\" directories with the following command:"
+msgstr ""
+"Nota: devido ao seu tamanho, terá que remover a pasta das imagens "
+"manualmente. A pasta terá o prefixo \"removed_\"."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:285
+msgid "Boards directory"
+msgstr "Pasta das boards"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:287
+msgid ""
+"Overrides the default path to the boards directory (Example: /var/www/"
+"foolfuuka/boards)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:292
+msgid "Boards URL"
+msgstr "URL das boards"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:294
+msgid ""
+"Overrides the default url to the boards folder (Example: http://foolfuuka."
+"site.com/there/boards)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:299
+msgid "Boards database"
+msgstr "Base de dados das boards"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:301
+msgid ""
+"Overrides the default database. You should point it to your Asagi database "
+"if you have a separate one."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:306
+msgid "Media load balancers"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:308
+msgid "Facultative. One per line the URLs where your images are reachable."
+msgstr "omitido"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:314
+msgid "HTTPS media load balancers"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:316
+msgid ""
+"Facultative. One per line the URLs where your images are reachable. This is "
+"used when the site is loaded via HTTPS protocol, and if empty it will fall "
+"back to HTTP media load balancers."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:359
+msgid "Activate Sphinx globally (enables crossboard search)"
+msgstr "Activar Sphinx globalmente (activa pesquisa entre boards)"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:366
+msgid "Set the address and port to your Sphinx instance."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:375
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:385
+msgid "The Sphinx listening address and port aren't formatted correctly."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:393
+msgid "The port specified isn't a valid number."
+msgstr "O porto especificado não é válida."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:407
+msgid ""
+"The Sphinx server couldn't be contacted at the specified address and port."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:420
+msgid "Set the address and port to your MySQL instance."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:430
+msgid ""
+"Set the MySQL client connection flags to enable compression, SSL, or secure "
+"connection."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:438
+msgid "Set the working directory to your Sphinx working directory."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:447
+msgid "Couldn't find the Sphinx working directory."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:459
+msgid "Set the minimum word length indexed by Sphinx."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:468
+msgid "Set the memory limit for the Sphinx instance in MegaBytes."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:478
+msgid "Set the maximum number of children to fork for searchd."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/boards.php:488
+msgid ""
+"Set the maximum amount of matches the search daemon keeps in RAM for each "
+"index and results returned to the client."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/posts.php:17
+#: ../../../fuel/app/modules/foolfuuka/config/sidebar.php:20
+msgid "Posts"
+msgstr "Posts"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/admin/posts.php:22
+#: ../../../fuel/app/modules/foolfuuka/config/sidebar.php:24
+msgid "Reports"
+msgstr "Denúncias"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:66
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:135
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:180
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:234
+#, fuzzy
+msgid "No board selected."
+msgstr "Nova board criada!"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:74
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:142
+#, fuzzy
+msgid "You are missing the 'num' parameter."
+msgstr "Parâmetros em falta no pedido."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:79
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:147
+msgid "Invalid value for 'num'."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:91
+#, fuzzy
+msgid "The value for 'latest_doc_id' is malformed."
+msgstr "O latest_doc_id está malformado"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:122
+#, fuzzy
+msgid "Thread not found."
+msgstr "Tópico não encontrado"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:126
+msgid "Unknown error."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:162
+#: ../../../fuel/app/modules/foolfuuka/classes/model/board.php:800
+#, fuzzy
+msgid "Post not found."
+msgstr "Post não encontrado"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:194
+msgid "Post reported."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:215
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:269
+msgid "Post deleted."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:229
+msgid "Forbidden."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:248
+msgid "Report deleted."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:283
+#, fuzzy
+msgid "Image deleted."
+msgstr "Imagem removida"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:297
+#, fuzzy
+msgid "Image banned."
+msgstr "Imagem removida"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/controller/api/chan.php:315
+#, fuzzy
+msgid "User banned."
+msgstr "Username"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/ban.php:30
+#, fuzzy
+msgid "The ban could not be found"
+msgstr "Tópico não encontrado"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/ban.php:109
+msgid "You inserted a non-existant board ID."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/ban.php:116
+msgid "You inserted an invalid IP."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/ban.php:121
+msgid "You inserted a too long reason for the ban."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/ban.php:126
+msgid "You inserted an invalid length for the ban."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/board.php:201
+#, fuzzy
+msgid "The page number is not valid."
+msgstr "O JSON inserido não é válido."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/board.php:541
+#, fuzzy
+msgid "The thread number is invalid."
+msgstr "O JSON inserido não é válido."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/board.php:606
+#, fuzzy
+msgid "There's no such a thread."
+msgstr "O post a ser apagado não existe."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/board.php:793
+msgid "No posts found with the submitted options."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:690
+#, fuzzy
+msgid "The password you inserted didn't match the password deletion password."
+msgstr "A senha inserida não corresponde à senha de eliminação do post."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:825
+msgid "It looks like you were banned on all boards."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:829
+msgid "It looks like you were banned on /"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:834
+msgid "This ban will last until:"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:838
+msgid "This ban will last forever."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:843
+msgid "The reason for this ban is:"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:858
+#, fuzzy
+msgid "You must wait up to 5 minutes to make another new thread."
+msgstr "Tem de esperar até %s horas para repostar esta imagem."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:873
+#, fuzzy
+msgid "You're sending the same comment as the last time"
+msgstr "Está a submeter o mesmo comentário do que da última vez!"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:878
+#, fuzzy
+msgid "You must wait up to 10 seconds to post again."
+msgstr "Tem de esperar até %s horas para repostar esta imagem."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:889
+msgid "Your post has undesidered content."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:896
+#, fuzzy
+msgid "Your comment has too many characters"
+msgstr "O post tinha demasiadas linhas."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:902
+#, fuzzy
+msgid "Your comment has too many lines."
+msgstr "O post tinha demasiadas linhas."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:951
+msgid "This comment would display empty."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:965
+msgid "You must submit a deletion password."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:997
+#, fuzzy
+msgid "You're not allowed to use this capcode."
+msgstr "Não está autorizado a efectuar esta acção"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:1026
+msgid "You can't start a new thread without an image."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/comment.php:1152
+msgid "You are sending the same post twice."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:139
+#, fuzzy
+msgid "The image could not be found."
+msgstr "Tópico não encontrado"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:168
+msgid "You must upload an image."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:173
+msgid "You can't upload multiple images."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:180
+msgid ""
+"The server is misconfigured: the FoOlFuuka upload size should be lower than "
+"PHP's upload limit."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:183
+msgid "You uploaded the file partially."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:186
+#, fuzzy
+msgid "The image couldn't be saved on the disk."
+msgstr "O plugin não pôde ser activado."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:189
+msgid "A PHP extension broke and made processing the image impossible."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:193
+msgid "You uploaded a too big file. The maxmimum allowed filesize is :sizekb"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:197
+msgid "You uploaded a file with an invalid extension."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:200
+msgid "You uploaded a file with a too long filename."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:203
+msgid "Your uploaded file couldn't me moved on the server."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:205
+msgid "Unexpected upload error."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:701
+msgid "The file you uploaded is not an image."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/media.php:707
+msgid "The image you uploaded is too small."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:54
+msgid "Couldn't find the board with the submitted ID."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:65
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:22
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:28
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:20
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:103
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:9
+msgid "Name"
+msgstr "Nome"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:66
+msgid "Insert the name of the board normally shown as title."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:67
+#: ../../../fuel/app/views/admin/account/change_password.php:15
+#: ../../../fuel/app/views/admin/account/change_password.php:23
+#: ../../../fuel/app/views/admin/account/delete.php:15
+#: ../../../fuel/app/views/admin/account/forgot_password.php:15
+#: ../../../fuel/app/views/admin/account/login.php:12
+#: ../../../fuel/app/views/admin/account/login.php:20
+#: ../../../fuel/app/views/admin/account/request_change_email.php:15
+#: ../../../fuel/app/views/admin/account/request_change_email.php:23
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:55
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:63
+msgid "Required"
+msgstr "Obrigatório"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:74
+#: ../../../fuel/app/views/admin/boards/manage.php:11
+msgid "Shortname"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:75
+msgid ""
+"Insert the shorter name of the board. Reserved: \"api\", \"cli\", \"admin\"."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:76
+msgid "Req."
+msgstr "Req."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:114
+msgid "The shortname is already used for another board."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:123
+msgid "General rules"
+msgstr "Regras gerais"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:124
+msgid ""
+"Full board rules displayed in a separate page, in <a href=\"http://"
+"daringfireball.net/projects/markdown/basics\" target=\"_blank\">MarkDown</a> "
+"syntax. Will not display if left empty."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:126
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:138
+msgid "MarkDown goes here"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:135
+msgid "Posting rules"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:136
+msgid ""
+"Posting rules displayed in the posting area, in <a href=\"http://"
+"daringfireball.net/projects/markdown/basics\" target=\"_blank\">MarkDown</a> "
+"syntax. Will not display if left empty."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:146
+msgid "Maximum number of threads to display in the index pages"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:154
+msgid "Is this a 4chan archiving board?"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:158
+msgid "Options for archive boards"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:164
+msgid "URL to the 4chan board (facultative)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:173
+msgid "URL to the board thumbnails (facultative)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:182
+msgid "URL to the board images (facultative)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:191
+msgid "Image fetching workers"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:192
+msgid ""
+"The number of workers that will fetch full images. Set to zero not to fetch "
+"them."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:202
+msgid "Thumbnail fetching workers"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:203
+msgid "The number of workers that will fetch thumbnails"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:213
+msgid "Thread fetching workers"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:214
+msgid "The number of workers that fetch new threads"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:225
+msgid "Minutes to refresh the thread"
+msgstr "Minutos para actualizar o tópico"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:233
+msgid "Thread refresh rate"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:234
+msgid "Array of refresh rates in seconds per page in JSON format"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:250
+msgid "The JSON inputted is not valid."
+msgstr "O JSON inserido não é válido."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:259
+msgid "Options for normal boards"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:264
+msgid "Opening post thumbnail maximum width after resizing"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:272
+msgid "Opening post thumbnail maximum height after resizing"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:280
+msgid "Reply thumbnail maximum width after resizing"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:288
+msgid "Reply thumbnail maximum height after resizing"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:296
+msgid "Full image maximum size in kilobytes"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:304
+msgid "Full image maximum width in pixels"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:312
+msgid "Full image maximum height in pixels"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:320
+msgid "The maximum amount of posts before a thread \"dies\""
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:328
+msgid ""
+"The maximum amount of images in replies before posting more is prohibited"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:336
+msgid ""
+"The minimum time in seconds to repost the same image (0 means no limit, -1 "
+"means never allowing a repost)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:346
+msgid "The default name when an user doesn't enter a name"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:354
+msgid ""
+"Should the image spoilers be semi-transparent? (mods and admins have it "
+"always on for moderation)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:360
+msgid "Show the EXIF data (EXIF data is saved in the database regardless)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:367
+msgid ""
+"Enable poster hashes, an IP-based code to temporarily distinguish Anonymous "
+"users"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:373
+msgid "Don't allow ghost posting (disallows infinite replying)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:379
+msgid "Hide the thumbnails?"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:385
+msgid "Hide the thumbnails for 24 hours? (for moderation purposes)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:391
+msgid "internal"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:396
+msgid "Use SphinxSearch as search engine?"
+msgstr "Utilizar Sphinx Search como motor de busca?"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:401
+msgid ""
+"Hide the board from public access? (only admins and mods will be able to "
+"browse it)"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/radix.php:1604
+msgid ""
+"Your MySQL installation doesn't support multibyte characters. Update MySQL "
+"to version 5.5 or higher."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/report.php:128
+#, fuzzy
+msgid "The report could not be found."
+msgstr "Tópico não encontrado"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/report.php:160
+#: ../../../fuel/app/modules/foolfuuka/classes/model/report.php:237
+#, fuzzy
+msgid "The report you are reporting could not be found."
+msgstr "Post fantasma não encontrado"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/report.php:168
+#, fuzzy
+msgid "Your report reason was too long."
+msgstr "Post demasiado longo."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/report.php:189
+msgid "You sent too many reports in a hour."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/report.php:218
+#, fuzzy
+msgid "The report could not be found in the database to be deleted."
+msgstr "A denúncia foi removida da base de dados."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/search.php:65
+#: ../../../fuel/app/modules/foolfuuka/classes/model/search.php:238
+#: ../../../fuel/app/modules/foolfuuka/classes/model/search.php:296
+#: ../../../fuel/app/modules/foolfuuka/classes/model/search.php:415
+#, fuzzy
+msgid "No results found."
+msgstr "Não encontrado"
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/search.php:76
+msgid "Sorry, this action requires the SphinxSearch engine."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/model/search.php:86
+msgid ""
+"The search backend is currently not online. Try later or contact us in case "
+"it's offline for too long."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:9
+msgid "FoolFuuka module management."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:14
+msgid "Select the section."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:29
+msgid "Choose the method to run"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:41
+msgid "Goodbye."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:46
+msgid "FoolFrame database management commands"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:68
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:134
+#, fuzzy
+msgid "Missing parameter."
+msgstr "Parâmetros em falta no pedido."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:74
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:98
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:140
+#, fuzzy
+msgid "Board doesn't exist."
+msgstr "Este tópico não existe."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:110
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:180
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/tasks/task.php:38
+msgid "Bad command."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:119
+msgid "FoolFrame board management commands"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:144
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:166
+#, fuzzy
+msgid "Your request is missing parameters: <name>"
+msgstr "Parâmetros em falta no pedido."
+
+#: ../../../fuel/app/modules/foolfuuka/classes/task/fool.php:154
+msgid "You must choose between 'archives', 'boards' or 'all'."
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/config/sidebar.php:14
+#: ../../../fuel/app/views/admin/boards/manage.php:3
+msgid "Add board"
+msgstr ""
+
+#: ../../../fuel/app/modules/foolfuuka/config/sidebar.php:15
+msgid "Sphinx Search"
+msgstr "Sphinx Search"
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:26
+#: ../../../fuel/app/modules/install/classes/controller/install.php:43
+msgid "Welcome"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:27
+#: ../../../fuel/app/modules/install/classes/controller/install.php:55
+#, fuzzy
+msgid "System Check"
+msgstr "Sistema"
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:28
+#: ../../../fuel/app/modules/install/classes/controller/install.php:100
+#, fuzzy
+msgid "Database Setup"
+msgstr "Tipo de base de dados"
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:29
+#: ../../../fuel/app/modules/install/classes/controller/install.php:143
+#, fuzzy
+msgid "Admin Account"
+msgstr "Conta"
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:30
+#, fuzzy
+msgid "Install Modules"
+msgstr "Instalado"
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:31
+#: ../../../fuel/app/modules/install/classes/controller/install.php:206
+#, fuzzy
+msgid "Congratulations"
+msgstr "População"
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:68
+#, fuzzy
+msgid "Hostname"
+msgstr "Username"
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:69
+msgid "Prefix"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:72
+msgid "Database name"
+msgstr "Nome da base de dados"
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:90
+msgid ""
+"Connection to specified database failed. Please check your connection "
+"details again."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:187
+msgid "Please select at least one module."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/controller/install.php:192
+msgid "Install FoolFrame Modules"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:16
+msgid "Software"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:22
+msgid ""
+"This will check and display the current version of PHP running on your "
+"server."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:23
+msgid ""
+"You are currently running an old version of PHP. Please upgrade to :version "
+"or higher to install FoolFrame."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:36
+#: ../../../fuel/app/modules/install/classes/model/install.php:45
+#: ../../../fuel/app/views/admin/system/information.php:84
+#: ../../../fuel/app/views/admin/system/information.php:96
+msgid "On"
+msgstr "Ligado"
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:36
+#: ../../../fuel/app/modules/install/classes/model/install.php:45
+#: ../../../fuel/app/views/admin/system/information.php:84
+#: ../../../fuel/app/views/admin/system/information.php:96
+msgid "Off"
+msgstr "Desligado"
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:37
+msgid ""
+"This variable attempts to resolve security problems found on shared hosting "
+"and disables many important PHP functions required for FoolFrame to function "
+"properly."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:38
+msgid ""
+"Safe Mode has been enabled on your PHP installation. It is recommended that "
+"this setting is disabled to allow FoolFrame to function properly."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:46
+msgid ""
+"This variable determines if PHP allows URL-aware fopen wrappers to access "
+"remote files via the FTP or HTTP protocol. If cURL is not installed on the "
+"system, this will affect FoolFrame functions that require accessing remote "
+"files."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:47
+msgid ""
+"Your PHP installation does not support accessing remote files via the FTP or "
+"HTTP protocol with URL-aware fopen wrappers. It is recommended that this "
+"setting is enabled to ensure full compatibility."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:55
+#, fuzzy
+msgid ""
+"This variable determines the maximum time in seconds a script is allowed to "
+"run before it is terminated by the parser."
+msgstr ""
+"Isto é o tempo máximo em segundos que um script é autorizado a executar "
+"antes que seja terminado pelo parser."
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:56
+msgid ""
+"Your current value for max execution time is fairly low. It is recommended "
+"that you raise this value when PHP terminates FoolFrame operations "
+"prematurely."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:63
+#: ../../../fuel/app/views/admin/system/information.php:120
+msgid "Enabled"
+msgstr "Activado"
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:63
+#: ../../../fuel/app/views/admin/system/information.php:100
+#: ../../../fuel/app/views/admin/system/information.php:120
+#: ../../../fuel/app/views/admin/system/information.php:124
+msgid "Disabled"
+msgstr "Desactivado"
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:64
+#, fuzzy
+msgid "This variable determines whether or not to allow HTTP file uploads."
+msgstr "Permitir ou não o upload de ficheiros por HTTP."
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:65
+msgid ""
+"Your PHP installation currently has file uploads disabled. This must be "
+"enabled to allow FoolFrame to operate correctly."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:73
+#, fuzzy
+msgid ""
+"This variable sets the maximum number of files allowed to be uploaded "
+"simultaneously."
+msgstr "Número máximo de ficheiros cujo upload pode ser feito simultaneamente."
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:74
+#: ../../../fuel/app/modules/install/classes/model/install.php:83
+#: ../../../fuel/app/modules/install/classes/model/install.php:92
+msgid ""
+"Your current value for max execution time is fairly low. It is recommended "
+"that you raise this value when PHP terminates FoolFrame uploads prematurely."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:82
+msgid ""
+"This variable sets the maximum size of POST data allowed. This variable "
+"determines the maximum size of POST data allowed to be sent in PHP."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:91
+#, fuzzy
+msgid "This variable sets the maximum size allowed for an uploaded file."
+msgstr "O tamanho máximo permitido para um ficheiro carregado."
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:104
+#: ../../../fuel/app/modules/install/classes/model/install.php:111
+#: ../../../fuel/app/modules/install/classes/model/install.php:118
+#: ../../../fuel/app/modules/install/classes/model/install.php:125
+#: ../../../fuel/app/modules/install/classes/model/install.php:132
+#: ../../../fuel/app/modules/install/classes/model/install.php:139
+#: ../../../fuel/app/modules/install/classes/model/install.php:146
+#: ../../../fuel/app/modules/install/classes/model/install.php:153
+#: ../../../fuel/app/modules/install/classes/model/install.php:160
+#: ../../../fuel/app/modules/install/classes/model/install.php:167
+#: ../../../fuel/app/views/admin/system/information.php:176
+#: ../../../fuel/app/views/admin/system/information.php:181
+#: ../../../fuel/app/views/admin/system/information.php:187
+msgid "Installed"
+msgstr "Instalado"
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:104
+#: ../../../fuel/app/modules/install/classes/model/install.php:111
+#: ../../../fuel/app/modules/install/classes/model/install.php:118
+#: ../../../fuel/app/modules/install/classes/model/install.php:125
+#: ../../../fuel/app/modules/install/classes/model/install.php:132
+#: ../../../fuel/app/modules/install/classes/model/install.php:139
+#: ../../../fuel/app/modules/install/classes/model/install.php:146
+#: ../../../fuel/app/modules/install/classes/model/install.php:153
+#: ../../../fuel/app/modules/install/classes/model/install.php:160
+#: ../../../fuel/app/modules/install/classes/model/install.php:167
+#: ../../../fuel/app/views/admin/system/information.php:181
+msgid "Missing"
+msgstr "Em falta"
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:260
+msgid "FoolFuuka Imageboard"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:261
+msgid "FoolFuuka is one of the most advanced imageboard software written."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:266
+msgid "FoolPod Distribution Repository"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:267
+msgid ""
+"FoolPod is the distribution system that provides FoolFrame installations "
+"with updates. It provides updates for the FoolFrame framework, modules, "
+"themes, and plugins."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:272
+msgid "FoolSlide Online Reader"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/classes/model/install.php:273
+msgid ""
+"FoolSlide provides a clean visual interface to view multiple images in "
+"reading format. It can be used standalone to offer users the best reading "
+"experience available online."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/complete.php:2
+msgid "Congratulations! Your custom FoolFrame installation is complete."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/complete.php:7
+msgid "Log In"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/create_admin.php:2
+msgid ""
+"Please enter the account details you wish to create with administrative "
+"privileges. This account will be used to manage your FoolFrame installation. "
+"It is important that you do not lose this information since it required to "
+"perform administrative tasks."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/create_admin.php:12
+msgid ""
+"This will the the username of the account with administrative privileges "
+"created to manage your FoolFrame installation."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/create_admin.php:20
+msgid ""
+"Enter the email address for the user account specified above. This will be "
+"used for account recovery and authentication."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/create_admin.php:32
+#: ../../../fuel/app/views/admin/account/change_password.php:18
+#: ../../../fuel/app/views/admin/account/register.php:38
+msgid "Confirm Password"
+msgstr "Confirmar senha"
+
+#: ../../../fuel/app/modules/install/views/create_admin.php:40
+#: ../../../fuel/app/modules/install/views/database_setup.php:50
+#: ../../../fuel/app/modules/install/views/modules.php:21
+#: ../../../fuel/app/modules/install/views/system_check.php:72
+#: ../../../fuel/app/modules/install/views/welcome.php:11
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:208
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:210
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:227
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:229
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:151
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:153
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:227
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:229
+msgid "Next"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/database_setup.php:2
+msgid "Please enter your database connection details below."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/database_setup.php:9
+#, fuzzy
+msgid "Database Host"
+msgstr "Hostname da base de dados"
+
+#: ../../../fuel/app/modules/install/views/database_setup.php:12
+msgid ""
+"Unless you are using a remote database server for this FoolFrame "
+"installation, leave it as `localhost`."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/database_setup.php:17
+#, fuzzy
+msgid "Database Name"
+msgstr "Nome da base de dados"
+
+#: ../../../fuel/app/modules/install/views/database_setup.php:20
+msgid ""
+"This is the name of the database which will store your FoolFrame "
+"installation."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/database_setup.php:28
+msgid ""
+"This is the username of the account used to access the database server "
+"specified above."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/database_setup.php:36
+msgid "Enter the password for the account specified above."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/database_setup.php:41
+#, fuzzy
+msgid "Table Prefix"
+msgstr "Prefixo da base de dados"
+
+#: ../../../fuel/app/modules/install/views/database_setup.php:44
+msgid ""
+"If you wish to run multiple FoolFrame installations in a single database, "
+"change this."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/default.php:33
+#: ../../../public/foolfuuka/themes/default/views/error.php:7
+msgid "Error!"
+msgstr "Erro!"
+
+#: ../../../fuel/app/modules/install/views/default.php:36
+msgid "Please resolve the following errors:"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/modules.php:2
+msgid ""
+"Congratulations, you now have a minimal FoolFrame installation. In order to "
+"actually use the framework, you must install at least one of the following "
+"modules:"
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/system_check.php:2
+msgid ""
+"FoolFrame is checking to ensure that your server meets the minimum "
+"requirements to run the framework. It will also determine if your server "
+"environment is properly configured to run the framework properly."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/system_check.php:68
+msgid ""
+"Congratulations! It seems that your server passed all system requirements to "
+"run FoolFrame."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/system_check.php:74
+msgid ""
+"Sorry, your server failed to pass all of the essential requirements to run "
+"FoolFrame. Please view the information above and ensure that your "
+"environment is properly configured."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/welcome.php:2
+msgid ""
+"FoolFrame is a customized framework built upon the open source FuelPHP "
+"framework. It provides basic and extended capabilities that are not present "
+"within the original FuelPHP framework but specific to our software only. "
+"This customized framework serves as the basis of all modules written for "
+"FoolFrame."
+msgstr ""
+
+#: ../../../fuel/app/modules/install/views/welcome.php:6
+msgid ""
+"The installation procedure is split into 6 simple steps and should take "
+"approximately 10 minutes to complete."
+msgstr ""
+
+#: ../../../fuel/app/tasks/fool.php:9
+msgid "Welcome to the FoolFrame command line system."
+msgstr ""
+
+#: ../../../fuel/app/tasks/fool.php:15
+msgid "What module would you like to work on?"
+msgstr ""
+
+#: ../../../fuel/app/views/admin/confirm.php:7
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: ../../../fuel/app/views/admin/confirm.php:10
+msgid "Go back"
+msgstr "Voltar"
+
+#: ../../../fuel/app/views/admin/default.php:4
+#: ../../../fuel/app/views/admin/navbar.php:5
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:80
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:80
+msgid "Control Panel"
+msgstr "Painel de controlo"
+
+#: ../../../fuel/app/views/admin/default.php:88
+#, fuzzy
+msgid "New Version Available: :version"
+msgstr "Nova versão disponível"
+
+#: ../../../fuel/app/views/admin/navbar.php:9
+msgid "Home"
+msgstr ""
+
+#: ../../../fuel/app/views/admin/navbar.php:29
+msgid "Logout"
+msgstr ""
+
+#: ../../../fuel/app/views/admin/navbar.php:34
+msgid "Logout on All Devices"
+msgstr ""
+
+#: ../../../fuel/app/views/admin/account/change_password.php:4
+#, fuzzy
+msgid "Insert the new password."
+msgstr "Obter nova senha"
+
+#: ../../../fuel/app/views/admin/account/delete.php:4
+msgid ""
+"If you wish to delete your account, an email will be sent to email address "
+"associated with your account providing you with a link to securely delete "
+"your account."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/account/delete.php:20
+msgid "Request Account Deletion"
+msgstr ""
+
+#: ../../../fuel/app/views/admin/account/forgot_password.php:4
+msgid ""
+"To reset your password, please enter the following information to begin the "
+"process of resetting your account password."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/account/forgot_password.php:10
+#: ../../../fuel/app/views/admin/account/register.php:16
+msgid "Email Address"
+msgstr "Endereço de email"
+
+#: ../../../fuel/app/views/admin/account/login.php:31
+#, fuzzy
+msgid "Remember Me"
+msgstr "Lembrar-me"
+
+#: ../../../fuel/app/views/admin/account/register.php:13
+#: ../../../fuel/app/views/admin/account/register.php:23
+#: ../../../fuel/app/views/admin/account/register.php:34
+#: ../../../fuel/app/views/admin/account/register.php:45
+msgid "required"
+msgstr "obrigatório"
+
+#: ../../../fuel/app/views/admin/account/register.php:61
+msgid "Back to login"
+msgstr ""
+
+#: ../../../fuel/app/views/admin/account/request_change_email.php:4
+msgid ""
+"Enter the new email address you wish to associate with your account. You "
+"must enter your password and complete the email verification process to "
+"confirm this change being made."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/account/request_change_email.php:10
+#, fuzzy
+msgid "New Email Address"
+msgstr "Endereço de email"
+
+#: ../../../fuel/app/views/admin/account/request_change_password.php:4
+msgid ""
+"If you wish to change your current password, an email will be sent to the "
+"email address associated with your account providing you with a link to "
+"securely change your password."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/account/request_change_password.php:10
+#, fuzzy
+msgid "Request Password Change"
+msgstr "Repor senha"
+
+#: ../../../fuel/app/views/admin/boards/manage.php:10
+#: ../../../fuel/app/views/admin/users/manage.php:4
+msgid "ID"
+msgstr "ID"
+
+#: ../../../fuel/app/views/admin/boards/manage.php:12
+msgid "Board"
+msgstr "Board"
+
+#: ../../../fuel/app/views/admin/boards/manage.php:13
+msgid "Quick functions"
+msgstr ""
+
+#: ../../../fuel/app/views/admin/boards/manage.php:37
+#: ../../../fuel/app/views/admin/boards/manage.php:45
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:178
+msgid "Edit"
+msgstr "Editar"
+
+#: ../../../fuel/app/views/admin/boards/manage.php:51
+#: ../../../public/foolfuuka/themes/default/views/board.php:78
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:101
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:30
+msgid "Delete"
+msgstr "Remover"
+
+#: ../../../fuel/app/views/admin/plugins/manage.php:3
+#, fuzzy
+msgid "Plugins for :module"
+msgstr "Nome do plugin"
+
+#: ../../../fuel/app/views/admin/plugins/manage.php:9
+msgid "Plugin name"
+msgstr "Nome do plugin"
+
+#: ../../../fuel/app/views/admin/plugins/manage.php:10
+msgid "Description"
+msgstr "Descrição"
+
+#: ../../../fuel/app/views/admin/plugins/manage.php:11
+msgid "Status"
+msgstr "Estado"
+
+#: ../../../fuel/app/views/admin/plugins/manage.php:12
+#: ../../../fuel/app/views/admin/plugins/manage.php:35
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:181
+msgid "Remove"
+msgstr "Remover"
+
+#: ../../../fuel/app/views/admin/plugins/manage.php:26
+msgid "Disable"
+msgstr "Desactivar"
+
+#: ../../../fuel/app/views/admin/plugins/manage.php:27
+msgid "Enable"
+msgstr "Activar"
+
+#: ../../../fuel/app/views/admin/system/information.php:11
+msgid "Server Information"
+msgstr "Informação do servidor"
+
+#: ../../../fuel/app/views/admin/system/information.php:15
+msgid "Web Server Software"
+msgstr "Software do servidor web"
+
+#: ../../../fuel/app/views/admin/system/information.php:17
+msgid "The web server that is currently running to serve your content."
+msgstr ""
+"O servidor web que está actualmente a funcionar para servir os seus "
+"conteúdos."
+
+#: ../../../fuel/app/views/admin/system/information.php:21
+msgid "PHP Version"
+msgstr "Versão PHP"
+
+#: ../../../fuel/app/views/admin/system/information.php:23
+msgid "The version of the currently running PHP parser."
+msgstr "A versão actual do parser PHP."
+
+#: ../../../fuel/app/views/admin/system/information.php:26
+msgid "Old PHP version"
+msgstr "Versão PHP antiga"
+
+#: ../../../fuel/app/views/admin/system/information.php:27
+msgid "To run {{FOOL_NAME}}, you need at least PHP  version 5.2.0."
+msgstr ""
+"Para correr {{FOOL_NAME}}, necessita da versão do PHP de pelo menos 5.2.0."
+
+#: ../../../fuel/app/views/admin/system/information.php:27
+#: ../../../fuel/app/views/admin/system/information.php:57
+#: ../../../fuel/app/views/admin/system/information.php:89
+#: ../../../fuel/app/views/admin/system/information.php:101
+#: ../../../fuel/app/views/admin/system/information.php:113
+#: ../../../fuel/app/views/admin/system/information.php:125
+#: ../../../fuel/app/views/admin/system/information.php:137
+#: ../../../fuel/app/views/admin/system/information.php:149
+#: ../../../fuel/app/views/admin/system/information.php:161
+msgid "Suggested"
+msgstr "Sugerido"
+
+#: ../../../fuel/app/views/admin/system/information.php:38
+msgid "Nginx Upload Size"
+msgstr "Tamanho de upload Nginx"
+
+#: ../../../fuel/app/views/admin/system/information.php:39
+msgid "This value cannot be checked via PHP."
+msgstr "Este valor não pode ser verificado via PHP."
+
+#: ../../../fuel/app/views/admin/system/information.php:40
+msgid ""
+"The Nginx web server has its own internal upload limit variable. If you are "
+"receiving upload errors, and your PHP configuration looks fine, check this "
+"variable in your Nginx configuration file."
+msgstr ""
+"O servidor web Nginx tem o seu próprio limite de upload interno. Se estiver "
+"a receber erros de upload, e sua configuração do PHP parecer estar correcta, "
+"verifique esta variável no ficheiro de configuração do Nginx."
+
+#: ../../../fuel/app/views/admin/system/information.php:40
+#: ../../../fuel/app/views/admin/system/information.php:85
+#: ../../../fuel/app/views/admin/system/information.php:97
+#: ../../../fuel/app/views/admin/system/information.php:109
+#: ../../../fuel/app/views/admin/system/information.php:121
+#: ../../../fuel/app/views/admin/system/information.php:133
+#: ../../../fuel/app/views/admin/system/information.php:145
+#: ../../../fuel/app/views/admin/system/information.php:157
+msgid "Variable"
+msgstr "Variável"
+
+#: ../../../fuel/app/views/admin/system/information.php:46
+msgid "Software Information"
+msgstr "Informação do software"
+
+#: ../../../fuel/app/views/admin/system/information.php:50
+msgid "{{FOOL_NAME}} Version"
+msgstr ""
+
+#: ../../../fuel/app/views/admin/system/information.php:52
+msgid ""
+"The version of {{FOOL_NAME}} that you are currently running on your server."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/system/information.php:55
+#: ../../../fuel/app/views/admin/system/information.php:56
+msgid "New Version Available"
+msgstr "Nova versão disponível"
+
+#: ../../../fuel/app/views/admin/system/information.php:57
+msgid ""
+"Upgrading {{FOOL_NAME}} ensures that you have the most secure, stable and "
+"feature enhanced release."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/system/information.php:63
+msgid "Environment"
+msgstr "Ambiente"
+
+#: ../../../fuel/app/views/admin/system/information.php:65
+msgid "The environment {{FOOL_NAME}} is currently running as on the server."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/system/information.php:72
+msgid "PHP Configuration"
+msgstr "Configuração de PHP"
+
+#: ../../../fuel/app/views/admin/system/information.php:73
+msgid "PHP settings can be easily changed by editing your php.ini file."
+msgstr ""
+"As configurações PHP podem ser facilmente modificadas editando o seu "
+"ficheiro php.ini."
+
+#: ../../../fuel/app/views/admin/system/information.php:77
+msgid "php.ini Location"
+msgstr "Localização do php.ini"
+
+#: ../../../fuel/app/views/admin/system/information.php:79
+msgid ""
+"This is the location of the file to edit to change the following variables."
+msgstr ""
+"Isto é a localização do ficheiro a editar para modificar as seguintes "
+"variáveis."
+
+#: ../../../fuel/app/views/admin/system/information.php:83
+#: ../../../fuel/app/views/admin/system/information.php:88
+msgid "Safe Mode"
+msgstr "Safe Mode"
+
+#: ../../../fuel/app/views/admin/system/information.php:85
+msgid ""
+"The PHP safe mode is an attempt to solve the shared-server security problems "
+"and disables many important PHP functions. This is mainly used by shared "
+"hosting services to avoid implementing correct security fixes for shared-"
+"server environments."
+msgstr ""
+"O Safe Mode do PHP é uma tentativa de resolver problemas comuns de segurança "
+"de servidores partilhados e desactiva muitas funções PHP importantes. Isto é "
+"usado principalmente por serviços de hospedagem compartilhados para evitar a "
+"necessidade de ter de efectuar as correcções de segurança correctas para "
+"esses ambientes."
+
+#: ../../../fuel/app/views/admin/system/information.php:89
+msgid ""
+"Safe Mode has been enabled on your PHP installation. This setting has "
+"nothing to do with security, and it's used by shared server hosts to limit "
+"your actions. This variable should be turned off for {{FOOL_NAME}} to "
+"function correctly."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/system/information.php:95
+msgid "Allow URL fopen"
+msgstr "URL fopen autorizado"
+
+#: ../../../fuel/app/views/admin/system/information.php:97
+msgid ""
+"This function allows PHP to use URL-aware fopen wrappers to access remote "
+"files via FTP or HTTP protocol."
+msgstr ""
+"Esta função permite que o PHP possa usar fopen wrappers URL-aware para "
+"aceder a arquivos remotos via FTP ou protocolo HTTP."
+
+#: ../../../fuel/app/views/admin/system/information.php:101
+msgid ""
+"Your PHP configuration currently has URL-aware fopen wrappers disabled. This "
+"affects {{FOOL_NAME}} functions that require accessing remote files in case "
+"cURL is not installed on the system. If it is possible, this variable should "
+"be enabled with cURL installed as well."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/system/information.php:107
+msgid "Max Execution Time"
+msgstr "Tempo máximo de execução"
+
+#: ../../../fuel/app/views/admin/system/information.php:109
+msgid ""
+"This is the maximum time in seconds a script is allowed to run before it is "
+"terminated by the parser."
+msgstr ""
+"Isto é o tempo máximo em segundos que um script é autorizado a executar "
+"antes que seja terminado pelo parser."
+
+#: ../../../fuel/app/views/admin/system/information.php:112
+#: ../../../fuel/app/views/admin/system/information.php:136
+#: ../../../fuel/app/views/admin/system/information.php:148
+#: ../../../fuel/app/views/admin/system/information.php:160
+msgid "Low Value"
+msgstr "Valor baixo"
+
+#: ../../../fuel/app/views/admin/system/information.php:113
+msgid ""
+"Your current value for max execution time is low. This option affects "
+"functions that require large amounts of processing time, such as processing "
+"images. If your server doesn't have a powerful processor or you're "
+"processing large amounts of images, this value must be set as high as the "
+"total processing time taken to complete the function."
+msgstr ""
+"O seu valor actual para tempo máximo de execução é baixa. Esta opção afecta "
+"as funções que exigem grandes quantidades de tempo de processamento, tais "
+"como processamento de imagens. Se o teu servidor não tem um processador "
+"poderoso ou se estiveres processando grandes quantidades de imagens, este "
+"valor deve ser definido tão alto quanto o tempo de processamento total "
+"necessário para concluir a função."
+
+#: ../../../fuel/app/views/admin/system/information.php:119
+msgid "File Uploads"
+msgstr "Upload de ficheiros"
+
+#: ../../../fuel/app/views/admin/system/information.php:121
+msgid "This states whether or not to allow HTTP file uploads."
+msgstr "Permitir ou não o upload de ficheiros por HTTP."
+
+#: ../../../fuel/app/views/admin/system/information.php:125
+msgid ""
+"Your PHP configuration currently has file uploads disabled. This variable "
+"must be enabled or {{FOOL_NAME}} will not operate correctly."
+msgstr ""
+
+#: ../../../fuel/app/views/admin/system/information.php:131
+msgid "Max POST Size"
+msgstr "Tamanho POST máx."
+
+#: ../../../fuel/app/views/admin/system/information.php:133
+msgid "This is max size of post data allowed."
+msgstr "O tamanho máximo permitido no envio de dados POST."
+
+#: ../../../fuel/app/views/admin/system/information.php:137
+msgid ""
+"Your current value for POST size is low. This variable should generally be "
+"set at a higher value to accomodate and ensure that all of your chapters "
+"will be uploaded."
+msgstr ""
+"O valor actual do tamanho POST max. é baixo. Normalmente, esta variável deve "
+"ser ajustada para valor mais alto, de maneira a acomodar e garantir que "
+"todos os seus capítulos serão carregados."
+
+#: ../../../fuel/app/views/admin/system/information.php:143
+msgid "Max Upload Size"
+msgstr "Tamanho de upload max"
+
+#: ../../../fuel/app/views/admin/system/information.php:145
+msgid "This is the maximum size allowed for an uploaded file."
+msgstr "O tamanho máximo permitido para um ficheiro carregado."
+
+#: ../../../fuel/app/views/admin/system/information.php:149
+msgid ""
+"Your current value for max upload size is low. This variable should "
+"generally be set at a higher value to accommodate and allow your largest "
+"chapter to be uploaded."
+msgstr ""
+"O valor actual do tamanho de upload máximo é baixo. Normalmente, esta "
+"variável deve ser ajustada para valor mais alto, de maneira a acomodar e "
+"garantir o upload do maior capítulo que tenha."
+
+#: ../../../fuel/app/views/admin/system/information.php:155
+msgid "Max File Uploads"
+msgstr "Upload de ficheiros máximo"
+
+#: ../../../fuel/app/views/admin/system/information.php:157
+msgid ""
+"This is the maximum number of files allowed to be uploaded simultaneously."
+msgstr "Número máximo de ficheiros cujo upload pode ser feito simultaneamente."
+
+#: ../../../fuel/app/views/admin/system/information.php:161
+msgid ""
+"Your current value for max file uploads is low. This variable should "
+"generally be set at a higher value than the number of pages your chapters "
+"may have."
+msgstr ""
+"O valor actual para o número máximo de upload de ficheiros é baixo. Em "
+"geral, esta variável deve conter um valor maior do que o número de páginas "
+"que qualquer capítulo possa ter."
+
+#: ../../../fuel/app/views/admin/system/information.php:171
+msgid "Extensions"
+msgstr "Extensões"
+
+#: ../../../fuel/app/views/admin/system/information.php:176
+#: ../../../fuel/app/views/admin/system/information.php:187
+msgid "Not Installed"
+msgstr "Não instalado"
+
+#: ../../../fuel/app/views/admin/system/information.php:177
+msgid ""
+"This is a library used to communicate with different types of servers with "
+"many types of protocols."
+msgstr ""
+"Biblioteca utilizada para comunicar com diferentes tipos de servidores com "
+"muitos tipos de protocolos."
+
+#: ../../../fuel/app/views/admin/system/information.php:182
+msgid "This is a library used to dynamically create images and thumbnails."
+msgstr ""
+"Biblioteca utilizada para a criação de imagens e thumbnails dinamicamente."
+
+#: ../../../fuel/app/views/admin/system/information.php:188
+msgid ""
+"This is a library used to dynamically create, edit, compose or convert "
+"images."
+msgstr ""
+"Biblioteca utilizada para a criação, edição e conversão de imagens "
+"dinamicamente."
+
+#: ../../../fuel/app/views/admin/system/information.php:188
+msgid "Optional"
+msgstr "Opcional"
+
+#: ../../../fuel/app/views/admin/system/upgrade.php:7
+msgid "Current Version"
+msgstr "Versão actual"
+
+#: ../../../fuel/app/views/admin/system/upgrade.php:8
+msgid "Latest Version Available"
+msgstr "Versão mais recente disponível"
+
+#: ../../../fuel/app/views/admin/system/upgrade.php:8
+msgid "You have the latest version of {{FOOL_NAME}}."
+msgstr "Tem a versão mais recente de {{FOOL_NAME}}."
+
+#: ../../../fuel/app/views/admin/system/upgrade.php:16
+msgid "Upgrade or reinstall"
+msgstr "Actualizar ou reinstalar"
+
+#: ../../../fuel/app/views/admin/system/upgrade.php:29
+msgid "Changelog"
+msgstr "Changelog"
+
+#: ../../../fuel/app/views/admin/users/manage.php:6
+msgid "Display name"
+msgstr "Nome de apresentação"
+
+#: ../../../fuel/app/views/admin/users/manage.php:7
+msgid "Twitter"
+msgstr "Twitter"
+
+#: ../../../fuel/app/views/admin/users/manage.php:9
+msgid "Last seen"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/bootstrap.php:20
+#: ../../../public/foolframe/plugins/articles/bootstrap.php:28
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:148
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:246
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:283
+#: ../../../public/foolframe/plugins/articles/classes/model/articles.php:166
+msgid "Articles"
+msgstr "Artigos"
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:41
+msgid "Couldn't find the article with the submitted ID."
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:53
+msgid "The title of your article"
+msgstr "Título do artigo"
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:61
+msgid "Slug"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:62
+msgid ""
+"Insert the short name of the article to use in the url. Only alphanumeric "
+"and dashes."
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:97
+msgid "The slug is already used for another board."
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:107
+msgid "If you set this, the article link will actually be an outlink."
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:114
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:239
+msgid "Article"
+msgstr "Artigo"
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:115
+msgid "The content of your article, in MarkDown"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:123
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:124
+msgid "Display the article link on the top of the page"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:129
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:130
+msgid "Display the article link on the bottom of the page"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:156
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:243
+msgid "New article"
+msgstr "Novo artigo"
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:215
+msgid "New article created!"
+msgstr "Novo artigo criado!"
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:221
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:226
+msgid "Article information updated."
+msgstr ""
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:284
+msgid "Removing article:"
+msgstr "A remover o artigo:"
+
+#: ../../../public/foolframe/plugins/articles/classes/controller/admin.php:286
+msgid "Do you really want to remove the article?"
+msgstr "Deseja realmente remover o artigo?"
+
+#: ../../../public/foolframe/plugins/articles/config/config.php:12
+msgid "Enable support for custom pages in MarkDown and custom links."
+msgstr ""
+
+#: ../../../public/foolframe/plugins/ssl_tools/bootstrap.php:23
+#: ../../../public/foolframe/plugins/ssl_tools/classes/controller/admin/ssl_tools.php:20
+msgid "SSL Tools"
+msgstr "Ferramentas SSL"
+
+#: ../../../public/foolframe/plugins/ssl_tools/classes/controller/admin/ssl_tools.php:36
+msgid ""
+"Does the server have SSL available (does your site support https:// "
+"protocol)?"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/ssl_tools/classes/controller/admin/ssl_tools.php:41
+msgid "Redirect the logged in users to the SSL version of the site"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/ssl_tools/classes/controller/admin/ssl_tools.php:46
+msgid "Redirect every user to the SSL version of the site"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/ssl_tools/classes/controller/admin/ssl_tools.php:51
+msgid ""
+"Set a cookie for users that browsed the site with https:// so they get "
+"redirected to the https:// version of the site"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/ssl_tools/classes/controller/admin/ssl_tools.php:56
+msgid "Show a link to SSL in the header if the user is browsing in http://"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/ssl_tools/classes/controller/admin/ssl_tools.php:61
+msgid "Show a link to SSL in the footer if the user is browsing in http://"
+msgstr ""
+
+#: ../../../public/foolframe/plugins/ssl_tools/config/config.php:12
+msgid "Adds a panel to control useful tools if you have SSL available"
+msgstr ""
+
+#: ../../../public/foolfuuka/deadplugins/FU_Comment_Hostname/FU_Comment_Hostname_info.php:15
+#, fuzzy
+msgid "Stores the hostname of the user in the database."
+msgstr "O username do utilizador com permissões para a base de dados"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/theme_plugin.php:116
+#: ../../../public/foolfuuka/deadthemes/yotsuba/theme_plugin.php:119
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:308
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:337
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:367
+msgid "Redirecting..."
+msgstr "A redireccionar..."
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/board.php:25
+msgid "This user is a Moderator."
+msgstr ""
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/board.php:26
+#, fuzzy
+msgid "This user is an Administrator."
+msgstr "Administrador"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/board.php:38
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/board_comment.php:40
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:20
+#: ../../../public/foolfuuka/themes/fuuka/views/board_comment.php:45
+#, fuzzy
+msgid "File:"
+msgstr "Ficheiro"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/board.php:80
+#: ../../../public/foolfuuka/themes/default/views/board.php:113
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:82
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:85
+#, fuzzy
+msgid "post"
+msgid_plural "posts"
+msgstr[0] "posts"
+msgstr[1] "posts"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/board.php:82
+#: ../../../public/foolfuuka/themes/default/views/board.php:115
+#, fuzzy
+msgid "image"
+msgid_plural "images"
+msgstr[0] "Ban. imag."
+msgstr[1] "Ban. imag."
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/board.php:84
+#: ../../../public/foolfuuka/themes/default/views/board.php:117
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:83
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:86
+#, fuzzy
+msgid "omitted"
+msgid_plural "omitted"
+msgstr[0] "omitido"
+msgstr[1] "omitido"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/board.php:85
+msgid "Click Reply to View."
+msgstr ""
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/index.php:7
+#: ../../../public/foolfuuka/themes/fuuka/views/index.php:7
+#, fuzzy
+msgid "Welcome to {{FOOL_NAME}}"
+msgstr "Bem-vindo a {{FOOL_NAME}} versão %s"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/index.php:8
+#: ../../../public/foolfuuka/themes/fuuka/views/index.php:8
+msgid "Choose a Board:"
+msgstr ""
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:38
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:44
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:152
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:24
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:107
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:72
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:25
+msgid "E-mail"
+msgstr "E-mail"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:66
+msgid "Spoiler Image?"
+msgstr ""
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:79
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:104
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:99
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:79
+msgid ""
+"This thread has been archived. Any replies made will be marked as ghost "
+"posts and will only affect the ghost index."
+msgstr ""
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:85
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:62
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:36
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:120
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:93
+msgid "File"
+msgstr "Ficheiro"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:97
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:44
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:129
+msgid "This is used for file and post deletion."
+msgstr ""
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:102
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:86
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:56
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:134
+#, fuzzy
+msgid "Post As"
+msgstr "Postar como"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:105
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:80
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:50
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:51
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:137
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:113
+msgid "Moderator"
+msgstr "Moderador"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/tools_reply_box.php:108
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:81
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:139
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:116
+msgid "Administrator"
+msgstr "Administrador"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:58
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:246
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:79
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:118
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:40
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:79
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:118
+msgid "Index"
+msgstr "Índice"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:61
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:249
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:43
+msgid "Top"
+msgstr ""
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:62
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:250
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:22
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:24
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:60
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:44
+msgid "Statistics"
+msgstr "Estatísticas"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:64
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:252
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:46
+#, fuzzy
+msgid "Report Bug"
+msgstr "Denunciar"
+
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:151
+#: ../../../public/foolfuuka/deadthemes/yotsuba/views/layouts/chan.php:153
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:184
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:186
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:184
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:186
+msgid "Previous"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/bootstrap.php:22
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/admin.php:62
+msgid "Board Statistics"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/bootstrap.php:40
+msgid "Stats"
+msgstr "Estatísticas"
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/admin.php:30
+msgid ""
+"Select the statistics to enable. Some might be too slow to process, so you "
+"should disable them. Some statistics don't use extra processing power so "
+"they are enabled by default."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/admin.php:51
+#, php-format
+msgid "Enable %s statistics"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:55
+msgid "Statistic currently not available."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:68
+msgid "now!"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:72
+msgid "seconds"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:76
+msgid "minutes"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:80
+msgid "hours"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:84
+msgid "days"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:88
+#, php-format
+msgid "Statistics: %s (Next Update in %s)"
+msgstr "Estatísticas: %s (Próxima actualização em %s)"
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/controller/chan.php:95
+#, php-format
+msgid "Statistics: %s"
+msgstr "Estatísticas: %s"
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:15
+#: ../../../public/foolfuuka/plugins/board_statistics/views/availability.php:11
+msgid "Availability"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:16
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:23
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:46
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:69
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:93
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:99
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:122
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:128
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:151
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:157
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:163
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:169
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:175
+msgid "Posts in last month by name and availability by time of day."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:22
+msgid "Daily Activity"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:45
+msgid "Daily Activity \"Archive\""
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:68
+msgid "Daily Activity \"Hourly\""
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:92
+msgid "Image Reposts"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:98
+msgid "Karma"
+msgstr "Karma"
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:121
+msgid "New Users"
+msgstr "Novos utilizadores"
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:127
+msgid "Population"
+msgstr "População"
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:150
+msgid "Post Count"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:156
+msgid "Post Rate"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:162
+msgid "Post Rate \"Archive\""
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:168
+msgid "Users Online"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/classes/model/board_statistics.php:174
+msgid "Users Posting in Archive"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/config/config.php:12
+msgid "Statistics for the boards, to keep live with a php daemon."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/views/availability.php:9
+#: ../../../public/foolfuuka/plugins/board_statistics/views/new_users.php:18
+#: ../../../public/foolfuuka/plugins/board_statistics/views/post_count.php:9
+#: ../../../public/foolfuuka/plugins/board_statistics/views/users_online.php:10
+msgid "Poster"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/views/availability.php:10
+#: ../../../public/foolfuuka/plugins/board_statistics/views/new_users.php:20
+#: ../../../public/foolfuuka/plugins/board_statistics/views/post_count.php:10
+msgid "Total Posts"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/views/new_users.php:19
+msgid "First Seen"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/views/post_rate.php:10
+msgid "Posts within Last Hour"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/views/post_rate.php:11
+msgid "Posts per Minute"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/views/users_online.php:11
+msgid "Last Seen"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/board_statistics/views/users_online.php:12
+msgid "Latest Post"
+msgstr "Post mais recente"
+
+#: ../../../public/foolfuuka/plugins/dice_roll/bootstrap.php:18
+msgid "Enable dice roll?"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/dice_roll/config/config.php:12
+msgid "Adds support for dice rolling on certain boards."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/bootstrap.php:36
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/bootstrap.php:46
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:45
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:56
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:67
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:78
+msgid "Comma separated list of GeoIP 2-letter nation codes."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:20
+msgid "GeoIP Region Lock"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:35
+msgid "You can add board-specific locks by browsing the board preferences."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:39
+#, fuzzy
+msgid "Countries allowed to post"
+msgstr "Não está autorizado a efectuar esta acção"
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:45
+msgid "If you allow a nation, all other nations won't be able to comment."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:50
+msgid "Countries disallowed to post"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:56
+msgid "Disallowed nations won't be able to comment."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:61
+msgid "Countries allowed to view the site"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:67
+msgid ""
+"If you allow a nation, all other nations won't be able to reach the "
+"interface."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:72
+msgid "Countries disallowed to view the site."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:78
+msgid "Disallowed nations won't be able to reach the interface."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:87
+msgid "Allow logged in users to post regardless."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/controller/admin/geoip_region_lock.php:90
+msgid ""
+"Allow all logged in users to post regardless of region lock? (Mods and "
+"Admins are always allowed to post)"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/model/geoip_region_lock.php:43
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/classes/model/geoip_region_lock.php:58
+msgid "Your nation has been blocked from posting."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/geoip_region_lock/config/config.php:12
+msgid ""
+"Allow or disallow nations to reach the board or post comments. Requires the "
+"GeoIP PECL module."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/nginx_cache_purge/classes/controller/admin/nginx_cache_purge.php:32
+msgid "Cache cleaning URLs"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/nginx_cache_purge/classes/controller/admin/nginx_cache_purge.php:33
+msgid ""
+"Insert the URLs that Nginx Cache Purge will have to contact and their "
+"eventual Basic Auth passwords. Make sure you \"allow\" only the IP from this "
+"server on the Nginx Cache Purge configuration block. The following is the "
+"format:"
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/nginx_cache_purge/config/config.php:13
+#, php-format
+msgid ""
+"Remove deleted images from the Nginx proxy cache when deleted locally. "
+"Requires Nginx compiled with %s to work."
+msgstr ""
+
+#: ../../../public/foolfuuka/plugins/patch_sopa_spoilers_2012/config/config.php:12
+msgid ""
+"Prevents the display of the spoilers used by 4chan during the SOPA protest."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:23
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:52
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:43
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:40
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:124
+#, fuzzy
+msgid "Spoiler"
+msgstr "Submeter spoilerizado"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:23
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:52
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:43
+msgid "Click to view"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:37
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:21
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:53
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:23
+#: ../../../public/foolfuuka/themes/fuuka/views/board_comment.php:50
+msgid "View Same"
+msgstr "Ver iguais"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:58
+#: ../../../public/foolfuuka/themes/default/views/board.php:87
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:80
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:116
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:20
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:50
+#: ../../../public/foolfuuka/themes/fuuka/views/board_comment.php:20
+msgid "Mod"
+msgstr "Mod"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:61
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:83
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:23
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:53
+#: ../../../public/foolfuuka/themes/fuuka/views/board_comment.php:23
+msgid "Admin"
+msgstr "Admin"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:64
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:86
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:26
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:82
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:56
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:52
+msgid "Developer"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:69
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:91
+#, fuzzy
+msgid "4chan Time"
+msgstr "Hora do 4chan"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:74
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:97
+msgid "This post contains a spoiler image."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:75
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:98
+msgid "This post was deleted from 4chan manually."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:78
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:101
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:30
+msgid "View"
+msgstr "Ver"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:78
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:30
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:70
+msgid "Reply"
+msgstr "Responder"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:78
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:30
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:71
+msgid "Last 50"
+msgstr "Últimos 50"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:78
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:30
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:72
+msgid "Original"
+msgstr "Original"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:78
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:101
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:30
+msgid "Report"
+msgstr "Denunciar"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:82
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:107
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:75
+#: ../../../public/foolfuuka/themes/fuuka/views/board_comment.php:70
+#, fuzzy
+msgid "Quoted By:"
+msgstr "Citado por:"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:90
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:119
+#, fuzzy
+msgid "Delete Post"
+msgstr "Apagar conta"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:92
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:121
+#, fuzzy
+msgid "Delete Image"
+msgstr "Remover"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:93
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:122
+#, fuzzy
+msgid "Ban Image"
+msgstr "Ban. imag."
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:96
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:125
+#, fuzzy
+msgid "Ban IP:"
+msgstr "Ban. util.:"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:97
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:126
+#, fuzzy
+msgid "Search IP"
+msgstr "Pesquisar"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:99
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:128
+msgid "Search IP Globally"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:124
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:135
+#, fuzzy
+msgid "Reported Reason:"
+msgstr "Razão da denúncia"
+
+#: ../../../public/foolfuuka/themes/default/views/board.php:128
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:139
+#, fuzzy
+msgid "Delete Report"
+msgstr "Apagar conta"
+
+#: ../../../public/foolfuuka/themes/default/views/board_comment.php:96
+#, fuzzy
+msgid "This post was made in the archive."
+msgstr "Este post já está a ser processado..."
+
+#: ../../../public/foolfuuka/themes/default/views/captcha_confirm.php:7
+msgid "Enter the captcha to complete the action:"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:59
+#, fuzzy
+msgid "Replies"
+msgstr "Só respostas"
+
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:59
+#, fuzzy
+msgid "Images"
+msgstr "Hash imagem"
+
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:61
+msgid "This post was deleted from 4chan manually"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/gallery.php:62
+msgid "This post contains a spoiler image"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/index.php:15
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:85
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:85
+msgid "Archives"
+msgstr "Arquivos"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_modal.php:24
+msgid "Cancel"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:130
+#, fuzzy
+msgid "Submit Spoilered"
+msgstr "Submeter spoilerizado"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_reply_box.php:141
+msgid "Reset"
+msgstr "Reset"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:30
+#, fuzzy
+msgid "Search or Insert Post No. or Thread URL"
+msgstr "Pesquisar ou inserir nº post / URL tópico"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:30
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:57
+msgid "Global Search"
+msgstr "Pesquisa global"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:39
+msgid "Undefined"
+msgstr "Indefinido"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:48
+msgid "Search"
+msgstr "Pesquisar"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:66
+#, fuzzy
+msgid "Go to Post"
+msgstr "Ir para post"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:75
+#, fuzzy
+msgid "Deletion Mode"
+msgstr "Remover"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:87
+msgid "Filters:"
+msgstr "Filtros:"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:92
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:97
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:102
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:107
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:112
+msgid "All"
+msgstr "Tudo"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:93
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:129
+#, fuzzy
+msgid "Only Deleted Posts"
+msgstr "Só apagados"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:94
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:133
+#, fuzzy
+msgid "Only Non-Deleted Posts"
+msgstr "Apenas não-apagados"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:98
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:146
+#, fuzzy
+msgid "Only Ghost Posts"
+msgstr "Só Fantasmas"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:99
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:150
+#, fuzzy
+msgid "Only Non-Ghost Posts"
+msgstr "Só Fantasmas"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:103
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:163
+#, fuzzy
+msgid "Only Containing Images"
+msgstr "que contenham imagens"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:104
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:167
+msgid "Only Containing Text"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:108
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:113
+msgid "Only Opening Posts"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:109
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:180
+#, fuzzy
+msgid "Only Reply Posts"
+msgstr "Só por mods"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:114
+#, fuzzy
+msgid "Only Moderator Posts"
+msgstr "Moderador"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:115
+#, fuzzy
+msgid "Only Admin Posts"
+msgstr "Só por admins"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:116
+#, fuzzy
+msgid "Only Developer Posts"
+msgstr "Só apagados"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:119
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:214
+#, fuzzy
+msgid "New Posts First"
+msgstr "Mais recentes primeiro"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:120
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:218
+#, fuzzy
+msgid "Old Posts First"
+msgstr "Mais antigos primeiro"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:148
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:66
+msgid "Tripcode"
+msgstr "Tripcode"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:156
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:109
+msgid "Filename"
+msgstr "Nome ficheiro"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:160
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:78
+msgid "From Date"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:175
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:93
+msgid "To Date"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:190
+#, fuzzy
+msgid "IP Address"
+msgstr "Endereço de email"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:196
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:115
+#, fuzzy
+msgid "Image Hash"
+msgstr "Hash imagem"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:200
+#, fuzzy
+msgid "You can drag-and-drop an image onto the field above."
+msgstr "Pode arrastar uma imagem para o campo acima"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:203
+#, fuzzy
+msgid "Your 5 Latest Searches:"
+msgstr "Últimas pesquisas (suas):"
+
+#: ../../../public/foolfuuka/themes/default/views/tools_search.php:204
+msgid "Clear"
+msgstr "Apagar"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:49
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:49
+#, fuzzy, php-format
+msgid "Archives: [ %s ]"
+msgstr "Arquivos"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:65
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:65
+#, fuzzy, php-format
+msgid "Boards: [ %s ]"
+msgstr "Boards"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:127
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:127
+#, fuzzy
+msgid "By Post"
+msgstr "Posts"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:133
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:133
+msgid "By Thread"
+msgstr "Por tópico"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:144
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:144
+msgid "Ghost"
+msgstr "Fantasma"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:145
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:145
+msgid "Gallery"
+msgstr "Galeria"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:245
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:264
+#, fuzzy
+msgid "Change Theme"
+msgstr "Mudar tema"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:265
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:284
+#, fuzzy
+msgid "Change Language"
+msgstr "A mudar o idioma"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/chan.php:276
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:295
+#, fuzzy
+msgid "Add a Translation"
+msgstr "Adicionar uma tradução"
+
+#: ../../../public/foolfuuka/themes/default/views/layouts/redirect.php:15
+#, php-format
+msgid "Attempting to redirect to %s."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:119
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:151
+msgid "This thread does not exist."
+msgstr "Este tópico não existe."
+
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:165
+msgid "This thread is closed."
+msgstr "Este tópico está trancado."
+
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:190
+msgid "You are required to upload an image when posting a new thread."
+msgstr "É obrigatório fazer upload duma imagem para começar um tópico novo."
+
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:208
+msgid "You are required to write a comment when no image upload is present."
+msgstr "É obrigatório escrever um comentário quando não há imagem presente."
+
+#: ../../../public/foolfuuka/themes/fuuka/classes/controller.php:226
+msgid "The posting of images has been disabled for this thread."
+msgstr "Novas imagens foram desactivadas para este tópico."
+
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:67
+#: ../../../public/foolfuuka/themes/fuuka/views/board_comment.php:36
+msgid "This post was deleted before its lifetime has expired."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/board.php:68
+#: ../../../public/foolfuuka/themes/fuuka/views/board_comment.php:37
+msgid "The image in this post is marked as spoiler."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/board_comment.php:26
+msgid "Developers"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/board_comment.php:38
+msgid "This post is not an archived reply."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:12
+#, fuzzy
+msgid "Create New Thread"
+msgstr "Últimos por tópico"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:63
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:147
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:223
+msgid "Action"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:94
+#, fuzzy
+msgid "Reply to Thread"
+msgstr "Por tópico"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_reply_box.php:94
+msgid ""
+"Don't expect anything heroic. This post will not be posted to any other "
+"board."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:17
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:48
+#, fuzzy
+msgid "Text Search"
+msgstr "Pesquisar"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:35
+msgid "Advanced"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:45
+msgid "Advanced Search"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:60
+msgid "Search for an <b>exact</b> username. Leave empty for any username."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:66
+msgid "Search for an <b>exact</b> tripcode. Leave empty for any tripcode."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:78
+#, fuzzy
+msgid "Enter the starting date for your search."
+msgstr "Insira os números que ouve"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:78
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:93
+msgid "Format: YYYY-MM-DD"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:93
+#, fuzzy
+msgid "Enter the ending date for your search."
+msgstr "Insira os números que ouve"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:121
+#, fuzzy
+msgid "Deleted Posts"
+msgstr "Apagar conta"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:125
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:142
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:159
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:193
+msgid "Show All Posts"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:138
+#, fuzzy
+msgid "Ghost Posts"
+msgstr "Página do além"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:155
+#, fuzzy
+msgid "Show Posts"
+msgstr "Posts"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:172
+msgid "Results"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:176
+#, fuzzy
+msgid "All Posts"
+msgstr "Posts"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:184
+#, fuzzy
+msgid "Only OP Posts"
+msgstr "Só Fantasmas"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:189
+#, fuzzy
+msgid "Capcode"
+msgstr "Tripcode"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:197
+msgid "Only by Users"
+msgstr "Só por utilizadores"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:201
+msgid "Only by Mods"
+msgstr "Só por mods"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:205
+msgid "Only by Admins"
+msgstr "Só por admins"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:210
+msgid "Order"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:238
+msgid "Simple"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:250
+#, fuzzy
+msgid "View Post"
+msgstr "Ver"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:273
+#, fuzzy
+msgid "View Page"
+msgstr "Ver iguais"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/tools_search.php:292
+msgid "In Ghost Mode, only threads that contain ghost posts will be listed."
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:94
+msgid "Navigation"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:97
+#, fuzzy
+msgid "View Posts"
+msgstr "Posts"
+
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:100
+#: ../../../public/foolfuuka/themes/fuuka/views/layouts/chan.php:102
+msgid "Prev"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/tools_reply_box.php:110
+msgid "Post as"
+msgstr "Postar como"
+
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:173
+msgid "Global Announcement"
+msgstr ""
+
+#: ../../../public/foolfuuka/themes/yotsubatwo/views/layouts/chan.php:245
+#, fuzzy
+msgid "Change Style"
+msgstr "Mudar tema"
+
+#~ msgid "Gallery: Showing Latest Submitted Images"
+#~ msgstr "Galeria: Últimas imagens submetidas"
+
+#~ msgid "Gallery: Showing Latest Created Threads"
+#~ msgstr "Galeria: Últimos tópicos criados"
+
+#~ msgid "By Image"
+#~ msgstr "Por imagem"
+
+#~ msgid "Showing the last 50 posts for Thread No."
+#~ msgstr "Últimos 50 posts por nº de tópico"
+
+#~ msgid "Searched text"
+#~ msgstr "Texto pesquisado"
+
+#~ msgid "Your request is missing parameters: add the board shortname."
+#~ msgstr "Parâmetros em falta no pedido: adicione o shortname da board."
+
+#~ msgid "{{FOOL_NAME}} Installation"
+#~ msgstr "{{FOOL_NAME}}: Instalação"
+
+#~ msgid ""
+#~ "The type of database you're going to use. There's only one option "
+#~ "currently."
+#~ msgstr ""
+#~ "O tipo de base de dados a ser utilizado. Só há uma opção de momento."
+
+#~ msgid ""
+#~ "The hostname of the server hosting the database. 99.8% of times is "
+#~ "localhost"
+#~ msgstr ""
+#~ "O hostname do servidor que contém a base de dados. 99.8% das vezes é "
+#~ "localhost"
+
+#~ msgid "The name of the database"
+#~ msgstr "O nome da base de dados"
+
+#~ msgid "Database username"
+#~ msgstr "Username da base de dados"
+
+#~ msgid "Database password"
+#~ msgstr "Senha da base de dados"
+
+#~ msgid "The password of the user with permissions to the database"
+#~ msgstr "A senha do utilizador com permissão para a base de dados"
+
+#~ msgid "Administrator username"
+#~ msgstr "Username do administrador"
+
+#~ msgid "The username of the administrator's account"
+#~ msgstr "O username da conta de administrador"
+
+#~ msgid "Administrator password"
+#~ msgstr "Senha do administrador"
+
+#~ msgid "The password of the administrator's account"
+#~ msgstr "A senha da conta de administrador"
+
+#~ msgid "Administrator email"
+#~ msgstr "Email do administrador"
+
+#~ msgid "The email of the administrator's account"
+#~ msgstr "O endereço de email da conta de administrador"
+
+#~ msgid "Connection with database not established: check the database fields."
+#~ msgstr ""
+#~ "Ligação à base de dados não estabelecida com sucesso: verifique os campos "
+#~ "da base de dados."
+
+#~ msgid ""
+#~ "{{FOOL_NAME}} has installed successfully. You can proceed logging in."
+#~ msgstr "{{FOOL_NAME}} foi instalado com sucesso. Pode proceder ao login."
+
+#~ msgid ""
+#~ "The %s directory would be better if writable, in order to deliver "
+#~ "automatic updates. Use this command in your shell if possible: %s"
+#~ msgstr ""
+#~ "Para ser possível executar actualizações automáticas, a pasta %s tem de "
+#~ "ser acessível para escrita. Use este comando na shell se possível: %s"
+
+#~ msgid ""
+#~ "The %s directory would be better if writable, in order to deliver "
+#~ "automatic updates.<br/>It was impossible to determine the user running "
+#~ "PHP. Use this command in your shell if possible: %s where www-data is an "
+#~ "example (usually it's www-data or Apache)"
+#~ msgstr ""
+#~ "Para ser possível executar actualizações automáticas, a pasta %s tem de "
+#~ "ser acessível para escrita.<br/>Não foi possível determinar o utilizador "
+#~ "que está a correr o PHP. Use este comando na shell se possível: %s onde "
+#~ "www-data é um exemplo (normalmente é www-data ou Apache)"
+
+#~ msgid ""
+#~ "If you can't do the above, after the installation you will be given a "
+#~ "textfile to paste in config.php. More info after submitting."
+#~ msgstr ""
+#~ "Se não puder fazer o que está descrito acima, irá receber um ficheiro de "
+#~ "texto após a instalação para inserir no ficheiro config.php. Mas "
+#~ "informação após a submissão."
+
+#~ msgid ""
+#~ "If you made any changes, just refresh this page to recheck the directory "
+#~ "permissions."
+#~ msgstr ""
+#~ "Se efectuou algumas mudanças, actualize esta página para voltar a "
+#~ "verificar as permissões das pastas."
+
+#~ msgid "Authorization"
+#~ msgstr "Autorização"
+
+#~ msgid "Resend activation email"
+#~ msgstr "Reenviar email de activação"
+
+#~ msgid "Change password"
+#~ msgstr "Mudar senha"
+
+#~ msgid "Unregister"
+#~ msgstr "Anular registo"
+
+#~ msgid "Manage boards"
+#~ msgstr "Gerir boards"
+
+#~ msgid "Downloaded and installed the latest version of Asagi."
+#~ msgstr "Transferida e instalada a versão mais recente de Asagi."
+
+#~ msgid "Asagi has been removed."
+#~ msgstr "Asagi foi removida."
+
+#~ msgid "Settings updated."
+#~ msgstr "Configurações actualizadas."
+
+#~ msgid "Ran Asagi."
+#~ msgstr "Asagi activada."
+
+#~ msgid "Stopped Asagi."
+#~ msgstr "Asagi parada."
+
+#~ msgid "Enabled Asagi autorun."
+#~ msgstr "Início automático de Asagi activado."
+
+#~ msgid "Disabled Asagi autorun."
+#~ msgstr "Início automático de Asagi desactivado."
+
+#~ msgid "Asagi"
+#~ msgstr "Asagi"
+
+#~ msgid "Asagi installation"
+#~ msgstr "Asagi: Instalação"
+
+#~ msgid "Database"
+#~ msgstr "Base de dados"
+
+#~ msgid "Successfully updated the database."
+#~ msgstr "Base de dados actualizada com sucesso."
+
+#~ msgid "Members"
+#~ msgstr "Membros"
+
+#~ msgid "User profile saved!"
+#~ msgstr "Perfil de utilizador gravado!"
+
+#~ msgid "Editing user:"
+#~ msgstr "A editar utilizador:"
+
+#~ msgid "The plugin couldn't be disabled."
+#~ msgstr "O plugin não pôde ser desactivado."
+
+#~ msgid "Access to reports outside the administrative panel is denied."
+#~ msgstr "Acesso negado às denúncias fora do painel de administração."
+
+#~ msgid "Failed to remove the report from the database."
+#~ msgstr "Falha ao remover a denúncia da base de dados."
+
+#~ msgid "Found and Working"
+#~ msgstr "Encontrado e OK"
+
+#~ msgid "Not Available"
+#~ msgstr "Não disponível"
+
+#~ msgid ""
+#~ "You must have Safe Mode turned off and the exec() function enabled to "
+#~ "allow ImageMagick to process your images. Please check the information "
+#~ "panel for more details."
+#~ msgstr ""
+#~ "Deve ter o Safe Mode desligado e a função exec() activada para permitir o "
+#~ "processamento de imagens pelo ImageMagick. Por favor verifique o painel "
+#~ "de informações para mais detalhes."
+
+#~ msgid "Disabled Functions"
+#~ msgstr "Funcionalidades desactivadas"
+
+#~ msgid ""
+#~ "You must provide the correct path to the \"convert\" binary on your "
+#~ "system. This is typically located under /usr/bin (Linux), /opt/local/bin "
+#~ "(Mac OSX) or the installation directory (Windows)."
+#~ msgstr ""
+#~ "Deve fornecer o caminho correcto para o executável \"convert\" no seu "
+#~ "sistema. Está normalmente localizado em /usr/bin (Linux), /opt/local/bin "
+#~ "(Mac OS X) ou na sua pasta de instalação (Windows)."
+
+#~ msgid "Not Working"
+#~ msgstr "Não funcional"
+
+#~ msgid ""
+#~ "There has been an error encountered when testing your ImageMagick "
+#~ "installation. To manually check for errors, access your server via shell "
+#~ "or command line and type: %s"
+#~ msgstr ""
+#~ "Foi encontrado um erro no teste de instalação do ImageMagick. Para "
+#~ "verificar manualmente por erros, aceda ao servidor via shell ou linha de "
+#~ "comando e digite: %s"
+
+#~ msgid "Path to ImageMagick"
+#~ msgstr "Caminho para o ImageMagick"
+
+#~ msgid "The location of your ImageMagick \"convert\" executable"
+#~ msgstr "Localização do executável \"convert\" do ImageMagick"
+
+#~ msgid "Upgrade failed: check file permissions."
+#~ msgstr "Falha na actualização: verifique as permissões dos ficheiros."
+
+#~ msgid "Upgrade successful"
+#~ msgstr "Actualização feita com sucesso"
+
+#~ msgid "Can't go over page 500"
+#~ msgstr "A denúncia foi removida da base de dados."
+
+#~ msgid "Faulty per_page value"
+#~ msgstr "Tema"
+
+#~ msgid "Can't return more than 50 threads"
+#~ msgstr "Não é possível retornar mais que 50 tópicos"
+
+#~ msgid "Threads could not be found"
+#~ msgstr "Tópicos não encontrados"
+
+#~ msgid "You have to select a thread number"
+#~ msgstr "Tem de seleccionar um número de tópico"
+
+#~ msgid "Post could not be found"
+#~ msgstr "Post não encontrado"
+
+#~ msgid "Can't return more than 3000 ghost posts"
+#~ msgstr "Impossível retornar mais do que 3000 posts fantasmas"
+
+#~ msgid "Member List"
+#~ msgstr "Lista de membros"
+
+#~ msgid "The board you selected doesn't exist"
+#~ msgstr "A board seleccionada não existe."
+
+#~ msgid "Invalid action"
+#~ msgstr "Acção inválida"
+
+#~ msgid ""
+#~ "This image has already been posted once. This board doesn't allow image "
+#~ "reposting"
+#~ msgstr ""
+#~ "Esta imagem já foi postada. Esta board não permite reposts de imagens."
+
+#~ msgid "An image is required for creating threads."
+#~ msgstr "É necessária uma imagem para criar tópicos."
+
+#~ msgid "Group"
+#~ msgstr "Grupo"
+
+#~ msgid "Member"
+#~ msgstr "Membro"
+
+#~ msgid "Bio"
+#~ msgstr "Bio"
+
+#~ msgid "Converting %s to utfmb4"
+#~ msgstr "A converter %s para utf8mb4"
+
+#~ msgid "The tables have all been converted to utf8mb4"
+#~ msgstr "Todas as tabelas foram convertidas para utf8mb4"
+
+#~ msgid "Post number"
+#~ msgstr "Número post"
+
+#~ msgid "Reason"
+#~ msgstr "Razão"
+
+#~ msgid "New upgrade available:"
+#~ msgstr "Nova actualização disponível:"
+
+#~ msgid "Old Password"
+#~ msgstr "Senha antiga"
+
+#~ msgid "Confirm New Password"
+#~ msgstr "Confirmar nova senha"
+
+#~ msgid "Email or username"
+#~ msgstr "Email ou username"
+
+#~ msgid "Get another CAPTCHA"
+#~ msgstr "Obter outra CAPTCHA"
+
+#~ msgid "Get an audio CAPTCHA"
+#~ msgstr "Obter uma CAPTCHA áudio"
+
+#~ msgid "Get an image CAPTCHA"
+#~ msgstr "Obter uma imagem CAPTCHA"
+
+#~ msgid "Enter the words above"
+#~ msgstr "Insira as palavras acima"
+
+#~ msgid "Enter the letters above"
+#~ msgstr "Insira as letras acima"
+
+#~ msgid "Send"
+#~ msgstr "Enviar"
+
+#~ msgid "Run"
+#~ msgstr "Correr"
+
+#~ msgid "Kill"
+#~ msgstr "Terminar"
+
+#~ msgid "License"
+#~ msgstr "Licença"
+
+#~ msgid ""
+#~ "Asagi is released under the GNU General Public License, version 2, or "
+#~ "later."
+#~ msgstr ""
+#~ "Asagi está disponível nos termos da GNU General Public License, versão 2, "
+#~ "ou posterior."
+
+#~ msgid "Click here to read the full license."
+#~ msgstr "Clique aqui para ler a licença integral."
+
+#~ msgid ""
+#~ "\n"
+#~ "Asagi is the Open Source (GPLv3) 4chan data fetcher coded by Eksopl. It "
+#~ "can dump the threads, images and thumbnails from the Yotsuba boards in "
+#~ "4chan into your server for easy consumption.\n"
+#~ "\n"
+#~ "If you're interested in using FoOlFuuka as a 4chan archive, you need to "
+#~ "download, setup and run Asagi.\n"
+#~ "\n"
+#~ "We can do the downloading and the setup, and all that is left to you is "
+#~ "running it since we can't reliably run it off the web interface. "
+#~ "FoOlFuuka will keep the settings of Asagi updated for you, so you can "
+#~ "manage your archives through the boards manager.\n"
+#~ "\n"
+#~ "Requirements: Java installed on your server.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Asagi é um fetcher de dados do 4chan Open Source (GPLv3) criado por "
+#~ "Eksopl. É capaz de arquivar os tópicos, imagens e miniaturas das boards "
+#~ "baseadas no software Yotsuba do 4chan para dentro do seu servidor, para "
+#~ "consumo fácil.\n"
+#~ "\n"
+#~ "Se está interessado em usar FoOlFuuka como um arquivo do 4chan, é "
+#~ "necessário transferir, configurar e correr Asagi.\n"
+#~ "\n"
+#~ "Nós podemos fazer a transferência e a configuração. Após isso, tudo o que "
+#~ "resta é correr-lo, dado que não podemos corrê-lo de forma fiável a partir "
+#~ "da interface web. FoOlFuuka mantém as definições de Asagi actualizados "
+#~ "por si, pelo que pode gerir os arquivos através da gestão de boards.\n"
+#~ "\n"
+#~ "Requisitos: Java instalado no servidor.\n"
+
+#~ msgid "Install"
+#~ msgstr "Instalar"
+
+#~ msgid "Update database"
+#~ msgstr "Actualizar base de dados"
+
+#~ msgid "Do you really want to upgrade your database?"
+#~ msgstr "Tem a certeza que quer actualizar a base de dados?"
+
+#~ msgid "{{FOOL_NAME}}"
+#~ msgstr "{{FOOL_NAME}}"
+
+#~ msgid "Done"
+#~ msgstr "Efectuado"
+
+#~ msgid "SSL"
+#~ msgstr "SSL"
+
+#~ msgid "The article was removed"
+#~ msgstr "O artigo foi removido"
+
+#~ msgid "Global Mod"
+#~ msgstr "Mod global"
+
+#~ msgid "Remove image"
+#~ msgstr "Remover imagem"
+
+#~ msgid "Remove report"
+#~ msgstr "Remover denúncia"
+
+#~ msgid "Only with image"
+#~ msgstr "Só com imagens"
+
+#~ msgid "Only without image"
+#~ msgstr "Só sem imagens"
+
+#~ msgid "Thread OPs Only"
+#~ msgstr "Só OPs de tópicos"
+
+#~ msgid "Date start"
+#~ msgstr "Data início"
+
+#~ msgid "Date end"
+#~ msgstr "Data fim"
+
+#~ msgid "By post"
+#~ msgstr "Por post"
+
+#~ msgid "By thread"
+#~ msgstr "Por tópico"

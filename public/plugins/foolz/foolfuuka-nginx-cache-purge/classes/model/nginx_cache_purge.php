@@ -2,107 +2,105 @@
 
 namespace Foolz\Foolfuuka\Plugins\NginxCachePurge\Model;
 
-class NginxCachePurge
+use Foolz\Foolframe\Model\Context;
+use Foolz\Foolframe\Model\Model;
+use Foolz\Foolframe\Model\Preferences;
+use Foolz\Foolfuuka\Model\Media;
+
+class NginxCachePurge extends Model
 {
-	public static function beforeDeleteMedia($result)
-	{
-		$post = $result->getObject();
-		$dir = [];
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
 
-		// purge full image
-		try
-		{
-			$dir['full'] = $post->getLink(false, true);
-		}
-		catch (\Foolz\Foolfuuka\Model\MediaException $e)
-		{
+    public function __construct(Context $context)
+    {
+        parent::__construct($context);
 
-		}
+        $this->preferences = $context->getService('preferences');
+    }
 
-		// purge thumbnail
-		try
-		{
-			$dir['thumb'] = $post->getLink(true, true);
-		}
-		catch (\Foolz\Foolfuuka\Model\MediaException $e)
-		{
+    public function beforeDeleteMedia($result)
+    {
+        /** @var Media $post */
+        $post = $result->getObject();
+        $dir = [];
 
-		}
+        // purge full image
+        try {
+            $dir['full'] = $post->getDir(false, true, true);
+        } catch (\Foolz\Foolfuuka\Model\MediaException $e) {
 
-		$url_user_password = static::parseUrls();
+        }
 
-		foreach ($url_user_password as $item)
-		{
-			foreach ($dir as $d)
-			{
-				// getLink gives null on failure
-				if ($d === null)
-				{
-					continue;
-				}
+        // purge thumbnail
+        try {
+            $dir['thumb'] = $post->getDir(true, true, true);
+        } catch (\Foolz\Foolfuuka\Model\MediaException $e) {
 
-				$ch = curl_init();
+        }
 
-				if (isset($item['pass']))
-				{
-					$options = [
-						CURLOPT_URL => $item['url'].parse_url($d, PHP_URL_PATH),
-						CURLOPT_RETURNTRANSFER => true,
-						CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-						CURLOPT_USERPWD => $item['user'].':'.$item['pass']
-					];
-				}
-				else
-				{
-					$options = [
-						CURLOPT_URL => $item['url'].parse_url($d, PHP_URL_PATH),
-						CURLOPT_RETURNTRANSFER => true
-					];
-				}
+        $urls = $this->parseUrls();
 
-				curl_setopt_array($ch, $options);
-				curl_exec($ch);
-				curl_close($ch);
-			}
-		}
+        foreach ($urls as $item) {
+            foreach ($dir as $d) {
+                // getLink gives null on failure
+                if ($d === null) {
+                    continue;
+                }
 
-		return;
-	}
+                $ch = curl_init();
+                $options = [
+                    CURLOPT_URL => $item['url'].$d,
+                    CURLOPT_RETURNTRANSFER => true
+                ];
 
-	public static function parseUrls()
-	{
-		$text = \Preferences::get('foolfuuka.plugins.nginx_cache_purge.urls');
+                if (isset($item['pass'])) {
+                    $options = $options + [
+                        CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+                        CURLOPT_USERPWD => $item['user'].':'.$item['pass']
+                    ];
+                }
 
-		if ( ! $text)
-		{
-			return [];
-		}
+                curl_setopt_array($ch, $options);
+                curl_exec($ch);
+                curl_close($ch);
+            }
+        }
 
-		$lines = preg_split('/\r\n|\r|\n/', $text);
+        return;
+    }
 
-		$lines_exploded = [];
+    public function parseUrls()
+    {
+        $text = $this->preferences->get('foolfuuka.plugins.nginx_cache_purge.urls');
 
-		foreach($lines as $key => $line)
-		{
-			$explode = explode('::', $line);
+        if (!$text) {
+            return [];
+        }
 
-			if (count($explode) == 0)
-			{
-				continue;
-			}
+        $lines = preg_split('/\r\n|\r|\n/', $text);
 
-			if (count($explode) > 1)
-			{
-				$lines_exploded[$key]['url'] = rtrim(array_shift($explode), '/');
-			}
+        $lines_exploded = [];
 
-			if (count($explode) > 1)
-			{
-				$lines_exploded[$key]['user'] = array_shift($explode);
-				$lines_exploded[$key]['pass'] = implode(':', $explode);
-			}
-		}
+        foreach($lines as $key => $line) {
+            $explode = explode('::', $line);
 
-		return $lines_exploded;
-	}
+            if (count($explode) == 0) {
+                continue;
+            }
+
+            if (count($explode) >= 1) {
+                $lines_exploded[$key]['url'] = rtrim(array_shift($explode), '/');
+            }
+
+            if (count($explode) >= 1) {
+                $lines_exploded[$key]['user'] = array_shift($explode);
+                $lines_exploded[$key]['pass'] = array_shift($explode);
+            }
+        }
+
+        return $lines_exploded;
+    }
 }

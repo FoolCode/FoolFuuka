@@ -2,180 +2,160 @@
 
 namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
 
+use Foolz\Foolframe\Model\Cookie;
+use Foolz\Foolframe\Model\Util;
+use Foolz\Foolfuuka\Model\Board;
+use Foolz\Foolfuuka\Model\Comment;
+use Foolz\Inet\Inet;
+use Symfony\Component\HttpFoundation\Response;
+
 class Chan extends \Foolz\Foolfuuka\Controller\Chan
 {
-	/**
-	 * @param int $page
-	 */
-	public function radix_page($page = 1)
-	{
-		$options = [
-			'per_page' => 24,
-			'per_thread' => 5,
-			'order' => ($this->_radix->archive ? 'by_thread' : 'by_post')
-		];
+    public function radix_page($page = 1)
+    {
+        $options = [
+            'per_page' => 24,
+            'per_thread' => 5,
+            'order' => ($this->radix->archive ? 'by_thread' : 'by_post')
+        ];
 
-		return $this->latest($page, $options);
-	}
+        return $this->latest($page, $options);
+    }
 
-	public function radix_gallery($page = 1)
-	{
-		throw new \HttpNotFoundException;
-	}
+    public function radix_gallery($page = 1)
+    {
+        return $this->action_404();
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function radix_submit()
-	{
-		// adapter
-		if ( ! \Input::post())
-		{
-			return $this->error(__('You aren\'t sending the required fields for creating a new message.'));
-		}
+    /**
+     * @return bool
+     */
+    public function radix_submit()
+    {
+        // adapter
+        if (!$this->getPost()) {
+            return $this->error(_i('You aren\'t sending the required fields for creating a new message.'));
+        }
 
-		if ( ! \Security::check_token())
-		{
-			return $this->error(__('The security token wasn\'t found. Try resubmitting.'));
-		}
+        if (!$this->checkCsrfToken()) {
+            return $this->error(_i('The security token wasn\'t found. Try resubmitting.'));
+        }
 
-		if (\Input::post('reply_delete'))
-		{
-			foreach (\Input::post('delete') as $idx => $doc_id)
-			{
-				try
-				{
-					$comments = \Board::forge()
-						->getPost()
-						->setOptions('doc_id', $doc_id)
-						->setRadix($this->_radix)
-						->getComments();
+        if ($this->getPost('reply_delete')) {
+            foreach ($this->getPost('delete') as $idx => $doc_id) {
+                try {
+                    $comments = Board::forge($this->getContext())
+                        ->getPost()
+                        ->setOptions('doc_id', $doc_id)
+                        ->setRadix($this->radix)
+                        ->getComments();
 
-					$comment = current($comments);
-					$comment->delete(\Input::post('delpass'));
-				}
-				catch (\Foolz\Foolfuuka\Model\BoardException $e)
-				{
-					return $this->error($e->getMessage(), 404);
-				}
-				catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e)
-				{
-					return $this->error($e->getMessage(), 404);
-				}
-			}
+                    $comment = current($comments);
+                    $comment = new Comment($this->getContext(), $comment);
+                    $comment->delete($this->getPost('delpass'));
+                } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
+                    return $this->error($e->getMessage(), 404);
+                } catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e) {
+                    return $this->error($e->getMessage(), 404);
+                }
+            }
 
-			$this->builder->createLayout('redirect')
-				->getParamManager()
-				->setParam('url', \Uri::create([$this->_radix->shortname, 'thread', $comment->thread_num]));
-			$this->builder->getProps()->addTitle(__('Redirecting'));
+            $this->builder->createLayout('redirect')
+                ->getParamManager()
+                ->setParam('url', $this->uri->create([$this->radix->shortname, 'thread', $comment->comment->thread_num]));
+            $this->builder->getProps()->addTitle(_i('Redirecting'));
 
-			return \Response::forge($this->builder->build());
-		}
+            return new Response($this->builder->build());
+        }
 
-		if (\Input::post('reply_report'))
-		{
+        if ($this->getPost('reply_report')) {
 
-			foreach (\Input::post('delete') as $idx => $doc_id)
-			{
-				try
-				{
-					\Report::add($this->_radix, $doc_id, \Input::post('KOMENTO'));
-				}
-				catch (\Foolz\Foolfuuka\Model\ReportException $e)
-				{
-					return $this->error($e->getMessage(), 404);
-				}
-			}
+            foreach ($this->getPost('delete') as $idx => $doc_id) {
+                try {
+                    $this->getContext()->getService('foolfuuka.report_collection')
+                        ->add(
+                            $this->radix,
+                            $doc_id,
+                            $this->getPost('KOMENTO'),
+                            Inet::ptod($this->getRequest()->getClientIp())
+                        );
+                } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
+                    return $this->error($e->getMessage(), 404);
+                }
+            }
 
-			$this->builder->createLayout('redirect')
-				->getParamManager()
-				->setParam('url', \Uri::create($this->_radix->shortname.'/thread/'.\Input::post('parent')));
-			$this->builder->getProps()->addTitle(__('Redirecting'));
+            $this->builder->createLayout('redirect')
+                ->getParamManager()
+                ->setParam('url', $this->uri->create($this->radix->shortname.'/thread/'.$this->getPost('parent')));
+            $this->builder->getProps()->addTitle(_i('Redirecting'));
 
-			return \Response::forge($this->builder->build());
-		}
+            return new Response($this->builder->build());
+        }
 
-		// Determine if the invalid post fields are populated by bots.
-		if (isset($post['name']) && mb_strlen($post['name']) > 0)
-		{
-			return $this->error();
-		}
-		if (isset($post['reply']) && mb_strlen($post['reply']) > 0)
-		{
-			return $this->error();
-		}
-		if (isset($post['email']) && mb_strlen($post['email']) > 0)
-		{
-			return $this->error();
-		}
+        // Determine if the invalid post fields are populated by bots.
+        if (isset($post['name']) && mb_strlen($post['name'], 'utf-8') > 0) {
+            return $this->error();
+        }
+        if (isset($post['reply']) && mb_strlen($post['reply'], 'utf-8') > 0) {
+            return $this->error();
+        }
+        if (isset($post['email']) && mb_strlen($post['email'], 'utf-8') > 0) {
+            return $this->error();
+        }
 
-		$data = [];
+        $data = [];
 
-		$post = \Input::post();
+        $post = $this->getPost();
 
-		if (isset($post['parent']))
-		{
-			$data['thread_num'] = $post['parent'];
-		}
-		if (isset($post['NAMAE']))
-		{
-			$data['name'] = $post['NAMAE'];
-		}
-		if (isset($post['MERU']))
-		{
-			$data['email'] = $post['MERU'];
-		}
-		if (isset($post['subject']))
-		{
-			$data['title'] = $post['subject'];
-		}
-		if (isset($post['KOMENTO']))
-		{
-			$data['comment'] = $post['KOMENTO'];
-		}
-		if (isset($post['delpass']))
-		{
-			// get the password needed for the reply field if it's not set yet
-			if ( ! $post['delpass'] || strlen($post['delpass']) < 3)
-			{
-				$post['delpass'] = \Str::random('alnum', 7);
-			}
+        if (isset($post['parent'])) {
+            $data['thread_num'] = $post['parent'];
+        }
+        if (isset($post['NAMAE'])) {
+            $data['name'] = $post['NAMAE'];
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_name', $data['name'], 60*60*24*30));
+        }
+        if (isset($post['MERU'])) {
+            $data['email'] = $post['MERU'];
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_email', $data['email'], 60*60*24*30));
+        }
+        if (isset($post['subject'])) {
+            $data['title'] = $post['subject'];
+        }
+        if (isset($post['KOMENTO'])) {
+            $data['comment'] = $post['KOMENTO'];
+        }
+        if (isset($post['delpass'])) {
+            // get the password needed for the reply field if it's not set yet
+            if (!$post['delpass'] || strlen($post['delpass']) < 3) {
+                $post['delpass'] = Util::randomString(7);
+            }
 
-			$data['delpass'] = $post['delpass'];
-		}
-		if (isset($post['reply_spoiler']))
-		{
-			$data['spoiler'] = true;
-		}
-		if (isset($post['reply_postas']))
-		{
-			$data['capcode'] = $post['reply_postas'];
-		}
-		if (isset($post['recaptcha_challenge_field']) && isset($post['recaptcha_response_field']))
-		{
-			$data['recaptcha_challenge'] = $post['recaptcha_challenge_field'];
-			$data['recaptcha_response'] = $post['recaptcha_response_field'];
-		}
+            $data['delpass'] = $post['delpass'];
+        }
+        if (isset($post['reply_spoiler'])) {
+            $data['spoiler'] = true;
+        }
+        if (isset($post['reply_postas'])) {
+            $data['capcode'] = $post['reply_postas'];
+        }
+        if (isset($post['recaptcha_challenge_field']) && isset($post['recaptcha_response_field'])) {
+            $data['recaptcha_challenge'] = $post['recaptcha_challenge_field'];
+            $data['recaptcha_response'] = $post['recaptcha_response_field'];
+        }
 
-		$media = null;
+        $media = null;
 
-		if (count(\Upload::get_files()))
-		{
-			try
-			{
-				$media = \Media::forgeFromUpload($this->_radix);
-				$media->spoiler = isset($data['spoiler']) && $data['spoiler'];
-			}
-			catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e)
-			{
-				$media = null;
-			}
-			catch (\Foolz\Foolfuuka\Model\MediaUploadException $e)
-			{
-				return $this->error($e->getMessage());
-			}
-		}
+        if ($this->getRequest()->files->count()) {
+            try {
+                $media = $this->media_factory->forgeFromUpload($this->getRequest(), $this->radix);
+                $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
+            } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
+                $media = null;
+            } catch (\Foolz\Foolfuuka\Model\MediaUploadException $e) {
+                return $this->error($e->getMessage());
+            }
+        }
 
-		return $this->submit($data, $media);
-	}
+        return $this->submit($data, $media);
+    }
 }

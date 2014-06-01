@@ -194,7 +194,7 @@ class CommentInsert extends Comment
      * @throws CommentSendingUnallowedCapcodeException
      * @return array error key with explanation to show to user, or success and post row
      */
-    protected function p_insert(Media $media = null, $data = [])
+    public function p_insert(Media $media = null, $data = [])
     {
         if (isset($data['recaptcha_challenge'])) {
             $this->recaptcha_challenge = $data['recaptcha_challenge'];

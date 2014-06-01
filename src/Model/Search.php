@@ -18,6 +18,13 @@ class SearchEmptyResultException extends SearchException {}
 class Search extends Board
 {
     /**
+     * The total number of results found
+     *
+     * @var  int
+     */
+    protected $total_found;
+
+    /**
      * @var Logger
      */
     protected $logger;
@@ -430,10 +437,12 @@ class Search extends Board
                 $query->orderBy('timestamp', 'DESC');
             }
 
+            $max_matches = $this->preferences->get('foolfuuka.sphinx.max_matches', 5000);
+
             // set sphinx options
             $query->limit($limit)
-                ->offset((($page * $limit) - $limit) >= 5000 ? 4999 : ($page * $limit) - $limit)
-                ->option('max_matches', $this->preferences->get('foolfuuka.sphinx.max_matches', 5000))
+                ->offset((($page * $limit) - $limit) >= $max_matches ? ($max_matches - 1) : ($page * $limit) - $limit)
+                ->option('max_matches', $max_matches)
                 ->option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
 
             // submit query
@@ -454,6 +463,7 @@ class Search extends Board
 
             $sphinx_meta = Helper::pairsToAssoc(Helper::create($conn)->showMeta()->execute());
             $this->total_count = $sphinx_meta['total'];
+            $this->total_found = $sphinx_meta['total_found'];
 
             // populate sql array for full records
             $sql = [];
@@ -497,10 +507,12 @@ class Search extends Board
     }
 
     /**
-     * Sets the count of results, max 5000
+     * Returns the total number of results found WITHOUT max_matches.
+     *
+     * @return  int
      */
     public function getSearchCount()
     {
-        $this->getComments();
+        return $this->total_found;
     }
 }

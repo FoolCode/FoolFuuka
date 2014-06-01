@@ -996,7 +996,13 @@ class Chan extends Common
             $this->builder->getProps()->addTitle('Global Search &raquo; '.$title);
         }
 
-        $this->param_manager->setParam('section_title', $title);
+        if ($board->getSearchCount() > 5000) {
+            $search_title = sprintf(_i('%s <small>Returning only first %d of %d results found.</small>', $title, $this->preferences->get('foolfuuka.sphinx.max_matches', 5000), $board->getSearchCount()));
+        } else {
+            $search_title = sprintf(_i('%s <small>%d results found.</small>', $title, $board->getSearchCount()));
+        }
+
+        $this->param_manager->setParam('section_title', $search_title);
         $main_partial = $this->builder->createPartial('body', 'board');
         $main_partial->getParamManager()->setParam('board', $board->getComments());
 

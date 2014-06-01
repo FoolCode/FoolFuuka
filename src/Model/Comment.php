@@ -349,19 +349,18 @@ class Comment extends Model
         $comment = htmlentities($comment, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
 
         // format entire comment
+        $comment = preg_replace($find, $html, $comment);
+        $comment = static::parseBbcode($comment, ($this->radix->archive && !$this->comment->subnum));
+        $comment = $this->autoLinkify($comment);
+
         $comment = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i",
             [$this, 'processInternalLinks'], $comment);
-
         $comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
             [$this, 'processExternalLinks'], $comment);
 
         if ($process_backlinks_only) {
             return '';
         }
-
-        $comment = preg_replace($find, $html, $comment);
-        $comment = static::parseBbcode($comment, ($this->radix->archive && !$this->comment->subnum));
-        $comment = $this->autoLinkify($comment);
 
         // additional formatting
         if ($this->radix->archive && !$this->comment->subnum) {

@@ -319,6 +319,14 @@ class RadixCollection extends Model
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
                     ],
+                    'thread_lifetime' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('The amount of time a thread will stay alive in seconds.'),
+                        'type' => 'input',
+                        'class' => 'span1',
+                        'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
+                    ],
                     'min_image_repost_time' => [
                         'database' => true,
                         'boards_preferences' => true,

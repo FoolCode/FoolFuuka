@@ -39,19 +39,17 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                         <a href="<?= $this->getUri()->create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $p->radix->shortname) . '/search/image/' . $p_media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><a
                             href="http://google.com/searchbyimage?image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">Google</a><a
                             href="http://iqdb.org/?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">iqdb</a><a
-                            href="http://saucenao.com/search.php?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">SauceNAO</a>
+                            href="http://saucenao.com/search.php?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">SauceNAO</a><a
+                            href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" download="<?= $p_media->getMediaFilenameProcessed() ?>" class="btnr parent">D</a>
                         <?php endif; ?>
                     <?php endif ?>
                     </span>
                     <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_banned')) : ?>
                     <?php if (mb_strlen($p_media->getMediaFilenameProcessed()) > 38) : ?>
-                        <span class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p_media->media_filename) ?>">
-                            <?= mb_substr($p_media->getMediaFilenameProcessed(), 0, 32, 'utf-8') . ' (...)' . mb_substr($p_media->getMediaFilenameProcessed(), mb_strrpos($p_media->getMediaFilenameProcessed(), '.', 'utf-8'), null, 'utf-8') . ', ' ?>
-                        </span>
+                        <a href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p_media->media_filename) ?>"><?= mb_substr($p_media->getMediaFilenameProcessed(), 0, 32, 'utf-8') . ' (...)' . mb_substr($p_media->getMediaFilenameProcessed(), mb_strrpos($p_media->getMediaFilenameProcessed(), '.', 'utf-8'), null, 'utf-8') ?></a>,
                     <?php else: ?>
-                        <?= $p_media->getMediaFilenameProcessed() . ', ' ?>
+                        <a href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p_media->media_filename) ?>"><?= $p_media->getMediaFilenameProcessed() ?></a>,
                     <?php endif; ?>
-
                     <span class="post_file_metadata">
                         <?= \Rych\ByteSize\ByteSize::formatBinary($p_media->media_size, 0) . ', ' . $p_media->media_w . 'x' . $p_media->media_h ?>
                     </span>

@@ -62,7 +62,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                     <?php endif; ?>
                     <?php if ($op_media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
                     <div class="post_file" style="padding-left: 2px;<?php if ($op_media->preview_w > 149) echo 'max-width:'.$op_media->preview_w .'px;'; ?>">
-                        <?= ByteSize::formatBinary($op_media->media_size, 0) . ', ' . $op_media->media_w . 'x' . $op_media->media_h . ', ' . $op_media->getMediaFilenameProcessed(); ?>
+                        <?= ByteSize::formatBinary($op_media->media_size, 0) . ', ' . $op_media->media_w . 'x' . $op_media->media_h . ', '; ?><a class="post_file_filename" href="<?= ($op_media->getMediaLink($this->getRequest())) ? $op_media->getMediaLink($this->getRequest()) : $op_media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank"><?= $op_media->getMediaFilenameProcessed(); ?></a>
                     </div>
                     <?php endif; ?>
                     <div class="post_file_controls">
@@ -74,7 +74,9 @@ class Board extends \Foolz\Foolfuuka\View\View
                                 href="http://iqdb.org/?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                 class="btnr parent">iqdb</a><a
                                 href="http://saucenao.com/search.php?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
-                                class="btnr parent">SauceNAO</a>
+                                class="btnr parent">SauceNAO</a><a
+                                href="<?= ($op_media->getMediaLink($this->getRequest())) ? $op_media->getMediaLink($this->getRequest()) : $op_media->getRemoteMediaLink($this->getRequest()) ?>" download="<?= $op_media->getMediaFilenameProcessed() ?>"
+                                class="btnr parent">D</a>
                             <?php endif; ?>
                         <?php endif; ?>
                     </div>

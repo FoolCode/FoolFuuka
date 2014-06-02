@@ -332,7 +332,7 @@ class CommentInsert extends Comment
 
             } elseif ($this->preferences->get('foolframe.auth.recaptcha_public')) { // if there wasn't a recaptcha input, let's go with heavier checks
                 // 3+ links is suspect
-                if (substr_count($this->comment->comment, 'http') > 2) {
+                if (substr_count($this->comment->comment, 'http') >= $this->radix->getValue('captcha_comment_link_limit')) {
                     throw new CommentSendingRequestCaptchaException;
                 }
 
@@ -625,8 +625,7 @@ class CommentInsert extends Comment
                 'media_size' => $this->media->media_size,
                 'media_hash' => $this->media->media_hash,
                 'media_orig' => $this->media->media_orig,
-                'exif' => $this->media->exif !== null ? json_encode($this->media->exif) : null,
-
+                'exif' => $this->media->exif !== null ? @json_encode($this->media->exif) : null,
                 'timestamp_expired' => 0
             ];
 

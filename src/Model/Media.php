@@ -652,7 +652,6 @@ class Media extends Model
         $this->op = $is_op;
 
         $getimagesize = getimagesize($full_path);
-
         if (!$getimagesize) {
             throw new MediaInsertInvalidFormatException(_i('The file you uploaded is not an image.'));
         }
@@ -763,7 +762,6 @@ class Media extends Model
                 ])
                 ->execute()
                 ->get();
-
 
             if ($return instanceof \Foolz\Plugin\Void) {
                 if ($this->radix->getValue('enable_animated_gif_thumbs') && strtolower($file->getClientOriginalExtension()) === 'gif') {

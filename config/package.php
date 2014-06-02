@@ -87,7 +87,8 @@ return [
             'max_comment_lines_allowed' => 20,
             'cooldown_new_comment' => 10,
             'cooldown_new_thread' => 300,
-            'thread_lifetime' => 432000
+            'thread_lifetime' => 432000,
+            'captcha_comment_link_limit' => 3
         ],
 
         'boards' => [

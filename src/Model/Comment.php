@@ -385,7 +385,7 @@ class Comment extends Model
         return $this->comment->comment_processed = $comment;
     }
 
-protected static function parseBbcode($str, $special_code, $strip = true)
+    protected static function parseBbcode($str, $special_code, $strip = true)
     {
         if (static::$_bbcode_parser === null) {
             $bbcode = new \StringParser_BBCode();
@@ -464,8 +464,6 @@ protected static function parseBbcode($str, $special_code, $strip = true)
         if ($content === '' || $content === false) {
             return '';
         }
-
-        $content = htmlentities($content, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
 
         // if <code> has multiple lines, wrap it in <pre> instead
         if ($params['start_tag'] == '<code>') {

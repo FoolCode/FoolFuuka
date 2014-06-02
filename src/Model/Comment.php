@@ -385,14 +385,13 @@ class Comment extends Model
         return $this->comment->comment_processed = $comment;
     }
 
-    protected static function parseBbcode($str, $special_code, $strip = true)
+protected static function parseBbcode($str, $special_code, $strip = true)
     {
         if (static::$_bbcode_parser === null) {
             $bbcode = new \StringParser_BBCode();
 
-            $codes = [];
-
             // add list of bbcode for formatting
+            $codes = [];
             $codes[] = ['code', 'simple_replace', null, ['start_tag' => '<code>', 'end_tag' => '</code>'], 'code',
                 ['block', 'inline'], []];
             $codes[] = ['spoiler', 'simple_replace', null,
@@ -434,18 +433,30 @@ class Comment extends Model
 
         // if $special == true, add special bbcode
         if ($special_code === true) {
-            /* @todo put this into form bootstrap
-            if ($CI->theme->get_selected_theme() == 'fuuka') {
-                $bbcode->addCode('moot', 'simple_replace', null,
-                    ['start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'),
-                    'inline', array['block', 'inline'], []);
-            } else {*/
-                static::$_bbcode_parser->addCode('moot', 'simple_replace', null, ['start_tag' => '', 'end_tag' => ''], 'inline',
-                    ['block', 'inline'], []);
-            /* } */
+            static::$_bbcode_parser->addCode('moot', 'simple_replace', null, ['start_tag' => '', 'end_tag' => ''], 'inline',
+                ['block', 'inline'], []);
+            static::$_bbcode_parser->addCode(
+                'fortune', 'usecontent?', '\\Comment::parseBbcodeAttr', ['usecontent_param' => 'color'],
+                'inline', ['block', 'inline'], []
+            );
         }
 
         return static::$_bbcode_parser->parse($str);
+    }
+
+    public static function parseBbcodeAttr($action, $attributes, $content, $params, &$node_object)
+    {
+        if ($content === '' || $content === false) {
+            return '';
+        }
+
+        $attributes = array_map(function ($attr) {
+            return str_replace('&quot;', '', $attr);
+        }, $attributes);
+
+        $content = htmlentities($content, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
+
+        return '<span class="fortune" style="color: '.$attributes['color'].'">'.$content.'</span>';
     }
 
     public static function stripUnusedBbcode($action, $attributes, $content, $params, &$node_object)
@@ -453,6 +464,8 @@ class Comment extends Model
         if ($content === '' || $content === false) {
             return '';
         }
+
+        $content = htmlentities($content, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
 
         // if <code> has multiple lines, wrap it in <pre> instead
         if ($params['start_tag'] == '<code>') {

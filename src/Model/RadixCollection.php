@@ -370,6 +370,14 @@ class RadixCollection extends Model
                 'class' => 'span1',
                 'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
             ],
+            'captcha_comment_link_limit' => [
+                'database' => true,
+                'boards_preferences' => true,
+                'label' => _i('Maximum allowed `HTTP` links before triggering spam detection.'),
+                'type' => 'input',
+                'class' => 'span1',
+                'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
+            ],
             'transparent_spoiler' => [
                 'database' => true,
                 'boards_preferences' => true,

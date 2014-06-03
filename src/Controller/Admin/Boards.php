@@ -216,6 +216,12 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'class' => 'span6'
         ];
 
+        $form['foolfuuka.boards.media_download_url'] = [
+            'type' => 'input',
+            'label' => _i('Boards Media Download URL'),
+            'preferences' => true,
+        ];
+
         $form['separator-2'] = [
             'type' => 'separator'
         ];

@@ -303,6 +303,16 @@ class Media extends Model
     }
 
     /**
+     * Returns the media download link
+     *
+     * @return  string
+     */
+    public function getMediaDownloadLink(Request $request)
+    {
+        return $this->getLink($request, false, true);
+    }
+
+    /**
      * Returns the media_thumb and caches the result
      *
      * @see getLink(true)
@@ -387,7 +397,7 @@ class Media extends Model
      *
      * @return  null|string  Null if not available, string of the url if available
      */
-    public function getLink(Request $request, $thumbnail = false)
+    public function getLink(Request $request, $thumbnail = false, $download = false)
     {
         $before = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::getLink.call.before.method.body')
             ->setObject($this)
@@ -439,7 +449,11 @@ class Media extends Model
         }
 
         if ($image !== null) {
-            $media_cdn = [];
+            if ($download === true && $this->preferences->get('foolfuuka.boards.media_download_url')) {
+                return $this->preferences->get('foolfuuka.boards.media_download_url').'/'.$this->radix->shortname.'/'
+                .($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
+            }
+
             if ($request->isSecure() && $this->preferences->get('foolfuuka.boards.media_balancers_https')) {
                 $balancers = $this->preferences->get('foolfuuka.boards.media_balancers_https');
             }
@@ -448,6 +462,7 @@ class Media extends Model
                 $balancers = $this->preferences->get('foolfuuka.boards.media_balancers');
             }
 
+            $media_cdn = [];
             if (isset($balancers)) {
                 $media_cdn = array_filter(preg_split('/\r\n|\r|\n/', $balancers));
             }

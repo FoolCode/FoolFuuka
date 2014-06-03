@@ -40,7 +40,7 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                             href="http://google.com/searchbyimage?image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">Google</a><a
                             href="http://iqdb.org/?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">iqdb</a><a
                             href="http://saucenao.com/search.php?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">SauceNAO</a><a
-                            href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" download="<?= $p_media->getMediaFilenameProcessed() ?>" class="btnr parent"><i class="icon-download-alt"></i></a>
+                            href="<?= $p_media->getMediaDownloadLink($this->getRequest()) ?>" download="<?= $p_media->getMediaFilenameProcessed() ?>" class="btnr parent"><i class="icon-download-alt"></i></a>
                         <?php endif; ?>
                     <?php endif ?>
                     </span>

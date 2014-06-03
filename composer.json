@@ -1,19 +1,19 @@
 {
-	"name": "foolz/foolfuuka",
-	"description": "The core package of FoolFuuka Imageboard",
-	"authors": [
-		{
-			"name": "Foolz",
-			"email": "support@foolz.us"
-		}
-	],
-	"require": {
+    "name": "foolz/foolfuuka",
+    "description": "The core package of FoolFuuka Imageboard",
+    "authors": [
+        {
+            "name": "Foolz",
+            "email": "support@foolz.us"
+        }
+    ],
+    "require": {
 
-	},
-	"autoload": {
-		"psr-4": {"Foolz\\Foolfuuka\\": "src/"},
-    "classmap": [
-      "packages/stringparser-bbcode/library/stringparser_bbcode.class.php"
-    ]
-	}
+    },
+    "autoload": {
+        "psr-4": {"Foolz\\Foolfuuka\\": "src/"},
+        "classmap": [
+          "packages/stringparser-bbcode/library/stringparser_bbcode.class.php"
+        ]
+    }
 }

@@ -76,7 +76,7 @@ class Board extends \Foolz\Foolfuuka\View\View
                                 href="http://saucenao.com/search.php?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                 class="btnr parent">SauceNAO</a><a
                                 href="<?= ($op_media->getMediaLink($this->getRequest())) ? $op_media->getMediaLink($this->getRequest()) : $op_media->getRemoteMediaLink($this->getRequest()) ?>" download="<?= $op_media->getMediaFilenameProcessed() ?>"
-                                class="btnr parent">D</a>
+                                class="btnr parent"><i class="icon-download-alt"></i></a>
                             <?php endif; ?>
                         <?php endif; ?>
                     </div>

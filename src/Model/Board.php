@@ -190,7 +190,7 @@ class Board extends Model
      */
     protected function p_getPages()
     {
-        return floor($this->getCount() / $this->options['per_page']) + 1;
+        return ceil($this->getCount() / $this->options['per_page']);
     }
 
     /**

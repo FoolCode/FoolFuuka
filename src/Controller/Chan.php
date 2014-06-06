@@ -1030,7 +1030,7 @@ class Chan extends Common
         $this->param_manager->setParam('pagination', [
             'base_url' => $this->uri->create($pagination_arr),
             'current_page' => $search['page'] ? : 1,
-            'total' => floor($board->getCount()/25+1),
+            'total' => ceil($board->getCount()/25),
         ]);
 
         $this->param_manager->setParam('modifiers', [

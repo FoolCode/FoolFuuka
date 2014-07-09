@@ -127,5 +127,4 @@ class HHVM_BS
     }
 }
 
-
 (new HHVM_BS())->run();

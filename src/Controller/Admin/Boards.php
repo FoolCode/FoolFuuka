@@ -387,6 +387,14 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'class' => 'span1'
         ];
 
+        $form['foolfuuka.sphinx.custom_message'] = [
+            'type' => 'textarea',
+            'label' => 'Custom Error Message',
+            'preferences' => true,
+            'help' => _i('Set a custom error message.'),
+            'class' => 'span6'
+        ];
+
         $form['separator'] = [
             'type' => 'separator'
         ];

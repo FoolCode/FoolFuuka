@@ -74,9 +74,9 @@ class Board extends \Foolz\Foolfuuka\View\View
                                 href="http://iqdb.org/?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                 class="btnr parent">iqdb</a><a
                                 href="http://saucenao.com/search.php?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
-                                class="btnr parent">SauceNAO</a><a
+                                class="btnr parent">SauceNAO</a><?php if (!$op->radix->archive || $op->radix->getValue('archive_full_images')) : ?><a
                                 href="<?= $op_media->getMediaDownloadLink($this->getRequest()) ?>" download="<?= $op_media->getMediaFilenameProcessed() ?>"
-                                class="btnr parent"><i class="icon-download-alt"></i></a>
+                                class="btnr parent"><i class="icon-download-alt"></i></a><?php endif; ?>
                             <?php endif; ?>
                         <?php endif; ?>
                     </div>

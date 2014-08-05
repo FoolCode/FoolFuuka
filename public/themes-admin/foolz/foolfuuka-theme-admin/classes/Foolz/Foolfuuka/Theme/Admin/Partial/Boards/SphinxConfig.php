@@ -30,10 +30,12 @@ source main
 {
   type     = mysql
   sql_host = <?= $mysql['host'] ?>
+  
   sql_user =
   sql_pass =
   sql_db   =
   sql_port = <?= $mysql['port'] ?>
+  
   mysql_connect_flags = <?= $mysql['flag'] ?>
 
   sql_query_pre  = SET NAMES utf8mb4
@@ -268,6 +270,7 @@ searchd
   # maximum amount of children to fork (concurrent searches to run)
   # optional, default is 0 (unlimited)
   max_children    = <?= $sphinx['max_children'] ?>
+  
 
   # PID file, searchd process ID file name
   # mandatory

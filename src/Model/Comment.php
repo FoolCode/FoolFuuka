@@ -684,14 +684,14 @@ class Comment extends Model
 
             // check that the post isn't already in deleted
             $has_deleted = $this->dc->qb()
-                ->select('COUNT(*)')
+                ->select('COUNT(*) as found')
                 ->from($this->radix->getTable('_deleted'), 'd')
                 ->where('doc_id = :doc_id')
                 ->setParameter(':doc_id', $this->comment->doc_id)
                 ->execute()
                 ->fetch();
 
-            if (!$has_deleted) {
+            if (!$has_deleted['found']) {
                 // throw into _deleted table
                 $this->dc->getConnection()->executeUpdate(
                     'INSERT INTO '.$this->radix->getTable('_deleted').' '.

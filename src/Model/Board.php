@@ -190,7 +190,7 @@ class Board extends Model
      */
     protected function p_getPages()
     {
-        return floor($this->getCount() / $this->options['per_page']) + 1;
+        return ceil($this->getCount() / $this->options['per_page']);
     }
 
     /**
@@ -962,8 +962,7 @@ class Board extends Model
             'last_modified' => $last_modified
         ];
 
-        // time check
-        if (time() - $thread['time_last'] > 432000 || $ghost_post_present) {
+        if (($this->radix->getValue('thread_lifetime') > 0 && time() - $thread['time_last'] > $this->radix->getValue('thread_lifetime')) || $ghost_post_present) {
             $result['dead'] = true;
             $result['disable_image_upload'] = true;
         }

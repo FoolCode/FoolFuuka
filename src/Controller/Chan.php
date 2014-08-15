@@ -921,7 +921,7 @@ class Chan extends Common
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
             return $this->error($e->getMessage());
         } catch (\Foolz\SphinxQL\ConnectionException $e) {
-            return $this->error("It appears that the search engine is offline at the moment. Please try again later.");
+            return $this->error($this->preferences->get('foolfuuka.sphinx.custom_message', 'It appears that the search engine is offline at the moment. Please try again later.'));
         }
 
         // Generate the $title with all search modifiers enabled.
@@ -996,7 +996,13 @@ class Chan extends Common
             $this->builder->getProps()->addTitle('Global Search &raquo; '.$title);
         }
 
-        $this->param_manager->setParam('section_title', $title);
+        if ($board->getSearchCount() > 5000) {
+            $search_title = sprintf(_i('%s <small>Returning only first %d of %d results found.</small>', $title, $this->preferences->get('foolfuuka.sphinx.max_matches', 5000), $board->getSearchCount()));
+        } else {
+            $search_title = sprintf(_i('%s <small>%d results found.</small>', $title, $board->getSearchCount()));
+        }
+
+        $this->param_manager->setParam('section_title', $search_title);
         $main_partial = $this->builder->createPartial('body', 'board');
         $main_partial->getParamManager()->setParam('board', $board->getComments());
 
@@ -1024,7 +1030,7 @@ class Chan extends Common
         $this->param_manager->setParam('pagination', [
             'base_url' => $this->uri->create($pagination_arr),
             'current_page' => $search['page'] ? : 1,
-            'total' => floor($board->getCount()/25+1),
+            'total' => ceil($board->getCount()/25),
         ]);
 
         $this->param_manager->setParam('modifiers', [

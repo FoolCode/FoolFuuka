@@ -29,21 +29,23 @@ class SphinxConfig extends \Foolz\Foolframe\View\View
 source main
 {
   type     = mysql
-  sql_host =
+  sql_host = <?= $mysql['host'] ?>
+  
   sql_user =
   sql_pass =
   sql_db   =
-  sql_port =
+  sql_port = <?= $mysql['port'] ?>
+  
   mysql_connect_flags = <?= $mysql['flag'] ?>
 
   sql_query_pre  = SET NAMES utf8mb4
 
   sql_range_step = 10000
   sql_query      = \
-      SELECT doc_id, <?= $example->id ?> AS board, timestamp, num, subnum, title, comment, name, trip, email, \
-        media_filename, media_id as mid, media_hash, poster_ip as pip, poster_hash as pid, thread_num AS tnum, \
-        ASCII(capcode) AS cap, (media_filename != '' AND media_filename IS NOT NULL) AS has_image, (subnum != 0) \
-        AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky as is_sticky, op AS is_op \
+      SELECT doc_id, <?= $example->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \
+        media_id as mid, media_filename, media_hash, poster_ip as pip, poster_hash as pid, ASCII(capcode) AS cap, \
+        (subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
+        (media_filename != '' AND media_filename IS NOT NULL) AS has_image \
       FROM `<?= $example->shortname ?>` LIMIT 1
 
   sql_attr_uint = num
@@ -62,7 +64,6 @@ source main
   sql_attr_timestamp = timestamp
 
   sql_query_post_index =
-  sql_query_info       =
 }
 
 <?php foreach ($boards as $key => $board) : ?>
@@ -70,10 +71,10 @@ source main
 source <?= $board->shortname.'_main' ?> : main
 {
   sql_query      = \
-      SELECT doc_id, <?= $board->id ?> AS board, timestamp, num, subnum, title, comment, name, trip, email, \
-        media_filename, media_id as mid, media_hash, poster_ip as pip, poster_hash as pid, thread_num AS tnum, \
-        ASCII(capcode) AS cap, (media_filename != '' AND media_filename IS NOT NULL) AS has_image, (subnum != 0) \
-        AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky as is_sticky, op AS is_op \
+      SELECT doc_id, <?= $board->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \
+        media_id as mid, media_filename, media_hash, poster_ip as pip, poster_hash as pid, ASCII(capcode) AS cap, \
+        (subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
+        (media_filename != '' AND media_filename IS NOT NULL) AS has_image \
       FROM `<?= $board->shortname ?>` WHERE doc_id >= $start AND doc_id <= $end
   sql_query_info = SELECT * FROM `<?= $board->shortname ?>` WHERE doc_id = $id
 
@@ -106,7 +107,6 @@ index main
   docinfo      = extern
   mlock        = 0
   morphology   = none
-  charset_type = utf-8
   min_word_len = <?= $sphinx['min_word_len'] ?>
 
   # optional, default value depends on charset_type
@@ -170,8 +170,6 @@ index main
     U+FF9D->U+30F3
 
   min_prefix_len    = 3
-  prefix_fields     = comment, title
-  enable_star       = 1
   html_strip        = 0
 }
 
@@ -251,8 +249,7 @@ searchd
   # listen      = 192.168.0.1:9312
   # listen      = 9312
   # listen      = /var/run/searchd.sock
-  listen       = 9312:sphinx
-  listen       = 9306:mysql41
+  listen       = <?= $sphinx['port'] ?>:mysql41
 
   # log file, searchd run info is logged here
   # optional, default is 'searchd.log'
@@ -273,16 +270,11 @@ searchd
   # maximum amount of children to fork (concurrent searches to run)
   # optional, default is 0 (unlimited)
   max_children    = <?= $sphinx['max_children'] ?>
+  
 
   # PID file, searchd process ID file name
   # mandatory
   pid_file        = <?=rtrim($sphinx['working_directory'], '/') ?>/searchd.pid
-
-  # max amount of matches the daemon ever keeps in RAM, per-index
-  # WARNING, THERE'S ALSO PER-QUERY LIMIT, SEE SetLimits() API CALL
-  # default is 1000 (just like Google)
-  max_matches     = <?= $sphinx['max_matches'] ?>
-
 
   # seamless rotate, prevents rotate stalls if precaching huge datasets
   # optional, default is 1

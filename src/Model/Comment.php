@@ -349,19 +349,18 @@ class Comment extends Model
         $comment = htmlentities($comment, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
 
         // format entire comment
+        $comment = preg_replace($find, $html, $comment);
+        $comment = static::parseBbcode($comment, ($this->radix->archive && !$this->comment->subnum));
+        $comment = $this->autoLinkify($comment);
+
         $comment = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i",
             [$this, 'processInternalLinks'], $comment);
-
         $comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
             [$this, 'processExternalLinks'], $comment);
 
         if ($process_backlinks_only) {
             return '';
         }
-
-        $comment = preg_replace($find, $html, $comment);
-        $comment = static::parseBbcode($comment, ($this->radix->archive && !$this->comment->subnum));
-        $comment = static::autoLinkify($comment, 'url', true);
 
         // additional formatting
         if ($this->radix->archive && !$this->comment->subnum) {
@@ -391,9 +390,8 @@ class Comment extends Model
         if (static::$_bbcode_parser === null) {
             $bbcode = new \StringParser_BBCode();
 
-            $codes = [];
-
             // add list of bbcode for formatting
+            $codes = [];
             $codes[] = ['code', 'simple_replace', null, ['start_tag' => '<code>', 'end_tag' => '</code>'], 'code',
                 ['block', 'inline'], []];
             $codes[] = ['spoiler', 'simple_replace', null,
@@ -435,18 +433,30 @@ class Comment extends Model
 
         // if $special == true, add special bbcode
         if ($special_code === true) {
-            /* @todo put this into form bootstrap
-            if ($CI->theme->get_selected_theme() == 'fuuka') {
-                $bbcode->addCode('moot', 'simple_replace', null,
-                    ['start_tag' => '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">', 'end_tag' => '</div>'),
-                    'inline', array['block', 'inline'], []);
-            } else {*/
-                static::$_bbcode_parser->addCode('moot', 'simple_replace', null, ['start_tag' => '', 'end_tag' => ''], 'inline',
-                    ['block', 'inline'], []);
-            /* } */
+            static::$_bbcode_parser->addCode('moot', 'simple_replace', null, ['start_tag' => '', 'end_tag' => ''], 'inline',
+                ['block', 'inline'], []);
+            static::$_bbcode_parser->addCode(
+                'fortune', 'usecontent?', '\\Comment::parseBbcodeAttr', ['usecontent_param' => 'color'],
+                'inline', ['block', 'inline'], []
+            );
         }
 
         return static::$_bbcode_parser->parse($str);
+    }
+
+    public static function parseBbcodeAttr($action, $attributes, $content, $params, &$node_object)
+    {
+        if ($content === '' || $content === false) {
+            return '';
+        }
+
+        $attributes = array_map(function ($attr) {
+            return str_replace('&quot;', '', $attr);
+        }, $attributes);
+
+        $content = htmlentities($content, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
+
+        return '<span class="fortune" style="color: '.$attributes['color'].'">'.$content.'</span>';
     }
 
     public static function stripUnusedBbcode($action, $attributes, $content, $params, &$node_object)
@@ -610,20 +620,21 @@ class Comment extends Model
      * Returns a string with all text links transformed into clickable links
      *
      * @param string $str
-     * @param string $type
-     * @param boolean $popup
      *
      * @return string
      */
-    public static function autoLinkify($str, $type = 'both', $popup = false)
+    public function autoLinkify($str)
     {
-        if ($type != 'email') {
-            $target = ($popup == true) ? ' target="_blank"' : '';
+        return preg_replace_callback('/(?i)\b((?:((?:ht|f)tps?:(?:\/{1,3}|[a-z0-9%]))|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b\/?(?!@)))/i', "self::processLinkify", $str);
+    }
 
-            $str = preg_replace("#((^|\s|\(|\])(((http(s?)://)|(www\.))(\w+[^\s\)\<]+)))#i", '$2<a href="$3"'.$target.'>$3</a>', $str);
+    public function processLinkify($matches)
+    {
+        if (!isset($matches[2])) {
+            return '<a href="http://'.$matches[1].'" target="_blank">'.$matches[1].'</a>';
         }
 
-        return $str;
+        return '<a href="'.$matches[1].'" target="_blank">'.$matches[1].'</a>';
     }
 
     /**
@@ -673,14 +684,14 @@ class Comment extends Model
 
             // check that the post isn't already in deleted
             $has_deleted = $this->dc->qb()
-                ->select('COUNT(*)')
+                ->select('COUNT(*) as found')
                 ->from($this->radix->getTable('_deleted'), 'd')
                 ->where('doc_id = :doc_id')
                 ->setParameter(':doc_id', $this->comment->doc_id)
                 ->execute()
                 ->fetch();
 
-            if (!$has_deleted) {
+            if (!$has_deleted['found']) {
                 // throw into _deleted table
                 $this->dc->getConnection()->executeUpdate(
                     'INSERT INTO '.$this->radix->getTable('_deleted').' '.

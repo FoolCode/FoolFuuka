@@ -9,7 +9,7 @@ return [
         /**
          * Version for autoupgrades
          */
-        'version' => '2.0.0-dev-0',
+        'version' => '2.0.1',
 
         /**
          * Display name for the module
@@ -61,7 +61,7 @@ return [
 
         'sphinx' => [
             'listen' => '127.0.0.1:9306',
-            'listen_mysql' => '127.0.0.1:9306',
+            'listen_mysql' => '127.0.0.1:3306',
             'dir' => '/usr/local/sphinx/var',
             'min_word' => 3,
             'memory' => 2047
@@ -86,7 +86,9 @@ return [
             'max_comment_characters_allowed' => 4096,
             'max_comment_lines_allowed' => 20,
             'cooldown_new_comment' => 10,
-            'cooldown_new_thread' => 300
+            'cooldown_new_thread' => 300,
+            'thread_lifetime' => 432000,
+            'captcha_comment_link_limit' => 3
         ],
 
         'boards' => [

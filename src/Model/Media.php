@@ -303,6 +303,16 @@ class Media extends Model
     }
 
     /**
+     * Returns the media download link
+     *
+     * @return  string
+     */
+    public function getMediaDownloadLink(Request $request)
+    {
+        return $this->getLink($request, false, true);
+    }
+
+    /**
      * Returns the media_thumb and caches the result
      *
      * @see getLink(true)
@@ -387,7 +397,7 @@ class Media extends Model
      *
      * @return  null|string  Null if not available, string of the url if available
      */
-    public function getLink(Request $request, $thumbnail = false)
+    public function getLink(Request $request, $thumbnail = false, $download = false)
     {
         $before = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::getLink.call.before.method.body')
             ->setObject($this)
@@ -439,7 +449,11 @@ class Media extends Model
         }
 
         if ($image !== null) {
-            $media_cdn = [];
+            if ($download === true && $this->preferences->get('foolfuuka.boards.media_download_url')) {
+                return $this->preferences->get('foolfuuka.boards.media_download_url').'/'.$this->radix->shortname.'/'
+                .($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
+            }
+
             if ($request->isSecure() && $this->preferences->get('foolfuuka.boards.media_balancers_https')) {
                 $balancers = $this->preferences->get('foolfuuka.boards.media_balancers_https');
             }
@@ -448,6 +462,7 @@ class Media extends Model
                 $balancers = $this->preferences->get('foolfuuka.boards.media_balancers');
             }
 
+            $media_cdn = [];
             if (isset($balancers)) {
                 $media_cdn = array_filter(preg_split('/\r\n|\r|\n/', $balancers));
             }
@@ -646,33 +661,45 @@ class Media extends Model
     public function p_insert($microtime, $is_op)
     {
         $file = $this->temp_file;
-        $this->media->media_size = $file->getClientSize();
-        $this->media->media_filename = $file->getClientOriginalName();
-        $full_path = $file->getPathname();
         $this->op = $is_op;
 
-        $getimagesize = getimagesize($full_path);
+        $data = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::insert.result.media_data')
+            ->setParams([
+                'dimensions' => getimagesize($file->getPathname()),
+                'file' => $file,
+                'name' => $file->getClientOriginalName(),
+                'path' => $file->getPathname(),
+                'hash' => base64_encode(pack("H*", md5(file_get_contents($file->getPathname())))),
+                'size' => $file->getClientSize(),
+                'time' => $microtime,
+                'media_orig' => $microtime.'.'.strtolower($file->getClientOriginalExtension()),
+                'preview_orig' => $microtime.'s.'.strtolower($file->getClientOriginalExtension())
+            ])
+            ->execute()
+            ->getParams();
 
-        if (!$getimagesize) {
-            throw new MediaInsertInvalidFormatException(_i('The file you uploaded is not an image.'));
+        if (!($getimagesize = $data['dimensions'])) {
+            throw new MediaInsertInvalidFormatException(_i('The file you uploaded is not allowed.'));
         }
 
         // if width and height are lower than 25 reject the image
         if ($getimagesize[0] < 25 || $getimagesize[1] < 25) {
-            throw new MediaInsertDomainException(_i('The image you uploaded is too small.'));
+            throw new MediaInsertDomainException(_i('The file you uploaded is too small.'));
         }
 
         if ($getimagesize[0] > $this->radix->getValue('max_image_size_width')
             || $getimagesize[1] > $this->radix->getValue('max_image_size_height'))
         {
-            throw new MediaInsertDomainException(_i('The dimensions of the image you uploaded are too large.'));
+            throw new MediaInsertDomainException(_i('The dimensions of the file you uploaded is too large.'));
         }
 
         $this->media->media_w = $getimagesize[0];
         $this->media->media_h = $getimagesize[1];
-        $this->media->media_orig = $microtime.'.'.strtolower($file->getClientOriginalExtension());
-        $this->media->preview_orig = $microtime.'s.'.strtolower($file->getClientOriginalExtension());
-        $this->media->media_hash = base64_encode(pack("H*", md5(file_get_contents($full_path))));
+        $this->media->media_filename = $data['name'];;
+        $this->media->media_hash = $data['hash'];;
+        $this->media->media_size = $data['size'];;
+        $this->media->media_orig = $data['media_orig'];;
+        $this->media->preview_orig = $data['preview_orig'];;
 
         $do_thumb = true;
         $do_full = true;
@@ -758,21 +785,22 @@ class Media extends Model
                 ->setParams([
                     'thumb_width' => $thumb_width,
                     'thumb_height' => $thumb_height,
-                    'full_path' => $full_path,
-                    'is_op' => $is_op
+                    'exec' => str_replace(' ', '\\ ', $this->preferences->get('foolframe.imagick.convert_path')),
+                    'is_op' => $is_op,
+                    'media' => $file,
+                    'thumb' => $this->pathFromFilename(true, $is_op, true)
                 ])
                 ->execute()
                 ->get();
 
-
             if ($return instanceof \Foolz\Plugin\Void) {
                 if ($this->radix->getValue('enable_animated_gif_thumbs') && strtolower($file->getClientOriginalExtension()) === 'gif') {
                     exec(str_replace(' ', '\\ ', $this->preferences->get('foolframe.imagick.convert_path')) .
-                        " " . $full_path . " -coalesce -treedepth 4 -colors 256 -quality 80 -background none " .
+                        " " . $data['path'] . " -coalesce -treedepth 4 -colors 256 -quality 80 -background none " .
                         "-resize \"" . $thumb_width . "x" . $thumb_height . ">\" " . $this->pathFromFilename(true, $is_op, true));
                 } else {
                     exec(str_replace(' ', '\\ ', $this->preferences->get('foolframe.imagick.convert_path')) .
-                        " " . $full_path . "[0] -quality 80 -background none " .
+                        " " . $data['path'] . "[0] -quality 80 -background none " .
                         "-resize \"" . $thumb_width . "x" . $thumb_height . ">\" " . $this->pathFromFilename(true, $is_op, true));
                 }
             }
@@ -790,15 +818,15 @@ class Media extends Model
                     mkdir($this->pathFromFilename(), 0777, true);
                 }
 
-                copy($full_path, $this->pathFromFilename(false, false, true));
+                copy($data['path'], $this->pathFromFilename(false, false, true));
             }
         }
         if (function_exists('exif_read_data') && in_array(strtolower($file->getClientOriginalExtension()), ['jpg', 'jpeg', 'tiff'])) {
-            $media_data = null;
-            getimagesize($full_path, $media_data);
+            $exif_data = null;
+            getimagesize($data['path'], $exif_data);
 
-            if (!isset($media_data['APP1']) || strpos($media_data['APP1'], 'Exif') === 0) {
-                $exif = exif_read_data($full_path);
+            if (!isset($exif_data['APP1']) || strpos($exif_data['APP1'], 'Exif') === 0) {
+                $exif = exif_read_data($data['path']);
 
                 if ($exif !== false) {
                     $this->media->exif = $exif;

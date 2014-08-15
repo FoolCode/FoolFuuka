@@ -456,12 +456,11 @@ var bindFunctions = function()
 			modal.find(".modal-error").html('');
 			modal.find(".modal-loading").hide();
 			modal.find(".modal-information").html('\
-			<span class="modal-label">Post ID</span>\n\
 			<input type="hidden" class="modal-post-id" value="' + el.data("post") + '" />\n\
 			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
-			<br>\n\
 			<span class="modal-field">Comment</span>\n\
-			<textarea class="modal-comment"></textarea>');
+			<textarea class="modal-comment"></textarea>\n\
+			<span class="model-note">Note: Requests for content removal and take-downs must be sent via email.</span>');
 			modal.find(".submitModal").data("action", 'report');
 		},
 

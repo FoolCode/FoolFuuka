@@ -319,6 +319,14 @@ class RadixCollection extends Model
                         'class' => 'span1',
                         'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
                     ],
+                    'thread_lifetime' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('The amount of time a thread will stay alive in seconds.'),
+                        'type' => 'input',
+                        'class' => 'span1',
+                        'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
+                    ],
                     'min_image_repost_time' => [
                         'database' => true,
                         'boards_preferences' => true,
@@ -358,6 +366,14 @@ class RadixCollection extends Model
                 'database' => true,
                 'boards_preferences' => true,
                 'label' => _i('The minimum delay between posts for each user in seconds.'),
+                'type' => 'input',
+                'class' => 'span1',
+                'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]
+            ],
+            'captcha_comment_link_limit' => [
+                'database' => true,
+                'boards_preferences' => true,
+                'label' => _i('Maximum allowed `HTTP` links before triggering spam detection.'),
                 'type' => 'input',
                 'class' => 'span1',
                 'validation' => [new Assert\NotBlank(), new Assert\Type('digit')]

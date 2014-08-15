@@ -16,6 +16,7 @@ use Foolz\Foolfuuka\Model\MediaFactory;
 use Foolz\Foolfuuka\Model\Radix;
 use Foolz\Foolfuuka\Model\RadixCollection;
 use Foolz\Foolfuuka\Model\ReportCollection;
+use Foolz\Foolfuuka\Model\Search;
 use Foolz\Inet\Inet;
 use Foolz\Profiler\Profiler;
 use Foolz\Theme\Builder;
@@ -261,7 +262,6 @@ class Chan extends Common
         return $this->response->setData(['error' => _i('Invalid Method.')])->setStatusCode(404);
     }
 
-    /*
     public function get_index()
     {
         if (!$this->check_board()) {
@@ -294,6 +294,10 @@ class Chan extends Common
                 ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                 ->setOptions($options);
 
+            foreach ($board->getCommentsUnsorted() as $comment) {
+                $this->apify($comment);
+            }
+
             $this->response->setData($board->getComments());
         } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
             return $this->response->setData(['error' => _i('Thread not found.')]);
@@ -303,9 +307,7 @@ class Chan extends Common
 
         return $this->response;
     }
-    */
 
-    /*
     public function get_search()
     {
         // check all allowed search modifiers and apply only these
@@ -321,7 +323,7 @@ class Chan extends Common
         $search = [];
 
         foreach ($modifiers as $modifier) {
-            $search[$modifier] = $this->getQuery($modifier);
+            $search[$modifier] = $this->getQuery($modifier, null);
         }
 
         foreach ($search as $key => $value) {
@@ -338,9 +340,9 @@ class Chan extends Common
             $search['image'] = base64_encode(Media::urlsafe_b64decode($search['image']));
         }
 
-        if ($search['poster_ip'] !== null) {
+        if ($this->getAuth()->hasAccess('comment.see_ip') && $search['poster_ip'] !== null) {
             if (!filter_var($search['poster_ip'], FILTER_VALIDATE_IP)) {
-                return $this->error(_i('The poster IP you inserted is not a valid IP address.'));
+                return $this->response->setData(['error' => _i('The poster IP you inserted is not a valid IP address.')]);
             }
 
             $search['poster_ip'] = Inet::ptod($search['poster_ip']);
@@ -353,6 +355,10 @@ class Chan extends Common
                 ->setPage($search['page'] ? $search['page'] : 1)
                 ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => true]);
 
+            foreach ($board->getCommentsUnsorted() as $comment) {
+                $this->apify($comment);
+            }
+
             $comments = $board->getComments();
 
             $this->response->setData($comments);
@@ -364,7 +370,6 @@ class Chan extends Common
 
         return $this->response;
     }
-    */
 
     /**
      * Returns a thread

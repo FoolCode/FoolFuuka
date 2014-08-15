@@ -216,6 +216,12 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'class' => 'span6'
         ];
 
+        $form['foolfuuka.boards.media_download_url'] = [
+            'type' => 'input',
+            'label' => _i('Boards Media Download URL'),
+            'preferences' => true,
+        ];
+
         $form['separator-2'] = [
             'type' => 'separator'
         ];
@@ -381,6 +387,14 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'class' => 'span1'
         ];
 
+        $form['foolfuuka.sphinx.custom_message'] = [
+            'type' => 'textarea',
+            'label' => 'Custom Error Message',
+            'preferences' => true,
+            'help' => _i('Set a custom error message.'),
+            'class' => 'span6'
+        ];
+
         $form['separator'] = [
             'type' => 'separator'
         ];
@@ -413,11 +427,16 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
     {
         $data = [];
 
+        $mysql = $this->preferences->get('foolfuuka.sphinx.listen_mysql', null);
         $data['mysql'] = [
-            'flag' => $this->preferences->get('foolfuuka.sphinx.mysql.hostname', '0')
+            'host' => $mysql === null ? '127.0.0.1' : explode(':', $mysql)[0],
+            'port' => $mysql === null ? '3306' : explode(':', $mysql)[1],
+            'flag' => $this->preferences->get('foolfuuka.sphinx.connection_flags', '0')
         ];
 
+        $sphinx = $this->preferences->get('foolfuuka.sphinx.listen', null);
         $data['sphinx'] = [
+            'port' => $sphinx === null ? '9306' : explode(':', $sphinx)[1],
             'working_directory' => $this->preferences->get('foolfuuka.sphinx.dir', '/usr/local/sphinx'),
             'mem_limit' => $this->preferences->get('foolfuuka.sphinx.mem_limit', '1024M'),
             'min_word_len' => $this->preferences->get('foolfuuka.sphinx.min_word_len', 1),

@@ -36,7 +36,10 @@ class NginxCachePurge extends Model
 
         // purge thumbnail
         try {
-            $dir['thumb'] = $post->getDir(true, true, true);
+            $post->op = 0;
+            $dir['thumb-0'] = $post->getDir(true, true, true);
+            $post->op = 1;
+            $dir['thumb-1'] = $post->getDir(true, true, true);
         } catch (\Foolz\Foolfuuka\Model\MediaException $e) {
 
         }

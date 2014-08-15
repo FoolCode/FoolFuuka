@@ -62,8 +62,13 @@ class Board extends \Foolz\Foolfuuka\View\View
                     <?php endif; ?>
                     <?php if ($op_media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
                     <div class="post_file" style="padding-left: 2px;<?php if ($op_media->preview_w > 149) echo 'max-width:'.$op_media->preview_w .'px;'; ?>">
-                        <?= ByteSize::formatBinary($op_media->media_size, 0) . ', ' . $op_media->media_w . 'x' . $op_media->media_h . ', '; ?><a class="post_file_filename" href="<?= ($op_media->getMediaLink($this->getRequest())) ? $op_media->getMediaLink($this->getRequest()) : $op_media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank"><?= $op_media->getMediaFilenameProcessed(); ?></a>
-                    </div>
+                        <?= ByteSize::formatBinary($op_media->media_size, 0) . ', ' . $op_media->media_w . 'x' . $op_media->media_h . ', '; ?>
+						<?php if (mb_strlen($op_media->getMediaFilenameProcessed()) > 38) : ?>
+						<a class="post_file_filename" href="<?= ($op_media->getMediaLink($this->getRequest())) ? $op_media->getMediaLink($this->getRequest()) : $op_media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="tooltip" title="<?= htmlspecialchars($op_media->getMediaFilenameProcessed()) ?>"><?= mb_substr($op_media->getMediaFilenameProcessed(), 0, 26, 'utf-8') . ' (...)' . mb_substr($op_media->getMediaFilenameProcessed(), mb_strrpos($op_media->getMediaFilenameProcessed(), '.', 'utf-8'), null, 'utf-8') ?></a>
+						<?php else: ?>
+						<a class="post_file_filename" href="<?= ($op_media->getMediaLink($this->getRequest())) ? $op_media->getMediaLink($this->getRequest()) : $op_media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank"><?= $op_media->getMediaFilenameProcessed(); ?></a>
+                        <?php endif; ?>
+					</div>
                     <?php endif; ?>
                     <div class="post_file_controls">
                         <?php if ($op_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_banned')) : ?>

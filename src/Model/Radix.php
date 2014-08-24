@@ -71,13 +71,12 @@ class Radix extends Model
     }
 
     /**
-     * Removes the board and renames its dir with a _removed suffix and with a number
-     * in case of collision
+     * Removes the board and renames its dir with a _removed_ + microtime() suffix
      */
     public function remove()
     {
-        // always remove the triggers first
         $this->dc->getConnection()->beginTransaction();
+
         $this->dc->qb()
             ->delete($this->dc->p('boards_preferences'))
             ->where('board_id = :id')
@@ -91,21 +90,17 @@ class Radix extends Model
             ->execute();
 
         // rename the directory and prevent directory collision
-        $base = $this->preferences->get('foolfuuka.boards.directory') . '/' . $this->shortname;
-        if (file_exists($base . '_removed')) {
-            $incremented = \Str::increment('_removed');
-            while (file_exists($base . $incremented)) {
-                $incremented = \Str::increment($incremented);
-            }
+        $base = $this->preferences->get('foolfuuka.boards.directory').'/'.$this->shortname;
+        if (file_exists($base)) {
+            $rename_to = $this->preferences->get('foolfuuka.boards.directory')
+                .'/'.$this->shortname.'_removed_'.str_replace('.', '', (string) microtime(true));
 
-            $rename_to = $base . $incremented;
-        } else {
-            $rename_to = $this->preferences->get('foolfuuka.boards.directory') . '/' . $this->shortname . '_removed';
+            rename($base, $rename_to);
         }
 
-        rename($base, $rename_to);
 
-        // for huge boards, this may time out with PHP, while MySQL will keep going
+
+        // for huge boards, this better run via command line
         $this->removeTables();
         $this->dc->getConnection()->commit();
         $this->collection->clearCache();

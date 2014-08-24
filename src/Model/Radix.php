@@ -98,8 +98,6 @@ class Radix extends Model
             rename($base, $rename_to);
         }
 
-
-
         // for huge boards, this better run via command line
         $this->removeTables();
         $this->dc->getConnection()->commit();
@@ -109,10 +107,10 @@ class Radix extends Model
     /**
      * Get the config parameter of the radix by key
      *
-     * @param  string $key  The key associated to the key
+     * @param string $key The key associated to the key
      *
-     * @return  mixed  The value associated to the key
-     * @throws  \OutOfBoundsException If the key doesn't exist (this should be a typo, as default values are always set on preload)
+     * @return mixed  The value associated to the key
+     * @throws \OutOfBoundsException If the key doesn't exist (this should be a typo, as default values are always set on preload)
      */
     public function getValue($key)
     {
@@ -126,7 +124,7 @@ class Radix extends Model
     /**
      * Return all the values for the radix as an associative array
      *
-     * @return  array  Associative array of key => value
+     * @return array Associative array of key => value
      */
     public function getAllValues()
     {
@@ -136,8 +134,8 @@ class Radix extends Model
     /**
      * Bind a radix config value to a key
      *
-     * @param  string $key    The key to bind to
-     * @param  mixed $value  The value to bind
+     * @param string $key The key to bind to
+     * @param mixed $value The value to bind
      */
     public function setValue($key, $value)
     {
@@ -162,9 +160,9 @@ class Radix extends Model
     /**
      * Get the board table name with protexted identifiers
      *
-     * @param   string $suffix  board suffix like _images
+     * @param string $suffix board suffix like _images
      *
-     * @return  string  the table name with protected identifiers
+     * @return string The table name with protected identifiers
      */
     public function getTable($suffix = '')
     {
@@ -179,10 +177,10 @@ class Radix extends Model
     /**
      * Get the board index name for index creation (doesn't redirect to foreign database! must "use"!)
      *
-     * @param   string $suffix  board suffix like _images
-     * @param   string $index   board index like op_index
+     * @param string $suffix board suffix like _images
+     * @param string $index board index like op_index
      *
-     * @return  string  the table name with protected identifiers
+     * @return string The table name with protected identifiers
      */
     public function getIndex($suffix = '', $index = '')
     {

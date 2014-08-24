@@ -997,7 +997,8 @@ class Chan extends Common
         }
 
         if ($board->getSearchCount() > 5000) {
-            $search_title = sprintf(_i('%s <small>Returning only first %d of %d results found.</small>', $title, $this->preferences->get('foolfuuka.sphinx.max_matches', 5000), $board->getSearchCount()));
+            $search_title = sprintf(_i('%s <small>Returning only first %d of %d results found.</small>',
+                $title, $this->preferences->get('foolfuuka.sphinx.max_matches', 5000), $board->getSearchCount()));
         } else {
             $search_title = sprintf(_i('%s <small>%d results found.</small>', $title, $board->getSearchCount()));
         }

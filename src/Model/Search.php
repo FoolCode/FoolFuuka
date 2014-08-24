@@ -443,14 +443,14 @@ class Search extends Board
             $query->limit($limit)
                 ->offset((($page * $limit) - $limit) >= $max_matches ? ($max_matches - 1) : ($page * $limit) - $limit)
                 ->option('max_matches', $max_matches)
-                ->option('reverse_scan', ($args['order'] == 'asc') ? 0 : 1);
+                ->option('reverse_scan', ($args['order'] === 'asc') ? 0 : 1);
 
             // submit query
             try {
                 $search = $query->execute();
             } catch(\Foolz\SphinxQL\DatabaseException $e) {
                 $this->logger->error('Search Error: '.$e->getMessage());
-                throw new SearchInvalidException(_i(''));
+                throw new SearchInvalidException(_i('The search backend returned an error.'));
             }
 
             // no results found

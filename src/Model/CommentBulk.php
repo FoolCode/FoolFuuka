@@ -21,6 +21,11 @@ class CommentBulk implements \JsonSerializable
     public $media = null;
 
     /**
+     * @var boolean
+     */
+    protected $jsonExportRadix = false;
+
+    /**
      * @param Radix $radix
      * @param CommentData $comment
      * @param MediaData $media
@@ -54,6 +59,11 @@ class CommentBulk implements \JsonSerializable
         } else {
             $array['media'] = null;
         }
+
+        $array['board'] = [
+            'name' => $this->radix->name,
+            'shortname' => $this->radix->shortname
+        ];
 
         return $array;
     }

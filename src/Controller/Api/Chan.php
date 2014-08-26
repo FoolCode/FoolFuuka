@@ -261,23 +261,23 @@ class Chan extends Common
 
     public function get_404()
     {
-        return $this->response->setData(['error' => _i('Invalid Method.')])->setStatusCode(404);
+        return $this->response->setData(['error' => _i('Invalid Method.')])->setStatusCode(422);
     }
 
     public function get_index()
     {
         if (!$this->check_board()) {
-            return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(422);
         }
 
         $page = $this->getQuery('page');
 
         if (!$page) {
-            return $this->response->setData(['error' => _i('The "page" parameter is missing.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('The "page" parameter is missing.')])->setStatusCode(422);
         }
 
         if (!ctype_digit((string) $page)) {
-            return $this->response->setData(['error' => _i('The value for "page" is invalid.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('The value for "page" is invalid.')])->setStatusCode(422);
         }
 
         $page = intval($page);
@@ -381,18 +381,18 @@ class Chan extends Common
     public function get_thread()
     {
         if (!$this->check_board()) {
-            return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(422);
         }
 
         $num = $this->getQuery('num', null);
         $latest_doc_id = $this->getQuery('latest_doc_id', null);
 
         if ($num === null) {
-            return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(422);
         }
 
         if (!ctype_digit((string) $num)) {
-            return $this->response->setData(['error' => _i('The value for "num" is invalid.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('The value for "num" is invalid.')])->setStatusCode(422);
         }
 
         $num = intval($num);
@@ -401,7 +401,7 @@ class Chan extends Common
             // build an array if we have more specifications
             if ($latest_doc_id !== null && $latest_doc_id > 0) {
                 if (!ctype_digit((string) $latest_doc_id)) {
-                    return $this->response->setData(['error' => _i('The value for "latest_doc_id" is malformed.')])->setStatusCode(404);
+                    return $this->response->setData(['error' => _i('The value for "latest_doc_id" is malformed.')])->setStatusCode(422);
                 }
 
                 $board = Board::forge($this->getContext())
@@ -460,17 +460,17 @@ class Chan extends Common
     public function get_post()
     {
         if (!$this->check_board()) {
-            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
         }
 
         $num = $this->getQuery('num');
 
         if (!$num) {
-            return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(422);
         }
 
         if (!Board::isValidPostNumber($num)) {
-            return $this->response->setData(['error' => _i('The value for "num" is invalid.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('The value for "num" is invalid.')])->setStatusCode(422);
         }
 
         try {
@@ -492,7 +492,7 @@ class Chan extends Common
         } catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e) {
             return $this->response->setData(['error' => _i('Post not found.')]);
         } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
-            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
         }
 
         return $this->response;
@@ -505,7 +505,7 @@ class Chan extends Common
         }
 
         if (!$this->check_board()) {
-            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
         }
 
         if ($this->getPost('action') === 'report') {
@@ -568,7 +568,7 @@ class Chan extends Common
         }
 
         if (!$this->check_board()) {
-            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(404);
+            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
         }
 
         if ($this->getPost('action') === 'delete_report') {

@@ -21,11 +21,6 @@ class CommentBulk implements \JsonSerializable
     public $media = null;
 
     /**
-     * @var boolean
-     */
-    protected $jsonExportRadix = false;
-
-    /**
      * @param Radix $radix
      * @param CommentData $comment
      * @param MediaData $media

@@ -1266,7 +1266,6 @@ class Chan extends Common
                     $board = Board::forge($this->getContext())
                         ->getThread($comment->comment->thread_num)
                         ->setRadix($this->radix)
-                        ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                         ->setOptions([
                             'type' => 'from_doc_id',
                             'latest_doc_id' => $latest_doc_id

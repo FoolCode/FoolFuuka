@@ -291,7 +291,6 @@ class Chan extends Common
                 ->getLatest()
                 ->setRadix($this->radix)
                 ->setPage($page)
-                ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => false])
                 ->setOptions($options);
 
             foreach ($board->getCommentsUnsorted() as $comment) {
@@ -352,8 +351,7 @@ class Chan extends Common
             $board = Search::forge($this->getContext())
                 ->getSearch($search)
                 ->setRadix($this->radix)
-                ->setPage($search['page'] ? $search['page'] : 1)
-                ->setApi(['request' => $this->getRequest(), 'theme' => $this->builder, 'board' => true]);
+                ->setPage($search['page'] ? $search['page'] : 1);
 
             foreach ($board->getCommentsUnsorted() as $comment) {
                 $this->apify($comment);

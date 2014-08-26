@@ -129,15 +129,11 @@ class Board extends Model
         if ($this->comments === null) {
             if (method_exists($this, 'p_'.$this->method_fetching)) {
                 $this->profiler->log('Start Board::getComments() with method '.$this->method_fetching);
-                if (!$this->api)
-                    $this->profiler->logMem('Start Board::getComments() with method '.$this->method_fetching, $this);
 
                 $this->{$this->method_fetching}();
                 $this->loadBacklinks();
 
                 $this->profiler->log('End Board::getComments() with method '.$this->method_fetching);
-                if (!$this->api)
-                    $this->profiler->logMem('End Board::getComments() with method '.$this->method_fetching, $this);
             } else {
                 $this->comments = false;
             }
@@ -167,14 +163,10 @@ class Board extends Model
         if ($this->total_count === null) {
             if (method_exists($this, 'p_'.$this->method_counting)) {
                 $this->profiler->log('Start Board::getCount() with method '.$this->method_counting);
-                if (!$this->api)
-                    $this->profiler->logMem('Start Board::getCount() with method '.$this->method_counting, $this);
 
                 $this->{$this->method_counting}();
 
                 $this->profiler->log('End Board::getCount() with method '.$this->method_counting);
-                if (!$this->api)
-                    $this->profiler->logMem('End Board::getCount() with method '.$this->method_counting, $this);
             } else {
                 $this->total_count = false;
             }
@@ -297,20 +289,6 @@ class Board extends Model
     protected function p_setRadix(Radix $radix = null)
     {
         $this->radix = $radix;
-
-        return $this;
-    }
-
-    /**
-     * Set the API options
-     *
-     * @param  array|null  $enable  If array it will be used to set API options, if null it will disable API mode
-     *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
-     */
-    protected function p_setApi($enable = [])
-    {
-        $this->api = $enable;
 
         return $this;
     }

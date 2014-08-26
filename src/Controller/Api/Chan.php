@@ -172,13 +172,15 @@ class Chan extends Common
         $this->response->headers->set('Access-Control-Max-Age', '604800');
 
         $request = $this->getRequest();
-        if ($request->getMethod() == 'GET') {
+        if ($request->getMethod() == 'GET' && method_exists($this, 'get_'.$method)) {
             return [$this, 'get_'.$method, []];
         }
 
-        if ($request->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST' && method_exists($this, 'post_'.$method)) {
             return [$this, 'post_'.$method, []];
         }
+
+        return [$this, 'get_404', []];
     }
 
     public function setLastModified($timestamp = 0, $max_age = 0)

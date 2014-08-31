@@ -680,9 +680,7 @@ class Chan extends Common
     public function radix_image()
     {
         // support non-urlsafe hash
-        $uri = $this->uri->segments();
-        array_shift($uri);
-        array_shift($uri);
+        $uri = array_filter(array_slice($this->uri->segments(), 5));
 
         $imploded_uri = rawurldecode(implode('/', $uri));
         if (mb_strlen($imploded_uri, 'utf-8') < 22) {

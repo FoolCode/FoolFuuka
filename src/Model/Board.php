@@ -414,7 +414,8 @@ class Board extends Model
                     $query = $this->dc->qb()
                         ->select('*, thread_num AS unq_thread_num')
                         ->from($this->radix->getTable('_threads'), 'rt')
-                        ->orderBy('rt.time_bump', 'DESC')
+                        ->orderBy('rt.sticky', 'DESC')
+                        ->addOrderBy('rt.time_bump', 'DESC')
                         ->setMaxResults($per_page)
                         ->setFirstResult(($page * $per_page) - $per_page);
                     break;
@@ -423,7 +424,8 @@ class Board extends Model
                     $query = $this->dc->qb()
                         ->select('*, thread_num AS unq_thread_num')
                         ->from($this->radix->getTable('_threads'), 'rt')
-                        ->orderBy('rt.thread_num', 'DESC')
+                        ->orderBy('rt.sticky', 'DESC')
+                        ->addOrderBy('rt.thread_num', 'DESC')
                         ->setMaxResults($per_page)
                         ->setFirstResult(($page * $per_page) - $per_page);
                     break;
@@ -433,7 +435,8 @@ class Board extends Model
                         ->select('*, thread_num AS unq_thread_num')
                         ->from($this->radix->getTable('_threads'), 'rt')
                         ->where('rt.time_ghost_bump IS NOT null')
-                        ->orderBy('rt.time_ghost_bump', 'DESC')
+                        ->orderBy('rt.sticky', 'DESC')
+                        ->addOrderBy('rt.time_ghost_bump', 'DESC')
                         ->setMaxResults($per_page)
                         ->setFirstResult(($page * $per_page) - $per_page);
                     break;

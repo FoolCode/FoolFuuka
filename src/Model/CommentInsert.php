@@ -31,6 +31,7 @@ class CommentInsert extends Comment
     public $recaptcha_challenge = null;
     public $recaptcha_response = null;
     public $ghost = false;
+    public $ghost_exist = false;
     public $allow_media = false;
 
     protected function insertTriggerDaily()
@@ -202,6 +203,7 @@ class CommentInsert extends Comment
         }
 
         $this->ghost = false;
+        $this->ghost_exist = false;
         $this->allow_media = true;
 
         // some users don't need to be limited, in here go all the ban and posting limitators
@@ -252,6 +254,7 @@ class CommentInsert extends Comment
             }
 
             $this->ghost = $status['dead'];
+            $this->ghost_exist = $status['ghost_exist'];
             $this->allow_media = ! $status['disable_image_upload'];
         }
 
@@ -318,7 +321,6 @@ class CommentInsert extends Comment
             $this->comment->clean();
 
             if ($this->recaptcha_challenge && $this->recaptcha_response && $this->preferences->get('foolframe.auth.recaptcha_public', false)) {
-
                 $recaptcha = ReCaptcha::create($this->preferences->get('foolframe.auth.recaptcha_public'), $this->preferences->get('foolframe.auth.recaptcha_private'));
                 $recaptcha_result = $recaptcha->checkAnswer(
                     Inet::dtop($this->comment->poster_ip),
@@ -329,7 +331,6 @@ class CommentInsert extends Comment
                 if (!$recaptcha_result->isValid()) {
                     throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution.'));
                 }
-
             } elseif ($this->preferences->get('foolframe.auth.recaptcha_public')) { // if there wasn't a recaptcha input, let's go with heavier checks
                 if (substr_count($this->comment->comment, 'http') >= $this->radix->getValue('captcha_comment_link_limit')) {
                     throw new CommentSendingRequestCaptchaException;

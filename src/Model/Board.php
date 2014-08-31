@@ -939,6 +939,7 @@ class Board extends Model
         $result = [
             'closed' => (bool) $thread['locked'],
             'dead' => (bool) $this->radix->archive,
+            'ghost_exist' => $ghost_post_present,
             'disable_image_upload' => (bool) $this->radix->archive,
             'last_modified' => $last_modified
         ];

@@ -2,7 +2,7 @@
 
 namespace Foolz\Foolfuuka\Theme\Admin\Partial\Boards;
 
-class SphinxConfig extends \Foolz\Foolframe\View\View
+class SphinxDistConfig extends \Foolz\Foolframe\View\View
 {
     public function toString()
     {
@@ -11,7 +11,7 @@ class SphinxConfig extends \Foolz\Foolframe\View\View
 
 <div class="admin-container">
     <div class="admin-container-header">
-        <?= _i('Configuration File') ?>
+        <?= _i('Configuration File - Distributed') ?>
     </div>
 
 <?php if ($example === false) : ?>
@@ -22,11 +22,11 @@ class SphinxConfig extends \Foolz\Foolframe\View\View
     <hr/>
 
 <textarea class="input-block-level" rows="30" id="sphinx-config">
-###########################################
-## Sphinx Configuration File for FoolFuuka
-###########################################
+######################################################
+## Distributed Sphinx Configuration File for FoolFuuka
+######################################################
 
-source main
+source template
 {
   type     = mysql
   sql_host = <?= $mysql['host'].PHP_EOL ?>
@@ -66,7 +66,49 @@ source main
 
 <?php foreach ($boards as $key => $board) : ?>
 # /<?= $board->shortname ?>/
-source <?= $board->shortname.'_main' ?> : main
+source <?= $board->shortname.'_ancient0' ?> : template
+{
+  sql_query      = \
+      SELECT doc_id, <?= $board->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \
+        media_id as mid, media_filename, media_hash, poster_ip as pip, poster_hash as pid, ASCII(capcode) AS cap, \
+        (subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
+        (media_filename != '' AND media_filename IS NOT NULL) AS has_image \
+      FROM <?= $board->getTable() ?> WHERE doc_id >= $start AND doc_id <= $end AND doc_id % <?= $sphinx['distributed'] ?> = 0
+  sql_query_info = SELECT * FROM <?= $board->getTable() ?> WHERE doc_id = $id
+
+  sql_query_range      = SELECT MIN(doc_id), MAX(doc_id) FROM <?= $board->getTable() ?>
+  sql_query_post_index = REPLACE INTO `index_counters` (id, val) VALUES ('max_ancient_id_<?= $board->shortname ?>', $maxid)
+}
+
+<?php for ($i = 1, $n = $sphinx['distributed']; $i < $n; $i++) : ?>
+source <?= $board->shortname.'_ancient'.$i ?> : template
+{
+  sql_query      = \
+      SELECT doc_id, <?= $board->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \
+        media_id as mid, media_filename, media_hash, poster_ip as pip, poster_hash as pid, ASCII(capcode) AS cap, \
+        (subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
+        (media_filename != '' AND media_filename IS NOT NULL) AS has_image \
+      FROM <?= $board->getTable() ?> WHERE doc_id >= $start AND doc_id <= $end AND doc_id % <?= $sphinx['distributed'] ?> = <?= $i.PHP_EOL ?>
+  sql_query_info = SELECT * FROM <?= $board->getTable() ?> WHERE doc_id = $id
+
+  sql_query_range      = SELECT (SELECT MIN(doc_id) FROM <?= $board->getTable() ?>), (SELECT val FROM `index_counters` WHERE id = 'max_ancient_id_<?= $board->shortname ?>')
+}
+
+<?php endfor; ?>
+source <?= $board->shortname.'_main0' ?> : <?= $board->shortname.'_ancient0'.PHP_EOL ?>
+{
+  sql_query_range      = SELECT (SELECT val FROM `index_counters` WHERE id = 'max_ancient_id_<?= $board->shortname ?>'), (SELECT MAX(doc_id) FROM <?= $board->getTable() ?>)
+  sql_query_post_index = REPLACE INTO `index_counters` (id, val) VALUES ('max_indexed_id_<?= $board->shortname ?>', $maxid)
+}
+
+<?php for ($i = 1, $n = $sphinx['distributed']; $i < $n; $i++) : ?>
+source <?= $board->shortname.'_main'.$i ?> : <?= $board->shortname.'_ancient'.$i.PHP_EOL ?>
+{
+  sql_query_range      = SELECT (SELECT val FROM `index_counters` WHERE id = 'max_ancient_id_<?= $board->shortname ?>'), (SELECT val FROM `index_counters` WHERE id = 'max_indexed_id_<?= $board->shortname ?>')
+}
+
+<?php endfor; ?>
+source <?= $board->shortname.'_delta' ?> : template
 {
   sql_query      = \
       SELECT doc_id, <?= $board->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \
@@ -76,20 +118,7 @@ source <?= $board->shortname.'_main' ?> : main
       FROM <?= $board->getTable() ?> WHERE doc_id >= $start AND doc_id <= $end
   sql_query_info = SELECT * FROM <?= $board->getTable() ?> WHERE doc_id = $id
 
-  sql_query_range      = SELECT (SELECT val FROM `index_counters` WHERE id = 'max_ancient_id_<?= $board->shortname ?>'), (SELECT MAX(doc_id) FROM <?= $board->getTable() ?>)
-  sql_query_post_index = REPLACE INTO `index_counters` (id, val) VALUES ('max_indexed_id_<?= $board->shortname ?>', $maxid)
-}
-
-source <?= $board->shortname.'_ancient' ?> : <?= $board->shortname.'_main'.PHP_EOL ?>
-{
-  sql_query_range      = SELECT MIN(doc_id), MAX(doc_id) FROM <?= $board->getTable() ?>
-  sql_query_post_index = REPLACE INTO `index_counters` (id, val) VALUES ('max_ancient_id_<?= $board->shortname ?>', $maxid)
-}
-
-source <?= $board->shortname.'_delta' ?> : <?= $board->shortname.'_main'.PHP_EOL ?>
-{
   sql_query_range      = SELECT (SELECT val FROM `index_counters` WHERE id = 'max_indexed_id_<?= $board->shortname ?>'), (SELECT MAX(doc_id) FROM <?= $board->getTable() ?>)
-  sql_query_post_index =
 }
 
 <?php endforeach; ?>
@@ -98,9 +127,10 @@ source <?= $board->shortname.'_delta' ?> : <?= $board->shortname.'_main'.PHP_EOL
 ## index definition
 #############################################################################
 
-index main
+index template
 {
-  source       = main
+  type         = plain
+  source       = template
   path         = <?= rtrim($sphinx['working_directory'], '/') ?>/data/main
   docinfo      = extern
   mlock        = 0
@@ -173,19 +203,39 @@ index main
 
 <?php foreach ($boards as $key => $board) : ?>
 # /<?= $board->shortname ?>/
-index <?= $board->shortname.'_main' ?> : main
+<?php for ($i = 0, $n = $sphinx['distributed']; $i < $n; $i++) : ?>
+index <?= $board->shortname.'_ancient'.$i ?> : template
 {
-  source = <?= $board->shortname ?>_main
-  path   = <?=rtrim($sphinx['working_directory'], '/') ?>/data/<?= $board->shortname ?>_main
+  source = <?= $board->shortname ?>_ancient<?= $i.PHP_EOL ?>
+  path   = <?=rtrim($sphinx['working_directory'], '/') ?>/data/<?= $board->shortname ?>_ancient<?= $i.PHP_EOL ?>
+}
+<?php endfor; ?>
+
+index <?= $board->shortname.'_ancient'.PHP_EOL ?>
+{
+  type = distributed
+<?php for ($i = 0, $n = $sphinx['distributed']; $i < $n; $i++) : ?>
+  local = <?= $board->shortname.'_ancient'.$i.PHP_EOL ?>
+<?php endfor; ?>
 }
 
-index <?= $board->shortname.'_ancient' ?> : <?= $board->shortname.'_main'.PHP_EOL ?>
+<?php for ($i = 0, $n = $sphinx['distributed']; $i < $n; $i++) : ?>
+index <?= $board->shortname.'_main'.$i ?> : <?= $board->shortname.'_ancient'.$i.PHP_EOL ?>
 {
-  source = <?= $board->shortname ?>_ancient
-  path   = <?=rtrim($sphinx['working_directory'], '/') ?>/data/<?= $board->shortname ?>_ancient
+  source = <?= $board->shortname ?>_main<?= $i.PHP_EOL ?>
+  path   = <?=rtrim($sphinx['working_directory'], '/') ?>/data/<?= $board->shortname ?>_main<?= $i.PHP_EOL ?>
+}
+<?php endfor; ?>
+
+index <?= $board->shortname.'_main'.PHP_EOL ?>
+{
+  type = distributed
+<?php for ($i = 0, $n = $sphinx['distributed']; $i < $n; $i++) : ?>
+  local = <?= $board->shortname.'_main'.$i.PHP_EOL ?>
+<?php endfor; ?>
 }
 
-index <?= $board->shortname.'_delta' ?> : <?= $board->shortname.'_main'.PHP_EOL ?>
+index <?= $board->shortname.'_delta' ?> : <?= $board->shortname.'_ancient'.PHP_EOL ?>
 {
   source = <?= $board->shortname ?>_delta
   path   = <?=rtrim($sphinx['working_directory'], '/') ?>/data/<?= $board->shortname ?>_delta
@@ -359,7 +409,7 @@ searchd
   # optional, default is 0, which means disable multi-threaded searching
   # should work with all MPMs (ie. does NOT require workers=threads)
   #
-  # dist_threads    = 4
+  dist_threads    = 4
 
   # binlog files path; use empty string to disable binlog
   # optional, default is build-time configured data directory

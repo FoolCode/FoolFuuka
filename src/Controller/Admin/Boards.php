@@ -363,7 +363,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'type' => 'input',
             'label' => 'Memory Limit',
             'preferences' => true,
-            'help' => _i('Set the memory limit for the Sphinx instance in MegaBytes.'),
+            'help' => _i('Set the memory limit for the Sphinx indexer.'),
             'class' => 'span1'
         ];
 
@@ -384,6 +384,16 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'validation' => [new Trim()],
             'preferences' => true,
             'help' => _i('Set the maximum amount of matches the search daemon keeps in RAM for each index and results returned to the client.'),
+            'class' => 'span1'
+        ];
+
+        $form['foolfuuka.sphinx.distributed'] = [
+            'type' => 'input',
+            'label' => 'Number of Distributed Indexes',
+            'placeholder' => 0,
+            'validation' => [new Trim()],
+            'preferences' => true,
+            'help' => _i('Set the total number of distributed indexes to be created with indexer and used for searchd.'),
             'class' => 'span1'
         ];
 
@@ -441,14 +451,15 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
             'mem_limit' => $this->preferences->get('foolfuuka.sphinx.mem_limit', '1024M'),
             'min_word_len' => $this->preferences->get('foolfuuka.sphinx.min_word_len', 1),
             'max_children' => $this->preferences->get('foolfuuka.sphinx.max_children', 0),
-            'max_matches' => $this->preferences->get('foolfuuka.sphinx.max_matches', 5000)
+            'max_matches' => $this->preferences->get('foolfuuka.sphinx.max_matches', 5000),
+            'distributed' => (int) $this->preferences->get('foolfuuka.sphinx.distributed', 0)
         ];
 
         $data['boards'] = $this->radix_coll->getAll();
         $data['example'] = current($data['boards']);
 
         $this->param_manager->setParam('method_title', [_i('Search'), 'Sphinx', _i('Configuration File'), _i('Generate')]);
-        $this->builder->createPartial('body', 'boards/sphinx_config')
+        $this->builder->createPartial('body', ($data['sphinx']['distributed'] > 1) ? 'boards/sphinx_dist_config' : 'boards/sphinx_config')
             ->getParamManager()->setParams($data);
 
         return new Response($this->builder->build());

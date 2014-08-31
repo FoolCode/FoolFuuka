@@ -277,7 +277,7 @@ class Search extends Board
             // configure sphinx connection params
             $sphinx = explode(':', $this->preferences->get('foolfuuka.sphinx.listen'));
             $conn = new SphinxConnnection();
-            $conn->setConnectionParams($sphinx[0], $sphinx[1]);
+            $conn->setParams(['host' => $sphinx[0], 'port' => $sphinx[1], 'options' => [MYSQLI_OPT_CONNECT_TIMEOUT => 5]]);
             $conn->silenceConnectionWarning(true);
 
             // establish connection

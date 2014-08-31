@@ -261,7 +261,7 @@ class Chan extends Common
 
     public function get_404()
     {
-        return $this->response->setData(['error' => _i('Invalid Method.')])->setStatusCode(422);
+        return $this->response->setData(['error' => _i('Requested resource does not exist.')])->setStatusCode(404);
     }
 
     public function get_index()

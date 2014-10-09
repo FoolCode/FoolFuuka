@@ -76,7 +76,7 @@ source <?= $board->shortname.'_ancient0' ?> : template
       FROM <?= $board->getTable() ?> WHERE doc_id >= $start AND doc_id <= $end AND doc_id % <?= $sphinx['distributed'] ?> = 0
   sql_query_info = SELECT * FROM <?= $board->getTable() ?> WHERE doc_id = $id
 
-  sql_query_range      = SELECT MIN(doc_id), MAX(doc_id) FROM <?= $board->getTable() ?>
+  sql_query_range      = SELECT MIN(doc_id), MAX(doc_id) FROM <?= $board->getTable().PHP_EOL ?>
   sql_query_post_index = REPLACE INTO `index_counters` (id, val) VALUES ('max_ancient_id_<?= $board->shortname ?>', $maxid)
 }
 

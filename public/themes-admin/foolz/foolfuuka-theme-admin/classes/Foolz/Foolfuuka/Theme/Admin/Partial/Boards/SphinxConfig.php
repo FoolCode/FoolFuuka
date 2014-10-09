@@ -82,7 +82,7 @@ source <?= $board->shortname.'_main' ?> : main
 
 source <?= $board->shortname.'_ancient' ?> : <?= $board->shortname.'_main'.PHP_EOL ?>
 {
-  sql_query_range      = SELECT MIN(doc_id), MAX(doc_id) FROM <?= $board->getTable() ?>
+  sql_query_range      = SELECT MIN(doc_id), MAX(doc_id) FROM <?= $board->getTable().PHP_EOL ?>
   sql_query_post_index = REPLACE INTO `index_counters` (id, val) VALUES ('max_ancient_id_<?= $board->shortname ?>', $maxid)
 }
 

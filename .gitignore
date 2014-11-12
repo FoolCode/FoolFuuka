@@ -1,5 +1,6 @@
 config/development/
 config/production/
+docs/build/
 
 vendor
 .idea

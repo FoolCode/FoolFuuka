@@ -280,13 +280,6 @@ class Search extends Board
             $conn->setParams(['host' => $sphinx[0], 'port' => $sphinx[1], 'options' => [MYSQLI_OPT_CONNECT_TIMEOUT => 5]]);
             $conn->silenceConnectionWarning(true);
 
-            // establish connection
-            try {
-                SphinxQL::forge($conn);
-            } catch (\Foolz\SphinxQL\ConnectionException $e) {
-                throw new SearchSphinxOfflineException(_i('The search backend is currently unavailable.'));
-            }
-
             // determine if all boards will be used for search or not
             if ($this->radix == null) {
                 $indexes = [];
@@ -308,8 +301,12 @@ class Search extends Board
                 ];
             }
 
-            // start search query
-            $query = SphinxQL::forge()->select('id', 'board')->from($indexes);
+            // establish connection
+            try {
+                $query = SphinxQL::create($conn)->select('id', 'board')->from($indexes);
+            } catch (\Foolz\SphinxQL\ConnectionException $e) {
+                throw new SearchSphinxOfflineException(_i('The search backend is currently unavailable.'));
+            }
 
             // parse search params
             if ($args['subject'] !== null) {

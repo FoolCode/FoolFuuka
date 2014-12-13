@@ -41,8 +41,8 @@ return [
      * Locations of the data out of the module folder
      */
     'directories' => [
-        'themes' => 'public/themes/',
-        'plugins' => 'public/plugins/'
+        'themes' => ASSETSPATH.'public/themes/',
+        'plugins' => ASSETSPATH.'public/plugins/'
     ],
 
     /**

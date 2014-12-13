@@ -23,6 +23,10 @@ class Context implements ContextInterface
     {
         $this->context = $context;
 
+        /** @var \Foolz\Foolframe\Model\Config $config */
+        $config = $this->context->getService('config');
+        $config->addPackage('foolz/foolfuuka', ASSETSPATH);
+
         class_alias('Foolz\\Foolfuuka\\Model\\Ban', 'Ban');
         class_alias('Foolz\\Foolfuuka\\Model\\Board', 'Board');
         class_alias('Foolz\\Foolfuuka\\Model\\Comment', 'Comment');
@@ -32,7 +36,7 @@ class Context implements ContextInterface
         class_alias('Foolz\\Foolfuuka\\Model\\Report', 'Report');
         class_alias('Foolz\\Foolfuuka\\Model\\Search', 'Search');
 
-        require_once __DIR__.'/../../packages/stringparser-bbcode/library/stringparser_bbcode.class.php';
+        require_once __DIR__.'/../../assets/packages/stringparser-bbcode/library/stringparser_bbcode.class.php';
 
         $context->getContainer()
             ->register('foolfuuka.radix_collection', 'Foolz\Foolfuuka\Model\RadixCollection')
@@ -62,7 +66,7 @@ class Context implements ContextInterface
         $uri = $this->context->getService('uri');
 
         $theme_instance = \Foolz\Theme\Loader::forge('foolfuuka');
-        $theme_instance->addDir(VENDPATH.'foolz/foolfuuka/'.$config->get('foolz/foolfuuka', 'package', 'directories.themes'));
+        $theme_instance->addDir($config->get('foolz/foolfuuka', 'package', 'directories.themes'));
         $theme_instance->addDir(VAPPPATH.'foolz/foolfuuka/themes/');
         $theme_instance->setBaseUrl($uri->base().'foolfuuka/');
         $theme_instance->setPublicDir(DOCROOT.'foolfuuka/');

@@ -42,7 +42,7 @@ class Boards extends \Foolz\Foolframe\Controller\Admin
     public function setupTheme(Loader $theme_instance)
     {
         // we need to load more themes
-        $theme_instance->addDir(VENDPATH.'foolz/foolfuuka/public/themes-admin');
+        $theme_instance->addDir(ASSETSPATH.'public/themes-admin');
         $this->theme = $theme_instance->get('foolz/foolfuuka-theme-admin');
     }
 

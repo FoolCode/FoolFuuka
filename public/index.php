@@ -20,6 +20,11 @@ define('VENDPATH', realpath(__DIR__.'/../vendor/').DIRECTORY_SEPARATOR);
  */
 define('VAPPPATH', realpath(__DIR__.'/../app/').DIRECTORY_SEPARATOR);
 
+/**
+ * The "ASSSETS APP" directory where live content can be stored
+ */
+define('ASSETSPATH', realpath(__DIR__.'/../assets/').DIRECTORY_SEPARATOR);
+
 function e($string)
 {
     return htmlentities($string);

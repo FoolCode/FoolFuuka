@@ -3,7 +3,7 @@
 use Symfony\Component\Routing\Route;
 
 require_once __DIR__ . '/functions.php';
-require_once __DIR__.'/controller.php';
+require_once __DIR__ . '/controller.php';
 
 \Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Context.loadRoutes.after')
     ->setCall(function($result) {

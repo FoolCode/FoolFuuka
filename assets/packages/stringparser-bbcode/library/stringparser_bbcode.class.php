@@ -31,7 +31,7 @@
  * THE SOFTWARE.
  */
 
-require_once dirname(__FILE__).'/stringparser.class.php';
+require_once dirname(__FILE__) . '/stringparser.class.php';
 
 define ('BBCODE_CLOSETAG_FORBIDDEN', -1);
 define ('BBCODE_CLOSETAG_OPTIONAL', 0);

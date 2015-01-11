@@ -271,6 +271,14 @@ class BoardStatistics extends Model
             ->execute()
             ->fetchAll();
 
+        $result['total'] = $this->dc->qb()
+            ->select('day AS time, posts, images, sage')
+            ->from($board->getTable('_daily'), 'bd')
+            ->groupBy('time')
+            ->orderBy('time')
+            ->execute()
+            ->fetchAll();
+
         return $result;
     }
 

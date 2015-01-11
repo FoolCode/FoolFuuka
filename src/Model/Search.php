@@ -90,7 +90,12 @@ class Search extends Board
             [
                 'type' => 'input',
                 'label' => _i('Unique ID'),
-                'name' => 'uid',
+                'name' => 'uid'
+            ],
+            [
+                'type' => 'input',
+                'label' => _i('Country'),
+                'name' => 'country'
             ],
             [
                 'type' => 'input',
@@ -105,7 +110,7 @@ class Search extends Board
             ],
             [
                 'type' => 'input',
-                'label' => _i('Image hash'),
+                'label' => _i('Image Hash'),
                 'placeholder' => _i('Drop your image here'),
                 'name' => 'image'
             ],
@@ -123,7 +128,7 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
-                'label' => _i('Show posts'),
+                'label' => _i('Show Posts'),
                 'name' => 'filter',
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
@@ -133,7 +138,7 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
-                'label' => _i('Deleted posts'),
+                'label' => _i('Deleted Posts'),
                 'name' => 'deleted',
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
@@ -143,7 +148,7 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
-                'label' => _i('Ghost posts'),
+                'label' => _i('Ghost Posts'),
                 'name' => 'ghost',
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
@@ -223,7 +228,7 @@ class Search extends Board
 
         // set all empty fields to null
         $search_fields = ['boards', 'subject', 'text', 'username', 'tripcode', 'email', 'capcode', 'uid', 'poster_ip',
-            'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order'];
+            'country', 'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order'];
 
         foreach ($search_fields as $field) {
             if (!isset($args[$field])) {
@@ -347,6 +352,10 @@ class Search extends Board
 
             if ($args['uid'] !== null) {
                 $query->match('pid', $args['uid']);
+            }
+
+            if ($args['country'] !== null) {
+                $query->match('country', $args['country'], true);
             }
 
             if ($this->getAuth()->hasAccess('comment.see_ip') && $args['poster_ip'] !== null) {

@@ -786,7 +786,7 @@ class Chan extends Common
         // Check all allowed search modifiers and apply only these
         $modifiers = [
             'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid',
-            'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'page'
+            'country', 'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'page'
         ];
 
         if ($this->getAuth()->hasAccess('comment.see_ip')) {;

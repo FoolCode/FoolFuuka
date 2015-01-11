@@ -76,6 +76,9 @@ var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
     .ticks(d3.time.hours, 2);
+var xAxisScaler = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left");
@@ -91,6 +94,10 @@ var line = d3.svg.line()
     .interpolate("basis")
     .x(function(d) { return x(d.time); })
     .y(function(d) { return y(d.y); });
+var lineAvg = d3.svg.line()
+    .interpolate("basis")
+    .x(function(d,i) { return x(d.time); })
+    .y(function(d,i) { return y(d.y); });
 var area = d3.svg.area()
     .interpolate("basis")
     .x(function(d) { return x(d.time); })
@@ -101,6 +108,7 @@ var area = d3.svg.area()
 var data_board = <?= json_encode($temp['board']) ?>;
 var data_ghost = <?= json_encode($temp['ghost']) ?>;
 var data_karma = <?= json_encode($temp['karma']) ?>;
+var data_total = <?= json_encode($temp['total']) ?>;
 
 data_board.forEach(function(d) {
     d.time = new Date(d.time * 1000);
@@ -113,6 +121,11 @@ data_ghost.forEach(function(d) {
 });
 
 data_karma.forEach(function(d) {
+    d.time = new Date(d.time * 1000);
+    d.count = +d.count;
+});
+
+data_total.forEach(function(d) {
     d.time = new Date(d.time * 1000);
     d.count = +d.count;
 });
@@ -239,6 +252,47 @@ y.domain([0, d3.max(data_karma, function(d) { return d.y + d.y0 + 2; })]);
         .attr("x", 10)
         .attr("dy", 20)
         .text("Activity (Past Year)")
+        .style("font-weight", "bold");
+
+var svg_total = d3.select("#graphs").append("svg")
+    .attr("width", w + m[3] + m[1]
+    .attr("height", h + m[0] + m[2])
+    .append("g")
+    .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+var layers = stack(nest.entries(data_total));
+x.domain(d3.extent(data_total, function(d) { return d.time; }));
+y.domain([0, d3.max(data_total, function(d) { return d.y + d.y0 + 2; })]).range([h, 0]);
+
+    svg_total.selectAll(".layer")
+        .data(layers)
+        .enter().append("path")
+        .attr("class", "layer")
+        .attr("d", function(d) { return area(d.values); })
+        .style("fill", function(d, i) { return color(i); })
+        .attr("fill-opacity",".2");
+
+    svg_total.selectAll(".line")
+        .data(layers)
+        .enter().append("path")
+        .attr("class", "line")
+        .attr("stroke", function(d, i) { return color(i); })
+        .attr("d", function(d) { return lineAvg(d.values); })
+        .style("fill", "none");
+
+    svg_total.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + h + ")")
+        .call(xAxisScaler);
+
+    svg_total.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    svg_total.append("text")
+        .attr("x", 10)
+        .attr("dy", 20)
+        .text("Activity (Total)")
         .style("font-weight", "bold");
 
 // graph legend

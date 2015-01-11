@@ -281,11 +281,14 @@ class Radix extends Model
             $table_threads->addColumn('sticky', 'boolean', ['default' => 0]);
             $table_threads->addColumn('locked', 'boolean', ['default' => 0]);
             $table_threads->setPrimaryKey(['thread_num']);
+            $table_threads->addIndex(['locked'], $this->getIndex('_threads', 'locked_index'));
             $table_threads->addIndex(['time_op'], $this->getIndex('_threads', 'time_op_index'));
             $table_threads->addIndex(['time_bump'], $this->getIndex('_threads', 'time_bump_index'));
             $table_threads->addIndex(['time_ghost_bump'], $this->getIndex('_threads', 'time_ghost_bump_index'));
             $table_threads->addIndex(['sticky'], $this->getIndex('_threads', 'sticky_index'));
-            $table_threads->addIndex(['locked'], $this->getIndex('_threads', 'locked_index'));
+            $table_threads->addIndex(['sticky', 'time_bump'], $this->getIndex('_threads', 'sticky_time_bump_index'));
+            $table_threads->addIndex(['sticky', 'time_ghost_bump'], $this->getIndex('_threads', 'sticky_time_ghost_bump_index'));
+            $table_threads->addIndex(['sticky', 'thread_num'], $this->getIndex('_threads', 'sticky_thread_num_index'));
         }
 
         if (!$schema->hasTable($this->getPrefix() . $this->shortname . '_users')) {

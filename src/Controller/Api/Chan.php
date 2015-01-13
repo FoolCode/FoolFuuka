@@ -328,7 +328,7 @@ class Chan extends Common
         }
 
         foreach ($search as $key => $value) {
-            if (in_array($key, $modifiers) && $value !== null &&) {
+            if (in_array($key, $modifiers) && $value !== null) {
                 if (trim($value) !== '') {
                     $search[$key] = rawurldecode(trim($value));
                 } else {

@@ -804,14 +804,9 @@ class Chan extends Common
 
             foreach ($modifiers as $modifier) {
                 if ($this->getPost($modifier)) {
-                    if ($modifier === 'image') {
-                        array_push($redirect_url, $modifier);
-                        array_push($redirect_url,
-                            rawurlencode(Media::urlsafe_b64encode(Media::urlsafe_b64decode($this->getPost($modifier))))
-                        );
-                    } elseif ($modifier === 'boards') {
+                    if ($modifier === 'boards') {
                         if ($this->getPost('submit_search_global')) {
-
+                            // we don't need to do anything here
                         } elseif (count($this->getPost($modifier)) == 1) {
                             $boards = $this->getPost($modifier);
                             $redirect_url[0] = $boards[0];
@@ -831,9 +826,16 @@ class Chan extends Common
                                 array_push($redirect_url, rawurlencode(implode('.', $this->getPost($modifier))));
                             }
                         }
-                    } else {
+                    } elseif (trim($this->getPost($modifier)) !== '') {
                         array_push($redirect_url, $modifier);
-                        array_push($redirect_url, rawurlencode($this->getPost($modifier)));
+
+                        if ($modifier === 'image') {
+                            array_push($redirect_url,
+                                rawurlencode(Media::urlsafe_b64encode(Media::urlsafe_b64decode($this->getPost($modifier))))
+                            );
+                        } else {
+                            array_push($redirect_url, rawurlencode($this->getPost($modifier)));
+                        }
                     }
                 }
             }

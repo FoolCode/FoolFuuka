@@ -347,16 +347,6 @@ class CommentInsert extends Comment
                 }
             }
 
-            // load the spam list and check comment, name, title and email
-            $spam = array_filter(preg_split('/\r\n|\r|\n/', file_get_contents(ASSETSPATH.'packages/anti-spam/databases/urls.dat')));
-            foreach($spam as $s) {
-                if (strpos($this->comment->comment, $s) !== false || strpos($this->comment->name, $s) !== false
-                    || strpos($this->comment->title, $s) !== false || strpos($this->comment->email, $s) !== false)
-                {
-                    throw new CommentSendingSpamException(_i('Your post has undesidered content.'));
-                }
-            }
-
             // check entire length of comment
             if (mb_strlen($this->comment->comment, 'utf-8') > $this->radix->getValue('max_comment_characters_allowed')) {
                 throw new CommentSendingTooManyCharactersException(_i('Your comment has too many characters'));

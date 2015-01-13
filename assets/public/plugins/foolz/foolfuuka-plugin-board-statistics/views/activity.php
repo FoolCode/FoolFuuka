@@ -255,7 +255,7 @@ y.domain([0, d3.max(data_karma, function(d) { return d.y + d.y0 + 2; })]);
         .style("font-weight", "bold");
 
 var svg_total = d3.select("#graphs").append("svg")
-    .attr("width", w + m[3] + m[1]
+    .attr("width", w + m[3] + m[1])
     .attr("height", h + m[0] + m[2])
     .append("g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");

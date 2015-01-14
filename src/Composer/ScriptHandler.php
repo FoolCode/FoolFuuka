@@ -24,7 +24,7 @@ class ScriptHandler
         $options = self::getOptions($event);
         $rootDir = realpath(__DIR__.'/../../');
 
-        $event->getIO->write('Installing assets.');
+        $event->getIO()->write('Installing assets.');
         foreach ($options['assets'] as $package => $path) {
             $pkgDir = $rootDir.'/'.$path;
             $webDir = $rootDir.'/'.$options['foolfuuka-web-dir'].'/foolfuuka/'.$package;

@@ -34,9 +34,9 @@ class ScriptHandler
             }
 
             if (is_dir($pkgDir)) {
-                @mkdir($webDir, 0655, true);
+                @mkdir($webDir, 0755, true);
             } else {
-                @mkdir($webDir.'/../', 0655, true);
+                @mkdir($webDir.'/../', 0755, true);
             }
 
             Util::copy($pkgDir, $webDir);

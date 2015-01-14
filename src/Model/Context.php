@@ -75,7 +75,7 @@ class Context implements ContextInterface
         /** @var Auth $auth */
         $auth = $this->context->getService('auth');
         if ($auth->hasAccess('maccess.admin')) {
-            Event::forge('Foolz\Foolfuuka\Model\System::getEnvironment#var.environment')
+            Event::forge('Foolz\Foolframe\Model\System::getEnvironment#var.environment')
                 ->setCall(function($result) use ($config) {
                     $environment = $result->getParam('environment');
 

@@ -645,5 +645,44 @@ class Chan extends Common
 
             return $this->response->setData(['success' => _i('This user was banned.')]);
         }
+
+        if ($this->getPost('action') === 'toggle_sticky') {
+            try {
+                $comments = Board::forge($this->getContext())
+                    ->getPost()
+                    ->setOptions('doc_id', $this->getPost('id'))
+                    ->setRadix($this->radix)
+                    ->getComments();
+
+                $comment = current($comments);
+                $comment = new Comment($this->getContext(), $comment);
+                $comment->setSticky((int) !$comment->comment->sticky);
+            } catch (\Foolz\Foolfuuka\Model\CommentUpdateException $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(422);
+            } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
+            }
+
+            return $this->response->setData(['success' => _i('The sticky status of this post has been updated.')]);
+        }
+
+        if ($this->getPost('action') === 'toggle_locked') {
+            try {
+                $comments = Board::forge($this->getContext())->getPost()->setOptions(
+                        'doc_id',
+                        $this->getPost('id')
+                    )->setRadix($this->radix)->getComments();
+
+                $comment = current($comments);
+                $comment = new Comment($this->getContext(), $comment);
+                $comment->setLocked((int) !$comment->comment->locked);
+            } catch (\Foolz\Foolfuuka\Model\CommentUpdateException $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(422);
+            } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
+            }
+
+            return $this->response->setData(['success' => _i('The locked status of this post has been updated.')]);
+        }
     }
 }

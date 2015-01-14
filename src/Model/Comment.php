@@ -13,6 +13,7 @@ use Foolz\Plugin\Hook;
 use Foolz\Plugin\PlugSuit;
 
 class CommentException extends \Exception {}
+class CommentUpdateException extends CommentException {}
 class CommentDeleteWrongPassException extends CommentException {}
 
 class Comment extends Model
@@ -664,6 +665,86 @@ class Comment extends Model
         }
     }
 
+    protected function p_setSticky($value = true)
+    {
+        if (!$this->comment->op) {
+            throw new CommentUpdateException(_i('Invalid Comment.'));
+        }
+
+        try {
+            $this->dc->getConnection()->beginTransaction();
+
+            // we don't want to modify archived data
+            if (!$this->radix->archive) {
+                $this->dc->qb()
+                    ->update($this->radix->getTable())
+                    ->set('sticky', $value)
+                    ->where('doc_id = :doc_id')
+                    ->setParameter(':doc_id', $this->comment->doc_id)
+                    ->execute();
+            }
+
+            $this->dc->qb()
+                ->update($this->radix->getTable('_threads'))
+                ->set('time_last_modified', ':update')
+                ->set('sticky', $value)
+                ->where('thread_num = :thread')
+                ->setParameter(':thread', $this->comment->thread_num)
+                ->setParameter(':update', $this->getRadixTime())
+                ->execute();
+
+            $this->dc->getConnection()->commit();
+            $this->clearCache();
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->logger->error('\Foolz\Foolfuuka\Model\Comment: '.$e->getMessage());
+            $this->dc->getConnection()->rollBack();
+
+            throw new CommentUpdateException(_i('Unable to update the comment sticky status.'));
+        }
+
+        return $this;
+    }
+
+    protected function p_setLocked($value = true)
+    {
+        if (!$this->comment->op) {
+            throw new CommentUpdateException(_i('Invalid Comment.'));
+        }
+
+        try {
+            $this->dc->getConnection()->beginTransaction();
+
+            // we don't want to modify archived data
+            if (!$this->radix->archive) {
+                $this->dc->qb()
+                    ->update($this->radix->getTable())
+                    ->set('locked', $value)
+                    ->where('doc_id = :doc_id')
+                    ->setParameter(':doc_id', $this->comment->doc_id)
+                    ->execute();
+            }
+
+            $this->dc->qb()
+                ->update($this->radix->getTable('_threads'))
+                ->set('time_last_modified', ':update')
+                ->set('locked', $value)
+                ->where('thread_num = :thread')
+                ->setParameter(':thread', $this->comment->thread_num)
+                ->setParameter(':update', $this->getRadixTime())
+                ->execute();
+
+            $this->dc->getConnection()->commit();
+            $this->clearCache();
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->logger->error('\Foolz\Foolfuuka\Model\Comment: '.$e->getMessage());
+            $this->dc->getConnection()->rollBack();
+
+            throw new CommentUpdateException(_i('Unable to update the comment locked status.'));
+        }
+
+        return $this;
+    }
+
     /**
      * Delete the post and eventually the entire thread if it's OP
      * Also deletes the images when it's the only post with that image
@@ -842,22 +923,7 @@ class Comment extends Model
             }
 
             $this->dc->getConnection()->commit();
-
-            // clean up some caches
-            Cache::item('foolfuuka.model.board.getThreadComments.thread.'
-                .md5(serialize([$this->radix->shortname, $this->comment->thread_num])))->delete();
-
-            // clean up the 10 first pages of index and gallery that are cached
-            for ($i = 1; $i <= 10; $i++) {
-                Cache::item('foolfuuka.model.board.getLatestComments.query.'
-                    .$this->radix->shortname.'.by_post.'.$i)->delete();
-
-                Cache::item('foolfuuka.model.board.getLatestComments.query.'
-                    .$this->radix->shortname.'.by_thread.'.$i)->delete();
-
-                Cache::item('foolfuuka.model.board.getThreadsComments.query.'
-                    .$this->radix->shortname.'.'.$i)->delete();
-            }
+            $this->clearCache();
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->logger->error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();
@@ -934,5 +1000,26 @@ class Comment extends Model
     protected function p_processSecureTripcode($plain)
     {
         return substr(base64_encode(sha1($plain . base64_decode($this->config->get('foolz/foolfuuka', 'config', 'comment.secure_tripcode_salt')), true)), 0, 11);
+    }
+
+    protected function clearCache()
+    {
+        // clean up some caches
+        Cache::item('foolfuuka.model.board.getThreadComments.thread.'
+            .md5(serialize([$this->radix->shortname, $this->comment->thread_num])))->delete();
+
+        // clean up the 10 first pages of index and gallery that are cached
+        for ($i = 1; $i <= 10; $i++) {
+            Cache::item('foolfuuka.model.board.getLatestComments.query.'
+                .$this->radix->shortname.'.by_post.'.$i)->delete();
+
+            Cache::item('foolfuuka.model.board.getLatestComments.query.'
+                .$this->radix->shortname.'.by_thread.'.$i)->delete();
+
+            Cache::item('foolfuuka.model.board.getThreadsComments.query.'
+                .$this->radix->shortname.'.'.$i)->delete();
+        }
+
+        return $this;
     }
 }

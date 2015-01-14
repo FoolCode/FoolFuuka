@@ -128,6 +128,10 @@ class BoardComment extends \Foolz\Foolfuuka\View\View
                     <button class="btn btn-mini" data-function="activateModeration"><?= _i('Mod') ?><?php if ($p->poster_ip) echo ' ' .Inet::dtop($p->poster_ip) ?></button>
                 </div>
                 <div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">
+                    <?php if ($p->op) : ?>
+                    <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="toggle_sticky"><?= _i('Toggle Sticky') ?></button>
+                    <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="toggle_locked"><?= _i('Toggle Locked') ?></button>
+                    <?php endif; ?>
                     <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-board-url="<?= $this->getUri()->create([$p->radix->shortname]) ?>" data-id="<?= $p->doc_id ?>" data-action="delete_post"><?= _i('Delete Post') ?></button>
                     <?php if ( !is_null($p_media)) : ?>
                         <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p_media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="delete_image"><?= _i('Delete Image') ?></button>

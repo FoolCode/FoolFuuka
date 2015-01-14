@@ -308,7 +308,9 @@ class Search extends Board
 
             // establish connection
             try {
-                $query = SphinxQL::create($conn)->select('id', 'board')->from($indexes);
+                $query = SphinxQL::create($conn)->select('id', 'board')->from($indexes)
+                    ->setFullEscapeChars(['\\', '(', ')', '|', '-', '!', '@', '%', '~', '"', '&', '/', '^', '$', '='])
+                    ->setHalfEscapeChars(['\\', '(', ')', '!', '@', '%', '~', '&', '/', '^', '$', '=']);
             } catch (\Foolz\SphinxQL\ConnectionException $e) {
                 throw new SearchSphinxOfflineException(_i('The search backend is currently unavailable.'));
             }

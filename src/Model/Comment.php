@@ -401,6 +401,10 @@ class Comment extends Model
                 ['block', 'inline'], ['code']];
             $codes[] = ['sup', 'simple_replace', null, ['start_tag' => '<sup>', 'end_tag' => '</sup>'], 'inline',
                 ['block', 'inline'], ['code']];
+            $codes[] = ['math', 'simple_replace', null, ['start_tag' => '<script type="math/tex">', 'end_tag' => '</script>'],
+                'inline', ['block', 'inline'], ['code']];
+            $codes[] = ['eqn', 'simple_replace', null, ['start_tag' => '<script type="math/tex; mode=display">', 'end_tag' => '</script>'],
+                'inline', ['block', 'inline'], ['code']];
             $codes[] = ['b', 'simple_replace', null, ['start_tag' => '<b>', 'end_tag' => '</b>'], 'inline',
                 ['block', 'inline'], ['code']];
             $codes[] = ['i', 'simple_replace', null, ['start_tag' => '<em>', 'end_tag' => '</em>'], 'inline',

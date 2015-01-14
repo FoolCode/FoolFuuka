@@ -61,6 +61,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
               title="<?= $this->getPreferences()->get('foolframe.gen.website_title'); ?> " href="<?= $this->getUri()->create('_/opensearch') ?>"/>
         <?php endif; ?>
 
+        <script src="<?= $this->getUri()->create('foolfuuka/mathjax/mathjax') ?>MathJax.js?config=default"></script>
         <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
 
     </head>

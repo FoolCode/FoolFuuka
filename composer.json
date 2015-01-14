@@ -7,6 +7,12 @@
             "email": "support@foolz.us"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mathjax/MathJax"
+        }
+    ],
     "require": {
         "foolz/foolframe": "dev-master",
         "foolz/inet": "dev-master",
@@ -28,20 +34,37 @@
         "symfony/validator": "2.3.*",
 
         "doctrine/dbal": "2.5.*@beta",
-        "michelf/php-markdown": "1.3.*@dev",
-        "monolog/monolog": "1.9.*",
-        "swiftmailer/swiftmailer": "5.0.*",
-        "ircmaxell/password-compat": "1.0.*",
-        "rych/bytesize": "1.0.*",
-        "neutron/recaptcha": "~0.1",
         "forxer/Gravatar": "~1.1",
+        "geoip2/geoip2": "~0.6",
+        "ircmaxell/password-compat": "1.0.*",
+        "michelf/php-markdown": "1.3.*@dev",
+        "mathjax/mathjax": "dev-v2.5-beta",
+        "monolog/monolog": "1.9.*",
+        "neutron/recaptcha": "~0.1",
         "predis/predis": "~0.8",
-        "geoip2/geoip2": "~0.6"
+        "swiftmailer/swiftmailer": "5.0.*",
+        "rych/bytesize": "1.0.*"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Foolz\\Foolfuuka\\Composer\\ScriptHandler::installAssets"
+        ],
+        "post-update-cmd": [
+            "Foolz\\Foolfuuka\\Composer\\ScriptHandler::installAssets"
+        ]
     },
     "autoload": {
         "psr-4": {"Foolz\\Foolfuuka\\": "src/"},
         "classmap": [
           "assets/packages/stringparser-bbcode/library/stringparser_bbcode.class.php"
         ]
+    },
+    "extra": {
+        "foolfuuka-app-dir": "app",
+        "foolfuuka-web-dir": "public",
+        "assets": {
+            "mathjax/mathjax": "vendor/mathjax/mathjax",
+            "mathjax/mathjax/config/default.js": "assets/config/mathjax.js"
+        }
     }
 }

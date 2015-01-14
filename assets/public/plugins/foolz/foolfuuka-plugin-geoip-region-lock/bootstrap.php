@@ -11,7 +11,7 @@ class HHVM_GeoIpBlock
 {
     public function run()
     {
-        Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-geoip-region-lock')
+        Event::forge('Foolz\Plugin\Plugin::execute#foolz/foolfuuka-plugin-geoip-region-lock')
             ->setCall(function(Result $result) {
                 /* @var $context Context */
                 $context = $result->getParam('context');
@@ -23,7 +23,7 @@ class HHVM_GeoIpBlock
                     'Foolz\Foolfuuka\Plugins\GeoipRegionLock\Model\GeoipRegionLock' =>__DIR__.'/classes/model/geoip_region_lock.php'
                 ]);
 
-                Event::forge('Foolz\Foolframe\Model\Context.handleWeb.has_auth')
+                Event::forge('Foolz\Foolframe\Model\Context::handleWeb#obj.afterAuth')
                     ->setCall(function($result) use ($context) {
                         // don't add the admin panels if the user is not an admin
                         /** @var Auth $auth */
@@ -42,7 +42,7 @@ class HHVM_GeoIpBlock
                                 )
                             );
 
-                            Event::forge('Foolz\Foolframe\Controller\Admin.before.sidebar.add')
+                            Event::forge('Foolz\Foolframe\Controller\Admin::before#var.sidebar')
                                 ->setCall(function($result) {
                                     $sidebar = $result->getParam('sidebar');
                                     $sidebar[]['plugins'] = [
@@ -62,13 +62,13 @@ class HHVM_GeoIpBlock
                         $object = $context->getService('foolfuuka-plugin.geoip_region_lock');
 
                         if (!$auth->hasAccess('maccess.mod') && !($preferences->get('foolfuuka.plugins.geoip_region_lock.allow_logged_in') && $auth->hasAccess('access.user'))) {
-                            Event::forge('Foolz\Foolframe\Model\Context.handleWeb.override_response')
+                            Event::forge('Foolz\Foolframe\Model\Context::handleWeb#obj.response')
                                 ->setCall(function(Result $result) use ($context, $object) {
                                     $object->blockCountryView($result);
                                 })
                                 ->setPriority(2);
 
-                            Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.method')
+                            Event::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#call.beforeMethod')
                                 ->setCall(function(Result $result) use ($context, $object) {
                                     $object->blockCountryComment($result);
                                 })
@@ -78,7 +78,7 @@ class HHVM_GeoIpBlock
 
 
 
-                Event::forge('Foolz\Foolfuuka\Model\Radix::structure.result')
+                Event::forge('Foolz\Foolfuuka\Model\RadixCollection::structure#var.structure')
                     ->setCall(function(Result $result){
                         $structure = $result->getParam('structure');
 
@@ -101,6 +101,7 @@ class HHVM_GeoIpBlock
                             'help' => _i('Comma separated list of GeoIP 2-letter nation codes.'),
                             'default_value' => false
                         ];
+
                         $result->setParam('structure', $structure)->set($structure);
                     })->setPriority(8);
             });

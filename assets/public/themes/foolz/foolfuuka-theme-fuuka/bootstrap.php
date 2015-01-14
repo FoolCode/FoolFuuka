@@ -1,11 +1,12 @@
 <?php
 
+use Foolz\Plugin\Event;
 use Symfony\Component\Routing\Route;
 
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/controller.php';
 
-\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Context.loadRoutes.after')
+Event::forge('Foolz\Foolfuuka\Model\Context::loadRoutes#obj.afterRouting')
     ->setCall(function($result) {
         $obj = $result->getObject();
         foreach ($obj->context->getService('foolfuuka.radix_collection')->getAll() as $radix) {
@@ -26,14 +27,14 @@ require_once __DIR__ . '/controller.php';
     });
 
 // use hooks for manipulating comments
-\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Comment::processComment.result.greentext')
+Event::forge('Foolz\Foolfuuka\Model\Comment::processComment#var.greentext')
     ->setCall(function($result) {
         $html= '\\1<span class="greentext">\\2</span>\\3';;
         $result->setParam('html', $html)->set($html);
     })
     ->setPriority(8);
 
-\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Comment::processInternalLinks.result.html')
+Event::forge('Foolz\Foolfuuka\Model\Comment::processInternalLinks#var.link')
     ->setCall(function($result) {
         $data = $result->getParam('data');
         $html = [
@@ -48,7 +49,7 @@ require_once __DIR__ . '/controller.php';
     })
     ->setPriority(8);
 
-\Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Comment::processExternalLinks.result.html')
+Event::forge('Foolz\Foolfuuka\Model\Comment::processExternalLinks#var.link')
     ->setCall(function($result) {
         $data = $result->getParam('data');
         $html = [

@@ -4,6 +4,7 @@ namespace Foolz\Foolfuuka\Model;
 
 use Foolz\Cache\Cache;
 use Foolz\Inet\Inet;
+use Foolz\Plugin\Hook;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use Neutron\ReCaptcha\ReCaptcha;
@@ -332,6 +333,10 @@ class CommentInsert extends Comment
                     throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution.'));
                 }
             } elseif ($this->preferences->get('foolframe.auth.recaptcha_public')) { // if there wasn't a recaptcha input, let's go with heavier checks
+                Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#obj.captcha')
+                    ->setObject($this)
+                    ->execute();
+
                 if (substr_count($this->comment->comment, 'http') >= $this->radix->getValue('captcha_comment_link_limit')) {
                     throw new CommentSendingRequestCaptchaException;
                 }
@@ -358,7 +363,7 @@ class CommentInsert extends Comment
             }
         }
 
-        \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.after.input_checks')
+        Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#obj.afterInputCheck')
             ->setObject($this)
             ->execute();
 
@@ -470,7 +475,7 @@ class CommentInsert extends Comment
 
         $this->comment->timestamp = $this->getRadixTime($this->comment->timestamp);
 
-        \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert.call.before.sql')
+        Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#obj.comment')
             ->setObject($this)
             ->execute();
 

@@ -1,9 +1,11 @@
 <?php
 
-\Foolz\Plugin\Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-gifsicle')
+use Foolz\Plugin\Event;
+
+Event::forge('Foolz\Plugin\Plugin::execute#foolz/foolfuuka-plugin-gifsicle')
     ->setCall(function($result) {
 
-        \Foolz\Plugin\Event::forge('Foolz\Foolfuuka\Model\Media::insert.result.create_thumbnail')
+        Event::forge('Foolz\Foolfuuka\Model\Media::insert#exec.createThumbnail')
             ->setCall(function($result){
 
                 if (!$result instanceof \Foolz\Plugin\Void || strtolower($this->temp_extension) !== 'gif') {

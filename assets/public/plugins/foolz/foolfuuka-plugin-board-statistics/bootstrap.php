@@ -14,7 +14,7 @@ class HHVM_BS
 {
     public function run()
     {
-        Event::forge('Foolz\Plugin\Plugin::execute.foolz/foolfuuka-plugin-board-statistics')
+        Event::forge('Foolz\Plugin\Plugin::execute#foolz/foolfuuka-plugin-board-statistics')
             ->setCall(function ($result) {
                 /* @var Context $context */
                 $context = $result->getParam('context');
@@ -32,11 +32,11 @@ class HHVM_BS
                     ->register('foolfuuka-plugin.board_statistics', 'Foolz\Foolfuuka\Plugins\BoardStatistics\Model\BoardStatistics')
                     ->addArgument($context);
 
-                Event::forge('Foolz\Foolframe\Model\Context.handleWeb.has_auth')
+                Event::forge('Foolz\Foolframe\Model\Context::handleWeb#obj.afterAuth')
                     ->setCall(function ($result) use ($context) {
                         // don't add the admin panels if the user is not an admin
                         if ($context->getService('auth')->hasAccess('maccess.admin')) {
-                            Event::forge('Foolz\Foolframe\Controller\Admin.before.sidebar.add')
+                            Event::forge('Foolz\Foolframe\Controller\Admin::before#var.sidebar')
                                 ->setCall(function ($result) {
                                     $sidebar = $result->getParam('sidebar');
                                     $sidebar[]['plugins'] = [
@@ -71,13 +71,13 @@ class HHVM_BS
                             })->setPriority(3);
                     });
 
-                Event::forge('Foolz\Foolframe\Model\Context::handleConsole.add')
+                Event::forge('Foolz\Foolframe\Model\Context::handleConsole#obj.app')
                     ->setCall(function ($result) use ($context) {
                         $result->getParam('application')
                             ->add(new \Foolz\Foolfuuka\Plugins\BoardStatistics\Console\Console($context));
                     });
 
-                Event::forge('Foolz\Foolframe\Model\Context.handleWeb.route_collection')
+                Event::forge('Foolz\Foolframe\Model\Context::handleWeb#obj.routing')
                     ->setCall(function ($result) use ($context) {
                         /** @var RadixCollection $radix_coll */
                         $radix_coll = $context->getService('foolfuuka.radix_collection');
@@ -101,7 +101,7 @@ class HHVM_BS
                     });
             });
 
-        Event::forge('Foolz\Foolframe\Model\Plugin::schemaUpdate.foolz/foolfuuka-plugin-board-statistics')
+        Event::forge('Foolz\Foolframe\Model\Plugin::install#foolz/foolfuuka-plugin-board-statistics')
             ->setCall(function ($result) {
                 /** @var Context $context */
                 $context = $result->getParam('context');

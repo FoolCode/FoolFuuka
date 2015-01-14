@@ -132,7 +132,7 @@ class MediaFactory extends Model
      */
     protected function p_forgeFromUpload(Request $request, Radix $radix)
     {
-        $config = Hook::forge('Foolz\Foolfuuka\Model\Media::upload.config')
+        $config = Hook::forge('Foolz\Foolfuuka\Model\MediaFactory::forgeFromUpload#var.config')
             ->setParams([
                 'ext_whitelist' => ['jpg', 'jpeg', 'gif', 'png'],
                 'mime_whitelist' => ['image/jpeg', 'image/png', 'image/gif']

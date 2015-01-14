@@ -8,6 +8,7 @@ use Foolz\Cache\Cache;
 use Foolz\Foolframe\Model\Model;
 use Foolz\Foolframe\Model\Preferences;
 use Foolz\Foolframe\Model\Uri;
+use Foolz\Plugin\Hook;
 use Foolz\Plugin\PlugSuit;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -399,7 +400,7 @@ class Media extends Model
      */
     public function getLink(Request $request, $thumbnail = false, $download = false)
     {
-        $before = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::getLink.call.before.method.body')
+        $before = Hook::forge('Foolz\Foolfuuka\Model\Media::getLink#exec.beforeMethod')
             ->setObject($this)
             ->setParams(['thumbnail' => $thumbnail])
             ->execute()
@@ -663,7 +664,7 @@ class Media extends Model
         $file = $this->temp_file;
         $this->op = $is_op;
 
-        $data = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::insert.result.media_data')
+        $data = Hook::forge('Foolz\Foolfuuka\Model\Media::insert#var.media')
             ->setParams([
                 'dimensions' => getimagesize($file->getPathname()),
                 'file' => $file,
@@ -780,7 +781,7 @@ class Media extends Model
                 mkdir($this->pathFromFilename(true, $is_op), 0777, true);
             }
 
-            $return = \Foolz\Plugin\Hook::forge('Foolz\Foolfuuka\Model\Media::insert.result.create_thumbnail')
+            $return = Hook::forge('Foolz\Foolfuuka\Model\Media::insert#exec.createThumbnail')
                 ->setObject($this)
                 ->setParams([
                     'thumb_width' => $thumb_width,

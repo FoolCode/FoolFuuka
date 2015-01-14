@@ -119,7 +119,7 @@ class HHVM_BS
                 $table->addColumn('board_id', 'integer', ['unsigned' => true]);
                 $table->addColumn('name', 'string', ['length' => 32]);
                 $table->addColumn('timestamp', 'integer', ['unsigned' => true]);
-                $table->addColumn('data', 'text', ['length' => 65532]);
+                $table->addColumn('data', 'text', ['length' => 4294967295]);
                 $table->setPrimaryKey(['id']);
                 $table->addUniqueIndex(['board_id', 'name'], $dc->p('plugin_fu_board_statistics_board_id_name_index'));
                 $table->addIndex(['timestamp'], $dc->p('plugin_fu_board_statistics_timestamp_index'));

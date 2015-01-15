@@ -26,17 +26,24 @@ FoolFuuka supports the following database servers:
 * MariaDB 5.5+ (Recommended)
 * MySQL 5.5+
 
-Note: When dealing with large amounts of data, we recommend using the `TokuDB` storage engine for all board
-tables which is available with MariaDB. This mainly applies to deployments used to provide a front-end for
-`Asagi <https://github.com/FoolCode/asagi>`_ and archives.
+.. note::
+
+    When dealing with large amounts of data, we recommend using the ``TokuDB`` storage engine for all
+    board tables which is available with MariaDB. This mainly applies to deployments used to provide a
+    front-end for `Asagi <https://github.com/FoolCode/asagi>`_ and archives.
 
 
 Search Server
 -------------
 
-FoolFuuka requires an additional software to index and serve search results to users. This is achieved with
-`Sphinx Open Source Search Server <http://sphinxsearch.com/>`_ which must be installed to provide users
-with search capabilities.
+FoolFuuka requires an additional software to index and serve search results to users. This is achieved
+with `Sphinx Open Source Search Server <http://sphinxsearch.com/>`_ which must be installed to provide
+users with search capabilities.
+
+.. note::
+
+    FoolFuuka includes a Sphinx configuration file generator in the web administration interface and
+    should be used to generate a new sphinx configuration file accordingly.
 
 
 Git/Composer

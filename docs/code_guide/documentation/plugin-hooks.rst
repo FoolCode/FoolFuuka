@@ -1,156 +1,217 @@
 Plugin Hooks
 ============
 
+Plugin
+------
+
+**Foolz\\Plugin\\Plugin::execute#<plugin-name>**
+
+.. code-block:: php
+
+    ->setObject($plugin)
+    ->setParam('context', $this->getContext())
+
+**Foolz\\Foolframe\\Model\\Plugin::install#<plugin-name>**
+
+.. code-block:: php
+
+    ->setParam('context', $this->getContext())
+    ->setParam('schema', $sm->getCodedSchema())
+
+
 FoolFrame
 ---------
 
-Foolz\\Foolframe\\Model\\System::getEnvironment#var.environment::
+**Foolz\\Foolframe\\Model\\System::getEnvironment#var.environment**
 
-    setParam environment $environment
+.. code-block:: php
 
-Foolz\\Foolframe\\Model\\SchemaManager::forge#var.ignorePrefix::
+    ->setParam('environment', $environment)
 
-    setObject new static()
-    setParam prefixes $prefixes
+**Foolz\\Foolframe\\Model\\SchemaManager::forge#var.ignorePrefix**
 
-Foolz\\Foolframe\\Model\\SchemaManager::forge#var.tables::
+.. code-block:: php
 
-    setObject new static()
-    setParam tables $tables
+    ->setObject(new static())
+    ->setParam('prefixes', $prefixes)
 
-Foolz\\Foolframe\\Model\\Preferences::load#var.preferences::
+**Foolz\\Foolframe\\Model\\SchemaManager::forge#var.tables**
 
-    setObject $this
-    setparam preferences $this->preferences
+.. code-block:: php
 
-Foolz\\Foolframe\\Model\\Context::handleConsole#obj.app::
+    ->setObject(new static())
+    ->setParam('tables', $tables)
 
-    setObject $this
-    setParam application $application
+**Foolz\\Foolframe\\Model\\Preferences::load#var.preferences**
 
-Foolz\\Foolframe\\Model\\Context::handleWeb#obj.afterAuth::
+.. code-block:: php
 
-    setObject $this
-    setParam route_collection $this->route_collection
+    ->setObject($this)
+    ->setParam('preferences', $this->preferences)
 
-Foolz\\Foolframe\\Model\\Context::handleWeb#obj.routing::
+**Foolz\\Foolframe\\Model\\Context::handleConsole#obj.app**
 
-    setObject $this
-    setParam route_collection $this->route_collection
+.. code-block:: php
 
-Foolz\\Foolframe\\Model\\Context::handleWeb#obj.context::
+    ->setObject($this)
+    ->setParam('application', $application)
 
-    setObject $this
+**Foolz\\Foolframe\\Model\\Context::handleWeb#obj.afterAuth**
 
-Foolz\\Foolframe\\Model\\Context::handleWeb#obj.request::
+.. code-block:: php
 
-    setObject $this
-    setParam request $request
+    ->setObject($this)
+    ->setParam('route_collection', $this->route_collection)
 
-Foolz\\Foolframe\\Model\\Context::handleWeb#obj.response::
+**Foolz\\Foolframe\\Model\\Context::handleWeb#obj.routing**
 
-    setObject $this
-    setParam request $request
+.. code-block:: php
 
-Foolz\\Foolframe\\Controller\\Admin::before#var.sidebar::
+    ->setObject($this)
+    ->setParam('route_collection', $this->route_collection)
 
-    setObject $this
-    setParam sidebar []
+**Foolz\\Foolframe\\Model\\Context::handleWeb#obj.context**
 
-Foolz\\Plugin\\Plugin::execute#<plugin-name>::
+.. code-block:: php
 
-    setObject $plugin
-    setParam context $this->getContext()
+    ->setObject($this)
 
-Foolz\\Foolframe\\Model\\Plugin::install#<plugin-name>::
+**Foolz\\Foolframe\\Model\\Context::handleWeb#obj.request**
 
-    setParam context $this->getContext()
-    setParam schema $sm->getCodedSchema()
+.. code-block:: php
+
+    ->setObject($this)
+    ->setParam('request', $request)
+
+**Foolz\\Foolframe\\Model\\Context::handleWeb#obj.response**
+
+.. code-block:: php
+
+    ->setObject($this)
+    ->setParam('request', $request)
+
+**Foolz\\Foolframe\\Controller\\Admin::before#var.sidebar**
+
+.. code-block:: php
+
+    ->setObject($this)
+    ->setParam('sidebar', [])
 
 
 FoolFuuka
 ---------
 
-Foolz\\Foolfuuka\\Model\\Comment::processComment#var.greentext::
+**Foolz\\Foolfuuka\\Model\\Comment::processComment#var.greentext**
 
-    setParam html $html
+.. code-block:: php
 
-Foolz\\Foolfuuka\\Model\\Comment::processExternalLinks#var.link::
+    ->setParam('html', $html)
 
-    setObject $this
-    setParam data $data
-    setParam build_href $build_href
+**Foolz\\Foolfuuka\\Model\\Comment::processExternalLinks#var.link**
 
-Foolz\\Foolfuuka\\Model\\Comment::processInternalLinks#var.link::
+.. code-block:: php
 
-    setObject $this
-    setParam data $data
-    setParam build_url $build_url
+    ->setObject($this)
+    ->setParam('data', $data)
+    ->setParam('build_href', $build_href)
 
-Foolz\\Foolfuuka\\Model\\CommentInsert::insert#obj.captcha::
+**Foolz\\Foolfuuka\\Model\\Comment::processInternalLinks#var.link**
 
-    setObject $this
+.. code-block:: php
 
-Foolz\\Foolfuuka\\Model\\CommentInsert::insert#obj.afterInputCheck::
+    ->setObject($this)
+    ->setParam('data', $data)
+    ->setParam('build_url', $build_url)
 
-    setObject $this
+**Foolz\\Foolfuuka\\Model\\CommentInsert::insert#obj.captcha**
 
-Foolz\\Foolfuuka\\Model\\CommentInsert::insert#obj.comment::
+.. code-block:: php
 
-    setObject $this
+    ->setObject($this)
 
-Foolz\\Foolfuuka\\Model\\Context::loadRoutes#obj.beforeRouting::
+**Foolz\\Foolfuuka\\Model\\CommentInsert::insert#obj.afterInputCheck**
 
-    setObject $this
-    setParam route_collection $route_collection
+.. code-block:: php
 
-Foolz\\Foolfuuka\\Model\\Context::loadRoutes#var.collection::
+    ->setObject($this)
 
-    setParam default_suffix page
-    setParam suffix page
-    setParam controller 'Foolz\\Foolfuuka\\Controller\\Chan::*'
+**Foolz\\Foolfuuka\\Model\\CommentInsert::insert#obj.comment**
 
-Foolz\\Foolfuuka\\Model\\Context::loadRoutes#obj.afterRouting::
+.. code-block:: php
 
-    setObject $this
-    setParam route_collection $route_collection
+    ->setObject($this)
 
-Foolz\\Foolfuuka\\Model\\Media::getLink#exec.beforeMethod::
+**Foolz\\Foolfuuka\\Model\\Context::loadRoutes#obj.beforeRouting**
 
-    setObject $this
-    setParam thumbnail $thumbnail
+.. code-block:: php
 
-Foolz\\Foolfuuka\\Model\\Media::insert#var.media::
+    ->setObject($this)
+    ->setParam('route_collection', $route_collection)
 
-    setParam dimensions
-    setParam file
-    setParam name
-    setParam path
-    setParam hash
-    setParam size
-    setParam time
-    setParam media_orig
-    setParam preview_orig
+**Foolz\\Foolfuuka\\Model\\Context::loadRoutes#var.collection**
 
-Foolz\\Foolfuuka\\Model\\Media::insert#exec.createThumbnail::
+.. code-block:: php
 
-    setObject $this
-    setParam thumb_width
-    setParam thumb_height
-    setParam exec
-    setParam is_op
-    setParam media
-    setParam thumb
+    ->setParam('default_suffix', page)
+    ->setParam('suffix', page)
+    ->setParam('controller', 'Foolz\\Foolfuuka\\Controller\\Chan::*')
 
-Foolz\\Foolfuuka\\Model\\MediaFactory::forgeFromUpload#var.config::
+**Foolz\\Foolfuuka\\Model\\Context::loadRoutes#obj.afterRouting**
 
-    setParam ext_whitelist []
-    setParam mime_whitelist []
-Foolz\\Foolfuuka\\Model\\RadixCollection::structure#var.structure::
+.. code-block:: php
 
-    setParam structure $structure
+    ->setObject($this)
+    ->setParam('route_collection', $route_collection)
 
-Foolz\\Foolfuuka\\Model\\RadixCollection::preload#var.radixes::
+**Foolz\\Foolfuuka\\Model\\Media::getLink#exec.beforeMethod**
 
-    setObject $this
-    setParam preloaded_radixes $this->preloaded_radixes
+.. code-block:: php
+
+    ->setObject($this)
+    ->setParam('thumbnail', $thumbnail)
+
+**Foolz\\Foolfuuka\\Model\\Media::insert#var.media**
+
+.. code-block:: php
+
+    ->setParam('dimensions', $dimensions)
+    ->setParam('file', $file)
+    ->setParam('name', $name
+    ->setParam('path', $path)
+    ->setParam('hash', $hash)
+    ->setParam('size', $size)
+    ->setParam('time', $time)
+    ->setParam('media_orig', $media_orig)
+    ->setParam('preview_orig', $preview_orig)
+
+**Foolz\\Foolfuuka\\Model\\Media::insert#exec.createThumbnail**
+
+.. code-block:: php
+
+    ->setObject($this)
+    ->setParam('is_op', $is_op)
+    ->setParam('media', $media)
+    ->setParam('thumb', $thumb)
+    ->setParam('thumb_width', $thumb_width)
+    ->setParam('thumb_height', $thumb_height)
+    ->setParam('exec', $exec)
+
+**Foolz\\Foolfuuka\\Model\\MediaFactory::forgeFromUpload#var.config**
+
+.. code-block:: php
+
+    ->setParam('ext_whitelist', [])
+    ->setParam('mime_whitelist', [])
+
+**Foolz\\Foolfuuka\\Model\\RadixCollection::structure#var.structure**
+
+.. code-block:: php
+
+    ->setParam('structure', $structure)
+
+**Foolz\\Foolfuuka\\Model\\RadixCollection::preload#var.radixes**
+
+.. code-block:: php
+
+    ->setObject($this)
+    ->setParam('preloaded_radixes', $this->preloaded_radixes)

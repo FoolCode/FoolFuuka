@@ -26,3 +26,10 @@ modindex_common_prefix = ['foolfuuka']
 html_theme = 'default'
 html_static_path = ['_static']
 htmlhelp_basename = 'FoolFuukaDoc'
+
+from sphinx.highlighting import lexers
+from pygments.lexers.web import JsonLexer
+from pygments.lexers.web import PhpLexer
+
+lexers['json'] = JsonLexer(startinline=True)
+lexers['php'] = PhpLexer(startinline=True)

@@ -943,6 +943,14 @@ class Chan extends Common
             array_push($title,
                 sprintf(_i('with the tripcode &lsquo;%s&rsquo;'),
                     e($search['tripcode'])));
+        if ($search['uid'])
+            array_push($title,
+                sprintf(_i('with the unique id &lsquo;%s&rsquo;'),
+                    e($search['uid'])));
+        if ($search['email'])
+            array_push($title,
+                sprintf(_i('with the email &lsquo;%s&rsquo;'),
+                    e($search['email'])));
         if ($search['filename'])
             array_push($title,
                 sprintf(_i('with the filename &lsquo;%s&rsquo;'),
@@ -952,6 +960,10 @@ class Chan extends Common
                 sprintf(_i('with the image hash &lsquo;%s&rsquo;'),
                     e($search['image'])));
         }
+        if ($search['country'])
+            array_push($title,
+                sprintf(_i('in &lsquo;%s&rsquo;'),
+                    e($search['country'])));
         if ($search['deleted'] == 'deleted')
             array_push($title, _i('that have been deleted'));
         if ($search['deleted'] == 'not-deleted')

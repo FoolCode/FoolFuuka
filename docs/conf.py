@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys, os
-sys.path.insert(0, '../')
+sys.path.insert(0, os.path.abspath('.'))
 #needs_sphinx = '1.0'
 
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode']
@@ -26,8 +26,3 @@ modindex_common_prefix = ['foolfuuka']
 html_theme = 'default'
 html_static_path = ['_static']
 htmlhelp_basename = 'FoolFuukaDoc'
-
-from sphinx.highlighting import lexers
-from pygments.lexers.web import PhpLexer
-
-lexers['php'] = PhpLexer(startinline=True)

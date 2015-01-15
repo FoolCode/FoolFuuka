@@ -22,32 +22,12 @@ Plugin
 FoolFrame
 ---------
 
-**Foolz\\Foolframe\\Model\\System::getEnvironment#var.environment**
-
-.. code-block:: php
-
-    ->setParam('environment', $environment)
-
-**Foolz\\Foolframe\\Model\\SchemaManager::forge#var.ignorePrefix**
-
-.. code-block:: php
-
-    ->setObject(new static())
-    ->setParam('prefixes', $prefixes)
-
-**Foolz\\Foolframe\\Model\\SchemaManager::forge#var.tables**
-
-.. code-block:: php
-
-    ->setObject(new static())
-    ->setParam('tables', $tables)
-
-**Foolz\\Foolframe\\Model\\Preferences::load#var.preferences**
+**Foolz\\Foolframe\\Controller\\Admin::before#var.sidebar**
 
 .. code-block:: php
 
     ->setObject($this)
-    ->setParam('preferences', $this->preferences)
+    ->setParam('sidebar', [])
 
 **Foolz\\Foolframe\\Model\\Context::handleConsole#obj.app**
 
@@ -90,12 +70,32 @@ FoolFrame
     ->setObject($this)
     ->setParam('request', $request)
 
-**Foolz\\Foolframe\\Controller\\Admin::before#var.sidebar**
+**Foolz\\Foolframe\\Model\\Preferences::load#var.preferences**
 
 .. code-block:: php
 
     ->setObject($this)
-    ->setParam('sidebar', [])
+    ->setParam('preferences', $this->preferences)
+
+**Foolz\\Foolframe\\Model\\SchemaManager::forge#var.ignorePrefix**
+
+.. code-block:: php
+
+    ->setObject(new static())
+    ->setParam('prefixes', $prefixes)
+
+**Foolz\\Foolframe\\Model\\SchemaManager::forge#var.tables**
+
+.. code-block:: php
+
+    ->setObject(new static())
+    ->setParam('tables', $tables)
+
+**Foolz\\Foolframe\\Model\\System::getEnvironment#var.environment**
+
+.. code-block:: php
+
+    ->setParam('environment', $environment)
 
 
 FoolFuuka

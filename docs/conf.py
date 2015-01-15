@@ -12,18 +12,22 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'FoolFuuka'
-copyright = u'2012-2014, Foolz'
+copyright = u'2012-2015, FoolCode'
 
+version = '2.1.0'
+release = version
 
-version = '2.0.x'
-release = '2.0.x'
-
-exclude_patterns = ['_build']
+exclude_patterns = ['_build', 'html', 'doctrees']
 add_function_parentheses = True
 add_module_names = True
 show_authors = False
 pygments_style = 'sphinx'
 modindex_common_prefix = ['foolfuuka']
-html_theme = 'nature'
+html_theme = 'default'
 html_static_path = ['_static']
-htmlhelp_basename = 'foolfuukadoc'
+htmlhelp_basename = 'FoolFuukaDoc'
+
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+
+lexers['php'] = PhpLexer(startinline=True)

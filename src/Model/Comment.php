@@ -668,7 +668,7 @@ class Comment extends Model
     protected function p_setThreadData($field = null, $value = null)
     {
         if ($field === null || $value === null) {
-            throw nwe CommentUpdateException(_i('Missing parameters.'));
+            throw new CommentUpdateException(_i('Missing parameters.'));
         }
 
         try {

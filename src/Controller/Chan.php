@@ -606,15 +606,11 @@ class Chan extends Common
                 return new RedirectResponse($this->uri->create([$this->radix->shortname, 'post', implode('_', $post)]));
             }
 
-            $board = Board::forge($this->getContext())
+            $comment = Board::forge($this->getContext())
                 ->getPost()
+                ->setOptions('num', $num)
                 ->setRadix($this->radix)
-                ->setOptions('num', $num);
-
-            $comments = $board->getComments();
-
-            // it always returns an array
-            $comment = current($comments);
+                ->getComment();
 
             $redirect =  $this->uri->create($this->radix->shortname.'/thread/'.$comment->comment->thread_num.'/');
 

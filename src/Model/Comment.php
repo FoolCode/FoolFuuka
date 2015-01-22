@@ -665,10 +665,10 @@ class Comment extends Model
         }
     }
 
-    protected function p_setSticky($value = true)
+    protected function p_setThreadData($field = null, $value = null)
     {
-        if (!$this->comment->op) {
-            throw new CommentUpdateException(_i('Invalid Comment.'));
+        if ($field === null || $value === null) {
+            throw nwe CommentUpdateException(_i('Missing parameters.'));
         }
 
         try {
@@ -687,7 +687,7 @@ class Comment extends Model
             $this->dc->qb()
                 ->update($this->radix->getTable('_threads'))
                 ->set('time_last_modified', ':update')
-                ->set('sticky', $value)
+                ->set($field, $value)
                 ->where('thread_num = :thread')
                 ->setParameter(':thread', $this->comment->thread_num)
                 ->setParameter(':update', $this->getRadixTime())
@@ -699,10 +699,19 @@ class Comment extends Model
             $this->logger->error('\Foolz\Foolfuuka\Model\Comment: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();
 
-            throw new CommentUpdateException(_i('Unable to update the comment sticky status.'));
+            throw new CommentUpdateException(_i('Unable to update the comment thread data.'));
         }
 
         return $this;
+    }
+
+    protected function p_setSticky($value = true)
+    {
+        if (!$this->comment->op) {
+            throw new CommentUpdateException(_i('Invalid Comment.'));
+        }
+
+        return $this->setThreadData('sticky', $value);
     }
 
     protected function p_setLocked($value = true)
@@ -711,38 +720,7 @@ class Comment extends Model
             throw new CommentUpdateException(_i('Invalid Comment.'));
         }
 
-        try {
-            $this->dc->getConnection()->beginTransaction();
-
-            // we don't want to modify archived data
-            if (!$this->radix->archive) {
-                $this->dc->qb()
-                    ->update($this->radix->getTable())
-                    ->set('locked', $value)
-                    ->where('doc_id = :doc_id')
-                    ->setParameter(':doc_id', $this->comment->doc_id)
-                    ->execute();
-            }
-
-            $this->dc->qb()
-                ->update($this->radix->getTable('_threads'))
-                ->set('time_last_modified', ':update')
-                ->set('locked', $value)
-                ->where('thread_num = :thread')
-                ->setParameter(':thread', $this->comment->thread_num)
-                ->setParameter(':update', $this->getRadixTime())
-                ->execute();
-
-            $this->dc->getConnection()->commit();
-            $this->clearCache();
-        } catch (\Doctrine\DBAL\DBALException $e) {
-            $this->logger->error('\Foolz\Foolfuuka\Model\Comment: '.$e->getMessage());
-            $this->dc->getConnection()->rollBack();
-
-            throw new CommentUpdateException(_i('Unable to update the comment locked status.'));
-        }
-
-        return $this;
+        return $this->setThreadData('locked', $value);
     }
 
     /**

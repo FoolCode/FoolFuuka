@@ -120,6 +120,18 @@ class Board extends Model
     }
 
     /**
+     * Returns a single comment, and executes the query if not already executed
+     *
+     *  @return \Foolz\Foolfuuka\Model\Comment A single comment object
+     */
+    protected function p_getComment()
+    {
+        $this->getComments();
+
+        return current($this->comments);
+    }
+
+    /**
      * Returns the comments, and executes the query if not already executed
      *
      * @return  \Foolz\Foolfuuka\Model\Comment[]  The array of comment objects
@@ -150,6 +162,7 @@ class Board extends Model
     protected function p_getCommentsUnsorted()
     {
         $this->getComments();
+
         return $this->comments_unsorted;
     }
 

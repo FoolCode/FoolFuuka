@@ -478,17 +478,13 @@ class Chan extends Common
         }
 
         try {
-            $board = Board::forge($this->getContext())
+            $comment = Board::forge($this->getContext())
                 ->getPost($num)
-                ->setRadix($this->radix);
-
-            $comment = current($board->getComments());
+                ->setRadix($this->radix)
+                ->getComment();
 
             $this->apify($comment);
-
-            $last_modified = $comment->comment->timestamp_expired ?: $comment->comment->timestamp;
-
-            $this->setLastModified($last_modified);
+            $this->setLastModified($comment->comment->timestamp_expired ?: $comment->comment->timestamp);
 
             if (!$this->response->isNotModified($this->request)) {
                 $this->response->setData($comment);
@@ -541,14 +537,13 @@ class Chan extends Common
 
         if ($this->getPost('action') === 'delete') {
             try {
-                $comments = Board::forge($this->getContext())
+                $comment = Board::forge($this->getContext())
                     ->getPost()
                     ->setOptions('doc_id', $this->getPost('doc_id'))
                     ->setCommentOptions('clean', false)
                     ->setRadix($this->radix)
-                    ->getComments();
+                    ->getComment();
 
-                $comment = current($comments);
                 $comment = new Comment($this->getContext(), $comment);
                 $comment->delete($this->getPost('password'));
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
@@ -587,13 +582,12 @@ class Chan extends Common
 
         if ($this->getPost('action') === 'delete_post') {
             try {
-                $comments = Board::forge($this->getContext())
+                $comment = Board::forge($this->getContext())
                     ->getPost()
                     ->setOptions('doc_id', $this->getPost('id'))
                     ->setRadix($this->radix)
-                    ->getComments();
+                    ->getComment();
 
-                $comment = current($comments);
                 $comment = new Comment($this->getContext(), $comment);
                 $comment->delete();
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
@@ -648,15 +642,20 @@ class Chan extends Common
 
         if ($this->getPost('action') === 'toggle_sticky') {
             try {
-                $comments = Board::forge($this->getContext())
+                $comment = Board::forge($this->getContext())
                     ->getPost()
                     ->setOptions('doc_id', $this->getPost('id'))
                     ->setRadix($this->radix)
-                    ->getComments();
+                    ->getComment();
 
-                $comment = current($comments);
+                $thread = Board::forge($this->getContext())
+                    ->getThread($comment->comment->thread_num)
+                    ->setRadix($this->radix)
+                    ->setOptions(['type' => 'thread'])
+                    ->getThreadStatus();
+
                 $comment = new Comment($this->getContext(), $comment);
-                $comment->setSticky((int) !$comment->comment->sticky);
+                $comment->setSticky((int) !$thread['sticky']);
             } catch (\Foolz\Foolfuuka\Model\CommentUpdateException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(422);
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
@@ -668,14 +667,20 @@ class Chan extends Common
 
         if ($this->getPost('action') === 'toggle_locked') {
             try {
-                $comments = Board::forge($this->getContext())->getPost()->setOptions(
-                        'doc_id',
-                        $this->getPost('id')
-                    )->setRadix($this->radix)->getComments();
+                $comment = Board::forge($this->getContext())
+                    ->getPost()
+                    ->setOptions('doc_id', $this->getPost('id'))
+                    ->setRadix($this->radix)
+                    ->getComment();
 
-                $comment = current($comments);
+                $thread = Board::forge($this->getContext())
+                    ->getThread($comment->comment->thread_num)
+                    ->setRadix($this->radix)
+                    ->setOptions(['type' => 'thread'])
+                    ->getThreadStatus();
+
                 $comment = new Comment($this->getContext(), $comment);
-                $comment->setLocked((int) !$comment->comment->locked);
+                $comment->setLocked((int) !$thread['locked']);
             } catch (\Foolz\Foolfuuka\Model\CommentUpdateException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(422);
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {

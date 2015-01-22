@@ -680,7 +680,7 @@ class Chan extends Common
                     ->getThreadStatus();
 
                 $comment = new Comment($this->getContext(), $comment);
-                $comment->setLocked((int) !$thread['locked']);
+                $comment->setLocked((int) !$thread['closed']);
             } catch (\Foolz\Foolfuuka\Model\CommentUpdateException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(422);
             } catch (\Foolz\Foolfuuka\Model\BoardException $e) {

@@ -417,7 +417,8 @@ class Board extends Model
             // not archives, not ghosts, under 10 pages, 10 per page
             if (!$this->radix->archive && $order !== 'ghost' && $page <= 10 && $per_page == 10) {
                 list($results, $query_posts) = Cache::item('foolfuuka.model.board.getLatestComments.query.'
-                    .$this->radix->shortname.'.'.$order.'.'.$page)->get();			} else {
+                    .$this->radix->shortname.'.'.$order.'.'.$page)->get();
+            } else {
                 // lots of cases we don't want to handle go dynamic
                 throw new \OutOfBoundsException;
             }
@@ -950,6 +951,7 @@ class Board extends Model
         }
 
         $result = [
+            'sticky' => (bool) $thread['sticky'],
             'closed' => (bool) $thread['locked'],
             'dead' => (bool) $this->radix->archive,
             'ghost_exist' => $ghost_post_present,

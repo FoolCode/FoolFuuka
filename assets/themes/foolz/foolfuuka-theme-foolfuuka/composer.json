@@ -25,7 +25,7 @@
     "foolz/theme": "dev"
   },
   "autoload": {
-    "psr-0": {
+    "psr-4": {
       "Foolz\\Foolfuuka\\Theme\\Foolfuuka\\": "src/"
     }
   },

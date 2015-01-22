@@ -1,0 +1,24 @@
+{
+	"name": "foolz/foolfuuka-plugin-board-statistics",
+	"type": "foolz-foolfuuka-plugin",
+	"description": "Statistics for the boards, to keep live with a php daemon.",
+	"version": "1.0.0",
+	"keywords": ["fake", "mock"],
+	"homepage": "http://www.foolz.us",
+	"license": "Apache-2.0",
+	"authors": [{"name": "foolz", "email": "support@foolz.us"}],
+	"support": {
+		"email": "support@foolz.us",
+		"irc": "irc://irc.irchighway.net/fooldriver"
+	},
+
+	"require" : {
+		"foolz/plugin": "dev"
+	},
+
+	"extra": {
+		"name": "Board Statistics",
+		"slug": "board_statistics",
+		"module": "foolfuuka"
+	}
+}

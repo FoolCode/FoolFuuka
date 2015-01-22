@@ -24,11 +24,16 @@ class ScriptHandler
         $options = self::getOptions($event);
         $rootDir = realpath(__DIR__.'/../../');
 
-        $event->getIO()->write('Installing assets.');
+        if (!$event->getIO()->askConfirmation('Would you like to install the third-party assets? [y/N] ', false)) {
+            return;
+        }
+
+        $event->getIO()->write('Installing third-party assets.');
         foreach ($options['assets'] as $package => $path) {
             $pkgDir = $rootDir.'/'.$path;
             $webDir = $rootDir.'/'.$options['foolfuuka-web-dir'].'/foolfuuka/'.$package;
 
+            $event->getIO()->write('+ '.$package);
             if (file_exists($webDir)) {
                 Util::delete($webDir);
             }
@@ -41,5 +46,6 @@ class ScriptHandler
 
             Util::copy($pkgDir, $webDir);
         }
+        $event->getIO()->write('Finished installing third-party assets.');
     }
 }

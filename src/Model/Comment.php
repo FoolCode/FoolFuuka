@@ -406,7 +406,7 @@ class Comment extends Model
                 'inline', ['block', 'inline'], ['code']];
             $codes[] = ['eqn', 'simple_replace', null, ['start_tag' => '<script type="math/tex; mode=display">', 'end_tag' => '</script>'],
                 'inline', ['block', 'inline'], ['code']];
-            $codes[] = ['b', 'simple_replace', null, ['start_tag' => '<b>', 'end_tag' => '</b>'], 'inline',
+            $codes[] = ['b', 'simple_replace', null, ['start_tag' => '<strong>', 'end_tag' => '</strong>'], 'inline',
                 ['block', 'inline'], ['code']];
             $codes[] = ['i', 'simple_replace', null, ['start_tag' => '<em>', 'end_tag' => '</em>'], 'inline',
                 ['block', 'inline'], ['code']];

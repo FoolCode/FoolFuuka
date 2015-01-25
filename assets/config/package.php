@@ -93,7 +93,7 @@ return [
 
         'boards' => [
             'directory' => DOCROOT.'foolfuuka/boards/',
-            'url' => '/foolfuuka/boards/'
+            'url' => '/foolfuuka/boards'
         ]
     ]
 ];

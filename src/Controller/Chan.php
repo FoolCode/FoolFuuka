@@ -1057,7 +1057,12 @@ class Chan extends Common
         return $this->response;
     }
 
-    public function radix_appeal()
+    public function action_appeal_ban()
+    {
+        return call_user_func_array([$this, 'radix_appeal_ban'], func_get_args());
+    }
+
+    public function radix_appeal_ban()
     {
         try {
             /** @var BanFactory $ban_factory */

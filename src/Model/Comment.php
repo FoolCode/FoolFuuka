@@ -317,12 +317,13 @@ class Comment extends Model
             ->get('\\1<span class="greentext">\\2</span>\\3');
 
         $comment = Hook::forge('Foolz\FoolFuuka\Model\Comment::processComment#var.originalComment')
+            ->setObject($this)
             ->setParam('comment', $this->comment->comment)
             ->execute()
             ->get($this->comment->comment);
 
         // sanitize comment
-        $comment = htmlentities($comment, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
+        $comment = htmlentities($comment, ENT_COMPAT, 'UTF-8', false);
 
         // process comment for greentext, bbcode, links
         $comment = preg_replace('/(\r?\n|^)(&gt;.*?)(?=$|\r?\n)/i', $greentext, $comment);
@@ -342,6 +343,7 @@ class Comment extends Model
         $comment = nl2br(trim($comment));
 
         $comment = Hook::forge('Foolz\FoolFuuka\Model\Comment::processComment#var.processedComment')
+            ->setObject($this)
             ->setParam('comment', $comment)
             ->execute()
             ->get($comment);
@@ -355,11 +357,6 @@ class Comment extends Model
         $definitions = array();
 
         $builder = new \JBBCode\CodeDefinitionBuilder('code', '<pre class="code">{param}</pre>');
-        $builder->setParseContent(false);
-        array_push($definitions, $builder->build());
-
-        $builder = new \JBBCode\CodeDefinitionBuilder('code', '<pre class="code code-{option}">{param}</pre>');
-        $builder->setUseOption(true);
         $builder->setParseContent(false);
         array_push($definitions, $builder->build());
 
@@ -395,7 +392,12 @@ class Comment extends Model
         $builder = new \JBBCode\CodeDefinitionBuilder('u', '<span class="underline">{param}</span>');
         array_push($definitions, $builder->build());
 
+        $builder = new \JBBCode\CodeDefinitionBuilder('fortune', '<span class="fortune" style="color: {color}">{param}</span>');
+        $builder->setUseOption(true);
+        array_push($definitions, $builder->build());
+
         $definitions = Hook::forge('Foolz\Foolfuuka\Model\Comment::processCommentBBCode#var.definitions')
+            ->setObject($this)
             ->setParam('definitions', $definitions)
             ->execute()
             ->get($definitions);
@@ -404,7 +406,12 @@ class Comment extends Model
             $parser->addCodeDefinition($definition);
         }
 
-        return $parser->parse($comment)->getAsHtml();
+        // work around for dealing with quotes in BBCode tags
+        $comment = str_replace('&quot;', '"', $comment);
+        $comment = $parser->parse($comment)->getAsBBCode();
+        $comment = str_replace('"', '&quot;', $comment);
+
+        return $parser->parse($comment)->getAsHTML();
     }
 
     /**

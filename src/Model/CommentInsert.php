@@ -674,7 +674,7 @@ class CommentInsert extends Comment
             $this->dc->getConnection()->commit();
 
             // clean up some caches
-           $this->clearCache();
+            $this->clearCache();
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->logger->error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();

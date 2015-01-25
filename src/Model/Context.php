@@ -36,8 +36,6 @@ class Context implements ContextInterface
         class_alias('Foolz\\Foolfuuka\\Model\\Report', 'Report');
         class_alias('Foolz\\Foolfuuka\\Model\\Search', 'Search');
 
-        require_once __DIR__.'/../../assets/packages/stringparser-bbcode/library/stringparser_bbcode.class.php';
-
         $context->getContainer()
             ->register('foolfuuka.radix_collection', 'Foolz\Foolfuuka\Model\RadixCollection')
             ->addArgument($context);

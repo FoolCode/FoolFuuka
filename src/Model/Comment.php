@@ -29,13 +29,6 @@ class Comment extends Model
     protected $_backlinks_hash_only_url = false;
 
     /**
-     * The bbcode parser object when created
-     *
-     * @var null|object
-     */
-    protected static $_bbcode_parser = null;
-
-    /**
      * @var DoctrineConnection
      */
     protected $dc;
@@ -167,7 +160,7 @@ class Comment extends Model
             $this->comment->poster_country_name = $this->config->get('foolz/foolfuuka', 'geoip_codes', 'codes.'.strtoupper($this->comment->poster_country));
         }
 
-        $num = $this->comment->num.($this->comment->subnum ? ','.$this->comment->subnum : '');
+        $num = $this->getPostNum(',');
         $this->comment_factory->posts[$this->comment->thread_num][] = $num;
     }
 
@@ -245,6 +238,11 @@ class Comment extends Model
         return htmlentities(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
     }
 
+    public function getPostNum($separator = ',')
+    {
+        return $this->comment->num.($this->comment->subnum ? $separator.$this->comment->subnum : '');
+    }
+
     public function getTitleProcessed()
     {
         if ($this->comment->title_processed === false) {
@@ -313,185 +311,122 @@ class Comment extends Model
      */
     public function processComment($process_backlinks_only = false)
     {
-        // default variables
-        $find = "'(\r?\n|^)(&gt;.*?)(?=$|\r?\n)'i";
-        $html = '\\1<span class="greentext">\\2</span>\\3';
-
-        $html = Hook::forge('Foolz\Foolfuuka\Model\Comment::processComment#var.greentext')
-            ->setParam('html', $html)
+        $greentext = Hook::forge('Foolz\Foolfuuka\Model\Comment::processComment#var.greentext')
+            ->setParam('html', '\\1<span class="greentext">\\2</span>\\3')
             ->execute()
-            ->get($html);
+            ->get('\\1<span class="greentext">\\2</span>\\3');
 
-        $comment = $this->comment->comment;
+        $comment = Hook::forge('Foolz\FoolFuuka\Model\Comment::processComment#var.originalComment')
+            ->setParam('comment', $this->comment->comment)
+            ->execute()
+            ->get($this->comment->comment);
 
-        // this stores an array of moot's formatting that must be removed
-        $special = [
-            '<div style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">',
-            '<span style="padding: 5px;margin-left: .5em;border-color: #faa;border: 2px dashed rgba(255,0,0,.1);border-radius: 2px">'
-        ];
-
-        // remove moot's special formatting
-        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[0], null, 'utf-8') == 0) {
-            $comment = str_replace($special[0], '', $comment);
-
-            if (mb_substr($comment, -6, 6, 'utf-8') == '</div>') {
-                $comment = mb_substr($comment, 0, mb_strlen($comment, 'utf-8') - 6, 'utf-8');
-            }
-        }
-
-        if ($this->comment->capcode == 'A' && mb_strpos($comment, $special[1], null, 'utf-8') == 0) {
-            $comment = str_replace($special[1], '', $comment);
-
-            if (mb_substr($comment, -10, 10, 'utf-8') == '[/spoiler]') {
-                $comment = mb_substr($comment, 0, mb_strlen($comment, 'utf-8') - 10, 'utf-8');
-            }
-        }
-
+        // sanitize comment
         $comment = htmlentities($comment, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
 
-        // format entire comment
-        $comment = preg_replace($find, $html, $comment);
-        $comment = static::parseBbcode($comment, ($this->radix->archive && !$this->comment->subnum));
-        $comment = $this->autoLinkify($comment);
+        // process comment for greentext, bbcode, links
+        $comment = preg_replace('/(\r?\n|^)(&gt;.*?)(?=$|\r?\n)/i', $greentext, $comment);
+        $comment = $this->processCommentBBCode($comment);
+        $comment = $this->processCommentLinks($comment);
 
-        $comment = preg_replace_callback("'(&gt;&gt;(\d+(?:,\d+)?))'i",
+        // process internal and external links
+        $comment = preg_replace_callback('/(&gt;&gt;(\d+(?:,\d+)?))/i',
             [$this, 'processInternalLinks'], $comment);
-        $comment = preg_replace_callback("'(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))'i",
+        $comment = preg_replace_callback('/(&gt;&gt;&gt;(\/(\w+)\/([\w-]+(?:,\d+)?)?(\/?)))/i',
             [$this, 'processExternalLinks'], $comment);
 
         if ($process_backlinks_only) {
             return '';
         }
 
-        // additional formatting
-        if ($this->radix->archive && !$this->comment->subnum) {
-            // admin bbcode
-            $admin_find = "'\[banned\](.*?)\[/banned\]'i";
-            $admin_html = '<span class="banned">\\1</span>';
-
-            $comment = preg_replace($admin_find, $admin_html, $comment);
-            $comment = preg_replace("'\[(/?(banned|moot|spoiler|code)):lit\]'i", "[$1]", $comment);
-        }
-
         $comment = nl2br(trim($comment));
 
-        if (preg_match_all('/\<pre\>(.*?)\<\/pre\>/', $comment, $match)) {
-            foreach ($match as $a) {
-                foreach ($a as $b) {
-                    $comment = str_replace('<pre>'.$b.'</pre>', "<pre>".str_replace("<br />", "", $b)."</pre>", $comment);
-                }
-            }
-        }
+        $comment = Hook::forge('Foolz\FoolFuuka\Model\Comment::processComment#var.processedComment')
+            ->setParam('comment', $comment)
+            ->execute()
+            ->get($comment);
 
         return $this->comment->comment_processed = $comment;
     }
 
-    protected static function parseBbcode($str, $special_code, $strip = true)
+    protected function processCommentBBCode($comment)
     {
-        if (static::$_bbcode_parser === null) {
-            $bbcode = new \StringParser_BBCode();
+        $parser = new \JBBCode\Parser();
+        $definitions = array();
 
-            // add list of bbcode for formatting
-            $codes = [];
-            $codes[] = ['code', 'simple_replace', null, ['start_tag' => '<code>', 'end_tag' => '</code>'], 'code',
-                ['block', 'inline'], []];
-            $codes[] = ['spoiler', 'simple_replace', null,
-                ['start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
-                ['code']];
-            $codes[] = ['sub', 'simple_replace', null, ['start_tag' => '<sub>', 'end_tag' => '</sub>'], 'inline',
-                ['block', 'inline'], ['code']];
-            $codes[] = ['sup', 'simple_replace', null, ['start_tag' => '<sup>', 'end_tag' => '</sup>'], 'inline',
-                ['block', 'inline'], ['code']];
-            $codes[] = ['math', 'simple_replace', null, ['start_tag' => '<script type="math/tex">', 'end_tag' => '</script>'],
-                'inline', ['block', 'inline'], ['code']];
-            $codes[] = ['eqn', 'simple_replace', null, ['start_tag' => '<script type="math/tex; mode=display">', 'end_tag' => '</script>'],
-                'inline', ['block', 'inline'], ['code']];
-            $codes[] = ['b', 'simple_replace', null, ['start_tag' => '<b>', 'end_tag' => '</b>'], 'inline',
-                ['block', 'inline'], ['code']];
-            $codes[] = ['i', 'simple_replace', null, ['start_tag' => '<em>', 'end_tag' => '</em>'], 'inline',
-                ['block', 'inline'], ['code']];
-            $codes[] = ['m', 'simple_replace', null, ['start_tag' => '<tt class="code">', 'end_tag' => '</tt>'],
-                'inline', ['block', 'inline'], ['code']];
-            $codes[] = ['o', 'simple_replace', null, ['start_tag' => '<span class="overline">', 'end_tag' => '</span>'],
-                'inline', ['block', 'inline'], ['code']];
-            $codes[] = ['s', 'simple_replace', null,
-                ['start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
-                ['code']];
-            $codes[] = ['u', 'simple_replace', null,
-                ['start_tag' => '<span class="underline">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
-                ['code']];
-            $codes[] = ['EXPERT', 'simple_replace', null,
-                ['start_tag' => '<span class="expert">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
-                ['code']];
+        $builder = new \JBBCode\CodeDefinitionBuilder('code', '<pre class="code">{param}</pre>');
+        $builder->setParseContent(false);
+        array_push($definitions, $builder->build());
 
-            foreach($codes as $code) {
-                if ($strip) {
-                    $code[1] = 'callback_replace';
-                    $code[2] = '\\Comment::stripUnusedBbcode'; // this also fixes pre/code
-                }
+        $builder = new \JBBCode\CodeDefinitionBuilder('code', '<pre class="code code-{option}">{param}</pre>');
+        $builder->setUseOption(true);
+        $builder->setParseContent(false);
+        array_push($definitions, $builder->build());
 
-                $bbcode->addCode($code[0], $code[1], $code[2], $code[3], $code[4], $code[5], $code[6]);
-            }
+        $builder = new \JBBCode\CodeDefinitionBuilder('spoiler', '<span class="spoiler">{param}</span>');
+        array_push($definitions, $builder->build());
 
-            static::$_bbcode_parser = $bbcode;
+        $builder = new \JBBCode\CodeDefinitionBuilder('sub', '<sub>{param}</sub>');
+        $builder->setNestLimit(1);
+        array_push($definitions, $builder->build());
+
+        $builder = new \JBBCode\CodeDefinitionBuilder('sup', '<sup>{param}</sup>');
+        $builder->setNestLimit(1);
+        array_push($definitions, $builder->build());
+
+        $builder = new \JBBCode\CodeDefinitionBuilder('eqn', '<script type="math/tex; mode=display">{param}</script>');
+        array_push($definitions, $builder->build());
+
+        $builder = new \JBBCode\CodeDefinitionBuilder('math', '<script type="math/tex">{param}</script>');
+        array_push($definitions, $builder->build());
+
+        $builder = new \JBBCode\CodeDefinitionBuilder('b', '<strong>{param}</strong>');
+        array_push($definitions, $builder->build());
+
+        $builder = new \JBBCode\CodeDefinitionBuilder('i', '<em>{param}</em>');
+        array_push($definitions, $builder->build());
+
+        $builder = new \JBBCode\CodeDefinitionBuilder('o', '<span class="overline">{param}</span>');
+        array_push($definitions, $builder->build());
+
+        $builder = new \JBBCode\CodeDefinitionBuilder('s', '<span class="strikethrough">{param}</span>');
+        array_push($definitions, $builder->build());
+
+        $builder = new \JBBCode\CodeDefinitionBuilder('u', '<span class="underline">{param}</span>');
+        array_push($definitions, $builder->build());
+
+        $definitions = Hook::forge('Foolz\Foolfuuka\Model\Comment::processCommentBBCode#var.definitions')
+            ->setParam('definitions', $definitions)
+            ->execute()
+            ->get($definitions);
+
+        foreach ($definitions as $definition) {
+            $parser->addCodeDefinition($definition);
         }
 
-        // if $special == true, add special bbcode
-        if ($special_code === true) {
-            static::$_bbcode_parser->addCode('moot', 'simple_replace', null, ['start_tag' => '', 'end_tag' => ''], 'inline',
-                ['block', 'inline'], []);
-            static::$_bbcode_parser->addCode(
-                'fortune', 'usecontent?', '\\Comment::parseBbcodeAttr', ['usecontent_param' => 'color'],
-                'inline', ['block', 'inline'], []
-            );
-        }
-
-        return static::$_bbcode_parser->parse($str);
+        return $parser->parse($comment)->getAsHtml();
     }
 
-    public static function parseBbcodeAttr($action, $attributes, $content, $params, &$node_object)
+    /**
+     * Returns a string with all text links transformed into clickable links
+     *
+     * @param string $comment
+     *
+     * @return string
+     */
+    public function processCommentLinks($comment)
     {
-        if ($content === '' || $content === false) {
-            return '';
-        }
-
-        $attributes = array_map(function ($attr) {
-            return str_replace('&quot;', '', $attr);
-        }, $attributes);
-
-        $content = htmlentities($content, ENT_COMPAT | ENT_IGNORE, 'UTF-8', false);
-
-        return '<span class="fortune" style="color: '.$attributes['color'].'">'.$content.'</span>';
+        return preg_replace_callback('/(?i)\b((?:((?:ht|f)tps?:(?:\/{1,3}|[a-z0-9%]))|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b\/?(?!@)))/i', [$this, 'processLinkify'], $comment);
     }
 
-    public static function stripUnusedBbcode($action, $attributes, $content, $params, &$node_object)
+    public function processLinkify($matches)
     {
-        if ($content === '' || $content === false) {
-            return '';
+        // if protocol is not set, use http by default
+        if (!isset($matches[2])) {
+            return '<a href="http://'.$matches[1].'" target="_blank">'.$matches[1].'</a>';
         }
 
-        // if <code> has multiple lines, wrap it in <pre> instead
-        if ($params['start_tag'] == '<code>') {
-            if (count(array_filter(preg_split('/\r\n|\r|\n/', $content))) > 1) {
-                return '<pre>'.$content.'</pre>';
-            }
-        }
-
-        // limit nesting level
-        $parent_count = 0;
-        $temp_node_object = $node_object;
-        while ($temp_node_object->_parent !== null) {
-            $parent_count++;
-            $temp_node_object = $temp_node_object->_parent;
-
-            if (in_array($params['start_tag'], ['<sub>', '<sup>']) && $parent_count > 1) {
-                return $content;
-            } elseif ($parent_count > 4) {
-                return $content;
-            }
-        }
-
-        return $params['start_tag'].$content.$params['end_tag'];
+        return '<a href="'.$matches[1].'" target="_blank">'.$matches[1].'</a>';
     }
 
     /**
@@ -516,8 +451,8 @@ class Comment extends Model
         $data->board = $this->radix;
         $data->post = $this;
 
-        $current_p_num_c = $this->comment->num.($this->comment->subnum ? ','.$this->comment->subnum : '');
-        $current_p_num_u = $this->comment->num.($this->comment->subnum ? '_'.$this->comment->subnum : '');
+        $current_p_num_c = $this->getPostNum(',');
+        $current_p_num_u = $this->getPostNum('_');
 
         $build_url = [
             'tags' => ['', ''],
@@ -622,27 +557,6 @@ class Comment extends Model
     }
 
     /**
-     * Returns a string with all text links transformed into clickable links
-     *
-     * @param string $str
-     *
-     * @return string
-     */
-    public function autoLinkify($str)
-    {
-        return preg_replace_callback('/(?i)\b((?:((?:ht|f)tps?:(?:\/{1,3}|[a-z0-9%]))|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b\/?(?!@)))/i', "self::processLinkify", $str);
-    }
-
-    public function processLinkify($matches)
-    {
-        if (!isset($matches[2])) {
-            return '<a href="http://'.$matches[1].'" target="_blank">'.$matches[1].'</a>';
-        }
-
-        return '<a href="'.$matches[1].'" target="_blank">'.$matches[1].'</a>';
-    }
-
-    /**
      * Returns the timestamp fixed for the radix time
      *
      * @param int|null $time If a timestamp is supplied, it will calculate the time in relation to that moment
@@ -667,6 +581,10 @@ class Comment extends Model
 
     protected function p_setThreadData($field = null, $value = null)
     {
+        if (!$this->comment->op) {
+            throw new CommentUpdateException(_i('Invalid Comment.'));
+        }
+
         if ($field === null || $value === null) {
             throw new CommentUpdateException(_i('Missing parameters.'));
         }
@@ -707,19 +625,11 @@ class Comment extends Model
 
     protected function p_setSticky($value = true)
     {
-        if (!$this->comment->op) {
-            throw new CommentUpdateException(_i('Invalid Comment.'));
-        }
-
         return $this->setThreadData('sticky', $value);
     }
 
     protected function p_setLocked($value = true)
     {
-        if (!$this->comment->op) {
-            throw new CommentUpdateException(_i('Invalid Comment.'));
-        }
-
         return $this->setThreadData('locked', $value);
     }
 

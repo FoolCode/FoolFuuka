@@ -141,7 +141,7 @@ class ReportCollection extends Model
         $this->preload();
         $result = [];
 
-        foreach($this->preloaded as $item) {
+        foreach ($this->preloaded as $item) {
             if ($item['board_id'] === $radix->id && $item['doc_id'] === $doc_id) {
                 $result[] = $item;
             }

@@ -674,20 +674,7 @@ class CommentInsert extends Comment
             $this->dc->getConnection()->commit();
 
             // clean up some caches
-            Cache::item('foolfuuka.model.board.getThreadComments.thread.'
-                .md5(serialize([$this->radix->shortname, $this->comment->thread_num])))->delete();
-
-            // clean up the 10 first pages of index and gallery that are cached
-            for ($i = 1; $i <= 10; $i++) {
-                Cache::item('foolfuuka.model.board.getLatestComments.query.'
-                    .$this->radix->shortname.'.by_post.'.$i)->delete();
-
-                Cache::item('foolfuuka.model.board.getLatestComments.query.'
-                    .$this->radix->shortname.'.by_thread.'.$i)->delete();
-
-                Cache::item('foolfuuka.model.board.getThreadsComments.query.'
-                    .$this->radix->shortname.'.'.$i)->delete();
-            }
+           $this->clearCache();
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->logger->error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();

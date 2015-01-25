@@ -1,6 +1,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine on
 
+    RewriteCond %{REQUEST_URI} !^/(foolframe|foolfuuka)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 

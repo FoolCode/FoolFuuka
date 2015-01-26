@@ -377,10 +377,7 @@ class Comment extends Model
             $builder->setNestLimit(1);
             array_push($definitions, $builder->build());
 
-            $builder = new \JBBCode\CodeDefinitionBuilder(
-                'eqn',
-                '<script type="math/tex; mode=display">{param}</script>'
-            );
+            $builder = new \JBBCode\CodeDefinitionBuilder('eqn', '<script type="math/tex; mode=display">{param}</script>');
             array_push($definitions, $builder->build());
 
             $builder = new \JBBCode\CodeDefinitionBuilder('math', '<script type="math/tex">{param}</script>');
@@ -401,16 +398,11 @@ class Comment extends Model
             $builder = new \JBBCode\CodeDefinitionBuilder('u', '<span class="underline">{param}</span>');
             array_push($definitions, $builder->build());
 
-            $builder = new \JBBCode\CodeDefinitionBuilder(
-                'fortune',
-                '<span class="fortune" style="color: {color}">{param}</span>'
-            );
-            $builder->setUseOption(true);
-            array_push($definitions, $builder->build());
-
-            $definitions = Hook::forge(
-                'Foolz\Foolfuuka\Model\Comment::processCommentBBCode#var.definitions'
-            )->setObject($this)->setParam('definitions', $definitions)->execute()->get($definitions);
+            $definitions = Hook::forge('Foolz\FoolFuuka\Model\Comment::processCommentBBCode#var.definitions')
+                ->setObject($this)
+                ->setParam('definitions', $definitions)
+                ->execute()
+                ->get($definitions);
 
             foreach ($definitions as $definition) {
                 $parser->addCodeDefinition($definition);

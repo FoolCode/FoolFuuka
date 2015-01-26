@@ -128,6 +128,18 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
+                'label' => _i('Capcode'),
+                'name' => 'capcode',
+                'elements' => [
+                    ['value' => false, 'text' => _i('All')],
+                    ['value' => 'user', 'text' => _i('Only User Posts')],
+                    ['value' => 'mod', 'text' => _i('Only Moderator Posts')],
+                    ['value' => 'admin', 'text' => _i('Only Admin Posts')],
+                    ['value' => 'dev', 'text' => _i('Only Developer Posts')]
+                ]
+            ],
+            [
+                'type' => 'radio',
                 'label' => _i('Show Posts'),
                 'name' => 'filter',
                 'elements' => [
@@ -158,7 +170,7 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
-                'label' => _i('Results'),
+                'label' => _i('Post Type'),
                 'name' => 'type',
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
@@ -169,14 +181,11 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
-                'label' => _i('Capcode'),
-                'name' => 'capcode',
+                'label' => _i('Results'),
+                'name' => 'results',
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
-                    ['value' => 'user', 'text' => _i('Only User Posts')],
-                    ['value' => 'mod', 'text' => _i('Only Moderator Posts')],
-                    ['value' => 'admin', 'text' => _i('Only Admin Posts')],
-                    ['value' => 'dev', 'text' => _i('Only Developer Posts')]
+                    ['value' => 'asc', 'text' => _i('Grouped By Threads')]
                 ]
             ],
             [
@@ -430,7 +439,7 @@ class Search extends Board
 
             if ($args['results'] !== null) {
                 if ($args['results'] == 'op') {
-                    $query->groupBy('thread_num');
+                    $query->groupBy('tnum');
                     $query->withinGroupOrderBy('is_op', 'desc');
                 }
 
@@ -455,7 +464,9 @@ class Search extends Board
 
             // submit query
             try {
+                $this->profiler->log('Start: SphinxQL: '.$query->compile()->getCompiled());
                 $search = $query->execute();
+                $this->profiler->log('Stop: SphinxQL');
             } catch(\Foolz\SphinxQL\DatabaseException $e) {
                 $this->logger->error('Search Error: '.$e->getMessage());
                 throw new SearchInvalidException(_i('The search backend returned an error.'));

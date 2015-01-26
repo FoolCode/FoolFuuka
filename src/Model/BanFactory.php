@@ -47,17 +47,20 @@ class BanFactory extends Model
      * Takes an array of arrays to create Ban objects
      *
      * @param   array  $array  The array from database
+     * @param   boolean  $merge  Use the board_id as keys or not
      *
      * @return  array  An array of \Foolz\FoolFuuka\Model\Ban with as key the board_id
      */
-    public function fromArrayDeep($array)
+    public function fromArrayDeep($array, $merge = false)
     {
         $new = [];
 
         foreach ($array as $item) {
-            // use the board_id as key
-            $obj = $this->fromArray($item);
-            $new[$item['board_id']] = $obj;
+            if ($merge === true) {
+                $new[$item['board_id']] = $this->fromArray($item);
+            } else {
+                $new[] = $this->fromArray($item);
+            }
         }
 
         return $new;
@@ -109,7 +112,7 @@ class BanFactory extends Model
             throw new BanNotFoundException(_i('The ban could not be found.'));
         }
 
-        return $this->fromArrayDeep($result);
+        return $this->fromArrayDeep($result, true);
     }
 
     /**

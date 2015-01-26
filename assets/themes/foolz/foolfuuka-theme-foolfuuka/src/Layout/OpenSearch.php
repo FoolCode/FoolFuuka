@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Foolfuuka\Layout;
+namespace Foolz\FoolFuuka\Theme\FoolFuuka\Layout;
 
-class OpenSearch extends \Foolz\Foolfuuka\View\View
+class OpenSearch extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {

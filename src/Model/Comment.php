@@ -1,14 +1,14 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Config;
-use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\FoolFrame\Model\Config;
+use Foolz\FoolFrame\Model\DoctrineConnection;
 use Foolz\Cache\Cache;
-use Foolz\Foolframe\Model\Logger;
-use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Preferences;
-use Foolz\Foolframe\Model\Uri;
+use Foolz\FoolFrame\Model\Logger;
+use Foolz\FoolFrame\Model\Model;
+use Foolz\FoolFrame\Model\Preferences;
+use Foolz\FoolFrame\Model\Uri;
 use Foolz\Plugin\Hook;
 use Foolz\Plugin\PlugSuit;
 
@@ -117,7 +117,7 @@ class Comment extends Model
         return $this->comment->$key;
     }
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context, CommentBulk $bulk = null)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context, CommentBulk $bulk = null)
     {
         parent::__construct($context);
 
@@ -626,7 +626,7 @@ class Comment extends Model
             $this->dc->getConnection()->commit();
             $this->clearCache();
         } catch (\Doctrine\DBAL\DBALException $e) {
-            $this->logger->error('\Foolz\Foolfuuka\Model\Comment: '.$e->getMessage());
+            $this->logger->error('\Foolz\FoolFuuka\Model\Comment: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();
 
             throw new CommentUpdateException(_i('Unable to update the comment thread data.'));
@@ -825,7 +825,7 @@ class Comment extends Model
             $this->dc->getConnection()->commit();
             $this->clearCache();
         } catch (\Doctrine\DBAL\DBALException $e) {
-            $this->logger->error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
+            $this->logger->error('\Foolz\FoolFuuka\Model\CommentInsert: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();
 
             throw new CommentSendingDatabaseException(_i('Something went wrong when deleting the post in the database. Try again.'));

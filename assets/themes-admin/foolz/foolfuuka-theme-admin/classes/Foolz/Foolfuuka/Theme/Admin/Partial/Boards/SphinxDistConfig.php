@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Admin\Partial\Boards;
+namespace Foolz\FoolFuuka\Theme\Admin\Partial\Boards;
 
-class SphinxDistConfig extends \Foolz\Foolframe\View\View
+class SphinxDistConfig extends \Foolz\FoolFrame\View\View
 {
     public function toString()
     {

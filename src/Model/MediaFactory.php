@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Model;
+use Foolz\FoolFrame\Model\Model;
 use Foolz\Plugin\Hook;
 use Foolz\Plugin\Plugsuit;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -12,7 +12,7 @@ class MediaFactory extends Model
 {
     use Plugsuit;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
@@ -24,7 +24,7 @@ class MediaFactory extends Model
      *
      * @param  Radix $radix  The Radix the Media will refer to
      *
-     * @return \Foolz\Foolfuuka\Model\Media  An empty Media object, with all the values unset
+     * @return \Foolz\FoolFuuka\Model\Media  An empty Media object, with all the values unset
      */
     public function forgeEmpty(Radix $radix)
     {
@@ -40,7 +40,7 @@ class MediaFactory extends Model
      * @param  string                        $value  The value searched for
      * @param  boolean                       $op     If the object is for an opening post
      *
-     * @return  \Foolz\Foolfuuka\Model\MediaData  The searched object
+     * @return  \Foolz\FoolFuuka\Model\MediaData  The searched object
      * @throws  MediaNotFoundException        If the media has not been found
      */
     protected function p_getBy(Radix $radix, $where, $value, $op = true)
@@ -68,7 +68,7 @@ class MediaFactory extends Model
      * @param  string                        $value  The media ID
      * @param  boolean                       $op     If the object is for an opening post
      *
-     * @return  \Foolz\Foolfuuka\Model\Media  The searched object
+     * @return  \Foolz\FoolFuuka\Model\Media  The searched object
      * @throws  MediaNotFoundException        If the media has not been found
      */
     protected function p_getByMediaId(Radix $radix, $value, $op = false)
@@ -83,7 +83,7 @@ class MediaFactory extends Model
      * @param  string                        $value  The media hash
      * @param  boolean                       $op     If the object is for an opening post
      *
-     * @return  \Foolz\Foolfuuka\Model\Media  The searched object
+     * @return  \Foolz\FoolFuuka\Model\Media  The searched object
      * @throws  MediaNotFoundException        If the media has not been found
      */
     protected function p_getByMediaHash(Radix $radix, $value, $op = false)
@@ -97,7 +97,7 @@ class MediaFactory extends Model
      * @param  Radix $radix  The Radix where the Media can be found
      * @param  string                        $value  The filename
      *
-     * @return  \Foolz\Foolfuuka\Model\MediaData  The searched object
+     * @return  \Foolz\FoolFuuka\Model\MediaData  The searched object
      * @throws  MediaNotFoundException        If the media has not been found
      */
     protected function p_getByFilename(Radix $radix, $filename)
@@ -125,7 +125,7 @@ class MediaFactory extends Model
      *
      * @param  Radix $radix  The Radix where this Media belongs
      *
-     * @return  \Foolz\Foolfuuka\Model\Media            A new Media object with the upload data
+     * @return  \Foolz\FoolFuuka\Model\Media            A new Media object with the upload data
      * @throws  MediaUploadNoFileException              If there's no file uploaded
      * @throws  MediaUploadMultipleNotAllowedException  If there's multiple uploads
      * @throws  MediaUploadInvalidException             If the file format is not allowed

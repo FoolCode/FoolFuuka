@@ -16,7 +16,7 @@ Event::forge('Foolz\FoolFuuka\Model\Context::loadRoutes#obj.afterRouting')
                 [
                     '_default_suffix' => 'page',
                     '_suffix' => 'page',
-                    '_controller' => '\Foolz\Foolfuuka\Themes\Fuuka\Controller\Chan::*',
+                    '_controller' => '\Foolz\FoolFuuka\Themes\Fuuka\Controller\Chan::*',
                     'radix_shortname' => $radix->shortname
                 ],
                 [

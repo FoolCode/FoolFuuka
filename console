@@ -65,4 +65,4 @@ function _n()
 require VENDPATH.'autoload.php';
 
 
-(new Foolz\Foolframe\Model\Context())->handleConsole();
+(new Foolz\FoolFrame\Model\Context())->handleConsole();

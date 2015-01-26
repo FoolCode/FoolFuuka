@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Model;
+use Foolz\FoolFrame\Model\Model;
 
 /**
  * Thrown when there's no results from database or the value domain hasn't been respected
@@ -104,7 +104,7 @@ class Ban extends Model
     const APPEAL_PENDING = 1;
     const APPEAL_REJECTED = 2;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
@@ -118,7 +118,7 @@ class Ban extends Model
      *
      * @param   string  $appeal  The appeal submitted by the user
      *
-     * @return  \Foolz\Foolfuuka\Model\Ban
+     * @return  \Foolz\FoolFuuka\Model\Ban
      */
     public function appeal($appeal)
     {
@@ -137,7 +137,7 @@ class Ban extends Model
     /**
      * Sets the flag to deny the appeal
      *
-     * @return  \Foolz\Foolfuuka\Model\Ban
+     * @return  \Foolz\FoolFuuka\Model\Ban
      */
     public function appealReject()
     {
@@ -154,7 +154,7 @@ class Ban extends Model
     /**
      * Remove the entry for a ban (unban)
      *
-     * @return  \Foolz\Foolfuuka\Model\Ban
+     * @return  \Foolz\FoolFuuka\Model\Ban
      */
     public function delete()
     {

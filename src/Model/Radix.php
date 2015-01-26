@@ -1,11 +1,11 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Config;
-use Foolz\Foolframe\Model\DoctrineConnection;
-use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Preferences;
+use Foolz\FoolFrame\Model\Config;
+use Foolz\FoolFrame\Model\DoctrineConnection;
+use Foolz\FoolFrame\Model\Model;
+use Foolz\FoolFrame\Model\Preferences;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Radix extends Model
@@ -60,7 +60,7 @@ class Radix extends Model
      */
     protected $config;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context, RadixCollection $collection)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context, RadixCollection $collection)
     {
         parent::__construct($context);
 

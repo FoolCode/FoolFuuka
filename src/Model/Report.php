@@ -1,9 +1,9 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\DoctrineConnection;
-use Foolz\Foolframe\Model\Model;
+use Foolz\FoolFrame\Model\DoctrineConnection;
+use Foolz\FoolFrame\Model\Model;
 use Foolz\Plugin\PlugSuit;
 
 /**
@@ -118,14 +118,14 @@ class Report extends Model
     /**
      * The Radix object
      *
-     * @var  \Foolz\Foolfuuka\Model\Radix|null
+     * @var  \Foolz\FoolFuuka\Model\Radix|null
      */
     public $radix = null;
 
     /**
      * The Comment object
      *
-     * @var  \Foolz\Foolfuuka\Model\Comment|null
+     * @var  \Foolz\FoolFuuka\Model\Comment|null
      */
     public $comment = null;
 
@@ -144,7 +144,7 @@ class Report extends Model
      */
     protected $report_coll;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
@@ -166,9 +166,9 @@ class Report extends Model
     /**
      * Returns the Comment by doc_id or the first Comment found with a matching media_id
      *
-     * @return  null|\Foolz\Foolfuuka\Model\CommentBulk
-     * @throws  \Foolz\Foolfuuka\Model\ReportMediaNotFoundException
-     * @throws  \Foolz\Foolfuuka\Model\ReportCommentNotFoundException
+     * @return  null|\Foolz\FoolFuuka\Model\CommentBulk
+     * @throws  \Foolz\FoolFuuka\Model\ReportMediaNotFoundException
+     * @throws  \Foolz\FoolFuuka\Model\ReportCommentNotFoundException
      */
     public function p_getComment()
     {

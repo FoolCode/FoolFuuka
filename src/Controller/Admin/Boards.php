@@ -1,11 +1,11 @@
 <?php
 
-namespace Foolz\Foolfuuka\Controller\Admin;
+namespace Foolz\FoolFuuka\Controller\Admin;
 
-use Foolz\Foolframe\Model\DoctrineConnection;
-use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
-use Foolz\Foolframe\Model\Validation\Validator;
-use Foolz\Foolfuuka\Model\RadixCollection;
+use Foolz\FoolFrame\Model\DoctrineConnection;
+use Foolz\FoolFrame\Model\Validation\ActiveConstraint\Trim;
+use Foolz\FoolFrame\Model\Validation\Validator;
+use Foolz\FoolFuuka\Model\RadixCollection;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-class Boards extends \Foolz\Foolframe\Controller\Admin
+class Boards extends \Foolz\FoolFrame\Controller\Admin
 {
     /**
      * @var RadixCollection

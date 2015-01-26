@@ -1,12 +1,12 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
 use Foolz\Cache\Cache;
-use Foolz\Foolframe\Model\Config;
-use Foolz\Foolframe\Model\DoctrineConnection;
-use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Preferences;
+use Foolz\FoolFrame\Model\Config;
+use Foolz\FoolFrame\Model\DoctrineConnection;
+use Foolz\FoolFrame\Model\Model;
+use Foolz\FoolFrame\Model\Preferences;
 use Foolz\Plugin\Hook;
 use Foolz\Profiler\Profiler;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -40,7 +40,7 @@ class RadixCollection extends Model
      */
     protected $profiler;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
@@ -53,7 +53,7 @@ class RadixCollection extends Model
     /**
      * The structure of the radix table to be used with validation and form creator
      *
-     * @param  \Foolz\Foolfuuka\Model\Radix|null  $radix  If available insert to customize the structure
+     * @param  \Foolz\FoolFuuka\Model\Radix|null  $radix  If available insert to customize the structure
      *
      * @return  array  The structure
      */
@@ -608,7 +608,7 @@ class RadixCollection extends Model
     /**
      * Insert custom preferences. One must use this for 'internal' preferences
      *
-     * @param  \Foolz\Foolfuuka\Model\Radix|int  $board_id  can also be the board object
+     * @param  \Foolz\FoolFuuka\Model\Radix|int  $board_id  can also be the board object
      * @param  string  $name   The name of the value to insert
      * @param  mixed   $value  The value to insert
      */
@@ -815,7 +815,7 @@ class RadixCollection extends Model
     /**
      * Returns all the radixes as array of objects
      *
-     * @return  \Foolz\Foolfuuka\Model\Radix[]  the objects of the preloaded radixes
+     * @return  \Foolz\FoolFuuka\Model\Radix[]  the objects of the preloaded radixes
      */
     public function getAll()
     {
@@ -832,7 +832,7 @@ class RadixCollection extends Model
      *
      * @param   int  $radix_id  the ID of the board
      *
-     * @return  \Foolz\Foolfuuka\Model\Radix  false on failure, else the board object
+     * @return  \Foolz\FoolFuuka\Model\Radix  false on failure, else the board object
      */
     public function getById($radix_id)
     {
@@ -853,7 +853,7 @@ class RadixCollection extends Model
      * @param  string   $type    the variable name on which to match
      * @param  boolean  $switch  true if it must be equal or false if not equal
      *
-     * @return  \Foolz\Foolfuuka\Model\Radix  false if not found or the board object
+     * @return  \Foolz\FoolFuuka\Model\Radix  false if not found or the board object
      */
     public function getByType($value, $type, $switch = true)
     {
@@ -874,7 +874,7 @@ class RadixCollection extends Model
      *
      * @param  string  $shortname  The shortname of the board
      *
-     * @return  \Foolz\Foolfuuka\Model\Radix  the board with the shortname, false if not found
+     * @return  \Foolz\FoolFuuka\Model\Radix  the board with the shortname, false if not found
      */
     public function getByShortname($shortname)
     {
@@ -888,7 +888,7 @@ class RadixCollection extends Model
      * @param  string   $type    the variable name
      * @param  boolean  $switch  the value to match
      *
-     * @return  \Foolz\Foolfuuka\Model\Radix[]  the Radix objects
+     * @return  \Foolz\FoolFuuka\Model\Radix[]  the Radix objects
      */
     public function filterByType($type, $switch)
     {
@@ -906,7 +906,7 @@ class RadixCollection extends Model
     /**
      * Returns an array of objects that are archives
      *
-     * @return  \Foolz\Foolfuuka\Model\Radix[]  the board objects that are archives
+     * @return  \Foolz\FoolFuuka\Model\Radix[]  the board objects that are archives
      */
     public function getArchives()
     {
@@ -917,7 +917,7 @@ class RadixCollection extends Model
     /**
      * Returns an array of objects that are boards (not archives)
      *
-     * @return  \Foolz\Foolfuuka\Model\Radix[]  the board objects that are boards
+     * @return  \Foolz\FoolFuuka\Model\Radix[]  the board objects that are boards
      */
     public function getBoards()
     {

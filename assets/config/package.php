@@ -19,7 +19,7 @@ return [
         /**
          * The name that can be used in classes names
          */
-        'class_name' => 'Foolfuuka',
+        'class_name' => 'FoolFuuka',
 
         /**
          *  URL to download a newer version

@@ -1,12 +1,12 @@
 <?php
 
-namespace Foolz\Foolfuuka\View;
+namespace Foolz\FoolFuuka\View;
 
-use Foolz\Foolfuuka\Model\Radix;
-use Foolz\Foolfuuka\Model\RadixCollection;
-use Foolz\Foolfuuka\Model\ReportCollection;
+use Foolz\FoolFuuka\Model\Radix;
+use Foolz\FoolFuuka\Model\RadixCollection;
+use Foolz\FoolFuuka\Model\ReportCollection;
 
-class View extends \Foolz\Foolframe\View\View
+class View extends \Foolz\FoolFrame\View\View
 {
     /**
      * @return Radix

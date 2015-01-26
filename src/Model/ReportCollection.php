@@ -1,11 +1,11 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
 use Foolz\Cache\Cache;
-use Foolz\Foolframe\Model\DoctrineConnection;
-use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Uri;
+use Foolz\FoolFrame\Model\DoctrineConnection;
+use Foolz\FoolFrame\Model\Model;
+use Foolz\FoolFrame\Model\Uri;
 use Foolz\Plugin\PlugSuit;
 
 class ReportCollection extends Model
@@ -45,7 +45,7 @@ class ReportCollection extends Model
      */
     protected $ban_factory;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
@@ -62,7 +62,7 @@ class ReportCollection extends Model
      * Creates a Report object from an associative array
      *
      * @param   array  $array  An associative array
-     * @return  \Foolz\Foolfuuka\Model\Report
+     * @return  \Foolz\FoolFuuka\Model\Report
      */
     public function fromArray(array $array)
     {
@@ -131,10 +131,10 @@ class ReportCollection extends Model
     /**
      * Returns an array of Reports by a comment's doc_id
      *
-     * @param   \Foolz\Foolfuuka\Model\Radix  $board  The Radix on which the Comment resides
+     * @param   \Foolz\FoolFuuka\Model\Radix  $board  The Radix on which the Comment resides
      * @param   int  $doc_id  The doc_id of the Comment
      *
-     * @return  array  An array of \Foolz\Foolfuuka\Model\Report
+     * @return  array  An array of \Foolz\FoolFuuka\Model\Report
      */
     public function getByDocId($radix, $doc_id)
     {
@@ -153,10 +153,10 @@ class ReportCollection extends Model
     /**
      * Returns an array of Reports by a Media's media_id
      *
-     * @param   \Foolz\Foolfuuka\Model\Radix  $board  The Radix on which the Comment resides
+     * @param   \Foolz\FoolFuuka\Model\Radix  $board  The Radix on which the Comment resides
      * @param   int  $media_id  The media_id of the Media
      *
-     * @return  array  An array of \Foolz\Foolfuuka\Model\Report
+     * @return  array  An array of \Foolz\FoolFuuka\Model\Report
      */
     public function getByMediaId($radix, $media_id)
     {
@@ -243,13 +243,13 @@ class ReportCollection extends Model
     /**
      * Adds a new report to the database
      *
-     * @param   \Foolz\Foolfuuka\Model\Radix  $radix  The Radix to which the Report is referred to
+     * @param   \Foolz\FoolFuuka\Model\Radix  $radix  The Radix to which the Report is referred to
      * @param   int     $id           The ID of the object being reported (doc_id or media_id)
      * @param   string  $reason       The reason for the report
      * @param   string  $ip_reporter  The IP in decimal format
      * @param   string  $mode         The type of column (doc_id or media_id)
      *
-     * @return  \Foolz\Foolfuuka\Model\Report   The created report
+     * @return  \Foolz\FoolFuuka\Model\Report   The created report
      * @throws  ReportMediaNotFoundException    If the reported media_id doesn't exist
      * @throws  ReportCommentNotFoundException  If the reported doc_id doesn't exist
      * @throws  ReportReasonTooLongException    If the reason inserted was too long
@@ -319,7 +319,7 @@ class ReportCollection extends Model
      *
      * @param   int  $id  The ID of the Report
      *
-     * @throws  \Foolz\Foolfuuka\Model\ReportNotFoundException
+     * @throws  \Foolz\FoolFuuka\Model\ReportNotFoundException
      */
     public function p_delete($id)
     {

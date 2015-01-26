@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Yotsubatwo\Layout;
+namespace Foolz\FoolFuuka\Theme\Yotsubatwo\Layout;
 
-class Chan extends \Foolz\Foolfuuka\View\View
+class Chan extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {

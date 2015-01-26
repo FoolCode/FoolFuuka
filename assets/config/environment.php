@@ -1,21 +1,6 @@
 <?php
 
 return [
-    /*
-     * TODO find a way to display this programmatically
-     * 'software' => [
-        [
-            'title' => _i('FoolFuuka Version'),
-            'value' => \Foolz\Foolframe\Model\Legacy\Config::get('foolz/foolfuuka', 'package', 'main.version'),
-            'alert' => [
-                'type' => 'info',
-                'condition' => true,
-                'title' => _i('New Update Available'),
-                'string' => _i('There is a new version of the software available for download.')
-            ]
-        ]
-    ], */
-
     'php-extensions' => [
         [
             'title' => 'BCMath',

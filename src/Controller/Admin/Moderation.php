@@ -1,17 +1,17 @@
 <?php
 
-namespace Foolz\Foolfuuka\Controller\Admin;
+namespace Foolz\FoolFuuka\Controller\Admin;
 
-use Foolz\Foolfuuka\Model\BanFactory;
-use Foolz\Foolfuuka\Model\RadixCollection;
-use Foolz\Foolfuuka\Model\ReportCollection;
+use Foolz\FoolFuuka\Model\BanFactory;
+use Foolz\FoolFuuka\Model\RadixCollection;
+use Foolz\FoolFuuka\Model\ReportCollection;
 use Foolz\Inet\Inet;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class Moderation extends \Foolz\Foolframe\Controller\Admin
+class Moderation extends \Foolz\FoolFrame\Controller\Admin
 {
     /**
      * @var RadixCollection
@@ -119,7 +119,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
 
         try {
             $bans = $this->ban_factory->getByIp(Inet::ptod($ip));
-        } catch (\Foolz\Foolfuuka\Model\BanException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BanException $e) {
             $bans = [];
         }
 
@@ -137,7 +137,7 @@ class Moderation extends \Foolz\Foolframe\Controller\Admin
     {
         try {
             $ban = $this->ban_factory->getById($id);
-        } catch (\Foolz\Foolfuuka\Model\BanException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BanException $e) {
             throw new NotFoundHttpException;
         }
 

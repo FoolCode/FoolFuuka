@@ -1,9 +1,9 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Logger;
-use Foolz\Foolframe\Model\Preferences;
+use Foolz\FoolFrame\Model\Logger;
+use Foolz\FoolFrame\Model\Preferences;
 use Foolz\Inet\Inet;
 use Foolz\SphinxQL\Helper;
 use Foolz\SphinxQL\SphinxQL;
@@ -44,7 +44,7 @@ class Search extends Board
      */
     protected $media_factory;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
@@ -197,7 +197,7 @@ class Search extends Board
      *
      * @param  array  $arguments  The search arguments
      *
-     * @return  \Foolz\Foolfuuka\Model\Search  The current object
+     * @return  \Foolz\FoolFuuka\Model\Search  The current object
      */
     protected function p_getSearch($arguments)
     {
@@ -215,7 +215,7 @@ class Search extends Board
     /**
      * Gets the search results
      *
-     * @return  \Foolz\Foolfuuka\Model\Search  The current object
+     * @return  \Foolz\FoolFuuka\Model\Search  The current object
      * @throws  SearchEmptyResultException     If there's no results to display
      * @throws  SearchRequiresSphinxException  If the search submitted requires Sphinx to run
      * @throws  SearchSphinxOfflineException   If the Sphinx server is unreachable

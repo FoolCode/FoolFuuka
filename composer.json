@@ -51,14 +51,14 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "Foolz\\Foolfuuka\\Composer\\ScriptHandler::installAssets"
+            "Foolz\\FoolFuuka\\Composer\\ScriptHandler::installAssets"
         ],
         "post-update-cmd": [
-            "Foolz\\Foolfuuka\\Composer\\ScriptHandler::installAssets"
+            "Foolz\\FoolFuuka\\Composer\\ScriptHandler::installAssets"
         ]
     },
     "autoload": {
-        "psr-4": {"Foolz\\Foolfuuka\\": "src/"}
+        "psr-4": {"Foolz\\FoolFuuka\\": "src/"}
     },
     "extra": {
         "foolfuuka-app-dir": "app",

@@ -1,13 +1,13 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
+namespace Foolz\FoolFuuka\Theme\Fuuka\Partial;
 
-use Foolz\Foolfuuka\Model\Comment;
-use Foolz\Foolfuuka\Model\CommentBulk;
-use Foolz\Foolfuuka\Model\Media;
+use Foolz\FoolFuuka\Model\Comment;
+use Foolz\FoolFuuka\Model\CommentBulk;
+use Foolz\FoolFuuka\Model\Media;
 use Rych\ByteSize\ByteSize;
 
-class Board extends \Foolz\Foolfuuka\View\View
+class Board extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {

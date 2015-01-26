@@ -16,6 +16,8 @@ return [
          */
         'name' => 'FoolFuuka',
 
+        'class_context' => '\\Foolz\\FoolFuuka\\Model\\Context',
+
         /**
          * The name that can be used in classes names
          */

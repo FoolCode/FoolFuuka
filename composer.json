@@ -46,6 +46,7 @@
         "rych/bytesize": "1.0.*",
 
         "components/font-awesome": "4.2.0",
+        "components/highlightjs": "8.4.0",
         "mathjax/mathjax": "dev-v2.5-beta"
     },
     "scripts": {
@@ -64,6 +65,7 @@
         "foolfuuka-web-dir": "public",
         "assets": {
             "components/font-awesome": "vendor/components/font-awesome",
+            "components/highlightjs": "vendor/components/highlightjs",
             "mathjax/mathjax": "vendor/mathjax/mathjax",
             "mathjax/mathjax/config/default.js": "assets/config/mathjax.js"
         }

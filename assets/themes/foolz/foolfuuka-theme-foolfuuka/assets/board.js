@@ -970,6 +970,9 @@ var insertPost = function(data, textStatus, jqXHR)
 					aside.append(post);
 					backlinkify(post, value.num, value.subnum);
 
+					hljs.initHighlighting.called = false;
+					hljs.initHighlighting();
+
 					if(backend_vars.latest_doc_id < value.doc_id)
 					{
 						backend_vars.latest_doc_id = value.doc_id;

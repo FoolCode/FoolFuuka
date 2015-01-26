@@ -185,7 +185,7 @@ class Search extends Board
                 'name' => 'results',
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
-                    ['value' => 'asc', 'text' => _i('Grouped By Threads')]
+                    ['value' => 'thread', 'text' => _i('Grouped By Threads')]
                 ]
             ],
             [
@@ -438,13 +438,9 @@ class Search extends Board
             }
 
             if ($args['results'] !== null) {
-                if ($args['results'] == 'op') {
+                if ($args['results'] == 'thread') {
                     $query->groupBy('tnum');
                     $query->withinGroupOrderBy('is_op', 'desc');
-                }
-
-                if ($args['results'] == 'posts') {
-                    $query->where('is_op', 0);
                 }
             }
 

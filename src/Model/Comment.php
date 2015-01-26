@@ -29,6 +29,11 @@ class Comment extends Model
     protected $_backlinks_hash_only_url = false;
 
     /**
+     * @var Parser
+     */
+    protected $_bbcode_processor = null;
+
+    /**
      * @var DoctrineConnection
      */
     protected $dc;
@@ -353,65 +358,73 @@ class Comment extends Model
 
     protected function processCommentBBCode($comment)
     {
-        $parser = new \JBBCode\Parser();
-        $definitions = array();
+        if ($this->_bbcode_processor === null) {
+            $parser = new \JBBCode\Parser();
+            $definitions = array();
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('code', '<pre class="code">{param}</pre>');
-        $builder->setParseContent(false);
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('code', '<pre class="code">{param}</pre>');
+            $builder->setParseContent(false);
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('spoiler', '<span class="spoiler">{param}</span>');
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('spoiler', '<span class="spoiler">{param}</span>');
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('sub', '<sub>{param}</sub>');
-        $builder->setNestLimit(1);
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('sub', '<sub>{param}</sub>');
+            $builder->setNestLimit(1);
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('sup', '<sup>{param}</sup>');
-        $builder->setNestLimit(1);
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('sup', '<sup>{param}</sup>');
+            $builder->setNestLimit(1);
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('eqn', '<script type="math/tex; mode=display">{param}</script>');
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder(
+                'eqn',
+                '<script type="math/tex; mode=display">{param}</script>'
+            );
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('math', '<script type="math/tex">{param}</script>');
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('math', '<script type="math/tex">{param}</script>');
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('b', '<strong>{param}</strong>');
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('b', '<strong>{param}</strong>');
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('i', '<em>{param}</em>');
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('i', '<em>{param}</em>');
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('o', '<span class="overline">{param}</span>');
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('o', '<span class="overline">{param}</span>');
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('s', '<span class="strikethrough">{param}</span>');
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('s', '<span class="strikethrough">{param}</span>');
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('u', '<span class="underline">{param}</span>');
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder('u', '<span class="underline">{param}</span>');
+            array_push($definitions, $builder->build());
 
-        $builder = new \JBBCode\CodeDefinitionBuilder('fortune', '<span class="fortune" style="color: {color}">{param}</span>');
-        $builder->setUseOption(true);
-        array_push($definitions, $builder->build());
+            $builder = new \JBBCode\CodeDefinitionBuilder(
+                'fortune',
+                '<span class="fortune" style="color: {color}">{param}</span>'
+            );
+            $builder->setUseOption(true);
+            array_push($definitions, $builder->build());
 
-        $definitions = Hook::forge('Foolz\Foolfuuka\Model\Comment::processCommentBBCode#var.definitions')
-            ->setObject($this)
-            ->setParam('definitions', $definitions)
-            ->execute()
-            ->get($definitions);
+            $definitions = Hook::forge(
+                'Foolz\Foolfuuka\Model\Comment::processCommentBBCode#var.definitions'
+            )->setObject($this)->setParam('definitions', $definitions)->execute()->get($definitions);
 
-        foreach ($definitions as $definition) {
-            $parser->addCodeDefinition($definition);
+            foreach ($definitions as $definition) {
+                $parser->addCodeDefinition($definition);
+            }
+
+            $this->_bbcode_processor = $parser;
         }
 
         // work around for dealing with quotes in BBCode tags
         $comment = str_replace('&quot;', '"', $comment);
-        $comment = $parser->parse($comment)->getAsBBCode();
+        $comment = $this->_bbcode_processor->parse($comment)->getAsBBCode();
         $comment = str_replace('"', '&quot;', $comment);
 
-        return $parser->parse($comment)->getAsHTML();
+        return $this->_bbcode_processor->parse($comment)->getAsHTML();
     }
 
     /**

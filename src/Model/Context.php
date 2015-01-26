@@ -73,7 +73,7 @@ class Context implements ContextInterface
         /** @var Auth $auth */
         $auth = $this->context->getService('auth');
         if ($auth->hasAccess('maccess.admin')) {
-            Event::forge('Foolz\Foolframe\Model\System::getEnvironment#var.environment')
+            Event::forge('Foolz\FoolFrame\Model\System::getEnvironment#var.environment')
                 ->setCall(function($result) use ($config) {
                     $environment = $result->getParam('environment');
 
@@ -131,7 +131,7 @@ class Context implements ContextInterface
 
     public function loadRoutes(RouteCollection $route_collection)
     {
-        Hook::forge('Foolz\Foolfuuka\Model\Context::loadRoutes#obj.beforeRouting')
+        Hook::forge('Foolz\FoolFuuka\Model\Context::loadRoutes#obj.beforeRouting')
             ->setObject($this)
             ->setParam('route_collection', $route_collection)
             ->execute();
@@ -146,7 +146,7 @@ class Context implements ContextInterface
             ['_controller' => '\Foolz\Foolfuuka\Controller\Chan::404']
         ));
 
-        $route = Hook::forge('Foolz\Foolfuuka\Model\Context::loadRoutes#var.collection')
+        $route = Hook::forge('Foolz\FoolFuuka\Model\Context::loadRoutes#var.collection')
             ->setParams([
                 'default_suffix' => 'page',
                 'suffix' => 'page',
@@ -213,7 +213,7 @@ class Context implements ContextInterface
             );
         }
 
-        Hook::forge('Foolz\Foolfuuka\Model\Context::loadRoutes#obj.afterRouting')
+        Hook::forge('Foolz\FoolFuuka\Model\Context::loadRoutes#obj.afterRouting')
             ->setObject($this)
             ->setParam('route_collection', $route_collection)
             ->execute();

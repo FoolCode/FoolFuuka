@@ -316,7 +316,7 @@ class Comment extends Model
      */
     public function processComment($process_backlinks_only = false)
     {
-        $greentext = Hook::forge('Foolz\Foolfuuka\Model\Comment::processComment#var.greentext')
+        $greentext = Hook::forge('Foolz\FoolFuuka\Model\Comment::processComment#var.greentext')
             ->setParam('html', '\\1<span class="greentext">\\2</span>\\3')
             ->execute()
             ->get('\\1<span class="greentext">\\2</span>\\3');
@@ -482,7 +482,7 @@ class Comment extends Model
             'attr_backlink' => 'class="backlink" data-function="highlight" data-backlink="true" data-board="' . $data->board->shortname . '" data-post="' . $current_p_num_u . '"',
         ];
 
-        $build_url = Hook::forge('Foolz\Foolfuuka\Model\Comment::processInternalLinks#var.link')
+        $build_url = Hook::forge('Foolz\FoolFuuka\Model\Comment::processInternalLinks#var.link')
             ->setObject($this)
             ->setParam('data', $data)
             ->setParam('build_url', $build_url)
@@ -553,7 +553,7 @@ class Comment extends Model
                 .(($data->board)?$data->board->shortname:$data->shortname).'" data-post="'.$data->query.'"'
         ];
 
-        $build_href = Hook::forge('Foolz\Foolfuuka\Model\Comment::processExternalLinks#var.link')
+        $build_href = Hook::forge('Foolz\FoolFuuka\Model\Comment::processExternalLinks#var.link')
             ->setObject($this)
             ->setParam('data', $data)
             ->setParam('build_href', $build_href)

@@ -400,7 +400,7 @@ class Media extends Model
      */
     public function getLink(Request $request, $thumbnail = false, $download = false)
     {
-        $before = Hook::forge('Foolz\Foolfuuka\Model\Media::getLink#exec.beforeMethod')
+        $before = Hook::forge('Foolz\FoolFuuka\Model\Media::getLink#exec.beforeMethod')
             ->setObject($this)
             ->setParams(['thumbnail' => $thumbnail])
             ->execute()
@@ -664,7 +664,7 @@ class Media extends Model
         $file = $this->temp_file;
         $this->op = $is_op;
 
-        $data = Hook::forge('Foolz\Foolfuuka\Model\Media::insert#var.media')
+        $data = Hook::forge('Foolz\FoolFuuka\Model\Media::insert#var.media')
             ->setParams([
                 'dimensions' => getimagesize($file->getPathname()),
                 'file' => $file,
@@ -781,7 +781,7 @@ class Media extends Model
                 mkdir($this->pathFromFilename(true, $is_op), 0777, true);
             }
 
-            $return = Hook::forge('Foolz\Foolfuuka\Model\Media::insert#exec.createThumbnail')
+            $return = Hook::forge('Foolz\FoolFuuka\Model\Media::insert#exec.createThumbnail')
                 ->setObject($this)
                 ->setParams([
                     'thumb_width' => $thumb_width,

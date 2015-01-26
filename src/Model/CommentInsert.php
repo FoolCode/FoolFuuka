@@ -310,7 +310,7 @@ class CommentInsert extends Comment
                     throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution.'));
                 }
             } elseif ($this->preferences->get('foolframe.auth.recaptcha_public')) { // if there wasn't a recaptcha input, let's go with heavier checks
-                Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#obj.captcha')
+                Hook::forge('Foolz\FoolFuuka\Model\CommentInsert::insert#obj.captcha')
                     ->setObject($this)
                     ->execute();
 
@@ -340,7 +340,7 @@ class CommentInsert extends Comment
             }
         }
 
-        Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#obj.afterInputCheck')
+        Hook::forge('Foolz\FoolFuuka\Model\CommentInsert::insert#obj.afterInputCheck')
             ->setObject($this)
             ->execute();
 
@@ -452,7 +452,7 @@ class CommentInsert extends Comment
 
         $this->comment->timestamp = $this->getRadixTime($this->comment->timestamp);
 
-        Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#obj.comment')
+        Hook::forge('Foolz\FoolFuuka\Model\CommentInsert::insert#obj.comment')
             ->setObject($this)
             ->execute();
 

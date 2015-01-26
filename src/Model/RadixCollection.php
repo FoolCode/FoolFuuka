@@ -433,7 +433,7 @@ class RadixCollection extends Model
             ],
         ];
 
-        $structure = Hook::forge('Foolz\Foolfuuka\Model\RadixCollection::structure#var.structure')
+        $structure = Hook::forge('Foolz\FoolFuuka\Model\RadixCollection::structure#var.structure')
             ->setParam('structure', $structure)
             ->execute()
             ->get($structure);
@@ -802,7 +802,7 @@ class RadixCollection extends Model
 
         // take them all and then filter/do whatever (we use this to split the boards through various subdomains)
         // only public is affected! admins and mods will see all boards at all the time
-        $this->preloaded_radixes = Hook::forge('Foolz\Foolfuuka\Model\RadixCollection::preload#var.radixes')
+        $this->preloaded_radixes = Hook::forge('Foolz\FoolFuuka\Model\RadixCollection::preload#var.radixes')
             ->setObject($this)
             ->setParam('preloaded_radixes', $this->preloaded_radixes)
             ->execute()

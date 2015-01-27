@@ -286,7 +286,7 @@ class Search extends Board
 
         if ($this->radix === null && !$this->preferences->get('foolfuuka.sphinx.global')) {
             // global search requires sphinx
-            throw new SearchRequiresSphinxException(_i('Sorry, this action requires the Sphinx to be installed and running.'));
+            throw new SearchRequiresSphinxException(_i('Sorry, the global search function has not been enabled.'));
         } elseif (($this->radix === null && $this->preferences->get('foolfuuka.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx)) {
             // configure sphinx connection params
             $sphinx = explode(':', $this->preferences->get('foolfuuka.sphinx.listen'));

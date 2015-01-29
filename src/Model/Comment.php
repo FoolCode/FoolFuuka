@@ -413,9 +413,8 @@ class Comment extends Model
 >>>>>>> b427215015fab469f464c60d6249e16795c5f938
 >>>>>>> upstream/master
 
-            $builder = new \JBBCode\CodeDefinitionBuilder('code', '<pre class="code"><code>{param}</code></pre>');
-            $builder->setParseContent(false);
-            array_push($definitions, $builder->build());
+            $builder = new \Foolz\FoolFuuka\Model\BBCode\Code();
+            array_push($definitions, $builder);
 
             $builder = new \JBBCode\CodeDefinitionBuilder('spoiler', '<span class="spoiler">{param}</span>');
             array_push($definitions, $builder->build());

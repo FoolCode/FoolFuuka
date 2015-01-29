@@ -230,3 +230,7 @@ body.theme_default.yotsuba_b {
 .navbar-search .search-query {
   box-shadow: none;
 }
+
+code.hljs {
+  display: inline;
+}

@@ -403,9 +403,14 @@ class Comment extends Model
 =======
     protected function processCommentBBCode($comment)
     {
+<<<<<<< HEAD
         if ($this->_bbcode_processor === null) {
             $parser = new \JBBCode\Parser();
             $definitions = array();
+=======
+        $parser = new \JBBCode\Parser();
+        $definitions = array();
+>>>>>>> b427215015fab469f464c60d6249e16795c5f938
 >>>>>>> upstream/master
 
             $builder = new \JBBCode\CodeDefinitionBuilder('code', '<pre class="code"><code>{param}</code></pre>');

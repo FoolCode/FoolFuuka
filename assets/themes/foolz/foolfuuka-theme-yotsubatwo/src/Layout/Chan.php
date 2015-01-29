@@ -45,6 +45,8 @@ class Chan extends \Foolz\FoolFuuka\View\View
         <link href="<?= $this->getUri()->create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS"/>
         <link href="<?= $this->getUri()->create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom"/>
         <?php endif; ?>
+
+        <link href="<?= $this->getUri()->create('foolfuuka/components/highlightjs/styles') ?>default.css" rel="stylesheet" type="text/css"/>
         <link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css"/>
         <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>" rel="stylesheet" type="text/css"/>
         <!--[if lt IE 8]>
@@ -61,7 +63,6 @@ class Chan extends \Foolz\FoolFuuka\View\View
               title="<?= $this->getPreferences()->get('foolframe.gen.website_title'); ?> " href="<?= $this->getUri()->create('_/opensearch') ?>"/>
         <?php endif; ?>
 
-        <link rel="stylesheet" href="<?= $this->getUri()->create('foolfuuka/components/highlightjs/styles') ?>default.css">
         <script src="<?= $this->getUri()->create('foolfuuka/components/highlightjs') ?>highlight.pack.js"></script>
         <script src="<?= $this->getUri()->create('foolfuuka/mathjax/mathjax') ?>MathJax.js?config=default"></script>
         <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
@@ -371,7 +372,14 @@ class Chan extends \Foolz\FoolFuuka\View\View
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="<?= $this->getUri()->base().'assets/js/jquery.js' ?>"><\/script>')</script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+        hljs.configure({
+            tableReplace: '  '
+        });
+        $('pre,code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+    </script>
     <script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('bootstrap.min.js') ?>"></script>
     <script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
     <script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('board.js') ?>"></script>

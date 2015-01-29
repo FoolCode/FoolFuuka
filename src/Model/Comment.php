@@ -362,9 +362,8 @@ class Comment extends Model
             $parser = new \JBBCode\Parser();
             $definitions = array();
 
-            $builder = new \JBBCode\CodeDefinitionBuilder('code', '<pre class="code"><code>{param}</code></pre>');
-            $builder->setParseContent(false);
-            array_push($definitions, $builder->build());
+            $builder = new \Foolz\FoolFuuka\Model\BBCode\Code();
+            array_push($definitions, $builder);
 
             $builder = new \JBBCode\CodeDefinitionBuilder('spoiler', '<span class="spoiler">{param}</span>');
             array_push($definitions, $builder->build());

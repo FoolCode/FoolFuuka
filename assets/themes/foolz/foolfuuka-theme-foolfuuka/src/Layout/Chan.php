@@ -43,10 +43,12 @@ class Chan extends \Foolz\FoolFuuka\View\View
     <meta name="generator" content="<?= $this->getConfig()->get('foolz/foolfuuka', 'package', 'main.name').' '.$this->getConfig()->get('foolz/foolfuuka', 'package', 'main.version') ?>">
     <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
     <link href="<?= $this->getUri()->base() ?>" rel="index" title="<?= $this->getPreferences()->get('foolframe.gen.website_title') ?>">
-    <link href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css">
-    <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="<?= $this->getUri()->create('foolfuuka/components/highlightjs/styles') ?>default.css">
+    <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>">
+    <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>">
     <!--[if lt IE 8]>
-        <link href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>">
     <![endif]-->
 
     <?php $this->getStyles(); ?>
@@ -58,7 +60,6 @@ class Chan extends \Foolz\FoolFuuka\View\View
         <link rel="search" type="application/opensearchdescription+xml" title="<?= $this->getPreferences()->get('foolframe.gen.website_title'); ?>" href="<?= $this->getUri()->create('_/opensearch') ?>">
     <?php endif; ?>
 
-    <link rel="stylesheet" href="<?= $this->getUri()->create('foolfuuka/components/highlightjs/styles') ?>default.css">
     <script src="<?= $this->getUri()->create('foolfuuka/components/highlightjs') ?>highlight.pack.js"></script>
     <script src="<?= $this->getUri()->create('foolfuuka/mathjax/mathjax') ?>MathJax.js?config=default"></script>
     <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
@@ -366,7 +367,12 @@ class Chan extends \Foolz\FoolFuuka\View\View
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>
         window.jQuery || document.write('<script src="<?= $this->getAssetManager()->getAssetLink('assets/js/jquery.js') ?>"><\/script>');
-        hljs.initHighlightingOnLoad();
+        hljs.configure({
+            tableReplace: '  '
+        });
+        $('pre,code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
 
         var backend_vars = <?= json_encode($this->getBuilderParamManager()->getParam('backend_vars')) ?>;
 

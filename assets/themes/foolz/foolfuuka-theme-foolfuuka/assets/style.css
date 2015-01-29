@@ -1204,3 +1204,7 @@ a.visited {
 .table-striped tbody tr:nth-child(2n+1) th {
   background-color: #282a2e;
 }
+
+code.hljs {
+  display: inline;
+}

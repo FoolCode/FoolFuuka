@@ -1,15 +1,15 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\DoctrineConnection;
-use Foolz\Foolframe\Model\SchemaManager;
+use Foolz\FoolFrame\Model\DoctrineConnection;
+use Foolz\FoolFrame\Model\SchemaManager;
 
 class Schema
 {
     use \Foolz\Plugin\PlugSuit;
 
-    public static function load(\Foolz\Foolframe\Model\Context $context, SchemaManager $sm)
+    public static function load(\Foolz\FoolFrame\Model\Context $context, SchemaManager $sm)
     {
         /** @var DoctrineConnection $dc */
         $dc = $context->getService('doctrine');

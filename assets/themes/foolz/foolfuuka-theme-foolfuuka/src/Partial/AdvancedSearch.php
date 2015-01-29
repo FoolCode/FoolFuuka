@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
+namespace Foolz\FoolFuuka\Theme\FoolFuuka\Partial;
 
-class AdvancedSearch extends \Foolz\Foolfuuka\View\View
+class AdvancedSearch extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {

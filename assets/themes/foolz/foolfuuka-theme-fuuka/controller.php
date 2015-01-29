@@ -1,15 +1,15 @@
 <?php
 
-namespace Foolz\Foolfuuka\Themes\Fuuka\Controller;
+namespace Foolz\FoolFuuka\Themes\Fuuka\Controller;
 
-use Foolz\Foolframe\Model\Cookie;
-use Foolz\Foolframe\Model\Util;
-use Foolz\Foolfuuka\Model\Board;
-use Foolz\Foolfuuka\Model\Comment;
+use Foolz\FoolFrame\Model\Cookie;
+use Foolz\FoolFrame\Model\Util;
+use Foolz\FoolFuuka\Model\Board;
+use Foolz\FoolFuuka\Model\Comment;
 use Foolz\Inet\Inet;
 use Symfony\Component\HttpFoundation\Response;
 
-class Chan extends \Foolz\Foolfuuka\Controller\Chan
+class Chan extends \Foolz\FoolFuuka\Controller\Chan
 {
     public function radix_page($page = 1)
     {
@@ -53,9 +53,9 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
                     $comment = current($comments);
                     $comment = new Comment($this->getContext(), $comment);
                     $comment->delete($this->getPost('delpass'));
-                } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
+                } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
                     return $this->error($e->getMessage(), 404);
-                } catch (\Foolz\Foolfuuka\Model\CommentDeleteWrongPassException $e) {
+                } catch (\Foolz\FoolFuuka\Model\CommentDeleteWrongPassException $e) {
                     return $this->error($e->getMessage(), 404);
                 }
             }
@@ -79,7 +79,7 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
                             $this->getPost('KOMENTO'),
                             Inet::ptod($this->getRequest()->getClientIp())
                         );
-                } catch (\Foolz\Foolfuuka\Model\ReportException $e) {
+                } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
                     return $this->error($e->getMessage(), 404);
                 }
             }
@@ -149,9 +149,9 @@ class Chan extends \Foolz\Foolfuuka\Controller\Chan
             try {
                 $media = $this->media_factory->forgeFromUpload($this->getRequest(), $this->radix);
                 $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
-            } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
+            } catch (\Foolz\FoolFuuka\Model\MediaUploadNoFileException $e) {
                 $media = null;
-            } catch (\Foolz\Foolfuuka\Model\MediaUploadException $e) {
+            } catch (\Foolz\FoolFuuka\Model\MediaUploadException $e) {
                 return $this->error($e->getMessage());
             }
         }

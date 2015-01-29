@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Yotsubatwo\Partial;
+namespace Foolz\FoolFuuka\Theme\Yotsubatwo\Partial;
 
-class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
+class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {
@@ -168,7 +168,7 @@ class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
                 <td></td>
                 <td>
                     <?php
-                    echo \Foolz\Foolframe\Model\Markdown::parse($radix->getValue('posting_rules'));
+                    echo \Foolz\FoolFrame\Model\Markdown::parse($radix->getValue('posting_rules'));
                     ?>
                 </td>
             </tr>

@@ -27,7 +27,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Foolz\\Foolfuuka\\Theme\\Fuuka\\": "src/"
+      "Foolz\\FoolFuuka\\Theme\\Fuuka\\": "src/"
     }
   },
   "extra": {

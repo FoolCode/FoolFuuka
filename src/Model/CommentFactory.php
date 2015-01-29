@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Model;
+use Foolz\FoolFrame\Model\Model;
 
 class CommentFactory extends Model
 {

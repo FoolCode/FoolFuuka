@@ -1,11 +1,11 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Admin\Partial\Moderation;
+namespace Foolz\FoolFuuka\Theme\Admin\Partial\Moderation;
 
-use Foolz\Foolfuuka\Model\Ban;
+use Foolz\FoolFuuka\Model\Ban;
 use Foolz\Inet\Inet;
 
-class Bans extends \Foolz\Foolframe\View\View
+class Bans extends \Foolz\FoolFrame\View\View
 {
     public function toString()
     {

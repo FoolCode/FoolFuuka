@@ -1,6 +1,6 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
 
 class CommentData extends Data

@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Yotsubatwo\Layout;
+namespace Foolz\FoolFuuka\Theme\Yotsubatwo\Layout;
 
-class Chan extends \Foolz\Foolfuuka\View\View
+class Chan extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {
@@ -61,6 +61,8 @@ class Chan extends \Foolz\Foolfuuka\View\View
               title="<?= $this->getPreferences()->get('foolframe.gen.website_title'); ?> " href="<?= $this->getUri()->create('_/opensearch') ?>"/>
         <?php endif; ?>
 
+        <link rel="stylesheet" href="<?= $this->getUri()->create('foolfuuka/components/highlightjs/styles') ?>default.css">
+        <script src="<?= $this->getUri()->create('foolfuuka/components/highlightjs') ?>highlight.pack.js"></script>
         <script src="<?= $this->getUri()->create('foolfuuka/mathjax/mathjax') ?>MathJax.js?config=default"></script>
         <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
 
@@ -369,6 +371,7 @@ class Chan extends \Foolz\Foolfuuka\View\View
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="<?= $this->getUri()->base().'assets/js/jquery.js' ?>"><\/script>')</script>
+    <script>hljs.initHighlightingOnLoad();</script>
     <script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('bootstrap.min.js') ?>"></script>
     <script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
     <script defer src="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('board.js') ?>"></script>

@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
+namespace Foolz\FoolFuuka\Theme\FoolFuuka\Partial;
 
-class Error extends \Foolz\Foolfuuka\View\View
+class Error extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {

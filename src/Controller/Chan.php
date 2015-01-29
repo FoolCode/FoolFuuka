@@ -1,28 +1,28 @@
 <?php
 
-namespace Foolz\Foolfuuka\Controller;
+namespace Foolz\FoolFuuka\Controller;
 
-use Foolz\Foolframe\Controller\Common;
-use Foolz\Foolframe\Model\Config;
-use Foolz\Foolframe\Model\Preferences;
-use Foolz\Foolframe\Model\Uri;
-use Foolz\Foolframe\Model\Util;
-use Foolz\Foolframe\Model\Validation\ActiveConstraint\Trim;
-use Foolz\Foolframe\Model\Validation\Validator;
-use Foolz\Foolframe\Model\Cookie;
-use Foolz\Foolfuuka\Model\Ban;
-use Foolz\Foolfuuka\Model\BanFactory;
-use Foolz\Foolfuuka\Model\Board;
-use Foolz\Foolfuuka\Model\Comment;
-use Foolz\Foolfuuka\Model\CommentBulk;
-use Foolz\Foolfuuka\Model\CommentFactory;
-use Foolz\Foolfuuka\Model\CommentInsert;
-use Foolz\Foolfuuka\Model\Media;
-use Foolz\Foolfuuka\Model\MediaFactory;
-use Foolz\Foolfuuka\Model\Radix;
-use Foolz\Foolfuuka\Model\RadixCollection;
-use Foolz\Foolfuuka\Model\Report;
-use Foolz\Foolfuuka\Model\Search;
+use Foolz\FoolFrame\Controller\Common;
+use Foolz\FoolFrame\Model\Config;
+use Foolz\FoolFrame\Model\Preferences;
+use Foolz\FoolFrame\Model\Uri;
+use Foolz\FoolFrame\Model\Util;
+use Foolz\FoolFrame\Model\Validation\ActiveConstraint\Trim;
+use Foolz\FoolFrame\Model\Validation\Validator;
+use Foolz\FoolFrame\Model\Cookie;
+use Foolz\FoolFuuka\Model\Ban;
+use Foolz\FoolFuuka\Model\BanFactory;
+use Foolz\FoolFuuka\Model\Board;
+use Foolz\FoolFuuka\Model\Comment;
+use Foolz\FoolFuuka\Model\CommentBulk;
+use Foolz\FoolFuuka\Model\CommentFactory;
+use Foolz\FoolFuuka\Model\CommentInsert;
+use Foolz\FoolFuuka\Model\Media;
+use Foolz\FoolFuuka\Model\MediaFactory;
+use Foolz\FoolFuuka\Model\Radix;
+use Foolz\FoolFuuka\Model\RadixCollection;
+use Foolz\FoolFuuka\Model\Report;
+use Foolz\FoolFuuka\Model\Search;
 use Foolz\Inet\Inet;
 use Foolz\Profiler\Profiler;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -404,7 +404,7 @@ class Chan extends Common
             // execute in case there's more exceptions to handle
             $board->getComments();
             $board->getCount();
-        } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
             $this->profiler->log('Controller Chan::latest End Prematurely');
 
             return $this->error($e->getMessage());
@@ -547,10 +547,10 @@ class Chan extends Common
                     $this->builder->stream();
                 });
             }
-        } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BoardThreadNotFoundException $e) {
             $this->profiler->log('Controller Chan::thread End Prematurely');
             return $this->error($e->getMessage(), 404);
-        } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
             $this->profiler->log('Controller Chan::thread End Prematurely');
             return $this->error($e->getMessage());
         }
@@ -584,7 +584,7 @@ class Chan extends Common
                     'total' => $board->getPages()
                 ]
             ]);
-        } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
             return $this->error($e->getMessage());
         }
 
@@ -622,9 +622,9 @@ class Chan extends Common
                 ->getParamManager()
                 ->setParam('url', $redirect);
             $this->builder->getProps()->addTitle(_i('Redirecting'));
-        } catch (\Foolz\Foolfuuka\Model\BoardMalformedInputException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BoardMalformedInputException $e) {
             return $this->error(_i('The post number you submitted is invalid.'));
-        } catch (\Foolz\Foolfuuka\Model\BoardPostNotFoundException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
             return $this->error(_i('The post you are looking for does not exist.'));
         }
 
@@ -709,7 +709,7 @@ class Chan extends Common
 
         try {
             $bulk = $this->media_factory->getByFilename($this->radix, $filename);
-        } catch (\Foolz\Foolfuuka\Model\MediaException $e) {
+        } catch (\Foolz\FoolFuuka\Model\MediaException $e) {
             return $this->action_404(_i('The image was never in our databases.'));
         }
 
@@ -781,8 +781,8 @@ class Chan extends Common
 
         // Check all allowed search modifiers and apply only these
         $modifiers = [
-            'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid',
-            'country', 'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'order', 'page'
+            'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid', 'country',
+            'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'results', 'order', 'page'
         ];
 
         if ($this->getAuth()->hasAccess('comment.see_ip')) {;
@@ -912,9 +912,9 @@ class Chan extends Common
                 ->setRadix($this->radix)
                 ->setPage($search['page'] ? $search['page'] : 1);
             $board->getComments();
-        } catch (\Foolz\Foolfuuka\Model\SearchException $e) {
+        } catch (\Foolz\FoolFuuka\Model\SearchException $e) {
             return $this->error($e->getMessage());
-        } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
             return $this->error($e->getMessage());
         } catch (\Foolz\SphinxQL\ConnectionException $e) {
             return $this->error($this->preferences->get('foolfuuka.sphinx.custom_message', 'It appears that the search engine is offline at the moment. Please try again later.'));
@@ -1057,13 +1057,18 @@ class Chan extends Common
         return $this->response;
     }
 
-    public function radix_appeal()
+    public function action_appeal_ban()
+    {
+        return call_user_func_array([$this, 'radix_appeal_ban'], func_get_args());
+    }
+
+    public function radix_appeal_ban()
     {
         try {
             /** @var BanFactory $ban_factory */
             $ban_factory = $this->getContext()->getService('foolfuuka.ban_factory');
             $bans = $ban_factory->getByIp(Inet::ptod($this->getRequest()->getClientIp()));
-        } catch (\Foolz\Foolfuuka\Model\BanException $e) {
+        } catch (\Foolz\FoolFuuka\Model\BanException $e) {
             return $this->error(_i('It doesn\'t look like you\'re banned.'));
         }
 
@@ -1196,13 +1201,13 @@ class Chan extends Common
             try {
                 $media = $this->media_factory->forgeFromUpload($this->getRequest(), $this->radix);
                 $media->media->spoiler = isset($data['spoiler']) && $data['spoiler'];
-            } catch (\Foolz\Foolfuuka\Model\MediaUploadNoFileException $e) {
+            } catch (\Foolz\FoolFuuka\Model\MediaUploadNoFileException $e) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
                     return $this->error($e->getMessage());
                 }
-            } catch (\Foolz\Foolfuuka\Model\MediaUploadException $e) {
+            } catch (\Foolz\FoolFuuka\Model\MediaUploadException $e) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
@@ -1245,13 +1250,13 @@ class Chan extends Common
                 $bulk->import($data, $this->radix);
                 $comment = new CommentInsert($this->getContext(), $bulk);
                 $comment->insert($media, $data);
-            } catch (\Foolz\Foolfuuka\Model\CommentSendingRequestCaptchaException $e) {
+            } catch (\Foolz\FoolFuuka\Model\CommentSendingRequestCaptchaException $e) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['captcha' => true]);
                 } else {
                     return $this->error(_i('Your message looked like spam. Make sure you have JavaScript enabled to display the reCAPTCHA to submit the comment.'));
                 }
-            } catch (\Foolz\Foolfuuka\Model\CommentSendingException $e) {
+            } catch (\Foolz\FoolFuuka\Model\CommentSendingException $e) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['error' => $e->getMessage()]);
                 } else {
@@ -1280,9 +1285,9 @@ class Chan extends Common
                         ]);
 
                     $comments = $board->getComments();
-                } catch (\Foolz\Foolfuuka\Model\BoardThreadNotFoundException $e) {
+                } catch (\Foolz\FoolFuuka\Model\BoardThreadNotFoundException $e) {
                     return $this->error(_i('Thread not found.'));
-                } catch (\Foolz\Foolfuuka\Model\BoardException $e) {
+                } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
                     return $this->error(_i('Unknown error.'));
                 }
 

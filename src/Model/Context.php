@@ -1,10 +1,10 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Auth;
-use Foolz\Foolframe\Model\ContextInterface;
-use Foolz\Foolframe\Model\Legacy\Config;
+use Foolz\FoolFrame\Model\Auth;
+use Foolz\FoolFrame\Model\ContextInterface;
+use Foolz\FoolFrame\Model\Legacy\Config;
 use Foolz\Plugin\Event;
 use Foolz\Plugin\Hook;
 use Symfony\Component\HttpKernel\HttpKernel;
@@ -15,47 +15,45 @@ use Symfony\Component\Routing\RouteCollection;
 class Context implements ContextInterface
 {
     /**
-     * @var \Foolz\Foolframe\Model\Context
+     * @var \Foolz\FoolFrame\Model\Context
      */
     public $context;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         $this->context = $context;
 
-        /** @var \Foolz\Foolframe\Model\Config $config */
+        /** @var \Foolz\FoolFrame\Model\Config $config */
         $config = $this->context->getService('config');
         $config->addPackage('foolz/foolfuuka', ASSETSPATH);
 
-        class_alias('Foolz\\Foolfuuka\\Model\\Ban', 'Ban');
-        class_alias('Foolz\\Foolfuuka\\Model\\Board', 'Board');
-        class_alias('Foolz\\Foolfuuka\\Model\\Comment', 'Comment');
-        class_alias('Foolz\\Foolfuuka\\Model\\CommentInsert', 'CommentInsert');
-        class_alias('Foolz\\Foolfuuka\\Model\\Media', 'Media');
-        class_alias('Foolz\\Foolfuuka\\Model\\Radix', 'Radix');
-        class_alias('Foolz\\Foolfuuka\\Model\\Report', 'Report');
-        class_alias('Foolz\\Foolfuuka\\Model\\Search', 'Search');
-
-        require_once __DIR__.'/../../assets/packages/stringparser-bbcode/library/stringparser_bbcode.class.php';
+        class_alias('Foolz\\FoolFuuka\\Model\\Ban', 'Ban');
+        class_alias('Foolz\\FoolFuuka\\Model\\Board', 'Board');
+        class_alias('Foolz\\FoolFuuka\\Model\\Comment', 'Comment');
+        class_alias('Foolz\\FoolFuuka\\Model\\CommentInsert', 'CommentInsert');
+        class_alias('Foolz\\FoolFuuka\\Model\\Media', 'Media');
+        class_alias('Foolz\\FoolFuuka\\Model\\Radix', 'Radix');
+        class_alias('Foolz\\FoolFuuka\\Model\\Report', 'Report');
+        class_alias('Foolz\\FoolFuuka\\Model\\Search', 'Search');
 
         $context->getContainer()
-            ->register('foolfuuka.radix_collection', 'Foolz\Foolfuuka\Model\RadixCollection')
+            ->register('foolfuuka.radix_collection', 'Foolz\FoolFuuka\Model\RadixCollection')
             ->addArgument($context);
 
         $context->getContainer()
-            ->register('foolfuuka.comment_factory', 'Foolz\Foolfuuka\Model\CommentFactory')
+            ->register('foolfuuka.comment_factory', 'Foolz\FoolFuuka\Model\CommentFactory')
             ->addArgument($context);
 
         $context->getContainer()
-            ->register('foolfuuka.media_factory', 'Foolz\Foolfuuka\Model\MediaFactory')
+            ->register('foolfuuka.media_factory', 'Foolz\FoolFuuka\Model\MediaFactory')
             ->addArgument($context);
 
         $context->getContainer()
-            ->register('foolfuuka.ban_factory', 'Foolz\Foolfuuka\Model\BanFactory')
+            ->register('foolfuuka.ban_factory', 'Foolz\FoolFuuka\Model\BanFactory')
             ->addArgument($context);
 
         $context->getContainer()
-            ->register('foolfuuka.report_collection', 'Foolz\Foolfuuka\Model\ReportCollection')
+            ->register('foolfuuka.report_collection', 'Foolz\FoolFuuka\Model\ReportCollection')
             ->addArgument($context);
     }
 
@@ -75,7 +73,7 @@ class Context implements ContextInterface
         /** @var Auth $auth */
         $auth = $this->context->getService('auth');
         if ($auth->hasAccess('maccess.admin')) {
-            Event::forge('Foolz\Foolframe\Model\System::getEnvironment#var.environment')
+            Event::forge('Foolz\FoolFrame\Model\System::getEnvironment#var.environment')
                 ->setCall(function($result) use ($config) {
                     $environment = $result->getParam('environment');
 
@@ -133,26 +131,26 @@ class Context implements ContextInterface
 
     public function loadRoutes(RouteCollection $route_collection)
     {
-        Hook::forge('Foolz\Foolfuuka\Model\Context::loadRoutes#obj.beforeRouting')
+        Hook::forge('Foolz\FoolFuuka\Model\Context::loadRoutes#obj.beforeRouting')
             ->setObject($this)
             ->setParam('route_collection', $route_collection)
             ->execute();
 
         $route_collection->add('foolfuuka.root', new Route(
             '/',
-            ['_controller' => '\Foolz\Foolfuuka\Controller\Chan::index']
+            ['_controller' => '\Foolz\FoolFuuka\Controller\Chan::index']
         ));
 
         $route_collection->add('404', new Route(
             '',
-            ['_controller' => '\Foolz\Foolfuuka\Controller\Chan::404']
+            ['_controller' => '\Foolz\FoolFuuka\Controller\Chan::404']
         ));
 
-        $route = Hook::forge('Foolz\Foolfuuka\Model\Context::loadRoutes#var.collection')
+        $route = Hook::forge('Foolz\FoolFuuka\Model\Context::loadRoutes#var.collection')
             ->setParams([
                 'default_suffix' => 'page',
                 'suffix' => 'page',
-                'controller' => '\Foolz\Foolfuuka\Controller\Chan::*'
+                'controller' => '\Foolz\FoolFuuka\Controller\Chan::*'
             ])
             ->execute();
 
@@ -181,7 +179,7 @@ class Context implements ContextInterface
             '/_/api/chan/{_suffix}',
             [
                 '_suffix' => '',
-                '_controller' => '\Foolz\Foolfuuka\Controller\Api\Chan::*',
+                '_controller' => '\Foolz\FoolFuuka\Controller\Api\Chan::*',
             ],
             [
                 '_suffix' => '.*'
@@ -193,7 +191,7 @@ class Context implements ContextInterface
             '/_/{_suffix}',
             [
                 '_suffix' => '',
-                '_controller' => '\Foolz\Foolfuuka\Controller\Chan::*',
+                '_controller' => '\Foolz\FoolFuuka\Controller\Chan::*',
             ],
             [
                 '_suffix' => '.*'
@@ -206,7 +204,7 @@ class Context implements ContextInterface
                     '/admin/'.$location.'/{_suffix}',
                     [
                         '_suffix' => '',
-                        '_controller' => '\Foolz\Foolfuuka\Controller\Admin\\'.ucfirst($location).'::*',
+                        '_controller' => '\Foolz\FoolFuuka\Controller\Admin\\'.ucfirst($location).'::*',
                     ],
                     [
                         '_suffix' => '.*',
@@ -215,7 +213,7 @@ class Context implements ContextInterface
             );
         }
 
-        Hook::forge('Foolz\Foolfuuka\Model\Context::loadRoutes#obj.afterRouting')
+        Hook::forge('Foolz\FoolFuuka\Model\Context::loadRoutes#obj.afterRouting')
             ->setObject($this)
             ->setParam('route_collection', $route_collection)
             ->execute();

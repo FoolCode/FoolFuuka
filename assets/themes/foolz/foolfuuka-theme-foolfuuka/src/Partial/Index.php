@@ -1,10 +1,10 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
+namespace Foolz\FoolFuuka\Theme\FoolFuuka\Partial;
 
 use Foolz\Plugin\Hook;
 
-class Index extends \Foolz\Foolfuuka\View\View
+class Index extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {

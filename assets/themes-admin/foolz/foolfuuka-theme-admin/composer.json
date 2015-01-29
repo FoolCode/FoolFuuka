@@ -1,27 +1,36 @@
 {
-	"name": "foolz/foolfuuka-theme-admin",
-	"type": "foolz-foolfuuka-admin-theme",
-	"description": "The default FoolFrame admin theme.",
-	"version": "1.0.2",
-	"keywords": ["theme", "admin", "foolfuuka"],
-	"homepage": "http://www.foolz.us",
-	"license": "Apache-2.0",
-	"authors": [{"name": "foolz", "email": "support@foolz.us"}],
-	"support": {
-		"email": "support@foolz.us",
-		"irc": "irc://irc.irchighway.net/fooldriver"
-	},
-	"require": {
-		"php": ">=5.4.0",
-		"foolz/theme": "dev"
-	},
-	"autoload": {
-		"psr-0": {
-			"Foolz\\Foolfuuka\\Theme\\Admin": "classes/"
-		}
-	},
-	"extra": {
-		"name": "Admin",
-		"extends": "foolz/foolframe-theme-admin"
-	}
+  "name": "foolz/foolfuuka-theme-admin",
+  "type": "foolz-foolfuuka-admin-theme",
+  "description": "The default FoolFrame admin theme.",
+  "version": "1.0.2",
+  "keywords": [
+    "theme",
+    "admin",
+    "foolfuuka"
+  ],
+  "homepage": "http://www.foolz.us",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "foolz",
+      "email": "support@foolz.us"
+    }
+  ],
+  "support": {
+    "email": "support@foolz.us",
+    "irc": "irc://irc.irchighway.net/fooldriver"
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "foolz/theme": "dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "Foolz\\FoolFuuka\\Theme\\Admin\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Admin",
+    "extends": "foolz/foolframe-theme-admin"
+  }
 }

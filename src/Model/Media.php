@@ -1,13 +1,13 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Config;
-use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\FoolFrame\Model\Config;
+use Foolz\FoolFrame\Model\DoctrineConnection;
 use Foolz\Cache\Cache;
-use Foolz\Foolframe\Model\Model;
-use Foolz\Foolframe\Model\Preferences;
-use Foolz\Foolframe\Model\Uri;
+use Foolz\FoolFrame\Model\Model;
+use Foolz\FoolFrame\Model\Preferences;
+use Foolz\FoolFrame\Model\Uri;
 use Foolz\Plugin\Hook;
 use Foolz\Plugin\PlugSuit;
 use Symfony\Component\HttpFoundation\File\File;
@@ -167,7 +167,7 @@ class Media extends Model
      * @param  Radix $radix    The Radix in which the Media can be found
      * @param  boolean                       $op       If this media is referred to an opening post
      */
-    public function __construct(\Foolz\Foolframe\Model\Context $context, CommentBulk $bulk = null)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context, CommentBulk $bulk = null)
     {
         parent::__construct($context);
 
@@ -400,7 +400,7 @@ class Media extends Model
      */
     public function getLink(Request $request, $thumbnail = false, $download = false)
     {
-        $before = Hook::forge('Foolz\Foolfuuka\Model\Media::getLink#exec.beforeMethod')
+        $before = Hook::forge('Foolz\FoolFuuka\Model\Media::getLink#exec.beforeMethod')
             ->setObject($this)
             ->setParams(['thumbnail' => $thumbnail])
             ->execute()
@@ -653,7 +653,7 @@ class Media extends Model
      * @param  string   $microtime  The time in microseconds to use for the local filename
      * @param  boolean  $is_op      True if the thumbnail sizes should be for OP, false if they should be for a reply
      *
-     * @return  \Foolz\Foolfuuka\Model\Media       The current object updated with the insert data
+     * @return  \Foolz\FoolFuuka\Model\Media       The current object updated with the insert data
      * @throws  MediaInsertInvalidFormatException  In case the media is not a valid format
      * @throws  MediaInsertDomainException         In case the media uploaded is in example too small or validations don't pass
      * @throws  MediaInsertRepostException         In case the media has been reposted too recently according to control panel settings
@@ -664,7 +664,7 @@ class Media extends Model
         $file = $this->temp_file;
         $this->op = $is_op;
 
-        $data = Hook::forge('Foolz\Foolfuuka\Model\Media::insert#var.media')
+        $data = Hook::forge('Foolz\FoolFuuka\Model\Media::insert#var.media')
             ->setParams([
                 'dimensions' => getimagesize($file->getPathname()),
                 'file' => $file,
@@ -781,7 +781,7 @@ class Media extends Model
                 mkdir($this->pathFromFilename(true, $is_op), 0777, true);
             }
 
-            $return = Hook::forge('Foolz\Foolfuuka\Model\Media::insert#exec.createThumbnail')
+            $return = Hook::forge('Foolz\FoolFuuka\Model\Media::insert#exec.createThumbnail')
                 ->setObject($this)
                 ->setParams([
                     'thumb_width' => $thumb_width,

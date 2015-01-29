@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Fuuka\Partial;
+namespace Foolz\FoolFuuka\Theme\Fuuka\Partial;
 
-class ToolsReplyBox extends \Foolz\Foolfuuka\View\View
+class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {

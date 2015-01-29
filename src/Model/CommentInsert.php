@@ -1,6 +1,6 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
 use Foolz\Cache\Cache;
 use Foolz\Inet\Inet;
@@ -211,30 +211,7 @@ class CommentInsert extends Comment
         if (!$this->getAuth()->hasAccess('comment.limitless_comment')) {
             // check if the user is banned
             if ($ban = $this->ban_factory->isBanned($this->comment->poster_ip, $this->radix)) {
-                if ($ban->board_id == 0) {
-                    $banned_string = _i('It looks like you were banned on all boards.');
-                } else {
-                    $banned_string = _i('It looks like you were banned on /'.$this->radix->shortname.'/.');
-                }
-
-                if ($ban->length) {
-                    $banned_string .= ' '._i('This ban will last until:').' '.date(DATE_COOKIE, $ban->start + $ban->length).'.';
-                } else {
-                    $banned_string .= ' '._i('This ban will last forever.');
-                }
-
-                if ($ban->reason) {
-                    $banned_string .= ' '._i('The reason for this ban is:').' «'.$ban->reason.'».';
-                }
-
-                if ($ban->appeal_status == Ban::APPEAL_NONE) {
-                    $banned_string .= ' '._i('If you\'d like to appeal to your ban, go to the %s page.',
-                        '<a href="'.$this->uri->create($this->radix->shortname.'/appeal').'">'._i('Appeal').'</a>');
-                } elseif ($ban->appeal_status == Ban::APPEAL_PENDING) {
-                    $banned_string .= ' '._i('Your appeal is pending.');
-                }
-
-                throw new CommentSendingBannedException($banned_string);
+                throw new CommentSendingBannedException($ban->getMessage());
             }
         }
 
@@ -333,7 +310,7 @@ class CommentInsert extends Comment
                     throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution.'));
                 }
             } elseif ($this->preferences->get('foolframe.auth.recaptcha_public')) { // if there wasn't a recaptcha input, let's go with heavier checks
-                Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#obj.captcha')
+                Hook::forge('Foolz\FoolFuuka\Model\CommentInsert::insert#obj.captcha')
                     ->setObject($this)
                     ->execute();
 
@@ -363,7 +340,7 @@ class CommentInsert extends Comment
             }
         }
 
-        Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#obj.afterInputCheck')
+        Hook::forge('Foolz\FoolFuuka\Model\CommentInsert::insert#obj.afterInputCheck')
             ->setObject($this)
             ->execute();
 
@@ -475,7 +452,7 @@ class CommentInsert extends Comment
 
         $this->comment->timestamp = $this->getRadixTime($this->comment->timestamp);
 
-        Hook::forge('Foolz\Foolfuuka\Model\CommentInsert::insert#obj.comment')
+        Hook::forge('Foolz\FoolFuuka\Model\CommentInsert::insert#obj.comment')
             ->setObject($this)
             ->execute();
 
@@ -674,22 +651,9 @@ class CommentInsert extends Comment
             $this->dc->getConnection()->commit();
 
             // clean up some caches
-            Cache::item('foolfuuka.model.board.getThreadComments.thread.'
-                .md5(serialize([$this->radix->shortname, $this->comment->thread_num])))->delete();
-
-            // clean up the 10 first pages of index and gallery that are cached
-            for ($i = 1; $i <= 10; $i++) {
-                Cache::item('foolfuuka.model.board.getLatestComments.query.'
-                    .$this->radix->shortname.'.by_post.'.$i)->delete();
-
-                Cache::item('foolfuuka.model.board.getLatestComments.query.'
-                    .$this->radix->shortname.'.by_thread.'.$i)->delete();
-
-                Cache::item('foolfuuka.model.board.getThreadsComments.query.'
-                    .$this->radix->shortname.'.'.$i)->delete();
-            }
+            $this->clearCache();
         } catch (\Doctrine\DBAL\DBALException $e) {
-            $this->logger->error('\Foolz\Foolfuuka\Model\CommentInsert: '.$e->getMessage());
+            $this->logger->error('\Foolz\FoolFuuka\Model\CommentInsert: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();
 
             throw new CommentSendingDatabaseException(_i('Something went wrong when inserting the post in the database. Try again.'));

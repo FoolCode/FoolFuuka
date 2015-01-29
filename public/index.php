@@ -120,4 +120,4 @@ else
 // Boot the app
 require VENDPATH.'autoload.php';
 
-(new Foolz\Foolframe\Model\Context())->handleWeb();
+(new Foolz\FoolFrame\Model\Context())->handleWeb();

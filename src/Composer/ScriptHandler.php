@@ -3,7 +3,7 @@
 namespace Foolz\FoolFuuka\Composer;
 
 use Composer\Script\CommandEvent;
-use Foolz\Foolframe\Model\Util;
+use Foolz\FoolFrame\Model\Util;
 
 class ScriptHandler
 {

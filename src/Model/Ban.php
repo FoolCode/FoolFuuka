@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Model;
+use Foolz\FoolFrame\Model\Model;
 
 /**
  * Thrown when there's no results from database or the value domain hasn't been respected
@@ -83,33 +83,34 @@ class Ban extends Model
     public $appeal_status = 0;
 
     /**
+     * @var DoctrineConnection
+     */
+    protected $dc;
+
+    /**
+     * @var Uri
+     */
+    protected $uri;
+
+    /**
+     * @var RadixCollection
+     */
+    protected $radix_coll;
+
+    /**
      * Appeal statuses for the appeal_status field
      */
     const APPEAL_NONE = 0;
     const APPEAL_PENDING = 1;
     const APPEAL_REJECTED = 2;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
         $this->dc = $context->getService('doctrine');
-    }
-
-    /**
-     * Remove the entry for a ban (unban)
-     *
-     * @return  \Foolz\Foolfuuka\Model\Ban
-     */
-    public function delete()
-    {
-        $this->dc->qb()
-            ->delete($this->dc->p('banned_posters'))
-            ->where('id = :id')
-            ->setParameter(':id', $this->id)
-            ->execute();
-
-        return $this;
+        $this->uri = $context->getService('uri');
+        $this->radix_coll = $context->getService('foolfuuka.radix_collection');
     }
 
     /**
@@ -117,7 +118,7 @@ class Ban extends Model
      *
      * @param   string  $appeal  The appeal submitted by the user
      *
-     * @return  \Foolz\Foolfuuka\Model\Ban
+     * @return  \Foolz\FoolFuuka\Model\Ban
      */
     public function appeal($appeal)
     {
@@ -136,7 +137,7 @@ class Ban extends Model
     /**
      * Sets the flag to deny the appeal
      *
-     * @return  \Foolz\Foolfuuka\Model\Ban
+     * @return  \Foolz\FoolFuuka\Model\Ban
      */
     public function appealReject()
     {
@@ -148,5 +149,51 @@ class Ban extends Model
             ->execute();
 
         return $this;
+    }
+
+    /**
+     * Remove the entry for a ban (unban)
+     *
+     * @return  \Foolz\FoolFuuka\Model\Ban
+     */
+    public function delete()
+    {
+        $this->dc->qb()
+            ->delete($this->dc->p('banned_posters'))
+            ->where('id = :id')
+            ->setParameter(':id', $this->id)
+            ->execute();
+
+        return $this;
+    }
+
+    public function getMessage()
+    {
+        if ($this->board_id == 0) {
+            $message = _i('It looks like you were banned on all boards.');
+        } else {
+            $message = _i('It looks like you were banned on /'.$this->radix_coll->getById($this->board_id)->shortname.'/.');
+        }
+
+        if ($this->length) {
+            $message .= ' '._i('This ban will last until:').' '.date(DATE_COOKIE, $this->start + $this->length).'.';
+        } else {
+            $message .= ' '._i('This ban will last forever.');
+        }
+
+        if ($this->reason) {
+            $message .= ' '._i('The reason for this ban is:').' «'.$this->reason.'».';
+        }
+
+        if ($this->appeal_status == Ban::APPEAL_NONE) {
+            $message .= ' '._i(
+                    'If you\'d like to appeal to your ban, go to the :appeal page.',
+                    '<a href="'.$this->uri->create('_/appeal_ban').'">'._i('appeal ban').'</a>'
+                );
+        } elseif ($this->appeal_status == Ban::APPEAL_PENDING) {
+            $message .= ' '._i('Your appeal is pending.');
+        }
+
+        return $message;
     }
 }

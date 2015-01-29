@@ -1,9 +1,9 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\Logger;
-use Foolz\Foolframe\Model\Preferences;
+use Foolz\FoolFrame\Model\Logger;
+use Foolz\FoolFrame\Model\Preferences;
 use Foolz\Inet\Inet;
 use Foolz\SphinxQL\Helper;
 use Foolz\SphinxQL\SphinxQL;
@@ -44,7 +44,7 @@ class Search extends Board
      */
     protected $media_factory;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
@@ -128,6 +128,18 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
+                'label' => _i('Capcode'),
+                'name' => 'capcode',
+                'elements' => [
+                    ['value' => false, 'text' => _i('All')],
+                    ['value' => 'user', 'text' => _i('Only User Posts')],
+                    ['value' => 'mod', 'text' => _i('Only Moderator Posts')],
+                    ['value' => 'admin', 'text' => _i('Only Admin Posts')],
+                    ['value' => 'dev', 'text' => _i('Only Developer Posts')]
+                ]
+            ],
+            [
+                'type' => 'radio',
                 'label' => _i('Show Posts'),
                 'name' => 'filter',
                 'elements' => [
@@ -158,7 +170,7 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
-                'label' => _i('Results'),
+                'label' => _i('Post Type'),
                 'name' => 'type',
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
@@ -169,14 +181,11 @@ class Search extends Board
             ],
             [
                 'type' => 'radio',
-                'label' => _i('Capcode'),
-                'name' => 'capcode',
+                'label' => _i('Results'),
+                'name' => 'results',
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
-                    ['value' => 'user', 'text' => _i('Only User Posts')],
-                    ['value' => 'mod', 'text' => _i('Only Moderator Posts')],
-                    ['value' => 'admin', 'text' => _i('Only Admin Posts')],
-                    ['value' => 'dev', 'text' => _i('Only Developer Posts')]
+                    ['value' => 'thread', 'text' => _i('Grouped By Threads')]
                 ]
             ],
             [
@@ -197,7 +206,7 @@ class Search extends Board
      *
      * @param  array  $arguments  The search arguments
      *
-     * @return  \Foolz\Foolfuuka\Model\Search  The current object
+     * @return  \Foolz\FoolFuuka\Model\Search  The current object
      */
     protected function p_getSearch($arguments)
     {
@@ -215,7 +224,7 @@ class Search extends Board
     /**
      * Gets the search results
      *
-     * @return  \Foolz\Foolfuuka\Model\Search  The current object
+     * @return  \Foolz\FoolFuuka\Model\Search  The current object
      * @throws  SearchEmptyResultException     If there's no results to display
      * @throws  SearchRequiresSphinxException  If the search submitted requires Sphinx to run
      * @throws  SearchSphinxOfflineException   If the Sphinx server is unreachable
@@ -277,7 +286,7 @@ class Search extends Board
 
         if ($this->radix === null && !$this->preferences->get('foolfuuka.sphinx.global')) {
             // global search requires sphinx
-            throw new SearchRequiresSphinxException(_i('Sorry, this action requires the Sphinx to be installed and running.'));
+            throw new SearchRequiresSphinxException(_i('Sorry, the global search function has not been enabled.'));
         } elseif (($this->radix === null && $this->preferences->get('foolfuuka.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx)) {
             // configure sphinx connection params
             $sphinx = explode(':', $this->preferences->get('foolfuuka.sphinx.listen'));
@@ -429,13 +438,9 @@ class Search extends Board
             }
 
             if ($args['results'] !== null) {
-                if ($args['results'] == 'op') {
-                    $query->groupBy('thread_num');
+                if ($args['results'] == 'thread') {
+                    $query->groupBy('tnum');
                     $query->withinGroupOrderBy('is_op', 'desc');
-                }
-
-                if ($args['results'] == 'posts') {
-                    $query->where('is_op', 0);
                 }
             }
 
@@ -455,7 +460,9 @@ class Search extends Board
 
             // submit query
             try {
+                $this->profiler->log('Start: SphinxQL: '.$query->compile()->getCompiled());
                 $search = $query->execute();
+                $this->profiler->log('Stop: SphinxQL');
             } catch(\Foolz\SphinxQL\DatabaseException $e) {
                 $this->logger->error('Search Error: '.$e->getMessage());
                 throw new SearchInvalidException(_i('The search backend returned an error.'));

@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Fuuka\Layout;
+namespace Foolz\FoolFuuka\Theme\Fuuka\Layout;
 
-class Redirect extends \Foolz\Foolfuuka\View\View
+class Redirect extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {

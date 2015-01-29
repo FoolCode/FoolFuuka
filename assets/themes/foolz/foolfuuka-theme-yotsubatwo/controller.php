@@ -1,8 +1,8 @@
 <?php
 
-namespace Foolz\Foolfuuka\Themes\Yotsubatwo\Controller;
+namespace Foolz\FoolFuuka\Themes\Yotsubatwo\Controller;
 
-class Chan extends \Foolz\Foolfuuka\Controller\Chan
+class Chan extends \Foolz\FoolFuuka\Controller\Chan
 {
     public function radix_page($page = 1)
     {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Foolz\Foolfuuka\Model;
+namespace Foolz\FoolFuuka\Model;
 
-use Foolz\Foolframe\Model\DoctrineConnection;
+use Foolz\FoolFrame\Model\DoctrineConnection;
 use Foolz\Cache\Cache;
-use Foolz\Foolframe\Model\Model;
+use Foolz\FoolFrame\Model\Model;
 use Foolz\Plugin\PlugSuit;
 use Foolz\Profiler\Profiler;
 
@@ -100,7 +100,7 @@ class Board extends Model
      */
     protected $comment_factory;
 
-    public function __construct(\Foolz\Foolframe\Model\Context $context)
+    public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
@@ -112,7 +112,7 @@ class Board extends Model
     /**
      * Creates a new instance of Comment
      *
-     * @return  \Foolz\Foolfuuka\Model\Comment
+     * @return  \Foolz\FoolFuuka\Model\Comment
      */
     public static function forge($context)
     {
@@ -122,7 +122,7 @@ class Board extends Model
     /**
      * Returns a single comment, and executes the query if not already executed
      *
-     *  @return \Foolz\Foolfuuka\Model\Comment A single comment object
+     *  @return \Foolz\FoolFuuka\Model\Comment A single comment object
      */
     protected function p_getComment()
     {
@@ -134,7 +134,7 @@ class Board extends Model
     /**
      * Returns the comments, and executes the query if not already executed
      *
-     * @return  \Foolz\Foolfuuka\Model\Comment[]  The array of comment objects
+     * @return  \Foolz\FoolFuuka\Model\Comment[]  The array of comment objects
      */
     protected function p_getComments()
     {
@@ -157,7 +157,7 @@ class Board extends Model
     /**
      * Returns the comments in a plain array, and executes the query if not already executed
      *
-     * @return  \Foolz\Foolfuuka\Model\Comment[]  The array of comment objects
+     * @return  \Foolz\FoolFuuka\Model\Comment[]  The array of comment objects
      */
     protected function p_getCommentsUnsorted()
     {
@@ -203,7 +203,7 @@ class Board extends Model
      *
      * @param  string  $key  The key (column) on which to calculate the "highest" Comment
      *
-     * @return  \Foolz\Foolfuuka\Model\Board
+     * @return  \Foolz\FoolFuuka\Model\Board
      */
     protected function p_getHighest($key)
     {
@@ -223,7 +223,7 @@ class Board extends Model
      *
      * @param  string  $name  The method name of the fetching method, without p_
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_setMethodFetching($name)
     {
@@ -237,7 +237,7 @@ class Board extends Model
      *
      * @param  string  $name  The method name of the counting method, without p_
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_setMethodCounting($name)
     {
@@ -252,7 +252,7 @@ class Board extends Model
      * @param  string|array  $name   The name of the variable, if associative array it will be used instead
      * @param  mixed         $value  The value of the variable
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     public function setOptions($name, $value = null)
     {
@@ -275,7 +275,7 @@ class Board extends Model
      * @param  string|array  $name   The name of the variable, if associative array it will be used instead
      * @param  mixed         $value  The value of the variable
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_setCommentOptions($name, $value = null)
     {
@@ -297,7 +297,7 @@ class Board extends Model
      *
      * @param  Radix $radix  The Radix object pertaining this Board
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_setRadix(Radix $radix = null)
     {
@@ -311,8 +311,8 @@ class Board extends Model
      *
      * @param  int  $page  The page to fetch
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
-     * @throws  \Foolz\Foolfuuka\Model\BoardException  If the page number is not valid
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
+     * @throws  \Foolz\FoolFuuka\Model\BoardException  If the page number is not valid
      */
     protected function p_setPage($page)
     {
@@ -386,7 +386,7 @@ class Board extends Model
      * Sets the board to the "latest" mode, to create index pages with a couple of the last posts per thread
      * Options: page, per_page, order[by_post, by_thread, ghost]
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_getLatest()
     {
@@ -406,7 +406,7 @@ class Board extends Model
     /**
      * Returns the latest threads with a couple of the latest posts in each thread
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_getLatestComments()
     {
@@ -543,7 +543,7 @@ class Board extends Model
     /**
      * Returns the count of the threads available
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_getLatestCount()
     {
@@ -557,7 +557,7 @@ class Board extends Model
         }
 
         try {
-            $this->total_count = Cache::item('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$type_cache)->get();
+            $this->total_count = Cache::item('Foolz_FoolFuuka_Model_Board.getLatestCount.result.'.$type_cache)->get();
             return $this;
         } catch (\OutOfBoundsException $e) {
             switch ($order) {
@@ -582,7 +582,7 @@ class Board extends Model
                 ->fetch();
 
             $this->total_count = $result['threads'];
-            Cache::item('Foolz_Foolfuuka_Model_Board.getLatestCount.result.'.$type_cache)->set($this->total_count, 300);
+            Cache::item('Foolz_FoolFuuka_Model_Board.getLatestCount.result.'.$type_cache)->set($this->total_count, 300);
         }
 
         $this->profiler->logMem('Board $this', $this);
@@ -594,7 +594,7 @@ class Board extends Model
      * Sets the "thread" mode
      * Options: page, per_page
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_getThreads()
     {
@@ -612,7 +612,7 @@ class Board extends Model
     /**
      * Fetches a bunch of threads (in example for gallery)
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_getThreadsComments()
     {
@@ -682,14 +682,14 @@ class Board extends Model
     /**
      * Counts the available threads
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_getThreadsCount()
     {
         extract($this->options);
 
         try {
-            $this->total_count = Cache::item('Foolz_Foolfuuka_Model_Board.getThreadsCount.result')->get();
+            $this->total_count = Cache::item('Foolz_FoolFuuka_Model_Board.getThreadsCount.result')->get();
         } catch (\OutOfBoundsException $e) {
             $result = $this->dc->qb()
                 ->select('COUNT(thread_num) AS threads')
@@ -698,7 +698,7 @@ class Board extends Model
                 ->fetch();
 
             $this->total_count = $result['threads'];
-            Cache::item('Foolz_Foolfuuka_Model_Board.getThreadsCount.result')->set($this->total_count, 300);
+            Cache::item('Foolz_FoolFuuka_Model_Board.getThreadsCount.result')->set($this->total_count, 300);
         }
 
         return $this;
@@ -712,7 +712,7 @@ class Board extends Model
      *
      * @param  int  $num  The number of the thread
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      * @throws  BoardMalformedInputException
      */
     protected function p_getThread($num)
@@ -734,7 +734,7 @@ class Board extends Model
     /**
      * Gets a thread
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      * @throws  BoardThreadNotFoundException  If the thread wasn't found
      */
     protected function p_getThreadComments()
@@ -984,7 +984,7 @@ class Board extends Model
      *
      * @param  string  $num  If specified, a valid post number
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      */
     protected function p_getPost($num = null)
     {
@@ -1001,7 +1001,7 @@ class Board extends Model
     /**
      * Gets a post by num or doc_d
      *
-     * @return  \Foolz\Foolfuuka\Model\Board  The current object
+     * @return  \Foolz\FoolFuuka\Model\Board  The current object
      * @throws  BoardMalformedInputException  If the $num is not a valid post number
      * @throws  BoardMissingOptionsException  If doc_id or num has not been specified
      * @throws  BoardPostNotFoundException    If the post has not been found

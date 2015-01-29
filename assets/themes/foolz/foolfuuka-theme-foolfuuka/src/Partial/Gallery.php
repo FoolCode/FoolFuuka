@@ -1,11 +1,11 @@
 <?php
 
-namespace Foolz\Foolfuuka\Theme\Foolfuuka\Partial;
+namespace Foolz\FoolFuuka\Theme\FoolFuuka\Partial;
 
-use Foolz\Foolfuuka\Model\Comment;
-use Foolz\Foolfuuka\Model\Media;
+use Foolz\FoolFuuka\Model\Comment;
+use Foolz\FoolFuuka\Model\Media;
 
-class Gallery extends \Foolz\Foolfuuka\View\View
+class Gallery extends \Foolz\FoolFuuka\View\View
 {
     public function toString()
     {

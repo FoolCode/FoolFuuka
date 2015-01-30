@@ -209,9 +209,9 @@ class Board extends Model
     {
         $temp = $this->comments_unsorted[0];
 
-        foreach ($this->comments_unsorted as $bulk) {
-            if ($temp->comment->$key < $bulk->comment->$key) {
-                $temp = $bulk;
+        foreach ($this->comments_unsorted as $comment) {
+            if ($temp->comment->$key < $comment->comment->$key) {
+                $temp = $comment;
             }
         }
 
@@ -989,7 +989,7 @@ class Board extends Model
     protected function p_getPost($num = null)
     {
         // default variables
-        $this->setMethodFetching('getPostComments');
+        $this->setMethodFetching('getPostComment');
 
         if ($num !== null) {
             $this->setOptions('num', $num);
@@ -1006,7 +1006,7 @@ class Board extends Model
      * @throws  BoardMissingOptionsException  If doc_id or num has not been specified
      * @throws  BoardPostNotFoundException    If the post has not been found
      */
-    protected function p_getPostComments()
+    protected function p_getPostComment()
     {
         extract($this->options);
 
@@ -1046,7 +1046,7 @@ class Board extends Model
         }
 
         foreach ($this->comments_unsorted as $comment) {
-            $this->comments[$comment->comment->num.($comment->comment->subnum ? '_'.$comment->comment->subnum : '')] = $comment;
+            $this->comments[$data->comment->getPostNum('_')] = $data;
         }
 
         return $this;

@@ -165,7 +165,7 @@ class Comment extends Model
             $this->comment->poster_country_name = $this->config->get('foolz/foolfuuka', 'geoip_codes', 'codes.'.strtoupper($this->comment->poster_country));
         }
 
-        $num = $this->getPostNum(',');
+        $num = $this->comment->getPostNum(',');
         $this->comment_factory->posts[$this->comment->thread_num][] = $num;
     }
 
@@ -241,11 +241,6 @@ class Comment extends Model
     public static function process($string)
     {
         return htmlentities(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
-    }
-
-    public function getPostNum($separator = ',')
-    {
-        return $this->comment->num.($this->comment->subnum ? $separator.$this->comment->subnum : '');
     }
 
     public function getTitleProcessed()
@@ -462,8 +457,8 @@ class Comment extends Model
         $data->board = $this->radix;
         $data->post = $this;
 
-        $current_p_num_c = $this->getPostNum(',');
-        $current_p_num_u = $this->getPostNum('_');
+        $current_p_num_c = $this->comment->getPostNum(',');
+        $current_p_num_u = $this->comment->getPostNum('_');
 
         $build_url = [
             'tags' => ['', ''],

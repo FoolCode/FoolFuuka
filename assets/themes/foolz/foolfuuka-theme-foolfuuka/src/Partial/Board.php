@@ -69,11 +69,11 @@ class Board extends \Foolz\FoolFuuka\View\View
                         <?php if ($op_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_banned')) : ?>
                         <?php if ( !$op->radix->hide_thumbnails || $this->getAuth()->hasAccess('maccess.mod')) : ?>
                             <a href="<?= $this->getUri()->create($op->radix->shortname . '/search/image/' . $op_media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><a
-                                href="http://google.com/searchbyimage?image_url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
+                                href="http://google.com/searchbyimage?image_url=<?= trim($this->getUri()->create($op_media->getMediaLink($this->getRequest())),'/') ?>" target="_blank"
                                 class="btnr parent">Google</a><a
-                                href="http://iqdb.org/?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
+                                href="http://iqdb.org/?url=<?= trim($this->getUri()->create($op_media->getMediaLink($this->getRequest())),'/') ?>" target="_blank"
                                 class="btnr parent">iqdb</a><a
-                                href="http://saucenao.com/search.php?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
+                                href="http://saucenao.com/search.php?url=<?= trim($this->getUri()->create($op_media->getMediaLink($this->getRequest())),'/') ?>" target="_blank"
                                 class="btnr parent">SauceNAO</a><?php if (!$op->radix->archive || $op->radix->getValue('archive_full_images')) : ?><a
                                 href="<?= $op_media->getMediaDownloadLink($this->getRequest()) ?>" download="<?= $op_media->getMediaFilenameProcessed() ?>"
                                 class="btnr parent"><i class="icon-download-alt"></i></a><?php endif; ?>

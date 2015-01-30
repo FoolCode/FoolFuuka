@@ -653,13 +653,13 @@ class Chan extends Common
 
         $this->builder->createPartial('body', 'board')
             ->getParamManager()
-            ->setParams([
-                'board' => $results,
-                'modifiers' => [
-                    'post_show_board_name' => true,
-                    'post_show_view_button' => true
-                ]
-            ]);
+            ->setParam('board', $results);
+        $this->param_manager->setParams([
+            'modifiers' => [
+                'post_show_board_name' => true,
+                'post_show_view_button' => true
+            ]
+        ]);
 
         $this->response->setCallback(function() {
             $this->builder->stream();

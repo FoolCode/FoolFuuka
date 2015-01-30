@@ -69,9 +69,9 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
 
                 <?php if (!$p->radix->hide_thumbnails || $this->getAuth()->hasAccess('maccess.mod')) : ?>
                     [<a href="<?= $this->getUri()->create($p->radix->shortname . '/search/image/' . $p_media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a>]
-                    [<a href="http://google.com/searchbyimage?image_url=<?= trim($this->getUri()->create($op_media->getMediaLink($this->getRequest())),'/') ?>">Google</a>]
-                    [<a href="http://iqdb.org/?url=<?= trim($this->getUri()->create($op_media->getMediaLink($this->getRequest())),'/') ?>">iqdb</a>]
-                    [<a href="http://saucenao.com/search.php?url=<?= trim($this->getUri()->create($op_media->getMediaLink($this->getRequest())),'/') ?>">SauceNAO</a>]
+                    [<a href="http://google.com/searchbyimage?image_url=<?= trim($this->getUri()->create($p_media->getMediaLink($this->getRequest())),'/') ?>">Google</a>]
+                    [<a href="http://iqdb.org/?url=<?= trim($this->getUri()->create($p_media->getMediaLink($this->getRequest())),'/') ?>">iqdb</a>]
+                    [<a href="http://saucenao.com/search.php?url=<?= trim($this->getUri()->create($p_media->getMediaLink($this->getRequest())),'/') ?>">SauceNAO</a>]
                     <?php endif; ?>
                 <br />
                 <?php endif; ?>

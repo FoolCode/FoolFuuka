@@ -211,14 +211,33 @@ class Search extends Board
     protected function p_getSearch($arguments)
     {
         // prepare
-        $this->setMethodFetching('getSearchComments')
-            ->setMethodCounting('getSearchCount')
+        $this->setMethodFetching('getResults')
+            ->setMethodCounting('getTotalResults')
             ->setOptions([
                 'args' => $arguments,
                 'limit' => 25,
             ]);
 
         return $this;
+    }
+
+    protected function getUserInput()
+    {
+        $args = [];
+        extract($this->options);
+
+        $search_inputs = [
+            'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'capcode', 'uid', 'poster_ip', 'country',
+            'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order'
+        ];
+
+        foreach ($search_inputs as $field) {
+            if (!isset($args[$field])) {
+                $args[$field] = null;
+            }
+        }
+
+        return $args;
     }
 
     /**
@@ -230,26 +249,17 @@ class Search extends Board
      * @throws  SearchSphinxOfflineException   If the Sphinx server is unreachable
      * @throws  SearchInvalidException         If the values of the search weren't compatible with the domain
      */
-    protected function p_getSearchComments()
+    protected function p_getResults()
     {
-        $this->profiler->log('Board::getSearchComments Start');
-        extract($this->options);
+        $this->profiler->log('Search::getResults Start');
 
-        // set all empty fields to null
-        $search_fields = ['boards', 'subject', 'text', 'username', 'tripcode', 'email', 'capcode', 'uid', 'poster_ip',
-            'country', 'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order'];
-
-        foreach ($search_fields as $field) {
-            if (!isset($args[$field])) {
-                $args[$field] = null;
-            }
-        }
-
-        // populate an array containing all boards that would be searched
         $boards = [];
+        $input = $this->getUserInput();
 
-        if ($args['boards'] !== null) {
-            foreach ($args['boards'] as $board) {
+        if ($this->radix !== null) {
+            $boards[] = $this->radix;
+        } elseif ($input['boards'] !== null) {
+            foreach ($input['boards'] as $board) {
                 $b = $this->radix_coll->getByShortname($board);
                 if ($b) {
                     $boards[] = $b;
@@ -263,243 +273,220 @@ class Search extends Board
         }
 
         // if image is set, get either the media_hash or media_id
-        if ($args['image'] !== null) {
-            if (substr($args['image'], -2) !== '==') {
-                $args['image'] .= '==';
-            }
-
-            // if board is set, retrieve media_id
-            if ($this->radix !== null) {
-                try {
-                    $media = $this->media_factory->getByMediaHash($this->radix, $args['image']);
-                } catch (MediaNotFoundException $e) {
-                    $this->comments_unsorted = [];
-                    $this->comments = [];
-
-                    $this->profiler->log('Board::getSearchComments Ended Prematurely');
-                    throw new SearchEmptyResultException(_i('No results found.'));
-                }
-
-                $args['image'] = $media->media_id;
-            }
+        if ($input['image'] !== null && substr($input['image'], -2) !== '==') {
+            $input['image'] .= '==';
         }
 
         if ($this->radix === null && !$this->preferences->get('foolfuuka.sphinx.global')) {
-            // global search requires sphinx
             throw new SearchRequiresSphinxException(_i('Sorry, the global search function has not been enabled.'));
-        } elseif (($this->radix === null && $this->preferences->get('foolfuuka.sphinx.global')) || ($this->radix !== null && $this->radix->sphinx)) {
-            // configure sphinx connection params
-            $sphinx = explode(':', $this->preferences->get('foolfuuka.sphinx.listen'));
-            $conn = new SphinxConnnection();
-            $conn->setParams(['host' => $sphinx[0], 'port' => $sphinx[1], 'options' => [MYSQLI_OPT_CONNECT_TIMEOUT => 5]]);
-            $conn->silenceConnectionWarning(true);
+        }
 
-            // determine if all boards will be used for search or not
-            if ($this->radix == null) {
-                $indexes = [];
-
-                foreach ($boards as $radix) {
-                    if (!$radix->sphinx) {
-                        continue;
-                    }
-
-                    $indexes[] = $radix->shortname.'_ancient';
-                    $indexes[] = $radix->shortname.'_main';
-                    $indexes[] = $radix->shortname.'_delta';
-                }
-            } else {
-                $indexes = [
-                    $this->radix->shortname.'_ancient',
-                    $this->radix->shortname.'_main',
-                    $this->radix->shortname.'_delta'
-                ];
-            }
-
-            // establish connection
-            try {
-                $query = SphinxQL::create($conn)->select('id', 'board')->from($indexes)
-                    ->setFullEscapeChars(['\\', '(', ')', '|', '-', '!', '@', '%', '~', '"', '&', '/', '^', '$', '='])
-                    ->setHalfEscapeChars(['\\', '(', ')', '!', '@', '%', '~', '&', '/', '^', '$', '=']);
-            } catch (\Foolz\SphinxQL\ConnectionException $e) {
-                throw new SearchSphinxOfflineException(_i('The search backend is currently unavailable.'));
-            }
-
-            // parse search params
-            if ($args['subject'] !== null) {
-                $query->match('title', $args['subject']);
-            }
-
-            if ($args['text'] !== null) {
-                if (mb_strlen($args['text'], 'utf-8') < 1) {
-                    return [];
-                }
-
-                $query->match('comment', $args['text'], true);
-            }
-
-            if ($args['username'] !== null) {
-                $query->match('name', $args['username']);
-            }
-
-            if ($args['tripcode'] !== null) {
-                $query->match('trip', '"'.$args['tripcode'].'"');
-            }
-
-            if ($args['email'] !== null) {
-                $query->match('email', $args['email']);
-            }
-
-            if ($args['capcode'] !== null) {
-                if ($args['capcode'] === 'user') {
-                    $query->where('cap', ord('N'));
-                } elseif ($args['capcode'] === 'mod') {
-                    $query->where('cap', ord('M'));
-                } elseif ($args['capcode'] === 'admin') {
-                    $query->where('cap', ord('A'));
-                } elseif ($args['capcode'] === 'dev') {
-                    $query->where('cap', ord('D'));
-                }
-            }
-
-            if ($args['uid'] !== null) {
-                $query->match('pid', $args['uid']);
-            }
-
-            if ($args['country'] !== null) {
-                $query->match('country', $args['country'], true);
-            }
-
-            if ($this->getAuth()->hasAccess('comment.see_ip') && $args['poster_ip'] !== null) {
-                $query->where('pip', (int) Inet::ptod($args['poster_ip']));
-            }
-
-            if ($args['filename'] !== null) {
-                $query->match('media_filename', $args['filename']);
-            }
-
-            if ($args['image'] !== null) {
-                if ($this->radix !== null) {
-                    $query->where('mid', (int) $args['image']);
-                } else {
-                    $query->match('media_hash', '"'.$args['image'].'"');
-                }
-            }
-
-            if ($args['deleted'] !== null) {
-                if ($args['deleted'] == 'deleted') {
-                    $query->where('is_deleted', 1);
-                }
-
-                if ($args['deleted'] == 'not-deleted') {
-                    $query->where('is_deleted', 0);
-                }
-            }
-
-            if ($args['ghost'] !== null) {
-                if ($args['ghost'] == 'only') {
-                    $query->where('is_internal', 1);
-                }
-
-                if ($args['ghost'] == 'none') {
-                    $query->where('is_internal', 0);
-                }
-            }
-
-            if ($args['filter'] !== null) {
-                if ($args['filter'] == 'image') {
-                    $query->where('has_image', 0);
-                }
-
-                if ($args['filter'] == 'text') {
-                    $query->where('has_image', 1);
-                }
-            }
-
-            if ($args['type'] !== null) {
-                if ($args['type'] == 'sticky') {
-                    $query->where('is_sticky', 1);
-                }
-
-                if ($args['type'] == 'op') {
-                    $query->where('is_op', 1);
-                }
-
-                if ($args['type'] == 'posts') {
-                    $query->where('is_op', 0);
-                }
-            }
-
-            if ($args['start'] !== null) {
-                $query->where('timestamp', '>=', intval(strtotime($args['start'])));
-            }
-
-            if ($args['end'] !== null) {
-                $query->where('timestamp', '<=', intval(strtotime($args['end'])));
-            }
-
-            if ($args['results'] !== null) {
-                if ($args['results'] == 'thread') {
-                    $query->groupBy('tnum');
-                    $query->withinGroupOrderBy('is_op', 'desc');
-                }
-            }
-
-            if ($args['order'] !== null && $args['order'] == 'asc') {
-                $query->orderBy('timestamp', 'ASC');
-            } else {
-                $query->orderBy('timestamp', 'DESC');
-            }
-
-            $max_matches = $this->preferences->get('foolfuuka.sphinx.max_matches', 5000);
-
-            // set sphinx options
-            $query->limit($limit)
-                ->offset((($page * $limit) - $limit) >= $max_matches ? ($max_matches - 1) : ($page * $limit) - $limit)
-                ->option('max_matches', (int) $max_matches)
-                ->option('reverse_scan', ($args['order'] === 'asc') ? 0 : 1);
-
-            // submit query
-            try {
-                $this->profiler->log('Start: SphinxQL: '.$query->compile()->getCompiled());
-                $search = $query->execute();
-                $this->profiler->log('Stop: SphinxQL');
-            } catch(\Foolz\SphinxQL\DatabaseException $e) {
-                $this->logger->error('Search Error: '.$e->getMessage());
-                throw new SearchInvalidException(_i('The search backend returned an error.'));
-            }
-
-            // no results found
-            if (!count($search)) {
-                $this->comments_unsorted = [];
-                $this->comments = [];
-
-                throw new SearchEmptyResultException(_i('No results found.'));
-            }
-
-            $sphinx_meta = Helper::pairsToAssoc(Helper::create($conn)->showMeta()->execute());
-            $this->total_count = $sphinx_meta['total'];
-            $this->total_found = $sphinx_meta['total_found'];
-
-            // populate sql array for full records
-            $sql = [];
-
-            foreach ($search as $doc => $result) {
-                $board = $this->radix_coll->getById($result['board']);
-                $sql[] = $this->dc->qb()
-                    ->select('*, '.$result['board'].' AS board_id')
-                    ->from($board->getTable(), 'r')
-                    ->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-                    ->where('doc_id = '.$this->dc->getConnection()->quote($result['id']))
-                    ->getSQL();
-            }
-
-            $result = $this->dc->getConnection()
-                ->executeQuery(implode(' UNION ', $sql))
-                ->fetchAll();
-        } else {
-            // this is not implemented yet, would require some sort of MySQL search
+        if ($this->radix !== null && !$this->radix->sphinx) {
             throw new SearchRequiresSphinxException(_i('Sorry, this board does not have search enabled.'));
         }
+
+        $sphinx = explode(':', $this->preferences->get('foolfuuka.sphinx.listen'));
+        $conn = new SphinxConnnection();
+        $conn->setParams([
+            'host' => $sphinx[0],
+            'port' => $sphinx[1],
+            'options' => [MYSQLI_OPT_CONNECT_TIMEOUT => 5]
+        ]);
+
+        $indices = [];
+        foreach ($boards as $radix) {
+            if (!$radix->sphinx) {
+                continue;
+            }
+
+            $indices[] = $radix->shortname.'_ancient';
+            $indices[] = $radix->shortname.'_main';
+            $indices[] = $radix->shortname.'_delta';
+        }
+
+        // establish connection
+        try {
+            $query = SphinxQL::create($conn)->select('id', 'board')->from($indexes)
+                ->setFullEscapeChars(['\\', '(', ')', '|', '-', '!', '@', '%', '~', '"', '&', '/', '^', '$', '='])
+                ->setHalfEscapeChars(['\\', '(', ')', '!', '@', '%', '~', '&', '/', '^', '$', '=']);
+        } catch (\Foolz\SphinxQL\ConnectionException $e) {
+            throw new SearchSphinxOfflineException(_i('The search backend is currently unavailable.'));
+        }
+
+        // process user input
+        if ($input['subject'] !== null) {
+            $query->match('title', $input['subject']);
+        }
+
+        if ($input['text'] !== null) {
+            if (mb_strlen($input['text'], 'utf-8') < 1) {
+                return [];
+            }
+
+            $query->match('comment', $input['text'], true);
+        }
+
+        if ($input['username'] !== null) {
+            $query->match('name', $input['username']);
+        }
+
+        if ($input['tripcode'] !== null) {
+            $query->match('trip', '"'.$input['tripcode'].'"');
+        }
+
+        if ($input['email'] !== null) {
+            $query->match('email', $input['email']);
+        }
+
+        if ($input['capcode'] !== null) {
+            switch ($input['capcode']) {
+                case 'user':
+                    $query->where('cap', ord('N'));
+                    break;
+                case 'mod':
+                    $query->where('cap', ord('M'));
+                    break;
+                case 'dev':
+                    $query->where('cap', ord('D'));
+                    break;
+                case 'admin':
+                    $query->where('cap', ord('A'));
+                    break;
+            }
+        }
+
+        if ($input['uid'] !== null) {
+            $query->match('pid', $input['uid']);
+        }
+
+        if ($input['country'] !== null) {
+            $query->match('country', $input['country'], true);
+        }
+
+        if ($this->getAuth()->hasAccess('comment.see_ip') && $input['poster_ip'] !== null) {
+            $query->where('pip', (int) Inet::ptod($input['poster_ip']));
+        }
+
+        if ($input['filename'] !== null) {
+            $query->match('media_filename', $input['filename']);
+        }
+
+        if ($input['image'] !== null) {
+            $query->match('media_hash', '"'.$input['image'].'"');
+        }
+
+        if ($input['deleted'] !== null) {
+            switch ($input['deleted']) {
+                case 'deleted':
+                    $query->where('is_deleted', 1);
+                    break;
+                case 'not-deleted':
+                    $query->where('is_deleted', 0);
+                    break;
+            }
+        }
+
+        if ($input['ghost'] !== null) {
+            switch ($input['ghost']) {
+                case 'only':
+                    $query->where('is_internal', 1);
+                    break;
+                case 'none':
+                    $query->where('is_internal', 0);
+                    break;
+            }
+        }
+
+        if ($input['filter'] !== null) {
+            switch ($input['filter']) {
+                case 'image':
+                    $query->where('has_image', 0);
+                    break;
+                case 'text':
+                    $query->where('has_image', 1);
+                    break;
+            }
+        }
+
+        if ($input['type'] !== null) {
+            switch ($input['type']) {
+                case 'sticky':
+                    $query->where('is_sticky', 1);
+                    break;
+                case 'op':
+                    $query->where('is_op', 1);
+                    break;
+                case 'posts':
+                    $query->where('is_op', 0);
+                    break;
+            }
+        }
+
+        if ($input['start'] !== null) {
+            $query->where('timestamp', '>=', intval(strtotime($input['start'])));
+        }
+
+        if ($input['end'] !== null) {
+            $query->where('timestamp', '<=', intval(strtotime($input['end'])));
+        }
+
+        if ($input['results'] !== null && $input['results'] == 'thread') {
+            $query->groupBy('tnum');
+            $query->withinGroupOrderBy('is_op', 'desc');
+        }
+
+        if ($input['order'] !== null && $input['order'] == 'asc') {
+            $query->orderBy('timestamp', 'ASC');
+        } else {
+            $query->orderBy('timestamp', 'DESC');
+        }
+
+        $max_matches = $this->preferences->get('foolfuuka.sphinx.max_matches', 5000);
+
+        // set sphinx options
+        $query->limit($limit)
+            ->offset((($page * $limit) - $limit) >= $max_matches ? ($max_matches - 1) : ($page * $limit) - $limit)
+            ->option('max_matches', (int) $max_matches)
+            ->option('reverse_scan', ($input['order'] === 'asc') ? 0 : 1);
+
+        // submit query
+        try {
+            $this->profiler->log('Start: SphinxQL: '.$query->compile()->getCompiled());
+            $search = $query->execute();
+            $this->profiler->log('Stop: SphinxQL');
+        } catch(\Foolz\SphinxQL\DatabaseException $e) {
+            $this->logger->error('Search Error: '.$e->getMessage());
+            throw new SearchInvalidException(_i('The search backend returned an error.'));
+        }
+
+        // no results found
+        if (!count($search)) {
+            $this->comments_unsorted = [];
+            $this->comments = [];
+
+            throw new SearchEmptyResultException(_i('No results found.'));
+        }
+
+        $sphinx_meta = Helper::pairsToAssoc(Helper::create($conn)->showMeta()->execute());
+        $this->total_count = $sphinx_meta['total'];
+        $this->total_found = $sphinx_meta['total_found'];
+
+        // populate sql array for full records
+        $sql = [];
+
+        foreach ($search as $doc => $result) {
+            $board = $this->radix_coll->getById($result['board']);
+            $sql[] = $this->dc->qb()
+                ->select('*, '.$result['board'].' AS board_id')
+                ->from($board->getTable(), 'r')
+                ->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+                ->where('doc_id = '.$this->dc->getConnection()->quote($result['id']))
+                ->getSQL();
+        }
+
+        $result = $this->dc->getConnection()
+            ->executeQuery(implode(' UNION ', $sql))
+            ->fetchAll();
 
         // no results found IN DATABASE, but we might still get a search count from Sphinx
         if (!count($result)) {
@@ -526,7 +513,7 @@ class Search extends Board
      *
      * @return  int
      */
-    public function getSearchCount()
+    public function getTotalResults()
     {
         return $this->total_found;
     }

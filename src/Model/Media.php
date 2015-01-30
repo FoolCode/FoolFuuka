@@ -439,7 +439,7 @@ class Media extends Model
 
         $cdn = array_filter(preg_split('/\r\n|\r|\n/', $cdn));
         if (!empty($cdn)) {
-            return $cdn[($this->media->media_id & count($cdn))]
+            return $cdn[($this->media->media_id % count($cdn))]
                 .'/'.$this->radix->shortname.'/'.($thumbnail ? 'thumb' : 'image').'/'
                 .substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
         }

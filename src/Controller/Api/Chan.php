@@ -304,7 +304,7 @@ class Chan extends Common
             'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'results', 'order', 'page'
         ];
 
-        if ($this->getAuth()->hasAccess('comment.see_ip')) {;
+        if ($this->getAuth()->hasAccess('comment.see_ip')) {
             $modifiers[] = 'poster_ip';
         }
 
@@ -319,7 +319,7 @@ class Chan extends Common
                 if (trim($value) !== '') {
                     $search[$key] = rawurldecode(trim($value));
                 } else {
-                    unset($search[$key]);
+                    $search[$key] = null;
                 }
             }
         }

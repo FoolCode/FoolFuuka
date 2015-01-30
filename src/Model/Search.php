@@ -252,6 +252,7 @@ class Search extends Board
     protected function p_getResults()
     {
         $this->profiler->log('Search::getResults Start');
+        extract($this->options);
 
         $boards = [];
         $input = $this->getUserInput();
@@ -306,7 +307,7 @@ class Search extends Board
 
         // establish connection
         try {
-            $query = SphinxQL::create($conn)->select('id', 'board')->from($indexes)
+            $query = SphinxQL::create($conn)->select('id', 'board')->from($indices)
                 ->setFullEscapeChars(['\\', '(', ')', '|', '-', '!', '@', '%', '~', '"', '&', '/', '^', '$', '='])
                 ->setHalfEscapeChars(['\\', '(', ')', '!', '@', '%', '~', '&', '/', '^', '$', '=']);
         } catch (\Foolz\SphinxQL\ConnectionException $e) {

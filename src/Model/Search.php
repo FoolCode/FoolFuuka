@@ -307,7 +307,7 @@ class Search extends Board
 
         // establish connection
         try {
-            $query = SphinxQL::create($conn)->select('id', 'board')->from($indices)
+            $query = SphinxQL::create($conn)->select('id', 'board', 'tnum')->from($indices)
                 ->setFullEscapeChars(['\\', '(', ')', '|', '-', '!', '@', '%', '~', '"', '&', '/', '^', '$', '='])
                 ->setHalfEscapeChars(['\\', '(', ')', '!', '@', '%', '~', '&', '/', '^', '$', '=']);
         } catch (\Foolz\SphinxQL\ConnectionException $e) {
@@ -477,11 +477,18 @@ class Search extends Board
 
         foreach ($search as $doc => $result) {
             $board = $this->radix_coll->getById($result['board']);
+
+            if ($input['results'] !== null && $input['results'] == 'thread') {
+                $post = 'num = '.$this->dc->getConnection()->quote($result['tnum']).' AND subnum = 0';
+            } else {
+                $post = 'doc_id = '.$this->dc->getConnection()->quote($result['id']);
+            }
+
             $sql[] = $this->dc->qb()
                 ->select('*, '.$result['board'].' AS board_id')
                 ->from($board->getTable(), 'r')
                 ->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
-                ->where('doc_id = '.$this->dc->getConnection()->quote($result['id']))
+                ->where($post)
                 ->getSQL();
         }
 

@@ -356,62 +356,11 @@ class Comment extends Model
         return $this->comment->comment_processed = $comment;
     }
 
-<<<<<<< HEAD
-    protected static function parseBbcode($str, $special_code, $strip = true)
-    {
-        if (static::$_bbcode_parser === null) {
-            $bbcode = new \StringParser_BBCode();
-
-            // add list of bbcode for formatting
-            $codes = [];
-            $codes[] = ['code', 'simple_replace', null, ['start_tag' => '<code>', 'end_tag' => '</code>'], 'code',
-                ['block', 'inline'], []];
-            $codes[] = ['spoiler', 'simple_replace', null,
-                ['start_tag' => '<span class="spoiler">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
-                ['code']];
-            $codes[] = ['sub', 'simple_replace', null, ['start_tag' => '<sub>', 'end_tag' => '</sub>'], 'inline',
-                ['block', 'inline'], ['code']];
-            $codes[] = ['sup', 'simple_replace', null, ['start_tag' => '<sup>', 'end_tag' => '</sup>'], 'inline',
-                ['block', 'inline'], ['code']];
-            $codes[] = ['math', 'simple_replace', null, ['start_tag' => '<script type="math/tex">', 'end_tag' => '</script>'],
-                'inline', ['block', 'inline'], ['code']];
-            $codes[] = ['eqn', 'simple_replace', null, ['start_tag' => '<script type="math/tex; mode=display">', 'end_tag' => '</script>'],
-                'inline', ['block', 'inline'], ['code']];
-            $codes[] = ['b', 'simple_replace', null, ['start_tag' => '<strong>', 'end_tag' => '</strong>'], 'inline',
-                ['block', 'inline'], ['code']];
-            $codes[] = ['i', 'simple_replace', null, ['start_tag' => '<em>', 'end_tag' => '</em>'], 'inline',
-                ['block', 'inline'], ['code']];
-            $codes[] = ['m', 'simple_replace', null, ['start_tag' => '<tt class="code">', 'end_tag' => '</tt>'],
-                'inline', ['block', 'inline'], ['code']];
-            $codes[] = ['o', 'simple_replace', null, ['start_tag' => '<span class="overline">', 'end_tag' => '</span>'],
-                'inline', ['block', 'inline'], ['code']];
-            $codes[] = ['s', 'simple_replace', null,
-                ['start_tag' => '<span class="strikethrough">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
-                ['code']];
-            $codes[] = ['u', 'simple_replace', null,
-                ['start_tag' => '<span class="underline">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
-                ['code']];
-            $codes[] = ['EXPERT', 'simple_replace', null,
-                ['start_tag' => '<span class="expert">', 'end_tag' => '</span>'], 'inline', ['block', 'inline'],
-                ['code']];
-
-            foreach($codes as $code) {
-                if ($strip) {
-                    $code[1] = 'callback_replace';
-                    $code[2] = '\\Comment::stripUnusedBbcode'; // this also fixes pre/code
-                }
-=======
     protected function processCommentBBCode($comment)
     {
-<<<<<<< HEAD
         if ($this->_bbcode_processor === null) {
             $parser = new \JBBCode\Parser();
             $definitions = array();
-=======
-        $parser = new \JBBCode\Parser();
-        $definitions = array();
->>>>>>> b427215015fab469f464c60d6249e16795c5f938
->>>>>>> upstream/master
 
             $builder = new \Foolz\FoolFuuka\Model\BBCode\Code();
             array_push($definitions, $builder);

@@ -326,9 +326,9 @@ class Comment extends Model
         $comment = htmlentities($comment, ENT_COMPAT, 'UTF-8', false);
 
         // process comment for greentext, bbcode, links
-        $comment = preg_replace('/(\r?\n|^)(&gt;.*?)(?=$|\r?\n)/i', $greentext, $comment);
         $comment = $this->processCommentBBCode($comment);
         $comment = $this->processCommentLinks($comment);
+        $comment = preg_replace('/(\r?\n|^)(&gt;.*?)(?=$|\r?\n)/i', $greentext, $comment);
 
         // process internal and external links
         $comment = preg_replace_callback('/(&gt;&gt;(\d+(?:,\d+)?))/i',

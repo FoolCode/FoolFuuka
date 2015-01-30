@@ -653,13 +653,13 @@ class Chan extends Common
 
         $this->builder->createPartial('body', 'board')
             ->getParamManager()
-            ->setParams([
-                'board' => $results,
-                'modifiers' => [
-                    'post_show_board_name' => true,
-                    'post_show_view_button' => true
-                ]
-            ]);
+            ->setParam('board', $results);
+        $this->param_manager->setParams([
+            'modifiers' => [
+                'post_show_board_name' => true,
+                'post_show_view_button' => true
+            ]
+        ]);
 
         $this->response->setCallback(function() {
             $this->builder->stream();
@@ -1004,11 +1004,11 @@ class Chan extends Common
             $this->builder->getProps()->addTitle('Global Search &raquo; '.$title);
         }
 
-        if ($board->getSearchCount() > 5000) {
+        if ($board->getTotalResults() > 5000) {
             $search_title = sprintf(_i('%s <small>Returning only first %d of %d results found.</small>',
-                $title, $this->preferences->get('foolfuuka.sphinx.max_matches', 5000), $board->getSearchCount()));
+                $title, $this->preferences->get('foolfuuka.sphinx.max_matches', 5000), $board->getTotalResults()));
         } else {
-            $search_title = sprintf(_i('%s <small>%d results found.</small>', $title, $board->getSearchCount()));
+            $search_title = sprintf(_i('%s <small>%d results found.</small>', $title, $board->getTotalResults()));
         }
 
         $this->param_manager->setParam('section_title', $search_title);

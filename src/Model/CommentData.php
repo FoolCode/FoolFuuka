@@ -43,6 +43,11 @@ class CommentData extends Data
 
     private $archive_timezone = false;
 
+    public function getPostNum($separator = ',')
+    {
+        return $this->num.($this->subnum ? $separator.$this->subnum : '');
+    }
+
     /**
      * @param $delpass
      */

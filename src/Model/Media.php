@@ -410,78 +410,43 @@ class Media extends Model
             return $before;
         }
 
-        $image = null;
-
-        if ($this->config->get('foolz/foolfuuka', 'config', 'media.filecheck') === true) {
-            // locate the image
-            if ($thumbnail && file_exists($this->getDir($thumbnail)) !== false) {
-                if ($this->op == 1) {
-                    $image = $this->media->preview_op ? : $this->media->preview_reply;
-                } else {
-                    $image = $this->media->preview_reply ? : $this->media->preview_op;
-                }
-            }
-
-            // full image
-            if (!$thumbnail && file_exists($this->getDir(false)) !== false) {
-                $image = $this->media->media;
-            }
-
-            // fallback if we have the full image but not the thumbnail
-            if ($thumbnail && $image === null && file_exists($this->getDir(false))) {
-                $thumbnail = false;
-                $image = $this->media->media;
+        if ($thumbnail) {
+            if ($this->op == 1) {
+                $image = $this->media->preview_op ? : $this->media->preview_reply;
+            } else {
+                $image = $this->media->preview_reply ? : $this->media->preview_op;
             }
         } else {
-            // locate the image
-            if ($thumbnail) {
-                if ($this->op == 1) {
-                    $image = $this->media->preview_op ? : $this->media->preview_reply;
-                } else {
-                    $image = $this->media->preview_reply ? : $this->media->preview_op;
-                }
+            if ($this->radix->archive && !$this->radix->getValue('archive_full_images')) {
+                return null;
             } else {
-                if ($this->radix->archive && !$this->radix->getValue('archive_full_images')) {
-                    return null;
-                } else {
-                    $image = $this->media->media;
-                }
+                $image = $this->media->media;
             }
         }
 
-        if ($image !== null) {
-            if ($download === true && $this->preferences->get('foolfuuka.boards.media_download_url')) {
-                return $this->preferences->get('foolfuuka.boards.media_download_url').'/'.$this->radix->shortname.'/'
-                .($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
-            }
-
-            if ($request->isSecure() && $this->preferences->get('foolfuuka.boards.media_balancers_https')) {
-                $balancers = $this->preferences->get('foolfuuka.boards.media_balancers_https');
-            }
-
-            if (!isset($balancers) && $this->preferences->get('foolfuuka.boards.media_balancers')) {
-                $balancers = $this->preferences->get('foolfuuka.boards.media_balancers');
-            }
-
-            $media_cdn = [];
-            if (isset($balancers)) {
-                $media_cdn = array_filter(preg_split('/\r\n|\r|\n/', $balancers));
-            }
-
-            if (!empty($media_cdn) && $this->media->media_id > 0) {
-                return $media_cdn[($this->media->media_id % count($media_cdn))].'/'.$this->radix->shortname.'/'
-                    .($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
-            }
-
-            return $this->preferences->get('foolfuuka.boards.url').'/'.$this->radix->shortname.'/'
-                .($thumbnail ? 'thumb' : 'image').'/'.substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
+        if ($download === true && $this->preferences->get('foolfuuka.boards.media_download_url')) {
+            return $this->preferences->get('foolfuuka.boards.media_download_url')
+                .'/'.$this->radix->shortname.'/'.($thumbnail ? 'thumb' : 'image').'/'
+                .substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
         }
 
-        if ($thumbnail && $this->media->media_status === 'normal') {
-            $this->media->media_status = 'not-available';
+        $cdn = '';
+        if ($request->isSecure() && $this->preferences->get('foolfuuka.boards.media_balancers_https')) {
+            $cdn = $this->preferences->get('foolfuuka.boards.media_balancers_https');
+        } elseif ($this->preferences->get('foolfuuka.boards.media_balancers')) {
+            $cdn = $this->preferences->get('foolfuuka.boards.media_balancers');
         }
 
-        return null;
+        $cdn = array_filter(preg_split('/\r\n|\r|\n/', $cdn));
+        if (!empty($cdn)) {
+            return $cdn[($this->media->media_id % count($cdn))]
+                .'/'.$this->radix->shortname.'/'.($thumbnail ? 'thumb' : 'image').'/'
+                .substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
+        }
+
+        return $this->preferences->get('foolfuuka.boards.url')
+            .'/'.$this->radix->shortname.'/'.($thumbnail ? 'thumb' : 'image').'/'
+            .substr($image, 0, 4).'/'.substr($image, 4, 2).'/'.$image;
     }
 
     /**

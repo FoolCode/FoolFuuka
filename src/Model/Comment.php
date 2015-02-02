@@ -256,8 +256,12 @@ class Comment extends Model
     {
         if ($this->comment->name_processed === false) {
             $this->comment->name_processed = static::process($this->comment->name);
-        }
-
+            $this->comment->name_processed = Hook::forge('Foolz\FoolFuuka\Model\Comment::getNameProcessed#var.processedName')
+                ->setObject($this)
+                ->setParam('name', $this->comment->name_processed)
+                ->execute()
+                ->get($this->comment->name_processed);
+	}
         return $this->comment->name_processed;
     }
 

@@ -30,6 +30,11 @@ return [
             'level' => 'mod',
             'default' => 'reports',
             'content' => [
+                'logs' => [
+                    'level' => 'admin',
+                    'name' => _i('Audit Log'),
+                    'icon' => 'icon-file'
+                ],
                 'bans' => [
                     'level' => 'mod',
                     'name' => _i('Bans'),

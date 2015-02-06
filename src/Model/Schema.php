@@ -19,6 +19,18 @@ class Schema
 
         $schema = $sm->getCodedSchema();
 
+        $audit_log = $schema->createTable($dc->p('audit_log'));
+        if ($dc->getConnection()->getDriver()->getName() == 'pdo_mysql') {
+            $audit_log->addOption('charset', $charset);
+            $audit_log->addOption('collate', $collate);
+        }
+        $audit_log->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+        $audit_log->addColumn('timestamp', 'integer', ['unsigned' => true]);
+        $audit_log->addColumn('type', 'integer', ['unsigned' => true, 'default' => 0]);
+        $audit_log->addColumn('user', 'integer', ['unsigned' => true, 'default' => 0]);
+        $audit_log->addColumn('data', 'text', ['length' => 4294967295]);
+        $audit_log->setPrimaryKey(['id']);
+
         $banned_md5 = $schema->createTable($dc->p('banned_md5'));
         $banned_md5->addColumn('md5', 'string', ['length' => 24]);
         $banned_md5->setPrimaryKey(['md5']);

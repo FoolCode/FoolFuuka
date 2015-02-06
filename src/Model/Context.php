@@ -27,6 +27,7 @@ class Context implements ContextInterface
         $config = $this->context->getService('config');
         $config->addPackage('foolz/foolfuuka', ASSETSPATH);
 
+        class_alias('Foolz\\FoolFuuka\\Model\\Audit', 'Audit');
         class_alias('Foolz\\FoolFuuka\\Model\\Ban', 'Ban');
         class_alias('Foolz\\FoolFuuka\\Model\\Board', 'Board');
         class_alias('Foolz\\FoolFuuka\\Model\\Comment', 'Comment');
@@ -46,6 +47,10 @@ class Context implements ContextInterface
 
         $context->getContainer()
             ->register('foolfuuka.media_factory', 'Foolz\FoolFuuka\Model\MediaFactory')
+            ->addArgument($context);
+
+        $context->getContainer()
+            ->register('foolfuuka.audit_factory', 'Foolz\FoolFuuka\Model\AuditFactory')
             ->addArgument($context);
 
         $context->getContainer()

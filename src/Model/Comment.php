@@ -34,6 +34,11 @@ class Comment extends Model
     protected $_bbcode_processor = null;
 
     /**
+     * @var Audit
+     */
+    protected $audit;
+
+    /**
      * @var DoctrineConnection
      */
     protected $dc;
@@ -126,6 +131,7 @@ class Comment extends Model
         $this->preferences = $context->getService('preferences');
         $this->logger = $context->getService('logger');
         $this->uri = $context->getService('uri');
+        $this->audit = $context->getService('foolfuuka.audit_factory');
         $this->comment_factory = $context->getService('foolfuuka.comment_factory');
         $this->media_factory = $context->getService('foolfuuka.media_factory');
         $this->ban_factory = $context->getService('foolfuuka.ban_factory');
@@ -238,15 +244,23 @@ class Comment extends Model
 
     }
 
-    public static function process($string)
+    public function process($method, $string)
     {
-        return htmlentities(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
+        if ($string !== null) {
+            $string = htmlentities(@iconv('UTF-8', 'UTF-8//IGNORE', $string));
+        }
+
+        return Hook::forge('Foolz\FoolFuuka\Model\Comment::'.$method.'#var.result')
+            ->setObject($this)
+            ->setParam('result', $string)
+            ->execute()
+            ->get($string);
     }
 
     public function getTitleProcessed()
     {
         if ($this->comment->title_processed === false) {
-            $this->comment->title_processed = static::process($this->comment->title);
+            $this->comment->title_processed = $this->process('getTitleProcessed', $this->comment->title);
         }
 
         return $this->comment->title_processed;
@@ -255,7 +269,7 @@ class Comment extends Model
     public function getNameProcessed()
     {
         if ($this->comment->name_processed === false) {
-            $this->comment->name_processed = static::process($this->comment->name);
+            $this->comment->name_processed = $this->process('getNameProcessed', $this->comment->name);
         }
 
         return $this->comment->name_processed;
@@ -264,7 +278,7 @@ class Comment extends Model
     public function getEmailProcessed()
     {
         if ($this->comment->email_processed === false) {
-            $this->comment->email_processed = static::process($this->comment->email);
+            $this->comment->email_processed = $this->process('getEmailProcessed', $this->comment->email);
         }
 
         return $this->comment->email_processed;
@@ -273,7 +287,7 @@ class Comment extends Model
     public function getTripProcessed()
     {
         if ($this->comment->trip_processed === false) {
-            $this->comment->trip_processed = static::process($this->comment->trip);
+            $this->comment->trip_processed = $this->process('getTripProcessed', $this->comment->trip);
         }
 
         return $this->comment->trip_processed;
@@ -282,7 +296,7 @@ class Comment extends Model
     public function getPosterHashProcessed()
     {
         if ($this->comment->poster_hash_processed === false) {
-            $this->comment->poster_hash_processed = static::process($this->comment->poster_hash);
+            $this->comment->poster_hash_processed = $this->process('getPosterHashProcessed', $this->comment->poster_hash);
         }
 
         return $this->comment->poster_hash_processed;
@@ -292,9 +306,9 @@ class Comment extends Model
     {
         if ($this->comment->poster_country_name_processed === false) {
             if (!isset($this->comment->poster_country_name)) {
-                $this->comment->poster_country_name_processed = null;
+                $this->comment->poster_country_name_processed = $this->process('getPosterCountryNameProcesed', null);
             } else {
-                $this->comment->poster_country_name_processed = static::process($this->comment->poster_country_name);
+                $this->comment->poster_country_name_processed = $this->process('getPosterCountryNameProcesed', $this->comment->poster_country_name);
             }
         }
 
@@ -817,6 +831,13 @@ class Comment extends Model
             }
 
             $this->dc->getConnection()->commit();
+            $this->audit->log(Audit::AUDIT_DEL_POST, [
+                'radix' => $this->radix->id,
+                'doc_id' => $this->comment->doc_id,
+                'thread_num' => $this->comment->thread_num,
+                'num' => $this->comment->num,
+                'subnum' => $this->comment->subnum
+            ]);
             $this->clearCache();
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->logger->error('\Foolz\FoolFuuka\Model\CommentInsert: '.$e->getMessage());

@@ -14,6 +14,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Moderation extends \Foolz\FoolFrame\Controller\Admin
 {
     /**
+     * @var Audit
+     */
+    protected $audit;
+
+    /**
      * @var RadixCollection
      */
     protected $radic_coll;
@@ -35,6 +40,7 @@ class Moderation extends \Foolz\FoolFrame\Controller\Admin
     {
         parent::before();
 
+        $this->audit = $this->getContext()->getService('foolfuuka.audit_factory');
         $this->radix_coll = $this->getContext()->getService('foolfuuka.radix_collection');
         $this->report_coll = $this->getContext()->getService('foolfuuka.report_collection');
         $this->ban_factory = $this->getContext()->getService('foolfuuka.ban_factory');
@@ -57,6 +63,30 @@ class Moderation extends \Foolz\FoolFrame\Controller\Admin
         // we need to load more themes
         $theme_instance->addDir(ASSETSPATH.'themes-admin');
         $this->theme = $theme_instance->get('foolz/foolfuuka-theme-admin');
+    }
+
+    public function action_logs($page = 1)
+    {
+        if (!$this->getAuth()->hasAccess('maccess.admin')) {
+            return $this->redirectToAdmin();
+        }
+
+        $this->param_manager->setParam('method_title', [_i('Audit'), _i('Logs')]);
+
+        if ($page < 1 || !ctype_digit((string) $page)) {
+            $page = 1;
+        }
+
+        $logs = $this->audit->getPagedBy('id', 'desc', $page);
+
+        $this->builder->createPartial('body', 'moderation/audit_log')
+            ->getParamManager()->setParams([
+                'logs' => $logs,
+                'page' => $page,
+                'page_url' => $this->uri->create('admin/moderation/logs')
+            ]);
+
+        return new Response($this->builder->build());
     }
 
     public function action_bans($page = 1)

@@ -60,6 +60,11 @@ class Media extends Model
     public $temp_file = null;
 
     /**
+     * @var Audit
+     */
+    protected $audit;
+
+    /**
      * @var DoctrineConnection
      */
     protected $dc;
@@ -175,6 +180,7 @@ class Media extends Model
         $this->preferences = $context->getService('preferences');
         $this->config = $context->getService('config');
         $this->uri = $context->getService('uri');
+        $this->audit = $context->getService('foolfuuka.audit_factory');
         $this->radix_coll = $context->getService('foolfuuka.radix_collection');
         $this->media_factory = $context->getService('foolfuuka.media_factory');
 
@@ -556,6 +562,8 @@ class Media extends Model
 
                 $this->op = $temp;
             }
+
+            $this->audit->log(Audit::AUDIT_DEL_FILE, ['radix' => $this->radix->id, 'media_id' => $this->media->media_id, 'media_hash' => $this->media->media_hash]);
         }
     }
 
@@ -575,6 +583,7 @@ class Media extends Model
                 ->execute();
 
             $this->delete(true, true, true);
+            $this->audit->log(Audit::AUDIT_BAN_FILE, ['global' => false, 'radix' => $this->radix->id, 'media_id' => $this->media->media_id, 'media_hash' => $this->media->media_hash]);
             return;
         }
 
@@ -610,6 +619,7 @@ class Media extends Model
                     ->insert($radix->getTable('_images'), ['media_hash' => $this->media->media_hash, 'banned' => 1]);
             }
         }
+        $this->audit->log(Audit::AUDIT_BAN_FILE, ['global' => true, 'media_hash' => $this->media->media_hash]);
     }
 
     /**

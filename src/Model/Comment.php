@@ -831,14 +831,17 @@ class Comment extends Model
             }
 
             $this->dc->getConnection()->commit();
-            $this->audit->log(Audit::AUDIT_DEL_POST, [
-                'radix' => $this->radix->id,
-                'doc_id' => $this->comment->doc_id,
-                'thread_num' => $this->comment->thread_num,
-                'num' => $this->comment->num,
-                'subnum' => $this->comment->subnum
-            ]);
             $this->clearCache();
+            
+            if ($thread === false) {
+                $this->audit->log(Audit::AUDIT_DEL_POST, [
+                    'radix' => $this->radix->id,
+                    'doc_id' => $this->comment->doc_id,
+                    'thread_num' => $this->comment->thread_num,
+                    'num' => $this->comment->num,
+                    'subnum' => $this->comment->subnum
+                ]);
+            }
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->logger->error('\Foolz\FoolFuuka\Model\CommentInsert: '.$e->getMessage());
             $this->dc->getConnection()->rollBack();

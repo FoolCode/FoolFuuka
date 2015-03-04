@@ -311,7 +311,7 @@ class Search extends Board
                 ->setFullEscapeChars(['\\', '(', ')', '|', '-', '!', '@', '%', '~', '"', '&', '/', '^', '$', '='])
                 ->setHalfEscapeChars(['\\', '(', ')', '!', '@', '%', '~', '&', '/', '^', '$', '=']);
         } catch (\Foolz\SphinxQL\Exception\ConnectionException $e) {
-            throw new SearchSphinxOfflineException(_i('The search backend is currently unavailable.'));
+            throw new SearchSphinxOfflineException($this->preferences->get('foolfuuka.sphinx.custom_message', _i('The search backend is currently unavailable.')));
         }
 
         // process user input
@@ -457,7 +457,7 @@ class Search extends Board
             $this->profiler->log('Stop: SphinxQL');
         } catch(\Foolz\SphinxQL\Exception\DatabaseException $e) {
             $this->logger->error('Search Error: '.$e->getMessage());
-            throw new SearchInvalidException($this->preferences->get('foolfuuka.sphinx.custom_message', _i('The search backend returned an error.')));
+            throw new SearchInvalidException(_i('The search backend returned an error.'));
         }
 
         // no results found

@@ -916,8 +916,6 @@ class Chan extends Common
             return $this->error($e->getMessage());
         } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
             return $this->error($e->getMessage());
-        } catch (\Foolz\SphinxQL\ConnectionException $e) {
-            return $this->error($this->preferences->get('foolfuuka.sphinx.custom_message', 'It appears that the search engine is offline at the moment. Please try again later.'));
         }
 
         // Generate the $title with all search modifiers enabled.

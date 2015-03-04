@@ -310,8 +310,8 @@ class Search extends Board
             $query = SphinxQL::create($conn)->select('id', 'board', 'tnum')->from($indices)
                 ->setFullEscapeChars(['\\', '(', ')', '|', '-', '!', '@', '%', '~', '"', '&', '/', '^', '$', '='])
                 ->setHalfEscapeChars(['\\', '(', ')', '!', '@', '%', '~', '&', '/', '^', '$', '=']);
-        } catch (\Foolz\SphinxQL\ConnectionException $e) {
-            throw new SearchSphinxOfflineException(_i('The search backend is currently unavailable.'));
+        } catch (\Foolz\SphinxQL\Exception\ConnectionException $e) {
+            throw new SearchSphinxOfflineException($this->preferences->get('foolfuuka.sphinx.custom_message', _i('The search backend is currently unavailable.')));
         }
 
         // process user input
@@ -455,7 +455,7 @@ class Search extends Board
             $this->profiler->log('Start: SphinxQL: '.$query->compile()->getCompiled());
             $search = $query->execute();
             $this->profiler->log('Stop: SphinxQL');
-        } catch(\Foolz\SphinxQL\DatabaseException $e) {
+        } catch(\Foolz\SphinxQL\Exception\DatabaseException $e) {
             $this->logger->error('Search Error: '.$e->getMessage());
             throw new SearchInvalidException(_i('The search backend returned an error.'));
         }

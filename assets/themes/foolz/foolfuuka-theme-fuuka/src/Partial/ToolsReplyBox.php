@@ -16,7 +16,7 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
         $form = $this->getForm();
 
         if (!$thread_id && !$radix->archive) : ?>
-            <?= $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform']) ?>
+            <?= $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $this->getUri()->create([$radix->shortname, 'submit']), 'id' => 'postform']) ?>
             <?= $form->hidden('csrf_token', $this->getSecurity()->getCsrfToken()); ?>
             <?= isset($backend_vars['last_limit']) ? $form->hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
         <table style="margin-left: auto; margin-right: auto">

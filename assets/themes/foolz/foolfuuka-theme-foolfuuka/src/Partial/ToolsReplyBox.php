@@ -20,7 +20,7 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
 
         <div id="reply" class="thread_form_wrap clearfix">
             <section class="thread_form clearfix">
-                <?= $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit']) ?>
+                <?= $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $this->getUri()->create([$radix->shortname, 'submit'])]) ?>
                 <?= $form->hidden('csrf_token', $this->getSecurity()->getCsrfToken()); ?>
                 <?= $form->hidden('reply_numero', $thread_id, ['id' => 'reply_numero']) ?>
                 <?= isset($backend_vars['last_limit']) ? $form->hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>

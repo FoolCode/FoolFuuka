@@ -402,7 +402,7 @@ class Chan extends \Foolz\FoolFuuka\View\View
     <?= $this->getPreferences()->get('foolframe.theme.footer_code'); ?>
 
     <?php
-        if ($this->getBuilder()->isStreaming() && $this->getAuth()->hasAccess('maccess.admin')) {
+        if ($this->getConfig()->get('foolz/foolfuuka', 'config', 'profiler.enabled') && $this->getBuilder()->isStreaming() && $this->getAuth()->hasAccess('maccess.admin')) {
             $profiler = $this->getContext()->getService('profiler');
             $profiler->log('Generating profiler HTML in streamed response');
             echo $profiler->getHtml();

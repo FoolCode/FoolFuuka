@@ -187,7 +187,7 @@ class Ban extends Model
 
         if ($this->appeal_status == Ban::APPEAL_NONE) {
             $message .= ' '._i(
-                    'If you\'d like to appeal to your ban, go to the :appeal page.',
+                    'If you wish to appeal your ban, go to the "%s" page.',
                     '<a href="'.$this->uri->create('_/appeal_ban').'">'._i('appeal ban').'</a>'
                 );
         } elseif ($this->appeal_status == Ban::APPEAL_PENDING) {

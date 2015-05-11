@@ -260,7 +260,7 @@ class ReportCollection extends Model
      */
     public function p_add($radix, $id, $reason, $ip_reporter, $mode = 'doc_id')
     {
-        if (trim($reason) === null) {
+        if (trim($reason) === '') {
             throw new ReportReasonNullException(_i('A reason must be included with your report.'));
         }
 

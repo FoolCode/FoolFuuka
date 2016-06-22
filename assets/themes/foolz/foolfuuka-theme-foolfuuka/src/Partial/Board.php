@@ -71,6 +71,8 @@ class Board extends \Foolz\FoolFuuka\View\View
                             <a href="<?= $this->getUri()->create($op->radix->shortname . '/search/image/' . $op_media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><a
                                 href="http://google.com/searchbyimage?image_url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                 class="btnr parent">Google</a><a
+                                href="http://imgops.com/<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
+                                class="btnr parent">ImgOps</a><a
                                 href="http://iqdb.org/?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                 class="btnr parent">iqdb</a><a
                                 href="http://saucenao.com/search.php?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank"
